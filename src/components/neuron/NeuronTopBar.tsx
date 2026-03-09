@@ -2,10 +2,14 @@ import { useState } from "react";
 import {
   Share2, Copy, Download, ArrowRightLeft,
   Eye, EyeOff, Users, Globe,
-  ChevronDown, Zap, Hash, Play, CheckCircle2, Shield
+  ChevronDown, Zap, Hash, Play, Shield,
+  Fingerprint, MapPin
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip, TooltipContent, TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
