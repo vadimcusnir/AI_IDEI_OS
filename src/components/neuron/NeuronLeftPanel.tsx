@@ -1,113 +1,91 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   ChevronRight, ChevronDown, Network, Link2, AtSign,
-  GitBranch, Zap, FolderTree, Search
+  GitBranch, Zap, FolderTree, Search, Plus, X, Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-interface GraphNode {
-  id: string;
-  label: string;
-  type: "category" | "cluster" | "neuron";
-  children?: GraphNode[];
-  isCurrent?: boolean;
-}
-
-interface BacklinkItem {
-  id: string;
-  title: string;
-  relation: string;
-}
+import { NeuronLink, GraphAddress } from "@/hooks/useNeuronGraph";
+import { useNavigate } from "react-router-dom";
 
 interface NeuronLeftPanelProps {
   isCollapsed: boolean;
   onToggle: () => void;
+  neuronId?: number;
+  links: NeuronLink[];
+  addresses: GraphAddress[];
+  loadingLinks: boolean;
+  onAddLink?: (targetId: number, relationType: string) => void;
+  onRemoveLink?: (linkId: string) => void;
 }
 
-const graphTree: GraphNode[] = [
-  {
-    id: "1", label: "Knowledge Base", type: "category", children: [
-      {
-        id: "2", label: "Marketing", type: "cluster", children: [
-          {
-            id: "3", label: "Viral Ideas", type: "cluster", children: [
-              {
-                id: "4", label: "Psychology", type: "cluster", children: [
-                  { id: "5", label: "Scarcity Attention Law", type: "neuron", isCurrent: true },
-                ]
-              },
-              { id: "6", label: "Network Effects", type: "neuron" },
-            ]
-          },
-          { id: "7", label: "Growth Hacking", type: "neuron" },
-        ]
-      },
-      {
-        id: "8", label: "Economics", type: "cluster", children: [
-          { id: "9", label: "Attention Economy", type: "neuron" },
-          { id: "10", label: "Token Models", type: "neuron" },
-        ]
-      },
-    ]
-  },
-];
-
-const backlinks: BacklinkItem[] = [
-  { id: "bl1", title: "Attention Economy", relation: "references" },
-  { id: "bl2", title: "Viral Content Framework", relation: "extends" },
-  { id: "bl3", title: "Identity & Branding", relation: "supports" },
-];
-
-const mentions: BacklinkItem[] = [
-  { id: "m1", title: "Growth Hacking Playbook", relation: "cited in" },
-  { id: "m2", title: "Marketing Course v2", relation: "used in" },
-];
-
-const derived: BacklinkItem[] = [
-  { id: "d1", title: "Scarcity Framework (Card)", relation: "derived_from" },
-];
-
-function TreeNode({ node, depth = 0 }: { node: GraphNode; depth?: number }) {
-  const [isOpen, setIsOpen] = useState(
-    node.children?.some(c => c.isCurrent || c.children?.some(cc => cc.isCurrent || cc.children?.some(ccc => ccc.isCurrent || ccc.children?.some(cccc => cccc.isCurrent)))) ?? false
-  );
-
-  const hasChildren = node.children && node.children.length > 0;
-  const Icon = node.type === "category" ? FolderTree : node.type === "cluster" ? Network : Zap;
+function AddressTree({ addresses }: { addresses: GraphAddress[] }) {
+  if (addresses.length === 0) {
+    return (
+      <div className="text-[10px] text-muted-foreground/50 px-2 py-2">
+        No graph position assigned yet.
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <button
-        onClick={() => hasChildren && setIsOpen(!isOpen)}
-        className={cn(
-          "w-full flex items-center gap-1.5 py-1 px-1.5 rounded-md text-xs transition-colors text-left",
-          node.isCurrent
-            ? "bg-primary/10 text-primary font-medium"
-            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-        )}
-        style={{ paddingLeft: `${depth * 12 + 6}px` }}
-      >
-        {hasChildren ? (
-          isOpen ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />
-        ) : (
-          <span className="w-3" />
-        )}
-        <Icon className={cn("h-3 w-3 shrink-0", node.isCurrent && "text-primary")} />
-        <span className="truncate">{node.label}</span>
-      </button>
-      {isOpen && hasChildren && (
-        <div>
-          {node.children!.map(child => (
-            <TreeNode key={child.id} node={child} depth={depth + 1} />
-          ))}
-        </div>
-      )}
+    <div className="space-y-0.5">
+      {addresses.map(addr => {
+        const levels = [addr.domain, addr.level1, addr.level2, addr.level3, addr.level4].filter(Boolean);
+        return (
+          <div key={addr.id} className="px-1.5">
+            {levels.map((level, depth) => (
+              <div
+                key={depth}
+                className={cn(
+                  "flex items-center gap-1.5 py-0.5 text-xs",
+                  depth === levels.length - 1
+                    ? "text-primary font-medium"
+                    : "text-muted-foreground"
+                )}
+                style={{ paddingLeft: `${depth * 12 + 6}px` }}
+              >
+                {depth < levels.length - 1 ? (
+                  <ChevronDown className="h-3 w-3 shrink-0" />
+                ) : (
+                  <Zap className="h-3 w-3 shrink-0 text-primary" />
+                )}
+                {depth === 0 ? (
+                  <FolderTree className="h-3 w-3 shrink-0" />
+                ) : (
+                  <Network className="h-3 w-3 shrink-0" />
+                )}
+                <span className="truncate">{level}</span>
+              </div>
+            ))}
+            <div className="text-[9px] font-mono text-muted-foreground/40 pl-6 mt-0.5">
+              {addr.path}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-function LinkSection({ title, icon: Icon, items }: { title: string; icon: React.ElementType; items: BacklinkItem[] }) {
+function LinkSection({
+  title,
+  icon: Icon,
+  items,
+  direction,
+  onRemoveLink,
+}: {
+  title: string;
+  icon: React.ElementType;
+  items: NeuronLink[];
+  direction: "outgoing" | "incoming";
+  onRemoveLink?: (linkId: string) => void;
+}) {
   const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
+
+  const filtered = items.filter(l => l.direction === direction);
+  if (filtered.length === 0) return null;
+
   return (
     <div className="panel-section">
       <button
@@ -116,28 +94,70 @@ function LinkSection({ title, icon: Icon, items }: { title: string; icon: React.
       >
         <Icon className="h-3 w-3" />
         {title}
-        <span className="text-[9px] bg-muted rounded-full px-1.5 ml-auto">{items.length}</span>
+        <span className="text-[9px] bg-muted rounded-full px-1.5 ml-auto">{filtered.length}</span>
         {isOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
       </button>
       {isOpen && (
         <div className="space-y-0.5 mt-1">
-          {items.map(item => (
-            <button
-              key={item.id}
-              className="w-full flex items-center gap-2 py-1 px-2 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors text-left"
-            >
-              <Zap className="h-3 w-3 shrink-0 text-primary/50" />
-              <span className="truncate flex-1">{item.title}</span>
-              <span className="text-[9px] text-muted-foreground/60">{item.relation}</span>
-            </button>
-          ))}
+          {filtered.map(item => {
+            const displayTitle = direction === "outgoing"
+              ? item.targetTitle || `Neuron #${item.targetNeuronId}`
+              : item.sourceTitle || `Neuron #${item.sourceNeuronId}`;
+            const targetNumber = direction === "outgoing" ? item.targetNeuronId : item.sourceNeuronId;
+
+            return (
+              <div
+                key={item.id}
+                className="group/link w-full flex items-center gap-2 py-1 px-2 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+              >
+                <button
+                  onClick={() => navigate(`/n/${targetNumber}`)}
+                  className="flex items-center gap-2 flex-1 min-w-0 text-left"
+                >
+                  <Zap className="h-3 w-3 shrink-0 text-primary/50" />
+                  <span className="truncate flex-1">{displayTitle}</span>
+                  <span className="text-[9px] text-muted-foreground/60">{item.relationType}</span>
+                </button>
+                {onRemoveLink && (
+                  <button
+                    onClick={() => onRemoveLink(item.id)}
+                    className="h-4 w-4 flex items-center justify-center opacity-0 group-hover/link:opacity-100 text-muted-foreground hover:text-destructive transition-all"
+                  >
+                    <X className="h-2.5 w-2.5" />
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
 
-export function NeuronLeftPanel({ isCollapsed, onToggle }: NeuronLeftPanelProps) {
+export function NeuronLeftPanel({
+  isCollapsed,
+  onToggle,
+  neuronId,
+  links,
+  addresses,
+  loadingLinks,
+  onAddLink,
+  onRemoveLink,
+}: NeuronLeftPanelProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredLinks = searchQuery
+    ? links.filter(l => {
+        const title = l.direction === "outgoing" ? l.targetTitle : l.sourceTitle;
+        return title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          l.relationType.toLowerCase().includes(searchQuery.toLowerCase());
+      })
+    : links;
+
+  const backlinks = filteredLinks.filter(l => l.direction === "incoming");
+  const outgoing = filteredLinks.filter(l => l.direction === "outgoing");
+
   if (isCollapsed) {
     return (
       <div className="w-10 border-r border-border bg-card flex flex-col items-center py-3 gap-3 shrink-0">
@@ -147,9 +167,9 @@ export function NeuronLeftPanel({ isCollapsed, onToggle }: NeuronLeftPanelProps)
         <button className="text-muted-foreground hover:text-foreground transition-colors">
           <Link2 className="h-4 w-4" />
         </button>
-        <button className="text-muted-foreground hover:text-foreground transition-colors">
-          <AtSign className="h-4 w-4" />
-        </button>
+        {links.length > 0 && (
+          <span className="text-[9px] font-mono text-primary">{links.length}</span>
+        )}
         <button className="text-muted-foreground hover:text-foreground transition-colors">
           <GitBranch className="h-4 w-4" />
         </button>
@@ -172,27 +192,79 @@ export function NeuronLeftPanel({ isCollapsed, onToggle }: NeuronLeftPanelProps)
         <div className="flex items-center gap-1.5 bg-muted/50 rounded-md px-2 py-1">
           <Search className="h-3 w-3 text-muted-foreground" />
           <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search graph..."
             className="text-xs bg-transparent border-none outline-none w-full text-foreground placeholder:text-muted-foreground/50"
           />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")}>
+              <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Tree */}
+      {/* Content */}
       <div className="flex-1 overflow-y-auto">
+        {/* Graph Position */}
         <div className="panel-section">
           <div className="panel-section-title flex items-center gap-1.5">
             <FolderTree className="h-3 w-3" />
             Graph Position
           </div>
-          {graphTree.map(node => (
-            <TreeNode key={node.id} node={node} />
-          ))}
+          <AddressTree addresses={addresses} />
         </div>
 
-        <LinkSection title="Backlinks" icon={Link2} items={backlinks} />
-        <LinkSection title="Mentions" icon={AtSign} items={mentions} />
-        <LinkSection title="Derived" icon={GitBranch} items={derived} />
+        {/* Loading */}
+        {loadingLinks && (
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          </div>
+        )}
+
+        {/* Links */}
+        {!loadingLinks && (
+          <>
+            <LinkSection
+              title="Outgoing Links"
+              icon={Link2}
+              items={filteredLinks}
+              direction="outgoing"
+              onRemoveLink={onRemoveLink}
+            />
+            <LinkSection
+              title="Backlinks"
+              icon={AtSign}
+              items={filteredLinks}
+              direction="incoming"
+              onRemoveLink={onRemoveLink}
+            />
+          </>
+        )}
+
+        {/* Empty state */}
+        {!loadingLinks && links.length === 0 && (
+          <div className="px-3 py-6 text-center">
+            <Network className="h-8 w-8 text-muted-foreground/20 mx-auto mb-2" />
+            <p className="text-[11px] text-muted-foreground/50">No connections yet.</p>
+            <p className="text-[10px] text-muted-foreground/30 mt-1">Links will appear here as you connect neurons.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Footer stats */}
+      <div className="px-3 py-2 border-t border-border bg-panel-header">
+        <div className="grid grid-cols-2 gap-y-1 text-[10px]">
+          <span className="text-muted-foreground">Total Links</span>
+          <span className="text-right font-medium">{links.length}</span>
+          <span className="text-muted-foreground">Outgoing</span>
+          <span className="text-right font-medium text-primary">{outgoing.length}</span>
+          <span className="text-muted-foreground">Backlinks</span>
+          <span className="text-right font-medium">{backlinks.length}</span>
+          <span className="text-muted-foreground">Addresses</span>
+          <span className="text-right font-medium">{addresses.length}</span>
+        </div>
       </div>
     </div>
   );
