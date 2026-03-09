@@ -66,6 +66,12 @@ export default function Index() {
           <img src={logo} alt="ai-idei.com" className="h-6 w-6" />
           <span className="text-base font-serif">ai-idei.com</span>
         </div>
+        {isAdmin && (
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/admin")}>
+            <Shield className="h-3.5 w-3.5" />
+            Admin
+          </Button>
+        )}
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCreateNeuron}>
           <Plus className="h-3.5 w-3.5" />
           New Neuron
