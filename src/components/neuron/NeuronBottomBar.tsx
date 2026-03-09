@@ -2,48 +2,31 @@ import { useState } from "react";
 import {
   GitBranch, MessageSquare, BarChart3, Link2,
   Clock, ChevronDown, ChevronUp, Eye, Download, Quote,
-  Terminal, CheckCircle2, XCircle, Loader2, Zap
+  Terminal, CheckCircle2, XCircle, Loader2, Zap,
+  Trash2, Plus, Save
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ExecutionLog } from "./types";
+import { NeuronLink, NeuronVersion } from "@/hooks/useNeuronGraph";
+import { useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 
-type BottomTab = "relations" | "history" | "analytics" | "comments" | "logs";
+type BottomTab = "relations" | "history" | "logs" | "analytics" | "comments";
 
-interface RelationItem {
-  id: string;
-  targetTitle: string;
-  relationType: string;
-  direction: "outgoing" | "incoming";
+interface NeuronBottomBarProps {
+  isExpanded: boolean;
+  onToggle: () => void;
+  executionLogs: ExecutionLog[];
+  links: NeuronLink[];
+  versions: NeuronVersion[];
+  loadingLinks: boolean;
+  loadingVersions: boolean;
+  onRemoveLink?: (linkId: string) => void;
+  onSaveVersion?: () => void;
+  onClearLogs?: () => void;
 }
-
-const relations: RelationItem[] = [
-  { id: "r1", targetTitle: "Attention Economy", relationType: "references", direction: "outgoing" },
-  { id: "r2", targetTitle: "Viral Content Framework", relationType: "extends", direction: "outgoing" },
-  { id: "r3", targetTitle: "Identity & Branding", relationType: "supports", direction: "incoming" },
-  { id: "r4", targetTitle: "Network Effects", relationType: "contradicts", direction: "incoming" },
-  { id: "r5", targetTitle: "Bitcoin Meme Analysis", relationType: "derived_from", direction: "outgoing" },
-];
-
-const versions = [
-  { id: "v1", timestamp: "2 min ago", author: "You", changes: "Added YAML pipeline block" },
-  { id: "v2", timestamp: "15 min ago", author: "You", changes: "Added prompt definition" },
-  { id: "v3", timestamp: "1 hour ago", author: "You", changes: "Added code block with viral_score" },
-  { id: "v4", timestamp: "3 hours ago", author: "You", changes: "Initial draft" },
-];
-
-const comments = [
-  { id: "c1", author: "AI Worker", text: "Pipeline validated. 3 tasks registered. Consider adding error handling to extract_frameworks.", timestamp: "2 min ago" },
-  { id: "c2", author: "You", text: "Need to find more data on identity-linked sharing.", timestamp: "30 min ago" },
-];
-
-const relationColors: Record<string, string> = {
-  supports: "bg-status-validated/15 text-status-validated",
-  contradicts: "bg-destructive/15 text-destructive",
-  extends: "bg-primary/15 text-primary",
-  references: "bg-muted text-muted-foreground",
-  derived_from: "bg-graph-highlight/15 text-graph-highlight",
-};
 
 const tabs: { id: BottomTab; label: string; icon: React.ElementType }[] = [
   { id: "relations", label: "Relations", icon: Link2 },
@@ -53,11 +36,13 @@ const tabs: { id: BottomTab; label: string; icon: React.ElementType }[] = [
   { id: "comments", label: "Comments", icon: MessageSquare },
 ];
 
-interface NeuronBottomBarProps {
-  isExpanded: boolean;
-  onToggle: () => void;
-  executionLogs: ExecutionLog[];
-}
+const relationColors: Record<string, string> = {
+  supports: "bg-status-validated/15 text-status-validated",
+  contradicts: "bg-destructive/15 text-destructive",
+  extends: "bg-primary/15 text-primary",
+  references: "bg-muted text-muted-foreground",
+  derived_from: "bg-graph-highlight/15 text-graph-highlight",
+};
 
 const logStatusIcons = {
   idle: Zap,
@@ -73,8 +58,14 @@ const logStatusColors = {
   error: "text-destructive",
 };
 
-export function NeuronBottomBar({ isExpanded, onToggle, executionLogs }: NeuronBottomBarProps) {
+export function NeuronBottomBar({
+  isExpanded, onToggle, executionLogs,
+  links, versions, loadingLinks, loadingVersions,
+  onRemoveLink, onSaveVersion, onClearLogs,
+}: NeuronBottomBarProps) {
   const [activeTab, setActiveTab] = useState<BottomTab>("relations");
+  const [commentText, setCommentText] = useState("");
+  const navigate = useNavigate();
 
   return (
     <div className={cn("border-t border-border bg-card shrink-0 transition-all", isExpanded ? "h-48" : "h-9")}>
@@ -92,18 +83,31 @@ export function NeuronBottomBar({ isExpanded, onToggle, executionLogs }: NeuronB
           >
             <tab.icon className="h-3 w-3" />
             {tab.label}
-            {tab.id === "relations" && (
-              <span className="text-[9px] bg-muted rounded-full px-1.5">{relations.length}</span>
+            {tab.id === "relations" && links.length > 0 && (
+              <span className="text-[9px] bg-muted rounded-full px-1.5">{links.length}</span>
             )}
             {tab.id === "logs" && executionLogs.length > 0 && (
               <span className="text-[9px] bg-primary/15 text-primary rounded-full px-1.5">{executionLogs.length}</span>
             )}
-            {tab.id === "comments" && (
-              <span className="text-[9px] bg-muted rounded-full px-1.5">{comments.length}</span>
+            {tab.id === "history" && versions.length > 0 && (
+              <span className="text-[9px] bg-muted rounded-full px-1.5">{versions.length}</span>
             )}
           </button>
         ))}
         <div className="flex-1" />
+
+        {/* Tab-specific actions */}
+        {isExpanded && activeTab === "logs" && executionLogs.length > 0 && onClearLogs && (
+          <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2 text-muted-foreground" onClick={onClearLogs}>
+            <Trash2 className="h-3 w-3 mr-1" /> Clear
+          </Button>
+        )}
+        {isExpanded && activeTab === "history" && onSaveVersion && (
+          <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2 text-primary" onClick={onSaveVersion}>
+            <Save className="h-3 w-3 mr-1" /> Save Version
+          </Button>
+        )}
+
         <button onClick={onToggle} className="text-muted-foreground hover:text-foreground transition-colors p-1">
           {isExpanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
         </button>
@@ -111,35 +115,81 @@ export function NeuronBottomBar({ isExpanded, onToggle, executionLogs }: NeuronB
 
       {isExpanded && (
         <div className="h-[calc(100%-36px)] overflow-y-auto px-3 py-2">
+          {/* Relations */}
           {activeTab === "relations" && (
-            <div className="flex flex-wrap gap-2">
-              {relations.map(rel => (
-                <div key={rel.id} className="flex items-center gap-2 bg-muted/30 rounded-lg px-3 py-1.5 text-xs hover:bg-muted/60 transition-colors cursor-pointer">
-                  <span className={cn("text-[9px]", rel.direction === "outgoing" ? "text-primary" : "text-muted-foreground")}>
-                    {rel.direction === "outgoing" ? "→" : "←"}
-                  </span>
-                  <span className="font-medium">{rel.targetTitle}</span>
-                  <Badge variant="secondary" className={cn("text-[9px] px-1.5 py-0", relationColors[rel.relationType])}>
-                    {rel.relationType}
-                  </Badge>
+            <div>
+              {loadingLinks ? (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                 </div>
-              ))}
+              ) : links.length === 0 ? (
+                <div className="text-xs text-muted-foreground/50 text-center py-4">
+                  No relations yet. Connect this neuron to others.
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {links.map(rel => {
+                    const displayTitle = rel.direction === "outgoing"
+                      ? rel.targetTitle || `Neuron #${rel.targetNeuronId}`
+                      : rel.sourceTitle || `Neuron #${rel.sourceNeuronId}`;
+                    const targetNumber = rel.direction === "outgoing" ? rel.targetNeuronId : rel.sourceNeuronId;
+
+                    return (
+                      <div key={rel.id} className="group flex items-center gap-2 bg-muted/30 rounded-lg px-3 py-1.5 text-xs hover:bg-muted/60 transition-colors">
+                        <span className={cn("text-[9px]", rel.direction === "outgoing" ? "text-primary" : "text-muted-foreground")}>
+                          {rel.direction === "outgoing" ? "→" : "←"}
+                        </span>
+                        <button onClick={() => navigate(`/n/${targetNumber}`)} className="font-medium hover:text-primary transition-colors">
+                          {displayTitle}
+                        </button>
+                        <Badge variant="secondary" className={cn("text-[9px] px-1.5 py-0", relationColors[rel.relationType] || "bg-muted text-muted-foreground")}>
+                          {rel.relationType}
+                        </Badge>
+                        {onRemoveLink && (
+                          <button
+                            onClick={() => onRemoveLink(rel.id)}
+                            className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all"
+                          >
+                            <XCircle className="h-3 w-3" />
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
+          {/* History */}
           {activeTab === "history" && (
-            <div className="space-y-1.5">
-              {versions.map((v, i) => (
-                <div key={v.id} className={cn("flex items-center gap-3 px-2 py-1.5 rounded-md text-xs", i === 0 ? "bg-primary/5" : "hover:bg-muted/50")}>
-                  <Clock className="h-3 w-3 text-muted-foreground shrink-0" />
-                  <span className="text-muted-foreground w-20 shrink-0">{v.timestamp}</span>
-                  <span className="font-medium flex-1">{v.changes}</span>
-                  <span className="text-muted-foreground">{v.author}</span>
+            <div>
+              {loadingVersions ? (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                 </div>
-              ))}
+              ) : versions.length === 0 ? (
+                <div className="text-xs text-muted-foreground/50 text-center py-4">
+                  No versions saved yet. Click "Save Version" to create a snapshot.
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  {versions.map((v, i) => (
+                    <div key={v.id} className={cn("flex items-center gap-3 px-2 py-1.5 rounded-md text-xs", i === 0 ? "bg-primary/5" : "hover:bg-muted/50")}>
+                      <Clock className="h-3 w-3 text-muted-foreground shrink-0" />
+                      <span className="text-muted-foreground w-24 shrink-0">
+                        {formatDistanceToNow(new Date(v.createdAt), { addSuffix: true })}
+                      </span>
+                      <span className="font-mono text-[10px] text-muted-foreground/60">v{v.version}</span>
+                      <span className="font-medium flex-1 truncate">{v.title}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
+          {/* Logs */}
           {activeTab === "logs" && (
             <div className="space-y-1">
               {executionLogs.length === 0 ? (
@@ -163,12 +213,13 @@ export function NeuronBottomBar({ isExpanded, onToggle, executionLogs }: NeuronB
             </div>
           )}
 
+          {/* Analytics */}
           {activeTab === "analytics" && (
             <div className="grid grid-cols-4 gap-4">
               {[
-                { label: "Views", value: "127", icon: Eye },
-                { label: "Citations", value: "8", icon: Quote },
-                { label: "Exports", value: "3", icon: Download },
+                { label: "Links", value: String(links.length), icon: Link2 },
+                { label: "Versions", value: String(versions.length), icon: GitBranch },
+                { label: "Blocks", value: String(0), icon: Eye },
                 { label: "Executions", value: String(executionLogs.filter(l => l.status === "success").length), icon: Terminal },
               ].map(stat => (
                 <div key={stat.label} className="flex flex-col items-center gap-1 py-2">
@@ -180,28 +231,16 @@ export function NeuronBottomBar({ isExpanded, onToggle, executionLogs }: NeuronB
             </div>
           )}
 
+          {/* Comments */}
           {activeTab === "comments" && (
             <div className="space-y-2">
-              {comments.map(c => (
-                <div key={c.id} className="flex gap-2 text-xs">
-                  <div className={cn(
-                    "h-5 w-5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0",
-                    c.author === "AI Worker" ? "bg-ai-accent/15 text-ai-accent" : "bg-primary/15 text-primary"
-                  )}>
-                    {c.author[0]}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{c.author}</span>
-                      {c.author === "AI Worker" && <span className="text-[8px] bg-ai-accent/15 text-ai-accent rounded px-1">AI</span>}
-                      <span className="text-muted-foreground text-[10px]">{c.timestamp}</span>
-                    </div>
-                    <p className="text-muted-foreground mt-0.5">{c.text}</p>
-                  </div>
-                </div>
-              ))}
+              <div className="text-xs text-muted-foreground/50 text-center py-2">
+                Comments are coming soon.
+              </div>
               <div className="flex gap-2 mt-2">
                 <input
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
                   placeholder="Add a comment..."
                   className="flex-1 text-xs bg-muted/50 rounded-md px-2.5 py-1.5 outline-none border-none placeholder:text-muted-foreground/40"
                 />

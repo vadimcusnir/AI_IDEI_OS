@@ -1,15 +1,16 @@
-import { useMemo } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNeuron } from "@/hooks/useNeuron";
+import { useNeuronGraph } from "@/hooks/useNeuronGraph";
 import { NeuronTopBar } from "@/components/neuron/NeuronTopBar";
 import { NeuronLeftPanel } from "@/components/neuron/NeuronLeftPanel";
 import { NeuronRightPanel } from "@/components/neuron/NeuronRightPanel";
 import { NeuronEditorToolbar } from "@/components/neuron/NeuronEditorToolbar";
 import { NeuronMainEditor } from "@/components/neuron/NeuronMainEditor";
 import { NeuronBottomBar } from "@/components/neuron/NeuronBottomBar";
-import { useState, useCallback } from "react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function NeuronEditor() {
   const { number } = useParams();
@@ -21,8 +22,14 @@ export default function NeuronEditor() {
     executionLogs, setTitle, setStatus, setVisibility,
     handleBlockChange, handleBlockToggle, handleAddBlock,
     handleDeleteBlock, handleBlockExecute, handleBlockLanguageChange,
-    handleRunAll,
+    handleRunAll, clearLogs,
   } = useNeuron(neuronNumber);
+
+  const {
+    links, versions, addresses,
+    loadingLinks, loadingVersions,
+    addLink, removeLink, createVersion,
+  } = useNeuronGraph(neuron?.id);
 
   const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
   const [leftCollapsed, setLeftCollapsed] = useState(false);
@@ -33,6 +40,34 @@ export default function NeuronEditor() {
     setActiveFormats(prev =>
       prev.includes(format) ? prev.filter(f => f !== format) : [...prev, format]
     );
+  }, []);
+
+  const handleSaveVersion = useCallback(async () => {
+    if (!neuron) return;
+    const blocksSnapshot = blocks.map(b => ({
+      type: b.type,
+      content: b.content,
+      language: b.language,
+      checked: b.checked,
+      executionMode: b.executionMode,
+    }));
+    const result = await createVersion(neuron.title, blocksSnapshot);
+    if (result?.error) {
+      toast.error("Failed to save version");
+    } else {
+      toast.success("Version saved");
+    }
+  }, [neuron, blocks, createVersion]);
+
+  const handleRemoveLink = useCallback(async (linkId: string) => {
+    const result = await removeLink(linkId);
+    if (result?.error) {
+      toast.error("Failed to remove link");
+    }
+  }, [removeLink]);
+
+  const handleAIAction = useCallback((action: string) => {
+    toast.info(`AI action "${action}" triggered. AI integration coming soon.`);
   }, []);
 
   const neuronScore = useMemo(() => {
@@ -83,6 +118,11 @@ export default function NeuronEditor() {
         <NeuronLeftPanel
           isCollapsed={leftCollapsed}
           onToggle={() => setLeftCollapsed(!leftCollapsed)}
+          neuronId={neuron.id}
+          links={links}
+          addresses={addresses}
+          loadingLinks={loadingLinks}
+          onRemoveLink={handleRemoveLink}
         />
 
         <div className="flex-1 flex flex-col min-w-0">
@@ -108,6 +148,8 @@ export default function NeuronEditor() {
           onToggle={() => setRightCollapsed(!rightCollapsed)}
           neuronScore={neuronScore}
           blocks={blocks}
+          neuronId={neuron.id}
+          onAIAction={handleAIAction}
         />
       </div>
 
@@ -115,6 +157,13 @@ export default function NeuronEditor() {
         isExpanded={bottomExpanded}
         onToggle={() => setBottomExpanded(!bottomExpanded)}
         executionLogs={executionLogs}
+        links={links}
+        versions={versions}
+        loadingLinks={loadingLinks}
+        loadingVersions={loadingVersions}
+        onRemoveLink={handleRemoveLink}
+        onSaveVersion={handleSaveVersion}
+        onClearLogs={clearLogs}
       />
 
       {/* Save indicator */}
