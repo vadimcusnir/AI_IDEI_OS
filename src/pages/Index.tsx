@@ -61,7 +61,7 @@ export default function Index() {
       {/* Header */}
       <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
         <div className="flex items-center gap-2">
-          <Zap className="h-5 w-5 text-primary" />
+          <img src={logo} alt="ai-idei.com" className="h-6 w-6" />
           <span className="text-base font-serif">ai-idei.com</span>
         </div>
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCreateNeuron}>
