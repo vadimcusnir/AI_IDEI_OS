@@ -4,10 +4,14 @@ import {
   Expand, BookOpen, Swords, GraduationCap,
   FileText, Twitter, Video, Presentation,
   Network, Radar, Layers, TrendingUp,
-  ChevronRight, ChevronDown, Loader2, Zap
+  ChevronRight, ChevronDown, Loader2, Zap,
+  Code, Bug, TestTube, Gauge,
+  Play, Settings2, Calendar,
+  FileCode, Braces, Table as TableIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Block, BLOCK_TYPE_CONFIG } from "./types";
 
 interface AIToolItem {
   icon: React.ElementType;
@@ -22,57 +26,11 @@ interface AISection {
   items: AIToolItem[];
 }
 
-const aiSections: AISection[] = [
-  {
-    title: "AI Extraction",
-    icon: Sparkles,
-    color: "text-ai-accent",
-    items: [
-      { icon: Brain, label: "Extract Insights", description: "Key takeaways from content" },
-      { icon: Layers, label: "Extract Frameworks", description: "Structured mental models" },
-      { icon: MessageSquareQuote, label: "Extract Questions", description: "Questions this raises" },
-      { icon: Target, label: "Extract Quotes", description: "Quotable statements" },
-      { icon: Lightbulb, label: "Extract Prompts", description: "Actionable prompts" },
-    ],
-  },
-  {
-    title: "AI Expansion",
-    icon: Expand,
-    color: "text-status-validated",
-    items: [
-      { icon: Expand, label: "Expand Idea", description: "Develop concept further" },
-      { icon: BookOpen, label: "Generate Examples", description: "Real-world examples" },
-      { icon: Swords, label: "Counterarguments", description: "Challenge the idea" },
-      { icon: GraduationCap, label: "Teaching Version", description: "Simplified explanation" },
-    ],
-  },
-  {
-    title: "AI Transformation",
-    icon: Zap,
-    color: "text-primary",
-    items: [
-      { icon: FileText, label: "→ Article", description: "Full article format" },
-      { icon: Twitter, label: "→ Twitter Thread", description: "Thread of tweets" },
-      { icon: Video, label: "→ Script", description: "Video/podcast script" },
-      { icon: Presentation, label: "→ Course Slide", description: "Teaching material" },
-    ],
-  },
-  {
-    title: "Graph Analysis",
-    icon: Network,
-    color: "text-graph-highlight",
-    items: [
-      { icon: Network, label: "Related Neurons", description: "Similar content" },
-      { icon: Radar, label: "Idea Clusters", description: "Thematic groupings" },
-      { icon: TrendingUp, label: "Influence Score", description: "Impact measurement" },
-    ],
-  },
-];
-
 interface NeuronRightPanelProps {
   isCollapsed: boolean;
   onToggle: () => void;
   neuronScore: number;
+  blocks: Block[];
 }
 
 function AIToolButton({ item, onRun }: { item: AIToolItem; onRun: () => void }) {
@@ -103,8 +61,10 @@ function AIToolButton({ item, onRun }: { item: AIToolItem; onRun: () => void }) 
   );
 }
 
-function CollapsibleSection({ section }: { section: AISection }) {
-  const [isOpen, setIsOpen] = useState(true);
+function CollapsibleSection({ title, icon: Icon, color, items, defaultOpen = true }: {
+  title: string; icon: React.ElementType; color: string; items: AIToolItem[]; defaultOpen?: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
     <div className="panel-section">
@@ -112,13 +72,13 @@ function CollapsibleSection({ section }: { section: AISection }) {
         onClick={() => setIsOpen(!isOpen)}
         className="panel-section-title flex items-center gap-1.5 w-full text-left"
       >
-        <section.icon className={cn("h-3 w-3", section.color)} />
-        {section.title}
+        <Icon className={cn("h-3 w-3", color)} />
+        {title}
         {isOpen ? <ChevronDown className="h-3 w-3 ml-auto" /> : <ChevronRight className="h-3 w-3 ml-auto" />}
       </button>
       {isOpen && (
         <div className="space-y-0.5 mt-1">
-          {section.items.map(item => (
+          {items.map(item => (
             <AIToolButton key={item.label} item={item} onRun={() => {}} />
           ))}
         </div>
@@ -127,7 +87,15 @@ function CollapsibleSection({ section }: { section: AISection }) {
   );
 }
 
-export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore }: NeuronRightPanelProps) {
+export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks }: NeuronRightPanelProps) {
+  const executableCount = blocks.filter(b => BLOCK_TYPE_CONFIG[b.type].executable).length;
+  const formatStats = {
+    code: blocks.filter(b => b.type === "code").length,
+    yaml: blocks.filter(b => b.type === "yaml").length,
+    prompts: blocks.filter(b => b.type === "prompt").length,
+    data: blocks.filter(b => b.type === "dataset" || b.type === "json").length,
+  };
+
   if (isCollapsed) {
     return (
       <div className="w-10 border-l border-border bg-card flex flex-col items-center py-3 gap-3 shrink-0">
@@ -135,10 +103,10 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore }: NeuronR
           <Sparkles className="h-4 w-4" />
         </button>
         <button className="text-muted-foreground hover:text-foreground transition-colors">
-          <Brain className="h-4 w-4" />
+          <Code className="h-4 w-4" />
         </button>
         <button className="text-muted-foreground hover:text-foreground transition-colors">
-          <Zap className="h-4 w-4" />
+          <Play className="h-4 w-4" />
         </button>
         <button className="text-muted-foreground hover:text-foreground transition-colors">
           <Network className="h-4 w-4" />
@@ -160,43 +128,108 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore }: NeuronR
         </button>
       </div>
 
-      {/* Score */}
+      {/* Score + Format Stats */}
       <div className="px-3 py-3 border-b border-border">
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Neuron Score</span>
           <span className="text-lg font-bold text-primary">{neuronScore}</span>
         </div>
-        <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-          <div
-            className="h-full bg-primary rounded-full transition-all duration-500"
-            style={{ width: `${neuronScore}%` }}
-          />
+        <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-2">
+          <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${neuronScore}%` }} />
         </div>
-        <div className="flex justify-between mt-1 text-[9px] text-muted-foreground">
-          <span>Depth</span>
-          <span>Connections</span>
-          <span>Usage</span>
+        <div className="grid grid-cols-4 gap-1 text-center">
+          {[
+            { label: "Code", value: formatStats.code, color: "text-status-validated" },
+            { label: "YAML", value: formatStats.yaml, color: "text-ai-accent" },
+            { label: "Prompts", value: formatStats.prompts, color: "text-primary" },
+            { label: "Data", value: formatStats.data, color: "text-graph-highlight" },
+          ].map(s => (
+            <div key={s.label} className="text-center">
+              <div className={cn("text-sm font-bold", s.color)}>{s.value}</div>
+              <div className="text-[8px] text-muted-foreground">{s.label}</div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* AI Sections */}
       <div className="flex-1 overflow-y-auto">
-        {aiSections.map(section => (
-          <CollapsibleSection key={section.title} section={section} />
-        ))}
+        <CollapsibleSection
+          title="AI Extraction"
+          icon={Sparkles}
+          color="text-ai-accent"
+          items={[
+            { icon: Brain, label: "Extract Insights", description: "Key takeaways from content" },
+            { icon: Layers, label: "Extract Frameworks", description: "Structured mental models" },
+            { icon: MessageSquareQuote, label: "Extract Questions", description: "Questions this raises" },
+            { icon: Target, label: "Extract Quotes", description: "Quotable statements" },
+            { icon: Lightbulb, label: "Extract Prompts", description: "Auto-generate prompts" },
+          ]}
+        />
+
+        <CollapsibleSection
+          title="Code Tools"
+          icon={Code}
+          color="text-status-validated"
+          items={[
+            { icon: Bug, label: "Debug Code", description: "Find and fix errors" },
+            { icon: Gauge, label: "Optimize Code", description: "Performance improvements" },
+            { icon: TestTube, label: "Generate Tests", description: "Auto-create test cases" },
+            { icon: FileCode, label: "Explain Code", description: "Line-by-line explanation" },
+          ]}
+          defaultOpen={false}
+        />
+
+        <CollapsibleSection
+          title="Pipeline Execution"
+          icon={Play}
+          color="text-primary"
+          items={[
+            { icon: Play, label: "Run Pipeline", description: "Execute YAML pipeline" },
+            { icon: Settings2, label: "Simulate", description: "Dry-run without side effects" },
+            { icon: Calendar, label: "Schedule", description: "Set automated execution" },
+            { icon: Braces, label: "Validate Schema", description: "Check data structures" },
+          ]}
+          defaultOpen={false}
+        />
+
+        <CollapsibleSection
+          title="AI Transformation"
+          icon={Zap}
+          color="text-primary"
+          items={[
+            { icon: FileText, label: "→ Article", description: "Full article format" },
+            { icon: Twitter, label: "→ Twitter Thread", description: "Thread of tweets" },
+            { icon: Video, label: "→ Script", description: "Video/podcast script" },
+            { icon: Presentation, label: "→ Course Slide", description: "Teaching material" },
+          ]}
+          defaultOpen={false}
+        />
+
+        <CollapsibleSection
+          title="Graph Analysis"
+          icon={Network}
+          color="text-graph-highlight"
+          items={[
+            { icon: Network, label: "Related Neurons", description: "Similar content" },
+            { icon: Radar, label: "Idea Clusters", description: "Thematic groupings" },
+            { icon: TrendingUp, label: "Influence Score", description: "Impact measurement" },
+          ]}
+          defaultOpen={false}
+        />
       </div>
 
       {/* Metadata footer */}
       <div className="px-3 py-2 border-t border-border bg-panel-header">
         <div className="grid grid-cols-2 gap-y-1 text-[10px]">
-          <span className="text-muted-foreground">Words</span>
-          <span className="text-right font-medium">342</span>
-          <span className="text-muted-foreground">Blocks</span>
-          <span className="text-right font-medium">8</span>
+          <span className="text-muted-foreground">Total Blocks</span>
+          <span className="text-right font-medium">{blocks.length}</span>
+          <span className="text-muted-foreground">Executable</span>
+          <span className="text-right font-medium text-primary">{executableCount}</span>
           <span className="text-muted-foreground">Links</span>
           <span className="text-right font-medium">5</span>
-          <span className="text-muted-foreground">Citations</span>
-          <span className="text-right font-medium">3</span>
+          <span className="text-muted-foreground">Format Types</span>
+          <span className="text-right font-medium">{new Set(blocks.map(b => b.type)).size}</span>
         </div>
       </div>
     </div>

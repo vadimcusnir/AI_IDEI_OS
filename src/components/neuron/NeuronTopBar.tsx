@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   Share2, Copy, Download, ArrowRightLeft,
   Eye, EyeOff, Users, Globe,
-  ChevronDown, Zap, Hash
+  ChevronDown, Zap, Hash, Play, CheckCircle2, Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +27,7 @@ interface NeuronTopBarProps {
   onStatusChange: (status: NeuronStatus) => void;
   onVisibilityChange: (visibility: NeuronVisibility) => void;
   onTagsChange: (tags: string[]) => void;
+  onRunAll: () => void;
 }
 
 const statusConfig: Record<NeuronStatus, { label: string; className: string }> = {
@@ -43,7 +44,7 @@ const visibilityIcons: Record<NeuronVisibility, React.ElementType> = {
 
 export function NeuronTopBar({
   title, neuronId, tags, status, visibility,
-  onTitleChange, onStatusChange, onVisibilityChange, onTagsChange,
+  onTitleChange, onStatusChange, onVisibilityChange, onTagsChange, onRunAll,
 }: NeuronTopBarProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTag, setNewTag] = useState("");
@@ -89,7 +90,6 @@ export function NeuronTopBar({
         </button>
       )}
 
-      {/* Divider */}
       <div className="w-px h-5 bg-border mx-1" />
 
       {/* Tags */}
@@ -150,6 +150,24 @@ export function NeuronTopBar({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <div className="w-px h-5 bg-border" />
+
+      {/* Execution controls */}
+      <Button
+        variant="default"
+        size="sm"
+        className="h-7 gap-1.5 text-xs px-3"
+        onClick={onRunAll}
+      >
+        <Play className="h-3 w-3" />
+        Run
+      </Button>
+
+      <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-2">
+        <Shield className="h-3 w-3" />
+        Validate
+      </Button>
 
       <div className="w-px h-5 bg-border" />
 
