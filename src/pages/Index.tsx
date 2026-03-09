@@ -1,38 +1,39 @@
 import { useState, useCallback, useMemo } from "react";
-import { NeuronToolbar } from "@/components/neuron/NeuronToolbar";
-import { NeuronHeader } from "@/components/neuron/NeuronHeader";
-import { NeuronEditor, Block } from "@/components/neuron/NeuronEditor";
-import { NeuronStatusBar } from "@/components/neuron/NeuronStatusBar";
-import { motion } from "framer-motion";
-
-const colorBgMap: Record<string, string> = {
-  default: "bg-card",
-  yellow: "bg-note-yellow",
-  green: "bg-note-green",
-  blue: "bg-note-blue",
-  pink: "bg-note-pink",
-  purple: "bg-note-purple",
-};
+import { NeuronTopBar } from "@/components/neuron/NeuronTopBar";
+import { NeuronLeftPanel } from "@/components/neuron/NeuronLeftPanel";
+import { NeuronRightPanel } from "@/components/neuron/NeuronRightPanel";
+import { NeuronEditorToolbar } from "@/components/neuron/NeuronEditorToolbar";
+import { NeuronMainEditor, Block } from "@/components/neuron/NeuronMainEditor";
+import { NeuronBottomBar } from "@/components/neuron/NeuronBottomBar";
 
 const initialBlocks: Block[] = [
-  { id: "1", type: "heading", content: "Welcome to Neuron" },
-  { id: "2", type: "text", content: "The smallest unit of content. Start typing to capture your thoughts, ideas, and tasks." },
-  { id: "3", type: "todo", content: "Try checking this off", checked: false },
-  { id: "4", type: "todo", content: "Add a new block below", checked: false },
-  { id: "5", type: "quote", content: "The brain is wider than the sky." },
-  { id: "6", type: "code", content: 'console.log("Hello, Neuron!");' },
-  { id: "7", type: "divider", content: "" },
-  { id: "8", type: "text", content: "Use the toolbar above to format text, create lists, and insert media." },
+  { id: "1", type: "heading", content: "Idea" },
+  { id: "2", type: "text", content: "When attention is scarce, ideas with identity signals propagate faster." },
+  { id: "3", type: "heading", content: "Explanation" },
+  { id: "4", type: "text", content: "Identity-linked ideas trigger social sharing because sharing them reinforces group belonging. People don't just share information — they share identity markers." },
+  { id: "5", type: "heading", content: "Example" },
+  { id: "6", type: "idea", content: "Bitcoin memes in 2017 — sharing BTC content signaled membership in the crypto tribe, driving exponential memetic propagation." },
+  { id: "7", type: "heading", content: "Application" },
+  { id: "8", type: "text", content: "Attach identity markers to ideas to increase viral propagation. The idea must allow the sharer to signal who they are." },
+  { id: "9", type: "todo", content: "Research identity theory in social psychology", checked: false },
+  { id: "10", type: "todo", content: "Find 3 more examples beyond crypto", checked: false },
+  { id: "11", type: "todo", content: "Map to existing viral content frameworks", checked: true },
+  { id: "12", type: "divider", content: "" },
+  { id: "13", type: "heading", content: "References" },
+  { id: "14", type: "reference", content: "Berger, J. (2013). Contagious: Why Things Catch On" },
+  { id: "15", type: "reference", content: "Heath, C. & Heath, D. (2007). Made to Stick" },
 ];
 
 export default function Index() {
-  const [title, setTitle] = useState("My First Neuron");
+  const [title, setTitle] = useState("The Scarcity Attention Law");
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
   const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
-  const [isPinned, setIsPinned] = useState(false);
-  const [isStarred, setIsStarred] = useState(false);
-  const [noteColor, setNoteColor] = useState("default");
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [status, setStatus] = useState<"draft" | "validated" | "published">("draft");
+  const [visibility, setVisibility] = useState<"private" | "team" | "public">("private");
+  const [tags, setTags] = useState(["marketing", "psychology", "virality"]);
+  const [leftCollapsed, setLeftCollapsed] = useState(false);
+  const [rightCollapsed, setRightCollapsed] = useState(false);
+  const [bottomExpanded, setBottomExpanded] = useState(false);
 
   const handleFormatToggle = useCallback((format: string) => {
     setActiveFormats(prev =>
@@ -48,11 +49,12 @@ export default function Index() {
     setBlocks(prev => prev.map(b => b.id === id ? { ...b, checked: !b.checked } : b));
   }, []);
 
-  const handleAddBlock = useCallback((afterId: string) => {
+  const handleAddBlock = useCallback((afterId: string, type: Block["type"] = "text") => {
     const newBlock: Block = {
       id: Date.now().toString(),
-      type: "text",
+      type,
       content: "",
+      ...(type === "todo" ? { checked: false } : {}),
     };
     setBlocks(prev => {
       const idx = prev.findIndex(b => b.id === afterId);
@@ -66,54 +68,64 @@ export default function Index() {
     setBlocks(prev => prev.filter(b => b.id !== id));
   }, []);
 
-  const { wordCount, charCount } = useMemo(() => {
-    const allText = title + " " + blocks.map(b => b.content).join(" ");
-    const words = allText.trim().split(/\s+/).filter(Boolean).length;
-    return { wordCount: words, charCount: allText.length };
-  }, [title, blocks]);
+  const neuronScore = useMemo(() => {
+    const contentLength = blocks.reduce((sum, b) => sum + b.content.length, 0);
+    return Math.min(100, Math.round((contentLength / 500) * 40 + blocks.length * 3 + tags.length * 5));
+  }, [blocks, tags]);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 font-sans">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className={`w-full max-w-4xl h-[85vh] flex flex-col rounded-xl border border-border shadow-xl overflow-hidden transition-colors duration-300 ${colorBgMap[noteColor]}`}
-      >
-        <NeuronHeader
-          isPinned={isPinned}
-          isStarred={isStarred}
-          noteColor={noteColor}
-          tags={["personal", "ideas"]}
-          lastEdited="Edited just now"
-          onTogglePin={() => setIsPinned(!isPinned)}
-          onToggleStar={() => setIsStarred(!isStarred)}
-          onColorChange={(c) => { setNoteColor(c); setShowColorPicker(false); }}
-          showColorPicker={showColorPicker}
-          onToggleColorPicker={() => setShowColorPicker(!showColorPicker)}
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
+      {/* Top Bar */}
+      <NeuronTopBar
+        title={title}
+        neuronId="NRN-0042"
+        tags={tags}
+        status={status}
+        visibility={visibility}
+        onTitleChange={setTitle}
+        onStatusChange={setStatus}
+        onVisibilityChange={setVisibility}
+        onTagsChange={setTags}
+      />
+
+      {/* Main area: left + editor + right */}
+      <div className="flex-1 flex min-h-0">
+        {/* Left Panel */}
+        <NeuronLeftPanel
+          isCollapsed={leftCollapsed}
+          onToggle={() => setLeftCollapsed(!leftCollapsed)}
         />
 
-        <NeuronToolbar
-          activeFormats={activeFormats}
-          onFormatToggle={handleFormatToggle}
-        />
+        {/* Center: toolbar + editor */}
+        <div className="flex-1 flex flex-col min-w-0">
+          <NeuronEditorToolbar
+            activeFormats={activeFormats}
+            onFormatToggle={handleFormatToggle}
+          />
+          <NeuronMainEditor
+            title={title}
+            blocks={blocks}
+            onTitleChange={setTitle}
+            onBlockChange={handleBlockChange}
+            onBlockToggle={handleBlockToggle}
+            onAddBlock={handleAddBlock}
+            onDeleteBlock={handleDeleteBlock}
+          />
+        </div>
 
-        <NeuronEditor
-          title={title}
-          blocks={blocks}
-          onTitleChange={setTitle}
-          onBlockChange={handleBlockChange}
-          onBlockToggle={handleBlockToggle}
-          onAddBlock={handleAddBlock}
-          onDeleteBlock={handleDeleteBlock}
+        {/* Right Panel */}
+        <NeuronRightPanel
+          isCollapsed={rightCollapsed}
+          onToggle={() => setRightCollapsed(!rightCollapsed)}
+          neuronScore={neuronScore}
         />
+      </div>
 
-        <NeuronStatusBar
-          wordCount={wordCount}
-          charCount={charCount}
-          blockCount={blocks.length}
-        />
-      </motion.div>
+      {/* Bottom Bar */}
+      <NeuronBottomBar
+        isExpanded={bottomExpanded}
+        onToggle={() => setBottomExpanded(!bottomExpanded)}
+      />
     </div>
   );
 }
