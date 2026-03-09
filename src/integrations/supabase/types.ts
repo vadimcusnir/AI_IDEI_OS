@@ -14,7 +14,321 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      neuron_address_aliases: {
+        Row: {
+          alias: string
+          created_at: string
+          id: string
+          target_path: string
+        }
+        Insert: {
+          alias: string
+          created_at?: string
+          id?: string
+          target_path: string
+        }
+        Update: {
+          alias?: string
+          created_at?: string
+          id?: string
+          target_path?: string
+        }
+        Relationships: []
+      }
+      neuron_addresses: {
+        Row: {
+          created_at: string
+          depth: number
+          domain: string
+          id: string
+          level_1: string | null
+          level_2: string | null
+          level_3: string | null
+          level_4: string | null
+          neuron_id: number
+          path: string
+        }
+        Insert: {
+          created_at?: string
+          depth?: number
+          domain: string
+          id?: string
+          level_1?: string | null
+          level_2?: string | null
+          level_3?: string | null
+          level_4?: string | null
+          neuron_id: number
+          path: string
+        }
+        Update: {
+          created_at?: string
+          depth?: number
+          domain?: string
+          id?: string
+          level_1?: string | null
+          level_2?: string | null
+          level_3?: string | null
+          level_4?: string | null
+          neuron_id?: number
+          path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neuron_addresses_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neuron_blocks: {
+        Row: {
+          checked: boolean | null
+          content: string
+          created_at: string
+          execution_mode: string
+          id: string
+          language: string | null
+          metadata: Json | null
+          neuron_id: number
+          position: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          checked?: boolean | null
+          content?: string
+          created_at?: string
+          execution_mode?: string
+          id?: string
+          language?: string | null
+          metadata?: Json | null
+          neuron_id: number
+          position?: number
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          checked?: boolean | null
+          content?: string
+          created_at?: string
+          execution_mode?: string
+          id?: string
+          language?: string | null
+          metadata?: Json | null
+          neuron_id?: number
+          position?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neuron_blocks_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neuron_jobs: {
+        Row: {
+          author_id: string | null
+          block_id: string | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          input: Json | null
+          neuron_id: number
+          result: Json | null
+          status: string
+          worker_type: string
+        }
+        Insert: {
+          author_id?: string | null
+          block_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          input?: Json | null
+          neuron_id: number
+          result?: Json | null
+          status?: string
+          worker_type: string
+        }
+        Update: {
+          author_id?: string | null
+          block_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          input?: Json | null
+          neuron_id?: number
+          result?: Json | null
+          status?: string
+          worker_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neuron_jobs_block_id_fkey"
+            columns: ["block_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_blocks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_jobs_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neuron_links: {
+        Row: {
+          created_at: string
+          id: string
+          relation_type: string
+          source_neuron_id: number
+          target_neuron_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          relation_type: string
+          source_neuron_id: number
+          target_neuron_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          relation_type?: string
+          source_neuron_id?: number
+          target_neuron_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neuron_links_source_neuron_id_fkey"
+            columns: ["source_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_links_target_neuron_id_fkey"
+            columns: ["target_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neuron_number_ranges: {
+        Row: {
+          created_at: string
+          current_pointer: number
+          id: string
+          range_end: number
+          range_start: number
+          worker_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_pointer: number
+          id?: string
+          range_end: number
+          range_start: number
+          worker_id: string
+        }
+        Update: {
+          created_at?: string
+          current_pointer?: number
+          id?: string
+          range_end?: number
+          range_start?: number
+          worker_id?: string
+        }
+        Relationships: []
+      }
+      neuron_versions: {
+        Row: {
+          author_id: string | null
+          blocks_snapshot: Json
+          created_at: string
+          id: string
+          neuron_id: number
+          title: string
+          version: number
+        }
+        Insert: {
+          author_id?: string | null
+          blocks_snapshot?: Json
+          created_at?: string
+          id?: string
+          neuron_id: number
+          title: string
+          version?: number
+        }
+        Update: {
+          author_id?: string | null
+          blocks_snapshot?: Json
+          created_at?: string
+          id?: string
+          neuron_id?: number
+          title?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neuron_versions_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neurons: {
+        Row: {
+          author_id: string | null
+          created_at: string
+          id: number
+          number: number
+          score: number
+          status: string
+          title: string
+          updated_at: string
+          uuid: string
+          visibility: string
+        }
+        Insert: {
+          author_id?: string | null
+          created_at?: string
+          id?: never
+          number?: number
+          score?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          uuid?: string
+          visibility?: string
+        }
+        Update: {
+          author_id?: string | null
+          created_at?: string
+          id?: never
+          number?: number
+          score?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          uuid?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
