@@ -148,7 +148,9 @@ export default function Index() {
     <div className="h-screen flex flex-col bg-background overflow-hidden">
       <NeuronTopBar
         title={title}
-        neuronId="NRN-0042"
+        neuronNumber={245}
+        neuronUuid="7f92c3a2-1c33-4e9e-bdb1-90ac64a88c0a"
+        nasPath="/marketing/virality/identity-signals"
         tags={tags}
         status={status}
         visibility={visibility}
