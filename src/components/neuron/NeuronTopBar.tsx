@@ -49,7 +49,7 @@ const visibilityIcons: Record<NeuronVisibility, React.ElementType> = {
 };
 
 export function NeuronTopBar({
-  title, neuronId, tags, status, visibility,
+  title, neuronNumber, neuronUuid, nasPath, tags, status, visibility,
   onTitleChange, onStatusChange, onVisibilityChange, onTagsChange, onRunAll,
 }: NeuronTopBarProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
