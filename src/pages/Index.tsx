@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Zap, Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
+import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
@@ -60,7 +61,7 @@ export default function Index() {
       {/* Header */}
       <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
         <div className="flex items-center gap-2">
-          <Zap className="h-5 w-5 text-primary" />
+          <img src={logo} alt="ai-idei.com" className="h-6 w-6" />
           <span className="text-base font-serif">ai-idei.com</span>
         </div>
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCreateNeuron}>
@@ -75,7 +76,7 @@ export default function Index() {
 
         {neurons.length === 0 ? (
           <div className="text-center py-16">
-            <Zap className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+            <img src={logo} className="h-10 w-10 opacity-30 mx-auto mb-3" alt="" />
             <p className="text-sm text-muted-foreground mb-4">No neurons yet. Create your first knowledge atom.</p>
             <Button onClick={handleCreateNeuron} className="gap-1.5">
               <Plus className="h-4 w-4" />

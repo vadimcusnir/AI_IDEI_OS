@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Zap, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -40,7 +41,7 @@ export default function Auth() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <Zap className="h-8 w-8 text-primary" />
+          <img src={logo} alt="ai-idei.com" className="h-10 w-10" />
           <span className="text-2xl font-serif font-normal">ai-idei.com</span>
         </div>
 
