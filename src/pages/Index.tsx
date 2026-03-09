@@ -76,7 +76,7 @@ export default function Index() {
 
         {neurons.length === 0 ? (
           <div className="text-center py-16">
-            <Zap className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+            <img src={logo} className="h-10 w-10 opacity-30 mx-auto mb-3" alt="" />
             <p className="text-sm text-muted-foreground mb-4">No neurons yet. Create your first knowledge atom.</p>
             <Button onClick={handleCreateNeuron} className="gap-1.5">
               <Plus className="h-4 w-4" />

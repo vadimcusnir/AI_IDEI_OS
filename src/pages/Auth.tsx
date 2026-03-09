@@ -41,7 +41,7 @@ export default function Auth() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <Zap className="h-8 w-8 text-primary" />
+          <img src={logo} alt="ai-idei.com" className="h-10 w-10" />
           <span className="text-2xl font-serif font-normal">ai-idei.com</span>
         </div>
 
