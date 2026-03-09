@@ -71,11 +71,36 @@ export function NeuronTopBar({
 
   return (
     <div className="h-12 flex items-center gap-2 px-4 border-b border-border bg-card shrink-0">
-      {/* Neuron icon + ID */}
-      <div className="flex items-center gap-1.5 mr-1">
-        <Zap className="h-4 w-4 text-primary" />
-        <span className="text-[10px] font-mono text-muted-foreground">{neuronId}</span>
-      </div>
+      {/* Neuron Number — primary identity */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex items-center gap-1.5 mr-1 cursor-default">
+            <Zap className="h-4 w-4 text-primary" />
+            <span className="text-sm font-bold text-primary font-mono">#{neuronNumber}</span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="text-xs max-w-[300px]">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Zap className="h-3 w-3 text-primary" />
+              <span className="font-semibold">Neuron #{neuronNumber}</span>
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Fingerprint className="h-3 w-3" />
+              <span className="font-mono text-[10px]">{neuronUuid}</span>
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPin className="h-3 w-3" />
+              <span className="font-mono text-[10px]">{nasPath}</span>
+            </div>
+          </div>
+        </TooltipContent>
+      </Tooltip>
+
+      {/* NAS Path */}
+      <span className="text-[10px] font-mono text-muted-foreground/60 hidden lg:inline truncate max-w-[200px]">
+        {nasPath}
+      </span>
 
       {/* Title */}
       {isEditingTitle ? (
