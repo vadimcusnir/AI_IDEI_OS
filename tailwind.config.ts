@@ -12,8 +12,25 @@ export default {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      serif: ['var(--font-serif)'],
+      sans: ['var(--font-sans)'],
+    },
     extend: {
       colors: {
+        toolbar: {
+          DEFAULT: "hsl(var(--toolbar-bg))",
+          border: "hsl(var(--toolbar-border))",
+          active: "hsl(var(--toolbar-active))",
+        },
+        note: {
+          yellow: "hsl(var(--note-yellow))",
+          green: "hsl(var(--note-green))",
+          blue: "hsl(var(--note-blue))",
+          pink: "hsl(var(--note-pink))",
+          purple: "hsl(var(--note-purple))",
+          default: "hsl(var(--note-default))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
