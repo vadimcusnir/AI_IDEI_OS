@@ -23,7 +23,9 @@ type NeuronVisibility = "private" | "team" | "public";
 
 interface NeuronTopBarProps {
   title: string;
-  neuronId: string;
+  neuronNumber: number;
+  neuronUuid: string;
+  nasPath: string;
   tags: string[];
   status: NeuronStatus;
   visibility: NeuronVisibility;
