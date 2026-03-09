@@ -23,6 +23,7 @@ export function useNeuron(neuronNumber?: number) {
   const [nasPath, setNasPath] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [executionLogs, setExecutionLogs] = useState<ExecutionLog[]>([]);
+  const clearLogs = useCallback(() => setExecutionLogs([]), []);
   const saveTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Load neuron by number or create new
@@ -311,5 +312,6 @@ export function useNeuron(neuronNumber?: number) {
     handleBlockExecute,
     handleBlockLanguageChange,
     handleRunAll,
+    clearLogs,
   };
 }
