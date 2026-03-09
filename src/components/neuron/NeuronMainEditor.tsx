@@ -159,10 +159,14 @@ export function NeuronMainEditor({
           />
         </div>
 
-        {/* Subtitle */}
-        <div className="mb-8 flex items-center gap-2">
-          <Zap className="h-3.5 w-3.5 text-primary/40" />
-          <span className="text-xs text-muted-foreground/40">Programmable knowledge object &middot; Type / for commands</span>
+        {/* Identity bar */}
+        <div className="mb-8 flex items-center gap-3 text-xs text-muted-foreground/40">
+          <div className="flex items-center gap-1.5">
+            <Zap className="h-3.5 w-3.5 text-primary/40" />
+            <span>Programmable knowledge object</span>
+          </div>
+          <span className="text-border">|</span>
+          <span className="font-mono">Type / for commands</span>
         </div>
 
         {/* Blocks */}
