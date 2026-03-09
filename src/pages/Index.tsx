@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, Shield } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 interface NeuronListItem {
   id: number;
@@ -18,6 +19,7 @@ interface NeuronListItem {
 
 export default function Index() {
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +66,12 @@ export default function Index() {
           <img src={logo} alt="ai-idei.com" className="h-6 w-6" />
           <span className="text-base font-serif">ai-idei.com</span>
         </div>
+        {isAdmin && (
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/admin")}>
+            <Shield className="h-3.5 w-3.5" />
+            Admin
+          </Button>
+        )}
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCreateNeuron}>
           <Plus className="h-3.5 w-3.5" />
           New Neuron
