@@ -41,7 +41,7 @@ export default function Auth() {
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
           <Zap className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-serif font-normal">Neuron</span>
+          <span className="text-2xl font-serif font-normal">ai-idei.com</span>
         </div>
 
         {/* Card */}
