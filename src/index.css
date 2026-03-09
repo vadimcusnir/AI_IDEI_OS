@@ -2,66 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Neuron Platform Design System
+   All colors MUST be HSL. */
 
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
 
 @layer base {
   :root {
-    --background: 40 20% 98%;
-    --foreground: 30 10% 12%;
+    --background: 220 16% 96%;
+    --foreground: 220 20% 10%;
 
-    --card: 40 25% 97%;
-    --card-foreground: 30 10% 12%;
+    --card: 220 20% 99%;
+    --card-foreground: 220 20% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 30 10% 12%;
+    --popover: 220 20% 99%;
+    --popover-foreground: 220 20% 10%;
 
-    --primary: 32 80% 50%;
-    --primary-foreground: 40 20% 98%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 35 20% 92%;
-    --secondary-foreground: 30 10% 25%;
+    --secondary: 220 14% 92%;
+    --secondary-foreground: 220 20% 25%;
 
-    --muted: 35 15% 93%;
-    --muted-foreground: 30 8% 50%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 10% 46%;
 
-    --accent: 32 80% 50%;
-    --accent-foreground: 40 20% 98%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 35 15% 88%;
-    --input: 35 15% 88%;
-    --ring: 32 80% 50%;
+    --border: 220 14% 90%;
+    --input: 220 14% 90%;
+    --ring: 25 95% 53%;
 
-    --radius: 0.625rem;
+    --radius: 0.5rem;
 
     --font-serif: 'Instrument Serif', Georgia, serif;
     --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
 
-    --toolbar-bg: 35 20% 95%;
-    --toolbar-border: 35 15% 85%;
-    --toolbar-active: 32 80% 50%;
+    /* Panel system */
+    --panel-bg: 220 20% 99%;
+    --panel-border: 220 14% 90%;
+    --panel-header: 220 16% 96%;
 
+    /* Toolbar */
+    --toolbar-bg: 220 16% 97%;
+    --toolbar-border: 220 14% 90%;
+    --toolbar-active: 25 95% 53%;
+
+    /* Status colors */
+    --status-draft: 220 10% 46%;
+    --status-validated: 152 60% 40%;
+    --status-published: 25 95% 53%;
+
+    /* Graph colors */
+    --graph-node: 25 95% 53%;
+    --graph-edge: 220 14% 75%;
+    --graph-highlight: 262 60% 55%;
+
+    /* AI panel */
+    --ai-bg: 262 30% 97%;
+    --ai-border: 262 20% 90%;
+    --ai-accent: 262 60% 55%;
+
+    /* Note colors */
     --note-yellow: 48 96% 89%;
     --note-green: 142 40% 89%;
     --note-blue: 210 50% 90%;
     --note-pink: 340 50% 92%;
     --note-purple: 270 40% 92%;
-    --note-default: 40 25% 97%;
+    --note-default: 220 20% 99%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar */
+    --sidebar-background: 220 20% 97%;
+    --sidebar-foreground: 220 15% 25%;
+    --sidebar-primary: 25 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 94%;
+    --sidebar-accent-foreground: 220 20% 15%;
+    --sidebar-border: 220 14% 90%;
+    --sidebar-ring: 25 95% 53%;
   }
 }
 
@@ -71,6 +94,38 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.3);
+  }
+}
+
+@layer components {
+  .panel-section {
+    @apply border-b border-border py-3 px-3;
+  }
+
+  .panel-section-title {
+    @apply text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2;
+  }
+
+  .neuron-block-placeholder:empty::before {
+    content: attr(data-placeholder);
+    @apply text-muted-foreground/30 pointer-events-none;
   }
 }
