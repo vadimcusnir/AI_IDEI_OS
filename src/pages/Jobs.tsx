@@ -38,7 +38,7 @@ export default function Jobs() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     fetchJobs();
 
     // Realtime subscription for job updates
