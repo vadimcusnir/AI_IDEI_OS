@@ -47,6 +47,7 @@ const App = () => (
               <Route path="/u/:username" element={<PublicProfile />} />
 
               {/* Protected routes with AppLayout */}
+              <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
               <Route path="/neurons" element={<ProtectedRoute><AppLayout><Index /></AppLayout></ProtectedRoute>} />
               <Route path="/n/new" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
               <Route path="/n/:number" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
