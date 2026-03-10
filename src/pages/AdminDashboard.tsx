@@ -404,11 +404,11 @@ export default function AdminDashboard() {
                   <TableRow>
                     <TableHead className="text-[10px]">User ID</TableHead>
                     <TableHead className="text-[10px]">Roles</TableHead>
-                    <TableHead className="text-[10px] text-right">Neuroni</TableHead>
-                    <TableHead className="text-[10px] text-right">Balance</TableHead>
-                    <TableHead className="text-[10px] text-right">Spent</TableHead>
-                    <TableHead className="text-[10px] text-right">Earned</TableHead>
-                    <TableHead className="text-[10px] w-28">Acțiuni</TableHead>
+                     <TableHead className="text-[10px] text-right">Neurons</TableHead>
+                     <TableHead className="text-[10px] text-right">Balance</TableHead>
+                     <TableHead className="text-[10px] text-right">Spent</TableHead>
+                     <TableHead className="text-[10px] text-right">Earned</TableHead>
+                     <TableHead className="text-[10px] w-28">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
