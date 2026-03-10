@@ -671,6 +671,11 @@ export default function AdminDashboard() {
               )}
             </div>
           </TabsContent>
+
+          {/* ─── Feedback ─── */}
+          <TabsContent value="feedback">
+            <AdminFeedbackTab />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
