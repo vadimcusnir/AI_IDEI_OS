@@ -1,10 +1,11 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
 import logo from "@/assets/logo.gif";
 import {
-  Brain, Shield, BookOpen, Link2, LogOut, LogIn,
-  LayoutDashboard, User,
+  Brain, Shield, Upload, Sparkles, Briefcase, Coins,
+  LogOut, LogIn, Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -12,10 +13,12 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { label: "Neuroni", to: "/", icon: Brain, auth: true },
-  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, auth: true },
-  { label: "Links", to: "/links", icon: Link2, auth: false },
-  { label: "Docs", to: "/architecture", icon: BookOpen, auth: false },
+  { label: "Home", to: "/home", icon: Home, auth: true },
+  { label: "Extractor", to: "/extractor", icon: Upload, auth: true },
+  { label: "Neuroni", to: "/neurons", icon: Brain, auth: true },
+  { label: "Servicii", to: "/services", icon: Sparkles, auth: true },
+  { label: "Jobs", to: "/jobs", icon: Briefcase, auth: true },
+  { label: "Credits", to: "/credits", icon: Coins, auth: true },
 ];
 
 export function SiteHeader() {
@@ -23,13 +26,14 @@ export function SiteHeader() {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
+  const { balance, loading: balanceLoading } = useCreditBalance();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 h-12 flex items-center gap-2">
         {/* Logo */}
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate(user ? "/home" : "/")}
           className="flex items-center gap-2 shrink-0 mr-2"
         >
           <img src={logo} alt="AI-IDEI" className="h-7 w-7 rounded-full" />
@@ -76,6 +80,19 @@ export function SiteHeader() {
 
         {/* Right side */}
         <div className="flex items-center gap-1.5 shrink-0">
+          {/* Credit Balance Badge */}
+          {user && (
+            <button
+              onClick={() => navigate("/credits")}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 hover:bg-primary/15 transition-colors"
+              title="Balanță NEURONS"
+            >
+              <Coins className="h-3 w-3 text-primary" />
+              <span className="text-[11px] font-mono font-bold text-primary">
+                {balanceLoading ? "…" : balance}
+              </span>
+            </button>
+          )}
           <ThemeToggle />
           {user && <NotificationBell />}
           {user ? (
