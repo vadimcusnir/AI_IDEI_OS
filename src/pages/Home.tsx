@@ -110,12 +110,12 @@ export default function Home() {
         {/* Welcome header */}
         <div className="mb-6">
           <h1 className="text-xl sm:text-2xl font-serif font-bold mb-1">
-            {isNewUser ? "Bine ai venit în AI-IDEI" : "Cockpit"}
+            {isNewUser ? "Welcome to AI-IDEI" : "Cockpit"}
           </h1>
           <p className="text-sm text-muted-foreground">
             {isNewUser
-              ? "Platforma ta de capitalizare a expertizei. Începe prin a încărca primul conținut."
-              : "Centrul tău de comandă pentru pipeline-ul de cunoaștere."
+              ? "Your expertise capitalization platform. Start by uploading your first content."
+              : "Your command center for the knowledge pipeline."
             }
           </p>
         </div>
