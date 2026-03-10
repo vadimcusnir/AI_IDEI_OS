@@ -189,6 +189,9 @@ export default function Credits() {
           </div>
         </div>
 
+        {/* Consumption chart */}
+        <ConsumptionChart transactions={transactions} />
+
         {/* Service consumption breakdown */}
         {Object.keys(serviceStats).length > 0 && (
           <div className="mb-6">
