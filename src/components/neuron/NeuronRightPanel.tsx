@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Sparkles, Brain, Lightbulb, MessageSquareQuote, Target,
   BookOpen,
@@ -7,13 +7,22 @@ import {
   ChevronRight, MessageCircle, Zap,
   Code, Bug, TestTube, Gauge,
   Play, Settings2, Calendar,
-  FileCode, Braces
+  FileCode, Braces, FileAudio, X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Block, BLOCK_TYPE_CONFIG } from "./types";
 import { CollapsibleSection } from "./right-panel/CollapsibleSection";
 import { ScorePanel } from "./right-panel/ScorePanel";
 import { NeuronChatPanel } from "./NeuronChatPanel";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface EpisodeSource {
+  id: string;
+  title: string;
+  source_type: string;
+  transcript: string | null;
+}
 
 interface NeuronRightPanelProps {
   isCollapsed: boolean;
@@ -23,12 +32,19 @@ interface NeuronRightPanelProps {
   neuronId?: number;
   neuronTitle?: string;
   onAIAction?: (action: string, blockIds?: string[]) => void;
+  selectedEpisodeTranscript?: string;
+  onEpisodeSelect?: (transcript: string | null) => void;
 }
 
 type RightPanelTab = "tools" | "chat";
 
-export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, neuronId, neuronTitle, onAIAction }: NeuronRightPanelProps) {
+export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, neuronId, neuronTitle, onAIAction, selectedEpisodeTranscript, onEpisodeSelect }: NeuronRightPanelProps) {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<RightPanelTab>("tools");
+  const [episodes, setEpisodes] = useState<EpisodeSource[]>([]);
+  const [selectedEpisodeId, setSelectedEpisodeId] = useState<string | null>(null);
+  const [loadingEpisodes, setLoadingEpisodes] = useState(false);
+
   const executableCount = blocks.filter(b => BLOCK_TYPE_CONFIG[b.type].executable).length;
   const formatStats = useMemo(() => ({
     code: blocks.filter(b => b.type === "code").length,
@@ -36,6 +52,59 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
     prompts: blocks.filter(b => b.type === "prompt").length,
     data: blocks.filter(b => b.type === "dataset" || b.type === "json").length,
   }), [blocks]);
+
+  // Load user episodes with transcripts
+  useEffect(() => {
+    if (!user) return;
+    const loadEpisodes = async () => {
+      setLoadingEpisodes(true);
+      const { data } = await supabase
+        .from("episodes")
+        .select("id, title, source_type, transcript")
+        .not("transcript", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      setEpisodes((data || []) as EpisodeSource[]);
+      setLoadingEpisodes(false);
+    };
+    loadEpisodes();
+  }, [user]);
+
+  // Also check if neuron has an episode_id linked
+  useEffect(() => {
+    if (!neuronId) return;
+    const checkLinkedEpisode = async () => {
+      const { data } = await supabase
+        .from("neurons")
+        .select("episode_id")
+        .eq("id", neuronId)
+        .single();
+      if (data?.episode_id) {
+        setSelectedEpisodeId(data.episode_id);
+        // Load the transcript
+        const { data: ep } = await supabase
+          .from("episodes")
+          .select("transcript")
+          .eq("id", data.episode_id)
+          .single();
+        if (ep?.transcript) {
+          onEpisodeSelect?.(ep.transcript);
+        }
+      }
+    };
+    checkLinkedEpisode();
+  }, [neuronId]);
+
+  const handleEpisodeChange = (episodeId: string) => {
+    if (episodeId === "") {
+      setSelectedEpisodeId(null);
+      onEpisodeSelect?.(null);
+      return;
+    }
+    setSelectedEpisodeId(episodeId);
+    const ep = episodes.find(e => e.id === episodeId);
+    onEpisodeSelect?.(ep?.transcript || null);
+  };
 
   const handleAIAction = (action: string) => {
     onAIAction?.(action);
@@ -108,6 +177,45 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
       {activeTab === "tools" && (
         <>
           <ScorePanel neuronScore={neuronScore} formatStats={formatStats} />
+
+          {/* Episode Source Selector */}
+          <div className="px-3 py-2 border-b border-border">
+            <label className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block flex items-center gap-1">
+              <FileAudio className="h-2.5 w-2.5" />
+              Sursă Transcript
+            </label>
+            {selectedEpisodeId ? (
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-foreground truncate flex-1">
+                  {episodes.find(e => e.id === selectedEpisodeId)?.title || "Episod legat"}
+                </span>
+                <button
+                  onClick={() => handleEpisodeChange("")}
+                  className="text-muted-foreground hover:text-foreground p-0.5"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ) : (
+              <select
+                value={selectedEpisodeId || ""}
+                onChange={e => handleEpisodeChange(e.target.value)}
+                className="w-full bg-muted/50 rounded px-2 py-1 text-[10px] border border-border outline-none focus:border-primary"
+              >
+                <option value="">— Fără sursă (doar blocurile neuronului) —</option>
+                {episodes.map(ep => (
+                  <option key={ep.id} value={ep.id}>
+                    {ep.title} ({ep.source_type})
+                  </option>
+                ))}
+              </select>
+            )}
+            {selectedEpisodeId && (
+              <p className="text-[8px] text-muted-foreground/50 mt-0.5">
+                AI va folosi transcriptul ca sursă pentru extracție
+              </p>
+            )}
+          </div>
 
           <div className="flex-1 overflow-y-auto">
             <CollapsibleSection

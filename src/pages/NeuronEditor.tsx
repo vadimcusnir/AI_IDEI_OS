@@ -43,6 +43,7 @@ export default function NeuronEditor() {
   const { saveAsTemplate } = useNeuronTemplates();
 
   const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
+  const [selectedEpisodeTranscript, setSelectedEpisodeTranscript] = useState<string | null>(null);
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(false);
   const [bottomExpanded, setBottomExpanded] = useState(false);
@@ -102,11 +103,11 @@ export default function NeuronEditor() {
 
   const handleAIAction = useCallback((action: string) => {
     if (AI_ACTIONS.includes(action)) {
-      extract(action, blocks, neuron?.title || "");
+      extract(action, blocks, neuron?.title || "", selectedEpisodeTranscript || undefined);
     } else {
       toast.info(`Action "${action}" — use AI Services for advanced processing.`);
     }
-  }, [extract, blocks, neuron?.title]);
+  }, [extract, blocks, neuron?.title, selectedEpisodeTranscript]);
 
   const handleInsertAIResult = useCallback(async (content: string) => {
     if (!blocks.length) return;
@@ -204,6 +205,8 @@ export default function NeuronEditor() {
           neuronId={neuron.id}
           neuronTitle={neuron.title}
           onAIAction={handleAIAction}
+          selectedEpisodeTranscript={selectedEpisodeTranscript || undefined}
+          onEpisodeSelect={setSelectedEpisodeTranscript}
         />
       </div>
 

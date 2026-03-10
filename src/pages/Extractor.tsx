@@ -8,7 +8,7 @@ import {
   Upload, FileText, X, Clock, Trash2, Pencil,
   FileAudio, Film, Type, Globe, Loader2, Brain,
   ChevronDown, ChevronUp, Copy, ExternalLink,
-  Layers, Zap, Users,
+  Layers, Zap, Users, Save,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -55,6 +55,11 @@ export default function Extractor() {
   const [content, setContent] = useState("");
   const [creating, setCreating] = useState(false);
   const [autoTitleApplied, setAutoTitleApplied] = useState(false);
+  const [fetchingTitle, setFetchingTitle] = useState(false);
+  // Inline transcript editing
+  const [editingTranscriptId, setEditingTranscriptId] = useState<string | null>(null);
+  const [editTranscriptText, setEditTranscriptText] = useState("");
+  const [savingTranscript, setSavingTranscript] = useState(false);
   const urlRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
@@ -63,12 +68,10 @@ export default function Extractor() {
     fetchEpisodes();
   }, [user, authLoading]);
 
-  // Auto-show form when no episodes
   useEffect(() => {
     if (!loading && episodes.length === 0) setShowForm(true);
   }, [loading, episodes.length]);
 
-  // Focus URL input on form open
   useEffect(() => {
     if (showForm && sourceType === "url") setTimeout(() => urlRef.current?.focus(), 100);
     else if (showForm) setTimeout(() => titleRef.current?.focus(), 100);
@@ -91,35 +94,65 @@ export default function Extractor() {
     setAutoTitleApplied(false);
   };
 
-  // Extract a readable title from URL
+  // Fetch real YouTube title via oEmbed (free, no API key needed)
+  const fetchYouTubeTitle = async (url: string): Promise<string | null> => {
+    try {
+      const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
+      const resp = await fetch(oembedUrl);
+      if (resp.ok) {
+        const data = await resp.json();
+        return data.title || null;
+      }
+    } catch {
+      // fallback silently
+    }
+    return null;
+  };
+
+  // Check if URL is YouTube
+  const isYouTubeUrl = (url: string): boolean => {
+    try {
+      const parsed = new URL(url);
+      return parsed.hostname.includes("youtube.com") || parsed.hostname.includes("youtu.be");
+    } catch {
+      return false;
+    }
+  };
+
+  // Extract a readable title from URL (fallback)
   const extractTitleFromUrl = (url: string): string => {
     try {
       const parsed = new URL(url);
-      // YouTube
-      const ytMatch = parsed.searchParams.get("v");
-      if (parsed.hostname.includes("youtube") && ytMatch) {
-        return `YouTube: ${ytMatch}`;
-      }
-      // Path-based title
       const pathParts = parsed.pathname.split("/").filter(Boolean);
       if (pathParts.length > 0) {
         const last = decodeURIComponent(pathParts[pathParts.length - 1])
           .replace(/[-_]/g, " ")
-          .replace(/\.\w+$/, "") // remove file extension
+          .replace(/\.\w+$/, "")
           .replace(/\b\w/g, c => c.toUpperCase());
         if (last.length > 2) return last;
       }
-      // Fallback to hostname
       return parsed.hostname.replace("www.", "");
     } catch {
       return "";
     }
   };
 
-  const handleUrlChange = (url: string) => {
+  const handleUrlChange = async (url: string) => {
     setContent(url);
-    // Auto-fill title if user hasn't manually edited it
+
     if (!autoTitleApplied || !title.trim()) {
+      // Try YouTube oEmbed first for real title
+      if (isYouTubeUrl(url) && url.length > 20) {
+        setFetchingTitle(true);
+        const ytTitle = await fetchYouTubeTitle(url);
+        setFetchingTitle(false);
+        if (ytTitle) {
+          setTitle(ytTitle);
+          setAutoTitleApplied(true);
+          return;
+        }
+      }
+      // Fallback to URL parsing
       const extracted = extractTitleFromUrl(url);
       if (extracted) {
         setTitle(extracted);
@@ -143,7 +176,10 @@ export default function Extractor() {
     if (error) {
       toast.error("Nu s-a putut crea episodul");
     } else {
-      toast.success("Episod creat");
+      toast.success(sourceType === "url"
+        ? "Episod creat. Adaugă transcriptul manual pentru a putea extrage neuroni."
+        : "Episod creat"
+      );
       resetForm();
       if (episodes.length > 0) setShowForm(false);
       fetchEpisodes();
@@ -167,6 +203,34 @@ export default function Extractor() {
   const copyTranscript = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success("Transcript copiat în clipboard");
+  };
+
+  // Save transcript for an episode (add/edit)
+  const handleSaveTranscript = async (episodeId: string) => {
+    if (!editTranscriptText.trim()) {
+      toast.error("Transcriptul nu poate fi gol");
+      return;
+    }
+    setSavingTranscript(true);
+    const { error } = await supabase.from("episodes").update({
+      transcript: editTranscriptText.trim(),
+      status: "transcribed",
+    } as any).eq("id", episodeId);
+
+    if (error) {
+      toast.error("Nu s-a putut salva transcriptul");
+    } else {
+      toast.success("Transcript salvat — acum poți extrage neuroni!");
+      setEditingTranscriptId(null);
+      setEditTranscriptText("");
+      fetchEpisodes();
+    }
+    setSavingTranscript(false);
+  };
+
+  const startEditTranscript = (ep: Episode) => {
+    setEditingTranscriptId(ep.id);
+    setEditTranscriptText(ep.transcript || "");
   };
 
   const handleChunkPreview = async (episode: Episode) => {
@@ -197,7 +261,7 @@ export default function Extractor() {
 
   const handleExtractNeurons = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
-      toast.error("Episodul nu are conținut transcript pentru extracție.");
+      toast.error("Episodul nu are conținut transcript. Adaugă transcriptul mai întâi.");
       return;
     }
     setExtractingId(episode.id);
@@ -335,7 +399,7 @@ export default function Extractor() {
                   ref={urlRef}
                   value={content}
                   onChange={e => handleUrlChange(e.target.value)}
-                  placeholder="Lipește un URL — titlul se completează automat"
+                  placeholder="Lipește un URL YouTube sau altă sursă — titlul se completează automat"
                   className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
                   onKeyDown={e => { if (e.key === "Enter" && title.trim()) handleCreate(); }}
                 />
@@ -345,7 +409,12 @@ export default function Extractor() {
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
                 <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                  Titlu {sourceType === "url" && title && autoTitleApplied && (
+                  Titlu {fetchingTitle && (
+                    <span className="text-primary/50 normal-case font-normal ml-1 inline-flex items-center gap-1">
+                      <Loader2 className="h-2.5 w-2.5 animate-spin" /> se detectează...
+                    </span>
+                  )}
+                  {!fetchingTitle && sourceType === "url" && title && autoTitleApplied && (
                     <span className="text-primary/50 normal-case font-normal ml-1">· auto-detectat</span>
                   )}
                 </label>
@@ -408,6 +477,16 @@ export default function Extractor() {
               </div>
             )}
 
+            {/* Info banner for URL mode */}
+            {sourceType === "url" && content.trim() && (
+              <div className="bg-muted/30 border border-border rounded-lg px-3 py-2">
+                <p className="text-[10px] text-muted-foreground">
+                  💡 <strong>Pasul următor:</strong> După creare, expandează episodul și lipește transcriptul manual.
+                  Transcrierile automate YouTube vor fi disponibile în curând.
+                </p>
+              </div>
+            )}
+
             <div className="flex items-center justify-between pt-1">
               <p className="text-[10px] text-muted-foreground/50">
                 {sourceType === "url" && content.trim()
@@ -437,19 +516,21 @@ export default function Extractor() {
             {episodes.map(ep => {
               const Icon = SOURCE_ICONS[ep.source_type] || FileText;
               const isExtracting = extractingId === ep.id;
-              const canExtract = (ep.status === "transcribed" || ep.status === "uploaded") && ep.transcript?.trim();
+              const hasTranscript = !!ep.transcript?.trim();
+              const canExtract = (ep.status === "transcribed" || ep.status === "uploaded") && hasTranscript;
               const isAnalyzed = ep.status === "analyzed";
               const isExpanded = expandedId === ep.id;
               const isDeleting = deletingId === ep.id;
-              const hasTranscript = !!ep.transcript?.trim();
               const wordCount = hasTranscript ? ep.transcript!.split(/\s+/).length : 0;
+              const needsTranscript = !hasTranscript && ep.source_type === "url";
+              const isEditingTranscript = editingTranscriptId === ep.id;
 
               return (
                 <div key={ep.id} className={cn(
                   "rounded-xl border bg-card transition-colors",
                   isExpanded ? "border-primary/30" : "border-border hover:border-primary/20"
                 )}>
-                  {/* Row header — clickable */}
+                  {/* Row header */}
                   <button
                     className="w-full flex items-center gap-4 px-4 py-3 text-left"
                     onClick={() => setExpandedId(isExpanded ? null : ep.id)}
@@ -475,6 +556,11 @@ export default function Extractor() {
                         {hasTranscript && (
                           <span className="text-[10px] text-muted-foreground/40">
                             {wordCount.toLocaleString()} cuvinte
+                          </span>
+                        )}
+                        {needsTranscript && (
+                          <span className="text-[10px] text-amber-500 font-medium">
+                            ⚠ lipsește transcript
                           </span>
                         )}
                       </div>
@@ -506,6 +592,16 @@ export default function Extractor() {
                       >
                         {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
                         Guests
+                      </Button>
+                    )}
+                    {needsTranscript && !isExtracting && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-xs gap-1 shrink-0 border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
+                        onClick={e => { e.stopPropagation(); setExpandedId(ep.id); startEditTranscript(ep); }}
+                      >
+                        <Pencil className="h-3 w-3" /> Adaugă Transcript
                       </Button>
                     )}
                     {isExtracting && (
@@ -543,19 +639,62 @@ export default function Extractor() {
                         <span>Creat: {new Date(ep.created_at).toLocaleString("ro-RO")}</span>
                       </div>
 
-                      {/* Transcript preview */}
-                      {hasTranscript ? (
+                      {/* Transcript section */}
+                      {isEditingTranscript ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                              {hasTranscript ? "Editează Transcript" : "Adaugă Transcript"}
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <Button
+                                variant="ghost" size="sm" className="h-6 text-[10px]"
+                                onClick={() => { setEditingTranscriptId(null); setEditTranscriptText(""); }}
+                              >
+                                Anulează
+                              </Button>
+                              <Button
+                                size="sm" className="h-6 text-[10px] gap-1"
+                                onClick={() => handleSaveTranscript(ep.id)}
+                                disabled={savingTranscript || !editTranscriptText.trim()}
+                              >
+                                {savingTranscript ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <Save className="h-2.5 w-2.5" />}
+                                Salvează
+                              </Button>
+                            </div>
+                          </div>
+                          <textarea
+                            value={editTranscriptText}
+                            onChange={e => setEditTranscriptText(e.target.value)}
+                            placeholder="Lipește transcriptul aici... (copiază-l de pe YouTube sau din altă sursă)"
+                            rows={8}
+                            className="w-full bg-muted/50 rounded-lg px-3 py-2.5 text-xs outline-none border border-border focus:border-primary transition-colors resize-none font-mono leading-relaxed"
+                            autoFocus
+                          />
+                          {editTranscriptText.trim() && (
+                            <p className="text-[10px] text-muted-foreground/50">
+                              {editTranscriptText.length.toLocaleString()} caractere · ~{Math.ceil(editTranscriptText.split(/\s+/).length)} cuvinte
+                            </p>
+                          )}
+                        </div>
+                      ) : hasTranscript ? (
                         <div>
                           <div className="flex items-center justify-between mb-1.5">
                             <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Transcript</span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 text-[10px] gap-1"
-                              onClick={() => copyTranscript(ep.transcript!)}
-                            >
-                              <Copy className="h-2.5 w-2.5" /> Copiază
-                            </Button>
+                            <div className="flex items-center gap-1">
+                              <Button
+                                variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
+                                onClick={() => startEditTranscript(ep)}
+                              >
+                                <Pencil className="h-2.5 w-2.5" /> Editează
+                              </Button>
+                              <Button
+                                variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
+                                onClick={() => copyTranscript(ep.transcript!)}
+                              >
+                                <Copy className="h-2.5 w-2.5" /> Copiază
+                              </Button>
+                            </div>
                           </div>
                           <div className="bg-muted/50 rounded-lg px-3 py-2.5 max-h-48 overflow-y-auto">
                             <p className="text-xs text-muted-foreground font-mono whitespace-pre-wrap leading-relaxed">
@@ -564,8 +703,17 @@ export default function Extractor() {
                           </div>
                         </div>
                       ) : (
-                        <div className="bg-muted/30 rounded-lg px-3 py-4 text-center">
-                          <p className="text-xs text-muted-foreground/60">Niciun transcript disponibil</p>
+                        <div className="bg-amber-500/5 border border-amber-500/20 rounded-lg px-4 py-4 text-center space-y-2">
+                          <p className="text-xs text-muted-foreground">Niciun transcript disponibil</p>
+                          <p className="text-[10px] text-muted-foreground/60">
+                            Lipește transcriptul manual pentru a putea extrage neuroni din acest episod.
+                          </p>
+                          <Button
+                            variant="outline" size="sm" className="h-7 text-xs gap-1"
+                            onClick={() => startEditTranscript(ep)}
+                          >
+                            <Pencil className="h-3 w-3" /> Adaugă Transcript
+                          </Button>
                         </div>
                       )}
 
