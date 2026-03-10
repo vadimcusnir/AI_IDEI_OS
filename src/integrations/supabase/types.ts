@@ -622,6 +622,60 @@ export type Database = {
           },
         ]
       }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_credits: boolean
+          email_digest: string
+          email_feedback: boolean
+          email_jobs: boolean
+          id: string
+          push_credits: boolean
+          push_enabled: boolean
+          push_feedback: boolean
+          push_jobs: boolean
+          push_versions: boolean
+          quiet_hours_end: number | null
+          quiet_hours_start: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_credits?: boolean
+          email_digest?: string
+          email_feedback?: boolean
+          email_jobs?: boolean
+          id?: string
+          push_credits?: boolean
+          push_enabled?: boolean
+          push_feedback?: boolean
+          push_jobs?: boolean
+          push_versions?: boolean
+          quiet_hours_end?: number | null
+          quiet_hours_start?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_credits?: boolean
+          email_digest?: string
+          email_feedback?: boolean
+          email_jobs?: boolean
+          id?: string
+          push_credits?: boolean
+          push_enabled?: boolean
+          push_feedback?: boolean
+          push_jobs?: boolean
+          push_versions?: boolean
+          quiet_hours_end?: number | null
+          quiet_hours_start?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -688,6 +742,36 @@ export type Database = {
           updated_at?: string
           user_id?: string
           username?: string | null
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth_key: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth_key: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth_key?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }

@@ -34,6 +34,30 @@ export function useNotifications() {
     setLoading(false);
   }, [user]);
 
+  // Show browser desktop notification
+  const showBrowserNotification = useCallback((notif: AppNotification) => {
+    if (!("Notification" in window)) return;
+    if (Notification.permission !== "granted") return;
+
+    try {
+      const n = new Notification(notif.title, {
+        body: notif.message,
+        icon: "/favicon.ico",
+        tag: notif.id,
+        silent: false,
+      });
+      n.onclick = () => {
+        window.focus();
+        if (notif.link) window.location.href = notif.link;
+        n.close();
+      };
+      // Auto-close after 8 seconds
+      setTimeout(() => n.close(), 8000);
+    } catch {
+      // Notification API not available in this context
+    }
+  }, []);
+
   // Initial fetch + realtime subscription
   useEffect(() => {
     if (!user) {
@@ -57,6 +81,8 @@ export function useNotifications() {
         (payload) => {
           const newNotif = payload.new as unknown as AppNotification;
           setNotifications((prev) => [newNotif, ...prev].slice(0, 50));
+          // Show browser notification
+          showBrowserNotification(newNotif);
         }
       )
       .subscribe();
@@ -64,20 +90,17 @@ export function useNotifications() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, fetchNotifications]);
+  }, [user, fetchNotifications, showBrowserNotification]);
 
-  const markRead = useCallback(
-    async (id: string) => {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-      );
-      await supabase
-        .from("notifications")
-        .update({ read: true } as any)
-        .eq("id", id);
-    },
-    []
-  );
+  const markRead = useCallback(async (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+    );
+    await supabase
+      .from("notifications")
+      .update({ read: true } as any)
+      .eq("id", id);
+  }, []);
 
   const markAllRead = useCallback(async () => {
     if (!user) return;
@@ -98,7 +121,26 @@ export function useNotifications() {
       .eq("user_id", user.id);
   }, [user]);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const requestPermission = useCallback(async () => {
+    if (!("Notification" in window)) return "denied";
+    const permission = await Notification.requestPermission();
+    return permission;
+  }, []);
 
-  return { notifications, unreadCount, markRead, markAllRead, clearAll, loading, refetch: fetchNotifications };
+  const unreadCount = notifications.filter((n) => !n.read).length;
+  const permissionStatus = typeof window !== "undefined" && "Notification" in window
+    ? Notification.permission
+    : "denied";
+
+  return {
+    notifications,
+    unreadCount,
+    markRead,
+    markAllRead,
+    clearAll,
+    loading,
+    refetch: fetchNotifications,
+    requestPermission,
+    permissionStatus,
+  };
 }
