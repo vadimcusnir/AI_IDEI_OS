@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
-import { SiteHeader } from "@/components/SiteHeader";
+import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
