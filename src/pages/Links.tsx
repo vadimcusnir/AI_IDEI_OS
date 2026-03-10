@@ -17,7 +17,7 @@ import { MonetizationBlock } from "@/components/links/MonetizationBlock";
 import { FavoritesBlock } from "@/components/links/FavoritesBlock";
 import { PopularNeuronsBlock, RecommendedTemplatesBlock, LatestVersionsBlock } from "@/components/links/DynamicSections";
 import { LiveStatsBlock } from "@/components/links/LiveStatsBlock";
-import { SiteHeader } from "@/components/SiteHeader";
+
 
 /* ─── Types ─── */
 interface LinkItem {
