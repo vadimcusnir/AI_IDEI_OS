@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  Plus, Loader2, Shield, BookOpen, Search, X, Upload, Sparkles,
+  Plus, Loader2, Search, X, Upload, Sparkles, BookOpen,
   ClipboardList, Coins, BarChart3, LayoutDashboard, Download,
   Link2, List, Grid3X3, LayoutGrid, SortAsc, SortDesc,
   Pin, PinOff, Calendar, ArrowUpDown, Tag, Filter,
@@ -11,13 +11,12 @@ import {
 } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
+import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { NotificationBell } from "@/components/NotificationBell";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
 import {
   DropdownMenu,
@@ -481,61 +480,41 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <img src={logo} alt="ai-idei.com" className="h-6 w-6" />
-          <span className="text-base font-serif">ai-idei.com</span>
-        </div>
-        <div className="flex items-center gap-1">
-          {isAdmin && (
-            <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/admin")}>
-              <Shield className="h-3.5 w-3.5" />
-              Admin
-            </Button>
-          )}
-          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" onClick={() => navigate("/extractor")}>
-            <Upload className="h-3.5 w-3.5" />
-            <span className="hidden lg:inline">Extractor</span>
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" onClick={() => navigate("/services")}>
-            <Sparkles className="h-3.5 w-3.5" />
-            <span className="hidden lg:inline">Services</span>
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" onClick={() => navigate("/jobs")}>
-            <ClipboardList className="h-3.5 w-3.5" />
-            <span className="hidden lg:inline">Jobs</span>
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" onClick={() => navigate("/credits")}>
-            <Coins className="h-3.5 w-3.5" />
-            <span className="hidden lg:inline">Credits</span>
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" onClick={() => navigate("/intelligence")}>
-            <BarChart3 className="h-3.5 w-3.5" />
-            <span className="hidden lg:inline">Intel</span>
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" onClick={() => navigate("/dashboard")}>
-            <LayoutDashboard className="h-3.5 w-3.5" />
-            <span className="hidden lg:inline">Dash</span>
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" onClick={() => setShowExportImport(true)}>
-            <Download className="h-3.5 w-3.5" />
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs" onClick={() => navigate("/links")}>
-            <Link2 className="h-3.5 w-3.5" />
-          </Button>
-          <NotificationBell />
-          <ThemeToggle />
-          <div className="w-px h-5 bg-border mx-1" />
-          <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
-            <Plus className="h-3.5 w-3.5" />
-            New
-          </Button>
-        </div>
+      <SiteHeader />
+      {/* Secondary toolbar */}
+      <div className="h-10 border-b border-border bg-card flex items-center justify-end px-4 gap-1">
+        <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={() => navigate("/extractor")}>
+          <Upload className="h-3.5 w-3.5" />
+          <span className="hidden lg:inline">Extractor</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={() => navigate("/services")}>
+          <Sparkles className="h-3.5 w-3.5" />
+          <span className="hidden lg:inline">Services</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={() => navigate("/jobs")}>
+          <ClipboardList className="h-3.5 w-3.5" />
+          <span className="hidden lg:inline">Jobs</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={() => navigate("/credits")}>
+          <Coins className="h-3.5 w-3.5" />
+          <span className="hidden lg:inline">Credits</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={() => navigate("/intelligence")}>
+          <BarChart3 className="h-3.5 w-3.5" />
+          <span className="hidden lg:inline">Intel</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={() => setShowExportImport(true)}>
+          <Download className="h-3.5 w-3.5" />
+        </Button>
+        <div className="w-px h-5 bg-border mx-1" />
+        <Button size="sm" className="h-7 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
+          <Plus className="h-3.5 w-3.5" />
+          New
+        </Button>
       </div>
 
       {/* Content with sidebar */}
-      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 48px)' }}>
+      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 88px)' }}>
         {/* Folder Sidebar */}
         {showFolders && (
           <NeuronFolderSidebar
