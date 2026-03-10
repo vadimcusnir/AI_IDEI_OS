@@ -115,7 +115,7 @@ export default function NeuronEditor() {
 
   if (authLoading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background">
+      <div className="flex-1 flex items-center justify-center bg-background">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
@@ -125,7 +125,7 @@ export default function NeuronEditor() {
 
   if (loading || !neuron) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background">
+      <div className="flex-1 flex items-center justify-center bg-background">
         <div className="flex items-center gap-3 text-muted-foreground">
           <Loader2 className="h-5 w-5 animate-spin" />
           <span className="text-sm">{loading ? "Loading neuron..." : "Creating neuron..."}</span>
@@ -135,7 +135,7 @@ export default function NeuronEditor() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+    <div className="flex-1 flex flex-col bg-background overflow-hidden">
       <NeuronTopBar
         title={neuron.title}
         neuronNumber={neuron.number}

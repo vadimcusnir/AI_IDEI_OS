@@ -56,7 +56,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/links" element={<Links />} />
-              <Route path="/changelog" element={<Changelog />} />
+              <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
               <Route path="/architecture" element={<Architecture />} />
               <Route path="/u/:username" element={<PublicProfile />} />
               <Route path="/guest/:slug" element={<GuestProfile />} />
@@ -64,8 +64,8 @@ const App = () => (
               {/* Protected routes — require authentication */}
               <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
               <Route path="/neurons" element={<ProtectedRoute><AppLayout><Index /></AppLayout></ProtectedRoute>} />
-              <Route path="/n/new" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
-              <Route path="/n/:number" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
+              <Route path="/n/new" element={<ProtectedRoute><AppLayout fullHeight><NeuronEditor /></AppLayout></ProtectedRoute>} />
+              <Route path="/n/:number" element={<ProtectedRoute><AppLayout fullHeight><NeuronEditor /></AppLayout></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute><AppLayout><Dashboard /></AppLayout></ProtectedRoute>} />
               <Route path="/extractor" element={<ProtectedRoute><AppLayout><Extractor /></AppLayout></ProtectedRoute>} />
               <Route path="/services" element={<ProtectedRoute><AppLayout><Services /></AppLayout></ProtectedRoute>} />
