@@ -4,9 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
-  Upload, FileText, X, Clock,
+  Upload, FileText, X, Clock, Trash2, Pencil,
   FileAudio, Film, Type, Globe, Loader2, Brain,
-  ChevronDown, ChevronUp,
+  ChevronDown, ChevronUp, Copy, ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +40,8 @@ export default function Extractor() {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [extractingId, setExtractingId] = useState<string | null>(null);
-
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   // Inline create form state
   const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState("");
@@ -103,7 +104,24 @@ export default function Extractor() {
     setCreating(false);
   };
 
-  const handleExtractNeurons = async (episode: Episode) => {
+  const handleDeleteEpisode = async (id: string) => {
+    setDeletingId(id);
+    const { error } = await supabase.from("episodes").delete().eq("id", id);
+    if (error) {
+      toast.error("Nu s-a putut șterge episodul");
+    } else {
+      toast.success("Episod șters");
+      setEpisodes(prev => prev.filter(e => e.id !== id));
+      if (expandedId === id) setExpandedId(null);
+    }
+    setDeletingId(null);
+  };
+
+  const copyTranscript = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Transcript copiat în clipboard");
+  };
+
     if (!user || !episode.transcript?.trim()) {
       toast.error("Episodul nu are conținut transcript pentru extracție.");
       return;
@@ -304,52 +322,145 @@ export default function Extractor() {
               const isExtracting = extractingId === ep.id;
               const canExtract = (ep.status === "transcribed" || ep.status === "uploaded") && ep.transcript?.trim();
               const isAnalyzed = ep.status === "analyzed";
+              const isExpanded = expandedId === ep.id;
+              const isDeleting = deletingId === ep.id;
+              const hasTranscript = !!ep.transcript?.trim();
+              const wordCount = hasTranscript ? ep.transcript!.split(/\s+/).length : 0;
 
               return (
-                <div
-                  key={ep.id}
-                  className="flex items-center gap-4 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors"
-                >
-                  <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                    <Icon className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{ep.title}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[10px] text-muted-foreground">
-                        {new Date(ep.created_at).toLocaleDateString("ro-RO")}
-                      </span>
-                      {ep.duration_seconds && (
-                        <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
-                          <Clock className="h-2.5 w-2.5" />
-                          {Math.round(ep.duration_seconds / 60)}min
+                <div key={ep.id} className={cn(
+                  "rounded-xl border bg-card transition-colors",
+                  isExpanded ? "border-primary/30" : "border-border hover:border-primary/20"
+                )}>
+                  {/* Row header — clickable */}
+                  <button
+                    className="w-full flex items-center gap-4 px-4 py-3 text-left"
+                    onClick={() => setExpandedId(isExpanded ? null : ep.id)}
+                  >
+                    <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                      <Icon className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{ep.title}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[10px] text-muted-foreground">
+                          {new Date(ep.created_at).toLocaleDateString("ro-RO")}
                         </span>
-                      )}
-                      {ep.language && (
-                        <span className="text-[10px] text-muted-foreground/60 uppercase">{ep.language}</span>
-                      )}
+                        {ep.duration_seconds && (
+                          <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+                            <Clock className="h-2.5 w-2.5" />
+                            {Math.round(ep.duration_seconds / 60)}min
+                          </span>
+                        )}
+                        {ep.language && (
+                          <span className="text-[10px] text-muted-foreground/60 uppercase">{ep.language}</span>
+                        )}
+                        {hasTranscript && (
+                          <span className="text-[10px] text-muted-foreground/40">
+                            {wordCount.toLocaleString()} cuvinte
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <span className={cn(
-                    "text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0",
-                    STATUS_COLORS[ep.status] || STATUS_COLORS.uploaded
-                  )}>
-                    {ep.status}
-                  </span>
+                    <span className={cn(
+                      "text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0",
+                      STATUS_COLORS[ep.status] || STATUS_COLORS.uploaded
+                    )}>
+                      {ep.status}
+                    </span>
 
-                  {canExtract && !isExtracting && (
-                    <Button variant="outline" size="sm" className="h-7 text-xs gap-1 shrink-0" onClick={() => handleExtractNeurons(ep)}>
-                      <Brain className="h-3 w-3" /> Extrage
-                    </Button>
-                  )}
-                  {isExtracting && (
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" />
-                      <span className="text-[10px] text-ai-accent font-medium">Se extrage...</span>
+                    {canExtract && !isExtracting && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-xs gap-1 shrink-0"
+                        onClick={e => { e.stopPropagation(); handleExtractNeurons(ep); }}
+                      >
+                        <Brain className="h-3 w-3" /> Extrage
+                      </Button>
+                    )}
+                    {isExtracting && (
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" />
+                        <span className="text-[10px] text-ai-accent font-medium">Se extrage...</span>
+                      </div>
+                    )}
+                    {isAnalyzed && (
+                      <span className="text-[10px] text-status-validated font-medium shrink-0">✓ Extras</span>
+                    )}
+
+                    <ChevronDown className={cn(
+                      "h-3.5 w-3.5 text-muted-foreground/40 shrink-0 transition-transform",
+                      isExpanded && "rotate-180"
+                    )} />
+                  </button>
+
+                  {/* Expanded detail panel */}
+                  {isExpanded && (
+                    <div className="border-t border-border px-4 py-4 space-y-3">
+                      {/* Metadata row */}
+                      <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
+                        <span>Tip: <strong className="text-foreground">{ep.source_type}</strong></span>
+                        {ep.source_url && (
+                          <a
+                            href={ep.source_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-0.5 text-primary hover:underline"
+                          >
+                            <ExternalLink className="h-2.5 w-2.5" /> Sursă
+                          </a>
+                        )}
+                        <span>Creat: {new Date(ep.created_at).toLocaleString("ro-RO")}</span>
+                      </div>
+
+                      {/* Transcript preview */}
+                      {hasTranscript ? (
+                        <div>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Transcript</span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 text-[10px] gap-1"
+                              onClick={() => copyTranscript(ep.transcript!)}
+                            >
+                              <Copy className="h-2.5 w-2.5" /> Copiază
+                            </Button>
+                          </div>
+                          <div className="bg-muted/50 rounded-lg px-3 py-2.5 max-h-48 overflow-y-auto">
+                            <p className="text-xs text-muted-foreground font-mono whitespace-pre-wrap leading-relaxed">
+                              {ep.transcript}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="bg-muted/30 rounded-lg px-3 py-4 text-center">
+                          <p className="text-xs text-muted-foreground/60">Niciun transcript disponibil</p>
+                        </div>
+                      )}
+
+                      {/* Actions */}
+                      <div className="flex items-center justify-between pt-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-xs gap-1 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => handleDeleteEpisode(ep.id)}
+                          disabled={isDeleting}
+                        >
+                          {isDeleting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
+                          Șterge
+                        </Button>
+                        <div className="flex items-center gap-1.5">
+                          {canExtract && !isExtracting && (
+                            <Button size="sm" className="h-7 text-xs gap-1" onClick={() => handleExtractNeurons(ep)}>
+                              <Brain className="h-3 w-3" /> Extrage Neuroni
+                            </Button>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  {isAnalyzed && (
-                    <span className="text-[10px] text-status-validated font-medium shrink-0">✓ Extras</span>
                   )}
                 </div>
               );
