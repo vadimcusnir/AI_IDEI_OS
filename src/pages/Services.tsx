@@ -61,7 +61,7 @@ export default function Services() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
 
     const fetch = async () => {
       const { data, error } = await supabase
