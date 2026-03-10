@@ -1,0 +1,15 @@
+{
+  "required": "Câmpul este obligatoriu",
+  "invalid_email": "Adresa de email nu este validă",
+  "min_length": "Minim {{min}} caractere",
+  "max_length": "Maxim {{max}} caractere",
+  "password_mismatch": "Parolele nu se potrivesc",
+  "title_label": "Titlu",
+  "title_placeholder": "Introdu un titlu",
+  "description_label": "Descriere",
+  "description_placeholder": "Introdu o descriere",
+  "email_label": "Email",
+  "email_placeholder": "email@exemplu.com",
+  "password_label": "Parolă",
+  "password_placeholder": "Introdu parola"
+}

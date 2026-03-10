@@ -40,6 +40,20 @@ i18n
         forms: formsEN,
         pages: pagesEN,
       },
+      ro: {
+        common: commonRO,
+        navigation: navigationRO,
+        errors: errorsRO,
+        forms: formsRO,
+        pages: pagesRO,
+      },
+      ru: {
+        common: commonRU,
+        navigation: navigationRU,
+        errors: errorsRU,
+        forms: formsRU,
+        pages: pagesRU,
+      },
     },
     detection: {
       order: ["querystring", "localStorage", "navigator"],

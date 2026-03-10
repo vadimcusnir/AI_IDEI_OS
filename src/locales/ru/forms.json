@@ -1,0 +1,15 @@
+{
+  "required": "Поле обязательно",
+  "invalid_email": "Недействительный адрес электронной почты",
+  "min_length": "Минимум {{min}} символов",
+  "max_length": "Максимум {{max}} символов",
+  "password_mismatch": "Пароли не совпадают",
+  "title_label": "Заголовок",
+  "title_placeholder": "Введите заголовок",
+  "description_label": "Описание",
+  "description_placeholder": "Введите описание",
+  "email_label": "Эл. почта",
+  "email_placeholder": "email@example.com",
+  "password_label": "Пароль",
+  "password_placeholder": "Введите пароль"
+}
