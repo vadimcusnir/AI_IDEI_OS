@@ -168,12 +168,12 @@ export default function Home() {
         {isNewUser && (
           <div className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center">
             <Upload className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h2 className="text-base font-serif font-bold mb-1.5">Primul pas: încarcă conținut</h2>
+            <h2 className="text-base font-serif font-bold mb-1.5">First step: upload content</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Încarcă un podcast, un text sau un video. Sistemul va extrage automat neuroni de cunoaștere.
+              Upload a podcast, text, or video. The system will automatically extract knowledge neurons.
             </p>
             <Button onClick={() => navigate("/extractor")} size="sm" className="gap-2">
-              Deschide Extractorul
+              Open Extractor
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
