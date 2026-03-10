@@ -124,6 +124,7 @@ export default function Intelligence() {
             Analytics
           </span>
         </div>
+        <ThemeToggle />
       </div>
 
       <div className="max-w-2xl mx-auto px-6 py-8">

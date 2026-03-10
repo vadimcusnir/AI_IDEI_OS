@@ -139,13 +139,7 @@ export default function Index() {
             <Link2 className="h-3.5 w-3.5" />
             Links
           </Button>
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="h-8 w-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            title="Toggle theme"
-          >
-            {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-          </button>
+          <ThemeToggle />
         </div>
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
           <Plus className="h-3.5 w-3.5" />
