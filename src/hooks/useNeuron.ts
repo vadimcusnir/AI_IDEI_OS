@@ -295,6 +295,38 @@ export function useNeuron(neuronNumber?: number) {
     });
   }, [blocks, handleBlockExecute]);
 
+  const restoreBlocks = useCallback(async (blocksSnapshot: any[]) => {
+    if (!neuron) return;
+    // Delete existing blocks
+    await supabase.from("neuron_blocks").delete().eq("neuron_id", neuron.id);
+    // Insert from snapshot
+    const newRows = blocksSnapshot.map((b: any, i: number) => ({
+      neuron_id: neuron.id,
+      type: b.type || "text",
+      content: b.content || "",
+      position: i,
+      execution_mode: b.executionMode || b.execution_mode || "passive",
+      language: b.language || null,
+      checked: b.checked ?? null,
+    }));
+    const { data: inserted } = await supabase
+      .from("neuron_blocks")
+      .insert(newRows)
+      .select();
+
+    if (inserted) {
+      setBlocks(inserted.map(b => ({
+        id: b.id,
+        type: b.type as BlockType,
+        content: b.content,
+        checked: b.checked ?? undefined,
+        language: (b.language as CodeLanguage) ?? undefined,
+        executionMode: b.execution_mode as any,
+        executionStatus: "idle" as const,
+      })));
+    }
+  }, [neuron]);
+
   return {
     neuron,
     blocks,
@@ -315,5 +347,6 @@ export function useNeuron(neuronNumber?: number) {
     handleBlockLanguageChange,
     handleRunAll,
     clearLogs,
+    restoreBlocks,
   };
 }
