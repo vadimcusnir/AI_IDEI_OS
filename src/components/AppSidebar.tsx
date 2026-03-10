@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
@@ -20,37 +21,38 @@ import {
 import { PipelineIndicator } from "@/components/PipelineIndicator";
 
 const MAIN_NAV = [
-  { label: "Cockpit", to: "/home", icon: Home },
-  { label: "Extractor", to: "/extractor", icon: Upload },
-  { label: "Neurons", to: "/neurons", icon: Brain },
-  { label: "Services", to: "/services", icon: Sparkles },
-  { label: "Jobs", to: "/jobs", icon: Briefcase },
-  { label: "Library", to: "/library", icon: BookOpen },
-  { label: "Guest Pages", to: "/guests", icon: Users },
+  { labelKey: "cockpit", to: "/home", icon: Home },
+  { labelKey: "extractor", to: "/extractor", icon: Upload },
+  { labelKey: "neurons", to: "/neurons", icon: Brain },
+  { labelKey: "services", to: "/services", icon: Sparkles },
+  { labelKey: "jobs", to: "/jobs", icon: Briefcase },
+  { labelKey: "library", to: "/library", icon: BookOpen },
+  { labelKey: "guest_pages", to: "/guests", icon: Users },
 ];
 
 const SECONDARY_NAV = [
-  { label: "Intelligence", to: "/intelligence", icon: Network },
-  { label: "Credits", to: "/credits", icon: Coins },
-  { label: "Dashboard", to: "/dashboard", icon: BarChart3 },
-  { label: "Onboarding", to: "/onboarding", icon: Rocket },
-  { label: "Notifications", to: "/notifications", icon: Bell },
-  { label: "Feedback", to: "/feedback", icon: MessageCircle },
-  { label: "Changelog", to: "/changelog", icon: ScrollText },
+  { labelKey: "intelligence", to: "/intelligence", icon: Network },
+  { labelKey: "credits", to: "/credits", icon: Coins },
+  { labelKey: "dashboard", to: "/dashboard", icon: BarChart3 },
+  { labelKey: "onboarding", to: "/onboarding", icon: Rocket },
+  { labelKey: "notifications", to: "/notifications", icon: Bell },
+  { labelKey: "feedback", to: "/feedback", icon: MessageCircle },
+  { labelKey: "changelog", to: "/changelog", icon: ScrollText },
 ];
 
 const KNOWLEDGE_NAV = [
-  { label: "Docs", to: "/docs", icon: FileText },
-  { label: "Insights", to: "/insights", icon: Lightbulb },
-  { label: "Patterns", to: "/patterns", icon: Repeat2 },
-  { label: "Formulas", to: "/formulas", icon: FlaskConical },
-  { label: "Contradictions", to: "/contradictions", icon: AlertTriangle },
-  { label: "Applications", to: "/applications", icon: Layers },
-  { label: "Profiles", to: "/profiles", icon: Users },
-  { label: "Topics", to: "/topics", icon: Brain },
+  { labelKey: "docs", to: "/docs", icon: FileText },
+  { labelKey: "insights", to: "/insights", icon: Lightbulb },
+  { labelKey: "patterns", to: "/patterns", icon: Repeat2 },
+  { labelKey: "formulas", to: "/formulas", icon: FlaskConical },
+  { labelKey: "contradictions", to: "/contradictions", icon: AlertTriangle },
+  { labelKey: "applications", to: "/applications", icon: Layers },
+  { labelKey: "profiles", to: "/profiles", icon: Users },
+  { labelKey: "topics", to: "/topics", icon: Brain },
 ];
 
 export function AppSidebar() {
+  const { t } = useTranslation(["navigation", "common"]);
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
@@ -77,7 +79,7 @@ export function AppSidebar() {
           <button onClick={() => navigate("/credits")} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 hover:bg-primary/15 transition-colors">
             <Coins className="h-4 w-4 text-primary shrink-0" />
             <div className="flex flex-col items-start">
-              <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold">NEURONS</span>
+              <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold">{t("common:neurons_currency")}</span>
               <span className="text-sm font-mono font-bold text-primary">{balanceLoading ? "…" : balance.toLocaleString()}</span>
             </div>
           </button>
@@ -85,7 +87,7 @@ export function AppSidebar() {
       )}
       {user && collapsed && (
         <div className="flex justify-center py-2">
-          <button onClick={() => navigate("/credits")} className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/15 transition-colors" title={`${balance} NEURONS`}>
+          <button onClick={() => navigate("/credits")} className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/15 transition-colors" title={`${balance} ${t("common:neurons_currency")}`}>
             <Coins className="h-4 w-4 text-primary" />
           </button>
         </div>
@@ -93,15 +95,15 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Pipeline</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("navigation:pipeline")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {MAIN_NAV.map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={item.label}>
+                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={t(`navigation:${item.labelKey}`)}>
                     <button onClick={() => navigate(item.to)} className="w-full">
                       <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <span>{t(`navigation:${item.labelKey}`)}</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -113,25 +115,25 @@ export function AppSidebar() {
         <SidebarSeparator />
 
         <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("navigation:platform")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {SECONDARY_NAV.map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={item.label}>
+                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={t(`navigation:${item.labelKey}`)}>
                     <button onClick={() => navigate(item.to)} className="w-full">
                       <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <span>{t(`navigation:${item.labelKey}`)}</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
               {isAdmin && (
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isActive("/admin")} tooltip="Admin">
+                  <SidebarMenuButton asChild isActive={isActive("/admin")} tooltip={t("navigation:admin")}>
                     <button onClick={() => navigate("/admin")} className="w-full">
                       <Shield className="h-4 w-4" />
-                      <span>Admin</span>
+                      <span>{t("navigation:admin")}</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -143,15 +145,15 @@ export function AppSidebar() {
         <SidebarSeparator />
 
         <SidebarGroup>
-          <SidebarGroupLabel>Knowledge</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("navigation:knowledge")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {KNOWLEDGE_NAV.map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={item.label}>
+                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={t(`navigation:${item.labelKey}`)}>
                     <button onClick={() => navigate(item.to)} className="w-full">
                       <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <span>{t(`navigation:${item.labelKey}`)}</span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -164,7 +166,7 @@ export function AppSidebar() {
           <>
             <SidebarSeparator />
             <SidebarGroup>
-              <SidebarGroupLabel>Pipeline Status</SidebarGroupLabel>
+              <SidebarGroupLabel>{t("navigation:pipeline_status")}</SidebarGroupLabel>
               <SidebarGroupContent>
                 <div className="px-2"><PipelineIndicator /></div>
               </SidebarGroupContent>
@@ -177,19 +179,19 @@ export function AppSidebar() {
         <SidebarSeparator />
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/profile")} tooltip="Profile">
+            <SidebarMenuButton asChild isActive={isActive("/profile")} tooltip={t("navigation:profile")}>
               <button onClick={() => navigate("/profile")} className="w-full">
                 <User className="h-4 w-4" />
-                <span>Profile</span>
+                <span>{t("navigation:profile")}</span>
               </button>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <div className="flex items-center justify-between px-2 py-1">
               {!collapsed && <ThemeToggle />}
-              <SidebarMenuButton tooltip="Sign Out" className={cn(collapsed ? "w-full" : "w-auto flex-shrink-0")} onClick={() => signOut()}>
+              <SidebarMenuButton tooltip={t("common:sign_out")} className={cn(collapsed ? "w-full" : "w-auto flex-shrink-0")} onClick={() => signOut()}>
                 <LogOut className="h-4 w-4" />
-                {!collapsed && <span>Sign Out</span>}
+                {!collapsed && <span>{t("common:sign_out")}</span>}
               </SidebarMenuButton>
             </div>
           </SidebarMenuItem>
