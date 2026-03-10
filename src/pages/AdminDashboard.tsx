@@ -689,6 +689,11 @@ export default function AdminDashboard() {
           <TabsContent value="changelog">
             <AdminChangelogTab />
           </TabsContent>
+
+          {/* ─── Knowledge Graph ─── */}
+          <TabsContent value="knowledge-graph">
+            <AdminKnowledgeGraphTab />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
