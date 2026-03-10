@@ -383,7 +383,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Account info (read-only) */}
-        <div className="bg-card border border-border rounded-xl p-6">
+        <div className="bg-card border border-border rounded-xl p-6 mb-4">
           <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Account Info</h2>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -400,6 +400,22 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Data & Privacy */}
+        <Link
+          to="/data-privacy"
+          className="block bg-card border border-border rounded-xl p-5 hover:border-primary/30 transition-colors"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium">Data & Privacy</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">
+                Export your data or delete your account (GDPR)
+              </p>
+            </div>
+            <span className="text-xs text-primary">→</span>
+          </div>
+        </Link>
       </div>
     </div>
   );
