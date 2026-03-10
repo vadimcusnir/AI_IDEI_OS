@@ -82,6 +82,25 @@ export function SiteHeader() {
               <span className="text-[11px] font-mono font-bold text-primary">{balanceLoading ? "…" : balance}</span>
             </button>
           )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
+                <span className="text-sm leading-none">{currentLang.flag}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[140px]">
+              {LANG_OPTIONS.map(lang => (
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => i18n.changeLanguage(lang.code)}
+                  className={cn("gap-2 text-xs", i18n.language === lang.code && "bg-accent")}
+                >
+                  <span>{lang.flag}</span>
+                  {lang.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <ThemeToggle />
           {user && <NotificationBell />}
           {user && (
