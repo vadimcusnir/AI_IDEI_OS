@@ -226,7 +226,6 @@ export default function Links() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
       <HeroBlock />
 
       <div className="max-w-lg mx-auto px-6 pb-16">
