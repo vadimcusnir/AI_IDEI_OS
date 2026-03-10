@@ -1,6 +1,34 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google Consent Mode v2 — defaults BEFORE tag loads -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      // Default: denied for EEA compliance; granted for non-EEA
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied'
+      });
+
+      // Restore consent from previous session
+      (function(){
+        try {
+          var c = localStorage.getItem('ai-idei-cookie-consent');
+          if (c === 'accepted') {
+            gtag('consent', 'update', {
+              'ad_storage': 'granted',
+              'ad_user_data': 'granted',
+              'ad_personalization': 'granted',
+              'analytics_storage': 'granted'
+            });
+          }
+        } catch(e){}
+      })();
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HRRT1FBHRZ"></script>
     <script>
@@ -9,7 +37,6 @@
       gtag('js', new Date());
       gtag('config', 'G-HRRT1FBHRZ');
     </script>
-    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/gif" href="/favicon.gif">
     <!-- TODO: Set the document title to the name of your application -->
