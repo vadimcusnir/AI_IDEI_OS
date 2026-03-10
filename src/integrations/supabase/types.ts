@@ -587,6 +587,146 @@ export type Database = {
         }
         Relationships: []
       }
+      idea_metrics: {
+        Row: {
+          acceleration_score: number
+          activation_score: number
+          amplification_probability: number
+          authority_score: number
+          betweenness_score: number
+          computed_at: string
+          decay_risk_score: number
+          economic_conversion_score: number
+          growth_score: number
+          model_version: string
+          multi_hop_influence: number
+          node_id: string
+          novelty_score: number
+          pagerank_score: number
+          propagation_value_score: number
+        }
+        Insert: {
+          acceleration_score?: number
+          activation_score?: number
+          amplification_probability?: number
+          authority_score?: number
+          betweenness_score?: number
+          computed_at?: string
+          decay_risk_score?: number
+          economic_conversion_score?: number
+          growth_score?: number
+          model_version?: string
+          multi_hop_influence?: number
+          node_id: string
+          novelty_score?: number
+          pagerank_score?: number
+          propagation_value_score?: number
+        }
+        Update: {
+          acceleration_score?: number
+          activation_score?: number
+          amplification_probability?: number
+          authority_score?: number
+          betweenness_score?: number
+          computed_at?: string
+          decay_risk_score?: number
+          economic_conversion_score?: number
+          growth_score?: number
+          model_version?: string
+          multi_hop_influence?: number
+          node_id?: string
+          novelty_score?: number
+          pagerank_score?: number
+          propagation_value_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "idea_metrics_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: true
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      idea_rank_experiments: {
+        Row: {
+          config: Json
+          created_at: string
+          experiment_id: string
+          metrics: Json
+          model_version: string
+          test_range: unknown
+          train_range: unknown
+          validate_range: unknown
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          experiment_id?: string
+          metrics?: Json
+          model_version: string
+          test_range: unknown
+          train_range: unknown
+          validate_range: unknown
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          experiment_id?: string
+          metrics?: Json
+          model_version?: string
+          test_range?: unknown
+          train_range?: unknown
+          validate_range?: unknown
+        }
+        Relationships: []
+      }
+      idea_rank_predictions: {
+        Row: {
+          experiment_id: string
+          node_id: string
+          predicted_economic_use: number | null
+          predicted_growth: number | null
+          predicted_rank: number | null
+          predicted_score: number
+          snapshot_at: string
+        }
+        Insert: {
+          experiment_id: string
+          node_id: string
+          predicted_economic_use?: number | null
+          predicted_growth?: number | null
+          predicted_rank?: number | null
+          predicted_score?: number
+          snapshot_at: string
+        }
+        Update: {
+          experiment_id?: string
+          node_id?: string
+          predicted_economic_use?: number | null
+          predicted_growth?: number | null
+          predicted_rank?: number | null
+          predicted_score?: number
+          snapshot_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "idea_rank_predictions_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "idea_rank_experiments"
+            referencedColumns: ["experiment_id"]
+          },
+          {
+            foreignKeyName: "idea_rank_predictions_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       neuron_address_aliases: {
         Row: {
           alias: string

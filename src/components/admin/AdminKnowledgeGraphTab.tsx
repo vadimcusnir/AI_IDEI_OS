@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Brain, Zap, RefreshCw, Loader2, BarChart3, Link2, Tag, TrendingUp } from "lucide-react";
+import { Brain, Zap, RefreshCw, Loader2, BarChart3, Link2, Tag, TrendingUp, Activity, Target, Shield, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -14,15 +14,34 @@ interface KGStats {
   topEntities: Array<{ title: string; entity_type: string; importance_score: number; idea_rank: number; slug: string }>;
 }
 
+interface PVSMetrics {
+  node_id: string;
+  title: string;
+  entity_type: string;
+  activation_score: number;
+  growth_score: number;
+  pagerank_score: number;
+  betweenness_score: number;
+  authority_score: number;
+  economic_conversion_score: number;
+  novelty_score: number;
+  decay_risk_score: number;
+  propagation_value_score: number;
+  amplification_probability: number;
+  model_version: string;
+  computed_at: string;
+}
+
 export function AdminKnowledgeGraphTab() {
   const [stats, setStats] = useState<KGStats | null>(null);
+  const [pvsMetrics, setPvsMetrics] = useState<PVSMetrics[]>([]);
   const [loading, setLoading] = useState(false);
   const [projecting, setProjecting] = useState(false);
   const [computing, setComputing] = useState(false);
 
   const loadStats = useCallback(async () => {
     setLoading(true);
-    const [entAll, entPub, rels, topics, byTypeRes, topRes] = await Promise.all([
+    const [entAll, entPub, rels, topics, byTypeRes, topRes, metricsRes] = await Promise.all([
       supabase.from("entities").select("id", { count: "exact", head: true }),
       supabase.from("entities").select("id", { count: "exact", head: true }).eq("is_published", true),
       supabase.from("entity_relations").select("id", { count: "exact", head: true }),
@@ -33,12 +52,32 @@ export function AdminKnowledgeGraphTab() {
         .eq("is_published", true)
         .order("importance_score", { ascending: false })
         .limit(15),
+      supabase.from("idea_metrics")
+        .select("node_id, activation_score, growth_score, pagerank_score, betweenness_score, authority_score, economic_conversion_score, novelty_score, decay_risk_score, propagation_value_score, amplification_probability, model_version, computed_at")
+        .order("propagation_value_score", { ascending: false })
+        .limit(20),
     ]);
 
     const byType: Record<string, number> = {};
     (byTypeRes.data || []).forEach((e: any) => {
       byType[e.entity_type] = (byType[e.entity_type] || 0) + 1;
     });
+
+    // Enrich metrics with entity titles
+    const metricsData = metricsRes.data || [];
+    let enrichedMetrics: PVSMetrics[] = [];
+    if (metricsData.length > 0) {
+      const nodeIds = metricsData.map((m: any) => m.node_id);
+      const { data: entities } = await supabase
+        .from("entities")
+        .select("id, title, entity_type")
+        .in("id", nodeIds);
+      const entityMap = new Map((entities || []).map((e: any) => [e.id, e]));
+      enrichedMetrics = metricsData.map((m: any) => {
+        const ent = entityMap.get(m.node_id) || { title: "Unknown", entity_type: "unknown" };
+        return { ...m, title: ent.title, entity_type: ent.entity_type };
+      });
+    }
 
     setStats({
       totalEntities: entAll.count ?? 0,
@@ -48,6 +87,7 @@ export function AdminKnowledgeGraphTab() {
       byType,
       topEntities: (topRes.data as any[]) || [],
     });
+    setPvsMetrics(enrichedMetrics);
     setLoading(false);
   }, []);
 
@@ -74,16 +114,15 @@ export function AdminKnowledgeGraphTab() {
         body: { action: "compute_idearank" },
       });
       if (error) throw error;
-      toast.success("IdeaRank computed successfully");
+      toast.success("PVS computed successfully (model: pvs-mvp-v1)");
       await loadStats();
     } catch (err: any) {
-      toast.error(err.message || "IdeaRank computation failed");
+      toast.error(err.message || "PVS computation failed");
     } finally {
       setComputing(false);
     }
   };
 
-  // Auto-load on first render
   if (!stats && !loading) {
     loadStats();
   }
@@ -106,7 +145,7 @@ export function AdminKnowledgeGraphTab() {
         </Button>
         <Button onClick={computeIdeaRank} disabled={computing} size="sm" variant="outline" className="gap-1.5">
           {computing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <TrendingUp className="h-3.5 w-3.5" />}
-          Compute IdeaRank
+          Compute PVS
         </Button>
         <Button onClick={loadStats} disabled={loading} size="sm" variant="ghost" className="gap-1.5">
           <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
@@ -156,10 +195,65 @@ export function AdminKnowledgeGraphTab() {
             )}
           </div>
 
-          {/* IdeaRank Leaderboard */}
+          {/* PVS Leaderboard */}
           <div className="bg-card border border-border rounded-xl p-5">
             <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-              <TrendingUp className="h-3 w-3" /> IdeaRank Leaderboard
+              <Activity className="h-3 w-3" /> Propagation Value Score (PVS) Leaderboard
+            </h3>
+            {pvsMetrics.length === 0 ? (
+              <p className="text-xs text-muted-foreground">No PVS metrics yet. Compute PVS after projecting entities.</p>
+            ) : (
+              <div className="space-y-0.5">
+                {/* Header */}
+                <div className="grid grid-cols-[24px_1fr_60px_48px_48px_48px_48px_48px_56px] gap-1 px-2 py-1 text-[8px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                  <span>#</span>
+                  <span>Entity</span>
+                  <span className="text-right">PVS</span>
+                  <span className="text-right">Act</span>
+                  <span className="text-right">Grw</span>
+                  <span className="text-right">Cen</span>
+                  <span className="text-right">Auth</span>
+                  <span className="text-right">Econ</span>
+                  <span className="text-right">Amp%</span>
+                </div>
+                {pvsMetrics.map((m, i) => (
+                  <div
+                    key={m.node_id}
+                    className="grid grid-cols-[24px_1fr_60px_48px_48px_48px_48px_48px_56px] gap-1 px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors items-center"
+                  >
+                    <span className="text-[10px] font-mono text-muted-foreground">{i + 1}</span>
+                    <div className="truncate">
+                      <span className="text-xs">{m.title}</span>
+                      <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
+                    </div>
+                    <span className="text-right text-xs font-mono font-bold text-primary">
+                      {(m.propagation_value_score * 100).toFixed(1)}
+                    </span>
+                    <PVSBar value={m.activation_score} color="bg-emerald-500/70" />
+                    <PVSBar value={m.growth_score} color="bg-sky-500/70" />
+                    <PVSBar value={m.pagerank_score} color="bg-violet-500/70" />
+                    <PVSBar value={m.authority_score} color="bg-amber-500/70" />
+                    <PVSBar value={m.economic_conversion_score} color="bg-rose-500/70" />
+                    <span className="text-right text-[10px] font-mono text-muted-foreground">
+                      {(m.amplification_probability * 100).toFixed(0)}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {pvsMetrics.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-border flex items-center gap-4 text-[8px] text-muted-foreground/50">
+                <span>Model: {pvsMetrics[0].model_version}</span>
+                <span>Computed: {new Date(pvsMetrics[0].computed_at).toLocaleString()}</span>
+                <span className="ml-auto">PVS = 0.30·Act + 0.20·Grw + 0.20·Cen + 0.15·Auth + 0.15·Econ</span>
+              </div>
+            )}
+          </div>
+
+          {/* Legacy IdeaRank Leaderboard */}
+          <div className="bg-card border border-border rounded-xl p-5">
+            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+              <TrendingUp className="h-3 w-3" /> Importance Score (PVS-derived)
             </h3>
             {stats.topEntities.length === 0 ? (
               <p className="text-xs text-muted-foreground">No ranked entities yet.</p>
@@ -170,7 +264,7 @@ export function AdminKnowledgeGraphTab() {
                     <span className="text-[10px] font-mono text-muted-foreground w-5 text-right">{i + 1}</span>
                     <span className="text-xs truncate flex-1">{e.title}</span>
                     <span className="text-[9px] uppercase text-muted-foreground/60">{e.entity_type}</span>
-                    <span className="text-[10px] font-mono text-primary">{e.importance_score.toFixed(1)}</span>
+                    <span className="text-[10px] font-mono text-primary">{e.importance_score?.toFixed(1)}</span>
                   </div>
                 ))}
               </div>
@@ -190,6 +284,19 @@ function KGKpi({ icon: Icon, label, value, color }: { icon: any; label: string; 
         <span className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-lg font-bold font-mono", color)}>{value}</p>
+    </div>
+  );
+}
+
+function PVSBar({ value, color }: { value: number; color: string }) {
+  return (
+    <div className="flex items-center justify-end gap-1">
+      <div className="w-6 h-1 bg-muted rounded-full overflow-hidden">
+        <div className={cn("h-full rounded-full", color)} style={{ width: `${Math.min(100, value * 100)}%` }} />
+      </div>
+      <span className="text-[9px] font-mono text-muted-foreground w-6 text-right">
+        {(value * 100).toFixed(0)}
+      </span>
     </div>
   );
 }
