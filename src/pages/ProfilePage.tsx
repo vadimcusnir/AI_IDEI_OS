@@ -82,7 +82,7 @@ export default function ProfilePage() {
       if (error.message.includes("unique")) {
         toast.error("This username is already taken.");
       } else {
-        toast.error("Eroare la salvare: " + error.message);
+        toast.error("Save error: " + error.message);
       }
     } else {
       setSaved(true);
