@@ -5,7 +5,7 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
-  LogOut, LogIn, Home, User, MessageCircle,
+  LogOut, LogIn, Home, User, MessageCircle, ScrollText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
