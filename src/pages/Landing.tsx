@@ -13,41 +13,41 @@ import { motion } from "framer-motion";
 import { PublicTestimonials } from "@/components/landing/PublicTestimonials";
 
 const FLOW_STEPS = [
-  { icon: Upload, label: "Încarci conținut", sub: "Audio, video, text, URL" },
-  { icon: Brain, label: "Extragi neuroni", sub: "Idei atomice structurate" },
-  { icon: Layers, label: "Construiești grafuri", sub: "Relații semantice" },
-  { icon: Sparkles, label: "Rulezi servicii AI", sub: "Rezultate operaționale" },
-  { icon: BarChart3, label: "Monetizezi", sub: "Active digitale reutilizabile" },
+  { icon: Upload, label: "Upload Content", sub: "Audio, video, text, URL" },
+  { icon: Brain, label: "Extract Neurons", sub: "Structured atomic ideas" },
+  { icon: Layers, label: "Build Graphs", sub: "Semantic relations" },
+  { icon: Sparkles, label: "Run AI Services", sub: "Operational results" },
+  { icon: BarChart3, label: "Monetize", sub: "Reusable digital assets" },
 ];
 
 const FEATURES = [
   {
     icon: Brain,
     title: "Knowledge Extraction",
-    description: "Transformă conversații, podcasturi și texte în unități de cunoaștere structurate — neuroni atomici cu relații semantice.",
+    description: "Transform conversations, podcasts, and texts into structured knowledge units — atomic neurons with semantic relations.",
   },
   {
     icon: Zap,
     title: "AI Services Layer",
-    description: "Servicii deterministe cu costuri fixe. Fiecare serviciu are input definit, deliverables clare și execuție auditabilă.",
+    description: "Deterministic services with fixed costs. Each service has defined input, clear deliverables, and auditable execution.",
   },
   {
     icon: Network,
     title: "Knowledge Graph",
-    description: "Neuronii se leagă prin relații tipizate: supports, contradicts, extends, derived_from. Grafuri de cunoaștere navigabile.",
+    description: "Neurons connect through typed relations: supports, contradicts, extends, derived_from. Navigable knowledge graphs.",
   },
   {
     icon: Shield,
     title: "Credit Economy",
-    description: "Sistem intern de credite transparent. Fiecare operație are cost vizibil. Fără surprize, fără abonamente ascunse.",
+    description: "Transparent internal credit system. Every operation has a visible cost. No surprises, no hidden subscriptions.",
   },
 ];
 
 const PROOF_ITEMS = [
-  { value: "11+", label: "Categorii de conținut" },
-  { value: "44+", label: "Template-uri AI" },
-  { value: "5", label: "Lifecycle stages" },
-  { value: "7+", label: "Servicii AI active" },
+  { value: "11+", label: "Content Categories" },
+  { value: "44+", label: "AI Templates" },
+  { value: "5", label: "Lifecycle Stages" },
+  { value: "7+", label: "Active AI Services" },
 ];
 
 const fadeUp = {
@@ -87,7 +87,7 @@ export default function Landing() {
                   Login
                 </Button>
                 <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5">
-                  Start gratuit
+                  Start Free
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -120,9 +120,9 @@ export default function Landing() {
             transition={{ delay: 0.15, duration: 0.5 }}
             className="text-4xl sm:text-5xl font-serif font-bold mb-4 leading-tight"
           >
-            Transformă expertiza ta
+            Transform Your Expertise
             <br />
-            <span className="text-primary">în active digitale</span>
+            <span className="text-primary">Into Digital Assets</span>
           </motion.h1>
 
           <motion.p
@@ -131,8 +131,8 @@ export default function Landing() {
             transition={{ delay: 0.25, duration: 0.5 }}
             className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto mb-8"
           >
-            AI-IDEI extrage cunoștințe din conversații, podcasturi și texte, 
-            le structurează în neuroni atomici și le transformă în produse monetizabile.
+            AI-IDEI extracts knowledge from conversations, podcasts, and texts, 
+            structures them into atomic neurons, and transforms them into monetizable products.
           </motion.p>
 
           <motion.div
@@ -160,12 +160,12 @@ export default function Landing() {
             className="flex items-center justify-center gap-3"
           >
             <Button size="lg" onClick={() => navigate(user ? "/home" : "/auth")} className="gap-2 text-sm px-8">
-              {user ? "Mergi la Dashboard" : "Începe gratuit"}
+              {user ? "Go to Dashboard" : "Start Free"}
               <ArrowRight className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/architecture")} className="gap-2 text-sm">
               <Play className="h-4 w-4" />
-              Cum funcționează
+              How It Works
             </Button>
           </motion.div>
         </div>
@@ -174,7 +174,6 @@ export default function Landing() {
       {/* Problem / Solution */}
       <section className="max-w-3xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Problem */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -183,19 +182,18 @@ export default function Landing() {
             variants={fadeUp}
             className="p-6 rounded-2xl border border-destructive/20 bg-destructive/5"
           >
-            <span className="text-[10px] font-bold uppercase tracking-widest text-destructive mb-3 block">Problema</span>
-            <h2 className="text-xl font-serif font-bold mb-3">Internetul produce informație infinită.</h2>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-destructive mb-3 block">The Problem</span>
+            <h2 className="text-xl font-serif font-bold mb-3">The internet produces infinite information.</h2>
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              Dar aproape nimic nu devine cunoaștere utilizabilă. Insight-urile dispar în podcasturi, conversații și note neorganizate.
+              But almost nothing becomes usable knowledge. Insights disappear in podcasts, conversations, and unorganized notes.
             </p>
             <div className="flex flex-wrap gap-2">
-              {["Podcasturi", "Interviuri", "Cursuri", "Articole", "Conversații"].map(t => (
+              {["Podcasts", "Interviews", "Courses", "Articles", "Conversations"].map(t => (
                 <span key={t} className="text-[10px] bg-background border border-border px-2.5 py-1 rounded-full text-muted-foreground">{t}</span>
               ))}
             </div>
           </motion.div>
 
-          {/* Solution */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -204,13 +202,13 @@ export default function Landing() {
             variants={fadeUp}
             className="p-6 rounded-2xl border border-status-validated/20 bg-status-validated/5"
           >
-            <span className="text-[10px] font-bold uppercase tracking-widest text-status-validated mb-3 block">Soluția</span>
-            <h2 className="text-xl font-serif font-bold mb-3">Extrage idei. Construiește sisteme de decizie.</h2>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-status-validated mb-3 block">The Solution</span>
+            <h2 className="text-xl font-serif font-bold mb-3">Extract ideas. Build decision systems.</h2>
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              Platforma extrage idei din conversații și le transformă în structuri de cunoaștere acționabile, nu conținut generic.
+              The platform extracts ideas from conversations and transforms them into actionable knowledge structures, not generic content.
             </p>
             <div className="flex flex-wrap gap-2">
-              {["Neuroni atomici", "Knowledge Graph", "Servicii AI", "Monetizare"].map(t => (
+              {["Atomic Neurons", "Knowledge Graph", "AI Services", "Monetization"].map(t => (
                 <span key={t} className="text-[10px] bg-background border border-border px-2.5 py-1 rounded-full text-muted-foreground">{t}</span>
               ))}
             </div>
@@ -218,7 +216,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* How it works - Flow */}
+      {/* How it works */}
       <section className="bg-card border-y border-border">
         <div className="max-w-3xl mx-auto px-6 py-16">
           <motion.div
@@ -229,8 +227,8 @@ export default function Landing() {
             variants={fadeUp}
             className="text-center mb-10"
           >
-            <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-2 block">Cum funcționează</span>
-            <h2 className="text-2xl font-serif font-bold">De la conținut brut la active monetizabile</h2>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-2 block">How It Works</span>
+            <h2 className="text-2xl font-serif font-bold">From Raw Content to Monetizable Assets</h2>
           </motion.div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-0">
@@ -270,8 +268,8 @@ export default function Landing() {
           variants={fadeUp}
           className="text-center mb-10"
         >
-          <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-2 block">Capabilități</span>
-          <h2 className="text-2xl font-serif font-bold">Explorează structura ideilor, nu doar conținutul</h2>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-2 block">Capabilities</span>
+          <h2 className="text-2xl font-serif font-bold">Explore the Structure of Ideas, Not Just Content</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -295,7 +293,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Social Proof / Stats */}
+      {/* Social Proof */}
       <section className="bg-card border-y border-border">
         <div className="max-w-3xl mx-auto px-6 py-12">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -317,7 +315,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Public Testimonials */}
       <PublicTestimonials />
 
       {/* Final CTA */}
@@ -330,13 +327,13 @@ export default function Landing() {
           variants={fadeUp}
         >
           <h2 className="text-3xl font-serif font-bold mb-4">
-            Ești gata să-ți transformi expertiza?
+            Ready to Transform Your Expertise?
           </h2>
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
-            Începe gratuit cu 500 de credite. Încarcă primul tău conținut și extrage neuroni în mai puțin de 2 minute.
+            Start free with 500 credits. Upload your first content and extract neurons in less than 2 minutes.
           </p>
           <Button size="lg" onClick={() => navigate(user ? "/home" : "/auth")} className="gap-2 px-10">
-            {user ? "Mergi la Dashboard" : "Creează cont gratuit"}
+            {user ? "Go to Dashboard" : "Create Free Account"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </motion.div>

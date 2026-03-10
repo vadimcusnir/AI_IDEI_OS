@@ -3,10 +3,7 @@ import logo from "@/assets/logo.gif";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
-    <Link
-      to={to}
-      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-    >
+    <Link to={to} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
       {children}
     </Link>
   );
@@ -17,7 +14,6 @@ export function Footer() {
     <footer className="border-t border-border bg-card mt-auto">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-5">
-          {/* Brand */}
           <div className="space-y-3 col-span-2 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2">
               <img src={logo} alt="AI-IDEI" className="h-6 w-6 rounded-full" />
@@ -30,7 +26,6 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Docs */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-foreground">Docs</h3>
             <ul className="space-y-2">
@@ -41,7 +36,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Intelligence Assets */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-foreground">Assets</h3>
             <ul className="space-y-2">
@@ -53,7 +47,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Platform */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-foreground">Platform</h3>
             <ul className="space-y-2">
@@ -64,7 +57,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Info */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-foreground">Info</h3>
             <ul className="space-y-2">
@@ -75,7 +67,6 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 text-xs text-muted-foreground sm:flex-row">
           <span>© {new Date().getFullYear()} AI-IDEI. All rights reserved.</span>
           <div className="flex flex-wrap items-center gap-4">
