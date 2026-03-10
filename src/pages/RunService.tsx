@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import {
@@ -177,6 +178,7 @@ export default function RunService() {
 
       setJobStatus("completed");
       toast.success("Job completed — results audited and saved");
+      trackEvent({ name: "service_executed", params: { service_key: service.service_key, job_id: jobId || undefined, credits_cost: service.credits_cost } });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Unknown error";
       toast.error(msg);

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -273,17 +274,20 @@ export default function Extractor() {
         // Auto-trigger transcription for audio/video uploads
         if ((sourceType === "audio" || sourceType === "video") && filePath) {
           toast.success("Episode created — starting transcription…");
+          trackEvent({ name: "transcript_uploaded", params: { source_type: sourceType, episode_id: ep.id } });
           resetForm();
           if (episodes.length > 0) setShowForm(false);
           await fetchEpisodes();
           triggerTranscription(ep.id, filePath);
         } else if (sourceType === "url") {
           toast.success("Episode created. Add a transcript or upload an audio file to extract neurons.");
+          trackEvent({ name: "transcript_uploaded", params: { source_type: sourceType, episode_id: ep.id } });
           resetForm();
           if (episodes.length > 0) setShowForm(false);
           fetchEpisodes();
         } else {
           toast.success("Episode created");
+          trackEvent({ name: "transcript_uploaded", params: { source_type: sourceType, episode_id: ep.id } });
           resetForm();
           if (episodes.length > 0) setShowForm(false);
           fetchEpisodes();
@@ -464,6 +468,7 @@ export default function Extractor() {
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       setExtractionProgress({ chunks: data.chunks_processed || 0, neurons: data.neurons_created });
       toast.success(`${data.neurons_created} neurons extracted from ${data.chunks_processed || 1} segments! (${data.credits_spent} credits)`);
+      trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.neurons_created, credits_spent: data.credits_spent } });
       setChunkPreview(null);
       fetchEpisodes();
     } catch (e) {
