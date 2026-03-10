@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Plus, Loader2, Shield } from "lucide-react";
+import { Plus, Loader2, Shield, BookOpen } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -66,12 +66,18 @@ export default function Index() {
           <img src={logo} alt="ai-idei.com" className="h-6 w-6" />
           <span className="text-base font-serif">ai-idei.com</span>
         </div>
-        {isAdmin && (
-          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/admin")}>
-            <Shield className="h-3.5 w-3.5" />
-            Admin
+        <div className="flex items-center gap-2">
+          {isAdmin && (
+            <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/admin")}>
+              <Shield className="h-3.5 w-3.5" />
+              Admin
+            </Button>
+          )}
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/architecture")}>
+            <BookOpen className="h-3.5 w-3.5" />
+            Architecture
           </Button>
-        )}
+        </div>
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCreateNeuron}>
           <Plus className="h-3.5 w-3.5" />
           New Neuron

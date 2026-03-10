@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      block_type_registry: {
+        Row: {
+          category: string
+          config_schema: Json | null
+          created_at: string
+          default_execution_mode: string
+          description: string
+          icon: string
+          is_executable: boolean
+          is_system: boolean
+          label: string
+          short_label: string
+          type_key: string
+        }
+        Insert: {
+          category?: string
+          config_schema?: Json | null
+          created_at?: string
+          default_execution_mode?: string
+          description?: string
+          icon?: string
+          is_executable?: boolean
+          is_system?: boolean
+          label: string
+          short_label: string
+          type_key: string
+        }
+        Update: {
+          category?: string
+          config_schema?: Json | null
+          created_at?: string
+          default_execution_mode?: string
+          description?: string
+          icon?: string
+          is_executable?: boolean
+          is_system?: boolean
+          label?: string
+          short_label?: string
+          type_key?: string
+        }
+        Relationships: []
+      }
       neuron_address_aliases: {
         Row: {
           alias: string
@@ -126,6 +168,48 @@ export type Database = {
           {
             foreignKeyName: "neuron_blocks_neuron_id_fkey"
             columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neuron_clones: {
+        Row: {
+          clone_type: string
+          cloned_by: string | null
+          cloned_neuron_id: number
+          created_at: string
+          id: string
+          source_neuron_id: number
+        }
+        Insert: {
+          clone_type?: string
+          cloned_by?: string | null
+          cloned_neuron_id: number
+          created_at?: string
+          id?: string
+          source_neuron_id: number
+        }
+        Update: {
+          clone_type?: string
+          cloned_by?: string | null
+          cloned_neuron_id?: number
+          created_at?: string
+          id?: string
+          source_neuron_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neuron_clones_cloned_neuron_id_fkey"
+            columns: ["cloned_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_clones_source_neuron_id_fkey"
+            columns: ["source_neuron_id"]
             isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]
@@ -252,31 +336,79 @@ export type Database = {
         }
         Relationships: []
       }
+      neuron_templates: {
+        Row: {
+          author_id: string | null
+          blocks_template: Json
+          category: string
+          created_at: string
+          default_tags: string[] | null
+          description: string
+          id: string
+          is_public: boolean
+          name: string
+          usage_count: number
+        }
+        Insert: {
+          author_id?: string | null
+          blocks_template?: Json
+          category?: string
+          created_at?: string
+          default_tags?: string[] | null
+          description?: string
+          id?: string
+          is_public?: boolean
+          name: string
+          usage_count?: number
+        }
+        Update: {
+          author_id?: string | null
+          blocks_template?: Json
+          category?: string
+          created_at?: string
+          default_tags?: string[] | null
+          description?: string
+          id?: string
+          is_public?: boolean
+          name?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
       neuron_versions: {
         Row: {
           author_id: string | null
           blocks_snapshot: Json
+          change_summary: string | null
           created_at: string
+          diff: Json | null
           id: string
           neuron_id: number
+          parent_version_id: string | null
           title: string
           version: number
         }
         Insert: {
           author_id?: string | null
           blocks_snapshot?: Json
+          change_summary?: string | null
           created_at?: string
+          diff?: Json | null
           id?: string
           neuron_id: number
+          parent_version_id?: string | null
           title: string
           version?: number
         }
         Update: {
           author_id?: string | null
           blocks_snapshot?: Json
+          change_summary?: string | null
           created_at?: string
+          diff?: Json | null
           id?: string
           neuron_id?: number
+          parent_version_id?: string | null
           title?: string
           version?: number
         }
@@ -286,6 +418,13 @@ export type Database = {
             columns: ["neuron_id"]
             isOneToOne: false
             referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_versions_parent_version_id_fkey"
+            columns: ["parent_version_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_versions"
             referencedColumns: ["id"]
           },
         ]
@@ -349,7 +488,17 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      neuron_stats: {
+        Row: {
+          author_id: string | null
+          avg_score: number | null
+          drafts: number | null
+          last_active: string | null
+          published: number | null
+          total_neurons: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
