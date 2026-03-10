@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
+import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
