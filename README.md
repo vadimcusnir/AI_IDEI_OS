@@ -9,8 +9,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/vadimcusnir/AI_IDEI_OS/actions"><img src="https://github.com/vadimcusnir/AI_IDEI_OS/workflows/CI/badge.svg" alt="CI Status" /></a>
-  <a href="https://github.com/vadimcusnir/AI_IDEI_OS/actions"><img src="https://github.com/vadimcusnir/AI_IDEI_OS/workflows/Security/badge.svg" alt="Security" /></a>
+  <a href="https://github.com/vadimcusnir/AI_IDEI_OS/actions/workflows/ci.yml"><img src="https://github.com/vadimcusnir/AI_IDEI_OS/workflows/CI/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/vadimcusnir/AI_IDEI_OS/actions/workflows/codeql.yml"><img src="https://github.com/vadimcusnir/AI_IDEI_OS/workflows/CodeQL/badge.svg" alt="CodeQL" /></a>
+  <a href="https://github.com/vadimcusnir/AI_IDEI_OS/actions/workflows/security.yml"><img src="https://github.com/vadimcusnir/AI_IDEI_OS/workflows/Security/badge.svg" alt="Security" /></a>
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
   <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/React-18.x-61DAFB?logo=react&logoColor=white" alt="React" />
