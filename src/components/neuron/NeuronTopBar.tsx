@@ -36,6 +36,7 @@ interface NeuronTopBarProps {
   onRunAll: () => void;
   onClone?: () => Promise<any>;
   onFork?: () => Promise<any>;
+  onSaveAsTemplate?: () => void;
 }
 
 const statusConfig: Record<NeuronStatus, { label: string; className: string }> = {
