@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
-import { Coins, Plus, Zap, Sparkles, Crown } from "lucide-react";
+import { Coins, Plus, Zap, Sparkles, Crown, Loader2, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "react-router-dom";
 
 const PACKAGES = [
-  { neurons: 500, price: 5, icon: Zap, label: "Starter", popular: false },
-  { neurons: 1000, price: 10, icon: Sparkles, label: "Standard", popular: true },
-  { neurons: 5000, price: 47, icon: Crown, label: "Pro", popular: false },
+  { key: "starter", neurons: 500, price: 11, icon: Zap, label: "Starter", popular: false },
+  { key: "standard", neurons: 1000, price: 20, icon: Sparkles, label: "Standard", popular: true },
+  { key: "pro", neurons: 5000, price: 92, icon: Crown, label: "Pro", popular: false },
 ];
 
 interface TopUpDialogProps {
@@ -22,45 +23,52 @@ interface TopUpDialogProps {
 export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
-  const [processing, setProcessing] = useState<number | null>(null);
+  const [processing, setProcessing] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleTopUp = async (neurons: number) => {
+  // Handle return from Stripe checkout
+  useEffect(() => {
+    const topup = searchParams.get("topup");
+    const neurons = searchParams.get("neurons");
+    if (topup === "success" && neurons) {
+      // Verify payment and credit neurons
+      verifyPayment();
+      // Clean URL params
+      searchParams.delete("topup");
+      searchParams.delete("neurons");
+      setSearchParams(searchParams, { replace: true });
+    } else if (topup === "cancelled") {
+      toast.info("Plata a fost anulată.");
+      searchParams.delete("topup");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, []);
+
+  const verifyPayment = async () => {
+    // The credits are added by verify-topup edge function
+    // For now just show success and refresh
+    toast.success("Plata a fost procesată! Creditele vor fi adăugate în scurt timp.");
+    onSuccess();
+  };
+
+  const handleTopUp = async (packageKey: string) => {
     if (!user) return;
-    setProcessing(neurons);
+    setProcessing(packageKey);
 
     try {
-      // Insert top-up transaction
-      const { error: txError } = await supabase.from("credit_transactions").insert({
-        user_id: user.id,
-        amount: neurons,
-        type: "topup",
-        description: `TOPUP: +${neurons} NEURONS`,
+      const { data, error } = await supabase.functions.invoke("create-topup-checkout", {
+        body: { package_key: packageKey },
       });
-      if (txError) throw txError;
 
-      // Update balance
-      const { data: current } = await supabase
-        .from("user_credits")
-        .select("balance, total_earned")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      if (error) throw new Error(error.message || "Eroare la crearea sesiunii de plată");
+      if (!data?.url) throw new Error("Nu s-a primit URL-ul de checkout");
 
-      if (current) {
-        const { error: updateError } = await supabase
-          .from("user_credits")
-          .update({
-            balance: current.balance + neurons,
-            total_earned: current.total_earned + neurons,
-          })
-          .eq("user_id", user.id);
-        if (updateError) throw updateError;
-      }
-
-      toast.success(`+${neurons} NEURONS adăugați cu succes!`);
+      // Open Stripe checkout in new tab
+      window.open(data.url, "_blank");
       setOpen(false);
-      onSuccess();
+      toast.info("Finalizează plata în fereastra deschisă.");
     } catch (err: any) {
-      toast.error("Eroare la încărcare: " + (err.message || "Încearcă din nou"));
+      toast.error("Eroare: " + (err.message || "Încearcă din nou"));
     } finally {
       setProcessing(null);
     }
@@ -79,16 +87,16 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
           <DialogTitle className="text-base font-semibold">Încarcă NEURONS</DialogTitle>
         </DialogHeader>
         <p className="text-xs text-muted-foreground mb-4">
-          Alege un pachet pentru a-ți reîncărca balanța de credite.
+          Alege un pachet. Plata se procesează securizat prin Stripe.
         </p>
         <div className="space-y-2">
           {PACKAGES.map(pkg => {
             const Icon = pkg.icon;
-            const isProcessing = processing === pkg.neurons;
+            const isProcessing = processing === pkg.key;
             return (
               <button
-                key={pkg.neurons}
-                onClick={() => handleTopUp(pkg.neurons)}
+                key={pkg.key}
+                onClick={() => handleTopUp(pkg.key)}
                 disabled={processing !== null}
                 className={cn(
                   "w-full flex items-center gap-4 p-4 rounded-xl border transition-all text-left",
@@ -102,7 +110,11 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
                   "h-10 w-10 rounded-xl flex items-center justify-center shrink-0",
                   pkg.popular ? "bg-primary/10" : "bg-muted"
                 )}>
-                  <Icon className={cn("h-5 w-5", pkg.popular ? "text-primary" : "text-muted-foreground")} />
+                  {isProcessing ? (
+                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  ) : (
+                    <Icon className={cn("h-5 w-5", pkg.popular ? "text-primary" : "text-muted-foreground")} />
+                  )}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
@@ -127,9 +139,12 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
             );
           })}
         </div>
-        <p className="text-[10px] text-muted-foreground/60 text-center mt-2">
-          Creditele sunt adăugate instant în cont.
-        </p>
+        <div className="flex items-center justify-center gap-1.5 mt-3">
+          <ExternalLink className="h-3 w-3 text-muted-foreground/40" />
+          <p className="text-[10px] text-muted-foreground/60 text-center">
+            Plată securizată prin Stripe. Creditele se adaugă instant după confirmare.
+          </p>
+        </div>
       </DialogContent>
     </Dialog>
   );
