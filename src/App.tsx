@@ -31,6 +31,7 @@ import ProfileExtractor from "./pages/ProfileExtractor";
 import Notifications from "./pages/Notifications";
 import Feedback from "./pages/Feedback";
 import Index from "./pages/Index";
+import Changelog from "./pages/Changelog";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/links" element={<Links />} />
+              <Route path="/changelog" element={<Changelog />} />
               <Route path="/architecture" element={<Architecture />} />
               <Route path="/u/:username" element={<PublicProfile />} />
 

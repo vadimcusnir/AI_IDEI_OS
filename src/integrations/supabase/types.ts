@@ -56,6 +56,60 @@ export type Database = {
         }
         Relationships: []
       }
+      changelog_entries: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string
+          example: string | null
+          id: string
+          position: number
+          release_date: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_benefit: string | null
+          version: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          example?: string | null
+          id?: string
+          position?: number
+          release_date?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_benefit?: string | null
+          version?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          example?: string | null
+          id?: string
+          position?: number
+          release_date?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_benefit?: string | null
+          version?: string
+        }
+        Relationships: []
+      }
       credit_transactions: {
         Row: {
           amount: number

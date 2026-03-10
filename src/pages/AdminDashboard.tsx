@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
+import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
@@ -335,6 +336,9 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="feedback" className="text-xs gap-1">
               <MessageCircle className="h-3 w-3" /> Feedback
+            </TabsTrigger>
+            <TabsTrigger value="changelog" className="text-xs gap-1">
+              <ScrollText className="h-3 w-3" /> Changelog
             </TabsTrigger>
           </TabsList>
 
@@ -675,6 +679,11 @@ export default function AdminDashboard() {
           {/* ─── Feedback ─── */}
           <TabsContent value="feedback">
             <AdminFeedbackTab />
+          </TabsContent>
+
+          {/* ─── Changelog ─── */}
+          <TabsContent value="changelog">
+            <AdminChangelogTab />
           </TabsContent>
         </Tabs>
       </div>
