@@ -146,7 +146,7 @@ export function KnowledgeGraph() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">
-            {nodes.length} neuroni · {links.length} conexiuni
+            {nodes.length} neurons · {links.length} connections
           </span>
         </div>
         <div className="flex items-center gap-1">
