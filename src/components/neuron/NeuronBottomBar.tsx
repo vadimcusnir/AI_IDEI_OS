@@ -26,6 +26,7 @@ interface NeuronBottomBarProps {
   onRemoveLink?: (linkId: string) => void;
   onSaveVersion?: () => void;
   onClearLogs?: () => void;
+  onRestoreVersion?: (version: NeuronVersion) => void;
 }
 
 const tabs: { id: BottomTab; label: string; icon: React.ElementType }[] = [
