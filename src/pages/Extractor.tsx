@@ -287,6 +287,7 @@ export default function Extractor() {
           fetchEpisodes();
         } else {
           toast.success("Episode created");
+          trackEvent({ name: "transcript_uploaded", params: { source_type: sourceType, episode_id: ep.id } });
           resetForm();
           if (episodes.length > 0) setShowForm(false);
           fetchEpisodes();
