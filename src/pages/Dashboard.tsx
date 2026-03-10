@@ -138,6 +138,32 @@ export default function Dashboard() {
           <KPI icon={Layers} label="Artifacts" value={data.artifacts.total} sub={`+${data.artifacts.thisWeek} this week`} />
         </div>
 
+        {/* Pipeline Progress */}
+        <div className="bg-card border border-border rounded-xl p-4 mb-6">
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <Activity className="h-3 w-3" /> Pipeline Progress
+          </h3>
+          <div className="flex items-center gap-2">
+            {[
+              { label: "Upload", value: data.pipeline.uploaded, icon: FileAudio },
+              { label: "Transcribe", value: data.pipeline.transcribed, icon: Layers },
+              { label: "Extract", value: data.pipeline.analyzed, icon: Brain },
+              { label: "Deliver", value: data.pipeline.serviced, icon: Sparkles },
+            ].map((step, i, arr) => (
+              <div key={step.label} className="flex items-center gap-2 flex-1">
+                <div className="flex-1 text-center">
+                  <step.icon className={cn("h-4 w-4 mx-auto mb-1", step.value > 0 ? "text-primary" : "text-muted-foreground/30")} />
+                  <p className="text-lg font-bold font-mono">{step.value}</p>
+                  <p className="text-[9px] text-muted-foreground">{step.label}</p>
+                </div>
+                {i < arr.length - 1 && (
+                  <div className={cn("h-0.5 w-6 rounded-full shrink-0", step.value > 0 ? "bg-primary/40" : "bg-muted")} />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Activity Chart + Credit Gauge */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {/* Activity */}
