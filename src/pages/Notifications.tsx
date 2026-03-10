@@ -52,11 +52,11 @@ export default function Notifications() {
   const handleTogglePush = async () => {
     if (isSubscribed) {
       await unsubscribe();
-      toast.success("Notificările push au fost dezactivate.");
+      toast.success("Push notifications disabled.");
     } else {
       const ok = await subscribe();
-      if (ok) toast.success("Notificările push au fost activate!");
-      else toast.error("Nu s-au putut activa notificările push.");
+      if (ok) toast.success("Push notifications enabled!");
+      else toast.error("Could not enable push notifications.");
     }
   };
 
