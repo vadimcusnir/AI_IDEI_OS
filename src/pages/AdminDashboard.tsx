@@ -216,7 +216,7 @@ export default function AdminDashboard() {
     if (hasAdmin) {
       const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "admin");
       if (error) { toast.error(error.message); return; }
-      toast.success("Rol admin revocat");
+      toast.success("Admin role revoked");
     } else {
       const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
       if (error) { toast.error(error.message); return; }
