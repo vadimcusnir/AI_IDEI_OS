@@ -10,6 +10,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
+import Home from "./pages/Home";
 import NeuronEditor from "./pages/NeuronEditor";
 import AdminDashboard from "./pages/AdminDashboard";
 import Architecture from "./pages/Architecture";
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/u/:username" element={<PublicProfile />} />
 
               {/* Protected routes with AppLayout */}
+              <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
               <Route path="/neurons" element={<ProtectedRoute><AppLayout><Index /></AppLayout></ProtectedRoute>} />
               <Route path="/n/new" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
               <Route path="/n/:number" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />

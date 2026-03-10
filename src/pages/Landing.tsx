@@ -76,7 +76,7 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             {user ? (
-              <Button size="sm" onClick={() => navigate("/neurons")} className="gap-1.5">
+              <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5">
                 <Brain className="h-3.5 w-3.5" />
                 Dashboard
               </Button>
@@ -158,8 +158,8 @@ export default function Landing() {
             transition={{ delay: 0.45, duration: 0.5 }}
             className="flex items-center justify-center gap-3"
           >
-            <Button size="lg" onClick={() => navigate(user ? "/neurons" : "/auth")} className="gap-2 text-sm px-8">
-              {user ? "Mergi la Neuroni" : "Începe gratuit"}
+            <Button size="lg" onClick={() => navigate(user ? "/home" : "/auth")} className="gap-2 text-sm px-8">
+              {user ? "Mergi la Dashboard" : "Începe gratuit"}
               <ArrowRight className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/architecture")} className="gap-2 text-sm">
@@ -331,8 +331,8 @@ export default function Landing() {
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
             Începe gratuit cu 500 de credite. Încarcă primul tău conținut și extrage neuroni în mai puțin de 2 minute.
           </p>
-          <Button size="lg" onClick={() => navigate(user ? "/neurons" : "/auth")} className="gap-2 px-10">
-            {user ? "Mergi la Neuroni" : "Creează cont gratuit"}
+          <Button size="lg" onClick={() => navigate(user ? "/home" : "/auth")} className="gap-2 px-10">
+            {user ? "Mergi la Dashboard" : "Creează cont gratuit"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </motion.div>
