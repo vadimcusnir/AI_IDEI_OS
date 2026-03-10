@@ -11,3 +11,9 @@ verify_jwt = false
 
 [functions.extract-guests]
 verify_jwt = false
+
+[functions.create-topup-checkout]
+verify_jwt = false
+
+[functions.verify-topup]
+verify_jwt = false
