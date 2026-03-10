@@ -170,6 +170,11 @@ export default function NeuronEditor() {
           links={links}
           addresses={addresses}
           loadingLinks={loadingLinks}
+          onAddLink={async (targetId, relationType) => {
+            const result = await addLink(targetId, relationType);
+            if (result?.error) toast.error("Failed to add link");
+            else toast.success("Link added");
+          }}
           onRemoveLink={handleRemoveLink}
         />
 
