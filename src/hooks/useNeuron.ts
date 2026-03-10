@@ -24,7 +24,7 @@ export function useNeuron(neuronNumber?: number) {
   const [tags, setTags] = useState<string[]>([]);
   const [executionLogs, setExecutionLogs] = useState<ExecutionLog[]>([]);
   const clearLogs = useCallback(() => setExecutionLogs([]), []);
-  const saveTimeoutRef = useRef<NodeJS.Timeout>();
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Load neuron by number or create new
   useEffect(() => {
