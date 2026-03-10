@@ -169,12 +169,39 @@ export default function Extractor() {
     toast.success("Transcript copiat în clipboard");
   };
 
+  const handleChunkPreview = async (episode: Episode) => {
+    if (!user || !episode.transcript?.trim()) return;
+    setChunkingId(episode.id);
+    try {
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chunk-transcript`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ episode_id: episode.id, user_id: user.id }),
+        }
+      );
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
+      setChunkPreview({ episodeId: episode.id, chunks: data.chunks });
+      toast.success(`${data.total_chunks} segmente generate (${data.total_tokens} tokens)`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Segmentarea a eșuat");
+    } finally {
+      setChunkingId(null);
+    }
+  };
+
   const handleExtractNeurons = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
       toast.error("Episodul nu are conținut transcript pentru extracție.");
       return;
     }
     setExtractingId(episode.id);
+    setExtractionProgress({ chunks: 0, neurons: 0 });
     toast.info("Se extrag neuroni din episod... (100 credite)");
     try {
       const resp = await fetch(
@@ -190,12 +217,17 @@ export default function Extractor() {
       );
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
-      toast.success(`${data.neurons_created} neuroni extrași! (${data.credits_spent} credite consumate)`);
+      setExtractionProgress({ chunks: data.chunks_processed || 0, neurons: data.neurons_created });
+      toast.success(`${data.neurons_created} neuroni extrași din ${data.chunks_processed || 1} segmente! (${data.credits_spent} credite)`);
+      setChunkPreview(null);
       fetchEpisodes();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Extracția a eșuat");
     } finally {
-      setExtractingId(null);
+      setTimeout(() => {
+        setExtractingId(null);
+        setExtractionProgress(null);
+      }, 2000);
     }
   };
 
