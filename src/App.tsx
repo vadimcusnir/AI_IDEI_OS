@@ -40,6 +40,7 @@ const App = () => (
             <Route path="/run/:serviceKey" element={<RunService />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/credits" element={<Credits />} />
+            <Route path="/intelligence" element={<Intelligence />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

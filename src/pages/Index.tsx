@@ -126,6 +126,10 @@ export default function Index() {
             <Coins className="h-3.5 w-3.5" />
             Credits
           </Button>
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/intelligence")}>
+            <BarChart3 className="h-3.5 w-3.5" />
+            Intelligence
+          </Button>
           <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/architecture")}>
             <BookOpen className="h-3.5 w-3.5" />
             Docs
