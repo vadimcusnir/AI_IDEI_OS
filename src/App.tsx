@@ -18,6 +18,7 @@ import RunService from "./pages/RunService";
 import Credits from "./pages/Credits";
 import Intelligence from "./pages/Intelligence";
 import Dashboard from "./pages/Dashboard";
+import PublicProfile from "./pages/PublicProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
