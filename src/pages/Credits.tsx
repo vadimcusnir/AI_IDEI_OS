@@ -207,7 +207,7 @@ export default function Credits() {
                   <div key={name} className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-border bg-card">
                     <div className="min-w-0">
                       <p className="text-xs font-medium truncate">{name}</p>
-                      <p className="text-[10px] text-muted-foreground">{stats.count} execuți{stats.count !== 1 ? "i" : "e"}</p>
+                      <p className="text-[10px] text-muted-foreground">{stats.count} execution{stats.count !== 1 ? "s" : ""}</p>
                     </div>
                     <span className="text-sm font-mono font-bold text-destructive shrink-0 ml-2">-{stats.total}</span>
                   </div>
