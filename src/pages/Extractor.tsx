@@ -496,6 +496,18 @@ export default function Extractor() {
                         <Brain className="h-3 w-3" /> Extrage
                       </Button>
                     )}
+                    {canExtract && !isExtracting && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs gap-1 shrink-0"
+                        disabled={detectingGuests === ep.id}
+                        onClick={e => { e.stopPropagation(); handleDetectGuests(ep); }}
+                      >
+                        {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
+                        Guests
+                      </Button>
+                    )}
                     {isExtracting && (
                       <div className="flex items-center gap-1.5 shrink-0">
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" />
