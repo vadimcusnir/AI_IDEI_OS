@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.gif";
@@ -31,87 +32,74 @@ const scaleIn = {
   visible: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
-/* ─── Data ─── */
-const PIPELINE = [
-  { icon: Upload, label: "Upload", sub: "Audio · Video · Text · URL", color: "text-blue-500" },
-  { icon: Brain, label: "Extract", sub: "Atomic neurons", color: "text-primary" },
-  { icon: Network, label: "Connect", sub: "Knowledge graph", color: "text-violet-500" },
-  { icon: Sparkles, label: "Generate", sub: "50+ deliverables", color: "text-amber-500" },
-  { icon: BarChart3, label: "Monetize", sub: "Infinite reuse", color: "text-emerald-500" },
-];
-
-const CAPABILITIES = [
-  {
-    icon: Brain,
-    title: "Knowledge Extraction Engine",
-    description: "Turns conversations into structured atomic ideas — frameworks, patterns, formulas, psychological signals. Not summaries. Structures.",
-    accent: "from-primary/20 to-primary/5",
-  },
-  {
-    icon: Zap,
-    title: "Deterministic AI Services",
-    description: "Fixed cost. Clear deliverables. Every service has defined input, auditable execution, and predictable output. No tokens burned guessing.",
-    accent: "from-amber-500/20 to-amber-500/5",
-  },
-  {
-    icon: Network,
-    title: "Living Knowledge Graph",
-    description: "Neurons connect through typed relations: supports, contradicts, extends, derived_from. Your expertise becomes navigable architecture.",
-    accent: "from-violet-500/20 to-violet-500/5",
-  },
-  {
-    icon: Shield,
-    title: "Transparent Credit Economy",
-    description: "Every operation has a visible cost in NEURONS. No subscriptions. No surprises. You see exactly what you pay — down to 0.01 USD.",
-    accent: "from-emerald-500/20 to-emerald-500/5",
-  },
-];
-
-const CONTENT_TYPES = [
-  { icon: Mic, label: "Podcasts" },
-  { icon: Users, label: "Interviews" },
-  { icon: BookOpen, label: "Courses" },
-  { icon: FileText, label: "Articles" },
-  { icon: Globe, label: "Webinars" },
-  { icon: Bot, label: "AI Conversations" },
-];
-
-const DELIVERABLES = [
-  "Marketing frameworks", "Sales scripts", "Social media posts", "Course outlines",
-  "Copywriting formulas", "Psychological profiles", "JTBD patterns", "Persuasion frameworks",
-  "Narrative structures", "Guest profiles", "Knowledge reports", "Decision models",
-];
-
-const PROVEN_RESULTS = [
-  { value: "11+", label: "Content categories", icon: Layers },
-  { value: "44+", label: "AI templates", icon: FileText },
-  { value: "50+", label: "Deliverables per run", icon: Sparkles },
-  { value: "500", label: "Free credits on signup", icon: Gem },
-];
-
-const WHO_IS_THIS_FOR = [
-  { icon: Mic, title: "Podcasters & Creators", description: "Turn every episode into a library of reusable frameworks, guest profiles, and content assets." },
-  { icon: Target, title: "Marketers & Consultants", description: "Extract decision patterns from client conversations. Generate campaigns from real buyer psychology." },
-  { icon: BookOpen, title: "Coaches & Educators", description: "Transform your methodology into structured courses, frameworks, and sellable knowledge products." },
-  { icon: TrendingUp, title: "Founders & Researchers", description: "Build a compounding knowledge base from market conversations, interviews, and field research." },
-];
-
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation("landing");
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   const ctaAction = () => navigate(user ? "/home" : "/auth");
-  const ctaLabel = user ? "Go to Dashboard" : "Start Free — 500 Credits";
+  const ctaLabel = user ? t("hero.cta_dashboard") : t("hero.cta_start");
+
+  const PIPELINE = [
+    { icon: Upload, label: t("pipeline.upload"), sub: t("pipeline.upload_sub"), color: "text-blue-500" },
+    { icon: Brain, label: t("pipeline.extract"), sub: t("pipeline.extract_sub"), color: "text-primary" },
+    { icon: Network, label: t("pipeline.connect"), sub: t("pipeline.connect_sub"), color: "text-violet-500" },
+    { icon: Sparkles, label: t("pipeline.generate"), sub: t("pipeline.generate_sub"), color: "text-amber-500" },
+    { icon: BarChart3, label: t("pipeline.monetize"), sub: t("pipeline.monetize_sub"), color: "text-emerald-500" },
+  ];
+
+  const CAPABILITIES = [
+    { icon: Brain, title: t("capabilities.extraction_title"), description: t("capabilities.extraction_desc"), accent: "from-primary/20 to-primary/5" },
+    { icon: Zap, title: t("capabilities.services_title"), description: t("capabilities.services_desc"), accent: "from-amber-500/20 to-amber-500/5" },
+    { icon: Network, title: t("capabilities.graph_title"), description: t("capabilities.graph_desc"), accent: "from-violet-500/20 to-violet-500/5" },
+    { icon: Shield, title: t("capabilities.economy_title"), description: t("capabilities.economy_desc"), accent: "from-emerald-500/20 to-emerald-500/5" },
+  ];
+
+  const CONTENT_TYPES = [
+    { icon: Mic, label: t("problem.podcasts") },
+    { icon: Users, label: t("problem.interviews") },
+    { icon: BookOpen, label: t("problem.courses") },
+    { icon: FileText, label: t("problem.articles") },
+    { icon: Globe, label: t("problem.webinars") },
+    { icon: Bot, label: t("problem.ai_conversations") },
+  ];
+
+  const DELIVERABLES = [
+    t("pipeline.d_marketing"), t("pipeline.d_sales"), t("pipeline.d_social"), t("pipeline.d_course"),
+    t("pipeline.d_copy"), t("pipeline.d_psych"), t("pipeline.d_jtbd"), t("pipeline.d_persuasion"),
+    t("pipeline.d_narrative"), t("pipeline.d_guest"), t("pipeline.d_knowledge"), t("pipeline.d_decision"),
+  ];
+
+  const PROVEN_RESULTS = [
+    { value: "11+", label: t("social_proof.categories"), icon: Layers },
+    { value: "44+", label: t("social_proof.templates"), icon: FileText },
+    { value: "50+", label: t("social_proof.deliverables"), icon: Sparkles },
+    { value: "500", label: t("social_proof.free_credits"), icon: Gem },
+  ];
+
+  const WHO_IS_THIS_FOR = [
+    { icon: Mic, title: t("use_cases.podcasters_title"), description: t("use_cases.podcasters_desc") },
+    { icon: Target, title: t("use_cases.marketers_title"), description: t("use_cases.marketers_desc") },
+    { icon: BookOpen, title: t("use_cases.coaches_title"), description: t("use_cases.coaches_desc") },
+    { icon: TrendingUp, title: t("use_cases.founders_title"), description: t("use_cases.founders_desc") },
+  ];
+
+  const NAV_LINKS = [
+    { label: t("nav.how_it_works"), to: "#pipeline" },
+    { label: t("nav.capabilities"), to: "#capabilities" },
+    { label: t("nav.use_cases"), to: "#use-cases" },
+    { label: t("nav.docs"), to: "/docs" },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="AI-IDEI — Knowledge Extraction Operating System"
-        description="Transform expertise into digital assets. Upload content once, generate dozens of professional outputs automatically. The magic marketing button."
+        title={t("seo.title")}
+        description={t("seo.description")}
         canonical="https://ai-idei-os.lovable.app"
       />
 
@@ -122,16 +110,11 @@ export default function Landing() {
             <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full group-hover:shadow-lg group-hover:shadow-primary/20 transition-shadow" />
             <span className="text-base font-serif font-bold">AI-IDEI</span>
             <span className="text-[9px] uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold hidden sm:inline">
-              Knowledge OS
+              {t("nav.knowledge_os")}
             </span>
           </button>
           <nav className="hidden md:flex items-center gap-6">
-            {[
-              { label: "How It Works", to: "#pipeline" },
-              { label: "Capabilities", to: "#capabilities" },
-              { label: "Use Cases", to: "#use-cases" },
-              { label: "Docs", to: "/docs" },
-            ].map(link => (
+            {NAV_LINKS.map(link => (
               <button
                 key={link.label}
                 onClick={() => link.to.startsWith("#") ? document.querySelector(link.to)?.scrollIntoView({ behavior: "smooth" }) : navigate(link.to)}
@@ -146,15 +129,15 @@ export default function Landing() {
             {user ? (
               <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5">
                 <Brain className="h-3.5 w-3.5" />
-                Dashboard
+                {t("nav.dashboard")}
               </Button>
             ) : (
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs">
-                  Login
+                  {t("nav.login")}
                 </Button>
                 <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5">
-                  Start Free
+                  {t("nav.start_free")}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -165,7 +148,6 @@ export default function Landing() {
 
       {/* ═══ HERO ═══ */}
       <section ref={heroRef} className="relative overflow-hidden">
-        {/* Ambient glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.04] via-transparent to-transparent" />
         <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-primary/[0.06] rounded-full blur-[150px]" />
         <div className="absolute top-40 right-1/4 w-[400px] h-[400px] bg-violet-500/[0.04] rounded-full blur-[120px]" />
@@ -178,74 +160,47 @@ export default function Landing() {
             </div>
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="text-[11px] font-bold uppercase tracking-[0.25em] text-primary mb-6"
-          >
-            Knowledge Extraction Operating System
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="text-[11px] font-bold uppercase tracking-[0.25em] text-primary mb-6">
+            {t("hero.tagline")}
           </motion.p>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6 leading-[1.1] tracking-tight"
-          >
-            Your expertise disappears
+          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6 leading-[1.1] tracking-tight">
+            {t("hero.title_line1")}
             <br />
             <span className="relative">
-              in conversations.
+              {t("hero.title_line2")}
               <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none">
                 <path d="M2 8C50 2 250 2 298 8" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" opacity="0.4" />
               </svg>
             </span>
             <br />
-            <span className="text-primary">We extract it forever.</span>
+            <span className="text-primary">{t("hero.title_line3")}</span>
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.5 }}
-            className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-10"
-          >
-            Upload one podcast. Get 50+ professional outputs — articles, frameworks, scripts, 
-            courses, psychological profiles, marketing funnels. Automatically. Every time.
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }} className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-10">
+            {t("hero.subtitle")}
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
             <Button size="lg" onClick={ctaAction} className="gap-2 text-sm px-10 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
               {ctaLabel}
               <ArrowRight className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/architecture")} className="gap-2 text-sm h-12">
               <Play className="h-4 w-4" />
-              See How It Works
+              {t("hero.cta_how")}
             </Button>
           </motion.div>
 
-          {/* Trust pills */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="flex items-center justify-center gap-4 flex-wrap"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }} className="flex items-center justify-center gap-4 flex-wrap">
             {[
-              { icon: CheckCircle2, text: "No credit card required" },
-              { icon: Zap, text: "500 free credits" },
-              { icon: Lock, text: "GDPR compliant" },
-            ].map(t => (
-              <span key={t.text} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                <t.icon className="h-3.5 w-3.5 text-status-validated" />
-                {t.text}
+              { icon: CheckCircle2, text: t("hero.trust_no_card") },
+              { icon: Zap, text: t("hero.trust_credits") },
+              { icon: Lock, text: t("hero.trust_gdpr") },
+            ].map(item => (
+              <span key={item.text} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                <item.icon className="h-3.5 w-3.5 text-status-validated" />
+                {item.text}
               </span>
             ))}
           </motion.div>
@@ -259,43 +214,36 @@ export default function Landing() {
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
               <div className="inline-flex items-center gap-2 mb-4">
                 <div className="h-1 w-6 rounded-full bg-destructive" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-destructive">The Problem</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-destructive">{t("problem.label")}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
-                The internet produces infinite information.
+                {t("problem.title")}
               </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                But almost none of it becomes <strong className="text-foreground">usable knowledge</strong>. 
-                Insights disappear in podcast episodes, client calls, interviews, and unstructured notes. 
-                You repeat yourself. You forget what you said. You can't find that one framework you explained brilliantly… three months ago.
-              </p>
+              <p className="text-muted-foreground leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: t("problem.desc") }} />
               <div className="flex flex-wrap gap-2">
-                {CONTENT_TYPES.map(t => (
-                  <span key={t.label} className="flex items-center gap-1.5 text-[11px] bg-destructive/5 border border-destructive/10 px-3 py-1.5 rounded-full text-muted-foreground">
-                    <t.icon className="h-3 w-3 text-destructive/60" />
-                    {t.label}
+                {CONTENT_TYPES.map(ct => (
+                  <span key={ct.label} className="flex items-center gap-1.5 text-[11px] bg-destructive/5 border border-destructive/10 px-3 py-1.5 rounded-full text-muted-foreground">
+                    <ct.icon className="h-3 w-3 text-destructive/60" />
+                    {ct.label}
                   </span>
                 ))}
               </div>
               <p className="mt-6 text-sm text-destructive/80 font-medium italic">
-                Most insights disappear. Forever.
+                {t("problem.footnote")}
               </p>
             </motion.div>
 
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp}>
               <div className="inline-flex items-center gap-2 mb-4">
                 <div className="h-1 w-6 rounded-full bg-status-validated" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-status-validated">The Solution</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-status-validated">{t("solution.label")}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
-                Extract ideas.<br />Build decision systems.
+                {t("solution.title_line1")}<br />{t("solution.title_line2")}
               </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                AI-IDEI doesn't summarize. It <strong className="text-foreground">structures</strong>. Every conversation becomes atomic knowledge units — neurons — 
-                connected through semantic relations into a navigable graph of your expertise. Then it generates products from that graph. Automatically.
-              </p>
+              <p className="text-muted-foreground leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: t("solution.desc") }} />
               <div className="space-y-2">
-                {["Upload once → generate forever", "Atomic ideas, not vague summaries", "50+ deliverables per content piece", "Knowledge compounds over time"].map(line => (
+                {[t("solution.bullet1"), t("solution.bullet2"), t("solution.bullet3"), t("solution.bullet4")].map(line => (
                   <div key={line} className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-status-validated shrink-0" />
                     <span className="text-sm text-foreground">{line}</span>
@@ -313,28 +261,20 @@ export default function Landing() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="h-1 w-6 rounded-full bg-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">How It Works</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("pipeline.label")}</span>
               <div className="h-1 w-6 rounded-full bg-primary" />
             </div>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-3">From Raw Content to Monetizable Assets</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">Five deterministic steps. No guessing. No prompt engineering. Press the button.</p>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("pipeline.title")}</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">{t("pipeline.subtitle")}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 sm:gap-2">
             {PIPELINE.map((step, i) => (
-              <motion.div
-                key={step.label}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                className="relative flex flex-col items-center text-center group"
-              >
+              <motion.div key={step.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="relative flex flex-col items-center text-center group">
                 <div className="h-16 w-16 rounded-2xl bg-background border border-border flex items-center justify-center mb-3 group-hover:border-primary/30 group-hover:shadow-lg group-hover:shadow-primary/10 transition-all duration-300">
                   <step.icon className={cn("h-7 w-7", step.color)} />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">Step {i + 1}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">{t("pipeline.step", { number: i + 1 })}</span>
                 <span className="text-sm font-semibold">{step.label}</span>
                 <span className="text-[11px] text-muted-foreground mt-0.5">{step.sub}</span>
                 {i < PIPELINE.length - 1 && (
@@ -344,9 +284,8 @@ export default function Landing() {
             ))}
           </div>
 
-          {/* Deliverables ticker */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={5} variants={fadeUp} className="mt-14">
-            <p className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">One upload generates</p>
+            <p className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">{t("pipeline.ticker_label")}</p>
             <div className="flex flex-wrap justify-center gap-2">
               {DELIVERABLES.map(d => (
                 <span key={d} className="text-[11px] px-3 py-1.5 rounded-full border border-border bg-background text-muted-foreground hover:border-primary/20 hover:text-foreground transition-all cursor-default">
@@ -363,25 +302,17 @@ export default function Landing() {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
           <div className="inline-flex items-center gap-2 mb-3">
             <div className="h-1 w-6 rounded-full bg-primary" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Capabilities</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("capabilities.label")}</span>
             <div className="h-1 w-6 rounded-full bg-primary" />
           </div>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-3">
-            Explore the Structure of Ideas,<br />Not Just the Content Around Them
+            {t("capabilities.title_line1")}<br />{t("capabilities.title_line2")}
           </h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {CAPABILITIES.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={i}
-              variants={fadeUp}
-              className="relative p-6 rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group"
-            >
+            <motion.div key={f.title} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="relative p-6 rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
               <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500", f.accent)} />
               <div className="relative">
                 <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
@@ -400,15 +331,7 @@ export default function Landing() {
         <div className="max-w-5xl mx-auto px-6 py-14">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {PROVEN_RESULTS.map((p, i) => (
-              <motion.div
-                key={p.label}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                className="text-center group"
-              >
+              <motion.div key={p.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="text-center group">
                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/15 transition-colors">
                   <p.icon className="h-5 w-5 text-primary" />
                 </div>
@@ -425,28 +348,16 @@ export default function Landing() {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
           <div className="inline-flex items-center gap-2 mb-3">
             <div className="h-1 w-6 rounded-full bg-primary" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Who Is This For</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("use_cases.label")}</span>
             <div className="h-1 w-6 rounded-full bg-primary" />
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-3">
-            Built for People Who Create Knowledge
-          </h2>
-          <p className="text-muted-foreground max-w-lg mx-auto">
-            If you speak, write, teach, or consult — your expertise is leaking. We capture it.
-          </p>
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("use_cases.title")}</h2>
+          <p className="text-muted-foreground max-w-lg mx-auto">{t("use_cases.subtitle")}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {WHO_IS_THIS_FOR.map((item, i) => (
-            <motion.div
-              key={item.title}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={i}
-              variants={fadeUp}
-              className="flex gap-4 p-5 rounded-2xl border border-border bg-card hover:border-primary/20 hover:shadow-md transition-all"
-            >
+            <motion.div key={item.title} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="flex gap-4 p-5 rounded-2xl border border-border bg-card hover:border-primary/20 hover:shadow-md transition-all">
               <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                 <item.icon className="h-5 w-5 text-primary" />
               </div>
@@ -465,32 +376,20 @@ export default function Landing() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="h-1 w-6 rounded-full bg-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">The Economics</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("economics.label")}</span>
               <div className="h-1 w-6 rounded-full bg-primary" />
             </div>
-            <h2 className="text-3xl font-serif font-bold mb-3">
-              The Real Margin Comes From Reuse
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto text-sm">
-              A framework extracted once can be reused 10,000 times. That's not a subscription — that's a knowledge multiplication engine.
-            </p>
+            <h2 className="text-3xl font-serif font-bold mb-3">{t("economics.title")}</h2>
+            <p className="text-muted-foreground max-w-lg mx-auto text-sm">{t("economics.subtitle")}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
-              { label: "Cost per extraction", value: "~$0.35", sub: "35 NEURONS credits" },
-              { label: "Deliverables generated", value: "50+", sub: "Per content piece" },
-              { label: "Cost per deliverable", value: "$0.007", sub: "Seven thousandths" },
+              { label: t("economics.cost_label"), value: t("economics.cost_value"), sub: t("economics.cost_sub") },
+              { label: t("economics.deliverables_label"), value: t("economics.deliverables_value"), sub: t("economics.deliverables_sub") },
+              { label: t("economics.per_label"), value: t("economics.per_value"), sub: t("economics.per_sub") },
             ].map((item, i) => (
-              <motion.div
-                key={item.label}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                className="text-center p-6 rounded-2xl border border-border bg-card"
-              >
+              <motion.div key={item.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="text-center p-6 rounded-2xl border border-border bg-card">
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">{item.label}</p>
                 <p className="text-3xl font-mono font-bold text-primary">{item.value}</p>
                 <p className="text-[11px] text-muted-foreground mt-1">{item.sub}</p>
@@ -503,38 +402,29 @@ export default function Landing() {
       {/* ═══ TESTIMONIALS ═══ */}
       <PublicTestimonials />
 
-      {/* ═══ EXPLORE KNOWLEDGE (like cusnirvadim.com) ═══ */}
+      {/* ═══ EXPLORE KNOWLEDGE ═══ */}
       <section className="bg-card border-y border-border">
         <div className="max-w-5xl mx-auto px-6 py-20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="h-1 w-6 rounded-full bg-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Explore Knowledge</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("explore.label")}</span>
               <div className="h-1 w-6 rounded-full bg-primary" />
             </div>
-            <h2 className="text-3xl font-serif font-bold mb-3">Navigate the Structure of Ideas</h2>
-            <p className="text-muted-foreground max-w-lg mx-auto text-sm">Public knowledge infrastructure — browse insights, patterns, and frameworks extracted by the platform.</p>
+            <h2 className="text-3xl font-serif font-bold mb-3">{t("explore.title")}</h2>
+            <p className="text-muted-foreground max-w-lg mx-auto text-sm">{t("explore.subtitle")}</p>
           </motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
-              { icon: Lightbulb, label: "Insights", sub: "Structured ideas", to: "/insights" },
-              { icon: Eye, label: "Patterns", sub: "Behavior models", to: "/patterns" },
-              { icon: Cpu, label: "Formulas", sub: "Conversion tools", to: "/formulas" },
-              { icon: Flame, label: "Contradictions", sub: "Tension maps", to: "/contradictions" },
-              { icon: Target, label: "Applications", sub: "Use cases", to: "/applications" },
-              { icon: Users, label: "Profiles", sub: "Expert maps", to: "/profiles" },
+              { icon: Lightbulb, label: t("explore.insights"), sub: t("explore.insights_sub"), to: "/insights" },
+              { icon: Eye, label: t("explore.patterns"), sub: t("explore.patterns_sub"), to: "/patterns" },
+              { icon: Cpu, label: t("explore.formulas"), sub: t("explore.formulas_sub"), to: "/formulas" },
+              { icon: Flame, label: t("explore.contradictions"), sub: t("explore.contradictions_sub"), to: "/contradictions" },
+              { icon: Target, label: t("explore.applications"), sub: t("explore.applications_sub"), to: "/applications" },
+              { icon: Users, label: t("explore.profiles"), sub: t("explore.profiles_sub"), to: "/profiles" },
             ].map((item, i) => (
-              <motion.button
-                key={item.label}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                onClick={() => navigate(item.to)}
-                className="flex flex-col items-center text-center p-4 rounded-xl border border-border bg-background hover:border-primary/20 hover:shadow-md transition-all group"
-              >
+              <motion.button key={item.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} onClick={() => navigate(item.to)} className="flex flex-col items-center text-center p-4 rounded-xl border border-border bg-background hover:border-primary/20 hover:shadow-md transition-all group">
                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mb-2 group-hover:bg-primary/15 transition-colors">
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
@@ -554,13 +444,11 @@ export default function Landing() {
         <div className="relative max-w-3xl mx-auto px-6 py-24 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
-              Stop Losing Your Best Ideas.
+              {t("final_cta.title_line1")}
               <br />
-              <span className="text-primary">Start Extracting Them.</span>
+              <span className="text-primary">{t("final_cta.title_line2")}</span>
             </h2>
-            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-              Create your free account. Get 500 NEURONS credits. Upload your first content and watch the magic happen — in under 2 minutes.
-            </p>
+            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">{t("final_cta.subtitle")}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Button size="lg" onClick={ctaAction} className="gap-2 px-10 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
                 {ctaLabel}
@@ -568,17 +456,14 @@ export default function Landing() {
               </Button>
               <Button variant="outline" size="lg" onClick={() => navigate("/docs")} className="gap-2 h-12">
                 <BookOpen className="h-4 w-4" />
-                Read the Docs
+                {t("final_cta.read_docs")}
               </Button>
             </div>
-            <p className="mt-6 text-[11px] text-muted-foreground">
-              No credit card • No commitment • GDPR compliant
-            </p>
+            <p className="mt-6 text-[11px] text-muted-foreground">{t("final_cta.footer")}</p>
           </motion.div>
         </div>
       </section>
 
-      {/* ═══ FOOTER ═══ */}
       <Footer />
     </div>
   );
