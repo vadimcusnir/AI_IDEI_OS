@@ -9,6 +9,7 @@
 
 @layer base {
   :root {
+    --header-height: 2.75rem; /* 44px mobile */
     --background: 220 16% 96%;
     --foreground: 220 20% 10%;
 
