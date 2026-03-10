@@ -40,7 +40,8 @@ export default function Extractor() {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [extractingId, setExtractingId] = useState<string | null>(null);
-
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   // Inline create form state
   const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState("");
