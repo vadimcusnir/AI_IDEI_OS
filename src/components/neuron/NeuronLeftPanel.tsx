@@ -311,6 +311,9 @@ export function NeuronLeftPanel({
           </div>
         )}
 
+        {/* Add Link */}
+        <AddLinkForm neuronId={neuronId} onAddLink={onAddLink} />
+
         {/* Links */}
         {!loadingLinks && (
           <>
