@@ -7,9 +7,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   Upload, Brain, Sparkles, Briefcase, Coins, ArrowRight,
-  Loader2, Clock, Zap, TrendingUp, Plus,
+  Loader2, Clock, Plus, Zap, TrendingUp, FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PipelineIndicator } from "@/components/PipelineIndicator";
 
 interface RecentNeuron {
   id: number;
@@ -27,10 +28,34 @@ interface RecentJob {
 }
 
 const QUICK_ACTIONS = [
-  { label: "Încarcă conținut", icon: Upload, path: "/extractor", color: "text-primary" },
-  { label: "Neuron nou", icon: Plus, path: "/n/new", color: "text-primary" },
-  { label: "Rulează serviciu", icon: Sparkles, path: "/services", color: "text-primary" },
-  { label: "Vezi joburi", icon: Briefcase, path: "/jobs", color: "text-primary" },
+  {
+    label: "Încarcă conținut",
+    desc: "Transcripții, podcasturi, texte",
+    icon: Upload,
+    path: "/extractor",
+    gradient: "from-primary/15 to-primary/5",
+  },
+  {
+    label: "Neuron nou",
+    desc: "Creează un neuron manual",
+    icon: Plus,
+    path: "/n/new",
+    gradient: "from-primary/10 to-accent/5",
+  },
+  {
+    label: "Rulează serviciu",
+    desc: "Generează deliverables AI",
+    icon: Sparkles,
+    path: "/services",
+    gradient: "from-accent/15 to-primary/5",
+  },
+  {
+    label: "Vezi joburi",
+    desc: "Monitorizează execuțiile",
+    icon: Briefcase,
+    path: "/jobs",
+    gradient: "from-muted to-card",
+  },
 ];
 
 export default function Home() {
@@ -39,7 +64,9 @@ export default function Home() {
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<RecentNeuron[]>([]);
   const [jobs, setJobs] = useState<RecentJob[]>([]);
-  const [stats, setStats] = useState({ neurons: 0, episodes: 0, jobs: 0 });
+  const [totalNeurons, setTotalNeurons] = useState(0);
+  const [totalEpisodes, setTotalEpisodes] = useState(0);
+  const [totalJobs, setTotalJobs] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,21 +75,21 @@ export default function Home() {
   }, [user, authLoading]);
 
   const loadData = async () => {
-    const [neuronsRes, jobsRes, episodesRes] = await Promise.all([
+    const [neuronsRes, jobsRes, episodesRes, neuronsCount, jobsCount] = await Promise.all([
       supabase.from("neurons").select("id, number, title, status, updated_at")
         .eq("author_id", user!.id).order("updated_at", { ascending: false }).limit(5),
       supabase.from("neuron_jobs").select("id, worker_type, status, created_at")
         .eq("author_id", user!.id).order("created_at", { ascending: false }).limit(5),
-      supabase.from("episodes").select("id").eq("author_id", user!.id),
+      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
     ]);
 
     setNeurons(neuronsRes.data as RecentNeuron[] || []);
     setJobs(jobsRes.data as RecentJob[] || []);
-    setStats({
-      neurons: neuronsRes.data?.length ?? 0,
-      episodes: episodesRes.data?.length ?? 0,
-      jobs: jobsRes.data?.length ?? 0,
-    });
+    setTotalNeurons(neuronsCount.count ?? 0);
+    setTotalEpisodes(episodesRes.count ?? 0);
+    setTotalJobs(jobsCount.count ?? 0);
     setLoading(false);
   };
 
@@ -77,153 +104,168 @@ export default function Home() {
   const isNewUser = neurons.length === 0 && jobs.length === 0;
 
   return (
-    <div className="flex-1">
-      <div className="max-w-3xl mx-auto px-6 py-8">
-        {/* Welcome */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-serif font-bold mb-1">
-            {isNewUser ? "Bine ai venit în AI-IDEI" : "Bine ai revenit"}
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        {/* Welcome header */}
+        <div className="mb-6">
+          <h1 className="text-xl sm:text-2xl font-serif font-bold mb-1">
+            {isNewUser ? "Bine ai venit în AI-IDEI" : "Cockpit"}
           </h1>
           <p className="text-sm text-muted-foreground">
             {isNewUser
-              ? "Începe prin a încărca primul tău conținut în Extractor."
-              : "Continuă de unde ai rămas."
+              ? "Platforma ta de capitalizare a expertizei. Începe prin a încărca primul conținut."
+              : "Centrul tău de comandă pentru pipeline-ul de cunoaștere."
             }
           </p>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <StatCard icon={Brain} label="Neuroni" value={stats.neurons} />
-          <StatCard icon={Upload} label="Episoade" value={stats.episodes} />
-          <StatCard icon={Briefcase} label="Jobs" value={stats.jobs} />
-          <StatCard icon={Coins} label="Credite" value={balance} color="text-primary" />
+        {/* Stats row */}
+        <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
+          <StatCard icon={Brain} label="Neuroni" value={totalNeurons} />
+          <StatCard icon={FileText} label="Episoade" value={totalEpisodes} />
+          <StatCard icon={Zap} label="Jobs" value={totalJobs} />
+          <StatCard icon={Coins} label="Credits" value={balance} highlight />
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        {/* Quick Actions — large cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {QUICK_ACTIONS.map(action => (
             <button
               key={action.label}
               onClick={() => navigate(action.path)}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all group"
+              className={cn(
+                "group relative flex flex-col items-start gap-3 p-4 rounded-xl border border-border",
+                "bg-gradient-to-br hover:border-primary/30 hover:shadow-md transition-all duration-200",
+                action.gradient
+              )}
             >
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
-                <action.icon className={cn("h-5 w-5", action.color)} />
+              <div className="h-10 w-10 rounded-xl bg-background/80 border border-border flex items-center justify-center group-hover:border-primary/30 group-hover:shadow-sm transition-all">
+                <action.icon className="h-5 w-5 text-primary" />
               </div>
-              <span className="text-xs font-medium">{action.label}</span>
+              <div className="text-left">
+                <p className="text-xs font-semibold mb-0.5">{action.label}</p>
+                <p className="text-[10px] text-muted-foreground leading-tight hidden sm:block">{action.desc}</p>
+              </div>
+              <ArrowRight className="absolute top-3 right-3 h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
             </button>
           ))}
         </div>
 
-        {/* New user CTA */}
+        {/* New user onboarding CTA */}
         {isNewUser && (
-          <div className="mb-8 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
+          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center">
             <Upload className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h2 className="text-lg font-serif font-bold mb-2">Primul pas: încarcă conținut</h2>
-            <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-              Încarcă un text, un podcast sau un video. Sistemul va extrage automat neuroni de cunoaștere din conținutul tău.
+            <h2 className="text-base font-serif font-bold mb-1.5">Primul pas: încarcă conținut</h2>
+            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
+              Încarcă un podcast, un text sau un video. Sistemul va extrage automat neuroni de cunoaștere.
             </p>
-            <Button onClick={() => navigate("/extractor")} className="gap-2">
+            <Button onClick={() => navigate("/extractor")} size="sm" className="gap-2">
               Deschide Extractorul
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         )}
 
-        {/* Recent Neurons + Jobs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Recent Neurons */}
-          <div className="bg-card border border-border rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                <Brain className="h-3 w-3" /> Neuroni recenți
-              </h3>
-              <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/neurons")}>
-                Toți
-              </Button>
-            </div>
-            {neurons.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-4 text-center">Niciun neuron încă.</p>
-            ) : (
-              <div className="space-y-1">
-                {neurons.map(n => (
-                  <button
-                    key={n.id}
-                    onClick={() => navigate(`/n/${n.number}`)}
-                    className="w-full flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-muted/50 transition-colors text-left"
-                  >
-                    <span className="text-xs truncate flex-1">{n.title}</span>
-                    <span className={cn(
-                      "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded ml-2",
-                      n.status === "published" ? "bg-primary/10 text-primary" :
-                      "bg-muted text-muted-foreground"
-                    )}>{n.status}</span>
-                  </button>
-                ))}
+        {/* Main content grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Left column: Recent items */}
+          <div className="lg:col-span-2 space-y-4">
+            {/* Recent Neurons */}
+            <div className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <Brain className="h-3 w-3" /> Neuroni recenți
+                </h3>
+                <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/neurons")}>
+                  Toți <ArrowRight className="h-3 w-3 ml-1" />
+                </Button>
               </div>
-            )}
+              {neurons.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-4 text-center">Niciun neuron încă.</p>
+              ) : (
+                <div className="space-y-1">
+                  {neurons.map(n => (
+                    <button
+                      key={n.id}
+                      onClick={() => navigate(`/n/${n.number}`)}
+                      className="w-full flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-muted/50 transition-colors text-left"
+                    >
+                      <span className="text-xs truncate flex-1">{n.title}</span>
+                      <span className={cn(
+                        "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded ml-2",
+                        n.status === "published" ? "bg-primary/10 text-primary" :
+                        "bg-muted text-muted-foreground"
+                      )}>{n.status}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Recent Jobs */}
+            <div className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <Clock className="h-3 w-3" /> Joburi recente
+                </h3>
+                <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/jobs")}>
+                  Toate <ArrowRight className="h-3 w-3 ml-1" />
+                </Button>
+              </div>
+              {jobs.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-4 text-center">Niciun job rulat.</p>
+              ) : (
+                <div className="space-y-1">
+                  {jobs.map(job => (
+                    <div key={job.id} className="flex items-center justify-between py-1.5 px-2">
+                      <span className="text-xs truncate flex-1">{job.worker_type.replace(/-/g, " ")}</span>
+                      <span className={cn(
+                        "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded ml-2",
+                        job.status === "completed" ? "bg-primary/10 text-primary" :
+                        job.status === "failed" ? "bg-destructive/15 text-destructive" :
+                        "bg-muted text-muted-foreground"
+                      )}>{job.status}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Recent Jobs */}
-          <div className="bg-card border border-border rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                <Clock className="h-3 w-3" /> Joburi recente
+          {/* Right column: Pipeline + What's New */}
+          <div className="space-y-4">
+            {/* Pipeline Progress */}
+            <div className="bg-card border border-border rounded-xl p-4">
+              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
+                <TrendingUp className="h-3 w-3" /> Pipeline
               </h3>
-              <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/jobs")}>
-                Toate
-              </Button>
+              <PipelineIndicator />
             </div>
-            {jobs.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-4 text-center">Niciun job rulat.</p>
-            ) : (
-              <div className="space-y-1">
-                {jobs.map(job => (
-                  <div key={job.id} className="flex items-center justify-between py-1.5 px-2">
-                    <span className="text-xs truncate flex-1">{job.worker_type.replace(/-/g, " ")}</span>
-                    <span className={cn(
-                      "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded ml-2",
-                      job.status === "completed" ? "bg-primary/10 text-primary" :
-                      job.status === "failed" ? "bg-destructive/15 text-destructive" :
-                      "bg-muted text-muted-foreground"
-                    )}>{job.status}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
 
-        {/* What's New */}
-        <div className="mt-4">
-          <WhatsNewWidget />
-        </div>
-        {/* Pipeline hint */}
-        <div className="mt-8 flex items-center justify-center gap-2 text-[10px] text-muted-foreground">
-          <span className="flex items-center gap-1"><Upload className="h-3 w-3" /> Încarcă</span>
-          <ArrowRight className="h-3 w-3" />
-          <span className="flex items-center gap-1"><Brain className="h-3 w-3" /> Extrage</span>
-          <ArrowRight className="h-3 w-3" />
-          <span className="flex items-center gap-1"><Sparkles className="h-3 w-3" /> Execută</span>
-          <ArrowRight className="h-3 w-3" />
-          <span className="flex items-center gap-1"><Coins className="h-3 w-3" /> Monetizează</span>
+            {/* What's New */}
+            <WhatsNewWidget />
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function StatCard({ icon: Icon, label, value, color }: {
-  icon: React.ElementType; label: string; value: number; color?: string;
+function StatCard({ icon: Icon, label, value, highlight }: {
+  icon: React.ElementType; label: string; value: number; highlight?: boolean;
 }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-3">
+    <div className={cn(
+      "rounded-xl p-3 border transition-colors",
+      highlight
+        ? "bg-primary/5 border-primary/20"
+        : "bg-card border-border"
+    )}>
       <div className="flex items-center gap-1.5 mb-1">
-        <Icon className="h-3 w-3 text-muted-foreground" />
+        <Icon className={cn("h-3 w-3", highlight ? "text-primary" : "text-muted-foreground")} />
         <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
-      <p className={cn("text-xl font-bold font-mono", color)}>{value}</p>
+      <p className={cn("text-lg font-bold font-mono", highlight && "text-primary")}>{value.toLocaleString()}</p>
     </div>
   );
 }
