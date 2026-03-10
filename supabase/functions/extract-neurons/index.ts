@@ -161,6 +161,13 @@ Deno.serve(async (req) => {
     }
     const userId = caller.id;
 
+    // ── Rate limit check ──
+    if (!checkRateLimit(userId)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded (10 extractions/hour)" }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
