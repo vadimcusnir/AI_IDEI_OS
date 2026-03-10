@@ -5,7 +5,7 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
-  LogOut, LogIn, Home,
+  LogOut, LogIn, Home, User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -95,6 +95,17 @@ export function SiteHeader() {
           )}
           <ThemeToggle />
           {user && <NotificationBell />}
+          {user && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => navigate("/profile")}
+              title="Profilul meu"
+            >
+              <User className="h-3.5 w-3.5" />
+            </Button>
+          )}
           {user ? (
             <Button
               variant="ghost"

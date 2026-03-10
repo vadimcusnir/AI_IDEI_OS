@@ -14,6 +14,7 @@ import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/Home";
 import NeuronEditor from "./pages/NeuronEditor";
+import ProfilePage from "./pages/ProfilePage";
 import AdminDashboard from "./pages/AdminDashboard";
 import Architecture from "./pages/Architecture";
 import Links from "./pages/Links";
@@ -63,6 +64,7 @@ const App = () => (
               <Route path="/intelligence" element={<ProtectedRoute><AppLayout><Intelligence /></AppLayout></ProtectedRoute>} />
               <Route path="/prompt-forge" element={<ProtectedRoute><AppLayout><PromptForge /></AppLayout></ProtectedRoute>} />
               <Route path="/profile-extractor" element={<ProtectedRoute><AppLayout><ProfileExtractor /></AppLayout></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><AppLayout><ProfilePage /></AppLayout></ProtectedRoute>} />
 
               {/* Admin route — requires authentication + admin role */}
               <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
