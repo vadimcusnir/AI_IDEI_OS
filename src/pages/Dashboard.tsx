@@ -52,6 +52,7 @@ export default function Dashboard() {
     const episodes = episodesRes.data || [];
     const credits = creditsRes.data;
     const jobs = jobsRes.data || [];
+    const artifacts = artifactsRes.data || [];
 
     const categories: Record<string, number> = {};
     neurons.forEach((n: any) => {
