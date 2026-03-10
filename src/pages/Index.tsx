@@ -67,6 +67,41 @@ export default function Index() {
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [showExportImport, setShowExportImport] = useState(false);
 
+  // Folder state
+  const { folders, assignments } = useNeuronFolders();
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [showFolders, setShowFolders] = useState(true);
+  const [aiSuggesting, setAiSuggesting] = useState(false);
+
+  const handleAISuggest = useCallback(async () => {
+    if (neurons.length === 0) { toast.info("Add some neurons first"); return; }
+    setAiSuggesting(true);
+    try {
+      const titles = neurons.map(n => n.title).join(", ");
+      const resp = await supabase.functions.invoke("neuron-chat", {
+        body: {
+          messages: [
+            { role: "system", content: "You are an organization assistant. Given neuron titles, suggest a folder structure with 2-3 top-level categories and 2-3 subcategories each. Return ONLY valid JSON array like: [{\"name\":\"Category\",\"children\":[{\"name\":\"Sub\",\"children\":[]}]}]. No markdown, no explanation." },
+            { role: "user", content: `Organize these neurons into folders: ${titles}` }
+          ]
+        }
+      });
+      if (resp.data) {
+        const text = typeof resp.data === "string" ? resp.data : JSON.stringify(resp.data);
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          const structure = JSON.parse(jsonMatch[0]);
+          const { importStructure } = useNeuronFolders();
+          importStructure(structure);
+          toast.success("AI folder structure created!");
+        }
+      }
+    } catch (e) {
+      toast.error("AI suggestion failed. Try creating folders manually.");
+    }
+    setAiSuggesting(false);
+  }, [neurons]);
+
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [sortField, setSortField] = useState<SortField>("updated_at");
