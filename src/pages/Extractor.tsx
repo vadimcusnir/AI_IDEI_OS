@@ -42,7 +42,7 @@ export default function Extractor() {
   const [extractingId, setExtractingId] = useState<string | null>(null);
 
   // Inline create form state
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState("");
   const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("text");
   const [content, setContent] = useState("");
