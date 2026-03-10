@@ -88,7 +88,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base">Trimite feedback</DialogTitle>
+          <DialogTitle className="text-base">Submit Feedback</DialogTitle>
         </DialogHeader>
 
         {/* Type selector */}
