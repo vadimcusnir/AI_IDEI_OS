@@ -30,7 +30,7 @@ export default function Auth() {
       if (error) {
         toast.error(error.message);
       } else {
-        navigate("/");
+        navigate("/home");
       }
     }
     setLoading(false);
