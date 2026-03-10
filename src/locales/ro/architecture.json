@@ -41,9 +41,9 @@
     ],
     "pipeline_title": "Pipeline-ul Central",
     "pipeline_code": "Upload conținut → Extracție AI → Neuroni structurați → Servicii AI → Livrabile monetizabile\n\nExemplu concret:\n  1 podcast (60 min) → 1 episod → extracție AI → 5 neuroni\n  5 neuroni → 10 servicii AI → 50+ livrabile\n  50+ livrabile = articole, cursuri, strategii, frameworks, scripturi",
-    "philosophy": "<strong>Filosofie:</strong> „Services First, Knowledge Always." Sistemul nu generează conținut aleatoriu — execută servicii deterministe cu input definit, cost fixat, și output auditabil.",
-    "positioning_title": "Poziționare",
-    "positioning": "Platforma este „<strong>The Magic Marketing Button</strong>" — utilizatorii încarcă conținut o singură dată, iar sistemul generează automat zeci de livrabile profesionale. Marginea reală vine din reutilizare: un framework extras o dată poate fi reutilizat de 10.000 de ori."
+    "philosophy": "<strong>Filosofie:</strong> Services First, Knowledge Always. Sistemul nu genereaza continut aleatoriu - executa servicii deterministe cu input definit, cost fixat, si output auditabil.",
+    "positioning_title": "Pozitionare",
+    "positioning": "Platforma este <strong>The Magic Marketing Button</strong> - utilizatorii incarca continut o singura data, iar sistemul genereaza automat zeci de livrabile profesionale. Marginea reala vine din reutilizare: un framework extras o data poate fi reutilizat de 10.000 de ori."
   },
   "s2": {
     "title": "2. Obiectul Neuron — Model de Date",
