@@ -36,6 +36,19 @@ export default function NeuronEditor() {
   } = useNeuronGraph(neuron?.id);
 
   const { isExtracting, extractionResult, activeAction, extract, clearResult } = useAIExtraction();
+  const { cloneNeuron, forkNeuron } = useNeuronClone();
+
+  const handleClone = useCallback(async () => {
+    if (!neuron) return;
+    const cloned = await cloneNeuron(neuron.id);
+    if (cloned) navigate(`/n/${cloned.number}`);
+  }, [neuron, cloneNeuron, navigate]);
+
+  const handleFork = useCallback(async () => {
+    if (!neuron) return;
+    const forked = await forkNeuron(neuron.id);
+    if (forked) navigate(`/n/${forked.number}`);
+  }, [neuron, forkNeuron, navigate]);
 
   const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
   const [leftCollapsed, setLeftCollapsed] = useState(false);
