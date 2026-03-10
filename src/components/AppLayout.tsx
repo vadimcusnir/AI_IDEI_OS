@@ -35,6 +35,10 @@ interface AppLayoutProps {
 
 export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   const { direction, isAtTop } = useScrollDirection();
+  const { i18n } = useTranslation();
+  const { user } = useAuth();
+
+  const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
 
   return (
     <SidebarProvider>
@@ -45,7 +49,6 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           <header
             className={cn(
               "sticky top-0 z-40 h-[var(--header-height)] flex items-center border-b border-border bg-background/90 backdrop-blur-md px-3 gap-2 transition-transform duration-200",
-              // On mobile: hide header on scroll down, show on scroll up
               "md:translate-y-0",
               direction === "down" && !isAtTop
                 ? "-translate-y-full md:translate-y-0"
@@ -55,6 +58,27 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             <SidebarTrigger />
             <div className="flex-1" />
             <GlobalSearch />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
+                  <span className="text-sm leading-none">{currentLang.flag}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[140px]">
+                {LANG_OPTIONS.map(lang => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => i18n.changeLanguage(lang.code)}
+                    className={cn("gap-2 text-xs", i18n.language === lang.code && "bg-accent")}
+                  >
+                    <span>{lang.flag}</span>
+                    {lang.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <ThemeToggle />
+            {user && <NotificationBell />}
           </header>
 
           {fullHeight ? (
