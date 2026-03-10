@@ -1,0 +1,15 @@
+{
+  "home": {
+    "welcome": "Bine ai venit la AI-IDEI",
+    "cockpit": "Cockpit",
+    "welcome_desc": "Platforma ta de capitalizare a expertizei. Începe prin încărcarea primului conținut.",
+    "cockpit_desc": "Centrul tău de comandă pentru pipeline-ul de cunoaștere.",
+    "first_step_title": "Primul pas: încarcă conținut",
+    "first_step_desc": "Încarcă un podcast, text sau video. Sistemul va extrage automat neuroni de cunoaștere.",
+    "open_extractor": "Deschide Extractor",
+    "recent_neurons": "Neuroni Recenți",
+    "recent_jobs": "Joburi Recente",
+    "no_neurons": "Niciun neuron încă.",
+    "no_jobs": "Niciun job rulat încă."
+  }
+}

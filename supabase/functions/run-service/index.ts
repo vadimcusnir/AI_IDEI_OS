@@ -94,23 +94,79 @@ const SERVICE_ARTIFACT_TYPE: Record<string, string> = {
   "prompt-forge": "prompt",
 };
 
+// ── Rate limiting ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 20; // per hour
+const RATE_WINDOW = 3600_000; // 1 hour in ms
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(userId);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
+    // ── AUTHENTICATE via JWT — derive user_id from token ──
+    const authHeader = req.headers.get("authorization") || "";
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
+    if (authError || !caller) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // CRITICAL: Always derive user_id from JWT, never from request body
+    const user_id = caller.id;
+
+    // ── Rate limit check ──
+    if (!checkRateLimit(user_id)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded (20 service runs/hour)" }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const { job_id, service_key, neuron_id, inputs, user_id } = await req.json();
+    const { job_id, service_key, neuron_id, inputs } = await req.json();
 
-    if (!job_id || !service_key || !user_id) {
-      return new Response(JSON.stringify({ error: "Missing job_id, service_key, or user_id" }), {
+    if (!job_id || !service_key) {
+      return new Response(JSON.stringify({ error: "Missing job_id or service_key" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Validate input lengths
+    if (inputs && typeof inputs === "object") {
+      for (const [key, value] of Object.entries(inputs)) {
+        if (typeof value === "string" && value.length > 50_000) {
+          return new Response(JSON.stringify({ error: `Input '${key}' exceeds maximum length (50000 chars)` }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+      }
     }
 
     // ── Update job to running ──

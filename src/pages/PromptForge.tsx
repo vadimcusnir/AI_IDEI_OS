@@ -70,19 +70,19 @@ export default function PromptForge() {
 
       if (jErr || !job) throw new Error("Failed to create job");
 
+      const { data: { session } } = await supabase.auth.getSession();
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/run-service`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${session?.access_token}`,
           },
           body: JSON.stringify({
             job_id: job.id,
             service_key: "prompt-forge",
             neuron_id: neuron.id,
-            user_id: user.id,
             inputs: { context, goal, details },
           }),
         }

@@ -135,7 +135,6 @@ export default function BatchRunner() {
               job_id: job.id,
               service_key: batchJobs[i].serviceKey,
               neuron_id: Number(neuronId),
-              user_id: user.id,
               inputs: { content: neuronContent, title: neuronTitle },
             }),
           }

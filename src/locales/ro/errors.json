@@ -1,0 +1,10 @@
+{
+  "generic": "A apărut o eroare. Te rugăm să încerci din nou.",
+  "network": "Eroare de rețea. Verifică conexiunea la internet.",
+  "unauthorized": "Nu ai acces la această resursă.",
+  "not_found": "Pagina nu a fost găsită.",
+  "server": "Eroare de server. Te rugăm să încerci mai târziu.",
+  "validation": "Date invalide. Verifică câmpurile și încearcă din nou.",
+  "insufficient_credits": "Credite insuficiente. Te rugăm să faci top-up.",
+  "rate_limit": "Prea multe cereri. Așteaptă câteva minute."
+}

@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminRoute } from "@/components/AdminRoute";
+import { CookieConsent } from "@/components/global/CookieConsent";
 
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
@@ -45,6 +46,9 @@ import TopicListing from "./pages/TopicListing";
 import TopicDetail from "./pages/TopicDetail";
 import MediaProfiles from "./pages/MediaProfiles";
 import NotFound from "./pages/NotFound";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import DataPrivacy from "./pages/DataPrivacy";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +89,8 @@ const App = () => (
               <Route path="/topics" element={<AppLayout><TopicListing /></AppLayout>} />
               <Route path="/topics/:slug" element={<AppLayout><TopicDetail /></AppLayout>} />
               <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
+              <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
+              <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
 
               {/* Protected routes — require authentication */}
               <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
@@ -108,6 +114,7 @@ const App = () => (
               <Route path="/feedback" element={<ProtectedRoute><AppLayout><Feedback /></AppLayout></ProtectedRoute>} />
               <Route path="/guests" element={<ProtectedRoute><AppLayout><GuestPages /></AppLayout></ProtectedRoute>} />
               <Route path="/onboarding" element={<ProtectedRoute><AppLayout><Onboarding /></AppLayout></ProtectedRoute>} />
+              <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
 
               {/* Admin route */}
               <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
@@ -115,6 +122,7 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <CookieConsent />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
