@@ -133,7 +133,7 @@ export default function ProfilePage() {
             ) : (
               <Save className="h-3.5 w-3.5" />
             )}
-            {saved ? "Salvat" : "Salvează"}
+            {saved ? "Saved" : "Save"}
           </Button>
         </div>
 
