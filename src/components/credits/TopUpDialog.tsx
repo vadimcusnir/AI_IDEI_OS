@@ -29,13 +29,13 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
   // Handle return from Stripe checkout
   useEffect(() => {
     const topup = searchParams.get("topup");
-    const neurons = searchParams.get("neurons");
-    if (topup === "success" && neurons) {
-      // Verify payment and credit neurons
-      verifyPayment();
+    const sessionId = searchParams.get("session_id");
+    if (topup === "success" && sessionId) {
+      verifyPayment(sessionId);
       // Clean URL params
       searchParams.delete("topup");
       searchParams.delete("neurons");
+      searchParams.delete("session_id");
       setSearchParams(searchParams, { replace: true });
     } else if (topup === "cancelled") {
       toast.info("Plata a fost anulată.");
@@ -44,11 +44,21 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
     }
   }, []);
 
-  const verifyPayment = async () => {
-    // The credits are added by verify-topup edge function
-    // For now just show success and refresh
-    toast.success("Plata a fost procesată! Creditele vor fi adăugate în scurt timp.");
-    onSuccess();
+  const verifyPayment = async (sessionId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke("verify-topup", {
+        body: { session_id: sessionId },
+      });
+      if (error) throw new Error(error.message);
+      if (data?.already_processed) {
+        toast.info("Plata a fost deja procesată.");
+      } else {
+        toast.success(`+${data?.neurons_added ?? ""} NEURONS adăugați cu succes!`);
+      }
+      onSuccess();
+    } catch (err: any) {
+      toast.error("Eroare la verificarea plății: " + (err.message || "Încearcă din nou"));
+    }
   };
 
   const handleTopUp = async (packageKey: string) => {
