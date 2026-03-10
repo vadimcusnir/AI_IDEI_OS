@@ -1,161 +1,531 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Shield, Users, FileText, ArrowLeft } from "lucide-react";
+import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import logo from "@/assets/logo.gif";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-interface NeuronStat {
-  total: number;
-  published: number;
-  draft: number;
+// ─── Types ──────────────────────────────────────────
+interface PlatformStats {
+  totalNeurons: number; publishedNeurons: number; draftNeurons: number;
+  totalEpisodes: number; totalJobs: number; completedJobs: number; failedJobs: number;
+  totalUsers: number; totalCreditsCirculating: number; totalCreditsSpent: number;
+  activeServices: number;
 }
 
-interface RecentNeuron {
-  id: number;
-  number: number;
-  title: string;
-  status: string;
-  visibility: string;
-  created_at: string;
+interface UserRow {
+  user_id: string; email: string; balance: number; total_spent: number; total_earned: number;
+  neuron_count: number; roles: string[];
+}
+
+interface NeuronRow {
+  id: number; number: number; title: string; status: string; visibility: string;
+  author_id: string; created_at: string; score: number; lifecycle: string;
+}
+
+interface JobRow {
+  id: string; worker_type: string; status: string; neuron_id: number;
+  author_id: string; created_at: string; completed_at: string | null;
+}
+
+interface ServiceRow {
+  id: string; service_key: string; name: string; category: string;
+  credits_cost: number; is_active: boolean; service_class: string;
 }
 
 export default function AdminDashboard() {
   const { isAdmin, loading, user } = useAdminCheck();
   const navigate = useNavigate();
-  const [stats, setStats] = useState<NeuronStat>({ total: 0, published: 0, draft: 0 });
-  const [recentNeurons, setRecentNeurons] = useState<RecentNeuron[]>([]);
+  const [stats, setStats] = useState<PlatformStats | null>(null);
+  const [users, setUsers] = useState<UserRow[]>([]);
+  const [neurons, setNeurons] = useState<NeuronRow[]>([]);
+  const [jobs, setJobs] = useState<JobRow[]>([]);
+  const [services, setServices] = useState<ServiceRow[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
     if (loading) return;
     if (!user) return;
-    if (!isAdmin) { navigate("/"); return; }
+    if (!isAdmin) { navigate("/home"); return; }
+    loadAll();
+  }, [isAdmin, loading, user]);
 
-    const fetchData = async () => {
-      const [allRes, publishedRes, draftRes, recentRes] = await Promise.all([
-        supabase.from("neurons").select("id", { count: "exact", head: true }),
-        supabase.from("neurons").select("id", { count: "exact", head: true }).eq("status", "published"),
-        supabase.from("neurons").select("id", { count: "exact", head: true }).eq("status", "draft"),
-        supabase.from("neurons").select("id, number, title, status, visibility, created_at").order("created_at", { ascending: false }).limit(20),
-      ]);
+  const loadAll = useCallback(async () => {
+    setLoadingData(true);
+    await Promise.all([loadStats(), loadUsers(), loadNeurons(), loadJobs(), loadServices()]);
+    setLoadingData(false);
+  }, []);
 
-      setStats({
-        total: allRes.count ?? 0,
-        published: publishedRes.count ?? 0,
-        draft: draftRes.count ?? 0,
-      });
-      setRecentNeurons(recentRes.data ?? []);
-      setLoadingData(false);
-    };
+  const loadStats = async () => {
+    const [neuronsAll, neuronsPub, neuronsDraft, episodes, jobsAll, jobsDone, jobsFailed, credits, servicesActive] = await Promise.all([
+      supabase.from("neurons").select("id", { count: "exact", head: true }),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("status", "published"),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("status", "draft"),
+      supabase.from("episodes").select("id", { count: "exact", head: true }),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("status", "completed"),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("status", "failed"),
+      supabase.from("user_credits").select("balance, total_spent"),
+      supabase.from("service_catalog").select("id", { count: "exact", head: true }).eq("is_active", true),
+    ]);
 
-    fetchData();
-  }, [isAdmin, loading, user, navigate]);
+    const creditsData = credits.data || [];
+    setStats({
+      totalNeurons: neuronsAll.count ?? 0,
+      publishedNeurons: neuronsPub.count ?? 0,
+      draftNeurons: neuronsDraft.count ?? 0,
+      totalEpisodes: episodes.count ?? 0,
+      totalJobs: jobsAll.count ?? 0,
+      completedJobs: jobsDone.count ?? 0,
+      failedJobs: jobsFailed.count ?? 0,
+      totalUsers: creditsData.length,
+      totalCreditsCirculating: creditsData.reduce((s, c: any) => s + (c.balance || 0), 0),
+      totalCreditsSpent: creditsData.reduce((s, c: any) => s + (c.total_spent || 0), 0),
+      activeServices: servicesActive.count ?? 0,
+    });
+  };
+
+  const loadUsers = async () => {
+    const { data: creditsData } = await supabase.from("user_credits").select("user_id, balance, total_spent, total_earned");
+    const { data: rolesData } = await supabase.from("user_roles").select("user_id, role");
+    const { data: neuronsData } = await supabase.from("neurons").select("author_id");
+
+    const neuronCounts: Record<string, number> = {};
+    (neuronsData || []).forEach((n: any) => {
+      if (n.author_id) neuronCounts[n.author_id] = (neuronCounts[n.author_id] || 0) + 1;
+    });
+
+    const rolesMap: Record<string, string[]> = {};
+    (rolesData || []).forEach((r: any) => {
+      if (!rolesMap[r.user_id]) rolesMap[r.user_id] = [];
+      rolesMap[r.user_id].push(r.role);
+    });
+
+    const rows: UserRow[] = (creditsData || []).map((c: any) => ({
+      user_id: c.user_id,
+      email: c.user_id.substring(0, 8) + "…",
+      balance: c.balance,
+      total_spent: c.total_spent,
+      total_earned: c.total_earned,
+      neuron_count: neuronCounts[c.user_id] || 0,
+      roles: rolesMap[c.user_id] || [],
+    }));
+
+    setUsers(rows);
+  };
+
+  const loadNeurons = async () => {
+    const { data } = await supabase.from("neurons")
+      .select("id, number, title, status, visibility, author_id, created_at, score, lifecycle")
+      .order("created_at", { ascending: false }).limit(50);
+    setNeurons(data as NeuronRow[] || []);
+  };
+
+  const loadJobs = async () => {
+    const { data } = await supabase.from("neuron_jobs")
+      .select("id, worker_type, status, neuron_id, author_id, created_at, completed_at")
+      .order("created_at", { ascending: false }).limit(50);
+    setJobs(data as JobRow[] || []);
+  };
+
+  const loadServices = async () => {
+    const { data } = await supabase.from("service_catalog")
+      .select("id, service_key, name, category, credits_cost, is_active, service_class")
+      .order("created_at", { ascending: false });
+    setServices(data as ServiceRow[] || []);
+  };
+
+  // ─── Admin Actions ──────────────────────────────────
+  const toggleServiceActive = async (serviceId: string, currentActive: boolean) => {
+    const { error } = await supabase.from("service_catalog")
+      .update({ is_active: !currentActive }).eq("id", serviceId);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Serviciu ${!currentActive ? "activat" : "dezactivat"}`);
+    loadServices();
+    loadStats();
+  };
+
+  const toggleUserRole = async (userId: string, hasAdmin: boolean) => {
+    if (hasAdmin) {
+      const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "admin");
+      if (error) { toast.error(error.message); return; }
+      toast.success("Rol admin revocat");
+    } else {
+      const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
+      if (error) { toast.error(error.message); return; }
+      toast.success("Rol admin acordat");
+    }
+    loadUsers();
+  };
+
+  const deleteNeuron = async (neuronId: number) => {
+    const { error } = await supabase.from("neurons").delete().eq("id", neuronId);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Neuron șters");
+    loadNeurons();
+    loadStats();
+  };
+
+  const toggleNeuronVisibility = async (neuronId: number, currentVis: string) => {
+    const newVis = currentVis === "public" ? "private" : "public";
+    const { error } = await supabase.from("neurons").update({ visibility: newVis }).eq("id", neuronId);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Vizibilitate schimbată: ${newVis}`);
+    loadNeurons();
+  };
 
   if (loading || loadingData) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background">
+      <div className="flex-1 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
   }
 
+  if (!stats) return null;
+
   return (
     <div className="flex-1">
-      <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
-        {/* Stats cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                Total Neurons
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-serif">{stats.total}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Published</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-serif text-primary">{stats.published}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Drafts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-serif">{stats.draft}</p>
-            </CardContent>
-          </Card>
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-destructive/10 flex items-center justify-center">
+              <Shield className="h-5 w-5 text-destructive" />
+            </div>
+            <div>
+              <h1 className="text-xl font-serif font-bold">Admin Control Panel</h1>
+              <p className="text-xs text-muted-foreground">Monitorizare și control platforma AI-IDEI</p>
+            </div>
+          </div>
+          <Button variant="outline" size="sm" onClick={loadAll} className="gap-1.5">
+            <RefreshCw className="h-3.5 w-3.5" /> Refresh
+          </Button>
         </div>
 
-        {/* Recent neurons table */}
-        <div>
-          <h2 className="text-lg font-serif mb-4">Recent Neurons</h2>
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-20">#</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead className="w-24">Status</TableHead>
-                  <TableHead className="w-24">Visibility</TableHead>
-                  <TableHead className="w-32">Created</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentNeurons.map((n) => (
-                  <TableRow
-                    key={n.id}
-                    className="cursor-pointer"
-                    onClick={() => navigate(`/n/${n.number}`)}
-                  >
-                    <TableCell className="font-mono text-primary font-bold text-xs">
-                      {n.number}
-                    </TableCell>
-                    <TableCell className="font-medium">{n.title}</TableCell>
-                    <TableCell>
-                      <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
-                        {n.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
-                        {n.visibility}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
-                      {new Date(n.created_at).toLocaleDateString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {recentNeurons.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                      No neurons yet.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </Card>
+        {/* KPI Row */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
+          <KPI label="Utilizatori" value={stats.totalUsers} icon={Users} />
+          <KPI label="Neuroni" value={stats.totalNeurons} icon={Brain} />
+          <KPI label="Publicați" value={stats.publishedNeurons} icon={Brain} color="text-primary" />
+          <KPI label="Draft" value={stats.draftNeurons} icon={Brain} />
+          <KPI label="Episoade" value={stats.totalEpisodes} icon={Activity} />
+          <KPI label="Jobs" value={stats.totalJobs} icon={Briefcase} />
+          <KPI label="Credits circ." value={stats.totalCreditsCirculating} icon={Coins} color="text-primary" />
+          <KPI label="Credits spent" value={stats.totalCreditsSpent} icon={Coins} color="text-destructive" />
         </div>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="mb-4">
+            <TabsTrigger value="overview" className="text-xs">Overview</TabsTrigger>
+            <TabsTrigger value="users" className="text-xs">Utilizatori</TabsTrigger>
+            <TabsTrigger value="neurons" className="text-xs">Neuroni</TabsTrigger>
+            <TabsTrigger value="jobs" className="text-xs">Jobs</TabsTrigger>
+            <TabsTrigger value="services" className="text-xs">Servicii</TabsTrigger>
+          </TabsList>
+
+          {/* ─── Overview ─── */}
+          <TabsContent value="overview">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* System health */}
+              <div className="bg-card border border-border rounded-xl p-5">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
+                  <Activity className="h-3 w-3" /> System Health
+                </h3>
+                <div className="space-y-3">
+                  <HealthRow label="Job Success Rate" value={stats.totalJobs > 0 ? `${Math.round((stats.completedJobs / stats.totalJobs) * 100)}%` : "N/A"} good={stats.failedJobs === 0} />
+                  <HealthRow label="Failed Jobs" value={String(stats.failedJobs)} good={stats.failedJobs === 0} />
+                  <HealthRow label="Active Services" value={String(stats.activeServices)} good={stats.activeServices > 0} />
+                  <HealthRow label="Avg Credits/User" value={stats.totalUsers > 0 ? String(Math.round(stats.totalCreditsCirculating / stats.totalUsers)) : "0"} good />
+                </div>
+              </div>
+
+              {/* Economy */}
+              <div className="bg-card border border-border rounded-xl p-5">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
+                  <Coins className="h-3 w-3" /> Economia Platformei
+                </h3>
+                <div className="space-y-3">
+                  <EconRow label="Credits în circulație" value={stats.totalCreditsCirculating} />
+                  <EconRow label="Credits consumate" value={stats.totalCreditsSpent} />
+                  <EconRow label="Venituri estimate" value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
+                  <EconRow label="Neuroni per user" value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
+                </div>
+              </div>
+
+              {/* Recent activity */}
+              <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                  Ultimele 10 neuroni
+                </h3>
+                <div className="space-y-1">
+                  {neurons.slice(0, 10).map(n => (
+                    <button
+                      key={n.id}
+                      onClick={() => navigate(`/n/${n.number}`)}
+                      className="w-full flex items-center gap-3 py-1.5 px-2 rounded-md hover:bg-muted/50 transition-colors text-left"
+                    >
+                      <span className="text-[10px] font-mono text-primary font-bold w-12">#{n.number}</span>
+                      <span className="text-xs truncate flex-1">{n.title}</span>
+                      <StatusBadge status={n.status} />
+                      <StatusBadge status={n.visibility} />
+                      <span className="text-[9px] text-muted-foreground">{new Date(n.created_at).toLocaleDateString()}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* ─── Users ─── */}
+          <TabsContent value="users">
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[10px]">User ID</TableHead>
+                    <TableHead className="text-[10px]">Roles</TableHead>
+                    <TableHead className="text-[10px] text-right">Neuroni</TableHead>
+                    <TableHead className="text-[10px] text-right">Balance</TableHead>
+                    <TableHead className="text-[10px] text-right">Spent</TableHead>
+                    <TableHead className="text-[10px] text-right">Earned</TableHead>
+                    <TableHead className="text-[10px] w-20">Acțiuni</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {users.map(u => (
+                    <TableRow key={u.user_id}>
+                      <TableCell className="text-xs font-mono">{u.user_id.substring(0, 12)}…</TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          {u.roles.length === 0 && <span className="text-[9px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">user</span>}
+                          {u.roles.map(r => (
+                            <span key={r} className={cn(
+                              "text-[9px] px-1.5 py-0.5 rounded font-mono",
+                              r === "admin" ? "bg-destructive/15 text-destructive" : "bg-primary/10 text-primary"
+                            )}>{r}</span>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-xs font-mono text-right">{u.neuron_count}</TableCell>
+                      <TableCell className="text-xs font-mono text-right">{u.balance}</TableCell>
+                      <TableCell className="text-xs font-mono text-right">{u.total_spent}</TableCell>
+                      <TableCell className="text-xs font-mono text-right">{u.total_earned}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => toggleUserRole(u.user_id, u.roles.includes("admin"))}
+                          title={u.roles.includes("admin") ? "Revocă admin" : "Acordă admin"}
+                        >
+                          {u.roles.includes("admin") ? <UserMinus className="h-3.5 w-3.5 text-destructive" /> : <UserPlus className="h-3.5 w-3.5" />}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </TabsContent>
+
+          {/* ─── Neurons ─── */}
+          <TabsContent value="neurons">
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[10px] w-16">#</TableHead>
+                    <TableHead className="text-[10px]">Titlu</TableHead>
+                    <TableHead className="text-[10px]">Status</TableHead>
+                    <TableHead className="text-[10px]">Vizibilitate</TableHead>
+                    <TableHead className="text-[10px]">Lifecycle</TableHead>
+                    <TableHead className="text-[10px] text-right">Score</TableHead>
+                    <TableHead className="text-[10px]">Creat</TableHead>
+                    <TableHead className="text-[10px] w-24">Acțiuni</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {neurons.map(n => (
+                    <TableRow key={n.id}>
+                      <TableCell className="text-xs font-mono text-primary font-bold">
+                        <button onClick={() => navigate(`/n/${n.number}`)} className="hover:underline">{n.number}</button>
+                      </TableCell>
+                      <TableCell className="text-xs max-w-[200px] truncate">
+                        <button onClick={() => navigate(`/n/${n.number}`)} className="hover:underline">{n.title}</button>
+                      </TableCell>
+                      <TableCell><StatusBadge status={n.status} /></TableCell>
+                      <TableCell><StatusBadge status={n.visibility} /></TableCell>
+                      <TableCell><StatusBadge status={n.lifecycle} /></TableCell>
+                      <TableCell className="text-xs font-mono text-right">{n.score.toFixed(1)}</TableCell>
+                      <TableCell className="text-[10px] text-muted-foreground">{new Date(n.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toggleNeuronVisibility(n.id, n.visibility)} title="Toggle vizibilitate">
+                            {n.visibility === "public" ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => deleteNeuron(n.id)} title="Șterge neuron">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </TabsContent>
+
+          {/* ─── Jobs ─── */}
+          <TabsContent value="jobs">
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[10px]">ID</TableHead>
+                    <TableHead className="text-[10px]">Worker</TableHead>
+                    <TableHead className="text-[10px]">Status</TableHead>
+                    <TableHead className="text-[10px]">Neuron</TableHead>
+                    <TableHead className="text-[10px]">Creat</TableHead>
+                    <TableHead className="text-[10px]">Completat</TableHead>
+                    <TableHead className="text-[10px] text-right">Durată</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {jobs.map(j => {
+                    const duration = j.completed_at
+                      ? Math.round((new Date(j.completed_at).getTime() - new Date(j.created_at).getTime()) / 1000)
+                      : null;
+                    return (
+                      <TableRow key={j.id}>
+                        <TableCell className="text-[10px] font-mono text-muted-foreground">{j.id.substring(0, 8)}</TableCell>
+                        <TableCell className="text-xs">{j.worker_type.replace(/-/g, " ")}</TableCell>
+                        <TableCell><StatusBadge status={j.status} /></TableCell>
+                        <TableCell className="text-xs font-mono text-primary">{j.neuron_id}</TableCell>
+                        <TableCell className="text-[10px] text-muted-foreground">{new Date(j.created_at).toLocaleString()}</TableCell>
+                        <TableCell className="text-[10px] text-muted-foreground">{j.completed_at ? new Date(j.completed_at).toLocaleString() : "—"}</TableCell>
+                        <TableCell className="text-xs font-mono text-right">{duration !== null ? `${duration}s` : "—"}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </TabsContent>
+
+          {/* ─── Services ─── */}
+          <TabsContent value="services">
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[10px]">Key</TableHead>
+                    <TableHead className="text-[10px]">Nume</TableHead>
+                    <TableHead className="text-[10px]">Categorie</TableHead>
+                    <TableHead className="text-[10px]">Clasă</TableHead>
+                    <TableHead className="text-[10px] text-right">Cost (credits)</TableHead>
+                    <TableHead className="text-[10px]">Status</TableHead>
+                    <TableHead className="text-[10px] w-20">Acțiuni</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {services.map(s => (
+                    <TableRow key={s.id}>
+                      <TableCell className="text-[10px] font-mono">{s.service_key}</TableCell>
+                      <TableCell className="text-xs font-medium">{s.name}</TableCell>
+                      <TableCell><StatusBadge status={s.category} /></TableCell>
+                      <TableCell>
+                        <span className={cn(
+                          "text-[9px] font-mono font-bold px-1.5 py-0.5 rounded",
+                          s.service_class === "A" ? "bg-primary/10 text-primary" :
+                          s.service_class === "B" ? "bg-orange-500/10 text-orange-600" :
+                          "bg-destructive/10 text-destructive"
+                        )}>{s.service_class}</span>
+                      </TableCell>
+                      <TableCell className="text-xs font-mono text-right">{s.credits_cost}</TableCell>
+                      <TableCell>
+                        <span className={cn(
+                          "text-[9px] font-mono px-1.5 py-0.5 rounded",
+                          s.is_active ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                        )}>{s.is_active ? "ACTIV" : "INACTIV"}</span>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => toggleServiceActive(s.id, s.is_active)}
+                          title={s.is_active ? "Dezactivează" : "Activează"}
+                        >
+                          {s.is_active ? <EyeOff className="h-3.5 w-3.5 text-destructive" /> : <Eye className="h-3.5 w-3.5 text-primary" />}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
+    </div>
+  );
+}
+
+// ─── Sub-components ─────────────────────────────────
+
+function KPI({ label, value, icon: Icon, color }: { label: string; value: number | string; icon: React.ElementType; color?: string }) {
+  return (
+    <div className="bg-card border border-border rounded-xl p-3">
+      <div className="flex items-center gap-1 mb-1">
+        <Icon className="h-3 w-3 text-muted-foreground" />
+        <span className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+      </div>
+      <p className={cn("text-lg font-bold font-mono", color)}>{value}</p>
+    </div>
+  );
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const colors: Record<string, string> = {
+    published: "bg-primary/10 text-primary",
+    public: "bg-primary/10 text-primary",
+    completed: "bg-primary/10 text-primary",
+    active: "bg-primary/10 text-primary",
+    draft: "bg-muted text-muted-foreground",
+    private: "bg-muted text-muted-foreground",
+    pending: "bg-orange-500/10 text-orange-600",
+    processing: "bg-orange-500/10 text-orange-600",
+    failed: "bg-destructive/15 text-destructive",
+    archived: "bg-muted text-muted-foreground/60",
+  };
+  return (
+    <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", colors[status] || "bg-muted text-muted-foreground")}>
+      {status}
+    </span>
+  );
+}
+
+function HealthRow({ label, value, good }: { label: string; value: string; good: boolean }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className={cn("text-xs font-mono font-bold", good ? "text-primary" : "text-destructive")}>{value}</span>
+    </div>
+  );
+}
+
+function EconRow({ label, value }: { label: string; value: number | string }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-xs font-mono font-bold">{value}</span>
     </div>
   );
 }
