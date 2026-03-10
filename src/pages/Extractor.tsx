@@ -47,7 +47,7 @@ export default function Extractor() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     fetchEpisodes();
   }, [user, authLoading]);
 
