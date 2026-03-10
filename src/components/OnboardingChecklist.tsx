@@ -33,8 +33,8 @@ const STEPS: Step[] = [
   {
     id: "neuron",
     icon: Brain,
-    label: "Creează un neuron",
-    description: "Extrage o idee atomică din conținutul tău",
+    label: "Create a Neuron",
+    description: "Extract an atomic idea from your content",
     route: "/n/new",
     checkFn: async () => {
       const { count } = await supabase.from("neurons").select("*", { count: "exact", head: true });
