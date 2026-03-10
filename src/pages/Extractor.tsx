@@ -8,7 +8,7 @@ import {
   Upload, FileText, X, Clock, Trash2, Pencil,
   FileAudio, Film, Type, Globe, Loader2, Brain,
   ChevronDown, ChevronUp, Copy, ExternalLink,
-  Layers, Zap,
+  Layers, Zap, Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
