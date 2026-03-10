@@ -337,6 +337,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="feedback" className="text-xs gap-1">
               <MessageCircle className="h-3 w-3" /> Feedback
             </TabsTrigger>
+            <TabsTrigger value="changelog" className="text-xs gap-1">
+              <ScrollText className="h-3 w-3" /> Changelog
+            </TabsTrigger>
           </TabsList>
 
           {/* ─── Overview ─── */}
