@@ -327,7 +327,7 @@ export default function ProfilePage() {
                     />
                     <PrefToggle
                       icon={Coins}
-                      label="Raport credite"
+                      label="Credits report"
                       checked={prefs.email_credits}
                       onChange={(v) => updatePrefs({ email_credits: v })}
                     />
