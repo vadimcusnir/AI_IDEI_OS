@@ -49,8 +49,9 @@ const ENTITY_META: Record<string, { title: string; singular: string; description
 };
 
 export default function EntityListing() {
-  const { entityType } = useParams<{ entityType: string }>();
-  const meta = ENTITY_META[entityType || ""] || ENTITY_META.insights;
+  const location = useLocation();
+  const entityType = location.pathname.replace(/^\//, "");
+  const meta = ENTITY_META[entityType] || ENTITY_META.insights;
   const [neurons, setNeurons] = useState<EntityNeuron[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
