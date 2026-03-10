@@ -55,8 +55,8 @@ const STEPS: Step[] = [
   {
     id: "dashboard",
     icon: BarChart3,
-    label: "Verifică Dashboard-ul",
-    description: "Vizualizează statisticile și activitatea ta",
+    label: "Check the Dashboard",
+    description: "View your statistics and activity",
     route: "/dashboard",
     checkFn: async () => {
       // This step is "done" once user has visited dashboard
