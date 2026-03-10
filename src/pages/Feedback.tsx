@@ -103,9 +103,9 @@ export default function Feedback() {
     } as any);
 
     if (error) {
-      toast.error("Eroare: " + error.message);
+      toast.error("Error: " + error.message);
     } else {
-      toast.success("Mulțumim pentru feedback! 🙏");
+      toast.success("Thank you for your feedback! 🙏");
       setTitle("");
       setMessage("");
       setRating(null);
