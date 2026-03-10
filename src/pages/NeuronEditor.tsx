@@ -3,12 +3,14 @@ import { useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNeuron } from "@/hooks/useNeuron";
 import { useNeuronGraph } from "@/hooks/useNeuronGraph";
+import { useAIExtraction } from "@/hooks/useAIExtraction";
 import { NeuronTopBar } from "@/components/neuron/NeuronTopBar";
 import { NeuronLeftPanel } from "@/components/neuron/NeuronLeftPanel";
 import { NeuronRightPanel } from "@/components/neuron/NeuronRightPanel";
 import { NeuronEditorToolbar } from "@/components/neuron/NeuronEditorToolbar";
 import { NeuronMainEditor } from "@/components/neuron/NeuronMainEditor";
 import { NeuronBottomBar } from "@/components/neuron/NeuronBottomBar";
+import { AIResultsPanel } from "@/components/neuron/AIResultsPanel";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
