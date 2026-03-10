@@ -158,8 +158,8 @@ export default function Landing() {
             transition={{ delay: 0.45, duration: 0.5 }}
             className="flex items-center justify-center gap-3"
           >
-            <Button size="lg" onClick={() => navigate(user ? "/neurons" : "/auth")} className="gap-2 text-sm px-8">
-              {user ? "Mergi la Neuroni" : "Începe gratuit"}
+            <Button size="lg" onClick={() => navigate(user ? "/home" : "/auth")} className="gap-2 text-sm px-8">
+              {user ? "Mergi la Dashboard" : "Începe gratuit"}
               <ArrowRight className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/architecture")} className="gap-2 text-sm">
