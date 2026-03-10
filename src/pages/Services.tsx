@@ -11,6 +11,7 @@ import {
   FileText, GraduationCap, Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface Service {
   id: string;
