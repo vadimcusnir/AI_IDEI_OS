@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminRoute } from "@/components/AdminRoute";
+import { CookieConsent } from "@/components/global/CookieConsent";
 
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
@@ -120,6 +121,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+          <CookieConsent />
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>
