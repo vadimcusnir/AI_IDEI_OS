@@ -118,7 +118,7 @@ export default function Notifications() {
             disabled={pushLoading}
           >
             {pushLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-            {isSubscribed ? "Dezactivează" : "Activează"}
+            {isSubscribed ? "Disable" : "Enable"}
           </Button>
         </div>
       )}
