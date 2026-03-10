@@ -207,7 +207,8 @@ export function NeuronFolderSidebar({
           onDrop={e => {
             e.preventDefault();
             e.currentTarget.classList.remove("bg-primary/20");
-            if (dragNeuronId) { assignNeuron(dragNeuronId, folder.id); setDragNeuronId(null); }
+            const nId = (window as any).__dragNeuronId;
+            if (nId) { assignNeuron(nId, folder.id); (window as any).__dragNeuronId = null; }
           }}
         >
           <button className="h-4 w-4 flex items-center justify-center shrink-0" onClick={e => { e.stopPropagation(); toggle(folder.id); }}>

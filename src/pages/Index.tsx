@@ -183,9 +183,24 @@ export default function Index() {
     toast.success("Neuron deleted");
   }, []);
 
+  // Filter by folder first
+  const filteredByFolder = useMemo(() => {
+    let list = searchResults !== null ? searchResults : neurons;
+    if (selectedFolderId === "__unassigned") {
+      const assigned = new Set(Object.keys(assignments).map(Number));
+      list = list.filter(n => !assigned.has(n.id));
+    } else if (selectedFolderId) {
+      const idsInFolder = Object.entries(assignments)
+        .filter(([, fId]) => fId === selectedFolderId)
+        .map(([nId]) => Number(nId));
+      list = list.filter(n => idsInFolder.includes(n.id));
+    }
+    return list;
+  }, [neurons, searchResults, selectedFolderId, assignments]);
+
   // Sorted, filtered, grouped neurons
   const processedNeurons = useMemo(() => {
-    let list = searchResults !== null ? searchResults : neurons;
+    let list = filteredByFolder;
 
     // Filter by status
     if (filterStatus) list = list.filter(n => n.status === filterStatus);
@@ -207,7 +222,7 @@ export default function Index() {
     });
 
     return list;
-  }, [neurons, searchResults, filterStatus, sortField, sortDir, pinnedIds]);
+  }, [filteredByFolder, filterStatus, sortField, sortDir, pinnedIds]);
 
   // Group neurons
   const groupedNeurons = useMemo(() => {
@@ -280,6 +295,11 @@ export default function Index() {
       return (
         <div
           key={n.id}
+          draggable
+          onDragStart={() => {
+            // Store neuron id for folder drop
+            (window as any).__dragNeuronId = n.id;
+          }}
           onClick={() => navigate(`/n/${n.number}`)}
           className={cn(
             "group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all",
@@ -514,17 +534,40 @@ export default function Index() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+      {/* Content with sidebar */}
+      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 48px)' }}>
+        {/* Folder Sidebar */}
+        {showFolders && (
+          <NeuronFolderSidebar
+            neurons={neurons.map(n => ({ id: n.id, number: n.number, title: n.title, status: n.status }))}
+            selectedFolderId={selectedFolderId}
+            onSelectFolder={setSelectedFolderId}
+            onAISuggest={handleAISuggest}
+            aiSuggesting={aiSuggesting}
+          />
+        )}
+
+        {/* Main content */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
         {/* Title row */}
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-xl font-serif">Your Neurons</h1>
-            <p className="text-[11px] text-muted-foreground/60 mt-0.5">
-              {neurons.length} neuron{neurons.length !== 1 ? "s" : ""}
-              {pinnedIds.size > 0 && ` · ${pinnedIds.size} pinned`}
-              {filterStatus && ` · filtered: ${filterStatus}`}
-            </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowFolders(!showFolders)}
+              className="h-7 w-7 flex items-center justify-center rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+              title={showFolders ? "Hide folders" : "Show folders"}
+            >
+              {showFolders ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeft className="h-4 w-4" />}
+            </button>
+            <div>
+              <h1 className="text-xl font-serif">Your Neurons</h1>
+              <p className="text-[11px] text-muted-foreground/60 mt-0.5">
+                {filteredByFolder.length} neuron{filteredByFolder.length !== 1 ? "s" : ""}
+                {pinnedIds.size > 0 && ` · ${pinnedIds.size} pinned`}
+                {filterStatus && ` · filtered: ${filterStatus}`}
+                {selectedFolderId && selectedFolderId !== "__unassigned" && ` · in folder`}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -713,7 +756,8 @@ export default function Index() {
             ))}
           </div>
         )}
-      </div>
+        </div>{/* end main content */}
+      </div>{/* end flex with sidebar */}
 
       {/* Modals */}
       <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />
