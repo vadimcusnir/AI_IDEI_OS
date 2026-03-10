@@ -276,7 +276,7 @@ export default function EntityDetail() {
       <SEOHead
         title={`${entity.title} — AI-IDEI ${TYPE_LABEL[entity.entity_type] || "Entity"}`}
         description={entity.meta_description || entity.summary || undefined}
-        canonical={entity.canonical_url ? `https://ai-idei-os.lovable.app${entity.canonical_url}` : undefined}
+        canonical={entity.canonical_url ? `https://ai-idei.com${entity.canonical_url}` : undefined}
       />
       {/* Header */}
       <div className="border-b border-border bg-card">
