@@ -151,7 +151,7 @@ export default function Notifications() {
         <div className="text-center py-16">
           <Bell className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">
-            {filter === "all" ? "Nicio notificare încă" : "Nicio notificare pentru acest filtru"}
+            {filter === "all" ? "No notifications yet" : "No notifications for this filter"}
           </p>
         </div>
       ) : (
