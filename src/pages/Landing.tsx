@@ -17,6 +17,18 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { PublicTestimonials } from "@/components/landing/PublicTestimonials";
 import { Footer } from "@/components/global/Footer";
 import { useRef } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const LANG_OPTIONS = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "ro", label: "Română", flag: "🇷🇴" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+];
 
 /* ─── Animation Variants ─── */
 const fadeUp = {
