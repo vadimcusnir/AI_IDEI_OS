@@ -38,6 +38,9 @@ import GuestPages from "./pages/GuestPages";
 import GuestProfile from "./pages/GuestProfile";
 import BatchRunner from "./pages/BatchRunner";
 import Onboarding from "./pages/Onboarding";
+import Docs from "./pages/Docs";
+import EntityListing from "./pages/EntityListing";
+import MediaProfiles from "./pages/MediaProfiles";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,10 +59,20 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/links" element={<Links />} />
-              <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
               <Route path="/architecture" element={<Architecture />} />
               <Route path="/u/:username" element={<PublicProfile />} />
               <Route path="/guest/:slug" element={<GuestProfile />} />
+
+              {/* Public knowledge infrastructure — with global layout */}
+              <Route path="/docs" element={<AppLayout><Docs /></AppLayout>} />
+              <Route path="/docs/:section/:topic" element={<AppLayout><Docs /></AppLayout>} />
+              <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
+              <Route path="/insights" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/patterns" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/formulas" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/contradictions" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/applications" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
 
               {/* Protected routes — require authentication */}
               <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
@@ -84,7 +97,7 @@ const App = () => (
               <Route path="/guests" element={<ProtectedRoute><AppLayout><GuestPages /></AppLayout></ProtectedRoute>} />
               <Route path="/onboarding" element={<ProtectedRoute><AppLayout><Onboarding /></AppLayout></ProtectedRoute>} />
 
-              {/* Admin route — requires authentication + admin role */}
+              {/* Admin route */}
               <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

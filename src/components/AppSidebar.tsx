@@ -6,7 +6,8 @@ import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
-  BarChart3, Wrench, Bell, BookOpen, Users, Network, Rocket,
+  BarChart3, Bell, BookOpen, Users, Network, Rocket,
+  FileText, Lightbulb, Repeat2, FlaskConical, AlertTriangle, Layers,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
@@ -41,9 +42,19 @@ const SECONDARY_NAV = [
   { label: "Credits", to: "/credits", icon: Coins },
   { label: "Dashboard", to: "/dashboard", icon: BarChart3 },
   { label: "Onboarding", to: "/onboarding", icon: Rocket },
-  { label: "Notificări", to: "/notifications", icon: Bell },
+  { label: "Notifications", to: "/notifications", icon: Bell },
   { label: "Feedback", to: "/feedback", icon: MessageCircle },
   { label: "Changelog", to: "/changelog", icon: ScrollText },
+];
+
+const KNOWLEDGE_NAV = [
+  { label: "Docs", to: "/docs", icon: FileText },
+  { label: "Insights", to: "/insights", icon: Lightbulb },
+  { label: "Patterns", to: "/patterns", icon: Repeat2 },
+  { label: "Formulas", to: "/formulas", icon: FlaskConical },
+  { label: "Contradictions", to: "/contradictions", icon: AlertTriangle },
+  { label: "Applications", to: "/applications", icon: Layers },
+  { label: "Profiles", to: "/media/profiles", icon: Users },
 ];
 
 export function AppSidebar() {
@@ -162,6 +173,31 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarSeparator />
+
+        {/* Knowledge Infrastructure */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Knowledge</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {KNOWLEDGE_NAV.map((item) => (
+                <SidebarMenuItem key={item.to}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(item.to)}
+                    tooltip={item.label}
+                  >
+                    <button onClick={() => navigate(item.to)} className="w-full">
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.label}</span>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
