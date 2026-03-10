@@ -204,7 +204,7 @@ export default function ProfilePage() {
             <textarea
               value={profile.bio}
               onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-              placeholder="Descrie-te pe scurt..."
+              placeholder="Describe yourself briefly..."
               rows={4}
               maxLength={500}
               className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary transition-colors resize-none"
