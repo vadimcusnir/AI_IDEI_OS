@@ -363,13 +363,13 @@ export default function AdminDashboard() {
 
               <div className="bg-card border border-border rounded-xl p-5">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
-                  <Coins className="h-3 w-3" /> Economia Platformei
+                  <Coins className="h-3 w-3" /> Platform Economy
                 </h3>
                 <div className="space-y-3">
-                  <EconRow label="Credits în circulație" value={stats.totalCreditsCirculating} />
-                  <EconRow label="Credits consumate" value={stats.totalCreditsSpent} />
-                  <EconRow label="Venituri estimate" value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
-                  <EconRow label="Neuroni per user" value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
+                  <EconRow label="Credits in circulation" value={stats.totalCreditsCirculating} />
+                  <EconRow label="Credits consumed" value={stats.totalCreditsSpent} />
+                  <EconRow label="Estimated revenue" value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
+                  <EconRow label="Neurons per user" value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
                 </div>
               </div>
 
