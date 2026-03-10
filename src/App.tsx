@@ -48,6 +48,7 @@ import MediaProfiles from "./pages/MediaProfiles";
 import NotFound from "./pages/NotFound";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import DataPrivacy from "./pages/DataPrivacy";
 
 const queryClient = new QueryClient();
 
