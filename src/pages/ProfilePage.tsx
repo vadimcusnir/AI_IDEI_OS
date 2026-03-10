@@ -177,7 +177,7 @@ export default function ProfilePage() {
               type="text"
               value={profile.display_name}
               onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-              placeholder="Numele tău"
+              placeholder="Your name"
               className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary transition-colors"
             />
           </div>
