@@ -61,7 +61,6 @@ export default function Index() {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
-  const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [showExportImport, setShowExportImport] = useState(false);
