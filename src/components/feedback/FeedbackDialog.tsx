@@ -48,7 +48,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
       return;
     }
     if (needsRating && !rating) {
-      toast.error("Selectează un rating.");
+      toast.error("Please select a rating.");
       return;
     }
 
