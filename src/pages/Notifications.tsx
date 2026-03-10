@@ -103,10 +103,10 @@ export default function Notifications() {
             )}
             <div>
               <p className="text-xs font-semibold">
-                {isSubscribed ? "Push notifications active" : "Activează push notifications"}
+                {isSubscribed ? "Push notifications active" : "Enable push notifications"}
               </p>
               <p className="text-[10px] text-muted-foreground">
-                {isSubscribed ? "Primești alerte chiar și când nu ești pe site." : "Fii notificat când un job se finalizează sau creditele sunt scăzute."}
+                {isSubscribed ? "You receive alerts even when you're not on the site." : "Get notified when a job completes or credits run low."}
               </p>
             </div>
           </div>
