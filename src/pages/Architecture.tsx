@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import {
   Database, Layers, GitBranch, Blocks, Copy, Zap, Search, Server,
   Brain, Shield, Coins, Workflow, MessageSquare, Users, BookOpen,
   Bell, MessageCircle, BarChart3, Globe, UserCircle,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Section = ({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) => (
   <section className="mb-14">
