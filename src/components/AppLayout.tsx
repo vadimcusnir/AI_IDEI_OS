@@ -15,6 +15,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         {children}
       </main>
       <FeedbackFAB />
+      <ContextualFeedbackPrompt />
     </div>
   );
 }

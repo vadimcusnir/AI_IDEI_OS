@@ -317,6 +317,9 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Public Testimonials */}
+      <PublicTestimonials />
+
       {/* Final CTA */}
       <section className="max-w-3xl mx-auto px-6 py-20 text-center">
         <motion.div

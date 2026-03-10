@@ -156,6 +156,13 @@ export function AdminFeedbackTab() {
 
   return (
     <div>
+      {/* Export + Stats */}
+      <div className="flex items-center justify-end mb-3">
+        <Button variant="outline" size="sm" onClick={exportCSV} className="text-xs gap-1.5">
+          <Download className="h-3.5 w-3.5" />
+          Export CSV
+        </Button>
+      </div>
       {/* Stats row */}
       <div className="grid grid-cols-4 gap-3 mb-4">
         <div className="bg-card border border-border rounded-lg p-3 text-center">
