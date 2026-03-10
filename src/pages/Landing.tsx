@@ -76,7 +76,7 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             {user ? (
-              <Button size="sm" onClick={() => navigate("/neurons")} className="gap-1.5">
+              <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5">
                 <Brain className="h-3.5 w-3.5" />
                 Dashboard
               </Button>
