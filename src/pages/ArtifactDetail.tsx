@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import ReactMarkdown from "react-markdown";
 import {
   ArrowLeft, Loader2, Download, Copy, Trash2, Brain,
-  Clock, FileText, Check, ExternalLink,
+  Clock, FileText, Check, ExternalLink, FileCode,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
