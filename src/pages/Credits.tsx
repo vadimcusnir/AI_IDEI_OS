@@ -47,7 +47,7 @@ export default function Credits() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     loadData();
   }, [user, authLoading]);
 
