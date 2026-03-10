@@ -220,7 +220,7 @@ export default function AdminDashboard() {
     } else {
       const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
       if (error) { toast.error(error.message); return; }
-      toast.success("Rol admin acordat");
+      toast.success("Admin role granted");
     }
     loadUsers();
   };
