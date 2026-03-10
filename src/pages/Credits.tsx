@@ -244,9 +244,9 @@ export default function Credits() {
             {/* Filter chips */}
             <div className="flex items-center gap-0.5 flex-wrap">
               {([
-                { value: "all" as TxFilter, label: "Toate" },
-                { value: "spend" as TxFilter, label: "Consum" },
-                { value: "topup" as TxFilter, label: "Încărcări" },
+                { value: "all" as TxFilter, label: "All" },
+                { value: "spend" as TxFilter, label: "Spend" },
+                { value: "topup" as TxFilter, label: "Top-ups" },
                 { value: "bonus" as TxFilter, label: "Bonus" },
               ]).map(f => (
                 <button
