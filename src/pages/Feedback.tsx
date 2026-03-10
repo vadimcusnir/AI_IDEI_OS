@@ -270,7 +270,7 @@ export default function Feedback() {
             const config = TYPE_CONFIG[item.type] || TYPE_CONFIG.feedback;
             const statusCfg = STATUS_CONFIG[item.status] || STATUS_CONFIG.pending;
             const Icon = config.icon;
-            const timeAgo = formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ro });
+            const timeAgo = formatDistanceToNow(new Date(item.created_at), { addSuffix: true });
 
             return (
               <div key={item.id} className="bg-card border border-border rounded-xl p-4">
