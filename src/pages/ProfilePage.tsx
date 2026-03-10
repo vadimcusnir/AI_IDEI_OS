@@ -333,7 +333,7 @@ export default function ProfilePage() {
                     />
                     <PrefToggle
                       icon={MessageCircle}
-                      label="Raport feedback"
+                      label="Feedback report"
                       checked={prefs.email_feedback}
                       onChange={(v) => updatePrefs({ email_feedback: v })}
                     />
