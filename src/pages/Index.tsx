@@ -478,9 +478,7 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      {/* Secondary toolbar */}
+    <div className="flex-1 flex flex-col overflow-hidden">
       <div className="h-10 border-b border-border bg-card flex items-center justify-end px-4 gap-1">
         <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={() => navigate("/extractor")}>
           <Upload className="h-3.5 w-3.5" />
