@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork, Link2, Upload, Sparkles } from "lucide-react";
+import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork, Link2, Upload, Sparkles, ClipboardList } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
