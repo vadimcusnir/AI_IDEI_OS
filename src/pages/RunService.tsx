@@ -7,7 +7,7 @@ import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Loader2, Sparkles, Play, CheckCircle2,
-  Clock, AlertCircle, Coins, ChevronRight,
+  Clock, AlertCircle, Coins,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +49,6 @@ export default function RunService() {
   }, [user, authLoading, serviceKey]);
 
   const loadData = async () => {
-    // Load service and credits in parallel
     const [serviceRes, creditsRes] = await Promise.all([
       supabase.from("service_catalog").select("*").eq("service_key", serviceKey!).single(),
       supabase.from("user_credits").select("balance, total_spent").eq("user_id", user!.id).maybeSingle(),
@@ -61,7 +60,6 @@ export default function RunService() {
     if (creditsRes.data) {
       setCredits(creditsRes.data as UserCredits);
     } else {
-      // Create initial credit balance
       await supabase.from("user_credits").insert({ user_id: user!.id, balance: 500, total_earned: 500, total_spent: 0 } as any);
       setCredits({ balance: 500, total_spent: 0 });
     }
@@ -71,7 +69,6 @@ export default function RunService() {
   const handleRun = async () => {
     if (!service || !user || !credits) return;
 
-    // Cost firewall
     if (credits.balance < service.credits_cost) {
       toast.error(`Insufficient credits. Need ${service.credits_cost}, have ${credits.balance}.`);
       return;
@@ -80,7 +77,7 @@ export default function RunService() {
     setJobStatus("creating");
 
     try {
-      // Create a neuron for job results (or use existing)
+      // Create neuron for results
       const { data: neuron, error: neuronErr } = await supabase
         .from("neurons")
         .insert({
@@ -111,7 +108,7 @@ export default function RunService() {
       setJobId(job.id);
       setJobStatus("running");
 
-      // Call edge function
+      // Call server-side job runner (handles credit reservation + AI + auditing)
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/run-service`,
         {
@@ -152,6 +149,7 @@ export default function RunService() {
           let line = buffer.slice(0, nlIndex);
           buffer = buffer.slice(nlIndex + 1);
           if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
           if (!line.startsWith("data: ")) continue;
           const data = line.slice(6).trim();
           if (data === "[DONE]") break;
@@ -162,48 +160,35 @@ export default function RunService() {
               fullResult += content;
               setJobResult(fullResult);
             }
-          } catch { /* partial */ }
+          } catch {
+            buffer = line + "\n" + buffer;
+            break;
+          }
         }
       }
 
-      // Update job as completed
-      await supabase.from("neuron_jobs").update({
-        status: "completed",
-        completed_at: new Date().toISOString(),
-        result: { content: fullResult },
-      } as any).eq("id", job.id);
+      // Refresh credits (server already deducted)
+      const { data: updatedCredits } = await supabase
+        .from("user_credits")
+        .select("balance, total_spent")
+        .eq("user_id", user.id)
+        .single();
+      if (updatedCredits) setCredits(updatedCredits as UserCredits);
 
-      // Deduct credits
-      await supabase.from("user_credits").update({
-        balance: credits.balance - service.credits_cost,
-        total_spent: credits.total_spent + service.credits_cost,
-      } as any).eq("user_id", user.id);
-
-      // Log transaction
-      await supabase.from("credit_transactions").insert({
-        user_id: user.id,
-        job_id: job.id,
-        amount: -service.credits_cost,
-        type: "spend",
-        description: `Service: ${service.name}`,
-      } as any);
-
-      setCredits(prev => prev ? { ...prev, balance: prev.balance - service.credits_cost, total_spent: prev.total_spent + service.credits_cost } : prev);
       setJobStatus("completed");
-      toast.success("Job completed successfully");
+      toast.success("Job completed — results audited and saved");
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Unknown error";
       toast.error(msg);
       setJobStatus("failed");
 
-      // Mark job as failed
-      if (jobId) {
-        await supabase.from("neuron_jobs").update({
-          status: "failed",
-          completed_at: new Date().toISOString(),
-          result: { error: msg },
-        } as any).eq("id", jobId);
-      }
+      // Refresh credits (may have been released server-side)
+      const { data: updatedCredits } = await supabase
+        .from("user_credits")
+        .select("balance, total_spent")
+        .eq("user_id", user.id)
+        .single();
+      if (updatedCredits) setCredits(updatedCredits as UserCredits);
     }
   };
 
@@ -232,11 +217,11 @@ export default function RunService() {
           <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
           <span className="text-sm font-serif">Run Service</span>
         </div>
-        <div className="flex items-center gap-2">
+        <button onClick={() => navigate("/credits")} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <Coins className="h-3.5 w-3.5 text-ai-accent" />
           <span className="text-xs font-mono font-bold">{credits?.balance ?? 0}</span>
           <span className="text-[9px] text-muted-foreground">credits</span>
-        </div>
+        </button>
       </div>
 
       <div className="max-w-2xl mx-auto px-6 py-8">
@@ -299,7 +284,6 @@ export default function RunService() {
           </div>
         )}
 
-        {/* No input fields: simple context */}
         {inputFields.length === 0 && canRun && (
           <div className="mb-8">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Context</h2>
@@ -313,7 +297,6 @@ export default function RunService() {
           </div>
         )}
 
-        {/* Deliverables preview */}
         {deliverables.length > 0 && canRun && (
           <div className="mb-8">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">What You'll Receive</h2>
@@ -328,15 +311,9 @@ export default function RunService() {
           </div>
         )}
 
-        {/* Run button */}
         {canRun && (
           <div className="flex items-center gap-3">
-            <Button
-              onClick={handleRun}
-              disabled={!hasEnoughCredits}
-              className="gap-2"
-              size="lg"
-            >
+            <Button onClick={handleRun} disabled={!hasEnoughCredits} className="gap-2" size="lg">
               <Play className="h-4 w-4" />
               Run Job — {service.credits_cost} credits
             </Button>
@@ -352,13 +329,13 @@ export default function RunService() {
         {/* Execution timeline */}
         {(jobStatus === "creating" || jobStatus === "running") && (
           <div className="mt-8">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Execution</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Execution Pipeline</h2>
             <div className="space-y-3">
               {[
                 { label: "Creating job", done: jobStatus !== "creating" },
-                { label: "Reserving credits", done: jobStatus === "running" },
+                { label: "Reserving credits (server)", done: jobStatus === "running" },
                 { label: "Executing AI pipeline", done: false, active: jobStatus === "running" },
-                { label: "Delivering results", done: false },
+                { label: "Auditing & saving results", done: false },
               ].map((step, i) => (
                 <div key={i} className="flex items-center gap-3">
                   {step.done ? (
@@ -377,11 +354,10 @@ export default function RunService() {
           </div>
         )}
 
-        {/* Streaming result */}
         {jobResult && (
           <div className="mt-8">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-              {jobStatus === "completed" ? "Results" : "Generating..."}
+              {jobStatus === "completed" ? "Results (Audited)" : "Generating..."}
             </h2>
             <div className="bg-card border border-border rounded-xl p-4 max-h-96 overflow-y-auto">
               <pre className="text-xs font-mono whitespace-pre-wrap leading-relaxed">{jobResult}</pre>
@@ -391,10 +367,14 @@ export default function RunService() {
                 <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => navigate("/jobs")}>
                   View All Jobs
                 </Button>
+                <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => navigate("/credits")}>
+                  <Coins className="h-3 w-3" /> View Credits
+                </Button>
                 <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => {
                   setJobStatus("idle");
                   setJobResult("");
                   setJobId(null);
+                  loadData();
                 }}>
                   Run Again
                 </Button>
@@ -403,11 +383,10 @@ export default function RunService() {
           </div>
         )}
 
-        {/* Failed state */}
         {jobStatus === "failed" && !jobResult && (
           <div className="mt-8 flex items-center gap-2 text-destructive">
             <AlertCircle className="h-4 w-4" />
-            <span className="text-sm">Job failed. You can try again.</span>
+            <span className="text-sm">Job failed. Credits released if reserved. Try again.</span>
           </div>
         )}
       </div>

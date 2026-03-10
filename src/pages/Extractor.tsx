@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,9 +6,8 @@ import { toast } from "sonner";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import {
-  Upload, FileText, Mic, Video, Link2, Loader2,
-  ArrowLeft, Search, X, Clock, ChevronRight,
-  FileAudio, Film, Type, Globe,
+  Upload, FileText, Search, X, Clock, ChevronRight,
+  FileAudio, Film, Type, Globe, Loader2, Brain, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,17 +24,15 @@ interface Episode {
 }
 
 const SOURCE_ICONS: Record<string, React.ElementType> = {
-  text: Type,
-  audio: FileAudio,
-  video: Film,
-  url: Globe,
+  text: Type, audio: FileAudio, video: Film, url: Globe,
 };
 
 const STATUS_COLORS: Record<string, string> = {
   uploaded: "bg-muted text-muted-foreground",
   transcribing: "bg-primary/15 text-primary",
   transcribed: "bg-status-validated/15 text-status-validated",
-  analyzed: "bg-ai-accent/15 text-ai-accent",
+  analyzing: "bg-ai-accent/15 text-ai-accent",
+  analyzed: "bg-primary/15 text-primary",
   error: "bg-destructive/15 text-destructive",
 };
 
@@ -45,6 +42,7 @@ export default function Extractor() {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [extractingId, setExtractingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (authLoading) return;
@@ -62,6 +60,47 @@ export default function Extractor() {
     setLoading(false);
   };
 
+  const handleExtractNeurons = async (episode: Episode) => {
+    if (!user || !episode.transcript?.trim()) {
+      toast.error("Episode has no transcript content to extract from.");
+      return;
+    }
+
+    setExtractingId(episode.id);
+    toast.info("Extracting neurons from episode... (100 credits)");
+
+    try {
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-neurons`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            episode_id: episode.id,
+            user_id: user.id,
+          }),
+        }
+      );
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(data.error || `Error ${resp.status}`);
+      }
+
+      toast.success(`Extracted ${data.neurons_created} neurons! (${data.credits_spent} credits spent)`);
+      fetchEpisodes();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Extraction failed";
+      toast.error(msg);
+    } finally {
+      setExtractingId(null);
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
@@ -76,7 +115,7 @@ export default function Extractor() {
       <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4 rotate-180" />
           </button>
           <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
           <span className="text-sm font-serif">Extractor</span>
@@ -97,8 +136,8 @@ export default function Extractor() {
           {[
             { label: "Upload", icon: Upload, active: true },
             { label: "Transcribe", icon: FileText, active: false },
-            { label: "Extract", icon: Search, active: false },
-            { label: "Neurons", icon: Globe, active: false },
+            { label: "Extract", icon: Brain, active: false },
+            { label: "Neurons", icon: Sparkles, active: false },
           ].map((step, i) => (
             <div key={step.label} className="flex items-center gap-2 shrink-0">
               {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground/30" />}
@@ -134,6 +173,10 @@ export default function Extractor() {
           <div className="space-y-2">
             {episodes.map(ep => {
               const Icon = SOURCE_ICONS[ep.source_type] || FileText;
+              const isExtracting = extractingId === ep.id;
+              const canExtract = (ep.status === "transcribed" || ep.status === "uploaded") && ep.transcript?.trim();
+              const isAnalyzed = ep.status === "analyzed";
+
               return (
                 <div
                   key={ep.id}
@@ -157,14 +200,33 @@ export default function Extractor() {
                     </div>
                   </div>
                   <span className={cn(
-                    "text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
+                    "text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0",
                     STATUS_COLORS[ep.status] || STATUS_COLORS.uploaded
                   )}>
                     {ep.status}
                   </span>
-                  <Button variant="ghost" size="sm" className="h-7 text-xs">
-                    View
-                  </Button>
+
+                  {/* Extract Neurons button */}
+                  {canExtract && !isExtracting && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-7 text-xs gap-1 shrink-0"
+                      onClick={() => handleExtractNeurons(ep)}
+                    >
+                      <Brain className="h-3 w-3" />
+                      Extract
+                    </Button>
+                  )}
+                  {isExtracting && (
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" />
+                      <span className="text-[10px] text-ai-accent font-medium">Extracting...</span>
+                    </div>
+                  )}
+                  {isAnalyzed && (
+                    <span className="text-[10px] text-status-validated font-medium shrink-0">✓ Extracted</span>
+                  )}
                 </div>
               );
             })}
@@ -276,9 +338,7 @@ function CreateEpisodeModal({ onClose, onCreated }: { onClose: () => void; onCre
 
           {sourceType === "url" && (
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                URL
-              </label>
+              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
               <input
                 value={content}
                 onChange={e => setContent(e.target.value)}
