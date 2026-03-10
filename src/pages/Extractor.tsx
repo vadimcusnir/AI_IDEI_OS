@@ -122,6 +122,7 @@ export default function Extractor() {
     toast.success("Transcript copiat în clipboard");
   };
 
+  const handleExtractNeurons = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
       toast.error("Episodul nu are conținut transcript pentru extracție.");
       return;
