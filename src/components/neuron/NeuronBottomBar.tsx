@@ -26,6 +26,7 @@ interface NeuronBottomBarProps {
   onRemoveLink?: (linkId: string) => void;
   onSaveVersion?: () => void;
   onClearLogs?: () => void;
+  onRestoreVersion?: (version: NeuronVersion) => void;
 }
 
 const tabs: { id: BottomTab; label: string; icon: React.ElementType }[] = [
@@ -61,7 +62,7 @@ const logStatusColors = {
 export function NeuronBottomBar({
   isExpanded, onToggle, executionLogs,
   links, versions, loadingLinks, loadingVersions,
-  onRemoveLink, onSaveVersion, onClearLogs,
+  onRemoveLink, onSaveVersion, onClearLogs, onRestoreVersion,
 }: NeuronBottomBarProps) {
   const [activeTab, setActiveTab] = useState<BottomTab>("relations");
   const [commentText, setCommentText] = useState("");
@@ -175,13 +176,23 @@ export function NeuronBottomBar({
               ) : (
                 <div className="space-y-1.5">
                   {versions.map((v, i) => (
-                    <div key={v.id} className={cn("flex items-center gap-3 px-2 py-1.5 rounded-md text-xs", i === 0 ? "bg-primary/5" : "hover:bg-muted/50")}>
+                    <div key={v.id} className={cn("flex items-center gap-3 px-2 py-1.5 rounded-md text-xs group", i === 0 ? "bg-primary/5" : "hover:bg-muted/50")}>
                       <Clock className="h-3 w-3 text-muted-foreground shrink-0" />
                       <span className="text-muted-foreground w-24 shrink-0">
                         {formatDistanceToNow(new Date(v.createdAt), { addSuffix: true })}
                       </span>
                       <span className="font-mono text-[10px] text-muted-foreground/60">v{v.version}</span>
                       <span className="font-medium flex-1 truncate">{v.title}</span>
+                      {onRestoreVersion && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-5 text-[9px] px-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary"
+                          onClick={() => onRestoreVersion(v)}
+                        >
+                          Restore
+                        </Button>
+                      )}
                     </div>
                   ))}
                 </div>

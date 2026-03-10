@@ -3,7 +3,7 @@ import {
   Share2, Copy, Download, ArrowRightLeft,
   Eye, EyeOff, Users, Globe,
   ChevronDown, Zap, Hash, Play, Shield,
-  Fingerprint, MapPin, GitFork, Loader2
+  Fingerprint, MapPin, GitFork, Loader2, BookmarkPlus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +36,7 @@ interface NeuronTopBarProps {
   onRunAll: () => void;
   onClone?: () => Promise<any>;
   onFork?: () => Promise<any>;
+  onSaveAsTemplate?: () => void;
 }
 
 const statusConfig: Record<NeuronStatus, { label: string; className: string }> = {
@@ -53,7 +54,7 @@ const visibilityIcons: Record<NeuronVisibility, React.ElementType> = {
 export function NeuronTopBar({
   title, neuronNumber, neuronUuid, nasPath, tags, status, visibility,
   onTitleChange, onStatusChange, onVisibilityChange, onTagsChange, onRunAll,
-  onClone, onFork,
+  onClone, onFork, onSaveAsTemplate,
 }: NeuronTopBarProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTag, setNewTag] = useState("");
@@ -258,6 +259,12 @@ export function NeuronTopBar({
           <DropdownMenuItem>→ Course Slide</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {onSaveAsTemplate && (
+        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onSaveAsTemplate} title="Save as template">
+          <BookmarkPlus className="h-3.5 w-3.5" />
+        </Button>
+      )}
 
       <Button variant="ghost" size="icon" className="h-7 w-7">
         <Download className="h-3.5 w-3.5" />

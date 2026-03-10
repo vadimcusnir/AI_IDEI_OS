@@ -191,8 +191,8 @@ export function useNeuron(neuronNumber?: number) {
     await supabase.from("neuron_blocks").update({ checked: !block?.checked }).eq("id", id);
   }, [blocks]);
 
-  const handleAddBlock = useCallback(async (afterId: string, type: BlockType = "text") => {
-    if (!neuron) return;
+  const handleAddBlock = useCallback(async (afterId: string, type: BlockType = "text", initialContent?: string) => {
+    if (!neuron) return null;
     const cfg = BLOCK_TYPE_CONFIG[type];
     const idx = blocks.findIndex(b => b.id === afterId);
     const position = idx + 1;
@@ -208,7 +208,7 @@ export function useNeuron(neuronNumber?: number) {
       .insert({
         neuron_id: neuron.id,
         type,
-        content: "",
+        content: initialContent || "",
         position,
         execution_mode: cfg.defaultExecutionMode,
         checked: type === "todo" ? false : null,
@@ -221,7 +221,7 @@ export function useNeuron(neuronNumber?: number) {
       const block: Block = {
         id: newBlock.id,
         type: newBlock.type as BlockType,
-        content: "",
+        content: initialContent || "",
         checked: type === "todo" ? false : undefined,
         language: type === "code" ? "python" : undefined,
         executionMode: cfg.defaultExecutionMode,
@@ -232,7 +232,9 @@ export function useNeuron(neuronNumber?: number) {
         copy.splice(position, 0, block);
         return copy;
       });
+      return block;
     }
+    return null;
   }, [neuron, blocks]);
 
   const handleDeleteBlock = useCallback(async (id: string) => {
@@ -293,6 +295,38 @@ export function useNeuron(neuronNumber?: number) {
     });
   }, [blocks, handleBlockExecute]);
 
+  const restoreBlocks = useCallback(async (blocksSnapshot: any[]) => {
+    if (!neuron) return;
+    // Delete existing blocks
+    await supabase.from("neuron_blocks").delete().eq("neuron_id", neuron.id);
+    // Insert from snapshot
+    const newRows = blocksSnapshot.map((b: any, i: number) => ({
+      neuron_id: neuron.id,
+      type: b.type || "text",
+      content: b.content || "",
+      position: i,
+      execution_mode: b.executionMode || b.execution_mode || "passive",
+      language: b.language || null,
+      checked: b.checked ?? null,
+    }));
+    const { data: inserted } = await supabase
+      .from("neuron_blocks")
+      .insert(newRows)
+      .select();
+
+    if (inserted) {
+      setBlocks(inserted.map(b => ({
+        id: b.id,
+        type: b.type as BlockType,
+        content: b.content,
+        checked: b.checked ?? undefined,
+        language: (b.language as CodeLanguage) ?? undefined,
+        executionMode: b.execution_mode as any,
+        executionStatus: "idle" as const,
+      })));
+    }
+  }, [neuron]);
+
   return {
     neuron,
     blocks,
@@ -313,5 +347,6 @@ export function useNeuron(neuronNumber?: number) {
     handleBlockLanguageChange,
     handleRunAll,
     clearLogs,
+    restoreBlocks,
   };
 }
