@@ -77,7 +77,7 @@ export default function Notifications() {
           {unreadCount > 0 && (
             <Button variant="outline" size="sm" onClick={markAllRead} className="text-xs gap-1.5">
               <CheckCheck className="h-3.5 w-3.5" />
-              Marchează toate
+              Mark all read
             </Button>
           )}
           {notifications.length > 0 && (
