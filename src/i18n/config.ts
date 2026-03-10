@@ -42,6 +42,7 @@ i18n
         errors: errorsEN,
         forms: formsEN,
         pages: pagesEN,
+        architecture: architectureEN,
       },
       ro: {
         common: commonRO,
@@ -49,6 +50,7 @@ i18n
         errors: errorsRO,
         forms: formsRO,
         pages: pagesRO,
+        architecture: architectureRO,
       },
       ru: {
         common: commonRU,
@@ -56,6 +58,7 @@ i18n
         errors: errorsRU,
         forms: formsRU,
         pages: pagesRU,
+        architecture: architectureRU,
       },
     },
     detection: {
