@@ -6,7 +6,7 @@ import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
-  BarChart3, Wrench, Bell, BookOpen,
+  BarChart3, Wrench, Bell, BookOpen, Users,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
@@ -33,6 +33,7 @@ const MAIN_NAV = [
   { label: "Servicii", to: "/services", icon: Sparkles },
   { label: "Jobs", to: "/jobs", icon: Briefcase },
   { label: "Biblioteca", to: "/library", icon: BookOpen },
+  { label: "Guest Pages", to: "/guests", icon: Users },
 ];
 
 const SECONDARY_NAV = [

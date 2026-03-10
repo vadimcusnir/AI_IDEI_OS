@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.chunk-transcript]
 verify_jwt = false
+
+[functions.extract-guests]
+verify_jwt = false

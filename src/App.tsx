@@ -34,6 +34,8 @@ import Index from "./pages/Index";
 import Changelog from "./pages/Changelog";
 import Library from "./pages/Library";
 import ArtifactDetail from "./pages/ArtifactDetail";
+import GuestPages from "./pages/GuestPages";
+import GuestProfile from "./pages/GuestProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -55,6 +57,7 @@ const App = () => (
               <Route path="/changelog" element={<Changelog />} />
               <Route path="/architecture" element={<Architecture />} />
               <Route path="/u/:username" element={<PublicProfile />} />
+              <Route path="/guest/:slug" element={<GuestProfile />} />
 
               {/* Protected routes — require authentication */}
               <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
@@ -75,6 +78,7 @@ const App = () => (
               <Route path="/profile" element={<ProtectedRoute><AppLayout><ProfilePage /></AppLayout></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><AppLayout><Notifications /></AppLayout></ProtectedRoute>} />
               <Route path="/feedback" element={<ProtectedRoute><AppLayout><Feedback /></AppLayout></ProtectedRoute>} />
+              <Route path="/guests" element={<ProtectedRoute><AppLayout><GuestPages /></AppLayout></ProtectedRoute>} />
 
               {/* Admin route — requires authentication + admin role */}
               <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />

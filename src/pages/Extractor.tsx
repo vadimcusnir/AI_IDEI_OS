@@ -8,7 +8,7 @@ import {
   Upload, FileText, X, Clock, Trash2, Pencil,
   FileAudio, Film, Type, Globe, Loader2, Brain,
   ChevronDown, ChevronUp, Copy, ExternalLink,
-  Layers, Zap,
+  Layers, Zap, Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -229,6 +229,35 @@ export default function Extractor() {
         setExtractionProgress(null);
       }, 2000);
     }
+  };
+
+  const [detectingGuests, setDetectingGuests] = useState<string | null>(null);
+
+  const handleDetectGuests = async (episode: Episode) => {
+    if (!user || !episode.transcript?.trim()) {
+      toast.error("Episodul nu are transcript.");
+      return;
+    }
+    setDetectingGuests(episode.id);
+    try {
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-guests`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          },
+          body: JSON.stringify({ episode_id: episode.id, user_id: user.id }),
+        }
+      );
+      const result = await resp.json();
+      if (!resp.ok) throw new Error(result.error || "Failed");
+      toast.success(`${result.guests_processed} persoane detectate!`);
+    } catch (e: any) {
+      toast.error(e.message || "Eroare la detecție");
+    }
+    setDetectingGuests(null);
   };
 
   const stats = {
@@ -467,6 +496,18 @@ export default function Extractor() {
                         <Brain className="h-3 w-3" /> Extrage
                       </Button>
                     )}
+                    {canExtract && !isExtracting && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs gap-1 shrink-0"
+                        disabled={detectingGuests === ep.id}
+                        onClick={e => { e.stopPropagation(); handleDetectGuests(ep); }}
+                      >
+                        {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
+                        Guests
+                      </Button>
+                    )}
                     {isExtracting && (
                       <div className="flex items-center gap-1.5 shrink-0">
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" />
@@ -611,4 +652,3 @@ export default function Extractor() {
     </div>
   );
 }
-

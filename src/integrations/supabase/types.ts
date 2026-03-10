@@ -378,6 +378,63 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_profiles: {
+        Row: {
+          author_id: string
+          bio: string | null
+          created_at: string
+          episode_ids: string[] | null
+          expertise_areas: string[] | null
+          frameworks_mentioned: string[] | null
+          full_name: string
+          id: string
+          is_public: boolean | null
+          key_quotes: string[] | null
+          metadata: Json | null
+          neuron_ids: number[] | null
+          psychological_traits: string[] | null
+          role: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          bio?: string | null
+          created_at?: string
+          episode_ids?: string[] | null
+          expertise_areas?: string[] | null
+          frameworks_mentioned?: string[] | null
+          full_name: string
+          id?: string
+          is_public?: boolean | null
+          key_quotes?: string[] | null
+          metadata?: Json | null
+          neuron_ids?: number[] | null
+          psychological_traits?: string[] | null
+          role?: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          bio?: string | null
+          created_at?: string
+          episode_ids?: string[] | null
+          expertise_areas?: string[] | null
+          frameworks_mentioned?: string[] | null
+          full_name?: string
+          id?: string
+          is_public?: boolean | null
+          key_quotes?: string[] | null
+          metadata?: Json | null
+          neuron_ids?: number[] | null
+          psychological_traits?: string[] | null
+          role?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       neuron_address_aliases: {
         Row: {
           alias: string
