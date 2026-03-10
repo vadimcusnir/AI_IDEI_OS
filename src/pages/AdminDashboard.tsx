@@ -477,7 +477,7 @@ export default function AdminDashboard() {
                                 onClick={() => adjustCredits(u.user_id)}
                               >
                                 {adjustLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <PlusCircle className="h-3 w-3" />}
-                                Aplică
+                                 Aplică
                               </Button>
                               <Button
                                 size="sm"
