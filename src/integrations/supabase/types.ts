@@ -56,6 +56,54 @@ export type Database = {
         }
         Relationships: []
       }
+      episodes: {
+        Row: {
+          author_id: string
+          created_at: string
+          duration_seconds: number | null
+          file_path: string | null
+          id: string
+          language: string | null
+          metadata: Json | null
+          source_type: string
+          source_url: string | null
+          status: string
+          title: string
+          transcript: string | null
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          duration_seconds?: number | null
+          file_path?: string | null
+          id?: string
+          language?: string | null
+          metadata?: Json | null
+          source_type?: string
+          source_url?: string | null
+          status?: string
+          title?: string
+          transcript?: string | null
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          duration_seconds?: number | null
+          file_path?: string | null
+          id?: string
+          language?: string | null
+          metadata?: Json | null
+          source_type?: string
+          source_url?: string | null
+          status?: string
+          title?: string
+          transcript?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       neuron_address_aliases: {
         Row: {
           alias: string
@@ -432,8 +480,12 @@ export type Database = {
       neurons: {
         Row: {
           author_id: string | null
+          content_category: string | null
           created_at: string
+          credits_cost: number
+          episode_id: string | null
           id: number
+          lifecycle: string
           number: number
           score: number
           status: string
@@ -444,8 +496,12 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
+          content_category?: string | null
           created_at?: string
+          credits_cost?: number
+          episode_id?: string | null
           id?: never
+          lifecycle?: string
           number?: number
           score?: number
           status?: string
@@ -456,8 +512,12 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
+          content_category?: string | null
           created_at?: string
+          credits_cost?: number
+          episode_id?: string | null
           id?: never
+          lifecycle?: string
           number?: number
           score?: number
           status?: string
@@ -465,6 +525,59 @@ export type Database = {
           updated_at?: string
           uuid?: string
           visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neurons_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: false
+            referencedRelation: "episodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_catalog: {
+        Row: {
+          category: string
+          created_at: string
+          credits_cost: number
+          deliverables_schema: Json | null
+          description: string
+          icon: string | null
+          id: string
+          input_schema: Json | null
+          is_active: boolean
+          name: string
+          service_class: string
+          service_key: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          credits_cost?: number
+          deliverables_schema?: Json | null
+          description?: string
+          icon?: string | null
+          id?: string
+          input_schema?: Json | null
+          is_active?: boolean
+          name: string
+          service_class?: string
+          service_key: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          credits_cost?: number
+          deliverables_schema?: Json | null
+          description?: string
+          icon?: string | null
+          id?: string
+          input_schema?: Json | null
+          is_active?: boolean
+          name?: string
+          service_class?: string
+          service_key?: string
         }
         Relationships: []
       }
@@ -511,6 +624,25 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      content_category:
+        | "transcript"
+        | "insight"
+        | "framework"
+        | "strategy"
+        | "formula"
+        | "pattern"
+        | "avatar"
+        | "argument_map"
+        | "narrative"
+        | "psychological"
+        | "commercial"
+      neuron_lifecycle:
+        | "ingested"
+        | "structured"
+        | "active"
+        | "capitalized"
+        | "compounded"
+      service_class: "A" | "B" | "C"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -639,6 +771,27 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      content_category: [
+        "transcript",
+        "insight",
+        "framework",
+        "strategy",
+        "formula",
+        "pattern",
+        "avatar",
+        "argument_map",
+        "narrative",
+        "psychological",
+        "commercial",
+      ],
+      neuron_lifecycle: [
+        "ingested",
+        "structured",
+        "active",
+        "capitalized",
+        "compounded",
+      ],
+      service_class: ["A", "B", "C"],
     },
   },
 } as const

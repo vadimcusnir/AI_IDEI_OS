@@ -4,7 +4,7 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import logo from "@/assets/logo.gif";
 import {
   Brain, Plus, Shield, BookOpen, Link2, Github,
-  FileText, Sparkles, Network, Podcast,
+  FileText, Sparkles, Network, Podcast, Upload,
   ExternalLink, ArrowRight, Zap, Globe,
   BarChart3, Users, Mail, MessageCircle,
 } from "lucide-react";
@@ -40,11 +40,29 @@ const SECTIONS: LinkSection[] = [
         requiresAuth: true,
       },
       {
+        title: "Extractor",
+        description: "Upload and ingest content — the ingestion layer",
+        icon: Upload,
+        to: "/extractor",
+        color: "text-status-validated",
+        requiresAuth: true,
+        badge: "New",
+      },
+      {
+        title: "Service Catalog",
+        description: "Browse AI services with fixed costs and deliverables",
+        icon: Sparkles,
+        to: "/services",
+        color: "text-ai-accent",
+        requiresAuth: true,
+        badge: "New",
+      },
+      {
         title: "Create Neuron",
         description: "Start a new knowledge atom from scratch or template",
         icon: Plus,
         to: "/n/new",
-        color: "text-status-validated",
+        color: "text-status-published",
         requiresAuth: true,
       },
       {
@@ -52,7 +70,7 @@ const SECTIONS: LinkSection[] = [
         description: "System design, data models and API documentation",
         icon: BookOpen,
         to: "/architecture",
-        color: "text-ai-accent",
+        color: "text-muted-foreground",
       },
       {
         title: "Admin Dashboard",

@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork, Link2 } from "lucide-react";
+import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork, Link2, Upload, Sparkles } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -110,9 +110,17 @@ export default function Index() {
               Admin
             </Button>
           )}
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/extractor")}>
+            <Upload className="h-3.5 w-3.5" />
+            Extractor
+          </Button>
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/services")}>
+            <Sparkles className="h-3.5 w-3.5" />
+            Services
+          </Button>
           <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/architecture")}>
             <BookOpen className="h-3.5 w-3.5" />
-            Architecture
+            Docs
           </Button>
           <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/links")}>
             <Link2 className="h-3.5 w-3.5" />
