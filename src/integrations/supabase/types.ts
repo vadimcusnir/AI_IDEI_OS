@@ -285,17 +285,21 @@ export type Database = {
       entities: {
         Row: {
           canonical_url: string | null
+          citation_sources: Json | null
           confidence_score: number | null
           created_at: string | null
           description: string | null
           entity_type: string
           evidence_count: number | null
           id: string
+          idea_rank: number | null
           importance_score: number | null
+          insight_family: string | null
           is_published: boolean | null
           json_ld: Json | null
           meta_description: string | null
           neuron_id: number | null
+          reuse_count: number | null
           slug: string
           summary: string | null
           title: string
@@ -303,17 +307,21 @@ export type Database = {
         }
         Insert: {
           canonical_url?: string | null
+          citation_sources?: Json | null
           confidence_score?: number | null
           created_at?: string | null
           description?: string | null
           entity_type: string
           evidence_count?: number | null
           id?: string
+          idea_rank?: number | null
           importance_score?: number | null
+          insight_family?: string | null
           is_published?: boolean | null
           json_ld?: Json | null
           meta_description?: string | null
           neuron_id?: number | null
+          reuse_count?: number | null
           slug: string
           summary?: string | null
           title: string
@@ -321,17 +329,21 @@ export type Database = {
         }
         Update: {
           canonical_url?: string | null
+          citation_sources?: Json | null
           confidence_score?: number | null
           created_at?: string | null
           description?: string | null
           entity_type?: string
           evidence_count?: number | null
           id?: string
+          idea_rank?: number | null
           importance_score?: number | null
+          insight_family?: string | null
           is_published?: boolean | null
           json_ld?: Json | null
           meta_description?: string | null
           neuron_id?: number | null
+          reuse_count?: number | null
           slug?: string
           summary?: string | null
           title?: string
@@ -1357,6 +1369,7 @@ export type Database = {
       }
     }
     Functions: {
+      compute_idearank: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
