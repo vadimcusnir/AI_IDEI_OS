@@ -191,7 +191,8 @@ export default function Library() {
                 <div
                   key={artifact.id}
                   className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
-                  onClick={() => setPreviewArtifact(artifact)}
+                  onClick={() => navigate(`/library/${artifact.id}`)}
+                >
                 >
                   {/* Type + Status */}
                   <div className="flex items-center justify-between mb-2">
