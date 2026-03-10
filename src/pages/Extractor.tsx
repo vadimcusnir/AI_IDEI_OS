@@ -32,6 +32,7 @@ const STATUS_COLORS: Record<string, string> = {
   uploaded: "bg-muted text-muted-foreground",
   transcribing: "bg-primary/15 text-primary",
   transcribed: "bg-status-validated/15 text-status-validated",
+  chunked: "bg-accent/15 text-accent-foreground",
   analyzing: "bg-ai-accent/15 text-ai-accent",
   analyzed: "bg-primary/15 text-primary",
   error: "bg-destructive/15 text-destructive",
