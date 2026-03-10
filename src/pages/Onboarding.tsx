@@ -105,9 +105,9 @@ export default function Onboarding() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-serif font-bold mb-2">Pipeline-ul tău de cunoaștere</h1>
+          <h1 className="text-2xl font-serif font-bold mb-2">Your Knowledge Pipeline</h1>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Transformă expertise în active digitale reutilizabile. Urmează cei 4 pași pentru a debloca întregul potențial.
+            Transform expertise into reusable digital assets. Follow the 4 steps to unlock the full potential.
           </p>
         </div>
 
