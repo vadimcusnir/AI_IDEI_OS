@@ -43,6 +43,9 @@ export default function Extractor() {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [extractingId, setExtractingId] = useState<string | null>(null);
+  const [extractionProgress, setExtractionProgress] = useState<{ chunks: number; neurons: number } | null>(null);
+  const [chunkPreview, setChunkPreview] = useState<{ episodeId: string; chunks: any[] } | null>(null);
+  const [chunkingId, setChunkingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   // Inline create form state
