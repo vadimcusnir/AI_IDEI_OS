@@ -238,6 +238,7 @@ export default function Index() {
 
       {/* Template Picker Modal */}
       <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />
+      <ExportImportPanel isOpen={showExportImport} onClose={() => setShowExportImport(false)} />
     </div>
   );
 }
