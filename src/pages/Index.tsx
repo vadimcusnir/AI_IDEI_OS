@@ -514,17 +514,40 @@ export default function Index() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+      {/* Content with sidebar */}
+      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 48px)' }}>
+        {/* Folder Sidebar */}
+        {showFolders && (
+          <NeuronFolderSidebar
+            neurons={neurons.map(n => ({ id: n.id, number: n.number, title: n.title, status: n.status }))}
+            selectedFolderId={selectedFolderId}
+            onSelectFolder={setSelectedFolderId}
+            onAISuggest={handleAISuggest}
+            aiSuggesting={aiSuggesting}
+          />
+        )}
+
+        {/* Main content */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
         {/* Title row */}
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-xl font-serif">Your Neurons</h1>
-            <p className="text-[11px] text-muted-foreground/60 mt-0.5">
-              {neurons.length} neuron{neurons.length !== 1 ? "s" : ""}
-              {pinnedIds.size > 0 && ` · ${pinnedIds.size} pinned`}
-              {filterStatus && ` · filtered: ${filterStatus}`}
-            </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowFolders(!showFolders)}
+              className="h-7 w-7 flex items-center justify-center rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+              title={showFolders ? "Hide folders" : "Show folders"}
+            >
+              {showFolders ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeft className="h-4 w-4" />}
+            </button>
+            <div>
+              <h1 className="text-xl font-serif">Your Neurons</h1>
+              <p className="text-[11px] text-muted-foreground/60 mt-0.5">
+                {filteredByFolder.length} neuron{filteredByFolder.length !== 1 ? "s" : ""}
+                {pinnedIds.size > 0 && ` · ${pinnedIds.size} pinned`}
+                {filterStatus && ` · filtered: ${filterStatus}`}
+                {selectedFolderId && selectedFolderId !== "__unassigned" && ` · in folder`}
+              </p>
+            </div>
           </div>
         </div>
 
