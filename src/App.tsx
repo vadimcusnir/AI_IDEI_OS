@@ -15,6 +15,7 @@ import Services from "./pages/Services";
 import Jobs from "./pages/Jobs";
 import RunService from "./pages/RunService";
 import Credits from "./pages/Credits";
+import Intelligence from "./pages/Intelligence";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/run/:serviceKey" element={<RunService />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/credits" element={<Credits />} />
+            <Route path="/intelligence" element={<Intelligence />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
