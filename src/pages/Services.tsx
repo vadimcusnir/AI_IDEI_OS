@@ -157,6 +157,7 @@ export default function Services() {
                   return (
                     <div
                       key={service.id}
+                      onClick={() => navigate(`/run/${service.service_key}`)}
                       className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all group cursor-pointer"
                     >
                       <div className="h-9 w-9 rounded-xl bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
