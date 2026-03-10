@@ -128,6 +128,7 @@ export default function Credits() {
             </span>
           </div>
           <TopUpDialog onSuccess={loadData} />
+        </div>
 
         {/* Balance + Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
