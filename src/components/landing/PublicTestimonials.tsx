@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Quote, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,7 +21,7 @@ const fadeUp = {
   }),
 };
 
-export function PublicTestimonials() {
+export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimonials(_props, ref) {
   const [items, setItems] = useState<PublicFeedback[]>([]);
 
   useEffect(() => {

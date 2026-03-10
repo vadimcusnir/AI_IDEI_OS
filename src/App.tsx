@@ -87,6 +87,8 @@ const App = () => (
               <Route path="/topics" element={<AppLayout><TopicListing /></AppLayout>} />
               <Route path="/topics/:slug" element={<AppLayout><TopicDetail /></AppLayout>} />
               <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
+              <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
+              <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
 
               {/* Protected routes — require authentication */}
               <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
