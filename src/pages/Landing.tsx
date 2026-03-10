@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { PublicTestimonials } from "@/components/landing/PublicTestimonials";
 
 const FLOW_STEPS = [
   { icon: Upload, label: "Încarci conținut", sub: "Audio, video, text, URL" },
@@ -315,6 +316,9 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* Public Testimonials */}
+      <PublicTestimonials />
 
       {/* Final CTA */}
       <section className="max-w-3xl mx-auto px-6 py-20 text-center">

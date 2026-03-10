@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   MessageCircle, Star, ThumbsUp, AlertTriangle, Lightbulb, Quote,
-  Loader2, Send, CheckCircle2, Eye, Filter,
+  Loader2, Send, CheckCircle2, Eye, Filter, Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -121,6 +121,31 @@ export function AdminFeedbackTab() {
     })(),
   };
 
+  const exportCSV = () => {
+    const headers = ["ID", "Tip", "Titlu", "Mesaj", "Rating", "Status", "Public", "Pagina", "Răspuns Admin", "Data"];
+    const rows = items.map((i) => [
+      i.id,
+      i.type,
+      `"${i.title.replace(/"/g, '""')}"`,
+      `"${i.message.replace(/"/g, '""')}"`,
+      i.rating ?? "",
+      i.status,
+      i.is_public ? "Da" : "Nu",
+      i.context_page ?? "",
+      i.admin_response ? `"${i.admin_response.replace(/"/g, '""')}"` : "",
+      i.created_at,
+    ]);
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `feedback-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV exportat");
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -131,6 +156,13 @@ export function AdminFeedbackTab() {
 
   return (
     <div>
+      {/* Export + Stats */}
+      <div className="flex items-center justify-end mb-3">
+        <Button variant="outline" size="sm" onClick={exportCSV} className="text-xs gap-1.5">
+          <Download className="h-3.5 w-3.5" />
+          Export CSV
+        </Button>
+      </div>
       {/* Stats row */}
       <div className="grid grid-cols-4 gap-3 mb-4">
         <div className="bg-card border border-border rounded-lg p-3 text-center">

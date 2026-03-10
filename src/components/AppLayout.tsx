@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FeedbackFAB } from "@/components/feedback/FeedbackFAB";
+import { ContextualFeedbackPrompt } from "@/components/feedback/ContextualFeedbackPrompt";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         {children}
       </main>
       <FeedbackFAB />
+      <ContextualFeedbackPrompt />
     </div>
   );
 }
