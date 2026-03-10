@@ -159,6 +159,7 @@ export default function NeuronEditor() {
         onClone={handleClone}
         onFork={handleFork}
         onSaveAsTemplate={() => setShowSaveTemplate(true)}
+        blocks={blocks.map(b => ({ type: b.type, content: b.content }))}
       />
 
       <div className="flex-1 flex min-h-0">
