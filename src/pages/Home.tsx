@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { WhatsNewWidget } from "@/components/home/WhatsNewWidget";
+import { TrendingIdeasWidget } from "@/components/home/TrendingIdeasWidget";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { supabase } from "@/integrations/supabase/client";
@@ -254,6 +255,9 @@ export default function Home() {
               </h3>
               <PipelineIndicator />
             </div>
+
+            {/* Trending Ideas */}
+            <TrendingIdeasWidget />
 
             {/* What's New */}
             <WhatsNewWidget />
