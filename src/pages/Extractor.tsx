@@ -468,6 +468,7 @@ export default function Extractor() {
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       setExtractionProgress({ chunks: data.chunks_processed || 0, neurons: data.neurons_created });
       toast.success(`${data.neurons_created} neurons extracted from ${data.chunks_processed || 1} segments! (${data.credits_spent} credits)`);
+      trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.neurons_created, credits_spent: data.credits_spent } });
       setChunkPreview(null);
       fetchEpisodes();
     } catch (e) {
