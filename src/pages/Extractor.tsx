@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import {
   Upload, FileText, X, Clock,
-  FileAudio, Film, Type, Globe, Loader2, Brain, Sparkles,
+  FileAudio, Film, Type, Globe, Loader2, Brain,
+  ChevronDown, ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -38,17 +37,32 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [extractingId, setExtractingId] = useState<string | null>(null);
 
+  // Inline create form state
+  const [showForm, setShowForm] = useState(false);
+  const [title, setTitle] = useState("");
+  const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("text");
+  const [content, setContent] = useState("");
+  const [creating, setCreating] = useState(false);
+  const titleRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) return;
+    if (authLoading || !user) return;
     fetchEpisodes();
   }, [user, authLoading]);
+
+  // Auto-show form when no episodes
+  useEffect(() => {
+    if (!loading && episodes.length === 0) setShowForm(true);
+  }, [loading, episodes.length]);
+
+  // Focus title on form open
+  useEffect(() => {
+    if (showForm) setTimeout(() => titleRef.current?.focus(), 100);
+  }, [showForm]);
 
   const fetchEpisodes = async () => {
     const { data, error } = await supabase
@@ -60,15 +74,42 @@ export default function Extractor() {
     setLoading(false);
   };
 
+  const resetForm = () => {
+    setTitle("");
+    setContent("");
+    setSourceType("text");
+  };
+
+  const handleCreate = async () => {
+    if (!user || !title.trim()) return;
+    setCreating(true);
+    const { error } = await supabase.from("episodes").insert({
+      author_id: user.id,
+      title: title.trim(),
+      source_type: sourceType,
+      transcript: sourceType === "text" ? content : null,
+      source_url: sourceType === "url" ? content : null,
+      status: sourceType === "text" && content ? "transcribed" : "uploaded",
+    } as any);
+
+    if (error) {
+      toast.error("Nu s-a putut crea episodul");
+    } else {
+      toast.success("Episod creat");
+      resetForm();
+      if (episodes.length > 0) setShowForm(false);
+      fetchEpisodes();
+    }
+    setCreating(false);
+  };
+
   const handleExtractNeurons = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
       toast.error("Episodul nu are conținut transcript pentru extracție.");
       return;
     }
-
     setExtractingId(episode.id);
     toast.info("Se extrag neuroni din episod... (100 credite)");
-
     try {
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-neurons`,
@@ -78,21 +119,15 @@ export default function Extractor() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
-          body: JSON.stringify({
-            episode_id: episode.id,
-            user_id: user.id,
-          }),
+          body: JSON.stringify({ episode_id: episode.id, user_id: user.id }),
         }
       );
-
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
-
       toast.success(`${data.neurons_created} neuroni extrași! (${data.credits_spent} credite consumate)`);
       fetchEpisodes();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Extracția a eșuat";
-      toast.error(msg);
+      toast.error(e instanceof Error ? e.message : "Extracția a eșuat");
     } finally {
       setExtractingId(null);
     }
@@ -137,24 +172,132 @@ export default function Extractor() {
               </div>
             )}
           </div>
-          <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowCreateModal(true)}>
-            <Upload className="h-3.5 w-3.5" /> Episod Nou
-          </Button>
+          {episodes.length > 0 && (
+            <Button
+              variant={showForm ? "secondary" : "default"}
+              size="sm"
+              className="h-8 gap-1.5 text-xs"
+              onClick={() => setShowForm(f => !f)}
+            >
+              {showForm ? <ChevronUp className="h-3.5 w-3.5" /> : <Upload className="h-3.5 w-3.5" />}
+              {showForm ? "Ascunde" : "Episod Nou"}
+            </Button>
+          )}
+        </div>
+
+        {/* Inline create form */}
+        <div className={cn(
+          "overflow-hidden transition-all duration-200 ease-in-out",
+          showForm ? "max-h-[500px] opacity-100 mb-6" : "max-h-0 opacity-0 mb-0"
+        )}>
+          <div className="border border-border rounded-xl bg-card p-5 space-y-4">
+            {episodes.length === 0 && (
+              <div className="mb-2">
+                <h3 className="text-base font-semibold mb-1">Adaugă primul episod</h3>
+                <p className="text-xs text-muted-foreground">
+                  Episoadele sunt materialele brute ale sistemului. Lipește un transcript sau un URL pentru a începe.
+                </p>
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Titlu</label>
+                <input
+                  ref={titleRef}
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                  placeholder="Titlul episodului..."
+                  className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors"
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && sourceType !== "text") handleCreate();
+                  }}
+                />
+              </div>
+              <div className="shrink-0">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Tip sursă</label>
+                <div className="flex gap-1">
+                  {([
+                    { value: "text", label: "Text", icon: Type },
+                    { value: "audio", label: "Audio", icon: FileAudio },
+                    { value: "video", label: "Video", icon: Film },
+                    { value: "url", label: "URL", icon: Globe },
+                  ] as const).map(st => (
+                    <button
+                      key={st.value}
+                      onClick={() => setSourceType(st.value)}
+                      className={cn(
+                        "flex items-center gap-1 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors",
+                        sourceType === st.value ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      )}
+                    >
+                      <st.icon className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">{st.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {sourceType === "text" && (
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                  Conținut / Transcript
+                </label>
+                <textarea
+                  value={content}
+                  onChange={e => setContent(e.target.value)}
+                  placeholder="Lipește transcriptul sau conținutul text..."
+                  rows={5}
+                  className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors resize-none font-mono text-xs"
+                />
+              </div>
+            )}
+
+            {sourceType === "url" && (
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
+                <input
+                  value={content}
+                  onChange={e => setContent(e.target.value)}
+                  placeholder="https://youtube.com/watch?v=..."
+                  className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
+                  onKeyDown={e => { if (e.key === "Enter") handleCreate(); }}
+                />
+              </div>
+            )}
+
+            {(sourceType === "audio" || sourceType === "video") && (
+              <div className="border-2 border-dashed border-border rounded-xl p-6 text-center">
+                <Upload className="h-6 w-6 opacity-20 mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">Upload fișiere — în curând</p>
+                <p className="text-[10px] text-muted-foreground/50 mt-1">Folosește Text sau URL deocamdată</p>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between pt-1">
+              <p className="text-[10px] text-muted-foreground/50">
+                {sourceType === "text" && content.length > 0
+                  ? `${content.length.toLocaleString()} caractere · ~${Math.ceil(content.split(/\s+/).length)} cuvinte`
+                  : "Completează câmpurile și apasă Creează"}
+              </p>
+              <div className="flex items-center gap-2">
+                {episodes.length > 0 && (
+                  <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => { resetForm(); setShowForm(false); }}>
+                    Anulează
+                  </Button>
+                )}
+                <Button size="sm" className="h-7 text-xs gap-1.5" onClick={handleCreate} disabled={!title.trim() || creating}>
+                  {creating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
+                  Creează Episod
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Episodes list */}
-        {episodes.length === 0 ? (
-          <div className="text-center py-20">
-            <Upload className="h-10 w-10 opacity-20 mx-auto mb-4" />
-            <h3 className="text-lg font-serif font-medium mb-2">Niciun episod încă</h3>
-            <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
-              Episoadele sunt materialele brute ale sistemului de cunoaștere. Încarcă conținut pentru a începe extracția.
-            </p>
-            <Button onClick={() => setShowCreateModal(true)} className="gap-1.5">
-              <Upload className="h-4 w-4" /> Creează Primul Episod
-            </Button>
-          </div>
-        ) : (
+        {episodes.length > 0 && (
           <div className="space-y-1.5">
             {episodes.map(ep => {
               const Icon = SOURCE_ICONS[ep.source_type] || FileText;
@@ -195,14 +338,8 @@ export default function Extractor() {
                   </span>
 
                   {canExtract && !isExtracting && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-7 text-xs gap-1 shrink-0"
-                      onClick={() => handleExtractNeurons(ep)}
-                    >
-                      <Brain className="h-3 w-3" />
-                      Extrage
+                    <Button variant="outline" size="sm" className="h-7 text-xs gap-1 shrink-0" onClick={() => handleExtractNeurons(ep)}>
+                      <Brain className="h-3 w-3" /> Extrage
                     </Button>
                   )}
                   {isExtracting && (
@@ -219,138 +356,6 @@ export default function Extractor() {
             })}
           </div>
         )}
-      </div>
-
-      {/* Create Episode Modal */}
-      {showCreateModal && (
-        <CreateEpisodeModal
-          onClose={() => setShowCreateModal(false)}
-          onCreated={() => { setShowCreateModal(false); fetchEpisodes(); }}
-        />
-      )}
-    </div>
-  );
-}
-
-function CreateEpisodeModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
-  const { user } = useAuth();
-  const [title, setTitle] = useState("");
-  const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("text");
-  const [content, setContent] = useState("");
-  const [creating, setCreating] = useState(false);
-
-  const handleCreate = async () => {
-    if (!user || !title.trim()) return;
-    setCreating(true);
-    const { error } = await supabase.from("episodes").insert({
-      author_id: user.id,
-      title: title.trim(),
-      source_type: sourceType,
-      transcript: sourceType === "text" ? content : null,
-      source_url: sourceType === "url" ? content : null,
-      status: sourceType === "text" && content ? "transcribed" : "uploaded",
-    } as any);
-
-    if (error) {
-      toast.error("Nu s-a putut crea episodul");
-    } else {
-      toast.success("Episod creat");
-      onCreated();
-    }
-    setCreating(false);
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg mx-4" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <div>
-            <h2 className="text-base font-semibold">Episod Nou</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Conținut brut pentru extracția de cunoștințe</p>
-          </div>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="px-5 py-4 space-y-4">
-          <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Titlu</label>
-            <input
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="Titlul episodului..."
-              className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors"
-            />
-          </div>
-
-          <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Tip sursă</label>
-            <div className="flex gap-1.5">
-              {([
-                { value: "text", label: "Text", icon: Type },
-                { value: "audio", label: "Audio", icon: FileAudio },
-                { value: "video", label: "Video", icon: Film },
-                { value: "url", label: "URL", icon: Globe },
-              ] as const).map(st => (
-                <button
-                  key={st.value}
-                  onClick={() => setSourceType(st.value)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                    sourceType === st.value ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  )}
-                >
-                  <st.icon className="h-3.5 w-3.5" />
-                  {st.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {sourceType === "text" && (
-            <div>
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                Conținut / Transcript
-              </label>
-              <textarea
-                value={content}
-                onChange={e => setContent(e.target.value)}
-                placeholder="Lipește transcriptul sau conținutul text..."
-                rows={6}
-                className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors resize-none font-mono text-xs"
-              />
-            </div>
-          )}
-
-          {sourceType === "url" && (
-            <div>
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
-              <input
-                value={content}
-                onChange={e => setContent(e.target.value)}
-                placeholder="https://youtube.com/watch?v=..."
-                className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
-              />
-            </div>
-          )}
-
-          {(sourceType === "audio" || sourceType === "video") && (
-            <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
-              <Upload className="h-8 w-8 opacity-20 mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">Upload fișiere — în curând</p>
-              <p className="text-[10px] text-muted-foreground/50 mt-1">Folosește Text sau URL deocamdată</p>
-            </div>
-          )}
-        </div>
-
-        <div className="flex justify-end gap-2 px-5 py-3 border-t border-border">
-          <Button variant="ghost" size="sm" onClick={onClose} className="text-xs">Anulează</Button>
-          <Button size="sm" onClick={handleCreate} disabled={!title.trim() || creating} className="text-xs gap-1.5">
-            {creating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
-            Creează Episod
-          </Button>
-        </div>
       </div>
     </div>
   );
