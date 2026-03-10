@@ -70,9 +70,28 @@ export default function NeuronEditor() {
     }
   }, [removeLink]);
 
+  const AI_ACTIONS = ["extract_insights", "extract_frameworks", "extract_questions", "extract_quotes", "extract_prompts"];
+
   const handleAIAction = useCallback((action: string) => {
-    toast.info(`AI action "${action}" triggered. AI integration coming soon.`);
-  }, []);
+    if (AI_ACTIONS.includes(action)) {
+      extract(action, blocks, neuron?.title || "");
+    } else {
+      toast.info(`AI action "${action}" triggered. Coming soon.`);
+    }
+  }, [extract, blocks, neuron?.title]);
+
+  const handleInsertAIResult = useCallback(async (content: string) => {
+    if (!blocks.length) return;
+    const lastBlockId = blocks[blocks.length - 1].id;
+    await handleAddBlock(lastBlockId, "markdown");
+    // Find the newly added block and set its content
+    setTimeout(() => {
+      const newBlocks = document.querySelectorAll('[data-block-id]');
+      if (newBlocks.length > 0) {
+        handleBlockChange(blocks[blocks.length]?.id || lastBlockId, content);
+      }
+    }, 100);
+  }, [blocks, handleAddBlock, handleBlockChange]);
 
   const neuronScore = useMemo(() => {
     const contentLength = blocks.reduce((sum, b) => sum + b.content.length, 0);
