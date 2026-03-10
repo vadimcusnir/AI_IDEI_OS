@@ -82,6 +82,9 @@ export default function Dashboard() {
       });
     }
 
+    const episodesByStatus = (status: string) => episodes.filter((e: any) => e.status === status).length;
+    const artifactsThisWeek = artifacts.filter((a: any) => new Date(a.created_at) >= weekAgo).length;
+
     setData({
       neurons: {
         total: neurons.length,
@@ -89,7 +92,7 @@ export default function Dashboard() {
         published: neurons.filter((n: any) => n.status === "published").length,
         thisWeek: thisWeekNeurons,
       },
-      episodes: { total: episodes.length, analyzed: episodes.filter((e: any) => e.status === "analyzed").length },
+      episodes: { total: episodes.length, analyzed: episodesByStatus("analyzed"), pending: episodesByStatus("uploaded") + episodesByStatus("transcribed") },
       credits: { balance: credits?.balance ?? 0, spent: credits?.total_spent ?? 0, earned: credits?.total_earned ?? 0 },
       jobs: {
         total: jobs.length,
@@ -97,9 +100,16 @@ export default function Dashboard() {
         failed: jobs.filter((j: any) => j.status === "failed").length,
         avgDuration: Math.round(avgDuration),
       },
+      artifacts: { total: artifacts.length, thisWeek: artifactsThisWeek },
       categories,
       weeklyActivity,
       recentJobs: jobs.slice(0, 5) as any[],
+      pipeline: {
+        uploaded: episodes.length,
+        transcribed: episodesByStatus("transcribed") + episodesByStatus("analyzed"),
+        analyzed: episodesByStatus("analyzed"),
+        serviced: artifacts.length,
+      },
     });
     setLoading(false);
   };
