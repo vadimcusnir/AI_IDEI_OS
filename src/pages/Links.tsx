@@ -286,28 +286,6 @@ export default function Links() {
         {/* Social Proof */}
         <SocialProofBlock />
 
-        {/* Footer */}
-        <div className="mt-8 text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            {[
-              { icon: Github, href: "https://github.com/vadimcusnir/AI_IDEI_OS" },
-              { icon: Globe, href: "https://ai-idei-os.lovable.app" },
-            ].map(s => (
-              <a
-                key={s.href}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-              >
-                <s.icon className="h-4 w-4" />
-              </a>
-            ))}
-          </div>
-          <p className="text-[10px] text-muted-foreground/50">
-            AI-IDEI OS · Knowledge Operating System · {new Date().getFullYear()}
-          </p>
-        </div>
       </div>
     </div>
   );
