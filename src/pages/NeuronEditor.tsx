@@ -17,6 +17,7 @@ import { toast } from "sonner";
 
 export default function NeuronEditor() {
   const { number } = useParams();
+  const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const neuronNumber = number ? parseInt(number, 10) : undefined;
 
