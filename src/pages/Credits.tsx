@@ -9,6 +9,8 @@ import {
   BarChart3, Filter, Search, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TopUpDialog } from "@/components/credits/TopUpDialog";
+import { ConsumptionChart } from "@/components/credits/ConsumptionChart";
 
 interface UserCredits {
   balance: number;
