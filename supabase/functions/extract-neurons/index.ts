@@ -114,6 +114,23 @@ Rules:
   return [];
 }
 
+// ── Rate limiting ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 10; // per hour
+const RATE_WINDOW = 3600_000;
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(userId);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 // ── Main handler ──
 
 Deno.serve(async (req) => {
