@@ -15,6 +15,7 @@ import Services from "./pages/Services";
 import Jobs from "./pages/Jobs";
 import RunService from "./pages/RunService";
 import Credits from "./pages/Credits";
+import Intelligence from "./pages/Intelligence";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
