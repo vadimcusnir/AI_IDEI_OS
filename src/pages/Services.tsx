@@ -95,22 +95,7 @@ export default function Services() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
-          <span className="text-sm font-serif">Service Catalog</span>
-          <span className="text-[9px] uppercase tracking-wider bg-ai-accent/10 text-ai-accent px-1.5 py-0.5 rounded font-semibold">
-            Execution Layer
-          </span>
-        </div>
-        <ThemeToggle />
-      </div>
-
+    <div className="flex-1">
       <div className="max-w-3xl mx-auto px-6 py-8">
         <h1 className="text-xl font-serif mb-2">AI Services</h1>
         <p className="text-xs text-muted-foreground mb-6">
