@@ -172,6 +172,7 @@ export default function NeuronEditor() {
           neuronScore={neuronScore}
           blocks={blocks}
           neuronId={neuron.id}
+          neuronTitle={neuron.title}
           onAIAction={handleAIAction}
         />
       </div>
