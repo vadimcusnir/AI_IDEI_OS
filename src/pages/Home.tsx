@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
+import { TopUpDialog } from "@/components/credits/TopUpDialog";
 
 interface RecentNeuron {
   id: number;
