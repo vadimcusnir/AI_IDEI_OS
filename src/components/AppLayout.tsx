@@ -1,13 +1,31 @@
 import { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { Globe } from "lucide-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { FeedbackFAB } from "@/components/feedback/FeedbackFAB";
 import { ContextualFeedbackPrompt } from "@/components/feedback/ContextualFeedbackPrompt";
 import { GlobalSearch } from "@/components/GlobalSearch";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { NotificationBell } from "@/components/NotificationBell";
 import { Footer } from "@/components/global/Footer";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const LANG_OPTIONS = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "ro", label: "Română", flag: "🇷🇴" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+];
 
 interface AppLayoutProps {
   children: ReactNode;
