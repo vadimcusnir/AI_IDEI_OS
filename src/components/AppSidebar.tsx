@@ -42,9 +42,19 @@ const SECONDARY_NAV = [
   { label: "Credits", to: "/credits", icon: Coins },
   { label: "Dashboard", to: "/dashboard", icon: BarChart3 },
   { label: "Onboarding", to: "/onboarding", icon: Rocket },
-  { label: "Notificări", to: "/notifications", icon: Bell },
+  { label: "Notifications", to: "/notifications", icon: Bell },
   { label: "Feedback", to: "/feedback", icon: MessageCircle },
   { label: "Changelog", to: "/changelog", icon: ScrollText },
+];
+
+const KNOWLEDGE_NAV = [
+  { label: "Docs", to: "/docs", icon: FileText },
+  { label: "Insights", to: "/insights", icon: Lightbulb },
+  { label: "Patterns", to: "/patterns", icon: Repeat2 },
+  { label: "Formulas", to: "/formulas", icon: FlaskConical },
+  { label: "Contradictions", to: "/contradictions", icon: AlertTriangle },
+  { label: "Applications", to: "/applications", icon: Layers },
+  { label: "Profiles", to: "/media/profiles", icon: Users },
 ];
 
 export function AppSidebar() {
