@@ -194,7 +194,7 @@ export default function Home() {
                 </Button>
               </div>
               {neurons.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-4 text-center">Niciun neuron încă.</p>
+                <p className="text-xs text-muted-foreground py-4 text-center">No neurons yet.</p>
               ) : (
                 <div className="space-y-1">
                   {neurons.map(n => (
