@@ -89,7 +89,7 @@ export function ConsumptionChart({ transactions }: ConsumptionChartProps) {
               labelStyle={{ fontWeight: 600, marginBottom: 4 }}
               formatter={(value: number, name: string) => [
                 `${name === 'spent' ? '-' : '+'}${value}`,
-                name === 'spent' ? 'Consumat' : 'Câștigat'
+                name === 'spent' ? 'Spent' : 'Earned'
               ]}
             />
             <Bar dataKey="spent" radius={[2, 2, 0, 0]} fill="hsl(var(--destructive))" opacity={0.8} />

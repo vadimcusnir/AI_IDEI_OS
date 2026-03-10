@@ -295,7 +295,7 @@ export default function Credits() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium truncate">{tx.description}</p>
                       <p className="text-[10px] text-muted-foreground">
-                        {new Date(tx.created_at).toLocaleString("ro-RO")} · <span className="uppercase">{cfg.label}</span>
+                        {new Date(tx.created_at).toLocaleString("en-US")} · <span className="uppercase">{cfg.label}</span>
                       </p>
                     </div>
                     <span className={cn(

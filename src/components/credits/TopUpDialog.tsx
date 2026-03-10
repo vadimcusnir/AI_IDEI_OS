@@ -152,7 +152,7 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
         <div className="flex items-center justify-center gap-1.5 mt-3">
           <ExternalLink className="h-3 w-3 text-muted-foreground/40" />
           <p className="text-[10px] text-muted-foreground/60 text-center">
-            Plată securizată prin Stripe. Creditele se adaugă instant după confirmare.
+            Secure payment via Stripe. Credits are added instantly after confirmation.
           </p>
         </div>
       </DialogContent>
