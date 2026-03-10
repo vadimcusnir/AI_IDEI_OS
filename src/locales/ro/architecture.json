@@ -1,0 +1,370 @@
+{
+  "hero": {
+    "title": "AI-IDEI · Knowledge Operating System",
+    "description": "Arhitectura completă a unui Knowledge Operating System construit pe Neuroni atomici, programabili. Proiectat pentru 100K+ neuroni cu full-text search, versioning Git-like, tipuri de blocuri dinamice, clonare/template-uri, servicii AI deterministe, economie de credite, sistem de notificări în timp real, feedback & testimoniale, și administrare avansată."
+  },
+  "toc": {
+    "title": "Cuprins",
+    "items": [
+      "1. Concept & Misiune",
+      "2. Obiectul Neuron — Model de Date",
+      "3. Sistem Universal de Blocuri",
+      "4. Clasificarea Conținutului",
+      "5. Relații & Grafuri de Cunoaștere",
+      "6. Sistem de Versionare Git-like",
+      "7. Model de Execuție & Servicii AI",
+      "8. Economie de Credite (NEURONS)",
+      "9. Pipeline de Ingestie & Extracție",
+      "10. Sistem de Notificări",
+      "11. Feedback & Testimoniale",
+      "12. Profiluri Utilizator & Pagini Publice",
+      "13. Dashboard Admin",
+      "14. Reguli & Principii de Operare",
+      "15. Sistem de Clonare & Template-uri",
+      "16. Pagini & Flux Aplicație",
+      "17. Scalabilitate & Indexare",
+      "18. Edge Functions & API"
+    ]
+  },
+  "s1": {
+    "title": "1. Concept & Misiune",
+    "callout_label": "Misiune",
+    "callout": "Transformarea cunoașterii brute (transcrieri, note, idei) în active intelectuale programabile, capitalizabile și tranzacționabile.",
+    "intro": "AI-IDEI este un <strong>Knowledge Operating System (KOS)</strong> — nu un simplu editor de note sau CMS. Sistemul operează pe principiul că fiecare unitate de cunoaștere (Neuron) este un obiect programabil care poate fi:",
+    "bullets": [
+      "<strong>Capturat</strong> — din transcrieri, interviuri, podcasturi, texte",
+      "<strong>Structurat</strong> — în blocuri tipizate cu metadate semantice",
+      "<strong>Conectat</strong> — prin grafuri de relații (supports, contradicts, extends)",
+      "<strong>Executat</strong> — prin servicii AI deterministe cu costuri fixe",
+      "<strong>Versionat</strong> — cu istoric Git-like și restaurare",
+      "<strong>Capitalizat</strong> — transformat în livrabile economice (cursuri, strategii, produse)"
+    ],
+    "pipeline_title": "Pipeline-ul Central",
+    "pipeline_code": "Upload conținut → Extracție AI → Neuroni structurați → Servicii AI → Livrabile monetizabile\n\nExemplu concret:\n  1 podcast (60 min) → 1 episod → extracție AI → 5 neuroni\n  5 neuroni → 10 servicii AI → 50+ livrabile\n  50+ livrabile = articole, cursuri, strategii, frameworks, scripturi",
+    "philosophy": "<strong>Filosofie:</strong> Services First, Knowledge Always. Sistemul nu genereaza continut aleatoriu - executa servicii deterministe cu input definit, cost fixat, si output auditabil.",
+    "positioning_title": "Pozitionare",
+    "positioning": "Platforma este <strong>The Magic Marketing Button</strong> - utilizatorii incarca continut o singura data, iar sistemul genereaza automat zeci de livrabile profesionale. Marginea reala vine din reutilizare: un framework extras o data poate fi reutilizat de 10.000 de ori."
+  },
+  "s2": {
+    "title": "2. Obiectul Neuron — Model de Date",
+    "intro": "Neuronul este unitatea atomică de cunoaștere. Intern, este un document programabil compus din blocuri tipizate, cu un sistem de identitate pe trei nivele:",
+    "id_purpose": "Cheie primară bază de date, auto-increment",
+    "uuid_purpose": "Referință cross-sistem",
+    "number_purpose": "Referință citare umană #245",
+    "composition_title": "Ierarhia compoziției",
+    "scale": "Scală",
+    "neurons_col": "Neuroni",
+    "example": "Exemplu",
+    "composition_rows": [
+      ["Atomic", "1", "O singură idee sau insight"],
+      ["Articol", "10", "Blog post sau analiză"],
+      ["Framework", "30", "Model mental sau metodologie"],
+      ["Curs", "100", "Program educațional complet"],
+      ["Bază de Cunoaștere", "500+", "Carte sau sistem comprehensiv"]
+    ],
+    "lifecycle_title": "Progresie lifecycle"
+  },
+  "s3": {
+    "title": "3. Sistem Universal de Blocuri",
+    "intro": "Blocurile sunt primitivele de conținut din interiorul unui Neuron. Fiecare bloc are un tip care determină randarea, comportamentul de execuție și schema de metadate. Tipurile noi pot fi înregistrate dinamic via tabelul <code class=\"text-xs bg-muted px-1 rounded\">block_type_registry</code>.",
+    "category": "Categorie",
+    "block_types": "Tipuri de Block",
+    "executable": "Executabil",
+    "types_rows": [
+      ["Conținut", "text, heading, subheading, markdown, todo, quote, list, idea, reference", "Nu"],
+      ["Structură", "divider", "Nu"],
+      ["Cod", "code, yaml, json", "Da"],
+      ["AI", "prompt, dataset, diagram, ai-action", "Da"]
+    ],
+    "editor_desc": "Editorul Neuron este un sistem hibrid bloc-based — între Notion (structură), Google Docs (editare), VSCode (cod) și Jupyter (execuție). Suportă inserție via slash command (<code class=\"text-xs bg-muted px-1 rounded\">/</code>)."
+  },
+  "s4": {
+    "title": "4. Clasificarea Conținutului",
+    "intro": "Fiecare neuron este clasificat pe două dimensiuni: <strong>content_category</strong> (ce conține) și <strong>lifecycle</strong> (stadiul de maturitate).",
+    "category": "Categorie",
+    "description": "Descriere",
+    "example": "Exemplu",
+    "categories_rows": [
+      ["transcript", "Conținut transcris brut", "Episod de podcast verbatim"],
+      ["insight", "Takeaway cheie extras", "Driver de retenție clienți"],
+      ["framework", "Model mental sau metodologie", "Modelul AIDA aplicat la SaaS"],
+      ["strategy", "Plan de acțiune", "Plan go-to-market"],
+      ["formula", "Pattern sau rețetă repetabilă", "Formula de pricing pentru info-produse"],
+      ["pattern", "Comportament recurent identificat", "Pattern de churn în luna 3"],
+      ["avatar", "Profil de utilizator sau audiență", "Persona antreprenor solo"],
+      ["argument_map", "Structură logică de idei", "Analiză pro/contra"],
+      ["narrative", "Poveste sau studiu de caz", "Narativul fondatorului"],
+      ["psychological", "Insight comportamental sau cognitiv", "Aversiunea la pierdere în pricing"],
+      ["commercial", "Model de business sau revenue", "Arhitectura de subscription tiers"]
+    ],
+    "service_title": "Clasificarea Serviciilor",
+    "class": "Clasă",
+    "type": "Tip",
+    "cost": "Cost",
+    "examples": "Exemple",
+    "service_rows": [
+      ["A", "Analiză & Extracție", "50-100 credite", "Insight Extractor, Framework Detector, Quote Extractor"],
+      ["B", "Producție & Generare", "100-200 credite", "Course Generator, Strategy Builder, Prompt Generator"],
+      ["C", "Orchestrare Complexă", "200-500 credite", "Market Research, Argument Mapper, Content Classifier"]
+    ]
+  },
+  "s5": {
+    "title": "5. Relații & Grafuri de Cunoaștere",
+    "intro": "Neuronii formează un graf direcționat prin linkuri tipizate. Fiecare link are un tip de relație semantică ce permite traversarea cunoașterii, detectarea contradicțiilor și urmărirea dependențelor.",
+    "nas_desc": "<strong>NAS (Neuron Addressing System):</strong> Coordonate semantice care separă identitatea de locație."
+  },
+  "s6": {
+    "title": "6. Sistem de Versionare Git-like",
+    "intro": "Fiecare versiune stochează un snapshot complet al blocurilor cu diff opțional de la părinte. Suportă branching, restaurare și urmărirea evoluției cunoașterii.",
+    "operation": "Operație",
+    "description": "Descriere",
+    "ops_rows": [
+      ["Snapshot", "Capturează starea curentă a blocurilor ca versiune nouă"],
+      ["Restore", "Revertă neuronul la orice versiune anterioară"],
+      ["Diff", "Compară două versiuni pentru a vedea schimbările"],
+      ["Branch", "Fork versiune într-un lanț nou pentru editare paralelă"]
+    ]
+  },
+  "s7": {
+    "title": "7. Model de Execuție & Servicii AI",
+    "intro": "Blocurile pot fi executate în funcție de modul lor de execuție. Serviciile sunt pipeline-uri AI deterministe cu costuri fixe și output auditabil.",
+    "mode": "Mod",
+    "behavior": "Comportament",
+    "use_cases": "Cazuri de utilizare",
+    "modes_rows": [
+      ["passive", "Fără execuție, doar conținut", "Text, headings, quotes"],
+      ["validated", "Verificare schemă/sintaxă la modificare", "JSON, dataset, diagram"],
+      ["executable", "Rulare la cerere (buton play)", "Cod, pipeline-uri YAML, prompts"],
+      ["automated", "Auto-run pe trigger/schedule", "AI actions, workflows"]
+    ],
+    "implemented_title": "Servicii Implementate (10)",
+    "name": "Nume",
+    "class": "Clasă",
+    "credits": "Credite",
+    "realtime": "Monitorizare în timp real via Supabase Realtime — pagina Jobs se actualizează automat la schimbarea statusului oricărui job."
+  },
+  "s8": {
+    "title": "8. Economie de Credite (NEURONS)",
+    "callout_label": "Model Dual-Token",
+    "callout": "NOTA2 (on-chain, acces & staking) + NEURONS (off-chain, credite de computație pentru servicii AI)",
+    "intro": "Sistemul de credite implementează un model de economie internă cu rezervare atomică, auditare și release on failure.",
+    "flow_title": "Fluxul de Credite",
+    "flow_code": "1. Client → POST /run-service { job_id, service_key, neuron_id, inputs, user_id }\n2. Server: Verificare balanță ≥ service.credits_cost\n3. Server: REZERVARE — deducere credite atomic\n4. Server: Logare tranzacție (tip: 'reserve')\n5. Server: Execuție AI via Lovable AI Gateway (SSE streaming)\n6. Server: TEE stream → client (live) + audit (colectare rezultat complet)\n7. La SUCCES:\n   └─ Logare tranzacție (tip: 'spend')\n   └─ Salvare rezultat ca neuron_block (tip: 'markdown')\n   └─ Actualizare neuron lifecycle → 'structured'\n   └─ Marcare job 'completed'\n   └─ Trigger notificare → 'Job finalizat ✓'\n8. La EȘEC:\n   └─ ELIBERARE credite (restaurare balanță)\n   └─ Logare tranzacție (tip: 'release')\n   └─ Marcare job 'failed'\n   └─ Trigger notificare → 'Job eșuat ✗'",
+    "economy_title": "Economie",
+    "metric": "Metric",
+    "value": "Valoare",
+    "economy_rows": [
+      ["1000 credite", "10 USD"],
+      ["1 credit", "0.01 USD"],
+      ["Serviciu tipic", "50-200 credite (0.50-2.00 USD)"],
+      ["Credite inițiale", "500 gratuite la înregistrare"],
+      ["Alertă low-balance", "Notificare automată sub 50 credite"]
+    ]
+  },
+  "s9": {
+    "title": "9. Pipeline de Ingestie & Extracție",
+    "intro": "Pipeline-ul complet de la conținut brut la neuroni structurați:",
+    "podcast_desc": "<strong>Podcast Intelligence:</strong> Sistemul extrage din podcasturi: identificarea segmentelor cheie, extragerea citatelor directe, generarea de rezumate și clasificarea conținutului. Episoadele suportă tipuri: <code class=\"text-xs bg-muted px-1 rounded\">text, audio, video, url</code>.",
+    "stage": "Etapă",
+    "component": "Component",
+    "output": "Output",
+    "stages_rows": [
+      ["1. Upload", "Pagina Extractor", "Înregistrare episod (status: uploaded)"],
+      ["2. Transcribe", "Manual/AI (planificat)", "Text transcript (status: transcribed)"],
+      ["3. Extract", "extract-neurons Edge Function", "3-8 neuroni cu blocuri (status: analyzed)"],
+      ["4. Structure", "Neuron Editor", "Blocuri rafinate, categorii, adrese"],
+      ["5. Service", "run-service Edge Function", "Livrabile AI salvate ca blocuri"],
+      ["6. Capitalize", "Export/Publish", "Cursuri, strategii, produse"]
+    ]
+  },
+  "s10": {
+    "title": "10. Sistem de Notificări",
+    "callout_label": "Real-time, multi-canal",
+    "callout": "Notificări in-app cu Supabase Realtime + Desktop Notifications API + preferințe granulare per utilizator.",
+    "triggers_title": "Triggere Automate (PostgreSQL)",
+    "trigger": "Trigger",
+    "table": "Tabelă",
+    "condition": "Condiție",
+    "notification": "Notificare",
+    "triggers_rows": [
+      ["notify_job_status", "neuron_jobs", "Status → completed/failed", "Job finalizat ✓ / Job eșuat ✗"],
+      ["notify_credits_low", "user_credits", "Balance < 50", "Credite scăzute ⚠"],
+      ["notify_version_created", "neuron_versions", "INSERT", "Versiune nouă salvată"],
+      ["notify_feedback_submitted", "feedback", "INSERT", "Feedback nou → toți adminii"],
+      ["notify_feedback_responded", "feedback", "admin_response UPDATE", "Răspuns la feedback-ul tău"]
+    ],
+    "prefs_title": "Preferințe Notificări",
+    "channels_title": "Canale de Livrare",
+    "channel": "Canal",
+    "implementation": "Implementare",
+    "status": "Status",
+    "channels_rows": [
+      ["In-app (bell icon)", "Supabase Realtime subscription pe notifications table", "✅ Activ"],
+      ["Desktop (browser)", "Notification API — apare chiar dacă tab-ul nu e focusat", "✅ Activ"],
+      ["Email digest", "Preferință stocată, sender planificat", "🔜 Planificat"],
+      ["Web Push (offline)", "push_subscriptions table + VAPID keys", "🔜 Planificat"]
+    ],
+    "bell_desc": "Componenta <code class=\"text-xs bg-muted px-1 rounded\">NotificationBell</code> din header afișează badge cu numărul de unread notifications, dropdown cu preview, și link la pagina <code class=\"text-xs bg-muted px-1 rounded\">/notifications</code> cu filtrare pe tip și acțiuni batch (mark all read, clear all)."
+  },
+  "s11": {
+    "title": "11. Sistem de Feedback & Testimoniale",
+    "intro": "Sistem complet de colectare feedback, testimoniale, recenzii, propuneri și plângeri — cu workflow de moderare admin, publicare pe Landing Page, și feedback contextual automat.",
+    "collection_title": "Puncte de Colectare",
+    "point": "Punct",
+    "component": "Component",
+    "behavior": "Comportament",
+    "collection_rows": [
+      ["FAB global", "FeedbackFAB (buton floating)", "Disponibil pe orice pagină autentificată"],
+      ["Pagina /feedback", "Formular inline integrat", "Deschis automat, colapsabil, cu istoric complet"],
+      ["Post-job completion", "ContextualFeedbackPrompt", "Apare automat după finalizarea unui job (session-based)"],
+      ["Landing Page", "PublicTestimonials", "Afișează feedback-uri marcate ca publice de admin"]
+    ],
+    "admin_title": "Workflow Admin",
+    "admin_code": "Feedback primit → Notificare automată toți adminii\n                → Admin Dashboard tab \"Feedback\"\n                → Statistici: Total, Pending, Plângeri, Rating mediu\n                → Filtrare: tip, status\n                → Acțiuni: schimbare status, răspuns (→ notificare user), \n                           publicare/ascundere, export CSV\n                → Export CSV: UTF-8 BOM, toate coloanele, descărcare directă"
+  },
+  "s12": {
+    "title": "12. Profiluri Utilizator & Pagini Publice",
+    "page": "Pagină",
+    "route": "Rută",
+    "function": "Funcție",
+    "pages_rows": [
+      ["Profil privat", "/profile", "Editare display name, username, bio, avatar + preferințe notificări"],
+      ["Profil public", "/u/:username", "Pagină publică cu neuroni publici ai utilizatorului"],
+      ["Pagina Links", "/links", "Director de resurse externe cu social proof"]
+    ],
+    "settings_desc": "Profilul privat include secțiuni de setări pentru notificări: toggle-uri per tip de alertă, selectare frecvență email digest, configurare quiet hours."
+  },
+  "s13": {
+    "title": "13. Dashboard Admin",
+    "callout_label": "Acces restricționat",
+    "callout": "Ruta /admin protejată de AdminRoute — verifică rolul 'admin' via funcția has_role() SECURITY DEFINER. Rolurile sunt stocate în tabel separat user_roles (nu pe profil!).",
+    "functions": "Funcții",
+    "tabs_rows": [
+      ["Overview", "KPI-uri globale: utilizatori totali, neuroni, jobs, credite în circulație, rate succes"],
+      ["Utilizatori", "Lista utilizatorilor, management roluri (admin/moderator/user), ajustare credite"],
+      ["Neuroni", "Control vizibilitate, statistici per categorie"],
+      ["Jobs", "Monitorizare execuții, rate eșec, durată medie"],
+      ["Servicii", "Activare/dezactivare servicii din catalog, editare costuri"],
+      ["Feedback", "Statistici (total, pending, plângeri, rating mediu), filtrare, răspuns, publicare, export CSV"]
+    ]
+  },
+  "s14": {
+    "title": "14. Reguli & Principii de Operare",
+    "callout_label": "Principii Fundamentale",
+    "callout": "Services First · Job-centric Architecture · Invisible Library · Deterministic Execution · Real-time Feedback",
+    "principle": "Principiu",
+    "description": "Descriere",
+    "principles_rows": [
+      ["Services First", "Fiecare interacțiune AI este un serviciu definit cu cost, input schema și deliverables — nu chat liber"],
+      ["Job-centric Architecture", "Toată munca e urmărită ca job-uri auditabile: pending → running → completed/failed"],
+      ["Deterministic Execution", "Same input + same service = structură de output predictibilă. Fără randomness în pipeline"],
+      ["Credit Firewall", "Nicio execuție fără credite suficiente. Rezervare înainte de execuție, release on failure"],
+      ["Invisible Library", "Knowledge graph-ul e implicit — neuronii sunt conectați dar nu expuși ca bibliotecă tradițională"],
+      ["Audit Trail", "Fiecare mișcare de credite e logată: reserve, spend, release, denied. Ledger complet de tranzacții"],
+      ["RLS Everywhere", "Row-Level Security pe toate tabelele. Utilizatorii văd doar datele lor. Adminii au politici separate"],
+      ["Lifecycle Progression", "Neuronii evoluează: ingested → structured → active → capitalized → compounded"],
+      ["Block Composability", "Orice tip de bloc poate fi adăugat la orice neuron. Tipuri noi înregistrate dinamic"],
+      ["Version Immutability", "Versiunile sunt snapshot-uri append-only. Istoria nu poate fi alterată"],
+      ["Real-time Awareness", "Notificări instant pentru job-uri, credite, feedback — prin Supabase Realtime + Desktop Notifications"],
+      ["Feedback Loop", "Feedback contextual automat după job-uri, colecție multiplă (FAB, inline, post-completion)"]
+    ],
+    "security_title": "Modelul de Securitate",
+    "layer": "Strat",
+    "implementation": "Implementare",
+    "security_rows": [
+      ["Autentificare", "Supabase Auth cu email/parolă, verificare email, persistența sesiunii"],
+      ["Autorizare", "RLS policies per tabel; has_role() SECURITY DEFINER function"],
+      ["Roluri", "Tabel separat user_roles (admin, moderator, user) — NICIODATĂ pe profil"],
+      ["Edge Functions", "Service role key pentru operații server-side; CORS headers"],
+      ["Protecție Credite", "Verificare server-side a balanței și deducere atomică înainte de execuția AI"],
+      ["Notification RLS", "Utilizatorii pot citi/modifica/șterge doar notificările proprii. INSERT doar din trigger-e server-side"],
+      ["Feedback RLS", "Utilizatorii citesc propriul feedback + cele publice. Adminii citesc tot și pot actualiza"]
+    ]
+  },
+  "s15": {
+    "title": "15. Sistem de Clonare & Template-uri",
+    "intro": "Template-urile sunt structuri de neuroni pre-configurate. Clonarea creează o copie deep cu urmărire a originii.",
+    "operation": "Operație",
+    "description": "Descriere",
+    "ops_rows": [
+      ["Create from Template", "Instanțiază neuron nou cu structură pre-definită de blocuri"],
+      ["Clone Neuron", "Copie deep a tuturor blocurilor + metadate, cu urmărire lineage"],
+      ["Fork Neuron", "Clone + creare link (derived_from) la sursă"],
+      ["Save as Template", "Extrage structura neuronului curent ca template reutilizabil"]
+    ]
+  },
+  "s16": {
+    "title": "16. Pagini & Flux Aplicație",
+    "public_routes": "Rute Publice",
+    "protected_routes": "Rute Protejate (autentificare necesară)",
+    "admin_routes": "Rute Admin",
+    "route": "Rută",
+    "page": "Pagină",
+    "function": "Funcție",
+    "public_rows": [
+      ["/", "Landing Page", "Marketing, pipeline vizual, testimoniale publice, CTA"],
+      ["/auth", "Autentificare", "Login/signup cu verificare email"],
+      ["/reset-password", "Reset Parolă", "Flux de resetare parolă"],
+      ["/architecture", "Documentație", "Această pagină de arhitectură"],
+      ["/links", "Links", "Director resurse externe, social proof, stats live"],
+      ["/u/:username", "Profil Public", "Pagină publică cu neuronii publici ai utilizatorului"]
+    ],
+    "protected_rows": [
+      ["/home", "Cockpit", "Dashboard principal: stats, acțiuni rapide, neuroni/jobs recenți, pipeline hint"],
+      ["/neurons", "Lista Neuroni", "Navigare, căutare, filtrare neuroni"],
+      ["/n/new", "Editor Neuron", "Creare neuron nou (3-panel layout)"],
+      ["/n/:number", "Editor Neuron", "Editare neuron existent cu preview, AI tools, versioning"],
+      ["/extractor", "Extractor", "Ingestie episoade, management transcripții, extracție AI"],
+      ["/services", "Catalog Servicii", "Navigare servicii AI pe clase (A/B/C)"],
+      ["/run/:serviceKey", "Run Service", "Execuție serviciu cu inputs, SSE streaming, credit tracking"],
+      ["/jobs", "Jobs", "Istoric execuții cu status, durată, rezultate expandabile, realtime"],
+      ["/credits", "Credits", "Balanță, ledger tranzacții, consum per serviciu, top-up"],
+      ["/intelligence", "Intelligence", "Statistici agregate: neuroni, episoade, categorii, activitate"],
+      ["/prompt-forge", "Prompt Forge", "Generator și tester de prompts"],
+      ["/profile-extractor", "Profile Extractor", "Extracție profil din conținut"],
+      ["/profile", "Profil & Setări", "Editare profil + preferințe notificări + quiet hours"],
+      ["/notifications", "Notificări", "Pagină dedicată: filtrare tip, mark all read, clear all"],
+      ["/feedback", "Feedback", "Formular inline integrat + istoric feedback propriu"],
+      ["/dashboard", "Dashboard", "Overview analitic"]
+    ],
+    "admin_desc": "Overview, Utilizatori, Neuroni, Jobs, Servicii, Feedback — tabs",
+    "nav_title": "Navigație Globală (SiteHeader)",
+    "nav_desc": "Pipeline-ul cognitiv al utilizatorului reflectat în navigație:",
+    "editor_title": "Layout Editor Neuron"
+  },
+  "s17": {
+    "title": "17. Scalabilitate & Indexare (100K+)",
+    "strategy": "Strategie",
+    "implementation": "Implementare",
+    "benefit": "Beneficiu",
+    "rows": [
+      ["GIN FTS Index", "to_tsvector pe title + content", "Full-text search sub 100ms"],
+      ["Composite Indexes", "author+status, neuron+position", "Query-uri filtrate rapide"],
+      ["Materialized Views", "neuron_stats view per author", "Dashboard loads < 50ms"],
+      ["Range Partitioning", "neuron_number_ranges table", "Scrieri paralele AI fără coliziune"],
+      ["Connection Pooling", "PgBouncer built-in", "1000+ utilizatori concurenți"],
+      ["Edge Caching", "CDN pentru neuroni publici", "Citiri globale <200ms"],
+      ["Realtime Channels", "Supabase channels per user/table", "Notificări instant fără polling"]
+    ]
+  },
+  "s18": {
+    "title": "18. Edge Functions & API",
+    "intro": "Logica backend rulează ca Edge Functions pe Lovable Cloud. Toate endpoint-urile folosesc CORS headers și autentificare service role.",
+    "neuron_api": "CRUD pentru neuroni, blocuri, linkuri, versiuni, căutare",
+    "run_service": "Job runner: credit reserve → AI execute → audit → save",
+    "extract_neurons": "Episode transcript → AI extraction → 3-8 neuroni",
+    "neuron_chat": "Chat AI contextual în editorul de neuroni",
+    "extract_insights": "Extracție insight-uri din blocuri (legacy)",
+    "secrets_title": "Secrete Configurate",
+    "purpose": "Scop",
+    "secret_url": "URL-ul proiectului Supabase",
+    "secret_anon": "Cheie publică pentru client-side",
+    "secret_service": "Cheie server-side pentru Edge Functions",
+    "secret_db": "Conexiune directă la PostgreSQL",
+    "secret_ai": "Acces la AI Gateway (auto-provisioned)"
+  },
+  "footer": {
+    "doc_label": "Document de Arhitectură",
+    "sections": "secțiuni"
+  }
+}

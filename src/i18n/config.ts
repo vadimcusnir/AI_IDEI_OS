@@ -7,18 +7,21 @@ import navigationEN from "@/locales/en/navigation.json";
 import errorsEN from "@/locales/en/errors.json";
 import formsEN from "@/locales/en/forms.json";
 import pagesEN from "@/locales/en/pages.json";
+import architectureEN from "@/locales/en/architecture.json";
 
 import commonRO from "@/locales/ro/common.json";
 import navigationRO from "@/locales/ro/navigation.json";
 import errorsRO from "@/locales/ro/errors.json";
 import formsRO from "@/locales/ro/forms.json";
 import pagesRO from "@/locales/ro/pages.json";
+import architectureRO from "@/locales/ro/architecture.json";
 
 import commonRU from "@/locales/ru/common.json";
 import navigationRU from "@/locales/ru/navigation.json";
 import errorsRU from "@/locales/ru/errors.json";
 import formsRU from "@/locales/ru/forms.json";
 import pagesRU from "@/locales/ru/pages.json";
+import architectureRU from "@/locales/ru/architecture.json";
 
 export const defaultNS = "common";
 export const supportedLanguages = ["en", "ro", "ru"] as const;
@@ -39,6 +42,7 @@ i18n
         errors: errorsEN,
         forms: formsEN,
         pages: pagesEN,
+        architecture: architectureEN,
       },
       ro: {
         common: commonRO,
@@ -46,6 +50,7 @@ i18n
         errors: errorsRO,
         forms: formsRO,
         pages: pagesRO,
+        architecture: architectureRO,
       },
       ru: {
         common: commonRU,
@@ -53,6 +58,7 @@ i18n
         errors: errorsRU,
         forms: formsRU,
         pages: pagesRU,
+        architecture: architectureRU,
       },
     },
     detection: {
