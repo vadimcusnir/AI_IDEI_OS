@@ -12,11 +12,11 @@ import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  job_completed: { icon: CheckCircle2, color: "text-emerald-500", label: "Job finalizat" },
-  job_failed: { icon: AlertCircle, color: "text-destructive", label: "Job eșuat" },
-  extraction_done: { icon: Zap, color: "text-primary", label: "Extracție" },
-  credits_low: { icon: Coins, color: "text-amber-500", label: "Credite" },
-  version_created: { icon: GitBranch, color: "text-muted-foreground", label: "Versiune" },
+  job_completed: { icon: CheckCircle2, color: "text-emerald-500", label: "Job Completed" },
+  job_failed: { icon: AlertCircle, color: "text-destructive", label: "Job Failed" },
+  extraction_done: { icon: Zap, color: "text-primary", label: "Extraction" },
+  credits_low: { icon: Coins, color: "text-amber-500", label: "Credits" },
+  version_created: { icon: GitBranch, color: "text-muted-foreground", label: "Version" },
   info: { icon: Bell, color: "text-muted-foreground", label: "Info" },
 };
 
