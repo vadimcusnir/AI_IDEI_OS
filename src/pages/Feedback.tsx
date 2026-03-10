@@ -89,7 +89,7 @@ export default function Feedback() {
       return;
     }
     if (needsRating && !rating) {
-      toast.error("Selectează un rating.");
+      toast.error("Please select a rating.");
       return;
     }
     setSending(true);
