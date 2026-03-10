@@ -26,6 +26,7 @@ const App = () => (
             <Route path="/n/new" element={<NeuronEditor />} />
             <Route path="/n/:number" element={<NeuronEditor />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/architecture" element={<Architecture />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
