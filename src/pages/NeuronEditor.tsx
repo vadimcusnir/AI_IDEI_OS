@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNeuron } from "@/hooks/useNeuron";
 import { useNeuronGraph } from "@/hooks/useNeuronGraph";
 import { useAIExtraction } from "@/hooks/useAIExtraction";
+import { useNeuronClone } from "@/hooks/useNeuronClone";
 import { NeuronTopBar } from "@/components/neuron/NeuronTopBar";
 import { NeuronLeftPanel } from "@/components/neuron/NeuronLeftPanel";
 import { NeuronRightPanel } from "@/components/neuron/NeuronRightPanel";
