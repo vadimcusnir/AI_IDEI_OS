@@ -130,11 +130,12 @@ export default function Dashboard() {
     <div className="flex-1">
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* KPI Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
           <KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} />
           <KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} />
           <KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" />
           <KPI icon={TrendingUp} label="Spent" value={data.credits.spent} sub={`of ${data.credits.earned} earned`} color="text-destructive" />
+          <KPI icon={Layers} label="Artifacts" value={data.artifacts.total} sub={`+${data.artifacts.thisWeek} this week`} />
         </div>
 
         {/* Activity Chart + Credit Gauge */}
