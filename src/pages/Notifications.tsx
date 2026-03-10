@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
+import { usePushSubscription } from "@/hooks/usePushSubscription";
 import {
   Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch,
-  CheckCheck, Trash2, Filter, Loader2,
+  CheckCheck, Trash2, Filter, Loader2, BellRing, BellOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ro } from "date-fns/locale";
+import { toast } from "sonner";
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   job_completed: { icon: CheckCircle2, color: "text-emerald-500", label: "Job finalizat" },
