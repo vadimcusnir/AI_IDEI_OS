@@ -62,10 +62,11 @@ export default function Extractor() {
     if (!loading && episodes.length === 0) setShowForm(true);
   }, [loading, episodes.length]);
 
-  // Focus title on form open
+  // Focus URL input on form open
   useEffect(() => {
-    if (showForm) setTimeout(() => titleRef.current?.focus(), 100);
-  }, [showForm]);
+    if (showForm && sourceType === "url") setTimeout(() => urlRef.current?.focus(), 100);
+    else if (showForm) setTimeout(() => titleRef.current?.focus(), 100);
+  }, [showForm, sourceType]);
 
   const fetchEpisodes = async () => {
     const { data, error } = await supabase
