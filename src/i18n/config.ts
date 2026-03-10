@@ -46,6 +46,7 @@ i18n
         forms: formsEN,
         pages: pagesEN,
         architecture: architectureEN,
+        landing: landingEN,
       },
       ro: {
         common: commonRO,
@@ -54,6 +55,7 @@ i18n
         forms: formsRO,
         pages: pagesRO,
         architecture: architectureRO,
+        landing: landingRO,
       },
       ru: {
         common: commonRU,
@@ -62,6 +64,7 @@ i18n
         forms: formsRU,
         pages: pagesRU,
         architecture: architectureRU,
+        landing: landingRU,
       },
     },
     detection: {
