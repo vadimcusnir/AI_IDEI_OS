@@ -639,6 +639,12 @@ export default function Extractor() {
                               <Brain className="h-3 w-3" /> Extrage Neuroni
                             </Button>
                           )}
+                          {canExtract && !isExtracting && (
+                            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" disabled={detectingGuests === ep.id} onClick={() => handleDetectGuests(ep)}>
+                              {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
+                              Guests
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </div>
