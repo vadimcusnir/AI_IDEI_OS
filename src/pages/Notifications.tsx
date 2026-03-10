@@ -90,6 +90,40 @@ export default function Notifications() {
         </div>
       </div>
 
+      {/* Push notification toggle */}
+      {isSupported && (
+        <div className={cn(
+          "flex items-center justify-between p-3 rounded-xl border mb-4 transition-colors",
+          isSubscribed ? "bg-primary/5 border-primary/20" : "bg-card border-border"
+        )}>
+          <div className="flex items-center gap-3">
+            {isSubscribed ? (
+              <BellRing className="h-4 w-4 text-primary" />
+            ) : (
+              <BellOff className="h-4 w-4 text-muted-foreground" />
+            )}
+            <div>
+              <p className="text-xs font-semibold">
+                {isSubscribed ? "Push notifications active" : "Activează push notifications"}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {isSubscribed ? "Primești alerte chiar și când nu ești pe site." : "Fii notificat când un job se finalizează sau creditele sunt scăzute."}
+              </p>
+            </div>
+          </div>
+          <Button
+            variant={isSubscribed ? "outline" : "default"}
+            size="sm"
+            className="text-xs gap-1.5"
+            onClick={handleTogglePush}
+            disabled={pushLoading}
+          >
+            {pushLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+            {isSubscribed ? "Dezactivează" : "Activează"}
+          </Button>
+        </div>
+      )}
+
       {/* Filters */}
       <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
         <Filter className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
