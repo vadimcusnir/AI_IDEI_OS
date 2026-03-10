@@ -136,7 +136,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
 
         {/* Form */}
         <Input
-          placeholder="Titlu scurt"
+          placeholder="Short title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={200}
