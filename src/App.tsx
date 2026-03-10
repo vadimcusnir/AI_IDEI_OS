@@ -40,6 +40,9 @@ import BatchRunner from "./pages/BatchRunner";
 import Onboarding from "./pages/Onboarding";
 import Docs from "./pages/Docs";
 import EntityListing from "./pages/EntityListing";
+import EntityDetail from "./pages/EntityDetail";
+import TopicListing from "./pages/TopicListing";
+import TopicDetail from "./pages/TopicDetail";
 import MediaProfiles from "./pages/MediaProfiles";
 import NotFound from "./pages/NotFound";
 
