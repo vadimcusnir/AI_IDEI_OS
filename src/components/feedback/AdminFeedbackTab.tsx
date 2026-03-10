@@ -121,6 +121,31 @@ export function AdminFeedbackTab() {
     })(),
   };
 
+  const exportCSV = () => {
+    const headers = ["ID", "Tip", "Titlu", "Mesaj", "Rating", "Status", "Public", "Pagina", "Răspuns Admin", "Data"];
+    const rows = items.map((i) => [
+      i.id,
+      i.type,
+      `"${i.title.replace(/"/g, '""')}"`,
+      `"${i.message.replace(/"/g, '""')}"`,
+      i.rating ?? "",
+      i.status,
+      i.is_public ? "Da" : "Nu",
+      i.context_page ?? "",
+      i.admin_response ? `"${i.admin_response.replace(/"/g, '""')}"` : "",
+      i.created_at,
+    ]);
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `feedback-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV exportat");
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
