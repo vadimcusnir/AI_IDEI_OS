@@ -256,7 +256,7 @@ export default function AdminDashboard() {
         description: `ADMIN: ${adjustDescription}`,
       });
 
-      toast.success(`${amount > 0 ? "+" : ""}${amount} credite aplicate`);
+      toast.success(`${amount > 0 ? "+" : ""}${amount} credits applied`);
       setAdjustingUser(null);
       setAdjustAmount("");
       setAdjustDescription("");
