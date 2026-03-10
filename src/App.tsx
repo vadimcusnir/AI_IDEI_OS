@@ -32,6 +32,7 @@ import Notifications from "./pages/Notifications";
 import Feedback from "./pages/Feedback";
 import Index from "./pages/Index";
 import Changelog from "./pages/Changelog";
+import Library from "./pages/Library";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

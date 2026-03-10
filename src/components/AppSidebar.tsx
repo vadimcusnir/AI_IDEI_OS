@@ -32,6 +32,7 @@ const MAIN_NAV = [
   { label: "Neuroni", to: "/neurons", icon: Brain },
   { label: "Servicii", to: "/services", icon: Sparkles },
   { label: "Jobs", to: "/jobs", icon: Briefcase },
+  { label: "Biblioteca", to: "/library", icon: BookOpen },
 ];
 
 const SECONDARY_NAV = [
