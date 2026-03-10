@@ -68,7 +68,7 @@ export default function Index() {
   const [showExportImport, setShowExportImport] = useState(false);
 
   // Folder state
-  const { folders, assignments } = useNeuronFolders();
+  const { folders, assignments, importStructure } = useNeuronFolders();
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [showFolders, setShowFolders] = useState(true);
   const [aiSuggesting, setAiSuggesting] = useState(false);
@@ -91,7 +91,6 @@ export default function Index() {
         const jsonMatch = text.match(/\[[\s\S]*\]/);
         if (jsonMatch) {
           const structure = JSON.parse(jsonMatch[0]);
-          const { importStructure } = useNeuronFolders();
           importStructure(structure);
           toast.success("AI folder structure created!");
         }
@@ -100,7 +99,7 @@ export default function Index() {
       toast.error("AI suggestion failed. Try creating folders manually.");
     }
     setAiSuggesting(false);
-  }, [neurons]);
+  }, [neurons, importStructure]);
 
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>("list");
