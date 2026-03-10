@@ -6,7 +6,7 @@ import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
-  BarChart3, Wrench, Bell, BookOpen, Users, Network,
+  BarChart3, Wrench, Bell, BookOpen, Users, Network, Rocket,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
@@ -40,6 +40,7 @@ const SECONDARY_NAV = [
   { label: "Intelligence", to: "/intelligence", icon: Network },
   { label: "Credits", to: "/credits", icon: Coins },
   { label: "Dashboard", to: "/dashboard", icon: BarChart3 },
+  { label: "Onboarding", to: "/onboarding", icon: Rocket },
   { label: "Notificări", to: "/notifications", icon: Bell },
   { label: "Feedback", to: "/feedback", icon: MessageCircle },
   { label: "Changelog", to: "/changelog", icon: ScrollText },
