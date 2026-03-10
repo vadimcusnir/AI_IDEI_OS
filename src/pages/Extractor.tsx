@@ -4,9 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
-  Upload, FileText, X, Clock,
+  Upload, FileText, X, Clock, Trash2, Pencil,
   FileAudio, Film, Type, Globe, Loader2, Brain,
-  ChevronDown, ChevronUp,
+  ChevronDown, ChevronUp, Copy, ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
