@@ -6,11 +6,10 @@ import { toast } from "sonner";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import {
-  Upload, FileText, Search, X, Clock, ChevronRight,
+  Upload, FileText, X, Clock,
   FileAudio, Film, Type, Globe, Loader2, Brain, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface Episode {
   id: string;
@@ -63,12 +62,12 @@ export default function Extractor() {
 
   const handleExtractNeurons = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
-      toast.error("Episode has no transcript content to extract from.");
+      toast.error("Episodul nu are conținut transcript pentru extracție.");
       return;
     }
 
     setExtractingId(episode.id);
-    toast.info("Extracting neurons from episode... (100 credits)");
+    toast.info("Se extrag neuroni din episod... (100 credite)");
 
     try {
       const resp = await fetch(
@@ -87,19 +86,23 @@ export default function Extractor() {
       );
 
       const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
 
-      if (!resp.ok) {
-        throw new Error(data.error || `Error ${resp.status}`);
-      }
-
-      toast.success(`Extracted ${data.neurons_created} neurons! (${data.credits_spent} credits spent)`);
+      toast.success(`${data.neurons_created} neuroni extrași! (${data.credits_spent} credite consumate)`);
       fetchEpisodes();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Extraction failed";
+      const msg = e instanceof Error ? e.message : "Extracția a eșuat";
       toast.error(msg);
     } finally {
       setExtractingId(null);
     }
+  };
+
+  const stats = {
+    total: episodes.length,
+    transcribed: episodes.filter(e => e.status === "transcribed").length,
+    analyzed: episodes.filter(e => e.status === "analyzed").length,
+    pending: episodes.filter(e => e.status === "uploaded").length,
   };
 
   if (authLoading || loading) {
@@ -111,63 +114,48 @@ export default function Extractor() {
   }
 
   return (
-    <div className="flex-1">
-      {/* Sub-header with action */}
-      <div className="h-10 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-serif">Extractor</span>
-          <span className="text-[9px] uppercase tracking-wider bg-primary/10 text-primary px-1.5 py-0.5 rounded font-semibold">
-            Ingestion Layer
-          </span>
-        </div>
-        <Button size="sm" className="h-7 gap-1.5 text-xs" onClick={() => setShowCreateModal(true)}>
-          <Upload className="h-3.5 w-3.5" />
-          New Episode
-        </Button>
-      </div>
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
-      {/* Main */}
-      <div className="max-w-3xl mx-auto px-6 py-8">
-        {/* Pipeline visual */}
-        <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2">
-          {[
-            { label: "Upload", icon: Upload, active: true },
-            { label: "Transcribe", icon: FileText, active: false },
-            { label: "Extract", icon: Brain, active: false },
-            { label: "Neurons", icon: Sparkles, active: false },
-          ].map((step, i) => (
-            <div key={step.label} className="flex items-center gap-2 shrink-0">
-              {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground/30" />}
-              <div className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                step.active ? "bg-primary/10 text-primary" : "bg-muted/50 text-muted-foreground"
-              )}>
-                <step.icon className="h-3.5 w-3.5" />
-                {step.label}
+        {/* Page title row */}
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-semibold tracking-tight">Extractor</h1>
+            {episodes.length > 0 && (
+              <div className="flex items-center gap-3 ml-1">
+                {[
+                  { label: "Total", value: stats.total },
+                  { label: "Transcrise", value: stats.transcribed, color: "text-status-validated" },
+                  { label: "Analizate", value: stats.analyzed, color: "text-primary" },
+                  { label: "În așteptare", value: stats.pending },
+                ].filter(s => s.value > 0).map(s => (
+                  <div key={s.label} className="flex items-center gap-1">
+                    <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">{s.label}</span>
+                    <span className={cn("text-xs font-mono font-bold", s.color)}>{s.value}</span>
+                  </div>
+                ))}
               </div>
-            </div>
-          ))}
+            )}
+          </div>
+          <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowCreateModal(true)}>
+            <Upload className="h-3.5 w-3.5" /> Episod Nou
+          </Button>
         </div>
 
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl font-serif">Episodes</h1>
-          <span className="text-xs text-muted-foreground">{episodes.length} total</span>
-        </div>
-
+        {/* Episodes list */}
         {episodes.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-20">
             <Upload className="h-10 w-10 opacity-20 mx-auto mb-4" />
-            <p className="text-sm text-muted-foreground mb-2">No episodes yet.</p>
-            <p className="text-xs text-muted-foreground/60 mb-6 max-w-sm mx-auto">
-              Episodes are the raw materials of your knowledge system. Upload content to begin extraction.
+            <h3 className="text-lg font-serif font-medium mb-2">Niciun episod încă</h3>
+            <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
+              Episoadele sunt materialele brute ale sistemului de cunoaștere. Încarcă conținut pentru a începe extracția.
             </p>
             <Button onClick={() => setShowCreateModal(true)} className="gap-1.5">
-              <Upload className="h-4 w-4" />
-              Create First Episode
+              <Upload className="h-4 w-4" /> Creează Primul Episod
             </Button>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {episodes.map(ep => {
               const Icon = SOURCE_ICONS[ep.source_type] || FileText;
               const isExtracting = extractingId === ep.id;
@@ -186,13 +174,16 @@ export default function Extractor() {
                     <p className="text-sm font-medium truncate">{ep.title}</p>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="text-[10px] text-muted-foreground">
-                        {new Date(ep.created_at).toLocaleDateString()}
+                        {new Date(ep.created_at).toLocaleDateString("ro-RO")}
                       </span>
                       {ep.duration_seconds && (
                         <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                           <Clock className="h-2.5 w-2.5" />
                           {Math.round(ep.duration_seconds / 60)}min
                         </span>
+                      )}
+                      {ep.language && (
+                        <span className="text-[10px] text-muted-foreground/60 uppercase">{ep.language}</span>
                       )}
                     </div>
                   </div>
@@ -203,7 +194,6 @@ export default function Extractor() {
                     {ep.status}
                   </span>
 
-                  {/* Extract Neurons button */}
                   {canExtract && !isExtracting && (
                     <Button
                       variant="outline"
@@ -212,17 +202,17 @@ export default function Extractor() {
                       onClick={() => handleExtractNeurons(ep)}
                     >
                       <Brain className="h-3 w-3" />
-                      Extract
+                      Extrage
                     </Button>
                   )}
                   {isExtracting && (
                     <div className="flex items-center gap-1.5 shrink-0">
                       <Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" />
-                      <span className="text-[10px] text-ai-accent font-medium">Extracting...</span>
+                      <span className="text-[10px] text-ai-accent font-medium">Se extrage...</span>
                     </div>
                   )}
                   {isAnalyzed && (
-                    <span className="text-[10px] text-status-validated font-medium shrink-0">✓ Extracted</span>
+                    <span className="text-[10px] text-status-validated font-medium shrink-0">✓ Extras</span>
                   )}
                 </div>
               );
@@ -262,9 +252,9 @@ function CreateEpisodeModal({ onClose, onCreated }: { onClose: () => void; onCre
     } as any);
 
     if (error) {
-      toast.error("Failed to create episode");
+      toast.error("Nu s-a putut crea episodul");
     } else {
-      toast.success("Episode created");
+      toast.success("Episod creat");
       onCreated();
     }
     setCreating(false);
@@ -275,8 +265,8 @@ function CreateEpisodeModal({ onClose, onCreated }: { onClose: () => void; onCre
       <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg mx-4" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <div>
-            <h2 className="text-base font-serif">New Episode</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Raw content for knowledge extraction</p>
+            <h2 className="text-base font-semibold">Episod Nou</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Conținut brut pentru extracția de cunoștințe</p>
           </div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X className="h-4 w-4" />
@@ -285,17 +275,17 @@ function CreateEpisodeModal({ onClose, onCreated }: { onClose: () => void; onCre
 
         <div className="px-5 py-4 space-y-4">
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Title</label>
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Titlu</label>
             <input
               value={title}
               onChange={e => setTitle(e.target.value)}
-              placeholder="Episode title..."
+              placeholder="Titlul episodului..."
               className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Source Type</label>
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Tip sursă</label>
             <div className="flex gap-1.5">
               {([
                 { value: "text", label: "Text", icon: Type },
@@ -321,12 +311,12 @@ function CreateEpisodeModal({ onClose, onCreated }: { onClose: () => void; onCre
           {sourceType === "text" && (
             <div>
               <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                Content / Transcript
+                Conținut / Transcript
               </label>
               <textarea
                 value={content}
                 onChange={e => setContent(e.target.value)}
-                placeholder="Paste your transcript or text content..."
+                placeholder="Lipește transcriptul sau conținutul text..."
                 rows={6}
                 className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors resize-none font-mono text-xs"
               />
@@ -348,17 +338,17 @@ function CreateEpisodeModal({ onClose, onCreated }: { onClose: () => void; onCre
           {(sourceType === "audio" || sourceType === "video") && (
             <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
               <Upload className="h-8 w-8 opacity-20 mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">File upload coming soon</p>
-              <p className="text-[10px] text-muted-foreground/50 mt-1">Use Text or URL for now</p>
+              <p className="text-xs text-muted-foreground">Upload fișiere — în curând</p>
+              <p className="text-[10px] text-muted-foreground/50 mt-1">Folosește Text sau URL deocamdată</p>
             </div>
           )}
         </div>
 
         <div className="flex justify-end gap-2 px-5 py-3 border-t border-border">
-          <Button variant="ghost" size="sm" onClick={onClose} className="text-xs">Cancel</Button>
+          <Button variant="ghost" size="sm" onClick={onClose} className="text-xs">Anulează</Button>
           <Button size="sm" onClick={handleCreate} disabled={!title.trim() || creating} className="text-xs gap-1.5">
             {creating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
-            Create Episode
+            Creează Episod
           </Button>
         </div>
       </div>
