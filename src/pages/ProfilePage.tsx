@@ -391,7 +391,7 @@ export default function ProfilePage() {
               <span className="text-xs font-mono">{user?.email}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">ID utilizator</span>
+              <span className="text-xs text-muted-foreground">User ID</span>
               <span className="text-[10px] font-mono text-muted-foreground/50">{user?.id.slice(0, 8)}...</span>
             </div>
             <div className="flex items-center justify-between">
