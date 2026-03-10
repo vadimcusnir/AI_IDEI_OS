@@ -100,6 +100,8 @@ export function useNeuron(neuronNumber?: number) {
             return;
           }
 
+          trackEvent({ name: "neuron_created", params: { neuron_id: n.id, neuron_number: n.number } });
+
           setNeuron({
             id: n.id,
             number: n.number,
