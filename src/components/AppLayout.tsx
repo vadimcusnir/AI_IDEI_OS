@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FeedbackFAB } from "@/components/feedback/FeedbackFAB";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <main className="flex-1 flex flex-col">
         {children}
       </main>
+      <FeedbackFAB />
     </div>
   );
 }
