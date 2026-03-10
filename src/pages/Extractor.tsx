@@ -528,6 +528,46 @@ export default function Extractor() {
                         </div>
                       )}
 
+                      {/* Chunk Preview */}
+                      {chunkPreview?.episodeId === ep.id && chunkPreview.chunks.length > 0 && (
+                        <div>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                              <Layers className="h-2.5 w-2.5" /> {chunkPreview.chunks.length} Segmente
+                            </span>
+                            <Button variant="ghost" size="sm" className="h-5 text-[9px]" onClick={() => setChunkPreview(null)}>Ascunde</Button>
+                          </div>
+                          <div className="space-y-1 max-h-48 overflow-y-auto">
+                            {chunkPreview.chunks.map((chunk: any) => (
+                              <div key={chunk.index} className="bg-muted/30 rounded-lg px-3 py-2 border border-border/50">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[9px] font-mono text-muted-foreground">Segment {chunk.index + 1}</span>
+                                  <span className="text-[9px] text-muted-foreground/50">~{chunk.token_estimate} tokens</span>
+                                </div>
+                                <p className="text-[11px] text-muted-foreground line-clamp-2">{chunk.content.slice(0, 200)}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Extraction Progress */}
+                      {isExtracting && extractionProgress && (
+                        <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                            <span className="text-xs font-medium text-primary">Extracție în curs...</span>
+                          </div>
+                          <Progress value={extractionProgress.neurons > 0 ? 100 : 50} className="h-1.5" />
+                          <p className="text-[10px] text-muted-foreground mt-1.5">
+                            {extractionProgress.neurons > 0
+                              ? `${extractionProgress.neurons} neuroni extrași din ${extractionProgress.chunks} segmente`
+                              : "Segmentare și analiză AI..."
+                            }
+                          </p>
+                        </div>
+                      )}
+
                       {/* Actions */}
                       <div className="flex items-center justify-between pt-1">
                         <Button
@@ -541,6 +581,18 @@ export default function Extractor() {
                           Șterge
                         </Button>
                         <div className="flex items-center gap-1.5">
+                          {hasTranscript && !isExtracting && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7 text-xs gap-1"
+                              onClick={() => handleChunkPreview(ep)}
+                              disabled={chunkingId === ep.id}
+                            >
+                              {chunkingId === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Layers className="h-3 w-3" />}
+                              Preview Segmente
+                            </Button>
+                          )}
                           {canExtract && !isExtracting && (
                             <Button size="sm" className="h-7 text-xs gap-1" onClick={() => handleExtractNeurons(ep)}>
                               <Brain className="h-3 w-3" /> Extrage Neuroni
