@@ -4,10 +4,11 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import logo from "@/assets/logo.gif";
 import {
   Brain, Plus, Shield, Upload, Sparkles, Network,
-  ExternalLink, ArrowRight, Globe, Play,
+  ExternalLink, ArrowRight, Globe,
   BookOpen, GraduationCap, Crown, Wand2, UserCheck,
   LayoutDashboard, Coins, Lock,
-  ClipboardList, BarChart3, Github,
+  ClipboardList, BarChart3, MessageSquare, Map,
+  FileText, Layers, HelpCircle, Newspaper, Rocket,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ContentHub } from "@/components/links/ContentHub";
@@ -17,7 +18,6 @@ import { MonetizationBlock } from "@/components/links/MonetizationBlock";
 import { FavoritesBlock } from "@/components/links/FavoritesBlock";
 import { PopularNeuronsBlock, RecommendedTemplatesBlock, LatestVersionsBlock } from "@/components/links/DynamicSections";
 import { LiveStatsBlock } from "@/components/links/LiveStatsBlock";
-
 
 /* ─── Types ─── */
 interface LinkItem {
@@ -40,7 +40,7 @@ interface Section {
 /* ─── Data ─── */
 const HERO = {
   name: "AI-IDEI.com",
-  tagline: "Knowledge Operating System — Extrage, structurează și monetizează expertiza umană prin neuroni atomici și AI.",
+  tagline: "Knowledge Operating System — Extract, structure, and capitalize human expertise through atomic neurons and AI.",
   pills: [
     { icon: Brain, label: "Knowledge Extraction" },
     { icon: Sparkles, label: "AI-Powered" },
@@ -49,7 +49,7 @@ const HERO = {
 };
 
 const CTA_PRIMARY: LinkItem = {
-  title: "🚀 Start aici — Creează primul Neuron",
+  title: "🚀 Start here — Create your first Neuron",
   icon: Plus,
   to: "/n/new",
   color: "text-primary-foreground",
@@ -58,33 +58,61 @@ const CTA_PRIMARY: LinkItem = {
 
 const SECTIONS: Section[] = [
   {
-    id: "actions",
-    title: "Acțiuni principale",
+    id: "product",
+    title: "Product",
     items: [
-      { title: "Dashboard", description: "Monitorizează KPI-urile tale", icon: LayoutDashboard, to: "/dashboard", color: "text-primary", accessLevel: "auth" },
-      { title: "Extractor", description: "Încarcă și ingestează conținut", icon: Upload, to: "/extractor", color: "text-status-validated", accessLevel: "auth", badge: "New" },
-      { title: "Service Catalog", description: "Servicii AI cu costuri fixe", icon: Sparkles, to: "/services", color: "text-ai-accent", accessLevel: "auth" },
-      { title: "Profile Extractor", description: "Generează conținut pentru profilul tău", icon: UserCheck, to: "/profile-extractor", color: "text-primary", accessLevel: "auth", badge: "New" },
-      { title: "Prompt Forge", description: "Creează prompturi specializate", icon: Wand2, to: "/prompt-forge", color: "text-ai-accent", accessLevel: "auth", badge: "New" },
-      { title: "Documentație", description: "Arhitectura și API", icon: BookOpen, to: "/architecture", color: "text-muted-foreground", accessLevel: "public" },
+      { title: "Documentation", description: "Learn how AI-IDEI works — from first upload to advanced services", icon: BookOpen, to: "/docs", color: "text-primary", accessLevel: "public" },
+      { title: "Architecture", description: "Technical architecture, database schema, and system design", icon: Layers, to: "/architecture", color: "text-muted-foreground", accessLevel: "public" },
+      { title: "Knowledge Graph", description: "Explore how neurons connect and form intelligence networks", icon: Network, to: "/intelligence", color: "text-status-validated", accessLevel: "auth" },
+      { title: "Service Catalog", description: "AI services with fixed credit costs — articles, strategies, copy", icon: Sparkles, to: "/services", color: "text-ai-accent", accessLevel: "auth" },
+      { title: "Changelog", description: "Latest updates, new features, and improvements", icon: Newspaper, to: "/changelog", color: "text-muted-foreground", accessLevel: "public" },
     ],
   },
   {
-    id: "products",
-    title: "Produse & Servicii",
+    id: "platform",
+    title: "Platform",
     items: [
-      { title: "Cursuri AI", description: "Învață să extragi cunoștințe cu AI", icon: GraduationCap, href: "#", color: "text-ai-accent", badge: "Soon", accessLevel: "public" },
-      { title: "Membership Premium", description: "Acces complet + credite lunare", icon: Crown, href: "#", color: "text-primary", badge: "Soon", accessLevel: "public" },
-      { title: "Intelligence", description: "Analiză avansată a neuronilor", icon: BarChart3, to: "/intelligence", color: "text-status-validated", accessLevel: "auth" },
-      { title: "Credits", description: "Cumpără și gestionează credite", icon: Coins, to: "/credits", color: "text-primary", accessLevel: "auth" },
+      { title: "Dashboard", description: "Monitor your KPIs and pipeline health", icon: LayoutDashboard, to: "/dashboard", color: "text-primary", accessLevel: "auth" },
+      { title: "Extractor", description: "Upload and ingest content — audio, video, text, URLs", icon: Upload, to: "/extractor", color: "text-status-validated", accessLevel: "auth", badge: "Core" },
+      { title: "Neurons", description: "Browse and manage your knowledge library", icon: Brain, to: "/neurons", color: "text-primary", accessLevel: "auth" },
+      { title: "Library", description: "All your generated artifacts in one place", icon: FileText, to: "/library", color: "text-muted-foreground", accessLevel: "auth" },
+      { title: "Jobs", description: "Monitor AI service executions in real-time", icon: ClipboardList, to: "/jobs", color: "text-muted-foreground", accessLevel: "auth" },
+      { title: "Credits", description: "Check balance, buy credits, view transaction history", icon: Coins, to: "/credits", color: "text-primary", accessLevel: "auth" },
+    ],
+  },
+  {
+    id: "tools",
+    title: "Tools",
+    items: [
+      { title: "Profile Extractor", description: "Generate guest profiles from podcast transcripts", icon: UserCheck, to: "/profile-extractor", color: "text-primary", accessLevel: "auth", badge: "New" },
+      { title: "Prompt Forge", description: "Create and test specialized AI prompts", icon: Wand2, to: "/prompt-forge", color: "text-ai-accent", accessLevel: "auth", badge: "New" },
+      { title: "Onboarding", description: "Step-by-step guide to get started with the platform", icon: Rocket, to: "/onboarding", color: "text-status-validated", accessLevel: "auth" },
+    ],
+  },
+  {
+    id: "resources",
+    title: "Resources",
+    items: [
+      { title: "Getting Started", description: "5-minute intro to using the platform", icon: Rocket, to: "/docs/getting-started/introduction", color: "text-status-validated", accessLevel: "public" },
+      { title: "FAQ", description: "Answers to common questions", icon: HelpCircle, to: "/docs/reference/faq", color: "text-muted-foreground", accessLevel: "public" },
+      { title: "Feedback", description: "Share ideas, report issues, suggest improvements", icon: MessageSquare, to: "/feedback", color: "text-ai-accent", accessLevel: "auth" },
+    ],
+  },
+  {
+    id: "explore",
+    title: "Explore Knowledge",
+    items: [
+      { title: "Insights", description: "Non-obvious mechanisms extracted from content", icon: Brain, to: "/insights", color: "text-primary", accessLevel: "public" },
+      { title: "Patterns", description: "Recurring cognitive and strategic structures", icon: Map, to: "/patterns", color: "text-status-validated", accessLevel: "public" },
+      { title: "Formulas", description: "Actionable rules you can apply immediately", icon: Sparkles, to: "/formulas", color: "text-ai-accent", accessLevel: "public" },
+      { title: "Topics", description: "Browse knowledge by subject area", icon: Globe, to: "/topics", color: "text-muted-foreground", accessLevel: "public" },
     ],
   },
   {
     id: "admin",
-    title: "Administrare",
+    title: "Administration",
     items: [
-      { title: "Admin Dashboard", description: "Monitorizare globală", icon: Shield, to: "/admin", color: "text-destructive", accessLevel: "admin", badge: "Admin" },
-      { title: "Jobs", description: "Joburi AI în procesare", icon: ClipboardList, to: "/jobs", color: "text-muted-foreground", accessLevel: "auth" },
+      { title: "Admin Dashboard", description: "Global monitoring and platform control", icon: Shield, to: "/admin", color: "text-destructive", accessLevel: "admin", badge: "Admin" },
     ],
   },
 ];
@@ -177,6 +205,7 @@ function LinkCard({ item, onClick, locked }: { item: LinkItem; onClick: () => vo
               "text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full",
               item.badge === "Admin" ? "bg-destructive/10 text-destructive" :
               item.badge === "New" ? "bg-status-validated/15 text-status-validated" :
+              item.badge === "Core" ? "bg-primary/10 text-primary" :
               "bg-muted text-muted-foreground"
             )}>
               {item.badge}
@@ -240,7 +269,7 @@ export default function Links() {
               hover:scale-[1.02] active:scale-[0.98]
               transition-all duration-200 mb-6"
           >
-            🔐 Înregistrează-te gratuit
+            🔐 Sign up for free
           </button>
         )}
 
@@ -285,7 +314,6 @@ export default function Links() {
 
         {/* Social Proof */}
         <SocialProofBlock />
-
       </div>
     </div>
   );
