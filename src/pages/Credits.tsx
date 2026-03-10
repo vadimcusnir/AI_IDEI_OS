@@ -127,7 +127,7 @@ export default function Credits() {
               {balanceHealth === "healthy" ? "Sănătos" : balanceHealth === "warning" ? "Scăzut" : "Critic"}
             </span>
           </div>
-        </div>
+          <TopUpDialog onSuccess={loadData} />
 
         {/* Balance + Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
