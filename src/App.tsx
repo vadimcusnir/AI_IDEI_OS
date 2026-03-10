@@ -45,6 +45,8 @@ import TopicListing from "./pages/TopicListing";
 import TopicDetail from "./pages/TopicDetail";
 import MediaProfiles from "./pages/MediaProfiles";
 import NotFound from "./pages/NotFound";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const queryClient = new QueryClient();
 
