@@ -186,10 +186,7 @@ export default function Landing() {
 
         <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="relative max-w-4xl mx-auto px-6 pt-24 pb-20 text-center">
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="mx-auto mb-8">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/50 to-violet-500/30 blur-2xl animate-pulse" style={{ animationDuration: "3s" }} />
-              <img src={logo} alt="AI-IDEI" className="relative h-20 w-20 rounded-full border-2 border-primary/20 shadow-2xl shadow-primary/30" />
-            </div>
+              <img src={logo} alt="AI-IDEI" className="relative h-24 w-24 shadow-2xl shadow-primary/30" />
           </motion.div>
 
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="text-[11px] font-bold uppercase tracking-[0.25em] text-primary mb-6">
