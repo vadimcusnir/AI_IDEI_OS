@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
-import { Sparkles, Wrench, Bug, Palette, Zap, Plug, BookOpen, Calendar } from "lucide-react";
+import { Sparkles, Wrench, Bug, Palette, Zap, Plug, BookOpen, Calendar, Search, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface ChangelogEntry {
   id: string;
@@ -29,6 +31,8 @@ const CATEGORY_META: Record<string, { label: string; icon: React.ElementType; co
 export default function Changelog() {
   const [entries, setEntries] = useState<ChangelogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -43,23 +47,76 @@ export default function Changelog() {
     })();
   }, []);
 
+  const filtered = useMemo(() => {
+    let result = entries;
+    if (activeFilter) result = result.filter(e => e.category === activeFilter);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(e =>
+        e.title.toLowerCase().includes(q) ||
+        e.description?.toLowerCase().includes(q) ||
+        e.version?.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [entries, search, activeFilter]);
+
   // Group by version
-  const grouped = entries.reduce<Record<string, { date: string; items: ChangelogEntry[] }>>((acc, e) => {
+  const grouped = filtered.reduce<Record<string, { date: string; items: ChangelogEntry[] }>>((acc, e) => {
     const key = e.version || "Unreleased";
     if (!acc[key]) acc[key] = { date: e.release_date, items: [] };
     acc[key].items.push(e);
     return acc;
   }, {});
 
+  const filterCategories = Object.entries(CATEGORY_META);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <div className="max-w-2xl mx-auto px-6 py-12">
-        <div className="mb-10">
+        <div className="mb-8">
           <h1 className="text-3xl font-serif font-bold mb-2">Changelog</h1>
           <p className="text-sm text-muted-foreground">
             Ce s-a schimbat pentru tine — funcționalități noi, îmbunătățiri și fix-uri.
           </p>
+        </div>
+
+        {/* Search + Filters */}
+        <div className="mb-8 space-y-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Caută în changelog..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="pl-10 text-sm"
+            />
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            <Button
+              size="sm"
+              variant={activeFilter === null ? "default" : "outline"}
+              className="h-7 text-[10px] px-2.5"
+              onClick={() => setActiveFilter(null)}
+            >
+              <Filter className="h-3 w-3 mr-1" /> Toate
+            </Button>
+            {filterCategories.map(([key, meta]) => {
+              const Icon = meta.icon;
+              return (
+                <Button
+                  key={key}
+                  size="sm"
+                  variant={activeFilter === key ? "default" : "outline"}
+                  className="h-7 text-[10px] px-2.5"
+                  onClick={() => setActiveFilter(activeFilter === key ? null : key)}
+                >
+                  <Icon className="h-3 w-3 mr-1" /> {meta.label}
+                </Button>
+              );
+            })}
+          </div>
         </div>
 
         {loading ? (
@@ -69,7 +126,9 @@ export default function Changelog() {
         ) : Object.keys(grouped).length === 0 ? (
           <div className="text-center py-20">
             <Sparkles className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">Nicio actualizare publicată încă.</p>
+            <p className="text-sm text-muted-foreground">
+              {search || activeFilter ? "Niciun rezultat pentru filtrele selectate." : "Nicio actualizare publicată încă."}
+            </p>
           </div>
         ) : (
           <div className="space-y-12">
@@ -80,6 +139,9 @@ export default function Changelog() {
                   <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                     <Calendar className="h-3 w-3" />
                     {new Date(date).toLocaleDateString("ro-RO", { year: "numeric", month: "long", day: "numeric" })}
+                  </span>
+                  <span className="text-[9px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                    {items.length} {items.length === 1 ? "schimbare" : "schimbări"}
                   </span>
                 </div>
 

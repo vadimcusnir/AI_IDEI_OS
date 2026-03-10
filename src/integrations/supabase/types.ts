@@ -110,6 +110,45 @@ export type Database = {
         }
         Relationships: []
       }
+      changes_raw: {
+        Row: {
+          component: string | null
+          created_at: string
+          created_by: string | null
+          diff_summary: string | null
+          file_path: string | null
+          id: string
+          impact_level: string
+          metadata: Json | null
+          source: string
+          source_id: string | null
+        }
+        Insert: {
+          component?: string | null
+          created_at?: string
+          created_by?: string | null
+          diff_summary?: string | null
+          file_path?: string | null
+          id?: string
+          impact_level?: string
+          metadata?: Json | null
+          source?: string
+          source_id?: string | null
+        }
+        Update: {
+          component?: string | null
+          created_at?: string
+          created_by?: string | null
+          diff_summary?: string | null
+          file_path?: string | null
+          id?: string
+          impact_level?: string
+          metadata?: Json | null
+          source?: string
+          source_id?: string | null
+        }
+        Relationships: []
+      }
       credit_transactions: {
         Row: {
           amount: number
