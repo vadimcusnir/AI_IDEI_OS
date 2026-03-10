@@ -34,6 +34,8 @@ import Index from "./pages/Index";
 import Changelog from "./pages/Changelog";
 import Library from "./pages/Library";
 import ArtifactDetail from "./pages/ArtifactDetail";
+import GuestPages from "./pages/GuestPages";
+import GuestProfile from "./pages/GuestProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
