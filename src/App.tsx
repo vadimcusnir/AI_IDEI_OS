@@ -14,6 +14,7 @@ import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/Home";
 import NeuronEditor from "./pages/NeuronEditor";
+import ProfilePage from "./pages/ProfilePage";
 import AdminDashboard from "./pages/AdminDashboard";
 import Architecture from "./pages/Architecture";
 import Links from "./pages/Links";
