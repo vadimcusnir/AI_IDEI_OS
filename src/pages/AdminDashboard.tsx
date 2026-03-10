@@ -65,9 +65,8 @@ export default function AdminDashboard() {
   const [adjustLoading, setAdjustLoading] = useState(false);
 
   useEffect(() => {
-    if (loading) return;
-    if (!user) return;
-    if (!isAdmin) { navigate("/home"); return; }
+    // AdminRoute already handles auth + role check, just load data
+    if (loading || !user || !isAdmin) return;
     loadAll();
   }, [isAdmin, loading, user]);
 
