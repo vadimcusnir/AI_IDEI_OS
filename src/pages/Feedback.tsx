@@ -234,7 +234,7 @@ export default function Feedback() {
       <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
         <Filter className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
         {[
-          { key: "all", label: "Toate" },
+          { key: "all", label: "All" },
           ...Object.entries(TYPE_CONFIG).map(([k, v]) => ({ key: k, label: v.label })),
         ].map((f) => (
           <button
