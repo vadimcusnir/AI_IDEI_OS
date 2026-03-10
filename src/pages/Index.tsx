@@ -122,6 +122,10 @@ export default function Index() {
             <ClipboardList className="h-3.5 w-3.5" />
             Jobs
           </Button>
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/credits")}>
+            <Coins className="h-3.5 w-3.5" />
+            Credits
+          </Button>
           <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/architecture")}>
             <BookOpen className="h-3.5 w-3.5" />
             Docs
