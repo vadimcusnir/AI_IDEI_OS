@@ -187,10 +187,10 @@ export default function Home() {
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Brain className="h-3 w-3" /> Neuroni recenți
+                  <Brain className="h-3 w-3" /> Recent Neurons
                 </h3>
                 <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/neurons")}>
-                  Toți <ArrowRight className="h-3 w-3 ml-1" />
+                  All <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </div>
               {neurons.length === 0 ? (
