@@ -7,9 +7,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AdminRoute } from "@/components/AdminRoute";
 
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/Home";
 import NeuronEditor from "./pages/NeuronEditor";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -39,14 +41,15 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              {/* Public routes */}
+              {/* Public routes — accessible without login */}
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/links" element={<Links />} />
               <Route path="/architecture" element={<Architecture />} />
               <Route path="/u/:username" element={<PublicProfile />} />
 
-              {/* Protected routes with AppLayout */}
+              {/* Protected routes — require authentication */}
               <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
               <Route path="/neurons" element={<ProtectedRoute><AppLayout><Index /></AppLayout></ProtectedRoute>} />
               <Route path="/n/new" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
@@ -58,9 +61,11 @@ const App = () => (
               <Route path="/jobs" element={<ProtectedRoute><AppLayout><Jobs /></AppLayout></ProtectedRoute>} />
               <Route path="/credits" element={<ProtectedRoute><AppLayout><Credits /></AppLayout></ProtectedRoute>} />
               <Route path="/intelligence" element={<ProtectedRoute><AppLayout><Intelligence /></AppLayout></ProtectedRoute>} />
-              <Route path="/admin" element={<ProtectedRoute><AppLayout><AdminDashboard /></AppLayout></ProtectedRoute>} />
               <Route path="/prompt-forge" element={<ProtectedRoute><AppLayout><PromptForge /></AppLayout></ProtectedRoute>} />
               <Route path="/profile-extractor" element={<ProtectedRoute><AppLayout><ProfileExtractor /></AppLayout></ProtectedRoute>} />
+
+              {/* Admin route — requires authentication + admin role */}
+              <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
