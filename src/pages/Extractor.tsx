@@ -45,9 +45,11 @@ export default function Extractor() {
   // Inline create form state
   const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState("");
-  const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("text");
+  const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("url");
   const [content, setContent] = useState("");
   const [creating, setCreating] = useState(false);
+  const [autoTitleApplied, setAutoTitleApplied] = useState(false);
+  const urlRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -60,10 +62,11 @@ export default function Extractor() {
     if (!loading && episodes.length === 0) setShowForm(true);
   }, [loading, episodes.length]);
 
-  // Focus title on form open
+  // Focus URL input on form open
   useEffect(() => {
-    if (showForm) setTimeout(() => titleRef.current?.focus(), 100);
-  }, [showForm]);
+    if (showForm && sourceType === "url") setTimeout(() => urlRef.current?.focus(), 100);
+    else if (showForm) setTimeout(() => titleRef.current?.focus(), 100);
+  }, [showForm, sourceType]);
 
   const fetchEpisodes = async () => {
     const { data, error } = await supabase
@@ -78,7 +81,45 @@ export default function Extractor() {
   const resetForm = () => {
     setTitle("");
     setContent("");
-    setSourceType("text");
+    setSourceType("url");
+    setAutoTitleApplied(false);
+  };
+
+  // Extract a readable title from URL
+  const extractTitleFromUrl = (url: string): string => {
+    try {
+      const parsed = new URL(url);
+      // YouTube
+      const ytMatch = parsed.searchParams.get("v");
+      if (parsed.hostname.includes("youtube") && ytMatch) {
+        return `YouTube: ${ytMatch}`;
+      }
+      // Path-based title
+      const pathParts = parsed.pathname.split("/").filter(Boolean);
+      if (pathParts.length > 0) {
+        const last = decodeURIComponent(pathParts[pathParts.length - 1])
+          .replace(/[-_]/g, " ")
+          .replace(/\.\w+$/, "") // remove file extension
+          .replace(/\b\w/g, c => c.toUpperCase());
+        if (last.length > 2) return last;
+      }
+      // Fallback to hostname
+      return parsed.hostname.replace("www.", "");
+    } catch {
+      return "";
+    }
+  };
+
+  const handleUrlChange = (url: string) => {
+    setContent(url);
+    // Auto-fill title if user hasn't manually edited it
+    if (!autoTitleApplied || !title.trim()) {
+      const extracted = extractTitleFromUrl(url);
+      if (extracted) {
+        setTitle(extracted);
+        setAutoTitleApplied(true);
+      }
+    }
   };
 
   const handleCreate = async () => {
@@ -219,13 +260,32 @@ export default function Extractor() {
               </div>
             )}
 
+            {/* URL/Content input — shown FIRST for URL mode */}
+            {sourceType === "url" && (
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
+                <input
+                  ref={urlRef}
+                  value={content}
+                  onChange={e => handleUrlChange(e.target.value)}
+                  placeholder="Lipește un URL — titlul se completează automat"
+                  className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
+                  onKeyDown={e => { if (e.key === "Enter" && title.trim()) handleCreate(); }}
+                />
+              </div>
+            )}
+
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Titlu</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                  Titlu {sourceType === "url" && title && autoTitleApplied && (
+                    <span className="text-primary/50 normal-case font-normal ml-1">· auto-detectat</span>
+                  )}
+                </label>
                 <input
                   ref={titleRef}
                   value={title}
-                  onChange={e => setTitle(e.target.value)}
+                  onChange={e => { setTitle(e.target.value); setAutoTitleApplied(false); }}
                   placeholder="Titlul episodului..."
                   className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors"
                   onKeyDown={e => {
@@ -237,10 +297,10 @@ export default function Extractor() {
                 <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Tip sursă</label>
                 <div className="flex gap-1">
                   {([
+                    { value: "url", label: "URL", icon: Globe },
                     { value: "text", label: "Text", icon: Type },
                     { value: "audio", label: "Audio", icon: FileAudio },
                     { value: "video", label: "Video", icon: Film },
-                    { value: "url", label: "URL", icon: Globe },
                   ] as const).map(st => (
                     <button
                       key={st.value}
@@ -273,32 +333,21 @@ export default function Extractor() {
               </div>
             )}
 
-            {sourceType === "url" && (
-              <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
-                <input
-                  value={content}
-                  onChange={e => setContent(e.target.value)}
-                  placeholder="https://youtube.com/watch?v=..."
-                  className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
-                  onKeyDown={e => { if (e.key === "Enter") handleCreate(); }}
-                />
-              </div>
-            )}
-
             {(sourceType === "audio" || sourceType === "video") && (
               <div className="border-2 border-dashed border-border rounded-xl p-6 text-center">
                 <Upload className="h-6 w-6 opacity-20 mx-auto mb-2" />
                 <p className="text-xs text-muted-foreground">Upload fișiere — în curând</p>
-                <p className="text-[10px] text-muted-foreground/50 mt-1">Folosește Text sau URL deocamdată</p>
+                <p className="text-[10px] text-muted-foreground/50 mt-1">Folosește URL sau Text deocamdată</p>
               </div>
             )}
 
             <div className="flex items-center justify-between pt-1">
               <p className="text-[10px] text-muted-foreground/50">
-                {sourceType === "text" && content.length > 0
-                  ? `${content.length.toLocaleString()} caractere · ~${Math.ceil(content.split(/\s+/).length)} cuvinte`
-                  : "Completează câmpurile și apasă Creează"}
+                {sourceType === "url" && content.trim()
+                  ? `URL detectat · titlu: ${title || "—"}`
+                  : sourceType === "text" && content.length > 0
+                    ? `${content.length.toLocaleString()} caractere · ~${Math.ceil(content.split(/\s+/).length)} cuvinte`
+                    : sourceType === "url" ? "Lipește un URL pentru a începe" : "Completează câmpurile și apasă Creează"}
               </p>
               <div className="flex items-center gap-2">
                 {episodes.length > 0 && (
