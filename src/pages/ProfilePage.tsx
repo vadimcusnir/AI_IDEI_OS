@@ -156,7 +156,7 @@ export default function ProfilePage() {
             <div className="flex-1">
               <p className="text-sm font-medium mb-1">Avatar</p>
               <p className="text-[10px] text-muted-foreground mb-3">
-                Introdu un URL pentru imaginea de profil.
+                Enter a URL for your profile image.
               </p>
               <input
                 type="url"
