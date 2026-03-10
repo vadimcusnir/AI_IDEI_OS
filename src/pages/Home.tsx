@@ -219,10 +219,10 @@ export default function Home() {
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Clock className="h-3 w-3" /> Joburi recente
+                  <Clock className="h-3 w-3" /> Recent Jobs
                 </h3>
                 <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/jobs")}>
-                  Toate <ArrowRight className="h-3 w-3 ml-1" />
+                  All <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </div>
               {jobs.length === 0 ? (
