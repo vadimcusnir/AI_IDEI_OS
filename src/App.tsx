@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import NeuronEditor from "./pages/NeuronEditor";
 import AdminDashboard from "./pages/AdminDashboard";
 import Architecture from "./pages/Architecture";
+import Links from "./pages/Links";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/n/:number" element={<NeuronEditor />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/architecture" element={<Architecture />} />
+            <Route path="/links" element={<Links />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
