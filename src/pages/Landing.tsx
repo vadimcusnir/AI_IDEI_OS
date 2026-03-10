@@ -47,7 +47,8 @@ const scaleIn = {
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useTranslation("landing");
+  const { t, i18n } = useTranslation("landing");
+  const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
