@@ -125,7 +125,19 @@ export default function Home() {
           <StatCard icon={Brain} label="Neuroni" value={totalNeurons} />
           <StatCard icon={FileText} label="Episoade" value={totalEpisodes} />
           <StatCard icon={Zap} label="Jobs" value={totalJobs} />
-          <StatCard icon={Coins} label="Credits" value={balance} highlight />
+          <div className={cn(
+            "rounded-xl p-3 border transition-colors",
+            "bg-primary/5 border-primary/20"
+          )}>
+            <div className="flex items-center gap-1.5 mb-1">
+              <Coins className="h-3 w-3 text-primary" />
+              <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Credits</span>
+            </div>
+            <p className="text-lg font-bold font-mono text-primary">{balance.toLocaleString()}</p>
+            <div className="mt-1.5">
+              <TopUpDialog onSuccess={loadData} />
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions — large cards */}
