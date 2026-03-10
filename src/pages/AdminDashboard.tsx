@@ -485,7 +485,7 @@ export default function AdminDashboard() {
                                 className="h-7 text-xs"
                                 onClick={() => { setAdjustingUser(null); setAdjustAmount(""); setAdjustDescription(""); }}
                               >
-                                Anulează
+                                Cancel
                               </Button>
                             </div>
                           </div>
