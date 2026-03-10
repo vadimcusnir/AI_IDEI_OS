@@ -8,8 +8,20 @@ import errorsEN from "@/locales/en/errors.json";
 import formsEN from "@/locales/en/forms.json";
 import pagesEN from "@/locales/en/pages.json";
 
+import commonRO from "@/locales/ro/common.json";
+import navigationRO from "@/locales/ro/navigation.json";
+import errorsRO from "@/locales/ro/errors.json";
+import formsRO from "@/locales/ro/forms.json";
+import pagesRO from "@/locales/ro/pages.json";
+
+import commonRU from "@/locales/ru/common.json";
+import navigationRU from "@/locales/ru/navigation.json";
+import errorsRU from "@/locales/ru/errors.json";
+import formsRU from "@/locales/ru/forms.json";
+import pagesRU from "@/locales/ru/pages.json";
+
 export const defaultNS = "common";
-export const supportedLanguages = ["en"] as const;
+export const supportedLanguages = ["en", "ro", "ru"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 i18n
