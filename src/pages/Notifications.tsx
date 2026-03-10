@@ -83,7 +83,7 @@ export default function Notifications() {
           {notifications.length > 0 && (
             <Button variant="ghost" size="sm" onClick={clearAll} className="text-xs gap-1.5 text-muted-foreground">
               <Trash2 className="h-3.5 w-3.5" />
-              Șterge tot
+              Clear all
             </Button>
           )}
         </div>
