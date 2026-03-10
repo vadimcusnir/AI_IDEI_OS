@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -48,6 +48,49 @@ export default function Credits() {
   const [loading, setLoading] = useState(true);
   const [txFilter, setTxFilter] = useState<TxFilter>("all");
   const [txSearch, setTxSearch] = useState("");
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Handle topup success/cancel from URL params
+  useEffect(() => {
+    if (authLoading || !user) return;
+
+    const topup = searchParams.get("topup");
+    const sessionId = searchParams.get("session_id");
+    const neurons = searchParams.get("neurons");
+
+    if (topup === "success" && sessionId) {
+      (async () => {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          const resp = await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-topup`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session?.access_token}`,
+              },
+              body: JSON.stringify({ session_id: sessionId }),
+            }
+          );
+          if (resp.ok) {
+            toast.success(`Top-up reușit! +${neurons || ""} NEURONS adăugați.`);
+          } else {
+            toast.error("Verificarea top-up a eșuat.");
+          }
+        } catch {
+          toast.error("Eroare la verificarea plății.");
+        }
+        setSearchParams({});
+        loadData();
+      })();
+    } else if (topup === "cancelled") {
+      toast.info("Top-up anulat.");
+      setSearchParams({});
+    }
+  }, [searchParams, user, authLoading]);
 
   useEffect(() => {
     if (authLoading || !user) return;

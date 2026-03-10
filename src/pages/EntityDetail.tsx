@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Brain, ChevronRight, ArrowRight, ExternalLink, Loader2, Tag, Quote, BarChart3 } from "lucide-react";
@@ -14,6 +15,7 @@ interface Entity {
   summary: string | null;
   description: string | null;
   meta_description: string | null;
+  canonical_url: string | null;
   confidence_score: number;
   importance_score: number;
   evidence_count: number;
@@ -266,6 +268,11 @@ export default function EntityDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${entity.title} — AI-IDEI ${TYPE_LABEL[entity.entity_type] || "Entity"}`}
+        description={entity.meta_description || entity.summary || undefined}
+        canonical={entity.canonical_url ? `https://ai-idei-os.lovable.app${entity.canonical_url}` : undefined}
+      />
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
