@@ -549,6 +549,37 @@ export default function Index() {
 
         {/* Main content */}
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
+        {/* Mini Hero */}
+        <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-primary/5 via-card to-ai-accent/5 p-5 mb-6">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex-1">
+              <h2 className="text-lg font-serif font-bold mb-1">Knowledge Operating System</h2>
+              <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
+                Extrage, structurează și monetizează cunoștințele tale prin neuroni atomici și AI.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
+                <Plus className="h-3.5 w-3.5" />
+                Creează Neuron
+              </Button>
+              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/dashboard")}>
+                <BarChart3 className="h-3.5 w-3.5" />
+                Stats
+              </Button>
+              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/links")}>
+                <Link2 className="h-3.5 w-3.5" />
+                Linktree
+              </Button>
+              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/services")}>
+                <Sparkles className="h-3.5 w-3.5" />
+                Services
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Title row */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
