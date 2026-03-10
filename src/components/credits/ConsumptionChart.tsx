@@ -59,11 +59,11 @@ export function ConsumptionChart({ transactions }: ConsumptionChartProps) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 rounded-full bg-destructive" />
-            <span className="text-[10px] text-muted-foreground">Consumat: <span className="font-mono font-bold text-destructive">-{totalSpent30d}</span></span>
+            <span className="text-[10px] text-muted-foreground">Spent: <span className="font-mono font-bold text-destructive">-{totalSpent30d}</span></span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 rounded-full bg-status-validated" />
-            <span className="text-[10px] text-muted-foreground">Câștigat: <span className="font-mono font-bold text-status-validated">+{totalEarned30d}</span></span>
+            <span className="text-[10px] text-muted-foreground">Earned: <span className="font-mono font-bold text-status-validated">+{totalEarned30d}</span></span>
           </div>
         </div>
       </div>
