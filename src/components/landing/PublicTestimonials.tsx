@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Quote, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,7 +21,7 @@ const fadeUp = {
   }),
 };
 
-export function PublicTestimonials() {
+export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimonials(_props, ref) {
   const [items, setItems] = useState<PublicFeedback[]>([]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function PublicTestimonials() {
   if (items.length === 0) return null;
 
   return (
-    <section className="max-w-3xl mx-auto px-6 py-16">
+    <section ref={ref} className="max-w-3xl mx-auto px-6 py-16">
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -86,4 +86,4 @@ export function PublicTestimonials() {
       </div>
     </section>
   );
-}
+});

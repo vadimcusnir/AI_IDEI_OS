@@ -67,12 +67,13 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 text-xs text-muted-foreground sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 text-xs text-muted-foreground sm:flex-row">
           <span>© {new Date().getFullYear()} AI-IDEI. All rights reserved.</span>
           <div className="flex flex-wrap items-center gap-4">
+            <FooterLink to="/terms">Terms</FooterLink>
+            <FooterLink to="/privacy">Privacy</FooterLink>
             <FooterLink to="/docs">Docs</FooterLink>
             <FooterLink to="/changelog">Changelog</FooterLink>
-            <FooterLink to="/architecture">Architecture</FooterLink>
           </div>
         </div>
       </div>
