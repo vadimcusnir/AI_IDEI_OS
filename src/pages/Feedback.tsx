@@ -44,10 +44,10 @@ const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; labe
 };
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  pending: { label: "În așteptare", color: "bg-muted text-muted-foreground" },
-  reviewed: { label: "Revizuit", color: "bg-primary/10 text-primary" },
-  resolved: { label: "Rezolvat", color: "bg-emerald-500/10 text-emerald-600" },
-  published: { label: "Publicat", color: "bg-amber-500/10 text-amber-600" },
+  pending: { label: "Pending", color: "bg-muted text-muted-foreground" },
+  reviewed: { label: "Reviewed", color: "bg-primary/10 text-primary" },
+  resolved: { label: "Resolved", color: "bg-emerald-500/10 text-emerald-600" },
+  published: { label: "Published", color: "bg-amber-500/10 text-amber-600" },
 };
 
 export default function Feedback() {
