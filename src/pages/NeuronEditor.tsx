@@ -194,11 +194,7 @@ export default function NeuronEditor() {
           isExtracting={isExtracting}
           activeAction={activeAction}
           onClose={clearResult}
-          onInsertAsBlock={async (content) => {
-            if (blocks.length > 0) {
-              await handleAddBlock(blocks[blocks.length - 1].id, "markdown");
-            }
-          }}
+          onInsertAsBlock={handleInsertAIResult}
         />
       )}
 
