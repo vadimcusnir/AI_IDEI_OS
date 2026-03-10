@@ -210,9 +210,36 @@ export function NeuronTopBar({
       <Button variant="ghost" size="icon" className="h-7 w-7">
         <Share2 className="h-3.5 w-3.5" />
       </Button>
-      <Button variant="ghost" size="icon" className="h-7 w-7">
-        <Copy className="h-3.5 w-3.5" />
-      </Button>
+
+      {/* Clone / Fork */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-2" disabled={cloning}>
+            {cloning ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Copy className="h-3.5 w-3.5" />}
+            Clone
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem onClick={async () => {
+            if (!onClone) return;
+            setCloning(true);
+            await onClone();
+            setCloning(false);
+          }}>
+            <Copy className="h-3.5 w-3.5 mr-2" />
+            Clone (full copy)
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={async () => {
+            if (!onFork) return;
+            setCloning(true);
+            await onFork();
+            setCloning(false);
+          }}>
+            <GitFork className="h-3.5 w-3.5 mr-2" />
+            Fork (copy + link)
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
