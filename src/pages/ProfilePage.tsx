@@ -96,9 +96,9 @@ export default function ProfilePage() {
     const permission = await requestPermission();
     if (permission === "granted") {
       await updatePrefs({ push_enabled: true });
-      toast.success("Notificări browser activate!");
+      toast.success("Browser notifications enabled!");
     } else {
-      toast.error("Permisiunea pentru notificări a fost refuzată.");
+      toast.error("Notification permission was denied.");
     }
   };
 
