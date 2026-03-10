@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { FeedbackFAB } from "@/components/feedback/FeedbackFAB";
