@@ -9,6 +9,8 @@ import {
   BarChart3, Filter, Search, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TopUpDialog } from "@/components/credits/TopUpDialog";
+import { ConsumptionChart } from "@/components/credits/ConsumptionChart";
 
 interface UserCredits {
   balance: number;
@@ -125,6 +127,7 @@ export default function Credits() {
               {balanceHealth === "healthy" ? "Sănătos" : balanceHealth === "warning" ? "Scăzut" : "Critic"}
             </span>
           </div>
+          <TopUpDialog onSuccess={loadData} />
         </div>
 
         {/* Balance + Stats row */}
@@ -186,6 +189,9 @@ export default function Credits() {
             </p>
           </div>
         </div>
+
+        {/* Consumption chart */}
+        <ConsumptionChart transactions={transactions} />
 
         {/* Service consumption breakdown */}
         {Object.keys(serviceStats).length > 0 && (
