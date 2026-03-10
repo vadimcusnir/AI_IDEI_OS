@@ -63,9 +63,9 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
     } as any);
 
     if (error) {
-      toast.error("Eroare la trimitere: " + error.message);
+      toast.error("Error submitting: " + error.message);
     } else {
-      toast.success("Mulțumim pentru feedback! 🙏");
+      toast.success("Thank you for your feedback! 🙏");
       setOpen(false);
       setTitle("");
       setMessage("");
