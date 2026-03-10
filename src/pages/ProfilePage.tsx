@@ -219,7 +219,7 @@ export default function ProfilePage() {
         <div className="bg-card border border-border rounded-xl p-6 mb-4">
           <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
             <Bell className="h-4 w-4 text-primary" />
-            Preferințe notificări
+            Notification Preferences
           </h2>
 
           {prefsLoading ? (
