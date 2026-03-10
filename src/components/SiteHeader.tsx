@@ -4,11 +4,23 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import logo from "@/assets/logo.gif";
-import { Brain, Shield, Upload, Sparkles, Briefcase, Coins, LogOut, LogIn, Home, User, MessageCircle, ScrollText } from "lucide-react";
+import { Brain, Shield, Upload, Sparkles, Briefcase, Coins, LogOut, LogIn, Home, User, MessageCircle, ScrollText, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const LANG_OPTIONS: { code: string; label: string; flag: string }[] = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "ro", label: "Română", flag: "🇷🇴" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+];
 
 const NAV_ITEMS = [
   { labelKey: "navigation:home", to: "/home", icon: Home, auth: true },
@@ -22,12 +34,14 @@ const NAV_ITEMS = [
 ];
 
 export function SiteHeader() {
-  const { t } = useTranslation(["navigation", "common"]);
+  const { t, i18n } = useTranslation(["navigation", "common"]);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { balance, loading: balanceLoading } = useCreditBalance();
+
+  const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
@@ -68,6 +82,25 @@ export function SiteHeader() {
               <span className="text-[11px] font-mono font-bold text-primary">{balanceLoading ? "…" : balance}</span>
             </button>
           )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
+                <span className="text-sm leading-none">{currentLang.flag}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[140px]">
+              {LANG_OPTIONS.map(lang => (
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => i18n.changeLanguage(lang.code)}
+                  className={cn("gap-2 text-xs", i18n.language === lang.code && "bg-accent")}
+                >
+                  <span>{lang.flag}</span>
+                  {lang.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <ThemeToggle />
           {user && <NotificationBell />}
           {user && (
