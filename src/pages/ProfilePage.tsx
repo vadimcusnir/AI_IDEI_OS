@@ -395,8 +395,8 @@ export default function ProfilePage() {
               <span className="text-[10px] font-mono text-muted-foreground/50">{user?.id.slice(0, 8)}...</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Creat la</span>
-              <span className="text-xs">{user?.created_at ? new Date(user.created_at).toLocaleDateString("ro-RO") : "—"}</span>
+              <span className="text-xs text-muted-foreground">Created</span>
+              <span className="text-xs">{user?.created_at ? new Date(user.created_at).toLocaleDateString("en-US") : "—"}</span>
             </div>
           </div>
         </div>
