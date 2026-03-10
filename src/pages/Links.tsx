@@ -232,7 +232,7 @@ function MonetizationBlock() {
   );
 }
 
-
+function SocialProofBlock() {
   return (
     <div className="mb-8">
       <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
