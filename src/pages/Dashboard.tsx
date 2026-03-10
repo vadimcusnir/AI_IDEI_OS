@@ -13,12 +13,14 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
-  episodes: { total: number; analyzed: number };
+  episodes: { total: number; analyzed: number; pending: number };
   credits: { balance: number; spent: number; earned: number };
   jobs: { total: number; completed: number; failed: number; avgDuration: number };
+  artifacts: { total: number; thisWeek: number };
   categories: Record<string, number>;
   weeklyActivity: { date: string; neurons: number; jobs: number }[];
   recentJobs: { id: string; worker_type: string; status: string; created_at: string }[];
+  pipeline: { uploaded: number; transcribed: number; analyzed: number; serviced: number };
 }
 
 export default function Dashboard() {
