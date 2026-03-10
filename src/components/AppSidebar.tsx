@@ -33,6 +33,7 @@ const MAIN_NAV = [
   { label: "Servicii", to: "/services", icon: Sparkles },
   { label: "Jobs", to: "/jobs", icon: Briefcase },
   { label: "Biblioteca", to: "/library", icon: BookOpen },
+  { label: "Guest Pages", to: "/guests", icon: Users },
 ];
 
 const SECONDARY_NAV = [
