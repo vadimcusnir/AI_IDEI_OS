@@ -205,6 +205,8 @@ export default function NeuronEditor() {
           neuronId={neuron.id}
           neuronTitle={neuron.title}
           onAIAction={handleAIAction}
+          selectedEpisodeTranscript={selectedEpisodeTranscript || undefined}
+          onEpisodeSelect={setSelectedEpisodeTranscript}
         />
       </div>
 
