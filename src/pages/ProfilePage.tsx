@@ -245,7 +245,7 @@ export default function ProfilePage() {
                     />
                   ) : (
                     <Button size="sm" variant="outline" className="text-xs gap-1" onClick={handleEnablePush}>
-                      <BellRing className="h-3 w-3" /> Activează
+                      <BellRing className="h-3 w-3" /> Enable
                     </Button>
                   )}
                 </div>
