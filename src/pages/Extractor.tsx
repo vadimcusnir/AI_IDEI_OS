@@ -81,7 +81,45 @@ export default function Extractor() {
   const resetForm = () => {
     setTitle("");
     setContent("");
-    setSourceType("text");
+    setSourceType("url");
+    setAutoTitleApplied(false);
+  };
+
+  // Extract a readable title from URL
+  const extractTitleFromUrl = (url: string): string => {
+    try {
+      const parsed = new URL(url);
+      // YouTube
+      const ytMatch = parsed.searchParams.get("v");
+      if (parsed.hostname.includes("youtube") && ytMatch) {
+        return `YouTube: ${ytMatch}`;
+      }
+      // Path-based title
+      const pathParts = parsed.pathname.split("/").filter(Boolean);
+      if (pathParts.length > 0) {
+        const last = decodeURIComponent(pathParts[pathParts.length - 1])
+          .replace(/[-_]/g, " ")
+          .replace(/\.\w+$/, "") // remove file extension
+          .replace(/\b\w/g, c => c.toUpperCase());
+        if (last.length > 2) return last;
+      }
+      // Fallback to hostname
+      return parsed.hostname.replace("www.", "");
+    } catch {
+      return "";
+    }
+  };
+
+  const handleUrlChange = (url: string) => {
+    setContent(url);
+    // Auto-fill title if user hasn't manually edited it
+    if (!autoTitleApplied || !title.trim()) {
+      const extracted = extractTitleFromUrl(url);
+      if (extracted) {
+        setTitle(extracted);
+        setAutoTitleApplied(true);
+      }
+    }
   };
 
   const handleCreate = async () => {
