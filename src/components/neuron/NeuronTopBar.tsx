@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Share2, Copy, Download, ArrowRightLeft,
   Eye, EyeOff, Users, Globe,
   ChevronDown, Zap, Hash, Play, Shield,
-  Fingerprint, MapPin, GitFork, Loader2, BookmarkPlus
+  Fingerprint, MapPin, GitFork, Loader2, BookmarkPlus,
+  Check, ExternalLink
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 type NeuronStatus = "draft" | "validated" | "published";
 type NeuronVisibility = "private" | "team" | "public";
@@ -37,6 +40,8 @@ interface NeuronTopBarProps {
   onClone?: () => Promise<any>;
   onFork?: () => Promise<any>;
   onSaveAsTemplate?: () => void;
+  onConvert?: (format: string) => void;
+  blocks?: { type: string; content: string }[];
 }
 
 const statusConfig: Record<NeuronStatus, { label: string; className: string }> = {
@@ -54,11 +59,13 @@ const visibilityIcons: Record<NeuronVisibility, React.ElementType> = {
 export function NeuronTopBar({
   title, neuronNumber, neuronUuid, nasPath, tags, status, visibility,
   onTitleChange, onStatusChange, onVisibilityChange, onTagsChange, onRunAll,
-  onClone, onFork, onSaveAsTemplate,
+  onClone, onFork, onSaveAsTemplate, onConvert, blocks,
 }: NeuronTopBarProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTag, setNewTag] = useState("");
   const [cloning, setCloning] = useState(false);
+  const [validating, setValidating] = useState(false);
+  const navigate = useNavigate();
 
   const VisIcon = visibilityIcons[visibility];
   const statusCfg = statusConfig[status];
@@ -74,12 +81,73 @@ export function NeuronTopBar({
     onTagsChange(tags.filter(t => t !== tag));
   };
 
+  const handleShare = useCallback(() => {
+    const url = `${window.location.origin}/n/${neuronNumber}`;
+    navigator.clipboard.writeText(url);
+    toast.success("Link copied to clipboard");
+  }, [neuronNumber]);
+
+  const handleDownload = useCallback(() => {
+    if (!blocks) return;
+    const content = blocks
+      .filter(b => b.content?.trim())
+      .map(b => {
+        if (b.type === "heading") return `# ${b.content}`;
+        if (b.type === "subheading") return `## ${b.content}`;
+        if (b.type === "quote") return `> ${b.content}`;
+        if (b.type === "todo") return `- [ ] ${b.content}`;
+        if (b.type === "code") return `\`\`\`\n${b.content}\n\`\`\``;
+        return b.content;
+      })
+      .join("\n\n");
+
+    const blob = new Blob([`# ${title}\n\n${content}`], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `neuron-${neuronNumber}-${title.toLowerCase().replace(/\s+/g, "-").slice(0, 30)}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Downloaded as Markdown");
+  }, [blocks, title, neuronNumber]);
+
+  const handleValidate = useCallback(async () => {
+    setValidating(true);
+    // Check basic quality criteria
+    const issues: string[] = [];
+    const totalContent = blocks?.reduce((sum, b) => sum + (b.content?.length || 0), 0) || 0;
+
+    if (totalContent < 50) issues.push("Content too short (minimum 50 chars)");
+    if (!title || title === "Untitled Neuron") issues.push("Title not set");
+    if (tags.length === 0) issues.push("No tags added");
+
+    await new Promise(r => setTimeout(r, 500)); // simulate validation delay
+
+    if (issues.length === 0) {
+      onStatusChange("validated");
+      toast.success("Neuron validated ✓ — status updated");
+    } else {
+      toast.warning(`Validation issues: ${issues.join(", ")}`);
+    }
+    setValidating(false);
+  }, [blocks, title, tags, onStatusChange]);
+
+  const handleConvert = useCallback((format: string) => {
+    if (onConvert) {
+      onConvert(format);
+    } else {
+      // Default: navigate to run service with neuron context
+      navigate(`/services`);
+      toast.info(`Use AI Services to convert this neuron to ${format}`);
+    }
+  }, [onConvert, navigate]);
+
   return (
-    <div className="h-12 flex items-center gap-2 px-4 border-b border-border bg-card shrink-0">
-      {/* Neuron Number — primary identity */}
+    <div className="h-12 flex items-center gap-1 sm:gap-2 px-2 sm:px-4 border-b border-border bg-card shrink-0 overflow-x-auto">
+      {/* Neuron Number */}
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="flex items-center gap-1.5 mr-1 cursor-default">
+          <div className="flex items-center gap-1 sm:gap-1.5 mr-1 cursor-default shrink-0">
             <Zap className="h-4 w-4 text-primary" />
             <span className="text-sm font-bold text-primary font-mono">#{neuronNumber}</span>
           </div>
@@ -102,8 +170,8 @@ export function NeuronTopBar({
         </TooltipContent>
       </Tooltip>
 
-      {/* NAS Path */}
-      <span className="text-[10px] font-mono text-muted-foreground/60 hidden lg:inline truncate max-w-[200px]">
+      {/* NAS Path - desktop only */}
+      <span className="text-[10px] font-mono text-muted-foreground/60 hidden xl:inline truncate max-w-[200px]">
         {nasPath}
       </span>
 
@@ -115,21 +183,21 @@ export function NeuronTopBar({
           onChange={(e) => onTitleChange(e.target.value)}
           onBlur={() => setIsEditingTitle(false)}
           onKeyDown={(e) => e.key === "Enter" && setIsEditingTitle(false)}
-          className="text-sm font-semibold bg-transparent border-none outline-none flex-shrink-0 max-w-[300px]"
+          className="text-sm font-semibold bg-transparent border-none outline-none flex-shrink-0 max-w-[200px] sm:max-w-[300px]"
         />
       ) : (
         <button
           onClick={() => setIsEditingTitle(true)}
-          className="text-sm font-semibold truncate max-w-[300px] hover:text-primary transition-colors"
+          className="text-sm font-semibold truncate max-w-[150px] sm:max-w-[300px] hover:text-primary transition-colors"
         >
           {title}
         </button>
       )}
 
-      <div className="w-px h-5 bg-border mx-1" />
+      <div className="w-px h-5 bg-border mx-0.5 sm:mx-1 hidden sm:block" />
 
-      {/* Tags */}
-      <div className="flex items-center gap-1 overflow-x-auto flex-1 min-w-0">
+      {/* Tags - hidden on small screens */}
+      <div className="hidden md:flex items-center gap-1 overflow-x-auto flex-1 min-w-0">
         {tags.map(tag => (
           <Badge
             key={tag}
@@ -150,14 +218,16 @@ export function NeuronTopBar({
         />
       </div>
 
+      <div className="flex-1 md:hidden" />
+
       {/* Status */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-2">
+          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-1.5 sm:px-2 shrink-0">
             <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ${statusCfg.className}`}>
               {statusCfg.label}
             </span>
-            <ChevronDown className="h-3 w-3" />
+            <ChevronDown className="h-3 w-3 hidden sm:block" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-36">
@@ -170,7 +240,7 @@ export function NeuronTopBar({
       {/* Visibility */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-7 w-7">
+          <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0">
             <VisIcon className="h-3.5 w-3.5" />
           </Button>
         </DropdownMenuTrigger>
@@ -187,37 +257,55 @@ export function NeuronTopBar({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <div className="w-px h-5 bg-border" />
+      <div className="w-px h-5 bg-border hidden sm:block" />
 
-      {/* Execution controls */}
+      {/* Run All */}
       <Button
         variant="default"
         size="sm"
-        className="h-7 gap-1.5 text-xs px-3"
+        className="h-7 gap-1.5 text-xs px-2 sm:px-3 shrink-0"
         onClick={onRunAll}
       >
         <Play className="h-3 w-3" />
-        Run
+        <span className="hidden sm:inline">Run</span>
       </Button>
 
-      <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-2">
-        <Shield className="h-3 w-3" />
-        Validate
+      {/* Validate */}
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-7 gap-1 text-xs px-1.5 sm:px-2 shrink-0"
+        onClick={handleValidate}
+        disabled={validating}
+      >
+        {validating ? (
+          <Loader2 className="h-3 w-3 animate-spin" />
+        ) : status === "validated" ? (
+          <Check className="h-3 w-3 text-status-validated" />
+        ) : (
+          <Shield className="h-3 w-3" />
+        )}
+        <span className="hidden sm:inline">Validate</span>
       </Button>
 
-      <div className="w-px h-5 bg-border" />
+      <div className="w-px h-5 bg-border hidden sm:block" />
 
-      {/* Actions */}
-      <Button variant="ghost" size="icon" className="h-7 w-7">
-        <Share2 className="h-3.5 w-3.5" />
-      </Button>
+      {/* Share */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={handleShare}>
+            <Share2 className="h-3.5 w-3.5" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="text-[10px]">Copy link</TooltipContent>
+      </Tooltip>
 
       {/* Clone / Fork */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-2" disabled={cloning}>
+          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-1.5 sm:px-2 shrink-0" disabled={cloning}>
             {cloning ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Copy className="h-3.5 w-3.5" />}
-            Clone
+            <span className="hidden sm:inline">Clone</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
@@ -242,33 +330,59 @@ export function NeuronTopBar({
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {/* Convert */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-2">
+          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-1.5 sm:px-2 shrink-0">
             <ArrowRightLeft className="h-3.5 w-3.5" />
-            Convert
+            <span className="hidden lg:inline">Convert</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem>→ Article</DropdownMenuItem>
-          <DropdownMenuItem>→ Knowledge Card</DropdownMenuItem>
-          <DropdownMenuItem>→ Tool Input</DropdownMenuItem>
-          <DropdownMenuItem>→ Framework Element</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleConvert("article")}>
+            → Article
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleConvert("knowledge-card")}>
+            → Knowledge Card
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleConvert("framework")}>
+            → Framework Element
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>→ Twitter Thread</DropdownMenuItem>
-          <DropdownMenuItem>→ Course Slide</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleConvert("twitter-thread")}>
+            → Twitter Thread
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleConvert("course-slide")}>
+            → Course Slide
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => navigate("/services")} className="text-primary">
+            <ExternalLink className="h-3.5 w-3.5 mr-2" />
+            All Services →
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
       {onSaveAsTemplate && (
-        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onSaveAsTemplate} title="Save as template">
-          <BookmarkPlus className="h-3.5 w-3.5" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={onSaveAsTemplate}>
+              <BookmarkPlus className="h-3.5 w-3.5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-[10px]">Save as template</TooltipContent>
+        </Tooltip>
       )}
 
-      <Button variant="ghost" size="icon" className="h-7 w-7">
-        <Download className="h-3.5 w-3.5" />
-      </Button>
+      {/* Download */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={handleDownload}>
+            <Download className="h-3.5 w-3.5" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="text-[10px]">Download as Markdown</TooltipContent>
+      </Tooltip>
     </div>
   );
 }
