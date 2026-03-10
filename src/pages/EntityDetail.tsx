@@ -15,6 +15,7 @@ interface Entity {
   summary: string | null;
   description: string | null;
   meta_description: string | null;
+  canonical_url: string | null;
   confidence_score: number;
   importance_score: number;
   evidence_count: number;
