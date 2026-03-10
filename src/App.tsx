@@ -36,6 +36,7 @@ import Library from "./pages/Library";
 import ArtifactDetail from "./pages/ArtifactDetail";
 import GuestPages from "./pages/GuestPages";
 import GuestProfile from "./pages/GuestProfile";
+import BatchRunner from "./pages/BatchRunner";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
