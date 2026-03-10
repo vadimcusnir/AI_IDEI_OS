@@ -34,12 +34,12 @@ export default function Notifications() {
   });
 
   const typeFilters = [
-    { key: "all", label: "Toate" },
-    { key: "unread", label: `Necitite (${unreadCount})` },
-    { key: "job_completed", label: "Finalizate" },
-    { key: "job_failed", label: "Eșuate" },
-    { key: "credits_low", label: "Credite" },
-    { key: "version_created", label: "Versiuni" },
+    { key: "all", label: "All" },
+    { key: "unread", label: `Unread (${unreadCount})` },
+    { key: "job_completed", label: "Completed" },
+    { key: "job_failed", label: "Failed" },
+    { key: "credits_low", label: "Credits" },
+    { key: "version_created", label: "Versions" },
   ];
 
   const handleClick = (notif: AppNotification) => {
