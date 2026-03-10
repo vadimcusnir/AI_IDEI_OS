@@ -227,8 +227,8 @@ export default function AdminDashboard() {
 
   const adjustCredits = async (userId: string) => {
     const amount = parseInt(adjustAmount);
-    if (isNaN(amount) || amount === 0) { toast.error("Sumă invalidă"); return; }
-    if (!adjustDescription.trim()) { toast.error("Adaugă o descriere"); return; }
+    if (isNaN(amount) || amount === 0) { toast.error("Invalid amount"); return; }
+    if (!adjustDescription.trim()) { toast.error("Add a description"); return; }
 
     setAdjustLoading(true);
     try {
