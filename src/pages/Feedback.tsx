@@ -200,7 +200,7 @@ export default function Feedback() {
             )}
 
             <Input
-              placeholder="Titlu scurt"
+              placeholder="Short title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={200}
