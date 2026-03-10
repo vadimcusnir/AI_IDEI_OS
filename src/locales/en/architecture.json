@@ -1,0 +1,370 @@
+{
+  "hero": {
+    "title": "AI-IDEI · Knowledge Operating System",
+    "description": "Complete architecture of a Knowledge Operating System built on atomic, programmable Neurons. Designed for 100K+ neurons with full-text search, Git-like versioning, dynamic block types, cloning/templates, deterministic AI services, credit economy, real-time notification system, feedback & testimonials, and advanced administration."
+  },
+  "toc": {
+    "title": "Table of Contents",
+    "items": [
+      "1. Concept & Mission",
+      "2. Neuron Object — Data Model",
+      "3. Universal Block System",
+      "4. Content Classification",
+      "5. Relations & Knowledge Graph",
+      "6. Git-like Versioning System",
+      "7. Execution Model & AI Services",
+      "8. Credit Economy (NEURONS)",
+      "9. Ingestion & Extraction Pipeline",
+      "10. Notification System",
+      "11. Feedback & Testimonials",
+      "12. User Profiles & Public Pages",
+      "13. Admin Dashboard",
+      "14. Rules & Operating Principles",
+      "15. Cloning & Template System",
+      "16. Application Pages & Flow",
+      "17. Scalability & Indexing",
+      "18. Edge Functions & API"
+    ]
+  },
+  "s1": {
+    "title": "1. Concept & Mission",
+    "callout_label": "Mission",
+    "callout": "Transforming raw knowledge (transcriptions, notes, ideas) into programmable, capitalizable, and tradeable intellectual assets.",
+    "intro": "AI-IDEI is a <strong>Knowledge Operating System (KOS)</strong> — not a simple note editor or CMS. The system operates on the principle that every knowledge unit (Neuron) is a programmable object that can be:",
+    "bullets": [
+      "<strong>Captured</strong> — from transcriptions, interviews, podcasts, texts",
+      "<strong>Structured</strong> — into typed blocks with semantic metadata",
+      "<strong>Connected</strong> — through relation graphs (supports, contradicts, extends)",
+      "<strong>Executed</strong> — through deterministic AI services with fixed costs",
+      "<strong>Versioned</strong> — with Git-like history and restoration",
+      "<strong>Capitalized</strong> — transformed into economic deliverables (courses, strategies, products)"
+    ],
+    "pipeline_title": "The Central Pipeline",
+    "pipeline_code": "Upload content → AI Extraction → Structured Neurons → AI Services → Monetizable Deliverables\n\nConcrete example:\n  1 podcast (60 min) → 1 episode → AI extraction → 5 neurons\n  5 neurons → 10 AI services → 50+ deliverables\n  50+ deliverables = articles, courses, strategies, frameworks, scripts",
+    "philosophy": "<strong>Philosophy:</strong> \"Services First, Knowledge Always.\" The system doesn't generate random content — it executes deterministic services with defined input, fixed cost, and auditable output.",
+    "positioning_title": "Positioning",
+    "positioning": "The platform is \"<strong>The Magic Marketing Button</strong>\" — users upload content once, and the system automatically generates dozens of professional deliverables. The real margin comes from reuse: a framework extracted once can be reused 10,000 times."
+  },
+  "s2": {
+    "title": "2. Neuron Object — Data Model",
+    "intro": "The Neuron is the atomic unit of knowledge. Internally, it is a programmable document composed of typed blocks, with a three-level identity system:",
+    "id_purpose": "Database primary key, auto-increment",
+    "uuid_purpose": "Cross-system reference",
+    "number_purpose": "Human citation ref #245",
+    "composition_title": "Composition hierarchy",
+    "scale": "Scale",
+    "neurons_col": "Neurons",
+    "example": "Example",
+    "composition_rows": [
+      ["Atomic", "1", "A single idea or insight"],
+      ["Article", "10", "Blog post or analysis"],
+      ["Framework", "30", "Mental model or methodology"],
+      ["Course", "100", "Complete educational program"],
+      ["Knowledge Base", "500+", "Book or comprehensive system"]
+    ],
+    "lifecycle_title": "Lifecycle progression"
+  },
+  "s3": {
+    "title": "3. Universal Block System",
+    "intro": "Blocks are the content primitives inside a Neuron. Each block has a type that determines rendering, execution behavior, and metadata schema. New types can be dynamically registered via the <code class=\"text-xs bg-muted px-1 rounded\">block_type_registry</code> table.",
+    "category": "Category",
+    "block_types": "Block Types",
+    "executable": "Executable",
+    "types_rows": [
+      ["Content", "text, heading, subheading, markdown, todo, quote, list, idea, reference", "No"],
+      ["Structure", "divider", "No"],
+      ["Code", "code, yaml, json", "Yes"],
+      ["AI", "prompt, dataset, diagram, ai-action", "Yes"]
+    ],
+    "editor_desc": "The Neuron editor is a hybrid block-based system — between Notion (structure), Google Docs (editing), VSCode (code), and Jupyter (execution). Supports insertion via slash command (<code class=\"text-xs bg-muted px-1 rounded\">/</code>)."
+  },
+  "s4": {
+    "title": "4. Content Classification",
+    "intro": "Each neuron is classified on two dimensions: <strong>content_category</strong> (what it contains) and <strong>lifecycle</strong> (maturity stage).",
+    "category": "Category",
+    "description": "Description",
+    "example": "Example",
+    "categories_rows": [
+      ["transcript", "Raw transcribed content", "Verbatim podcast episode"],
+      ["insight", "Key extracted takeaway", "Customer retention driver"],
+      ["framework", "Mental model or methodology", "AIDA model applied to SaaS"],
+      ["strategy", "Action plan", "Go-to-market plan"],
+      ["formula", "Repeatable pattern or recipe", "Info-product pricing formula"],
+      ["pattern", "Identified recurring behavior", "Month-3 churn pattern"],
+      ["avatar", "User or audience profile", "Solo entrepreneur persona"],
+      ["argument_map", "Logical idea structure", "Pro/con analysis"],
+      ["narrative", "Story or case study", "Founder's narrative"],
+      ["psychological", "Behavioral or cognitive insight", "Loss aversion in pricing"],
+      ["commercial", "Business or revenue model", "Subscription tier architecture"]
+    ],
+    "service_title": "Service Classification",
+    "class": "Class",
+    "type": "Type",
+    "cost": "Cost",
+    "examples": "Examples",
+    "service_rows": [
+      ["A", "Analysis & Extraction", "50-100 credits", "Insight Extractor, Framework Detector, Quote Extractor"],
+      ["B", "Production & Generation", "100-200 credits", "Course Generator, Strategy Builder, Prompt Generator"],
+      ["C", "Complex Orchestration", "200-500 credits", "Market Research, Argument Mapper, Content Classifier"]
+    ]
+  },
+  "s5": {
+    "title": "5. Relations & Knowledge Graph",
+    "intro": "Neurons form a directed graph through typed links. Each link has a semantic relation type that enables knowledge traversal, contradiction detection, and dependency tracking.",
+    "nas_desc": "<strong>NAS (Neuron Addressing System):</strong> Semantic coordinates that separate identity from location."
+  },
+  "s6": {
+    "title": "6. Git-like Versioning System",
+    "intro": "Each version stores a complete snapshot of the blocks with an optional diff from the parent. Supports branching, restoration, and tracking knowledge evolution.",
+    "operation": "Operation",
+    "description": "Description",
+    "ops_rows": [
+      ["Snapshot", "Captures the current state of blocks as a new version"],
+      ["Restore", "Reverts the neuron to any previous version"],
+      ["Diff", "Compares two versions to see changes"],
+      ["Branch", "Forks a version into a new chain for parallel editing"]
+    ]
+  },
+  "s7": {
+    "title": "7. Execution Model & AI Services",
+    "intro": "Blocks can be executed depending on their execution mode. Services are deterministic AI pipelines with fixed costs and auditable output.",
+    "mode": "Mode",
+    "behavior": "Behavior",
+    "use_cases": "Use Cases",
+    "modes_rows": [
+      ["passive", "No execution, content only", "Text, headings, quotes"],
+      ["validated", "Schema/syntax check on modification", "JSON, dataset, diagram"],
+      ["executable", "Run on demand (play button)", "Code, YAML pipelines, prompts"],
+      ["automated", "Auto-run on trigger/schedule", "AI actions, workflows"]
+    ],
+    "implemented_title": "Implemented Services (10)",
+    "name": "Name",
+    "class": "Class",
+    "credits": "Credits",
+    "realtime": "Real-time monitoring via Supabase Realtime — the Jobs page updates automatically when any job status changes."
+  },
+  "s8": {
+    "title": "8. Credit Economy (NEURONS)",
+    "callout_label": "Dual-Token Model",
+    "callout": "NOTA2 (on-chain, access & staking) + NEURONS (off-chain, compute credits for AI services)",
+    "intro": "The credit system implements an internal economy model with atomic reservation, auditing, and release on failure.",
+    "flow_title": "Credit Flow",
+    "flow_code": "1. Client → POST /run-service { job_id, service_key, neuron_id, inputs, user_id }\n2. Server: Check balance ≥ service.credits_cost\n3. Server: RESERVE — deduct credits atomically\n4. Server: Log transaction (type: 'reserve')\n5. Server: Execute AI via Lovable AI Gateway (SSE streaming)\n6. Server: TEE stream → client (live) + audit (collect full result)\n7. On SUCCESS:\n   └─ Log transaction (type: 'spend')\n   └─ Save result as neuron_block (type: 'markdown')\n   └─ Update neuron lifecycle → 'structured'\n   └─ Mark job 'completed'\n   └─ Trigger notification → 'Job completed ✓'\n8. On FAILURE:\n   └─ RELEASE credits (restore balance)\n   └─ Log transaction (type: 'release')\n   └─ Mark job 'failed'\n   └─ Trigger notification → 'Job failed ✗'",
+    "economy_title": "Economy",
+    "metric": "Metric",
+    "value": "Value",
+    "economy_rows": [
+      ["1000 credits", "10 USD"],
+      ["1 credit", "0.01 USD"],
+      ["Typical service", "50-200 credits (0.50-2.00 USD)"],
+      ["Initial credits", "500 free on signup"],
+      ["Low-balance alert", "Automatic notification below 50 credits"]
+    ]
+  },
+  "s9": {
+    "title": "9. Ingestion & Extraction Pipeline",
+    "intro": "The complete pipeline from raw content to structured neurons:",
+    "podcast_desc": "<strong>Podcast Intelligence:</strong> The system extracts from podcasts: key segment identification, direct quote extraction, summary generation, and content classification. Episodes support types: <code class=\"text-xs bg-muted px-1 rounded\">text, audio, video, url</code>.",
+    "stage": "Stage",
+    "component": "Component",
+    "output": "Output",
+    "stages_rows": [
+      ["1. Upload", "Extractor Page", "Episode record (status: uploaded)"],
+      ["2. Transcribe", "Manual/AI (planned)", "Text transcript (status: transcribed)"],
+      ["3. Extract", "extract-neurons Edge Function", "3-8 neurons with blocks (status: analyzed)"],
+      ["4. Structure", "Neuron Editor", "Refined blocks, categories, addresses"],
+      ["5. Service", "run-service Edge Function", "AI deliverables saved as blocks"],
+      ["6. Capitalize", "Export/Publish", "Courses, strategies, products"]
+    ]
+  },
+  "s10": {
+    "title": "10. Notification System",
+    "callout_label": "Real-time, multi-channel",
+    "callout": "In-app notifications with Supabase Realtime + Desktop Notifications API + granular per-user preferences.",
+    "triggers_title": "Automatic Triggers (PostgreSQL)",
+    "trigger": "Trigger",
+    "table": "Table",
+    "condition": "Condition",
+    "notification": "Notification",
+    "triggers_rows": [
+      ["notify_job_status", "neuron_jobs", "Status → completed/failed", "Job completed ✓ / Job failed ✗"],
+      ["notify_credits_low", "user_credits", "Balance < 50", "Low credits ⚠"],
+      ["notify_version_created", "neuron_versions", "INSERT", "New version saved"],
+      ["notify_feedback_submitted", "feedback", "INSERT", "New feedback → all admins"],
+      ["notify_feedback_responded", "feedback", "admin_response UPDATE", "Response to your feedback"]
+    ],
+    "prefs_title": "Notification Preferences",
+    "channels_title": "Delivery Channels",
+    "channel": "Channel",
+    "implementation": "Implementation",
+    "status": "Status",
+    "channels_rows": [
+      ["In-app (bell icon)", "Supabase Realtime subscription on notifications table", "✅ Active"],
+      ["Desktop (browser)", "Notification API — appears even if tab is not focused", "✅ Active"],
+      ["Email digest", "Preference stored, sender planned", "🔜 Planned"],
+      ["Web Push (offline)", "push_subscriptions table + VAPID keys", "🔜 Planned"]
+    ],
+    "bell_desc": "The <code class=\"text-xs bg-muted px-1 rounded\">NotificationBell</code> component in the header displays a badge with unread notification count, a dropdown with preview, and a link to the <code class=\"text-xs bg-muted px-1 rounded\">/notifications</code> page with type filtering and batch actions (mark all read, clear all)."
+  },
+  "s11": {
+    "title": "11. Feedback & Testimonials System",
+    "intro": "Complete feedback collection system for testimonials, reviews, proposals, and complaints — with admin moderation workflow, Landing Page publication, and automatic contextual feedback.",
+    "collection_title": "Collection Points",
+    "point": "Point",
+    "component": "Component",
+    "behavior": "Behavior",
+    "collection_rows": [
+      ["Global FAB", "FeedbackFAB (floating button)", "Available on any authenticated page"],
+      ["/feedback page", "Inline integrated form", "Auto-open, collapsible, with full history"],
+      ["Post-job completion", "ContextualFeedbackPrompt", "Appears automatically after job completion (session-based)"],
+      ["Landing Page", "PublicTestimonials", "Displays feedback marked as public by admin"]
+    ],
+    "admin_title": "Admin Workflow",
+    "admin_code": "Feedback received → Automatic notification to all admins\n                → Admin Dashboard tab \"Feedback\"\n                → Stats: Total, Pending, Complaints, Average rating\n                → Filter: type, status\n                → Actions: change status, respond (→ user notification), \n                           publish/hide, export CSV\n                → CSV Export: UTF-8 BOM, all columns, direct download"
+  },
+  "s12": {
+    "title": "12. User Profiles & Public Pages",
+    "page": "Page",
+    "route": "Route",
+    "function": "Function",
+    "pages_rows": [
+      ["Private profile", "/profile", "Edit display name, username, bio, avatar + notification preferences"],
+      ["Public profile", "/u/:username", "Public page with user's public neurons"],
+      ["Links page", "/links", "External resources directory with social proof"]
+    ],
+    "settings_desc": "The private profile includes notification settings sections: toggles per alert type, email digest frequency selection, quiet hours configuration."
+  },
+  "s13": {
+    "title": "13. Admin Dashboard",
+    "callout_label": "Restricted access",
+    "callout": "Route /admin protected by AdminRoute — checks 'admin' role via has_role() SECURITY DEFINER function. Roles are stored in a separate user_roles table (not on profile!).",
+    "functions": "Functions",
+    "tabs_rows": [
+      ["Overview", "Global KPIs: total users, neurons, jobs, circulating credits, success rates"],
+      ["Users", "User list, role management (admin/moderator/user), credit adjustment"],
+      ["Neurons", "Visibility control, per-category statistics"],
+      ["Jobs", "Execution monitoring, failure rates, average duration"],
+      ["Services", "Activate/deactivate catalog services, edit costs"],
+      ["Feedback", "Stats (total, pending, complaints, avg rating), filter, respond, publish, CSV export"]
+    ]
+  },
+  "s14": {
+    "title": "14. Rules & Operating Principles",
+    "callout_label": "Core Principles",
+    "callout": "Services First · Job-centric Architecture · Invisible Library · Deterministic Execution · Real-time Feedback",
+    "principle": "Principle",
+    "description": "Description",
+    "principles_rows": [
+      ["Services First", "Every AI interaction is a defined service with cost, input schema, and deliverables — not free chat"],
+      ["Job-centric Architecture", "All work is tracked as auditable jobs: pending → running → completed/failed"],
+      ["Deterministic Execution", "Same input + same service = predictable output structure. No randomness in pipeline"],
+      ["Credit Firewall", "No execution without sufficient credits. Reservation before execution, release on failure"],
+      ["Invisible Library", "The knowledge graph is implicit — neurons are connected but not exposed as a traditional library"],
+      ["Audit Trail", "Every credit movement is logged: reserve, spend, release, denied. Complete transaction ledger"],
+      ["RLS Everywhere", "Row-Level Security on all tables. Users only see their own data. Admins have separate policies"],
+      ["Lifecycle Progression", "Neurons evolve: ingested → structured → active → capitalized → compounded"],
+      ["Block Composability", "Any block type can be added to any neuron. New types registered dynamically"],
+      ["Version Immutability", "Versions are append-only snapshots. History cannot be altered"],
+      ["Real-time Awareness", "Instant notifications for jobs, credits, feedback — via Supabase Realtime + Desktop Notifications"],
+      ["Feedback Loop", "Automatic contextual feedback after jobs, multiple collection points (FAB, inline, post-completion)"]
+    ],
+    "security_title": "Security Model",
+    "layer": "Layer",
+    "implementation": "Implementation",
+    "security_rows": [
+      ["Authentication", "Supabase Auth with email/password, email verification, session persistence"],
+      ["Authorization", "RLS policies per table; has_role() SECURITY DEFINER function"],
+      ["Roles", "Separate user_roles table (admin, moderator, user) — NEVER on profile"],
+      ["Edge Functions", "Service role key for server-side operations; CORS headers"],
+      ["Credit Protection", "Server-side balance check and atomic deduction before AI execution"],
+      ["Notification RLS", "Users can read/modify/delete only their own notifications. INSERT only from server-side triggers"],
+      ["Feedback RLS", "Users read their own feedback + public ones. Admins read all and can update"]
+    ]
+  },
+  "s15": {
+    "title": "15. Cloning & Template System",
+    "intro": "Templates are pre-configured neuron structures. Cloning creates a deep copy with origin tracking.",
+    "operation": "Operation",
+    "description": "Description",
+    "ops_rows": [
+      ["Create from Template", "Instantiates a new neuron with a pre-defined block structure"],
+      ["Clone Neuron", "Deep copy of all blocks + metadata, with lineage tracking"],
+      ["Fork Neuron", "Clone + create link (derived_from) to source"],
+      ["Save as Template", "Extracts the current neuron's structure as a reusable template"]
+    ]
+  },
+  "s16": {
+    "title": "16. Application Pages & Flow",
+    "public_routes": "Public Routes",
+    "protected_routes": "Protected Routes (authentication required)",
+    "admin_routes": "Admin Routes",
+    "route": "Route",
+    "page": "Page",
+    "function": "Function",
+    "public_rows": [
+      ["/", "Landing Page", "Marketing, visual pipeline, public testimonials, CTA"],
+      ["/auth", "Authentication", "Login/signup with email verification"],
+      ["/reset-password", "Password Reset", "Password reset flow"],
+      ["/architecture", "Documentation", "This architecture page"],
+      ["/links", "Links", "External resources directory, social proof, live stats"],
+      ["/u/:username", "Public Profile", "Public page with user's public neurons"]
+    ],
+    "protected_rows": [
+      ["/home", "Cockpit", "Main dashboard: stats, quick actions, recent neurons/jobs, pipeline hint"],
+      ["/neurons", "Neuron List", "Browse, search, filter neurons"],
+      ["/n/new", "Neuron Editor", "Create new neuron (3-panel layout)"],
+      ["/n/:number", "Neuron Editor", "Edit existing neuron with preview, AI tools, versioning"],
+      ["/extractor", "Extractor", "Episode ingestion, transcript management, AI extraction"],
+      ["/services", "Service Catalog", "Browse AI services by class (A/B/C)"],
+      ["/run/:serviceKey", "Run Service", "Execute service with inputs, SSE streaming, credit tracking"],
+      ["/jobs", "Jobs", "Execution history with status, duration, expandable results, realtime"],
+      ["/credits", "Credits", "Balance, transaction ledger, per-service consumption, top-up"],
+      ["/intelligence", "Intelligence", "Aggregate stats: neurons, episodes, categories, activity"],
+      ["/prompt-forge", "Prompt Forge", "Prompt generator and tester"],
+      ["/profile-extractor", "Profile Extractor", "Profile extraction from content"],
+      ["/profile", "Profile & Settings", "Edit profile + notification preferences + quiet hours"],
+      ["/notifications", "Notifications", "Dedicated page: type filter, mark all read, clear all"],
+      ["/feedback", "Feedback", "Inline integrated form + own feedback history"],
+      ["/dashboard", "Dashboard", "Analytical overview"]
+    ],
+    "admin_desc": "Overview, Users, Neurons, Jobs, Services, Feedback — tabs",
+    "nav_title": "Global Navigation (SiteHeader)",
+    "nav_desc": "The user's cognitive pipeline reflected in navigation:",
+    "editor_title": "Neuron Editor Layout"
+  },
+  "s17": {
+    "title": "17. Scalability & Indexing (100K+)",
+    "strategy": "Strategy",
+    "implementation": "Implementation",
+    "benefit": "Benefit",
+    "rows": [
+      ["GIN FTS Index", "to_tsvector on title + content", "Full-text search under 100ms"],
+      ["Composite Indexes", "author+status, neuron+position", "Fast filtered queries"],
+      ["Materialized Views", "neuron_stats view per author", "Dashboard loads < 50ms"],
+      ["Range Partitioning", "neuron_number_ranges table", "Parallel AI writes without collision"],
+      ["Connection Pooling", "PgBouncer built-in", "1000+ concurrent users"],
+      ["Edge Caching", "CDN for public neurons", "Global reads <200ms"],
+      ["Realtime Channels", "Supabase channels per user/table", "Instant notifications without polling"]
+    ]
+  },
+  "s18": {
+    "title": "18. Edge Functions & API",
+    "intro": "Backend logic runs as Edge Functions on Lovable Cloud. All endpoints use CORS headers and service role authentication.",
+    "neuron_api": "CRUD for neurons, blocks, links, versions, search",
+    "run_service": "Job runner: credit reserve → AI execute → audit → save",
+    "extract_neurons": "Episode transcript → AI extraction → 3-8 neurons",
+    "neuron_chat": "Contextual AI chat in the neuron editor",
+    "extract_insights": "Insight extraction from blocks (legacy)",
+    "secrets_title": "Configured Secrets",
+    "purpose": "Purpose",
+    "secret_url": "Supabase project URL",
+    "secret_anon": "Public key for client-side",
+    "secret_service": "Server-side key for Edge Functions",
+    "secret_db": "Direct PostgreSQL connection",
+    "secret_ai": "AI Gateway access (auto-provisioned)"
+  },
+  "footer": {
+    "doc_label": "Architecture Document",
+    "sections": "sections"
+  }
+}
