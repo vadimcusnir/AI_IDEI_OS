@@ -57,6 +57,7 @@ const App = () => (
               <Route path="/changelog" element={<Changelog />} />
               <Route path="/architecture" element={<Architecture />} />
               <Route path="/u/:username" element={<PublicProfile />} />
+              <Route path="/guest/:slug" element={<GuestProfile />} />
 
               {/* Protected routes — require authentication */}
               <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
