@@ -594,16 +594,24 @@ export type Database = {
           amplification_probability: number
           authority_score: number
           betweenness_score: number
+          centrality_delta: number
           computed_at: string
+          connectivity_growth: number
           decay_risk_score: number
           economic_conversion_score: number
+          emergence_score: number
           growth_score: number
+          is_emerging: boolean
           model_version: string
           multi_hop_influence: number
           node_id: string
           novelty_score: number
           pagerank_score: number
+          previous_activation: number
+          previous_degree: number
+          previous_pagerank: number
           propagation_value_score: number
+          structural_rarity: number
         }
         Insert: {
           acceleration_score?: number
@@ -611,16 +619,24 @@ export type Database = {
           amplification_probability?: number
           authority_score?: number
           betweenness_score?: number
+          centrality_delta?: number
           computed_at?: string
+          connectivity_growth?: number
           decay_risk_score?: number
           economic_conversion_score?: number
+          emergence_score?: number
           growth_score?: number
+          is_emerging?: boolean
           model_version?: string
           multi_hop_influence?: number
           node_id: string
           novelty_score?: number
           pagerank_score?: number
+          previous_activation?: number
+          previous_degree?: number
+          previous_pagerank?: number
           propagation_value_score?: number
+          structural_rarity?: number
         }
         Update: {
           acceleration_score?: number
@@ -628,16 +644,24 @@ export type Database = {
           amplification_probability?: number
           authority_score?: number
           betweenness_score?: number
+          centrality_delta?: number
           computed_at?: string
+          connectivity_growth?: number
           decay_risk_score?: number
           economic_conversion_score?: number
+          emergence_score?: number
           growth_score?: number
+          is_emerging?: boolean
           model_version?: string
           multi_hop_influence?: number
           node_id?: string
           novelty_score?: number
           pagerank_score?: number
+          previous_activation?: number
+          previous_degree?: number
+          previous_pagerank?: number
           propagation_value_score?: number
+          structural_rarity?: number
         }
         Relationships: [
           {
