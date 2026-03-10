@@ -150,6 +150,8 @@ export default function NeuronEditor() {
         onVisibilityChange={setVisibility}
         onTagsChange={setTags}
         onRunAll={handleRunAll}
+        onClone={handleClone}
+        onFork={handleFork}
       />
 
       <div className="flex-1 flex min-h-0">
