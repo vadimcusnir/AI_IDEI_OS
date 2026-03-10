@@ -304,7 +304,7 @@ export default function AdminDashboard() {
             </div>
             <div>
               <h1 className="text-xl font-serif font-bold">Admin Control Panel</h1>
-              <p className="text-xs text-muted-foreground">Monitorizare și control platforma AI-IDEI</p>
+              <p className="text-xs text-muted-foreground">Monitoring and control for the AI-IDEI platform</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={loadAll} className="gap-1.5">
