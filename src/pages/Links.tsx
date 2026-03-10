@@ -5,7 +5,7 @@ import logo from "@/assets/logo.gif";
 import {
   Brain, Plus, Shield, Upload, Sparkles, Network,
   ExternalLink, ArrowRight, Globe, Play,
-  BookOpen, GraduationCap, Crown,
+  BookOpen, GraduationCap, Crown, Wand2, UserCheck,
   LayoutDashboard, Coins, Lock,
   ClipboardList, BarChart3, Github,
 } from "lucide-react";
@@ -60,6 +60,8 @@ const SECTIONS: Section[] = [
       { title: "Dashboard", description: "Monitorizează KPI-urile tale", icon: LayoutDashboard, to: "/dashboard", color: "text-primary", accessLevel: "auth" },
       { title: "Extractor", description: "Încarcă și ingestează conținut", icon: Upload, to: "/extractor", color: "text-status-validated", accessLevel: "auth", badge: "New" },
       { title: "Service Catalog", description: "Servicii AI cu costuri fixe", icon: Sparkles, to: "/services", color: "text-ai-accent", accessLevel: "auth" },
+      { title: "Profile Extractor", description: "Generează conținut pentru profilul tău", icon: UserCheck, to: "/profile-extractor", color: "text-primary", accessLevel: "auth", badge: "New" },
+      { title: "Prompt Forge", description: "Creează prompturi specializate", icon: Wand2, to: "/prompt-forge", color: "text-ai-accent", accessLevel: "auth", badge: "New" },
       { title: "Documentație", description: "Arhitectura și API", icon: BookOpen, to: "/architecture", color: "text-muted-foreground", accessLevel: "public" },
     ],
   },

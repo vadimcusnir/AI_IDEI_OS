@@ -19,6 +19,8 @@ import Credits from "./pages/Credits";
 import Intelligence from "./pages/Intelligence";
 import Dashboard from "./pages/Dashboard";
 import PublicProfile from "./pages/PublicProfile";
+import PromptForge from "./pages/PromptForge";
+import ProfileExtractor from "./pages/ProfileExtractor";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +49,8 @@ const App = () => (
               <Route path="/intelligence" element={<Intelligence />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/u/:username" element={<PublicProfile />} />
+              <Route path="/prompt-forge" element={<PromptForge />} />
+              <Route path="/profile-extractor" element={<ProfileExtractor />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
