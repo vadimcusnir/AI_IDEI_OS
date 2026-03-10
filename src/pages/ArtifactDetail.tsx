@@ -186,8 +186,11 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
               {copied ? "Copiat" : "Copiază"}
             </Button>
-            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleExport}>
-              <Download className="h-3.5 w-3.5" /> Export .md
+            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => handleExport("md")}>
+              <Download className="h-3.5 w-3.5" /> .md
+            </Button>
+            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => handleExport("html")}>
+              <FileCode className="h-3.5 w-3.5" /> .html
             </Button>
             <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs text-destructive" onClick={handleDelete}>
               <Trash2 className="h-3.5 w-3.5" />
