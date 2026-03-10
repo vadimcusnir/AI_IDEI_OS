@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Brain, ChevronRight, ArrowRight, ExternalLink, Loader2, Tag } from "lucide-react";
+import { Brain, ChevronRight, ArrowRight, ExternalLink, Loader2, Tag, Quote, BarChart3 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +17,10 @@ interface Entity {
   confidence_score: number;
   importance_score: number;
   evidence_count: number;
+  idea_rank: number;
+  insight_family: string | null;
+  reuse_count: number;
+  citation_sources: any[];
   created_at: string;
 }
 
@@ -25,8 +29,10 @@ interface RelatedEntity {
   entity_type: string;
   slug: string;
   title: string;
+  summary: string | null;
   relation_type: string;
   weight: number;
+  direction: "outgoing" | "incoming";
 }
 
 interface TopicRef {
@@ -63,12 +69,45 @@ const RELATION_LABEL: Record<string, string> = {
   MENTIONS: "Mentions",
   PART_OF: "Part of",
   INSPIRES: "Inspires",
+  SUPPORTS: "Supports",
+  EXTENDS: "Extends",
+  REFERENCES: "References",
 };
+
+const FAMILY_LABEL: Record<string, string> = {
+  decision: "Decision Intelligence",
+  strategy: "Strategic Intelligence",
+  economic: "Economic Intelligence",
+  behavioral: "Behavioral Intelligence",
+  cognitive: "Cognitive Intelligence",
+  system: "Systems Intelligence",
+  knowledge: "Knowledge Intelligence",
+  communication: "Communication Intelligence",
+  organization: "Organization Intelligence",
+  innovation: "Innovation Intelligence",
+  risk: "Risk Intelligence",
+  meta: "Meta Intelligence",
+};
+
+function ScoreBar({ label, value, max = 100 }: { label: string; value: number; max?: number }) {
+  const pct = Math.min(100, (value / max) * 100);
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between text-[10px]">
+        <span className="text-muted-foreground">{label}</span>
+        <span className="font-mono text-foreground">{value.toFixed(1)}</span>
+      </div>
+      <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+        <div className="h-full bg-primary/70 rounded-full transition-all" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
 
 export default function EntityDetail() {
   const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
-  const entityType = location.pathname.split("/")[1]; // insights → insight
+  const entityType = location.pathname.split("/")[1];
   const singularType = entityType?.replace(/s$/, "") || "insight";
 
   const [entity, setEntity] = useState<Entity | null>(null);
@@ -81,7 +120,6 @@ export default function EntityDetail() {
     setLoading(true);
 
     (async () => {
-      // Fetch entity
       const { data: ent } = await supabase
         .from("entities")
         .select("*")
@@ -89,34 +127,29 @@ export default function EntityDetail() {
         .eq("is_published", true)
         .single();
 
-      if (!ent) {
-        setEntity(null);
-        setLoading(false);
-        return;
-      }
-      setEntity(ent as Entity);
+      if (!ent) { setEntity(null); setLoading(false); return; }
+      setEntity(ent as unknown as Entity);
 
-      // Fetch relations and topics in parallel
+      // Fetch outgoing + incoming relations and topics in parallel
       const [outRels, inRels, topicsRes] = await Promise.all([
         supabase
           .from("entity_relations")
           .select("id, relation_type, weight, target_entity_id")
           .eq("source_entity_id", ent.id)
           .order("weight", { ascending: false })
-          .limit(20),
+          .limit(30),
         supabase
           .from("entity_relations")
           .select("id, relation_type, weight, source_entity_id")
           .eq("target_entity_id", ent.id)
           .order("weight", { ascending: false })
-          .limit(20),
+          .limit(30),
         supabase
           .from("entity_topics")
           .select("topic_id")
           .eq("entity_id", ent.id),
       ]);
 
-      // Resolve related entity details
       const relEntityIds = [
         ...(outRels.data || []).map((r: any) => r.target_entity_id),
         ...(inRels.data || []).map((r: any) => r.source_entity_id),
@@ -125,8 +158,8 @@ export default function EntityDetail() {
       if (relEntityIds.length > 0) {
         const { data: relEntities } = await supabase
           .from("entities")
-          .select("id, entity_type, slug, title")
-          .in("id", relEntityIds)
+          .select("id, entity_type, slug, title, summary")
+          .in("id", [...new Set(relEntityIds)])
           .eq("is_published", true);
 
         const entityMap = new Map((relEntities || []).map((e: any) => [e.id, e]));
@@ -134,16 +167,15 @@ export default function EntityDetail() {
 
         for (const r of outRels.data || []) {
           const e = entityMap.get((r as any).target_entity_id);
-          if (e) mapped.push({ ...e, relation_type: (r as any).relation_type, weight: (r as any).weight });
+          if (e) mapped.push({ ...e, relation_type: (r as any).relation_type, weight: (r as any).weight, direction: "outgoing" });
         }
         for (const r of inRels.data || []) {
           const e = entityMap.get((r as any).source_entity_id);
-          if (e) mapped.push({ ...e, relation_type: (r as any).relation_type, weight: (r as any).weight });
+          if (e) mapped.push({ ...e, relation_type: (r as any).relation_type, weight: (r as any).weight, direction: "incoming" });
         }
         setRelated(mapped);
       }
 
-      // Resolve topics
       const topicIds = (topicsRes.data || []).map((t: any) => t.topic_id);
       if (topicIds.length > 0) {
         const { data: topicData } = await supabase
@@ -157,7 +189,7 @@ export default function EntityDetail() {
     })();
   }, [slug]);
 
-  // Group related by type
+  // Group related by entity_type
   const relatedByType = related.reduce<Record<string, RelatedEntity[]>>((acc, r) => {
     const key = r.entity_type;
     if (!acc[key]) acc[key] = [];
@@ -190,9 +222,51 @@ export default function EntityDetail() {
     );
   }
 
+  const citations = Array.isArray(entity.citation_sources) ? entity.citation_sources : [];
+  const graphDensity = related.length;
+
+  // Build JSON-LD
+  const jsonLd: any = {
+    "@context": "https://schema.org",
+    "@type": singularType === "profile" ? "Person" : "DefinedTerm",
+    name: entity.title,
+    description: entity.summary || entity.meta_description || "",
+    url: `${window.location.origin}/${entityType}/${entity.slug}`,
+    identifier: entity.id,
+  };
+
+  if (singularType !== "profile") {
+    jsonLd.inDefinedTermSet = {
+      "@type": "DefinedTermSet",
+      name: entity.insight_family
+        ? FAMILY_LABEL[entity.insight_family] || entity.insight_family
+        : `AI-IDEI ${entityType}`,
+    };
+  }
+
+  if (citations.length > 0) {
+    jsonLd.citation = citations.map((c: any) => ({
+      "@type": "CreativeWork",
+      name: c.title || "Source",
+      ...(c.url && { url: c.url }),
+      ...(c.speaker && { author: { "@type": "Person", name: c.speaker } }),
+    }));
+  }
+
+  // Related entities as schema
+  if (related.length > 0) {
+    jsonLd.relatedLink = related.slice(0, 10).map((r) => ({
+      "@type": "DefinedTerm",
+      name: r.title,
+      url: `${window.location.origin}/${TYPE_PATH[r.entity_type] || "insights"}/${r.slug}`,
+    }));
+  }
+
+  jsonLd.publisher = { "@type": "Organization", name: "AI-IDEI" };
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Breadcrumb */}
+      {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
@@ -204,9 +278,16 @@ export default function EntityDetail() {
             <span className="text-foreground truncate">{entity.title}</span>
           </div>
 
-          <Badge variant="outline" className="text-[10px] uppercase tracking-wider mb-3">
-            {TYPE_LABEL[singularType] || singularType}
-          </Badge>
+          <div className="flex items-center gap-2 mb-3">
+            <Badge variant="outline" className="text-[10px] uppercase tracking-wider">
+              {TYPE_LABEL[singularType] || singularType}
+            </Badge>
+            {entity.insight_family && (
+              <Badge variant="secondary" className="text-[10px]">
+                {FAMILY_LABEL[entity.insight_family] || entity.insight_family}
+              </Badge>
+            )}
+          </div>
 
           <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-3 leading-tight">
             {entity.title}
@@ -217,135 +298,156 @@ export default function EntityDetail() {
               {entity.summary}
             </p>
           )}
-
-          {/* Confidence & Evidence */}
-          <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground">
-            {entity.confidence_score > 0 && (
-              <span>Confidence: <strong className="text-foreground">{Math.round(entity.confidence_score * 100)}%</strong></span>
-            )}
-            {entity.importance_score > 0 && (
-              <span>Importance: <strong className="text-foreground">{entity.importance_score.toFixed(1)}</strong></span>
-            )}
-            {entity.evidence_count > 0 && (
-              <span>{entity.evidence_count} evidence{entity.evidence_count > 1 ? "s" : ""}</span>
-            )}
-          </div>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-10">
-        {/* Description */}
-        {entity.description && (
-          <section>
-            <h2 className="text-lg font-serif font-semibold mb-3">Mechanism</h2>
-            <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-              {entity.description}
-            </div>
-          </section>
-        )}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-8">
+          {/* Main content */}
+          <div className="space-y-10">
+            {/* Definition / Mechanism */}
+            {entity.description && (
+              <section>
+                <h2 className="text-lg font-serif font-semibold mb-3">Mechanism</h2>
+                <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap bg-card border border-border rounded-lg p-4">
+                  {entity.description}
+                </div>
+              </section>
+            )}
 
-        {/* Topics */}
-        {topics.length > 0 && (
-          <section>
-            <h2 className="text-lg font-serif font-semibold mb-3">Topics</h2>
-            <div className="flex flex-wrap gap-2">
-              {topics.map((t) => (
+            {/* Evidence / Citations */}
+            {citations.length > 0 && (
+              <section>
+                <h2 className="text-lg font-serif font-semibold mb-3">Evidence</h2>
+                <div className="space-y-2">
+                  {citations.map((c: any, i: number) => (
+                    <div key={i} className="flex items-start gap-3 p-3 bg-card border border-border rounded-lg">
+                      <Quote className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium">{c.title || "Source"}</p>
+                        {c.speaker && <p className="text-[10px] text-muted-foreground">Speaker: {c.speaker}</p>}
+                        {c.timestamp && <p className="text-[10px] text-muted-foreground">Timestamp: {c.timestamp}</p>}
+                        {c.quote && <p className="text-xs text-muted-foreground mt-1 italic">"{c.quote}"</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Topics */}
+            {topics.length > 0 && (
+              <section>
+                <h2 className="text-lg font-serif font-semibold mb-3">Topics</h2>
+                <div className="flex flex-wrap gap-2">
+                  {topics.map((t) => (
+                    <Link
+                      key={t.id}
+                      to={`/topics/${t.slug}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                    >
+                      <Tag className="h-3 w-3" />
+                      {t.title}
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Related entities grouped by type */}
+            {Object.entries(relatedByType).map(([type, entities]) => (
+              <section key={type}>
+                <h2 className="text-lg font-serif font-semibold mb-3">
+                  Related {TYPE_LABEL[type] || type}s
+                </h2>
+                <div className="space-y-2">
+                  {entities.map((rel) => (
+                    <Link
+                      key={`${rel.id}-${rel.relation_type}-${rel.direction}`}
+                      to={`/${TYPE_PATH[rel.entity_type] || "insights"}/${rel.slug}`}
+                      className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors group"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                          {rel.title}
+                        </p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px] text-muted-foreground">
+                            {rel.direction === "incoming" ? "← " : "→ "}
+                            {RELATION_LABEL[rel.relation_type] || rel.relation_type}
+                          </span>
+                          {rel.weight > 0 && (
+                            <span className="text-[10px] text-muted-foreground/50">w:{rel.weight.toFixed(1)}</span>
+                          )}
+                        </div>
+                        {rel.summary && (
+                          <p className="text-[10px] text-muted-foreground truncate mt-0.5">{rel.summary}</p>
+                        )}
+                      </div>
+                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary shrink-0" />
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            ))}
+
+            {/* Source neuron */}
+            {entity.neuron_id && (
+              <section>
+                <h2 className="text-lg font-serif font-semibold mb-3">Source</h2>
                 <Link
-                  key={t.id}
-                  to={`/topics/${t.slug}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  to={`/n/${entity.neuron_id}`}
+                  className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
                 >
-                  <Tag className="h-3 w-3" />
-                  {t.title}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  View source neuron #{entity.neuron_id}
                 </Link>
-              ))}
-            </div>
-          </section>
-        )}
+              </section>
+            )}
 
-        {/* Related entities by type */}
-        {Object.entries(relatedByType).map(([type, entities]) => (
-          <section key={type}>
-            <h2 className="text-lg font-serif font-semibold mb-3">
-              Related {TYPE_LABEL[type] || type}s
-            </h2>
-            <div className="space-y-2">
-              {entities.map((rel) => (
-                <Link
-                  key={rel.id}
-                  to={`/${TYPE_PATH[rel.entity_type] || "insights"}/${rel.slug}`}
-                  className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors group"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
-                      {rel.title}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground">
-                      {RELATION_LABEL[rel.relation_type] || rel.relation_type}
-                      {rel.weight > 0 && ` · weight ${rel.weight.toFixed(1)}`}
-                    </p>
-                  </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary shrink-0" />
-                </Link>
-              ))}
-            </div>
-          </section>
-        ))}
-
-        {/* Source neuron */}
-        {entity.neuron_id && (
-          <section>
-            <h2 className="text-lg font-serif font-semibold mb-3">Source</h2>
-            <Link
-              to={`/n/${entity.neuron_id}`}
-              className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-              View source neuron #{entity.neuron_id}
-            </Link>
-          </section>
-        )}
-
-        {/* No relations message */}
-        {related.length === 0 && topics.length === 0 && !entity.description && (
-          <div className="text-center py-12">
-            <Brain className="h-8 w-8 text-muted-foreground/20 mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">
-              This entity is being enriched. Relations and context will appear as the knowledge graph grows.
-            </p>
+            {related.length === 0 && topics.length === 0 && !entity.description && citations.length === 0 && (
+              <div className="text-center py-12">
+                <Brain className="h-8 w-8 text-muted-foreground/20 mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground">
+                  This entity is being enriched. Relations and context will appear as the knowledge graph grows.
+                </p>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Sidebar — scores */}
+          <aside className="space-y-6">
+            <div className="bg-card border border-border rounded-lg p-4 space-y-4">
+              <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                <BarChart3 className="h-3.5 w-3.5" />
+                IdeaRank Scores
+              </div>
+              <ScoreBar label="IdeaRank" value={entity.idea_rank * 1000} max={10} />
+              <ScoreBar label="Importance" value={entity.importance_score} />
+              <ScoreBar label="Confidence" value={entity.confidence_score * 100} />
+              <div className="pt-2 border-t border-border space-y-1.5 text-[10px] text-muted-foreground">
+                <div className="flex justify-between">
+                  <span>Evidence count</span>
+                  <span className="font-mono text-foreground">{entity.evidence_count}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Reuse count</span>
+                  <span className="font-mono text-foreground">{entity.reuse_count}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Graph density</span>
+                  <span className="font-mono text-foreground">{graphDensity} links</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
 
       {/* JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            entity.neuron_id
-              ? {
-                  "@context": "https://schema.org",
-                  "@type": singularType === "profile" ? "Person" : "DefinedTerm",
-                  name: entity.title,
-                  description: entity.summary || entity.meta_description || "",
-                  url: `${window.location.origin}/${entityType}/${entity.slug}`,
-                  ...(singularType !== "profile" && {
-                    inDefinedTermSet: {
-                      "@type": "DefinedTermSet",
-                      name: `AI-IDEI ${entityType}`,
-                    },
-                  }),
-                  publisher: { "@type": "Organization", name: "AI-IDEI" },
-                }
-              : {
-                  "@context": "https://schema.org",
-                  "@type": "DefinedTerm",
-                  name: entity.title,
-                  description: entity.summary || "",
-                  publisher: { "@type": "Organization", name: "AI-IDEI" },
-                }
-          ),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
     </div>
   );
