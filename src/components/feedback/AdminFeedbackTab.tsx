@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   MessageCircle, Star, ThumbsUp, AlertTriangle, Lightbulb, Quote,
-  Loader2, Send, CheckCircle2, Eye, Filter,
+  Loader2, Send, CheckCircle2, Eye, Filter, Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
