@@ -5,6 +5,7 @@ import { useNeuron } from "@/hooks/useNeuron";
 import { useNeuronGraph } from "@/hooks/useNeuronGraph";
 import { useAIExtraction } from "@/hooks/useAIExtraction";
 import { useNeuronClone } from "@/hooks/useNeuronClone";
+import { useNeuronTemplates } from "@/hooks/useNeuronTemplates";
 import { NeuronTopBar } from "@/components/neuron/NeuronTopBar";
 import { NeuronLeftPanel } from "@/components/neuron/NeuronLeftPanel";
 import { NeuronRightPanel } from "@/components/neuron/NeuronRightPanel";
@@ -12,8 +13,10 @@ import { NeuronEditorToolbar } from "@/components/neuron/NeuronEditorToolbar";
 import { NeuronMainEditor } from "@/components/neuron/NeuronMainEditor";
 import { NeuronBottomBar } from "@/components/neuron/NeuronBottomBar";
 import { AIResultsPanel } from "@/components/neuron/AIResultsPanel";
+import { SaveAsTemplateDialog } from "@/components/neuron/SaveAsTemplateDialog";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { NeuronVersion } from "@/hooks/useNeuronGraph";
 
 export default function NeuronEditor() {
   const { number } = useParams();
@@ -26,7 +29,7 @@ export default function NeuronEditor() {
     executionLogs, setTitle, setStatus, setVisibility,
     handleBlockChange, handleBlockToggle, handleAddBlock,
     handleDeleteBlock, handleBlockExecute, handleBlockLanguageChange,
-    handleRunAll, clearLogs,
+    handleRunAll, clearLogs, restoreBlocks,
   } = useNeuron(neuronNumber);
 
   const {
@@ -37,6 +40,13 @@ export default function NeuronEditor() {
 
   const { isExtracting, extractionResult, activeAction, extract, clearResult } = useAIExtraction();
   const { cloneNeuron, forkNeuron } = useNeuronClone();
+  const { saveAsTemplate } = useNeuronTemplates();
+
+  const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
+  const [leftCollapsed, setLeftCollapsed] = useState(false);
+  const [rightCollapsed, setRightCollapsed] = useState(false);
+  const [bottomExpanded, setBottomExpanded] = useState(false);
+  const [showSaveTemplate, setShowSaveTemplate] = useState(false);
 
   const handleClone = useCallback(async () => {
     if (!neuron) return;
@@ -50,11 +60,6 @@ export default function NeuronEditor() {
     if (forked) navigate(`/n/${forked.number}`);
   }, [neuron, forkNeuron, navigate]);
 
-  const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
-  const [leftCollapsed, setLeftCollapsed] = useState(false);
-  const [rightCollapsed, setRightCollapsed] = useState(false);
-  const [bottomExpanded, setBottomExpanded] = useState(false);
-
   const handleFormatToggle = useCallback((format: string) => {
     setActiveFormats(prev =>
       prev.includes(format) ? prev.filter(f => f !== format) : [...prev, format]
@@ -64,25 +69,26 @@ export default function NeuronEditor() {
   const handleSaveVersion = useCallback(async () => {
     if (!neuron) return;
     const blocksSnapshot = blocks.map(b => ({
-      type: b.type,
-      content: b.content,
-      language: b.language,
-      checked: b.checked,
-      executionMode: b.executionMode,
+      type: b.type, content: b.content, language: b.language,
+      checked: b.checked, executionMode: b.executionMode,
     }));
     const result = await createVersion(neuron.title, blocksSnapshot);
-    if (result?.error) {
-      toast.error("Failed to save version");
-    } else {
-      toast.success("Version saved");
-    }
+    if (result?.error) toast.error("Failed to save version");
+    else toast.success("Version saved");
   }, [neuron, blocks, createVersion]);
+
+  const handleRestoreVersion = useCallback(async (version: NeuronVersion) => {
+    if (!version.blocksSnapshot || !Array.isArray(version.blocksSnapshot)) {
+      toast.error("Invalid version snapshot");
+      return;
+    }
+    await restoreBlocks(version.blocksSnapshot);
+    toast.success(`Restored to v${version.version}`);
+  }, [restoreBlocks]);
 
   const handleRemoveLink = useCallback(async (linkId: string) => {
     const result = await removeLink(linkId);
-    if (result?.error) {
-      toast.error("Failed to remove link");
-    }
+    if (result?.error) toast.error("Failed to remove link");
   }, [removeLink]);
 
   const AI_ACTIONS = ["extract_insights", "extract_frameworks", "extract_questions", "extract_quotes", "extract_prompts"];
@@ -145,6 +151,7 @@ export default function NeuronEditor() {
         onRunAll={handleRunAll}
         onClone={handleClone}
         onFork={handleFork}
+        onSaveAsTemplate={() => setShowSaveTemplate(true)}
       />
 
       <div className="flex-1 flex min-h-0">
@@ -209,6 +216,16 @@ export default function NeuronEditor() {
         onRemoveLink={handleRemoveLink}
         onSaveVersion={handleSaveVersion}
         onClearLogs={clearLogs}
+        onRestoreVersion={handleRestoreVersion}
+      />
+
+      {/* Save as Template Dialog */}
+      <SaveAsTemplateDialog
+        isOpen={showSaveTemplate}
+        onClose={() => setShowSaveTemplate(false)}
+        onSave={saveAsTemplate}
+        blocks={blocks}
+        defaultName={neuron.title}
       />
 
       {/* Save indicator */}
