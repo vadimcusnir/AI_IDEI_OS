@@ -3,7 +3,7 @@ import {
   Share2, Copy, Download, ArrowRightLeft,
   Eye, EyeOff, Users, Globe,
   ChevronDown, Zap, Hash, Play, Shield,
-  Fingerprint, MapPin
+  Fingerprint, MapPin, GitFork, Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +34,8 @@ interface NeuronTopBarProps {
   onVisibilityChange: (visibility: NeuronVisibility) => void;
   onTagsChange: (tags: string[]) => void;
   onRunAll: () => void;
+  onClone?: () => Promise<any>;
+  onFork?: () => Promise<any>;
 }
 
 const statusConfig: Record<NeuronStatus, { label: string; className: string }> = {
@@ -51,9 +53,11 @@ const visibilityIcons: Record<NeuronVisibility, React.ElementType> = {
 export function NeuronTopBar({
   title, neuronNumber, neuronUuid, nasPath, tags, status, visibility,
   onTitleChange, onStatusChange, onVisibilityChange, onTagsChange, onRunAll,
+  onClone, onFork,
 }: NeuronTopBarProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTag, setNewTag] = useState("");
+  const [cloning, setCloning] = useState(false);
 
   const VisIcon = visibilityIcons[visibility];
   const statusCfg = statusConfig[status];
@@ -206,9 +210,36 @@ export function NeuronTopBar({
       <Button variant="ghost" size="icon" className="h-7 w-7">
         <Share2 className="h-3.5 w-3.5" />
       </Button>
-      <Button variant="ghost" size="icon" className="h-7 w-7">
-        <Copy className="h-3.5 w-3.5" />
-      </Button>
+
+      {/* Clone / Fork */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-2" disabled={cloning}>
+            {cloning ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Copy className="h-3.5 w-3.5" />}
+            Clone
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem onClick={async () => {
+            if (!onClone) return;
+            setCloning(true);
+            await onClone();
+            setCloning(false);
+          }}>
+            <Copy className="h-3.5 w-3.5 mr-2" />
+            Clone (full copy)
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={async () => {
+            if (!onFork) return;
+            setCloning(true);
+            await onFork();
+            setCloning(false);
+          }}>
+            <GitFork className="h-3.5 w-3.5 mr-2" />
+            Fork (copy + link)
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

@@ -1,9 +1,10 @@
 import { useMemo, useState, useCallback } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNeuron } from "@/hooks/useNeuron";
 import { useNeuronGraph } from "@/hooks/useNeuronGraph";
 import { useAIExtraction } from "@/hooks/useAIExtraction";
+import { useNeuronClone } from "@/hooks/useNeuronClone";
 import { NeuronTopBar } from "@/components/neuron/NeuronTopBar";
 import { NeuronLeftPanel } from "@/components/neuron/NeuronLeftPanel";
 import { NeuronRightPanel } from "@/components/neuron/NeuronRightPanel";
@@ -16,6 +17,7 @@ import { toast } from "sonner";
 
 export default function NeuronEditor() {
   const { number } = useParams();
+  const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const neuronNumber = number ? parseInt(number, 10) : undefined;
 
@@ -34,6 +36,19 @@ export default function NeuronEditor() {
   } = useNeuronGraph(neuron?.id);
 
   const { isExtracting, extractionResult, activeAction, extract, clearResult } = useAIExtraction();
+  const { cloneNeuron, forkNeuron } = useNeuronClone();
+
+  const handleClone = useCallback(async () => {
+    if (!neuron) return;
+    const cloned = await cloneNeuron(neuron.id);
+    if (cloned) navigate(`/n/${cloned.number}`);
+  }, [neuron, cloneNeuron, navigate]);
+
+  const handleFork = useCallback(async () => {
+    if (!neuron) return;
+    const forked = await forkNeuron(neuron.id);
+    if (forked) navigate(`/n/${forked.number}`);
+  }, [neuron, forkNeuron, navigate]);
 
   const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
   const [leftCollapsed, setLeftCollapsed] = useState(false);
@@ -135,6 +150,8 @@ export default function NeuronEditor() {
         onVisibilityChange={setVisibility}
         onTagsChange={setTags}
         onRunAll={handleRunAll}
+        onClone={handleClone}
+        onFork={handleFork}
       />
 
       <div className="flex-1 flex min-h-0">
