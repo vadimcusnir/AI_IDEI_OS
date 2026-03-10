@@ -64,8 +64,8 @@ const App = () => (
               {/* Protected routes — require authentication */}
               <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
               <Route path="/neurons" element={<ProtectedRoute><AppLayout><Index /></AppLayout></ProtectedRoute>} />
-              <Route path="/n/new" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
-              <Route path="/n/:number" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
+              <Route path="/n/new" element={<ProtectedRoute><AppLayout fullHeight><NeuronEditor /></AppLayout></ProtectedRoute>} />
+              <Route path="/n/:number" element={<ProtectedRoute><AppLayout fullHeight><NeuronEditor /></AppLayout></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute><AppLayout><Dashboard /></AppLayout></ProtectedRoute>} />
               <Route path="/extractor" element={<ProtectedRoute><AppLayout><Extractor /></AppLayout></ProtectedRoute>} />
               <Route path="/services" element={<ProtectedRoute><AppLayout><Services /></AppLayout></ProtectedRoute>} />
