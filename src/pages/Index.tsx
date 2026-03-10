@@ -1,13 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Plus, Loader2, Shield, BookOpen } from "lucide-react";
+import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
 import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 
 interface NeuronListItem {
   id: number;
@@ -23,6 +23,12 @@ export default function Index() {
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+
+  // Search
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<NeuronListItem[] | null>(null);
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -46,9 +52,40 @@ export default function Index() {
     fetchNeurons();
   }, [user, authLoading, navigate]);
 
-  const handleCreateNeuron = () => {
-    navigate("/n/new");
+  const handleSearch = useCallback(async (query: string) => {
+    setSearchQuery(query);
+    if (!query.trim()) {
+      setSearchResults(null);
+      return;
+    }
+    setSearching(true);
+    const { data, error } = await supabase
+      .from("neurons")
+      .select("id, number, title, status, updated_at")
+      .textSearch("title", query)
+      .order("updated_at", { ascending: false })
+      .limit(20);
+
+    if (data) setSearchResults(data);
+    if (error) {
+      // Fallback to ilike search
+      const { data: fallback } = await supabase
+        .from("neurons")
+        .select("id, number, title, status, updated_at")
+        .ilike("title", `%${query}%`)
+        .order("updated_at", { ascending: false })
+        .limit(20);
+      setSearchResults(fallback || []);
+    }
+    setSearching(false);
+  }, []);
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setSearchResults(null);
   };
+
+  const displayNeurons = searchResults !== null ? searchResults : neurons;
 
   if (authLoading || loading) {
     return (
@@ -78,7 +115,7 @@ export default function Index() {
             Architecture
           </Button>
         </div>
-        <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCreateNeuron}>
+        <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
           <Plus className="h-3.5 w-3.5" />
           New Neuron
         </Button>
@@ -86,20 +123,62 @@ export default function Index() {
 
       {/* Neuron list */}
       <div className="max-w-2xl mx-auto px-6 py-8">
-        <h1 className="text-xl font-serif mb-6">Your Neurons</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-xl font-serif">Your Neurons</h1>
+          <span className="text-xs text-muted-foreground">{neurons.length} total</span>
+        </div>
 
-        {neurons.length === 0 ? (
+        {/* Search bar */}
+        <div className="relative mb-5">
+          <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-2 focus-within:border-primary transition-colors">
+            {searching ? (
+              <Loader2 className="h-4 w-4 text-muted-foreground animate-spin shrink-0" />
+            ) : (
+              <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+            )}
+            <input
+              value={searchQuery}
+              onChange={e => handleSearch(e.target.value)}
+              placeholder="Search neurons..."
+              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/50"
+            />
+            {searchQuery && (
+              <button onClick={clearSearch} className="text-muted-foreground hover:text-foreground transition-colors">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+          {searchResults !== null && (
+            <p className="text-[10px] text-muted-foreground mt-1.5 px-1">
+              {searchResults.length} result{searchResults.length !== 1 ? "s" : ""} for "{searchQuery}"
+            </p>
+          )}
+        </div>
+
+        {displayNeurons.length === 0 ? (
           <div className="text-center py-16">
-            <img src={logo} className="h-10 w-10 opacity-30 mx-auto mb-3" alt="" />
-            <p className="text-sm text-muted-foreground mb-4">No neurons yet. Create your first knowledge atom.</p>
-            <Button onClick={handleCreateNeuron} className="gap-1.5">
-              <Plus className="h-4 w-4" />
-              Create Neuron
-            </Button>
+            {searchResults !== null ? (
+              <>
+                <Search className="h-8 w-8 opacity-20 mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground mb-4">No neurons match your search.</p>
+                <Button variant="outline" onClick={clearSearch} className="gap-1.5 text-xs">
+                  Clear search
+                </Button>
+              </>
+            ) : (
+              <>
+                <img src={logo} className="h-10 w-10 opacity-30 mx-auto mb-3" alt="" />
+                <p className="text-sm text-muted-foreground mb-4">No neurons yet. Create your first knowledge atom.</p>
+                <Button onClick={() => setShowTemplatePicker(true)} className="gap-1.5">
+                  <Plus className="h-4 w-4" />
+                  Create Neuron
+                </Button>
+              </>
+            )}
           </div>
         ) : (
           <div className="space-y-1">
-            {neurons.map(n => (
+            {displayNeurons.map(n => (
               <button
                 key={n.id}
                 onClick={() => navigate(`/n/${n.number}`)}
@@ -118,6 +197,9 @@ export default function Index() {
           </div>
         )}
       </div>
+
+      {/* Template Picker Modal */}
+      <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />
     </div>
   );
 }
