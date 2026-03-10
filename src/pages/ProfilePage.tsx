@@ -80,7 +80,7 @@ export default function ProfilePage() {
 
     if (error) {
       if (error.message.includes("unique")) {
-        toast.error("Acest username este deja folosit.");
+        toast.error("This username is already taken.");
       } else {
         toast.error("Eroare la salvare: " + error.message);
       }
