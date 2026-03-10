@@ -183,9 +183,24 @@ export default function Index() {
     toast.success("Neuron deleted");
   }, []);
 
+  // Filter by folder first
+  const filteredByFolder = useMemo(() => {
+    let list = searchResults !== null ? searchResults : neurons;
+    if (selectedFolderId === "__unassigned") {
+      const assigned = new Set(Object.keys(assignments).map(Number));
+      list = list.filter(n => !assigned.has(n.id));
+    } else if (selectedFolderId) {
+      const idsInFolder = Object.entries(assignments)
+        .filter(([, fId]) => fId === selectedFolderId)
+        .map(([nId]) => Number(nId));
+      list = list.filter(n => idsInFolder.includes(n.id));
+    }
+    return list;
+  }, [neurons, searchResults, selectedFolderId, assignments]);
+
   // Sorted, filtered, grouped neurons
   const processedNeurons = useMemo(() => {
-    let list = searchResults !== null ? searchResults : neurons;
+    let list = filteredByFolder;
 
     // Filter by status
     if (filterStatus) list = list.filter(n => n.status === filterStatus);
@@ -207,7 +222,7 @@ export default function Index() {
     });
 
     return list;
-  }, [neurons, searchResults, filterStatus, sortField, sortDir, pinnedIds]);
+  }, [filteredByFolder, filterStatus, sortField, sortDir, pinnedIds]);
 
   // Group neurons
   const groupedNeurons = useMemo(() => {
