@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Database, Layers, GitBranch, Blocks, Copy, Zap, Search, Server,
   Brain, Shield, Coins, Workflow, MessageSquare, Users, BookOpen,
@@ -40,97 +41,68 @@ const Callout = ({ children }: { children: React.ReactNode }) => (
 
 export default function Architecture() {
   const navigate = useNavigate();
+  const { t } = useTranslation("architecture");
 
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Hero */}
         <div className="mb-16">
-          <h1 className="text-3xl font-serif mb-3">AI-IDEI · Knowledge Operating System</h1>
+          <h1 className="text-3xl font-serif mb-3">{t("hero.title")}</h1>
           <p className="text-sm text-muted-foreground max-w-2xl mb-6">
-            Arhitectura completă a unui Knowledge Operating System construit pe Neuroni atomici, programabili.
-            Proiectat pentru 100K+ neuroni cu full-text search, versioning Git-like, tipuri de blocuri dinamice,
-            clonare/template-uri, servicii AI deterministe, economie de credite, sistem de notificări în timp real,
-            feedback & testimoniale, și administrare avansată.
+            {t("hero.description")}
           </p>
           <div className="flex flex-wrap gap-2">
             {[
               "React + Vite + TypeScript", "Supabase (PostgreSQL)", "Edge Functions",
               "Lovable AI Gateway", "RLS Security", "SSE Streaming",
               "Realtime Subscriptions", "Desktop Notifications",
-            ].map(t => (
-              <span key={t} className="text-[10px] uppercase tracking-wider bg-muted px-2 py-1 rounded font-semibold text-muted-foreground">{t}</span>
+            ].map(tag => (
+              <span key={tag} className="text-[10px] uppercase tracking-wider bg-muted px-2 py-1 rounded font-semibold text-muted-foreground">{tag}</span>
             ))}
           </div>
         </div>
 
         {/* TABLE OF CONTENTS */}
         <div className="mb-14 p-5 rounded-xl border border-border bg-card">
-          <h2 className="text-sm font-semibold mb-3">Cuprins</h2>
+          <h2 className="text-sm font-semibold mb-3">{t("toc.title")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
-            {[
-              "1. Concept & Mission",
-              "2. Neuron Object — Data Model",
-              "3. Universal Block System",
-              "4. Content Classification",
-              "5. Relations & Knowledge Graph",
-              "6. Git-like Versioning System",
-              "7. Execution Model & AI Services",
-              "8. Credit Economy (NEURONS)",
-              "9. Ingestion & Extraction Pipeline",
-              "10. Notification System",
-              "11. Feedback & Testimonials",
-              "12. User Profiles & Public Pages",
-              "13. Admin Dashboard",
-              "14. Rules & Operating Principles",
-              "15. Cloning & Template System",
-              "16. Application Pages & Flow",
-              "17. Scalability & Indexing",
-              "18. Edge Functions & API",
-            ].map((item, i) => (
+            {(t("toc.items", { returnObjects: true }) as string[]).map((item, i) => (
               <span key={i} className="text-xs text-muted-foreground py-0.5">{item}</span>
             ))}
           </div>
         </div>
 
         {/* ─── 1. CONCEPT & MISSION ─── */}
-        <Section icon={Brain} title="1. Concept & Mission">
+        <Section icon={Brain} title={t("s1.title")}>
           <Callout>
-            <strong>Misiune:</strong> Transformarea cunoașterii brute (transcrieri, note, idei) în active intelectuale programabile, capitalizabile și tranzacționabile.
+            <strong>{t("s1.callout_label")}:</strong> {t("s1.callout")}
           </Callout>
-          <p>AI-IDEI este un <strong>Knowledge Operating System (KOS)</strong> — nu un simplu editor de note sau CMS. Sistemul operează pe principiul că fiecare unitate de cunoaștere (Neuron) este un obiect programabil care poate fi:</p>
+          <p>{t("s1.intro")}</p>
           <ul className="list-disc pl-6 space-y-1">
-            <li><strong>Capturat</strong> — din transcrieri, interviuri, podcasturi, texte</li>
-            <li><strong>Structurat</strong> — în blocuri tipizate cu metadate semantice</li>
-            <li><strong>Conectat</strong> — prin grafuri de relații (supports, contradicts, extends)</li>
-            <li><strong>Executat</strong> — prin servicii AI deterministe cu costuri fixe</li>
-            <li><strong>Versionat</strong> — cu istoric Git-like și restaurare</li>
-            <li><strong>Capitalizat</strong> — transformat în livrabile economice (cursuri, strategii, produse)</li>
+            {(t("s1.bullets", { returnObjects: true }) as string[]).map((b, i) => (
+              <li key={i} dangerouslySetInnerHTML={{ __html: b }} />
+            ))}
           </ul>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Pipeline-ul Central</h3>
-          <CodeBlock title="Knowledge Pipeline">{`Upload conținut → Extracție AI → Neuroni structurați → Servicii AI → Livrabile monetizabile
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s1.pipeline_title")}</h3>
+          <CodeBlock title="Knowledge Pipeline">{t("s1.pipeline_code")}</CodeBlock>
 
-Exemplu concret:
-  1 podcast (60 min) → 1 episod → extracție AI → 5 neuroni
-  5 neuroni → 10 servicii AI → 50+ livrabile
-  50+ livrabile = articole, cursuri, strategii, frameworks, scripturi`}</CodeBlock>
+          <p dangerouslySetInnerHTML={{ __html: t("s1.philosophy") }} />
 
-          <p><strong>Filosofie:</strong> „Services First, Knowledge Always." Sistemul nu generează conținut aleatoriu — execută servicii deterministe cu input definit, cost fixat, și output auditabil.</p>
-
-          <h3 className="text-base font-serif mt-6 text-foreground">Poziționare</h3>
-          <p>Platforma este „<strong>The Magic Marketing Button</strong>" — utilizatorii încarcă conținut o singură dată, iar sistemul generează automat zeci de livrabile profesionale. Marginea reală vine din reutilizare: un framework extras o dată poate fi reutilizat de 10.000 de ori.</p>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s1.positioning_title")}</h3>
+          <p dangerouslySetInnerHTML={{ __html: t("s1.positioning") }} />
         </Section>
 
         {/* ─── 2. NEURON OBJECT MODEL ─── */}
-        <Section icon={Database} title="2. Neuron Object — Data Model">
-          <p>Neuronul este unitatea atomică de cunoaștere. Intern, este un document programabil compus din blocuri tipizate, cu un sistem de identitate pe trei nivele:</p>
+        <Section icon={Database} title={t("s2.title")}>
+          <p>{t("s2.intro")}</p>
           <Table
             headers={["Layer", "Field", "Purpose", "Mutability"]}
             rows={[
-              ["Internal", "id (bigint)", "Database primary key, auto-increment", "Immutable"],
-              ["Global", "uuid (UUID v4)", "Cross-system reference", "Immutable"],
-              ["Public", "number (bigint)", "Human citation ref #245", "Immutable"],
+              ["Internal", "id (bigint)", t("s2.id_purpose"), "Immutable"],
+              ["Global", "uuid (UUID v4)", t("s2.uuid_purpose"), "Immutable"],
+              ["Public", "number (bigint)", t("s2.number_purpose"), "Immutable"],
             ]}
           />
           <CodeBlock title="Neuron Core Schema">{`neurons
@@ -150,24 +122,18 @@ Exemplu concret:
 ├── score: float (0-100, computed)
 ├── created_at / updated_at: timestamptz`}</CodeBlock>
 
-          <p><strong>Composition hierarchy:</strong></p>
+          <p><strong>{t("s2.composition_title")}:</strong></p>
           <Table
-            headers={["Scale", "Neurons", "Example"]}
-            rows={[
-              ["Atomic", "1", "O singură idee sau insight"],
-              ["Articol", "10", "Blog post sau analiză"],
-              ["Framework", "30", "Model mental sau metodologie"],
-              ["Curs", "100", "Program educațional complet"],
-              ["Knowledge Base", "500+", "Carte sau sistem comprehensiv"],
-            ]}
+            headers={[t("s2.scale"), t("s2.neurons_col"), t("s2.example")]}
+            rows={t("s2.composition_rows", { returnObjects: true }) as string[][]}
           />
 
-          <p><strong>Lifecycle progression:</strong> <code className="text-xs bg-muted px-1 rounded">ingested → structured → active → capitalized → compounded</code></p>
+          <p><strong>{t("s2.lifecycle_title")}:</strong> <code className="text-xs bg-muted px-1 rounded">ingested → structured → active → capitalized → compounded</code></p>
         </Section>
 
         {/* ─── 3. BLOCK SYSTEM ─── */}
-        <Section icon={Blocks} title="3. Universal Block System">
-          <p>Blocurile sunt primitivele de conținut din interiorul unui Neuron. Fiecare bloc are un tip care determină randarea, comportamentul de execuție și schema de metadate. Tipurile noi pot fi înregistrate dinamic via tabelul <code className="text-xs bg-muted px-1 rounded">block_type_registry</code>.</p>
+        <Section icon={Blocks} title={t("s3.title")}>
+          <p dangerouslySetInnerHTML={{ __html: t("s3.intro") }} />
 
           <CodeBlock title="Block Schema">{`neuron_blocks
 ├── id: uuid (PK)
@@ -182,53 +148,32 @@ Exemplu concret:
 ├── created_at / updated_at: timestamptz`}</CodeBlock>
 
           <Table
-            headers={["Categorie", "Tipuri de Block", "Executabil"]}
-            rows={[
-              ["Conținut", "text, heading, subheading, markdown, todo, quote, list, idea, reference", "Nu"],
-              ["Structură", "divider", "Nu"],
-              ["Cod", "code, yaml, json", "Da"],
-              ["AI", "prompt, dataset, diagram, ai-action", "Da"],
-            ]}
+            headers={[t("s3.category"), t("s3.block_types"), t("s3.executable")]}
+            rows={t("s3.types_rows", { returnObjects: true }) as string[][]}
           />
 
-          <p>Editorul Neuron este un sistem hibrid bloc-based — între Notion (structură), Google Docs (editare), VSCode (cod) și Jupyter (execuție). Suportă inserție via slash command (<code className="text-xs bg-muted px-1 rounded">/</code>).</p>
+          <p dangerouslySetInnerHTML={{ __html: t("s3.editor_desc") }} />
         </Section>
 
         {/* ─── 4. CONTENT CLASSIFICATION ─── */}
-        <Section icon={Layers} title="4. Content Classification">
-          <p>Fiecare neuron este clasificat pe două dimensiuni: <strong>content_category</strong> (ce conține) și <strong>lifecycle</strong> (stadiul de maturitate).</p>
+        <Section icon={Layers} title={t("s4.title")}>
+          <p dangerouslySetInnerHTML={{ __html: t("s4.intro") }} />
 
           <Table
-            headers={["Categorie", "Descriere", "Exemplu"]}
-            rows={[
-              ["transcript", "Conținut transcris brut", "Episod de podcast verbatim"],
-              ["insight", "Takeaway cheie extras", "Driver de retenție clienți"],
-              ["framework", "Model mental sau metodologie", "Modelul AIDA aplicat la SaaS"],
-              ["strategy", "Plan de acțiune", "Plan go-to-market"],
-              ["formula", "Pattern sau rețetă repetabilă", "Formula de pricing pentru info-produse"],
-              ["pattern", "Comportament recurent identificat", "Pattern de churn în luna 3"],
-              ["avatar", "Profil de utilizator sau audiență", "Persona antreprenor solo"],
-              ["argument_map", "Structură logică de idei", "Analiză pro/contra"],
-              ["narrative", "Poveste sau studiu de caz", "Narativul fondatorului"],
-              ["psychological", "Insight comportamental sau cognitiv", "Aversiunea la pierdere în pricing"],
-              ["commercial", "Model de business sau revenue", "Arhitectura de subscription tiers"],
-            ]}
+            headers={[t("s4.category"), t("s4.description"), t("s4.example")]}
+            rows={t("s4.categories_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Clasificarea Serviciilor</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s4.service_title")}</h3>
           <Table
-            headers={["Clasă", "Tip", "Cost", "Exemple"]}
-            rows={[
-              ["A", "Analiză & Extracție", "50-100 credite", "Insight Extractor, Framework Detector, Quote Extractor"],
-              ["B", "Producție & Generare", "100-200 credite", "Course Generator, Strategy Builder, Prompt Generator"],
-              ["C", "Orchestrare Complexă", "200-500 credite", "Market Research, Argument Mapper, Content Classifier"],
-            ]}
+            headers={[t("s4.class"), t("s4.type"), t("s4.cost"), t("s4.examples")]}
+            rows={t("s4.service_rows", { returnObjects: true }) as string[][]}
           />
         </Section>
 
         {/* ─── 5. RELATIONS & GRAPH ─── */}
-        <Section icon={Layers} title="5. Relations & Knowledge Graph">
-          <p>Neuronii formează un graf direcționat prin linkuri tipizate. Fiecare link are un tip de relație semantică ce permite traversarea cunoașterii, detectarea contradicțiilor și urmărirea dependențelor.</p>
+        <Section icon={Layers} title={t("s5.title")}>
+          <p>{t("s5.intro")}</p>
 
           <CodeBlock title="Link Schema">{`neuron_links
 ├── id: uuid (PK)
@@ -238,11 +183,11 @@ Exemplu concret:
 │                         'references','derived_from','parent','child'
 └── created_at: timestamptz`}</CodeBlock>
 
-          <p><strong>NAS (Neuron Addressing System):</strong> Coordonate semantice care separă identitatea de locație.</p>
+          <p dangerouslySetInnerHTML={{ __html: t("s5.nas_desc") }} />
           <CodeBlock title="Addressing">{`neuron_addresses
 ├── neuron_id → neurons(id)
 ├── domain: text — 'marketing', 'psychology', etc.
-├── level_1..level_4: text — segmente ierarhice
+├── level_1..level_4: text — hierarchical segments
 ├── path: text — '/marketing/virality/identity-signals'
 ├── depth: integer
 
@@ -252,49 +197,39 @@ neuron_address_aliases
         </Section>
 
         {/* ─── 6. VERSIONING ─── */}
-        <Section icon={GitBranch} title="6. Git-like Versioning System">
-          <p>Fiecare versiune stochează un snapshot complet al blocurilor cu diff opțional de la părinte. Suportă branching, restaurare și urmărirea evoluției cunoașterii.</p>
+        <Section icon={GitBranch} title={t("s6.title")}>
+          <p>{t("s6.intro")}</p>
 
           <CodeBlock title="Version Schema">{`neuron_versions
 ├── id: uuid (PK)
 ├── neuron_id: bigint → neurons(id)
-├── version: integer (secvențial per neuron)
+├── version: integer (sequential per neuron)
 ├── parent_version_id: uuid → neuron_versions(id) [nullable]
-├── title: text (titlul snapshot-ului)
+├── title: text (snapshot title)
 ├── change_summary: text
-├── blocks_snapshot: jsonb (stare completă)
-├── diff: jsonb (delta de la părinte)
+├── blocks_snapshot: jsonb (complete state)
+├── diff: jsonb (delta from parent)
 ├── author_id: uuid
 ├── created_at: timestamptz`}</CodeBlock>
 
           <Table
-            headers={["Operație", "Descriere"]}
-            rows={[
-              ["Snapshot", "Capturează starea curentă a blocurilor ca versiune nouă"],
-              ["Restore", "Revertă neuronul la orice versiune anterioară"],
-              ["Diff", "Compară două versiuni pentru a vedea schimbările"],
-              ["Branch", "Fork versiune într-un lanț nou pentru editare paralelă"],
-            ]}
+            headers={[t("s6.operation"), t("s6.description")]}
+            rows={t("s6.ops_rows", { returnObjects: true }) as string[][]}
           />
         </Section>
 
         {/* ─── 7. EXECUTION MODEL & SERVICES ─── */}
-        <Section icon={Zap} title="7. Execution Model & AI Services">
-          <p>Blocurile pot fi executate în funcție de modul lor de execuție. Serviciile sunt pipeline-uri AI deterministe cu costuri fixe și output auditabil.</p>
+        <Section icon={Zap} title={t("s7.title")}>
+          <p>{t("s7.intro")}</p>
 
           <Table
-            headers={["Mod", "Comportament", "Cazuri de utilizare"]}
-            rows={[
-              ["passive", "Fără execuție, doar conținut", "Text, headings, quotes"],
-              ["validated", "Verificare schemă/sintaxă la modificare", "JSON, dataset, diagram"],
-              ["executable", "Rulare la cerere (buton play)", "Cod, pipeline-uri YAML, prompts"],
-              ["automated", "Auto-run pe trigger/schedule", "AI actions, workflows"],
-            ]}
+            headers={[t("s7.mode"), t("s7.behavior"), t("s7.use_cases")]}
+            rows={t("s7.modes_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Servicii Implementate (10)</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s7.implemented_title")}</h3>
           <Table
-            headers={["Service Key", "Nume", "Clasă", "Credite"]}
+            headers={["Service Key", t("s7.name"), t("s7.class"), t("s7.credits")]}
             rows={[
               ["insight-extractor", "Extract Insights", "A", "50"],
               ["framework-detector", "Detect Frameworks", "A", "75"],
@@ -320,20 +255,20 @@ neuron_address_aliases
 ├── author_id: uuid
 ├── created_at / completed_at: timestamptz`}</CodeBlock>
 
-          <p>Monitorizare în timp real via Supabase Realtime — pagina Jobs se actualizează automat la schimbarea statusului oricărui job.</p>
+          <p>{t("s7.realtime")}</p>
         </Section>
 
         {/* ─── 8. CREDIT ECONOMY ─── */}
-        <Section icon={Coins} title="8. Credit Economy (NEURONS)">
+        <Section icon={Coins} title={t("s8.title")}>
           <Callout>
-            <strong>Dual-Token Model:</strong> NOTA2 (on-chain, acces & staking) + NEURONS (off-chain, credite de computație pentru servicii AI)
+            <strong>{t("s8.callout_label")}:</strong> {t("s8.callout")}
           </Callout>
 
-          <p>Sistemul de credite implementează un model de economie internă cu rezervare atomică, auditare și release on failure.</p>
+          <p>{t("s8.intro")}</p>
 
           <CodeBlock title="Credit Schema">{`user_credits
 ├── user_id: uuid (unique)
-├── balance: integer (default 500 — credite inițiale gratuite)
+├── balance: integer (default 500 — free initial credits)
 ├── total_earned: integer (default 500)
 ├── total_spent: integer (default 0)
 ├── updated_at: timestamptz
@@ -347,41 +282,19 @@ credit_transactions
 ├── description: text
 ├── created_at: timestamptz`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Credit Flow</h3>
-          <CodeBlock title="Job Runner Pipeline">{`1. Client → POST /run-service { job_id, service_key, neuron_id, inputs, user_id }
-2. Server: Check balance ≥ service.credits_cost
-3. Server: RESERVE — deduct credits atomically
-4. Server: Log transaction (type: 'reserve')
-5. Server: Execute AI via Lovable AI Gateway (SSE streaming)
-6. Server: TEE stream → client (live) + audit (collect full result)
-7. On SUCCESS:
-   └─ Log transaction (type: 'spend')
-   └─ Save result as neuron_block (type: 'markdown')
-   └─ Update neuron lifecycle → 'structured'
-   └─ Mark job 'completed'
-   └─ Trigger notification → 'Job finalizat ✓'
-8. On FAILURE:
-   └─ RELEASE credits (restore balance)
-   └─ Log transaction (type: 'release')
-   └─ Mark job 'failed'
-   └─ Trigger notification → 'Job eșuat ✗'`}</CodeBlock>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s8.flow_title")}</h3>
+          <CodeBlock title="Job Runner Pipeline">{t("s8.flow_code")}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Economie</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s8.economy_title")}</h3>
           <Table
-            headers={["Metric", "Valoare"]}
-            rows={[
-              ["1000 credite", "10 USD"],
-              ["1 credit", "0.01 USD"],
-              ["Serviciu tipic", "50-200 credite (0.50-2.00 USD)"],
-              ["Credite inițiale", "500 gratuite la înregistrare"],
-              ["Alertă low-balance", "Notificare automată sub 50 credite"],
-            ]}
+            headers={[t("s8.metric"), t("s8.value")]}
+            rows={t("s8.economy_rows", { returnObjects: true }) as string[][]}
           />
         </Section>
 
         {/* ─── 9. INGESTION PIPELINE ─── */}
-        <Section icon={Workflow} title="9. Ingestion & Extraction Pipeline">
-          <p>Pipeline-ul complet de la conținut brut la neuroni structurați:</p>
+        <Section icon={Workflow} title={t("s9.title")}>
+          <p>{t("s9.intro")}</p>
 
           <CodeBlock title="Full Pipeline">{`┌─────────────┐     ┌──────────────┐     ┌───────────────┐     ┌──────────────┐
 │  Raw Input  │ ──→ │   Episode    │ ──→ │   Extract     │ ──→ │   Neurons    │
@@ -399,25 +312,18 @@ For each extracted neuron:
   - episode_id: linked to source episode
   - credits_cost: proportional (100 / num_neurons)`}</CodeBlock>
 
-          <p><strong>Podcast Intelligence:</strong> Sistemul extrage din podcasturi: identificarea segmentelor cheie, extragerea citatelor directe, generarea de rezumate și clasificarea conținutului. Episoadele suportă tipuri: <code className="text-xs bg-muted px-1 rounded">text, audio, video, url</code>.</p>
+          <p dangerouslySetInnerHTML={{ __html: t("s9.podcast_desc") }} />
 
           <Table
-            headers={["Etapă", "Component", "Output"]}
-            rows={[
-              ["1. Upload", "Pagina Extractor", "Înregistrare episod (status: uploaded)"],
-              ["2. Transcribe", "Manual/AI (planificat)", "Text transcript (status: transcribed)"],
-              ["3. Extract", "extract-neurons Edge Function", "3-8 neuroni cu blocuri (status: analyzed)"],
-              ["4. Structure", "Neuron Editor", "Blocuri rafinate, categorii, adrese"],
-              ["5. Service", "run-service Edge Function", "Livrabile AI salvate ca blocuri"],
-              ["6. Capitalize", "Export/Publish", "Cursuri, strategii, produse"],
-            ]}
+            headers={[t("s9.stage"), t("s9.component"), t("s9.output")]}
+            rows={t("s9.stages_rows", { returnObjects: true }) as string[][]}
           />
         </Section>
 
         {/* ─── 10. NOTIFICATION SYSTEM ─── */}
-        <Section icon={Bell} title="10. Notification System">
+        <Section icon={Bell} title={t("s10.title")}>
           <Callout>
-            <strong>Real-time, multi-canal:</strong> Notificări in-app cu Supabase Realtime + Desktop Notifications API + preferințe granulare per utilizator.
+            <strong>{t("s10.callout_label")}:</strong> {t("s10.callout")}
           </Callout>
 
           <CodeBlock title="Notifications Schema">{`notifications
@@ -432,87 +338,65 @@ For each extracted neuron:
 ├── read: boolean (default false)
 ├── created_at: timestamptz`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Triggere Automate (PostgreSQL)</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s10.triggers_title")}</h3>
           <Table
-            headers={["Trigger", "Tabelă", "Condiție", "Notificare"]}
-            rows={[
-              ["notify_job_status", "neuron_jobs", "Status → completed/failed", "Job finalizat ✓ / Job eșuat ✗"],
-              ["notify_credits_low", "user_credits", "Balance < 50", "Credite scăzute ⚠"],
-              ["notify_version_created", "neuron_versions", "INSERT", "Versiune nouă salvată"],
-              ["notify_feedback_submitted", "feedback", "INSERT", "Feedback nou → toți adminii"],
-              ["notify_feedback_responded", "feedback", "admin_response UPDATE", "Răspuns la feedback-ul tău"],
-            ]}
+            headers={[t("s10.trigger"), t("s10.table"), t("s10.condition"), t("s10.notification")]}
+            rows={t("s10.triggers_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Preferințe Notificări</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s10.prefs_title")}</h3>
           <CodeBlock title="Notification Preferences">{`notification_preferences
 ├── user_id: uuid (unique)
 ├── push_enabled: boolean — Desktop Notifications API permission
-├── push_jobs: boolean — Alertă la finalizare/eșec job
-├── push_credits: boolean — Alertă credite scăzute
-├── push_feedback: boolean — Alertă răspuns feedback
-├── push_versions: boolean — Alertă versiune nouă
+├── push_jobs: boolean — Alert on job completion/failure
+├── push_credits: boolean — Low credits alert
+├── push_feedback: boolean — Feedback response alert
+├── push_versions: boolean — New version alert
 ├── email_digest: enum('none','daily','weekly')
 ├── email_jobs / email_credits / email_feedback: boolean
 ├── quiet_hours_start / quiet_hours_end: smallint (0-23)
 
 Auto-created via handle_new_user() trigger on auth.users INSERT.`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Canale de Livrare</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s10.channels_title")}</h3>
           <Table
-            headers={["Canal", "Implementare", "Status"]}
-            rows={[
-              ["In-app (bell icon)", "Supabase Realtime subscription pe notifications table", "✅ Activ"],
-              ["Desktop (browser)", "Notification API — apare chiar dacă tab-ul nu e focusat", "✅ Activ"],
-              ["Email digest", "Preferință stocată, sender planificat", "🔜 Planificat"],
-              ["Web Push (offline)", "push_subscriptions table + VAPID keys", "🔜 Planificat"],
-            ]}
+            headers={[t("s10.channel"), t("s10.implementation"), t("s10.status")]}
+            rows={t("s10.channels_rows", { returnObjects: true }) as string[][]}
           />
 
-          <p>Componenta <code className="text-xs bg-muted px-1 rounded">NotificationBell</code> din header afișează badge cu numărul de unread notifications, dropdown cu preview, și link la pagina <code className="text-xs bg-muted px-1 rounded">/notifications</code> cu filtrare pe tip și acțiuni batch (mark all read, clear all).</p>
+          <p dangerouslySetInnerHTML={{ __html: t("s10.bell_desc") }} />
         </Section>
 
         {/* ─── 11. FEEDBACK & TESTIMONIALS ─── */}
-        <Section icon={MessageCircle} title="11. Feedback & Testimonials System">
-          <p>Sistem complet de colectare feedback, testimoniale, recenzii, propuneri și plângeri — cu workflow de moderare admin, publicare pe Landing Page, și feedback contextual automat.</p>
+        <Section icon={MessageCircle} title={t("s11.title")}>
+          <p>{t("s11.intro")}</p>
 
           <CodeBlock title="Feedback Schema">{`feedback
 ├── id: uuid (PK)
 ├── user_id: uuid → auth.users(id)
 ├── type: enum('feedback','testimonial','review','proposal','complaint')
 ├── title: text
-├── message: text (max 2000 caractere)
-├── rating: smallint (1-5, nullable — obligatoriu pt review/testimonial)
+├── message: text (max 2000 characters)
+├── rating: smallint (1-5, nullable — required for review/testimonial)
 ├── status: enum('pending','reviewed','resolved','published')
-├── is_public: boolean (default false — controlat de admin)
-├── context_page: text (pagina de pe care s-a trimis)
+├── is_public: boolean (default false — admin-controlled)
+├── context_page: text (page from which it was submitted)
 ├── admin_response: text (nullable)
 ├── admin_responded_at: timestamptz
 ├── created_at / updated_at: timestamptz`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Puncte de Colectare</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s11.collection_title")}</h3>
           <Table
-            headers={["Punct", "Component", "Comportament"]}
-            rows={[
-              ["FAB global", "FeedbackFAB (buton floating)", "Disponibil pe orice pagină autentificată"],
-              ["Pagina /feedback", "Formular inline integrat", "Deschis automat, colapsabil, cu istoric complet"],
-              ["Post-job completion", "ContextualFeedbackPrompt", "Apare automat după finalizarea unui job (session-based)"],
-              ["Landing Page", "PublicTestimonials", "Afișează feedback-uri marcate ca publice de admin"],
-            ]}
+            headers={[t("s11.point"), t("s11.component"), t("s11.behavior")]}
+            rows={t("s11.collection_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Workflow Admin</h3>
-          <CodeBlock title="Admin Feedback Flow">{`Feedback primit → Notificare automată toți adminii
-                → Admin Dashboard tab "Feedback"
-                → Statistici: Total, Pending, Plângeri, Rating mediu
-                → Filtrare: tip, status
-                → Acțiuni: schimbare status, răspuns (→ notificare user), 
-                           publicare/ascundere, export CSV
-                → Export CSV: UTF-8 BOM, toate coloanele, descărcare directă`}</CodeBlock>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s11.admin_title")}</h3>
+          <CodeBlock title="Admin Feedback Flow">{t("s11.admin_code")}</CodeBlock>
         </Section>
 
         {/* ─── 12. USER PROFILES & PUBLIC PAGES ─── */}
-        <Section icon={UserCircle} title="12. User Profiles & Public Pages">
+        <Section icon={UserCircle} title={t("s12.title")}>
           <CodeBlock title="Profiles Schema">{`profiles
 ├── id: uuid (PK)
 ├── user_id: uuid → auth.users(id) (unique)
@@ -526,33 +410,22 @@ Auto-created via handle_new_user() trigger.
 Public profiles readable by all (RLS: true for SELECT).`}</CodeBlock>
 
           <Table
-            headers={["Pagină", "Rută", "Funcție"]}
-            rows={[
-              ["Profil privat", "/profile", "Editare display name, username, bio, avatar + preferințe notificări"],
-              ["Profil public", "/u/:username", "Pagină publică cu neuroni publici ai utilizatorului"],
-              ["Links page", "/links", "Director de resurse externe cu social proof"],
-            ]}
+            headers={[t("s12.page"), t("s12.route"), t("s12.function")]}
+            rows={t("s12.pages_rows", { returnObjects: true }) as string[][]}
           />
 
-          <p>Profilul privat include secțiuni de setări pentru notificări: toggle-uri per tip de alertă, selectare frecvență email digest, configurare quiet hours.</p>
+          <p>{t("s12.settings_desc")}</p>
         </Section>
 
         {/* ─── 13. ADMIN DASHBOARD ─── */}
-        <Section icon={BarChart3} title="13. Admin Dashboard">
+        <Section icon={BarChart3} title={t("s13.title")}>
           <Callout>
-            <strong>Acces restricționat:</strong> Ruta /admin protejată de AdminRoute — verifică rolul 'admin' via funcția has_role() SECURITY DEFINER. Rolurile sunt stocate în tabel separat user_roles (nu pe profil!).
+            <strong>{t("s13.callout_label")}:</strong> {t("s13.callout")}
           </Callout>
 
           <Table
-            headers={["Tab", "Funcții"]}
-            rows={[
-              ["Overview", "KPI-uri globale: utilizatori totali, neuroni, jobs, credite în circulație, rate succes"],
-              ["Utilizatori", "Lista utilizatorilor, management roluri (admin/moderator/user), ajustare credite"],
-              ["Neuroni", "Control vizibilitate, statistici per categorie"],
-              ["Jobs", "Monitorizare execuții, rate eșec, durată medie"],
-              ["Servicii", "Activare/dezactivare servicii din catalog, editare costuri"],
-              ["Feedback", "Statistici (total, pending, plângeri, rating mediu), filtrare, răspuns, publicare, export CSV"],
-            ]}
+            headers={["Tab", t("s13.functions")]}
+            rows={t("s13.tabs_rows", { returnObjects: true }) as string[][]}
           />
 
           <CodeBlock title="Role System">{`user_roles
@@ -567,54 +440,33 @@ has_role(_user_id uuid, _role app_role) → boolean
         </Section>
 
         {/* ─── 14. RULES & PRINCIPLES ─── */}
-        <Section icon={Shield} title="14. Rules & Operating Principles">
+        <Section icon={Shield} title={t("s14.title")}>
           <Callout>
-            <strong>Core Principles:</strong> Services First · Job-centric Architecture · Invisible Library · Deterministic Execution · Real-time Feedback
+            <strong>{t("s14.callout_label")}:</strong> {t("s14.callout")}
           </Callout>
 
           <Table
-            headers={["Principiu", "Descriere"]}
-            rows={[
-              ["Services First", "Fiecare interacțiune AI este un serviciu definit cu cost, input schema și deliverables — nu chat liber"],
-              ["Job-centric Architecture", "Toată munca e urmărită ca job-uri auditabile: pending → running → completed/failed"],
-              ["Deterministic Execution", "Same input + same service = structură de output predictibilă. Fără randomness în pipeline"],
-              ["Credit Firewall", "Nicio execuție fără credite suficiente. Rezervare înainte de execuție, release on failure"],
-              ["Invisible Library", "Knowledge graph-ul e implicit — neuronii sunt conectați dar nu expuși ca bibliotecă tradițională"],
-              ["Audit Trail", "Fiecare mișcare de credite e logată: reserve, spend, release, denied. Ledger complet de tranzacții"],
-              ["RLS Everywhere", "Row-Level Security pe toate tabelele. Utilizatorii văd doar datele lor. Adminii au politici separate"],
-              ["Lifecycle Progression", "Neuronii evoluează: ingested → structured → active → capitalized → compounded"],
-              ["Block Composability", "Orice tip de bloc poate fi adăugat la orice neuron. Tipuri noi înregistrate dinamic"],
-              ["Version Immutability", "Versiunile sunt snapshot-uri append-only. Istoria nu poate fi alterată"],
-              ["Real-time Awareness", "Notificări instant pentru job-uri, credite, feedback — prin Supabase Realtime + Desktop Notifications"],
-              ["Feedback Loop", "Feedback contextual automat după job-uri, colecție multiplă (FAB, inline, post-completion)"],
-            ]}
+            headers={[t("s14.principle"), t("s14.description")]}
+            rows={t("s14.principles_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Security Model</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s14.security_title")}</h3>
           <Table
-            headers={["Layer", "Implementare"]}
-            rows={[
-              ["Autentificare", "Supabase Auth cu email/parolă, verificare email, persistența sesiunii"],
-              ["Autorizare", "RLS policies per tabel; has_role() SECURITY DEFINER function"],
-              ["Roluri", "Tabel separat user_roles (admin, moderator, user) — NICIODATĂ pe profil"],
-              ["Edge Functions", "Service role key pentru operații server-side; CORS headers"],
-              ["Credit Protection", "Verificare server-side a balanței și deducere atomică înainte de execuția AI"],
-              ["Notification RLS", "Utilizatorii pot citi/modifica/șterge doar notificările proprii. INSERT doar din trigger-e server-side"],
-              ["Feedback RLS", "Utilizatorii citesc propriul feedback + cele publice. Adminii citesc tot și pot actualiza"],
-            ]}
+            headers={[t("s14.layer"), t("s14.implementation")]}
+            rows={t("s14.security_rows", { returnObjects: true }) as string[][]}
           />
         </Section>
 
         {/* ─── 15. CLONING & TEMPLATES ─── */}
-        <Section icon={Copy} title="15. Cloning & Template System">
-          <p>Template-urile sunt structuri de neuroni pre-configurate. Clonarea creează o copie deep cu urmărire a originii.</p>
+        <Section icon={Copy} title={t("s15.title")}>
+          <p>{t("s15.intro")}</p>
 
           <CodeBlock title="Template & Clone Schema">{`neuron_templates
 ├── id: uuid (PK)
 ├── name: text
 ├── description: text
 ├── category: text — 'research', 'analysis', 'report', etc.
-├── blocks_template: jsonb — array de definiții de blocuri
+├── blocks_template: jsonb — array of block definitions
 ├── default_tags: text[]
 ├── is_public: boolean
 ├── author_id: uuid
@@ -627,74 +479,45 @@ neuron_clones
 ├── clone_type: enum('full','template','fork')`}</CodeBlock>
 
           <Table
-            headers={["Operație", "Descriere"]}
-            rows={[
-              ["Create from Template", "Instanțiază neuron nou cu structură pre-definită de blocuri"],
-              ["Clone Neuron", "Copie deep a tuturor blocurilor + metadate, cu urmărire lineage"],
-              ["Fork Neuron", "Clone + creare link (derived_from) la sursă"],
-              ["Save as Template", "Extrage structura neuronului curent ca template reutilizabil"],
-            ]}
+            headers={[t("s15.operation"), t("s15.description")]}
+            rows={t("s15.ops_rows", { returnObjects: true }) as string[][]}
           />
         </Section>
 
         {/* ─── 16. PAGES & UI ─── */}
-        <Section icon={BookOpen} title="16. Application Pages & Flow">
-          <h3 className="text-base font-serif mt-2 text-foreground">Rute Publice</h3>
+        <Section icon={BookOpen} title={t("s16.title")}>
+          <h3 className="text-base font-serif mt-2 text-foreground">{t("s16.public_routes")}</h3>
           <Table
-            headers={["Rută", "Pagină", "Funcție"]}
+            headers={[t("s16.route"), t("s16.page"), t("s16.function")]}
+            rows={t("s16.public_rows", { returnObjects: true }) as string[][]}
+          />
+
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s16.protected_routes")}</h3>
+          <Table
+            headers={[t("s16.route"), t("s16.page"), t("s16.function")]}
+            rows={t("s16.protected_rows", { returnObjects: true }) as string[][]}
+          />
+
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s16.admin_routes")}</h3>
+          <Table
+            headers={[t("s16.route"), t("s16.page"), t("s16.function")]}
             rows={[
-              ["/", "Landing Page", "Marketing, pipeline vizual, testimoniale publice, CTA"],
-              ["/auth", "Autentificare", "Login/signup cu verificare email"],
-              ["/reset-password", "Reset Parolă", "Flux de resetare parolă"],
-              ["/architecture", "Documentație", "Această pagină de arhitectură"],
-              ["/links", "Links", "Director resurse externe, social proof, stats live"],
-              ["/u/:username", "Profil Public", "Pagină publică cu neuronii publici ai utilizatorului"],
+              ["/admin", "Admin Dashboard", t("s16.admin_desc")],
             ]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Rute Protejate (autentificare necesară)</h3>
-          <Table
-            headers={["Rută", "Pagină", "Funcție"]}
-            rows={[
-              ["/home", "Cockpit", "Dashboard principal: stats, acțiuni rapide, neuroni/jobs recenți, pipeline hint"],
-              ["/neurons", "Lista Neuroni", "Navigare, căutare, filtrare neuroni"],
-              ["/n/new", "Editor Neuron", "Creare neuron nou (3-panel layout)"],
-              ["/n/:number", "Editor Neuron", "Editare neuron existent cu preview, AI tools, versioning"],
-              ["/extractor", "Extractor", "Ingestie episoade, management transcripții, extracție AI"],
-              ["/services", "Catalog Servicii", "Navigare servicii AI pe clase (A/B/C)"],
-              ["/run/:serviceKey", "Run Service", "Execuție serviciu cu inputs, SSE streaming, credit tracking"],
-              ["/jobs", "Jobs", "Istoric execuții cu status, durată, rezultate expandabile, realtime"],
-              ["/credits", "Credits", "Balanță, ledger tranzacții, consum per serviciu, top-up"],
-              ["/intelligence", "Intelligence", "Statistici agregate: neuroni, episoade, categorii, activitate"],
-              ["/prompt-forge", "Prompt Forge", "Generator și tester de prompts"],
-              ["/profile-extractor", "Profile Extractor", "Extracție profil din conținut"],
-              ["/profile", "Profil & Setări", "Editare profil + preferințe notificări + quiet hours"],
-              ["/notifications", "Notificări", "Pagină dedicată: filtrare tip, mark all read, clear all"],
-              ["/feedback", "Feedback", "Formular inline integrat + istoric feedback propriu"],
-              ["/dashboard", "Dashboard", "Overview analitic"],
-            ]}
-          />
-
-          <h3 className="text-base font-serif mt-6 text-foreground">Rute Admin</h3>
-          <Table
-            headers={["Rută", "Pagină", "Funcție"]}
-            rows={[
-              ["/admin", "Admin Dashboard", "Overview, Utilizatori, Neuroni, Jobs, Servicii, Feedback — tabs"],
-            ]}
-          />
-
-          <h3 className="text-base font-serif mt-6 text-foreground">Navigație Globală (SiteHeader)</h3>
-          <p>Pipeline-ul cognitiv al utilizatorului reflectat în navigație:</p>
-          <CodeBlock title="Navigation Flow">{`Home (Cockpit) → Extractor (Ingestie) → Neuroni (Gestiune)
-→ Servicii (Execuție) → Jobs (Monitorizare) → Credits (Balanță)
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s16.nav_title")}</h3>
+          <p>{t("s16.nav_desc")}</p>
+          <CodeBlock title="Navigation Flow">{`Home (Cockpit) → Extractor (Ingestion) → Neurons (Management)
+→ Services (Execution) → Jobs (Monitoring) → Credits (Balance)
 
 Header includes:
-  - Badge balanță NEURONS (real-time via DB subscription)
+  - NEURONS balance badge (real-time via DB subscription)
   - NotificationBell (unread count, dropdown preview)
-  - Link Feedback
+  - Feedback link
   - ThemeToggle (light/dark)`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Neuron Editor Layout</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s16.editor_title")}</h3>
           <CodeBlock title="3-Panel Layout">{`┌─────────────────────────────────────────────────┐
 │  TopBar: title, status, #number, save indicator │
 ├──────┬──────────────────────┬───────────────────┤
@@ -712,33 +535,25 @@ Header includes:
         </Section>
 
         {/* ─── 17. SCALABILITY ─── */}
-        <Section icon={Search} title="17. Scalability & Indexing (100K+)">
+        <Section icon={Search} title={t("s17.title")}>
           <Table
-            headers={["Strategie", "Implementare", "Beneficiu"]}
-            rows={[
-              ["GIN FTS Index", "to_tsvector pe title + content", "Full-text search sub 100ms"],
-              ["Composite Indexes", "author+status, neuron+position", "Query-uri filtrate rapide"],
-              ["Materialized Views", "neuron_stats view per author", "Dashboard loads < 50ms"],
-              ["Range Partitioning", "neuron_number_ranges table", "Scrieri paralele AI fără coliziune"],
-              ["Connection Pooling", "PgBouncer built-in", "1000+ utilizatori concurenți"],
-              ["Edge Caching", "CDN pentru neuroni publici", "Citiri globale <200ms"],
-              ["Realtime Channels", "Supabase channels per user/table", "Notificări instant fără polling"],
-            ]}
+            headers={[t("s17.strategy"), t("s17.implementation"), t("s17.benefit")]}
+            rows={t("s17.rows", { returnObjects: true }) as string[][]}
           />
         </Section>
 
         {/* ─── 18. API ─── */}
-        <Section icon={Server} title="18. Edge Functions & API">
-          <p>Logica backend rulează ca Edge Functions pe Lovable Cloud. Toate endpoint-urile folosesc CORS headers și autentificare service role.</p>
+        <Section icon={Server} title={t("s18.title")}>
+          <p>{t("s18.intro")}</p>
 
           <Table
             headers={["Function", "Purpose", "Auth"]}
             rows={[
-              ["neuron-api", "CRUD pentru neuroni, blocuri, linkuri, versiuni, căutare", "JWT"],
-              ["run-service", "Job runner: credit reserve → AI execute → audit → save", "Anon key"],
-              ["extract-neurons", "Episode transcript → AI extraction → 3-8 neuroni", "Anon key"],
-              ["neuron-chat", "Chat AI contextual în editorul de neuroni", "JWT"],
-              ["extract-insights", "Extracție insight-uri din blocuri (legacy)", "JWT"],
+              ["neuron-api", t("s18.neuron_api"), "JWT"],
+              ["run-service", t("s18.run_service"), "Anon key"],
+              ["extract-neurons", t("s18.extract_neurons"), "Anon key"],
+              ["neuron-chat", t("s18.neuron_chat"), "JWT"],
+              ["extract-insights", t("s18.extract_insights"), "JWT"],
             ]}
           />
 
@@ -749,15 +564,15 @@ Models: google/gemini-3-flash-preview (default)
 Mode: Streaming (SSE) or non-streaming
 Rate limits: per-workspace, 429 on exceed, 402 on credits exhausted`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">Secrets Configurate</h3>
+          <h3 className="text-base font-serif mt-6 text-foreground">{t("s18.secrets_title")}</h3>
           <Table
-            headers={["Secret", "Scop"]}
+            headers={["Secret", t("s18.purpose")]}
             rows={[
-              ["SUPABASE_URL", "URL-ul proiectului Supabase"],
-              ["SUPABASE_ANON_KEY", "Cheie publică pentru client-side"],
-              ["SUPABASE_SERVICE_ROLE_KEY", "Cheie server-side pentru Edge Functions"],
-              ["SUPABASE_DB_URL", "Conexiune directă la PostgreSQL"],
-              ["LOVABLE_API_KEY", "Acces la AI Gateway (auto-provisioned)"],
+              ["SUPABASE_URL", t("s18.secret_url")],
+              ["SUPABASE_ANON_KEY", t("s18.secret_anon")],
+              ["SUPABASE_SERVICE_ROLE_KEY", t("s18.secret_service")],
+              ["SUPABASE_DB_URL", t("s18.secret_db")],
+              ["LOVABLE_API_KEY", t("s18.secret_ai")],
             ]}
           />
         </Section>
@@ -766,7 +581,7 @@ Rate limits: per-workspace, 429 on exceed, 402 on credits exhausted`}</CodeBlock
         <div className="border-t border-border pt-8 mt-16 text-center">
           <p className="text-xs text-muted-foreground">AI-IDEI · Knowledge Operating System v1.1</p>
           <p className="text-[10px] text-muted-foreground/50 mt-1">
-            Architecture Document — 18 secțiuni · {new Date().toLocaleDateString("ro-RO")}
+            {t("footer.doc_label")} — 18 {t("footer.sections")} · {new Date().toLocaleDateString()}
           </p>
           <div className="flex items-center justify-center gap-3 mt-4">
             <Button variant="outline" size="sm" onClick={() => navigate("/")} className="text-xs gap-1.5">
