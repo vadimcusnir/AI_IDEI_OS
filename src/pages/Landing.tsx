@@ -331,8 +331,8 @@ export default function Landing() {
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
             Începe gratuit cu 500 de credite. Încarcă primul tău conținut și extrage neuroni în mai puțin de 2 minute.
           </p>
-          <Button size="lg" onClick={() => navigate(user ? "/neurons" : "/auth")} className="gap-2 px-10">
-            {user ? "Mergi la Neuroni" : "Creează cont gratuit"}
+          <Button size="lg" onClick={() => navigate(user ? "/home" : "/auth")} className="gap-2 px-10">
+            {user ? "Mergi la Dashboard" : "Creează cont gratuit"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </motion.div>
