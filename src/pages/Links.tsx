@@ -8,7 +8,8 @@ import {
   BookOpen, Mail, MessageCircle, Users, Podcast,
   GraduationCap, Crown, Star, Quote, Handshake,
   Send, Radio, Newspaper, LayoutDashboard, Coins,
-  ClipboardList, BarChart3, Github,
+  ClipboardList, BarChart3, Github, DollarSign, ShoppingCart,
+  Briefcase, Flame,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
