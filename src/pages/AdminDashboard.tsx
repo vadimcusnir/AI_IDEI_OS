@@ -641,7 +641,7 @@ export default function AdminDashboard() {
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <ScrollText className="h-3 w-3" /> Operational Logs — Tranzacții & Erori
+                  <ScrollText className="h-3 w-3" /> Operational Logs — Transactions & Errors
                 </h3>
                 <Button variant="outline" size="sm" className="h-7 text-xs" onClick={loadLogs}>
                   <RefreshCw className="h-3 w-3 mr-1" /> Refresh
