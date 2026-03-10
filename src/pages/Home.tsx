@@ -30,29 +30,29 @@ interface RecentJob {
 
 const QUICK_ACTIONS = [
   {
-    label: "Încarcă conținut",
-    desc: "Transcripții, podcasturi, texte",
+    label: "Upload Content",
+    desc: "Transcripts, podcasts, texts",
     icon: Upload,
     path: "/extractor",
     gradient: "from-primary/15 to-primary/5",
   },
   {
-    label: "Neuron nou",
-    desc: "Creează un neuron manual",
+    label: "New Neuron",
+    desc: "Create a neuron manually",
     icon: Plus,
     path: "/n/new",
     gradient: "from-primary/10 to-accent/5",
   },
   {
-    label: "Rulează serviciu",
-    desc: "Generează deliverables AI",
+    label: "Run Service",
+    desc: "Generate AI deliverables",
     icon: Sparkles,
     path: "/services",
     gradient: "from-accent/15 to-primary/5",
   },
   {
-    label: "Vezi joburi",
-    desc: "Monitorizează execuțiile",
+    label: "View Jobs",
+    desc: "Monitor executions",
     icon: Briefcase,
     path: "/jobs",
     gradient: "from-muted to-card",
