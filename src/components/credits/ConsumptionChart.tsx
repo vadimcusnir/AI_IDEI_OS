@@ -54,7 +54,7 @@ export function ConsumptionChart({ transactions }: ConsumptionChartProps) {
     <div className="bg-card border border-border rounded-xl p-5 mb-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Activitate 30 zile
+          30-Day Activity
         </h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
