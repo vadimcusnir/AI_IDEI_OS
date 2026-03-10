@@ -34,6 +34,8 @@ interface NeuronTopBarProps {
   onVisibilityChange: (visibility: NeuronVisibility) => void;
   onTagsChange: (tags: string[]) => void;
   onRunAll: () => void;
+  onClone?: () => Promise<any>;
+  onFork?: () => Promise<any>;
 }
 
 const statusConfig: Record<NeuronStatus, { label: string; className: string }> = {
