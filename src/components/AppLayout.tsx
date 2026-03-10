@@ -19,6 +19,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <header className="sticky top-0 z-40 h-10 flex items-center border-b border-border bg-background/80 backdrop-blur-md px-3 gap-2">
             <SidebarTrigger />
             <div className="flex-1" />
+            <GlobalSearch />
           </header>
           <main className="flex-1 flex flex-col">
             {children}
