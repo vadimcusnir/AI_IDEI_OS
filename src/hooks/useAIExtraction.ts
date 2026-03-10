@@ -22,13 +22,16 @@ export function useAIExtraction() {
   const extract = useCallback(async (
     action: string,
     blocks: Block[],
-    neuronTitle: string
+    neuronTitle: string,
+    additionalContext?: string // optional: transcript/episode content as source
   ): Promise<string | null> => {
     if (isExtracting) return null;
 
     const contentBlocks = blocks.filter(b => b.content?.trim());
-    if (contentBlocks.length === 0) {
-      toast.error("No content to analyze. Add some text first.");
+    
+    // Allow extraction even with empty blocks if we have additional context
+    if (contentBlocks.length === 0 && !additionalContext?.trim()) {
+      toast.error("No content to analyze. Add some text or select a source transcript.");
       return null;
     }
 
@@ -40,6 +43,16 @@ export function useAIExtraction() {
     toast.info(`Running ${label}...`);
 
     try {
+      // Build blocks array: include neuron blocks + additional context if provided
+      const blocksToSend = contentBlocks.map(b => ({ type: b.type, content: b.content }));
+      
+      if (additionalContext?.trim()) {
+        blocksToSend.unshift({
+          type: "source_transcript",
+          content: additionalContext.trim(),
+        });
+      }
+
       const resp = await fetch(AI_URL, {
         method: "POST",
         headers: {
@@ -48,7 +61,7 @@ export function useAIExtraction() {
         },
         body: JSON.stringify({
           action,
-          blocks: contentBlocks.map(b => ({ type: b.type, content: b.content })),
+          blocks: blocksToSend,
           neuron_title: neuronTitle,
         }),
       });
