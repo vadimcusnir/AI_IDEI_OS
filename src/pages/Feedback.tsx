@@ -223,7 +223,7 @@ export default function Feedback() {
               <span className="text-[10px] text-muted-foreground">{message.length}/2000</span>
               <Button onClick={handleSubmit} disabled={sending} size="sm" className="gap-1.5">
                 {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-                Trimite
+                Submit
               </Button>
             </div>
           </div>
