@@ -33,6 +33,8 @@ export default function NeuronEditor() {
     addLink, removeLink, createVersion,
   } = useNeuronGraph(neuron?.id);
 
+  const { isExtracting, extractionResult, activeAction, extract, clearResult } = useAIExtraction();
+
   const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(false);
