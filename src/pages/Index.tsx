@@ -18,7 +18,6 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
-import { ExportImportPanel } from "@/components/ExportImportPanel";
 import {
   DropdownMenu,
   DropdownMenuContent,
