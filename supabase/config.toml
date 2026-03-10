@@ -23,3 +23,9 @@ verify_jwt = false
 
 [functions.send-push]
 verify_jwt = false
+
+[functions.generate-entities]
+verify_jwt = false
+
+[functions.sitemap]
+verify_jwt = false

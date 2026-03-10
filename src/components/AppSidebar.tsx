@@ -54,7 +54,8 @@ const KNOWLEDGE_NAV = [
   { label: "Formulas", to: "/formulas", icon: FlaskConical },
   { label: "Contradictions", to: "/contradictions", icon: AlertTriangle },
   { label: "Applications", to: "/applications", icon: Layers },
-  { label: "Profiles", to: "/media/profiles", icon: Users },
+  { label: "Profiles", to: "/profiles", icon: Users },
+  { label: "Topics", to: "/topics", icon: Brain },
 ];
 
 export function AppSidebar() {
