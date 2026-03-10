@@ -10,6 +10,7 @@ import {
   FileAudio, Film, Type, Globe, Loader2, Brain, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface Episode {
   id: string;
