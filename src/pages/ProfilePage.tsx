@@ -254,7 +254,7 @@ export default function ProfilePage() {
                   <div className="ml-6 space-y-2">
                     <PrefToggle
                       icon={Briefcase}
-                      label="Joburi finalizate / eșuate"
+                      label="Completed / failed jobs"
                       checked={prefs.push_jobs}
                       onChange={(v) => updatePrefs({ push_jobs: v })}
                     />
