@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
 import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
+import { AdminKnowledgeGraphTab } from "@/components/admin/AdminKnowledgeGraphTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
