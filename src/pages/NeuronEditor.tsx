@@ -98,15 +98,8 @@ export default function NeuronEditor() {
   const handleInsertAIResult = useCallback(async (content: string) => {
     if (!blocks.length) return;
     const lastBlockId = blocks[blocks.length - 1].id;
-    await handleAddBlock(lastBlockId, "markdown");
-    // Find the newly added block and set its content
-    setTimeout(() => {
-      const newBlocks = document.querySelectorAll('[data-block-id]');
-      if (newBlocks.length > 0) {
-        handleBlockChange(blocks[blocks.length]?.id || lastBlockId, content);
-      }
-    }, 100);
-  }, [blocks, handleAddBlock, handleBlockChange]);
+    await handleAddBlock(lastBlockId, "markdown", content);
+  }, [blocks, handleAddBlock]);
 
   const neuronScore = useMemo(() => {
     const contentLength = blocks.reduce((sum, b) => sum + b.content.length, 0);
