@@ -297,9 +297,9 @@ export default function ProfilePage() {
                 <div className="flex gap-1.5 mb-3 ml-6">
                   {(
                     [
-                      { key: "none", label: "Dezactivat" },
-                      { key: "daily", label: "Zilnic" },
-                      { key: "weekly", label: "Săptămânal" },
+                      { key: "none", label: "Disabled" },
+                      { key: "daily", label: "Daily" },
+                      { key: "weekly", label: "Weekly" },
                     ] as const
                   ).map((opt) => (
                     <button
