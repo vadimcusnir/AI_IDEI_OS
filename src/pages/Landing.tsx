@@ -65,6 +65,11 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="AI-IDEI — Knowledge Extraction Operating System"
+        description="Transform expertise into digital assets. Upload content once, generate dozens of professional outputs automatically."
+        canonical="https://ai-idei-os.lovable.app"
+      />
       {/* Nav */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
