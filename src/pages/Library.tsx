@@ -238,7 +238,7 @@ export default function Library() {
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6"
-                        onClick={(e) => { e.stopPropagation(); setPreviewArtifact(artifact); }}
+                        onClick={(e) => { e.stopPropagation(); navigate(`/library/${artifact.id}`); }}
                       >
                         <Eye className="h-3 w-3" />
                       </Button>
