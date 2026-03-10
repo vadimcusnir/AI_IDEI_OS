@@ -9,6 +9,18 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const LANG_OPTIONS: { code: string; label: string; flag: string }[] = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "ro", label: "Română", flag: "🇷🇴" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+];
 
 const NAV_ITEMS = [
   { labelKey: "navigation:home", to: "/home", icon: Home, auth: true },
