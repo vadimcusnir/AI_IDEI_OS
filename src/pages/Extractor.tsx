@@ -104,7 +104,24 @@ export default function Extractor() {
     setCreating(false);
   };
 
-  const handleExtractNeurons = async (episode: Episode) => {
+  const handleDeleteEpisode = async (id: string) => {
+    setDeletingId(id);
+    const { error } = await supabase.from("episodes").delete().eq("id", id);
+    if (error) {
+      toast.error("Nu s-a putut șterge episodul");
+    } else {
+      toast.success("Episod șters");
+      setEpisodes(prev => prev.filter(e => e.id !== id));
+      if (expandedId === id) setExpandedId(null);
+    }
+    setDeletingId(null);
+  };
+
+  const copyTranscript = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Transcript copiat în clipboard");
+  };
+
     if (!user || !episode.transcript?.trim()) {
       toast.error("Episodul nu are conținut transcript pentru extracție.");
       return;
