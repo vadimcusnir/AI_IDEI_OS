@@ -48,6 +48,19 @@ export default function Notifications() {
     if (notif.link) navigate(notif.link);
   };
 
+  const { isSupported, isSubscribed, subscribe, unsubscribe, loading: pushLoading } = usePushSubscription();
+
+  const handleTogglePush = async () => {
+    if (isSubscribed) {
+      await unsubscribe();
+      toast.success("Notificările push au fost dezactivate.");
+    } else {
+      const ok = await subscribe();
+      if (ok) toast.success("Notificările push au fost activate!");
+      else toast.error("Nu s-au putut activa notificările push.");
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
       {/* Header */}
