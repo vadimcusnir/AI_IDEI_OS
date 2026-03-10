@@ -27,6 +27,7 @@ export default function Index() {
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  const [showExportImport, setShowExportImport] = useState(false);
 
   // Search
   const [searchQuery, setSearchQuery] = useState("");
