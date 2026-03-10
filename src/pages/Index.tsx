@@ -295,6 +295,11 @@ export default function Index() {
       return (
         <div
           key={n.id}
+          draggable
+          onDragStart={() => {
+            // Store neuron id for folder drop
+            (window as any).__dragNeuronId = n.id;
+          }}
           onClick={() => navigate(`/n/${n.number}`)}
           className={cn(
             "group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all",
