@@ -328,10 +328,10 @@ export default function AdminDashboard() {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-4">
             <TabsTrigger value="overview" className="text-xs">Overview</TabsTrigger>
-            <TabsTrigger value="users" className="text-xs">Utilizatori</TabsTrigger>
-            <TabsTrigger value="neurons" className="text-xs">Neuroni</TabsTrigger>
+            <TabsTrigger value="users" className="text-xs">Users</TabsTrigger>
+            <TabsTrigger value="neurons" className="text-xs">Neurons</TabsTrigger>
             <TabsTrigger value="jobs" className="text-xs">Jobs</TabsTrigger>
-            <TabsTrigger value="services" className="text-xs">Servicii</TabsTrigger>
+            <TabsTrigger value="services" className="text-xs">Services</TabsTrigger>
             <TabsTrigger value="logs" className="text-xs gap-1">
               <ScrollText className="h-3 w-3" /> Logs
             </TabsTrigger>
