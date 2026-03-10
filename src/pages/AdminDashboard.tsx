@@ -39,7 +39,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (loading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     if (!isAdmin) { navigate("/"); return; }
 
     const fetchData = async () => {
