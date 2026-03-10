@@ -38,7 +38,7 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       searchParams.delete("session_id");
       setSearchParams(searchParams, { replace: true });
     } else if (topup === "cancelled") {
-      toast.info("Plata a fost anulată.");
+      toast.info("Payment was cancelled.");
       searchParams.delete("topup");
       setSearchParams(searchParams, { replace: true });
     }
