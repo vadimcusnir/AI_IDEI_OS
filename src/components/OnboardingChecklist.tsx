@@ -44,8 +44,8 @@ const STEPS: Step[] = [
   {
     id: "service",
     icon: Sparkles,
-    label: "Rulează un serviciu AI",
-    description: "Folosește serviciile AI pentru rezultate operaționale",
+    label: "Run an AI Service",
+    description: "Use AI services for operational results",
     route: "/services",
     checkFn: async () => {
       const { count } = await supabase.from("neuron_jobs").select("*", { count: "exact", head: true });
