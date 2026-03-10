@@ -86,4 +86,4 @@ export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimo
       </div>
     </section>
   );
-}
+});
