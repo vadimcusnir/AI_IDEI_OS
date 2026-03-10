@@ -5,7 +5,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
-import Index from "./pages/Index";
+import { AppLayout } from "@/components/AppLayout";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+
+import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import NeuronEditor from "./pages/NeuronEditor";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -21,6 +24,7 @@ import Dashboard from "./pages/Dashboard";
 import PublicProfile from "./pages/PublicProfile";
 import PromptForge from "./pages/PromptForge";
 import ProfileExtractor from "./pages/ProfileExtractor";
+import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,23 +38,28 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
+              {/* Public routes */}
+              <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<Auth />} />
-              <Route path="/n/new" element={<NeuronEditor />} />
-              <Route path="/n/:number" element={<NeuronEditor />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/architecture" element={<Architecture />} />
               <Route path="/links" element={<Links />} />
-              <Route path="/extractor" element={<Extractor />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/run/:serviceKey" element={<RunService />} />
-              <Route path="/jobs" element={<Jobs />} />
-              <Route path="/credits" element={<Credits />} />
-              <Route path="/intelligence" element={<Intelligence />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/architecture" element={<Architecture />} />
               <Route path="/u/:username" element={<PublicProfile />} />
-              <Route path="/prompt-forge" element={<PromptForge />} />
-              <Route path="/profile-extractor" element={<ProfileExtractor />} />
+
+              {/* Protected routes with AppLayout */}
+              <Route path="/neurons" element={<ProtectedRoute><AppLayout><Index /></AppLayout></ProtectedRoute>} />
+              <Route path="/n/new" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
+              <Route path="/n/:number" element={<ProtectedRoute><NeuronEditor /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><AppLayout><Dashboard /></AppLayout></ProtectedRoute>} />
+              <Route path="/extractor" element={<ProtectedRoute><AppLayout><Extractor /></AppLayout></ProtectedRoute>} />
+              <Route path="/services" element={<ProtectedRoute><AppLayout><Services /></AppLayout></ProtectedRoute>} />
+              <Route path="/run/:serviceKey" element={<ProtectedRoute><AppLayout><RunService /></AppLayout></ProtectedRoute>} />
+              <Route path="/jobs" element={<ProtectedRoute><AppLayout><Jobs /></AppLayout></ProtectedRoute>} />
+              <Route path="/credits" element={<ProtectedRoute><AppLayout><Credits /></AppLayout></ProtectedRoute>} />
+              <Route path="/intelligence" element={<ProtectedRoute><AppLayout><Intelligence /></AppLayout></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute><AppLayout><AdminDashboard /></AppLayout></ProtectedRoute>} />
+              <Route path="/prompt-forge" element={<ProtectedRoute><AppLayout><PromptForge /></AppLayout></ProtectedRoute>} />
+              <Route path="/profile-extractor" element={<ProtectedRoute><AppLayout><ProfileExtractor /></AppLayout></ProtectedRoute>} />
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
