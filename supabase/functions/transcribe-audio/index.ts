@@ -6,6 +6,23 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// ── Rate limiting ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 5; // per hour
+const RATE_WINDOW = 3600_000;
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(userId);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -26,43 +43,64 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    // Validate caller
+    // ── Authenticate via JWT (strict) ──
     const authHeader = req.headers.get("authorization") || "";
-    const token = authHeader.replace("Bearer ", "");
-    let callerId: string | null = null;
-
-    if (token && token !== anonKey) {
-      const userClient = createClient(supabaseUrl, anonKey, {
-        global: { headers: { Authorization: `Bearer ${token}` } },
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
-      const { data: { user: caller } } = await userClient.auth.getUser();
-      if (!caller) {
-        return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      callerId = caller.id;
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
+    if (authError || !caller) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const callerId = caller.id;
+
+    // ── Rate limit check ──
+    if (!checkRateLimit(callerId)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded (5 transcriptions/hour)" }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const { episode_id, file_path, language } = await req.json();
 
-    if (!episode_id || !file_path) {
+    if (!episode_id || typeof episode_id !== "string") {
       return new Response(
-        JSON.stringify({ error: "Missing episode_id or file_path" }),
+        JSON.stringify({ error: "Missing or invalid episode_id" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    if (!file_path || typeof file_path !== "string") {
+      return new Response(
+        JSON.stringify({ error: "Missing or invalid file_path" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    if (language && typeof language !== "string") {
+      return new Response(
+        JSON.stringify({ error: "Invalid language parameter" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Fetch the episode
+    // Fetch the episode — verify ownership
     const { data: episode, error: epErr } = await supabase
       .from("episodes")
       .select("*")
       .eq("id", episode_id)
+      .eq("author_id", callerId)
       .single();
 
     if (!episode || epErr) {
       return new Response(
-        JSON.stringify({ error: "Episode not found" }),
+        JSON.stringify({ error: "Episode not found or access denied" }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -131,7 +169,6 @@ Deno.serve(async (req) => {
     let srtContent = "";
     if (transcription.words && transcription.words.length > 0) {
       const words = transcription.words;
-      // Group words into ~10-word subtitle blocks
       const blockSize = 10;
       let blockIndex = 1;
       for (let i = 0; i < words.length; i += blockSize) {
@@ -146,7 +183,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Calculate duration from words if available
+    // Calculate duration
     let durationSeconds: number | null = null;
     if (transcription.words && transcription.words.length > 0) {
       const lastWord = transcription.words[transcription.words.length - 1];
