@@ -649,7 +649,7 @@ export default function AdminDashboard() {
               </div>
 
               {logs.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-8">Nu există loguri recente.</p>
+                <p className="text-xs text-muted-foreground text-center py-8">No recent logs.</p>
               ) : (
                 <div className="space-y-0.5 max-h-[600px] overflow-y-auto font-mono text-[11px]">
                   {logs.map(log => (
