@@ -190,7 +190,49 @@ function LinkCard({ item, onClick }: { item: LinkItem; onClick: () => void }) {
   );
 }
 
-function SocialProofBlock() {
+function MonetizationBlock() {
+  const MONETIZATION_ITEMS = [
+    { title: "Curs: Codul Cușnir Masterclass", description: "Toate formulele de copywriting într-un singur curs", icon: GraduationCap, priceUsd: "$97", priceNeurons: "500 NEURONS", color: "text-ai-accent", badge: "Curs" },
+    { title: "Consultanță AI-Powered", description: "Sesiune 1:1 de knowledge extraction cu AI", icon: Briefcase, priceUsd: "$149", priceNeurons: "750 NEURONS", color: "text-primary", badge: "Service" },
+    { title: "Pachet Neuroni Premium", description: "100 neuroni structurați din conținutul tău", icon: Flame, priceUsd: "$49", priceNeurons: "250 NEURONS", color: "text-status-validated", badge: "Pachet" },
+    { title: "Knowledge Audit", description: "Analiză completă a cunoștințelor tale cu raport detaliat", icon: BarChart3, priceUsd: "$199", priceNeurons: "1000 NEURONS", color: "text-destructive", badge: "Service" },
+  ];
+
+  return (
+    <div className="mb-8">
+      <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
+        Monetizare
+      </h2>
+      <div className="space-y-2">
+        {MONETIZATION_ITEMS.map((item, i) => (
+          <div
+            key={i}
+            className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-border bg-card hover:border-primary/25 hover:shadow-md hover:shadow-primary/5 transition-all group cursor-pointer"
+          >
+            <div className="h-9 w-9 rounded-lg flex items-center justify-center shrink-0 bg-muted group-hover:bg-primary/10 transition-colors">
+              <item.icon className={cn("h-4 w-4 transition-colors", item.color)} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium group-hover:text-primary transition-colors">{item.title}</span>
+                <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+                  {item.badge}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">{item.description}</p>
+            </div>
+            <div className="flex flex-col items-end shrink-0 gap-0.5">
+              <span className="text-sm font-bold text-primary">{item.priceUsd}</span>
+              <span className="text-[9px] text-muted-foreground/60">{item.priceNeurons}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
   return (
     <div className="mb-8">
       <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
