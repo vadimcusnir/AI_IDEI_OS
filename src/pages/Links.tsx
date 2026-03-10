@@ -267,6 +267,9 @@ export default function Links() {
           </div>
         ))}
 
+        {/* Monetization */}
+        <MonetizationBlock />
+
         {/* Social Proof */}
         <SocialProofBlock />
 
