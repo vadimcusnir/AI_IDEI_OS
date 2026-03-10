@@ -463,7 +463,7 @@ export default function AdminDashboard() {
                                 className="h-7 text-xs w-24"
                               />
                               <Input
-                                placeholder="Descriere tranzacție"
+                                placeholder="Transaction description"
                                 value={adjustDescription}
                                 onChange={e => setAdjustDescription(e.target.value)}
                                 className="h-7 text-xs flex-1"
