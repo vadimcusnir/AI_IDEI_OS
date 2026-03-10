@@ -616,7 +616,7 @@ export default function AdminDashboard() {
                         <span className={cn(
                           "text-[9px] font-mono px-1.5 py-0.5 rounded",
                           s.is_active ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-                        )}>{s.is_active ? "ACTIV" : "INACTIV"}</span>
+                        )}>{s.is_active ? "ACTIVE" : "INACTIVE"}</span>
                       </TableCell>
                       <TableCell>
                         <Button
