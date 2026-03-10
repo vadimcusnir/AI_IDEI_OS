@@ -10,6 +10,7 @@ import {
   FileAudio, Film, Type, Globe, Loader2, Brain, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface Episode {
   id: string;
@@ -123,10 +124,13 @@ export default function Extractor() {
             Ingestion Layer
           </span>
         </div>
-        <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowCreateModal(true)}>
-          <Upload className="h-3.5 w-3.5" />
-          New Episode
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowCreateModal(true)}>
+            <Upload className="h-3.5 w-3.5" />
+            New Episode
+          </Button>
+        </div>
       </div>
 
       {/* Main */}

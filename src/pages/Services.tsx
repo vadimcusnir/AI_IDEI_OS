@@ -11,6 +11,7 @@ import {
   FileText, GraduationCap, Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface Service {
   id: string;
@@ -107,6 +108,7 @@ export default function Services() {
             Execution Layer
           </span>
         </div>
+        <ThemeToggle />
       </div>
 
       <div className="max-w-3xl mx-auto px-6 py-8">

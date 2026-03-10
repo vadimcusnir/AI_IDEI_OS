@@ -1,14 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
-import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork, Link2, Upload, Sparkles, ClipboardList, Coins, BarChart3, Sun, Moon } from "lucide-react";
+import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork, Link2, Upload, Sparkles, ClipboardList, Coins, BarChart3 } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface NeuronListItem {
   id: number;
@@ -21,7 +21,6 @@ interface NeuronListItem {
 export default function Index() {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
-  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -140,13 +139,7 @@ export default function Index() {
             <Link2 className="h-3.5 w-3.5" />
             Links
           </Button>
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="h-8 w-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            title="Toggle theme"
-          >
-            {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-          </button>
+          <ThemeToggle />
         </div>
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
           <Plus className="h-3.5 w-3.5" />
