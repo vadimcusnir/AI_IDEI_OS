@@ -526,6 +526,8 @@ export default function Index() {
 
         {/* Main content */}
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
+        {/* Onboarding */}
+        <OnboardingChecklist />
         {/* Mini Hero */}
         <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-primary/5 via-card to-ai-accent/5 p-5 mb-6">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
