@@ -30,29 +30,29 @@ interface RecentJob {
 
 const QUICK_ACTIONS = [
   {
-    label: "Încarcă conținut",
-    desc: "Transcripții, podcasturi, texte",
+    label: "Upload Content",
+    desc: "Transcripts, podcasts, texts",
     icon: Upload,
     path: "/extractor",
     gradient: "from-primary/15 to-primary/5",
   },
   {
-    label: "Neuron nou",
-    desc: "Creează un neuron manual",
+    label: "New Neuron",
+    desc: "Create a neuron manually",
     icon: Plus,
     path: "/n/new",
     gradient: "from-primary/10 to-accent/5",
   },
   {
-    label: "Rulează serviciu",
-    desc: "Generează deliverables AI",
+    label: "Run Service",
+    desc: "Generate AI deliverables",
     icon: Sparkles,
     path: "/services",
     gradient: "from-accent/15 to-primary/5",
   },
   {
-    label: "Vezi joburi",
-    desc: "Monitorizează execuțiile",
+    label: "View Jobs",
+    desc: "Monitor executions",
     icon: Briefcase,
     path: "/jobs",
     gradient: "from-muted to-card",
@@ -110,20 +110,20 @@ export default function Home() {
         {/* Welcome header */}
         <div className="mb-6">
           <h1 className="text-xl sm:text-2xl font-serif font-bold mb-1">
-            {isNewUser ? "Bine ai venit în AI-IDEI" : "Cockpit"}
+            {isNewUser ? "Welcome to AI-IDEI" : "Cockpit"}
           </h1>
           <p className="text-sm text-muted-foreground">
             {isNewUser
-              ? "Platforma ta de capitalizare a expertizei. Începe prin a încărca primul conținut."
-              : "Centrul tău de comandă pentru pipeline-ul de cunoaștere."
+              ? "Your expertise capitalization platform. Start by uploading your first content."
+              : "Your command center for the knowledge pipeline."
             }
           </p>
         </div>
 
         {/* Stats row */}
         <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
-          <StatCard icon={Brain} label="Neuroni" value={totalNeurons} />
-          <StatCard icon={FileText} label="Episoade" value={totalEpisodes} />
+          <StatCard icon={Brain} label="Neurons" value={totalNeurons} />
+          <StatCard icon={FileText} label="Episodes" value={totalEpisodes} />
           <StatCard icon={Zap} label="Jobs" value={totalJobs} />
           <div className={cn(
             "rounded-xl p-3 border transition-colors",
@@ -168,12 +168,12 @@ export default function Home() {
         {isNewUser && (
           <div className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center">
             <Upload className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h2 className="text-base font-serif font-bold mb-1.5">Primul pas: încarcă conținut</h2>
+            <h2 className="text-base font-serif font-bold mb-1.5">First step: upload content</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Încarcă un podcast, un text sau un video. Sistemul va extrage automat neuroni de cunoaștere.
+              Upload a podcast, text, or video. The system will automatically extract knowledge neurons.
             </p>
             <Button onClick={() => navigate("/extractor")} size="sm" className="gap-2">
-              Deschide Extractorul
+              Open Extractor
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
@@ -187,14 +187,14 @@ export default function Home() {
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Brain className="h-3 w-3" /> Neuroni recenți
+                  <Brain className="h-3 w-3" /> Recent Neurons
                 </h3>
                 <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/neurons")}>
-                  Toți <ArrowRight className="h-3 w-3 ml-1" />
+                  All <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </div>
               {neurons.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-4 text-center">Niciun neuron încă.</p>
+                <p className="text-xs text-muted-foreground py-4 text-center">No neurons yet.</p>
               ) : (
                 <div className="space-y-1">
                   {neurons.map(n => (
@@ -219,14 +219,14 @@ export default function Home() {
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Clock className="h-3 w-3" /> Joburi recente
+                  <Clock className="h-3 w-3" /> Recent Jobs
                 </h3>
                 <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/jobs")}>
-                  Toate <ArrowRight className="h-3 w-3 ml-1" />
+                  All <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </div>
               {jobs.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-4 text-center">Niciun job rulat.</p>
+                <p className="text-xs text-muted-foreground py-4 text-center">No jobs run yet.</p>
               ) : (
                 <div className="space-y-1">
                   {jobs.map(job => (

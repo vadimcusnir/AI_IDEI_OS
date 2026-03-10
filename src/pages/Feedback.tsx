@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { ro } from "date-fns/locale";
 import { toast } from "sonner";
 
 interface FeedbackItem {
@@ -31,24 +30,24 @@ interface FeedbackItem {
 const FEEDBACK_TYPES = [
   { key: "feedback", label: "Feedback", icon: ThumbsUp, color: "text-primary" },
   { key: "testimonial", label: "Testimonial", icon: Quote, color: "text-emerald-500" },
-  { key: "proposal", label: "Propunere", icon: Lightbulb, color: "text-amber-500" },
-  { key: "complaint", label: "Plângere", icon: AlertTriangle, color: "text-destructive" },
-  { key: "review", label: "Recenzie", icon: Star, color: "text-primary" },
+  { key: "proposal", label: "Proposal", icon: Lightbulb, color: "text-amber-500" },
+  { key: "complaint", label: "Complaint", icon: AlertTriangle, color: "text-destructive" },
+  { key: "review", label: "Review", icon: Star, color: "text-primary" },
 ] as const;
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   feedback: { icon: ThumbsUp, color: "text-primary", label: "Feedback" },
   testimonial: { icon: Quote, color: "text-emerald-500", label: "Testimonial" },
-  review: { icon: Star, color: "text-amber-500", label: "Recenzie" },
-  proposal: { icon: Lightbulb, color: "text-amber-500", label: "Propunere" },
-  complaint: { icon: AlertTriangle, color: "text-destructive", label: "Plângere" },
+  review: { icon: Star, color: "text-amber-500", label: "Review" },
+  proposal: { icon: Lightbulb, color: "text-amber-500", label: "Proposal" },
+  complaint: { icon: AlertTriangle, color: "text-destructive", label: "Complaint" },
 };
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  pending: { label: "În așteptare", color: "bg-muted text-muted-foreground" },
-  reviewed: { label: "Revizuit", color: "bg-primary/10 text-primary" },
-  resolved: { label: "Rezolvat", color: "bg-emerald-500/10 text-emerald-600" },
-  published: { label: "Publicat", color: "bg-amber-500/10 text-amber-600" },
+  pending: { label: "Pending", color: "bg-muted text-muted-foreground" },
+  reviewed: { label: "Reviewed", color: "bg-primary/10 text-primary" },
+  resolved: { label: "Resolved", color: "bg-emerald-500/10 text-emerald-600" },
+  published: { label: "Published", color: "bg-amber-500/10 text-amber-600" },
 };
 
 export default function Feedback() {
@@ -86,11 +85,11 @@ export default function Feedback() {
   const handleSubmit = async () => {
     if (!user) return;
     if (!title.trim() || !message.trim()) {
-      toast.error("Completează titlul și mesajul.");
+      toast.error("Please fill in the title and message.");
       return;
     }
     if (needsRating && !rating) {
-      toast.error("Selectează un rating.");
+      toast.error("Please select a rating.");
       return;
     }
     setSending(true);
@@ -104,9 +103,9 @@ export default function Feedback() {
     } as any);
 
     if (error) {
-      toast.error("Eroare: " + error.message);
+      toast.error("Error: " + error.message);
     } else {
-      toast.success("Mulțumim pentru feedback! 🙏");
+      toast.success("Thank you for your feedback! 🙏");
       setTitle("");
       setMessage("");
       setRating(null);
@@ -135,7 +134,7 @@ export default function Feedback() {
           Feedback
         </h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          {stats.total} trimise · {stats.pending} în așteptare · {stats.responded} cu răspuns
+          {stats.total} submitted · {stats.pending} pending · {stats.responded} with response
         </p>
       </div>
 
@@ -147,7 +146,7 @@ export default function Feedback() {
         >
           <span className="text-sm font-medium flex items-center gap-2">
             <Send className="h-4 w-4 text-primary" />
-            Trimite feedback nou
+            Submit New Feedback
           </span>
           <ChevronUp className={cn(
             "h-4 w-4 text-muted-foreground transition-transform",
@@ -201,7 +200,7 @@ export default function Feedback() {
             )}
 
             <Input
-              placeholder="Titlu scurt"
+              placeholder="Short title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={200}
@@ -209,10 +208,10 @@ export default function Feedback() {
             />
             <Textarea
               placeholder={
-                type === "testimonial" ? "Povestește experiența ta cu AI-IDEI..." :
-                type === "complaint" ? "Descrie problema întâmpinată..." :
-                type === "proposal" ? "Ce funcționalitate ai vrea să vezi?" :
-                "Scrie feedback-ul tău..."
+                type === "testimonial" ? "Share your experience with AI-IDEI..." :
+                type === "complaint" ? "Describe the issue you encountered..." :
+                type === "proposal" ? "What feature would you like to see?" :
+                "Write your feedback..."
               }
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -224,7 +223,7 @@ export default function Feedback() {
               <span className="text-[10px] text-muted-foreground">{message.length}/2000</span>
               <Button onClick={handleSubmit} disabled={sending} size="sm" className="gap-1.5">
                 {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-                Trimite
+                Submit
               </Button>
             </div>
           </div>
@@ -235,7 +234,7 @@ export default function Feedback() {
       <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
         <Filter className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
         {[
-          { key: "all", label: "Toate" },
+          { key: "all", label: "All" },
           ...Object.entries(TYPE_CONFIG).map(([k, v]) => ({ key: k, label: v.label })),
         ].map((f) => (
           <button
@@ -262,7 +261,7 @@ export default function Feedback() {
         <div className="text-center py-16">
           <MessageCircle className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">
-            {items.length === 0 ? "Niciun feedback trimis încă — folosește formularul de sus!" : "Niciun rezultat pentru filtrul selectat"}
+            {items.length === 0 ? "No feedback submitted yet — use the form above!" : "No results for the selected filter"}
           </p>
         </div>
       ) : (
@@ -271,7 +270,7 @@ export default function Feedback() {
             const config = TYPE_CONFIG[item.type] || TYPE_CONFIG.feedback;
             const statusCfg = STATUS_CONFIG[item.status] || STATUS_CONFIG.pending;
             const Icon = config.icon;
-            const timeAgo = formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ro });
+            const timeAgo = formatDistanceToNow(new Date(item.created_at), { addSuffix: true });
 
             return (
               <div key={item.id} className="bg-card border border-border rounded-xl p-4">
@@ -305,7 +304,7 @@ export default function Feedback() {
                     {item.admin_response && (
                       <div className="bg-primary/5 border border-primary/10 rounded-lg p-3 mt-2">
                         <p className="text-[10px] font-semibold text-primary mb-1 flex items-center gap-1">
-                          <CheckCircle2 className="h-3 w-3" /> Răspuns admin
+                          <CheckCircle2 className="h-3 w-3" /> Admin Response
                         </p>
                         <p className="text-xs text-muted-foreground">{item.admin_response}</p>
                       </div>

@@ -22,8 +22,8 @@ const STEPS: Step[] = [
   {
     id: "upload",
     icon: Upload,
-    label: "Încarcă conținut",
-    description: "Adaugă primul tău episod — audio, video sau text",
+    label: "Upload Content",
+    description: "Add your first episode — audio, video, or text",
     route: "/extractor",
     checkFn: async () => {
       const { count } = await supabase.from("episodes").select("*", { count: "exact", head: true });
@@ -33,8 +33,8 @@ const STEPS: Step[] = [
   {
     id: "neuron",
     icon: Brain,
-    label: "Creează un neuron",
-    description: "Extrage o idee atomică din conținutul tău",
+    label: "Create a Neuron",
+    description: "Extract an atomic idea from your content",
     route: "/n/new",
     checkFn: async () => {
       const { count } = await supabase.from("neurons").select("*", { count: "exact", head: true });
@@ -44,8 +44,8 @@ const STEPS: Step[] = [
   {
     id: "service",
     icon: Sparkles,
-    label: "Rulează un serviciu AI",
-    description: "Folosește serviciile AI pentru rezultate operaționale",
+    label: "Run an AI Service",
+    description: "Use AI services for operational results",
     route: "/services",
     checkFn: async () => {
       const { count } = await supabase.from("neuron_jobs").select("*", { count: "exact", head: true });
@@ -55,8 +55,8 @@ const STEPS: Step[] = [
   {
     id: "dashboard",
     icon: BarChart3,
-    label: "Verifică Dashboard-ul",
-    description: "Vizualizează statisticile și activitatea ta",
+    label: "Check the Dashboard",
+    description: "View your statistics and activity",
     route: "/dashboard",
     checkFn: async () => {
       // This step is "done" once user has visited dashboard
@@ -126,9 +126,9 @@ export function OnboardingChecklist() {
             <Rocket className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold">Primii pași</h3>
+            <h3 className="text-sm font-semibold">Getting Started</h3>
             <p className="text-[10px] text-muted-foreground">
-              {completedSteps.size}/{STEPS.length} completați
+              {completedSteps.size}/{STEPS.length} completed
             </p>
           </div>
         </div>

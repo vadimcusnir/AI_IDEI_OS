@@ -30,13 +30,13 @@ interface Transaction {
 }
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  spend: { icon: ArrowDownRight, color: "text-destructive", label: "Consum" },
-  reserve: { icon: Clock, color: "text-primary", label: "Rezervat" },
-  release: { icon: ArrowUpRight, color: "text-status-validated", label: "Eliberat" },
-  denied: { icon: TrendingDown, color: "text-muted-foreground", label: "Refuzat" },
-  topup: { icon: TrendingUp, color: "text-status-validated", label: "Încărcare" },
+  spend: { icon: ArrowDownRight, color: "text-destructive", label: "Spend" },
+  reserve: { icon: Clock, color: "text-primary", label: "Reserved" },
+  release: { icon: ArrowUpRight, color: "text-status-validated", label: "Released" },
+  denied: { icon: TrendingDown, color: "text-muted-foreground", label: "Denied" },
+  topup: { icon: TrendingUp, color: "text-status-validated", label: "Top-up" },
   bonus: { icon: Gift, color: "text-ai-accent", label: "Bonus" },
-  adjustment: { icon: Coins, color: "text-primary", label: "Ajustare" },
+  adjustment: { icon: Coins, color: "text-primary", label: "Adjustment" },
 };
 
 type TxFilter = "all" | "spend" | "topup" | "bonus" | "reserve" | "release";
@@ -118,14 +118,14 @@ export default function Credits() {
         {/* Page title */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold tracking-tight">Credite NEURONS</h1>
+            <h1 className="text-lg font-semibold tracking-tight">NEURONS Credits</h1>
             <span className={cn(
               "text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
               balanceHealth === "healthy" ? "bg-status-validated/15 text-status-validated" :
               balanceHealth === "warning" ? "bg-primary/15 text-primary" :
               "bg-destructive/15 text-destructive"
             )}>
-              {balanceHealth === "healthy" ? "Sănătos" : balanceHealth === "warning" ? "Scăzut" : "Critic"}
+              {balanceHealth === "healthy" ? "Healthy" : balanceHealth === "warning" ? "Low" : "Critical"}
             </span>
           </div>
           <TopUpDialog onSuccess={loadData} />
@@ -136,7 +136,7 @@ export default function Credits() {
           {/* Main balance */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Balanță curentă</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Current Balance</p>
               <div className={cn(
                 "h-10 w-10 rounded-xl flex items-center justify-center",
                 balanceHealth === "healthy" ? "bg-status-validated/10" :
@@ -155,15 +155,15 @@ export default function Credits() {
             </div>
             <div className="flex gap-4">
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Câștigat</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Earned</p>
                 <p className="text-xs font-bold font-mono text-status-validated">+{credits?.total_earned ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Consumat</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Spent</p>
                 <p className="text-xs font-bold font-mono text-destructive">-{credits?.total_spent ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Utilizare</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Utilization</p>
                 <p className="text-xs font-bold font-mono">{utilization}%</p>
               </div>
             </div>
@@ -171,22 +171,22 @@ export default function Credits() {
 
           {/* Quick stats */}
           <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Tranzacții</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Transactions</p>
             <span className="text-2xl font-bold font-mono">{transactions.length}</span>
             <p className="text-[10px] text-muted-foreground mt-1">
               {transactions.filter(t => {
                 const d = new Date(t.created_at);
                 const now = new Date();
                 return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-              }).length} luna asta
+              }).length} this month
             </p>
           </div>
 
           <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Servicii folosite</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Services Used</p>
             <span className="text-2xl font-bold font-mono">{Object.keys(serviceStats).length}</span>
             <p className="text-[10px] text-muted-foreground mt-1">
-              {transactions.filter(t => t.type === "spend").length} execuții
+              {transactions.filter(t => t.type === "spend").length} executions
             </p>
           </div>
         </div>
@@ -198,7 +198,7 @@ export default function Credits() {
         {Object.keys(serviceStats).length > 0 && (
           <div className="mb-6">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2.5 flex items-center gap-1.5">
-              <BarChart3 className="h-3 w-3" /> Consum per serviciu
+              <BarChart3 className="h-3 w-3" /> Consumption per Service
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {Object.entries(serviceStats)
@@ -207,7 +207,7 @@ export default function Credits() {
                   <div key={name} className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-border bg-card">
                     <div className="min-w-0">
                       <p className="text-xs font-medium truncate">{name}</p>
-                      <p className="text-[10px] text-muted-foreground">{stats.count} execuți{stats.count !== 1 ? "i" : "e"}</p>
+                      <p className="text-[10px] text-muted-foreground">{stats.count} execution{stats.count !== 1 ? "s" : ""}</p>
                     </div>
                     <span className="text-sm font-mono font-bold text-destructive shrink-0 ml-2">-{stats.total}</span>
                   </div>
@@ -220,7 +220,7 @@ export default function Credits() {
         <div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-3">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 shrink-0">
-              Istoric tranzacții
+              Transaction History
               <span className="text-muted-foreground/40 font-normal">{filteredTx.length}</span>
             </h2>
             <div className="flex-1" />
@@ -231,7 +231,7 @@ export default function Credits() {
               <input
                 value={txSearch}
                 onChange={e => setTxSearch(e.target.value)}
-                placeholder="Caută..."
+                placeholder="Search..."
                 className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
               />
               {txSearch && (
@@ -244,9 +244,9 @@ export default function Credits() {
             {/* Filter chips */}
             <div className="flex items-center gap-0.5 flex-wrap">
               {([
-                { value: "all" as TxFilter, label: "Toate" },
-                { value: "spend" as TxFilter, label: "Consum" },
-                { value: "topup" as TxFilter, label: "Încărcări" },
+                { value: "all" as TxFilter, label: "All" },
+                { value: "spend" as TxFilter, label: "Spend" },
+                { value: "topup" as TxFilter, label: "Top-ups" },
                 { value: "bonus" as TxFilter, label: "Bonus" },
               ]).map(f => (
                 <button
@@ -268,14 +268,14 @@ export default function Credits() {
               <Coins className="h-8 w-8 opacity-20 mx-auto mb-3" />
               {transactions.length === 0 ? (
                 <>
-                  <p className="text-sm text-muted-foreground mb-1">Nicio tranzacție încă</p>
-                  <p className="text-[10px] text-muted-foreground/60">Rulează un serviciu pentru a vedea prima tranzacție.</p>
+                  <p className="text-sm text-muted-foreground mb-1">No transactions yet</p>
+                  <p className="text-[10px] text-muted-foreground/60">Run a service to see your first transaction.</p>
                 </>
               ) : (
                 <>
-                  <p className="text-sm text-muted-foreground mb-2">Niciun rezultat pentru filtrul selectat</p>
+                  <p className="text-sm text-muted-foreground mb-2">No results for the selected filter</p>
                   <Button variant="outline" size="sm" className="text-xs" onClick={() => { setTxFilter("all"); setTxSearch(""); }}>
-                    Șterge filtrele
+                    Clear filters
                   </Button>
                 </>
               )}
@@ -295,7 +295,7 @@ export default function Credits() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium truncate">{tx.description}</p>
                       <p className="text-[10px] text-muted-foreground">
-                        {new Date(tx.created_at).toLocaleString("ro-RO")} · <span className="uppercase">{cfg.label}</span>
+                        {new Date(tx.created_at).toLocaleString("en-US")} · <span className="uppercase">{cfg.label}</span>
                       </p>
                     </div>
                     <span className={cn(

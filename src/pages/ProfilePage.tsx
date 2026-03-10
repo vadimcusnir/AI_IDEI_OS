@@ -80,13 +80,13 @@ export default function ProfilePage() {
 
     if (error) {
       if (error.message.includes("unique")) {
-        toast.error("Acest username este deja folosit.");
+        toast.error("This username is already taken.");
       } else {
-        toast.error("Eroare la salvare: " + error.message);
+        toast.error("Save error: " + error.message);
       }
     } else {
       setSaved(true);
-      toast.success("Profil actualizat cu succes!");
+      toast.success("Profile updated successfully!");
       setTimeout(() => setSaved(false), 2000);
     }
     setSaving(false);
@@ -96,9 +96,9 @@ export default function ProfilePage() {
     const permission = await requestPermission();
     if (permission === "granted") {
       await updatePrefs({ push_enabled: true });
-      toast.success("Notificări browser activate!");
+      toast.success("Browser notifications enabled!");
     } else {
-      toast.error("Permisiunea pentru notificări a fost refuzată.");
+      toast.error("Notification permission was denied.");
     }
   };
 
@@ -119,7 +119,7 @@ export default function ProfilePage() {
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-lg font-semibold tracking-tight">Profilul meu</h1>
+          <h1 className="text-lg font-semibold tracking-tight">My Profile</h1>
           <Button
             onClick={handleSave}
             disabled={saving}
@@ -133,7 +133,7 @@ export default function ProfilePage() {
             ) : (
               <Save className="h-3.5 w-3.5" />
             )}
-            {saved ? "Salvat" : "Salvează"}
+            {saved ? "Saved" : "Save"}
           </Button>
         </div>
 
@@ -156,13 +156,13 @@ export default function ProfilePage() {
             <div className="flex-1">
               <p className="text-sm font-medium mb-1">Avatar</p>
               <p className="text-[10px] text-muted-foreground mb-3">
-                Introdu un URL pentru imaginea de profil.
+                Enter a URL for your profile image.
               </p>
               <input
                 type="url"
                 value={profile.avatar_url}
                 onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                placeholder="https://exemplu.com/avatar.jpg"
+                placeholder="https://example.com/avatar.jpg"
                 className="w-full h-9 px-3 rounded-lg border border-input bg-background text-xs outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary transition-colors"
               />
             </div>
@@ -172,12 +172,12 @@ export default function ProfilePage() {
         {/* Profile fields */}
         <div className="bg-card border border-border rounded-xl p-6 space-y-5 mb-4">
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Nume afișat</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Display Name</label>
             <input
               type="text"
               value={profile.display_name}
               onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-              placeholder="Numele tău"
+              placeholder="Your name"
               className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary transition-colors"
             />
           </div>
@@ -195,7 +195,7 @@ export default function ProfilePage() {
               />
             </div>
             <p className="text-[10px] text-muted-foreground mt-1">
-              Profilul tău public va fi accesibil la /u/{profile.username || "username"}
+              Your public profile will be accessible at /u/{profile.username || "username"}
             </p>
           </div>
 
@@ -204,7 +204,7 @@ export default function ProfilePage() {
             <textarea
               value={profile.bio}
               onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-              placeholder="Descrie-te pe scurt..."
+              placeholder="Describe yourself briefly..."
               rows={4}
               maxLength={500}
               className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary transition-colors resize-none"
@@ -219,7 +219,7 @@ export default function ProfilePage() {
         <div className="bg-card border border-border rounded-xl p-6 mb-4">
           <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
             <Bell className="h-4 w-4 text-primary" />
-            Preferințe notificări
+            Notification Preferences
           </h2>
 
           {prefsLoading ? (
@@ -232,9 +232,9 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-2">
                     <BellRing className="h-4 w-4 text-primary" />
                     <div>
-                      <p className="text-xs font-medium">Notificări browser</p>
+                      <p className="text-xs font-medium">Browser Notifications</p>
                       <p className="text-[10px] text-muted-foreground">
-                        Primești alerte pe desktop chiar dacă nu ești pe pagină
+                        Receive desktop alerts even when you're not on the page
                       </p>
                     </div>
                   </div>
@@ -245,7 +245,7 @@ export default function ProfilePage() {
                     />
                   ) : (
                     <Button size="sm" variant="outline" className="text-xs gap-1" onClick={handleEnablePush}>
-                      <BellRing className="h-3 w-3" /> Activează
+                      <BellRing className="h-3 w-3" /> Enable
                     </Button>
                   )}
                 </div>
@@ -254,25 +254,25 @@ export default function ProfilePage() {
                   <div className="ml-6 space-y-2">
                     <PrefToggle
                       icon={Briefcase}
-                      label="Joburi finalizate / eșuate"
+                      label="Completed / failed jobs"
                       checked={prefs.push_jobs}
                       onChange={(v) => updatePrefs({ push_jobs: v })}
                     />
                     <PrefToggle
                       icon={Coins}
-                      label="Alerte credite scăzute"
+                      label="Low credits alerts"
                       checked={prefs.push_credits}
                       onChange={(v) => updatePrefs({ push_credits: v })}
                     />
                     <PrefToggle
                       icon={MessageCircle}
-                      label="Feedback și răspunsuri"
+                      label="Feedback and responses"
                       checked={prefs.push_feedback}
                       onChange={(v) => updatePrefs({ push_feedback: v })}
                     />
                     <PrefToggle
                       icon={GitBranch}
-                      label="Versiuni noi salvate"
+                      label="New versions saved"
                       checked={prefs.push_versions}
                       onChange={(v) => updatePrefs({ push_versions: v })}
                     />
@@ -287,9 +287,9 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-2 mb-3">
                   <Mail className="h-4 w-4 text-primary" />
                   <div>
-                    <p className="text-xs font-medium">Digest email</p>
+                    <p className="text-xs font-medium">Email Digest</p>
                     <p className="text-[10px] text-muted-foreground">
-                      Rezumat periodic trimis pe email
+                      Periodic summary sent via email
                     </p>
                   </div>
                 </div>
@@ -297,9 +297,9 @@ export default function ProfilePage() {
                 <div className="flex gap-1.5 mb-3 ml-6">
                   {(
                     [
-                      { key: "none", label: "Dezactivat" },
-                      { key: "daily", label: "Zilnic" },
-                      { key: "weekly", label: "Săptămânal" },
+                      { key: "none", label: "Disabled" },
+                      { key: "daily", label: "Daily" },
+                      { key: "weekly", label: "Weekly" },
                     ] as const
                   ).map((opt) => (
                     <button
@@ -321,19 +321,19 @@ export default function ProfilePage() {
                   <div className="ml-6 space-y-2">
                     <PrefToggle
                       icon={Briefcase}
-                      label="Raport joburi"
+                      label="Jobs report"
                       checked={prefs.email_jobs}
                       onChange={(v) => updatePrefs({ email_jobs: v })}
                     />
                     <PrefToggle
                       icon={Coins}
-                      label="Raport credite"
+                      label="Credits report"
                       checked={prefs.email_credits}
                       onChange={(v) => updatePrefs({ email_credits: v })}
                     />
                     <PrefToggle
                       icon={MessageCircle}
-                      label="Raport feedback"
+                      label="Feedback report"
                       checked={prefs.email_feedback}
                       onChange={(v) => updatePrefs({ email_feedback: v })}
                     />
@@ -348,9 +348,9 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-2 mb-3">
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-xs font-medium">Ore liniștite</p>
+                    <p className="text-xs font-medium">Quiet Hours</p>
                     <p className="text-[10px] text-muted-foreground">
-                      Fără notificări browser în interval
+                      No browser notifications during this interval
                     </p>
                   </div>
                 </div>
@@ -360,7 +360,7 @@ export default function ProfilePage() {
                     onChange={(e) => updatePrefs({ quiet_hours_start: e.target.value ? Number(e.target.value) : null })}
                     className="h-8 px-2 rounded-md border border-input bg-background text-xs"
                   >
-                    <option value="">Dezactivat</option>
+                    <option value="">Disabled</option>
                     {Array.from({ length: 24 }, (_, i) => (
                       <option key={i} value={i}>{String(i).padStart(2, "0")}:00</option>
                     ))}
@@ -384,19 +384,19 @@ export default function ProfilePage() {
 
         {/* Account info (read-only) */}
         <div className="bg-card border border-border rounded-xl p-6">
-          <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Informații cont</h2>
+          <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Account Info</h2>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Email</span>
               <span className="text-xs font-mono">{user?.email}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">ID utilizator</span>
+              <span className="text-xs text-muted-foreground">User ID</span>
               <span className="text-[10px] font-mono text-muted-foreground/50">{user?.id.slice(0, 8)}...</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Creat la</span>
-              <span className="text-xs">{user?.created_at ? new Date(user.created_at).toLocaleDateString("ro-RO") : "—"}</span>
+              <span className="text-xs text-muted-foreground">Created</span>
+              <span className="text-xs">{user?.created_at ? new Date(user.created_at).toLocaleDateString("en-US") : "—"}</span>
             </div>
           </div>
         </div>

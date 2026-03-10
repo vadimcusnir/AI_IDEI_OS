@@ -38,7 +38,7 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       searchParams.delete("session_id");
       setSearchParams(searchParams, { replace: true });
     } else if (topup === "cancelled") {
-      toast.info("Plata a fost anulată.");
+      toast.info("Payment was cancelled.");
       searchParams.delete("topup");
       setSearchParams(searchParams, { replace: true });
     }
@@ -51,13 +51,13 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       });
       if (error) throw new Error(error.message);
       if (data?.already_processed) {
-        toast.info("Plata a fost deja procesată.");
+        toast.info("Payment was already processed.");
       } else {
-        toast.success(`+${data?.neurons_added ?? ""} NEURONS adăugați cu succes!`);
+        toast.success(`+${data?.neurons_added ?? ""} NEURONS added successfully!`);
       }
       onSuccess();
     } catch (err: any) {
-      toast.error("Eroare la verificarea plății: " + (err.message || "Încearcă din nou"));
+      toast.error("Payment verification error: " + (err.message || "Try again"));
     }
   };
 
@@ -70,15 +70,15 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
         body: { package_key: packageKey },
       });
 
-      if (error) throw new Error(error.message || "Eroare la crearea sesiunii de plată");
-      if (!data?.url) throw new Error("Nu s-a primit URL-ul de checkout");
+      if (error) throw new Error(error.message || "Error creating checkout session");
+      if (!data?.url) throw new Error("Checkout URL not received");
 
       // Open Stripe checkout in new tab
       window.open(data.url, "_blank");
       setOpen(false);
-      toast.info("Finalizează plata în fereastra deschisă.");
+      toast.info("Complete payment in the opened window.");
     } catch (err: any) {
-      toast.error("Eroare: " + (err.message || "Încearcă din nou"));
+      toast.error("Error: " + (err.message || "Try again"));
     } finally {
       setProcessing(null);
     }
@@ -94,10 +94,10 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base font-semibold">Încarcă NEURONS</DialogTitle>
+          <DialogTitle className="text-base font-semibold">Top Up NEURONS</DialogTitle>
         </DialogHeader>
         <p className="text-xs text-muted-foreground mb-4">
-          Alege un pachet. Plata se procesează securizat prin Stripe.
+          Choose a package. Payment is processed securely via Stripe.
         </p>
         <div className="space-y-2">
           {PACKAGES.map(pkg => {
@@ -152,7 +152,7 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
         <div className="flex items-center justify-center gap-1.5 mt-3">
           <ExternalLink className="h-3 w-3 text-muted-foreground/40" />
           <p className="text-[10px] text-muted-foreground/60 text-center">
-            Plată securizată prin Stripe. Creditele se adaugă instant după confirmare.
+            Secure payment via Stripe. Credits are added instantly after confirmation.
           </p>
         </div>
       </DialogContent>

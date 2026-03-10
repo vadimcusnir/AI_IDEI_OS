@@ -134,8 +134,8 @@ export function KnowledgeGraph() {
     return (
       <div className="flex flex-col items-center justify-center h-[400px] bg-card border-2 border-dashed border-border rounded-xl">
         <Info className="h-8 w-8 text-muted-foreground/30 mb-3" />
-        <p className="text-sm text-muted-foreground mb-1">Niciun neuron încă</p>
-        <p className="text-xs text-muted-foreground/60">Creează neuroni pentru a vedea graful de cunoaștere</p>
+        <p className="text-sm text-muted-foreground mb-1">No neurons yet</p>
+        <p className="text-xs text-muted-foreground/60">Create neurons to see the knowledge graph</p>
       </div>
     );
   }
@@ -146,7 +146,7 @@ export function KnowledgeGraph() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">
-            {nodes.length} neuroni · {links.length} conexiuni
+            {nodes.length} neurons · {links.length} connections
           </span>
         </div>
         <div className="flex items-center gap-1">
@@ -221,7 +221,7 @@ export function KnowledgeGraph() {
 
       {/* Legend */}
       <div className="bg-card border border-border rounded-xl p-3">
-        <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Categorii</p>
+        <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Categories</p>
         <div className="flex flex-wrap gap-x-4 gap-y-1">
           {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
             <div key={cat} className="flex items-center gap-1.5">

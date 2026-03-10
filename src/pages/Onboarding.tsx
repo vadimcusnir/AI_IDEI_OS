@@ -19,38 +19,38 @@ interface StepStatus {
 const STEPS = [
   {
     key: "upload",
-    title: "Încarcă conținut",
-    desc: "Adaugă un podcast, text sau video. Platforma va transcrie și pregăti conținutul pentru extracție.",
+    title: "Upload Content",
+    desc: "Add a podcast, text, or video. The platform will transcribe and prepare the content for extraction.",
     icon: Upload,
     action: "/extractor",
-    actionLabel: "Deschide Extractorul",
+    actionLabel: "Open Extractor",
     checkField: "episodes" as keyof StepStatus,
   },
   {
     key: "extract",
-    title: "Extrage neuroni",
-    desc: "Sistemul analizează conținutul și extrage unități atomice de cunoaștere: frameworks, pattern-uri, formule.",
+    title: "Extract Neurons",
+    desc: "The system analyzes the content and extracts atomic knowledge units: frameworks, patterns, formulas.",
     icon: Brain,
     action: "/neurons",
-    actionLabel: "Vezi neuronii",
+    actionLabel: "View Neurons",
     checkField: "neurons" as keyof StepStatus,
   },
   {
     key: "execute",
-    title: "Rulează servicii AI",
-    desc: "Combină neuronii cu servicii AI pentru a genera articole, strategii, copywriting și alte deliverables.",
+    title: "Run AI Services",
+    desc: "Combine neurons with AI services to generate articles, strategies, copywriting, and other deliverables.",
     icon: Sparkles,
     action: "/services",
-    actionLabel: "Explorează serviciile",
+    actionLabel: "Explore Services",
     checkField: "jobs" as keyof StepStatus,
   },
   {
     key: "capitalize",
-    title: "Capitalizează expertise",
-    desc: "Accesează biblioteca de artefacte generate. Refolosește, publică și monetizează cunoașterea ta.",
+    title: "Capitalize Expertise",
+    desc: "Access your library of generated artifacts. Reuse, publish, and monetize your knowledge.",
     icon: TrendingUp,
     action: "/library",
-    actionLabel: "Biblioteca",
+    actionLabel: "Library",
     checkField: "artifacts" as keyof StepStatus,
   },
 ];
@@ -105,17 +105,17 @@ export default function Onboarding() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-serif font-bold mb-2">Pipeline-ul tău de cunoaștere</h1>
+          <h1 className="text-2xl font-serif font-bold mb-2">Your Knowledge Pipeline</h1>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Transformă expertise în active digitale reutilizabile. Urmează cei 4 pași pentru a debloca întregul potențial.
+            Transform expertise into reusable digital assets. Follow the 4 steps to unlock the full potential.
           </p>
         </div>
 
         {/* Progress bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-muted-foreground">Progres</span>
-            <span className="text-xs font-mono font-bold text-primary">{completedCount}/{STEPS.length} completat</span>
+            <span className="text-xs font-semibold text-muted-foreground">Progress</span>
+            <span className="text-xs font-mono font-bold text-primary">{completedCount}/{STEPS.length} completed</span>
           </div>
           <div className="h-2 rounded-full bg-muted overflow-hidden">
             <div
@@ -168,11 +168,11 @@ export default function Onboarding() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
-                        Pas {idx + 1}
+                        Step {idx + 1}
                       </span>
                       {isCompleted && (
                         <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                          ✓ Completat
+                          ✓ Completed
                         </span>
                       )}
                     </div>
@@ -193,7 +193,7 @@ export default function Onboarding() {
 
                       {isCompleted && (
                         <p className="text-xs text-primary font-medium mb-3">
-                          {status[step.checkField]} {step.checkField === "episodes" ? "episoade" : step.checkField === "neurons" ? "neuroni" : step.checkField === "jobs" ? "joburi" : "artefacte"} create
+                          {status[step.checkField]} {step.checkField === "episodes" ? "episodes" : step.checkField === "neurons" ? "neurons" : step.checkField === "jobs" ? "jobs" : "artifacts"} created
                         </p>
                       )}
 
@@ -223,12 +223,12 @@ export default function Onboarding() {
             <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
               <TrendingUp className="h-6 w-6 text-primary" />
             </div>
-            <h2 className="text-lg font-serif font-bold mb-1.5">Pipeline-ul tău este activ! 🎉</h2>
+            <h2 className="text-lg font-serif font-bold mb-1.5">Your pipeline is active! 🎉</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Ai completat toți pașii. Continuă să încarci conținut și să rulezi servicii pentru a-ți maximiza capitalul intelectual.
+              You've completed all steps. Continue uploading content and running services to maximize your intellectual capital.
             </p>
             <Button onClick={() => navigate("/home")} className="gap-2">
-              Înapoi la Cockpit
+              Back to Cockpit
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>

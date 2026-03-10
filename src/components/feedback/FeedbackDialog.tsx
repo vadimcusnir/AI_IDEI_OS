@@ -18,9 +18,9 @@ import { toast } from "sonner";
 const FEEDBACK_TYPES = [
   { key: "feedback", label: "Feedback", icon: ThumbsUp, color: "text-primary" },
   { key: "testimonial", label: "Testimonial", icon: Quote, color: "text-emerald-500" },
-  { key: "proposal", label: "Propunere", icon: Lightbulb, color: "text-amber-500" },
-  { key: "complaint", label: "Plângere", icon: AlertTriangle, color: "text-destructive" },
-  { key: "review", label: "Recenzie", icon: Star, color: "text-primary" },
+  { key: "proposal", label: "Proposal", icon: Lightbulb, color: "text-amber-500" },
+  { key: "complaint", label: "Complaint", icon: AlertTriangle, color: "text-destructive" },
+  { key: "review", label: "Review", icon: Star, color: "text-primary" },
 ] as const;
 
 interface FeedbackDialogProps {
@@ -44,11 +44,11 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
   const handleSubmit = async () => {
     if (!user) return;
     if (!title.trim() || !message.trim()) {
-      toast.error("Completează titlul și mesajul.");
+      toast.error("Please fill in the title and message.");
       return;
     }
     if (needsRating && !rating) {
-      toast.error("Selectează un rating.");
+      toast.error("Please select a rating.");
       return;
     }
 
@@ -63,9 +63,9 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
     } as any);
 
     if (error) {
-      toast.error("Eroare la trimitere: " + error.message);
+      toast.error("Error submitting: " + error.message);
     } else {
-      toast.success("Mulțumim pentru feedback! 🙏");
+      toast.success("Thank you for your feedback! 🙏");
       setOpen(false);
       setTitle("");
       setMessage("");
@@ -88,7 +88,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base">Trimite feedback</DialogTitle>
+          <DialogTitle className="text-base">Submit Feedback</DialogTitle>
         </DialogHeader>
 
         {/* Type selector */}
@@ -136,7 +136,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
 
         {/* Form */}
         <Input
-          placeholder="Titlu scurt"
+          placeholder="Short title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={200}
@@ -144,10 +144,10 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
         />
         <Textarea
           placeholder={
-            type === "testimonial" ? "Povestește experiența ta cu AI-IDEI..." :
-            type === "complaint" ? "Descrie problema întâmpinată..." :
-            type === "proposal" ? "Ce funcționalitate ai vrea să vezi?" :
-            "Scrie feedback-ul tău..."
+            type === "testimonial" ? "Share your experience with AI-IDEI..." :
+            type === "complaint" ? "Describe the issue you encountered..." :
+            type === "proposal" ? "What feature would you like to see?" :
+            "Write your feedback..."
           }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -159,7 +159,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
 
         <Button onClick={handleSubmit} disabled={loading} className="w-full gap-2">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-          Trimite
+          Submit
         </Button>
       </DialogContent>
     </Dialog>

@@ -207,7 +207,7 @@ export default function AdminDashboard() {
     const { error } = await supabase.from("service_catalog")
       .update({ is_active: !currentActive }).eq("id", serviceId);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Serviciu ${!currentActive ? "activat" : "dezactivat"}`);
+    toast.success(`Service ${!currentActive ? "activated" : "deactivated"}`);
     loadServices();
     loadStats();
   };
@@ -216,19 +216,19 @@ export default function AdminDashboard() {
     if (hasAdmin) {
       const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "admin");
       if (error) { toast.error(error.message); return; }
-      toast.success("Rol admin revocat");
+      toast.success("Admin role revoked");
     } else {
       const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
       if (error) { toast.error(error.message); return; }
-      toast.success("Rol admin acordat");
+      toast.success("Admin role granted");
     }
     loadUsers();
   };
 
   const adjustCredits = async (userId: string) => {
     const amount = parseInt(adjustAmount);
-    if (isNaN(amount) || amount === 0) { toast.error("Sumă invalidă"); return; }
-    if (!adjustDescription.trim()) { toast.error("Adaugă o descriere"); return; }
+    if (isNaN(amount) || amount === 0) { toast.error("Invalid amount"); return; }
+    if (!adjustDescription.trim()) { toast.error("Add a description"); return; }
 
     setAdjustLoading(true);
     try {
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
       if (!current) { toast.error("User credits not found"); return; }
 
       const newBalance = current.balance + amount;
-      if (newBalance < 0) { toast.error(`Balance insuficient. Actual: ${current.balance}`); return; }
+      if (newBalance < 0) { toast.error(`Insufficient balance. Current: ${current.balance}`); return; }
 
       // Update balance
       const updateData: any = { balance: newBalance, updated_at: new Date().toISOString() };
@@ -256,7 +256,7 @@ export default function AdminDashboard() {
         description: `ADMIN: ${adjustDescription}`,
       });
 
-      toast.success(`${amount > 0 ? "+" : ""}${amount} credite aplicate`);
+      toast.success(`${amount > 0 ? "+" : ""}${amount} credits applied`);
       setAdjustingUser(null);
       setAdjustAmount("");
       setAdjustDescription("");
@@ -270,7 +270,7 @@ export default function AdminDashboard() {
   const deleteNeuron = async (neuronId: number) => {
     const { error } = await supabase.from("neurons").delete().eq("id", neuronId);
     if (error) { toast.error(error.message); return; }
-    toast.success("Neuron șters");
+    toast.success("Neuron deleted");
     loadNeurons();
     loadStats();
   };
@@ -279,7 +279,7 @@ export default function AdminDashboard() {
     const newVis = currentVis === "public" ? "private" : "public";
     const { error } = await supabase.from("neurons").update({ visibility: newVis }).eq("id", neuronId);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Vizibilitate schimbată: ${newVis}`);
+    toast.success(`Visibility changed: ${newVis}`);
     loadNeurons();
   };
 
@@ -304,7 +304,7 @@ export default function AdminDashboard() {
             </div>
             <div>
               <h1 className="text-xl font-serif font-bold">Admin Control Panel</h1>
-              <p className="text-xs text-muted-foreground">Monitorizare și control platforma AI-IDEI</p>
+              <p className="text-xs text-muted-foreground">Monitoring and control for the AI-IDEI platform</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={loadAll} className="gap-1.5">
@@ -314,11 +314,11 @@ export default function AdminDashboard() {
 
         {/* KPI Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
-          <KPI label="Utilizatori" value={stats.totalUsers} icon={Users} />
-          <KPI label="Neuroni" value={stats.totalNeurons} icon={Brain} />
-          <KPI label="Publicați" value={stats.publishedNeurons} icon={Brain} color="text-primary" />
+          <KPI label="Users" value={stats.totalUsers} icon={Users} />
+          <KPI label="Neurons" value={stats.totalNeurons} icon={Brain} />
+          <KPI label="Published" value={stats.publishedNeurons} icon={Brain} color="text-primary" />
           <KPI label="Draft" value={stats.draftNeurons} icon={Brain} />
-          <KPI label="Episoade" value={stats.totalEpisodes} icon={Activity} />
+          <KPI label="Episodes" value={stats.totalEpisodes} icon={Activity} />
           <KPI label="Jobs" value={stats.totalJobs} icon={Briefcase} />
           <KPI label="Credits circ." value={stats.totalCreditsCirculating} icon={Coins} color="text-primary" />
           <KPI label="Credits spent" value={stats.totalCreditsSpent} icon={Coins} color="text-destructive" />
@@ -328,10 +328,10 @@ export default function AdminDashboard() {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-4">
             <TabsTrigger value="overview" className="text-xs">Overview</TabsTrigger>
-            <TabsTrigger value="users" className="text-xs">Utilizatori</TabsTrigger>
-            <TabsTrigger value="neurons" className="text-xs">Neuroni</TabsTrigger>
+            <TabsTrigger value="users" className="text-xs">Users</TabsTrigger>
+            <TabsTrigger value="neurons" className="text-xs">Neurons</TabsTrigger>
             <TabsTrigger value="jobs" className="text-xs">Jobs</TabsTrigger>
-            <TabsTrigger value="services" className="text-xs">Servicii</TabsTrigger>
+            <TabsTrigger value="services" className="text-xs">Services</TabsTrigger>
             <TabsTrigger value="logs" className="text-xs gap-1">
               <ScrollText className="h-3 w-3" /> Logs
             </TabsTrigger>
@@ -363,19 +363,19 @@ export default function AdminDashboard() {
 
               <div className="bg-card border border-border rounded-xl p-5">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
-                  <Coins className="h-3 w-3" /> Economia Platformei
+                  <Coins className="h-3 w-3" /> Platform Economy
                 </h3>
                 <div className="space-y-3">
-                  <EconRow label="Credits în circulație" value={stats.totalCreditsCirculating} />
-                  <EconRow label="Credits consumate" value={stats.totalCreditsSpent} />
-                  <EconRow label="Venituri estimate" value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
-                  <EconRow label="Neuroni per user" value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
+                  <EconRow label="Credits in circulation" value={stats.totalCreditsCirculating} />
+                  <EconRow label="Credits consumed" value={stats.totalCreditsSpent} />
+                  <EconRow label="Estimated revenue" value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
+                  <EconRow label="Neurons per user" value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
                 </div>
               </div>
 
               <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-                  Ultimele 10 neuroni
+                  Last 10 Neurons
                 </h3>
                 <div className="space-y-1">
                   {neurons.slice(0, 10).map(n => (
@@ -404,11 +404,11 @@ export default function AdminDashboard() {
                   <TableRow>
                     <TableHead className="text-[10px]">User ID</TableHead>
                     <TableHead className="text-[10px]">Roles</TableHead>
-                    <TableHead className="text-[10px] text-right">Neuroni</TableHead>
-                    <TableHead className="text-[10px] text-right">Balance</TableHead>
-                    <TableHead className="text-[10px] text-right">Spent</TableHead>
-                    <TableHead className="text-[10px] text-right">Earned</TableHead>
-                    <TableHead className="text-[10px] w-28">Acțiuni</TableHead>
+                     <TableHead className="text-[10px] text-right">Neurons</TableHead>
+                     <TableHead className="text-[10px] text-right">Balance</TableHead>
+                     <TableHead className="text-[10px] text-right">Spent</TableHead>
+                     <TableHead className="text-[10px] text-right">Earned</TableHead>
+                     <TableHead className="text-[10px] w-28">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -437,7 +437,7 @@ export default function AdminDashboard() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={() => toggleUserRole(u.user_id, u.roles.includes("admin"))}
-                            title={u.roles.includes("admin") ? "Revocă admin" : "Acordă admin"}
+                            title={u.roles.includes("admin") ? "Revoke admin" : "Grant admin"}
                           >
                             {u.roles.includes("admin") ? <UserMinus className="h-3.5 w-3.5 text-destructive" /> : <UserPlus className="h-3.5 w-3.5" />}
                           </Button>
@@ -446,7 +446,7 @@ export default function AdminDashboard() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={() => setAdjustingUser(adjustingUser === u.user_id ? null : u.user_id)}
-                            title="Ajustare credite"
+                            title="Adjust credits"
                           >
                             <Coins className="h-3.5 w-3.5 text-primary" />
                           </Button>
@@ -463,7 +463,7 @@ export default function AdminDashboard() {
                                 className="h-7 text-xs w-24"
                               />
                               <Input
-                                placeholder="Descriere tranzacție"
+                                placeholder="Transaction description"
                                 value={adjustDescription}
                                 onChange={e => setAdjustDescription(e.target.value)}
                                 className="h-7 text-xs flex-1"
@@ -477,7 +477,7 @@ export default function AdminDashboard() {
                                 onClick={() => adjustCredits(u.user_id)}
                               >
                                 {adjustLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <PlusCircle className="h-3 w-3" />}
-                                Aplică
+                                 Apply
                               </Button>
                               <Button
                                 size="sm"
@@ -485,7 +485,7 @@ export default function AdminDashboard() {
                                 className="h-7 text-xs"
                                 onClick={() => { setAdjustingUser(null); setAdjustAmount(""); setAdjustDescription(""); }}
                               >
-                                Anulează
+                                Cancel
                               </Button>
                             </div>
                           </div>
@@ -505,13 +505,13 @@ export default function AdminDashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-[10px] w-16">#</TableHead>
-                    <TableHead className="text-[10px]">Titlu</TableHead>
-                    <TableHead className="text-[10px]">Status</TableHead>
-                    <TableHead className="text-[10px]">Vizibilitate</TableHead>
-                    <TableHead className="text-[10px]">Lifecycle</TableHead>
-                    <TableHead className="text-[10px] text-right">Score</TableHead>
-                    <TableHead className="text-[10px]">Creat</TableHead>
-                    <TableHead className="text-[10px] w-24">Acțiuni</TableHead>
+                     <TableHead className="text-[10px]">Title</TableHead>
+                     <TableHead className="text-[10px]">Status</TableHead>
+                     <TableHead className="text-[10px]">Visibility</TableHead>
+                     <TableHead className="text-[10px]">Lifecycle</TableHead>
+                     <TableHead className="text-[10px] text-right">Score</TableHead>
+                     <TableHead className="text-[10px]">Created</TableHead>
+                     <TableHead className="text-[10px] w-24">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -530,10 +530,10 @@ export default function AdminDashboard() {
                       <TableCell className="text-[10px] text-muted-foreground">{new Date(n.created_at).toLocaleDateString()}</TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toggleNeuronVisibility(n.id, n.visibility)} title="Toggle vizibilitate">
-                            {n.visibility === "public" ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => deleteNeuron(n.id)} title="Șterge neuron">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toggleNeuronVisibility(n.id, n.visibility)} title="Toggle visibility">
+                             {n.visibility === "public" ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                           </Button>
+                           <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => deleteNeuron(n.id)} title="Delete neuron">
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
@@ -554,11 +554,11 @@ export default function AdminDashboard() {
                     <TableHead className="text-[10px]">ID</TableHead>
                     <TableHead className="text-[10px]">Worker</TableHead>
                     <TableHead className="text-[10px]">Status</TableHead>
-                    <TableHead className="text-[10px]">Neuron</TableHead>
-                    <TableHead className="text-[10px]">Creat</TableHead>
-                    <TableHead className="text-[10px]">Completat</TableHead>
-                    <TableHead className="text-[10px] text-right">Durată</TableHead>
-                  </TableRow>
+                     <TableHead className="text-[10px]">Neuron</TableHead>
+                     <TableHead className="text-[10px]">Created</TableHead>
+                     <TableHead className="text-[10px]">Completed</TableHead>
+                     <TableHead className="text-[10px] text-right">Duration</TableHead>
+                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {jobs.map(j => {
@@ -589,12 +589,12 @@ export default function AdminDashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-[10px]">Key</TableHead>
-                    <TableHead className="text-[10px]">Nume</TableHead>
-                    <TableHead className="text-[10px]">Categorie</TableHead>
-                    <TableHead className="text-[10px]">Clasă</TableHead>
-                    <TableHead className="text-[10px] text-right">Cost (credits)</TableHead>
-                    <TableHead className="text-[10px]">Status</TableHead>
-                    <TableHead className="text-[10px] w-20">Acțiuni</TableHead>
+                     <TableHead className="text-[10px]">Name</TableHead>
+                     <TableHead className="text-[10px]">Category</TableHead>
+                     <TableHead className="text-[10px]">Class</TableHead>
+                     <TableHead className="text-[10px] text-right">Cost (credits)</TableHead>
+                     <TableHead className="text-[10px]">Status</TableHead>
+                     <TableHead className="text-[10px] w-20">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -616,7 +616,7 @@ export default function AdminDashboard() {
                         <span className={cn(
                           "text-[9px] font-mono px-1.5 py-0.5 rounded",
                           s.is_active ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-                        )}>{s.is_active ? "ACTIV" : "INACTIV"}</span>
+                        )}>{s.is_active ? "ACTIVE" : "INACTIVE"}</span>
                       </TableCell>
                       <TableCell>
                         <Button
@@ -624,7 +624,7 @@ export default function AdminDashboard() {
                           size="icon"
                           className="h-7 w-7"
                           onClick={() => toggleServiceActive(s.id, s.is_active)}
-                          title={s.is_active ? "Dezactivează" : "Activează"}
+                          title={s.is_active ? "Deactivate" : "Activate"}
                         >
                           {s.is_active ? <EyeOff className="h-3.5 w-3.5 text-destructive" /> : <Eye className="h-3.5 w-3.5 text-primary" />}
                         </Button>
@@ -641,7 +641,7 @@ export default function AdminDashboard() {
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <ScrollText className="h-3 w-3" /> Operational Logs — Tranzacții & Erori
+                  <ScrollText className="h-3 w-3" /> Operational Logs — Transactions & Errors
                 </h3>
                 <Button variant="outline" size="sm" className="h-7 text-xs" onClick={loadLogs}>
                   <RefreshCw className="h-3 w-3 mr-1" /> Refresh
@@ -649,7 +649,7 @@ export default function AdminDashboard() {
               </div>
 
               {logs.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-8">Nu există loguri recente.</p>
+                <p className="text-xs text-muted-foreground text-center py-8">No recent logs.</p>
               ) : (
                 <div className="space-y-0.5 max-h-[600px] overflow-y-auto font-mono text-[11px]">
                   {logs.map(log => (

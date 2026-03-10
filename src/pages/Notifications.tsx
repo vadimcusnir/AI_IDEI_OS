@@ -9,15 +9,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { ro } from "date-fns/locale";
 import { toast } from "sonner";
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  job_completed: { icon: CheckCircle2, color: "text-emerald-500", label: "Job finalizat" },
-  job_failed: { icon: AlertCircle, color: "text-destructive", label: "Job eșuat" },
-  extraction_done: { icon: Zap, color: "text-primary", label: "Extracție" },
-  credits_low: { icon: Coins, color: "text-amber-500", label: "Credite" },
-  version_created: { icon: GitBranch, color: "text-muted-foreground", label: "Versiune" },
+  job_completed: { icon: CheckCircle2, color: "text-emerald-500", label: "Job Completed" },
+  job_failed: { icon: AlertCircle, color: "text-destructive", label: "Job Failed" },
+  extraction_done: { icon: Zap, color: "text-primary", label: "Extraction" },
+  credits_low: { icon: Coins, color: "text-amber-500", label: "Credits" },
+  version_created: { icon: GitBranch, color: "text-muted-foreground", label: "Version" },
   info: { icon: Bell, color: "text-muted-foreground", label: "Info" },
 };
 
@@ -35,12 +34,12 @@ export default function Notifications() {
   });
 
   const typeFilters = [
-    { key: "all", label: "Toate" },
-    { key: "unread", label: `Necitite (${unreadCount})` },
-    { key: "job_completed", label: "Finalizate" },
-    { key: "job_failed", label: "Eșuate" },
-    { key: "credits_low", label: "Credite" },
-    { key: "version_created", label: "Versiuni" },
+    { key: "all", label: "All" },
+    { key: "unread", label: `Unread (${unreadCount})` },
+    { key: "job_completed", label: "Completed" },
+    { key: "job_failed", label: "Failed" },
+    { key: "credits_low", label: "Credits" },
+    { key: "version_created", label: "Versions" },
   ];
 
   const handleClick = (notif: AppNotification) => {
@@ -53,11 +52,11 @@ export default function Notifications() {
   const handleTogglePush = async () => {
     if (isSubscribed) {
       await unsubscribe();
-      toast.success("Notificările push au fost dezactivate.");
+      toast.success("Push notifications disabled.");
     } else {
       const ok = await subscribe();
-      if (ok) toast.success("Notificările push au fost activate!");
-      else toast.error("Nu s-au putut activa notificările push.");
+      if (ok) toast.success("Push notifications enabled!");
+      else toast.error("Could not enable push notifications.");
     }
   };
 
@@ -68,23 +67,23 @@ export default function Notifications() {
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
             <Bell className="h-5 w-5 text-primary" />
-            Notificări
+            Notifications
           </h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {unreadCount > 0 ? `${unreadCount} necitite` : "Ești la zi cu tot"}
+            {unreadCount > 0 ? `${unreadCount} unread` : "You're all caught up"}
           </p>
         </div>
         <div className="flex items-center gap-2">
           {unreadCount > 0 && (
             <Button variant="outline" size="sm" onClick={markAllRead} className="text-xs gap-1.5">
               <CheckCheck className="h-3.5 w-3.5" />
-              Marchează toate
+              Mark all read
             </Button>
           )}
           {notifications.length > 0 && (
             <Button variant="ghost" size="sm" onClick={clearAll} className="text-xs gap-1.5 text-muted-foreground">
               <Trash2 className="h-3.5 w-3.5" />
-              Șterge tot
+              Clear all
             </Button>
           )}
         </div>
@@ -104,10 +103,10 @@ export default function Notifications() {
             )}
             <div>
               <p className="text-xs font-semibold">
-                {isSubscribed ? "Push notifications active" : "Activează push notifications"}
+                {isSubscribed ? "Push notifications active" : "Enable push notifications"}
               </p>
               <p className="text-[10px] text-muted-foreground">
-                {isSubscribed ? "Primești alerte chiar și când nu ești pe site." : "Fii notificat când un job se finalizează sau creditele sunt scăzute."}
+                {isSubscribed ? "You receive alerts even when you're not on the site." : "Get notified when a job completes or credits run low."}
               </p>
             </div>
           </div>
@@ -119,7 +118,7 @@ export default function Notifications() {
             disabled={pushLoading}
           >
             {pushLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-            {isSubscribed ? "Dezactivează" : "Activează"}
+            {isSubscribed ? "Disable" : "Enable"}
           </Button>
         </div>
       )}
@@ -152,7 +151,7 @@ export default function Notifications() {
         <div className="text-center py-16">
           <Bell className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">
-            {filter === "all" ? "Nicio notificare încă" : "Nicio notificare pentru acest filtru"}
+            {filter === "all" ? "No notifications yet" : "No notifications for this filter"}
           </p>
         </div>
       ) : (
@@ -160,7 +159,7 @@ export default function Notifications() {
           {filtered.map((notif) => {
             const config = TYPE_CONFIG[notif.type] || TYPE_CONFIG.info;
             const Icon = config.icon;
-            const timeAgo = formatDistanceToNow(new Date(notif.created_at), { addSuffix: true, locale: ro });
+            const timeAgo = formatDistanceToNow(new Date(notif.created_at), { addSuffix: true });
 
             return (
               <button
@@ -191,7 +190,7 @@ export default function Notifications() {
                 </div>
                 {notif.link && (
                   <span className="text-[10px] text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1 shrink-0">
-                    Deschide →
+                    Open →
                   </span>
                 )}
               </button>
