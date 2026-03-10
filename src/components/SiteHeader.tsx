@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import logo from "@/assets/logo.gif";
-import { Brain, Shield, Upload, Sparkles, Briefcase, Coins, LogOut, LogIn, Home, User, MessageCircle, ScrollText } from "lucide-react";
+import { Brain, Shield, Upload, Sparkles, Briefcase, Coins, LogOut, LogIn, Home, User, MessageCircle, ScrollText, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
