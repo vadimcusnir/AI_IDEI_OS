@@ -12,6 +12,8 @@ import Architecture from "./pages/Architecture";
 import Links from "./pages/Links";
 import Extractor from "./pages/Extractor";
 import Services from "./pages/Services";
+import Jobs from "./pages/Jobs";
+import RunService from "./pages/RunService";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App = () => (
             <Route path="/links" element={<Links />} />
             <Route path="/extractor" element={<Extractor />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/run/:serviceKey" element={<RunService />} />
+            <Route path="/jobs" element={<Jobs />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
