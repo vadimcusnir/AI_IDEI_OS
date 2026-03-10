@@ -58,8 +58,6 @@ export function NeuronTopBar({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTag, setNewTag] = useState("");
   const [cloning, setCloning] = useState(false);
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [newTag, setNewTag] = useState("");
 
   const VisIcon = visibilityIcons[visibility];
   const statusCfg = statusConfig[status];
