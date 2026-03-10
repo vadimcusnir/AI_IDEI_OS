@@ -118,6 +118,8 @@ export default function ProfileExtractor() {
     toast.success("Copiat în clipboard!");
   }, [result]);
 
+  const TONES = ["profesional", "prietenos", "bold", "academic", "casual"];
+
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
