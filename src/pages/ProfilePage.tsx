@@ -384,7 +384,7 @@ export default function ProfilePage() {
 
         {/* Account info (read-only) */}
         <div className="bg-card border border-border rounded-xl p-6">
-          <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Informații cont</h2>
+          <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Account Info</h2>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Email</span>
