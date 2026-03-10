@@ -51,9 +51,9 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       });
       if (error) throw new Error(error.message);
       if (data?.already_processed) {
-        toast.info("Plata a fost deja procesată.");
+        toast.info("Payment was already processed.");
       } else {
-        toast.success(`+${data?.neurons_added ?? ""} NEURONS adăugați cu succes!`);
+        toast.success(`+${data?.neurons_added ?? ""} NEURONS added successfully!`);
       }
       onSuccess();
     } catch (err: any) {
