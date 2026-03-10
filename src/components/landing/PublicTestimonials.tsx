@@ -37,7 +37,7 @@ export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimo
   if (items.length === 0) return null;
 
   return (
-    <section className="max-w-3xl mx-auto px-6 py-16">
+    <section ref={ref} className="max-w-3xl mx-auto px-6 py-16">
       <motion.div
         initial="hidden"
         whileInView="visible"
