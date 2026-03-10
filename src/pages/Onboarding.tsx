@@ -168,11 +168,11 @@ export default function Onboarding() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
-                        Pas {idx + 1}
+                        Step {idx + 1}
                       </span>
                       {isCompleted && (
                         <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                          ✓ Completat
+                          ✓ Completed
                         </span>
                       )}
                     </div>
