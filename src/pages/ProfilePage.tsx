@@ -260,7 +260,7 @@ export default function ProfilePage() {
                     />
                     <PrefToggle
                       icon={Coins}
-                      label="Alerte credite scăzute"
+                      label="Low credits alerts"
                       checked={prefs.push_credits}
                       onChange={(v) => updatePrefs({ push_credits: v })}
                     />
