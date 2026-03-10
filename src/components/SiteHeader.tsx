@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { label: "Jobs", to: "/jobs", icon: Briefcase, auth: true },
   { label: "Credits", to: "/credits", icon: Coins, auth: true },
   { label: "Feedback", to: "/feedback", icon: MessageCircle, auth: true },
+  { label: "Changelog", to: "/changelog", icon: ScrollText, auth: false },
 ];
 
 export function SiteHeader() {
