@@ -2,13 +2,14 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  Plus, Loader2, Search, X, Upload, Sparkles,
+  Plus, Loader2, Search, X, Upload, Sparkles, BookOpen,
   ClipboardList, Coins, BarChart3, LayoutDashboard, Download,
   Link2, List, Grid3X3, LayoutGrid, SortAsc, SortDesc,
   Pin, PinOff, Calendar, ArrowUpDown, Tag, Filter,
   ChevronDown, MoreHorizontal, Trash2, Copy, GitFork, Star,
   PanelLeftClose, PanelLeft, GripVertical
 } from "lucide-react";
+import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
