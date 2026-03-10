@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { NotificationBell } from "@/components/NotificationBell";
+import { ExportImportPanel } from "@/components/ExportImportPanel";
 
 interface NeuronListItem {
   id: number;
