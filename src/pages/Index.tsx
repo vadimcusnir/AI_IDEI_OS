@@ -21,7 +21,6 @@ interface NeuronListItem {
 export default function Index() {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
-  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
