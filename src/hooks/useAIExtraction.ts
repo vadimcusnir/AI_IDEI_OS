@@ -44,7 +44,7 @@ export function useAIExtraction() {
 
     try {
       // Build blocks array: include neuron blocks + additional context if provided
-      const blocksToSend = contentBlocks.map(b => ({ type: b.type, content: b.content }));
+      const blocksToSend: Array<{ type: string; content: string }> = contentBlocks.map(b => ({ type: b.type, content: b.content }));
       
       if (additionalContext?.trim()) {
         blocksToSend.unshift({
