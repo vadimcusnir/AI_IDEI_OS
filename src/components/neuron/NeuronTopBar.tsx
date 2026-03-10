@@ -260,6 +260,12 @@ export function NeuronTopBar({
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {onSaveAsTemplate && (
+        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onSaveAsTemplate} title="Save as template">
+          <BookmarkPlus className="h-3.5 w-3.5" />
+        </Button>
+      )}
+
       <Button variant="ghost" size="icon" className="h-7 w-7">
         <Download className="h-3.5 w-3.5" />
       </Button>
