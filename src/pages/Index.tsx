@@ -6,13 +6,15 @@ import {
   ClipboardList, Coins, BarChart3, LayoutDashboard, Download,
   Link2, List, Grid3X3, LayoutGrid, SortAsc, SortDesc,
   Pin, PinOff, Calendar, ArrowUpDown, Tag, Filter,
-  ChevronDown, MoreHorizontal, Trash2, Copy, GitFork, Star
+  ChevronDown, MoreHorizontal, Trash2, Copy, GitFork, Star,
+  PanelLeftClose, PanelLeft, GripVertical
 } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
