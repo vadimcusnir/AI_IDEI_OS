@@ -119,7 +119,7 @@ export default function ProfilePage() {
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-lg font-semibold tracking-tight">Profilul meu</h1>
+          <h1 className="text-lg font-semibold tracking-tight">My Profile</h1>
           <Button
             onClick={handleSave}
             disabled={saving}
