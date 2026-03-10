@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
-import { Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch } from "lucide-react";
+import { Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch, MessageCircle, MessageSquarePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ro } from "date-fns/locale";
@@ -12,6 +12,8 @@ const NOTIF_ICONS: Record<string, React.ElementType> = {
   extraction_done: Zap,
   credits_low: Coins,
   version_created: GitBranch,
+  feedback_new: MessageSquarePlus,
+  feedback_response: MessageCircle,
 };
 
 const NOTIF_COLORS: Record<string, string> = {
@@ -20,6 +22,8 @@ const NOTIF_COLORS: Record<string, string> = {
   extraction_done: "text-primary",
   credits_low: "text-amber-500",
   version_created: "text-muted-foreground",
+  feedback_new: "text-primary",
+  feedback_response: "text-emerald-500",
 };
 
 export function NotificationBell() {

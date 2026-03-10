@@ -142,6 +142,54 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback: {
+        Row: {
+          admin_responded_at: string | null
+          admin_response: string | null
+          context_page: string | null
+          created_at: string
+          id: string
+          is_public: boolean
+          message: string
+          rating: number | null
+          status: string
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_responded_at?: string | null
+          admin_response?: string | null
+          context_page?: string | null
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          message: string
+          rating?: number | null
+          status?: string
+          title: string
+          type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_responded_at?: string | null
+          admin_response?: string | null
+          context_page?: string | null
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          message?: string
+          rating?: number | null
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       neuron_address_aliases: {
         Row: {
           alias: string

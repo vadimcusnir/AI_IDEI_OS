@@ -29,6 +29,7 @@ import PublicProfile from "./pages/PublicProfile";
 import PromptForge from "./pages/PromptForge";
 import ProfileExtractor from "./pages/ProfileExtractor";
 import Notifications from "./pages/Notifications";
+import Feedback from "./pages/Feedback";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="/profile-extractor" element={<ProtectedRoute><AppLayout><ProfileExtractor /></AppLayout></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><AppLayout><ProfilePage /></AppLayout></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><AppLayout><Notifications /></AppLayout></ProtectedRoute>} />
+              <Route path="/feedback" element={<ProtectedRoute><AppLayout><Feedback /></AppLayout></ProtectedRoute>} />
 
               {/* Admin route — requires authentication + admin role */}
               <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />

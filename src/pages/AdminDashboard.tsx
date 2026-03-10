@@ -2,13 +2,14 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle } from "lucide-react";
+import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
@@ -331,6 +332,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="services" className="text-xs">Servicii</TabsTrigger>
             <TabsTrigger value="logs" className="text-xs gap-1">
               <ScrollText className="h-3 w-3" /> Logs
+            </TabsTrigger>
+            <TabsTrigger value="feedback" className="text-xs gap-1">
+              <MessageCircle className="h-3 w-3" /> Feedback
             </TabsTrigger>
           </TabsList>
 
@@ -666,6 +670,11 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
+          </TabsContent>
+
+          {/* ─── Feedback ─── */}
+          <TabsContent value="feedback">
+            <AdminFeedbackTab />
           </TabsContent>
         </Tabs>
       </div>
