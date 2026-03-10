@@ -751,7 +751,8 @@ export default function Index() {
             ))}
           </div>
         )}
-      </div>
+        </div>{/* end main content */}
+      </div>{/* end flex with sidebar */}
 
       {/* Modals */}
       <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />
