@@ -94,10 +94,10 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base font-semibold">Încarcă NEURONS</DialogTitle>
+          <DialogTitle className="text-base font-semibold">Top Up NEURONS</DialogTitle>
         </DialogHeader>
         <p className="text-xs text-muted-foreground mb-4">
-          Alege un pachet. Plata se procesează securizat prin Stripe.
+          Choose a package. Payment is processed securely via Stripe.
         </p>
         <div className="space-y-2">
           {PACKAGES.map(pkg => {
