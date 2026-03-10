@@ -282,6 +282,146 @@ export type Database = {
           },
         ]
       }
+      entities: {
+        Row: {
+          canonical_url: string | null
+          confidence_score: number | null
+          created_at: string | null
+          description: string | null
+          entity_type: string
+          evidence_count: number | null
+          id: string
+          importance_score: number | null
+          is_published: boolean | null
+          json_ld: Json | null
+          meta_description: string | null
+          neuron_id: number | null
+          slug: string
+          summary: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          description?: string | null
+          entity_type: string
+          evidence_count?: number | null
+          id?: string
+          importance_score?: number | null
+          is_published?: boolean | null
+          json_ld?: Json | null
+          meta_description?: string | null
+          neuron_id?: number | null
+          slug: string
+          summary?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          canonical_url?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          description?: string | null
+          entity_type?: string
+          evidence_count?: number | null
+          id?: string
+          importance_score?: number | null
+          is_published?: boolean | null
+          json_ld?: Json | null
+          meta_description?: string | null
+          neuron_id?: number | null
+          slug?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entities_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_relations: {
+        Row: {
+          created_at: string | null
+          id: string
+          relation_type: string
+          source_entity_id: string
+          target_entity_id: string
+          weight: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          relation_type: string
+          source_entity_id: string
+          target_entity_id: string
+          weight?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          relation_type?: string
+          source_entity_id?: string
+          target_entity_id?: string
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_relations_source_entity_id_fkey"
+            columns: ["source_entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entity_relations_target_entity_id_fkey"
+            columns: ["target_entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_topics: {
+        Row: {
+          entity_id: string
+          relevance_score: number | null
+          topic_id: string
+        }
+        Insert: {
+          entity_id: string
+          relevance_score?: number | null
+          topic_id: string
+        }
+        Update: {
+          entity_id?: string
+          relevance_score?: number | null
+          topic_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_topics_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entity_topics_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       episodes: {
         Row: {
           author_id: string
@@ -1082,6 +1222,47 @@ export type Database = {
           service_key?: string
         }
         Relationships: []
+      }
+      topics: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          entity_count: number | null
+          id: string
+          parent_topic_id: string | null
+          slug: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          entity_count?: number | null
+          id?: string
+          parent_topic_id?: string | null
+          slug: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          entity_count?: number | null
+          id?: string
+          parent_topic_id?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "topics_parent_topic_id_fkey"
+            columns: ["parent_topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_credits: {
         Row: {

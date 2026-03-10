@@ -40,6 +40,9 @@ import BatchRunner from "./pages/BatchRunner";
 import Onboarding from "./pages/Onboarding";
 import Docs from "./pages/Docs";
 import EntityListing from "./pages/EntityListing";
+import EntityDetail from "./pages/EntityDetail";
+import TopicListing from "./pages/TopicListing";
+import TopicDetail from "./pages/TopicDetail";
 import MediaProfiles from "./pages/MediaProfiles";
 import NotFound from "./pages/NotFound";
 
@@ -68,10 +71,19 @@ const App = () => (
               <Route path="/docs/:section/:topic" element={<AppLayout><Docs /></AppLayout>} />
               <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
               <Route path="/insights" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/insights/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
               <Route path="/patterns" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/patterns/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
               <Route path="/formulas" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/formulas/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
               <Route path="/contradictions" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/contradictions/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
               <Route path="/applications" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/applications/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
+              <Route path="/profiles" element={<AppLayout><EntityListing /></AppLayout>} />
+              <Route path="/profiles/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
+              <Route path="/topics" element={<AppLayout><TopicListing /></AppLayout>} />
+              <Route path="/topics/:slug" element={<AppLayout><TopicDetail /></AppLayout>} />
               <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
 
               {/* Protected routes — require authentication */}
