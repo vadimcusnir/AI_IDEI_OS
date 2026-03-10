@@ -57,7 +57,7 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       }
       onSuccess();
     } catch (err: any) {
-      toast.error("Eroare la verificarea plății: " + (err.message || "Încearcă din nou"));
+      toast.error("Payment verification error: " + (err.message || "Try again"));
     }
   };
 
