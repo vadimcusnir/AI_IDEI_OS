@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  Upload, Brain, Sparkles, TrendingUp,
-  Check, ArrowRight, Loader2, ChevronRight,
+  Upload, Brain, Sparkles, TrendingUp, BookOpen,
+  Check, ArrowRight, Loader2, Play,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,40 +18,54 @@ interface StepStatus {
 
 const STEPS = [
   {
+    key: "learn",
+    title: "Understand the Platform",
+    desc: "AI-IDEI turns your content into structured knowledge. Upload a podcast, interview, or text — and the system extracts insights, frameworks, and patterns automatically.",
+    icon: BookOpen,
+    action: "/docs/getting-started/introduction",
+    actionLabel: "Read Introduction",
+    checkField: null as keyof StepStatus | null,
+    example: "You record a 1-hour podcast → the system extracts 20+ reusable knowledge units from it.",
+  },
+  {
     key: "upload",
-    title: "Upload Content",
-    desc: "Add a podcast, text, or video. The platform will transcribe and prepare the content for extraction.",
+    title: "Upload Your First Content",
+    desc: "Go to the Extractor and upload an audio file, paste text, or enter a YouTube URL. The system will transcribe and prepare your content.",
     icon: Upload,
     action: "/extractor",
     actionLabel: "Open Extractor",
     checkField: "episodes" as keyof StepStatus,
+    example: "Drag an MP3 file, paste a YouTube link, or type/paste text directly.",
   },
   {
     key: "extract",
-    title: "Extract Neurons",
-    desc: "The system analyzes the content and extracts atomic knowledge units: frameworks, patterns, formulas.",
+    title: "Extract Knowledge Neurons",
+    desc: "The AI analyzes your content and pulls out atomic knowledge units — insights, patterns, formulas, and frameworks. Each one is reusable forever.",
     icon: Brain,
     action: "/neurons",
     actionLabel: "View Neurons",
     checkField: "neurons" as keyof StepStatus,
+    example: "From one episode, you might get: 5 insights + 3 patterns + 2 formulas + 1 framework.",
   },
   {
     key: "execute",
-    title: "Run AI Services",
-    desc: "Combine neurons with AI services to generate articles, strategies, copywriting, and other deliverables.",
+    title: "Run Your First AI Service",
+    desc: "Pick a service from the catalog — article writer, strategy generator, copywriting engine — and let AI transform your neurons into professional deliverables.",
     icon: Sparkles,
     action: "/services",
     actionLabel: "Explore Services",
     checkField: "jobs" as keyof StepStatus,
+    example: "Select 'Article Writer' → pick 3 neurons → get a 1500-word article in 2 minutes.",
   },
   {
     key: "capitalize",
-    title: "Capitalize Expertise",
-    desc: "Access your library of generated artifacts. Reuse, publish, and monetize your knowledge.",
+    title: "Review & Reuse Your Artifacts",
+    desc: "Every generated output is saved in your Library. Edit, export, or use them as building blocks for more complex deliverables.",
     icon: TrendingUp,
     action: "/library",
-    actionLabel: "Library",
+    actionLabel: "Open Library",
     checkField: "artifacts" as keyof StepStatus,
+    example: "Your library grows with every service run. 10 runs = 50+ professional deliverables.",
   },
 ];
 
@@ -83,14 +97,15 @@ export default function Onboarding() {
     };
     setStatus(s);
 
-    // Auto-select first incomplete step
-    const firstIncomplete = STEPS.findIndex(step => s[step.checkField] === 0);
+    // Auto-select first incomplete step (skip step 0 "learn" which has no checkField)
+    const firstIncomplete = STEPS.findIndex(step => step.checkField && s[step.checkField] === 0);
     setActiveStep(firstIncomplete >= 0 ? firstIncomplete : STEPS.length - 1);
     setLoading(false);
   };
 
-  const completedCount = STEPS.filter(s => status[s.checkField] > 0).length;
-  const progressPercent = Math.round((completedCount / STEPS.length) * 100);
+  const completedCount = STEPS.filter(s => s.checkField && status[s.checkField!] > 0).length;
+  const totalCheckable = STEPS.filter(s => s.checkField).length;
+  const progressPercent = Math.round((completedCount / totalCheckable) * 100);
 
   if (authLoading || loading) {
     return (
@@ -105,9 +120,10 @@ export default function Onboarding() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-serif font-bold mb-2">Your Knowledge Pipeline</h1>
+          <h1 className="text-2xl font-serif font-bold mb-2">Get Started with AI-IDEI</h1>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Transform expertise into reusable digital assets. Follow the 4 steps to unlock the full potential.
+            Follow these 5 steps to turn your content into structured knowledge assets.
+            Each step builds on the previous one.
           </p>
         </div>
 
@@ -115,7 +131,7 @@ export default function Onboarding() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-muted-foreground">Progress</span>
-            <span className="text-xs font-mono font-bold text-primary">{completedCount}/{STEPS.length} completed</span>
+            <span className="text-xs font-mono font-bold text-primary">{completedCount}/{totalCheckable} completed</span>
           </div>
           <div className="h-2 rounded-full bg-muted overflow-hidden">
             <div
@@ -129,34 +145,26 @@ export default function Onboarding() {
         <div className="space-y-3">
           {STEPS.map((step, idx) => {
             const Icon = step.icon;
-            const isCompleted = status[step.checkField] > 0;
+            const isCompleted = step.checkField ? status[step.checkField] > 0 : false;
             const isActive = idx === activeStep;
-            const isLocked = idx > 0 && status[STEPS[idx - 1].checkField] === 0 && !isCompleted;
 
             return (
               <div
                 key={step.key}
-                onClick={() => !isLocked && setActiveStep(idx)}
+                onClick={() => setActiveStep(idx)}
                 className={cn(
                   "rounded-xl border transition-all duration-200 cursor-pointer",
                   isActive
                     ? "border-primary/30 bg-primary/5 shadow-sm"
                     : isCompleted
                     ? "border-border bg-card"
-                    : isLocked
-                    ? "border-border/50 bg-muted/30 opacity-60 cursor-not-allowed"
                     : "border-border bg-card hover:border-primary/20"
                 )}
               >
-                {/* Step header */}
                 <div className="flex items-center gap-4 p-4">
                   <div className={cn(
                     "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
-                    isCompleted
-                      ? "bg-primary/10"
-                      : isActive
-                      ? "bg-primary/10"
-                      : "bg-muted"
+                    isCompleted ? "bg-primary/10" : isActive ? "bg-primary/10" : "bg-muted"
                   )}>
                     {isCompleted ? (
                       <Check className="h-5 w-5 text-primary" />
@@ -172,28 +180,36 @@ export default function Onboarding() {
                       </span>
                       {isCompleted && (
                         <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                          ✓ Completed
+                          ✓ Done
                         </span>
                       )}
                     </div>
                     <h3 className="text-sm font-semibold mt-0.5">{step.title}</h3>
                   </div>
 
-                  <ChevronRight className={cn(
+                  <ArrowRight className={cn(
                     "h-4 w-4 text-muted-foreground/40 transition-transform",
                     isActive && "rotate-90"
                   )} />
                 </div>
 
-                {/* Expanded content */}
                 {isActive && (
                   <div className="px-4 pb-4 pt-0">
-                    <div className="pl-14">
-                      <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{step.desc}</p>
+                    <div className="pl-14 space-y-3">
+                      <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
 
-                      {isCompleted && (
-                        <p className="text-xs text-primary font-medium mb-3">
-                          {status[step.checkField]} {step.checkField === "episodes" ? "episodes" : step.checkField === "neurons" ? "neurons" : step.checkField === "jobs" ? "jobs" : "artifacts"} created
+                      {/* Example callout */}
+                      <div className="rounded-lg bg-muted/50 border border-border/50 p-3">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <Play className="h-3 w-3 text-primary" />
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Example</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground italic">{step.example}</p>
+                      </div>
+
+                      {isCompleted && step.checkField && (
+                        <p className="text-xs text-primary font-medium">
+                          {status[step.checkField]} {step.checkField} created
                         </p>
                       )}
 
@@ -218,14 +234,14 @@ export default function Onboarding() {
         </div>
 
         {/* Completion CTA */}
-        {completedCount === STEPS.length && (
+        {completedCount === totalCheckable && (
           <div className="mt-8 p-6 rounded-2xl border-2 border-primary/30 bg-primary/5 text-center">
             <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
               <TrendingUp className="h-6 w-6 text-primary" />
             </div>
             <h2 className="text-lg font-serif font-bold mb-1.5">Your pipeline is active! 🎉</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              You've completed all steps. Continue uploading content and running services to maximize your intellectual capital.
+              You've completed all steps. Keep uploading content and running services to grow your knowledge library.
             </p>
             <Button onClick={() => navigate("/home")} className="gap-2">
               Back to Cockpit
