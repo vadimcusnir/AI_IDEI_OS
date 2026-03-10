@@ -343,9 +343,11 @@ export default function Extractor() {
 
             <div className="flex items-center justify-between pt-1">
               <p className="text-[10px] text-muted-foreground/50">
-                {sourceType === "text" && content.length > 0
-                  ? `${content.length.toLocaleString()} caractere · ~${Math.ceil(content.split(/\s+/).length)} cuvinte`
-                  : "Completează câmpurile și apasă Creează"}
+                {sourceType === "url" && content.trim()
+                  ? `URL detectat · titlu: ${title || "—"}`
+                  : sourceType === "text" && content.length > 0
+                    ? `${content.length.toLocaleString()} caractere · ~${Math.ceil(content.split(/\s+/).length)} cuvinte`
+                    : sourceType === "url" ? "Lipește un URL pentru a începe" : "Completează câmpurile și apasă Creează"}
               </p>
               <div className="flex items-center gap-2">
                 {episodes.length > 0 && (
