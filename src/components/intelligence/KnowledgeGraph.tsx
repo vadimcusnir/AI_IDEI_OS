@@ -134,8 +134,8 @@ export function KnowledgeGraph() {
     return (
       <div className="flex flex-col items-center justify-center h-[400px] bg-card border-2 border-dashed border-border rounded-xl">
         <Info className="h-8 w-8 text-muted-foreground/30 mb-3" />
-        <p className="text-sm text-muted-foreground mb-1">Niciun neuron încă</p>
-        <p className="text-xs text-muted-foreground/60">Creează neuroni pentru a vedea graful de cunoaștere</p>
+        <p className="text-sm text-muted-foreground mb-1">No neurons yet</p>
+        <p className="text-xs text-muted-foreground/60">Create neurons to see the knowledge graph</p>
       </div>
     );
   }
