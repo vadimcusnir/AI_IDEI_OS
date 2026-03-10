@@ -134,7 +134,7 @@ export default function Feedback() {
           Feedback
         </h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          {stats.total} trimise · {stats.pending} în așteptare · {stats.responded} cu răspuns
+          {stats.total} submitted · {stats.pending} pending · {stats.responded} with response
         </p>
       </div>
 
