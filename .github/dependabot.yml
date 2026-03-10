@@ -10,6 +10,10 @@ updates:
       prefix: "chore(deps)"
     labels:
       - "dependencies"
+      - "security"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
     groups:
       radix:
         patterns:
@@ -37,3 +41,4 @@ updates:
       prefix: "chore(ci)"
     labels:
       - "ci"
+      - "security"
