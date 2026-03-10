@@ -76,9 +76,9 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       // Open Stripe checkout in new tab
       window.open(data.url, "_blank");
       setOpen(false);
-      toast.info("Finalizează plata în fereastra deschisă.");
+      toast.info("Complete payment in the opened window.");
     } catch (err: any) {
-      toast.error("Eroare: " + (err.message || "Încearcă din nou"));
+      toast.error("Error: " + (err.message || "Try again"));
     } finally {
       setProcessing(null);
     }
