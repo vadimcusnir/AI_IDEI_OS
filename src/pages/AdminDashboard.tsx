@@ -314,11 +314,11 @@ export default function AdminDashboard() {
 
         {/* KPI Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
-          <KPI label="Utilizatori" value={stats.totalUsers} icon={Users} />
-          <KPI label="Neuroni" value={stats.totalNeurons} icon={Brain} />
-          <KPI label="Publicați" value={stats.publishedNeurons} icon={Brain} color="text-primary" />
+          <KPI label="Users" value={stats.totalUsers} icon={Users} />
+          <KPI label="Neurons" value={stats.totalNeurons} icon={Brain} />
+          <KPI label="Published" value={stats.publishedNeurons} icon={Brain} color="text-primary" />
           <KPI label="Draft" value={stats.draftNeurons} icon={Brain} />
-          <KPI label="Episoade" value={stats.totalEpisodes} icon={Activity} />
+          <KPI label="Episodes" value={stats.totalEpisodes} icon={Activity} />
           <KPI label="Jobs" value={stats.totalJobs} icon={Briefcase} />
           <KPI label="Credits circ." value={stats.totalCreditsCirculating} icon={Coins} color="text-primary" />
           <KPI label="Credits spent" value={stats.totalCreditsSpent} icon={Coins} color="text-destructive" />
