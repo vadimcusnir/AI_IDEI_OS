@@ -23,31 +23,33 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/n/new" element={<NeuronEditor />} />
-            <Route path="/n/:number" element={<NeuronEditor />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/architecture" element={<Architecture />} />
-            <Route path="/links" element={<Links />} />
-            <Route path="/extractor" element={<Extractor />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/run/:serviceKey" element={<RunService />} />
-            <Route path="/jobs" element={<Jobs />} />
-            <Route path="/credits" element={<Credits />} />
-            <Route path="/intelligence" element={<Intelligence />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/n/new" element={<NeuronEditor />} />
+              <Route path="/n/:number" element={<NeuronEditor />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/architecture" element={<Architecture />} />
+              <Route path="/links" element={<Links />} />
+              <Route path="/extractor" element={<Extractor />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/run/:serviceKey" element={<RunService />} />
+              <Route path="/jobs" element={<Jobs />} />
+              <Route path="/credits" element={<Credits />} />
+              <Route path="/intelligence" element={<Intelligence />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
