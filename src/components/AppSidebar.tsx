@@ -6,7 +6,7 @@ import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
-  BarChart3, Wrench, Bell, BookOpen, Users,
+  BarChart3, Wrench, Bell, BookOpen, Users, Network,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
