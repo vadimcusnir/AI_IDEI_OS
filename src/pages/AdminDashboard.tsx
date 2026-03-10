@@ -341,6 +341,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="changelog" className="text-xs gap-1">
               <ScrollText className="h-3 w-3" /> Changelog
             </TabsTrigger>
+            <TabsTrigger value="knowledge-graph" className="text-xs gap-1">
+              <Network className="h-3 w-3" /> Knowledge Graph
+            </TabsTrigger>
           </TabsList>
 
           {/* ─── Overview ─── */}
