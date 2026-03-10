@@ -91,13 +91,20 @@ export default function NeuronEditor() {
     if (result?.error) toast.error("Failed to remove link");
   }, [removeLink]);
 
-  const AI_ACTIONS = ["extract_insights", "extract_frameworks", "extract_questions", "extract_quotes", "extract_prompts"];
+  const AI_ACTIONS = [
+    "extract_insights", "extract_frameworks", "extract_questions",
+    "extract_quotes", "extract_prompts",
+    // Extended actions routed to same edge function with custom prompts
+    "debug_code", "optimize_code", "generate_tests", "explain_code",
+    "transform_article", "transform_twitter", "transform_script", "transform_slide",
+    "find_related", "idea_clusters", "influence_score",
+  ];
 
   const handleAIAction = useCallback((action: string) => {
     if (AI_ACTIONS.includes(action)) {
       extract(action, blocks, neuron?.title || "");
     } else {
-      toast.info(`AI action "${action}" triggered. Coming soon.`);
+      toast.info(`Action "${action}" — use AI Services for advanced processing.`);
     }
   }, [extract, blocks, neuron?.title]);
 
