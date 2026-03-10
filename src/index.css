@@ -88,6 +88,13 @@
     --sidebar-ring: 25 95% 53%;
   }
 
+  /* Responsive header height */
+  @media (min-width: 768px) {
+    :root {
+      --header-height: 3rem; /* 48px desktop */
+    }
+  }
+
   .dark {
     --background: 220 20% 8%;
     --foreground: 220 14% 90%;
