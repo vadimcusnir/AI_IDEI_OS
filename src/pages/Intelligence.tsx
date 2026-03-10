@@ -9,6 +9,7 @@ import {
   TrendingUp, Layers, Sparkles, Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface Stats {
   totalNeurons: number;
