@@ -122,8 +122,8 @@ export default function Home() {
 
         {/* Stats row */}
         <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
-          <StatCard icon={Brain} label="Neuroni" value={totalNeurons} />
-          <StatCard icon={FileText} label="Episoade" value={totalEpisodes} />
+          <StatCard icon={Brain} label="Neurons" value={totalNeurons} />
+          <StatCard icon={FileText} label="Episodes" value={totalEpisodes} />
           <StatCard icon={Zap} label="Jobs" value={totalJobs} />
           <div className={cn(
             "rounded-xl p-3 border transition-colors",
