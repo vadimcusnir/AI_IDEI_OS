@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { label: "Servicii", to: "/services", icon: Sparkles, auth: true },
   { label: "Jobs", to: "/jobs", icon: Briefcase, auth: true },
   { label: "Credits", to: "/credits", icon: Coins, auth: true },
+  { label: "Feedback", to: "/feedback", icon: MessageCircle, auth: true },
 ];
 
 export function SiteHeader() {
