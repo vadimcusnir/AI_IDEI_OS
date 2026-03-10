@@ -446,7 +446,7 @@ export default function AdminDashboard() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={() => setAdjustingUser(adjustingUser === u.user_id ? null : u.user_id)}
-                            title="Ajustare credite"
+                            title="Adjust credits"
                           >
                             <Coins className="h-3.5 w-3.5 text-primary" />
                           </Button>
