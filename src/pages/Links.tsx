@@ -4,7 +4,7 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import logo from "@/assets/logo.gif";
 import {
   Brain, Plus, Shield, BookOpen, Link2, Github,
-  FileText, Sparkles, Network, Podcast,
+  FileText, Sparkles, Network, Podcast, Upload,
   ExternalLink, ArrowRight, Zap, Globe,
   BarChart3, Users, Mail, MessageCircle,
 } from "lucide-react";
