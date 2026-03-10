@@ -193,7 +193,7 @@ export default function Onboarding() {
 
                       {isCompleted && (
                         <p className="text-xs text-primary font-medium mb-3">
-                          {status[step.checkField]} {step.checkField === "episodes" ? "episoade" : step.checkField === "neurons" ? "neuroni" : step.checkField === "jobs" ? "joburi" : "artefacte"} create
+                          {status[step.checkField]} {step.checkField === "episodes" ? "episodes" : step.checkField === "neurons" ? "neurons" : step.checkField === "jobs" ? "jobs" : "artifacts"} created
                         </p>
                       )}
 
