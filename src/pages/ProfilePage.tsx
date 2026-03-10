@@ -272,7 +272,7 @@ export default function ProfilePage() {
                     />
                     <PrefToggle
                       icon={GitBranch}
-                      label="Versiuni noi salvate"
+                      label="New versions saved"
                       checked={prefs.push_versions}
                       onChange={(v) => updatePrefs({ push_versions: v })}
                     />
