@@ -146,7 +146,7 @@ export default function Feedback() {
         >
           <span className="text-sm font-medium flex items-center gap-2">
             <Send className="h-4 w-4 text-primary" />
-            Trimite feedback nou
+            Submit New Feedback
           </span>
           <ChevronUp className={cn(
             "h-4 w-4 text-muted-foreground transition-transform",
