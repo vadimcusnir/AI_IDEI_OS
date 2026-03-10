@@ -78,6 +78,22 @@ Recommend 3-5 content blocks (TextBlock, PromptBlock, ListBlock) that would work
 Format everything with ## headings and clear structure.`,
 };
 
+// Map service keys to artifact types
+const SERVICE_ARTIFACT_TYPE: Record<string, string> = {
+  "insight-extractor": "document",
+  "framework-detector": "document",
+  "question-engine": "document",
+  "quote-extractor": "document",
+  "prompt-generator": "prompt",
+  "market-research": "report",
+  "course-generator": "course",
+  "content-classifier": "document",
+  "strategy-builder": "strategy",
+  "argument-mapper": "document",
+  "profile-extractor": "profile",
+  "prompt-forge": "prompt",
+};
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -97,15 +113,12 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── STEP 1: Update job to running ──
+    // ── Update job to running ──
     await supabase.from("neuron_jobs").update({ status: "running" }).eq("id", job_id);
 
-    // ── STEP 2: Fetch service cost ──
+    // ── Fetch service cost ──
     const { data: service } = await supabase
-      .from("service_catalog")
-      .select("credits_cost, name")
-      .eq("service_key", service_key)
-      .single();
+      .from("service_catalog").select("credits_cost, name").eq("service_key", service_key).single();
 
     if (!service) {
       await supabase.from("neuron_jobs").update({ status: "failed", completed_at: new Date().toISOString(), result: { error: "Service not found" } }).eq("id", job_id);
@@ -114,26 +127,18 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── STEP 3: Reserve credits (server-side atomic check) ──
+    // ── Reserve credits ──
     const { data: userCredits } = await supabase
-      .from("user_credits")
-      .select("balance, total_spent")
-      .eq("user_id", user_id)
-      .single();
+      .from("user_credits").select("balance, total_spent").eq("user_id", user_id).single();
 
     if (!userCredits || userCredits.balance < service.credits_cost) {
       await supabase.from("neuron_jobs").update({
-        status: "failed",
-        completed_at: new Date().toISOString(),
+        status: "failed", completed_at: new Date().toISOString(),
         result: { error: "RC.CREDITS.INSUFFICIENT", reason: `Need ${service.credits_cost}, have ${userCredits?.balance ?? 0}` },
       }).eq("id", job_id);
 
-      // Log denied decision
       await supabase.from("credit_transactions").insert({
-        user_id,
-        job_id,
-        amount: 0,
-        type: "denied",
+        user_id, job_id, amount: 0, type: "denied",
         description: `DENIED: ${service.name} — insufficient credits`,
       });
 
@@ -142,68 +147,49 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Reserve: deduct credits immediately
     const newBalance = userCredits.balance - service.credits_cost;
     const newSpent = userCredits.total_spent + service.credits_cost;
     await supabase.from("user_credits").update({
-      balance: newBalance,
-      total_spent: newSpent,
-      updated_at: new Date().toISOString(),
+      balance: newBalance, total_spent: newSpent, updated_at: new Date().toISOString(),
     }).eq("user_id", user_id);
 
-    // Log reservation
     await supabase.from("credit_transactions").insert({
-      user_id,
-      job_id,
-      amount: -service.credits_cost,
-      type: "reserve",
+      user_id, job_id, amount: -service.credits_cost, type: "reserve",
       description: `RESERVE: ${service.name}`,
     });
 
-    // ── STEP 4: Execute AI pipeline ──
+    // ── Execute AI pipeline ──
     const systemPrompt = SERVICE_PROMPTS[service_key] || SERVICE_PROMPTS["insight-extractor"];
     const inputText = Object.entries(inputs || {})
       .filter(([_, v]) => v && String(v).trim())
-      .map(([k, v]) => `${k}: ${v}`)
-      .join("\n\n");
-
-    const userMessage = inputText || "Analyze the provided context and produce comprehensive results.";
+      .map(([k, v]) => `${k}: ${v}`).join("\n\n");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: userMessage },
+          { role: "user", content: inputText || "Analyze the provided context and produce comprehensive results." },
         ],
         stream: true,
       }),
     });
 
     if (!response.ok) {
-      // ── STEP 4b: Release credits on AI failure ──
+      // Release credits on AI failure
       await supabase.from("user_credits").update({
-        balance: newBalance + service.credits_cost,
-        total_spent: newSpent - service.credits_cost,
-        updated_at: new Date().toISOString(),
+        balance: newBalance + service.credits_cost, total_spent: newSpent - service.credits_cost, updated_at: new Date().toISOString(),
       }).eq("user_id", user_id);
 
       await supabase.from("credit_transactions").insert({
-        user_id,
-        job_id,
-        amount: service.credits_cost,
-        type: "release",
+        user_id, job_id, amount: service.credits_cost, type: "release",
         description: `RELEASE: ${service.name} — AI error ${response.status}`,
       });
 
       await supabase.from("neuron_jobs").update({
-        status: "failed",
-        completed_at: new Date().toISOString(),
+        status: "failed", completed_at: new Date().toISOString(),
         result: { error: `AI error: ${response.status}` },
       }).eq("id", job_id);
 
@@ -217,17 +203,14 @@ Deno.serve(async (req) => {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-
       return new Response(JSON.stringify({ error: "AI service unavailable. Credits released." }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // ── STEP 5: Stream response, collect full result for auditing ──
-    // We need to tee the stream: one for the client, one to collect the full text
+    // ── Stream response, collect for auditing + artifact generation ──
     const [clientStream, auditStream] = response.body!.tee();
 
-    // Background: collect full result and finalize job
     const finalizeJob = async () => {
       try {
         const reader = auditStream.getReader();
@@ -256,54 +239,66 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Finalize: mark job completed with audited result
+        // Mark job completed
         await supabase.from("neuron_jobs").update({
-          status: "completed",
-          completed_at: new Date().toISOString(),
+          status: "completed", completed_at: new Date().toISOString(),
           result: { content: fullResult, credits_spent: service.credits_cost, service: service.name },
         }).eq("id", job_id);
 
-        // Log spend (confirm reservation)
+        // Confirm spend
         await supabase.from("credit_transactions").insert({
-          user_id,
-          job_id,
-          amount: -service.credits_cost,
-          type: "spend",
+          user_id, job_id, amount: -service.credits_cost, type: "spend",
           description: `SPEND: ${service.name} — completed`,
         });
 
-        // Save result as neuron block
+        // Save as neuron block
         if (neuron_id && fullResult) {
           await supabase.from("neuron_blocks").insert({
-            neuron_id,
-            type: "markdown",
-            content: fullResult,
-            position: 0,
-            execution_mode: "passive",
+            neuron_id, type: "markdown", content: fullResult, position: 0, execution_mode: "passive",
           });
-
-          // Update neuron lifecycle
           await supabase.from("neurons").update({
-            status: "published",
-            lifecycle: "structured",
-            updated_at: new Date().toISOString(),
+            status: "published", lifecycle: "structured", updated_at: new Date().toISOString(),
           }).eq("id", neuron_id);
+        }
+
+        // ── AUTO-GENERATE ARTIFACT ──
+        if (fullResult && fullResult.length > 50) {
+          const artifactType = SERVICE_ARTIFACT_TYPE[service_key] || "document";
+          const artifactTitle = `${service.name} — ${new Date().toLocaleDateString("ro-RO")}`;
+
+          const { data: artifact } = await supabase.from("artifacts").insert({
+            author_id: user_id,
+            title: artifactTitle,
+            artifact_type: artifactType,
+            content: fullResult,
+            format: "markdown",
+            status: "generated",
+            service_key,
+            job_id,
+            tags: [service_key, artifactType],
+            metadata: { credits_spent: service.credits_cost, neuron_id },
+          }).select("id").single();
+
+          // Link artifact to source neuron
+          if (artifact && neuron_id) {
+            await supabase.from("artifact_neurons").insert({
+              artifact_id: artifact.id,
+              neuron_id,
+              relation_type: "source",
+            });
+          }
         }
       } catch (e) {
         console.error("Finalize job error:", e);
-        // On finalize failure, still mark job but log error
         await supabase.from("neuron_jobs").update({
-          status: "completed",
-          completed_at: new Date().toISOString(),
+          status: "completed", completed_at: new Date().toISOString(),
           result: { error: "Finalization error", partial: true },
         }).eq("id", job_id);
       }
     };
 
-    // Fire and forget the audit collection
     finalizeJob();
 
-    // ── STEP 6: Return stream to client ──
     return new Response(clientStream, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
