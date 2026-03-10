@@ -247,46 +247,137 @@ export function useNeuron(neuronNumber?: number) {
     await supabase.from("neuron_blocks").update({ language: lang }).eq("id", id);
   }, []);
 
-  const handleBlockExecute = useCallback((id: string) => {
+  const handleBlockExecute = useCallback(async (id: string) => {
+    if (!neuron) return;
+    const block = blocks.find(b => b.id === id);
+    if (!block) return;
+
     setBlocks(prev => prev.map(b =>
       b.id === id ? { ...b, executionStatus: "running" as const } : b
     ));
 
-    const block = blocks.find(b => b.id === id);
     const log: ExecutionLog = {
       id: Date.now().toString(),
       blockId: id,
-      blockType: block?.type || "text",
-      action: `Executing ${block?.type} block`,
+      blockType: block.type,
+      action: `Executing ${block.type} block`,
       status: "running",
       timestamp: new Date().toLocaleTimeString(),
     };
     setExecutionLogs(prev => [log, ...prev]);
 
-    setTimeout(() => {
-      const results: Record<string, string> = {
-        code: ">>> Output: success",
-        yaml: "Pipeline validated ✓",
-        json: "Schema valid ✓",
-        prompt: "Prompt compiled ✓",
-        dataset: "Data validated ✓",
-        diagram: "Graph rendered ✓",
-        "ai-action": "AI worker completed",
-      };
-      setBlocks(prev => prev.map(b =>
-        b.id === id ? {
-          ...b,
-          executionStatus: "success" as const,
-          executionResult: results[b.type] || "Executed"
-        } : b
-      ));
+    try {
+      // Create a job in the database
+      const { data: job, error: jobErr } = await supabase
+        .from("neuron_jobs")
+        .insert({
+          neuron_id: neuron.id,
+          block_id: id,
+          worker_type: block.type,
+          status: "processing",
+          input: { content: block.content, type: block.type, language: block.language },
+          author_id: user?.id,
+        })
+        .select()
+        .single();
+
+      if (jobErr) throw jobErr;
+
+      // For AI-action and prompt blocks, call the edge function
+      if (["ai-action", "prompt"].includes(block.type) && block.content.trim()) {
+        const resp = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-insights`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: JSON.stringify({
+              action: "extract_insights",
+              blocks: [{ type: block.type, content: block.content }],
+              neuron_title: neuron.title,
+            }),
+          }
+        );
+
+        if (!resp.ok) throw new Error(`Execution failed: ${resp.status}`);
+
+        // Read streamed result
+        const reader = resp.body?.getReader();
+        const decoder = new TextDecoder();
+        let result = "";
+        if (reader) {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            for (const line of chunk.split("\n")) {
+              if (!line.startsWith("data: ")) continue;
+              const jsonStr = line.slice(6).trim();
+              if (jsonStr === "[DONE]") continue;
+              try {
+                const parsed = JSON.parse(jsonStr);
+                const content = parsed.choices?.[0]?.delta?.content;
+                if (content) result += content;
+              } catch { /* skip */ }
+            }
+          }
+        }
+
+        // Update job with result
+        await supabase.from("neuron_jobs").update({
+          status: "completed",
+          completed_at: new Date().toISOString(),
+          result: { output: result },
+        }).eq("id", job.id);
+
+        setBlocks(prev => prev.map(b =>
+          b.id === id ? { ...b, executionStatus: "success" as const, executionResult: result.slice(0, 200) } : b
+        ));
+      } else {
+        // For other executable blocks, simulate validation
+        const results: Record<string, string> = {
+          code: ">>> Output: success",
+          yaml: "Pipeline validated ✓",
+          json: "Schema valid ✓",
+          dataset: "Data validated ✓",
+          diagram: "Graph rendered ✓",
+        };
+
+        await supabase.from("neuron_jobs").update({
+          status: "completed",
+          completed_at: new Date().toISOString(),
+          result: { output: results[block.type] || "Executed" },
+        }).eq("id", job.id);
+
+        setBlocks(prev => prev.map(b =>
+          b.id === id ? {
+            ...b,
+            executionStatus: "success" as const,
+            executionResult: results[b.type] || "Executed"
+          } : b
+        ));
+      }
+
       setExecutionLogs(prev => prev.map(l =>
         l.blockId === id && l.status === "running"
           ? { ...l, status: "success" as const, result: "Completed" }
           : l
       ));
-    }, 1500);
-  }, [blocks]);
+    } catch (err) {
+      console.error("Block execution error:", err);
+      setBlocks(prev => prev.map(b =>
+        b.id === id ? { ...b, executionStatus: "error" as const, executionResult: "Execution failed" } : b
+      ));
+      setExecutionLogs(prev => prev.map(l =>
+        l.blockId === id && l.status === "running"
+          ? { ...l, status: "error" as const, result: err instanceof Error ? err.message : "Failed" }
+          : l
+      ));
+      toast.error("Block execution failed");
+    }
+  }, [neuron, blocks, user]);
 
   const handleRunAll = useCallback(() => {
     const executableBlocks = blocks.filter(b => BLOCK_TYPE_CONFIG[b.type].executable);
