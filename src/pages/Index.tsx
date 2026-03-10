@@ -114,6 +114,10 @@ export default function Index() {
             <BookOpen className="h-3.5 w-3.5" />
             Architecture
           </Button>
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/links")}>
+            <Link2 className="h-3.5 w-3.5" />
+            Links
+          </Button>
         </div>
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
           <Plus className="h-3.5 w-3.5" />
