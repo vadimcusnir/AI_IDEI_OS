@@ -281,6 +281,7 @@ export default function Extractor() {
           triggerTranscription(ep.id, filePath);
         } else if (sourceType === "url") {
           toast.success("Episode created. Add a transcript or upload an audio file to extract neurons.");
+          trackEvent({ name: "transcript_uploaded", params: { source_type: sourceType, episode_id: ep.id } });
           resetForm();
           if (episodes.length > 0) setShowForm(false);
           fetchEpisodes();
