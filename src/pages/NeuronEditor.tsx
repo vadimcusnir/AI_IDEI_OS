@@ -176,6 +176,21 @@ export default function NeuronEditor() {
         />
       </div>
 
+      {/* AI Results Panel */}
+      {(extractionResult || isExtracting) && (
+        <AIResultsPanel
+          result={extractionResult}
+          isExtracting={isExtracting}
+          activeAction={activeAction}
+          onClose={clearResult}
+          onInsertAsBlock={async (content) => {
+            if (blocks.length > 0) {
+              await handleAddBlock(blocks[blocks.length - 1].id, "markdown");
+            }
+          }}
+        />
+      )}
+
       <NeuronBottomBar
         isExpanded={bottomExpanded}
         onToggle={() => setBottomExpanded(!bottomExpanded)}
