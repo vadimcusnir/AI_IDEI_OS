@@ -4,8 +4,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
+import { useNotifications } from "@/hooks/useNotifications";
 import {
-  Loader2, User, Camera, Save, ArrowLeft, CheckCircle2,
+  Loader2, User, Save, CheckCircle2,
+  Bell, BellRing, Mail, Clock,
+  Briefcase, Coins, MessageCircle, GitBranch, Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +33,8 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const { prefs, loading: prefsLoading, updatePrefs } = useNotificationPreferences();
+  const { requestPermission, permissionStatus } = useNotifications();
 
   useEffect(() => {
     if (authLoading || !user) return;
@@ -49,7 +56,6 @@ export default function ProfilePage() {
         username: data.username || null,
       });
     } else if (!error) {
-      // Profile doesn't exist yet, create it
       await supabase.from("profiles").insert({
         user_id: user!.id,
         display_name: user!.user_metadata?.full_name || "",
@@ -84,6 +90,16 @@ export default function ProfilePage() {
       setTimeout(() => setSaved(false), 2000);
     }
     setSaving(false);
+  };
+
+  const handleEnablePush = async () => {
+    const permission = await requestPermission();
+    if (permission === "granted") {
+      await updatePrefs({ push_enabled: true });
+      toast.success("Notificări browser activate!");
+    } else {
+      toast.error("Permisiunea pentru notificări a fost refuzată.");
+    }
   };
 
   const avatarInitial = profile.display_name?.charAt(0)?.toUpperCase() ||
@@ -154,7 +170,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile fields */}
-        <div className="bg-card border border-border rounded-xl p-6 space-y-5">
+        <div className="bg-card border border-border rounded-xl p-6 space-y-5 mb-4">
           <div>
             <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Nume afișat</label>
             <input
@@ -199,8 +215,175 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* ─── Notification Preferences ─── */}
+        <div className="bg-card border border-border rounded-xl p-6 mb-4">
+          <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
+            <Bell className="h-4 w-4 text-primary" />
+            Preferințe notificări
+          </h2>
+
+          {prefsLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground mx-auto my-4" />
+          ) : (
+            <div className="space-y-5">
+              {/* Browser Push */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <BellRing className="h-4 w-4 text-primary" />
+                    <div>
+                      <p className="text-xs font-medium">Notificări browser</p>
+                      <p className="text-[10px] text-muted-foreground">
+                        Primești alerte pe desktop chiar dacă nu ești pe pagină
+                      </p>
+                    </div>
+                  </div>
+                  {prefs.push_enabled && permissionStatus === "granted" ? (
+                    <Switch
+                      checked={prefs.push_enabled}
+                      onCheckedChange={(v) => updatePrefs({ push_enabled: v })}
+                    />
+                  ) : (
+                    <Button size="sm" variant="outline" className="text-xs gap-1" onClick={handleEnablePush}>
+                      <BellRing className="h-3 w-3" /> Activează
+                    </Button>
+                  )}
+                </div>
+
+                {prefs.push_enabled && (
+                  <div className="ml-6 space-y-2">
+                    <PrefToggle
+                      icon={Briefcase}
+                      label="Joburi finalizate / eșuate"
+                      checked={prefs.push_jobs}
+                      onChange={(v) => updatePrefs({ push_jobs: v })}
+                    />
+                    <PrefToggle
+                      icon={Coins}
+                      label="Alerte credite scăzute"
+                      checked={prefs.push_credits}
+                      onChange={(v) => updatePrefs({ push_credits: v })}
+                    />
+                    <PrefToggle
+                      icon={MessageCircle}
+                      label="Feedback și răspunsuri"
+                      checked={prefs.push_feedback}
+                      onChange={(v) => updatePrefs({ push_feedback: v })}
+                    />
+                    <PrefToggle
+                      icon={GitBranch}
+                      label="Versiuni noi salvate"
+                      checked={prefs.push_versions}
+                      onChange={(v) => updatePrefs({ push_versions: v })}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="border-t border-border" />
+
+              {/* Email Digest */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <Mail className="h-4 w-4 text-primary" />
+                  <div>
+                    <p className="text-xs font-medium">Digest email</p>
+                    <p className="text-[10px] text-muted-foreground">
+                      Rezumat periodic trimis pe email
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-1.5 mb-3 ml-6">
+                  {(
+                    [
+                      { key: "none", label: "Dezactivat" },
+                      { key: "daily", label: "Zilnic" },
+                      { key: "weekly", label: "Săptămânal" },
+                    ] as const
+                  ).map((opt) => (
+                    <button
+                      key={opt.key}
+                      onClick={() => updatePrefs({ email_digest: opt.key })}
+                      className={cn(
+                        "px-3 py-1 rounded-full text-[11px] font-medium transition-colors",
+                        prefs.email_digest === opt.key
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+
+                {prefs.email_digest !== "none" && (
+                  <div className="ml-6 space-y-2">
+                    <PrefToggle
+                      icon={Briefcase}
+                      label="Raport joburi"
+                      checked={prefs.email_jobs}
+                      onChange={(v) => updatePrefs({ email_jobs: v })}
+                    />
+                    <PrefToggle
+                      icon={Coins}
+                      label="Raport credite"
+                      checked={prefs.email_credits}
+                      onChange={(v) => updatePrefs({ email_credits: v })}
+                    />
+                    <PrefToggle
+                      icon={MessageCircle}
+                      label="Raport feedback"
+                      checked={prefs.email_feedback}
+                      onChange={(v) => updatePrefs({ email_feedback: v })}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="border-t border-border" />
+
+              {/* Quiet Hours */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs font-medium">Ore liniștite</p>
+                    <p className="text-[10px] text-muted-foreground">
+                      Fără notificări browser în interval
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 ml-6">
+                  <select
+                    value={prefs.quiet_hours_start ?? ""}
+                    onChange={(e) => updatePrefs({ quiet_hours_start: e.target.value ? Number(e.target.value) : null })}
+                    className="h-8 px-2 rounded-md border border-input bg-background text-xs"
+                  >
+                    <option value="">Dezactivat</option>
+                    {Array.from({ length: 24 }, (_, i) => (
+                      <option key={i} value={i}>{String(i).padStart(2, "0")}:00</option>
+                    ))}
+                  </select>
+                  <span className="text-xs text-muted-foreground">→</span>
+                  <select
+                    value={prefs.quiet_hours_end ?? ""}
+                    onChange={(e) => updatePrefs({ quiet_hours_end: e.target.value ? Number(e.target.value) : null })}
+                    className="h-8 px-2 rounded-md border border-input bg-background text-xs"
+                  >
+                    <option value="">—</option>
+                    {Array.from({ length: 24 }, (_, i) => (
+                      <option key={i} value={i}>{String(i).padStart(2, "0")}:00</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Account info (read-only) */}
-        <div className="bg-card border border-border rounded-xl p-6 mt-4">
+        <div className="bg-card border border-border rounded-xl p-6">
           <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Informații cont</h2>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -218,6 +401,23 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function PrefToggle({ icon: Icon, label, checked, onChange }: {
+  icon: React.ElementType;
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between py-1">
+      <div className="flex items-center gap-2">
+        <Icon className="h-3 w-3 text-muted-foreground" />
+        <span className="text-xs">{label}</span>
+      </div>
+      <Switch checked={checked} onCheckedChange={onChange} />
     </div>
   );
 }
