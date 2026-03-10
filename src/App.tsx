@@ -28,6 +28,7 @@ import Dashboard from "./pages/Dashboard";
 import PublicProfile from "./pages/PublicProfile";
 import PromptForge from "./pages/PromptForge";
 import ProfileExtractor from "./pages/ProfileExtractor";
+import Notifications from "./pages/Notifications";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
