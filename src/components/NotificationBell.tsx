@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
-import { Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch } from "lucide-react";
+import { Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch, MessageCircle, MessageSquarePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ro } from "date-fns/locale";
