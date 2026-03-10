@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star } from "lucide-react";
+import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -55,6 +55,9 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, onTogglePin, onDelet
         </DropdownMenuItem>
         <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/n/${n.number}`); }}>
           <BookOpen className="h-3.5 w-3.5 mr-2" /> Deschide
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/batch/${n.id}`); }}>
+          <Zap className="h-3.5 w-3.5 mr-2" /> Batch Execute
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive" onClick={(e) => onDelete(n.id, e)}>
