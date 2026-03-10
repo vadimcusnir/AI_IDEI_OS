@@ -134,6 +134,14 @@ export default function Index() {
             <BarChart3 className="h-3.5 w-3.5" />
             Intelligence
           </Button>
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/dashboard")}>
+            <LayoutDashboard className="h-3.5 w-3.5" />
+            Dashboard
+          </Button>
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowExportImport(true)}>
+            <Download className="h-3.5 w-3.5" />
+            Export
+          </Button>
           <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/architecture")}>
             <BookOpen className="h-3.5 w-3.5" />
             Docs
@@ -142,6 +150,7 @@ export default function Index() {
             <Link2 className="h-3.5 w-3.5" />
             Links
           </Button>
+          <NotificationBell />
           <ThemeToggle />
         </div>
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
