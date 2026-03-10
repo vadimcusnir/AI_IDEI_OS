@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork, Link2, Upload, Sparkles, ClipboardList, Coins, BarChart3 } from "lucide-react";
+import { Plus, Loader2, Shield, BookOpen, Search, X, Copy, GitFork, Link2, Upload, Sparkles, ClipboardList, Coins, BarChart3, LayoutDashboard, Download } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { NotificationBell } from "@/components/NotificationBell";
+import { ExportImportPanel } from "@/components/ExportImportPanel";
 
 interface NeuronListItem {
   id: number;
@@ -25,6 +27,7 @@ export default function Index() {
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  const [showExportImport, setShowExportImport] = useState(false);
 
   // Search
   const [searchQuery, setSearchQuery] = useState("");
@@ -131,6 +134,14 @@ export default function Index() {
             <BarChart3 className="h-3.5 w-3.5" />
             Intelligence
           </Button>
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/dashboard")}>
+            <LayoutDashboard className="h-3.5 w-3.5" />
+            Dashboard
+          </Button>
+          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowExportImport(true)}>
+            <Download className="h-3.5 w-3.5" />
+            Export
+          </Button>
           <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/architecture")}>
             <BookOpen className="h-3.5 w-3.5" />
             Docs
@@ -139,6 +150,7 @@ export default function Index() {
             <Link2 className="h-3.5 w-3.5" />
             Links
           </Button>
+          <NotificationBell />
           <ThemeToggle />
         </div>
         <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
@@ -226,6 +238,7 @@ export default function Index() {
 
       {/* Template Picker Modal */}
       <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />
+      <ExportImportPanel isOpen={showExportImport} onClose={() => setShowExportImport(false)} />
     </div>
   );
 }
