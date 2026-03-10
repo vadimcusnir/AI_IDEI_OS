@@ -220,7 +220,7 @@ export default function Credits() {
         <div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-3">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 shrink-0">
-              Istoric tranzacții
+              Transaction History
               <span className="text-muted-foreground/40 font-normal">{filteredTx.length}</span>
             </h2>
             <div className="flex-1" />
