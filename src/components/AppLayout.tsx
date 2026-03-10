@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { FeedbackFAB } from "@/components/feedback/FeedbackFAB";
 import { ContextualFeedbackPrompt } from "@/components/feedback/ContextualFeedbackPrompt";
+import { GlobalSearch } from "@/components/GlobalSearch";
 
 interface AppLayoutProps {
   children: ReactNode;
