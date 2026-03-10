@@ -34,12 +34,14 @@ const NAV_ITEMS = [
 ];
 
 export function SiteHeader() {
-  const { t } = useTranslation(["navigation", "common"]);
+  const { t, i18n } = useTranslation(["navigation", "common"]);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { balance, loading: balanceLoading } = useCreditBalance();
+
+  const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
