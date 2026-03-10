@@ -144,10 +144,10 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
         />
         <Textarea
           placeholder={
-            type === "testimonial" ? "Povestește experiența ta cu AI-IDEI..." :
-            type === "complaint" ? "Descrie problema întâmpinată..." :
-            type === "proposal" ? "Ce funcționalitate ai vrea să vezi?" :
-            "Scrie feedback-ul tău..."
+            type === "testimonial" ? "Share your experience with AI-IDEI..." :
+            type === "complaint" ? "Describe the issue you encountered..." :
+            type === "proposal" ? "What feature would you like to see?" :
+            "Write your feedback..."
           }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
