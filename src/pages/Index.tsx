@@ -514,7 +514,7 @@ export default function Index() {
       </div>
 
       {/* Content with sidebar */}
-      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 48px)' }}>
+      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 88px)' }}>
         {/* Folder Sidebar */}
         {showFolders && (
           <NeuronFolderSidebar
