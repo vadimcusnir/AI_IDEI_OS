@@ -321,7 +321,7 @@ export default function ProfilePage() {
                   <div className="ml-6 space-y-2">
                     <PrefToggle
                       icon={Briefcase}
-                      label="Raport joburi"
+                      label="Jobs report"
                       checked={prefs.email_jobs}
                       onChange={(v) => updatePrefs({ email_jobs: v })}
                     />
