@@ -56,7 +56,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/links" element={<Links />} />
-              <Route path="/changelog" element={<Changelog />} />
+              <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
               <Route path="/architecture" element={<Architecture />} />
               <Route path="/u/:username" element={<PublicProfile />} />
               <Route path="/guest/:slug" element={<GuestProfile />} />
