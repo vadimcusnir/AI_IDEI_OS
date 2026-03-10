@@ -359,6 +359,91 @@ export type Database = {
           },
         ]
       }
+      entity_content: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          entity_id: string
+          id: string
+          language: string
+          meta_description: string | null
+          slug: string | null
+          summary: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          entity_id: string
+          id?: string
+          language?: string
+          meta_description?: string | null
+          slug?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          entity_id?: string
+          id?: string
+          language?: string
+          meta_description?: string | null
+          slug?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_content_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_labels: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          entity_id: string
+          id: string
+          language: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          entity_id: string
+          id?: string
+          language?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          entity_id?: string
+          id?: string
+          language?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_labels_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       entity_relations: {
         Row: {
           created_at: string | null
@@ -1401,6 +1486,47 @@ export type Database = {
           service_key?: string
         }
         Relationships: []
+      }
+      topic_labels: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          language: string
+          slug: string | null
+          title: string
+          topic_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          language?: string
+          slug?: string | null
+          title: string
+          topic_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          language?: string
+          slug?: string | null
+          title?: string
+          topic_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "topic_labels_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       topics: {
         Row: {

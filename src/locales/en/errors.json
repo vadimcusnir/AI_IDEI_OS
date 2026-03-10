@@ -1,0 +1,20 @@
+{
+  "generic": "Something went wrong. Please try again.",
+  "save_failed": "Save error: {{message}}",
+  "username_taken": "This username is already taken.",
+  "fill_title_message": "Please fill in the title and message.",
+  "select_rating": "Please select a rating.",
+  "submit_error": "Error submitting: {{message}}",
+  "push_enable_failed": "Could not enable push notifications.",
+  "notification_denied": "Notification permission was denied.",
+  "invalid_amount": "Invalid amount",
+  "add_description": "Add a description",
+  "insufficient_balance": "Insufficient balance. Current: {{balance}}",
+  "payment_cancelled": "Payment was cancelled.",
+  "payment_already_processed": "Payment was already processed.",
+  "payment_error": "Payment verification error: {{message}}",
+  "checkout_error": "Error creating checkout session",
+  "checkout_url_missing": "Checkout URL not received",
+  "transcript_upload_failed": "Transcript upload failed.",
+  "extraction_timeout": "Extraction timed out."
+}
