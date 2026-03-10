@@ -14,6 +14,101 @@ export type Database = {
   }
   public: {
     Tables: {
+      artifact_neurons: {
+        Row: {
+          artifact_id: string
+          created_at: string
+          id: string
+          neuron_id: number
+          relation_type: string
+        }
+        Insert: {
+          artifact_id: string
+          created_at?: string
+          id?: string
+          neuron_id: number
+          relation_type?: string
+        }
+        Update: {
+          artifact_id?: string
+          created_at?: string
+          id?: string
+          neuron_id?: number
+          relation_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artifact_neurons_artifact_id_fkey"
+            columns: ["artifact_id"]
+            isOneToOne: false
+            referencedRelation: "artifacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "artifact_neurons_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      artifacts: {
+        Row: {
+          artifact_type: string
+          author_id: string
+          content: string
+          created_at: string
+          format: string
+          id: string
+          job_id: string | null
+          metadata: Json | null
+          service_key: string | null
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          artifact_type?: string
+          author_id: string
+          content?: string
+          created_at?: string
+          format?: string
+          id?: string
+          job_id?: string | null
+          metadata?: Json | null
+          service_key?: string | null
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          artifact_type?: string
+          author_id?: string
+          content?: string
+          created_at?: string
+          format?: string
+          id?: string
+          job_id?: string | null
+          metadata?: Json | null
+          service_key?: string | null
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artifacts_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       block_type_registry: {
         Row: {
           category: string
