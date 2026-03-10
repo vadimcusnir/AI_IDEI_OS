@@ -4,96 +4,101 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export interface AppNotification {
   id: string;
-  type: "job_completed" | "job_failed" | "extraction_done" | "credits_low" | "version_created";
+  type: string;
   title: string;
   message: string;
   read: boolean;
-  timestamp: Date;
-  meta?: Record<string, any>;
+  link: string | null;
+  meta: Record<string, any> | null;
+  created_at: string;
 }
 
 export function useNotifications() {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const checkNotifications = useCallback(async () => {
+  // Fetch notifications from DB
+  const fetchNotifications = useCallback(async () => {
     if (!user) return;
-
-    const newNotifs: AppNotification[] = [];
-
-    // Check recent completed/failed jobs (last 5 min)
-    const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-    const { data: recentJobs } = await supabase
-      .from("neuron_jobs")
-      .select("id, worker_type, status, completed_at")
-      .eq("author_id", user.id)
-      .gte("completed_at", fiveMinAgo)
-      .order("completed_at", { ascending: false })
-      .limit(5);
-
-    if (recentJobs) {
-      for (const job of recentJobs) {
-        const existing = notifications.find(n => n.id === `job-${job.id}`);
-        if (!existing) {
-          newNotifs.push({
-            id: `job-${job.id}`,
-            type: job.status === "completed" ? "job_completed" : "job_failed",
-            title: job.status === "completed" ? "Job Completed" : "Job Failed",
-            message: `${(job.worker_type as string).replace(/-/g, " ")} — ${job.status}`,
-            read: false,
-            timestamp: new Date(job.completed_at as string),
-          });
-        }
-      }
-    }
-
-    // Check credits
-    const { data: credits } = await supabase
-      .from("user_credits")
-      .select("balance")
+    const { data } = await supabase
+      .from("notifications")
+      .select("*")
       .eq("user_id", user.id)
-      .single();
+      .order("created_at", { ascending: false })
+      .limit(50);
 
-    if (credits && (credits as any).balance < 50) {
-      const existing = notifications.find(n => n.type === "credits_low");
-      if (!existing) {
-        newNotifs.push({
-          id: `credits-low-${Date.now()}`,
-          type: "credits_low",
-          title: "Credits Low",
-          message: `Balance: ${(credits as any).balance} NEURONS. Consider managing your usage.`,
-          read: false,
-          timestamp: new Date(),
-        });
-      }
+    if (data) {
+      setNotifications(data as unknown as AppNotification[]);
     }
-
-    if (newNotifs.length > 0) {
-      setNotifications(prev => [...newNotifs, ...prev].slice(0, 20));
-    }
-  }, [user, notifications]);
-
-  // Poll every 30 seconds
-  useEffect(() => {
-    if (!user) return;
-    checkNotifications();
-    const interval = setInterval(checkNotifications, 30000);
-    return () => clearInterval(interval);
+    setLoading(false);
   }, [user]);
 
-  const markRead = useCallback((id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-  }, []);
+  // Initial fetch + realtime subscription
+  useEffect(() => {
+    if (!user) {
+      setNotifications([]);
+      setLoading(false);
+      return;
+    }
 
-  const markAllRead = useCallback(() => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  }, []);
+    fetchNotifications();
 
-  const clearAll = useCallback(() => {
+    const channel = supabase
+      .channel("user-notifications")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          const newNotif = payload.new as unknown as AppNotification;
+          setNotifications((prev) => [newNotif, ...prev].slice(0, 50));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, fetchNotifications]);
+
+  const markRead = useCallback(
+    async (id: string) => {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+      );
+      await supabase
+        .from("notifications")
+        .update({ read: true } as any)
+        .eq("id", id);
+    },
+    []
+  );
+
+  const markAllRead = useCallback(async () => {
+    if (!user) return;
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    await supabase
+      .from("notifications")
+      .update({ read: true } as any)
+      .eq("user_id", user.id)
+      .eq("read", false);
+  }, [user]);
+
+  const clearAll = useCallback(async () => {
+    if (!user) return;
     setNotifications([]);
-  }, []);
+    await supabase
+      .from("notifications")
+      .delete()
+      .eq("user_id", user.id);
+  }, [user]);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
-  return { notifications, unreadCount, markRead, markAllRead, clearAll };
+  return { notifications, unreadCount, markRead, markAllRead, clearAll, loading, refetch: fetchNotifications };
 }
