@@ -6,7 +6,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// ── Chunking utilities (shared with chunk-transcript) ──
+// ── Chunking utilities ──
 
 function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
@@ -125,35 +125,39 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    // Validate caller identity via JWT
+    // ── Authenticate via JWT ──
     const authHeader = req.headers.get("authorization") || "";
-    const token = authHeader.replace("Bearer ", "");
-    if (token && token !== anonKey) {
-      const userClient = createClient(supabaseUrl, anonKey, {
-        global: { headers: { Authorization: `Bearer ${token}` } },
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
-      const { data: { user: caller } } = await userClient.auth.getUser();
-      if (!caller) {
-        return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
     }
+    const token = authHeader.replace("Bearer ", "");
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
+    if (authError || !caller) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userId = caller.id;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const { episode_id, user_id } = await req.json();
+    const { episode_id } = await req.json();
 
-    if (!episode_id || !user_id) {
-      return new Response(JSON.stringify({ error: "Missing episode_id or user_id" }), {
+    if (!episode_id) {
+      return new Response(JSON.stringify({ error: "Missing episode_id" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     // ── Fetch episode ──
     const { data: episode, error: epErr } = await supabase
-      .from("episodes").select("*").eq("id", episode_id).eq("author_id", user_id).single();
+      .from("episodes").select("*").eq("id", episode_id).eq("author_id", userId).single();
 
     if (!episode || epErr) {
       return new Response(JSON.stringify({ error: "Episode not found" }), {
@@ -171,7 +175,7 @@ Deno.serve(async (req) => {
     // ── Check credits (100 per extraction) ──
     const EXTRACTION_COST = 100;
     const { data: credits } = await supabase
-      .from("user_credits").select("balance, total_spent").eq("user_id", user_id).single();
+      .from("user_credits").select("balance, total_spent").eq("user_id", userId).single();
 
     if (!credits || credits.balance < EXTRACTION_COST) {
       return new Response(JSON.stringify({
@@ -187,7 +191,7 @@ Deno.serve(async (req) => {
       balance: credits.balance - EXTRACTION_COST,
       total_spent: credits.total_spent + EXTRACTION_COST,
       updated_at: new Date().toISOString(),
-    }).eq("user_id", user_id);
+    }).eq("user_id", userId);
 
     // ── Update episode status ──
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);
@@ -196,7 +200,7 @@ Deno.serve(async (req) => {
     const chunks = greedyChunk(transcript, 200, 800);
     console.log(`Transcript chunked into ${chunks.length} segments`);
 
-    // ── Process each chunk (sequentially to respect rate limits) ──
+    // ── Process each chunk ──
     const allNeurons: any[] = [];
     for (let i = 0; i < chunks.length; i++) {
       const extracted = await extractNeuronsFromChunk(
@@ -206,10 +210,9 @@ Deno.serve(async (req) => {
     }
 
     if (allNeurons.length === 0) {
-      // Release credits
       await supabase.from("user_credits").update({
         balance: credits.balance, total_spent: credits.total_spent,
-      }).eq("user_id", user_id);
+      }).eq("user_id", userId);
       await supabase.from("episodes").update({ status: "transcribed" }).eq("id", episode_id);
       return new Response(JSON.stringify({ error: "No neurons extracted" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -222,7 +225,7 @@ Deno.serve(async (req) => {
       const { data: newNeuron, error: nErr } = await supabase
         .from("neurons")
         .insert({
-          author_id: user_id,
+          author_id: userId,
           title: neuronData.title || "Extracted Neuron",
           status: "draft",
           lifecycle: "structured",
@@ -261,7 +264,7 @@ Deno.serve(async (req) => {
     } as any).eq("id", episode_id);
 
     await supabase.from("credit_transactions").insert({
-      user_id,
+      user_id: userId,
       amount: -EXTRACTION_COST,
       type: "spend",
       description: `EXTRACTION: ${episode.title} → ${createdNeurons.length} neurons (${chunks.length} chunks)`,

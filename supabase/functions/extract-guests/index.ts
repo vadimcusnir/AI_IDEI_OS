@@ -15,36 +15,38 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    // Validate caller
+    // ── Authenticate via JWT ──
     const authHeader = req.headers.get("authorization") || "";
-    const token = authHeader.replace("Bearer ", "");
-    let callerId: string | null = null;
-    if (token && token !== anonKey) {
-      const userClient = createClient(supabaseUrl, anonKey, {
-        global: { headers: { Authorization: `Bearer ${token}` } },
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
-      const { data: { user } } = await userClient.auth.getUser();
-      if (!user) {
-        return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      callerId = user.id;
     }
+    const token = authHeader.replace("Bearer ", "");
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
+    if (authError || !caller) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userId = caller.id;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const { episode_id, user_id } = await req.json();
-    if (!episode_id || !user_id) {
-      return new Response(JSON.stringify({ error: "Missing episode_id or user_id" }), {
+    const { episode_id } = await req.json();
+    if (!episode_id) {
+      return new Response(JSON.stringify({ error: "Missing episode_id" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     // Fetch episode
     const { data: episode, error: epErr } = await supabase
-      .from("episodes").select("*").eq("id", episode_id).eq("author_id", user_id).single();
+      .from("episodes").select("*").eq("id", episode_id).eq("author_id", userId).single();
 
     if (!episode || epErr) {
       return new Response(JSON.stringify({ error: "Episode not found" }), {
@@ -59,7 +61,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Take first 3000 chars for guest detection (enough context)
     const sample = transcript.slice(0, 6000);
 
     const systemPrompt = `You are a guest/participant detection engine for podcast transcripts.
@@ -126,16 +127,14 @@ If no distinct people can be identified, return an empty array [].`;
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
 
-      // Check if exists
       const { data: existing } = await supabase
         .from("guest_profiles")
         .select("id, episode_ids, neuron_ids")
-        .eq("author_id", user_id)
+        .eq("author_id", userId)
         .eq("slug", slug)
         .maybeSingle();
 
       if (existing) {
-        // Update with new episode
         const updatedEpisodes = Array.from(new Set([...(existing.episode_ids || []), episode_id]));
         await supabase.from("guest_profiles").update({
           episode_ids: updatedEpisodes,
@@ -151,7 +150,7 @@ If no distinct people can be identified, return an empty array [].`;
         const { data: newGuest, error: gErr } = await supabase
           .from("guest_profiles")
           .insert({
-            author_id: user_id,
+            author_id: userId,
             full_name: guest.full_name,
             slug,
             role: guest.role || "guest",
