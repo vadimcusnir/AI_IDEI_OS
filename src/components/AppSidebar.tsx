@@ -40,6 +40,7 @@ const SECONDARY_NAV = [
   { label: "Intelligence", to: "/intelligence", icon: Network },
   { label: "Credits", to: "/credits", icon: Coins },
   { label: "Dashboard", to: "/dashboard", icon: BarChart3 },
+  { label: "Onboarding", to: "/onboarding", icon: Rocket },
   { label: "Notificări", to: "/notifications", icon: Bell },
   { label: "Feedback", to: "/feedback", icon: MessageCircle },
   { label: "Changelog", to: "/changelog", icon: ScrollText },
