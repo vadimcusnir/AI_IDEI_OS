@@ -93,7 +93,7 @@ export function ConsumptionChart({ transactions }: ConsumptionChartProps) {
               ]}
             />
             <Bar dataKey="spent" radius={[2, 2, 0, 0]} fill="hsl(var(--destructive))" opacity={0.8} />
-            <Bar dataKey="earned" radius={[2, 2, 0, 0]} fill="hsl(var(--status-validated, 142 71% 45%))" opacity={0.8} />
+            <Bar dataKey="earned" radius={[2, 2, 0, 0]} fill="hsl(var(--status-validated))" opacity={0.8} />
           </BarChart>
         </ResponsiveContainer>
       </div>
