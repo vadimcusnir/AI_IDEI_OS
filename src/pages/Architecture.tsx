@@ -1,12 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft, Database, Layers, GitBranch, Blocks, Copy, Zap, Search, Server,
+  Database, Layers, GitBranch, Blocks, Copy, Zap, Search, Server,
   Brain, Shield, Coins, Workflow, MessageSquare, Users, BookOpen,
   Bell, MessageCircle, BarChart3, Globe, UserCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.gif";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Section = ({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) => (
   <section className="mb-14">
@@ -45,26 +43,6 @@ export default function Architecture() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
-          <button onClick={() => navigate("/")} className="flex items-center gap-2.5">
-            <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full" />
-            <span className="text-base font-serif font-bold">AI-IDEI</span>
-            <span className="text-[9px] uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold hidden sm:inline">
-              Docs
-            </span>
-          </button>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="gap-1.5 text-xs">
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Înapoi
-            </Button>
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Hero */}
         <div className="mb-16">
