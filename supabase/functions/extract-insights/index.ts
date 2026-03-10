@@ -37,68 +37,37 @@ Deno.serve(async (req) => {
 
     // Select prompt based on action
     const prompts: Record<string, string> = {
-      extract_insights: `You are a knowledge extraction engine for a Knowledge Operating System.
+      extract_insights: `You are a knowledge extraction engine. Analyze the content and extract 3-7 key insights. For each: a clear title, explanation (2-3 sentences), and "**Why it matters:**" line. Use ## headings.`,
 
-Analyze the following neuron content and extract the most important insights.
+      extract_frameworks: `You are a pattern recognition engine. Extract 2-5 mental models or frameworks. For each: name, core structure, when to use, example application. Use ## headings.`,
 
-For each insight provide:
-- A clear, concise title (max 10 words)
-- A detailed explanation (2-3 sentences)
-- Why it matters (practical implication)
+      extract_questions: `You are a Socratic analysis engine. Generate 5-10 important questions the content raises. Categories: Clarification, Challenge, Extension, Application. Use markdown formatting.`,
 
-Return between 3-7 insights, ordered by importance.
+      extract_quotes: `You are a quote extraction engine. Identify 3-7 quotable, impactful statements. For each: the quote, context, and suggested use. Use > blockquote formatting.`,
 
-Format your response as a structured list. Use markdown formatting with ## for each insight title, followed by the explanation and a "**Why it matters:**" line.`,
+      extract_prompts: `You are a prompt engineering engine. Generate 3-5 reusable AI prompts to explore ideas further, generate related content, or apply frameworks. Include title, full prompt text, and expected output type. Use ## headings and code blocks.`,
 
-      extract_frameworks: `You are a pattern recognition engine for a Knowledge Operating System.
+      debug_code: `You are a code debugger. Analyze the code and identify bugs, errors, and potential issues. For each issue: description, location, fix suggestion, and corrected code. Use markdown with code blocks.`,
 
-Analyze the following content and extract any mental models, frameworks, or structured thinking patterns.
+      optimize_code: `You are a code optimization expert. Analyze the code and suggest performance improvements. For each: what to optimize, why, before/after comparison. Use markdown with code blocks.`,
 
-For each framework provide:
-- Framework name
-- Core structure (steps, components, or layers)
-- When to use it
-- Example application
+      generate_tests: `You are a test engineer. Generate comprehensive test cases for the code. Include unit tests, edge cases, and integration tests. Output ready-to-use test code. Use markdown with code blocks.`,
 
-Return between 2-5 frameworks. Use markdown with ## for each framework name.`,
+      explain_code: `You are a code explainer. Provide a clear, line-by-line explanation of the code. Cover: purpose, logic flow, key functions, dependencies, and potential gotchas. Use markdown formatting.`,
 
-      extract_questions: `You are a Socratic analysis engine for a Knowledge Operating System.
+      transform_article: `You are a content transformer. Convert the following content into a well-structured article. Include: compelling headline, introduction, body sections with subheadings, conclusion with call-to-action. Professional editorial tone. Use markdown formatting.`,
 
-Analyze the following content and generate the most important questions it raises — both answered and unanswered.
+      transform_twitter: `You are a Twitter thread creator. Convert the content into a compelling 5-10 tweet thread. Each tweet under 280 chars. Include hooks, insights, and a strong closing tweet. Number each tweet.`,
 
-Categories:
-- **Clarification questions** — what needs more detail?
-- **Challenge questions** — what assumptions can be questioned?
-- **Extension questions** — where can this idea go further?
-- **Application questions** — how can this be used practically?
+      transform_script: `You are a video script writer. Convert the content into a professional video/podcast script. Include: hook, main segments with timestamps, key talking points, transitions, and outro. Use markdown formatting.`,
 
-Return 5-10 questions with their category. Use markdown formatting.`,
+      transform_slide: `You are a presentation designer. Convert the content into slide-ready material. For each slide: title, 3-5 bullet points, speaker notes. Aim for 5-10 slides. Use markdown formatting.`,
 
-      extract_quotes: `You are a quote extraction engine for a Knowledge Operating System.
+      find_related: `You are a knowledge graph analyzer. Based on this content, suggest 5-8 related topics, concepts, or domains that would create valuable connections. For each: topic, relationship type (supports, extends, contradicts), and why it's relevant.`,
 
-Analyze the following content and identify the most quotable, shareable, and impactful statements.
+      idea_clusters: `You are a thematic clustering engine. Group the ideas in this content into 3-5 thematic clusters. For each cluster: name, key ideas within it, and connections between them. Visualize as a text-based concept map.`,
 
-For each quote provide:
-- The exact quote or a refined version
-- Context of why it's powerful
-- Suggested use (social media, presentation, article opener, etc.)
-
-Return 3-7 quotes. Use markdown with > blockquote formatting.`,
-
-      extract_prompts: `You are a prompt engineering engine for a Knowledge Operating System.
-
-Analyze the following content and generate reusable AI prompts that could be used to:
-- Explore the ideas further
-- Generate related content
-- Apply the frameworks mentioned
-- Create derivative works
-
-For each prompt provide:
-- Prompt title
-- The full prompt text (ready to use)
-- Expected output type
-
-Return 3-5 prompts. Use markdown with ## for each prompt title and \`\`\` code blocks for the prompt text.`,
+      influence_score: `You are an impact analysis engine. Evaluate this content's potential influence across dimensions: originality (1-10), actionability (1-10), depth (1-10), breadth of application (1-10). Provide detailed justification for each score and an overall influence assessment.`,
     };
 
     const systemPrompt = prompts[action] || prompts.extract_insights;
