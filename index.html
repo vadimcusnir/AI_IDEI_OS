@@ -2,20 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Google Consent Mode v2 — defaults BEFORE tag loads -->
+    <!-- Google Consent Mode v2 Advanced — defaults BEFORE tag loads -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
 
-      // Default: denied for EEA compliance; granted for non-EEA
+      // EEA + UK: denied by default (GDPR regions)
       gtag('consent', 'default', {
         'ad_storage': 'denied',
         'ad_user_data': 'denied',
         'ad_personalization': 'denied',
-        'analytics_storage': 'denied'
+        'analytics_storage': 'denied',
+        'region': [
+          'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR',
+          'DE','GR','HU','IE','IT','LV','LT','LU','MT','NL',
+          'PL','PT','RO','SK','SI','ES','SE',
+          'IS','LI','NO',
+          'GB'
+        ]
       });
 
-      // Restore consent from previous session
+      // Rest of the world: granted by default (no consent banner needed)
+      gtag('consent', 'default', {
+        'ad_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted',
+        'analytics_storage': 'granted'
+      });
+
+      // Advanced: redact ad data when ad_storage is denied
+      gtag('set', 'ads_data_redaction', true);
+
+      // Advanced: pass ad click / client ID info via URL when cookies denied
+      gtag('set', 'url_passthrough', true);
+
+      // Restore consent from previous session (overrides regional default)
       (function(){
         try {
           var c = localStorage.getItem('ai-idei-cookie-consent');
@@ -25,6 +46,13 @@
               'ad_user_data': 'granted',
               'ad_personalization': 'granted',
               'analytics_storage': 'granted'
+            });
+          } else if (c === 'declined') {
+            gtag('consent', 'update', {
+              'ad_storage': 'denied',
+              'ad_user_data': 'denied',
+              'ad_personalization': 'denied',
+              'analytics_storage': 'denied'
             });
           }
         } catch(e){}
