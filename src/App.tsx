@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import NeuronEditor from "./pages/NeuronEditor";
 import AdminDashboard from "./pages/AdminDashboard";
 import Architecture from "./pages/Architecture";
+import Links from "./pages/Links";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
