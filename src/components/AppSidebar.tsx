@@ -37,6 +37,7 @@ const MAIN_NAV = [
 ];
 
 const SECONDARY_NAV = [
+  { label: "Intelligence", to: "/intelligence", icon: Network },
   { label: "Credits", to: "/credits", icon: Coins },
   { label: "Dashboard", to: "/dashboard", icon: BarChart3 },
   { label: "Notificări", to: "/notifications", icon: Bell },
