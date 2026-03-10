@@ -17,3 +17,9 @@ verify_jwt = false
 
 [functions.verify-topup]
 verify_jwt = false
+
+[functions.init-push]
+verify_jwt = false
+
+[functions.send-push]
+verify_jwt = false

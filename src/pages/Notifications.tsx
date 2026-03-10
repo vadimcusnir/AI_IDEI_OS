@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
+import { usePushSubscription } from "@/hooks/usePushSubscription";
 import {
   Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch,
-  CheckCheck, Trash2, Filter, Loader2,
+  CheckCheck, Trash2, Filter, Loader2, BellRing, BellOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ro } from "date-fns/locale";
+import { toast } from "sonner";
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   job_completed: { icon: CheckCircle2, color: "text-emerald-500", label: "Job finalizat" },
@@ -46,6 +48,19 @@ export default function Notifications() {
     if (notif.link) navigate(notif.link);
   };
 
+  const { isSupported, isSubscribed, subscribe, unsubscribe, loading: pushLoading } = usePushSubscription();
+
+  const handleTogglePush = async () => {
+    if (isSubscribed) {
+      await unsubscribe();
+      toast.success("Notificările push au fost dezactivate.");
+    } else {
+      const ok = await subscribe();
+      if (ok) toast.success("Notificările push au fost activate!");
+      else toast.error("Nu s-au putut activa notificările push.");
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
       {/* Header */}
@@ -74,6 +89,40 @@ export default function Notifications() {
           )}
         </div>
       </div>
+
+      {/* Push notification toggle */}
+      {isSupported && (
+        <div className={cn(
+          "flex items-center justify-between p-3 rounded-xl border mb-4 transition-colors",
+          isSubscribed ? "bg-primary/5 border-primary/20" : "bg-card border-border"
+        )}>
+          <div className="flex items-center gap-3">
+            {isSubscribed ? (
+              <BellRing className="h-4 w-4 text-primary" />
+            ) : (
+              <BellOff className="h-4 w-4 text-muted-foreground" />
+            )}
+            <div>
+              <p className="text-xs font-semibold">
+                {isSubscribed ? "Push notifications active" : "Activează push notifications"}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {isSubscribed ? "Primești alerte chiar și când nu ești pe site." : "Fii notificat când un job se finalizează sau creditele sunt scăzute."}
+              </p>
+            </div>
+          </div>
+          <Button
+            variant={isSubscribed ? "outline" : "default"}
+            size="sm"
+            className="text-xs gap-1.5"
+            onClick={handleTogglePush}
+            disabled={pushLoading}
+          >
+            {pushLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+            {isSubscribed ? "Dezactivează" : "Activează"}
+          </Button>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
