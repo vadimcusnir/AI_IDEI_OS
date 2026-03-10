@@ -198,7 +198,7 @@ export default function Credits() {
         {Object.keys(serviceStats).length > 0 && (
           <div className="mb-6">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2.5 flex items-center gap-1.5">
-              <BarChart3 className="h-3 w-3" /> Consum per serviciu
+              <BarChart3 className="h-3 w-3" /> Consumption per Service
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {Object.entries(serviceStats)
