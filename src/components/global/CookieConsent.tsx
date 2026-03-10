@@ -6,6 +6,24 @@ import { cn } from "@/lib/utils";
 
 const CONSENT_KEY = "ai-idei-cookie-consent";
 
+declare global {
+  interface Window {
+    dataLayer: unknown[];
+    gtag: (...args: unknown[]) => void;
+  }
+}
+
+function updateGtagConsent(granted: boolean) {
+  if (typeof window.gtag !== "function") return;
+  const state = granted ? "granted" : "denied";
+  window.gtag("consent", "update", {
+    ad_storage: state,
+    ad_user_data: state,
+    ad_personalization: state,
+    analytics_storage: state,
+  });
+}
+
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
@@ -19,11 +37,13 @@ export function CookieConsent() {
 
   const accept = () => {
     localStorage.setItem(CONSENT_KEY, "accepted");
+    updateGtagConsent(true);
     setVisible(false);
   };
 
   const decline = () => {
     localStorage.setItem(CONSENT_KEY, "declined");
+    updateGtagConsent(false);
     setVisible(false);
   };
 
@@ -41,8 +61,8 @@ export function CookieConsent() {
           <div className="flex-1 space-y-2">
             <p className="text-sm font-medium text-foreground">🍪 Cookies</p>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              We use essential cookies for authentication and session management.
-              No third-party advertising cookies.{" "}
+              We use essential cookies for authentication and analytics cookies
+              to improve your experience. No third-party advertising cookies.{" "}
               <Link to="/privacy" className="text-primary hover:underline">
                 Privacy Policy
               </Link>
