@@ -589,12 +589,12 @@ export default function AdminDashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-[10px]">Key</TableHead>
-                    <TableHead className="text-[10px]">Nume</TableHead>
-                    <TableHead className="text-[10px]">Categorie</TableHead>
-                    <TableHead className="text-[10px]">Clasă</TableHead>
-                    <TableHead className="text-[10px] text-right">Cost (credits)</TableHead>
-                    <TableHead className="text-[10px]">Status</TableHead>
-                    <TableHead className="text-[10px] w-20">Acțiuni</TableHead>
+                     <TableHead className="text-[10px]">Name</TableHead>
+                     <TableHead className="text-[10px]">Category</TableHead>
+                     <TableHead className="text-[10px]">Class</TableHead>
+                     <TableHead className="text-[10px] text-right">Cost (credits)</TableHead>
+                     <TableHead className="text-[10px]">Status</TableHead>
+                     <TableHead className="text-[10px] w-20">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
