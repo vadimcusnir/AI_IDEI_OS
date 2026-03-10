@@ -70,8 +70,8 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
         body: { package_key: packageKey },
       });
 
-      if (error) throw new Error(error.message || "Eroare la crearea sesiunii de plată");
-      if (!data?.url) throw new Error("Nu s-a primit URL-ul de checkout");
+      if (error) throw new Error(error.message || "Error creating checkout session");
+      if (!data?.url) throw new Error("Checkout URL not received");
 
       // Open Stripe checkout in new tab
       window.open(data.url, "_blank");
