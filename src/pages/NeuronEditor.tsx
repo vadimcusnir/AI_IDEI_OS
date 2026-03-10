@@ -103,11 +103,11 @@ export default function NeuronEditor() {
 
   const handleAIAction = useCallback((action: string) => {
     if (AI_ACTIONS.includes(action)) {
-      extract(action, blocks, neuron?.title || "");
+      extract(action, blocks, neuron?.title || "", selectedEpisodeTranscript || undefined);
     } else {
       toast.info(`Action "${action}" — use AI Services for advanced processing.`);
     }
-  }, [extract, blocks, neuron?.title]);
+  }, [extract, blocks, neuron?.title, selectedEpisodeTranscript]);
 
   const handleInsertAIResult = useCallback(async (content: string) => {
     if (!blocks.length) return;
