@@ -45,9 +45,11 @@ export default function Extractor() {
   // Inline create form state
   const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState("");
-  const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("text");
+  const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("url");
   const [content, setContent] = useState("");
   const [creating, setCreating] = useState(false);
+  const [autoTitleApplied, setAutoTitleApplied] = useState(false);
+  const urlRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
