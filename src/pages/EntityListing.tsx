@@ -5,46 +5,53 @@ import { Brain, ChevronRight, Search, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-interface EntityNeuron {
-  id: number;
-  number: number;
+interface EntityItem {
+  id: string;
+  slug: string;
   title: string;
-  content_category: string;
-  score: number;
-  lifecycle: string;
-  created_at: string;
+  summary: string | null;
+  entity_type: string;
+  confidence_score: number;
+  importance_score: number;
+  evidence_count: number;
 }
 
-const ENTITY_META: Record<string, { title: string; singular: string; description: string; category: string[] }> = {
+const ENTITY_META: Record<string, { title: string; singular: string; description: string; types: string[] }> = {
   insights: {
     title: "Insights",
     singular: "Insight",
     description: "Non-obvious mechanisms affecting decisions — extracted from real transcripts, not generated.",
-    category: ["insight"],
+    types: ["insight"],
   },
   patterns: {
     title: "Patterns",
     singular: "Pattern",
     description: "Recurring cognitive structures detected across multiple sources — stable regularities in thinking and strategy.",
-    category: ["pattern"],
+    types: ["pattern"],
   },
   formulas: {
     title: "Formulas",
     singular: "Formula",
     description: "Operational rules extracted from patterns — directly applicable to new contexts.",
-    category: ["formula"],
+    types: ["formula"],
   },
   contradictions: {
     title: "Contradictions",
     singular: "Contradiction",
     description: "Conflicts between statements or behaviors — boundary conditions where patterns break.",
-    category: ["argument_map"],
+    types: ["contradiction"],
   },
   applications: {
     title: "Applications",
     singular: "Application",
     description: "Contexts where formulas and patterns can be applied — from strategy to copywriting.",
-    category: ["strategy", "commercial"],
+    types: ["application"],
+  },
+  profiles: {
+    title: "Profiles",
+    singular: "Profile",
+    description: "Intelligence profiles derived from transcript analysis — cognitive patterns, decision styles, and strategic behavior.",
+    types: ["profile"],
   },
 };
 
@@ -52,7 +59,7 @@ export default function EntityListing() {
   const location = useLocation();
   const entityType = location.pathname.replace(/^\//, "");
   const meta = ENTITY_META[entityType] || ENTITY_META.insights;
-  const [neurons, setNeurons] = useState<EntityNeuron[]>([]);
+  const [entities, setEntities] = useState<EntityItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
@@ -60,28 +67,20 @@ export default function EntityListing() {
     setLoading(true);
     (async () => {
       const { data } = await supabase
-        .from("neurons")
-        .select("id, number, title, content_category, score, lifecycle, created_at")
-        .eq("visibility", "public")
-        .in("content_category", meta.category)
-        .order("score", { ascending: false })
+        .from("entities")
+        .select("id, slug, title, summary, entity_type, confidence_score, importance_score, evidence_count")
+        .eq("is_published", true)
+        .in("entity_type", meta.types)
+        .order("importance_score", { ascending: false })
         .limit(200);
-      setNeurons((data as EntityNeuron[]) || []);
+      setEntities((data as EntityItem[]) || []);
       setLoading(false);
     })();
   }, [entityType]);
 
   const filtered = search.trim()
-    ? neurons.filter((n) => n.title.toLowerCase().includes(search.toLowerCase()))
-    : neurons;
-
-  const lifecycleColor: Record<string, string> = {
-    ingested: "bg-muted text-muted-foreground",
-    structured: "bg-primary/10 text-primary",
-    active: "bg-status-validated/15 text-status-validated",
-    capitalized: "bg-ai-accent/15 text-ai-accent",
-    compounded: "bg-primary/20 text-primary",
-  };
+    ? entities.filter((e) => e.title.toLowerCase().includes(search.toLowerCase()))
+    : entities;
 
   return (
     <div className="min-h-screen bg-background">
@@ -105,7 +104,6 @@ export default function EntityListing() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-        {/* Search */}
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -132,28 +130,30 @@ export default function EntityListing() {
           </div>
         ) : (
           <div className="space-y-3">
-            {filtered.map((neuron) => (
+            {filtered.map((entity) => (
               <Link
-                key={neuron.id}
-                to={`/n/${neuron.number}`}
+                key={entity.id}
+                to={`/${entityType}/${entity.slug}`}
                 className="flex items-center gap-4 p-4 bg-card border border-border rounded-xl hover:border-primary/30 transition-colors group"
               >
-                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <span className="text-xs font-mono font-bold text-primary">
-                    #{neuron.number}
-                  </span>
-                </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-sm font-semibold truncate group-hover:text-primary transition-colors">
-                    {neuron.title}
+                    {entity.title}
                   </h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className={cn("text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full", lifecycleColor[neuron.lifecycle] || lifecycleColor.ingested)}>
-                      {neuron.lifecycle}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground">
-                      Score: {neuron.score}
-                    </span>
+                  {entity.summary && (
+                    <p className="text-[10px] text-muted-foreground truncate mt-0.5">{entity.summary}</p>
+                  )}
+                  <div className="flex items-center gap-3 mt-1.5">
+                    {entity.confidence_score > 0 && (
+                      <span className="text-[10px] text-muted-foreground">
+                        {Math.round(entity.confidence_score * 100)}% confidence
+                      </span>
+                    )}
+                    {entity.evidence_count > 0 && (
+                      <span className="text-[10px] text-muted-foreground">
+                        {entity.evidence_count} evidence{entity.evidence_count > 1 ? "s" : ""}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <ArrowRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary transition-colors shrink-0" />
@@ -162,7 +162,6 @@ export default function EntityListing() {
           </div>
         )}
 
-        {/* Stats */}
         {!loading && filtered.length > 0 && (
           <div className="mt-8 pt-6 border-t border-border text-center">
             <p className="text-xs text-muted-foreground">
@@ -172,7 +171,6 @@ export default function EntityListing() {
         )}
       </div>
 
-      {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
