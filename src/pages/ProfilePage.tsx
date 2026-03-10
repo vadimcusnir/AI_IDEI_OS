@@ -348,9 +348,9 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-2 mb-3">
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-xs font-medium">Ore liniștite</p>
+                    <p className="text-xs font-medium">Quiet Hours</p>
                     <p className="text-[10px] text-muted-foreground">
-                      Fără notificări browser în interval
+                      No browser notifications during this interval
                     </p>
                   </div>
                 </div>
