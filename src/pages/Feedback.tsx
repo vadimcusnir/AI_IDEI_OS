@@ -38,9 +38,9 @@ const FEEDBACK_TYPES = [
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   feedback: { icon: ThumbsUp, color: "text-primary", label: "Feedback" },
   testimonial: { icon: Quote, color: "text-emerald-500", label: "Testimonial" },
-  review: { icon: Star, color: "text-amber-500", label: "Recenzie" },
-  proposal: { icon: Lightbulb, color: "text-amber-500", label: "Propunere" },
-  complaint: { icon: AlertTriangle, color: "text-destructive", label: "Plângere" },
+  review: { icon: Star, color: "text-amber-500", label: "Review" },
+  proposal: { icon: Lightbulb, color: "text-amber-500", label: "Proposal" },
+  complaint: { icon: AlertTriangle, color: "text-destructive", label: "Complaint" },
 };
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
