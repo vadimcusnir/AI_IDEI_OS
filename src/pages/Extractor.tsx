@@ -260,13 +260,32 @@ export default function Extractor() {
               </div>
             )}
 
+            {/* URL/Content input — shown FIRST for URL mode */}
+            {sourceType === "url" && (
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
+                <input
+                  ref={urlRef}
+                  value={content}
+                  onChange={e => handleUrlChange(e.target.value)}
+                  placeholder="Lipește un URL — titlul se completează automat"
+                  className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
+                  onKeyDown={e => { if (e.key === "Enter" && title.trim()) handleCreate(); }}
+                />
+              </div>
+            )}
+
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Titlu</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                  Titlu {sourceType === "url" && title && autoTitleApplied && (
+                    <span className="text-primary/50 normal-case font-normal ml-1">· auto-detectat</span>
+                  )}
+                </label>
                 <input
                   ref={titleRef}
                   value={title}
-                  onChange={e => setTitle(e.target.value)}
+                  onChange={e => { setTitle(e.target.value); setAutoTitleApplied(false); }}
                   placeholder="Titlul episodului..."
                   className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors"
                   onKeyDown={e => {
@@ -278,10 +297,10 @@ export default function Extractor() {
                 <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Tip sursă</label>
                 <div className="flex gap-1">
                   {([
+                    { value: "url", label: "URL", icon: Globe },
                     { value: "text", label: "Text", icon: Type },
                     { value: "audio", label: "Audio", icon: FileAudio },
                     { value: "video", label: "Video", icon: Film },
-                    { value: "url", label: "URL", icon: Globe },
                   ] as const).map(st => (
                     <button
                       key={st.value}
@@ -314,24 +333,11 @@ export default function Extractor() {
               </div>
             )}
 
-            {sourceType === "url" && (
-              <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
-                <input
-                  value={content}
-                  onChange={e => setContent(e.target.value)}
-                  placeholder="https://youtube.com/watch?v=..."
-                  className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
-                  onKeyDown={e => { if (e.key === "Enter") handleCreate(); }}
-                />
-              </div>
-            )}
-
             {(sourceType === "audio" || sourceType === "video") && (
               <div className="border-2 border-dashed border-border rounded-xl p-6 text-center">
                 <Upload className="h-6 w-6 opacity-20 mx-auto mb-2" />
                 <p className="text-xs text-muted-foreground">Upload fișiere — în curând</p>
-                <p className="text-[10px] text-muted-foreground/50 mt-1">Folosește Text sau URL deocamdată</p>
+                <p className="text-[10px] text-muted-foreground/50 mt-1">Folosește URL sau Text deocamdată</p>
               </div>
             )}
 
