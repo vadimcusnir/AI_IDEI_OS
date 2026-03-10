@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { FeedbackDialog } from "@/components/feedback/FeedbackDialog";
-import {
-  MessageSquarePlus, Star, ThumbsUp, AlertTriangle,
-  Lightbulb, Quote, Loader2, Filter, Clock, CheckCircle2,
-  MessageCircle,
-} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import {
+  Star, ThumbsUp, AlertTriangle, Lightbulb, Quote,
+  Loader2, Filter, Clock, CheckCircle2, MessageCircle,
+  Send, ChevronUp,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ro } from "date-fns/locale";
+import { toast } from "sonner";
 
 interface FeedbackItem {
   id: string;
@@ -24,6 +27,14 @@ interface FeedbackItem {
   created_at: string;
   context_page: string | null;
 }
+
+const FEEDBACK_TYPES = [
+  { key: "feedback", label: "Feedback", icon: ThumbsUp, color: "text-primary" },
+  { key: "testimonial", label: "Testimonial", icon: Quote, color: "text-emerald-500" },
+  { key: "proposal", label: "Propunere", icon: Lightbulb, color: "text-amber-500" },
+  { key: "complaint", label: "Plângere", icon: AlertTriangle, color: "text-destructive" },
+  { key: "review", label: "Recenzie", icon: Star, color: "text-primary" },
+] as const;
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   feedback: { icon: ThumbsUp, color: "text-primary", label: "Feedback" },
@@ -42,9 +53,20 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 
 export default function Feedback() {
   const { user } = useAuth();
+  const location = useLocation();
   const [items, setItems] = useState<FeedbackItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+
+  // Inline form state — open by default
+  const [formOpen, setFormOpen] = useState(true);
+  const [type, setType] = useState("feedback");
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [rating, setRating] = useState<number | null>(null);
+  const [sending, setSending] = useState(false);
+
+  const needsRating = type === "review" || type === "testimonial";
 
   useEffect(() => {
     if (!user) return;
@@ -61,6 +83,38 @@ export default function Feedback() {
     setLoading(false);
   };
 
+  const handleSubmit = async () => {
+    if (!user) return;
+    if (!title.trim() || !message.trim()) {
+      toast.error("Completează titlul și mesajul.");
+      return;
+    }
+    if (needsRating && !rating) {
+      toast.error("Selectează un rating.");
+      return;
+    }
+    setSending(true);
+    const { error } = await supabase.from("feedback").insert({
+      user_id: user.id,
+      type,
+      title: title.trim().slice(0, 200),
+      message: message.trim().slice(0, 2000),
+      rating: needsRating ? rating : null,
+      context_page: location.pathname,
+    } as any);
+
+    if (error) {
+      toast.error("Eroare: " + error.message);
+    } else {
+      toast.success("Mulțumim pentru feedback! 🙏");
+      setTitle("");
+      setMessage("");
+      setRating(null);
+      loadFeedback();
+    }
+    setSending(false);
+  };
+
   const filtered = items.filter((i) => {
     if (filter === "all") return true;
     return i.type === filter;
@@ -75,24 +129,106 @@ export default function Feedback() {
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-bold flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-primary" />
-            Feedback-ul meu
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {stats.total} trimise · {stats.pending} în așteptare · {stats.responded} cu răspuns
-          </p>
-        </div>
-        <FeedbackDialog
-          trigger={
-            <Button size="sm" className="gap-1.5 text-xs">
-              <MessageSquarePlus className="h-3.5 w-3.5" />
-              Feedback nou
-            </Button>
-          }
-        />
+      <div className="mb-6">
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          <MessageCircle className="h-5 w-5 text-primary" />
+          Feedback
+        </h1>
+        <p className="text-sm text-muted-foreground mt-0.5">
+          {stats.total} trimise · {stats.pending} în așteptare · {stats.responded} cu răspuns
+        </p>
+      </div>
+
+      {/* Inline Form — collapsible, open by default */}
+      <div className="mb-6 bg-card border border-border rounded-xl overflow-hidden">
+        <button
+          onClick={() => setFormOpen(!formOpen)}
+          className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors"
+        >
+          <span className="text-sm font-medium flex items-center gap-2">
+            <Send className="h-4 w-4 text-primary" />
+            Trimite feedback nou
+          </span>
+          <ChevronUp className={cn(
+            "h-4 w-4 text-muted-foreground transition-transform",
+            !formOpen && "rotate-180"
+          )} />
+        </button>
+
+        {formOpen && (
+          <div className="px-4 pb-4 space-y-3 border-t border-border pt-3">
+            {/* Type selector */}
+            <div className="flex flex-wrap gap-1.5">
+              {FEEDBACK_TYPES.map((ft) => {
+                const Icon = ft.icon;
+                return (
+                  <button
+                    key={ft.key}
+                    onClick={() => setType(ft.key)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
+                      type === ft.key
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    )}
+                  >
+                    <Icon className="h-3 w-3" />
+                    {ft.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Rating */}
+            {needsRating && (
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground mr-2">Rating:</span>
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setRating(s)}
+                    className="p-0.5 transition-transform hover:scale-110"
+                  >
+                    <Star
+                      className={cn(
+                        "h-5 w-5 transition-colors",
+                        rating && s <= rating ? "text-amber-400 fill-amber-400" : "text-muted-foreground/20"
+                      )}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <Input
+              placeholder="Titlu scurt"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              maxLength={200}
+              className="text-sm"
+            />
+            <Textarea
+              placeholder={
+                type === "testimonial" ? "Povestește experiența ta cu AI-IDEI..." :
+                type === "complaint" ? "Descrie problema întâmpinată..." :
+                type === "proposal" ? "Ce funcționalitate ai vrea să vezi?" :
+                "Scrie feedback-ul tău..."
+              }
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              maxLength={2000}
+              rows={3}
+              className="text-sm resize-none"
+            />
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-muted-foreground">{message.length}/2000</span>
+              <Button onClick={handleSubmit} disabled={sending} size="sm" className="gap-1.5">
+                {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+                Trimite
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Filters */}
@@ -125,15 +261,9 @@ export default function Feedback() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
           <MessageCircle className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-          <p className="text-sm text-muted-foreground">Niciun feedback trimis încă</p>
-          <FeedbackDialog
-            trigger={
-              <Button variant="outline" size="sm" className="mt-4 gap-1.5 text-xs">
-                <MessageSquarePlus className="h-3.5 w-3.5" />
-                Trimite primul feedback
-              </Button>
-            }
-          />
+          <p className="text-sm text-muted-foreground">
+            {items.length === 0 ? "Niciun feedback trimis încă — folosește formularul de sus!" : "Niciun rezultat pentru filtrul selectat"}
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -144,10 +274,7 @@ export default function Feedback() {
             const timeAgo = formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ro });
 
             return (
-              <div
-                key={item.id}
-                className="bg-card border border-border rounded-xl p-4"
-              >
+              <div key={item.id} className="bg-card border border-border rounded-xl p-4">
                 <div className="flex items-start gap-3">
                   <div className={cn("p-1.5 rounded-lg bg-background border border-border shrink-0", config.color)}>
                     <Icon className="h-4 w-4" />
@@ -161,7 +288,6 @@ export default function Feedback() {
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{item.message}</p>
 
-                    {/* Rating */}
                     {item.rating && (
                       <div className="flex items-center gap-0.5 mb-2">
                         {[1, 2, 3, 4, 5].map((s) => (
@@ -176,7 +302,6 @@ export default function Feedback() {
                       </div>
                     )}
 
-                    {/* Admin response */}
                     {item.admin_response && (
                       <div className="bg-primary/5 border border-primary/10 rounded-lg p-3 mt-2">
                         <p className="text-[10px] font-semibold text-primary mb-1 flex items-center gap-1">
