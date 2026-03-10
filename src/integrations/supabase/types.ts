@@ -56,6 +56,44 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          job_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string
+          id?: string
+          job_id?: string | null
+          type?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          job_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_transactions_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       episodes: {
         Row: {
           author_id: string
@@ -578,6 +616,33 @@ export type Database = {
           name?: string
           service_class?: string
           service_key?: string
+        }
+        Relationships: []
+      }
+      user_credits: {
+        Row: {
+          balance: number
+          id: string
+          total_earned: number
+          total_spent: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          id?: string
+          total_earned?: number
+          total_spent?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          id?: string
+          total_earned?: number
+          total_spent?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
