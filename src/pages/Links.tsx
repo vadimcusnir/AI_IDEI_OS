@@ -14,6 +14,10 @@ import { ContentHub } from "@/components/links/ContentHub";
 import { CommunityBlock } from "@/components/links/CommunityBlock";
 import { SocialProofBlock } from "@/components/links/SocialProofBlock";
 import { MonetizationBlock } from "@/components/links/MonetizationBlock";
+import { FavoritesBlock } from "@/components/links/FavoritesBlock";
+import { PopularNeuronsBlock, RecommendedTemplatesBlock, LatestVersionsBlock } from "@/components/links/DynamicSections";
+import { LiveStatsBlock } from "@/components/links/LiveStatsBlock";
+import { SiteHeader } from "@/components/SiteHeader";
 
 /* ─── Types ─── */
 interface LinkItem {
@@ -94,7 +98,7 @@ function resolveAccess(
   if (level === "public") return "allow";
   if (level === "admin") return isAdmin ? "allow" : "hidden";
   if (level === "auth") return user ? "allow" : "paywall";
-  if (level === "paid") return user ? "allow" : "paywall"; // Future: check paid status
+  if (level === "paid") return user ? "allow" : "paywall";
   return "hidden";
 }
 
@@ -103,7 +107,7 @@ function HeroBlock() {
   return (
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-ai-accent/4 to-transparent" />
-      <div className="relative max-w-lg mx-auto px-6 pt-16 pb-8 text-center">
+      <div className="relative max-w-lg mx-auto px-6 pt-10 pb-6 text-center">
         <div className="relative mx-auto mb-5 h-20 w-20">
           <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-ai-accent/20 blur-xl" />
           <img src={logo} alt="AI-IDEI" className="relative h-20 w-20 rounded-full border-2 border-primary/20 shadow-lg shadow-primary/20 object-cover" />
@@ -222,6 +226,7 @@ export default function Links() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SiteHeader />
       <HeroBlock />
 
       <div className="max-w-lg mx-auto px-6 pb-16">
@@ -239,6 +244,9 @@ export default function Links() {
             🔐 Înregistrează-te gratuit
           </button>
         )}
+
+        {/* Live Stats */}
+        <LiveStatsBlock />
 
         {/* Sections with role-based access */}
         {processedSections.map(section => (
@@ -258,6 +266,14 @@ export default function Links() {
             </div>
           </div>
         ))}
+
+        {/* Favorites (auth only) */}
+        <FavoritesBlock />
+
+        {/* Dynamic sections */}
+        <PopularNeuronsBlock />
+        <RecommendedTemplatesBlock />
+        <LatestVersionsBlock />
 
         {/* Content Hub */}
         <ContentHub />
