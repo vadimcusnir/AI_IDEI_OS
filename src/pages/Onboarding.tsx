@@ -114,8 +114,8 @@ export default function Onboarding() {
         {/* Progress bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-muted-foreground">Progres</span>
-            <span className="text-xs font-mono font-bold text-primary">{completedCount}/{STEPS.length} completat</span>
+            <span className="text-xs font-semibold text-muted-foreground">Progress</span>
+            <span className="text-xs font-mono font-bold text-primary">{completedCount}/{STEPS.length} completed</span>
           </div>
           <div className="h-2 rounded-full bg-muted overflow-hidden">
             <div
