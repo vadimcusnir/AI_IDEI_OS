@@ -17,8 +17,7 @@ import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { NotificationBell } from "@/components/NotificationBell";
+import { ExportImportPanel } from "@/components/ExportImportPanel";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
 import {
   DropdownMenu,
