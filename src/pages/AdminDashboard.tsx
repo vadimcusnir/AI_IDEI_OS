@@ -238,7 +238,7 @@ export default function AdminDashboard() {
       if (!current) { toast.error("User credits not found"); return; }
 
       const newBalance = current.balance + amount;
-      if (newBalance < 0) { toast.error(`Balance insuficient. Actual: ${current.balance}`); return; }
+      if (newBalance < 0) { toast.error(`Insufficient balance. Current: ${current.balance}`); return; }
 
       // Update balance
       const updateData: any = { balance: newBalance, updated_at: new Date().toISOString() };
