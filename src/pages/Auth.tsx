@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Mail, Lock, ArrowRight, Loader2, KeyRound } from "lucide-react";
+import { lovable } from "@/integrations/lovable/index";
+import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
