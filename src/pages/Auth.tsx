@@ -41,7 +41,11 @@ export default function Auth() {
     } else {
       const { error } = await signIn(email, password);
       if (error) toast.error(error.message);
-      else navigate("/home");
+      else {
+        // Check if user has neurons — if not, redirect to onboarding
+        const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
+        navigate(count && count > 0 ? "/home" : "/onboarding");
+      }
     }
     setLoading(false);
   };

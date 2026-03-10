@@ -11,6 +11,8 @@
   "library": "Library",
   "guest_pages": "Guest Pages",
   "intelligence": "Intelligence",
+  "prompt_forge": "Prompt Forge",
+  "profile_extractor": "Profile Extractor",
   "dashboard": "Dashboard",
   "onboarding": "Onboarding",
   "notifications": "Notifications",

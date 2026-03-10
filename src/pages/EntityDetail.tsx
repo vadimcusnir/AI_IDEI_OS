@@ -227,13 +227,18 @@ export default function EntityDetail() {
   const citations = Array.isArray(entity.citation_sources) ? entity.citation_sources : [];
   const graphDensity = related.length;
 
-  // Build JSON-LD
-  const jsonLd: any = {
+  // Use DB json_ld if available, otherwise build from scratch
+  const dbJsonLd = (entity as any).json_ld;
+  const jsonLd: any = dbJsonLd ? {
+    "@context": "https://schema.org",
+    ...dbJsonLd,
+    url: `https://ai-idei.com/${entityType}/${entity.slug}`,
+  } : {
     "@context": "https://schema.org",
     "@type": singularType === "profile" ? "Person" : "DefinedTerm",
     name: entity.title,
     description: entity.summary || entity.meta_description || "",
-    url: `${window.location.origin}/${entityType}/${entity.slug}`,
+    url: `https://ai-idei.com/${entityType}/${entity.slug}`,
     identifier: entity.id,
   };
 
@@ -271,7 +276,7 @@ export default function EntityDetail() {
       <SEOHead
         title={`${entity.title} — AI-IDEI ${TYPE_LABEL[entity.entity_type] || "Entity"}`}
         description={entity.meta_description || entity.summary || undefined}
-        canonical={entity.canonical_url ? `https://ai-idei-os.lovable.app${entity.canonical_url}` : undefined}
+        canonical={entity.canonical_url ? `https://ai-idei.com${entity.canonical_url}` : undefined}
       />
       {/* Header */}
       <div className="border-b border-border bg-card">

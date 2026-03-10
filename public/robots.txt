@@ -22,4 +22,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://ai-idei-os.lovable.app/sitemap-static.xml
+Sitemap: https://ai-idei.com/sitemap-static.xml

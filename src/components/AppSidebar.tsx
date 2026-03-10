@@ -32,6 +32,8 @@ const MAIN_NAV = [
 
 const SECONDARY_NAV = [
   { labelKey: "intelligence", to: "/intelligence", icon: Network },
+  { labelKey: "prompt_forge", to: "/prompt-forge", icon: Sparkles },
+  { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users },
   { labelKey: "credits", to: "/credits", icon: Coins },
   { labelKey: "dashboard", to: "/dashboard", icon: BarChart3 },
   { labelKey: "onboarding", to: "/onboarding", icon: Rocket },
