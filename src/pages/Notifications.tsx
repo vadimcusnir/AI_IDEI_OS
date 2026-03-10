@@ -159,7 +159,7 @@ export default function Notifications() {
           {filtered.map((notif) => {
             const config = TYPE_CONFIG[notif.type] || TYPE_CONFIG.info;
             const Icon = config.icon;
-            const timeAgo = formatDistanceToNow(new Date(notif.created_at), { addSuffix: true, locale: ro });
+            const timeAgo = formatDistanceToNow(new Date(notif.created_at), { addSuffix: true });
 
             return (
               <button
