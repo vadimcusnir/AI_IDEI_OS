@@ -208,22 +208,7 @@ export default function RunService() {
   const hasEnoughCredits = credits && credits.balance >= service.credits_cost;
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/services")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
-          <span className="text-sm font-serif">Run Service</span>
-        </div>
-        <button onClick={() => navigate("/credits")} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <Coins className="h-3.5 w-3.5 text-ai-accent" />
-          <span className="text-xs font-mono font-bold">{credits?.balance ?? 0}</span>
-          <span className="text-[9px] text-muted-foreground">credits</span>
-        </button>
-      </div>
-
+    <div className="flex-1">
       <div className="max-w-2xl mx-auto px-6 py-8">
         {/* Service header */}
         <div className="mb-8">
