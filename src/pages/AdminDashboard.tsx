@@ -554,11 +554,11 @@ export default function AdminDashboard() {
                     <TableHead className="text-[10px]">ID</TableHead>
                     <TableHead className="text-[10px]">Worker</TableHead>
                     <TableHead className="text-[10px]">Status</TableHead>
-                    <TableHead className="text-[10px]">Neuron</TableHead>
-                    <TableHead className="text-[10px]">Creat</TableHead>
-                    <TableHead className="text-[10px]">Completat</TableHead>
-                    <TableHead className="text-[10px] text-right">Durată</TableHead>
-                  </TableRow>
+                     <TableHead className="text-[10px]">Neuron</TableHead>
+                     <TableHead className="text-[10px]">Created</TableHead>
+                     <TableHead className="text-[10px]">Completed</TableHead>
+                     <TableHead className="text-[10px] text-right">Duration</TableHead>
+                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {jobs.map(j => {
