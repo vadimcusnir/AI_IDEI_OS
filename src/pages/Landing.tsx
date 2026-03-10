@@ -188,7 +188,7 @@ export default function Landing() {
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="mx-auto mb-8">
             <div className="relative inline-block">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/50 to-violet-500/30 blur-2xl animate-pulse" style={{ animationDuration: "3s" }} />
-              <img src={logo} alt="AI-IDEI" className="relative h-28 w-28 rounded-full border-2 border-primary/20 shadow-2xl shadow-primary/30" />
+              <img src={logo} alt="AI-IDEI" className="relative h-20 w-20 rounded-full border-2 border-primary/20 shadow-2xl shadow-primary/30" />
             </div>
           </motion.div>
 
