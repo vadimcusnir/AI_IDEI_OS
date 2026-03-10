@@ -171,7 +171,7 @@ export default function Credits() {
 
           {/* Quick stats */}
           <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Tranzacții</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Transactions</p>
             <span className="text-2xl font-bold font-mono">{transactions.length}</span>
             <p className="text-[10px] text-muted-foreground mt-1">
               {transactions.filter(t => {
