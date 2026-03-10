@@ -256,6 +256,9 @@ export default function Home() {
               <PipelineIndicator />
             </div>
 
+            {/* Trending Ideas */}
+            <TrendingIdeasWidget />
+
             {/* What's New */}
             <WhatsNewWidget />
           </div>
