@@ -13,12 +13,14 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
-  episodes: { total: number; analyzed: number };
+  episodes: { total: number; analyzed: number; pending: number };
   credits: { balance: number; spent: number; earned: number };
   jobs: { total: number; completed: number; failed: number; avgDuration: number };
+  artifacts: { total: number; thisWeek: number };
   categories: Record<string, number>;
   weeklyActivity: { date: string; neurons: number; jobs: number }[];
   recentJobs: { id: string; worker_type: string; status: string; created_at: string }[];
+  pipeline: { uploaded: number; transcribed: number; analyzed: number; serviced: number };
 }
 
 export default function Dashboard() {
@@ -38,17 +40,19 @@ export default function Dashboard() {
     const weekAgo = new Date(now);
     weekAgo.setDate(weekAgo.getDate() - 7);
 
-    const [neuronsRes, episodesRes, creditsRes, jobsRes] = await Promise.all([
+    const [neuronsRes, episodesRes, creditsRes, jobsRes, artifactsRes] = await Promise.all([
       supabase.from("neurons").select("id, status, content_category, created_at").eq("author_id", user!.id),
       supabase.from("episodes").select("id, status").eq("author_id", user!.id),
       supabase.from("user_credits").select("*").eq("user_id", user!.id).maybeSingle(),
       supabase.from("neuron_jobs").select("id, worker_type, status, created_at, completed_at").eq("author_id", user!.id).order("created_at", { ascending: false }).limit(50),
+      supabase.from("artifacts").select("id, created_at").eq("author_id", user!.id),
     ]);
 
     const neurons = neuronsRes.data || [];
     const episodes = episodesRes.data || [];
     const credits = creditsRes.data;
     const jobs = jobsRes.data || [];
+    const artifacts = artifactsRes.data || [];
 
     const categories: Record<string, number> = {};
     neurons.forEach((n: any) => {
@@ -78,6 +82,9 @@ export default function Dashboard() {
       });
     }
 
+    const episodesByStatus = (status: string) => episodes.filter((e: any) => e.status === status).length;
+    const artifactsThisWeek = artifacts.filter((a: any) => new Date(a.created_at) >= weekAgo).length;
+
     setData({
       neurons: {
         total: neurons.length,
@@ -85,7 +92,7 @@ export default function Dashboard() {
         published: neurons.filter((n: any) => n.status === "published").length,
         thisWeek: thisWeekNeurons,
       },
-      episodes: { total: episodes.length, analyzed: episodes.filter((e: any) => e.status === "analyzed").length },
+      episodes: { total: episodes.length, analyzed: episodesByStatus("analyzed"), pending: episodesByStatus("uploaded") + episodesByStatus("transcribed") },
       credits: { balance: credits?.balance ?? 0, spent: credits?.total_spent ?? 0, earned: credits?.total_earned ?? 0 },
       jobs: {
         total: jobs.length,
@@ -93,9 +100,16 @@ export default function Dashboard() {
         failed: jobs.filter((j: any) => j.status === "failed").length,
         avgDuration: Math.round(avgDuration),
       },
+      artifacts: { total: artifacts.length, thisWeek: artifactsThisWeek },
       categories,
       weeklyActivity,
       recentJobs: jobs.slice(0, 5) as any[],
+      pipeline: {
+        uploaded: episodes.length,
+        transcribed: episodesByStatus("transcribed") + episodesByStatus("analyzed"),
+        analyzed: episodesByStatus("analyzed"),
+        serviced: artifacts.length,
+      },
     });
     setLoading(false);
   };
@@ -116,11 +130,38 @@ export default function Dashboard() {
     <div className="flex-1">
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* KPI Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
           <KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} />
           <KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} />
           <KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" />
           <KPI icon={TrendingUp} label="Spent" value={data.credits.spent} sub={`of ${data.credits.earned} earned`} color="text-destructive" />
+          <KPI icon={Layers} label="Artifacts" value={data.artifacts.total} sub={`+${data.artifacts.thisWeek} this week`} />
+        </div>
+
+        {/* Pipeline Progress */}
+        <div className="bg-card border border-border rounded-xl p-4 mb-6">
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <Activity className="h-3 w-3" /> Pipeline Progress
+          </h3>
+          <div className="flex items-center gap-2">
+            {[
+              { label: "Upload", value: data.pipeline.uploaded, icon: FileAudio },
+              { label: "Transcribe", value: data.pipeline.transcribed, icon: Layers },
+              { label: "Extract", value: data.pipeline.analyzed, icon: Brain },
+              { label: "Deliver", value: data.pipeline.serviced, icon: Sparkles },
+            ].map((step, i, arr) => (
+              <div key={step.label} className="flex items-center gap-2 flex-1">
+                <div className="flex-1 text-center">
+                  <step.icon className={cn("h-4 w-4 mx-auto mb-1", step.value > 0 ? "text-primary" : "text-muted-foreground/30")} />
+                  <p className="text-lg font-bold font-mono">{step.value}</p>
+                  <p className="text-[9px] text-muted-foreground">{step.label}</p>
+                </div>
+                {i < arr.length - 1 && (
+                  <div className={cn("h-0.5 w-6 rounded-full shrink-0", step.value > 0 ? "bg-primary/40" : "bg-muted")} />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Activity Chart + Credit Gauge */}
