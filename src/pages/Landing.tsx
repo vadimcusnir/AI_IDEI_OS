@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.gif";
 import {
