@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle } from "lucide-react";
+import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle, Network } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
 import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
+import { AdminKnowledgeGraphTab } from "@/components/admin/AdminKnowledgeGraphTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
@@ -339,6 +340,9 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="changelog" className="text-xs gap-1">
               <ScrollText className="h-3 w-3" /> Changelog
+            </TabsTrigger>
+            <TabsTrigger value="knowledge-graph" className="text-xs gap-1">
+              <Network className="h-3 w-3" /> Knowledge Graph
             </TabsTrigger>
           </TabsList>
 
@@ -684,6 +688,11 @@ export default function AdminDashboard() {
           {/* ─── Changelog ─── */}
           <TabsContent value="changelog">
             <AdminChangelogTab />
+          </TabsContent>
+
+          {/* ─── Knowledge Graph ─── */}
+          <TabsContent value="knowledge-graph">
+            <AdminKnowledgeGraphTab />
           </TabsContent>
         </Tabs>
       </div>

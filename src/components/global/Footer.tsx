@@ -49,6 +49,7 @@ export function Footer() {
               <li><FooterLink to="/patterns">Patterns</FooterLink></li>
               <li><FooterLink to="/formulas">Formulas</FooterLink></li>
               <li><FooterLink to="/contradictions">Contradictions</FooterLink></li>
+              <li><FooterLink to="/applications">Applications</FooterLink></li>
             </ul>
           </div>
 
@@ -56,10 +57,10 @@ export function Footer() {
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-foreground">Platform</h3>
             <ul className="space-y-2">
-              <li><FooterLink to="/media/profiles">Profiles</FooterLink></li>
+              <li><FooterLink to="/profiles">Profiles</FooterLink></li>
+              <li><FooterLink to="/topics">Topics</FooterLink></li>
               <li><FooterLink to="/services">Services</FooterLink></li>
               <li><FooterLink to="/changelog">Changelog</FooterLink></li>
-              <li><FooterLink to="/credits">Credits</FooterLink></li>
             </ul>
           </div>
 
