@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { WhatsNewWidget } from "@/components/home/WhatsNewWidget";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { supabase } from "@/integrations/supabase/client";
@@ -194,6 +195,10 @@ export default function Home() {
           </div>
         </div>
 
+        {/* What's New */}
+        <div className="mt-4">
+          <WhatsNewWidget />
+        </div>
         {/* Pipeline hint */}
         <div className="mt-8 flex items-center justify-center gap-2 text-[10px] text-muted-foreground">
           <span className="flex items-center gap-1"><Upload className="h-3 w-3" /> Încarcă</span>
