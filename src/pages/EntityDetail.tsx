@@ -267,6 +267,11 @@ export default function EntityDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${entity.title} — AI-IDEI ${TYPE_LABEL[entity.entity_type] || "Entity"}`}
+        description={entity.meta_description || entity.summary || undefined}
+        canonical={entity.canonical_url ? `https://ai-idei-os.lovable.app${entity.canonical_url}` : undefined}
+      />
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
