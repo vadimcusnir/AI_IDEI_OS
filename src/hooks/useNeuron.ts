@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Block, BlockType, CodeLanguage, BLOCK_TYPE_CONFIG, ExecutionLog } from "@/components/neuron/types";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 
 interface NeuronData {
   id: number;
