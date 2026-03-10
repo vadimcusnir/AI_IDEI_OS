@@ -172,7 +172,7 @@ export default function ProfilePage() {
         {/* Profile fields */}
         <div className="bg-card border border-border rounded-xl p-6 space-y-5 mb-4">
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Nume afișat</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Display Name</label>
             <input
               type="text"
               value={profile.display_name}
