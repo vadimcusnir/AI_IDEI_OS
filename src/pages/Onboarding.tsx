@@ -223,12 +223,12 @@ export default function Onboarding() {
             <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
               <TrendingUp className="h-6 w-6 text-primary" />
             </div>
-            <h2 className="text-lg font-serif font-bold mb-1.5">Pipeline-ul tău este activ! 🎉</h2>
+            <h2 className="text-lg font-serif font-bold mb-1.5">Your pipeline is active! 🎉</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Ai completat toți pașii. Continuă să încarci conținut și să rulezi servicii pentru a-ți maximiza capitalul intelectual.
+              You've completed all steps. Continue uploading content and running services to maximize your intellectual capital.
             </p>
             <Button onClick={() => navigate("/home")} className="gap-2">
-              Înapoi la Cockpit
+              Back to Cockpit
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>

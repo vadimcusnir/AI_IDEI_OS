@@ -190,7 +190,7 @@ export default function Notifications() {
                 </div>
                 {notif.link && (
                   <span className="text-[10px] text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1 shrink-0">
-                    Deschide →
+                    Open →
                   </span>
                 )}
               </button>

@@ -159,7 +159,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
 
         <Button onClick={handleSubmit} disabled={loading} className="w-full gap-2">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-          Trimite
+          Submit
         </Button>
       </DialogContent>
     </Dialog>
