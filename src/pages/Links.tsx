@@ -4,14 +4,16 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import logo from "@/assets/logo.gif";
 import {
   Brain, Plus, Shield, Upload, Sparkles, Network,
-  ExternalLink, ArrowRight, Zap, Globe, Play,
-  BookOpen, Mail, MessageCircle, Users, Podcast,
-  GraduationCap, Crown, Star, Quote, Handshake,
-  Send, Radio, Newspaper, LayoutDashboard, Coins,
-  ClipboardList, BarChart3, Github, DollarSign, ShoppingCart,
-  Briefcase, Flame,
+  ExternalLink, ArrowRight, Globe, Play,
+  BookOpen, GraduationCap, Crown,
+  LayoutDashboard, Coins, Lock,
+  ClipboardList, BarChart3, Github,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ContentHub } from "@/components/links/ContentHub";
+import { CommunityBlock } from "@/components/links/CommunityBlock";
+import { SocialProofBlock } from "@/components/links/SocialProofBlock";
+import { MonetizationBlock } from "@/components/links/MonetizationBlock";
 
 /* ─── Types ─── */
 interface LinkItem {
@@ -21,8 +23,7 @@ interface LinkItem {
   to?: string;
   href?: string;
   color: string;
-  requiresAuth?: boolean;
-  requiresAdmin?: boolean;
+  accessLevel: "public" | "auth" | "paid" | "admin";
   badge?: string;
 }
 
@@ -48,7 +49,7 @@ const CTA_PRIMARY: LinkItem = {
   icon: Plus,
   to: "/n/new",
   color: "text-primary-foreground",
-  requiresAuth: true,
+  accessLevel: "auth",
 };
 
 const SECTIONS: Section[] = [
@@ -56,58 +57,46 @@ const SECTIONS: Section[] = [
     id: "actions",
     title: "Acțiuni principale",
     items: [
-      { title: "Dashboard", description: "Monitorizează KPI-urile tale", icon: LayoutDashboard, to: "/dashboard", color: "text-primary", requiresAuth: true },
-      { title: "Extractor", description: "Încarcă și ingestează conținut", icon: Upload, to: "/extractor", color: "text-status-validated", requiresAuth: true, badge: "New" },
-      { title: "Service Catalog", description: "Servicii AI cu costuri fixe", icon: Sparkles, to: "/services", color: "text-ai-accent", requiresAuth: true },
-      { title: "Documentație", description: "Arhitectura și API", icon: BookOpen, to: "/architecture", color: "text-muted-foreground" },
+      { title: "Dashboard", description: "Monitorizează KPI-urile tale", icon: LayoutDashboard, to: "/dashboard", color: "text-primary", accessLevel: "auth" },
+      { title: "Extractor", description: "Încarcă și ingestează conținut", icon: Upload, to: "/extractor", color: "text-status-validated", accessLevel: "auth", badge: "New" },
+      { title: "Service Catalog", description: "Servicii AI cu costuri fixe", icon: Sparkles, to: "/services", color: "text-ai-accent", accessLevel: "auth" },
+      { title: "Documentație", description: "Arhitectura și API", icon: BookOpen, to: "/architecture", color: "text-muted-foreground", accessLevel: "public" },
     ],
   },
   {
     id: "products",
     title: "Produse & Servicii",
     items: [
-      { title: "Cursuri AI", description: "Învață să extragi cunoștințe cu AI", icon: GraduationCap, href: "#", color: "text-ai-accent", badge: "Soon" },
-      { title: "Membership Premium", description: "Acces complet + credite lunare", icon: Crown, href: "#", color: "text-primary", badge: "Soon" },
-      { title: "Intelligence", description: "Analiză avansată a neuronilor", icon: BarChart3, to: "/intelligence", color: "text-status-validated", requiresAuth: true },
-      { title: "Credits", description: "Cumpără și gestionează credite", icon: Coins, to: "/credits", color: "text-primary", requiresAuth: true },
-    ],
-  },
-  {
-    id: "content",
-    title: "Hub de Conținut",
-    items: [
-      { title: "YouTube", description: "Tutoriale și demo-uri KOS", icon: Play, href: "https://youtube.com/@ai-idei", color: "text-destructive" },
-      { title: "Podcast", description: "Conversații despre knowledge extraction", icon: Podcast, href: "#", color: "text-primary" },
-      { title: "Blog", description: "Articole și studii de caz", icon: Newspaper, href: "#", color: "text-muted-foreground", badge: "Soon" },
-      { title: "Newsletter", description: "Actualizări săptămânale", icon: Mail, href: "#", color: "text-ai-accent" },
-    ],
-  },
-  {
-    id: "community",
-    title: "Comunitate",
-    items: [
-      { title: "Discord", description: "Discuții în timp real", icon: MessageCircle, href: "#", color: "text-primary" },
-      { title: "Telegram", description: "Anunțuri și updates", icon: Send, href: "#", color: "text-status-validated" },
+      { title: "Cursuri AI", description: "Învață să extragi cunoștințe cu AI", icon: GraduationCap, href: "#", color: "text-ai-accent", badge: "Soon", accessLevel: "public" },
+      { title: "Membership Premium", description: "Acces complet + credite lunare", icon: Crown, href: "#", color: "text-primary", badge: "Soon", accessLevel: "public" },
+      { title: "Intelligence", description: "Analiză avansată a neuronilor", icon: BarChart3, to: "/intelligence", color: "text-status-validated", accessLevel: "auth" },
+      { title: "Credits", description: "Cumpără și gestionează credite", icon: Coins, to: "/credits", color: "text-primary", accessLevel: "auth" },
     ],
   },
   {
     id: "admin",
     title: "Administrare",
     items: [
-      { title: "Admin Dashboard", description: "Monitorizare globală", icon: Shield, to: "/admin", color: "text-destructive", requiresAdmin: true, badge: "Admin" },
-      { title: "Jobs", description: "Joburi AI în procesare", icon: ClipboardList, to: "/jobs", color: "text-muted-foreground", requiresAuth: true },
+      { title: "Admin Dashboard", description: "Monitorizare globală", icon: Shield, to: "/admin", color: "text-destructive", accessLevel: "admin", badge: "Admin" },
+      { title: "Jobs", description: "Joburi AI în procesare", icon: ClipboardList, to: "/jobs", color: "text-muted-foreground", accessLevel: "auth" },
     ],
   },
 ];
 
-const TESTIMONIALS = [
-  { quote: "AI-IDEI a transformat modul în care îmi structurez cunoștințele.", author: "Early Adopter" },
-  { quote: "Cel mai intuitiv knowledge OS pe care l-am folosit.", author: "Beta Tester" },
-];
+/* ─── Access Engine ─── */
+function resolveAccess(
+  level: "public" | "auth" | "paid" | "admin",
+  user: any,
+  isAdmin: boolean,
+): "allow" | "paywall" | "hidden" {
+  if (level === "public") return "allow";
+  if (level === "admin") return isAdmin ? "allow" : "hidden";
+  if (level === "auth") return user ? "allow" : "paywall";
+  if (level === "paid") return user ? "allow" : "paywall"; // Future: check paid status
+  return "hidden";
+}
 
-const PARTNERS = ["Lovable", "Supabase"];
-
-/* ─── Components ─── */
+/* ─── Sub-components ─── */
 function HeroBlock() {
   return (
     <div className="relative overflow-hidden">
@@ -148,24 +137,35 @@ function CTAButton({ item, onClick }: { item: LinkItem; onClick: () => void }) {
   );
 }
 
-function LinkCard({ item, onClick }: { item: LinkItem; onClick: () => void }) {
+function LinkCard({ item, onClick, locked }: { item: LinkItem; onClick: () => void; locked?: boolean }) {
   const isExternal = !!item.href;
   return (
     <button
-      onClick={onClick}
-      className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-border bg-card
-        hover:border-primary/25 hover:shadow-md hover:shadow-primary/5
-        transition-all duration-200 text-left group"
+      onClick={locked ? undefined : onClick}
+      className={cn(
+        "w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl border bg-card transition-all duration-200 text-left group",
+        locked
+          ? "border-dashed border-border opacity-60 cursor-default"
+          : "border-border hover:border-primary/25 hover:shadow-md hover:shadow-primary/5"
+      )}
     >
       <div className={cn(
         "h-9 w-9 rounded-lg flex items-center justify-center shrink-0",
         "bg-muted group-hover:bg-primary/10 transition-colors"
       )}>
-        <item.icon className={cn("h-4 w-4 transition-colors", item.color)} />
+        {locked
+          ? <Lock className="h-4 w-4 text-muted-foreground/50" />
+          : <item.icon className={cn("h-4 w-4 transition-colors", item.color)} />
+        }
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium group-hover:text-primary transition-colors">{item.title}</span>
+          <span className={cn(
+            "text-sm font-medium transition-colors",
+            locked ? "text-muted-foreground" : "group-hover:text-primary"
+          )}>
+            {item.title}
+          </span>
           {item.badge && (
             <span className={cn(
               "text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full",
@@ -176,92 +176,24 @@ function LinkCard({ item, onClick }: { item: LinkItem; onClick: () => void }) {
               {item.badge}
             </span>
           )}
+          {locked && (
+            <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+              Login
+            </span>
+          )}
         </div>
         {item.description && (
           <p className="text-xs text-muted-foreground mt-0.5 truncate">{item.description}</p>
         )}
       </div>
-      {isExternal ? (
-        <ExternalLink className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary/60 shrink-0" />
-      ) : (
-        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary/60 shrink-0 transition-transform group-hover:translate-x-0.5" />
+      {!locked && (
+        isExternal ? (
+          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary/60 shrink-0" />
+        ) : (
+          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary/60 shrink-0 transition-transform group-hover:translate-x-0.5" />
+        )
       )}
     </button>
-  );
-}
-
-function MonetizationBlock() {
-  const MONETIZATION_ITEMS = [
-    { title: "Curs: Codul Cușnir Masterclass", description: "Toate formulele de copywriting într-un singur curs", icon: GraduationCap, priceUsd: "$97", priceNeurons: "500 NEURONS", color: "text-ai-accent", badge: "Curs" },
-    { title: "Consultanță AI-Powered", description: "Sesiune 1:1 de knowledge extraction cu AI", icon: Briefcase, priceUsd: "$149", priceNeurons: "750 NEURONS", color: "text-primary", badge: "Service" },
-    { title: "Pachet Neuroni Premium", description: "100 neuroni structurați din conținutul tău", icon: Flame, priceUsd: "$49", priceNeurons: "250 NEURONS", color: "text-status-validated", badge: "Pachet" },
-    { title: "Knowledge Audit", description: "Analiză completă a cunoștințelor tale cu raport detaliat", icon: BarChart3, priceUsd: "$199", priceNeurons: "1000 NEURONS", color: "text-destructive", badge: "Service" },
-  ];
-
-  return (
-    <div className="mb-8">
-      <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
-        Monetizare
-      </h2>
-      <div className="space-y-2">
-        {MONETIZATION_ITEMS.map((item, i) => (
-          <div
-            key={i}
-            className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-border bg-card hover:border-primary/25 hover:shadow-md hover:shadow-primary/5 transition-all group cursor-pointer"
-          >
-            <div className="h-9 w-9 rounded-lg flex items-center justify-center shrink-0 bg-muted group-hover:bg-primary/10 transition-colors">
-              <item.icon className={cn("h-4 w-4 transition-colors", item.color)} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium group-hover:text-primary transition-colors">{item.title}</span>
-                <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
-                  {item.badge}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-0.5 truncate">{item.description}</p>
-            </div>
-            <div className="flex flex-col items-end shrink-0 gap-0.5">
-              <span className="text-sm font-bold text-primary">{item.priceUsd}</span>
-              <span className="text-[9px] text-muted-foreground/60">{item.priceNeurons}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SocialProofBlock() {
-  return (
-    <div className="mb-8">
-      <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
-        Social Proof
-      </h2>
-      <div className="space-y-3">
-        {TESTIMONIALS.map((t, i) => (
-          <div key={i} className="px-4 py-3.5 rounded-xl border border-border bg-card">
-            <div className="flex gap-2 items-start">
-              <Quote className="h-4 w-4 text-primary/40 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm text-foreground italic leading-relaxed">"{t.quote}"</p>
-                <p className="text-[11px] text-muted-foreground mt-1.5 font-medium">— {t.author}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      {PARTNERS.length > 0 && (
-        <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
-          <Handshake className="h-3.5 w-3.5 text-muted-foreground/50" />
-          {PARTNERS.map(p => (
-            <span key={p} className="text-[10px] text-muted-foreground font-medium bg-muted/50 px-2.5 py-1 rounded-full">
-              {p}
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -276,14 +208,13 @@ export default function Links() {
     else if (item.to) navigate(item.to);
   };
 
-  const filteredSections = SECTIONS
+  const processedSections = SECTIONS
     .map(s => ({
       ...s,
-      items: s.items.filter(item => {
-        if (item.requiresAdmin && !isAdmin) return false;
-        if (item.requiresAuth && !user) return false;
-        return true;
-      }),
+      items: s.items.map(item => ({
+        ...item,
+        _access: resolveAccess(item.accessLevel, user, isAdmin),
+      })).filter(item => item._access !== "hidden"),
     }))
     .filter(s => s.items.length > 0);
 
@@ -293,24 +224,47 @@ export default function Links() {
 
       <div className="max-w-lg mx-auto px-6 pb-16">
         {/* Primary CTA */}
-        {user && <CTAButton item={CTA_PRIMARY} onClick={() => handleClick(CTA_PRIMARY)} />}
+        {user ? (
+          <CTAButton item={CTA_PRIMARY} onClick={() => handleClick(CTA_PRIMARY)} />
+        ) : (
+          <button
+            onClick={() => navigate("/auth")}
+            className="w-full py-3.5 px-6 rounded-xl bg-primary text-primary-foreground font-semibold text-sm
+              shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30
+              hover:scale-[1.02] active:scale-[0.98]
+              transition-all duration-200 mb-6"
+          >
+            🔐 Înregistrează-te gratuit
+          </button>
+        )}
 
-        {/* Sections */}
-        {filteredSections.map(section => (
+        {/* Sections with role-based access */}
+        {processedSections.map(section => (
           <div key={section.id} className="mb-8">
             <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
               {section.title}
             </h2>
             <div className="space-y-2">
               {section.items.map(item => (
-                <LinkCard key={item.title} item={item} onClick={() => handleClick(item)} />
+                <LinkCard
+                  key={item.title}
+                  item={item}
+                  locked={item._access === "paywall"}
+                  onClick={() => item._access === "paywall" ? navigate("/auth") : handleClick(item)}
+                />
               ))}
             </div>
           </div>
         ))}
 
+        {/* Content Hub */}
+        <ContentHub />
+
         {/* Monetization */}
         <MonetizationBlock />
+
+        {/* Community */}
+        <CommunityBlock />
 
         {/* Social Proof */}
         <SocialProofBlock />
