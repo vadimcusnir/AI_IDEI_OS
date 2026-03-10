@@ -437,7 +437,7 @@ export default function AdminDashboard() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={() => toggleUserRole(u.user_id, u.roles.includes("admin"))}
-                            title={u.roles.includes("admin") ? "Revocă admin" : "Acordă admin"}
+                            title={u.roles.includes("admin") ? "Revoke admin" : "Grant admin"}
                           >
                             {u.roles.includes("admin") ? <UserMinus className="h-3.5 w-3.5 text-destructive" /> : <UserPlus className="h-3.5 w-3.5" />}
                           </Button>
