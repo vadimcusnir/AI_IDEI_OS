@@ -266,7 +266,7 @@ export default function ProfilePage() {
                     />
                     <PrefToggle
                       icon={MessageCircle}
-                      label="Feedback și răspunsuri"
+                      label="Feedback and responses"
                       checked={prefs.push_feedback}
                       onChange={(v) => updatePrefs({ push_feedback: v })}
                     />
