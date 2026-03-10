@@ -487,7 +487,7 @@ export default function Extractor() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
           },
-          body: JSON.stringify({ episode_id: episode.id, user_id: user.id }),
+          body: JSON.stringify({ episode_id: episode.id }),
         }
       );
       const result = await resp.json();
