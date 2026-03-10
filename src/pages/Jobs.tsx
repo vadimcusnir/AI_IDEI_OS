@@ -72,24 +72,7 @@ export default function Jobs() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
-          <span className="text-sm font-serif">Jobs</span>
-          <span className="text-[9px] uppercase tracking-wider bg-primary/10 text-primary px-1.5 py-0.5 rounded font-semibold">
-            Execution Log
-          </span>
-        </div>
-        <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => navigate("/services")}>
-          <Sparkles className="h-3.5 w-3.5" />
-          Run Service
-        </Button>
-      </div>
-
+    <div className="flex-1">
       <div className="max-w-3xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-serif">Job History</h1>

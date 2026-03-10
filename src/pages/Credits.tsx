@@ -89,21 +89,7 @@ export default function Credits() {
   }, {} as Record<string, { count: number; total: number }>);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
-          <span className="text-sm font-serif">Credits</span>
-          <span className="text-[9px] uppercase tracking-wider bg-ai-accent/10 text-ai-accent px-1.5 py-0.5 rounded font-semibold">
-            Economy
-          </span>
-        </div>
-        <ThemeToggle />
-      </div>
-
+    <div className="flex-1">
       <div className="max-w-2xl mx-auto px-6 py-8">
         {/* Balance card */}
         <div className="bg-card border border-border rounded-2xl p-6 mb-8">
