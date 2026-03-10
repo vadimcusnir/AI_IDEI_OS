@@ -6,6 +6,9 @@ import {
 import { cn } from "@/lib/utils";
 import { NeuronLink, GraphAddress } from "@/hooks/useNeuronGraph";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface NeuronLeftPanelProps {
   isCollapsed: boolean;
