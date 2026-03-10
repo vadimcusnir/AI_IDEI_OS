@@ -47,7 +47,7 @@ export default function Intelligence() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     loadStats();
   }, [user, authLoading]);
 
