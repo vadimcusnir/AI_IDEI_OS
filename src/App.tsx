@@ -12,6 +12,8 @@ import Architecture from "./pages/Architecture";
 import Links from "./pages/Links";
 import Extractor from "./pages/Extractor";
 import Services from "./pages/Services";
+import Jobs from "./pages/Jobs";
+import RunService from "./pages/RunService";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
