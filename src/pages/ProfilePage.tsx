@@ -360,7 +360,7 @@ export default function ProfilePage() {
                     onChange={(e) => updatePrefs({ quiet_hours_start: e.target.value ? Number(e.target.value) : null })}
                     className="h-8 px-2 rounded-md border border-input bg-background text-xs"
                   >
-                    <option value="">Dezactivat</option>
+                    <option value="">Disabled</option>
                     {Array.from({ length: 24 }, (_, i) => (
                       <option key={i} value={i}>{String(i).padStart(2, "0")}:00</option>
                     ))}
