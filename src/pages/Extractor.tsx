@@ -274,6 +274,7 @@ export default function Extractor() {
         // Auto-trigger transcription for audio/video uploads
         if ((sourceType === "audio" || sourceType === "video") && filePath) {
           toast.success("Episode created — starting transcription…");
+          trackEvent({ name: "transcript_uploaded", params: { source_type: sourceType, episode_id: ep.id } });
           resetForm();
           if (episodes.length > 0) setShowForm(false);
           await fetchEpisodes();
