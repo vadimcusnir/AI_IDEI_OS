@@ -1,1 +1,7 @@
 project_id = "swghuuxkcilayybesadm"
+
+[functions.changelog-ingest]
+verify_jwt = false
+
+[functions.changelog-generate]
+verify_jwt = false
