@@ -41,12 +41,12 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           {fullHeight ? (
             <main className="flex-1 flex flex-col min-h-0">
-              {children}
+              <ErrorBoundary>{children}</ErrorBoundary>
             </main>
           ) : (
             <>
               <main className="flex-1 flex flex-col">
-                {children}
+                <ErrorBoundary>{children}</ErrorBoundary>
               </main>
               <Footer />
             </>
