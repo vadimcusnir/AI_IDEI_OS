@@ -505,13 +505,13 @@ export default function AdminDashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-[10px] w-16">#</TableHead>
-                    <TableHead className="text-[10px]">Titlu</TableHead>
-                    <TableHead className="text-[10px]">Status</TableHead>
-                    <TableHead className="text-[10px]">Vizibilitate</TableHead>
-                    <TableHead className="text-[10px]">Lifecycle</TableHead>
-                    <TableHead className="text-[10px] text-right">Score</TableHead>
-                    <TableHead className="text-[10px]">Creat</TableHead>
-                    <TableHead className="text-[10px] w-24">Acțiuni</TableHead>
+                     <TableHead className="text-[10px]">Title</TableHead>
+                     <TableHead className="text-[10px]">Status</TableHead>
+                     <TableHead className="text-[10px]">Visibility</TableHead>
+                     <TableHead className="text-[10px]">Lifecycle</TableHead>
+                     <TableHead className="text-[10px] text-right">Score</TableHead>
+                     <TableHead className="text-[10px]">Created</TableHead>
+                     <TableHead className="text-[10px] w-24">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
