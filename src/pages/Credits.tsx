@@ -268,14 +268,14 @@ export default function Credits() {
               <Coins className="h-8 w-8 opacity-20 mx-auto mb-3" />
               {transactions.length === 0 ? (
                 <>
-                  <p className="text-sm text-muted-foreground mb-1">Nicio tranzacție încă</p>
-                  <p className="text-[10px] text-muted-foreground/60">Rulează un serviciu pentru a vedea prima tranzacție.</p>
+                  <p className="text-sm text-muted-foreground mb-1">No transactions yet</p>
+                  <p className="text-[10px] text-muted-foreground/60">Run a service to see your first transaction.</p>
                 </>
               ) : (
                 <>
-                  <p className="text-sm text-muted-foreground mb-2">Niciun rezultat pentru filtrul selectat</p>
+                  <p className="text-sm text-muted-foreground mb-2">No results for the selected filter</p>
                   <Button variant="outline" size="sm" className="text-xs" onClick={() => { setTxFilter("all"); setTxSearch(""); }}>
-                    Șterge filtrele
+                    Clear filters
                   </Button>
                 </>
               )}
