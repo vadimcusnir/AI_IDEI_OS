@@ -221,7 +221,7 @@ export function KnowledgeGraph() {
 
       {/* Legend */}
       <div className="bg-card border border-border rounded-xl p-3">
-        <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Categorii</p>
+        <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Categories</p>
         <div className="flex flex-wrap gap-x-4 gap-y-1">
           {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
             <div key={cat} className="flex items-center gap-1.5">
