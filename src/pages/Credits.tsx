@@ -136,7 +136,7 @@ export default function Credits() {
           {/* Main balance */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Balanță curentă</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Current Balance</p>
               <div className={cn(
                 "h-10 w-10 rounded-xl flex items-center justify-center",
                 balanceHealth === "healthy" ? "bg-status-validated/10" :
