@@ -17,6 +17,18 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { PublicTestimonials } from "@/components/landing/PublicTestimonials";
 import { Footer } from "@/components/global/Footer";
 import { useRef } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const LANG_OPTIONS = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "ro", label: "Română", flag: "🇷🇴" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+];
 
 /* ─── Animation Variants ─── */
 const fadeUp = {
@@ -35,7 +47,8 @@ const scaleIn = {
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useTranslation("landing");
+  const { t, i18n } = useTranslation("landing");
+  const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -125,6 +138,25 @@ export default function Landing() {
             ))}
           </nav>
           <div className="flex items-center gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
+                  <span className="text-sm leading-none">{currentLang.flag}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[140px]">
+                {LANG_OPTIONS.map(lang => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => i18n.changeLanguage(lang.code)}
+                    className={cn("gap-2 text-xs", i18n.language === lang.code && "bg-accent")}
+                  >
+                    <span>{lang.flag}</span>
+                    {lang.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <ThemeToggle />
             {user ? (
               <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5">
