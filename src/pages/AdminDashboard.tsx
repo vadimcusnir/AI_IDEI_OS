@@ -2,8 +2,9 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus } from "lucide-react";
+import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,14 @@ interface ServiceRow {
   credits_cost: number; is_active: boolean; service_class: string;
 }
 
+interface LogEntry {
+  id: string;
+  function_name: string;
+  level: string;
+  message: string;
+  timestamp: string;
+}
+
 export default function AdminDashboard() {
   const { isAdmin, loading, user } = useAdminCheck();
   const navigate = useNavigate();
@@ -45,8 +54,15 @@ export default function AdminDashboard() {
   const [neurons, setNeurons] = useState<NeuronRow[]>([]);
   const [jobs, setJobs] = useState<JobRow[]>([]);
   const [services, setServices] = useState<ServiceRow[]>([]);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+
+  // Credit adjustment state
+  const [adjustingUser, setAdjustingUser] = useState<string | null>(null);
+  const [adjustAmount, setAdjustAmount] = useState("");
+  const [adjustDescription, setAdjustDescription] = useState("");
+  const [adjustLoading, setAdjustLoading] = useState(false);
 
   useEffect(() => {
     if (loading) return;
@@ -57,7 +73,7 @@ export default function AdminDashboard() {
 
   const loadAll = useCallback(async () => {
     setLoadingData(true);
-    await Promise.all([loadStats(), loadUsers(), loadNeurons(), loadJobs(), loadServices()]);
+    await Promise.all([loadStats(), loadUsers(), loadNeurons(), loadJobs(), loadServices(), loadLogs()]);
     setLoadingData(false);
   }, []);
 
@@ -140,6 +156,50 @@ export default function AdminDashboard() {
     setServices(data as ServiceRow[] || []);
   };
 
+  const loadLogs = async () => {
+    // Load recent credit transactions as operational logs + failed jobs as error tracking
+    const [txResult, failedJobsResult] = await Promise.all([
+      supabase.from("credit_transactions")
+        .select("id, user_id, amount, type, description, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50),
+      supabase.from("neuron_jobs")
+        .select("id, worker_type, status, created_at, completed_at, result")
+        .in("status", ["failed", "running"])
+        .order("created_at", { ascending: false })
+        .limit(30),
+    ]);
+
+    const logEntries: LogEntry[] = [];
+
+    // Map transactions to log entries
+    (txResult.data || []).forEach((tx: any) => {
+      logEntries.push({
+        id: tx.id,
+        function_name: "credit-engine",
+        level: tx.type === "denied" ? "error" : tx.type === "release" ? "warn" : "info",
+        message: `[${tx.type.toUpperCase()}] ${tx.description} | amount: ${tx.amount} | user: ${tx.user_id.substring(0, 8)}…`,
+        timestamp: tx.created_at,
+      });
+    });
+
+    // Map failed/running jobs to log entries
+    (failedJobsResult.data || []).forEach((j: any) => {
+      const resultMsg = j.result?.error || j.result?.reason || "";
+      logEntries.push({
+        id: `job-${j.id}`,
+        function_name: j.worker_type || "run-service",
+        level: j.status === "failed" ? "error" : "warn",
+        message: `[JOB ${j.status.toUpperCase()}] ${j.worker_type} | ${resultMsg}`.trim(),
+        timestamp: j.created_at,
+      });
+    });
+
+    // Sort by timestamp desc
+    logEntries.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    setLogs(logEntries.slice(0, 80));
+  };
+
   // ─── Admin Actions ──────────────────────────────────
   const toggleServiceActive = async (serviceId: string, currentActive: boolean) => {
     const { error } = await supabase.from("service_catalog")
@@ -161,6 +221,48 @@ export default function AdminDashboard() {
       toast.success("Rol admin acordat");
     }
     loadUsers();
+  };
+
+  const adjustCredits = async (userId: string) => {
+    const amount = parseInt(adjustAmount);
+    if (isNaN(amount) || amount === 0) { toast.error("Sumă invalidă"); return; }
+    if (!adjustDescription.trim()) { toast.error("Adaugă o descriere"); return; }
+
+    setAdjustLoading(true);
+    try {
+      // Get current balance
+      const { data: current } = await supabase.from("user_credits")
+        .select("balance, total_earned").eq("user_id", userId).single();
+      if (!current) { toast.error("User credits not found"); return; }
+
+      const newBalance = current.balance + amount;
+      if (newBalance < 0) { toast.error(`Balance insuficient. Actual: ${current.balance}`); return; }
+
+      // Update balance
+      const updateData: any = { balance: newBalance, updated_at: new Date().toISOString() };
+      if (amount > 0) updateData.total_earned = current.total_earned + amount;
+
+      const { error: updateErr } = await supabase.from("user_credits")
+        .update(updateData).eq("user_id", userId);
+      if (updateErr) { toast.error(updateErr.message); return; }
+
+      // Log transaction
+      await supabase.from("credit_transactions").insert({
+        user_id: userId,
+        amount,
+        type: amount > 0 ? "admin_grant" : "admin_deduct",
+        description: `ADMIN: ${adjustDescription}`,
+      });
+
+      toast.success(`${amount > 0 ? "+" : ""}${amount} credite aplicate`);
+      setAdjustingUser(null);
+      setAdjustAmount("");
+      setAdjustDescription("");
+      loadUsers();
+      loadStats();
+    } finally {
+      setAdjustLoading(false);
+    }
   };
 
   const deleteNeuron = async (neuronId: number) => {
@@ -228,12 +330,14 @@ export default function AdminDashboard() {
             <TabsTrigger value="neurons" className="text-xs">Neuroni</TabsTrigger>
             <TabsTrigger value="jobs" className="text-xs">Jobs</TabsTrigger>
             <TabsTrigger value="services" className="text-xs">Servicii</TabsTrigger>
+            <TabsTrigger value="logs" className="text-xs gap-1">
+              <ScrollText className="h-3 w-3" /> Logs
+            </TabsTrigger>
           </TabsList>
 
           {/* ─── Overview ─── */}
           <TabsContent value="overview">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* System health */}
               <div className="bg-card border border-border rounded-xl p-5">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
                   <Activity className="h-3 w-3" /> System Health
@@ -246,7 +350,6 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Economy */}
               <div className="bg-card border border-border rounded-xl p-5">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
                   <Coins className="h-3 w-3" /> Economia Platformei
@@ -259,7 +362,6 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Recent activity */}
               <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
                   Ultimele 10 neuroni
@@ -295,7 +397,7 @@ export default function AdminDashboard() {
                     <TableHead className="text-[10px] text-right">Balance</TableHead>
                     <TableHead className="text-[10px] text-right">Spent</TableHead>
                     <TableHead className="text-[10px] text-right">Earned</TableHead>
-                    <TableHead className="text-[10px] w-20">Acțiuni</TableHead>
+                    <TableHead className="text-[10px] w-28">Acțiuni</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -318,15 +420,65 @@ export default function AdminDashboard() {
                       <TableCell className="text-xs font-mono text-right">{u.total_spent}</TableCell>
                       <TableCell className="text-xs font-mono text-right">{u.total_earned}</TableCell>
                       <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => toggleUserRole(u.user_id, u.roles.includes("admin"))}
-                          title={u.roles.includes("admin") ? "Revocă admin" : "Acordă admin"}
-                        >
-                          {u.roles.includes("admin") ? <UserMinus className="h-3.5 w-3.5 text-destructive" /> : <UserPlus className="h-3.5 w-3.5" />}
-                        </Button>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => toggleUserRole(u.user_id, u.roles.includes("admin"))}
+                            title={u.roles.includes("admin") ? "Revocă admin" : "Acordă admin"}
+                          >
+                            {u.roles.includes("admin") ? <UserMinus className="h-3.5 w-3.5 text-destructive" /> : <UserPlus className="h-3.5 w-3.5" />}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => setAdjustingUser(adjustingUser === u.user_id ? null : u.user_id)}
+                            title="Ajustare credite"
+                          >
+                            <Coins className="h-3.5 w-3.5 text-primary" />
+                          </Button>
+                        </div>
+                        {/* Credit adjustment inline */}
+                        {adjustingUser === u.user_id && (
+                          <div className="mt-2 p-3 bg-muted/50 rounded-lg border border-border space-y-2">
+                            <div className="flex gap-2">
+                              <Input
+                                type="number"
+                                placeholder="±amount"
+                                value={adjustAmount}
+                                onChange={e => setAdjustAmount(e.target.value)}
+                                className="h-7 text-xs w-24"
+                              />
+                              <Input
+                                placeholder="Descriere tranzacție"
+                                value={adjustDescription}
+                                onChange={e => setAdjustDescription(e.target.value)}
+                                className="h-7 text-xs flex-1"
+                              />
+                            </div>
+                            <div className="flex gap-1.5">
+                              <Button
+                                size="sm"
+                                className="h-7 text-xs gap-1"
+                                disabled={adjustLoading}
+                                onClick={() => adjustCredits(u.user_id)}
+                              >
+                                {adjustLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <PlusCircle className="h-3 w-3" />}
+                                Aplică
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-7 text-xs"
+                                onClick={() => { setAdjustingUser(null); setAdjustAmount(""); setAdjustDescription(""); }}
+                              >
+                                Anulează
+                              </Button>
+                            </div>
+                          </div>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -472,6 +624,50 @@ export default function AdminDashboard() {
               </Table>
             </div>
           </TabsContent>
+
+          {/* ─── Logs ─── */}
+          <TabsContent value="logs">
+            <div className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <ScrollText className="h-3 w-3" /> Operational Logs — Tranzacții & Erori
+                </h3>
+                <Button variant="outline" size="sm" className="h-7 text-xs" onClick={loadLogs}>
+                  <RefreshCw className="h-3 w-3 mr-1" /> Refresh
+                </Button>
+              </div>
+
+              {logs.length === 0 ? (
+                <p className="text-xs text-muted-foreground text-center py-8">Nu există loguri recente.</p>
+              ) : (
+                <div className="space-y-0.5 max-h-[600px] overflow-y-auto font-mono text-[11px]">
+                  {logs.map(log => (
+                    <div
+                      key={log.id}
+                      className={cn(
+                        "flex items-start gap-2 px-2 py-1.5 rounded",
+                        log.level === "error" ? "bg-destructive/5" :
+                        log.level === "warn" ? "bg-orange-500/5" :
+                        "hover:bg-muted/30"
+                      )}
+                    >
+                      <LogLevelBadge level={log.level} />
+                      <span className="text-[10px] text-muted-foreground shrink-0 w-[130px]">
+                        {new Date(log.timestamp).toLocaleString()}
+                      </span>
+                      <span className={cn(
+                        "text-[9px] px-1.5 py-0.5 rounded shrink-0",
+                        "bg-muted text-muted-foreground"
+                      )}>
+                        {log.function_name}
+                      </span>
+                      <span className="text-xs break-all">{log.message}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
@@ -502,12 +698,26 @@ function StatusBadge({ status }: { status: string }) {
     private: "bg-muted text-muted-foreground",
     pending: "bg-orange-500/10 text-orange-600",
     processing: "bg-orange-500/10 text-orange-600",
+    running: "bg-orange-500/10 text-orange-600",
     failed: "bg-destructive/15 text-destructive",
     archived: "bg-muted text-muted-foreground/60",
   };
   return (
     <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", colors[status] || "bg-muted text-muted-foreground")}>
       {status}
+    </span>
+  );
+}
+
+function LogLevelBadge({ level }: { level: string }) {
+  const colors: Record<string, string> = {
+    error: "bg-destructive/15 text-destructive",
+    warn: "bg-orange-500/10 text-orange-600",
+    info: "bg-primary/10 text-primary",
+  };
+  return (
+    <span className={cn("text-[8px] font-mono uppercase px-1.5 py-0.5 rounded shrink-0 w-10 text-center", colors[level] || "bg-muted text-muted-foreground")}>
+      {level}
     </span>
   );
 }
