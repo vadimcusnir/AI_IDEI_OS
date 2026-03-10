@@ -30,13 +30,13 @@ interface Transaction {
 }
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  spend: { icon: ArrowDownRight, color: "text-destructive", label: "Consum" },
-  reserve: { icon: Clock, color: "text-primary", label: "Rezervat" },
-  release: { icon: ArrowUpRight, color: "text-status-validated", label: "Eliberat" },
-  denied: { icon: TrendingDown, color: "text-muted-foreground", label: "Refuzat" },
-  topup: { icon: TrendingUp, color: "text-status-validated", label: "Încărcare" },
+  spend: { icon: ArrowDownRight, color: "text-destructive", label: "Spend" },
+  reserve: { icon: Clock, color: "text-primary", label: "Reserved" },
+  release: { icon: ArrowUpRight, color: "text-status-validated", label: "Released" },
+  denied: { icon: TrendingDown, color: "text-muted-foreground", label: "Denied" },
+  topup: { icon: TrendingUp, color: "text-status-validated", label: "Top-up" },
   bonus: { icon: Gift, color: "text-ai-accent", label: "Bonus" },
-  adjustment: { icon: Coins, color: "text-primary", label: "Ajustare" },
+  adjustment: { icon: Coins, color: "text-primary", label: "Adjustment" },
 };
 
 type TxFilter = "all" | "spend" | "topup" | "bonus" | "reserve" | "release";
