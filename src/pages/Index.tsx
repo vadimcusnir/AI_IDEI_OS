@@ -119,7 +119,7 @@ export default function Index() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
 
     const fetchNeurons = async () => {
       const { data, error } = await supabase
@@ -133,7 +133,7 @@ export default function Index() {
       setLoading(false);
     };
     fetchNeurons();
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading]);
 
   // Persist pins
   useEffect(() => {
