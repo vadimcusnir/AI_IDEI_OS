@@ -22,8 +22,8 @@ const STEPS: Step[] = [
   {
     id: "upload",
     icon: Upload,
-    label: "Încarcă conținut",
-    description: "Adaugă primul tău episod — audio, video sau text",
+    label: "Upload Content",
+    description: "Add your first episode — audio, video, or text",
     route: "/extractor",
     checkFn: async () => {
       const { count } = await supabase.from("episodes").select("*", { count: "exact", head: true });
