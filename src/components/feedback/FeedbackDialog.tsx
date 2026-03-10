@@ -44,7 +44,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
   const handleSubmit = async () => {
     if (!user) return;
     if (!title.trim() || !message.trim()) {
-      toast.error("Completează titlul și mesajul.");
+      toast.error("Please fill in the title and message.");
       return;
     }
     if (needsRating && !rating) {
