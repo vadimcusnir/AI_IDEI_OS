@@ -118,14 +118,14 @@ export default function Credits() {
         {/* Page title */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold tracking-tight">Credite NEURONS</h1>
+            <h1 className="text-lg font-semibold tracking-tight">NEURONS Credits</h1>
             <span className={cn(
               "text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
               balanceHealth === "healthy" ? "bg-status-validated/15 text-status-validated" :
               balanceHealth === "warning" ? "bg-primary/15 text-primary" :
               "bg-destructive/15 text-destructive"
             )}>
-              {balanceHealth === "healthy" ? "Sănătos" : balanceHealth === "warning" ? "Scăzut" : "Critic"}
+              {balanceHealth === "healthy" ? "Healthy" : balanceHealth === "warning" ? "Low" : "Critical"}
             </span>
           </div>
           <TopUpDialog onSuccess={loadData} />
