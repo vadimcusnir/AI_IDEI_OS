@@ -195,7 +195,7 @@ export default function ProfilePage() {
               />
             </div>
             <p className="text-[10px] text-muted-foreground mt-1">
-              Profilul tău public va fi accesibil la /u/{profile.username || "username"}
+              Your public profile will be accessible at /u/{profile.username || "username"}
             </p>
           </div>
 
