@@ -440,6 +440,7 @@ export type Database = {
           created_at: string
           duration_seconds: number | null
           file_path: string | null
+          file_size: number | null
           id: string
           language: string | null
           metadata: Json | null
@@ -455,6 +456,7 @@ export type Database = {
           created_at?: string
           duration_seconds?: number | null
           file_path?: string | null
+          file_size?: number | null
           id?: string
           language?: string | null
           metadata?: Json | null
@@ -470,6 +472,7 @@ export type Database = {
           created_at?: string
           duration_seconds?: number | null
           file_path?: string | null
+          file_size?: number | null
           id?: string
           language?: string | null
           metadata?: Json | null
