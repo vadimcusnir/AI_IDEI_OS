@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
-import { SiteHeader } from "@/components/SiteHeader";
+import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -120,7 +120,7 @@ export default function Index() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
 
     const fetchNeurons = async () => {
       const { data, error } = await supabase
@@ -134,7 +134,7 @@ export default function Index() {
       setLoading(false);
     };
     fetchNeurons();
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading]);
 
   // Persist pins
   useEffect(() => {
@@ -479,9 +479,7 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      {/* Secondary toolbar */}
+    <div className="flex-1 flex flex-col overflow-hidden">
       <div className="h-10 border-b border-border bg-card flex items-center justify-end px-4 gap-1">
         <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={() => navigate("/extractor")}>
           <Upload className="h-3.5 w-3.5" />
@@ -514,7 +512,7 @@ export default function Index() {
       </div>
 
       {/* Content with sidebar */}
-      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 88px)' }}>
+      <div className="flex flex-1 overflow-hidden">
         {/* Folder Sidebar */}
         {showFolders && (
           <NeuronFolderSidebar
@@ -528,6 +526,8 @@ export default function Index() {
 
         {/* Main content */}
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
+        {/* Onboarding */}
+        <OnboardingChecklist />
         {/* Mini Hero */}
         <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-primary/5 via-card to-ai-accent/5 p-5 mb-6">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />

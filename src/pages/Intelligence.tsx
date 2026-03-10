@@ -47,7 +47,7 @@ export default function Intelligence() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     loadStats();
   }, [user, authLoading]);
 
@@ -111,22 +111,7 @@ export default function Intelligence() {
   const maxActivity = Math.max(...stats.recentActivity.map(a => a.count), 1);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
-          <span className="text-sm font-serif">Intelligence</span>
-          <span className="text-[9px] uppercase tracking-wider bg-primary/10 text-primary px-1.5 py-0.5 rounded font-semibold">
-            Analytics
-          </span>
-        </div>
-        <ThemeToggle />
-      </div>
-
+    <div className="flex-1">
       <div className="max-w-2xl mx-auto px-6 py-8">
         {/* KPI Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">

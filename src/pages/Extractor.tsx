@@ -47,7 +47,7 @@ export default function Extractor() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     fetchEpisodes();
   }, [user, authLoading]);
 
@@ -111,26 +111,19 @@ export default function Extractor() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ChevronRight className="h-4 w-4 rotate-180" />
-          </button>
-          <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
+    <div className="flex-1">
+      {/* Sub-header with action */}
+      <div className="h-10 border-b border-border bg-card flex items-center justify-between px-6">
+        <div className="flex items-center gap-2">
           <span className="text-sm font-serif">Extractor</span>
           <span className="text-[9px] uppercase tracking-wider bg-primary/10 text-primary px-1.5 py-0.5 rounded font-semibold">
             Ingestion Layer
           </span>
         </div>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowCreateModal(true)}>
-            <Upload className="h-3.5 w-3.5" />
-            New Episode
-          </Button>
-        </div>
+        <Button size="sm" className="h-7 gap-1.5 text-xs" onClick={() => setShowCreateModal(true)}>
+          <Upload className="h-3.5 w-3.5" />
+          New Episode
+        </Button>
       </div>
 
       {/* Main */}

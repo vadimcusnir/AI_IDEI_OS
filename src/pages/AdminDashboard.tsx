@@ -39,7 +39,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (loading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     if (!isAdmin) { navigate("/"); return; }
 
     const fetchData = async () => {
@@ -71,19 +71,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => navigate("/")}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <img src={logo} alt="ai-idei.com" className="h-6 w-6" />
-          <span className="text-base font-serif">Admin Dashboard</span>
-          <Shield className="h-4 w-4 text-primary" />
-        </div>
-      </div>
-
+    <div className="flex-1">
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
         {/* Stats cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

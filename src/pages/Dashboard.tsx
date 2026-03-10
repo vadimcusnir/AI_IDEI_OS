@@ -29,7 +29,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) return;
     loadDashboard();
   }, [user, authLoading]);
 
@@ -113,21 +113,7 @@ export default function Dashboard() {
   const maxActivity = Math.max(...data.weeklyActivity.map(d => d.neurons + d.jobs), 1);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="h-12 border-b border-border bg-card flex items-center justify-between px-6">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <img src={logo} alt="ai-idei.com" className="h-5 w-5" />
-          <span className="text-sm font-serif">Dashboard</span>
-          <span className="text-[9px] uppercase tracking-wider bg-primary/10 text-primary px-1.5 py-0.5 rounded font-semibold">
-            Personal
-          </span>
-        </div>
-        <ThemeToggle />
-      </div>
-
+    <div className="flex-1">
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* KPI Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
