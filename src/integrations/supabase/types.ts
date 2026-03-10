@@ -1662,10 +1662,28 @@ export type Database = {
       }
     }
     Functions: {
+      add_credits: {
+        Args: {
+          _amount: number
+          _description: string
+          _type?: string
+          _user_id: string
+        }
+        Returns: boolean
+      }
       compute_idearank: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      spend_credits: {
+        Args: {
+          _amount: number
+          _description: string
+          _job_id?: string
           _user_id: string
         }
         Returns: boolean
