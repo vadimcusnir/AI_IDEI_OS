@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { WhatsNewWidget } from "@/components/home/WhatsNewWidget";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { supabase } from "@/integrations/supabase/client";
