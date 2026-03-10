@@ -285,13 +285,14 @@ export function useNeuron(neuronNumber?: number) {
 
       // For AI-action and prompt blocks, call the edge function
       if (["ai-action", "prompt"].includes(block.type) && block.content.trim()) {
+        const { data: { session } } = await supabase.auth.getSession();
         const resp = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-insights`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              Authorization: `Bearer ${session?.access_token}`,
             },
             body: JSON.stringify({
               action: "extract_insights",
