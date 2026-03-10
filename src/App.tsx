@@ -46,6 +46,7 @@ const App = () => (
               <Route path="/credits" element={<Credits />} />
               <Route path="/intelligence" element={<Intelligence />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/u/:username" element={<PublicProfile />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
