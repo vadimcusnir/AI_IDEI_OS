@@ -30,9 +30,9 @@ interface FeedbackItem {
 const FEEDBACK_TYPES = [
   { key: "feedback", label: "Feedback", icon: ThumbsUp, color: "text-primary" },
   { key: "testimonial", label: "Testimonial", icon: Quote, color: "text-emerald-500" },
-  { key: "proposal", label: "Propunere", icon: Lightbulb, color: "text-amber-500" },
-  { key: "complaint", label: "Plângere", icon: AlertTriangle, color: "text-destructive" },
-  { key: "review", label: "Recenzie", icon: Star, color: "text-primary" },
+  { key: "proposal", label: "Proposal", icon: Lightbulb, color: "text-amber-500" },
+  { key: "complaint", label: "Complaint", icon: AlertTriangle, color: "text-destructive" },
+  { key: "review", label: "Review", icon: Star, color: "text-primary" },
 ] as const;
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
