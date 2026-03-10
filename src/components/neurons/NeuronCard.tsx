@@ -56,6 +56,9 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, onTogglePin, onDelet
         <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/n/${n.number}`); }}>
           <BookOpen className="h-3.5 w-3.5 mr-2" /> Deschide
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/batch/${n.id}`); }}>
+          <Zap className="h-3.5 w-3.5 mr-2" /> Batch Execute
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive" onClick={(e) => onDelete(n.id, e)}>
           <Trash2 className="h-3.5 w-3.5 mr-2" /> Șterge
