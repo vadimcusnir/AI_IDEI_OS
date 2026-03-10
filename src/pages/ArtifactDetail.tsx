@@ -1,0 +1,233 @@
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import ReactMarkdown from "react-markdown";
+import {
+  ArrowLeft, Loader2, Download, Copy, Trash2, Brain,
+  Clock, FileText, Check, ExternalLink,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { toast } from "sonner";
+
+interface Artifact {
+  id: string;
+  title: string;
+  artifact_type: string;
+  format: string;
+  content: string;
+  status: string;
+  tags: string[];
+  service_key: string | null;
+  job_id: string | null;
+  metadata: any;
+  created_at: string;
+  updated_at: string;
+}
+
+interface LinkedNeuron {
+  id: string;
+  neuron_id: number;
+  relation_type: string;
+  neuron_number?: number;
+  neuron_title?: string;
+}
+
+const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
+  document: { label: "Document", color: "bg-primary/10 text-primary" },
+  report: { label: "Raport", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
+  prompt: { label: "Prompt", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
+  course: { label: "Curs", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
+  strategy: { label: "Strategie", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
+  profile: { label: "Profil", color: "bg-pink-500/10 text-pink-600 dark:text-pink-400" },
+};
+
+export default function ArtifactDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
+  const [artifact, setArtifact] = useState<Artifact | null>(null);
+  const [linkedNeurons, setLinkedNeurons] = useState<LinkedNeuron[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (authLoading || !user || !id) return;
+    loadArtifact();
+  }, [user, authLoading, id]);
+
+  const loadArtifact = async () => {
+    const [artRes, linksRes] = await Promise.all([
+      supabase.from("artifacts").select("*").eq("id", id!).single(),
+      supabase.from("artifact_neurons").select("id, neuron_id, relation_type").eq("artifact_id", id!),
+    ]);
+
+    if (artRes.data) {
+      setArtifact(artRes.data as any);
+    }
+
+    // Fetch neuron details for linked neurons
+    const links = (linksRes.data || []) as LinkedNeuron[];
+    if (links.length > 0) {
+      const neuronIds = links.map(l => l.neuron_id);
+      const { data: neurons } = await supabase
+        .from("neurons")
+        .select("id, number, title")
+        .in("id", neuronIds);
+
+      const neuronMap = new Map((neurons || []).map(n => [n.id, n]));
+      const enriched = links.map(l => ({
+        ...l,
+        neuron_number: neuronMap.get(l.neuron_id)?.number,
+        neuron_title: neuronMap.get(l.neuron_id)?.title,
+      }));
+      setLinkedNeurons(enriched);
+    }
+
+    setLoading(false);
+  };
+
+  const handleCopy = async () => {
+    if (!artifact) return;
+    await navigator.clipboard.writeText(artifact.content);
+    setCopied(true);
+    toast.success("Conținut copiat");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleExport = () => {
+    if (!artifact) return;
+    const blob = new Blob([artifact.content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${artifact.title.replace(/\s+/g, "-").toLowerCase()}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Fișier descărcat");
+  };
+
+  const handleDelete = async () => {
+    if (!artifact) return;
+    await supabase.from("artifact_neurons").delete().eq("artifact_id", artifact.id);
+    await supabase.from("artifacts").delete().eq("id", artifact.id);
+    toast.success("Artefact șters");
+    navigate("/library");
+  };
+
+  if (authLoading || loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!artifact) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center gap-3">
+        <p className="text-sm text-muted-foreground">Artefactul nu a fost găsit.</p>
+        <Button variant="outline" size="sm" onClick={() => navigate("/library")}>
+          <ArrowLeft className="h-3.5 w-3.5 mr-1.5" /> Înapoi la Bibliotecă
+        </Button>
+      </div>
+    );
+  }
+
+  const typeConf = TYPE_CONFIG[artifact.artifact_type] || { label: artifact.artifact_type, color: "bg-muted text-muted-foreground" };
+
+  return (
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+        {/* Back + Actions */}
+        <div className="flex items-center justify-between mb-5">
+          <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={() => navigate("/library")}>
+            <ArrowLeft className="h-3.5 w-3.5" /> Bibliotecă
+          </Button>
+          <div className="flex items-center gap-1.5">
+            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCopy}>
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? "Copiat" : "Copiază"}
+            </Button>
+            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleExport}>
+              <Download className="h-3.5 w-3.5" /> Export .md
+            </Button>
+            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs text-destructive" onClick={handleDelete}>
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Header */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
+              {typeConf.label}
+            </span>
+            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+              <Clock className="h-2.5 w-2.5" />
+              {format(new Date(artifact.created_at), "dd MMM yyyy, HH:mm")}
+            </span>
+          </div>
+          <h1 className="text-xl font-serif font-bold">{artifact.title}</h1>
+          {artifact.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {artifact.tags.map(tag => (
+                <Badge key={tag} variant="secondary" className="text-[9px]">{tag}</Badge>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Linked Neurons */}
+        {linkedNeurons.length > 0 && (
+          <div className="mb-6 bg-card border border-border rounded-xl p-4">
+            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
+              <Brain className="h-3 w-3" /> Neuroni sursă
+            </h3>
+            <div className="space-y-1">
+              {linkedNeurons.map(ln => (
+                <button
+                  key={ln.id}
+                  onClick={() => navigate(`/n/${ln.neuron_number}`)}
+                  className="w-full flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-muted/50 transition-colors text-left"
+                >
+                  <span className="text-xs">
+                    <span className="font-mono text-muted-foreground mr-1.5">#{ln.neuron_number}</span>
+                    {ln.neuron_title}
+                  </span>
+                  <ExternalLink className="h-3 w-3 text-muted-foreground/40" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="bg-card border border-border rounded-xl p-6">
+          <div className="prose prose-sm dark:prose-invert max-w-none">
+            <ReactMarkdown>{artifact.content}</ReactMarkdown>
+          </div>
+        </div>
+
+        {/* Metadata */}
+        {artifact.metadata && Object.keys(artifact.metadata).length > 0 && (
+          <div className="mt-4 bg-muted/30 border border-border rounded-xl p-4">
+            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Metadata</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(artifact.metadata).map(([key, val]) => (
+                <div key={key}>
+                  <span className="text-[9px] text-muted-foreground uppercase">{key.replace("_", " ")}</span>
+                  <p className="text-xs font-mono">{String(val)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
