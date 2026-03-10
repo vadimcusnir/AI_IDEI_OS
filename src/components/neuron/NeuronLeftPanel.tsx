@@ -6,6 +6,9 @@ import {
 import { cn } from "@/lib/utils";
 import { NeuronLink, GraphAddress } from "@/hooks/useNeuronGraph";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface NeuronLeftPanelProps {
   isCollapsed: boolean;
@@ -135,6 +138,91 @@ function LinkSection({
   );
 }
 
+function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (targetId: number, relationType: string) => void }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [targetNumber, setTargetNumber] = useState("");
+  const [relationType, setRelationType] = useState("supports");
+  const [adding, setAdding] = useState(false);
+  const [suggestions, setSuggestions] = useState<{ id: number; number: number; title: string }[]>([]);
+
+  const searchNeurons = useCallback(async (query: string) => {
+    if (!query.trim()) { setSuggestions([]); return; }
+    const isNum = /^\d+$/.test(query);
+    let q = supabase.from("neurons").select("id, number, title").limit(5);
+    if (isNum) {
+      q = q.eq("number", parseInt(query));
+    } else {
+      q = q.ilike("title", `%${query}%`);
+    }
+    const { data } = await q;
+    setSuggestions((data || []).filter(n => n.id !== neuronId));
+  }, [neuronId]);
+
+  const handleAdd = async (targetId: number) => {
+    if (!onAddLink) return;
+    setAdding(true);
+    onAddLink(targetId, relationType);
+    setTargetNumber("");
+    setSuggestions([]);
+    setIsOpen(false);
+    setAdding(false);
+  };
+
+  if (!isOpen) {
+    return (
+      <div className="px-3 py-2">
+        <Button variant="ghost" size="sm" className="w-full h-7 text-[10px] gap-1" onClick={() => setIsOpen(true)}>
+          <Plus className="h-3 w-3" /> Add Link
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-3 py-2 border-t border-border space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Add Link</span>
+        <button onClick={() => { setIsOpen(false); setSuggestions([]); }}>
+          <X className="h-3 w-3 text-muted-foreground" />
+        </button>
+      </div>
+      <input
+        value={targetNumber}
+        onChange={e => { setTargetNumber(e.target.value); searchNeurons(e.target.value); }}
+        placeholder="Search by # or title..."
+        className="w-full text-xs bg-muted/50 rounded-md px-2 py-1.5 outline-none border border-border focus:border-primary transition-colors"
+      />
+      {suggestions.length > 0 && (
+        <div className="space-y-0.5 max-h-24 overflow-y-auto">
+          {suggestions.map(s => (
+            <button
+              key={s.id}
+              onClick={() => handleAdd(s.id)}
+              disabled={adding}
+              className="w-full flex items-center gap-2 px-2 py-1 rounded text-xs hover:bg-muted/50 transition-colors text-left"
+            >
+              <Zap className="h-3 w-3 text-primary/50 shrink-0" />
+              <span className="font-mono text-[10px] text-muted-foreground">#{s.number}</span>
+              <span className="truncate">{s.title}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      <select
+        value={relationType}
+        onChange={e => setRelationType(e.target.value)}
+        className="w-full text-[10px] bg-muted/50 rounded-md px-2 py-1 outline-none border border-border"
+      >
+        <option value="supports">Supports</option>
+        <option value="contradicts">Contradicts</option>
+        <option value="extends">Extends</option>
+        <option value="references">References</option>
+        <option value="derived_from">Derived from</option>
+      </select>
+    </div>
+  );
+}
+
 export function NeuronLeftPanel({
   isCollapsed,
   onToggle,
@@ -222,6 +310,9 @@ export function NeuronLeftPanel({
             <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
           </div>
         )}
+
+        {/* Add Link */}
+        <AddLinkForm neuronId={neuronId} onAddLink={onAddLink} />
 
         {/* Links */}
         {!loadingLinks && (
