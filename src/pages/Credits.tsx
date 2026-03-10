@@ -178,7 +178,7 @@ export default function Credits() {
                 const d = new Date(t.created_at);
                 const now = new Date();
                 return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-              }).length} luna asta
+              }).length} this month
             </p>
           </div>
 
