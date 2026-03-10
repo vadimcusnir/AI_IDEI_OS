@@ -62,7 +62,7 @@ const logStatusColors = {
 export function NeuronBottomBar({
   isExpanded, onToggle, executionLogs,
   links, versions, loadingLinks, loadingVersions,
-  onRemoveLink, onSaveVersion, onClearLogs,
+  onRemoveLink, onSaveVersion, onClearLogs, onRestoreVersion,
 }: NeuronBottomBarProps) {
   const [activeTab, setActiveTab] = useState<BottomTab>("relations");
   const [commentText, setCommentText] = useState("");
