@@ -226,7 +226,7 @@ export default function Home() {
                 </Button>
               </div>
               {jobs.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-4 text-center">Niciun job rulat.</p>
+                <p className="text-xs text-muted-foreground py-4 text-center">No jobs run yet.</p>
               ) : (
                 <div className="space-y-1">
                   {jobs.map(job => (
