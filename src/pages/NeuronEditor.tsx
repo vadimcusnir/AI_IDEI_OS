@@ -43,6 +43,7 @@ export default function NeuronEditor() {
   const { saveAsTemplate } = useNeuronTemplates();
 
   const [activeFormats, setActiveFormats] = useState<string[]>(["left"]);
+  const [selectedEpisodeTranscript, setSelectedEpisodeTranscript] = useState<string | null>(null);
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(false);
   const [bottomExpanded, setBottomExpanded] = useState(false);
