@@ -193,7 +193,6 @@ export default function Library() {
                   className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
                   onClick={() => navigate(`/library/${artifact.id}`)}
                 >
-                >
                   {/* Type + Status */}
                   <div className="flex items-center justify-between mb-2">
                     <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
