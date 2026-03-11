@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
 export function useNeuronClone() {
   const { user } = useAuth();
