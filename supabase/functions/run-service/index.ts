@@ -253,9 +253,22 @@ Deno.serve(async (req) => {
         _type: "refund",
       });
 
+      // Mark failed with error message for retry system
+      const retryCount = currentJob?.retry_count || 0;
+      const maxRetries = currentJob?.max_retries || 3;
+      const shouldRetry = retryCount < maxRetries && response.status >= 500;
+
       await supabase.from("neuron_jobs").update({
-        status: "failed", completed_at: new Date().toISOString(),
+        status: "failed", 
+        completed_at: shouldRetry ? null : new Date().toISOString(),
+        error_message: `AI error: ${response.status}`,
         result: { error: `AI error: ${response.status}` },
+        ...(shouldRetry ? {
+          retry_count: retryCount + 1,
+          scheduled_at: new Date(Date.now() + retryCount * 30000).toISOString(),
+        } : {
+          dead_letter: retryCount >= maxRetries,
+        }),
       }).eq("id", job_id);
 
       if (response.status === 429) {
