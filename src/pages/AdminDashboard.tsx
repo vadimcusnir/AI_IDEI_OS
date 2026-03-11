@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle, Network } from "lucide-react";
+import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle, Network, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
 import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
 import { AdminKnowledgeGraphTab } from "@/components/admin/AdminKnowledgeGraphTab";
+import { AdminAnalyticsTab } from "@/components/admin/AdminAnalyticsTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
@@ -343,6 +344,9 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="knowledge-graph" className="text-xs gap-1">
               <Network className="h-3 w-3" /> Knowledge Graph
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="text-xs gap-1">
+              <BarChart3 className="h-3 w-3" /> Analytics
             </TabsTrigger>
           </TabsList>
 
@@ -693,6 +697,11 @@ export default function AdminDashboard() {
           {/* ─── Knowledge Graph ─── */}
           <TabsContent value="knowledge-graph">
             <AdminKnowledgeGraphTab />
+          </TabsContent>
+
+          {/* ─── Analytics ─── */}
+          <TabsContent value="analytics">
+            <AdminAnalyticsTab />
           </TabsContent>
         </Tabs>
       </div>

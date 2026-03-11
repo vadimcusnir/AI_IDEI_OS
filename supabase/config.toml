@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.run-pipeline]
 verify_jwt = false
+
+[functions.embed-neurons]
+verify_jwt = false

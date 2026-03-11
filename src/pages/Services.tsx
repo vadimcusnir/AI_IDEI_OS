@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { SEOHead } from "@/components/SEOHead";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -99,8 +101,37 @@ export default function Services() {
 
   return (
     <div className="flex-1 overflow-y-auto">
+      <SEOHead
+        title="AI Services — AI-IDEI"
+        description="AI-powered knowledge services: extraction, analysis, production. Transform expertise into structured intellectual assets."
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: "https://ai-idei.com" },
+        { name: "Services", url: "https://ai-idei.com/services" },
+      ]} />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "AI-IDEI Services",
+        description: "AI-powered knowledge extraction and content generation services",
+        numberOfItems: services.length,
+        itemListElement: services.slice(0, 10).map((s, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          item: {
+            "@type": "Service",
+            name: s.name,
+            description: s.description,
+            provider: { "@type": "Organization", name: "AI-IDEI" },
+            offers: {
+              "@type": "Offer",
+              price: (s.credits_cost * 0.01).toFixed(2),
+              priceCurrency: "USD",
+            },
+          },
+        })),
+      }} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
-
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
