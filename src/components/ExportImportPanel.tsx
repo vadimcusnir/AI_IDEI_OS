@@ -68,6 +68,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
       a.click();
       URL.revokeObjectURL(url);
       toast.success(`Exported ${exported.length} neurons`);
+      trackInternalEvent({ event: AnalyticsEvents.EXPORT_TRIGGERED, params: { format: "json", count: exported.length } });
     } catch (e) {
       toast.error("Export failed");
     }

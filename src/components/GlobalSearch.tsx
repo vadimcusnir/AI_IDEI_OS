@@ -118,6 +118,7 @@ export function GlobalSearch() {
     ];
 
     setResults(mapped);
+    trackInternalEvent({ event: AnalyticsEvents.SEARCH_PERFORMED, params: { query: q, results_count: mapped.length } });
     setSelectedIndex(0);
     setLoading(false);
   }, [user]);
