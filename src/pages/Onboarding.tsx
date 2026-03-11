@@ -118,6 +118,7 @@ export default function Onboarding() {
 
   return (
     <div className="flex-1 overflow-y-auto">
+      <SEOHead title="Onboarding — AI-IDEI" description="Get started with AI-IDEI: upload content, extract neurons, run AI services." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="text-center mb-8">

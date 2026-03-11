@@ -110,6 +110,7 @@ export default function Library() {
 
   return (
     <div className="flex-1 overflow-auto">
+      <SEOHead title="Library — AI-IDEI" description="Browse and manage your generated artifacts, documents and deliverables." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">

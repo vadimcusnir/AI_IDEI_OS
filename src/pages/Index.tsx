@@ -74,6 +74,7 @@ export default function Index() {
 
   return (
     <div className="flex-1 flex overflow-hidden">
+      <SEOHead title="Neurons — AI-IDEI" description="Browse, search and manage your neuron library." />
       {/* Folder sidebar — slides in/out */}
       <div
         className={cn(

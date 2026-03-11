@@ -128,6 +128,7 @@ export default function Feedback() {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
+      <SEOHead title="Feedback — AI-IDEI" description="Submit and track your feedback, reviews and feature proposals." />
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-xl font-bold flex items-center gap-2">

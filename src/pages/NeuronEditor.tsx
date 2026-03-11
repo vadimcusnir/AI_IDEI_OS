@@ -145,6 +145,7 @@ export default function NeuronEditor() {
 
   return (
     <div className="flex-1 flex flex-col bg-background overflow-hidden">
+      <SEOHead title={`${neuron.title || "Neuron"} #${neuron.number} — AI-IDEI`} description="Edit neuron blocks, run AI actions and manage knowledge units." />
       <NeuronTopBar
         title={neuron.title}
         neuronNumber={neuron.number}

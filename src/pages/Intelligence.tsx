@@ -95,6 +95,7 @@ export default function Intelligence() {
 
   return (
     <div className="flex-1 overflow-auto">
+      <SEOHead title="Intelligence — AI-IDEI" description="Knowledge graph, stats overview and neuron analytics." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         <div className="flex items-center justify-between mb-5">
           <div>

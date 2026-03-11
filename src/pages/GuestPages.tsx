@@ -75,6 +75,7 @@ export default function GuestPages() {
 
   return (
     <div className="flex-1 overflow-y-auto">
+      <SEOHead title="Guest Pages — AI-IDEI" description="Manage auto-generated guest profiles extracted from your transcriptions." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
