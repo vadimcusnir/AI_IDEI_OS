@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
 import { usePushSubscription } from "@/hooks/usePushSubscription";
 import {

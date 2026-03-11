@@ -1,5 +1,6 @@
 import { useMemo, useState, useCallback } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNeuron } from "@/hooks/useNeuron";
 import { useNeuronGraph } from "@/hooks/useNeuronGraph";

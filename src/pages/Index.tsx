@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { Plus, Loader2, Search, Filter, Download, FolderTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
