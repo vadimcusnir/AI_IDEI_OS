@@ -72,6 +72,7 @@ export function useNeuronTemplates() {
       .from("neuron_templates")
       .update({ usage_count: (template.usage_count || 0) + 1 })
       .eq("id", templateId);
+    trackInternalEvent({ event: AnalyticsEvents.TEMPLATE_USED, params: { template_id: templateId, template_name: template.name } });
 
     toast.success(`Created neuron from "${template.name}" template`);
     return neuron;
