@@ -1,5 +1,6 @@
 import { useMemo, useState, useCallback } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNeuron } from "@/hooks/useNeuron";
 import { useNeuronGraph } from "@/hooks/useNeuronGraph";
@@ -144,6 +145,7 @@ export default function NeuronEditor() {
 
   return (
     <div className="flex-1 flex flex-col bg-background overflow-hidden">
+      <SEOHead title={`${neuron.title || "Neuron"} #${neuron.number} — AI-IDEI`} description="Edit neuron blocks, run AI actions and manage knowledge units." />
       <NeuronTopBar
         title={neuron.title}
         neuronNumber={neuron.number}

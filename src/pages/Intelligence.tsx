@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -94,6 +95,7 @@ export default function Intelligence() {
 
   return (
     <div className="flex-1 overflow-auto">
+      <SEOHead title="Intelligence — AI-IDEI" description="Knowledge graph, stats overview and neuron analytics." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         <div className="flex items-center justify-between mb-5">
           <div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
 import { usePushSubscription } from "@/hooks/usePushSubscription";
 import {
@@ -62,6 +63,7 @@ export default function Notifications() {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
+      <SEOHead title="Notifications — AI-IDEI" description="Your notifications: job updates, credit alerts, version changes." />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

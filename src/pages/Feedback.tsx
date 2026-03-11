@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -106,6 +108,7 @@ export default function Feedback() {
       toast.error("Error: " + error.message);
     } else {
       toast.success("Thank you for your feedback! 🙏");
+      trackInternalEvent({ event: AnalyticsEvents.FEEDBACK_SUBMITTED, params: { type, rating } });
       setTitle("");
       setMessage("");
       setRating(null);
@@ -127,6 +130,7 @@ export default function Feedback() {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
+      <SEOHead title="Feedback — AI-IDEI" description="Submit and track your feedback, reviews and feature proposals." />
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-xl font-bold flex items-center gap-2">

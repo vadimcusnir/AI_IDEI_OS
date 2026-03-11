@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
 export function useNeuronClone() {
   const { user } = useAuth();
@@ -63,6 +64,7 @@ export function useNeuronClone() {
     } as any);
 
     toast.success(`Cloned "${source.title}" → #${cloned.number}`);
+    trackInternalEvent({ event: AnalyticsEvents.NEURON_CLONED, params: { source_id: source.id, clone_id: cloned.id } });
     return cloned;
   }, [user]);
 

@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Block, BlockType, CodeLanguage, BLOCK_TYPE_CONFIG, ExecutionLog } from "@/components/neuron/types";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
 interface NeuronData {
   id: number;
@@ -101,6 +102,7 @@ export function useNeuron(neuronNumber?: number) {
           }
 
           trackEvent({ name: "neuron_created", params: { neuron_id: n.id, neuron_number: n.number } });
+          trackInternalEvent({ event: AnalyticsEvents.NEURON_CREATED, params: { neuron_id: n.id, neuron_number: n.number } });
 
           setNeuron({
             id: n.id,

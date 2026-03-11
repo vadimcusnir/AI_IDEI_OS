@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -92,6 +93,7 @@ export default function Jobs() {
 
   return (
     <div className="flex-1 overflow-y-auto">
+      <SEOHead title="Jobs — AI-IDEI" description="Track AI service execution history, status and results." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
         {/* Header */}

@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
 export interface NeuronTemplate {
   id: string;
@@ -71,6 +72,7 @@ export function useNeuronTemplates() {
       .from("neuron_templates")
       .update({ usage_count: (template.usage_count || 0) + 1 })
       .eq("id", templateId);
+    trackInternalEvent({ event: AnalyticsEvents.TEMPLATE_USED, params: { template_id: templateId, template_name: template.name } });
 
     toast.success(`Created neuron from "${template.name}" template`);
     return neuron;

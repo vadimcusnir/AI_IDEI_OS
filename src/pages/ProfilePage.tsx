@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -115,6 +116,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
+      <SEOHead title="Profile — AI-IDEI" description="Manage your AI-IDEI profile, notification preferences and settings." />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-5">
 
         {/* Header */}

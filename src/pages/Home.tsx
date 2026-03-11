@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { WhatsNewWidget } from "@/components/home/WhatsNewWidget";
 import { TrendingIdeasWidget } from "@/components/home/TrendingIdeasWidget";
 import { useAuth } from "@/contexts/AuthContext";
@@ -107,6 +108,7 @@ export default function Home() {
 
   return (
     <div className="flex-1 overflow-auto">
+      <SEOHead title="Cockpit — AI-IDEI" description="Your AI-IDEI command center. Monitor neurons, episodes, jobs and credits." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Welcome header */}
         <div className="mb-6">

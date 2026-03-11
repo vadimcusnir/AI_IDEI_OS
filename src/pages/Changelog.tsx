@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { SEOHead } from "@/components/SEOHead";
 import { Sparkles, Wrench, Bug, Palette, Zap, Plug, BookOpen, Calendar, Search, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -71,6 +72,7 @@ export default function Changelog() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <SEOHead title="Changelog — AI-IDEI" description="Latest updates, features and improvements to the AI-IDEI platform." />
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-2">Changelog</h1>
         <p className="text-sm text-muted-foreground max-w-[65ch]">

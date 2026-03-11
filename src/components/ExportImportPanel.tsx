@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { Button } from "@/components/ui/button";
 import {
   Download, Upload, FileJson, FileText, Loader2, X, CheckCircle2,
@@ -67,6 +68,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
       a.click();
       URL.revokeObjectURL(url);
       toast.success(`Exported ${exported.length} neurons`);
+      trackInternalEvent({ event: AnalyticsEvents.EXPORT_TRIGGERED, params: { format: "json", count: exported.length } });
     } catch (e) {
       toast.error("Export failed");
     }

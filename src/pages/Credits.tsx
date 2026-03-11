@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -156,6 +157,7 @@ export default function Credits() {
 
   return (
     <div className="flex-1 overflow-y-auto">
+      <SEOHead title="Credits — AI-IDEI" description="Manage your NEURONS credits balance, transaction history and top-ups." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
         {/* Page title */}

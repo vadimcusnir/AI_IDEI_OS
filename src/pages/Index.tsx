@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { Plus, Loader2, Search, Filter, Download, FolderTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
@@ -73,6 +74,7 @@ export default function Index() {
 
   return (
     <div className="flex-1 flex overflow-hidden">
+      <SEOHead title="Neurons — AI-IDEI" description="Browse, search and manage your neuron library." />
       {/* Folder sidebar — slides in/out */}
       <div
         className={cn(
