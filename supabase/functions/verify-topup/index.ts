@@ -19,15 +19,12 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const supabaseAdmin = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-  );
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 
-  const supabaseClient = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
-  );
+  const supabaseAdmin = createClient(supabaseUrl, serviceKey);
+  const supabaseClient = createClient(supabaseUrl, anonKey);
 
   try {
     const authHeader = req.headers.get("Authorization")!;
@@ -37,7 +34,8 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated");
 
     const { session_id } = await req.json();
-    if (!session_id) throw new Error("Missing session_id");
+    if (!session_id || typeof session_id !== "string") throw new Error("Missing or invalid session_id");
+    if (session_id.length > 200) throw new Error("Invalid session_id format");
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
@@ -62,7 +60,7 @@ serve(async (req) => {
     }
 
     const neurons = parseInt(session.metadata?.neurons || "0");
-    if (neurons <= 0) throw new Error("Invalid neuron amount");
+    if (neurons <= 0 || neurons > 50_000) throw new Error("Invalid neuron amount");
 
     // Check if already processed (idempotency)
     const { data: existingTx } = await supabaseAdmin
@@ -77,34 +75,17 @@ serve(async (req) => {
       });
     }
 
-    // Update credits
-    const { data: current } = await supabaseAdmin
-      .from("user_credits")
-      .select("balance, total_earned")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (current) {
-      await supabaseAdmin.from("user_credits").update({
-        balance: current.balance + neurons,
-        total_earned: current.total_earned + neurons,
-        updated_at: new Date().toISOString(),
-      }).eq("user_id", user.id);
-    } else {
-      await supabaseAdmin.from("user_credits").insert({
-        user_id: user.id,
-        balance: neurons,
-        total_earned: neurons,
-      });
-    }
-
-    // Log transaction
-    await supabaseAdmin.from("credit_transactions").insert({
-      user_id: user.id,
-      amount: neurons,
-      type: "topup",
-      description: `STRIPE TOPUP: +${neurons} NEURONS (${session_id})`,
+    // Add credits atomically via SECURITY DEFINER function
+    const { data: added } = await supabaseAdmin.rpc("add_credits", {
+      _user_id: user.id,
+      _amount: neurons,
+      _description: `STRIPE TOPUP: +${neurons} NEURONS (${session_id})`,
+      _type: "topup",
     });
+
+    if (!added) {
+      throw new Error("Failed to add credits");
+    }
 
     return new Response(JSON.stringify({ success: true, neurons_added: neurons }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

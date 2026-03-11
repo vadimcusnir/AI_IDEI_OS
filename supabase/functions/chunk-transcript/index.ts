@@ -59,6 +59,23 @@ function greedyChunk(text: string, minTokens = 200, maxTokens = 800): string[] {
   return chunks;
 }
 
+// ── Rate limiting ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 20;
+const RATE_WINDOW = 3600_000;
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(userId);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -87,13 +104,24 @@ Deno.serve(async (req) => {
     }
     const userId = caller.id;
 
+    // ── Rate limit check ──
+    if (!checkRateLimit(userId)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded (20 chunk operations/hour)" }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { episode_id, min_tokens, max_tokens } = await req.json();
 
-    if (!episode_id) {
-      return new Response(JSON.stringify({ error: "Missing episode_id" }), {
+    if (!episode_id || typeof episode_id !== "string") {
+      return new Response(JSON.stringify({ error: "Missing or invalid episode_id" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Validate token parameters
+    const minT = Math.max(50, Math.min(2000, Number(min_tokens) || 200));
+    const maxT = Math.max(minT + 50, Math.min(5000, Number(max_tokens) || 800));
 
     // Fetch episode
     const { data: episode, error: epErr } = await supabase
@@ -116,8 +144,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    const minT = min_tokens ?? 200;
-    const maxT = max_tokens ?? 800;
     const chunks = greedyChunk(transcript, minT, maxT);
 
     const result = chunks.map((content, index) => ({
