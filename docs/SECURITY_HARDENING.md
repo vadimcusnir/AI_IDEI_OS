@@ -106,3 +106,36 @@ No edge function directly modifies the `user_credits` table. RLS policies restri
 - Dependency Review: blocks PR merge on HIGH severity
 - CI Security job: `npm audit --audit-level=high` blocks build
 - Secret scanning: enabled via GitHub Advanced Security
+
+## Job Queue Security (2026-03-11)
+
+### Retry & Dead Letter System
+- Jobs automatically retry up to `max_retries` (default: 3) with exponential backoff
+- Stale running jobs (>10 min) are auto-recovered by `process-queue`
+- Failed jobs exceeding max retries are moved to dead letter queue
+- `retry_failed_job()` is a SECURITY DEFINER function — users cannot manipulate retry counts
+- `process-queue` edge function requires internal secret or admin JWT
+
+### IMF Pipeline Security
+- Pipeline execution validates total credit cost upfront before starting
+- Each step executes via authenticated `run-service` call (not bypassing auth)
+- Pipeline runs are logged with full step-by-step audit trail
+- Only admins can create/modify pipeline definitions
+
+## Database Schema Additions (2026-03-11)
+
+### New Tables with RLS
+| Table | RLS | Access |
+|-------|-----|--------|
+| `token_balances` | ✅ | Users read own only |
+| `token_transactions` | ✅ | Users read own only |
+| `subscription_plans` | ✅ | Public read active plans, admin manage |
+| `analytics_events` | ✅ | Users insert own, admins read all |
+| `imf_pipelines` | ✅ | Admins manage, users read active |
+| `imf_pipeline_runs` | ✅ | Users read own, admins read all |
+| `neuron_embeddings` | ✅ | Follow neuron visibility |
+
+### Semantic Search Security
+- `search_neurons_semantic()` respects neuron visibility (public OR owner)
+- Requires `_user_id` parameter to filter private neurons
+- Uses `extensions.vector` type — no raw SQL exposed to clients
