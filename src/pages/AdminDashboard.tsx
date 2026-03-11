@@ -345,6 +345,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="knowledge-graph" className="text-xs gap-1">
               <Network className="h-3 w-3" /> Knowledge Graph
             </TabsTrigger>
+            <TabsTrigger value="analytics" className="text-xs gap-1">
+              <BarChart3 className="h-3 w-3" /> Analytics
+            </TabsTrigger>
           </TabsList>
 
           {/* ─── Overview ─── */}
