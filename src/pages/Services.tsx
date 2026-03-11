@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { SEOHead } from "@/components/SEOHead";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
