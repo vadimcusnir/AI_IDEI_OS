@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { WhatsNewWidget } from "@/components/home/WhatsNewWidget";
 import { TrendingIdeasWidget } from "@/components/home/TrendingIdeasWidget";
 import { useAuth } from "@/contexts/AuthContext";
