@@ -498,6 +498,17 @@ export default function Landing() {
       </section>
 
       <Footer />
+
+      {/* Structured Data */}
+      <OrganizationJsonLd />
+      <WebApplicationJsonLd />
+      <FAQJsonLd items={[
+        { question: "What is AI-IDEI?", answer: "AI-IDEI is an AI-driven expertise capitalization platform that transforms raw knowledge (podcasts, interviews, texts) into structured intellectual assets called Neurons." },
+        { question: "How does the extraction pipeline work?", answer: "Upload content → Automatic transcription → AI-powered deep knowledge extraction → Neuron generation → Multiple deliverables. One podcast can generate 50+ professional outputs." },
+        { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power service execution. 1000 credits = $10 USD. New users receive 500 free NEURONS as a welcome bonus." },
+        { question: "What types of content can I upload?", answer: "You can upload YouTube videos, MP3/MP4 files, Zoom recordings, podcast transcripts, and written text. The platform supports multiple input formats." },
+        { question: "What deliverables can AI-IDEI generate?", answer: "Articles, marketing frameworks, courses, copywriting formulas, scripts, social media posts, psychological profiles, marketing funnels, and many more structured knowledge outputs." },
+      ]} />
     </div>
   );
 }

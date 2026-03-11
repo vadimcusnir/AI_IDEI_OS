@@ -214,6 +214,15 @@ export default function RunService() {
 
   return (
     <div className="flex-1">
+      {service && (
+        <>
+          <ServiceJsonLd service={service} />
+          <BreadcrumbJsonLd items={[
+            { name: "Services", url: "https://ai-idei.com/services" },
+            { name: service.name, url: `https://ai-idei.com/services/${service.service_key}` },
+          ]} />
+        </>
+      )}
       <div className="max-w-2xl mx-auto px-6 py-8">
         {/* Service header */}
         <div className="mb-8">
