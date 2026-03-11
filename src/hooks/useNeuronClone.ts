@@ -64,6 +64,7 @@ export function useNeuronClone() {
     } as any);
 
     toast.success(`Cloned "${source.title}" → #${cloned.number}`);
+    trackInternalEvent({ event: AnalyticsEvents.NEURON_CLONED, params: { source_id: source.id, clone_id: cloned.id } });
     return cloned;
   }, [user]);
 

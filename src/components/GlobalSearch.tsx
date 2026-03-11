@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { Search, Brain, FileText, Users, X, Loader2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {

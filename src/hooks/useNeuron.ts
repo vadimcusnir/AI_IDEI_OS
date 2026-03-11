@@ -102,6 +102,7 @@ export function useNeuron(neuronNumber?: number) {
           }
 
           trackEvent({ name: "neuron_created", params: { neuron_id: n.id, neuron_number: n.number } });
+          trackInternalEvent({ event: AnalyticsEvents.NEURON_CREATED, params: { neuron_id: n.id, neuron_number: n.number } });
 
           setNeuron({
             id: n.id,
