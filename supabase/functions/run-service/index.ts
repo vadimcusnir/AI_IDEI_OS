@@ -177,8 +177,23 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ── Update job to running ──
-    await supabase.from("neuron_jobs").update({ status: "running" }).eq("id", job_id);
+    // ── Update job to running, track retry count ──
+    const { data: currentJob } = await supabase
+      .from("neuron_jobs")
+      .select("retry_count, max_retries, dead_letter")
+      .eq("id", job_id)
+      .single();
+
+    if (currentJob?.dead_letter) {
+      return new Response(JSON.stringify({ error: "Job is in dead letter queue" }), {
+        status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    await supabase.from("neuron_jobs").update({ 
+      status: "running",
+      scheduled_at: new Date().toISOString(),
+    }).eq("id", job_id);
 
     // ── Fetch service cost ──
     const { data: service } = await supabase
