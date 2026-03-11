@@ -6,6 +6,23 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// ── Rate limiting ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 10;
+const RATE_WINDOW = 3600_000;
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(userId);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -34,12 +51,19 @@ Deno.serve(async (req) => {
     }
     const userId = caller.id;
 
+    // ── Rate limit check ──
+    if (!checkRateLimit(userId)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded (10 guest extractions/hour)" }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     const { episode_id } = await req.json();
-    if (!episode_id) {
-      return new Response(JSON.stringify({ error: "Missing episode_id" }), {
+    if (!episode_id || typeof episode_id !== "string") {
+      return new Response(JSON.stringify({ error: "Missing or invalid episode_id" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -113,6 +137,9 @@ If no distinct people can be identified, return an empty array [].`;
       console.error("Parse error:", e);
     }
 
+    // Validate parsed guests - max 20, sanitize strings
+    guests = guests.slice(0, 20).filter(g => g.full_name && typeof g.full_name === "string");
+
     if (guests.length === 0) {
       return new Response(JSON.stringify({ guests: [], message: "No guests detected" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -122,10 +149,14 @@ If no distinct people can be identified, return an empty array [].`;
     // Upsert guest profiles
     const created: any[] = [];
     for (const guest of guests) {
-      const slug = guest.full_name
+      const fullName = String(guest.full_name).slice(0, 200);
+      const slug = fullName
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
+        .replace(/^-|-$/g, "")
+        .slice(0, 100);
+
+      if (!slug) continue;
 
       const { data: existing } = await supabase
         .from("guest_profiles")
@@ -138,33 +169,33 @@ If no distinct people can be identified, return an empty array [].`;
         const updatedEpisodes = Array.from(new Set([...(existing.episode_ids || []), episode_id]));
         await supabase.from("guest_profiles").update({
           episode_ids: updatedEpisodes,
-          bio: guest.bio || existing.bio || "",
-          expertise_areas: guest.expertise_areas || [],
-          frameworks_mentioned: guest.frameworks_mentioned || [],
-          psychological_traits: guest.psychological_traits || [],
-          key_quotes: guest.key_quotes || [],
+          bio: String(guest.bio || "").slice(0, 2000),
+          expertise_areas: (guest.expertise_areas || []).slice(0, 10).map((s: any) => String(s).slice(0, 200)),
+          frameworks_mentioned: (guest.frameworks_mentioned || []).slice(0, 10).map((s: any) => String(s).slice(0, 200)),
+          psychological_traits: (guest.psychological_traits || []).slice(0, 10).map((s: any) => String(s).slice(0, 200)),
+          key_quotes: (guest.key_quotes || []).slice(0, 10).map((s: any) => String(s).slice(0, 500)),
           updated_at: new Date().toISOString(),
         } as any).eq("id", existing.id);
-        created.push({ id: existing.id, slug, full_name: guest.full_name, updated: true });
+        created.push({ id: existing.id, slug, full_name: fullName, updated: true });
       } else {
         const { data: newGuest, error: gErr } = await supabase
           .from("guest_profiles")
           .insert({
             author_id: userId,
-            full_name: guest.full_name,
+            full_name: fullName,
             slug,
-            role: guest.role || "guest",
-            bio: guest.bio || "",
-            expertise_areas: guest.expertise_areas || [],
-            frameworks_mentioned: guest.frameworks_mentioned || [],
-            psychological_traits: guest.psychological_traits || [],
-            key_quotes: guest.key_quotes || [],
+            role: ["host", "guest", "expert", "panelist"].includes(guest.role) ? guest.role : "guest",
+            bio: String(guest.bio || "").slice(0, 2000),
+            expertise_areas: (guest.expertise_areas || []).slice(0, 10).map((s: any) => String(s).slice(0, 200)),
+            frameworks_mentioned: (guest.frameworks_mentioned || []).slice(0, 10).map((s: any) => String(s).slice(0, 200)),
+            psychological_traits: (guest.psychological_traits || []).slice(0, 10).map((s: any) => String(s).slice(0, 200)),
+            key_quotes: (guest.key_quotes || []).slice(0, 10).map((s: any) => String(s).slice(0, 500)),
             episode_ids: [episode_id],
           } as any)
           .select("id")
           .single();
 
-        if (newGuest) created.push({ id: newGuest.id, slug, full_name: guest.full_name, created: true });
+        if (newGuest) created.push({ id: newGuest.id, slug, full_name: fullName, created: true });
         if (gErr) console.error("Guest insert error:", gErr);
       }
     }

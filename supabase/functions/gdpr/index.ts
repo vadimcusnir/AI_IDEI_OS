@@ -6,6 +6,23 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// ── Rate limiting ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 3; // per hour (GDPR ops are sensitive)
+const RATE_WINDOW = 3600_000;
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(userId);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -38,7 +55,34 @@ Deno.serve(async (req) => {
   }
 
   const userId = user.id;
-  const { action } = await req.json();
+
+  // ── Rate limit check ──
+  if (!checkRateLimit(userId)) {
+    return new Response(JSON.stringify({ error: "Rate limit exceeded (3 GDPR requests/hour)" }), {
+      status: 429,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  const { action } = body;
+
+  // Validate action
+  if (!action || !["export", "delete"].includes(action)) {
+    return new Response(JSON.stringify({ error: "Invalid action. Use 'export' or 'delete'." }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
 
   const adminClient = createClient(supabaseUrl, serviceKey);
 

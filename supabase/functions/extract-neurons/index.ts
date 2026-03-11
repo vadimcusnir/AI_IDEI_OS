@@ -173,8 +173,8 @@ Deno.serve(async (req) => {
 
     const { episode_id } = await req.json();
 
-    if (!episode_id) {
-      return new Response(JSON.stringify({ error: "Missing episode_id" }), {
+    if (!episode_id || typeof episode_id !== "string") {
+      return new Response(JSON.stringify({ error: "Missing or invalid episode_id" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -196,26 +196,21 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Check credits (100 per extraction) ──
+    // ── Check & spend credits atomically via SECURITY DEFINER function ──
     const EXTRACTION_COST = 100;
-    const { data: credits } = await supabase
-      .from("user_credits").select("balance, total_spent").eq("user_id", userId).single();
+    const { data: spent } = await supabase.rpc("spend_credits", {
+      _user_id: userId,
+      _amount: EXTRACTION_COST,
+      _description: `EXTRACTION: ${episode.title}`,
+    });
 
-    if (!credits || credits.balance < EXTRACTION_COST) {
+    if (!spent) {
       return new Response(JSON.stringify({
         error: "Insufficient credits for extraction",
         reason_code: "RC.CREDITS.INSUFFICIENT",
         needed: EXTRACTION_COST,
-        have: credits?.balance ?? 0,
       }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
-
-    // Reserve credits
-    await supabase.from("user_credits").update({
-      balance: credits.balance - EXTRACTION_COST,
-      total_spent: credits.total_spent + EXTRACTION_COST,
-      updated_at: new Date().toISOString(),
-    }).eq("user_id", userId);
 
     // ── Update episode status ──
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);
@@ -234,9 +229,13 @@ Deno.serve(async (req) => {
     }
 
     if (allNeurons.length === 0) {
-      await supabase.from("user_credits").update({
-        balance: credits.balance, total_spent: credits.total_spent,
-      }).eq("user_id", userId);
+      // Refund credits atomically
+      await supabase.rpc("add_credits", {
+        _user_id: userId,
+        _amount: EXTRACTION_COST,
+        _description: `REFUND: ${episode.title} — no neurons extracted`,
+        _type: "refund",
+      });
       await supabase.from("episodes").update({ status: "transcribed" }).eq("id", episode_id);
       return new Response(JSON.stringify({ error: "No neurons extracted" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -250,7 +249,7 @@ Deno.serve(async (req) => {
         .from("neurons")
         .insert({
           author_id: userId,
-          title: neuronData.title || "Extracted Neuron",
+          title: (neuronData.title || "Extracted Neuron").slice(0, 200),
           status: "draft",
           lifecycle: "structured",
           content_category: neuronData.content_category || null,
@@ -267,7 +266,7 @@ Deno.serve(async (req) => {
         await supabase.from("neuron_blocks").insert({
           neuron_id: newNeuron.id,
           type: blocks[i].type || "text",
-          content: blocks[i].content || "",
+          content: (blocks[i].content || "").slice(0, 50_000),
           position: i,
           execution_mode: "passive",
         });
@@ -286,13 +285,6 @@ Deno.serve(async (req) => {
         analyzed_at: new Date().toISOString(),
       },
     } as any).eq("id", episode_id);
-
-    await supabase.from("credit_transactions").insert({
-      user_id: userId,
-      amount: -EXTRACTION_COST,
-      type: "spend",
-      description: `EXTRACTION: ${episode.title} → ${createdNeurons.length} neurons (${chunks.length} chunks)`,
-    });
 
     return new Response(JSON.stringify({
       success: true,

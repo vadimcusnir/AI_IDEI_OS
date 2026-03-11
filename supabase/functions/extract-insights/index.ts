@@ -6,11 +6,37 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Valid actions enum
+const VALID_ACTIONS = new Set([
+  "extract_insights", "extract_frameworks", "extract_questions",
+  "extract_quotes", "extract_prompts", "debug_code", "optimize_code",
+  "generate_tests", "explain_code", "transform_article", "transform_twitter",
+  "transform_script", "transform_slide", "find_related", "idea_clusters",
+  "influence_score",
+]);
+
+// ── Rate limiting ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 30;
+const RATE_WINDOW = 3600_000;
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(userId);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    // Verify JWT
+    // ── Authenticate via JWT ──
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Missing authorization" }), {
@@ -21,7 +47,6 @@ Deno.serve(async (req) => {
     const token = authHeader.replace("Bearer ", "");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2.49.1");
     const supabase = createClient(supabaseUrl, anonKey);
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
@@ -31,10 +56,25 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── Rate limit check ──
+    if (!checkRateLimit(user.id)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded (30 insight extractions/hour)" }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const { blocks, neuron_title, action } = await req.json();
+
+    // Validate action
+    if (action && !VALID_ACTIONS.has(action)) {
+      return new Response(JSON.stringify({ error: "Invalid action" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     if (!blocks || !Array.isArray(blocks) || blocks.length === 0) {
       return new Response(JSON.stringify({ error: "No blocks provided" }), {
@@ -43,11 +83,19 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Build content from blocks
+    if (blocks.length > 100) {
+      return new Response(JSON.stringify({ error: "Too many blocks (max 100)" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Build content from blocks with length limits
     const content = blocks
-      .filter((b: any) => b.content && b.content.trim())
-      .map((b: any) => `[${b.type}] ${b.content}`)
-      .join("\n\n");
+      .filter((b: any) => b.content && typeof b.content === "string" && b.content.trim())
+      .map((b: any) => `[${String(b.type || "text").slice(0, 20)}] ${b.content.slice(0, 10_000)}`)
+      .join("\n\n")
+      .slice(0, 50_000);
 
     if (!content.trim()) {
       return new Response(JSON.stringify({ error: "No content to analyze" }), {
@@ -59,42 +107,28 @@ Deno.serve(async (req) => {
     // Select prompt based on action
     const prompts: Record<string, string> = {
       extract_insights: `You are a knowledge extraction engine. Analyze the content and extract 3-7 key insights. For each: a clear title, explanation (2-3 sentences), and "**Why it matters:**" line. Use ## headings.`,
-
       extract_frameworks: `You are a pattern recognition engine. Extract 2-5 mental models or frameworks. For each: name, core structure, when to use, example application. Use ## headings.`,
-
       extract_questions: `You are a Socratic analysis engine. Generate 5-10 important questions the content raises. Categories: Clarification, Challenge, Extension, Application. Use markdown formatting.`,
-
       extract_quotes: `You are a quote extraction engine. Identify 3-7 quotable, impactful statements. For each: the quote, context, and suggested use. Use > blockquote formatting.`,
-
       extract_prompts: `You are a prompt engineering engine. Generate 3-5 reusable AI prompts to explore ideas further, generate related content, or apply frameworks. Include title, full prompt text, and expected output type. Use ## headings and code blocks.`,
-
       debug_code: `You are a code debugger. Analyze the code and identify bugs, errors, and potential issues. For each issue: description, location, fix suggestion, and corrected code. Use markdown with code blocks.`,
-
       optimize_code: `You are a code optimization expert. Analyze the code and suggest performance improvements. For each: what to optimize, why, before/after comparison. Use markdown with code blocks.`,
-
       generate_tests: `You are a test engineer. Generate comprehensive test cases for the code. Include unit tests, edge cases, and integration tests. Output ready-to-use test code. Use markdown with code blocks.`,
-
       explain_code: `You are a code explainer. Provide a clear, line-by-line explanation of the code. Cover: purpose, logic flow, key functions, dependencies, and potential gotchas. Use markdown formatting.`,
-
       transform_article: `You are a content transformer. Convert the following content into a well-structured article. Include: compelling headline, introduction, body sections with subheadings, conclusion with call-to-action. Professional editorial tone. Use markdown formatting.`,
-
       transform_twitter: `You are a Twitter thread creator. Convert the content into a compelling 5-10 tweet thread. Each tweet under 280 chars. Include hooks, insights, and a strong closing tweet. Number each tweet.`,
-
       transform_script: `You are a video script writer. Convert the content into a professional video/podcast script. Include: hook, main segments with timestamps, key talking points, transitions, and outro. Use markdown formatting.`,
-
       transform_slide: `You are a presentation designer. Convert the content into slide-ready material. For each slide: title, 3-5 bullet points, speaker notes. Aim for 5-10 slides. Use markdown formatting.`,
-
       find_related: `You are a knowledge graph analyzer. Based on this content, suggest 5-8 related topics, concepts, or domains that would create valuable connections. For each: topic, relationship type (supports, extends, contradicts), and why it's relevant.`,
-
       idea_clusters: `You are a thematic clustering engine. Group the ideas in this content into 3-5 thematic clusters. For each cluster: name, key ideas within it, and connections between them. Visualize as a text-based concept map.`,
-
       influence_score: `You are an impact analysis engine. Evaluate this content's potential influence across dimensions: originality (1-10), actionability (1-10), depth (1-10), breadth of application (1-10). Provide detailed justification for each score and an overall influence assessment.`,
     };
 
     const systemPrompt = prompts[action] || prompts.extract_insights;
 
-    const userMessage = neuron_title
-      ? `Neuron: "${neuron_title}"\n\nContent:\n${content}`
+    const safeTitle = neuron_title ? String(neuron_title).slice(0, 200) : "";
+    const userMessage = safeTitle
+      ? `Neuron: "${safeTitle}"\n\nContent:\n${content}`
       : `Content:\n${content}`;
 
     // Call Lovable AI Gateway with streaming

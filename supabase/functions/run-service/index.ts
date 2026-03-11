@@ -94,6 +94,9 @@ const SERVICE_ARTIFACT_TYPE: Record<string, string> = {
   "prompt-forge": "prompt",
 };
 
+// Valid service keys for input validation
+const VALID_SERVICE_KEYS = new Set(Object.keys(SERVICE_PROMPTS));
+
 // ── Rate limiting ──
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 20; // per hour
@@ -152,8 +155,13 @@ Deno.serve(async (req) => {
 
     const { job_id, service_key, neuron_id, inputs } = await req.json();
 
-    if (!job_id || !service_key) {
-      return new Response(JSON.stringify({ error: "Missing job_id or service_key" }), {
+    if (!job_id || typeof job_id !== "string") {
+      return new Response(JSON.stringify({ error: "Missing or invalid job_id" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (!service_key || typeof service_key !== "string") {
+      return new Response(JSON.stringify({ error: "Missing or invalid service_key" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -183,36 +191,24 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Reserve credits ──
-    const { data: userCredits } = await supabase
-      .from("user_credits").select("balance, total_spent").eq("user_id", user_id).single();
+    // ── Spend credits atomically via SECURITY DEFINER function ──
+    const { data: spent } = await supabase.rpc("spend_credits", {
+      _user_id: user_id,
+      _amount: service.credits_cost,
+      _description: `SPEND: ${service.name}`,
+      _job_id: job_id,
+    });
 
-    if (!userCredits || userCredits.balance < service.credits_cost) {
+    if (!spent) {
       await supabase.from("neuron_jobs").update({
         status: "failed", completed_at: new Date().toISOString(),
-        result: { error: "RC.CREDITS.INSUFFICIENT", reason: `Need ${service.credits_cost}, have ${userCredits?.balance ?? 0}` },
+        result: { error: "RC.CREDITS.INSUFFICIENT", reason: `Need ${service.credits_cost} credits` },
       }).eq("id", job_id);
-
-      await supabase.from("credit_transactions").insert({
-        user_id, job_id, amount: 0, type: "denied",
-        description: `DENIED: ${service.name} — insufficient credits`,
-      });
 
       return new Response(JSON.stringify({ error: "Insufficient credits", reason_code: "RC.CREDITS.INSUFFICIENT" }), {
         status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const newBalance = userCredits.balance - service.credits_cost;
-    const newSpent = userCredits.total_spent + service.credits_cost;
-    await supabase.from("user_credits").update({
-      balance: newBalance, total_spent: newSpent, updated_at: new Date().toISOString(),
-    }).eq("user_id", user_id);
-
-    await supabase.from("credit_transactions").insert({
-      user_id, job_id, amount: -service.credits_cost, type: "reserve",
-      description: `RESERVE: ${service.name}`,
-    });
 
     // ── Execute AI pipeline ──
     const systemPrompt = SERVICE_PROMPTS[service_key] || SERVICE_PROMPTS["insight-extractor"];
@@ -234,14 +230,12 @@ Deno.serve(async (req) => {
     });
 
     if (!response.ok) {
-      // Release credits on AI failure
-      await supabase.from("user_credits").update({
-        balance: newBalance + service.credits_cost, total_spent: newSpent - service.credits_cost, updated_at: new Date().toISOString(),
-      }).eq("user_id", user_id);
-
-      await supabase.from("credit_transactions").insert({
-        user_id, job_id, amount: service.credits_cost, type: "release",
-        description: `RELEASE: ${service.name} — AI error ${response.status}`,
+      // Refund credits on AI failure via atomic function
+      await supabase.rpc("add_credits", {
+        _user_id: user_id,
+        _amount: service.credits_cost,
+        _description: `REFUND: ${service.name} — AI error ${response.status}`,
+        _type: "refund",
       });
 
       await supabase.from("neuron_jobs").update({
@@ -250,16 +244,16 @@ Deno.serve(async (req) => {
       }).eq("id", job_id);
 
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Credits released." }), {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded. Credits refunded." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Credits released." }), {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Credits refunded." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      return new Response(JSON.stringify({ error: "AI service unavailable. Credits released." }), {
+      return new Response(JSON.stringify({ error: "AI service unavailable. Credits refunded." }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -301,16 +295,10 @@ Deno.serve(async (req) => {
           result: { content: fullResult, credits_spent: service.credits_cost, service: service.name },
         }).eq("id", job_id);
 
-        // Confirm spend
-        await supabase.from("credit_transactions").insert({
-          user_id, job_id, amount: -service.credits_cost, type: "spend",
-          description: `SPEND: ${service.name} — completed`,
-        });
-
         // Save as neuron block
         if (neuron_id && fullResult) {
           await supabase.from("neuron_blocks").insert({
-            neuron_id, type: "markdown", content: fullResult, position: 0, execution_mode: "passive",
+            neuron_id, type: "markdown", content: fullResult.slice(0, 100_000), position: 0, execution_mode: "passive",
           });
           await supabase.from("neurons").update({
             status: "published", lifecycle: "structured", updated_at: new Date().toISOString(),
@@ -326,7 +314,7 @@ Deno.serve(async (req) => {
             author_id: user_id,
             title: artifactTitle,
             artifact_type: artifactType,
-            content: fullResult,
+            content: fullResult.slice(0, 200_000),
             format: "markdown",
             status: "generated",
             service_key,
