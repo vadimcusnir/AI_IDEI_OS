@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Block, BlockType, CodeLanguage, BLOCK_TYPE_CONFIG, ExecutionLog } from "@/components/neuron/types";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
 interface NeuronData {
   id: number;
