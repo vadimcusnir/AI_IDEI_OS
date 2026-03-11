@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
+import { usePageTracking } from "@/hooks/usePageTracking";
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
