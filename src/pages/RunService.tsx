@@ -4,6 +4,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import {
@@ -179,6 +181,7 @@ export default function RunService() {
       setJobStatus("completed");
       toast.success("Job completed — results audited and saved");
       trackEvent({ name: "service_executed", params: { service_key: service.service_key, job_id: jobId || undefined, credits_cost: service.credits_cost } });
+      trackInternalEvent({ event: AnalyticsEvents.SERVICE_COMPLETED, params: { service_key: service.service_key, job_id: jobId, credits_cost: service.credits_cost } });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Unknown error";
       toast.error(msg);
@@ -211,6 +214,15 @@ export default function RunService() {
 
   return (
     <div className="flex-1">
+      {service && (
+        <>
+          <ServiceJsonLd service={service} />
+          <BreadcrumbJsonLd items={[
+            { name: "Services", url: "https://ai-idei.com/services" },
+            { name: service.name, url: `https://ai-idei.com/services/${service.service_key}` },
+          ]} />
+        </>
+      )}
       <div className="max-w-2xl mx-auto px-6 py-8">
         {/* Service header */}
         <div className="mb-8">

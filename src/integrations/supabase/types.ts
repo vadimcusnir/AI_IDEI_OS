@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_name: string
+          event_params: Json | null
+          id: string
+          page_path: string | null
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_name: string
+          event_params?: Json | null
+          id?: string
+          page_path?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_name?: string
+          event_params?: Json | null
+          id?: string
+          page_path?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       artifact_neurons: {
         Row: {
           artifact_id: string
@@ -839,6 +869,92 @@ export type Database = {
           },
         ]
       }
+      imf_pipeline_runs: {
+        Row: {
+          completed_at: string | null
+          error_message: string | null
+          id: string
+          pipeline_id: string
+          result: Json | null
+          started_at: string
+          status: string
+          steps_completed: number
+          total_steps: number
+          trigger_data: Json | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          pipeline_id: string
+          result?: Json | null
+          started_at?: string
+          status?: string
+          steps_completed?: number
+          total_steps?: number
+          trigger_data?: Json | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          pipeline_id?: string
+          result?: Json | null
+          started_at?: string
+          status?: string
+          steps_completed?: number
+          total_steps?: number
+          trigger_data?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imf_pipeline_runs_pipeline_id_fkey"
+            columns: ["pipeline_id"]
+            isOneToOne: false
+            referencedRelation: "imf_pipelines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imf_pipelines: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          steps: Json
+          trigger_event: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          steps?: Json
+          trigger_event: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          steps?: Json
+          trigger_event?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       neuron_address_aliases: {
         Row: {
           alias: string
@@ -999,16 +1115,57 @@ export type Database = {
           },
         ]
       }
+      neuron_embeddings: {
+        Row: {
+          content_hash: string | null
+          created_at: string
+          embedding: string | null
+          id: string
+          model: string
+          neuron_id: number
+        }
+        Insert: {
+          content_hash?: string | null
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          model?: string
+          neuron_id: number
+        }
+        Update: {
+          content_hash?: string | null
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          model?: string
+          neuron_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neuron_embeddings_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       neuron_jobs: {
         Row: {
           author_id: string | null
           block_id: string | null
           completed_at: string | null
           created_at: string
+          dead_letter: boolean
+          error_message: string | null
           id: string
           input: Json | null
+          max_retries: number
           neuron_id: number
+          priority: number
           result: Json | null
+          retry_count: number
+          scheduled_at: string | null
           status: string
           worker_type: string
         }
@@ -1017,10 +1174,16 @@ export type Database = {
           block_id?: string | null
           completed_at?: string | null
           created_at?: string
+          dead_letter?: boolean
+          error_message?: string | null
           id?: string
           input?: Json | null
+          max_retries?: number
           neuron_id: number
+          priority?: number
           result?: Json | null
+          retry_count?: number
+          scheduled_at?: string | null
           status?: string
           worker_type: string
         }
@@ -1029,10 +1192,16 @@ export type Database = {
           block_id?: string | null
           completed_at?: string | null
           created_at?: string
+          dead_letter?: boolean
+          error_message?: string | null
           id?: string
           input?: Json | null
+          max_retries?: number
           neuron_id?: number
+          priority?: number
           result?: Json | null
+          retry_count?: number
+          scheduled_at?: string | null
           status?: string
           worker_type?: string
         }
@@ -1487,6 +1656,108 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          features: Json | null
+          id: string
+          is_active: boolean
+          name: string
+          neurons_monthly: number
+          plan_key: string
+          position: number
+          price_usd: number
+          token_requirement: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean
+          name: string
+          neurons_monthly?: number
+          plan_key: string
+          position?: number
+          price_usd?: number
+          token_requirement?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          neurons_monthly?: number
+          plan_key?: string
+          position?: number
+          price_usd?: number
+          token_requirement?: number
+        }
+        Relationships: []
+      }
+      token_balances: {
+        Row: {
+          access_tier: string
+          balance: number
+          id: string
+          staked: number
+          tier_expires_at: string | null
+          total_earned: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_tier?: string
+          balance?: number
+          id?: string
+          staked?: number
+          tier_expires_at?: string | null
+          total_earned?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_tier?: string
+          balance?: number
+          id?: string
+          staked?: number
+          tier_expires_at?: string | null
+          total_earned?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      token_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string
+          id?: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       topic_labels: {
         Row: {
           created_at: string | null
@@ -1678,6 +1949,20 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
+      search_neurons_semantic: {
+        Args: {
+          _user_id?: string
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          neuron_id: number
+          similarity: number
+          title: string
+        }[]
       }
       spend_credits: {
         Args: {

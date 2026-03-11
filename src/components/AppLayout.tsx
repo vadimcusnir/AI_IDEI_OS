@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
+import { usePageTracking } from "@/hooks/usePageTracking";
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -37,6 +38,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   const { direction, isAtTop } = useScrollDirection();
   const { i18n } = useTranslation();
   const { user } = useAuth();
+  usePageTracking();
 
   const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
 

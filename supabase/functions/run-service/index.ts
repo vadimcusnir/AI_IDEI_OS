@@ -177,8 +177,23 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ── Update job to running ──
-    await supabase.from("neuron_jobs").update({ status: "running" }).eq("id", job_id);
+    // ── Update job to running, track retry count ──
+    const { data: currentJob } = await supabase
+      .from("neuron_jobs")
+      .select("retry_count, max_retries, dead_letter")
+      .eq("id", job_id)
+      .single();
+
+    if (currentJob?.dead_letter) {
+      return new Response(JSON.stringify({ error: "Job is in dead letter queue" }), {
+        status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    await supabase.from("neuron_jobs").update({ 
+      status: "running",
+      scheduled_at: new Date().toISOString(),
+    }).eq("id", job_id);
 
     // ── Fetch service cost ──
     const { data: service } = await supabase
@@ -238,9 +253,22 @@ Deno.serve(async (req) => {
         _type: "refund",
       });
 
+      // Mark failed with error message for retry system
+      const retryCount = currentJob?.retry_count || 0;
+      const maxRetries = currentJob?.max_retries || 3;
+      const shouldRetry = retryCount < maxRetries && response.status >= 500;
+
       await supabase.from("neuron_jobs").update({
-        status: "failed", completed_at: new Date().toISOString(),
+        status: "failed", 
+        completed_at: shouldRetry ? null : new Date().toISOString(),
+        error_message: `AI error: ${response.status}`,
         result: { error: `AI error: ${response.status}` },
+        ...(shouldRetry ? {
+          retry_count: retryCount + 1,
+          scheduled_at: new Date(Date.now() + retryCount * 30000).toISOString(),
+        } : {
+          dead_letter: retryCount >= maxRetries,
+        }),
       }).eq("id", job_id);
 
       if (response.status === 429) {
