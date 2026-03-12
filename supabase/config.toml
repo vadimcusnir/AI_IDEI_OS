@@ -1,43 +1,33 @@
 project_id = "swghuuxkcilayybesadm"
 
-[functions.changelog-ingest]
-verify_jwt = false
-
-[functions.changelog-generate]
-verify_jwt = false
-
-[functions.chunk-transcript]
-verify_jwt = false
-
-[functions.extract-guests]
-verify_jwt = false
-
-[functions.create-topup-checkout]
-verify_jwt = false
-
-[functions.verify-topup]
-verify_jwt = false
-
-[functions.init-push]
-verify_jwt = false
-
-[functions.send-push]
-verify_jwt = false
-
-[functions.generate-entities]
-verify_jwt = false
-
-[functions.sitemap]
-verify_jwt = false
-
-[functions.process-queue]
-verify_jwt = false
-
-[functions.run-pipeline]
-verify_jwt = false
-
-[functions.embed-neurons]
-verify_jwt = false
-
-[functions.process-email-queue]
-verify_jwt = false
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.changelog-generate]
+    verify_jwt = false
+  [functions.changelog-ingest]
+    verify_jwt = false
+  [functions.chunk-transcript]
+    verify_jwt = false
+  [functions.create-topup-checkout]
+    verify_jwt = false
+  [functions.embed-neurons]
+    verify_jwt = false
+  [functions.extract-guests]
+    verify_jwt = false
+  [functions.generate-entities]
+    verify_jwt = false
+  [functions.init-push]
+    verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = false
+  [functions.process-queue]
+    verify_jwt = false
+  [functions.run-pipeline]
+    verify_jwt = false
+  [functions.send-push]
+    verify_jwt = false
+  [functions.sitemap]
+    verify_jwt = false
+  [functions.verify-topup]
+    verify_jwt = false
