@@ -531,7 +531,6 @@ export default function Extractor() {
     pending: episodes.filter(e => e.status === "uploaded").length,
   };
 
-  if (authLoading || loading) {
   // === Drag and drop handler ===
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
