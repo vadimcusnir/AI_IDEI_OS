@@ -539,7 +539,64 @@ export default function Extractor() {
     );
   }
 
+  // === Drag and drop handler ===
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+
+    const ext = file.name.split(".").pop()?.toLowerCase() || "";
+    const transcriptExts = ["txt", "srt", "vtt", "md"];
+    const audioExts = ["mp3", "wav", "m4a", "ogg", "webm", "flac"];
+    const videoExts = ["mp4", "webm", "mov", "avi"];
+
+    if (transcriptExts.includes(ext)) {
+      // Auto-switch to text mode and import
+      setSourceType("text");
+      file.text().then(text => {
+        let parsed = text;
+        if (ext === "srt" || ext === "vtt") parsed = parseSrtToText(text);
+        setContent(parsed);
+        if (!title.trim()) {
+          setTitle(file.name.replace(/\.\w+$/, "").replace(/[-_]/g, " "));
+          setAutoTitleApplied(true);
+        }
+        toast.success(`Imported ${file.name} — ready to create episode`);
+      });
+    } else if (audioExts.includes(ext)) {
+      setSourceType("audio");
+      setSelectedFile(file);
+      if (!title.trim()) {
+        setTitle(file.name.replace(/\.\w+$/, "").replace(/[-_]/g, " "));
+        setAutoTitleApplied(true);
+      }
+      toast.success(`${file.name} selected — will be transcribed after upload`);
+    } else if (videoExts.includes(ext)) {
+      setSourceType("video");
+      setSelectedFile(file);
+      if (!title.trim()) {
+        setTitle(file.name.replace(/\.\w+$/, "").replace(/[-_]/g, " "));
+        setAutoTitleApplied(true);
+      }
+      toast.success(`${file.name} selected — will be transcribed after upload`);
+    } else {
+      toast.error(`Unsupported file type: .${ext}`);
+    }
+  }, [title, parseSrtToText]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
   return (
+    <TooltipProvider delayDuration={300}>
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
         {/* Page header */}
