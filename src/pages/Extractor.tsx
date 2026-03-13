@@ -637,7 +637,15 @@ export default function Extractor() {
           "overflow-hidden transition-all duration-200 ease-in-out",
           showForm ? "max-h-[600px] opacity-100 mb-6" : "max-h-0 opacity-0 mb-0"
         )}>
-          <div className="border border-border rounded-xl bg-card p-5 space-y-4">
+          <div
+            className={cn(
+              "border rounded-xl bg-card p-5 space-y-4 min-h-[280px] transition-colors",
+              isDragging ? "border-primary border-dashed bg-primary/5" : "border-border"
+            )}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+          >
             {episodes.length === 0 && (
               <div className="mb-2">
                 <h3 className="text-base font-semibold mb-1">Add your first episode</h3>
