@@ -90,6 +90,7 @@ export default function Extractor() {
   const [editingTranscriptId, setEditingTranscriptId] = useState<string | null>(null);
   const [editTranscriptText, setEditTranscriptText] = useState("");
   const [savingTranscript, setSavingTranscript] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const urlRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
