@@ -63,7 +63,7 @@ const ACCEPTED_FILE_TYPES: Record<string, string> = {
   video: ".mp4,.webm,.mov,.avi",
 };
 
-const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md";
+const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
