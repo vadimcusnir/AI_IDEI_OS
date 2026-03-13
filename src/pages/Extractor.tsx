@@ -7,6 +7,12 @@ import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Upload, FileText, X, Clock, Trash2, Pencil,
   FileAudio, Film, Type, Globe, Loader2, Brain,
   ChevronDown, ChevronUp, Copy, ExternalLink,
@@ -57,7 +63,7 @@ const ACCEPTED_FILE_TYPES: Record<string, string> = {
   video: ".mp4,.webm,.mov,.avi",
 };
 
-const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md";
+const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
@@ -84,6 +90,7 @@ export default function Extractor() {
   const [editingTranscriptId, setEditingTranscriptId] = useState<string | null>(null);
   const [editTranscriptText, setEditTranscriptText] = useState("");
   const [savingTranscript, setSavingTranscript] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const urlRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -468,7 +475,10 @@ export default function Extractor() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       setExtractionProgress({ chunks: data.chunks_processed || 0, neurons: data.neurons_created });
-      toast.success(`${data.neurons_created} neurons extracted from ${data.chunks_processed || 1} segments! (${data.credits_spent} credits)`);
+      toast.success(
+        `✅ S-au creat ${data.neurons_created} neuroni din ${data.chunks_processed || 1} segmente! (${data.credits_spent} credite consumate). Găsești neuronii noi în pagina Neurons.`,
+        { duration: 8000 }
+      );
       trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.neurons_created, credits_spent: data.credits_spent } });
       setChunkPreview(null);
       fetchEpisodes();
@@ -498,7 +508,10 @@ export default function Extractor() {
       );
       const result = await resp.json();
       if (!resp.ok) throw new Error(result.error || "Failed");
-      toast.success(`${result.guests_processed} guests detected!`);
+      toast.success(
+        `✅ ${result.guests_processed} profiluri de invitați detectate! Le poți vedea și edita în pagina Guests.`,
+        { duration: 8000 }
+      );
     } catch (e: any) {
       toast.error(e.message || "Guest detection failed");
     }
@@ -518,6 +531,61 @@ export default function Extractor() {
     pending: episodes.filter(e => e.status === "uploaded").length,
   };
 
+  // === Drag and drop handler ===
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+
+    const ext = file.name.split(".").pop()?.toLowerCase() || "";
+    const transcriptExts = ["txt", "srt", "vtt", "md"];
+    const audioExts = ["mp3", "wav", "m4a", "ogg", "webm", "flac"];
+    const videoExts = ["mp4", "webm", "mov", "avi"];
+
+    if (transcriptExts.includes(ext)) {
+      setSourceType("text");
+      file.text().then(text => {
+        let parsed = text;
+        if (ext === "srt" || ext === "vtt") parsed = parseSrtToText(text);
+        setContent(parsed);
+        if (!title.trim()) {
+          setTitle(file.name.replace(/\.\w+$/, "").replace(/[-_]/g, " "));
+          setAutoTitleApplied(true);
+        }
+        toast.success(`Imported ${file.name} — ready to create episode`);
+      });
+    } else if (audioExts.includes(ext)) {
+      setSourceType("audio");
+      setSelectedFile(file);
+      if (!title.trim()) {
+        setTitle(file.name.replace(/\.\w+$/, "").replace(/[-_]/g, " "));
+        setAutoTitleApplied(true);
+      }
+      toast.success(`${file.name} selected — will be transcribed after upload`);
+    } else if (videoExts.includes(ext)) {
+      setSourceType("video");
+      setSelectedFile(file);
+      if (!title.trim()) {
+        setTitle(file.name.replace(/\.\w+$/, "").replace(/[-_]/g, " "));
+        setAutoTitleApplied(true);
+      }
+      toast.success(`${file.name} selected — will be transcribed after upload`);
+    } else {
+      toast.error(`Unsupported file type: .${ext}`);
+    }
+  }, [title]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
   if (authLoading || loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
@@ -527,6 +595,7 @@ export default function Extractor() {
   }
 
   return (
+    <TooltipProvider delayDuration={300}>
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
         {/* Page header */}
@@ -567,7 +636,15 @@ export default function Extractor() {
           "overflow-hidden transition-all duration-200 ease-in-out",
           showForm ? "max-h-[600px] opacity-100 mb-6" : "max-h-0 opacity-0 mb-0"
         )}>
-          <div className="border border-border rounded-xl bg-card p-5 space-y-4">
+          <div
+            className={cn(
+              "border rounded-xl bg-card p-5 space-y-4 min-h-[280px] transition-colors",
+              isDragging ? "border-primary border-dashed bg-primary/5" : "border-border"
+            )}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+          >
             {episodes.length === 0 && (
               <div className="mb-2">
                 <h3 className="text-base font-semibold mb-1">Add your first episode</h3>
@@ -693,11 +770,14 @@ export default function Extractor() {
                 ) : (
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="w-full border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/30 transition-colors"
+                    className={cn(
+                      "w-full border-2 border-dashed rounded-xl p-6 text-center transition-colors",
+                      isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/30"
+                    )}
                   >
                     <Upload className="h-6 w-6 opacity-30 mx-auto mb-2" />
                     <p className="text-xs text-muted-foreground font-medium">
-                      Click to select {sourceType} file
+                      {isDragging ? "Drop file here" : `Click or drag & drop ${sourceType} file`}
                     </p>
                     <p className="text-[10px] text-muted-foreground/50 mt-1">
                       {sourceType === "audio" ? "MP3, WAV, M4A, OGG, FLAC · Max 50MB" : "MP4, WebM, MOV · Max 50MB"}
@@ -769,9 +849,12 @@ export default function Extractor() {
                   isExpanded ? "border-primary/30" : "border-border hover:border-primary/20"
                 )}>
                   {/* Row header */}
-                  <button
-                    className="w-full flex items-center gap-4 px-4 py-3 text-left"
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className="w-full flex items-center gap-4 px-4 py-3 text-left cursor-pointer"
                     onClick={() => setExpandedId(isExpanded ? null : ep.id)}
+                    onKeyDown={e => { if (e.key === "Enter" || e.key === " ") setExpandedId(isExpanded ? null : ep.id); }}
                   >
                     <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
                       <Icon className="h-4 w-4 text-muted-foreground" />
@@ -816,11 +899,50 @@ export default function Extractor() {
                         <span className="text-[10px] text-primary font-medium">Transcribing…</span>
                       </div>
                     )}
+                    {/* Quick action buttons in header */}
+                    {hasTranscript && !isExtracting && !isTranscribing && (
+                      <div className="flex items-center gap-0.5 shrink-0" onClick={e => e.stopPropagation()}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0"
+                              onClick={() => startEditTranscript(ep)}>
+                              <Pencil className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Editează transcriptul</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0"
+                              onClick={() => copyTranscript(ep.transcript!)}>
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Copiază transcriptul</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0"
+                              onClick={() => exportTranscript(ep, "txt")}>
+                              <Download className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Descarcă TXT</TooltipContent>
+                        </Tooltip>
+                      </div>
+                    )}
                     {canExtract && !isExtracting && !isTranscribing && (
-                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1 shrink-0"
-                        onClick={e => { e.stopPropagation(); handleExtractNeurons(ep); }}>
-                        <Brain className="h-3 w-3" /> Extract
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1 shrink-0"
+                            onClick={e => { e.stopPropagation(); handleExtractNeurons(ep); }}>
+                            <Brain className="h-3 w-3" /> Extract
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-[220px] text-center">
+                          Extrage neuroni de cunoștințe din transcript folosind AI (100 credite)
+                        </TooltipContent>
+                      </Tooltip>
                     )}
                     {needsTranscript && !isExtracting && !isTranscribing && (
                       <Button variant="outline" size="sm"
@@ -842,7 +964,7 @@ export default function Extractor() {
                       "h-3.5 w-3.5 text-muted-foreground/40 shrink-0 transition-transform",
                       isExpanded && "rotate-180"
                     )} />
-                  </button>
+                  </div>
 
                   {/* Expanded detail panel */}
                   {isExpanded && (
@@ -987,10 +1109,17 @@ export default function Extractor() {
                               </Button>
                             </div>
                           </div>
-                          <div className="bg-muted/50 rounded-lg px-3 py-2.5 max-h-48 overflow-y-auto">
-                            <p className="text-xs text-muted-foreground font-mono whitespace-pre-wrap leading-relaxed">
-                              {ep.transcript}
-                            </p>
+                          <div className="bg-muted/50 rounded-lg px-3 py-2.5 max-h-64 overflow-y-auto scroll-smooth">
+                            {ep.transcript!.split("\n").map((line, i) => (
+                              <div key={i} className="flex gap-2 group hover:bg-muted/80 rounded px-1 -mx-1">
+                                <span className="text-[9px] text-muted-foreground/30 font-mono w-5 shrink-0 text-right select-none pt-0.5">
+                                  {i + 1}
+                                </span>
+                                <p className="text-xs text-muted-foreground font-mono whitespace-pre-wrap leading-relaxed flex-1">
+                                  {line || "\u00A0"}
+                                </p>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       ) : null}
@@ -1045,23 +1174,44 @@ export default function Extractor() {
                         </Button>
                         <div className="flex items-center gap-1.5">
                           {hasTranscript && !isExtracting && (
-                            <Button variant="outline" size="sm" className="h-7 text-xs gap-1"
-                              onClick={() => handleChunkPreview(ep)} disabled={chunkingId === ep.id}>
-                              {chunkingId === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Layers className="h-3 w-3" />}
-                              Preview Segments
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="outline" size="sm" className="h-7 text-xs gap-1"
+                                  onClick={() => handleChunkPreview(ep)} disabled={chunkingId === ep.id}>
+                                  {chunkingId === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Layers className="h-3 w-3" />}
+                                  Preview Segments
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-[220px] text-center">
+                                Vizualizează cum va fi segmentat transcriptul înainte de extracție (200-800 tokens/segment)
+                              </TooltipContent>
+                            </Tooltip>
                           )}
                           {canExtract && !isExtracting && (
-                            <Button size="sm" className="h-7 text-xs gap-1" onClick={() => handleExtractNeurons(ep)}>
-                              <Brain className="h-3 w-3" /> Extract Neurons
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button size="sm" className="h-7 text-xs gap-1" onClick={() => handleExtractNeurons(ep)}>
+                                  <Brain className="h-3 w-3" /> Extract Neurons
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-[220px] text-center">
+                                Extrage neuroni de cunoștințe din transcript — framework-uri, insight-uri, citate (100 credite)
+                              </TooltipContent>
+                            </Tooltip>
                           )}
                           {canExtract && !isExtracting && (
-                            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                              disabled={detectingGuests === ep.id} onClick={() => handleDetectGuests(ep)}>
-                              {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
-                              Guests
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
+                                  disabled={detectingGuests === ep.id} onClick={() => handleDetectGuests(ep)}>
+                                  {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
+                                  Guests
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-[220px] text-center">
+                                Detectează și creează profiluri pentru persoanele menționate în transcript
+                              </TooltipContent>
+                            </Tooltip>
                           )}
                         </div>
                       </div>
@@ -1074,5 +1224,6 @@ export default function Extractor() {
         )}
       </div>
     </div>
+    </TooltipProvider>
   );
 }
