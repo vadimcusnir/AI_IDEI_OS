@@ -897,11 +897,50 @@ export default function Extractor() {
                         <span className="text-[10px] text-primary font-medium">Transcribing…</span>
                       </div>
                     )}
+                    {/* Quick action buttons in header */}
+                    {hasTranscript && !isExtracting && !isTranscribing && (
+                      <div className="flex items-center gap-0.5 shrink-0" onClick={e => e.stopPropagation()}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0"
+                              onClick={() => startEditTranscript(ep)}>
+                              <Pencil className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Editează transcriptul</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0"
+                              onClick={() => copyTranscript(ep.transcript!)}>
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Copiază transcriptul</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0"
+                              onClick={() => exportTranscript(ep, "txt")}>
+                              <Download className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Descarcă TXT</TooltipContent>
+                        </Tooltip>
+                      </div>
+                    )}
                     {canExtract && !isExtracting && !isTranscribing && (
-                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1 shrink-0"
-                        onClick={e => { e.stopPropagation(); handleExtractNeurons(ep); }}>
-                        <Brain className="h-3 w-3" /> Extract
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1 shrink-0"
+                            onClick={e => { e.stopPropagation(); handleExtractNeurons(ep); }}>
+                            <Brain className="h-3 w-3" /> Extract
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-[220px] text-center">
+                          Extrage neuroni de cunoștințe din transcript folosind AI (100 credite)
+                        </TooltipContent>
+                      </Tooltip>
                     )}
                     {needsTranscript && !isExtracting && !isTranscribing && (
                       <Button variant="outline" size="sm"
