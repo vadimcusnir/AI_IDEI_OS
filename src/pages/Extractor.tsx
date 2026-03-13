@@ -849,9 +849,12 @@ export default function Extractor() {
                   isExpanded ? "border-primary/30" : "border-border hover:border-primary/20"
                 )}>
                   {/* Row header */}
-                  <button
-                    className="w-full flex items-center gap-4 px-4 py-3 text-left"
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className="w-full flex items-center gap-4 px-4 py-3 text-left cursor-pointer"
                     onClick={() => setExpandedId(isExpanded ? null : ep.id)}
+                    onKeyDown={e => { if (e.key === "Enter" || e.key === " ") setExpandedId(isExpanded ? null : ep.id); }}
                   >
                     <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
                       <Icon className="h-4 w-4 text-muted-foreground" />
