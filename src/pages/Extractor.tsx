@@ -964,7 +964,7 @@ export default function Extractor() {
                       "h-3.5 w-3.5 text-muted-foreground/40 shrink-0 transition-transform",
                       isExpanded && "rotate-180"
                     )} />
-                  </button>
+                  </div>
 
                   {/* Expanded detail panel */}
                   {isExpanded && (
