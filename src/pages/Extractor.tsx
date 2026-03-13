@@ -1172,23 +1172,44 @@ export default function Extractor() {
                         </Button>
                         <div className="flex items-center gap-1.5">
                           {hasTranscript && !isExtracting && (
-                            <Button variant="outline" size="sm" className="h-7 text-xs gap-1"
-                              onClick={() => handleChunkPreview(ep)} disabled={chunkingId === ep.id}>
-                              {chunkingId === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Layers className="h-3 w-3" />}
-                              Preview Segments
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="outline" size="sm" className="h-7 text-xs gap-1"
+                                  onClick={() => handleChunkPreview(ep)} disabled={chunkingId === ep.id}>
+                                  {chunkingId === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Layers className="h-3 w-3" />}
+                                  Preview Segments
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-[220px] text-center">
+                                Vizualizează cum va fi segmentat transcriptul înainte de extracție (200-800 tokens/segment)
+                              </TooltipContent>
+                            </Tooltip>
                           )}
                           {canExtract && !isExtracting && (
-                            <Button size="sm" className="h-7 text-xs gap-1" onClick={() => handleExtractNeurons(ep)}>
-                              <Brain className="h-3 w-3" /> Extract Neurons
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button size="sm" className="h-7 text-xs gap-1" onClick={() => handleExtractNeurons(ep)}>
+                                  <Brain className="h-3 w-3" /> Extract Neurons
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-[220px] text-center">
+                                Extrage neuroni de cunoștințe din transcript — framework-uri, insight-uri, citate (100 credite)
+                              </TooltipContent>
+                            </Tooltip>
                           )}
                           {canExtract && !isExtracting && (
-                            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                              disabled={detectingGuests === ep.id} onClick={() => handleDetectGuests(ep)}>
-                              {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
-                              Guests
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
+                                  disabled={detectingGuests === ep.id} onClick={() => handleDetectGuests(ep)}>
+                                  {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
+                                  Guests
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-[220px] text-center">
+                                Detectează și creează profiluri pentru persoanele menționate în transcript
+                              </TooltipContent>
+                            </Tooltip>
                           )}
                         </div>
                       </div>
