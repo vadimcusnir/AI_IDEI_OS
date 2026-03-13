@@ -508,7 +508,10 @@ export default function Extractor() {
       );
       const result = await resp.json();
       if (!resp.ok) throw new Error(result.error || "Failed");
-      toast.success(`${result.guests_processed} guests detected!`);
+      toast.success(
+        `✅ ${result.guests_processed} profiluri de invitați detectate! Le poți vedea și edita în pagina Guests.`,
+        { duration: 8000 }
+      );
     } catch (e: any) {
       toast.error(e.message || "Guest detection failed");
     }
