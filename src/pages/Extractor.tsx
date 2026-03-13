@@ -771,11 +771,14 @@ export default function Extractor() {
                 ) : (
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="w-full border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/30 transition-colors"
+                    className={cn(
+                      "w-full border-2 border-dashed rounded-xl p-6 text-center transition-colors",
+                      isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/30"
+                    )}
                   >
                     <Upload className="h-6 w-6 opacity-30 mx-auto mb-2" />
                     <p className="text-xs text-muted-foreground font-medium">
-                      Click to select {sourceType} file
+                      {isDragging ? "Drop file here" : `Click or drag & drop ${sourceType} file`}
                     </p>
                     <p className="text-[10px] text-muted-foreground/50 mt-1">
                       {sourceType === "audio" ? "MP3, WAV, M4A, OGG, FLAC · Max 50MB" : "MP4, WebM, MOV · Max 50MB"}
