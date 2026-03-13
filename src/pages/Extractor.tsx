@@ -532,13 +532,6 @@ export default function Extractor() {
   };
 
   if (authLoading || loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   // === Drag and drop handler ===
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -552,7 +545,6 @@ export default function Extractor() {
     const videoExts = ["mp4", "webm", "mov", "avi"];
 
     if (transcriptExts.includes(ext)) {
-      // Auto-switch to text mode and import
       setSourceType("text");
       file.text().then(text => {
         let parsed = text;
@@ -583,7 +575,7 @@ export default function Extractor() {
     } else {
       toast.error(`Unsupported file type: .${ext}`);
     }
-  }, [title, parseSrtToText]);
+  }, [title]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -594,6 +586,14 @@ export default function Extractor() {
     e.preventDefault();
     setIsDragging(false);
   }, []);
+
+  if (authLoading || loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <TooltipProvider delayDuration={300}>
