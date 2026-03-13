@@ -1107,10 +1107,17 @@ export default function Extractor() {
                               </Button>
                             </div>
                           </div>
-                          <div className="bg-muted/50 rounded-lg px-3 py-2.5 max-h-48 overflow-y-auto">
-                            <p className="text-xs text-muted-foreground font-mono whitespace-pre-wrap leading-relaxed">
-                              {ep.transcript}
-                            </p>
+                          <div className="bg-muted/50 rounded-lg px-3 py-2.5 max-h-64 overflow-y-auto scroll-smooth">
+                            {ep.transcript!.split("\n").map((line, i) => (
+                              <div key={i} className="flex gap-2 group hover:bg-muted/80 rounded px-1 -mx-1">
+                                <span className="text-[9px] text-muted-foreground/30 font-mono w-5 shrink-0 text-right select-none pt-0.5">
+                                  {i + 1}
+                                </span>
+                                <p className="text-xs text-muted-foreground font-mono whitespace-pre-wrap leading-relaxed flex-1">
+                                  {line || "\u00A0"}
+                                </p>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       ) : null}
