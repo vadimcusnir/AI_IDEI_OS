@@ -475,7 +475,10 @@ export default function Extractor() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       setExtractionProgress({ chunks: data.chunks_processed || 0, neurons: data.neurons_created });
-      toast.success(`${data.neurons_created} neurons extracted from ${data.chunks_processed || 1} segments! (${data.credits_spent} credits)`);
+      toast.success(
+        `✅ S-au creat ${data.neurons_created} neuroni din ${data.chunks_processed || 1} segmente! (${data.credits_spent} credite consumate). Găsești neuronii noi în pagina Neurons.`,
+        { duration: 8000 }
+      );
       trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.neurons_created, credits_spent: data.credits_spent } });
       setChunkPreview(null);
       fetchEpisodes();
