@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { motion } from "framer-motion";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
