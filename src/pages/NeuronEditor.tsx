@@ -50,23 +50,6 @@ export default function NeuronEditor() {
   const [bottomExpanded, setBottomExpanded] = useState(false);
   const [showSaveTemplate, setShowSaveTemplate] = useState(false);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      const isMod = e.metaKey || e.ctrlKey;
-      if (!isMod) return;
-      if (e.key === "s") {
-        e.preventDefault();
-        handleSaveVersion();
-      }
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleRunAll();
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [handleSaveVersion, handleRunAll]);
 
   const handleClone = useCallback(async () => {
     if (!neuron) return;
