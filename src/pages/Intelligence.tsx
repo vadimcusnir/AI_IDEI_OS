@@ -12,6 +12,8 @@ import {
 import { cn } from "@/lib/utils";
 import { KnowledgeGraph } from "@/components/intelligence/KnowledgeGraph";
 import { StatsOverview } from "@/components/intelligence/StatsOverview";
+import { DuplicateMergePanel } from "@/components/neurons/DuplicateMergePanel";
+import { GitMerge } from "lucide-react";
 
 interface Stats {
   totalNeurons: number;
