@@ -108,7 +108,7 @@ export default function ProfileExtractor() {
 
       toast.success("Profile generated!");
     } catch (e: any) {
-      toast.error(e.message || "Extragerea a eșuat");
+      toast.error(e.message || "Extraction failed");
     }
     setLoading(false);
   }, [user, experience, skills, products, tone]);
