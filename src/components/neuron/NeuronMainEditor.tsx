@@ -19,6 +19,7 @@ interface NeuronMainEditorProps {
   onDeleteBlock: (id: string) => void;
   onBlockExecute: (id: string) => void;
   onBlockLanguageChange: (id: string, lang: CodeLanguage) => void;
+  onReorderBlock?: (fromIndex: number, toIndex: number) => void;
 }
 
 const contentBlockStyles: Record<string, string> = {
