@@ -70,7 +70,7 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/links" element={<AppLayout><Links /></AppLayout>} />
               <Route path="/architecture" element={<AppLayout><Architecture /></AppLayout>} />
-              <Route path="/u/:username" element={<PublicProfile />} />
+              <Route path="/u/:username" element={<PublicUserProfile />} />
               <Route path="/guest/:slug" element={<GuestProfile />} />
 
               {/* Public knowledge infrastructure — with global layout */}
