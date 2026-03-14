@@ -1107,40 +1107,22 @@ export default function Extractor() {
                           )}
                         </div>
                       ) : hasTranscript ? (
-                        <div>
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Transcript</span>
-                            <div className="flex items-center gap-1">
-                              <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                                onClick={() => startEditTranscript(ep)}>
-                                <Pencil className="h-2.5 w-2.5" /> Edit
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                                onClick={() => copyTranscript(ep.transcript!)}>
-                                <Copy className="h-2.5 w-2.5" /> Copy
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                                onClick={() => exportTranscript(ep, "txt")}>
-                                <Download className="h-2.5 w-2.5" /> TXT
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                                onClick={() => exportTranscript(ep, "srt")}>
-                                <Download className="h-2.5 w-2.5" /> SRT
-                              </Button>
-                            </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-1 justify-end">
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => startEditTranscript(ep)}>
+                              <Pencil className="h-2.5 w-2.5" /> Edit
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => copyTranscript(ep.transcript!)}>
+                              <Copy className="h-2.5 w-2.5" /> Copy
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => exportTranscript(ep, "txt")}>
+                              <Download className="h-2.5 w-2.5" /> TXT
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => exportTranscript(ep, "srt")}>
+                              <Download className="h-2.5 w-2.5" /> SRT
+                            </Button>
                           </div>
-                          <div className="bg-muted/50 rounded-lg px-3 py-2.5 max-h-64 overflow-y-auto scroll-smooth">
-                            {ep.transcript!.split("\n").map((line, i) => (
-                              <div key={i} className="flex gap-2 group hover:bg-muted/80 rounded px-1 -mx-1">
-                                <span className="text-[9px] text-muted-foreground/30 font-mono w-5 shrink-0 text-right select-none pt-0.5">
-                                  {i + 1}
-                                </span>
-                                <p className="text-xs text-muted-foreground font-mono whitespace-pre-wrap leading-relaxed flex-1">
-                                  {line || "\u00A0"}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
+                          <TranscriptViewer transcript={ep.transcript!} />
                         </div>
                       ) : null}
 
