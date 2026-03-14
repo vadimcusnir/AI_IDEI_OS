@@ -188,7 +188,12 @@ export default function Home() {
 
         {/* New user onboarding CTA */}
         {isNewUser && (
-          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center"
+          >
             <Upload className="h-8 w-8 text-primary mx-auto mb-3" />
             <h2 className="text-base font-serif font-bold mb-1.5">First step: upload content</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
@@ -198,7 +203,7 @@ export default function Home() {
               Open Extractor
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
-          </div>
+          </motion.div>
         )}
 
         {/* Main content grid */}
