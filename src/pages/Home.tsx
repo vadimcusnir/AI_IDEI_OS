@@ -108,12 +108,21 @@ export default function Home() {
 
   const isNewUser = neurons.length === 0 && jobs.length === 0;
 
+  const stagger = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.06 } },
+  };
+  const fadeUp = {
+    hidden: { opacity: 0, y: 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+  };
+
   return (
     <div className="flex-1 overflow-auto">
       <SEOHead title="Cockpit — AI-IDEI" description="Your AI-IDEI command center. Monitor neurons, episodes, jobs and credits." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Welcome header */}
-        <div className="mb-6">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="mb-6">
           <h1 className="text-xl sm:text-2xl font-serif font-bold mb-1">
             {isNewUser ? "Welcome to AI-IDEI" : "Cockpit"}
           </h1>
@@ -123,33 +132,38 @@ export default function Home() {
               : "Your command center for the knowledge pipeline."
             }
           </p>
-        </div>
+        </motion.div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
-          <StatCard icon={Brain} label="Neurons" value={totalNeurons} />
-          <StatCard icon={FileText} label="Episodes" value={totalEpisodes} />
-          <StatCard icon={Zap} label="Jobs" value={totalJobs} />
-          <div className={cn(
-            "rounded-xl p-3 border transition-colors",
-            "bg-primary/5 border-primary/20"
-          )}>
-            <div className="flex items-center gap-1.5 mb-1">
-              <Coins className="h-3 w-3 text-primary" />
-              <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Credits</span>
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
+          <motion.div variants={fadeUp}><StatCard icon={Brain} label="Neurons" value={totalNeurons} /></motion.div>
+          <motion.div variants={fadeUp}><StatCard icon={FileText} label="Episodes" value={totalEpisodes} /></motion.div>
+          <motion.div variants={fadeUp}><StatCard icon={Zap} label="Jobs" value={totalJobs} /></motion.div>
+          <motion.div variants={fadeUp}>
+            <div className={cn(
+              "rounded-xl p-3 border transition-colors h-full",
+              "bg-primary/5 border-primary/20"
+            )}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <Coins className="h-3 w-3 text-primary" />
+                <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Credits</span>
+              </div>
+              <p className="text-lg font-bold font-mono text-primary">{balance.toLocaleString()}</p>
+              <div className="mt-1.5">
+                <TopUpDialog onSuccess={loadData} />
+              </div>
             </div>
-            <p className="text-lg font-bold font-mono text-primary">{balance.toLocaleString()}</p>
-            <div className="mt-1.5">
-              <TopUpDialog onSuccess={loadData} />
-            </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Quick Actions — large cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {QUICK_ACTIONS.map(action => (
-            <button
+            <motion.button
               key={action.label}
+              variants={fadeUp}
+              whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => navigate(action.path)}
               className={cn(
                 "group relative flex flex-col items-start gap-3 p-4 rounded-xl border border-border",
@@ -165,9 +179,9 @@ export default function Home() {
                 <p className="text-[10px] text-muted-foreground leading-tight hidden sm:block">{action.desc}</p>
               </div>
               <ArrowRight className="absolute top-3 right-3 h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Onboarding Checklist */}
         <OnboardingChecklist />
