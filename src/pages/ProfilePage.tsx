@@ -14,6 +14,7 @@ import {
   Briefcase, Coins, MessageCircle, GitBranch, Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
 
 interface Profile {
   display_name: string;
