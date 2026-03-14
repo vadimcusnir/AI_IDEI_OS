@@ -1798,6 +1798,7 @@ export type Database = {
       }
       service_catalog: {
         Row: {
+          access_tier: string
           category: string
           created_at: string
           credits_cost: number
@@ -1812,6 +1813,7 @@ export type Database = {
           service_key: string
         }
         Insert: {
+          access_tier?: string
           category?: string
           created_at?: string
           credits_cost?: number
@@ -1826,6 +1828,7 @@ export type Database = {
           service_key: string
         }
         Update: {
+          access_tier?: string
           category?: string
           created_at?: string
           credits_cost?: number
@@ -2151,6 +2154,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      check_access: {
+        Args: { _service_key: string; _user_id: string }
+        Returns: Json
+      }
       compute_idearank: { Args: never; Returns: undefined }
       delete_email: {
         Args: { message_id: number; queue_name: string }
@@ -2184,6 +2191,14 @@ export type Database = {
           read_ct: number
         }[]
       }
+      refund_credits: {
+        Args: { _amount: number; _job_id: string; _user_id: string }
+        Returns: boolean
+      }
+      reserve_credits: {
+        Args: { _amount: number; _job_id: string; _user_id: string }
+        Returns: boolean
+      }
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
       search_neurons_semantic: {
         Args: {
@@ -2197,6 +2212,10 @@ export type Database = {
           similarity: number
           title: string
         }[]
+      }
+      settle_credits: {
+        Args: { _amount: number; _job_id: string; _user_id: string }
+        Returns: boolean
       }
       spend_credits: {
         Args: {
