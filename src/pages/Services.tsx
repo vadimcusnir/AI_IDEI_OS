@@ -45,6 +45,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   orchestration: "Orchestrare",
 };
 
+const TIER_CONFIG: Record<string, { label: string; className: string }> = {
+  free: { label: "FREE", className: "bg-status-validated/15 text-status-validated" },
+  premium: { label: "PREMIUM", className: "bg-ai-accent/15 text-ai-accent" },
+};
+
 export default function Services() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
