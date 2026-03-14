@@ -726,6 +726,21 @@ export default function AdminDashboard() {
               <AccessSimulator />
             </div>
           </TabsContent>
+
+          {/* ─── Decision Ledger ─── */}
+          <TabsContent value="ledger">
+            <DecisionLedgerTab />
+          </TabsContent>
+
+          {/* ─── Abuse Detection ─── */}
+          <TabsContent value="abuse">
+            <AbuseDetectionTab />
+          </TabsContent>
+
+          {/* ─── Wallet Management ─── */}
+          <TabsContent value="wallets">
+            <WalletManagementTab />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
