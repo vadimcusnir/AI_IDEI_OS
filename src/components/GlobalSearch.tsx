@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
-import { Search, Brain, FileText, Users, X, Loader2, ArrowRight } from "lucide-react";
+import { Search, Brain, FileText, Users, X, Loader2, ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
