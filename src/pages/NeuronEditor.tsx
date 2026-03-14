@@ -192,6 +192,7 @@ export default function NeuronEditor() {
           <NeuronEditorToolbar
             activeFormats={activeFormats}
             onFormatToggle={handleFormatToggle}
+            onInsertBlock={handleToolbarInsertBlock}
           />
           <NeuronMainEditor
             title={neuron.title}

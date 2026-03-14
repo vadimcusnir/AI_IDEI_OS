@@ -645,7 +645,7 @@ export default function Extractor() {
         )}>
           <div
             className={cn(
-              "border rounded-xl bg-card p-5 space-y-4 min-h-[280px] transition-colors",
+              "border rounded-xl bg-card p-5 space-y-4 transition-colors",
               isDragging ? "border-primary border-dashed bg-primary/5" : "border-border"
             )}
             onDrop={handleDrop}
