@@ -367,7 +367,7 @@ export default function Jobs() {
                         )}
                         {job.result && Object.keys(job.result).length > 0 && (
                           <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Rezultat</p>
+                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("jobs.result_label")}</p>
                             <pre className="text-[11px] font-mono bg-muted/50 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap max-h-64 overflow-y-auto">
                               {typeof job.result === "object" && job.result.content
                                 ? job.result.content
