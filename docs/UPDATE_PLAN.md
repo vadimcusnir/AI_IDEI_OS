@@ -277,7 +277,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 5.5.1 | ✅ Widget "Idei în trend" pe homepage | DONE — TrendingIdeasWidget |
 | 5.5.2 | ✅ Sortare entități după IdeaRank/freshness | DONE — EntityListing sort |
-| 5.5.3 | Pagină /topics/discovery cu clustering interactiv | P3 |
+| 5.5.3 | ✅ Pagină /topics/discovery cu clustering interactiv | DONE — TopicDiscovery page cu emerging ideas + cluster sizing |
 | 5.5.4 | ✅ Algoritm IdeaRank: influence scoring + propagation modeling | DONE — compute_idearank + PVS + emergence detection |
 
 ### 5.6 User Profile & Gamification
