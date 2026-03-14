@@ -32,10 +32,10 @@ const ICON_MAP: Record<string, React.ElementType> = {
   filter: Filter, megaphone: Megaphone, sparkles: Sparkles,
 };
 
-const CLASS_CONFIG: Record<string, { label: string; description: string; color: string }> = {
-  A: { label: "Analiză & Decizie", description: "Extrage insight-uri și produce framework-uri decizionale", color: "text-ai-accent" },
-  B: { label: "Producție Active", description: "Generează deliverables concrete și conținut", color: "text-status-validated" },
-  C: { label: "Orchestrare & Sistem", description: "Coordonează execuția între servicii", color: "text-primary" },
+const CLASS_CONFIG: Record<string, { label: string; description: string; color: string; timing: string; badge: string }> = {
+  A: { label: "Analiză & Decizie", description: "Extrage insight-uri și produce framework-uri decizionale", color: "text-ai-accent", timing: "<20s", badge: "S" },
+  B: { label: "Producție Active", description: "Generează deliverables concrete și conținut", color: "text-status-validated", timing: "1-5min", badge: "C" },
+  C: { label: "Orchestrare & Sistem", description: "Coordonează execuția între servicii — pipeline complet", color: "text-primary", timing: "5-15min", badge: "X" },
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
