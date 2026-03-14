@@ -135,7 +135,7 @@ export default function PromptForge() {
 
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(result);
-    toast.success("Copiat în clipboard!");
+    toast.success("Copied to clipboard!");
   }, [result]);
 
   return (

@@ -316,8 +316,8 @@ export default function GuestPages() {
                           </TooltipTrigger>
                           <TooltipContent side="top" className="text-[10px] max-w-[180px]">
                             {guest.is_public
-                              ? "Profilul este public și indexabil. Dezactivează pentru a-l ascunde."
-                              : "Activează pentru a publica pagina SEO a acestui expert."
+                              ? "Profile is public and indexable. Disable to hide it."
+                              : "Enable to publish the SEO page of this expert."
                             }
                           </TooltipContent>
                         </Tooltip>

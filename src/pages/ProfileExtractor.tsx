@@ -115,7 +115,7 @@ export default function ProfileExtractor() {
 
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(result);
-    toast.success("Copiat în clipboard!");
+    toast.success("Copied to clipboard!");
   }, [result]);
 
   const TONES = ["profesional", "prietenos", "bold", "academic", "casual"];
