@@ -164,6 +164,7 @@ function QuotesSection({ quotes, authorName }: { quotes: string[]; authorName: s
 export default function GuestProfile() {
   const { slug } = useParams<{ slug: string }>();
   const [guest, setGuest] = useState<GuestData | null>(null);
+  const [psychProfile, setPsychProfile] = useState<PsychologicalProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
