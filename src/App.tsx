@@ -51,6 +51,7 @@ import NotFound from "./pages/NotFound";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import DataPrivacy from "./pages/DataPrivacy";
+import PublicUserProfile from "./pages/PublicUserProfile";
 
 const queryClient = new QueryClient();
 
