@@ -125,7 +125,7 @@ export function NotificationBell() {
                 }}
                 className="w-full px-4 py-2 text-center text-[11px] text-primary font-medium hover:bg-muted/50 transition-colors border-t border-border"
               >
-                Vezi toate notificările →
+                {t("view_all_notifications")} →
               </button>
             )}
           </div>
