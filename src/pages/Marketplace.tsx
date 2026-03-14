@@ -63,11 +63,14 @@ export default function Marketplace() {
       setLoading(true);
 
       // Featured assets
-      const { data: featuredData } = await supabase
+      const featuredQuery: any = supabase
         .from("knowledge_assets")
         .select("*")
         .eq("is_published", true)
-        .eq("is_featured" as any, true)
+        .eq("is_featured", true);
+      const { data: featuredData } = await featuredQuery
+        .order("sales_count", { ascending: false })
+        .limit(6);
         .order("sales_count", { ascending: false })
         .limit(6);
 
