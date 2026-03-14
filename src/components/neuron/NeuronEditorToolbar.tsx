@@ -17,6 +17,7 @@ import {
 interface NeuronEditorToolbarProps {
   activeFormats: string[];
   onFormatToggle: (format: string) => void;
+  onInsertBlock?: (type: string) => void;
 }
 
 function ToolBtn({ icon: Icon, label, active, onClick }: {
