@@ -186,6 +186,11 @@ export default function Credits() {
           <TopUpDialog onSuccess={loadData} />
         </div>
 
+        {/* Subscription Plans */}
+        <div className="bg-card border border-border rounded-xl p-5 mb-6">
+          <SubscriptionPlans />
+        </div>
+
         {/* Balance + Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
           {/* Main balance */}

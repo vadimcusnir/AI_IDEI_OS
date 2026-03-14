@@ -90,7 +90,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             </main>
           ) : (
             <>
-              <main className="flex-1 flex flex-col">
+              <main className="flex-1 flex flex-col pb-16 md:pb-0">
                 <ErrorBoundary>{children}</ErrorBoundary>
               </main>
               <Footer />
@@ -98,6 +98,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           )}
         </div>
       </div>
+      <MobileBottomNav />
       <FeedbackFAB />
       <ContextualFeedbackPrompt />
     </SidebarProvider>
