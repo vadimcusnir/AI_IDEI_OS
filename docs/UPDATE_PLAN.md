@@ -106,7 +106,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 1.7.2 | ✅ Expertise bars animate | DONE |
 | 1.7.3 | ✅ Framework cards interactive | DONE |
 | 1.7.4 | Versiune gratuită vs. plată (paywall pe detalii avansate) | TODO |
-| 1.7.5 | Explicații sub fiecare framework | TODO |
+| 1.7.5 | ✅ Explicații sub fiecare framework | DONE — descriere contextuală sub fiecare framework card |
 | 1.7.6 | Citate extinse (zeci) + stil comunicare | TODO |
 
 ### 1.8 Pipeline Indicator
