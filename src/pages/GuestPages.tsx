@@ -63,6 +63,9 @@ export default function GuestPages() {
   const [search, setSearch] = useState("");
   const [selectedGuest, setSelectedGuest] = useState<GuestProfile | null>(null);
   const [showDuplicates, setShowDuplicates] = useState(false);
+  const [showFolders, setShowFolders] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const { assignments } = useFolderSidebar("guest_folders");
 
   useEffect(() => {
     if (authLoading || !user) return;
