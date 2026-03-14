@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Brain, Quote, Sparkles, Users } from "lucide-react";
+import { SEOHead } from "@/components/SEOHead";
+import { Loader2, Brain, Quote, Sparkles, Users, MessageCircle, Target, Award } from "lucide-react";
 import logo from "@/assets/logo.gif";
+import { cn } from "@/lib/utils";
 
 interface GuestData {
   full_name: string;
@@ -12,6 +14,34 @@ interface GuestData {
   frameworks_mentioned: string[];
   psychological_traits: string[];
   key_quotes: string[];
+}
+
+function ExpertiseBar({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-medium text-foreground">{label}</span>
+        <span className="text-[10px] font-semibold text-primary">{value}%</span>
+      </div>
+      <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-primary to-primary/60 transition-all duration-700"
+          style={{ width: `${value}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+// Derive a pseudo-percentage from expertise position (first = highest)
+function deriveExpertiseScores(areas: string[]): { label: string; value: number }[] {
+  if (areas.length === 0) return [];
+  const base = 95;
+  const step = Math.min(12, Math.floor(50 / Math.max(areas.length, 1)));
+  return areas.map((area, i) => ({
+    label: area,
+    value: Math.max(30, base - i * step),
+  }));
 }
 
 export default function GuestProfile() {
@@ -62,92 +92,145 @@ export default function GuestProfile() {
   }
 
   const initials = guest.full_name.split(" ").map(w => w[0]).join("").slice(0, 2);
+  const expertiseScores = deriveExpertiseScores(guest.expertise_areas);
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-lg mx-auto px-6 pt-16 pb-16">
-        {/* Avatar */}
-        <div className="text-center mb-8">
-          <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary/30 to-accent/20 mx-auto mb-4 flex items-center justify-center">
-            <span className="text-2xl font-bold text-primary">{initials}</span>
-          </div>
-          <h1 className="text-2xl font-serif font-bold">{guest.full_name}</h1>
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{guest.role}</span>
-          <p className="text-sm text-muted-foreground mt-3 max-w-sm mx-auto leading-relaxed">{guest.bio}</p>
-        </div>
+      <SEOHead
+        title={`${guest.full_name} — Expert Profile | AI-IDEI`}
+        description={guest.bio?.slice(0, 155) || `Profilul de expert al ${guest.full_name}`}
+      />
 
-        {/* Expertise */}
-        {guest.expertise_areas.length > 0 && (
-          <div className="mb-6">
-            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-1.5">
-              <Brain className="h-3 w-3" /> Expertise
-            </h2>
-            <div className="flex flex-wrap gap-1.5">
-              {guest.expertise_areas.map((area, i) => (
-                <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-primary/10 text-primary font-medium">
-                  {area}
-                </span>
+      {/* Hero section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
+        <div className="max-w-2xl mx-auto px-6 pt-16 pb-10 relative">
+          <div className="text-center">
+            <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/30 via-primary/10 to-accent/20 mx-auto mb-5 flex items-center justify-center ring-4 ring-background shadow-lg">
+              <span className="text-3xl font-bold text-primary">{initials}</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight">{guest.full_name}</h1>
+            <span className="inline-block mt-1.5 text-[10px] uppercase tracking-[0.2em] text-primary font-semibold bg-primary/10 px-3 py-1 rounded-full">
+              {guest.role}
+            </span>
+            <p className="text-sm text-muted-foreground mt-4 max-w-md mx-auto leading-relaxed">
+              {guest.bio}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-2xl mx-auto px-6 pb-16 space-y-10">
+        {/* Expertise with percentage bars */}
+        {expertiseScores.length > 0 && (
+          <section>
+            <SectionHeader icon={Brain} label="Expertise" />
+            <div className="space-y-3 mt-3">
+              {expertiseScores.map((item, i) => (
+                <ExpertiseBar key={i} label={item.label} value={item.value} />
               ))}
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Frameworks */}
+        {/* Frameworks & Models */}
         {guest.frameworks_mentioned.length > 0 && (
-          <div className="mb-6">
-            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-1.5">
-              <Sparkles className="h-3 w-3" /> Frameworks & Modele
-            </h2>
-            <div className="space-y-2">
+          <section>
+            <SectionHeader icon={Sparkles} label="Frameworks & Modele Mentale" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-3">
               {guest.frameworks_mentioned.map((f, i) => (
-                <div key={i} className="px-4 py-3 rounded-xl border border-border bg-card">
-                  <span className="text-sm font-medium">{f}</span>
+                <div
+                  key={i}
+                  className="group px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all"
+                >
+                  <div className="flex items-center gap-2">
+                    <Target className="h-3.5 w-3.5 text-primary/60 shrink-0" />
+                    <span className="text-sm font-medium">{f}</span>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Key Quotes */}
-        {guest.key_quotes.length > 0 && (
-          <div className="mb-6">
-            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-1.5">
-              <Quote className="h-3 w-3" /> Citate cheie
-            </h2>
-            <div className="space-y-2">
-              {guest.key_quotes.map((q, i) => (
-                <blockquote key={i} className="pl-3 border-l-2 border-primary/30 text-sm italic text-muted-foreground py-1">
-                  "{q}"
-                </blockquote>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Psychological traits */}
+        {/* Communication Style */}
         {guest.psychological_traits.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">
-              Stil comunicare
-            </h2>
-            <div className="flex flex-wrap gap-1.5">
+          <section>
+            <SectionHeader icon={MessageCircle} label="Stil de comunicare" />
+            <div className="flex flex-wrap gap-2 mt-3">
               {guest.psychological_traits.map((t, i) => (
-                <span key={i} className="text-[10px] px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
+                <span
+                  key={i}
+                  className={cn(
+                    "text-xs px-3 py-1.5 rounded-full font-medium transition-colors",
+                    i % 3 === 0 && "bg-primary/10 text-primary",
+                    i % 3 === 1 && "bg-accent/15 text-accent-foreground",
+                    i % 3 === 2 && "bg-muted text-muted-foreground",
+                  )}
+                >
                   {t}
                 </span>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
+        {/* Key Quotes - show all */}
+        {guest.key_quotes.length > 0 && (
+          <section>
+            <SectionHeader icon={Quote} label={`Citate cheie (${guest.key_quotes.length})`} />
+            <div className="space-y-3 mt-3">
+              {guest.key_quotes.map((q, i) => (
+                <blockquote
+                  key={i}
+                  className="relative pl-4 border-l-2 border-primary/30 py-2"
+                >
+                  <p className="text-sm italic text-muted-foreground leading-relaxed">"{q}"</p>
+                </blockquote>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Stats summary */}
+        <section>
+          <div className="grid grid-cols-3 gap-3">
+            <StatCard icon={Brain} value={guest.expertise_areas.length} label="Competențe" />
+            <StatCard icon={Sparkles} value={guest.frameworks_mentioned.length} label="Frameworks" />
+            <StatCard icon={Quote} value={guest.key_quotes.length} label="Citate" />
+          </div>
+        </section>
+
         {/* Footer */}
-        <div className="text-center mt-12">
-          <a href="/" className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
+        <div className="text-center pt-8 border-t border-border">
+          <a href="/" className="inline-flex items-center gap-2 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
             <img src={logo} className="h-4 w-4 rounded-full" alt="" />
             AI-IDEI Knowledge OS
           </a>
+          <p className="text-[9px] text-muted-foreground/30 mt-2">
+            Profil generat automat din analiză AI a conținutului public
+          </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SectionHeader({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
+  return (
+    <h2 className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <Icon className="h-3.5 w-3.5" />
+      {label}
+    </h2>
+  );
+}
+
+function StatCard({ icon: Icon, value, label }: { icon: React.ElementType; value: number; label: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-4 text-center">
+      <Icon className="h-4 w-4 text-primary mx-auto mb-1.5" />
+      <p className="text-xl font-bold text-foreground">{value}</p>
+      <p className="text-[10px] text-muted-foreground">{label}</p>
     </div>
   );
 }
