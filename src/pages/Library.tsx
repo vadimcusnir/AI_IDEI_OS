@@ -143,7 +143,18 @@ export default function Library() {
   }
 
   return (
-    <div className="flex-1 overflow-auto">
+    <div className="flex-1 flex overflow-hidden">
+      {showFolders && (
+        <FolderSidebar
+          storageKey="library_folders"
+          items={artifacts.map(a => ({ id: a.id, label: a.title }))}
+          selectedFolderId={selectedFolderId}
+          onSelectFolder={setSelectedFolderId}
+          allLabel="All Artifacts"
+          headerLabel="Library Folders"
+        />
+      )}
+      <div className="flex-1 overflow-auto">
       <SEOHead title="Library — AI-IDEI" description="Browse and manage your generated artifacts, documents and deliverables." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
