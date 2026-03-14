@@ -67,6 +67,8 @@ export default function Library() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<"updated_at" | "created_at" | "title">("updated_at");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
 
   useEffect(() => {
