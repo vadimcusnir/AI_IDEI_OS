@@ -113,7 +113,7 @@ export default function Library() {
       <SEOHead title="Library — AI-IDEI" description="Browse and manage your generated artifacts, documents and deliverables." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-xl font-serif font-bold flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-primary" />
@@ -122,6 +122,32 @@ export default function Library() {
             <p className="text-xs text-muted-foreground mt-0.5">
               {artifacts.length} artefacte generate • deliverables din serviciile AI
             </p>
+          </div>
+        </div>
+
+        {/* Library vs Neurons explainer */}
+        <div className="rounded-xl border border-border bg-card p-4 mb-5">
+          <div className="flex items-start gap-3">
+            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+              <BookOpen className="h-4 w-4 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xs font-semibold mb-1">Bibliotecă vs. Neuroni — care e diferența?</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-muted-foreground leading-relaxed">
+                <div className="bg-muted/30 rounded-lg p-2.5">
+                  <p className="font-semibold text-foreground mb-0.5 flex items-center gap-1">
+                    <Brain className="h-3 w-3 text-primary" /> Neuroni
+                  </p>
+                  <p>Unități atomice de cunoaștere extrase din conținut — frameworks, idei, structuri, pattern-uri. Sursa brută a inteligenței.</p>
+                </div>
+                <div className="bg-primary/5 rounded-lg p-2.5">
+                  <p className="font-semibold text-foreground mb-0.5 flex items-center gap-1">
+                    <BookOpen className="h-3 w-3 text-primary" /> Artefacte (Bibliotecă)
+                  </p>
+                  <p>Livrabile finale generate de AI: articole, scripturi, cursuri, social posts. Produsele gata de utilizat.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
