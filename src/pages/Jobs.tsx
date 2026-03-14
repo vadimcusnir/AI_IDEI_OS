@@ -46,6 +46,7 @@ type StatusFilter = "all" | "pending" | "running" | "completed" | "failed";
 
 /* ── Educational guide component ── */
 function JobsGuide() {
+  const { t } = useTranslation("pages");
   const [open, setOpen] = useState(() => {
     return localStorage.getItem("jobs_guide_dismissed") !== "true";
   });
@@ -54,6 +55,8 @@ function JobsGuide() {
     setOpen(false);
     localStorage.setItem("jobs_guide_dismissed", "true");
   };
+
+  const statusKeys = ["pending", "running", "completed", "failed"] as const;
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
@@ -64,8 +67,8 @@ function JobsGuide() {
               <HelpCircle className="h-4 w-4 text-primary" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-foreground">Ce sunt Job-urile?</p>
-              <p className="text-[10px] text-muted-foreground">Înțelege pipeline-ul de procesare AI</p>
+              <p className="text-sm font-medium text-foreground">{t("jobs.guide_title")}</p>
+              <p className="text-[10px] text-muted-foreground">{t("jobs.guide_subtitle")}</p>
             </div>
             {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
           </button>
@@ -73,16 +76,16 @@ function JobsGuide() {
         <CollapsibleContent>
           <div className="px-4 pb-4 space-y-3">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Job-urile sunt task-uri AI care rulează în fundal. Fiecare serviciu pe care îl folosești (extracție neuroni, generare conținut, analiză etc.) creează unul sau mai multe job-uri.
+              {t("jobs.guide_desc")}
             </p>
 
             {/* Pipeline visualization */}
             <div className="flex items-center gap-1 overflow-x-auto py-2">
               {[
-                { icon: FileAudio, label: "Upload", desc: "Transcripție" },
-                { icon: Brain, label: "Extract", desc: "Neuroni" },
-                { icon: Zap, label: "Process", desc: "Job AI" },
-                { icon: Sparkles, label: "Deliver", desc: "Artefacte" },
+                { icon: FileAudio, label: t("jobs.step_upload"), desc: t("jobs.step_upload_desc") },
+                { icon: Brain, label: t("jobs.step_extract"), desc: t("jobs.step_extract_desc") },
+                { icon: Zap, label: t("jobs.step_process"), desc: t("jobs.step_process_desc") },
+                { icon: Sparkles, label: t("jobs.step_deliver"), desc: t("jobs.step_deliver_desc") },
               ].map((step, i) => (
                 <div key={i} className="flex items-center gap-1 shrink-0">
                   {i > 0 && <ArrowRight className="h-3 w-3 text-muted-foreground/30 mx-0.5" />}
@@ -99,20 +102,24 @@ function JobsGuide() {
 
             {/* Status legend */}
             <div className="grid grid-cols-2 gap-2">
-              {Object.entries(STATUS_CONFIG).map(([key, cfg]) => (
-                <div key={key} className="flex items-start gap-2 bg-card border border-border rounded-lg p-2.5">
-                  <cfg.icon className={cn("h-3.5 w-3.5 mt-0.5 shrink-0", cfg.color)} />
-                  <div>
-                    <p className="text-[10px] font-semibold">{cfg.label}</p>
-                    <p className="text-[9px] text-muted-foreground leading-relaxed">{cfg.description}</p>
+              {statusKeys.map(key => {
+                const si = STATUS_ICONS[key] || STATUS_ICONS.pending;
+                const Icon = si.icon;
+                return (
+                  <div key={key} className="flex items-start gap-2 bg-card border border-border rounded-lg p-2.5">
+                    <Icon className={cn("h-3.5 w-3.5 mt-0.5 shrink-0", si.color)} />
+                    <div>
+                      <p className="text-[10px] font-semibold">{t(`jobs.status_${key}`)}</p>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">{t(`jobs.status_${key}_desc`)}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="flex justify-end">
               <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={dismiss}>
-                Am înțeles, ascunde
+                {t("jobs.guide_dismiss")}
               </Button>
             </div>
           </div>
