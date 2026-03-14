@@ -73,7 +73,7 @@ export function GlobalSearch() {
     setLoading(true);
     const pattern = `%${q.trim()}%`;
 
-    const [neuronsRes, artifactsRes, guestsRes] = await Promise.all([
+    const [neuronsRes, artifactsRes, guestsRes, entitiesRes] = await Promise.all([
       supabase
         .from("neurons")
         .select("id, number, title, status")
@@ -94,6 +94,13 @@ export function GlobalSearch() {
         .eq("author_id", user.id)
         .ilike("full_name", pattern)
         .order("updated_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("entities")
+        .select("id, title, entity_type, slug, idea_rank")
+        .eq("is_published", true)
+        .ilike("title", pattern)
+        .order("idea_rank", { ascending: false })
         .limit(5),
     ]);
 
