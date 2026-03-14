@@ -22,15 +22,17 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 ### 0.1 Securitate Edge Functions
 | # | Sarcină | Status actual |
 |---|---------|---------------|
-| 0.1.1 | Activare `verify_jwt=true` pe `extract-neurons`, `chunk-transcript`, `extract-guests`, `generate-entities` | ⚠ BUG-001/002/003 |
-| 0.1.2 | Extragere `user_id` din JWT token (nu din payload) | ⚠ Vulnerabil |
-| 0.1.3 | Audit complet al tuturor edge functions pentru pattern-ul corect | TODO |
+| 0.1.1 | ✅ Activare JWT auth pe `extract-neurons`, `chunk-transcript`, `extract-guests`, `generate-entities` | DONE — toate derivează user_id din JWT |
+| 0.1.2 | ✅ Extragere `user_id` din JWT token (nu din payload) | DONE — verificat în toate funcțiile |
+| 0.1.3 | ✅ Audit complet al tuturor edge functions pentru pattern-ul corect | DONE |
+| 0.1.4 | ✅ Fix CORS headers pe `generate-entities` | DONE |
+| 0.1.5 | ✅ Fix `search_path` pe funcțiile email (enqueue_email, read_email_batch, etc.) | DONE |
 
 ### 0.2 Performanță & Stabilitate
 | # | Sarcină | Prioritate |
 |---|---------|-----------|
-| 0.2.1 | Indexuri DB: `neurons.author_id`, `entities.slug`, `neuron_blocks.neuron_id`, `episodes.author_id` | P0 |
-| 0.2.2 | Error Boundaries pe rute principale (Extractor, NeuronEditor, Intelligence) | P0 |
+| 0.2.1 | ✅ Indexuri DB: `neurons.author_id`, `entities.slug`, `neuron_blocks.neuron_id`, `episodes.author_id` + 6 altele | DONE |
+| 0.2.2 | ✅ Error Boundaries pe rute principale (Extractor, NeuronEditor, Intelligence, RunService, BatchRunner) | DONE |
 | 0.2.3 | Eliminare navigație duplicată (SiteHeader vs AppSidebar) | P1 |
 
 ### 0.3 i18n & Consistență
