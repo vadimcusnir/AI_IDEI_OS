@@ -171,7 +171,7 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Activity Chart + Credit Gauge */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
