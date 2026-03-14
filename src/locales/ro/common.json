@@ -34,5 +34,13 @@
   "you_are_caught_up": "Ești la zi",
   "mark_all_read": "Marchează toate ca citite",
   "clear_all": "Șterge toate",
-  "ago": "în urmă"
+  "ago": "în urmă",
+  "notifications": "Notificări",
+  "no_notifications": "Nicio notificare",
+  "view_all_notifications": "Vezi toate notificările",
+  "search_placeholder": "Caută neuroni, artefacte, guests...",
+  "search_min_chars": "Scrie cel puțin 2 caractere pentru a căuta",
+  "no_results_for": "Niciun rezultat pentru „{{query}}"",
+  "navigate": "navigare",
+  "select": "selectare"
 }
