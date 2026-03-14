@@ -8,6 +8,7 @@ import {
   ArrowRight, Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
 
 interface PublicProfile {
   display_name: string;
