@@ -316,6 +316,15 @@ export default function Library() {
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6"
+                        title={artifact.status === "published" ? "Fă privat" : "Publică"}
+                        onClick={(e) => { e.stopPropagation(); handleToggleStatus(artifact.id, artifact.status); }}
+                      >
+                        {artifact.status === "published" ? <Globe className="h-3 w-3 text-status-validated" /> : <Lock className="h-3 w-3" />}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
                         onClick={(e) => { e.stopPropagation(); navigate(`/library/${artifact.id}`); }}
                       >
                         <Eye className="h-3 w-3" />

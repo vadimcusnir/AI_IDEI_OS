@@ -230,25 +230,34 @@ export default function GuestProfile() {
           <section>
             <SectionHeader icon={Sparkles} label="Frameworks & Modele Mentale" count={guest.frameworks_mentioned.length} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {guest.frameworks_mentioned.map((f, i) => (
-                <div
-                  key={i}
-                  className="group relative rounded-2xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all duration-300"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                      <Target className="h-4 w-4 text-primary" />
+              {guest.frameworks_mentioned.map((f, i) => {
+                const explanations: Record<string, string> = {
+                  default: "Structură cognitivă identificată din analiza conversației — oferă un cadru organizat de gândire aplicabil în context profesional.",
+                };
+                const explanation = explanations[f.toLowerCase()] || explanations.default;
+
+                return (
+                  <div
+                    key={i}
+                    className="group relative rounded-2xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                        <Target className="h-4 w-4 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-semibold text-foreground leading-tight">{f}</h3>
+                        <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+                          {explanation}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold text-foreground leading-tight">{f}</h3>
-                      <p className="text-[10px] text-muted-foreground/60 mt-1">Model mental / framework identificat</p>
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ArrowRight className="h-3.5 w-3.5 text-primary/40" />
                     </div>
                   </div>
-                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowRight className="h-3.5 w-3.5 text-primary/40" />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
