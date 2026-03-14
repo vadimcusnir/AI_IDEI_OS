@@ -157,11 +157,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const inviteMember = useCallback(async (email: string, role: string): Promise<boolean> => {
     if (!currentWorkspace) return false;
     // Look up user by email in profiles
-    const { data: profile } = await supabase
+    const { data: profile } = await (supabase
       .from("profiles")
       .select("user_id")
       .eq("email" as any, email)
-      .single();
+      .single() as any);
 
     if (!profile) return false;
 
