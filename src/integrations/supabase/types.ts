@@ -107,6 +107,51 @@ export type Database = {
         }
         Relationships: []
       }
+      api_keys: {
+        Row: {
+          created_at: string
+          daily_limit: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          requests_today: number
+          scopes: string[]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_limit?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name?: string
+          requests_today?: number
+          scopes?: string[]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_limit?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          requests_today?: number
+          scopes?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
       artifact_neurons: {
         Row: {
           artifact_id: string
@@ -2740,6 +2785,7 @@ export type Database = {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean
       }
+      reset_api_key_counters: { Args: never; Returns: undefined }
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
       root2_nearest: { Args: { _price: number }; Returns: number }
       root2_validate: { Args: { _price: number }; Returns: boolean }
