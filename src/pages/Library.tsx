@@ -111,6 +111,12 @@ export default function Library() {
       if (search && !a.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
+    if (selectedFolderId === "__unassigned") {
+      const assigned = new Set(Object.keys(assignments));
+      list = list.filter(a => !assigned.has(a.id));
+    } else if (selectedFolderId) {
+      list = list.filter(a => assignments[a.id] === selectedFolderId);
+    }
     list.sort((a, b) => {
       let cmp = 0;
       if (sortField === "title") cmp = a.title.localeCompare(b.title);
@@ -119,7 +125,7 @@ export default function Library() {
       return sortDir === "desc" ? -cmp : cmp;
     });
     return list;
-  }, [artifacts, search, typeFilter, statusFilter, sortField, sortDir]);
+  }, [artifacts, search, typeFilter, statusFilter, sortField, sortDir, selectedFolderId, assignments]);
 
   // Extract unique types from data
   const types = useMemo(() => {
