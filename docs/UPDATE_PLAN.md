@@ -202,19 +202,19 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 *Monetizare și control acces*
 
 ### 4.1 Credit System Enhancement
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 4.1.1 | Credit reservation la start job + settlement la finalizare | P0 |
-| 4.1.2 | Refund automat la job failed | P1 |
-| 4.1.3 | Cost preview înainte de execuție (UI) | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 4.1.1 | ✅ Credit reservation la start job + settlement la finalizare | DONE — reserve_credits + settle_credits DB functions |
+| 4.1.2 | ✅ Refund automat la job failed | DONE — refund_credits DB function |
+| 4.1.3 | ✅ Cost preview înainte de execuție (UI) | DONE — Cost Preview panel in RunService |
 | 4.1.4 | Pricing transitions bazat pe neuron lifecycle | P2 |
 
 ### 4.2 Access Control (`checkAccess`)
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 4.2.1 | Funcție canonică `checkAccess(user, resource, context)` → ALLOW/PAYWALL/DENY | P0 |
-| 4.2.2 | Entitlement resolver (credite, tier, token) | P1 |
-| 4.2.3 | UI verdict system (lock/unlock vizual pe servicii) | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 4.2.1 | ✅ Funcție canonică `checkAccess(user, resource, context)` → ALLOW/PAYWALL/DENY | DONE — check_access DB function |
+| 4.2.2 | ✅ Entitlement resolver (credite, tier, token) | DONE — integrated in check_access |
+| 4.2.3 | ✅ UI verdict system (lock/unlock vizual pe servicii) | DONE — Shield/Lock icons in RunService |
 | 4.2.4 | Access Simulator pentru admin | P2 |
 
 ### 4.3 Root2 Pricing
@@ -225,11 +225,11 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 4.3.3 | Admin toggle Root2 pe categorii | P3 |
 
 ### 4.4 Free vs Premium Tiers
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 4.4.1 | Free Set (~20 extractori): summary, quotes, topics, viral clips | P1 |
-| 4.4.2 | Premium Set (~100 extractori): psychological, strategic, business | P1 |
-| 4.4.3 | Paywall UI cu preview gratuit + unlock plătit | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 4.4.1 | ✅ Free Set (~20 extractori): summary, quotes, topics, viral clips | DONE — access_tier column + free services |
+| 4.4.2 | ✅ Premium Set (~100 extractori): psychological, strategic, business | DONE — default premium tier |
+| 4.4.3 | ✅ Paywall UI cu preview gratuit + unlock plătit | DONE — FREE/PREMIUM badges on Services page + PAYWALL verdict |
 
 ---
 
