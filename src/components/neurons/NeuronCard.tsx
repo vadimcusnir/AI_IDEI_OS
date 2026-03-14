@@ -41,7 +41,7 @@ interface Props {
   onPreview?: (neuron: NeuronListItem) => void;
 }
 
-export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onTogglePin, onDelete, onPreview }: Props) {
+export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onTogglePin, onToggleSelect, onDelete, onPreview }: Props) {
   const navigate = useNavigate();
 
   const handleClick = () => {
