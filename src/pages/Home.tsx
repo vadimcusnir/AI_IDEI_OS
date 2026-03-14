@@ -207,7 +207,7 @@ export default function Home() {
         )}
 
         {/* Main content grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Left column: Recent items */}
           <div className="lg:col-span-2 space-y-4">
             {/* Recent Neurons */}
