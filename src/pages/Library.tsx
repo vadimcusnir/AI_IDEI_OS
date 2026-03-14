@@ -72,6 +72,9 @@ export default function Library() {
   const [sortField, setSortField] = useState<"updated_at" | "created_at" | "title">("updated_at");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
+  const [showFolders, setShowFolders] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const { assignments } = useFolderSidebar("library_folders");
 
   useEffect(() => {
     if (authLoading || !user) return;
