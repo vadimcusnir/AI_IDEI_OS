@@ -139,6 +139,7 @@ export default function Index() {
               >
                 <PanelRightOpen className="h-3.5 w-3.5" />
               </Button>
+              <Button variant="ghost" size="sm" className="h-8 text-xs gap-1" onClick={() => setShowExportImport(true)}>
                 <Download className="h-3.5 w-3.5" />
               </Button>
               <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
