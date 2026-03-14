@@ -35,23 +35,11 @@ interface Job {
   max_retries: number;
 }
 
-const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string; description: string }> = {
-  pending: {
-    icon: Clock, color: "text-muted-foreground", label: "În așteptare",
-    description: "Job-ul este în coadă și va fi procesat automat. Timpul mediu de așteptare: 5-30 secunde.",
-  },
-  running: {
-    icon: Play, color: "text-primary", label: "Rulează",
-    description: "AI-ul procesează activ acest job. Durata depinde de complexitatea task-ului (30s – 5min).",
-  },
-  completed: {
-    icon: CheckCircle2, color: "text-status-validated", label: "Finalizat",
-    description: "Job-ul s-a finalizat cu succes. Rezultatele sunt disponibile. Click pentru a le vizualiza.",
-  },
-  failed: {
-    icon: XCircle, color: "text-destructive", label: "Eșuat",
-    description: "Job-ul a eșuat. Sistemul reîncearcă automat de până la 3 ori. Dacă persistă, contactează suportul.",
-  },
+const STATUS_ICONS: Record<string, { icon: React.ElementType; color: string }> = {
+  pending: { icon: Clock, color: "text-muted-foreground" },
+  running: { icon: Play, color: "text-primary" },
+  completed: { icon: CheckCircle2, color: "text-status-validated" },
+  failed: { icon: XCircle, color: "text-destructive" },
 };
 
 type StatusFilter = "all" | "pending" | "running" | "completed" | "failed";
