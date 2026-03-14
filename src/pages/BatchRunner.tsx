@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -186,6 +187,7 @@ export default function BatchRunner() {
 
   return (
     <div className="flex-1 overflow-auto">
+      <SEOHead title="Batch Runner — AI-IDEI" description="Run multiple AI services in batch on your neurons and content." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">

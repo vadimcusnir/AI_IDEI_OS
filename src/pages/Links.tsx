@@ -1,3 +1,4 @@
+import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -255,6 +256,7 @@ export default function Links() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Links — AI-IDEI" description="Your AI-IDEI hub: quick links, resources, community and knowledge assets." />
       <HeroBlock />
 
       <div className="max-w-lg mx-auto px-6 pb-16">

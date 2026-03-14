@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -58,6 +59,7 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <SEOHead title="Sign In — AI-IDEI" description="Sign in or create your AI-IDEI account to start extracting knowledge." />
       <div className="w-full max-w-sm">
         <button onClick={() => navigate("/")} className="flex items-center justify-center gap-2 mb-8 mx-auto">
           <img src={logo} alt="AI-IDEI" className="h-10 w-10 rounded-full" />

@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -139,6 +140,7 @@ export default function PromptForge() {
 
   return (
     <div className="flex-1">
+      <SEOHead title="Prompt Forge — AI-IDEI" description="Generate AI prompts for marketing, copywriting and content creation." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Hero */}
         <div className="mb-8">

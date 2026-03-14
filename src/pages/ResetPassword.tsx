@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Lock, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
@@ -36,6 +37,7 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <SEOHead title="Reset Password — AI-IDEI" description="Set a new password for your AI-IDEI account." />
       <div className="w-full max-w-sm">
         <button onClick={() => navigate("/")} className="flex items-center justify-center gap-2 mb-8 mx-auto">
           <img src={logo} alt="AI-IDEI" className="h-10 w-10 rounded-full" />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, ExternalLink, Brain, Sparkles, Mail } from "lucide-react";
@@ -53,6 +54,7 @@ export default function PublicProfile() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title={`${profile?.display_name || username} — AI-IDEI`} description={profile?.bio || "Public profile on AI-IDEI Knowledge OS."} />
       <div className="max-w-lg mx-auto px-6 pt-16 pb-16">
         {/* Avatar & Name */}
         <div className="text-center mb-8">

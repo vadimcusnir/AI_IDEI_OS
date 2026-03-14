@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -214,6 +215,7 @@ export default function RunService() {
 
   return (
     <div className="flex-1">
+      <SEOHead title={`${service?.name || "Service"} — AI-IDEI`} description={service?.description || "Run AI-powered knowledge service."} />
       {service && (
         <>
           <ServiceJsonLd service={service} />

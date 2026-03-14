@@ -248,7 +248,7 @@ export function NeuronLeftPanel({
 
   if (isCollapsed) {
     return (
-      <div className="w-10 border-r border-border bg-card flex flex-col items-center py-3 gap-3 shrink-0">
+      <div className="w-10 border-r border-border bg-card flex flex-col items-center py-3 gap-3 shrink-0 transition-all duration-200">
         <button onClick={onToggle} className="text-muted-foreground hover:text-foreground transition-colors">
           <Network className="h-4 w-4" />
         </button>
@@ -266,7 +266,7 @@ export function NeuronLeftPanel({
   }
 
   return (
-    <div className="w-56 border-r border-border bg-card flex flex-col shrink-0 overflow-hidden">
+    <div className="w-56 border-r border-border bg-card flex flex-col shrink-0 overflow-hidden transition-all duration-200">
       {/* Header */}
       <div className="h-9 flex items-center justify-between px-3 border-b border-border">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Knowledge Graph</span>
