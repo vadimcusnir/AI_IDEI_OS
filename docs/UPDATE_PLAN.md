@@ -207,7 +207,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 4.1.1 | ✅ Credit reservation la start job + settlement la finalizare | DONE — reserve_credits + settle_credits DB functions |
 | 4.1.2 | ✅ Refund automat la job failed | DONE — refund_credits DB function |
 | 4.1.3 | ✅ Cost preview înainte de execuție (UI) | DONE — Cost Preview panel in RunService |
-| 4.1.4 | Pricing transitions bazat pe neuron lifecycle | P2 |
+| 4.1.4 | ✅ Pricing transitions bazat pe neuron lifecycle | DONE — neuron_lifecycle_pricing view |
 
 ### 4.2 Access Control (`checkAccess`)
 | # | Sarcină | Status |
