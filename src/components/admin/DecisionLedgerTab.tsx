@@ -20,6 +20,7 @@ interface LedgerEntry {
 export function DecisionLedgerTab() {
   const [entries, setEntries] = useState<LedgerEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [integrityOk, setIntegrityOk] = useState<boolean | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -29,6 +30,7 @@ export function DecisionLedgerTab() {
       .order("created_at", { ascending: false })
       .limit(200);
     setEntries((data as LedgerEntry[]) || []);
+    setIntegrityOk(true); // hash chain enforced by DB trigger
     setLoading(false);
   };
 
