@@ -288,7 +288,7 @@ export default function Home() {
             {/* What's New */}
             <WhatsNewWidget />
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
