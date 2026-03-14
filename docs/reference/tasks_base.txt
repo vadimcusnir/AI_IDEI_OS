@@ -1,0 +1,1179 @@
+
+Sarcini propuse pentru îmbunătăţirea platformei AI‑IDEI
+
+Aceste sarcini sunt extrase din analiza codului sursă (repo AI_IDEI_OS), a documentaţiei interne (PRD, Route Tree, Bug Registry) şi din feedback‑ul utilizatorului referitor la experienţa actuală a platformei. Implementarea lor urmăreşte să îmbunătăţească experienţa de utilizare, să clarifice fluxurile şi să extindă funcţionalitatea existentă.
+
+1. Pagina Extractor
+
+Stabilizarea containerului de input – menţine dimensiunea şi poziţia dreptunghiului principal „Paste a URL to start” atunci când utilizatorul comută între modurile URL/Text/Audio/Video; comutarea nu trebuie să cauzeze mişcarea sau redimensionarea paginii.
+
+Încărcare fără clic suplimentar – permite încărcarea fişierelor .txt sau .pdf prin drag‑and‑drop sau selecţie directă, fără a mai fi necesare clicuri de confirmare.
+
+Vizualizare clară a transcriptului – îmbunătăţeşte interfaţa de vizualizare a transcriptului (scroll, structură pe speaker) astfel încât textul să fie uşor de parcurs şi editat.
+
+Butonistică vizibilă – mută butoanele „Edit”, „Copy”, „Download TXT/SRT” din meniul ascuns în antetul fiecărui episod, lângă statutul „Transcribed” şi butonul „Extract”, pentru acces rapid.
+
+Tooltip‑uri explicative – adaugă explicaţii la hover pentru butonul Extract (ce se întâmplă după apăsare) şi pentru „Preview Segment”, „Extract Neurons” şi „Guests”.
+
+Notificări de finalizare – la finalul proceselor „Extraction Neurons” şi „Guests”, afişează o notificare clară ce explică rezultatul, unde s‑au creat elementele noi şi paşii următori (de exemplu, „S‑au creat X neuroni; îi găseşti în pagina Neurons”).
+
+2. Pagina Guests (administrare profile extrase)
+
+Sugestii de fuziune a profilurilor – implementează o funcţie care detectează persoane duplicate şi propune unirea informaţiilor într‑un singur profil bogat.
+
+Descriere mai clară a funcţiei – înlocuieşte textul generic „Profile auto‑generate din transcrierile tale…” cu o explicaţie detaliată: de ce există această secţiune, cum te ajută şi cum poţi utiliza profilele pentru a crea conţinut viral.
+
+Claritate la publicare – atunci când un profil este făcut public, trimite o notificare care specifică ce profil a fost publicat, unde apare (URL) şi beneficiile pentru utilizator (de exemplu, SEO, posibilitatea de partajare).
+
+Profil personal pentru fiecare utilizator – dezvoltă o pagină de profil indexabilă pentru fiecare utilizator, cu realizări şi competenţe atribuite în funcţie de activitatea din platformă; ataşează aici şi profilele „Guests” publicate sub numele său, plus sistem de gamificare (premii pentru acumularea anumitor numere de neuroni/tokens).
+
+Editare şi completare – permite adăugarea unei fotografii şi editarea informaţiilor din profilurile „Guests” (sau trimiterea de sugestii de corectare) de către utilizatori care nu sunt autorii originali; recompensaţi utilizatorii pentru contribuţii utile.
+
+Organizare în foldere – introduce posibilitatea de a grupa profilele în foldere, similar structurii din pagina Neurons (sidebar extensibil). Ideal, acelaşi sidebar de foldere să fie reutilizat în paginile Guests şi Knowledge Graph pentru acces unificat.
+
+3. Pagina Neurons
+
+Previzualizare rapidă a neuronilor – implementaţi o vizualizare în listă (pane) care permite deschiderea conţinutului neuronului în aceeaşi pagină la click (similar cu Apple Notes/Evernote), fără a naviga către editorul full page.
+
+Sidebar unificat – folosiţi acelaşi sistem de foldere/extensii ca la Guests, Library şi Knowledge Graph pentru a naviga între neuroni.
+
+4. Pagina n/ (Editor de neuroni)
+
+Funcţionalitatea butoanelor – asiguraţi că fiecare buton din bara de instrumente, sidebar şi footer funcţionează corect.
+
+Tooltip‑uri – adăugaţi mesaje scurte la hover explicând acţiunea fiecărui buton (ex. „Run” porneşte execuţia codului, „Extract Insights” generează insight‑uri din neuron”).
+
+Stabilitate UI – evitaţi schimbări neaşteptate de layout atunci când se activează panouri suplimentare (blocuri de AI, istoric etc.).
+
+5. Pagina guest/ (profil individual)
+
+Web‑design premium – îmbunătăţiţi design‑ul vizual al paginii de profil astfel încât să fie estetic, modern şi responsiv.
+
+Expertiză în procente – reprezentaţi nivelul de expertiză pe fiecare domeniu prin procente din 100% pentru a crea un indicator vizual clar.
+
+Listă extinsă de competenţe – afişaţi un set mai bogat de specializări/expertize extrase din transcript, nu doar 2–3 categorii.
+
+Recomandări de utilizare – pe baza expertizei, sugeraţi în ce contexte poate fi contactat acest expert şi permiteţi utilizatorilor să adauge informaţii suplimentare (telefon, email, recenzie, status de membru al platformei). Informaţiile sensibile trebuie aprobate/moderate înainte de publicare.
+
+Explicaţii pentru Frameworks & Modele – includeţi sub fiecare framework un exemplu profesionist şi util pentru înţelegerea modului de aplicare.
+
+Citate şi stil de comunicare – extrageţi şi afişaţi mai multe citate relevante (zeci) şi descrieţi stilul de comunicare al persoanei (formal, empatic etc.).
+
+Versiune gratuită vs. plată – dezvoltaţi două variante de pagină:
+
+o versiune gratuită/publică pentru SEO, cu informaţii de bază;
+
+o versiune extinsă de 10× mai detaliată, accesibilă contra cost (de exemplu 4,9 USD/profil sau pachet ~99 USD pentru acces complet). După plată, utilizatorul să poată descărca versiunea extinsă din dashboard.
+
+Verificare de duplicare – analizaţi suprapunerea cu pagina /profiles (Knowledge → Intelligence profiles) şi decideţi dacă acestea ar trebui unificate; a doua pagină conţine IdeaRank şi este mai avansată.
+
+6. Pagina Jobs
+
+Definirea statusurilor – afişaţi o legendă a statusurilor (pending/running/completed/failed etc.) şi explicaţi pentru fiecare ce înseamnă, de ce job‑ul se află acolo şi ce poate face utilizatorul pentru a accelera sau când trebuie să aştepte.
+
+Notificări automate – implementează notificări care anunţă finalizarea sau eşuarea job‑urilor cu detalii despre rezultat.
+
+Educaţie despre job‑uri – adăugaţi un ghid în pagină care explică scopul job‑urilor, de ce sunt necesare pentru servicii AI, cum se lansează, ce input primesc şi ce output oferă; oferiţi opţiunea de a ascunde secţiunea Jobs pentru utilizatorii care nu folosesc servicii avansate, pentru a nu crea confuzie.
+
+7. Pagina Library
+
+Clarificare faţă de Neurons – explicaţi diferenţa dintre pagina Library (artifacts) şi Neurons (unităţi de cunoştinţe) pentru a reduce confuzia; de exemplu, Library conţine livrabile generate (rapoarte, documente) iar Neurons conţine sursa brută.
+
+Vizibilitate controlată – permiteţi utilizatorilor să seteze nivelul de acces pentru fiecare unitate de conţinut: privat (doar eu), workspace (pentru echipa mea), public (pentru toţi utilizatorii logaţi).
+
+Bibliotecă publică cu gating – creaţi un spaţiu comun unde utilizatorii pot partaja anumite artefacte; limitaţi numărul de piese publicabile în funcţie de abonament/pachet.
+
+Marketplace intern – permiteţi utilizatorilor să vândă unităţi de conţinut în Library, cu preţuri setate de sistem sau admin; integraţi economia NEURONS/TOKEN (venit pasiv în USD/NEURONS, disponibil în funcţie de gating şi KYC).
+
+Mini‑landing pages pentru artefacte – pentru fiecare library/*, generaţi automat o pagină de vânzare cu titlu, subtitlu, categorie, instrucţiuni de folosire, public ţintă şi efecte aşteptate. După achiziţie, oferiţi acces la instrucţiuni suplimentare şi integrarea în workflow. Utilizaţi AI pentru a genera aceste descrieri şi taxaţi utilizatorul (NEURONS/tokens).
+
+Recenzii şi rating‑uri – implementaţi sistem de comentarii şi evaluări cu stele pentru artefacte; recenziile să fie moderate de admin pentru a preveni scurgeri; în dashboard oferiţi creatorilor o secţiune centralizată cu feedback, rating‑uri şi notificări.
+
+8. Probleme generale şi întrebări
+
+Diferentierea elementelor – introduceţi iconografie/culori/etichete care indică dacă un buton sau un element de conţinut este privat, public, gratuit sau plătit, sau dacă necesită NEURONs/TOKENs; aceste indicaţii trebuie să fie vizibile şi coerente în toate paginile.
+
+Pipeline Status în sidebar – fie eliminaţi indicatorul „Pipeline Status” dacă nu are funcţionalitate, fie transformaţi‑l într‑o pagină/carte de bord unde se explică fiecare etapă (Episodes → Neurons → Jobs → Artifacts) şi se oferă indicatori de progres.
+
+9. Corecţii tehnice evidenţiate în codul sursă
+
+Autentificare şi securitate pentru edge functions – remediaţi problemele extract-neurons, chunk-transcript, extract-guests şi generate-entities care acceptă user_id din payload şi folosesc cheile anonime (BUG‑001, BUG‑002, BUG‑003 din registrul de buguri). Activaţi verify_jwt=true şi extrageţi user_id din token în interiorul funcţiei.
+
+Navigation duplicată – curăţaţi componenta SiteHeader sau clarificaţi rolul său, pentru a reduce redundanţa faţă de AppSidebar.
+
+Indexuri şi optimizare – adăugaţi indexuri pentru coloane folosite frecvent (neurons.author_id, entities.slug etc.) pentru a preveni degradarea performanţei.
+
+Integrarea i18n – mutaţi toate textele UI în fişiere de localizare şi standardizaţi limba (ENG + opţiune RO); evitaţi amestecul de română şi engleză.
+
+Error Boundaries şi fallback UI – introduceţi componente React de tip ErrorBoundary pentru a preveni crash‑uri complete ale aplicaţiei.
+
+Implementarea acestor sarcini va aduce platformei AI‑IDEI claritate, funcţionalitate extinsă şi o experienţă de utilizare coerentă, ajutând la transformarea platformei într‑un produs robust şi uşor de folosit.
+
+
+
+
+
+Platforma ta funcționează ca un pipeline determinist:
+
+Transcript
+→ Chunk Engine
+→ Extractor Engine
+→ Scoring Engine
+→ Knowledge Graph
+→ Intelligence Assets
+→ Public Modules
+
+00_PRD_PAGE_7
+
+Prin urmare task-urile trebuie definite pe componente ale pipeline-ului, nu generic.
+
+2. Structura YAML recomandată
+
+Fiecare task trebuie să aibă:
+
+task_id:
+module:
+owner:
+priority:
+objective:
+inputs:
+outputs:
+steps:
+dependencies:
+validation:
+metrics:
+risks:
+
+Aceasta permite:
+
+execuție automată
+
+verificare
+
+CI gates
+
+3. Exemplu real (Extraction Engine)
+task_id: extraction_engine_v1
+module: intelligence_pipeline
+priority: P0
+owner: backend_ai
+
+objective:
+  Implement the transcript intelligence extraction system.
+
+inputs:
+  - transcript
+  - metadata
+  - speaker_labels
+
+outputs:
+  - semantic_chunks
+  - atomic_items
+  - entities
+  - insights
+  - content_assets
+
+steps:
+
+  - step: transcript_cleaning
+    description: normalize transcript text
+    output: clean_transcript
+
+  - step: chunk_engine
+    description: split transcript into semantic chunks
+    chunk_size_tokens: 300-800
+    output: semantic_chunks
+
+  - step: extractor_engine
+    description: run extractor modules on chunks
+    extractor_count: 120
+
+  - step: scoring_engine
+    description: compute insight score
+    formula: novelty × information_density × utility × demand
+
+  - step: knowledge_graph_insert
+    description: store nodes and edges
+
+validation:
+  - chunk_count > 50
+  - extractor_runs_logged
+  - graph_nodes_created
+
+metrics:
+  - processing_time < 5 minutes
+  - extraction_accuracy > 0.85
+
+risks:
+  - semantic drift
+  - hallucinated insights
+
+Acest task reflectă exact pipeline-ul descris în documentația engine-ului. 
+
+00_PRD_PAGE_7
+
+4. Task YAML pentru extractor individual
+task_id: extractor_strategic_insights
+module: extractor_engine
+category: insights
+priority: P1
+
+input:
+  - semantic_chunks
+
+prompt_template: strategic_insights_extractor
+
+output_schema:
+  insight:
+    type: string
+  strategic_implication:
+    type: string
+  supporting_quote:
+    type: string
+  confidence:
+    type: float
+
+validation:
+  - supporting_quote_required
+  - confidence_range: [0,1]
+
+storage:
+  table: insights
+
+Extractorul detectează insight-uri strategice în transcript. 
+
+00_PRD_PAGE_7
+
+5. Task YAML pentru modulul Media Profiles (SEO)
+task_id: media_profiles_module
+module: derived_intelligence_public
+priority: P1
+owner: product
+
+objective:
+  expose intelligence profiles for analyzed persons
+
+routes:
+  - /media/profiles/public-figures
+  - /media/profiles/local-figures
+  - /media/profiles/case-studies
+
+inputs:
+  - transcript_analysis
+  - psychological_extractors
+  - communication_patterns
+
+outputs:
+  - public_profile_page
+  - structured_indicators
+  - profile_summary
+
+profile_sections:
+  - context
+  - analyzed_material
+  - extracted_indicators
+  - cognitive_patterns
+  - communication_style
+
+constraints:
+  - no psychological diagnosis
+  - only observable signals
+  - sources mandatory
+
+seo:
+  entity_page: true
+  structured_data: json-ld
+
+validation:
+  - sources_linked
+  - indicators_present
+
+Aceste profile sunt Derived Intelligence Assets, nu servicii. 
+
+01_IMPLEMENT_MEDIA_PROFILES
+
+6. Task YAML pentru Job Execution System
+task_id: execution_pipeline
+module: services_runtime
+priority: P0
+
+stages:
+  - created
+  - queued
+  - validating
+  - executing
+  - processing
+  - completed
+  - failed
+
+pre_run_protocol:
+  - check_access
+  - estimate_cost
+  - reserve_credits
+
+run:
+  provider: manus_api
+  retry_attempts: 3
+
+post_run:
+  - qc_validation
+  - artifact_storage
+  - cost_reconciliation
+
+validation:
+  - ledger_entry_created
+  - artifacts_generated
+
+Execuția serviciilor trebuie să includă pre-run validation și credit reservation. 
+
+00_PRD_PAGE_8
+
+7. Task YAML pentru Knowledge Graph
+task_id: knowledge_graph_builder
+module: knowledge_layer
+priority: P0
+
+nodes:
+  - person
+  - idea
+  - topic
+  - framework
+  - quote
+
+edges:
+  - person_said
+  - idea_about
+  - idea_related
+  - topic_cluster
+
+input:
+  - extracted_entities
+  - extracted_relationships
+
+validation:
+  - node_uniqueness
+  - embedding_similarity_threshold: 0.92
+
+Graph-ul conectează ideile extrase din transcript. 
+
+00_PRD_PAGE_7
+
+8. Task YAML pentru Scoring Engine
+task_id: insight_scoring
+module: economic_intelligence
+priority: P1
+
+formula:
+  score = novelty * information_density * utility * demand
+
+range: [0,100]
+
+thresholds:
+  premium_insight: >70
+  standard_insight: 40-70
+  discard: <40
+
+storage:
+  table: scores
+
+validation:
+  - score_exists
+
+Insight-urile primesc scor pentru prioritizare economică. 
+
+00_PRD_PAGE_7
+
+9. Cum ar trebui să arate repo-ul
+/tasks
+   extraction_engine.yaml
+   extractors/
+        strategic_insights.yaml
+        personality_traits.yaml
+   pipeline/
+        execution_pipeline.yaml
+   graph/
+        knowledge_graph.yaml
+   public_modules/
+        media_profiles.yaml
+10. Avantaj major pentru tine
+
+Dacă îți scriu toate task-urile platformei în YAML, obții:
+
+documentație executabilă
+
+blueprint pentru AI agents
+
+CI verificabil
+
+dezvoltare mult mai rapidă
+
+11. Ce ar trebui făcut next (important)
+
+Pasul următor logic este să generăm:
+
+MASTER TASK MAP
+
+aprox:
+
+≈120 extractors
+≈25 services
+≈12 pipelines
+≈8 public modules
+≈6 infra components
+
+Totul în YAML.
+
+
+
+
+
+Mai jos este AI-IDEI COMPLETE TASK ARCHITECTURE în format YAML conceptual.
+Structura este gândită ca manifest executabil pentru dezvoltare, nu ca document marketing.
+
+Arhitectura reflectă pipeline-ul central al platformei:
+
+Media
+→ Transcript
+→ Extraction Engine
+→ Knowledge Graph
+→ Intelligence Assets
+→ Services
+→ Public Modules
+→ Economic Layer
+
+Acesta este mecanismul prin care transcriptul devine capital semantic monetizabil. 
+
+00_PRD_PAGE_7
+
+AI-IDEI COMPLETE TASK ARCHITECTURE (MASTER YAML)
+platform: AI_IDEI
+version: 1.0
+architecture_type: knowledge_intelligence_os
+
+layers:
+
+  - ingestion
+  - transcript_processing
+  - extraction_engine
+  - knowledge_graph
+  - intelligence_assets
+  - service_execution
+  - public_modules
+  - economic_layer
+  - governance
+1. INGESTION LAYER
+tasks:
+
+- task_id: ingest_youtube
+  module: ingestion
+  inputs:
+    - youtube_url
+  outputs:
+    - audio_file
+    - metadata
+  steps:
+    - validate_url
+    - fetch_metadata
+    - download_audio
+
+- task_id: ingest_upload
+  module: ingestion
+  inputs:
+    - audio_file
+    - video_file
+    - pdf
+    - docx
+  outputs:
+    - normalized_input
+  steps:
+    - validate_format
+    - store_file
+    - generate_hash
+
+- task_id: ingest_rss
+  module: ingestion
+  inputs:
+    - rss_feed
+  outputs:
+    - episode_list
+2. TRANSCRIPT PROCESSING
+tasks:
+
+- task_id: transcription_engine
+  module: transcript_processing
+  inputs:
+    - audio_file
+  outputs:
+    - transcript
+  parameters:
+    diarization: true
+    timestamps: true
+
+- task_id: transcript_cleaning
+  module: transcript_processing
+  inputs:
+    - transcript
+  outputs:
+    - clean_transcript
+
+- task_id: transcript_segmentation
+  module: transcript_processing
+  inputs:
+    - clean_transcript
+  outputs:
+    - semantic_chunks
+  chunk_size_tokens: 300-800
+
+Chunking este etapa obligatorie înainte de rularea extractorilor. 
+
+00_PRD_PAGE_7
+
+3. EXTRACTION ENGINE
+
+≈120 extractors.
+
+module: extraction_engine
+
+categories:
+
+  core_knowledge:
+    - key_quotes_extractor
+    - core_ideas_extractor
+    - main_arguments_extractor
+    - claims_extractor
+    - frameworks_extractor
+    - principles_extractor
+    - lessons_extractor
+    - examples_extractor
+    - definitions_extractor
+    - analogies_extractor
+    - rules_extractor
+    - beliefs_extractor
+    - hypotheses_extractor
+    - assumptions_extractor
+    - takeaways_extractor
+
+  insights:
+    - strategic_insights_extractor
+    - counterintuitive_insights_extractor
+    - hidden_assumptions_extractor
+    - contradictions_extractor
+    - patterns_extractor
+    - long_term_predictions_extractor
+    - short_term_predictions_extractor
+    - future_scenarios_extractor
+    - implications_extractor
+    - philosophical_insights_extractor
+    - industry_insights_extractor
+    - societal_insights_extractor
+    - technology_insights_extractor
+    - economic_insights_extractor
+    - trend_signals_extractor
+
+  psychology:
+    - personality_traits_extractor
+    - thinking_style_extractor
+    - cognitive_biases_extractor
+    - decision_patterns_extractor
+    - motivations_extractor
+    - values_extractor
+    - belief_system_extractor
+    - communication_style_extractor
+    - persuasion_methods_extractor
+    - rhetorical_techniques_extractor
+    - confidence_signals_extractor
+    - uncertainty_signals_extractor
+    - dominant_emotions_extractor
+    - psychological_archetype_extractor
+    - worldview_model_extractor
+
+Extractorii detectează tipuri diferite de semnificație în transcript. 
+
+00_PRD_PAGE_7
+
+4. ENTITY EXTRACTION
+tasks:
+
+- person_entities_extractor
+- organization_entities_extractor
+- company_entities_extractor
+- book_entities_extractor
+- tool_entities_extractor
+- product_entities_extractor
+- technology_entities_extractor
+- concept_entities_extractor
+- topic_entities_extractor
+- location_entities_extractor
+- event_entities_extractor
+- theory_entities_extractor
+- method_entities_extractor
+- brand_entities_extractor
+- media_entities_extractor
+5. RELATIONSHIP EXTRACTION
+tasks:
+
+- person_said_quote_extractor
+- person_supports_idea_extractor
+- person_criticizes_idea_extractor
+- idea_related_to_topic_extractor
+- idea_contradicts_idea_extractor
+- idea_supports_idea_extractor
+- person_mentioned_entity_extractor
+- entity_related_to_entity_extractor
+- topic_cluster_extractor
+- concept_dependency_extractor
+- argument_structure_extractor
+- cause_effect_extractor
+- problem_solution_extractor
+- belief_conflict_extractor
+- influence_network_extractor
+6. MEDIA EXTRACTION
+tasks:
+
+- viral_clip_extractor
+- highlight_moments_extractor
+- soundbite_quotes_extractor
+- memorable_lines_extractor
+- emotion_peaks_extractor
+- story_segments_extractor
+- controversial_moments_extractor
+- debate_segments_extractor
+- dramatic_turns_extractor
+- audience_hook_moments_extractor
+7. CONTENT GENERATION
+tasks:
+
+- tweet_threads_extractor
+- linkedin_posts_extractor
+- blog_articles_extractor
+- youtube_script_extractor
+- newsletter_summary_extractor
+- viral_hooks_extractor
+- headline_generator_extractor
+- content_calendar_extractor
+- short_form_posts_extractor
+- long_form_article_extractor
+8. SEO LAYER
+tasks:
+
+- seo_keywords_extractor
+- search_intent_extractor
+- topic_clusters_extractor
+- seo_titles_extractor
+- meta_descriptions_extractor
+9. STRATEGIC INTELLIGENCE
+tasks:
+
+- strategic_threats_extractor
+- strategic_opportunities_extractor
+- systemic_risks_extractor
+- disruption_signals_extractor
+- black_swan_signals_extractor
+10. KNOWLEDGE GRAPH BUILDER
+module: knowledge_graph
+
+nodes:
+  - person
+  - idea
+  - topic
+  - framework
+  - episode
+  - quote
+
+edges:
+  - person_said
+  - idea_about
+  - idea_related
+  - topic_cluster
+11. SCORING ENGINE
+task_id: insight_scoring
+
+formula:
+
+InsightScore =
+  novelty
+  * information_density
+  * utility
+  * demand
+
+range: 0-100
+12. SERVICE EXECUTION
+module: services
+
+pipeline:
+
+- preflight_validation
+- cost_estimate
+- credit_reservation
+- execution
+- progress_tracking
+- qc_validation
+- artifact_storage
+
+Execuția serviciilor este orchestrată ca sistem de joburi. 
+
+00_PRD_PAGE_8
+
+13. PUBLIC MODULES
+modules:
+
+- media_profiles
+- guest_profiles
+- host_profiles
+- episode_insights
+- knowledge_library
+- intelligence_reports
+
+Profilele publice sunt Derived Intelligence Modules pentru SEO și autoritate. 
+
+01_IMPLEMENT_MEDIA_PROFILES
+
+14. ECONOMIC LAYER
+module: economic_engine
+
+assets:
+
+- atomic_items
+- insights
+- frameworks
+- content_assets
+
+valuation_formula:
+
+ExtractorValue =
+  InformationDensity
+  * Novelty
+  * Utility
+  * MarketDemand
+15. GOVERNANCE
+systems:
+
+- decision_ledger
+- abuse_detection
+- policy_engine
+- access_control
+- audit_logs
+STRUCTURA COMPLETĂ A TASKURILOR
+
+Aproximativ:
+
+ingestion                ~5
+transcript processing    ~6
+extractors               ~120
+entity extractors        ~15
+relationship extractors  ~15
+media extractors         ~10
+content generators       ~10
+seo extractors           ~5
+strategic extractors     ~5
+knowledge graph          ~5
+services                 ~10
+public modules           ~8
+economic layer           ~5
+governance               ~6
+
+Total aproximativ:
+
+≈200 TASKS
+INTERPRETARE STRATEGICĂ
+
+Platforma ta nu este:
+
+AI tool
+
+ci:
+
+Semantic Intelligence Refinery
+
+unde:
+
+Media
+→ Knowledge extraction
+→ Insight generation
+→ Intelligence assets
+→ Products
+
+
+
+
+
+Platforma AI_IDEI_OS operează ca un Knowledge Operating System în care unitatea primară este neuronul și execuția economică se face prin servicii orchestrate de job-engine. Sistemul trebuie să susțină:
+
+ingestia de transcript/media
+
+extracția de neuroni (unități de expertiză)
+
+relații în knowledge graph
+
+execuția serviciilor
+
+control economic (wallet, cost, ledger)
+
+guvernanță și audit
+
+Modelul de date trebuie să reflecte 4 straturi principale:
+
+Knowledge Layer (neuroni, graph)
+
+Execution Layer (jobs, services)
+
+Economic Layer (wallet, cost, credits)
+
+Governance Layer (permissions, audit, abuse)
+
+În continuare este definit AI-IDEI COMPLETE DATABASE SCHEMA (~40 tabele) și SYSTEM ARCHITECTURE (~35 servicii).
+
+1️⃣ AI-IDEI COMPLETE DATABASE SCHEMA (~40 TABLES)
+database: ai_idei_os
+version: v1
+A. IDENTITY & ACCESS
+tables:
+
+users:
+  id: uuid
+  email: text
+  created_at: timestamptz
+  status: text
+  locale: text
+
+user_profiles:
+  user_id: uuid
+  display_name: text
+  avatar_url: text
+  bio: text
+
+user_roles:
+  id: uuid
+  user_id: uuid
+  role: text
+  created_at: timestamptz
+
+permissions:
+  id: uuid
+  name: text
+  description: text
+
+role_permissions:
+  role_id: uuid
+  permission_id: uuid
+B. WORKSPACE MODEL
+workspaces:
+  id: uuid
+  name: text
+  owner_user_id: uuid
+  created_at: timestamptz
+
+workspace_members:
+  workspace_id: uuid
+  user_id: uuid
+  role: text
+  status: text
+
+Workspace model permite colaborare și RLS multi-tenant.
+
+C. KNOWLEDGE CORE (NEURON MODEL)
+
+Neuronul este unitatea atomică de expertiză.
+
+neurons:
+  id: uuid
+  title: text
+  type: text
+  visibility: text
+  created_at: timestamptz
+  updated_at: timestamptz
+
+neuron_blocks:
+  id: uuid
+  neuron_id: uuid
+  block_type: text
+  content: jsonb
+  order_index: int
+
+neuron_versions:
+  id: uuid
+  neuron_id: uuid
+  version: int
+  snapshot: jsonb
+  created_at: timestamptz
+
+neuron_relations:
+  id: uuid
+  source_neuron_id: uuid
+  target_neuron_id: uuid
+  relation_type: text
+
+neuron_addresses:
+  id: uuid
+  neuron_id: uuid
+  external_ref: text
+D. KNOWLEDGE GRAPH
+graph_nodes:
+  id: uuid
+  node_type: text
+  label: text
+  metadata: jsonb
+
+graph_edges:
+  id: uuid
+  source_node_id: uuid
+  target_node_id: uuid
+  edge_type: text
+  weight: float
+E. INGESTION & TRANSCRIPT
+sources:
+  id: uuid
+  source_type: text
+  url: text
+  created_at: timestamptz
+
+media_files:
+  id: uuid
+  source_id: uuid
+  file_url: text
+  duration: int
+
+transcripts:
+  id: uuid
+  media_id: uuid
+  language: text
+  content: text
+
+transcript_chunks:
+  id: uuid
+  transcript_id: uuid
+  chunk_index: int
+  text: text
+
+Chunking este necesar pentru extractor pipeline.
+
+F. EXTRACTION ENGINE
+extractors:
+  id: uuid
+  name: text
+  category: text
+  prompt_template: text
+
+extraction_runs:
+  id: uuid
+  extractor_id: uuid
+  transcript_chunk_id: uuid
+  created_at: timestamptz
+
+extracted_items:
+  id: uuid
+  run_id: uuid
+  item_type: text
+  payload: jsonb
+  confidence: float
+G. SERVICE LAYER
+services:
+  id: uuid
+  service_id: text
+  service_class: text
+  execution_mode: text
+
+service_manifests:
+  id: uuid
+  service_id: uuid
+  manifest: jsonb
+  version: text
+
+service_runs:
+  id: uuid
+  service_id: uuid
+  user_id: uuid
+  created_at: timestamptz
+  status: text
+H. JOB ENGINE
+jobs:
+  job_id: uuid
+  service_id: text
+  user_id: uuid
+  status: text
+  created_at: timestamptz
+
+job_steps:
+  id: uuid
+  job_id: uuid
+  step_name: text
+  status: text
+
+job_artifacts:
+  id: uuid
+  job_id: uuid
+  artifact_type: text
+  file_url: text
+
+Job lifecycle:
+
+CREATED
+QUEUED
+RUNNING
+QA
+DONE
+I. ECONOMIC SYSTEM
+wallet_state:
+  id: uuid
+  user_id: uuid
+  balance: numeric
+  reserved_balance: numeric
+
+credits_ledger:
+  id: uuid
+  user_id: uuid
+  amount: numeric
+  reason: text
+  created_at: timestamptz
+
+cost_ledger:
+  id: uuid
+  job_id: uuid
+  cost_tokens: int
+  cost_usd: numeric
+
+pricing_rules:
+  id: uuid
+  service_id: uuid
+  price: numeric
+J. ACCESS CONTROL
+entitlements:
+  id: uuid
+  user_id: uuid
+  entitlement_type: text
+  value: jsonb
+
+access_rules:
+  id: uuid
+  resource: text
+  rule_definition: jsonb
+K. DECISION & AUDIT
+decision_ledger:
+  id: uuid
+  user_id: uuid
+  resource: text
+  verdict: text
+  reason_code: text
+  created_at: timestamptz
+
+audit_logs:
+  id: uuid
+  event_type: text
+  payload: jsonb
+  created_at: timestamptz
+L. ABUSE DETECTION
+abuse_signals:
+  id: uuid
+  user_id: uuid
+  signal_type: text
+  severity: int
+  created_at: timestamptz
+
+rate_limits:
+  id: uuid
+  user_id: uuid
+  limit_type: text
+  value: int
+TOTAL TABLE COUNT
+≈42 tables
+2️⃣ AI-IDEI SYSTEM ARCHITECTURE (~35 SERVICES)
+
+Arhitectura este microservice + orchestration.
+
+architecture_type: distributed_ai_system
+deployment: kubernetes
+A. EDGE LAYER
+services:
+
+api_gateway
+auth_service
+rate_limit_firewall
+cors_gateway
+edge_functions_runtime
+B. IDENTITY SERVICES
+user_service
+workspace_service
+permission_service
+session_service
+C. INGESTION SERVICES
+media_ingest_service
+youtube_fetch_service
+rss_ingest_service
+file_upload_service
+transcription_service
+D. EXTRACTION ENGINE
+chunk_engine
+extractor_runtime
+prompt_dispatcher
+scoring_engine
+embedding_service
+E. KNOWLEDGE GRAPH
+graph_builder
+graph_indexer
+vector_index_service
+semantic_search_service
+relationship_engine
+F. SERVICE EXECUTION
+job_engine
+orchestrator
+agent_runner
+pipeline_executor
+artifact_packager
+G. ECONOMIC CONTROL
+wallet_service
+credit_reservation_service
+pricing_engine
+cost_monitor
+entropy_monitor
+H. GOVERNANCE
+decision_engine
+abuse_detection_engine
+audit_service
+policy_engine
+I. PUBLIC SURFACES
+media_profiles_service
+knowledge_library_service
+insights_service
+assistant_marketplace_service
+analytics_service
+J. OBSERVABILITY
+metrics_service
+logging_service
+alerting_service
+telemetry_service
+TOTAL SERVICE COUNT
+≈35 services
+SYSTEM FLOW (SIMPLIFIED)
+User Input
+   ↓
+API Gateway
+   ↓
+Access Engine
+   ↓
+Job Engine
+   ↓
+Extraction Engine
+   ↓
+Knowledge Graph
+   ↓
+Artifact Generation
+   ↓
+Economic Settlement
+   ↓
+Delivery
+VERDICT
+
+Această arhitectură produce un sistem care:
+
+tratează knowledge ca infrastructură
+
+separă execuția AI de controlul economic
+
+permite scalare la 100M neuroni + 1B relații
+
+menține audit complet prin decision ledger
+
+Aceasta este o structură enterprise-grade pentru Knowledge Operating System.
+
+
+
