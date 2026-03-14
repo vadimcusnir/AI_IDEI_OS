@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
 import { RadarChart } from "@/components/intelligence/RadarChart";
+import { PsychologicalProfileSection, type PsychologicalProfileData } from "@/components/profile/PsychologicalProfileSection";
 import {
   Loader2, Brain, Quote, Sparkles, Users, MessageCircle,
   Target, Award, Lightbulb, TrendingUp, ArrowRight, Lock,
@@ -163,6 +164,7 @@ function QuotesSection({ quotes, authorName }: { quotes: string[]; authorName: s
 export default function GuestProfile() {
   const { slug } = useParams<{ slug: string }>();
   const [guest, setGuest] = useState<GuestData | null>(null);
+  const [psychProfile, setPsychProfile] = useState<PsychologicalProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -181,6 +183,13 @@ export default function GuestProfile() {
         setNotFound(true);
       } else {
         setGuest(data as unknown as GuestData);
+        // Fetch psychological profile
+        const { data: pp } = await supabase
+          .from("psychological_profiles" as any)
+          .select("*")
+          .eq("guest_profile_id", data.id)
+          .maybeSingle();
+        if (pp) setPsychProfile(pp as unknown as PsychologicalProfileData);
       }
       setLoading(false);
     };
@@ -285,8 +294,16 @@ export default function GuestProfile() {
           </section>
         )}
 
-        {/* ── Psychological Radar Chart ── */}
-        {guest.psychological_traits.length >= 3 && (
+        {/* ── Deep Psychological Profile (from AI analysis) ── */}
+        {psychProfile && (
+          <section>
+            <SectionHeader icon={Brain} label="Deep Psychological Analysis" />
+            <PsychologicalProfileSection profile={psychProfile} />
+          </section>
+        )}
+
+        {/* ── Basic Psychological Radar Chart (fallback from traits) ── */}
+        {!psychProfile && guest.psychological_traits.length >= 3 && (
           <section>
             <SectionHeader icon={Brain} label="Psychological Profile" count={guest.psychological_traits.length} />
             <div className="rounded-2xl border border-border bg-card p-5 flex items-center justify-center">

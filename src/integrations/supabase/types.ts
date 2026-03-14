@@ -2130,6 +2130,101 @@ export type Database = {
         }
         Relationships: []
       }
+      psychological_profiles: {
+        Row: {
+          agreeableness: number | null
+          analysis_metadata: Json | null
+          analytical_thinking: number | null
+          authenticity: number | null
+          author_id: string
+          clout: number | null
+          cognitive_complexity: number | null
+          communication_style: string | null
+          confidence_level: number | null
+          conscientiousness: number | null
+          created_at: string | null
+          decision_style: string | null
+          dominance: number | null
+          emotional_tone: number | null
+          empathy: number | null
+          extraversion: number | null
+          guest_profile_id: string
+          id: string
+          leadership_style: string | null
+          lexical_features: Json | null
+          model_version: string | null
+          neuroticism: number | null
+          openness: number | null
+          persuasion_approach: string | null
+          risk_tolerance: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agreeableness?: number | null
+          analysis_metadata?: Json | null
+          analytical_thinking?: number | null
+          authenticity?: number | null
+          author_id: string
+          clout?: number | null
+          cognitive_complexity?: number | null
+          communication_style?: string | null
+          confidence_level?: number | null
+          conscientiousness?: number | null
+          created_at?: string | null
+          decision_style?: string | null
+          dominance?: number | null
+          emotional_tone?: number | null
+          empathy?: number | null
+          extraversion?: number | null
+          guest_profile_id: string
+          id?: string
+          leadership_style?: string | null
+          lexical_features?: Json | null
+          model_version?: string | null
+          neuroticism?: number | null
+          openness?: number | null
+          persuasion_approach?: string | null
+          risk_tolerance?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agreeableness?: number | null
+          analysis_metadata?: Json | null
+          analytical_thinking?: number | null
+          authenticity?: number | null
+          author_id?: string
+          clout?: number | null
+          cognitive_complexity?: number | null
+          communication_style?: string | null
+          confidence_level?: number | null
+          conscientiousness?: number | null
+          created_at?: string | null
+          decision_style?: string | null
+          dominance?: number | null
+          emotional_tone?: number | null
+          empathy?: number | null
+          extraversion?: number | null
+          guest_profile_id?: string
+          id?: string
+          leadership_style?: string | null
+          lexical_features?: Json | null
+          model_version?: string | null
+          neuroticism?: number | null
+          openness?: number | null
+          persuasion_approach?: string | null
+          risk_tolerance?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "psychological_profiles_guest_profile_id_fkey"
+            columns: ["guest_profile_id"]
+            isOneToOne: true
+            referencedRelation: "guest_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       push_config: {
         Row: {
           created_at: string | null
