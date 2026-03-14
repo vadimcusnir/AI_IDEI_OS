@@ -294,9 +294,10 @@ export default function Jobs() {
           ) : (
             <div className="space-y-1.5">
               {filtered.map(job => {
-                const cfg = STATUS_CONFIG[job.status] || STATUS_CONFIG.pending;
-                const StatusIcon = cfg.icon;
-                const isExpanded = expandedJob === job.id;
+                const si = STATUS_ICONS[job.status] || STATUS_ICONS.pending;
+                const StatusIcon = si.icon;
+                const statusLabel = t(`jobs.status_${job.status}`);
+                const statusDesc = t(`jobs.status_${job.status}_desc`);
                 const duration = job.completed_at
                   ? Math.round((new Date(job.completed_at).getTime() - new Date(job.created_at).getTime()) / 1000)
                   : null;
