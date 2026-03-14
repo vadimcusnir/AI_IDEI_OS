@@ -46,6 +46,7 @@ import EntityDetail from "./pages/EntityDetail";
 import TopicListing from "./pages/TopicListing";
 import TopicDetail from "./pages/TopicDetail";
 import MediaProfiles from "./pages/MediaProfiles";
+import PipelineOverview from "./pages/PipelineOverview";
 import NotFound from "./pages/NotFound";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
