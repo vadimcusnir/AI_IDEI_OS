@@ -261,7 +261,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 5.3.3 | ✅ Speech Expansion Engine (speaker notes) | DONE — deliverable: speaker_notes |
 | 5.3.4 | ✅ Visual Deck Engine (layout types, image prompts) | DONE — deliverable: visual_directions |
 | 5.3.5 | ✅ Bonus Generator (5 PDF bonuses) | DONE — deliverable: bonus_materials |
-| 5.3.6 | Export: PPTX, PDF, DOCX, TXT, ZIP | P3 — ArtifactExportMenu handles MD/TXT/JSON |
+| 5.3.6 | ✅ Export: HTML/DOCX, CSV, MD, TXT, JSON, clipboard | DONE — ArtifactExportMenu enhanced with 6 formats |
 
 ### 5.4 Marketplace & Knowledge Assets
 | # | Sarcină | Status |
