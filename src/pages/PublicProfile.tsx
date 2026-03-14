@@ -54,6 +54,7 @@ export default function PublicProfile() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title={`${profile?.display_name || username} — AI-IDEI`} description={profile?.bio || "Public profile on AI-IDEI Knowledge OS."} />
       <div className="max-w-lg mx-auto px-6 pt-16 pb-16">
         {/* Avatar & Name */}
         <div className="text-center mb-8">

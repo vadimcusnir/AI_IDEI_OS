@@ -45,6 +45,7 @@ export default function MediaProfiles() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Intelligence Profiles — AI-IDEI" description="AI-synthesized intelligence profiles from real conversations: cognitive patterns, decision styles, strategic behaviors." />
       {/* Hero */}
       <div className="border-b border-border bg-card">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">

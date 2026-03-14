@@ -46,6 +46,7 @@ export default function Architecture() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Architecture — AI-IDEI" description="Technical architecture overview: data model, pipeline, knowledge graph and system design." />
       <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Hero */}
         <div className="mb-16">
