@@ -196,7 +196,7 @@ export function GlobalSearch() {
 
             {query.length < 2 && (
               <div className="py-8 text-center">
-                <p className="text-xs text-muted-foreground/60">Scrie cel puțin 2 caractere pentru a căuta</p>
+                <p className="text-xs text-muted-foreground/60">{t("search_min_chars")}</p>
               </div>
             )}
 
