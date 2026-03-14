@@ -402,6 +402,14 @@ export default function Library() {
           )}
         </DialogContent>
       </Dialog>
+      {/* Publish to Marketplace Dialog */}
+      {publishArtifact && (
+        <PublishToMarketplaceDialog
+          open={!!publishArtifact}
+          onOpenChange={(open) => { if (!open) setPublishArtifact(null); }}
+          artifact={publishArtifact}
+        />
+      )}
       </div>
     </div>
   );

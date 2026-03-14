@@ -126,6 +126,13 @@ export function GlobalSearch() {
         type: "guest" as const,
         path: `/guest/${g.slug}`,
       })),
+      ...(entitiesRes.data || []).map((e: any) => ({
+        id: `e-${e.id}`,
+        title: e.title,
+        subtitle: `${e.entity_type}${e.idea_rank ? ` · IdeaRank ${(e.idea_rank as number).toFixed(1)}` : ""}`,
+        type: "entity" as const,
+        path: `/${e.entity_type === "insight" ? "insights" : e.entity_type === "pattern" ? "patterns" : e.entity_type === "formula" ? "formulas" : e.entity_type === "contradiction" ? "contradictions" : "insights"}/${e.slug}`,
+      })),
     ];
 
     setResults(mapped);
