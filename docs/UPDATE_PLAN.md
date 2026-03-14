@@ -344,9 +344,9 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | Faza 2 — Extraction Engine | ~15 | P0-P1 | ✅ 100% DONE |
 | Faza 3 — Service Execution | ~12 | P0-P1 | ✅ 100% DONE |
 | Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ 100% DONE |
-| Faza 5 — Advanced Features | ~25 | P1-P2 | ✅ ~95% DONE |
-| Faza 6 — Governance & Token | ~15 | P2-P3 | ~85% DONE |
-| **TOTAL** | **~122 sarcini** | | **~98% complet** |
+| Faza 5 — Advanced Features | ~25 | P1-P2 | ✅ 100% DONE |
+| Faza 6 — Governance & Token | ~15 | P2-P3 | ~90% DONE |
+| **TOTAL** | **~122 sarcini** | | **~99% complet** |
 
 ---
 
