@@ -159,14 +159,20 @@ export default function Library() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-xl font-serif font-bold flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" />
-              Biblioteca
-            </h1>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {artifacts.length} artefacte generate • deliverables din serviciile AI
-            </p>
+          <div className="flex items-center gap-3">
+            <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 text-[10px] gap-1"
+              onClick={() => setShowFolders(!showFolders)}>
+              <FolderTree className="h-3 w-3" />
+            </Button>
+            <div>
+              <h1 className="text-xl font-serif font-bold flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-primary" />
+                Library
+              </h1>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {filtered.length} / {artifacts.length} artifacts • AI service deliverables
+              </p>
+            </div>
           </div>
         </div>
 
