@@ -9,6 +9,7 @@ import {
   ArrowLeft, Loader2, Download, Copy, Trash2, Brain,
   Clock, FileText, Check, ExternalLink, FileCode,
 } from "lucide-react";
+import { ArtifactExportMenu } from "@/components/library/ArtifactExportMenu";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { toast } from "sonner";
