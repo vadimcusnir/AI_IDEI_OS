@@ -107,6 +107,8 @@ export default function Extractor() {
   const [editTranscriptText, setEditTranscriptText] = useState("");
   const [savingTranscript, setSavingTranscript] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [deepExtractingId, setDeepExtractingId] = useState<string | null>(null);
+  const [deepExtractResult, setDeepExtractResult] = useState<any>(null);
   const urlRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
