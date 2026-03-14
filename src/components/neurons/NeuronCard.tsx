@@ -34,8 +34,10 @@ interface Props {
   neuron: NeuronListItem;
   viewMode: ViewMode;
   isPinned: boolean;
+  isSelected?: boolean;
   onTogglePin: (id: number, e?: React.MouseEvent) => void;
   onDelete: (id: number, e?: React.MouseEvent) => void;
+  onPreview?: (neuron: NeuronListItem) => void;
 }
 
 export function NeuronCard({ neuron: n, viewMode, isPinned, onTogglePin, onDelete }: Props) {
