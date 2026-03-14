@@ -8,8 +8,8 @@ import {
   Eye, Trash2, Tag, Clock, ArrowRight, BookOpen, Brain,
   ArrowUpDown, SortAsc, SortDesc, Lock, Globe, FolderTree,
 } from "lucide-react";
-import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { VisibilityIcon } from "@/components/shared/AccessIcons";
+import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -111,7 +111,6 @@ export default function Library() {
       if (search && !a.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
-    // Folder filter
     if (selectedFolderId === "__unassigned") {
       const assigned = new Set(Object.keys(assignments));
       list = list.filter(a => !assigned.has(a.id));
@@ -145,33 +144,22 @@ export default function Library() {
   return (
     <div className="flex-1 flex overflow-hidden">
       {showFolders && (
-        <FolderSidebar
-          storageKey="library_folders"
-          items={artifacts.map(a => ({ id: a.id, label: a.title }))}
-          selectedFolderId={selectedFolderId}
-          onSelectFolder={setSelectedFolderId}
-          allLabel="All Artifacts"
-          headerLabel="Library Folders"
-        />
+        <FolderSidebar storageKey="library_folders" items={artifacts.map(a => ({ id: a.id, label: a.title }))}
+          selectedFolderId={selectedFolderId} onSelectFolder={setSelectedFolderId} allLabel="All Artifacts" headerLabel="Library Folders" />
       )}
       <div className="flex-1 overflow-auto">
       <SEOHead title="Library — AI-IDEI" description="Browse and manage your generated artifacts, documents and deliverables." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
-        {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 text-[10px] gap-1"
-              onClick={() => setShowFolders(!showFolders)}>
-              <FolderTree className="h-3 w-3" />
+            <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 w-7 p-0" onClick={() => setShowFolders(!showFolders)}>
+              <FolderTree className="h-3.5 w-3.5" />
             </Button>
             <div>
               <h1 className="text-xl font-serif font-bold flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-primary" />
-                Library
+                <BookOpen className="h-5 w-5 text-primary" /> Library
               </h1>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {filtered.length} / {artifacts.length} artifacts • AI service deliverables
-              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">{filtered.length} / {artifacts.length} artifacts</p>
             </div>
           </div>
         </div>

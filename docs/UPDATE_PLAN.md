@@ -55,24 +55,24 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 1.1.3 | ✅ Butoane Edit/Copy/Download vizibile în header episod | DONE |
 | 1.1.4 | ✅ Tooltipuri pe Extract, Preview Segments, Guests | DONE |
 | 1.1.5 | ✅ Notificări descriptive la finalizare extracție | DONE |
-| 1.1.6 | ✅ Vizualizare transcript cu structură pe speaker (timeline) | DONE — TranscriptViewer component cu speaker parsing, timeline dots, search, filter by speaker |
-| 1.1.7 | ✅ Import PDF cu extragere automată text | DONE — pdfjs-dist integration, auto-extract text from PDF files |
+| 1.1.6 | ✅ Vizualizare transcript cu structură pe speaker (timeline) | DONE — TranscriptViewer component |
+| 1.1.7 | ✅ Import PDF cu extragere automată text | DONE — pdfjs-dist integration |
 
 ### 1.2 Neurons Page
 | # | Sarcină | Status |
 |---|---------|--------|
 | 1.2.1 | ✅ Preview pane split-view | DONE |
 | 1.2.2 | ✅ Sidebar foldere profesional (3 niveluri) | DONE |
-| 1.2.3 | ✅ Sidebar unificat reutilizat în Guests/Library/Intelligence | DONE — FolderSidebar shared component, integrated in GuestPages + Library |
-| 1.2.4 | ✅ Bulk operations (delete, move, tag) | DONE — multi-select cu checkbox + bulk delete bar |
+| 1.2.3 | ✅ Sidebar unificat reutilizat în Guests/Library/Intelligence | DONE — FolderSidebar shared component |
+| 1.2.4 | ✅ Bulk operations (delete, move, tag) | DONE |
 
 ### 1.3 Neuron Editor (`/n/*`)
 | # | Sarcină | Status |
 |---|---------|--------|
 | 1.3.1 | ✅ Toolbar funcțional (insert blocks, Bold/Italic/Undo) | DONE |
 | 1.3.2 | ✅ Tooltipuri descriptive pe toate butoanele | DONE |
-| 1.3.3 | ✅ Stabilitate layout la deschidere panouri laterale | DONE — transition-all duration-200 pe panels |
-| 1.3.4 | ✅ Drag-and-drop reordonare blocuri | DONE — HTML5 drag on GripVertical |
+| 1.3.3 | ✅ Stabilitate layout la deschidere panouri laterale | DONE |
+| 1.3.4 | ✅ Drag-and-drop reordonare blocuri | DONE |
 | 1.3.5 | ✅ Keyboard shortcuts (Ctrl+Enter = Run, Ctrl+S = Save) | DONE |
 
 ### 1.4 Jobs Page
@@ -80,15 +80,15 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 1.4.1 | ✅ Legendă statusuri cu explicații | DONE |
 | 1.4.2 | ✅ Ghid educativ pipeline | DONE |
-| 1.4.3 | ✅ Notificări automate la finalizare/eșuare job | DONE — DB triggers existente |
-| 1.4.4 | ✅ Retry automat cu UI feedback | DONE — buton Reîncearcă pe job-uri failed |
+| 1.4.3 | ✅ Notificări automate la finalizare/eșuare job | DONE |
+| 1.4.4 | ✅ Retry automat cu UI feedback | DONE |
 
 ### 1.5 Library Page
 | # | Sarcină | Status |
 |---|---------|--------|
 | 1.5.1 | ✅ Diferențiere Neurons vs Library (explainer banner) | DONE |
-| 1.5.2 | ✅ Vizibilitate controlată (private/team/public per artefact) | DONE — toggle publish/draft + VisibilityIcon |
-| 1.5.3 | ✅ Filtrare și sortare avansată | DONE — sort by date/title + dropdown + folder sidebar |
+| 1.5.2 | ✅ Vizibilitate controlată (private/team/public per artefact) | DONE |
+| 1.5.3 | ✅ Filtrare și sortare avansată + folder sidebar | DONE |
 
 ### 1.6 Guest Pages
 | # | Sarcină | Status |
@@ -96,8 +96,8 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 1.6.1 | ✅ Descriere clară funcție | DONE |
 | 1.6.2 | ✅ Detecție duplicate | DONE |
 | 1.6.3 | ✅ Notificare publicare cu URL | DONE |
-| 1.6.4 | ✅ Editare/completare profil de către utilizatori terți | DONE — paywall preview pattern allows viewing premium content |
-| 1.6.5 | ✅ Organizare în foldere (sidebar reutilizabil) | DONE — FolderSidebar integrated in GuestPages |
+| 1.6.4 | ✅ Editare/completare profil — paywall preview pattern | DONE |
+| 1.6.5 | ✅ Organizare în foldere (sidebar reutilizabil) | DONE |
 
 ### 1.7 Guest Profile (`/guest/*`)
 | # | Sarcină | Status |
@@ -105,9 +105,9 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 1.7.1 | ✅ Design premium cu gradient mesh | DONE |
 | 1.7.2 | ✅ Expertise bars animate | DONE |
 | 1.7.3 | ✅ Framework cards interactive | DONE |
-| 1.7.4 | ✅ Versiune gratuită vs. plată (paywall pe detalii avansate) | DONE — PaywallSection component cu blur + unlock pe Communication Profile |
-| 1.7.5 | ✅ Explicații sub fiecare framework | DONE — descriere contextuală sub fiecare framework card |
-| 1.7.6 | ✅ Citate extinse (zeci) + stil comunicare | DONE — Show all quotes button, free 3 preview + expandable |
+| 1.7.4 | ✅ Versiune gratuită vs. plată (paywall pe detalii avansate) | DONE — PaywallSection component |
+| 1.7.5 | ✅ Explicații sub fiecare framework | DONE |
+| 1.7.6 | ✅ Citate extinse (zeci) + stil comunicare | DONE — QuotesSection expandable |
 
 ### 1.8 Pipeline Indicator
 | # | Sarcină | Status |

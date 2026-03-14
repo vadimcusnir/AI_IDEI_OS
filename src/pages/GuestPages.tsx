@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead } from "@/components/SEOHead";
-import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import {
   Sparkles, Quote, Search, X, AlertTriangle, Merge, Copy,
   TrendingUp, BookOpen, Share2, FolderTree,
 } from "lucide-react";
+import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { cn } from "@/lib/utils";
 
 interface GuestProfile {
@@ -137,7 +137,6 @@ export default function GuestPages() {
     if (showDuplicates) {
       list = list.filter(g => duplicateIds.has(g.id));
     }
-    // Folder filter
     if (selectedFolderId === "__unassigned") {
       const assigned = new Set(Object.keys(assignments));
       list = list.filter(g => !assigned.has(g.id));
@@ -159,28 +158,20 @@ export default function GuestPages() {
     <TooltipProvider>
       <div className="flex-1 flex overflow-hidden">
         {showFolders && (
-          <FolderSidebar
-            storageKey="guest_folders"
-            items={guests.map(g => ({ id: g.id, label: g.full_name }))}
-            selectedFolderId={selectedFolderId}
-            onSelectFolder={setSelectedFolderId}
-            allLabel="All Guests"
-            headerLabel="Guest Folders"
-          />
+          <FolderSidebar storageKey="guest_folders" items={guests.map(g => ({ id: g.id, label: g.full_name }))}
+            selectedFolderId={selectedFolderId} onSelectFolder={setSelectedFolderId} allLabel="All Guests" headerLabel="Guest Folders" />
         )}
         <div className="flex-1 overflow-y-auto">
         <SEOHead title="Guest Pages — AI-IDEI" description="Manage auto-generated guest profiles extracted from your transcriptions." />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
-          {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 text-[10px] gap-1"
-                onClick={() => setShowFolders(!showFolders)}>
-                <FolderTree className="h-3 w-3" />
+              <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 w-7 p-0" onClick={() => setShowFolders(!showFolders)}>
+                <FolderTree className="h-3.5 w-3.5" />
               </Button>
               <h1 className="text-lg font-semibold tracking-tight">Guest Pages</h1>
               <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-                {filtered.length} / {guests.length}
+                {guests.length} profile
               </span>
             </div>
             {duplicates.size > 0 && (

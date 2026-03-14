@@ -22,6 +22,20 @@ import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
 
+async function extractTextFromPDF(file: File): Promise<string> {
+  const pdfjsLib = await import("pdfjs-dist");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  const pages: string[] = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const tc = await page.getTextContent();
+    pages.push(tc.items.map((it: any) => it.str).join(" "));
+  }
+  return pages.join("\n\n");
+}
+
 interface Episode {
   id: string;
   title: string;
@@ -66,20 +80,6 @@ const ACCEPTED_FILE_TYPES: Record<string, string> = {
 };
 
 const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
-
-async function extractTextFromPDF(file: File): Promise<string> {
-  const pdfjsLib = await import("pdfjs-dist");
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  const pages: string[] = [];
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    pages.push(content.items.map((item: any) => item.str).join(" "));
-  }
-  return pages.join("\n\n");
-}
 
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
@@ -209,7 +209,6 @@ export default function Extractor() {
 
     try {
       let transcript: string;
-
       if (file.name.endsWith(".pdf")) {
         transcript = await extractTextFromPDF(file);
       } else {
@@ -1110,20 +1109,16 @@ export default function Extractor() {
                       ) : hasTranscript ? (
                         <div className="space-y-2">
                           <div className="flex items-center gap-1 justify-end">
-                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                              onClick={() => startEditTranscript(ep)}>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => startEditTranscript(ep)}>
                               <Pencil className="h-2.5 w-2.5" /> Edit
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                              onClick={() => copyTranscript(ep.transcript!)}>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => copyTranscript(ep.transcript!)}>
                               <Copy className="h-2.5 w-2.5" /> Copy
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                              onClick={() => exportTranscript(ep, "txt")}>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => exportTranscript(ep, "txt")}>
                               <Download className="h-2.5 w-2.5" /> TXT
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                              onClick={() => exportTranscript(ep, "srt")}>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => exportTranscript(ep, "srt")}>
                               <Download className="h-2.5 w-2.5" /> SRT
                             </Button>
                           </div>

@@ -62,10 +62,14 @@ function StatCard({ icon: Icon, value, label, accent }: {
   return (
     <div className={cn(
       "rounded-2xl border p-5 text-center transition-all hover:scale-[1.02]",
-      accent ? "border-primary/20 bg-primary/5" : "border-border bg-card"
+      accent
+        ? "border-primary/20 bg-primary/5"
+        : "border-border bg-card"
     )}>
-      <div className={cn("h-10 w-10 rounded-xl mx-auto mb-3 flex items-center justify-center",
-        accent ? "bg-primary/15" : "bg-muted")}>
+      <div className={cn(
+        "h-10 w-10 rounded-xl mx-auto mb-3 flex items-center justify-center",
+        accent ? "bg-primary/15" : "bg-muted"
+      )}>
         <Icon className={cn("h-5 w-5", accent ? "text-primary" : "text-muted-foreground")} />
       </div>
       <p className="text-2xl font-bold font-serif text-foreground">{value}</p>
@@ -99,14 +103,10 @@ function SectionHeader({ icon: Icon, label, count }: {
 /* ── Paywall overlay ── */
 function PaywallSection({ children, title }: { children: React.ReactNode; title: string }) {
   const [unlocked, setUnlocked] = useState(false);
-
   if (unlocked) return <>{children}</>;
-
   return (
     <div className="relative">
-      <div className="pointer-events-none select-none blur-sm opacity-50">
-        {children}
-      </div>
+      <div className="pointer-events-none select-none blur-sm opacity-50">{children}</div>
       <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/60 backdrop-blur-[2px] rounded-2xl">
         <div className="text-center space-y-3 max-w-xs">
           <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto">
@@ -114,14 +114,47 @@ function PaywallSection({ children, title }: { children: React.ReactNode; title:
           </div>
           <h3 className="text-sm font-semibold text-foreground">{title}</h3>
           <p className="text-[11px] text-muted-foreground leading-relaxed">
-            Advanced analysis available with a premium account. Get deeper psychological insights, communication patterns, and extended quotes.
+            Advanced analysis available with a premium account.
           </p>
           <Button size="sm" className="h-8 text-xs gap-1.5" onClick={() => setUnlocked(true)}>
-            <Sparkles className="h-3 w-3" /> Preview Premium Content
+            <Sparkles className="h-3 w-3" /> Preview Premium
           </Button>
         </div>
       </div>
     </div>
+  );
+}
+
+/* ── Quotes with expand ── */
+function QuotesSection({ quotes, authorName }: { quotes: string[]; authorName: string }) {
+  const [showAll, setShowAll] = useState(false);
+  const FREE_LIMIT = 3;
+  const visible = showAll ? quotes : quotes.slice(0, FREE_LIMIT);
+  const hasMore = quotes.length > FREE_LIMIT;
+
+  return (
+    <section>
+      <SectionHeader icon={Quote} label="Memorable Quotes" count={quotes.length} />
+      <div className="space-y-4">
+        {visible.map((q, i) => (
+          <blockquote key={i} className="relative rounded-2xl border border-border bg-card p-5 pl-6 hover:border-primary/20 transition-colors">
+            <div className="absolute top-4 left-5 text-primary/10 text-4xl font-serif leading-none select-none">"</div>
+            <p className="relative text-sm italic text-foreground/80 leading-relaxed pl-4">{q}</p>
+            <div className="flex items-center gap-2 mt-3 pl-4">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">— {authorName}</span>
+            </div>
+          </blockquote>
+        ))}
+        {hasMore && !showAll && (
+          <div className="text-center">
+            <Button variant="outline" size="sm" className="h-8 text-xs gap-1.5" onClick={() => setShowAll(true)}>
+              <Quote className="h-3 w-3" /> Show all {quotes.length} quotes
+            </Button>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -131,7 +164,6 @@ export default function GuestProfile() {
   const [guest, setGuest] = useState<GuestData | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [showAllQuotes, setShowAllQuotes] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
@@ -166,9 +198,9 @@ export default function GuestProfile() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <Users className="h-12 w-12 text-muted-foreground/20 mb-4" />
-        <h1 className="text-xl font-serif font-bold mb-2">Profile not found</h1>
+        <h1 className="text-xl font-serif font-bold mb-2">Profil inexistent</h1>
         <p className="text-sm text-muted-foreground text-center max-w-sm">
-          This profile doesn't exist or is not public.
+          Acest profil nu există sau nu este public.
         </p>
       </div>
     );
@@ -178,25 +210,23 @@ export default function GuestProfile() {
   const expertiseScores = deriveExpertiseScores(guest.expertise_areas);
   const totalInsights = guest.expertise_areas.length + guest.frameworks_mentioned.length + guest.key_quotes.length;
 
-  const FREE_QUOTES_LIMIT = 3;
-  const visibleQuotes = showAllQuotes ? guest.key_quotes : guest.key_quotes.slice(0, FREE_QUOTES_LIMIT);
-  const hasMoreQuotes = guest.key_quotes.length > FREE_QUOTES_LIMIT;
-
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
         title={`${guest.full_name} — Expert Profile | AI-IDEI`}
-        description={guest.bio?.slice(0, 155) || `Expert profile for ${guest.full_name}`}
+        description={guest.bio?.slice(0, 155) || `Profilul de expert al ${guest.full_name}`}
       />
 
       {/* ═══════ HERO ═══════ */}
       <div className="relative overflow-hidden">
+        {/* Decorative gradient mesh */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/3 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
 
         <div className="relative max-w-2xl mx-auto px-6 pt-20 pb-14">
           <div className="text-center">
+            {/* Avatar ring */}
             <div className="relative inline-block mb-6">
               <div className="h-28 w-28 rounded-full bg-gradient-to-br from-primary/40 via-primary/15 to-accent/20 flex items-center justify-center ring-[3px] ring-primary/20 ring-offset-4 ring-offset-background shadow-xl">
                 <span className="text-4xl font-bold font-serif text-primary">{initials}</span>
@@ -218,10 +248,11 @@ export default function GuestProfile() {
               {guest.bio}
             </p>
 
+            {/* Quick stats row */}
             <div className="flex items-center justify-center gap-6 mt-6 text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Brain className="h-3.5 w-3.5 text-primary/60" />
-                <strong className="text-foreground">{guest.expertise_areas.length}</strong> expertise areas
+                <strong className="text-foreground">{guest.expertise_areas.length}</strong> competențe
               </span>
               <span className="h-3 w-px bg-border" />
               <span className="flex items-center gap-1.5">
@@ -231,7 +262,7 @@ export default function GuestProfile() {
               <span className="h-3 w-px bg-border" />
               <span className="flex items-center gap-1.5">
                 <Quote className="h-3.5 w-3.5 text-primary/60" />
-                <strong className="text-foreground">{guest.key_quotes.length}</strong> quotes
+                <strong className="text-foreground">{guest.key_quotes.length}</strong> citate
               </span>
             </div>
           </div>
@@ -241,10 +272,10 @@ export default function GuestProfile() {
       {/* ═══════ CONTENT ═══════ */}
       <div className="max-w-2xl mx-auto px-6 pb-20 space-y-12">
 
-        {/* ── FREE: Expertise with animated progress bars ── */}
+        {/* ── Expertise with animated progress bars ── */}
         {expertiseScores.length > 0 && (
           <section>
-            <SectionHeader icon={Brain} label="Expertise & Skills" count={expertiseScores.length} />
+            <SectionHeader icon={Brain} label="Expertise & Competențe" count={expertiseScores.length} />
             <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
               {expertiseScores.map((item, i) => (
                 <ExpertiseBar key={i} label={item.label} value={item.value} delay={150 + i * 100} />
@@ -253,29 +284,39 @@ export default function GuestProfile() {
           </section>
         )}
 
-        {/* ── FREE: Frameworks ── */}
+        {/* ── Frameworks in editorial cards ── */}
         {guest.frameworks_mentioned.length > 0 && (
           <section>
-            <SectionHeader icon={Sparkles} label="Frameworks & Mental Models" count={guest.frameworks_mentioned.length} />
+            <SectionHeader icon={Sparkles} label="Frameworks & Modele Mentale" count={guest.frameworks_mentioned.length} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {guest.frameworks_mentioned.map((f, i) => (
-                <div key={i} className="group relative rounded-2xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all duration-300">
-                  <div className="flex items-start gap-3">
-                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                      <Target className="h-4 w-4 text-primary" />
+              {guest.frameworks_mentioned.map((f, i) => {
+                const explanations: Record<string, string> = {
+                  default: "Structură cognitivă identificată din analiza conversației — oferă un cadru organizat de gândire aplicabil în context profesional.",
+                };
+                const explanation = explanations[f.toLowerCase()] || explanations.default;
+
+                return (
+                  <div
+                    key={i}
+                    className="group relative rounded-2xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                        <Target className="h-4 w-4 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-semibold text-foreground leading-tight">{f}</h3>
+                        <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+                          {explanation}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold text-foreground leading-tight">{f}</h3>
-                      <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
-                        Cognitive structure identified from conversation analysis — provides an organized thinking framework applicable in professional context.
-                      </p>
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ArrowRight className="h-3.5 w-3.5 text-primary/40" />
                     </div>
                   </div>
-                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowRight className="h-3.5 w-3.5 text-primary/40" />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
@@ -298,9 +339,7 @@ export default function GuestProfile() {
                       <span key={i} className={cn(
                         "text-xs px-3.5 py-2 rounded-xl font-medium border transition-transform hover:scale-105",
                         styles[i % styles.length]
-                      )}>
-                        {t}
-                      </span>
+                      )}>{t}</span>
                     );
                   })}
                 </div>
@@ -309,48 +348,15 @@ export default function GuestProfile() {
           </PaywallSection>
         )}
 
-        {/* ── Key Quotes — Free preview + paywall for extended ── */}
+        {/* ── Key Quotes — Free preview + expandable ── */}
         {guest.key_quotes.length > 0 && (
-          <section>
-            <SectionHeader icon={Quote} label="Memorable Quotes" count={guest.key_quotes.length} />
-            <div className="space-y-4">
-              {visibleQuotes.map((q, i) => (
-                <blockquote key={i} className="relative rounded-2xl border border-border bg-card p-5 pl-6 hover:border-primary/20 transition-colors">
-                  <div className="absolute top-4 left-5 text-primary/10 text-4xl font-serif leading-none select-none">"</div>
-                  <p className="relative text-sm italic text-foreground/80 leading-relaxed pl-4">{q}</p>
-                  <div className="flex items-center gap-2 mt-3 pl-4">
-                    <div className="h-px flex-1 bg-border" />
-                    <span className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">— {guest.full_name}</span>
-                  </div>
-                </blockquote>
-              ))}
-
-              {hasMoreQuotes && !showAllQuotes && (
-                <div className="relative">
-                  {/* Blurred preview of next quote */}
-                  <div className="pointer-events-none blur-sm opacity-30">
-                    <blockquote className="rounded-2xl border border-border bg-card p-5 pl-6">
-                      <p className="text-sm italic text-foreground/80 leading-relaxed pl-4">
-                        {guest.key_quotes[FREE_QUOTES_LIMIT]?.slice(0, 100)}...
-                      </p>
-                    </blockquote>
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Button variant="outline" size="sm" className="h-8 text-xs gap-1.5" onClick={() => setShowAllQuotes(true)}>
-                      <Quote className="h-3 w-3" />
-                      Show all {guest.key_quotes.length} quotes
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
+          <QuotesSection quotes={guest.key_quotes} authorName={guest.full_name} />
         )}
 
         {/* ── Summary stat cards ── */}
         <section>
           <div className="grid grid-cols-3 gap-3">
-            <StatCard icon={Brain} value={guest.expertise_areas.length} label="Skills" accent />
+            <StatCard icon={Brain} value={guest.expertise_areas.length} label="Competențe" accent />
             <StatCard icon={Sparkles} value={guest.frameworks_mentioned.length} label="Frameworks" />
             <StatCard icon={Lightbulb} value={totalInsights} label="Total insights" />
           </div>
@@ -359,13 +365,16 @@ export default function GuestProfile() {
         {/* ── CTA banner ── */}
         <section className="rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-transparent p-6 text-center">
           <TrendingUp className="h-6 w-6 text-primary mx-auto mb-2" />
-          <h3 className="text-sm font-semibold text-foreground mb-1">Discover more</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-1">Descoperă mai mult</h3>
           <p className="text-[11px] text-muted-foreground max-w-sm mx-auto mb-4">
-            This profile is automatically generated from AI analysis of public content.
-            Access AI-IDEI to extract knowledge from your own interviews.
+            Acest profil este generat automat din analiza AI a conținutului public.
+            Accesează AI-IDEI pentru a extrage cunoștințe din propriile tale interviuri.
           </p>
-          <a href="/" className="inline-flex items-center gap-2 text-xs font-medium text-primary hover:underline">
-            Explore the platform <ArrowRight className="h-3 w-3" />
+          <a
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-medium text-primary hover:underline"
+          >
+            Explorează platforma <ArrowRight className="h-3 w-3" />
           </a>
         </section>
 
