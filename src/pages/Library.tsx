@@ -92,6 +92,14 @@ export default function Library() {
     setArtifacts(prev => prev.filter(a => a.id !== id));
   };
 
+  const handleToggleStatus = async (id: string, currentStatus: string) => {
+    const newStatus = currentStatus === "published" ? "draft" : "published";
+    const { error } = await supabase.from("artifacts").update({ status: newStatus }).eq("id", id);
+    if (!error) {
+      setArtifacts(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
+    }
+  };
+
   const filtered = useMemo(() => {
     let list = artifacts.filter(a => {
       if (typeFilter !== "all" && a.artifact_type !== typeFilter) return false;
