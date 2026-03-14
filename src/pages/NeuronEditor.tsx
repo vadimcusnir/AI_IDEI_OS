@@ -30,7 +30,7 @@ export default function NeuronEditor() {
     executionLogs, setTitle, setStatus, setVisibility,
     handleBlockChange, handleBlockToggle, handleAddBlock,
     handleDeleteBlock, handleBlockExecute, handleBlockLanguageChange,
-    handleRunAll, clearLogs, restoreBlocks,
+    handleRunAll, handleReorderBlock, clearLogs, restoreBlocks,
   } = useNeuron(neuronNumber);
 
   const {
