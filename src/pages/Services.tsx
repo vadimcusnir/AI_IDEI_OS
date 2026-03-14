@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   Loader2, Sparkles, BarChart3, Filter, Megaphone,
   Brain, Layers, HelpCircle, Quote, MessageSquare,
-  FileText, GraduationCap, Zap, Search, X, Coins,
+  FileText, GraduationCap, Zap, Search, X, Coins, Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -32,10 +32,10 @@ const ICON_MAP: Record<string, React.ElementType> = {
   filter: Filter, megaphone: Megaphone, sparkles: Sparkles,
 };
 
-const CLASS_CONFIG: Record<string, { label: string; description: string; color: string }> = {
-  A: { label: "Analiză & Decizie", description: "Extrage insight-uri și produce framework-uri decizionale", color: "text-ai-accent" },
-  B: { label: "Producție Active", description: "Generează deliverables concrete și conținut", color: "text-status-validated" },
-  C: { label: "Orchestrare & Sistem", description: "Coordonează execuția între servicii", color: "text-primary" },
+const CLASS_CONFIG: Record<string, { label: string; description: string; color: string; timing: string; badge: string }> = {
+  A: { label: "Analiză & Decizie", description: "Extrage insight-uri și produce framework-uri decizionale", color: "text-ai-accent", timing: "<20s", badge: "S" },
+  B: { label: "Producție Active", description: "Generează deliverables concrete și conținut", color: "text-status-validated", timing: "1-5min", badge: "C" },
+  C: { label: "Orchestrare & Sistem", description: "Coordonează execuția între servicii — pipeline complet", color: "text-primary", timing: "5-15min", badge: "X" },
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -222,8 +222,13 @@ export default function Services() {
             return (
               <div key={classKey} className="mb-6">
                 <div className="flex items-center gap-2 mb-2.5">
-                  <span className={cn("text-[10px] font-bold uppercase tracking-wider", cfg.color)}>Clasă {classKey}</span>
-                  <span className="text-[10px] text-muted-foreground">— {cfg.label}</span>
+                  <span className={cn("text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-current/10", cfg.color)}>
+                    {cfg.badge}
+                  </span>
+                  <span className={cn("text-[10px] font-bold uppercase tracking-wider", cfg.color)}>{cfg.label}</span>
+                  <span className="text-[9px] text-muted-foreground/50 flex items-center gap-1">
+                    <Clock className="h-2.5 w-2.5" /> ~{cfg.timing}
+                  </span>
                   <span className="text-[10px] text-muted-foreground/40 ml-auto">{classServices.length} servicii</span>
                 </div>
 

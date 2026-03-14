@@ -9,6 +9,7 @@ import {
   ArrowLeft, Loader2, Download, Copy, Trash2, Brain,
   Clock, FileText, Check, ExternalLink, FileCode,
 } from "lucide-react";
+import { ArtifactExportMenu } from "@/components/library/ArtifactExportMenu";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -186,12 +187,15 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
               {copied ? "Copiat" : "Copiază"}
             </Button>
-            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => handleExport("md")}>
-              <Download className="h-3.5 w-3.5" /> .md
-            </Button>
-            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => handleExport("html")}>
-              <FileCode className="h-3.5 w-3.5" /> .html
-            </Button>
+            <ArtifactExportMenu
+              title={artifact.title}
+              content={artifact.content}
+              tags={artifact.tags}
+              artifactType={artifact.artifact_type}
+              serviceKey={artifact.service_key}
+              createdAt={artifact.created_at}
+              metadata={artifact.metadata}
+            />
             <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs text-destructive" onClick={handleDelete}>
               <Trash2 className="h-3.5 w-3.5" />
             </Button>

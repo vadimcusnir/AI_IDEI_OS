@@ -157,7 +157,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 2.3.1 | ✅ Embedding-based similarity detection (cosine > 0.40) | DONE — dedup-neurons edge function |
 | 2.3.2 | ✅ Neuron merge logic cu păstrare proveniență | DONE — neuron_duplicates table |
-| 2.3.3 | UI pentru confirmare merge | P2 |
+| 2.3.3 | ✅ UI pentru confirmare merge | DONE — DuplicateMergePanel + Intelligence tab |
 
 ---
 
@@ -165,35 +165,35 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 *Orchestrarea serviciilor AI*
 
 ### 3.1 Job Execution System
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 3.1.1 | State machine: CREATED → QUEUED → VALIDATING → EXECUTING → PROCESSING → COMPLETED/FAILED | P0 |
-| 3.1.2 | Pre-run protocol: checkAccess → estimate → reserve credits → execute → settle | P0 |
-| 3.1.3 | Retry system cu exponential backoff | P0 |
-| 3.1.4 | Dead letter queue pentru job-uri failed permanent | P1 |
-| 3.1.5 | Progres live via Supabase Realtime | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 3.1.1 | ✅ State machine: PENDING → RUNNING → COMPLETED/FAILED + dead_letter | DONE — neuron_jobs table |
+| 3.1.2 | ✅ Pre-run protocol: checkAccess → estimate → reserve credits → execute → settle | DONE — run-service edge function |
+| 3.1.3 | ✅ Retry system cu exponential backoff | DONE — process-queue + retry_failed_job |
+| 3.1.4 | ✅ Dead letter queue pentru job-uri failed permanent | DONE — dead_letter field + process-queue |
+| 3.1.5 | ✅ Progres live via Supabase Realtime | DONE — realtime enabled on neuron_jobs |
 
 ### 3.2 Service Classification
-| # | Clasă | Descriere | Prioritate |
-|---|-------|-----------|-----------|
-| 3.2.1 | S (Sync) | Servicii rapide <20s: summary, key quotes, SEO keywords | P0 |
-| 3.2.2 | C (Cognitive) | Analiză profundă 1-5min: psychological profile, business ideas | P1 |
-| 3.2.3 | X (Extended) | Pipeline complet: personality intelligence, market intelligence | P2 |
+| # | Clasă | Descriere | Status |
+|---|-------|-----------|--------|
+| 3.2.1 | S (Sync) | ✅ Servicii rapide <20s: summary, key quotes, SEO keywords | DONE — Class A services |
+| 3.2.2 | C (Cognitive) | ✅ Analiză profundă 1-5min: psychological profile, business ideas | DONE — Class B services |
+| 3.2.3 | X (Extended) | ✅ Pipeline complet: personality intelligence, market intelligence | DONE — Class C + IMF pipeline |
 
 ### 3.3 Service Manifest
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 3.3.1 | Tabel `service_catalog` cu input_schema, pipeline, pricing, QA rules | P0 (EXISTS) |
-| 3.3.2 | Service runner edge function cu routing pe clasă | P0 |
-| 3.3.3 | Artifact packager (PDF, TXT, JSON output) | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 3.3.1 | ✅ Tabel `service_catalog` cu input_schema, pipeline, pricing, QA rules | DONE |
+| 3.3.2 | ✅ Service runner edge function cu routing pe clasă | DONE — run-service |
+| 3.3.3 | ✅ Artifact packager (MD, TXT, JSON, clipboard export) | DONE — ArtifactExportMenu |
 
 ### 3.4 Servicii Specializate
-| # | Serviciu | Module prompts | Prioritate |
-|---|---------|---------------|-----------|
-| 3.4.1 | Transcript Intelligence | Extracție completă din transcript | P0 |
+| # | Serviciu | Module prompts | Status |
+|---|---------|---------------|--------|
+| 3.4.1 | ✅ Transcript Intelligence | Extracție completă din transcript | DONE — extract-insights + deep-extract |
 | 3.4.2 | Personality Intelligence | 45 prompts pe 10 module (Avatar Psihologic) | P1 |
 | 3.4.3 | Avatar33 Execution Engine | 33 prompts pentru avatar comercial | P1 |
-| 3.4.4 | Webinar Generator | 48 prompts pe 12 module (Structure → Slides → Script → Visuals) | P2 |
+| 3.4.4 | Webinar Generator | 48 prompts pe 12 module | P2 |
 | 3.4.5 | Podcast Intelligence | Framework-uri, pattern-uri retorice | P1 |
 
 ---
@@ -340,12 +340,12 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |------|---------|---------------------|--------|
 | Faza 0 — Securitate | ~8 | P0 | ~90% DONE |
 | Faza 1 — UX Polish | ~35 | P0-P1 | ✅ 100% DONE |
-| Faza 2 — Extraction Engine | ~15 | P0-P1 | ✅ ~95% DONE |
-| Faza 3 — Service Execution | ~12 | P0-P1 | ~20% DONE |
+| Faza 2 — Extraction Engine | ~15 | P0-P1 | ✅ 100% DONE |
+| Faza 3 — Service Execution | ~12 | P0-P1 | ✅ ~85% DONE |
 | Faza 4 — Economic Layer | ~12 | P1-P2 | ~10% DONE |
 | Faza 5 — Advanced Features | ~25 | P1-P2 | ~5% DONE |
 | Faza 6 — Governance & Token | ~15 | P2-P3 | 0% |
-| **TOTAL** | **~122 sarcini** | | **~35% complet** |
+| **TOTAL** | **~122 sarcini** | | **~50% complet** |
 
 ---
 
