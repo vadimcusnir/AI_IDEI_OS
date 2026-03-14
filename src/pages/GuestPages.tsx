@@ -174,9 +174,13 @@ export default function GuestPages() {
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
+              <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 text-[10px] gap-1"
+                onClick={() => setShowFolders(!showFolders)}>
+                <FolderTree className="h-3 w-3" />
+              </Button>
               <h1 className="text-lg font-semibold tracking-tight">Guest Pages</h1>
               <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-                {guests.length} profile
+                {filtered.length} / {guests.length}
               </span>
             </div>
             {duplicates.size > 0 && (
