@@ -87,7 +87,25 @@ export default function NeuronEditor() {
     else toast.success("Version saved");
   }, [neuron, blocks, createVersion]);
 
-  const handleRestoreVersion = useCallback(async (version: NeuronVersion) => {
+  // Keyboard shortcuts: Ctrl+S = save version, Ctrl+Enter = run all
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const isMod = e.metaKey || e.ctrlKey;
+      if (!isMod) return;
+      if (e.key === "s") {
+        e.preventDefault();
+        handleSaveVersion();
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleRunAll();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [handleSaveVersion, handleRunAll]);
+
+
     if (!version.blocksSnapshot || !Array.isArray(version.blocksSnapshot)) {
       toast.error("Invalid version snapshot");
       return;
