@@ -128,18 +128,24 @@ export default function Dashboard() {
 
   const maxActivity = Math.max(...data.weeklyActivity.map(d => d.neurons + d.jobs), 1);
 
+  const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+  const fadeUp = {
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+  };
+
   return (
     <div className="flex-1">
       <SEOHead title="Dashboard — AI-IDEI" description="Full analytics dashboard: neurons, jobs, credits, pipeline status." />
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* KPI Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
-          <KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} />
-          <KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} />
-          <KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" />
-          <KPI icon={TrendingUp} label="Spent" value={data.credits.spent} sub={`of ${data.credits.earned} earned`} color="text-destructive" />
-          <KPI icon={Layers} label="Artifacts" value={data.artifacts.total} sub={`+${data.artifacts.thisWeek} this week`} />
-        </div>
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+          <motion.div variants={fadeUp}><KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={TrendingUp} label="Spent" value={data.credits.spent} sub={`of ${data.credits.earned} earned`} color="text-destructive" /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Layers} label="Artifacts" value={data.artifacts.total} sub={`+${data.artifacts.thisWeek} this week`} /></motion.div>
+        </motion.div>
 
         {/* Pipeline Progress */}
         <div className="bg-card border border-border rounded-xl p-4 mb-6">
