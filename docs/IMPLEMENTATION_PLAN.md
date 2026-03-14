@@ -130,12 +130,12 @@
 - [x] Preview content editor
 - [x] Revenue split display (70/30)
 
-#### T1.2 🟡 Subscription Plans Integration
-**Efort:** 2-3 sesiuni
-- [ ] Stripe Subscriptions flow (monthly/annual)
-- [ ] Feature gating pe plan tier
-- [ ] Upgrade/downgrade UI
-- [ ] Verificare limite pe plan
+#### T1.2 ✅ Subscription Plans Integration
+**Efort:** 2-3 sesiuni — **IMPLEMENTAT**
+- [x] Stripe Subscriptions flow (monthly/annual)
+- [x] Feature gating pe plan tier
+- [x] Upgrade/downgrade UI (Stripe Customer Portal)
+- [x] Verificare limite pe plan (check-subscription edge function)
 
 #### T1.3 ✅ Decision Ledger Append-Only
 **Efort:** 1 sesiune — **IMPLEMENTAT**
