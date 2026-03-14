@@ -261,6 +261,14 @@ export default function Services() {
                             <span className="text-[9px] text-muted-foreground/50 uppercase">
                               {CATEGORY_LABELS[service.category] || service.category}
                             </span>
+                            {(() => {
+                              const tier = TIER_CONFIG[service.access_tier] || TIER_CONFIG.premium;
+                              return (
+                                <span className={cn("text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full", tier.className)}>
+                                  {tier.label}
+                                </span>
+                              );
+                            })()}
                           </div>
                         </div>
                       </div>
