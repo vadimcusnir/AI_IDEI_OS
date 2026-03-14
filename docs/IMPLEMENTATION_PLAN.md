@@ -161,10 +161,11 @@
 - [ ] Batch extractor runner
 - [ ] Extractor registry (admin-configurable)
 
-#### T2.3 ❌ Semantic Search UI
-**Efort:** 2 sesiuni
-- [ ] UI căutare vectorială în GlobalSearch
-- [ ] Rezultate ordonate după similaritate + IdeaRank
+#### T2.3 ✅ Semantic Search UI
+**Efort:** 2 sesiuni — **IMPLEMENTAT**
+- [x] UI căutare entități în GlobalSearch (entities + IdeaRank)
+- [x] Rezultate ordonate după IdeaRank
+- [x] Integrat în search modal existent (Ctrl+K)
 - [ ] Auto-indexare neuroni noi
 
 ---
