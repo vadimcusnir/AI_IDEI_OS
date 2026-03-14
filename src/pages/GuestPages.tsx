@@ -12,8 +12,9 @@ import {
 import {
   Loader2, Users, Eye, EyeOff, ExternalLink, Brain,
   Sparkles, Quote, Search, X, AlertTriangle, Merge, Copy,
-  TrendingUp, BookOpen, Share2,
+  TrendingUp, BookOpen, Share2, FolderTree,
 } from "lucide-react";
+import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { cn } from "@/lib/utils";
 
 interface GuestProfile {
