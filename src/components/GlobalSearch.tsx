@@ -190,7 +190,7 @@ export function GlobalSearch() {
           <div className="max-h-[320px] overflow-y-auto">
             {query.length >= 2 && results.length === 0 && !loading && (
               <div className="py-8 text-center">
-                <p className="text-sm text-muted-foreground">Niciun rezultat pentru „{query}"</p>
+                <p className="text-sm text-muted-foreground">{t("no_results_for", { query })}</p>
               </div>
             )}
 
