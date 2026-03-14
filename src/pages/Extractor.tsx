@@ -988,18 +988,31 @@ export default function Extractor() {
                         </Tooltip>
                       </div>
                     )}
-                    {canExtract && !isExtracting && !isTranscribing && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1 shrink-0"
-                            onClick={e => { e.stopPropagation(); handleExtractNeurons(ep); }}>
-                            <Brain className="h-3 w-3" /> Extract
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-[220px] text-center">
-                          Extrage neuroni de cunoștințe din transcript folosind AI (100 credite)
-                        </TooltipContent>
-                      </Tooltip>
+                    {canExtract && !isExtracting && !isTranscribing && !deepExtractingId && (
+                      <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="outline" size="sm" className="h-7 text-xs gap-1"
+                              onClick={() => handleExtractNeurons(ep)}>
+                              <Brain className="h-3 w-3" /> Extract
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[220px] text-center">
+                            Quick extraction — atomic neurons (100 credits)
+                          </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="default" size="sm" className="h-7 text-xs gap-1"
+                              onClick={() => handleDeepExtract(ep)}>
+                              <Layers className="h-3 w-3" /> Deep Extract
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[260px] text-center">
+                            Multi-level extraction: atomic, entities, frameworks, psychological, narrative, commercial, patterns, synthesis (~500 credits)
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
                     )}
                     {needsTranscript && !isExtracting && !isTranscribing && (
                       <Button variant="outline" size="sm"
