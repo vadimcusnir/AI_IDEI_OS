@@ -11,7 +11,7 @@ import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Loader2, Sparkles, Play, CheckCircle2,
-  Clock, AlertCircle, Coins,
+  Clock, AlertCircle, Coins, Lock, Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
