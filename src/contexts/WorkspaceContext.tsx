@@ -160,7 +160,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("user_id")
-      .eq("email", email)
+      .eq("email" as any, email)
       .single();
 
     if (!profile) return false;
@@ -169,10 +169,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       .from("workspace_members")
       .insert({
         workspace_id: currentWorkspace.id,
-        user_id: profile.user_id,
-        role,
+        user_id: (profile as any).user_id,
+        role: role as any,
         invited_by: user?.id,
-      });
+      } as any);
 
     return !error;
   }, [currentWorkspace, user]);
