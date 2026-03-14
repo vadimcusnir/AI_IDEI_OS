@@ -183,6 +183,13 @@ export default function GuestProfile() {
         setNotFound(true);
       } else {
         setGuest(data as unknown as GuestData);
+        // Fetch psychological profile
+        const { data: pp } = await supabase
+          .from("psychological_profiles" as any)
+          .select("*")
+          .eq("guest_profile_id", data.id)
+          .maybeSingle();
+        if (pp) setPsychProfile(pp as unknown as PsychologicalProfileData);
       }
       setLoading(false);
     };
