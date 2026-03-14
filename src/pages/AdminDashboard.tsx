@@ -355,6 +355,15 @@ export default function AdminDashboard() {
             <TabsTrigger value="access-sim" className="text-xs gap-1">
               <Shield className="h-3 w-3" /> Access Sim
             </TabsTrigger>
+            <TabsTrigger value="ledger" className="text-xs gap-1">
+              <ScrollText className="h-3 w-3" /> Ledger
+            </TabsTrigger>
+            <TabsTrigger value="abuse" className="text-xs gap-1">
+              <AlertTriangle className="h-3 w-3" /> Abuse
+            </TabsTrigger>
+            <TabsTrigger value="wallets" className="text-xs gap-1">
+              <Wallet className="h-3 w-3" /> Wallets
+            </TabsTrigger>
           </TabsList>
 
           {/* ─── Overview ─── */}
