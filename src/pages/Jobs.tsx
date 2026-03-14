@@ -235,10 +235,10 @@ export default function Jobs() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
             <div className="flex items-center gap-0.5 flex-wrap">
               {([
-                { value: "all" as StatusFilter, label: "Toate" },
-                { value: "completed" as StatusFilter, label: "Finalizate" },
-                { value: "running" as StatusFilter, label: "Active" },
-                { value: "failed" as StatusFilter, label: "Eșuate" },
+                { value: "all" as StatusFilter, label: t("jobs.filter_all") },
+                { value: "completed" as StatusFilter, label: t("jobs.filter_completed") },
+                { value: "running" as StatusFilter, label: t("jobs.filter_active") },
+                { value: "failed" as StatusFilter, label: t("jobs.filter_failed") },
               ]).map(f => (
                 <button
                   key={f.value}
