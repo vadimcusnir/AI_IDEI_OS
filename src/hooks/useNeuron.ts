@@ -454,6 +454,7 @@ export function useNeuron(neuronNumber?: number) {
     handleBlockExecute,
     handleBlockLanguageChange,
     handleRunAll,
+    handleReorderBlock,
     clearLogs,
     restoreBlocks,
   };
