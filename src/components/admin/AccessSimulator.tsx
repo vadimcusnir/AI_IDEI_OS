@@ -79,7 +79,7 @@ export function AccessSimulator() {
         <div className={cn(
           "border rounded-xl p-4 space-y-2",
           result.verdict === "ALLOW" ? "border-status-validated/30 bg-status-validated/5" :
-          result.verdict === "PAYWALL" ? "border-amber-500/30 bg-amber-500/5" :
+          result.verdict === "PAYWALL" ? "border-accent/30 bg-accent/5" :
           "border-destructive/30 bg-destructive/5"
         )}>
           <div className="flex items-center gap-2">

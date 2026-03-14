@@ -12,7 +12,7 @@ interface ChatMessage {
 
 export function useChatHistory() {
   const { user } = useAuth();
-  const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
+  const [sessionId, setSessionId] = useState<string>(() => crypto.randomUUID());
   const [sessions, setSessions] = useState<{ session_id: string; last_message: string; created_at: string }[]>([]);
 
   // Load previous sessions
