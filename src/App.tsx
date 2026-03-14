@@ -47,6 +47,8 @@ import TopicListing from "./pages/TopicListing";
 import TopicDetail from "./pages/TopicDetail";
 import MediaProfiles from "./pages/MediaProfiles";
 import PipelineOverview from "./pages/PipelineOverview";
+import TopicDiscovery from "./pages/TopicDiscovery";
+import Marketplace from "./pages/Marketplace";
 import NotFound from "./pages/NotFound";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -92,6 +94,8 @@ const App = () => (
               <Route path="/profiles/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
               <Route path="/topics" element={<AppLayout><TopicListing /></AppLayout>} />
               <Route path="/topics/:slug" element={<AppLayout><TopicDetail /></AppLayout>} />
+              <Route path="/topics/discovery" element={<AppLayout><TopicDiscovery /></AppLayout>} />
+              <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
               <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
               <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
               <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
