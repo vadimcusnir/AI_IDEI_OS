@@ -166,7 +166,7 @@ export function GlobalSearch() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-lg p-0 gap-0 overflow-hidden">
-          <DialogTitle className="sr-only">Căutare globală</DialogTitle>
+          <DialogTitle className="sr-only">{t("search")}</DialogTitle>
           {/* Search input */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
             <Search className="h-4 w-4 text-muted-foreground shrink-0" />
