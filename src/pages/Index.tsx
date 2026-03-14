@@ -244,8 +244,10 @@ export default function Index() {
                         neuron={n}
                         viewMode={viewMode}
                         isPinned={pinnedIds.has(n.id)}
+                        isSelected={previewNeuron?.id === n.id}
                         onTogglePin={togglePin}
                         onDelete={handleDelete}
+                        onPreview={previewNeuron !== null ? setPreviewNeuron : undefined}
                       />
                     ))}
                   </div>
