@@ -53,6 +53,8 @@ const KNOWLEDGE_NAV = [
   { labelKey: "applications", to: "/applications", icon: Layers },
   { labelKey: "profiles", to: "/profiles", icon: Users },
   { labelKey: "topics", to: "/topics", icon: Brain },
+  { labelKey: "topic_discovery", to: "/topics/discovery", icon: Network },
+  { labelKey: "marketplace", to: "/marketplace", icon: Coins },
 ];
 
 export function AppSidebar() {

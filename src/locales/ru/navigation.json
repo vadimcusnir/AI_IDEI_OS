@@ -26,8 +26,11 @@
   "applications": "Приложения",
   "profiles": "Профили",
   "topics": "Темы",
+  "topic_discovery": "Обзор тем",
+  "marketplace": "Маркетплейс",
   "pipeline": "Конвейер",
   "platform": "Платформа",
   "knowledge": "Знания",
-  "pipeline_status": "Статус конвейера"
+  "pipeline_status": "Статус конвейера",
+  "chat": "AI Чат"
 }
