@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle, Network, BarChart3 } from "lucide-react";
+import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +14,9 @@ import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
 import { AdminKnowledgeGraphTab } from "@/components/admin/AdminKnowledgeGraphTab";
 import { AdminAnalyticsTab } from "@/components/admin/AdminAnalyticsTab";
 import { AccessSimulator } from "@/components/admin/AccessSimulator";
+import { DecisionLedgerTab } from "@/components/admin/DecisionLedgerTab";
+import { AbuseDetectionTab } from "@/components/admin/AbuseDetectionTab";
+import { WalletManagementTab } from "@/components/admin/WalletManagementTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
@@ -351,6 +354,15 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="access-sim" className="text-xs gap-1">
               <Shield className="h-3 w-3" /> Access Sim
+            </TabsTrigger>
+            <TabsTrigger value="ledger" className="text-xs gap-1">
+              <ScrollText className="h-3 w-3" /> Ledger
+            </TabsTrigger>
+            <TabsTrigger value="abuse" className="text-xs gap-1">
+              <AlertTriangle className="h-3 w-3" /> Abuse
+            </TabsTrigger>
+            <TabsTrigger value="wallets" className="text-xs gap-1">
+              <Wallet className="h-3 w-3" /> Wallets
             </TabsTrigger>
           </TabsList>
 
@@ -713,6 +725,21 @@ export default function AdminDashboard() {
             <div className="bg-card border border-border rounded-xl p-5">
               <AccessSimulator />
             </div>
+          </TabsContent>
+
+          {/* ─── Decision Ledger ─── */}
+          <TabsContent value="ledger">
+            <DecisionLedgerTab />
+          </TabsContent>
+
+          {/* ─── Abuse Detection ─── */}
+          <TabsContent value="abuse">
+            <AbuseDetectionTab />
+          </TabsContent>
+
+          {/* ─── Wallet Management ─── */}
+          <TabsContent value="wallets">
+            <WalletManagementTab />
           </TabsContent>
         </Tabs>
       </div>

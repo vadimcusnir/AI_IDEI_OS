@@ -293,24 +293,24 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 *Infrastructură avansată și token economics*
 
 ### 6.1 Decision Ledger
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 6.1.1 | Tabel `decision_ledger` append-only | P1 |
-| 6.1.2 | Logging hooks pentru access allow/deny/abuse | P1 |
-| 6.1.3 | Audit viewer în Admin | P2 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 6.1.1 | ✅ Tabel `decision_ledger` append-only | DONE |
+| 6.1.2 | ✅ Logging hooks pentru access allow/deny/abuse | DONE — check_access_logged function |
+| 6.1.3 | ✅ Audit viewer în Admin | DONE — DecisionLedgerTab component |
 | 6.1.4 | Export CSV/JSON pentru audit extern | P2 |
 
 ### 6.2 Abuse Detection
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 6.2.1 | Detectare prompt probing | P1 |
-| 6.2.2 | Detectare export farming | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 6.2.1 | ✅ Detectare prompt probing | DONE — detect_prompt_probing function |
+| 6.2.2 | ✅ Detectare export farming | DONE — detect_export_farming function |
 | 6.2.3 | Downgrade ladder: cooldown → downgrade → suspend | P2 |
 
 ### 6.3 Admin Control Plane
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 6.3.1 | Wallet management dashboard | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 6.3.1 | ✅ Wallet management dashboard | DONE — WalletManagementTab component |
 | 6.3.2 | Reconciliation engine (cost vs revenue) | P2 |
 | 6.3.3 | Incident management panel | P2 |
 | 6.3.4 | Entropy monitoring (cost growth vs revenue growth) | P3 |
@@ -344,8 +344,8 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | Faza 3 — Service Execution | ~12 | P0-P1 | ✅ 100% DONE |
 | Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ 100% DONE |
 | Faza 5 — Advanced Features | ~25 | P1-P2 | ✅ ~95% DONE |
-| Faza 6 — Governance & Token | ~15 | P2-P3 | 0% |
-| **TOTAL** | **~122 sarcini** | | **~90% complet** |
+| Faza 6 — Governance & Token | ~15 | P2-P3 | ~45% DONE |
+| **TOTAL** | **~122 sarcini** | | **~93% complet** |
 
 ---
 

@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      abuse_events: {
+        Row: {
+          abuse_type: string
+          action_taken: string | null
+          created_at: string
+          details: Json | null
+          id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          user_id: string
+        }
+        Insert: {
+          abuse_type: string
+          action_taken?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          user_id: string
+        }
+        Update: {
+          abuse_type?: string
+          action_taken?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       access_simulation_log: {
         Row: {
           admin_id: string
@@ -416,6 +452,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      decision_ledger: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          event_type: string
+          id: string
+          ip_hint: string | null
+          metadata: Json | null
+          reason: string | null
+          target_resource: string | null
+          verdict: string | null
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_hint?: string | null
+          metadata?: Json | null
+          reason?: string | null
+          target_resource?: string | null
+          verdict?: string | null
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_hint?: string | null
+          metadata?: Json | null
+          reason?: string | null
+          target_resource?: string | null
+          verdict?: string | null
+        }
+        Relationships: []
       }
       email_send_log: {
         Row: {
@@ -2474,11 +2546,17 @@ export type Database = {
         Args: { _service_key: string; _user_id: string }
         Returns: Json
       }
+      check_access_logged: {
+        Args: { _ip_hint?: string; _service_key: string; _user_id: string }
+        Returns: Json
+      }
       compute_idearank: { Args: never; Returns: undefined }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
       }
+      detect_export_farming: { Args: { _user_id: string }; Returns: boolean }
+      detect_prompt_probing: { Args: { _user_id: string }; Returns: boolean }
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
