@@ -14,7 +14,7 @@ const PACKAGES: Record<string, { neurons: number; priceId: string }> = {
   pro: { neurons: 5000, priceId: "price_1T9TlPIK7fwtty4o7VRrMObq" },
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }

@@ -13,7 +13,7 @@ const PACKAGE_NEURONS: Record<string, number> = {
   pro: 5000,
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
