@@ -211,10 +211,10 @@ export default function Jobs() {
           {/* Stats row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
             {[
-              { label: "Finalizate", value: completedCount, color: "text-status-validated", tip: "Job-uri procesate cu succes" },
-              { label: "Eșuate", value: failedCount, color: "text-destructive", tip: "Job-uri care au eșuat (se reîncearcă automat)" },
-              { label: "Active", value: runningCount, color: "text-primary", tip: "Job-uri în procesare sau în așteptare" },
-              { label: "Durată medie", value: avgDuration, color: "", tip: "Durata medie de procesare în secunde", suffix: "sec" },
+              { label: t("jobs.stat_completed"), value: completedCount, color: "text-status-validated", tip: t("jobs.stat_completed_tip") },
+              { label: t("jobs.stat_failed"), value: failedCount, color: "text-destructive", tip: t("jobs.stat_failed_tip") },
+              { label: t("jobs.stat_active"), value: runningCount, color: "text-primary", tip: t("jobs.stat_active_tip") },
+              { label: t("jobs.stat_avg_duration"), value: avgDuration, color: "", tip: t("jobs.stat_avg_duration_tip"), suffix: "sec" },
             ].map(stat => (
               <Tooltip key={stat.label}>
                 <TooltipTrigger asChild>
