@@ -380,12 +380,12 @@ export default function Jobs() {
                             <AlertCircle className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />
                             <div>
                               <p className="text-xs text-destructive font-medium">
-                                {job.error_message || (job.result as any)?.error || "Job eșuat"}
+                              {job.error_message || (job.result as any)?.error || t("jobs.job_failed_label")}
                               </p>
                               <p className="text-[10px] text-muted-foreground mt-1">
                                 {job.retry_count >= job.max_retries
-                                  ? "Toate reîncercările au eșuat. Verifică input-ul și reîncearcă manual."
-                                  : `Sistemul va reîncerca automat (${job.retry_count}/${job.max_retries} reîncercări).`}
+                                  ? t("jobs.retries_exhausted")
+                                  : t("jobs.retries_remaining", { current: job.retry_count, max: job.max_retries })}
                               </p>
                             </div>
                           </div>
