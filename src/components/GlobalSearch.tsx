@@ -158,7 +158,7 @@ export function GlobalSearch() {
         className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors text-muted-foreground text-xs"
       >
         <Search className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Caută...</span>
+        <span className="hidden sm:inline">{t("search")}...</span>
         <kbd className="hidden sm:inline-flex h-5 items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground/60">
           ⌘K
         </kbd>
