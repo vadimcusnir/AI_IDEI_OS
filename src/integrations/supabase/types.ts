@@ -1042,6 +1042,56 @@ export type Database = {
         }
         Relationships: []
       }
+      insight_scores: {
+        Row: {
+          composite_score: number
+          computed_at: string
+          demand: number
+          extraction_level: string | null
+          id: string
+          information_density: number
+          model_version: string
+          neuron_id: number
+          novelty: number
+          tier: string
+          utility: number
+        }
+        Insert: {
+          composite_score?: number
+          computed_at?: string
+          demand?: number
+          extraction_level?: string | null
+          id?: string
+          information_density?: number
+          model_version?: string
+          neuron_id: number
+          novelty?: number
+          tier?: string
+          utility?: number
+        }
+        Update: {
+          composite_score?: number
+          computed_at?: string
+          demand?: number
+          extraction_level?: string | null
+          id?: string
+          information_density?: number
+          model_version?: string
+          neuron_id?: number
+          novelty?: number
+          tier?: string
+          utility?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insight_scores_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: true
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       neuron_address_aliases: {
         Row: {
           alias: string
@@ -1196,6 +1246,54 @@ export type Database = {
           {
             foreignKeyName: "neuron_clones_source_neuron_id_fkey"
             columns: ["source_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neuron_duplicates: {
+        Row: {
+          created_at: string
+          id: string
+          neuron_a: number
+          neuron_b: number
+          resolved_at: string | null
+          resolved_by: string | null
+          similarity: number
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          neuron_a: number
+          neuron_b: number
+          resolved_at?: string | null
+          resolved_by?: string | null
+          similarity?: number
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          neuron_a?: number
+          neuron_b?: number
+          resolved_at?: string | null
+          resolved_by?: string | null
+          similarity?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neuron_duplicates_neuron_a_fkey"
+            columns: ["neuron_a"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_duplicates_neuron_b_fkey"
+            columns: ["neuron_b"]
             isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]

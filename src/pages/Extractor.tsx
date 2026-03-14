@@ -107,6 +107,8 @@ export default function Extractor() {
   const [editTranscriptText, setEditTranscriptText] = useState("");
   const [savingTranscript, setSavingTranscript] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [deepExtractingId, setDeepExtractingId] = useState<string | null>(null);
+  const [deepExtractResult, setDeepExtractResult] = useState<any>(null);
   const urlRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -506,7 +508,42 @@ export default function Extractor() {
     }
   };
 
-  // === Detect guests ===
+  // === Deep Extract (Phase 2 — Multi-Level) ===
+  const handleDeepExtract = async (episode: Episode) => {
+    if (!user || !episode.transcript?.trim()) {
+      toast.error("No transcript content. Add a transcript first.");
+      return;
+    }
+    setDeepExtractingId(episode.id);
+    setDeepExtractResult(null);
+    toast.info("Running Deep Extract — 8 levels of intelligence extraction…");
+    try {
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/deep-extract`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          },
+          body: JSON.stringify({ episode_id: episode.id }),
+        }
+      );
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
+      setDeepExtractResult(data);
+      toast.success(
+        `✅ Deep Extract complete: ${data.total_neurons} neurons across ${data.levels_processed} levels (${data.credits_spent} credits)`,
+        { duration: 10000 }
+      );
+      trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.total_neurons, credits_spent: data.credits_spent } });
+      fetchEpisodes();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Deep extraction failed");
+    } finally {
+      setDeepExtractingId(null);
+    }
+  };
   const [detectingGuests, setDetectingGuests] = useState<string | null>(null);
   const handleDetectGuests = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) { toast.error("No transcript available."); return; }
@@ -951,18 +988,31 @@ export default function Extractor() {
                         </Tooltip>
                       </div>
                     )}
-                    {canExtract && !isExtracting && !isTranscribing && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1 shrink-0"
-                            onClick={e => { e.stopPropagation(); handleExtractNeurons(ep); }}>
-                            <Brain className="h-3 w-3" /> Extract
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-[220px] text-center">
-                          Extrage neuroni de cunoștințe din transcript folosind AI (100 credite)
-                        </TooltipContent>
-                      </Tooltip>
+                    {canExtract && !isExtracting && !isTranscribing && !deepExtractingId && (
+                      <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="outline" size="sm" className="h-7 text-xs gap-1"
+                              onClick={() => handleExtractNeurons(ep)}>
+                              <Brain className="h-3 w-3" /> Extract
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[220px] text-center">
+                            Quick extraction — atomic neurons (100 credits)
+                          </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="default" size="sm" className="h-7 text-xs gap-1"
+                              onClick={() => handleDeepExtract(ep)}>
+                              <Layers className="h-3 w-3" /> Deep Extract
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[260px] text-center">
+                            Multi-level extraction: atomic, entities, frameworks, psychological, narrative, commercial, patterns, synthesis (~500 credits)
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
                     )}
                     {needsTranscript && !isExtracting && !isTranscribing && (
                       <Button variant="outline" size="sm"
@@ -975,6 +1025,12 @@ export default function Extractor() {
                       <div className="flex items-center gap-1.5 shrink-0">
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" />
                         <span className="text-[10px] text-ai-accent font-medium">Extracting…</span>
+                      </div>
+                    )}
+                    {deepExtractingId === ep.id && (
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                        <span className="text-[10px] text-primary font-medium">Deep Extract (8 levels)…</span>
                       </div>
                     )}
                     {isAnalyzed && (
@@ -999,7 +1055,40 @@ export default function Extractor() {
                           </a>
                         )}
                         <span>Created: {new Date(ep.created_at).toLocaleString("en-US")}</span>
+                        {ep.metadata?.deep_extract && (
+                          <span className="text-primary font-medium">
+                            🧠 Deep: {ep.metadata.deep_extract.total_neurons} neurons / {ep.metadata.deep_extract.levels_run?.length || 0} levels
+                          </span>
+                        )}
+                        {ep.metadata?.neurons_extracted && !ep.metadata?.deep_extract && (
+                          <span className="text-status-validated font-medium">
+                            ⚡ {ep.metadata.neurons_extracted} neurons extracted
+                          </span>
+                        )}
                       </div>
+
+                      {/* Deep Extract Results */}
+                      {ep.metadata?.deep_extract?.results && (
+                        <div className="bg-muted/30 border border-border rounded-lg p-3 space-y-2">
+                          <p className="text-xs font-semibold flex items-center gap-1.5">
+                            <Layers className="h-3.5 w-3.5 text-primary" />
+                            Deep Extract Results
+                          </p>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            {(ep.metadata.deep_extract.results as Array<{level: string; neurons_created: number; avg_score: number}>).map((r: any) => (
+                              <div key={r.level} className="bg-background rounded-md px-2 py-1.5 border border-border">
+                                <p className="text-[9px] font-mono text-muted-foreground uppercase">{r.level.replace("L", "L").replace("_", " ")}</p>
+                                <p className="text-xs font-bold">{r.neurons_created} <span className="text-muted-foreground font-normal">neurons</span></p>
+                                {r.avg_score > 0 && (
+                                  <p className={cn("text-[9px] font-mono", r.avg_score > 70 ? "text-primary" : r.avg_score >= 40 ? "text-status-validated" : "text-muted-foreground")}>
+                                    score: {r.avg_score}
+                                  </p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Upload audio for transcription (for URL episodes without transcript) */}
                       {needsTranscript && !isEditingTranscript && (
