@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { motion } from "framer-motion";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
@@ -127,21 +128,27 @@ export default function Dashboard() {
 
   const maxActivity = Math.max(...data.weeklyActivity.map(d => d.neurons + d.jobs), 1);
 
+  const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+  const fadeUp = {
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+  };
+
   return (
     <div className="flex-1">
       <SEOHead title="Dashboard — AI-IDEI" description="Full analytics dashboard: neurons, jobs, credits, pipeline status." />
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* KPI Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
-          <KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} />
-          <KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} />
-          <KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" />
-          <KPI icon={TrendingUp} label="Spent" value={data.credits.spent} sub={`of ${data.credits.earned} earned`} color="text-destructive" />
-          <KPI icon={Layers} label="Artifacts" value={data.artifacts.total} sub={`+${data.artifacts.thisWeek} this week`} />
-        </div>
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+          <motion.div variants={fadeUp}><KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={TrendingUp} label="Spent" value={data.credits.spent} sub={`of ${data.credits.earned} earned`} color="text-destructive" /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Layers} label="Artifacts" value={data.artifacts.total} sub={`+${data.artifacts.thisWeek} this week`} /></motion.div>
+        </motion.div>
 
         {/* Pipeline Progress */}
-        <div className="bg-card border border-border rounded-xl p-4 mb-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }} className="bg-card border border-border rounded-xl p-4 mb-6">
           <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Activity className="h-3 w-3" /> Pipeline Progress
           </h3>
@@ -164,10 +171,10 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Activity Chart + Credit Gauge */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {/* Activity */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-4">
             <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
@@ -218,10 +225,10 @@ export default function Dashboard() {
               View Ledger
             </Button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Categories + Status */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
           {Object.keys(data.categories).length > 0 && (
             <div className="bg-card border border-border rounded-xl p-4">
               <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
@@ -254,7 +261,7 @@ export default function Dashboard() {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Recent Jobs */}
         {data.recentJobs.length > 0 && (
@@ -282,23 +289,25 @@ export default function Dashboard() {
         )}
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45, duration: 0.4 }} className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
           {[
             { label: "New Neuron", icon: Brain, path: "/n/new" },
             { label: "Extractor", icon: FileAudio, path: "/extractor" },
             { label: "Services", icon: Sparkles, path: "/services" },
             { label: "Intelligence", icon: BarChart3, path: "/intelligence" },
           ].map(action => (
-            <button
+            <motion.button
               key={action.label}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => navigate(action.path)}
               className="flex flex-col items-center gap-1.5 p-4 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors"
             >
               <action.icon className="h-4 w-4 text-muted-foreground" />
               <span className="text-[10px] font-medium">{action.label}</span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

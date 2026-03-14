@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
+import { motion } from "framer-motion";
 
 interface RecentNeuron {
   id: number;
@@ -107,12 +108,21 @@ export default function Home() {
 
   const isNewUser = neurons.length === 0 && jobs.length === 0;
 
+  const stagger = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.06 } },
+  };
+  const fadeUp = {
+    hidden: { opacity: 0, y: 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+  };
+
   return (
     <div className="flex-1 overflow-auto">
       <SEOHead title="Cockpit — AI-IDEI" description="Your AI-IDEI command center. Monitor neurons, episodes, jobs and credits." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Welcome header */}
-        <div className="mb-6">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="mb-6">
           <h1 className="text-xl sm:text-2xl font-serif font-bold mb-1">
             {isNewUser ? "Welcome to AI-IDEI" : "Cockpit"}
           </h1>
@@ -122,33 +132,38 @@ export default function Home() {
               : "Your command center for the knowledge pipeline."
             }
           </p>
-        </div>
+        </motion.div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
-          <StatCard icon={Brain} label="Neurons" value={totalNeurons} />
-          <StatCard icon={FileText} label="Episodes" value={totalEpisodes} />
-          <StatCard icon={Zap} label="Jobs" value={totalJobs} />
-          <div className={cn(
-            "rounded-xl p-3 border transition-colors",
-            "bg-primary/5 border-primary/20"
-          )}>
-            <div className="flex items-center gap-1.5 mb-1">
-              <Coins className="h-3 w-3 text-primary" />
-              <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Credits</span>
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
+          <motion.div variants={fadeUp}><StatCard icon={Brain} label="Neurons" value={totalNeurons} /></motion.div>
+          <motion.div variants={fadeUp}><StatCard icon={FileText} label="Episodes" value={totalEpisodes} /></motion.div>
+          <motion.div variants={fadeUp}><StatCard icon={Zap} label="Jobs" value={totalJobs} /></motion.div>
+          <motion.div variants={fadeUp}>
+            <div className={cn(
+              "rounded-xl p-3 border transition-colors h-full",
+              "bg-primary/5 border-primary/20"
+            )}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <Coins className="h-3 w-3 text-primary" />
+                <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Credits</span>
+              </div>
+              <p className="text-lg font-bold font-mono text-primary">{balance.toLocaleString()}</p>
+              <div className="mt-1.5">
+                <TopUpDialog onSuccess={loadData} />
+              </div>
             </div>
-            <p className="text-lg font-bold font-mono text-primary">{balance.toLocaleString()}</p>
-            <div className="mt-1.5">
-              <TopUpDialog onSuccess={loadData} />
-            </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Quick Actions — large cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {QUICK_ACTIONS.map(action => (
-            <button
+            <motion.button
               key={action.label}
+              variants={fadeUp}
+              whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => navigate(action.path)}
               className={cn(
                 "group relative flex flex-col items-start gap-3 p-4 rounded-xl border border-border",
@@ -164,16 +179,21 @@ export default function Home() {
                 <p className="text-[10px] text-muted-foreground leading-tight hidden sm:block">{action.desc}</p>
               </div>
               <ArrowRight className="absolute top-3 right-3 h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Onboarding Checklist */}
         <OnboardingChecklist />
 
         {/* New user onboarding CTA */}
         {isNewUser && (
-          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center"
+          >
             <Upload className="h-8 w-8 text-primary mx-auto mb-3" />
             <h2 className="text-base font-serif font-bold mb-1.5">First step: upload content</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
@@ -183,11 +203,11 @@ export default function Home() {
               Open Extractor
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
-          </div>
+          </motion.div>
         )}
 
         {/* Main content grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Left column: Recent items */}
           <div className="lg:col-span-2 space-y-4">
             {/* Recent Neurons */}
@@ -268,7 +288,7 @@ export default function Home() {
             {/* What's New */}
             <WhatsNewWidget />
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

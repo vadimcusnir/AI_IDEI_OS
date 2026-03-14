@@ -202,4 +202,25 @@
     content: attr(data-placeholder);
     @apply text-muted-foreground/30 pointer-events-none;
   }
+
+  /* Glass card effect */
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-sm border border-border rounded-xl;
+    @apply hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5;
+    @apply transition-all duration-300;
+  }
+
+  /* Smooth card lift on hover */
+  .card-lift {
+    @apply transition-all duration-200;
+  }
+  .card-lift:hover {
+    transform: translateY(-2px);
+    @apply shadow-md;
+  }
+
+  /* Gradient text utility */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+  }
 }
