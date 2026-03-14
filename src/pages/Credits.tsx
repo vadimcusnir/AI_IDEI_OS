@@ -92,6 +92,15 @@ export default function Credits() {
       toast.info("Top-up anulat.");
       setSearchParams({});
     }
+
+    const subscription = searchParams.get("subscription");
+    if (subscription === "success") {
+      toast.success("Abonament activat cu succes!");
+      setSearchParams({});
+    } else if (subscription === "cancel") {
+      toast.info("Abonare anulată.");
+      setSearchParams({});
+    }
   }, [searchParams, user, authLoading]);
 
   useEffect(() => {
