@@ -20,6 +20,7 @@ import {
   SidebarSeparator, useSidebar,
 } from "@/components/ui/sidebar";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
+import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
 
 const MAIN_NAV = [
   { labelKey: "cockpit", to: "/home", icon: Home },
