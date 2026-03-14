@@ -203,6 +203,7 @@ export function useNeuronList() {
     pinnedIds, togglePin,
     searchQuery, searchResults, searching, handleSearch, clearSearch,
     handleDelete,
+    selectedIds, toggleSelect, selectAll, clearSelection, bulkDelete,
     processedNeurons, groupedNeurons, statuses,
     baseList,
   };
