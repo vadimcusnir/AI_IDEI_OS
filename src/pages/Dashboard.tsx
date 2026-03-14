@@ -225,7 +225,7 @@ export default function Dashboard() {
               View Ledger
             </Button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Categories + Status */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
