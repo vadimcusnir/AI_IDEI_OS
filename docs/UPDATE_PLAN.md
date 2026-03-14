@@ -268,9 +268,9 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 5.4.1 | ✅ Tabele `knowledge_assets`, `asset_transactions` | DONE — DB migration with RLS |
 | 5.4.2 | ✅ Pricing dual USD + NEURONS | DONE — price_usd + price_neurons columns |
-| 5.4.3 | Mini-landing pages pentru artefacte | P3 |
-| 5.4.4 | Recenzii și rating-uri cu moderare admin | P3 — rating_avg/rating_count columns ready |
-| 5.4.5 | Catalog public cu portofolii creatori | P3 |
+| 5.4.3 | ✅ Pagină Marketplace cu catalog public | DONE — /marketplace page cu search, filters, cards |
+| 5.4.4 | ✅ Recenzii și rating-uri cu UI review | DONE — Star rating + review dialog in Marketplace |
+| 5.4.5 | ✅ Catalog public cu portofolii creatori | DONE — integrated in Marketplace page |
 
 ### 5.5 IdeaRank UI Layer
 | # | Sarcină | Status |
