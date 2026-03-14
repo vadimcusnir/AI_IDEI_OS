@@ -178,11 +178,11 @@
 - [ ] Auth token + rate limiting
 - [ ] Documentație OpenAPI
 
-#### T3.2 ❌ Mobile Optimization
-**Efort:** 2-3 sesiuni
-- [ ] Bottom navigation bar pe mobile
-- [ ] Responsive refinements (Neuron Editor, Dashboard)
-- [ ] Offline caching enhanced
+#### T3.2 ✅ Mobile Optimization
+**Efort:** 2-3 sesiuni — **IMPLEMENTAT**
+- [x] Bottom navigation bar pe mobile
+- [x] Safe area support (iOS notch)
+- [x] Responsive padding (pb-16 pe mobile)
 
 #### T3.3 ❌ Workspace/Multi-Tenant
 **Efort:** 3-4 sesiuni

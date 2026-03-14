@@ -223,4 +223,9 @@
   .text-gradient-primary {
     @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
   }
+
+  /* Safe area for mobile bottom nav */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
