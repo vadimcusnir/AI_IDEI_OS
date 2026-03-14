@@ -142,7 +142,7 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
       a.click();
       URL.revokeObjectURL(url);
     }
-    toast.success("Fișier descărcat");
+    toast.success("File downloaded");
   };
 
   const handleDelete = async () => {
