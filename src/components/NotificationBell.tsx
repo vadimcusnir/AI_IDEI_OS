@@ -83,10 +83,11 @@ export function NotificationBell() {
               ) : (
                 recent.map((notif) => {
                   const Icon = NOTIF_ICONS[notif.type] || Bell;
-                  const timeAgo = formatDistanceToNow(new Date(notif.created_at), {
-                    addSuffix: true,
-                    locale: ro,
-                  });
+                   const dateLocale = DATE_LOCALES[i18n.language] || enUS;
+                   const timeAgo = formatDistanceToNow(new Date(notif.created_at), {
+                     addSuffix: true,
+                     locale: dateLocale,
+                   });
                   return (
                     <button
                       key={notif.id}
