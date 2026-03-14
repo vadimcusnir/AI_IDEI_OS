@@ -34,5 +34,13 @@
   "you_are_caught_up": "Вы всё прочитали",
   "mark_all_read": "Прочитать все",
   "clear_all": "Очистить все",
-  "ago": "назад"
+  "ago": "назад",
+  "notifications": "Уведомления",
+  "no_notifications": "Нет уведомлений",
+  "view_all_notifications": "Все уведомления",
+  "search_placeholder": "Поиск нейронов, артефактов, гостей...",
+  "search_min_chars": "Введите минимум 2 символа для поиска",
+  "no_results_for": "Нет результатов для «{{query}}»",
+  "navigate": "навигация",
+  "select": "выбор"
 }

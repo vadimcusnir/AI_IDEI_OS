@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
 import { Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch, MessageCircle, MessageSquarePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { ro } from "date-fns/locale";
+import { enUS, ro, ru } from "date-fns/locale";
+
+const DATE_LOCALES: Record<string, typeof enUS> = { en: enUS, ro, ru };
 
 const NOTIF_ICONS: Record<string, React.ElementType> = {
   job_completed: CheckCircle2,
@@ -28,6 +31,7 @@ const NOTIF_COLORS: Record<string, string> = {
 
 export function NotificationBell() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation("common");
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
   const [open, setOpen] = useState(false);
 
@@ -60,11 +64,11 @@ export function NotificationBell() {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-10 z-50 w-80 bg-card border border-border rounded-xl shadow-xl overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
-              <span className="text-xs font-semibold">Notificări</span>
+              <span className="text-xs font-semibold">{t("notifications")}</span>
               <div className="flex items-center gap-2">
                 {unreadCount > 0 && (
                   <button onClick={markAllRead} className="text-[10px] text-primary hover:underline">
-                    Marchează citite
+                    {t("mark_all_read")}
                   </button>
                 )}
               </div>
@@ -74,15 +78,16 @@ export function NotificationBell() {
               {recent.length === 0 ? (
                 <div className="px-4 py-8 text-center">
                   <Bell className="h-5 w-5 opacity-20 mx-auto mb-2" />
-                  <p className="text-[11px] text-muted-foreground">Nicio notificare</p>
+                  <p className="text-[11px] text-muted-foreground">{t("no_notifications")}</p>
                 </div>
               ) : (
                 recent.map((notif) => {
                   const Icon = NOTIF_ICONS[notif.type] || Bell;
-                  const timeAgo = formatDistanceToNow(new Date(notif.created_at), {
-                    addSuffix: true,
-                    locale: ro,
-                  });
+                   const dateLocale = DATE_LOCALES[i18n.language] || enUS;
+                   const timeAgo = formatDistanceToNow(new Date(notif.created_at), {
+                     addSuffix: true,
+                     locale: dateLocale,
+                   });
                   return (
                     <button
                       key={notif.id}
@@ -120,7 +125,7 @@ export function NotificationBell() {
                 }}
                 className="w-full px-4 py-2 text-center text-[11px] text-primary font-medium hover:bg-muted/50 transition-colors border-t border-border"
               >
-                Vezi toate notificările →
+                {t("view_all_notifications")} →
               </button>
             )}
           </div>

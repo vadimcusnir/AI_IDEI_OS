@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
@@ -27,6 +28,7 @@ const TYPE_CONFIG = {
 
 export function GlobalSearch() {
   const { user } = useAuth();
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -156,7 +158,7 @@ export function GlobalSearch() {
         className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors text-muted-foreground text-xs"
       >
         <Search className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Caută...</span>
+        <span className="hidden sm:inline">{t("search")}...</span>
         <kbd className="hidden sm:inline-flex h-5 items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground/60">
           ⌘K
         </kbd>
@@ -164,7 +166,7 @@ export function GlobalSearch() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-lg p-0 gap-0 overflow-hidden">
-          <DialogTitle className="sr-only">Căutare globală</DialogTitle>
+          <DialogTitle className="sr-only">{t("search")}</DialogTitle>
           {/* Search input */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
             <Search className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -173,7 +175,7 @@ export function GlobalSearch() {
               value={query}
               onChange={e => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Caută neuroni, artefacte, guests..."
+              placeholder={t("search_placeholder")}
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/50"
             />
             {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
@@ -188,13 +190,13 @@ export function GlobalSearch() {
           <div className="max-h-[320px] overflow-y-auto">
             {query.length >= 2 && results.length === 0 && !loading && (
               <div className="py-8 text-center">
-                <p className="text-sm text-muted-foreground">Niciun rezultat pentru „{query}"</p>
+                <p className="text-sm text-muted-foreground">{t("no_results_for", { query })}</p>
               </div>
             )}
 
             {query.length < 2 && (
               <div className="py-8 text-center">
-                <p className="text-xs text-muted-foreground/60">Scrie cel puțin 2 caractere pentru a căuta</p>
+                <p className="text-xs text-muted-foreground/60">{t("search_min_chars")}</p>
               </div>
             )}
 
@@ -231,9 +233,9 @@ export function GlobalSearch() {
 
           {/* Footer */}
           <div className="px-4 py-2 border-t border-border flex items-center gap-3 text-[10px] text-muted-foreground/50">
-            <span>↑↓ navigare</span>
-            <span>↵ selectare</span>
-            <span>esc închide</span>
+            <span>↑↓ {t("navigate")}</span>
+            <span>↵ {t("select")}</span>
+            <span>esc {t("close")}</span>
           </div>
         </DialogContent>
       </Dialog>
