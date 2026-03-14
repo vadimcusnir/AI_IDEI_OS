@@ -228,7 +228,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Categories + Status */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
           {Object.keys(data.categories).length > 0 && (
             <div className="bg-card border border-border rounded-xl p-4">
               <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
