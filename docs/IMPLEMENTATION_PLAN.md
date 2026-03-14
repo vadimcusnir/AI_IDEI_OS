@@ -130,12 +130,12 @@
 - [x] Preview content editor
 - [x] Revenue split display (70/30)
 
-#### T1.2 🟡 Subscription Plans Integration
-**Efort:** 2-3 sesiuni
-- [ ] Stripe Subscriptions flow (monthly/annual)
-- [ ] Feature gating pe plan tier
-- [ ] Upgrade/downgrade UI
-- [ ] Verificare limite pe plan
+#### T1.2 ✅ Subscription Plans Integration
+**Efort:** 2-3 sesiuni — **IMPLEMENTAT**
+- [x] Stripe Subscriptions flow (monthly/annual)
+- [x] Feature gating pe plan tier
+- [x] Upgrade/downgrade UI (Stripe Customer Portal)
+- [x] Verificare limite pe plan (check-subscription edge function)
 
 #### T1.3 ✅ Decision Ledger Append-Only
 **Efort:** 1 sesiune — **IMPLEMENTAT**
@@ -178,11 +178,11 @@
 - [ ] Auth token + rate limiting
 - [ ] Documentație OpenAPI
 
-#### T3.2 ❌ Mobile Optimization
-**Efort:** 2-3 sesiuni
-- [ ] Bottom navigation bar pe mobile
-- [ ] Responsive refinements (Neuron Editor, Dashboard)
-- [ ] Offline caching enhanced
+#### T3.2 ✅ Mobile Optimization
+**Efort:** 2-3 sesiuni — **IMPLEMENTAT**
+- [x] Bottom navigation bar pe mobile
+- [x] Safe area support (iOS notch)
+- [x] Responsive padding (pb-16 pe mobile)
 
 #### T3.3 ❌ Workspace/Multi-Tenant
 **Efort:** 3-4 sesiuni

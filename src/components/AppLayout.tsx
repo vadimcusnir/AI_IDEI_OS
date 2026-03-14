@@ -11,6 +11,7 @@ import { GlobalSearch } from "@/components/GlobalSearch";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
 import { Footer } from "@/components/global/Footer";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -89,7 +90,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             </main>
           ) : (
             <>
-              <main className="flex-1 flex flex-col">
+              <main className="flex-1 flex flex-col pb-16 md:pb-0">
                 <ErrorBoundary>{children}</ErrorBoundary>
               </main>
               <Footer />
@@ -97,6 +98,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           )}
         </div>
       </div>
+      <MobileBottomNav />
       <FeedbackFAB />
       <ContextualFeedbackPrompt />
     </SidebarProvider>

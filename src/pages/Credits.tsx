@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { ConsumptionChart } from "@/components/credits/ConsumptionChart";
+import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
 
 interface UserCredits {
   balance: number;
@@ -89,6 +90,15 @@ export default function Credits() {
       })();
     } else if (topup === "cancelled") {
       toast.info("Top-up anulat.");
+      setSearchParams({});
+    }
+
+    const subscription = searchParams.get("subscription");
+    if (subscription === "success") {
+      toast.success("Abonament activat cu succes!");
+      setSearchParams({});
+    } else if (subscription === "cancel") {
+      toast.info("Abonare anulată.");
       setSearchParams({});
     }
   }, [searchParams, user, authLoading]);
@@ -174,6 +184,11 @@ export default function Credits() {
             </span>
           </div>
           <TopUpDialog onSuccess={loadData} />
+        </div>
+
+        {/* Subscription Plans */}
+        <div className="bg-card border border-border rounded-xl p-5 mb-6">
+          <SubscriptionPlans />
         </div>
 
         {/* Balance + Stats row */}
