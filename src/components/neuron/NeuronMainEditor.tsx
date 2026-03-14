@@ -38,8 +38,11 @@ const FORMAT_BLOCK_TYPES: BlockType[] = ["code", "yaml", "json", "prompt", "data
 
 export function NeuronMainEditor({
   title, blocks, onTitleChange, onBlockChange, onBlockToggle,
-  onAddBlock, onDeleteBlock, onBlockExecute, onBlockLanguageChange,
+  onAddBlock, onDeleteBlock, onBlockExecute, onBlockLanguageChange, onReorderBlock,
 }: NeuronMainEditorProps) {
+  const [hoveredBlock, setHoveredBlock] = useState<string | null>(null);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const [hoveredBlock, setHoveredBlock] = useState<string | null>(null);
   const [slashMenu, setSlashMenu] = useState<{ afterId: string; filter: string; position: { top: number; left: number } } | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
