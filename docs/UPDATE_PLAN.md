@@ -87,7 +87,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | # | Sarcină | Status |
 |---|---------|--------|
 | 1.5.1 | ✅ Diferențiere Neurons vs Library (explainer banner) | DONE |
-| 1.5.2 | Vizibilitate controlată (private/team/public per artefact) | TODO |
+| 1.5.2 | ✅ Vizibilitate controlată (private/team/public per artefact) | DONE — toggle publish/draft + VisibilityIcon |
 | 1.5.3 | ✅ Filtrare și sortare avansată | DONE — sort by date/title + dropdown |
 
 ### 1.6 Guest Pages
@@ -106,7 +106,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 1.7.2 | ✅ Expertise bars animate | DONE |
 | 1.7.3 | ✅ Framework cards interactive | DONE |
 | 1.7.4 | Versiune gratuită vs. plată (paywall pe detalii avansate) | TODO |
-| 1.7.5 | Explicații sub fiecare framework | TODO |
+| 1.7.5 | ✅ Explicații sub fiecare framework | DONE — descriere contextuală sub fiecare framework card |
 | 1.7.6 | Citate extinse (zeci) + stil comunicare | TODO |
 
 ### 1.8 Pipeline Indicator
@@ -114,13 +114,13 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 1.8.1 | ✅ Tooltipuri pe fiecare etapă | DONE |
 | 1.8.2 | ✅ Click navigare la pagina relevantă | DONE |
-| 1.8.3 | Pagină dedicată Pipeline Overview | TODO |
+| 1.8.3 | ✅ Pagină dedicată Pipeline Overview | DONE — /pipeline cu 9 etape, output badges, navigare |
 
 ### 1.9 General UX
 | # | Sarcină | Status |
 |---|---------|--------|
-| 1.9.1 | Iconografie consistentă privat/public/gratuit/plătit | TODO |
-| 1.9.2 | Indicatoare cost NEURONS pe servicii | TODO |
+| 1.9.1 | ✅ Iconografie consistentă privat/public/gratuit/plătit | DONE — AccessIcons shared component |
+| 1.9.2 | ✅ Indicatoare cost NEURONS pe servicii | DONE — Coins + cost pe fiecare service card |
 | 1.9.3 | ✅ SEOHead pe toate paginile | DONE — adăugat pe Links, Auth, NotFound, Architecture, PromptForge, MediaProfiles, ResetPassword, PublicProfile, BatchRunner, RunService |
 
 ---

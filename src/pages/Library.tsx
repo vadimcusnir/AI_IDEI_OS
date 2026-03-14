@@ -6,8 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   FileText, Search, Filter, Loader2, Plus, Download,
   Eye, Trash2, Tag, Clock, ArrowRight, BookOpen, Brain,
-  ArrowUpDown, SortAsc, SortDesc,
+  ArrowUpDown, SortAsc, SortDesc, Lock, Globe,
 } from "lucide-react";
+import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -89,6 +90,14 @@ export default function Library() {
   const handleDelete = async (id: string) => {
     await supabase.from("artifacts").delete().eq("id", id);
     setArtifacts(prev => prev.filter(a => a.id !== id));
+  };
+
+  const handleToggleStatus = async (id: string, currentStatus: string) => {
+    const newStatus = currentStatus === "published" ? "draft" : "published";
+    const { error } = await supabase.from("artifacts").update({ status: newStatus }).eq("id", id);
+    if (!error) {
+      setArtifacts(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
+    }
   };
 
   const filtered = useMemo(() => {
@@ -263,11 +272,14 @@ export default function Library() {
                   className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
                   onClick={() => navigate(`/library/${artifact.id}`)}
                 >
-                  {/* Type + Status */}
+                   {/* Type + Status + Visibility */}
                   <div className="flex items-center justify-between mb-2">
-                    <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
-                      {typeConf.label}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
+                        {typeConf.label}
+                      </span>
+                      <VisibilityIcon visibility={artifact.status === "published" ? "public" : "private"} size="xs" />
+                    </div>
                     <div className="flex items-center gap-1.5">
                       <div className={cn("h-1.5 w-1.5 rounded-full", statusConf.dot)} />
                       <span className="text-[9px] text-muted-foreground">{statusConf.label}</span>
@@ -303,6 +315,15 @@ export default function Library() {
                       {format(new Date(artifact.updated_at), "dd MMM yyyy")}
                     </span>
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        title={artifact.status === "published" ? "Fă privat" : "Publică"}
+                        onClick={(e) => { e.stopPropagation(); handleToggleStatus(artifact.id, artifact.status); }}
+                      >
+                        {artifact.status === "published" ? <Globe className="h-3 w-3 text-status-validated" /> : <Lock className="h-3 w-3" />}
+                      </Button>
                       <Button
                         variant="ghost"
                         size="icon"
