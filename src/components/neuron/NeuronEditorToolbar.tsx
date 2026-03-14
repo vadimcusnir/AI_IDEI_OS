@@ -17,6 +17,7 @@ import {
 interface NeuronEditorToolbarProps {
   activeFormats: string[];
   onFormatToggle: (format: string) => void;
+  onInsertBlock?: (type: string) => void;
 }
 
 function ToolBtn({ icon: Icon, label, active, onClick }: {
@@ -39,32 +40,37 @@ function ToolBtn({ icon: Icon, label, active, onClick }: {
   );
 }
 
-export function NeuronEditorToolbar({ activeFormats, onFormatToggle }: NeuronEditorToolbarProps) {
+export function NeuronEditorToolbar({ activeFormats, onFormatToggle, onInsertBlock }: NeuronEditorToolbarProps) {
   const is = (f: string) => activeFormats.includes(f);
+
+  const insert = (type: string) => {
+    if (onInsertBlock) onInsertBlock(type);
+    else onFormatToggle(type);
+  };
 
   return (
     <div className="h-9 flex items-center gap-0.5 px-3 bg-toolbar border-b border-toolbar-border shrink-0 overflow-x-auto">
-      <ToolBtn icon={Undo2} label="Undo" onClick={() => onFormatToggle("undo")} />
-      <ToolBtn icon={Redo2} label="Redo" onClick={() => onFormatToggle("redo")} />
+      <ToolBtn icon={Undo2} label="Undo (Ctrl+Z)" onClick={() => document.execCommand("undo")} />
+      <ToolBtn icon={Redo2} label="Redo (Ctrl+Y)" onClick={() => document.execCommand("redo")} />
 
       <Separator orientation="vertical" className="mx-1 h-4 bg-toolbar-border" />
 
-      <ToolBtn icon={Heading1} label="Heading" active={is("h1")} onClick={() => onFormatToggle("h1")} />
-      <ToolBtn icon={Heading2} label="Subheading" active={is("h2")} onClick={() => onFormatToggle("h2")} />
+      <ToolBtn icon={Heading1} label="Insert heading block" onClick={() => insert("heading")} />
+      <ToolBtn icon={Heading2} label="Insert subheading block" onClick={() => insert("subheading")} />
 
       <Separator orientation="vertical" className="mx-1 h-4 bg-toolbar-border" />
 
-      <ToolBtn icon={Bold} label="Bold" active={is("bold")} onClick={() => onFormatToggle("bold")} />
-      <ToolBtn icon={Italic} label="Italic" active={is("italic")} onClick={() => onFormatToggle("italic")} />
-      <ToolBtn icon={Underline} label="Underline" active={is("underline")} onClick={() => onFormatToggle("underline")} />
-      <ToolBtn icon={Strikethrough} label="Strikethrough" active={is("strike")} onClick={() => onFormatToggle("strike")} />
-      <ToolBtn icon={Code} label="Code" active={is("code")} onClick={() => onFormatToggle("code")} />
+      <ToolBtn icon={Bold} label="Bold (Ctrl+B)" active={is("bold")} onClick={() => document.execCommand("bold")} />
+      <ToolBtn icon={Italic} label="Italic (Ctrl+I)" active={is("italic")} onClick={() => document.execCommand("italic")} />
+      <ToolBtn icon={Underline} label="Underline (Ctrl+U)" active={is("underline")} onClick={() => document.execCommand("underline")} />
+      <ToolBtn icon={Strikethrough} label="Strikethrough" active={is("strike")} onClick={() => document.execCommand("strikeThrough")} />
+      <ToolBtn icon={Code} label="Insert code block" onClick={() => insert("code")} />
 
       <Separator orientation="vertical" className="mx-1 h-4 bg-toolbar-border" />
 
-      <ToolBtn icon={List} label="Bullet list" active={is("ul")} onClick={() => onFormatToggle("ul")} />
-      <ToolBtn icon={ListOrdered} label="Numbered list" active={is("ol")} onClick={() => onFormatToggle("ol")} />
-      <ToolBtn icon={CheckSquare} label="Checklist" active={is("checklist")} onClick={() => onFormatToggle("checklist")} />
+      <ToolBtn icon={List} label="Insert bullet list" onClick={() => insert("list")} />
+      <ToolBtn icon={ListOrdered} label="Insert numbered list" onClick={() => insert("list")} />
+      <ToolBtn icon={CheckSquare} label="Insert to-do checklist" onClick={() => insert("todo")} />
 
       <Separator orientation="vertical" className="mx-1 h-4 bg-toolbar-border" />
 
@@ -74,12 +80,12 @@ export function NeuronEditorToolbar({ activeFormats, onFormatToggle }: NeuronEdi
 
       <Separator orientation="vertical" className="mx-1 h-4 bg-toolbar-border" />
 
-      <ToolBtn icon={Link} label="Link" onClick={() => onFormatToggle("link")} />
-      <ToolBtn icon={Image} label="Image" onClick={() => onFormatToggle("image")} />
-      <ToolBtn icon={Quote} label="Quote" onClick={() => onFormatToggle("quote")} />
-      <ToolBtn icon={Lightbulb} label="Idea block" onClick={() => onFormatToggle("idea")} />
-      <ToolBtn icon={BookOpen} label="Reference" onClick={() => onFormatToggle("reference")} />
-      <ToolBtn icon={Minus} label="Divider" onClick={() => onFormatToggle("divider")} />
+      <ToolBtn icon={Link} label="Insert link" onClick={() => onFormatToggle("link")} />
+      <ToolBtn icon={Image} label="Insert image" onClick={() => onFormatToggle("image")} />
+      <ToolBtn icon={Quote} label="Insert quote block" onClick={() => insert("quote")} />
+      <ToolBtn icon={Lightbulb} label="Insert idea block — capture a spark" onClick={() => insert("idea")} />
+      <ToolBtn icon={BookOpen} label="Insert reference block" onClick={() => insert("reference")} />
+      <ToolBtn icon={Minus} label="Insert divider" onClick={() => insert("divider")} />
     </div>
   );
 }

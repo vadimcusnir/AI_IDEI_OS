@@ -1,20 +1,43 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload, Brain, Sparkles, Coins, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface PipelineStats { episodes: number; neurons: number; jobs: number; credits: number; }
 
 const STAGES = [
-  { key: "upload", label: "Upload", icon: Upload, check: (s: PipelineStats) => s.episodes > 0 },
-  { key: "extract", label: "Extract", icon: Brain, check: (s: PipelineStats) => s.neurons > 0 },
-  { key: "execute", label: "Execute", icon: Sparkles, check: (s: PipelineStats) => s.jobs > 0 },
-  { key: "capitalize", label: "Capitalize", icon: Coins, check: (s: PipelineStats) => s.credits > 100 },
+  {
+    key: "upload", label: "Upload", icon: Upload, to: "/extractor",
+    description: "Încarcă episoade — audio, video, text sau URL",
+    check: (s: PipelineStats) => s.episodes > 0,
+  },
+  {
+    key: "extract", label: "Extract", icon: Brain, to: "/neurons",
+    description: "Extrage neuroni de cunoștințe din transcrieri",
+    check: (s: PipelineStats) => s.neurons > 0,
+  },
+  {
+    key: "execute", label: "Execute", icon: Sparkles, to: "/jobs",
+    description: "Rulează servicii AI pentru a genera livrabile",
+    check: (s: PipelineStats) => s.jobs > 0,
+  },
+  {
+    key: "capitalize", label: "Capitalize", icon: Coins, to: "/library",
+    description: "Livrabile generate — articole, cursuri, framework-uri",
+    check: (s: PipelineStats) => s.credits > 100,
+  },
 ] as const;
 
 export function PipelineIndicator() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState<PipelineStats>({ episodes: 0, neurons: 0, jobs: 0, credits: 0 });
 
   useEffect(() => {
@@ -23,9 +46,10 @@ export function PipelineIndicator() {
       supabase.from("episodes").select("id", { count: "exact", head: true }).eq("author_id", user.id),
       supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user.id),
       supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("author_id", user.id).eq("status", "completed"),
-      supabase.from("user_credits").select("balance").eq("user_id", user.id).maybeSingle(),
+      supabase.from("credit_transactions").select("amount").eq("user_id", user.id),
     ]).then(([ep, ne, jo, cr]) => {
-      setStats({ episodes: ep.count ?? 0, neurons: ne.count ?? 0, jobs: jo.count ?? 0, credits: (cr.data as any)?.balance ?? 0 });
+      const totalCredits = (cr.data as any[])?.reduce((sum: number, t: any) => sum + (t.amount || 0), 0) ?? 0;
+      setStats({ episodes: ep.count ?? 0, neurons: ne.count ?? 0, jobs: jo.count ?? 0, credits: totalCredits });
     });
   }, [user]);
 
@@ -42,13 +66,30 @@ export function PipelineIndicator() {
       {STAGES.map((stage, i) => {
         const done = stage.check(stats);
         return (
-          <div key={stage.key} className={cn("flex items-center gap-2 px-2 py-1 rounded-md text-xs transition-colors", done ? "text-primary" : "text-muted-foreground")}>
-            <div className={cn("h-5 w-5 rounded-full flex items-center justify-center shrink-0 border transition-colors", done ? "bg-primary/15 border-primary/30" : "bg-muted border-border")}>
-              {done ? <Check className="h-3 w-3" /> : <stage.icon className="h-3 w-3" />}
-            </div>
-            <span className={cn("text-[11px]", done && "font-medium")}>{stage.label}</span>
-            {i < STAGES.length - 1 && <div className={cn("ml-auto w-3 h-px", done ? "bg-primary/30" : "bg-border")} />}
-          </div>
+          <Tooltip key={stage.key}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => navigate(stage.to)}
+                className={cn(
+                  "w-full flex items-center gap-2 px-2 py-1 rounded-md text-xs transition-colors hover:bg-muted/50",
+                  done ? "text-primary" : "text-muted-foreground"
+                )}
+              >
+                <div className={cn(
+                  "h-5 w-5 rounded-full flex items-center justify-center shrink-0 border transition-colors",
+                  done ? "bg-primary/15 border-primary/30" : "bg-muted border-border"
+                )}>
+                  {done ? <Check className="h-3 w-3" /> : <stage.icon className="h-3 w-3" />}
+                </div>
+                <span className={cn("text-[11px]", done && "font-medium")}>{stage.label}</span>
+                {i < STAGES.length - 1 && <div className={cn("ml-auto w-3 h-px", done ? "bg-primary/30" : "bg-border")} />}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="text-[10px] max-w-[200px]">
+              {stage.description}
+              {done && " ✓"}
+            </TooltipContent>
+          </Tooltip>
         );
       })}
     </div>

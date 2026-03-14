@@ -19,6 +19,7 @@ import {
   Layers, Zap, Users, Save, Download, FileUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SEOHead } from "@/components/SEOHead";
 
 interface Episode {
   id: string;
@@ -598,6 +599,9 @@ export default function Extractor() {
     <TooltipProvider delayDuration={300}>
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
+        {/* SEO */}
+        <SEOHead title="Extractor — AI-IDEI" description="Upload content, transcribe audio/video, and extract knowledge neurons using AI." />
+
         {/* Page header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
@@ -638,7 +642,7 @@ export default function Extractor() {
         )}>
           <div
             className={cn(
-              "border rounded-xl bg-card p-5 space-y-4 min-h-[280px] transition-colors",
+              "border rounded-xl bg-card p-5 space-y-4 transition-colors",
               isDragging ? "border-primary border-dashed bg-primary/5" : "border-border"
             )}
             onDrop={handleDrop}
