@@ -13,6 +13,7 @@ import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
 import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
 import { AdminKnowledgeGraphTab } from "@/components/admin/AdminKnowledgeGraphTab";
 import { AdminAnalyticsTab } from "@/components/admin/AdminAnalyticsTab";
+import { AccessSimulator } from "@/components/admin/AccessSimulator";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
