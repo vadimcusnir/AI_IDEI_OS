@@ -168,6 +168,9 @@ export default function Home() {
           ))}
         </div>
 
+        {/* Onboarding Checklist */}
+        <OnboardingChecklist />
+
         {/* New user onboarding CTA */}
         {isNewUser && (
           <div className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center">
