@@ -157,7 +157,18 @@ export default function GuestPages() {
 
   return (
     <TooltipProvider>
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 flex overflow-hidden">
+        {showFolders && (
+          <FolderSidebar
+            storageKey="guest_folders"
+            items={guests.map(g => ({ id: g.id, label: g.full_name }))}
+            selectedFolderId={selectedFolderId}
+            onSelectFolder={setSelectedFolderId}
+            allLabel="All Guests"
+            headerLabel="Guest Folders"
+          />
+        )}
+        <div className="flex-1 overflow-y-auto">
         <SEOHead title="Guest Pages — AI-IDEI" description="Manage auto-generated guest profiles extracted from your transcriptions." />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
           {/* Header */}
