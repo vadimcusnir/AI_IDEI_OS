@@ -119,6 +119,9 @@ export default function Intelligence() {
             <TabsTrigger value="stats" className="text-xs gap-1.5">
               <BarChart3 className="h-3.5 w-3.5" /> Analytics
             </TabsTrigger>
+            <TabsTrigger value="dedup" className="text-xs gap-1.5">
+              <GitMerge className="h-3.5 w-3.5" /> Deduplication
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="graph" className="mt-0">
@@ -127,6 +130,10 @@ export default function Intelligence() {
 
           <TabsContent value="stats" className="mt-0">
             <StatsOverview stats={stats} />
+          </TabsContent>
+
+          <TabsContent value="dedup" className="mt-0">
+            <DuplicateMergePanel />
           </TabsContent>
         </Tabs>
       </div>

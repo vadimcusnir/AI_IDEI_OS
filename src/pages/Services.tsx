@@ -222,8 +222,13 @@ export default function Services() {
             return (
               <div key={classKey} className="mb-6">
                 <div className="flex items-center gap-2 mb-2.5">
-                  <span className={cn("text-[10px] font-bold uppercase tracking-wider", cfg.color)}>Clasă {classKey}</span>
-                  <span className="text-[10px] text-muted-foreground">— {cfg.label}</span>
+                  <span className={cn("text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-current/10", cfg.color)}>
+                    {cfg.badge}
+                  </span>
+                  <span className={cn("text-[10px] font-bold uppercase tracking-wider", cfg.color)}>{cfg.label}</span>
+                  <span className="text-[9px] text-muted-foreground/50 flex items-center gap-1">
+                    <Clock className="h-2.5 w-2.5" /> ~{cfg.timing}
+                  </span>
                   <span className="text-[10px] text-muted-foreground/40 ml-auto">{classServices.length} servicii</span>
                 </div>
 
