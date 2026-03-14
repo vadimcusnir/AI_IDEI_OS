@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, ro, ru } from "date-fns/locale";
 
-const DATE_LOCALES: Record<string, Locale> = { en: enUS, ro, ru };
+const DATE_LOCALES: Record<string, typeof enUS> = { en: enUS, ro, ru };
 
 const NOTIF_ICONS: Record<string, React.ElementType> = {
   job_completed: CheckCircle2,
