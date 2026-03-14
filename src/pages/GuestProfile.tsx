@@ -263,63 +263,36 @@ export default function GuestProfile() {
           </section>
         )}
 
-        {/* ── Communication Style as visual chips ── */}
+        {/* ── PREMIUM: Communication Style ── */}
         {guest.psychological_traits.length > 0 && (
-          <section>
-            <SectionHeader icon={MessageCircle} label="Profil de comunicare" count={guest.psychological_traits.length} />
-            <div className="rounded-2xl border border-border bg-card p-5">
-              <div className="flex flex-wrap gap-2.5">
-                {guest.psychological_traits.map((t, i) => {
-                  const styles = [
-                    "bg-primary/10 text-primary border-primary/15",
-                    "bg-status-validated/10 text-status-validated border-status-validated/15",
-                    "bg-graph-highlight/10 text-graph-highlight border-graph-highlight/15",
-                    "bg-muted text-muted-foreground border-border",
-                  ];
-                  return (
-                    <span
-                      key={i}
-                      className={cn(
+          <PaywallSection title="Communication Profile — Premium">
+            <section>
+              <SectionHeader icon={MessageCircle} label="Communication Profile" count={guest.psychological_traits.length} />
+              <div className="rounded-2xl border border-border bg-card p-5">
+                <div className="flex flex-wrap gap-2.5">
+                  {guest.psychological_traits.map((t, i) => {
+                    const styles = [
+                      "bg-primary/10 text-primary border-primary/15",
+                      "bg-status-validated/10 text-status-validated border-status-validated/15",
+                      "bg-graph-highlight/10 text-graph-highlight border-graph-highlight/15",
+                      "bg-muted text-muted-foreground border-border",
+                    ];
+                    return (
+                      <span key={i} className={cn(
                         "text-xs px-3.5 py-2 rounded-xl font-medium border transition-transform hover:scale-105",
                         styles[i % styles.length]
-                      )}
-                    >
-                      {t}
-                    </span>
-                  );
-                })}
+                      )}>{t}</span>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </PaywallSection>
         )}
 
-        {/* ── Key Quotes – editorial blockquote design ── */}
+        {/* ── Key Quotes — Free preview + expandable ── */}
         {guest.key_quotes.length > 0 && (
-          <section>
-            <SectionHeader icon={Quote} label="Citate memorabile" count={guest.key_quotes.length} />
-            <div className="space-y-4">
-              {guest.key_quotes.map((q, i) => (
-                <blockquote
-                  key={i}
-                  className="relative rounded-2xl border border-border bg-card p-5 pl-6 hover:border-primary/20 transition-colors"
-                >
-                  {/* Decorative quote mark */}
-                  <div className="absolute top-4 left-5 text-primary/10 text-4xl font-serif leading-none select-none">
-                    "
-                  </div>
-                  <p className="relative text-sm italic text-foreground/80 leading-relaxed pl-4">
-                    {q}
-                  </p>
-                  <div className="flex items-center gap-2 mt-3 pl-4">
-                    <div className="h-px flex-1 bg-border" />
-                    <span className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">
-                      — {guest.full_name}
-                    </span>
-                  </div>
-                </blockquote>
-              ))}
-            </div>
-          </section>
+          <QuotesSection quotes={guest.key_quotes} authorName={guest.full_name} />
         )}
 
         {/* ── Summary stat cards ── */}
