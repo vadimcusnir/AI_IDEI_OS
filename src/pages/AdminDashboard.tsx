@@ -373,6 +373,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="incidents" className="text-xs gap-1">
               <AlertCircle className="h-3 w-3" /> Incidents
             </TabsTrigger>
+            <TabsTrigger value="entropy" className="text-xs gap-1">
+              <TrendingUp className="h-3 w-3" /> Entropy
+            </TabsTrigger>
           </TabsList>
 
           {/* ─── Overview ─── */}
