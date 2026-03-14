@@ -26,6 +26,8 @@
   "applications": "Applications",
   "profiles": "Profiles",
   "topics": "Topics",
+  "topic_discovery": "Topic Discovery",
+  "marketplace": "Marketplace",
   "pipeline": "Pipeline",
   "platform": "Platform",
   "knowledge": "Knowledge",

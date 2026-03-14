@@ -26,8 +26,11 @@
   "applications": "Aplicații",
   "profiles": "Profile",
   "topics": "Teme",
+  "topic_discovery": "Descoperire Teme",
+  "marketplace": "Marketplace",
   "pipeline": "Pipeline",
   "platform": "Platformă",
   "knowledge": "Cunoaștere",
-  "pipeline_status": "Status Pipeline"
+  "pipeline_status": "Status Pipeline",
+  "chat": "AI Chat"
 }
