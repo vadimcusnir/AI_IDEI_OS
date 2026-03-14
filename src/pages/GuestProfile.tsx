@@ -4,10 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
 import {
   Loader2, Brain, Quote, Sparkles, Users, MessageCircle,
-  Target, Award, Lightbulb, TrendingUp, ArrowRight,
+  Target, Award, Lightbulb, TrendingUp, ArrowRight, Lock,
 } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface GuestData {
   full_name: string;
