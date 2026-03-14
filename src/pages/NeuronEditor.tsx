@@ -223,6 +223,7 @@ export default function NeuronEditor() {
             onDeleteBlock={handleDeleteBlock}
             onBlockExecute={handleBlockExecute}
             onBlockLanguageChange={handleBlockLanguageChange}
+            onReorderBlock={handleReorderBlock}
           />
         </div>
 
