@@ -26,7 +26,7 @@ export function DuplicateMergePanel() {
   const { user } = useAuth();
   const [duplicates, setDuplicates] = useState<Duplicate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [actionDialog, setActionDialog] = useState<{\
+  const [actionDialog, setActionDialog] = useState<{
     dup: Duplicate;
     action: "merge" | "dismiss";
   } | null>(null);
