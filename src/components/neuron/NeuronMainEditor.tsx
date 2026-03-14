@@ -220,7 +220,12 @@ export function NeuronMainEditor({
                     >
                       <Plus className="h-3 w-3" />
                     </button>
-                    <button className="h-6 w-6 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground cursor-grab">
+                    <button
+                      draggable
+                      onDragStart={() => setDragIdx(blockIndex)}
+                      onDragEnd={() => { setDragIdx(null); setDragOverIdx(null); }}
+                      className="h-6 w-6 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground cursor-grab active:cursor-grabbing"
+                    >
                       <GripVertical className="h-3 w-3" />
                     </button>
                   </div>
