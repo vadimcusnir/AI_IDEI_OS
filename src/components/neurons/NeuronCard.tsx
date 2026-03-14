@@ -146,10 +146,11 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
   // Cards view
   return (
     <div
-      onClick={() => navigate(`/n/${n.number}`)}
+      onClick={handleClick}
       className={cn(
         "group relative flex flex-col p-5 rounded-xl border border-border bg-card cursor-pointer transition-all hover:shadow-lg hover:border-primary/20 hover:-translate-y-0.5",
-        isPinned && "ring-1 ring-primary/20 bg-primary/[0.02]"
+        isPinned && "ring-1 ring-primary/20 bg-primary/[0.02]",
+        isSelected && "ring-1 ring-primary/40 bg-primary/5"
       )}
     >
       {isPinned && (
