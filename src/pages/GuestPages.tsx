@@ -137,8 +137,15 @@ export default function GuestPages() {
     if (showDuplicates) {
       list = list.filter(g => duplicateIds.has(g.id));
     }
+    // Folder filter
+    if (selectedFolderId === "__unassigned") {
+      const assigned = new Set(Object.keys(assignments));
+      list = list.filter(g => !assigned.has(g.id));
+    } else if (selectedFolderId) {
+      list = list.filter(g => assignments[g.id] === selectedFolderId);
+    }
     return list;
-  }, [guests, search, showDuplicates, duplicateIds]);
+  }, [guests, search, showDuplicates, duplicateIds, selectedFolderId, assignments]);
 
   if (authLoading || loading) {
     return (
