@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
-import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen } from "lucide-react";
+import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen, Trash2, CheckSquare, XSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
@@ -38,6 +38,7 @@ export default function Index() {
     pinnedIds, togglePin,
     searchQuery, searchResults, searching, handleSearch, clearSearch,
     handleDelete,
+    selectedIds, toggleSelect, selectAll, clearSelection, bulkDelete,
     processedNeurons, groupedNeurons, statuses,
   } = useNeuronList();
 
@@ -166,6 +167,23 @@ export default function Index() {
             statuses={statuses}
           />
 
+          {/* Bulk action bar */}
+          {selectedIds.size > 0 && (
+            <div className="flex items-center gap-2 mb-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-2">
+              <span className="text-xs font-medium text-primary">{selectedIds.size} selectat{selectedIds.size > 1 ? "e" : ""}</span>
+              <div className="flex-1" />
+              <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={selectAll}>
+                <CheckSquare className="h-3 w-3" /> Selectează tot
+              </Button>
+              <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={clearSelection}>
+                <XSquare className="h-3 w-3" /> Deselectează
+              </Button>
+              <Button variant="destructive" size="sm" className="h-7 text-xs gap-1" onClick={bulkDelete}>
+                <Trash2 className="h-3 w-3" /> Șterge ({selectedIds.size})
+              </Button>
+            </div>
+          )}
+
           {/* Active filters indicators */}
           {(searchResults !== null || (selectedFolderId && selectedFolderId !== "__unassigned")) && (
             <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -245,8 +263,9 @@ export default function Index() {
                         neuron={n}
                         viewMode={viewMode}
                         isPinned={pinnedIds.has(n.id)}
-                        isSelected={previewNeuron?.id === n.id}
+                        isSelected={selectedIds.has(n.id) || previewNeuron?.id === n.id}
                         onTogglePin={togglePin}
+                        onToggleSelect={toggleSelect}
                         onDelete={handleDelete}
                         onPreview={previewNeuron !== null ? setPreviewNeuron : undefined}
                       />

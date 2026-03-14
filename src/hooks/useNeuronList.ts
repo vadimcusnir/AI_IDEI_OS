@@ -23,6 +23,7 @@ export function useNeuronList() {
   const { user, loading: authLoading } = useAuth();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>("list");
@@ -104,8 +105,35 @@ export function useNeuronList() {
     const { error } = await supabase.from("neurons").delete().eq("id", id);
     if (error) { toast.error("Failed to delete"); return; }
     setNeurons(prev => prev.filter(n => n.id !== id));
+    setSelectedIds(prev => { const next = new Set(prev); next.delete(id); return next; });
     toast.success("Neuron deleted");
   }, []);
+
+  const toggleSelect = useCallback((id: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const selectAll = useCallback(() => {
+    const list = searchResults ?? neurons;
+    setSelectedIds(new Set(list.map(n => n.id)));
+  }, [neurons, searchResults]);
+
+  const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
+
+  const bulkDelete = useCallback(async () => {
+    const ids = [...selectedIds];
+    if (!ids.length) return;
+    const { error } = await supabase.from("neurons").delete().in("id", ids);
+    if (error) { toast.error("Bulk delete failed"); return; }
+    setNeurons(prev => prev.filter(n => !selectedIds.has(n.id)));
+    setSelectedIds(new Set());
+    toast.success(`${ids.length} neuroni șterși`);
+  }, [selectedIds]);
 
   const toggleSort = useCallback((field: SortField) => {
     if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
@@ -175,6 +203,7 @@ export function useNeuronList() {
     pinnedIds, togglePin,
     searchQuery, searchResults, searching, handleSearch, clearSearch,
     handleDelete,
+    selectedIds, toggleSelect, selectAll, clearSelection, bulkDelete,
     processedNeurons, groupedNeurons, statuses,
     baseList,
   };

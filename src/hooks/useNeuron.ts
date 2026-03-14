@@ -392,6 +392,17 @@ export function useNeuron(neuronNumber?: number) {
     });
   }, [blocks, handleBlockExecute]);
 
+  const handleReorderBlock = useCallback(async (fromIndex: number, toIndex: number) => {
+    const updated = [...blocks];
+    const [moved] = updated.splice(fromIndex, 1);
+    updated.splice(toIndex, 0, moved);
+    setBlocks(updated);
+    // Persist new positions
+    for (let i = 0; i < updated.length; i++) {
+      await supabase.from("neuron_blocks").update({ position: i }).eq("id", updated[i].id);
+    }
+  }, [blocks]);
+
   const restoreBlocks = useCallback(async (blocksSnapshot: any[]) => {
     if (!neuron) return;
     // Delete existing blocks
@@ -443,6 +454,7 @@ export function useNeuron(neuronNumber?: number) {
     handleBlockExecute,
     handleBlockLanguageChange,
     handleRunAll,
+    handleReorderBlock,
     clearLogs,
     restoreBlocks,
   };

@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,7 +30,7 @@ export default function NeuronEditor() {
     executionLogs, setTitle, setStatus, setVisibility,
     handleBlockChange, handleBlockToggle, handleAddBlock,
     handleDeleteBlock, handleBlockExecute, handleBlockLanguageChange,
-    handleRunAll, clearLogs, restoreBlocks,
+    handleRunAll, handleReorderBlock, clearLogs, restoreBlocks,
   } = useNeuron(neuronNumber);
 
   const {
@@ -49,6 +49,7 @@ export default function NeuronEditor() {
   const [rightCollapsed, setRightCollapsed] = useState(false);
   const [bottomExpanded, setBottomExpanded] = useState(false);
   const [showSaveTemplate, setShowSaveTemplate] = useState(false);
+
 
   const handleClone = useCallback(async () => {
     if (!neuron) return;
@@ -85,6 +86,24 @@ export default function NeuronEditor() {
     if (result?.error) toast.error("Failed to save version");
     else toast.success("Version saved");
   }, [neuron, blocks, createVersion]);
+
+  // Keyboard shortcuts: Ctrl+S = save version, Ctrl+Enter = run all
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const isMod = e.metaKey || e.ctrlKey;
+      if (!isMod) return;
+      if (e.key === "s") {
+        e.preventDefault();
+        handleSaveVersion();
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleRunAll();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [handleSaveVersion, handleRunAll]);
 
   const handleRestoreVersion = useCallback(async (version: NeuronVersion) => {
     if (!version.blocksSnapshot || !Array.isArray(version.blocksSnapshot)) {
@@ -204,6 +223,7 @@ export default function NeuronEditor() {
             onDeleteBlock={handleDeleteBlock}
             onBlockExecute={handleBlockExecute}
             onBlockLanguageChange={handleBlockLanguageChange}
+            onReorderBlock={handleReorderBlock}
           />
         </div>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead } from "@/components/SEOHead";
@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   FileText, Search, Filter, Loader2, Plus, Download,
   Eye, Trash2, Tag, Clock, ArrowRight, BookOpen, Brain,
+  ArrowUpDown, SortAsc, SortDesc,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -63,6 +67,8 @@ export default function Library() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<"updated_at" | "created_at" | "title">("updated_at");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
 
   useEffect(() => {
@@ -86,13 +92,21 @@ export default function Library() {
   };
 
   const filtered = useMemo(() => {
-    return artifacts.filter(a => {
+    let list = artifacts.filter(a => {
       if (typeFilter !== "all" && a.artifact_type !== typeFilter) return false;
       if (statusFilter !== "all" && a.status !== statusFilter) return false;
       if (search && !a.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
-  }, [artifacts, search, typeFilter, statusFilter]);
+    list.sort((a, b) => {
+      let cmp = 0;
+      if (sortField === "title") cmp = a.title.localeCompare(b.title);
+      else if (sortField === "created_at") cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      else cmp = new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
+      return sortDir === "desc" ? -cmp : cmp;
+    });
+    return list;
+  }, [artifacts, search, typeFilter, statusFilter, sortField, sortDir]);
 
   // Extract unique types from data
   const types = useMemo(() => {
@@ -187,6 +201,34 @@ export default function Library() {
               <SelectItem value="published">Publicat</SelectItem>
             </SelectContent>
           </Select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                <ArrowUpDown className="h-3 w-3" /> Sort
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              {([
+                { field: "updated_at" as const, label: "Ultima modificare" },
+                { field: "created_at" as const, label: "Data creării" },
+                { field: "title" as const, label: "Titlu" },
+              ]).map(({ field, label }) => (
+                <DropdownMenuItem
+                  key={field}
+                  onClick={() => {
+                    if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
+                    else { setSortField(field); setSortDir("desc"); }
+                  }}
+                  className={cn(sortField === field && "text-primary")}
+                >
+                  {label}
+                  {sortField === field && (
+                    sortDir === "desc" ? <SortDesc className="h-3 w-3 ml-auto" /> : <SortAsc className="h-3 w-3 ml-auto" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <span className="text-[10px] text-muted-foreground ml-auto">
             {filtered.length} rezultate
           </span>

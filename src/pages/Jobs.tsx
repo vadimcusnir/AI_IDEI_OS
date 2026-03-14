@@ -393,6 +393,20 @@ export default function Jobs() {
                         )}
                         {/* Quick actions */}
                         <div className="flex items-center gap-2 mt-3">
+                          {job.status === "failed" && job.retry_count < job.max_retries && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7 text-xs gap-1"
+                              onClick={async () => {
+                                const { data, error } = await supabase.rpc("retry_failed_job", { _job_id: job.id });
+                                if (error || !data) toast.error("Reîncercarea a eșuat");
+                                else { toast.success("Job reprogramat"); fetchJobs(); }
+                              }}
+                            >
+                              <Play className="h-3 w-3" /> Reîncearcă
+                            </Button>
+                          )}
                           <Button
                             variant="ghost"
                             size="sm"

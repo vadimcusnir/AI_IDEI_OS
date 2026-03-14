@@ -64,7 +64,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 1.2.1 | ✅ Preview pane split-view | DONE |
 | 1.2.2 | ✅ Sidebar foldere profesional (3 niveluri) | DONE |
 | 1.2.3 | Sidebar unificat reutilizat în Guests/Library/Intelligence | TODO |
-| 1.2.4 | Bulk operations (delete, move, tag) | TODO |
+| 1.2.4 | ✅ Bulk operations (delete, move, tag) | DONE — multi-select cu checkbox + bulk delete bar |
 
 ### 1.3 Neuron Editor (`/n/*`)
 | # | Sarcină | Status |
@@ -72,23 +72,23 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 1.3.1 | ✅ Toolbar funcțional (insert blocks, Bold/Italic/Undo) | DONE |
 | 1.3.2 | ✅ Tooltipuri descriptive pe toate butoanele | DONE |
 | 1.3.3 | Stabilitate layout la deschidere panouri laterale | TODO |
-| 1.3.4 | Drag-and-drop reordonare blocuri | TODO |
-| 1.3.5 | Keyboard shortcuts (Ctrl+Enter = Run, Ctrl+S = Save) | TODO |
+| 1.3.4 | ✅ Drag-and-drop reordonare blocuri | DONE — HTML5 drag on GripVertical |
+| 1.3.5 | ✅ Keyboard shortcuts (Ctrl+Enter = Run, Ctrl+S = Save) | DONE |
 
 ### 1.4 Jobs Page
 | # | Sarcină | Status |
 |---|---------|--------|
 | 1.4.1 | ✅ Legendă statusuri cu explicații | DONE |
 | 1.4.2 | ✅ Ghid educativ pipeline | DONE |
-| 1.4.3 | Notificări automate la finalizare/eșuare job | TODO |
-| 1.4.4 | Retry automat cu UI feedback | TODO |
+| 1.4.3 | ✅ Notificări automate la finalizare/eșuare job | DONE — DB triggers existente |
+| 1.4.4 | ✅ Retry automat cu UI feedback | DONE — buton Reîncearcă pe job-uri failed |
 
 ### 1.5 Library Page
 | # | Sarcină | Status |
 |---|---------|--------|
 | 1.5.1 | ✅ Diferențiere Neurons vs Library (explainer banner) | DONE |
 | 1.5.2 | Vizibilitate controlată (private/team/public per artefact) | TODO |
-| 1.5.3 | Filtrare și sortare avansată | TODO |
+| 1.5.3 | ✅ Filtrare și sortare avansată | DONE — sort by date/title + dropdown |
 
 ### 1.6 Guest Pages
 | # | Sarcină | Status |

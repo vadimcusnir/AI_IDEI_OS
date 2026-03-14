@@ -36,11 +36,12 @@ interface Props {
   isPinned: boolean;
   isSelected?: boolean;
   onTogglePin: (id: number, e?: React.MouseEvent) => void;
+  onToggleSelect?: (id: number, e?: React.MouseEvent) => void;
   onDelete: (id: number, e?: React.MouseEvent) => void;
   onPreview?: (neuron: NeuronListItem) => void;
 }
 
-export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onTogglePin, onDelete, onPreview }: Props) {
+export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onTogglePin, onToggleSelect, onDelete, onPreview }: Props) {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -88,6 +89,15 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
           isSelected && "bg-primary/10 border-primary/20"
         )}
       >
+        {onToggleSelect && (
+          <input
+            type="checkbox"
+            checked={!!isSelected}
+            onChange={(e) => { e.stopPropagation(); onToggleSelect(n.id); }}
+            onClick={(e) => e.stopPropagation()}
+            className="h-3.5 w-3.5 rounded border-border accent-primary cursor-pointer shrink-0"
+          />
+        )}
         <button
           onClick={(e) => onTogglePin(n.id, e)}
           className={cn(

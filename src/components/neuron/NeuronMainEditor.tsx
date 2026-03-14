@@ -19,6 +19,7 @@ interface NeuronMainEditorProps {
   onDeleteBlock: (id: string) => void;
   onBlockExecute: (id: string) => void;
   onBlockLanguageChange: (id: string, lang: CodeLanguage) => void;
+  onReorderBlock?: (fromIndex: number, toIndex: number) => void;
 }
 
 const contentBlockStyles: Record<string, string> = {
@@ -37,9 +38,11 @@ const FORMAT_BLOCK_TYPES: BlockType[] = ["code", "yaml", "json", "prompt", "data
 
 export function NeuronMainEditor({
   title, blocks, onTitleChange, onBlockChange, onBlockToggle,
-  onAddBlock, onDeleteBlock, onBlockExecute, onBlockLanguageChange,
+  onAddBlock, onDeleteBlock, onBlockExecute, onBlockLanguageChange, onReorderBlock,
 }: NeuronMainEditorProps) {
   const [hoveredBlock, setHoveredBlock] = useState<string | null>(null);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const [slashMenu, setSlashMenu] = useState<{ afterId: string; filter: string; position: { top: number; left: number } } | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
 
@@ -172,7 +175,7 @@ export function NeuronMainEditor({
         {/* Blocks */}
         <div className="space-y-2">
           <AnimatePresence initial={false}>
-            {blocks.map((block) => {
+            {blocks.map((block, blockIndex) => {
               const isFormatBlock = FORMAT_BLOCK_TYPES.includes(block.type);
               const cfg = BLOCK_TYPE_CONFIG[block.type];
 
@@ -182,9 +185,21 @@ export function NeuronMainEditor({
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="group relative flex items-start gap-0.5"
+                  className={cn(
+                    "group relative flex items-start gap-0.5",
+                    dragOverIdx === blockIndex && dragIdx !== blockIndex && "border-t-2 border-primary"
+                  )}
                   onMouseEnter={() => setHoveredBlock(block.id)}
                   onMouseLeave={() => setHoveredBlock(null)}
+                  onDragOver={(e) => { e.preventDefault(); setDragOverIdx(blockIndex); }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (dragIdx !== null && dragIdx !== blockIndex && onReorderBlock) {
+                      onReorderBlock(dragIdx, blockIndex);
+                    }
+                    setDragIdx(null);
+                    setDragOverIdx(null);
+                  }}
                 >
                   {/* Side controls */}
                   <div className={cn(
@@ -205,7 +220,12 @@ export function NeuronMainEditor({
                     >
                       <Plus className="h-3 w-3" />
                     </button>
-                    <button className="h-6 w-6 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground cursor-grab">
+                    <button
+                      draggable
+                      onDragStart={() => setDragIdx(blockIndex)}
+                      onDragEnd={() => { setDragIdx(null); setDragOverIdx(null); }}
+                      className="h-6 w-6 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground cursor-grab active:cursor-grabbing"
+                    >
                       <GripVertical className="h-3 w-3" />
                     </button>
                   </div>
