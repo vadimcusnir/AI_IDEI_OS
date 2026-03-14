@@ -599,9 +599,6 @@ export default function Extractor() {
     <TooltipProvider delayDuration={300}>
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
-        {/* Page header */}
-    <div className="flex-1 overflow-y-auto">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
         {/* SEO */}
         <SEOHead title="Extractor — AI-IDEI" description="Upload content, transcribe audio/video, and extract knowledge neurons using AI." />
 
