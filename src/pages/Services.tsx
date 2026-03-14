@@ -51,6 +51,31 @@ const TIER_CONFIG: Record<string, { label: string; className: string }> = {
   premium: { label: "PREMIUM", className: "bg-ai-accent/15 text-ai-accent" },
 };
 
+// Root2 pricing: digit sum must equal 2
+function root2Nearest(n: number): number {
+  const digitSum = (x: number): number => {
+    let s = x;
+    while (s > 9) {
+      let t = 0;
+      let v = s;
+      while (v > 0) { t += v % 10; v = Math.floor(v / 10); }
+      s = t;
+    }
+    return s;
+  };
+  const rounded = Math.round(n);
+  if (rounded <= 0) return 2;
+  for (let i = 0; i <= 20; i++) {
+    if (digitSum(rounded + i) === 2) return rounded + i;
+    if (i > 0 && rounded - i > 0 && digitSum(rounded - i) === 2) return rounded - i;
+  }
+  return rounded;
+}
+
+function root2Display(usd: number): string {
+  return root2Nearest(Math.ceil(usd)).toString();
+}
+
 export default function Services() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
