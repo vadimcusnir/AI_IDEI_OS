@@ -105,8 +105,8 @@ export default function NeuronEditor() {
     return () => window.removeEventListener("keydown", handler);
   }, [handleSaveVersion, handleRunAll]);
 
-
-    const handleRestoreVersion = useCallback(async (version: NeuronVersion) => {
+  const handleRestoreVersion = useCallback(async (version: NeuronVersion) => {
+    if (!version.blocksSnapshot || !Array.isArray(version.blocksSnapshot)) {
       toast.error("Invalid version snapshot");
       return;
     }
