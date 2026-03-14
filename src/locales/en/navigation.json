@@ -29,5 +29,6 @@
   "pipeline": "Pipeline",
   "platform": "Platform",
   "knowledge": "Knowledge",
-  "pipeline_status": "Pipeline Status"
+  "pipeline_status": "Pipeline Status",
+  "chat": "AI Chat"
 }
