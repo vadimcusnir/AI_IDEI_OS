@@ -1,14 +1,15 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
-import { Plus, Loader2, Search, Filter, Download, FolderTree } from "lucide-react";
+import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
 import { NeuronToolbar } from "@/components/neurons/NeuronToolbar";
 import { NeuronCard } from "@/components/neurons/NeuronCard";
+import { NeuronPreviewPane } from "@/components/neurons/NeuronPreviewPane";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
-import { useNeuronList } from "@/hooks/useNeuronList";
+import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.gif";
 
