@@ -76,6 +76,14 @@ export default function RunService() {
       await supabase.from("user_credits").insert({ user_id: user!.id, balance: 500, total_earned: 500, total_spent: 0 } as any);
       setCredits({ balance: 500, total_spent: 0 });
     }
+
+    // Check access via server-side function
+    const { data: accessData } = await supabase.rpc("check_access", {
+      _user_id: user!.id,
+      _service_key: serviceKey!,
+    });
+    if (accessData) setAccessVerdict(accessData as unknown as AccessVerdict);
+
     setLoading(false);
   };
 
