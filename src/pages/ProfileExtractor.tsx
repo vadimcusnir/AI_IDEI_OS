@@ -106,7 +106,7 @@ export default function ProfileExtractor() {
         }
       }
 
-      toast.success("Profilul a fost generat!");
+      toast.success("Profile generated!");
     } catch (e: any) {
       toast.error(e.message || "Extragerea a eșuat");
     }
