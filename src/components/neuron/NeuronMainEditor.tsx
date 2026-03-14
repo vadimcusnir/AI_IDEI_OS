@@ -44,7 +44,6 @@ export function NeuronMainEditor({
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const [slashMenu, setSlashMenu] = useState<{ afterId: string; filter: string; position: { top: number; left: number } } | null>(null);
-  const [slashMenu, setSlashMenu] = useState<{ afterId: string; filter: string; position: { top: number; left: number } } | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
 
   const handleSlashInput = useCallback((blockId: string, e: React.FormEvent<HTMLDivElement>) => {
