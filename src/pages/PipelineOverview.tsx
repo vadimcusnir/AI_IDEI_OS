@@ -90,9 +90,9 @@ const STAGES: PipelineStage[] = [
 ];
 
 const STATUS_CONFIG = {
-  active: { label: "Activ", color: "bg-status-validated text-primary-foreground" },
-  ready: { label: "Pregătit", color: "bg-primary/15 text-primary" },
-  coming: { label: "În dezvoltare", color: "bg-muted text-muted-foreground" },
+  active: { label: "Active", color: "bg-status-validated text-primary-foreground" },
+  ready: { label: "Ready", color: "bg-primary/15 text-primary" },
+  coming: { label: "In Development", color: "bg-muted text-muted-foreground" },
 };
 
 export default function PipelineOverview() {

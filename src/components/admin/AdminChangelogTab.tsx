@@ -232,8 +232,8 @@ export function AdminChangelogTab() {
           <Textarea placeholder="Exemplu practic" value={form.example} onChange={e => F("example", e.target.value)} className="text-xs min-h-[40px]" />
           <Textarea placeholder="Beneficiu utilizator" value={form.user_benefit} onChange={e => F("user_benefit", e.target.value)} className="text-xs min-h-[40px]" />
           <div className="flex gap-2 justify-end">
-            <Button size="sm" variant="ghost" onClick={resetForm} className="text-xs gap-1"><X className="h-3 w-3" /> Anulează</Button>
-            <Button size="sm" onClick={save} className="text-xs gap-1"><Check className="h-3 w-3" /> {editingId ? "Salvează" : "Creează"}</Button>
+            <Button size="sm" variant="ghost" onClick={resetForm} className="text-xs gap-1"><X className="h-3 w-3" /> Cancel</Button>
+            <Button size="sm" onClick={save} className="text-xs gap-1"><Check className="h-3 w-3" /> {editingId ? "Save" : "Create"}</Button>
           </div>
         </div>
       )}

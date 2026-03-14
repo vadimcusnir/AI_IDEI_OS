@@ -35,16 +35,16 @@ const ICON_MAP: Record<string, React.ElementType> = {
 };
 
 const CLASS_CONFIG: Record<string, { label: string; description: string; color: string; timing: string; badge: string }> = {
-  A: { label: "Analiză & Decizie", description: "Extrage insight-uri și produce framework-uri decizionale", color: "text-ai-accent", timing: "<20s", badge: "S" },
-  B: { label: "Producție Active", description: "Generează deliverables concrete și conținut", color: "text-status-validated", timing: "1-5min", badge: "C" },
-  C: { label: "Orchestrare & Sistem", description: "Coordonează execuția între servicii — pipeline complet", color: "text-primary", timing: "5-15min", badge: "X" },
+  A: { label: "Analysis & Decision", description: "Extract insights and produce decision frameworks", color: "text-ai-accent", timing: "<20s", badge: "S" },
+  B: { label: "Asset Production", description: "Generate concrete deliverables and content", color: "text-status-validated", timing: "1-5min", badge: "C" },
+  C: { label: "Orchestration & System", description: "Coordinate execution across services — full pipeline", color: "text-primary", timing: "5-15min", badge: "X" },
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  extraction: "Extracție",
-  analysis: "Analiză",
-  production: "Producție",
-  orchestration: "Orchestrare",
+  extraction: "Extraction",
+  analysis: "Analysis",
+  production: "Production",
+  orchestration: "Orchestration",
 };
 
 const TIER_CONFIG: Record<string, { label: string; className: string }> = {
