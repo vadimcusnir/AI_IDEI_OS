@@ -130,7 +130,15 @@ export default function Index() {
                 <FolderTree className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Foldere</span>
               </Button>
-              <Button variant="ghost" size="sm" className="h-8 text-xs gap-1" onClick={() => setShowExportImport(true)}>
+              <Button
+                variant={previewNeuron ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 gap-1.5 text-xs hidden md:flex"
+                onClick={() => setPreviewNeuron(prev => prev ? null : (processedNeurons[0] || null))}
+                title="Previzualizare rapidă"
+              >
+                <PanelRightOpen className="h-3.5 w-3.5" />
+              </Button>
                 <Download className="h-3.5 w-3.5" />
               </Button>
               <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
