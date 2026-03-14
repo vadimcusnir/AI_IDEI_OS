@@ -157,7 +157,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 2.3.1 | ✅ Embedding-based similarity detection (cosine > 0.40) | DONE — dedup-neurons edge function |
 | 2.3.2 | ✅ Neuron merge logic cu păstrare proveniență | DONE — neuron_duplicates table |
-| 2.3.3 | UI pentru confirmare merge | P2 |
+| 2.3.3 | ✅ UI pentru confirmare merge | DONE — DuplicateMergePanel + Intelligence tab |
 
 ---
 
