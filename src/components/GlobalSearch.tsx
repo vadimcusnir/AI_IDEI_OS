@@ -233,9 +233,9 @@ export function GlobalSearch() {
 
           {/* Footer */}
           <div className="px-4 py-2 border-t border-border flex items-center gap-3 text-[10px] text-muted-foreground/50">
-            <span>↑↓ navigare</span>
-            <span>↵ selectare</span>
-            <span>esc închide</span>
+            <span>↑↓ {t("navigate")}</span>
+            <span>↵ {t("select")}</span>
+            <span>esc {t("close")}</span>
           </div>
         </DialogContent>
       </Dialog>
