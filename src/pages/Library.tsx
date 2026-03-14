@@ -201,6 +201,34 @@ export default function Library() {
               <SelectItem value="published">Publicat</SelectItem>
             </SelectContent>
           </Select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                <ArrowUpDown className="h-3 w-3" /> Sort
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              {([
+                { field: "updated_at" as const, label: "Ultima modificare" },
+                { field: "created_at" as const, label: "Data creării" },
+                { field: "title" as const, label: "Titlu" },
+              ]).map(({ field, label }) => (
+                <DropdownMenuItem
+                  key={field}
+                  onClick={() => {
+                    if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
+                    else { setSortField(field); setSortDir("desc"); }
+                  }}
+                  className={cn(sortField === field && "text-primary")}
+                >
+                  {label}
+                  {sortField === field && (
+                    sortDir === "desc" ? <SortDesc className="h-3 w-3 ml-auto" /> : <SortAsc className="h-3 w-3 ml-auto" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <span className="text-[10px] text-muted-foreground ml-auto">
             {filtered.length} rezultate
           </span>
