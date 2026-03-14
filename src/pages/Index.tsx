@@ -1,14 +1,15 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
-import { Plus, Loader2, Search, Filter, Download, FolderTree } from "lucide-react";
+import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
 import { NeuronToolbar } from "@/components/neurons/NeuronToolbar";
 import { NeuronCard } from "@/components/neurons/NeuronCard";
+import { NeuronPreviewPane } from "@/components/neurons/NeuronPreviewPane";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
-import { useNeuronList } from "@/hooks/useNeuronList";
+import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.gif";
 
@@ -26,6 +27,7 @@ export default function Index() {
   const [showFolders, setShowFolders] = useState(false);
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [aiSuggesting, setAiSuggesting] = useState(false);
+  const [previewNeuron, setPreviewNeuron] = useState<NeuronListItem | null>(null);
 
   const {
     neurons, loading, authLoading,
@@ -127,6 +129,15 @@ export default function Index() {
               >
                 <FolderTree className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Foldere</span>
+              </Button>
+              <Button
+                variant={previewNeuron ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 gap-1.5 text-xs hidden md:flex"
+                onClick={() => setPreviewNeuron(prev => prev ? null : (processedNeurons[0] || null))}
+                title="Previzualizare rapidă"
+              >
+                <PanelRightOpen className="h-3.5 w-3.5" />
               </Button>
               <Button variant="ghost" size="sm" className="h-8 text-xs gap-1" onClick={() => setShowExportImport(true)}>
                 <Download className="h-3.5 w-3.5" />
@@ -234,8 +245,10 @@ export default function Index() {
                         neuron={n}
                         viewMode={viewMode}
                         isPinned={pinnedIds.has(n.id)}
+                        isSelected={previewNeuron?.id === n.id}
                         onTogglePin={togglePin}
                         onDelete={handleDelete}
+                        onPreview={previewNeuron !== null ? setPreviewNeuron : undefined}
                       />
                     ))}
                   </div>
@@ -245,6 +258,14 @@ export default function Index() {
           )}
         </div>
       </div>
+
+      {/* Preview pane */}
+      {previewNeuron && (
+        <NeuronPreviewPane
+          neuron={previewNeuron}
+          onClose={() => setPreviewNeuron(null)}
+        />
+      )}
 
       {/* Modals */}
       <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />

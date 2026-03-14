@@ -34,12 +34,22 @@ interface Props {
   neuron: NeuronListItem;
   viewMode: ViewMode;
   isPinned: boolean;
+  isSelected?: boolean;
   onTogglePin: (id: number, e?: React.MouseEvent) => void;
   onDelete: (id: number, e?: React.MouseEvent) => void;
+  onPreview?: (neuron: NeuronListItem) => void;
 }
 
-export function NeuronCard({ neuron: n, viewMode, isPinned, onTogglePin, onDelete }: Props) {
+export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onTogglePin, onDelete, onPreview }: Props) {
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (onPreview) {
+      onPreview(n);
+    } else {
+      navigate(`/n/${n.number}`);
+    }
+  };
 
   const contextMenu = (
     <DropdownMenu>
@@ -70,11 +80,12 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, onTogglePin, onDelet
   if (viewMode === "list") {
     return (
       <div
-        onClick={() => navigate(`/n/${n.number}`)}
+        onClick={handleClick}
         className={cn(
           "group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all",
           "hover:bg-accent/50 border border-transparent hover:border-border",
-          isPinned && "bg-primary/[0.03] border-primary/10"
+          isPinned && "bg-primary/[0.03] border-primary/10",
+          isSelected && "bg-primary/10 border-primary/20"
         )}
       >
         <button
@@ -104,10 +115,11 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, onTogglePin, onDelet
   if (viewMode === "grid") {
     return (
       <div
-        onClick={() => navigate(`/n/${n.number}`)}
+        onClick={handleClick}
         className={cn(
           "group relative flex flex-col p-4 rounded-xl border border-border bg-card cursor-pointer transition-all hover:shadow-md hover:border-primary/20",
-          isPinned && "ring-1 ring-primary/20"
+          isPinned && "ring-1 ring-primary/20",
+          isSelected && "ring-1 ring-primary/40 bg-primary/5"
         )}
       >
         <div className="flex items-center justify-between mb-2">
@@ -134,10 +146,11 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, onTogglePin, onDelet
   // Cards view
   return (
     <div
-      onClick={() => navigate(`/n/${n.number}`)}
+      onClick={handleClick}
       className={cn(
         "group relative flex flex-col p-5 rounded-xl border border-border bg-card cursor-pointer transition-all hover:shadow-lg hover:border-primary/20 hover:-translate-y-0.5",
-        isPinned && "ring-1 ring-primary/20 bg-primary/[0.02]"
+        isPinned && "ring-1 ring-primary/20 bg-primary/[0.02]",
+        isSelected && "ring-1 ring-primary/40 bg-primary/5"
       )}
     >
       {isPinned && (
