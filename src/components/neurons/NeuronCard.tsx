@@ -36,6 +36,7 @@ interface Props {
   isPinned: boolean;
   isSelected?: boolean;
   onTogglePin: (id: number, e?: React.MouseEvent) => void;
+  onToggleSelect?: (id: number, e?: React.MouseEvent) => void;
   onDelete: (id: number, e?: React.MouseEvent) => void;
   onPreview?: (neuron: NeuronListItem) => void;
 }
