@@ -1027,6 +1027,12 @@ export default function Extractor() {
                         <span className="text-[10px] text-ai-accent font-medium">Extracting…</span>
                       </div>
                     )}
+                    {deepExtractingId === ep.id && (
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                        <span className="text-[10px] text-primary font-medium">Deep Extract (8 levels)…</span>
+                      </div>
+                    )}
                     {isAnalyzed && (
                       <span className="text-[10px] text-status-validated font-medium shrink-0">✓ Extracted</span>
                     )}
