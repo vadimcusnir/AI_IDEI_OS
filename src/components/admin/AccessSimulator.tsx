@@ -45,7 +45,7 @@ export function AccessSimulator() {
 
   const verdictIcon = (v: string) => {
     if (v === "ALLOW") return <CheckCircle2 className="h-4 w-4 text-status-validated" />;
-    if (v === "PAYWALL") return <AlertTriangle className="h-4 w-4 text-amber-500" />;
+    if (v === "PAYWALL") return <AlertTriangle className="h-4 w-4 text-accent-foreground" />;
     return <XCircle className="h-4 w-4 text-destructive" />;
   };
 
