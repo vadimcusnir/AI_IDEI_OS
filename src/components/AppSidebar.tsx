@@ -29,6 +29,7 @@ const MAIN_NAV = [
   { labelKey: "jobs", to: "/jobs", icon: Briefcase },
   { labelKey: "library", to: "/library", icon: BookOpen },
   { labelKey: "guest_pages", to: "/guests", icon: Users },
+  { labelKey: "chat", to: "/chat", icon: Bot },
 ];
 
 const SECONDARY_NAV = [
