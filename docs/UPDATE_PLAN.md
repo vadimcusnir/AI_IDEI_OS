@@ -218,9 +218,9 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 4.2.4 | Access Simulator pentru admin | P2 |
 
 ### 4.3 Root2 Pricing
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 4.3.1 | Funcție calcul Root2 (suma cifrelor = 2) | P2 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 4.3.1 | ✅ Funcție calcul Root2 (suma cifrelor = 2) | DONE — root2_validate + root2_nearest DB functions |
 | 4.3.2 | Aplicare pe prețuri vizibile (pachete, servicii) | P2 |
 | 4.3.3 | Admin toggle Root2 pe categorii | P3 |
 
