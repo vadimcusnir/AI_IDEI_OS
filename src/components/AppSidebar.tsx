@@ -82,7 +82,8 @@ export function AppSidebar() {
       <SidebarSeparator />
 
       {user && !collapsed && (
-        <div className="px-3 py-2">
+        <div className="px-3 py-2 space-y-2">
+          <WorkspaceSwitcher collapsed={false} />
           <button onClick={() => navigate("/credits")} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 hover:bg-primary/15 transition-colors">
             <Coins className="h-4 w-4 text-primary shrink-0" />
             <div className="flex flex-col items-start">
@@ -93,7 +94,8 @@ export function AppSidebar() {
         </div>
       )}
       {user && collapsed && (
-        <div className="flex justify-center py-2">
+        <div className="flex flex-col items-center gap-2 py-2">
+          <WorkspaceSwitcher collapsed={true} />
           <button onClick={() => navigate("/credits")} className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/15 transition-colors" title={`${balance} ${t("common:neurons_currency")}`}>
             <Coins className="h-4 w-4 text-primary" />
           </button>
