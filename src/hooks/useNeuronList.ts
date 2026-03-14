@@ -23,6 +23,7 @@ export function useNeuronList() {
   const { user, loading: authLoading } = useAuth();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>("list");
