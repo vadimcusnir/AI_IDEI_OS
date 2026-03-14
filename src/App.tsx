@@ -57,6 +57,7 @@ import DataPrivacy from "./pages/DataPrivacy";
 import PublicUserProfile from "./pages/PublicUserProfile";
 import ChatPage from "./pages/ChatPage";
 import ApiDocs from "./pages/ApiDocs";
+import WorkspaceSettings from "./pages/WorkspaceSettings";
 
 const queryClient = new QueryClient();
 
