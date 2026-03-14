@@ -1,0 +1,142 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Wallet, RefreshCw, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+
+interface WalletRow {
+  user_id: string;
+  balance: number;
+  total_earned: number;
+  total_spent: number;
+  updated_at: string;
+}
+
+interface RecentTx {
+  id: string;
+  user_id: string;
+  amount: number;
+  type: string;
+  description: string;
+  created_at: string;
+}
+
+export function WalletManagementTab() {
+  const [wallets, setWallets] = useState<WalletRow[]>([]);
+  const [recentTx, setRecentTx] = useState<RecentTx[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totals, setTotals] = useState({ circulating: 0, spent: 0, earned: 0, users: 0 });
+
+  const load = async () => {
+    setLoading(true);
+    const [walletsRes, txRes] = await Promise.all([
+      supabase.from("user_credits").select("*").order("balance", { ascending: false }).limit(50),
+      supabase.from("credit_transactions").select("*").order("created_at", { ascending: false }).limit(30),
+    ]);
+
+    const w = (walletsRes.data as WalletRow[]) || [];
+    setWallets(w);
+    setRecentTx((txRes.data as RecentTx[]) || []);
+    setTotals({
+      circulating: w.reduce((s, r) => s + r.balance, 0),
+      spent: w.reduce((s, r) => s + r.total_spent, 0),
+      earned: w.reduce((s, r) => s + r.total_earned, 0),
+      users: w.length,
+    });
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  return (
+    <div className="space-y-4">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <SummaryCard icon={Wallet} label="Circulating" value={totals.circulating} color="text-primary" />
+        <SummaryCard icon={TrendingUp} label="Total Earned" value={totals.earned} />
+        <SummaryCard icon={TrendingDown} label="Total Spent" value={totals.spent} color="text-destructive" />
+        <SummaryCard icon={DollarSign} label="Est. Revenue" value={`$${(totals.spent * 0.01).toFixed(2)}`} color="text-primary" />
+      </div>
+
+      {/* Wallets Table */}
+      <div className="bg-card border border-border rounded-xl p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+            <Wallet className="h-3 w-3" /> User Wallets — Top by Balance
+          </h3>
+          <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
+            <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> Refresh
+          </Button>
+        </div>
+        <div className="overflow-auto max-h-[350px]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-[10px]">User ID</TableHead>
+                <TableHead className="text-[10px] text-right">Balance</TableHead>
+                <TableHead className="text-[10px] text-right">Earned</TableHead>
+                <TableHead className="text-[10px] text-right">Spent</TableHead>
+                <TableHead className="text-[10px]">Last Update</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {wallets.map(w => (
+                <TableRow key={w.user_id}>
+                  <TableCell className="text-[10px] font-mono">{w.user_id.substring(0, 12)}…</TableCell>
+                  <TableCell className="text-xs font-mono text-right font-bold text-primary">{w.balance}</TableCell>
+                  <TableCell className="text-xs font-mono text-right">{w.total_earned}</TableCell>
+                  <TableCell className="text-xs font-mono text-right text-destructive">{w.total_spent}</TableCell>
+                  <TableCell className="text-[10px] text-muted-foreground">
+                    {new Date(w.updated_at).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      {/* Recent Transactions */}
+      <div className="bg-card border border-border rounded-xl p-4">
+        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+          Recent Transactions
+        </h3>
+        <div className="space-y-0.5 max-h-[300px] overflow-y-auto font-mono text-[11px]">
+          {recentTx.map(tx => (
+            <div key={tx.id} className={cn(
+              "flex items-center gap-2 px-2 py-1.5 rounded",
+              tx.amount > 0 ? "hover:bg-primary/5" : "hover:bg-destructive/5"
+            )}>
+              <span className={cn(
+                "text-xs font-bold w-16 text-right",
+                tx.amount > 0 ? "text-primary" : "text-destructive"
+              )}>
+                {tx.amount > 0 ? "+" : ""}{tx.amount}
+              </span>
+              <span className={cn(
+                "text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground shrink-0"
+              )}>{tx.type}</span>
+              <span className="text-xs truncate flex-1">{tx.description}</span>
+              <span className="text-[10px] text-muted-foreground shrink-0">
+                {new Date(tx.created_at).toLocaleString()}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SummaryCard({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: number | string; color?: string }) {
+  return (
+    <div className="bg-card border border-border rounded-xl p-4">
+      <div className="flex items-center gap-1.5 mb-1">
+        <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+      </div>
+      <p className={cn("text-xl font-bold font-mono", color)}>{value}</p>
+    </div>
+  );
+}
