@@ -118,6 +118,7 @@ const App = () => (
               <Route path="/notifications" element={<ProtectedRoute><AppLayout><Notifications /></AppLayout></ProtectedRoute>} />
               <Route path="/feedback" element={<ProtectedRoute><AppLayout><Feedback /></AppLayout></ProtectedRoute>} />
               <Route path="/guests" element={<ProtectedRoute><AppLayout><GuestPages /></AppLayout></ProtectedRoute>} />
+              <Route path="/chat" element={<ProtectedRoute><AppLayout fullHeight><ChatPage /></AppLayout></ProtectedRoute>} />
               <Route path="/onboarding" element={<ProtectedRoute><AppLayout><Onboarding /></AppLayout></ProtectedRoute>} />
               <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
 
