@@ -78,6 +78,13 @@ export type Database = {
             foreignKeyName: "artifact_neurons_neuron_id_fkey"
             columns: ["neuron_id"]
             isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "artifact_neurons_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]
           },
@@ -467,6 +474,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "entities_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
           {
             foreignKeyName: "entities_neuron_id_fkey"
             columns: ["neuron_id"]
@@ -1087,6 +1101,13 @@ export type Database = {
             foreignKeyName: "insight_scores_neuron_id_fkey"
             columns: ["neuron_id"]
             isOneToOne: true
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "insight_scores_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: true
             referencedRelation: "neurons"
             referencedColumns: ["id"]
           },
@@ -1155,6 +1176,13 @@ export type Database = {
             foreignKeyName: "neuron_addresses_neuron_id_fkey"
             columns: ["neuron_id"]
             isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "neuron_addresses_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]
           },
@@ -1205,6 +1233,13 @@ export type Database = {
             foreignKeyName: "neuron_blocks_neuron_id_fkey"
             columns: ["neuron_id"]
             isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "neuron_blocks_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]
           },
@@ -1240,8 +1275,22 @@ export type Database = {
             foreignKeyName: "neuron_clones_cloned_neuron_id_fkey"
             columns: ["cloned_neuron_id"]
             isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "neuron_clones_cloned_neuron_id_fkey"
+            columns: ["cloned_neuron_id"]
+            isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_clones_source_neuron_id_fkey"
+            columns: ["source_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
           },
           {
             foreignKeyName: "neuron_clones_source_neuron_id_fkey"
@@ -1288,8 +1337,22 @@ export type Database = {
             foreignKeyName: "neuron_duplicates_neuron_a_fkey"
             columns: ["neuron_a"]
             isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "neuron_duplicates_neuron_a_fkey"
+            columns: ["neuron_a"]
+            isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_duplicates_neuron_b_fkey"
+            columns: ["neuron_b"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
           },
           {
             foreignKeyName: "neuron_duplicates_neuron_b_fkey"
@@ -1326,6 +1389,13 @@ export type Database = {
           neuron_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "neuron_embeddings_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
           {
             foreignKeyName: "neuron_embeddings_neuron_id_fkey"
             columns: ["neuron_id"]
@@ -1402,6 +1472,13 @@ export type Database = {
             foreignKeyName: "neuron_jobs_neuron_id_fkey"
             columns: ["neuron_id"]
             isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "neuron_jobs_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]
           },
@@ -1434,8 +1511,22 @@ export type Database = {
             foreignKeyName: "neuron_links_source_neuron_id_fkey"
             columns: ["source_neuron_id"]
             isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "neuron_links_source_neuron_id_fkey"
+            columns: ["source_neuron_id"]
+            isOneToOne: false
             referencedRelation: "neurons"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_links_target_neuron_id_fkey"
+            columns: ["target_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
           },
           {
             foreignKeyName: "neuron_links_target_neuron_id_fkey"
@@ -1550,6 +1641,13 @@ export type Database = {
           version?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "neuron_versions_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
           {
             foreignKeyName: "neuron_versions_neuron_id_fkey"
             columns: ["neuron_id"]
@@ -2132,6 +2230,30 @@ export type Database = {
       }
     }
     Views: {
+      neuron_lifecycle_pricing: {
+        Row: {
+          adjusted_cost: number | null
+          base_cost: number | null
+          lifecycle: string | null
+          lifecycle_multiplier: number | null
+          neuron_id: number | null
+        }
+        Insert: {
+          adjusted_cost?: never
+          base_cost?: number | null
+          lifecycle?: string | null
+          lifecycle_multiplier?: never
+          neuron_id?: number | null
+        }
+        Update: {
+          adjusted_cost?: never
+          base_cost?: number | null
+          lifecycle?: string | null
+          lifecycle_multiplier?: never
+          neuron_id?: number | null
+        }
+        Relationships: []
+      }
       neuron_stats: {
         Row: {
           author_id: string | null
@@ -2200,6 +2322,8 @@ export type Database = {
         Returns: boolean
       }
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
+      root2_nearest: { Args: { _price: number }; Returns: number }
+      root2_validate: { Args: { _price: number }; Returns: boolean }
       search_neurons_semantic: {
         Args: {
           _user_id?: string

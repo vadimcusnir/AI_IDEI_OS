@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
+import { RadarChart } from "@/components/intelligence/RadarChart";
 import {
   Loader2, Brain, Quote, Sparkles, Users, MessageCircle,
   Target, Award, Lightbulb, TrendingUp, ArrowRight, Lock,
@@ -280,6 +281,22 @@ export default function GuestProfile() {
               {expertiseScores.map((item, i) => (
                 <ExpertiseBar key={i} label={item.label} value={item.value} delay={150 + i * 100} />
               ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── Psychological Radar Chart ── */}
+        {guest.psychological_traits.length >= 3 && (
+          <section>
+            <SectionHeader icon={Brain} label="Psychological Profile" count={guest.psychological_traits.length} />
+            <div className="rounded-2xl border border-border bg-card p-5 flex items-center justify-center">
+              <RadarChart
+                data={guest.psychological_traits.slice(0, 8).map((trait, i) => ({
+                  label: trait.length > 14 ? trait.slice(0, 12) + "…" : trait,
+                  value: Math.max(30, 95 - i * 8),
+                }))}
+                size={280}
+              />
             </div>
           </section>
         )}

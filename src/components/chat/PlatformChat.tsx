@@ -1,0 +1,343 @@
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  Send, Loader2, Bot, User, Sparkles, Upload,
+  X, Paperclip, RotateCcw,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface Message {
+  id: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+  timestamp: Date;
+  metadata?: { action?: string; service_key?: string; neuron_id?: number };
+}
+
+const SYSTEM_PROMPT = `You are the AI-IDEI platform assistant. You help users:
+- Extract knowledge from transcripts and content
+- Run AI services (summary, personality intelligence, avatar33, podcast intelligence, etc.)
+- Navigate the platform (neurons, services, jobs, library, credits)
+- Understand their knowledge graph and IdeaRank scores
+
+When a user wants to run a service, respond with actionable guidance.
+When they ask about their data, help them find it.
+Be concise, professional, and use Romanian when the user writes in Romanian.`;
+
+export function PlatformChat() {
+  const { user } = useAuth();
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "welcome",
+      role: "assistant",
+      content: "Bun venit! Sunt asistentul AI-IDEI. Te pot ajuta să extragi cunoștințe, să rulezi servicii AI sau să navighezi platforma. Cu ce te pot ajuta?",
+      timestamp: new Date(),
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  useEffect(scrollToBottom, [messages, scrollToBottom]);
+
+  const handleSend = async () => {
+    if (!input.trim() && files.length === 0) return;
+    if (!user) return;
+
+    const userMessage: Message = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: input.trim() + (files.length > 0 ? `\n\n[${files.length} file(s) attached: ${files.map(f => f.name).join(", ")}]` : ""),
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput("");
+    setFiles([]);
+    setLoading(true);
+
+    try {
+      // Build conversation history
+      const history = messages.slice(-10).map(m => ({
+        role: m.role as "user" | "assistant" | "system",
+        content: m.content,
+      }));
+
+      // Read file content if text-based
+      let fileContent = "";
+      for (const file of files) {
+        if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md")) {
+          fileContent += `\n--- ${file.name} ---\n` + await file.text();
+        }
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/neuron-chat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            message: userMessage.content + fileContent,
+            history,
+            system_prompt: SYSTEM_PROMPT,
+            neuron_id: null, // Platform-wide chat
+          }),
+        }
+      );
+
+      if (!resp.ok) {
+        throw new Error(`Error ${resp.status}`);
+      }
+
+      // Stream response
+      let fullContent = "";
+      const assistantId = crypto.randomUUID();
+
+      if (resp.body) {
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          let nlIdx: number;
+          while ((nlIdx = buffer.indexOf("\n")) !== -1) {
+            let line = buffer.slice(0, nlIdx);
+            buffer = buffer.slice(nlIdx + 1);
+            if (line.endsWith("\r")) line = line.slice(0, -1);
+            if (!line.startsWith("data: ")) continue;
+            const d = line.slice(6).trim();
+            if (d === "[DONE]") continue;
+            try {
+              const parsed = JSON.parse(d);
+              const c = parsed.choices?.[0]?.delta?.content;
+              if (c) {
+                fullContent += c;
+                setMessages(prev => {
+                  const existing = prev.find(m => m.id === assistantId);
+                  if (existing) {
+                    return prev.map(m =>
+                      m.id === assistantId ? { ...m, content: fullContent } : m
+                    );
+                  }
+                  return [
+                    ...prev,
+                    {
+                      id: assistantId,
+                      role: "assistant" as const,
+                      content: fullContent,
+                      timestamp: new Date(),
+                    },
+                  ];
+                });
+              }
+            } catch { /* partial */ }
+          }
+        }
+      }
+
+      if (!fullContent) {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: assistantId,
+            role: "assistant",
+            content: "Îmi pare rău, nu am putut genera un răspuns. Încearcă din nou.",
+            timestamp: new Date(),
+          },
+        ]);
+      }
+    } catch (e) {
+      toast.error("Chat error: " + (e instanceof Error ? e.message : "Unknown"));
+      setMessages(prev => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: "A apărut o eroare. Te rog să încerci din nou.",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFiles(prev => [...prev, ...Array.from(e.target.files!)]);
+    }
+  };
+
+  const removeFile = (idx: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const clearChat = () => {
+    setMessages([
+      {
+        id: "welcome-reset",
+        role: "assistant",
+        content: "Conversație resetată. Cu ce te pot ajuta?",
+        timestamp: new Date(),
+      },
+    ]);
+  };
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+        <div className="flex items-center gap-2">
+          <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Sparkles className="h-3.5 w-3.5 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold">AI-IDEI Assistant</p>
+            <p className="text-[9px] text-muted-foreground">Knowledge OS • Always online</p>
+          </div>
+        </div>
+        <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={clearChat}>
+          <RotateCcw className="h-3 w-3" />
+        </Button>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+        {messages.map((msg) => (
+          <div
+            key={msg.id}
+            className={cn(
+              "flex gap-2.5",
+              msg.role === "user" ? "flex-row-reverse" : "flex-row"
+            )}
+          >
+            <div className={cn(
+              "h-6 w-6 rounded-full flex items-center justify-center shrink-0 mt-0.5",
+              msg.role === "user" ? "bg-primary/10" : "bg-muted"
+            )}>
+              {msg.role === "user" ? (
+                <User className="h-3 w-3 text-primary" />
+              ) : (
+                <Bot className="h-3 w-3 text-muted-foreground" />
+              )}
+            </div>
+            <div className={cn(
+              "max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
+              msg.role === "user"
+                ? "bg-primary text-primary-foreground rounded-br-md"
+                : "bg-muted text-foreground rounded-bl-md"
+            )}>
+              <p className="whitespace-pre-wrap text-xs">{msg.content}</p>
+              <p className={cn(
+                "text-[8px] mt-1",
+                msg.role === "user" ? "text-primary-foreground/50 text-right" : "text-muted-foreground/50"
+              )}>
+                {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </p>
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex gap-2.5">
+            <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center shrink-0">
+              <Bot className="h-3 w-3 text-muted-foreground" />
+            </div>
+            <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
+              <div className="flex gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce" style={{ animationDelay: "0ms" }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce" style={{ animationDelay: "150ms" }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+              </div>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* File attachments preview */}
+      {files.length > 0 && (
+        <div className="px-4 py-2 flex gap-2 flex-wrap border-t border-border">
+          {files.map((f, i) => (
+            <div key={i} className="flex items-center gap-1.5 bg-muted rounded-lg px-2.5 py-1.5 text-[10px]">
+              <Paperclip className="h-3 w-3 text-muted-foreground" />
+              <span className="truncate max-w-[120px]">{f.name}</span>
+              <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground">
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Input */}
+      <div className="px-4 py-3 border-t border-border">
+        <div className="flex items-end gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            multiple
+            accept=".txt,.md,.csv,.json,.pdf"
+            onChange={handleFileSelect}
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 shrink-0"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload className="h-3.5 w-3.5" />
+          </Button>
+          <textarea
+            ref={inputRef}
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Scrie un mesaj..."
+            rows={1}
+            className="flex-1 bg-muted/50 rounded-xl px-3.5 py-2 text-sm outline-none border border-border focus:border-primary transition-colors resize-none min-h-[36px] max-h-[120px]"
+            style={{ height: "auto", overflow: "hidden" }}
+            onInput={(e) => {
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = "auto";
+              el.style.height = Math.min(el.scrollHeight, 120) + "px";
+            }}
+          />
+          <Button
+            size="sm"
+            className="h-8 w-8 p-0 shrink-0"
+            disabled={loading || (!input.trim() && files.length === 0)}
+            onClick={handleSend}
+          >
+            <Send className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

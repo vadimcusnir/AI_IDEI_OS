@@ -51,6 +51,8 @@ import NotFound from "./pages/NotFound";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import DataPrivacy from "./pages/DataPrivacy";
+import PublicUserProfile from "./pages/PublicUserProfile";
+import ChatPage from "./pages/ChatPage";
 
 const queryClient = new QueryClient();
 
@@ -69,7 +71,7 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/links" element={<AppLayout><Links /></AppLayout>} />
               <Route path="/architecture" element={<AppLayout><Architecture /></AppLayout>} />
-              <Route path="/u/:username" element={<PublicProfile />} />
+              <Route path="/u/:username" element={<PublicUserProfile />} />
               <Route path="/guest/:slug" element={<GuestProfile />} />
 
               {/* Public knowledge infrastructure — with global layout */}
@@ -116,6 +118,7 @@ const App = () => (
               <Route path="/notifications" element={<ProtectedRoute><AppLayout><Notifications /></AppLayout></ProtectedRoute>} />
               <Route path="/feedback" element={<ProtectedRoute><AppLayout><Feedback /></AppLayout></ProtectedRoute>} />
               <Route path="/guests" element={<ProtectedRoute><AppLayout><GuestPages /></AppLayout></ProtectedRoute>} />
+              <Route path="/chat" element={<ProtectedRoute><AppLayout fullHeight><ChatPage /></AppLayout></ProtectedRoute>} />
               <Route path="/onboarding" element={<ProtectedRoute><AppLayout><Onboarding /></AppLayout></ProtectedRoute>} />
               <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
 

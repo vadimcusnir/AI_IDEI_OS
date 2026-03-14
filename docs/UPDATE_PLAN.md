@@ -193,7 +193,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 3.4.1 | ✅ Transcript Intelligence | Extracție completă din transcript | DONE — extract-insights + deep-extract |
 | 3.4.2 | ✅ Personality Intelligence | 45 prompts pe 10 module (Avatar Psihologic) | DONE — service_catalog entry + 10 deliverables |
 | 3.4.3 | ✅ Avatar33 Execution Engine | 33 prompts pentru avatar comercial | DONE — service_catalog entry + 13 deliverables |
-| 3.4.4 | Webinar Generator | 48 prompts pe 12 module | P2 |
+| 3.4.4 | ✅ Webinar Generator | 48 prompts pe 12 module | DONE — service_catalog entry + 12 deliverables |
 | 3.4.5 | ✅ Podcast Intelligence | Framework-uri, pattern-uri retorice | DONE — service_catalog entry + 8 deliverables |
 
 ---
@@ -207,7 +207,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 4.1.1 | ✅ Credit reservation la start job + settlement la finalizare | DONE — reserve_credits + settle_credits DB functions |
 | 4.1.2 | ✅ Refund automat la job failed | DONE — refund_credits DB function |
 | 4.1.3 | ✅ Cost preview înainte de execuție (UI) | DONE — Cost Preview panel in RunService |
-| 4.1.4 | Pricing transitions bazat pe neuron lifecycle | P2 |
+| 4.1.4 | ✅ Pricing transitions bazat pe neuron lifecycle | DONE — neuron_lifecycle_pricing view |
 
 ### 4.2 Access Control (`checkAccess`)
 | # | Sarcină | Status |
@@ -218,9 +218,9 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 4.2.4 | Access Simulator pentru admin | P2 |
 
 ### 4.3 Root2 Pricing
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 4.3.1 | Funcție calcul Root2 (suma cifrelor = 2) | P2 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 4.3.1 | ✅ Funcție calcul Root2 (suma cifrelor = 2) | DONE — root2_validate + root2_nearest DB functions |
 | 4.3.2 | Aplicare pe prețuri vizibile (pachete, servicii) | P2 |
 | 4.3.3 | Admin toggle Root2 pe categorii | P3 |
 
@@ -237,21 +237,21 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 *Funcționalități avansate și diferențiatoare*
 
 ### 5.1 Chat Interface (Conversational Layer)
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 5.1.1 | Componentă chat cu input text + drag-drop fișiere | P1 |
-| 5.1.2 | Parser intenții (LLM via Lovable AI gateway) | P1 |
-| 5.1.3 | Conectare la edge functions (extract, generate, run-service) | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 5.1.1 | ✅ Componentă chat cu input text + drag-drop fișiere | DONE — PlatformChat component |
+| 5.1.2 | ✅ Parser intenții (LLM via Lovable AI gateway) | DONE — neuron-chat integration |
+| 5.1.3 | ✅ Conectare la edge functions (extract, generate, run-service) | DONE — via neuron-chat |
 | 5.1.4 | Context persistent pe sesiune | P2 |
 | 5.1.5 | Suport multi-modal (audio/video upload din chat) | P2 |
 
 ### 5.2 Psychological Profile Engine
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
+| # | Sarcină | Status |
+|---|---------|--------|
 | 5.2.1 | Pipeline LIWC-based: corpus → tokenizare → matrice lexicală → TF-IDF | P1 |
 | 5.2.2 | Mapare către Big Five traits via regression | P2 |
 | 5.2.3 | Generare psychological feature vector per speaker | P2 |
-| 5.2.4 | Vizualizare radar chart în profil guest | P1 |
+| 5.2.4 | ✅ Vizualizare radar chart în profil guest | DONE — RadarChart SVG component |
 
 ### 5.3 Webinar Generator Service
 | # | Sarcină | Prioritate |
@@ -273,17 +273,17 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 5.4.5 | Catalog public cu portofolii creatori | P3 |
 
 ### 5.5 IdeaRank UI Layer
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 5.5.1 | Widget "Idei în trend" pe homepage | P1 |
-| 5.5.2 | Sortare entități după IdeaRank/freshness | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 5.5.1 | ✅ Widget "Idei în trend" pe homepage | DONE — TrendingIdeasWidget |
+| 5.5.2 | ✅ Sortare entități după IdeaRank/freshness | DONE — EntityListing sort |
 | 5.5.3 | Pagină /topics/discovery cu clustering interactiv | P2 |
 | 5.5.4 | Algoritm IdeaRank: influence scoring + propagation modeling | P2 |
 
 ### 5.6 User Profile & Gamification
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 5.6.1 | Pagină profil indexabil per utilizator | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 5.6.1 | ✅ Pagină profil indexabil per utilizator | DONE — PublicUserProfile /u/:username |
 | 5.6.2 | Realizări/competențe din activitate platformă | P2 |
 | 5.6.3 | Premii pentru neuroni/tokens acumulați | P2 |
 
@@ -341,11 +341,11 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | Faza 0 — Securitate | ~8 | P0 | ~90% DONE |
 | Faza 1 — UX Polish | ~35 | P0-P1 | ✅ 100% DONE |
 | Faza 2 — Extraction Engine | ~15 | P0-P1 | ✅ 100% DONE |
-| Faza 3 — Service Execution | ~12 | P0-P1 | ✅ ~95% DONE |
-| Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ ~75% DONE |
-| Faza 5 — Advanced Features | ~25 | P1-P2 | ~5% DONE |
+| Faza 3 — Service Execution | ~12 | P0-P1 | ✅ 100% DONE |
+| Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ ~90% DONE |
+| Faza 5 — Advanced Features | ~25 | P1-P2 | ~35% DONE |
 | Faza 6 — Governance & Token | ~15 | P2-P3 | 0% |
-| **TOTAL** | **~122 sarcini** | | **~65% complet** |
+| **TOTAL** | **~122 sarcini** | | **~75% complet** |
 
 ---
 
