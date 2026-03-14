@@ -258,6 +258,14 @@ export default function Index() {
         </div>
       </div>
 
+      {/* Preview pane */}
+      {previewNeuron && (
+        <NeuronPreviewPane
+          neuron={previewNeuron}
+          onClose={() => setPreviewNeuron(null)}
+        />
+      )}
+
       {/* Modals */}
       <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />
       <ExportImportPanel isOpen={showExportImport} onClose={() => setShowExportImport(false)} />
