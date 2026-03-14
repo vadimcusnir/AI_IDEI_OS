@@ -83,13 +83,16 @@
 - ✅ Run service (Edge Function + SSE streaming)
 - ✅ Pre-Run protocol (checkAccess → create → run → settle)
 
-### Services & Marketplace (✅ 75%)
+### Services & Marketplace (✅ 95%)
 - ✅ Services catalog page cu filtering
 - ✅ RunService page cu SSE streaming
 - ✅ Marketplace page (knowledge assets)
 - ✅ Purchase flow (basic)
-- 🟡 Marketplace publish flow (creator side)
-- 🟡 Reviews & ratings system
+- ✅ Marketplace publish flow (creator side)
+- ✅ Reviews & ratings system (asset_reviews table + triggers + UI)
+- ✅ Featured assets section
+- ✅ Sort & advanced search (popular, newest, top rated, price)
+- 🟡 Purchase with NEURONS (credit deduction flow)
 
 ### Admin System (✅ 95%)
 - ✅ Admin dashboard (8 tabs)
@@ -241,7 +244,7 @@ Sprint F+:           T3.3 (Workspaces), T4.x (Token)
 | Core Features | 45/50 | 50 | 90% |
 | Security | 18/20 | 20 | 90% |
 | Extractors | ~55/120 | 120 | 46% |
-| Marketplace | 3/8 | 8 | 37% |
+| Marketplace | 7/8 | 8 | 87% |
 | Token System | 0/4 | 4 | 0% |
 | **TOTAL (fără extractors+token)** | **~106/120** | **120** | **~88%** |
 | **TOTAL (cu tot)** | **~148/292** | **292** | **~51%** |

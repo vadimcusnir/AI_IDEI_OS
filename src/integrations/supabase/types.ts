@@ -254,6 +254,47 @@ export type Database = {
           },
         ]
       }
+      asset_reviews: {
+        Row: {
+          asset_id: string
+          created_at: string
+          id: string
+          rating: number
+          review_text: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          id?: string
+          rating: number
+          review_text?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          review_text?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_reviews_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       asset_transactions: {
         Row: {
           amount_neurons: number
@@ -1387,6 +1428,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          is_featured: boolean | null
           is_published: boolean | null
           metadata: Json | null
           neuron_ids: number[] | null
@@ -1407,6 +1449,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          is_featured?: boolean | null
           is_published?: boolean | null
           metadata?: Json | null
           neuron_ids?: number[] | null
@@ -1427,6 +1470,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          is_featured?: boolean | null
           is_published?: boolean | null
           metadata?: Json | null
           neuron_ids?: number[] | null
