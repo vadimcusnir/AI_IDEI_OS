@@ -313,7 +313,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 6.3.1 | ✅ Wallet management dashboard | DONE — WalletManagementTab component |
 | 6.3.2 | ✅ Reconciliation engine (cost vs revenue) | DONE — ReconciliationTab component |
 | 6.3.3 | ✅ Incident management panel | DONE — IncidentManagementTab + incidents table |
-| 6.3.4 | Entropy monitoring (cost growth vs revenue growth) | P3 |
+| 6.3.4 | ✅ Entropy monitoring (cost growth vs revenue growth) | DONE — EntropyMonitoringTab component |
 
 ### 6.4 Token NOTA2
 | # | Sarcină | Prioritate |
@@ -328,7 +328,8 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | # | Sarcină | Status |
 |---|---------|--------|
 | 6.5.1 | Arhitectură 100M neuroni (distributed storage, graph indexing) | P3 |
-| 6.5.2 | Vector search semantic (Supabase pgvector) | P2 |
+| 6.5.2 | ✅ Vector search semantic (Supabase pgvector) | DONE — search_neurons_semantic function |
+| 6.5.3 | ✅ API REST pentru integrări externe | DONE — neuron-api edge function (CRUD, search, clone, fork) |
 | 6.5.3 | API REST/GraphQL pentru integrări externe | P2 |
 | 6.5.4 | ✅ PWA / mobile optimization | DONE — manifest.json + meta tags + SW registration |
 
@@ -344,8 +345,8 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | Faza 3 — Service Execution | ~12 | P0-P1 | ✅ 100% DONE |
 | Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ 100% DONE |
 | Faza 5 — Advanced Features | ~25 | P1-P2 | ✅ ~95% DONE |
-| Faza 6 — Governance & Token | ~15 | P2-P3 | ~75% DONE |
-| **TOTAL** | **~122 sarcini** | | **~96% complet** |
+| Faza 6 — Governance & Token | ~15 | P2-P3 | ~85% DONE |
+| **TOTAL** | **~122 sarcini** | | **~98% complet** |
 
 ---
 
