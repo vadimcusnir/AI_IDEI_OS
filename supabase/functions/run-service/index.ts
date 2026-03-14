@@ -280,6 +280,27 @@ const SERVICE_ARTIFACT_TYPE: Record<string, string> = {
   "funnel-architect": "strategy",
   "thought-leadership": "document",
   "audience-avatar": "document",
+  // Batch 2
+  "webinar-script": "document",
+  "linkedin-strategy": "strategy",
+  "sales-page": "document",
+  "coaching-framework": "document",
+  "podcast-pitch": "document",
+  "micro-course": "course",
+  "storytelling-vault": "document",
+  "ad-copy-suite": "document",
+  "community-playbook": "strategy",
+  "sop-generator": "document",
+  "content-repurposer": "document",
+  "negotiation-playbook": "document",
+  "onboarding-sequence": "strategy",
+  "investor-deck": "document",
+  "book-outline": "document",
+  "crisis-playbook": "strategy",
+  "partnership-brief": "document",
+  "retention-engine": "strategy",
+  "speaking-kit": "document",
+  "assessment-builder": "document",
 };
 
 // Valid service keys for input validation
