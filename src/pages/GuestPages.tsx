@@ -79,7 +79,7 @@ export default function GuestPages() {
       .eq("author_id", user!.id)
       .order("created_at", { ascending: false });
     if (data) setGuests(data as unknown as GuestProfile[]);
-    if (error) toast.error("Eroare la încărcarea profilelor");
+    if (error) toast.error("Error loading profiles");
     setLoading(false);
   };
 
