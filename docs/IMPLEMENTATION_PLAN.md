@@ -147,13 +147,13 @@
 
 ### TIER 2 — Intelligence Expansion (P1-P2)
 
-#### T2.1 ❌ Psychological Profile Engine
-**Efort:** 3-4 sesiuni
-- [ ] LIWC-style lexical analysis (Edge Function)
-- [ ] Big Five mapping din transcript
-- [ ] Psychological feature vector generation
-- [ ] Vizualizare profil psihologic complet
-- [ ] Integrare în Guest Profile pages
+#### T2.1 ✅ Psychological Profile Engine
+**Efort:** 3-4 sesiuni — **IMPLEMENTAT**
+- [x] LIWC-style lexical analysis (Edge Function)
+- [x] Big Five mapping din transcript
+- [x] Psychological feature vector generation
+- [x] Vizualizare profil psihologic complet
+- [x] Integrare în Guest Profile pages
 
 #### T2.2 🟡 Extractors Suplimentari
 **Efort:** 10+ sesiuni (incremental)
