@@ -9,6 +9,7 @@ import {
   LogOut, Home, User, MessageCircle, ScrollText,
   BarChart3, Bell, BookOpen, Users, Network, Rocket,
   FileText, Lightbulb, Repeat2, FlaskConical, AlertTriangle, Layers,
+  Bot,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
