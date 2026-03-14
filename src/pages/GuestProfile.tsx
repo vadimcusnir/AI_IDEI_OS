@@ -294,8 +294,16 @@ export default function GuestProfile() {
           </section>
         )}
 
-        {/* ── Psychological Radar Chart ── */}
-        {guest.psychological_traits.length >= 3 && (
+        {/* ── Deep Psychological Profile (from AI analysis) ── */}
+        {psychProfile && (
+          <section>
+            <SectionHeader icon={Brain} label="Deep Psychological Analysis" />
+            <PsychologicalProfileSection profile={psychProfile} />
+          </section>
+        )}
+
+        {/* ── Basic Psychological Radar Chart (fallback from traits) ── */}
+        {!psychProfile && guest.psychological_traits.length >= 3 && (
           <section>
             <SectionHeader icon={Brain} label="Psychological Profile" count={guest.psychological_traits.length} />
             <div className="rounded-2xl border border-border bg-card p-5 flex items-center justify-center">
