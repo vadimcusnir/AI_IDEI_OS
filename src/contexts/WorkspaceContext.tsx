@@ -184,7 +184,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const updateMemberRole = useCallback(async (memberId: string, role: string): Promise<boolean> => {
-    const { error } = await supabase.from("workspace_members").update({ role }).eq("id", memberId);
+    const { error } = await supabase.from("workspace_members").update({ role: role as any }).eq("id", memberId);
     if (!error) setMembers((prev) => prev.map((m) => (m.id === memberId ? { ...m, role } : m)));
     return !error;
   }, []);
