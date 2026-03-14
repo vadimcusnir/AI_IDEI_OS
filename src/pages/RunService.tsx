@@ -329,9 +329,55 @@ export default function RunService() {
           </div>
         )}
 
+        {/* Cost Preview Panel */}
+        {canRun && (
+          <div className="mb-6 rounded-xl border border-border bg-card p-4">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+              <Coins className="h-3 w-3" /> Cost Preview
+            </h2>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <p className="text-[10px] text-muted-foreground">Service Cost</p>
+                <p className="text-lg font-bold font-mono">{service.credits_cost}</p>
+                <p className="text-[9px] text-muted-foreground">NEURONS</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-muted-foreground">Your Balance</p>
+                <p className="text-lg font-bold font-mono">{credits?.balance ?? 0}</p>
+                <p className="text-[9px] text-muted-foreground">NEURONS</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-muted-foreground">After Run</p>
+                <p className={cn("text-lg font-bold font-mono", hasEnoughCredits ? "text-status-validated" : "text-destructive")}>
+                  {(credits?.balance ?? 0) - service.credits_cost}
+                </p>
+                <p className="text-[9px] text-muted-foreground">NEURONS</p>
+              </div>
+            </div>
+            {accessVerdict?.verdict === "PAYWALL" && (
+              <div className="mt-3 flex items-center gap-2 p-2.5 rounded-lg bg-destructive/10 border border-destructive/20">
+                <Lock className="h-4 w-4 text-destructive shrink-0" />
+                <div>
+                  <p className="text-xs font-medium text-destructive">Credite insuficiente</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    Ai nevoie de încă {accessVerdict.deficit} NEURONS.{" "}
+                    <button onClick={() => navigate("/credits")} className="text-primary underline">Top up →</button>
+                  </p>
+                </div>
+              </div>
+            )}
+            {accessVerdict?.verdict === "ALLOW" && (
+              <div className="mt-3 flex items-center gap-2 p-2.5 rounded-lg bg-status-validated/10 border border-status-validated/20">
+                <Shield className="h-4 w-4 text-status-validated shrink-0" />
+                <p className="text-xs text-status-validated">Acces verificat — ready to run</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {canRun && (
           <div className="flex items-center gap-3">
-            <Button onClick={handleRun} disabled={!hasEnoughCredits} className="gap-2" size="lg">
+            <Button onClick={handleRun} disabled={!hasEnoughCredits || accessVerdict?.verdict !== "ALLOW"} className="gap-2" size="lg">
               <Play className="h-4 w-4" />
               Run Job — {service.credits_cost} credits
             </Button>
