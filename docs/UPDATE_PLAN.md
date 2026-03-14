@@ -129,34 +129,34 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 *Motorul de extracție: de la ~5 extractori la ~120*
 
 ### 2.1 Pipeline Extracție Multi-Nivel
-| # | Nivel | Sarcină | Prioritate |
-|---|-------|---------|-----------|
-| 2.1.1 | L0 | Input Layer — normalizare media, PDF/DOCX parsing | P0 |
-| 2.1.2 | L1 | Segmentation — chunking semantic 300-800 tokens | P0 (parțial DONE) |
-| 2.1.3 | L2 | Atomic Extraction — statements, definitions, principles, questions | P0 |
-| 2.1.4 | L3 | Entity Extraction — persons, companies, concepts, frameworks | P0 (parțial DONE) |
-| 2.1.5 | L4 | Structural Extraction — frameworks, mental models, processes | P0 |
-| 2.1.6 | L5 | Psychological Extraction — cognitive style, emotional drivers, traits | P1 |
-| 2.1.7 | L6 | Narrative Extraction — anchor stories, metaphors, pivot phrases | P1 |
-| 2.1.8 | L7 | Commercial Extraction — JTBD, purchase triggers, opportunities | P1 |
-| 2.1.9 | L8 | Pattern Detection — decision/persuasion/influence patterns | P1 |
-| 2.1.10 | L9 | Insight Synthesis — strategic/psychological/commercial insights | P1 |
-| 2.1.11 | L10 | Profile Generation — speaker profiles cu componente psihologice | P1 |
-| 2.1.12 | L11 | Knowledge Graph Update — noduri, edge-uri, clustering | P1 |
-| 2.1.13 | L12 | Content Production — articole, rapoarte, social posts | P2 |
+| # | Nivel | Sarcină | Status |
+|---|-------|---------|--------|
+| 2.1.1 | L0 | ✅ Input Layer — normalizare media, PDF/DOCX parsing | DONE — PDF via pdfjs-dist |
+| 2.1.2 | L1 | ✅ Segmentation — chunking semantic 300-800 tokens | DONE — chunk-transcript edge function |
+| 2.1.3 | L2 | ✅ Atomic Extraction — statements, definitions, principles, questions | DONE — deep-extract L2_atomic |
+| 2.1.4 | L3 | ✅ Entity Extraction — persons, companies, concepts, frameworks | DONE — deep-extract L3_entity + extract-guests |
+| 2.1.5 | L4 | ✅ Structural Extraction — frameworks, mental models, processes | DONE — deep-extract L4_structural |
+| 2.1.6 | L5 | ✅ Psychological Extraction — cognitive style, emotional drivers, traits | DONE — deep-extract L5_psychological |
+| 2.1.7 | L6 | ✅ Narrative Extraction — anchor stories, metaphors, pivot phrases | DONE — deep-extract L6_narrative |
+| 2.1.8 | L7 | ✅ Commercial Extraction — JTBD, purchase triggers, opportunities | DONE — deep-extract L7_commercial |
+| 2.1.9 | L8 | ✅ Pattern Detection — decision/persuasion/influence patterns | DONE — deep-extract L8_pattern |
+| 2.1.10 | L9 | ✅ Insight Synthesis — strategic/psychological/commercial insights | DONE — deep-extract L9_synthesis |
+| 2.1.11 | L10 | ✅ Profile Generation — speaker profiles cu componente psihologice | DONE — extract-guests edge function |
+| 2.1.12 | L11 | ✅ Knowledge Graph Update — noduri, edge-uri, clustering | DONE — generate-entities + compute_idearank |
+| 2.1.13 | L12 | Content Production — articole, rapoarte, social posts | P2 (via IMF Pipeline) |
 
 ### 2.2 Scoring Engine
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 2.2.1 | Formula: `score = novelty × information_density × utility × demand` | P0 |
-| 2.2.2 | Praguri: premium (>70), standard (40-70), discard (<40) | P0 |
-| 2.2.3 | Stocare scoruri în tabel `insight_scores` | P0 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 2.2.1 | ✅ Formula: `score = novelty × information_density × utility × demand` | DONE — computed in deep-extract |
+| 2.2.2 | ✅ Praguri: premium (>70), standard (40-70), discard (<40) | DONE — tier field in insight_scores |
+| 2.2.3 | ✅ Stocare scoruri în tabel `insight_scores` | DONE — table + RLS + indexes |
 
 ### 2.3 Deduplicare & Merge
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 2.3.1 | Embedding-based similarity detection (cosine > 0.40) | P1 |
-| 2.3.2 | Neuron merge logic cu păstrare proveniență | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 2.3.1 | ✅ Embedding-based similarity detection (cosine > 0.40) | DONE — dedup-neurons edge function |
+| 2.3.2 | ✅ Neuron merge logic cu păstrare proveniență | DONE — neuron_duplicates table |
 | 2.3.3 | UI pentru confirmare merge | P2 |
 
 ---
