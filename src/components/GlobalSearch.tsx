@@ -175,7 +175,7 @@ export function GlobalSearch() {
               value={query}
               onChange={e => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Caută neuroni, artefacte, guests..."
+              placeholder={t("search_placeholder")}
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/50"
             />
             {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
