@@ -763,6 +763,11 @@ export default function AdminDashboard() {
           <TabsContent value="incidents">
             <IncidentManagementTab />
           </TabsContent>
+
+          {/* ─── Entropy Monitoring ─── */}
+          <TabsContent value="entropy">
+            <EntropyMonitoringTab />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
