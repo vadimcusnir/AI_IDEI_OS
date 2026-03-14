@@ -23,6 +23,7 @@ interface Service {
   credits_cost: number;
   icon: string;
   is_active: boolean;
+  access_tier: string;
 }
 
 const ICON_MAP: Record<string, React.ElementType> = {
