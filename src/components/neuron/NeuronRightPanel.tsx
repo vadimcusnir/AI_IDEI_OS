@@ -112,7 +112,7 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
 
   if (isCollapsed) {
     return (
-      <div className="w-10 border-l border-border bg-card flex flex-col items-center py-3 gap-3 shrink-0">
+      <div className="w-10 border-l border-border bg-card flex flex-col items-center py-3 gap-3 shrink-0 transition-all duration-200">
         <button onClick={onToggle} className="text-ai-accent hover:text-foreground transition-colors">
           <Sparkles className="h-4 w-4" />
         </button>
