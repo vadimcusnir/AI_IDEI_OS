@@ -237,21 +237,21 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 *Funcționalități avansate și diferențiatoare*
 
 ### 5.1 Chat Interface (Conversational Layer)
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 5.1.1 | Componentă chat cu input text + drag-drop fișiere | P1 |
-| 5.1.2 | Parser intenții (LLM via Lovable AI gateway) | P1 |
-| 5.1.3 | Conectare la edge functions (extract, generate, run-service) | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 5.1.1 | ✅ Componentă chat cu input text + drag-drop fișiere | DONE — PlatformChat component |
+| 5.1.2 | ✅ Parser intenții (LLM via Lovable AI gateway) | DONE — neuron-chat integration |
+| 5.1.3 | ✅ Conectare la edge functions (extract, generate, run-service) | DONE — via neuron-chat |
 | 5.1.4 | Context persistent pe sesiune | P2 |
 | 5.1.5 | Suport multi-modal (audio/video upload din chat) | P2 |
 
 ### 5.2 Psychological Profile Engine
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
+| # | Sarcină | Status |
+|---|---------|--------|
 | 5.2.1 | Pipeline LIWC-based: corpus → tokenizare → matrice lexicală → TF-IDF | P1 |
 | 5.2.2 | Mapare către Big Five traits via regression | P2 |
 | 5.2.3 | Generare psychological feature vector per speaker | P2 |
-| 5.2.4 | Vizualizare radar chart în profil guest | P1 |
+| 5.2.4 | ✅ Vizualizare radar chart în profil guest | DONE — RadarChart SVG component |
 
 ### 5.3 Webinar Generator Service
 | # | Sarcină | Prioritate |
