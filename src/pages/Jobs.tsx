@@ -258,7 +258,7 @@ export default function Jobs() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Caută job..."
+                placeholder={t("jobs.search_placeholder")}
                 className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
               />
               {search && (
