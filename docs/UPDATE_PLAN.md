@@ -88,7 +88,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 1.5.1 | ✅ Diferențiere Neurons vs Library (explainer banner) | DONE |
 | 1.5.2 | Vizibilitate controlată (private/team/public per artefact) | TODO |
-| 1.5.3 | Filtrare și sortare avansată | TODO |
+| 1.5.3 | ✅ Filtrare și sortare avansată | DONE — sort by date/title + dropdown |
 
 ### 1.6 Guest Pages
 | # | Sarcină | Status |
