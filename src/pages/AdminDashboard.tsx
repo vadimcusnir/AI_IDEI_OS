@@ -349,6 +349,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="analytics" className="text-xs gap-1">
               <BarChart3 className="h-3 w-3" /> Analytics
             </TabsTrigger>
+            <TabsTrigger value="access-sim" className="text-xs gap-1">
+              <Shield className="h-3 w-3" /> Access Sim
+            </TabsTrigger>
           </TabsList>
 
           {/* ─── Overview ─── */}
