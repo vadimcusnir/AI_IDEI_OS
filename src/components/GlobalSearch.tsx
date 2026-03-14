@@ -16,8 +16,9 @@ interface SearchResult {
   id: string;
   title: string;
   subtitle: string;
-  type: "neuron" | "artifact" | "guest";
+  type: "neuron" | "artifact" | "guest" | "entity";
   path: string;
+  semantic?: boolean;
 }
 
 const TYPE_CONFIG = {
