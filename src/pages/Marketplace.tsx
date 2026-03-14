@@ -71,8 +71,6 @@ export default function Marketplace() {
       const { data: featuredData } = await featuredQuery
         .order("sales_count", { ascending: false })
         .limit(6);
-        .order("sales_count", { ascending: false })
-        .limit(6);
 
       setFeatured((featuredData as KnowledgeAsset[]) || []);
 
