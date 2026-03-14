@@ -14,6 +14,9 @@ import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
 import { AdminKnowledgeGraphTab } from "@/components/admin/AdminKnowledgeGraphTab";
 import { AdminAnalyticsTab } from "@/components/admin/AdminAnalyticsTab";
 import { AccessSimulator } from "@/components/admin/AccessSimulator";
+import { DecisionLedgerTab } from "@/components/admin/DecisionLedgerTab";
+import { AbuseDetectionTab } from "@/components/admin/AbuseDetectionTab";
+import { WalletManagementTab } from "@/components/admin/WalletManagementTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
