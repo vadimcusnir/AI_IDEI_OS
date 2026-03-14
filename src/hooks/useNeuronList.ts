@@ -119,8 +119,9 @@ export function useNeuronList() {
   }, []);
 
   const selectAll = useCallback(() => {
-    setSelectedIds(new Set(processedNeurons.map(n => n.id)));
-  }, [processedNeurons]);
+    const list = searchResults ?? neurons;
+    setSelectedIds(new Set(list.map(n => n.id)));
+  }, [neurons, searchResults]);
 
   const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
 
