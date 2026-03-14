@@ -298,21 +298,21 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 6.1.1 | ✅ Tabel `decision_ledger` append-only | DONE |
 | 6.1.2 | ✅ Logging hooks pentru access allow/deny/abuse | DONE — check_access_logged function |
 | 6.1.3 | ✅ Audit viewer în Admin | DONE — DecisionLedgerTab component |
-| 6.1.4 | Export CSV/JSON pentru audit extern | P2 |
+| 6.1.4 | ✅ Export CSV/JSON pentru audit extern | DONE — export buttons in DecisionLedgerTab |
 
 ### 6.2 Abuse Detection
 | # | Sarcină | Status |
 |---|---------|--------|
 | 6.2.1 | ✅ Detectare prompt probing | DONE — detect_prompt_probing function |
 | 6.2.2 | ✅ Detectare export farming | DONE — detect_export_farming function |
-| 6.2.3 | Downgrade ladder: cooldown → downgrade → suspend | P2 |
+| 6.2.3 | ✅ Downgrade ladder: cooldown → downgrade → suspend | DONE — apply_abuse_ladder function |
 
 ### 6.3 Admin Control Plane
 | # | Sarcină | Status |
 |---|---------|--------|
 | 6.3.1 | ✅ Wallet management dashboard | DONE — WalletManagementTab component |
-| 6.3.2 | Reconciliation engine (cost vs revenue) | P2 |
-| 6.3.3 | Incident management panel | P2 |
+| 6.3.2 | ✅ Reconciliation engine (cost vs revenue) | DONE — ReconciliationTab component |
+| 6.3.3 | ✅ Incident management panel | DONE — IncidentManagementTab + incidents table |
 | 6.3.4 | Entropy monitoring (cost growth vs revenue growth) | P3 |
 
 ### 6.4 Token NOTA2
@@ -325,12 +325,12 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 6.4.5 | Guvernanță on-chain (propuneri, vot, quorum) | P3 |
 
 ### 6.5 Scaling
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
+| # | Sarcină | Status |
+|---|---------|--------|
 | 6.5.1 | Arhitectură 100M neuroni (distributed storage, graph indexing) | P3 |
 | 6.5.2 | Vector search semantic (Supabase pgvector) | P2 |
 | 6.5.3 | API REST/GraphQL pentru integrări externe | P2 |
-| 6.5.4 | PWA / mobile optimization | P2 |
+| 6.5.4 | ✅ PWA / mobile optimization | DONE — manifest.json + meta tags + SW registration |
 
 ---
 
@@ -344,8 +344,8 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | Faza 3 — Service Execution | ~12 | P0-P1 | ✅ 100% DONE |
 | Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ 100% DONE |
 | Faza 5 — Advanced Features | ~25 | P1-P2 | ✅ ~95% DONE |
-| Faza 6 — Governance & Token | ~15 | P2-P3 | ~45% DONE |
-| **TOTAL** | **~122 sarcini** | | **~93% complet** |
+| Faza 6 — Governance & Token | ~15 | P2-P3 | ~75% DONE |
+| **TOTAL** | **~122 sarcini** | | **~96% complet** |
 
 ---
 
