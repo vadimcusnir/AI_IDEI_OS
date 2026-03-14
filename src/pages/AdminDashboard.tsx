@@ -749,6 +749,16 @@ export default function AdminDashboard() {
           <TabsContent value="wallets">
             <WalletManagementTab />
           </TabsContent>
+
+          {/* ─── Reconciliation ─── */}
+          <TabsContent value="reconciliation">
+            <ReconciliationTab />
+          </TabsContent>
+
+          {/* ─── Incidents ─── */}
+          <TabsContent value="incidents">
+            <IncidentManagementTab />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
