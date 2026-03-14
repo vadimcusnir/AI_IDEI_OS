@@ -28,6 +28,7 @@ const TYPE_CONFIG = {
 
 export function GlobalSearch() {
   const { user } = useAuth();
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
