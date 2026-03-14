@@ -215,13 +215,13 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 4.2.1 | ✅ Funcție canonică `checkAccess(user, resource, context)` → ALLOW/PAYWALL/DENY | DONE — check_access DB function |
 | 4.2.2 | ✅ Entitlement resolver (credite, tier, token) | DONE — integrated in check_access |
 | 4.2.3 | ✅ UI verdict system (lock/unlock vizual pe servicii) | DONE — Shield/Lock icons in RunService |
-| 4.2.4 | Access Simulator pentru admin | P2 |
+| 4.2.4 | ✅ Access Simulator pentru admin | DONE — AccessSimulator component in Admin tab |
 
 ### 4.3 Root2 Pricing
 | # | Sarcină | Status |
 |---|---------|--------|
 | 4.3.1 | ✅ Funcție calcul Root2 (suma cifrelor = 2) | DONE — root2_validate + root2_nearest DB functions |
-| 4.3.2 | Aplicare pe prețuri vizibile (pachete, servicii) | P2 |
+| 4.3.2 | ✅ Aplicare pe prețuri vizibile (pachete, servicii) | DONE — Root2 USD display on Services page |
 | 4.3.3 | Admin toggle Root2 pe categorii | P3 |
 
 ### 4.4 Free vs Premium Tiers
