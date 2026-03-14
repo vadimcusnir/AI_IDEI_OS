@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "react-i18next";
 import {
   Database, Layers, GitBranch, Blocks, Copy, Zap, Search, Server,

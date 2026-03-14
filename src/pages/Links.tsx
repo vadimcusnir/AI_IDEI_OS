@@ -1,3 +1,4 @@
+import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";

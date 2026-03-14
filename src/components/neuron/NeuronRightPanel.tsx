@@ -130,7 +130,7 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
   }
 
   return (
-    <div className="w-64 border-l border-border bg-card flex flex-col shrink-0 overflow-hidden">
+    <div className="w-64 border-l border-border bg-card flex flex-col shrink-0 overflow-hidden transition-all duration-200">
       {/* Header with tabs */}
       <div className="h-9 flex items-center justify-between px-1 border-b border-border shrink-0">
         <div className="flex items-center gap-0.5">
