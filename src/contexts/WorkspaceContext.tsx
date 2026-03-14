@@ -127,7 +127,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     // Add self as owner
     await supabase
       .from("workspace_members")
-      .insert({ workspace_id: data.id, user_id: user.id, role: "owner" });
+      .insert({ workspace_id: (data as any).id, user_id: user.id, role: "owner" as const });
 
     const ws = data as Workspace;
     setWorkspaces((prev) => [...prev, ws]);
