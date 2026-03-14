@@ -273,17 +273,17 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 5.4.5 | Catalog public cu portofolii creatori | P3 |
 
 ### 5.5 IdeaRank UI Layer
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 5.5.1 | Widget "Idei în trend" pe homepage | P1 |
-| 5.5.2 | Sortare entități după IdeaRank/freshness | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 5.5.1 | ✅ Widget "Idei în trend" pe homepage | DONE — TrendingIdeasWidget |
+| 5.5.2 | ✅ Sortare entități după IdeaRank/freshness | DONE — EntityListing sort |
 | 5.5.3 | Pagină /topics/discovery cu clustering interactiv | P2 |
 | 5.5.4 | Algoritm IdeaRank: influence scoring + propagation modeling | P2 |
 
 ### 5.6 User Profile & Gamification
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 5.6.1 | Pagină profil indexabil per utilizator | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 5.6.1 | ✅ Pagină profil indexabil per utilizator | DONE — PublicUserProfile /u/:username |
 | 5.6.2 | Realizări/competențe din activitate platformă | P2 |
 | 5.6.3 | Premii pentru neuroni/tokens acumulați | P2 |
 
