@@ -2685,6 +2685,77 @@ export type Database = {
         }
         Relationships: []
       }
+      workspace_members: {
+        Row: {
+          id: string
+          invited_by: string | null
+          joined_at: string
+          role: Database["public"]["Enums"]["workspace_role"]
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          id?: string
+          invited_by?: string | null
+          joined_at?: string
+          role?: Database["public"]["Enums"]["workspace_role"]
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          id?: string
+          invited_by?: string | null
+          joined_at?: string
+          role?: Database["public"]["Enums"]["workspace_role"]
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_members_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workspaces: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          owner_id: string
+          settings: Json | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          settings?: Json | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          settings?: Json | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       neuron_lifecycle_pricing: {
@@ -2758,6 +2829,18 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      has_workspace_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["workspace_role"]
+          _user_id: string
+          _workspace_id: string
+        }
+        Returns: boolean
+      }
+      is_workspace_member: {
+        Args: { _user_id: string; _workspace_id: string }
         Returns: boolean
       }
       move_to_dlq: {
@@ -2837,6 +2920,7 @@ export type Database = {
         | "capitalized"
         | "compounded"
       service_class: "A" | "B" | "C"
+      workspace_role: "owner" | "admin" | "editor" | "viewer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2986,6 +3070,7 @@ export const Constants = {
         "compounded",
       ],
       service_class: ["A", "B", "C"],
+      workspace_role: ["owner", "admin", "editor", "viewer"],
     },
   },
 } as const
