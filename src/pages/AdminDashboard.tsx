@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet } from "lucide-react";
+import { Loader2, Shield, Users, Brain, Briefcase, Coins, Sparkles, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MinusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,6 +17,8 @@ import { AccessSimulator } from "@/components/admin/AccessSimulator";
 import { DecisionLedgerTab } from "@/components/admin/DecisionLedgerTab";
 import { AbuseDetectionTab } from "@/components/admin/AbuseDetectionTab";
 import { WalletManagementTab } from "@/components/admin/WalletManagementTab";
+import { ReconciliationTab } from "@/components/admin/ReconciliationTab";
+import { IncidentManagementTab } from "@/components/admin/IncidentManagementTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
@@ -363,6 +365,12 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="wallets" className="text-xs gap-1">
               <Wallet className="h-3 w-3" /> Wallets
+            </TabsTrigger>
+            <TabsTrigger value="reconciliation" className="text-xs gap-1">
+              <DollarSign className="h-3 w-3" /> Reconciliation
+            </TabsTrigger>
+            <TabsTrigger value="incidents" className="text-xs gap-1">
+              <AlertCircle className="h-3 w-3" /> Incidents
             </TabsTrigger>
           </TabsList>
 
@@ -740,6 +748,16 @@ export default function AdminDashboard() {
           {/* ─── Wallet Management ─── */}
           <TabsContent value="wallets">
             <WalletManagementTab />
+          </TabsContent>
+
+          {/* ─── Reconciliation ─── */}
+          <TabsContent value="reconciliation">
+            <ReconciliationTab />
+          </TabsContent>
+
+          {/* ─── Incidents ─── */}
+          <TabsContent value="incidents">
+            <IncidentManagementTab />
           </TabsContent>
         </Tabs>
       </div>

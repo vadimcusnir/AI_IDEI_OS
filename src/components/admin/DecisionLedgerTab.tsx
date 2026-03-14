@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { ScrollText, RefreshCw, ShieldAlert, ShieldCheck, ShieldX } from "lucide-react";
+import { ScrollText, RefreshCw, ShieldAlert, ShieldCheck, ShieldX, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface LedgerEntry {
   id: string;
@@ -13,6 +14,7 @@ interface LedgerEntry {
   verdict: string | null;
   reason: string | null;
   created_at: string;
+  metadata: Record<string, any> | null;
 }
 
 export function DecisionLedgerTab() {
@@ -23,19 +25,43 @@ export function DecisionLedgerTab() {
     setLoading(true);
     const { data } = await supabase
       .from("decision_ledger")
-      .select("id, event_type, actor_id, target_resource, verdict, reason, created_at")
+      .select("id, event_type, actor_id, target_resource, verdict, reason, created_at, metadata")
       .order("created_at", { ascending: false })
-      .limit(100);
+      .limit(200);
     setEntries((data as LedgerEntry[]) || []);
     setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
 
+  const exportCSV = () => {
+    if (entries.length === 0) { toast.error("No data to export"); return; }
+    const headers = ["timestamp", "event_type", "actor_id", "target_resource", "verdict", "reason"];
+    const rows = entries.map(e => [
+      e.created_at, e.event_type, e.actor_id ?? "", e.target_resource ?? "",
+      e.verdict ?? "", e.reason ?? ""
+    ]);
+    const csv = [headers.join(","), ...rows.map(r => r.map(c => `"${c}"`).join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `ledger-${Date.now()}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV exported");
+  };
+
+  const exportJSON = () => {
+    if (entries.length === 0) { toast.error("No data to export"); return; }
+    const blob = new Blob([JSON.stringify(entries, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `ledger-${Date.now()}.json`; a.click();
+    URL.revokeObjectURL(url);
+    toast.success("JSON exported");
+  };
+
   const verdictIcon = (v: string | null) => {
     if (v === "ALLOW") return <ShieldCheck className="h-3.5 w-3.5 text-primary" />;
     if (v === "DENY") return <ShieldX className="h-3.5 w-3.5 text-destructive" />;
-    if (v === "PAYWALL") return <ShieldAlert className="h-3.5 w-3.5 text-orange-500" />;
+    if (v === "PAYWALL") return <ShieldAlert className="h-3.5 w-3.5 text-accent-foreground" />;
     return null;
   };
 
@@ -45,9 +71,17 @@ export function DecisionLedgerTab() {
         <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           <ScrollText className="h-3 w-3" /> Decision Ledger — Access Audit Trail
         </h3>
-        <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
-          <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> Refresh
-        </Button>
+        <div className="flex gap-1.5">
+          <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={exportCSV}>
+            <Download className="h-3 w-3" /> CSV
+          </Button>
+          <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={exportJSON}>
+            <Download className="h-3 w-3" /> JSON
+          </Button>
+          <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
+            <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> Refresh
+          </Button>
+        </div>
       </div>
 
       {entries.length === 0 ? (
@@ -81,7 +115,7 @@ export function DecisionLedgerTab() {
                         "text-[9px] font-mono px-1.5 py-0.5 rounded",
                         e.verdict === "ALLOW" ? "bg-primary/10 text-primary" :
                         e.verdict === "DENY" ? "bg-destructive/10 text-destructive" :
-                        e.verdict === "PAYWALL" ? "bg-orange-500/10 text-orange-600" :
+                        e.verdict === "PAYWALL" ? "bg-accent text-accent-foreground" :
                         "bg-muted text-muted-foreground"
                       )}>{e.verdict ?? "—"}</span>
                     </div>

@@ -1226,6 +1226,51 @@ export type Database = {
         }
         Relationships: []
       }
+      incidents: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          related_job_id: string | null
+          related_user_id: string | null
+          resolved_at: string | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          related_job_id?: string | null
+          related_user_id?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          related_job_id?: string | null
+          related_user_id?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       insight_scores: {
         Row: {
           composite_score: number
@@ -2542,6 +2587,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      apply_abuse_ladder: { Args: { _user_id: string }; Returns: string }
       check_access: {
         Args: { _service_key: string; _user_id: string }
         Returns: Json
