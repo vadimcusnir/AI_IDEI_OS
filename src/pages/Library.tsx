@@ -391,6 +391,7 @@ export default function Library() {
           )}
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
