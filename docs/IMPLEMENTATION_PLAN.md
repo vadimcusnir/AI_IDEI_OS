@@ -190,12 +190,13 @@
 - [x] Safe area support (iOS notch)
 - [x] Responsive padding (pb-16 pe mobile)
 
-#### T3.3 ❌ Workspace/Multi-Tenant
-**Efort:** 3-4 sesiuni
-- [ ] Workspaces table + members
-- [ ] Roluri per workspace
-- [ ] RLS pe workspace_id
-- [ ] UI workspace switcher
+#### T3.3 ✅ Workspace/Multi-Tenant
+**Efort:** 3-4 sesiuni — **IMPLEMENTAT**
+- [x] Workspaces table + members
+- [x] Roluri per workspace (owner/admin/editor/viewer)
+- [x] RLS pe workspace_id (security definer functions)
+- [x] UI workspace switcher (sidebar dropdown)
+- [x] Workspace settings page (/workspace)
 
 ---
 

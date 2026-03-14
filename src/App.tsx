@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminRoute } from "@/components/AdminRoute";
@@ -56,6 +57,7 @@ import DataPrivacy from "./pages/DataPrivacy";
 import PublicUserProfile from "./pages/PublicUserProfile";
 import ChatPage from "./pages/ChatPage";
 import ApiDocs from "./pages/ApiDocs";
+import WorkspaceSettings from "./pages/WorkspaceSettings";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +65,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <AuthProvider>
+        <WorkspaceProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -127,6 +130,7 @@ const App = () => (
               <Route path="/onboarding" element={<ProtectedRoute><AppLayout><Onboarding /></AppLayout></ProtectedRoute>} />
               <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
               <Route path="/api" element={<ProtectedRoute><AppLayout><ApiDocs /></AppLayout></ProtectedRoute>} />
+              <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
 
               {/* Admin route */}
               <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
@@ -137,6 +141,7 @@ const App = () => (
             <CookieConsent />
           </BrowserRouter>
         </TooltipProvider>
+        </WorkspaceProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
