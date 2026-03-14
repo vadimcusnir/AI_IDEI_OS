@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   Loader2, Sparkles, BarChart3, Filter, Megaphone,
   Brain, Layers, HelpCircle, Quote, MessageSquare,
-  FileText, GraduationCap, Zap, Search, X, Coins,
+  FileText, GraduationCap, Zap, Search, X, Coins, Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
