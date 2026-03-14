@@ -6,10 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   FileText, Search, Filter, Loader2, Plus, Download,
   Eye, Trash2, Tag, Clock, ArrowRight, BookOpen, Brain,
-  ArrowUpDown, SortAsc, SortDesc, Lock, Globe, FolderTree,
+  ArrowUpDown, SortAsc, SortDesc, Lock, Globe, FolderTree, Store,
 } from "lucide-react";
 import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
+import { PublishToMarketplaceDialog } from "@/components/library/PublishToMarketplaceDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -74,6 +75,7 @@ export default function Library() {
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
   const [showFolders, setShowFolders] = useState(false);
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [publishArtifact, setPublishArtifact] = useState<Artifact | null>(null);
   const { assignments } = useFolderSidebar("library_folders");
 
   useEffect(() => {
@@ -335,6 +337,15 @@ export default function Library() {
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6"
+                        title="Publică pe Marketplace"
+                        onClick={(e) => { e.stopPropagation(); setPublishArtifact(artifact); }}
+                      >
+                        <Store className="h-3 w-3 text-primary" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
                         title={artifact.status === "published" ? "Fă privat" : "Publică"}
                         onClick={(e) => { e.stopPropagation(); handleToggleStatus(artifact.id, artifact.status); }}
                       >
@@ -391,6 +402,14 @@ export default function Library() {
           )}
         </DialogContent>
       </Dialog>
+      {/* Publish to Marketplace Dialog */}
+      {publishArtifact && (
+        <PublishToMarketplaceDialog
+          open={!!publishArtifact}
+          onOpenChange={(open) => { if (!open) setPublishArtifact(null); }}
+          artifact={publishArtifact}
+        />
+      )}
       </div>
     </div>
   );

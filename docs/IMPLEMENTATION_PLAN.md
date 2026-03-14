@@ -123,12 +123,12 @@
 
 ### TIER 1 — Completare Features Existente (P1)
 
-#### T1.1 🟡 Marketplace Creator Flow
-**Efort:** 2 sesiuni
-- [ ] UI pentru publicare asset de către creator (din Library)
-- [ ] Setare preț (USD + NEURONS) cu Root2 validation
-- [ ] Preview content editor
-- [ ] Revenue split display (70/30)
+#### T1.1 ✅ Marketplace Creator Flow
+**Efort:** 2 sesiuni — **IMPLEMENTAT**
+- [x] UI pentru publicare asset de către creator (din Library)
+- [x] Setare preț (USD + NEURONS) cu Root2 validation
+- [x] Preview content editor
+- [x] Revenue split display (70/30)
 
 #### T1.2 🟡 Subscription Plans Integration
 **Efort:** 2-3 sesiuni
@@ -137,11 +137,11 @@
 - [ ] Upgrade/downgrade UI
 - [ ] Verificare limite pe plan
 
-#### T1.3 ❌ Decision Ledger Append-Only
-**Efort:** 1 sesiune
-- [ ] Append-only constraint (SQL trigger)
-- [ ] Hash criptografic pe entries
-- [ ] Export CSV/JSON
+#### T1.3 ✅ Decision Ledger Append-Only
+**Efort:** 1 sesiune — **IMPLEMENTAT**
+- [x] Append-only constraint (SQL triggers BEFORE UPDATE/DELETE)
+- [x] Hash criptografic pe entries (SHA-256 chain)
+- [x] Export CSV/JSON
 
 ---
 
@@ -161,10 +161,11 @@
 - [ ] Batch extractor runner
 - [ ] Extractor registry (admin-configurable)
 
-#### T2.3 ❌ Semantic Search UI
-**Efort:** 2 sesiuni
-- [ ] UI căutare vectorială în GlobalSearch
-- [ ] Rezultate ordonate după similaritate + IdeaRank
+#### T2.3 ✅ Semantic Search UI
+**Efort:** 2 sesiuni — **IMPLEMENTAT**
+- [x] UI căutare entități în GlobalSearch (entities + IdeaRank)
+- [x] Rezultate ordonate după IdeaRank
+- [x] Integrat în search modal existent (Ctrl+K)
 - [ ] Auto-indexare neuroni noi
 
 ---

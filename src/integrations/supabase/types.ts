@@ -457,10 +457,12 @@ export type Database = {
         Row: {
           actor_id: string | null
           created_at: string
+          entry_hash: string | null
           event_type: string
           id: string
           ip_hint: string | null
           metadata: Json | null
+          prev_hash: string | null
           reason: string | null
           target_resource: string | null
           verdict: string | null
@@ -468,10 +470,12 @@ export type Database = {
         Insert: {
           actor_id?: string | null
           created_at?: string
+          entry_hash?: string | null
           event_type?: string
           id?: string
           ip_hint?: string | null
           metadata?: Json | null
+          prev_hash?: string | null
           reason?: string | null
           target_resource?: string | null
           verdict?: string | null
@@ -479,10 +483,12 @@ export type Database = {
         Update: {
           actor_id?: string | null
           created_at?: string
+          entry_hash?: string | null
           event_type?: string
           id?: string
           ip_hint?: string | null
           metadata?: Json | null
+          prev_hash?: string | null
           reason?: string | null
           target_resource?: string | null
           verdict?: string | null

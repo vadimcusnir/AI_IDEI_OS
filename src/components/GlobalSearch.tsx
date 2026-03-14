@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
-import { Search, Brain, FileText, Users, X, Loader2, ArrowRight } from "lucide-react";
+import { Search, Brain, FileText, Users, X, Loader2, ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -16,14 +16,16 @@ interface SearchResult {
   id: string;
   title: string;
   subtitle: string;
-  type: "neuron" | "artifact" | "guest";
+  type: "neuron" | "artifact" | "guest" | "entity";
   path: string;
+  semantic?: boolean;
 }
 
 const TYPE_CONFIG = {
   neuron: { icon: Brain, label: "Neuron", color: "text-primary" },
   artifact: { icon: FileText, label: "Artefact", color: "text-accent-foreground" },
   guest: { icon: Users, label: "Guest", color: "text-muted-foreground" },
+  entity: { icon: Sparkles, label: "Insight", color: "text-primary" },
 };
 
 export function GlobalSearch() {
@@ -71,7 +73,7 @@ export function GlobalSearch() {
     setLoading(true);
     const pattern = `%${q.trim()}%`;
 
-    const [neuronsRes, artifactsRes, guestsRes] = await Promise.all([
+    const [neuronsRes, artifactsRes, guestsRes, entitiesRes] = await Promise.all([
       supabase
         .from("neurons")
         .select("id, number, title, status")
@@ -92,6 +94,13 @@ export function GlobalSearch() {
         .eq("author_id", user.id)
         .ilike("full_name", pattern)
         .order("updated_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("entities")
+        .select("id, title, entity_type, slug, idea_rank")
+        .eq("is_published", true)
+        .ilike("title", pattern)
+        .order("idea_rank", { ascending: false })
         .limit(5),
     ]);
 
@@ -116,6 +125,13 @@ export function GlobalSearch() {
         subtitle: g.role,
         type: "guest" as const,
         path: `/guest/${g.slug}`,
+      })),
+      ...(entitiesRes.data || []).map((e: any) => ({
+        id: `e-${e.id}`,
+        title: e.title,
+        subtitle: `${e.entity_type}${e.idea_rank ? ` · IdeaRank ${(e.idea_rank as number).toFixed(1)}` : ""}`,
+        type: "entity" as const,
+        path: `/${e.entity_type === "insight" ? "insights" : e.entity_type === "pattern" ? "patterns" : e.entity_type === "formula" ? "formulas" : e.entity_type === "contradiction" ? "contradictions" : "insights"}/${e.slug}`,
       })),
     ];
 
