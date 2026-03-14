@@ -126,6 +126,7 @@ const App = () => (
               <Route path="/chat" element={<ProtectedRoute><AppLayout fullHeight><ChatPage /></AppLayout></ProtectedRoute>} />
               <Route path="/onboarding" element={<ProtectedRoute><AppLayout><Onboarding /></AppLayout></ProtectedRoute>} />
               <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
+              <Route path="/api" element={<ProtectedRoute><AppLayout><ApiDocs /></AppLayout></ProtectedRoute>} />
 
               {/* Admin route */}
               <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
