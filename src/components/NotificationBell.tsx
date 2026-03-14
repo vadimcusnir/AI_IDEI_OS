@@ -78,7 +78,7 @@ export function NotificationBell() {
               {recent.length === 0 ? (
                 <div className="px-4 py-8 text-center">
                   <Bell className="h-5 w-5 opacity-20 mx-auto mb-2" />
-                  <p className="text-[11px] text-muted-foreground">Nicio notificare</p>
+                  <p className="text-[11px] text-muted-foreground">{t("no_notifications")}</p>
                 </div>
               ) : (
                 recent.map((notif) => {
