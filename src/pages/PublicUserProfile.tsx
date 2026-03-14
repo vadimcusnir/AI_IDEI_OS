@@ -170,6 +170,11 @@ export default function PublicUserProfile() {
       {/* Content */}
       <div className="max-w-2xl mx-auto px-6 pb-16 space-y-8">
 
+        {/* Achievements */}
+        <section className="bg-card border border-border rounded-xl p-5">
+          <AchievementsBadges />
+        </section>
+
         {/* Public Neurons */}
         {publicNeurons.length > 0 && (
           <section>
