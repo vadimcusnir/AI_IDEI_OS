@@ -175,7 +175,7 @@ export function NeuronMainEditor({
         {/* Blocks */}
         <div className="space-y-2">
           <AnimatePresence initial={false}>
-            {blocks.map((block) => {
+            {blocks.map((block, blockIndex) => {
               const isFormatBlock = FORMAT_BLOCK_TYPES.includes(block.type);
               const cfg = BLOCK_TYPE_CONFIG[block.type];
 
@@ -185,9 +185,21 @@ export function NeuronMainEditor({
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="group relative flex items-start gap-0.5"
+                  className={cn(
+                    "group relative flex items-start gap-0.5",
+                    dragOverIdx === blockIndex && dragIdx !== blockIndex && "border-t-2 border-primary"
+                  )}
                   onMouseEnter={() => setHoveredBlock(block.id)}
                   onMouseLeave={() => setHoveredBlock(null)}
+                  onDragOver={(e) => { e.preventDefault(); setDragOverIdx(blockIndex); }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (dragIdx !== null && dragIdx !== blockIndex && onReorderBlock) {
+                      onReorderBlock(dragIdx, blockIndex);
+                    }
+                    setDragIdx(null);
+                    setDragOverIdx(null);
+                  }}
                 >
                   {/* Side controls */}
                   <div className={cn(
