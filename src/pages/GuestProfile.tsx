@@ -100,6 +100,64 @@ function SectionHeader({ icon: Icon, label, count }: {
   );
 }
 
+/* ── Paywall overlay ── */
+function PaywallSection({ children, title }: { children: React.ReactNode; title: string }) {
+  const [unlocked, setUnlocked] = useState(false);
+  if (unlocked) return <>{children}</>;
+  return (
+    <div className="relative">
+      <div className="pointer-events-none select-none blur-sm opacity-50">{children}</div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/60 backdrop-blur-[2px] rounded-2xl">
+        <div className="text-center space-y-3 max-w-xs">
+          <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto">
+            <Lock className="h-5 w-5 text-primary" />
+          </div>
+          <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+          <p className="text-[11px] text-muted-foreground leading-relaxed">
+            Advanced analysis available with a premium account.
+          </p>
+          <Button size="sm" className="h-8 text-xs gap-1.5" onClick={() => setUnlocked(true)}>
+            <Sparkles className="h-3 w-3" /> Preview Premium
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Quotes with expand ── */
+function QuotesSection({ quotes, authorName }: { quotes: string[]; authorName: string }) {
+  const [showAll, setShowAll] = useState(false);
+  const FREE_LIMIT = 3;
+  const visible = showAll ? quotes : quotes.slice(0, FREE_LIMIT);
+  const hasMore = quotes.length > FREE_LIMIT;
+
+  return (
+    <section>
+      <SectionHeader icon={Quote} label="Memorable Quotes" count={quotes.length} />
+      <div className="space-y-4">
+        {visible.map((q, i) => (
+          <blockquote key={i} className="relative rounded-2xl border border-border bg-card p-5 pl-6 hover:border-primary/20 transition-colors">
+            <div className="absolute top-4 left-5 text-primary/10 text-4xl font-serif leading-none select-none">"</div>
+            <p className="relative text-sm italic text-foreground/80 leading-relaxed pl-4">{q}</p>
+            <div className="flex items-center gap-2 mt-3 pl-4">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">— {authorName}</span>
+            </div>
+          </blockquote>
+        ))}
+        {hasMore && !showAll && (
+          <div className="text-center">
+            <Button variant="outline" size="sm" className="h-8 text-xs gap-1.5" onClick={() => setShowAll(true)}>
+              <Quote className="h-3 w-3" /> Show all {quotes.length} quotes
+            </Button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 /* ── Main component ── */
 export default function GuestProfile() {
   const { slug } = useParams<{ slug: string }>();
