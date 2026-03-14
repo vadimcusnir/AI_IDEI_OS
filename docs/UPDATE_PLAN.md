@@ -330,7 +330,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 6.5.1 | Arhitectură 100M neuroni (distributed storage, graph indexing) | P3 |
 | 6.5.2 | ✅ Vector search semantic (Supabase pgvector) | DONE — search_neurons_semantic function |
 | 6.5.3 | ✅ API REST pentru integrări externe | DONE — neuron-api edge function (CRUD, search, clone, fork) |
-| 6.5.3 | API REST/GraphQL pentru integrări externe | P2 |
+
 | 6.5.4 | ✅ PWA / mobile optimization | DONE — manifest.json + meta tags + SW registration |
 
 ---
