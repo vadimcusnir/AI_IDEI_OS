@@ -19,6 +19,7 @@ import { AbuseDetectionTab } from "@/components/admin/AbuseDetectionTab";
 import { WalletManagementTab } from "@/components/admin/WalletManagementTab";
 import { ReconciliationTab } from "@/components/admin/ReconciliationTab";
 import { IncidentManagementTab } from "@/components/admin/IncidentManagementTab";
+import { EntropyMonitoringTab } from "@/components/admin/EntropyMonitoringTab";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
