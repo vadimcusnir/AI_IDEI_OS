@@ -422,7 +422,6 @@ export default function GuestPages() {
           )}
         </div>
         </div>
-        </div>
       </div>
     </TooltipProvider>
   );
