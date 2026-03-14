@@ -8,6 +8,7 @@ import {
   ArrowRight, Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
 
 interface PublicProfile {
   display_name: string;
@@ -168,6 +169,11 @@ export default function PublicUserProfile() {
 
       {/* Content */}
       <div className="max-w-2xl mx-auto px-6 pb-16 space-y-8">
+
+        {/* Achievements */}
+        <section className="bg-card border border-border rounded-xl p-5">
+          <AchievementsBadges />
+        </section>
 
         {/* Public Neurons */}
         {publicNeurons.length > 0 && (

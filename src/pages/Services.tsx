@@ -51,6 +51,31 @@ const TIER_CONFIG: Record<string, { label: string; className: string }> = {
   premium: { label: "PREMIUM", className: "bg-ai-accent/15 text-ai-accent" },
 };
 
+// Root2 pricing: digit sum must equal 2
+function root2Nearest(n: number): number {
+  const digitSum = (x: number): number => {
+    let s = x;
+    while (s > 9) {
+      let t = 0;
+      let v = s;
+      while (v > 0) { t += v % 10; v = Math.floor(v / 10); }
+      s = t;
+    }
+    return s;
+  };
+  const rounded = Math.round(n);
+  if (rounded <= 0) return 2;
+  for (let i = 0; i <= 20; i++) {
+    if (digitSum(rounded + i) === 2) return rounded + i;
+    if (i > 0 && rounded - i > 0 && digitSum(rounded - i) === 2) return rounded - i;
+  }
+  return rounded;
+}
+
+function root2Display(usd: number): string {
+  return root2Nearest(Math.ceil(usd)).toString();
+}
+
 export default function Services() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -257,6 +282,9 @@ export default function Services() {
                             <span className="text-[9px] font-mono bg-muted text-muted-foreground px-1.5 py-0.5 rounded flex items-center gap-1">
                               <Coins className="h-2.5 w-2.5" />
                               {service.credits_cost} NEURONS
+                            </span>
+                            <span className="text-[8px] font-mono text-muted-foreground/40">
+                              ≈${(service.credits_cost * 0.01).toFixed(0) === "0" ? (service.credits_cost * 0.01).toFixed(2) : root2Display(service.credits_cost * 0.01)} USD
                             </span>
                             <span className="text-[9px] text-muted-foreground/50 uppercase">
                               {CATEGORY_LABELS[service.category] || service.category}

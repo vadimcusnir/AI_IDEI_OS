@@ -13,6 +13,7 @@ import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
 import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
 import { AdminKnowledgeGraphTab } from "@/components/admin/AdminKnowledgeGraphTab";
 import { AdminAnalyticsTab } from "@/components/admin/AdminAnalyticsTab";
+import { AccessSimulator } from "@/components/admin/AccessSimulator";
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
@@ -347,6 +348,9 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="analytics" className="text-xs gap-1">
               <BarChart3 className="h-3 w-3" /> Analytics
+            </TabsTrigger>
+            <TabsTrigger value="access-sim" className="text-xs gap-1">
+              <Shield className="h-3 w-3" /> Access Sim
             </TabsTrigger>
           </TabsList>
 
@@ -702,6 +706,13 @@ export default function AdminDashboard() {
           {/* ─── Analytics ─── */}
           <TabsContent value="analytics">
             <AdminAnalyticsTab />
+          </TabsContent>
+
+          {/* ─── Access Simulator ─── */}
+          <TabsContent value="access-sim">
+            <div className="bg-card border border-border rounded-xl p-5">
+              <AccessSimulator />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

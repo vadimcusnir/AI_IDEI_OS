@@ -14,6 +14,7 @@ import {
   Briefcase, Coins, MessageCircle, GitBranch, Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
 
 interface Profile {
   display_name: string;
@@ -401,6 +402,11 @@ export default function ProfilePage() {
               <span className="text-xs">{user?.created_at ? new Date(user.created_at).toLocaleDateString("en-US") : "—"}</span>
             </div>
           </div>
+        </div>
+
+        {/* Achievements */}
+        <div className="bg-card border border-border rounded-xl p-5">
+          <AchievementsBadges />
         </div>
 
         {/* Data & Privacy */}

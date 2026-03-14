@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_simulation_log: {
+        Row: {
+          admin_id: string
+          created_at: string
+          id: string
+          service_key: string
+          simulated_user_id: string | null
+          verdict: Json
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          id?: string
+          service_key: string
+          simulated_user_id?: string | null
+          verdict?: Json
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          id?: string
+          service_key?: string
+          simulated_user_id?: string | null
+          verdict?: Json
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -142,6 +169,47 @@ export type Database = {
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "neuron_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_transactions: {
+        Row: {
+          amount_neurons: number
+          amount_usd: number | null
+          asset_id: string | null
+          buyer_id: string
+          created_at: string
+          id: string
+          seller_id: string
+          status: string
+        }
+        Insert: {
+          amount_neurons?: number
+          amount_usd?: number | null
+          asset_id?: string | null
+          buyer_id: string
+          created_at?: string
+          id?: string
+          seller_id: string
+          status?: string
+        }
+        Update: {
+          amount_neurons?: number
+          amount_usd?: number | null
+          asset_id?: string | null
+          buyer_id?: string
+          created_at?: string
+          id?: string
+          seller_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_transactions_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_assets"
             referencedColumns: ["id"]
           },
         ]
@@ -278,6 +346,36 @@ export type Database = {
           metadata?: Json | null
           source?: string
           source_id?: string | null
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          role?: string
+          session_id?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          role?: string
+          session_id?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1112,6 +1210,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      knowledge_assets: {
+        Row: {
+          artifact_ids: string[] | null
+          asset_type: string
+          author_id: string
+          created_at: string
+          description: string | null
+          id: string
+          is_published: boolean | null
+          metadata: Json | null
+          neuron_ids: number[] | null
+          preview_content: string | null
+          price_neurons: number | null
+          price_usd: number | null
+          rating_avg: number | null
+          rating_count: number | null
+          sales_count: number | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          artifact_ids?: string[] | null
+          asset_type?: string
+          author_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          metadata?: Json | null
+          neuron_ids?: number[] | null
+          preview_content?: string | null
+          price_neurons?: number | null
+          price_usd?: number | null
+          rating_avg?: number | null
+          rating_count?: number | null
+          sales_count?: number | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          artifact_ids?: string[] | null
+          asset_type?: string
+          author_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          metadata?: Json | null
+          neuron_ids?: number[] | null
+          preview_content?: string | null
+          price_neurons?: number | null
+          price_usd?: number | null
+          rating_avg?: number | null
+          rating_count?: number | null
+          sales_count?: number | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       neuron_address_aliases: {
         Row: {
@@ -2149,6 +2310,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_achievements: {
+        Row: {
+          achievement_key: string
+          description: string | null
+          icon: string | null
+          id: string
+          title: string
+          unlocked_at: string
+          user_id: string
+          xp_reward: number | null
+        }
+        Insert: {
+          achievement_key: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          title: string
+          unlocked_at?: string
+          user_id: string
+          xp_reward?: number | null
+        }
+        Update: {
+          achievement_key?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          title?: string
+          unlocked_at?: string
+          user_id?: string
+          xp_reward?: number | null
+        }
+        Relationships: []
       }
       user_credits: {
         Row: {
