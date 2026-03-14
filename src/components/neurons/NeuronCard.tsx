@@ -40,8 +40,16 @@ interface Props {
   onPreview?: (neuron: NeuronListItem) => void;
 }
 
-export function NeuronCard({ neuron: n, viewMode, isPinned, onTogglePin, onDelete }: Props) {
+export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onTogglePin, onDelete, onPreview }: Props) {
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (onPreview) {
+      onPreview(n);
+    } else {
+      navigate(`/n/${n.number}`);
+    }
+  };
 
   const contextMenu = (
     <DropdownMenu>
