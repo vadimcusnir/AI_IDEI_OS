@@ -114,7 +114,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 1.8.1 | ✅ Tooltipuri pe fiecare etapă | DONE |
 | 1.8.2 | ✅ Click navigare la pagina relevantă | DONE |
-| 1.8.3 | Pagină dedicată Pipeline Overview | TODO |
+| 1.8.3 | ✅ Pagină dedicată Pipeline Overview | DONE — /pipeline cu 9 etape, output badges, navigare |
 
 ### 1.9 General UX
 | # | Sarcină | Status |
