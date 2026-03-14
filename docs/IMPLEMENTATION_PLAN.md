@@ -175,11 +175,14 @@
 
 ### TIER 3 — Platform Growth (P2)
 
-#### T3.1 ❌ API Public (REST)
-**Efort:** 3-4 sesiuni
-- [ ] Endpoints: neurons, entities, jobs, IdeaRank
-- [ ] Auth token + rate limiting
-- [ ] Documentație OpenAPI
+#### T3.1 ✅ API Public (REST)
+**Efort:** 3-4 sesiuni — **IMPLEMENTAT**
+- [x] Endpoints: neurons, entities, jobs, IdeaRank, search, templates
+- [x] Dual auth: JWT + API Key (X-API-Key header)
+- [x] API key management (generate, revoke, scopes, daily limits)
+- [x] Rate limiting (1000 req/day per key)
+- [x] API documentation page (/api)
+- [x] cURL examples + endpoint reference
 
 #### T3.2 ✅ Mobile Optimization
 **Efort:** 2-3 sesiuni — **IMPLEMENTAT**
