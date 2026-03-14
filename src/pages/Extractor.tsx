@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
+import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
 
 interface Episode {
   id: string;
@@ -65,6 +66,20 @@ const ACCEPTED_FILE_TYPES: Record<string, string> = {
 };
 
 const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
+
+async function extractTextFromPDF(file: File): Promise<string> {
+  const pdfjsLib = await import("pdfjs-dist");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const pages: string[] = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    pages.push(content.items.map((item: any) => item.str).join(" "));
+  }
+  return pages.join("\n\n");
+}
 
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
@@ -193,20 +208,22 @@ export default function Extractor() {
     if (!file) return;
 
     try {
-      const text = await file.text();
-      let transcript = text;
+      let transcript: string;
 
-      // Parse SRT/VTT → plain text
-      if (file.name.endsWith(".srt") || file.name.endsWith(".vtt")) {
-        transcript = parseSrtToText(text);
+      if (file.name.endsWith(".pdf")) {
+        transcript = await extractTextFromPDF(file);
+      } else {
+        const text = await file.text();
+        transcript = text;
+        if (file.name.endsWith(".srt") || file.name.endsWith(".vtt")) {
+          transcript = parseSrtToText(text);
+        }
       }
 
       if (episodeId) {
-        // Importing into existing episode
         setEditTranscriptText(transcript);
         setEditingTranscriptId(episodeId);
       } else {
-        // Importing during creation (text mode)
         setContent(transcript);
         if (!title.trim()) {
           setTitle(file.name.replace(/\.\w+$/, "").replace(/[-_]/g, " "));
@@ -1091,40 +1108,26 @@ export default function Extractor() {
                           )}
                         </div>
                       ) : hasTranscript ? (
-                        <div>
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Transcript</span>
-                            <div className="flex items-center gap-1">
-                              <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                                onClick={() => startEditTranscript(ep)}>
-                                <Pencil className="h-2.5 w-2.5" /> Edit
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                                onClick={() => copyTranscript(ep.transcript!)}>
-                                <Copy className="h-2.5 w-2.5" /> Copy
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                                onClick={() => exportTranscript(ep, "txt")}>
-                                <Download className="h-2.5 w-2.5" /> TXT
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
-                                onClick={() => exportTranscript(ep, "srt")}>
-                                <Download className="h-2.5 w-2.5" /> SRT
-                              </Button>
-                            </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-1 justify-end">
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
+                              onClick={() => startEditTranscript(ep)}>
+                              <Pencil className="h-2.5 w-2.5" /> Edit
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
+                              onClick={() => copyTranscript(ep.transcript!)}>
+                              <Copy className="h-2.5 w-2.5" /> Copy
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
+                              onClick={() => exportTranscript(ep, "txt")}>
+                              <Download className="h-2.5 w-2.5" /> TXT
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1"
+                              onClick={() => exportTranscript(ep, "srt")}>
+                              <Download className="h-2.5 w-2.5" /> SRT
+                            </Button>
                           </div>
-                          <div className="bg-muted/50 rounded-lg px-3 py-2.5 max-h-64 overflow-y-auto scroll-smooth">
-                            {ep.transcript!.split("\n").map((line, i) => (
-                              <div key={i} className="flex gap-2 group hover:bg-muted/80 rounded px-1 -mx-1">
-                                <span className="text-[9px] text-muted-foreground/30 font-mono w-5 shrink-0 text-right select-none pt-0.5">
-                                  {i + 1}
-                                </span>
-                                <p className="text-xs text-muted-foreground font-mono whitespace-pre-wrap leading-relaxed flex-1">
-                                  {line || "\u00A0"}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
+                          <TranscriptViewer transcript={ep.transcript!} />
                         </div>
                       ) : null}
 

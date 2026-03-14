@@ -6,8 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   FileText, Search, Filter, Loader2, Plus, Download,
   Eye, Trash2, Tag, Clock, ArrowRight, BookOpen, Brain,
-  ArrowUpDown, SortAsc, SortDesc, Lock, Globe,
+  ArrowUpDown, SortAsc, SortDesc, Lock, Globe, FolderTree,
 } from "lucide-react";
+import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,6 +72,9 @@ export default function Library() {
   const [sortField, setSortField] = useState<"updated_at" | "created_at" | "title">("updated_at");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
+  const [showFolders, setShowFolders] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const { assignments } = useFolderSidebar("library_folders");
 
   useEffect(() => {
     if (authLoading || !user) return;
@@ -107,6 +111,13 @@ export default function Library() {
       if (search && !a.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
+    // Folder filter
+    if (selectedFolderId === "__unassigned") {
+      const assigned = new Set(Object.keys(assignments));
+      list = list.filter(a => !assigned.has(a.id));
+    } else if (selectedFolderId) {
+      list = list.filter(a => assignments[a.id] === selectedFolderId);
+    }
     list.sort((a, b) => {
       let cmp = 0;
       if (sortField === "title") cmp = a.title.localeCompare(b.title);
@@ -115,7 +126,7 @@ export default function Library() {
       return sortDir === "desc" ? -cmp : cmp;
     });
     return list;
-  }, [artifacts, search, typeFilter, statusFilter, sortField, sortDir]);
+  }, [artifacts, search, typeFilter, statusFilter, sortField, sortDir, selectedFolderId, assignments]);
 
   // Extract unique types from data
   const types = useMemo(() => {
@@ -132,19 +143,36 @@ export default function Library() {
   }
 
   return (
-    <div className="flex-1 overflow-auto">
+    <div className="flex-1 flex overflow-hidden">
+      {showFolders && (
+        <FolderSidebar
+          storageKey="library_folders"
+          items={artifacts.map(a => ({ id: a.id, label: a.title }))}
+          selectedFolderId={selectedFolderId}
+          onSelectFolder={setSelectedFolderId}
+          allLabel="All Artifacts"
+          headerLabel="Library Folders"
+        />
+      )}
+      <div className="flex-1 overflow-auto">
       <SEOHead title="Library — AI-IDEI" description="Browse and manage your generated artifacts, documents and deliverables." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-xl font-serif font-bold flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" />
-              Biblioteca
-            </h1>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {artifacts.length} artefacte generate • deliverables din serviciile AI
-            </p>
+          <div className="flex items-center gap-3">
+            <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 text-[10px] gap-1"
+              onClick={() => setShowFolders(!showFolders)}>
+              <FolderTree className="h-3 w-3" />
+            </Button>
+            <div>
+              <h1 className="text-xl font-serif font-bold flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-primary" />
+                Library
+              </h1>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {filtered.length} / {artifacts.length} artifacts • AI service deliverables
+              </p>
+            </div>
           </div>
         </div>
 
@@ -375,6 +403,7 @@ export default function Library() {
           )}
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
