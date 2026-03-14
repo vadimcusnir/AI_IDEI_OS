@@ -71,7 +71,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 1.3.1 | ✅ Toolbar funcțional (insert blocks, Bold/Italic/Undo) | DONE |
 | 1.3.2 | ✅ Tooltipuri descriptive pe toate butoanele | DONE |
-| 1.3.3 | Stabilitate layout la deschidere panouri laterale | TODO |
+| 1.3.3 | ✅ Stabilitate layout la deschidere panouri laterale | DONE — transition-all duration-200 pe panels |
 | 1.3.4 | ✅ Drag-and-drop reordonare blocuri | DONE — HTML5 drag on GripVertical |
 | 1.3.5 | ✅ Keyboard shortcuts (Ctrl+Enter = Run, Ctrl+S = Save) | DONE |
 
