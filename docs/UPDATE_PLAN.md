@@ -33,14 +33,14 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|-----------|
 | 0.2.1 | ✅ Indexuri DB: `neurons.author_id`, `entities.slug`, `neuron_blocks.neuron_id`, `episodes.author_id` + 6 altele | DONE |
 | 0.2.2 | ✅ Error Boundaries pe rute principale (Extractor, NeuronEditor, Intelligence, RunService, BatchRunner) | DONE |
-| 0.2.3 | Eliminare navigație duplicată (SiteHeader vs AppSidebar) | P1 |
+| 0.2.3 | ✅ Eliminare navigație duplicată (SiteHeader vs AppSidebar) | DONE — unified in AppSidebar |
 
 ### 0.3 i18n & Consistență
 | # | Sarcină | Prioritate |
 |---|---------|-----------|
-| 0.3.1 | Standardizare limbă UI: EN principal + RO opțional | P1 |
-| 0.3.2 | Migrare texte hardcodate în fișiere locale (`src/locales/`) | P1 |
-| 0.3.3 | Eliminare mix RO/EN din interfață | P1 |
+| 0.3.1 | ✅ Standardizare limbă UI: EN principal + RO opțional | DONE |
+| 0.3.2 | ✅ Migrare texte hardcodate în fișiere locale (`src/locales/`) | DONE — Jobs, Services, ArtifactDetail, GuestPages, PromptForge, PipelineOverview |
+| 0.3.3 | ✅ Eliminare mix RO/EN din interfață | DONE — all critical pages standardized to EN with RO locale support |
 
 ---
 
@@ -339,7 +339,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 
 | Fază | Sarcini | Prioritate dominantă | Status |
 |------|---------|---------------------|--------|
-| Faza 0 — Securitate | ~8 | P0 | ~90% DONE |
+| Faza 0 — Securitate | ~8 | P0 | ✅ 100% DONE |
 | Faza 1 — UX Polish | ~35 | P0-P1 | ✅ 100% DONE |
 | Faza 2 — Extraction Engine | ~15 | P0-P1 | ✅ 100% DONE |
 | Faza 3 — Service Execution | ~12 | P0-P1 | ✅ 100% DONE |

@@ -106,16 +106,16 @@ export default function ProfileExtractor() {
         }
       }
 
-      toast.success("Profilul a fost generat!");
+      toast.success("Profile generated!");
     } catch (e: any) {
-      toast.error(e.message || "Extragerea a eșuat");
+      toast.error(e.message || "Extraction failed");
     }
     setLoading(false);
   }, [user, experience, skills, products, tone]);
 
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(result);
-    toast.success("Copiat în clipboard!");
+    toast.success("Copied to clipboard!");
   }, [result]);
 
   const TONES = ["profesional", "prietenos", "bold", "academic", "casual"];

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,29 +35,18 @@ interface Job {
   max_retries: number;
 }
 
-const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string; description: string }> = {
-  pending: {
-    icon: Clock, color: "text-muted-foreground", label: "În așteptare",
-    description: "Job-ul este în coadă și va fi procesat automat. Timpul mediu de așteptare: 5-30 secunde.",
-  },
-  running: {
-    icon: Play, color: "text-primary", label: "Rulează",
-    description: "AI-ul procesează activ acest job. Durata depinde de complexitatea task-ului (30s – 5min).",
-  },
-  completed: {
-    icon: CheckCircle2, color: "text-status-validated", label: "Finalizat",
-    description: "Job-ul s-a finalizat cu succes. Rezultatele sunt disponibile. Click pentru a le vizualiza.",
-  },
-  failed: {
-    icon: XCircle, color: "text-destructive", label: "Eșuat",
-    description: "Job-ul a eșuat. Sistemul reîncearcă automat de până la 3 ori. Dacă persistă, contactează suportul.",
-  },
+const STATUS_ICONS: Record<string, { icon: React.ElementType; color: string }> = {
+  pending: { icon: Clock, color: "text-muted-foreground" },
+  running: { icon: Play, color: "text-primary" },
+  completed: { icon: CheckCircle2, color: "text-status-validated" },
+  failed: { icon: XCircle, color: "text-destructive" },
 };
 
 type StatusFilter = "all" | "pending" | "running" | "completed" | "failed";
 
 /* ── Educational guide component ── */
 function JobsGuide() {
+  const { t } = useTranslation("pages");
   const [open, setOpen] = useState(() => {
     return localStorage.getItem("jobs_guide_dismissed") !== "true";
   });
@@ -65,6 +55,8 @@ function JobsGuide() {
     setOpen(false);
     localStorage.setItem("jobs_guide_dismissed", "true");
   };
+
+  const statusKeys = ["pending", "running", "completed", "failed"] as const;
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
@@ -75,8 +67,8 @@ function JobsGuide() {
               <HelpCircle className="h-4 w-4 text-primary" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-foreground">Ce sunt Job-urile?</p>
-              <p className="text-[10px] text-muted-foreground">Înțelege pipeline-ul de procesare AI</p>
+              <p className="text-sm font-medium text-foreground">{t("jobs.guide_title")}</p>
+              <p className="text-[10px] text-muted-foreground">{t("jobs.guide_subtitle")}</p>
             </div>
             {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
           </button>
@@ -84,16 +76,16 @@ function JobsGuide() {
         <CollapsibleContent>
           <div className="px-4 pb-4 space-y-3">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Job-urile sunt task-uri AI care rulează în fundal. Fiecare serviciu pe care îl folosești (extracție neuroni, generare conținut, analiză etc.) creează unul sau mai multe job-uri.
+              {t("jobs.guide_desc")}
             </p>
 
             {/* Pipeline visualization */}
             <div className="flex items-center gap-1 overflow-x-auto py-2">
               {[
-                { icon: FileAudio, label: "Upload", desc: "Transcripție" },
-                { icon: Brain, label: "Extract", desc: "Neuroni" },
-                { icon: Zap, label: "Process", desc: "Job AI" },
-                { icon: Sparkles, label: "Deliver", desc: "Artefacte" },
+                { icon: FileAudio, label: t("jobs.step_upload"), desc: t("jobs.step_upload_desc") },
+                { icon: Brain, label: t("jobs.step_extract"), desc: t("jobs.step_extract_desc") },
+                { icon: Zap, label: t("jobs.step_process"), desc: t("jobs.step_process_desc") },
+                { icon: Sparkles, label: t("jobs.step_deliver"), desc: t("jobs.step_deliver_desc") },
               ].map((step, i) => (
                 <div key={i} className="flex items-center gap-1 shrink-0">
                   {i > 0 && <ArrowRight className="h-3 w-3 text-muted-foreground/30 mx-0.5" />}
@@ -110,20 +102,24 @@ function JobsGuide() {
 
             {/* Status legend */}
             <div className="grid grid-cols-2 gap-2">
-              {Object.entries(STATUS_CONFIG).map(([key, cfg]) => (
-                <div key={key} className="flex items-start gap-2 bg-card border border-border rounded-lg p-2.5">
-                  <cfg.icon className={cn("h-3.5 w-3.5 mt-0.5 shrink-0", cfg.color)} />
-                  <div>
-                    <p className="text-[10px] font-semibold">{cfg.label}</p>
-                    <p className="text-[9px] text-muted-foreground leading-relaxed">{cfg.description}</p>
+              {statusKeys.map(key => {
+                const si = STATUS_ICONS[key] || STATUS_ICONS.pending;
+                const Icon = si.icon;
+                return (
+                  <div key={key} className="flex items-start gap-2 bg-card border border-border rounded-lg p-2.5">
+                    <Icon className={cn("h-3.5 w-3.5 mt-0.5 shrink-0", si.color)} />
+                    <div>
+                      <p className="text-[10px] font-semibold">{t(`jobs.status_${key}`)}</p>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">{t(`jobs.status_${key}_desc`)}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="flex justify-end">
               <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={dismiss}>
-                Am înțeles, ascunde
+                {t("jobs.guide_dismiss")}
               </Button>
             </div>
           </div>
@@ -134,6 +130,7 @@ function JobsGuide() {
 }
 
 export default function Jobs() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -201,9 +198,9 @@ export default function Jobs() {
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
-              <h1 className="text-lg font-semibold tracking-tight">Istoric Execuții</h1>
+              <h1 className="text-lg font-semibold tracking-tight">{t("jobs.title")}</h1>
               <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-                {jobs.length} job-uri
+                {t("jobs.count", { count: jobs.length })}
               </span>
             </div>
           </div>
@@ -214,10 +211,10 @@ export default function Jobs() {
           {/* Stats row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
             {[
-              { label: "Finalizate", value: completedCount, color: "text-status-validated", tip: "Job-uri procesate cu succes" },
-              { label: "Eșuate", value: failedCount, color: "text-destructive", tip: "Job-uri care au eșuat (se reîncearcă automat)" },
-              { label: "Active", value: runningCount, color: "text-primary", tip: "Job-uri în procesare sau în așteptare" },
-              { label: "Durată medie", value: avgDuration, color: "", tip: "Durata medie de procesare în secunde", suffix: "sec" },
+              { label: t("jobs.stat_completed"), value: completedCount, color: "text-status-validated", tip: t("jobs.stat_completed_tip") },
+              { label: t("jobs.stat_failed"), value: failedCount, color: "text-destructive", tip: t("jobs.stat_failed_tip") },
+              { label: t("jobs.stat_active"), value: runningCount, color: "text-primary", tip: t("jobs.stat_active_tip") },
+              { label: t("jobs.stat_avg_duration"), value: avgDuration, color: "", tip: t("jobs.stat_avg_duration_tip"), suffix: "sec" },
             ].map(stat => (
               <Tooltip key={stat.label}>
                 <TooltipTrigger asChild>
@@ -238,10 +235,10 @@ export default function Jobs() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
             <div className="flex items-center gap-0.5 flex-wrap">
               {([
-                { value: "all" as StatusFilter, label: "Toate" },
-                { value: "completed" as StatusFilter, label: "Finalizate" },
-                { value: "running" as StatusFilter, label: "Active" },
-                { value: "failed" as StatusFilter, label: "Eșuate" },
+                { value: "all" as StatusFilter, label: t("jobs.filter_all") },
+                { value: "completed" as StatusFilter, label: t("jobs.filter_completed") },
+                { value: "running" as StatusFilter, label: t("jobs.filter_active") },
+                { value: "failed" as StatusFilter, label: t("jobs.filter_failed") },
               ]).map(f => (
                 <button
                   key={f.value}
@@ -261,7 +258,7 @@ export default function Jobs() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Caută job..."
+                placeholder={t("jobs.search_placeholder")}
                 className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
               />
               {search && (
@@ -278,18 +275,18 @@ export default function Jobs() {
               <Sparkles className="h-8 w-8 opacity-20 mx-auto mb-3" />
               {jobs.length === 0 ? (
                 <>
-                  <p className="text-sm text-muted-foreground mb-1">Niciun job încă</p>
-                  <p className="text-[10px] text-muted-foreground/60 mb-6">Rulează un serviciu pentru a crea primul job.</p>
+                  <p className="text-sm text-muted-foreground mb-1">{t("jobs.no_jobs")}</p>
+                  <p className="text-[10px] text-muted-foreground/60 mb-6">{t("jobs.no_jobs_hint")}</p>
                   <Button onClick={() => navigate("/services")} className="gap-1.5">
                     <Sparkles className="h-4 w-4" />
-                    Servicii AI
+                    {t("jobs.ai_services")}
                   </Button>
                 </>
               ) : (
                 <>
-                  <p className="text-sm text-muted-foreground mb-2">Niciun rezultat pentru filtrul selectat</p>
+                  <p className="text-sm text-muted-foreground mb-2">{t("jobs.no_filter_results")}</p>
                   <Button variant="outline" size="sm" className="text-xs" onClick={() => { setStatusFilter("all"); setSearch(""); }}>
-                    Șterge filtrele
+                    {t("jobs.clear_filters")}
                   </Button>
                 </>
               )}
@@ -297,8 +294,10 @@ export default function Jobs() {
           ) : (
             <div className="space-y-1.5">
               {filtered.map(job => {
-                const cfg = STATUS_CONFIG[job.status] || STATUS_CONFIG.pending;
-                const StatusIcon = cfg.icon;
+                const si = STATUS_ICONS[job.status] || STATUS_ICONS.pending;
+                const StatusIcon = si.icon;
+                const statusLabel = t(`jobs.status_${job.status}`);
+                const statusDesc = t(`jobs.status_${job.status}_desc`);
                 const isExpanded = expandedJob === job.id;
                 const duration = job.completed_at
                   ? Math.round((new Date(job.completed_at).getTime() - new Date(job.created_at).getTime()) / 1000)
@@ -318,21 +317,21 @@ export default function Jobs() {
                             job.status === "failed" ? "bg-destructive/10" :
                             job.status === "running" ? "bg-primary/10" : "bg-muted"
                           )}>
-                            <StatusIcon className={cn("h-3.5 w-3.5", cfg.color)} />
+                            <StatusIcon className={cn("h-3.5 w-3.5", si.color)} />
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="text-[10px] max-w-[200px]">{cfg.description}</TooltipContent>
+                        <TooltipContent side="right" className="text-[10px] max-w-[200px]">{statusDesc}</TooltipContent>
                       </Tooltip>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">{job.worker_type.replace(/_/g, " ")}</span>
-                          <span className={cn("text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full", cfg.color, "bg-current/10")}>
-                            {cfg.label}
+                          <span className={cn("text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full", si.color, "bg-current/10")}>
+                            {statusLabel}
                           </span>
                         </div>
                         <div className="flex items-center gap-3 mt-0.5">
                           <span className="text-[10px] text-muted-foreground">
-                            {new Date(job.created_at).toLocaleString("ro-RO")}
+                            {new Date(job.created_at).toLocaleString()}
                           </span>
                           {duration !== null && (
                             <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
@@ -368,7 +367,7 @@ export default function Jobs() {
                         )}
                         {job.result && Object.keys(job.result).length > 0 && (
                           <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Rezultat</p>
+                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("jobs.result_label")}</p>
                             <pre className="text-[11px] font-mono bg-muted/50 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap max-h-64 overflow-y-auto">
                               {typeof job.result === "object" && job.result.content
                                 ? job.result.content
@@ -381,12 +380,12 @@ export default function Jobs() {
                             <AlertCircle className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />
                             <div>
                               <p className="text-xs text-destructive font-medium">
-                                {job.error_message || (job.result as any)?.error || "Job eșuat"}
+                              {job.error_message || (job.result as any)?.error || t("jobs.job_failed_label")}
                               </p>
                               <p className="text-[10px] text-muted-foreground mt-1">
                                 {job.retry_count >= job.max_retries
-                                  ? "Toate reîncercările au eșuat. Verifică input-ul și reîncearcă manual."
-                                  : `Sistemul va reîncerca automat (${job.retry_count}/${job.max_retries} reîncercări).`}
+                                  ? t("jobs.retries_exhausted")
+                                  : t("jobs.retries_remaining", { current: job.retry_count, max: job.max_retries })}
                               </p>
                             </div>
                           </div>
@@ -400,11 +399,11 @@ export default function Jobs() {
                               className="h-7 text-xs gap-1"
                               onClick={async () => {
                                 const { data, error } = await supabase.rpc("retry_failed_job", { _job_id: job.id });
-                                if (error || !data) toast.error("Reîncercarea a eșuat");
-                                else { toast.success("Job reprogramat"); fetchJobs(); }
+                                if (error || !data) toast.error(t("jobs.retry_failed"));
+                                else { toast.success(t("jobs.job_rescheduled")); fetchJobs(); }
                               }}
                             >
-                              <Play className="h-3 w-3" /> Reîncearcă
+                              <Play className="h-3 w-3" /> {t("jobs.retry")}
                             </Button>
                           )}
                           <Button
@@ -413,7 +412,7 @@ export default function Jobs() {
                             className="h-7 text-xs gap-1"
                             onClick={() => navigate(`/n/${job.neuron_id}`)}
                           >
-                            <Brain className="h-3 w-3" /> Vezi Neuronul
+                            <Brain className="h-3 w-3" /> {t("jobs.view_neuron")}
                           </Button>
                         </div>
                       </div>

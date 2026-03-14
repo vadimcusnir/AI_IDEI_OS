@@ -79,7 +79,7 @@ export default function GuestPages() {
       .eq("author_id", user!.id)
       .order("created_at", { ascending: false });
     if (data) setGuests(data as unknown as GuestProfile[]);
-    if (error) toast.error("Eroare la încărcarea profilelor");
+    if (error) toast.error("Error loading profiles");
     setLoading(false);
   };
 
@@ -223,7 +223,7 @@ export default function GuestPages() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Caută persoane..."
+              placeholder="Search people..."
               className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
             />
             {search && (
@@ -316,8 +316,8 @@ export default function GuestPages() {
                           </TooltipTrigger>
                           <TooltipContent side="top" className="text-[10px] max-w-[180px]">
                             {guest.is_public
-                              ? "Profilul este public și indexabil. Dezactivează pentru a-l ascunde."
-                              : "Activează pentru a publica pagina SEO a acestui expert."
+                              ? "Profile is public and indexable. Disable to hide it."
+                              : "Enable to publish the SEO page of this expert."
                             }
                           </TooltipContent>
                         </Tooltip>
