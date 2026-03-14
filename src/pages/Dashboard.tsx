@@ -289,23 +289,25 @@ export default function Dashboard() {
         )}
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45, duration: 0.4 }} className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
           {[
             { label: "New Neuron", icon: Brain, path: "/n/new" },
             { label: "Extractor", icon: FileAudio, path: "/extractor" },
             { label: "Services", icon: Sparkles, path: "/services" },
             { label: "Intelligence", icon: BarChart3, path: "/intelligence" },
           ].map(action => (
-            <button
+            <motion.button
               key={action.label}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => navigate(action.path)}
               className="flex flex-col items-center gap-1.5 p-4 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors"
             >
               <action.icon className="h-4 w-4 text-muted-foreground" />
               <span className="text-[10px] font-medium">{action.label}</span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
