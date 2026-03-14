@@ -313,7 +313,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 6.3.1 | ✅ Wallet management dashboard | DONE — WalletManagementTab component |
 | 6.3.2 | ✅ Reconciliation engine (cost vs revenue) | DONE — ReconciliationTab component |
 | 6.3.3 | ✅ Incident management panel | DONE — IncidentManagementTab + incidents table |
-| 6.3.4 | Entropy monitoring (cost growth vs revenue growth) | P3 |
+| 6.3.4 | ✅ Entropy monitoring (cost growth vs revenue growth) | DONE — EntropyMonitoringTab component |
 
 ### 6.4 Token NOTA2
 | # | Sarcină | Prioritate |
