@@ -191,10 +191,10 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | # | Serviciu | Module prompts | Status |
 |---|---------|---------------|--------|
 | 3.4.1 | ✅ Transcript Intelligence | Extracție completă din transcript | DONE — extract-insights + deep-extract |
-| 3.4.2 | Personality Intelligence | 45 prompts pe 10 module (Avatar Psihologic) | P1 |
-| 3.4.3 | Avatar33 Execution Engine | 33 prompts pentru avatar comercial | P1 |
+| 3.4.2 | ✅ Personality Intelligence | 45 prompts pe 10 module (Avatar Psihologic) | DONE — service_catalog entry + 10 deliverables |
+| 3.4.3 | ✅ Avatar33 Execution Engine | 33 prompts pentru avatar comercial | DONE — service_catalog entry + 13 deliverables |
 | 3.4.4 | Webinar Generator | 48 prompts pe 12 module | P2 |
-| 3.4.5 | Podcast Intelligence | Framework-uri, pattern-uri retorice | P1 |
+| 3.4.5 | ✅ Podcast Intelligence | Framework-uri, pattern-uri retorice | DONE — service_catalog entry + 8 deliverables |
 
 ---
 
@@ -202,19 +202,19 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 *Monetizare și control acces*
 
 ### 4.1 Credit System Enhancement
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 4.1.1 | Credit reservation la start job + settlement la finalizare | P0 |
-| 4.1.2 | Refund automat la job failed | P1 |
-| 4.1.3 | Cost preview înainte de execuție (UI) | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 4.1.1 | ✅ Credit reservation la start job + settlement la finalizare | DONE — reserve_credits + settle_credits DB functions |
+| 4.1.2 | ✅ Refund automat la job failed | DONE — refund_credits DB function |
+| 4.1.3 | ✅ Cost preview înainte de execuție (UI) | DONE — Cost Preview panel in RunService |
 | 4.1.4 | Pricing transitions bazat pe neuron lifecycle | P2 |
 
 ### 4.2 Access Control (`checkAccess`)
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 4.2.1 | Funcție canonică `checkAccess(user, resource, context)` → ALLOW/PAYWALL/DENY | P0 |
-| 4.2.2 | Entitlement resolver (credite, tier, token) | P1 |
-| 4.2.3 | UI verdict system (lock/unlock vizual pe servicii) | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 4.2.1 | ✅ Funcție canonică `checkAccess(user, resource, context)` → ALLOW/PAYWALL/DENY | DONE — check_access DB function |
+| 4.2.2 | ✅ Entitlement resolver (credite, tier, token) | DONE — integrated in check_access |
+| 4.2.3 | ✅ UI verdict system (lock/unlock vizual pe servicii) | DONE — Shield/Lock icons in RunService |
 | 4.2.4 | Access Simulator pentru admin | P2 |
 
 ### 4.3 Root2 Pricing
@@ -225,11 +225,11 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 4.3.3 | Admin toggle Root2 pe categorii | P3 |
 
 ### 4.4 Free vs Premium Tiers
-| # | Sarcină | Prioritate |
-|---|---------|-----------|
-| 4.4.1 | Free Set (~20 extractori): summary, quotes, topics, viral clips | P1 |
-| 4.4.2 | Premium Set (~100 extractori): psychological, strategic, business | P1 |
-| 4.4.3 | Paywall UI cu preview gratuit + unlock plătit | P1 |
+| # | Sarcină | Status |
+|---|---------|--------|
+| 4.4.1 | ✅ Free Set (~20 extractori): summary, quotes, topics, viral clips | DONE — access_tier column + free services |
+| 4.4.2 | ✅ Premium Set (~100 extractori): psychological, strategic, business | DONE — default premium tier |
+| 4.4.3 | ✅ Paywall UI cu preview gratuit + unlock plătit | DONE — FREE/PREMIUM badges on Services page + PAYWALL verdict |
 
 ---
 
@@ -341,11 +341,11 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | Faza 0 — Securitate | ~8 | P0 | ~90% DONE |
 | Faza 1 — UX Polish | ~35 | P0-P1 | ✅ 100% DONE |
 | Faza 2 — Extraction Engine | ~15 | P0-P1 | ✅ 100% DONE |
-| Faza 3 — Service Execution | ~12 | P0-P1 | ✅ ~85% DONE |
-| Faza 4 — Economic Layer | ~12 | P1-P2 | ~10% DONE |
+| Faza 3 — Service Execution | ~12 | P0-P1 | ✅ ~95% DONE |
+| Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ ~75% DONE |
 | Faza 5 — Advanced Features | ~25 | P1-P2 | ~5% DONE |
 | Faza 6 — Governance & Token | ~15 | P2-P3 | 0% |
-| **TOTAL** | **~122 sarcini** | | **~50% complet** |
+| **TOTAL** | **~122 sarcini** | | **~65% complet** |
 
 ---
 

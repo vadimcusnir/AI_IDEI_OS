@@ -23,6 +23,7 @@ interface Service {
   credits_cost: number;
   icon: string;
   is_active: boolean;
+  access_tier: string;
 }
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -43,6 +44,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   analysis: "Analiză",
   production: "Producție",
   orchestration: "Orchestrare",
+};
+
+const TIER_CONFIG: Record<string, { label: string; className: string }> = {
+  free: { label: "FREE", className: "bg-status-validated/15 text-status-validated" },
+  premium: { label: "PREMIUM", className: "bg-ai-accent/15 text-ai-accent" },
 };
 
 export default function Services() {
@@ -255,6 +261,14 @@ export default function Services() {
                             <span className="text-[9px] text-muted-foreground/50 uppercase">
                               {CATEGORY_LABELS[service.category] || service.category}
                             </span>
+                            {(() => {
+                              const tier = TIER_CONFIG[service.access_tier] || TIER_CONFIG.premium;
+                              return (
+                                <span className={cn("text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full", tier.className)}>
+                                  {tier.label}
+                                </span>
+                              );
+                            })()}
                           </div>
                         </div>
                       </div>
