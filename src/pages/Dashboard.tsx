@@ -261,7 +261,7 @@ export default function Dashboard() {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Recent Jobs */}
         {data.recentJobs.length > 0 && (
