@@ -298,6 +298,7 @@ export default function Jobs() {
                 const StatusIcon = si.icon;
                 const statusLabel = t(`jobs.status_${job.status}`);
                 const statusDesc = t(`jobs.status_${job.status}_desc`);
+                const isExpanded = expandedJob === job.id;
                 const duration = job.completed_at
                   ? Math.round((new Date(job.completed_at).getTime() - new Date(job.created_at).getTime()) / 1000)
                   : null;
@@ -316,21 +317,21 @@ export default function Jobs() {
                             job.status === "failed" ? "bg-destructive/10" :
                             job.status === "running" ? "bg-primary/10" : "bg-muted"
                           )}>
-                            <StatusIcon className={cn("h-3.5 w-3.5", cfg.color)} />
+                            <StatusIcon className={cn("h-3.5 w-3.5", si.color)} />
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="text-[10px] max-w-[200px]">{cfg.description}</TooltipContent>
+                        <TooltipContent side="right" className="text-[10px] max-w-[200px]">{statusDesc}</TooltipContent>
                       </Tooltip>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">{job.worker_type.replace(/_/g, " ")}</span>
-                          <span className={cn("text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full", cfg.color, "bg-current/10")}>
-                            {cfg.label}
+                          <span className={cn("text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full", si.color, "bg-current/10")}>
+                            {statusLabel}
                           </span>
                         </div>
                         <div className="flex items-center gap-3 mt-0.5">
                           <span className="text-[10px] text-muted-foreground">
-                            {new Date(job.created_at).toLocaleString("ro-RO")}
+                            {new Date(job.created_at).toLocaleString()}
                           </span>
                           {duration !== null && (
                             <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
