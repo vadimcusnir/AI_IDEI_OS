@@ -80,11 +80,12 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
   if (viewMode === "list") {
     return (
       <div
-        onClick={() => navigate(`/n/${n.number}`)}
+        onClick={handleClick}
         className={cn(
           "group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all",
           "hover:bg-accent/50 border border-transparent hover:border-border",
-          isPinned && "bg-primary/[0.03] border-primary/10"
+          isPinned && "bg-primary/[0.03] border-primary/10",
+          isSelected && "bg-primary/10 border-primary/20"
         )}
       >
         <button
