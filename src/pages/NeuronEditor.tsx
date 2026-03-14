@@ -106,7 +106,7 @@ export default function NeuronEditor() {
   }, [handleSaveVersion, handleRunAll]);
 
 
-    if (!version.blocksSnapshot || !Array.isArray(version.blocksSnapshot)) {
+    const handleRestoreVersion = useCallback(async (version: NeuronVersion) => {
       toast.error("Invalid version snapshot");
       return;
     }
