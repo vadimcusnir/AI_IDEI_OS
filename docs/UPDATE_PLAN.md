@@ -64,7 +64,7 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | 1.2.1 | ✅ Preview pane split-view | DONE |
 | 1.2.2 | ✅ Sidebar foldere profesional (3 niveluri) | DONE |
 | 1.2.3 | Sidebar unificat reutilizat în Guests/Library/Intelligence | TODO |
-| 1.2.4 | Bulk operations (delete, move, tag) | TODO |
+| 1.2.4 | ✅ Bulk operations (delete, move, tag) | DONE — multi-select cu checkbox + bulk delete bar |
 
 ### 1.3 Neuron Editor (`/n/*`)
 | # | Sarcină | Status |
