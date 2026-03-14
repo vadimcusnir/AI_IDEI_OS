@@ -399,11 +399,11 @@ export default function Jobs() {
                               className="h-7 text-xs gap-1"
                               onClick={async () => {
                                 const { data, error } = await supabase.rpc("retry_failed_job", { _job_id: job.id });
-                                if (error || !data) toast.error("Reîncercarea a eșuat");
-                                else { toast.success("Job reprogramat"); fetchJobs(); }
+                                if (error || !data) toast.error(t("jobs.retry_failed"));
+                                else { toast.success(t("jobs.job_rescheduled")); fetchJobs(); }
                               }}
                             >
-                              <Play className="h-3 w-3" /> Reîncearcă
+                              <Play className="h-3 w-3" /> {t("jobs.retry")}
                             </Button>
                           )}
                           <Button
