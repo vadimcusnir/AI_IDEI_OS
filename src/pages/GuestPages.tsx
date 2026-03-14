@@ -223,7 +223,7 @@ export default function GuestPages() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Caută persoane..."
+              placeholder="Search people..."
               className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
             />
             {search && (
