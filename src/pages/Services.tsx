@@ -258,6 +258,9 @@ export default function Services() {
                               <Coins className="h-2.5 w-2.5" />
                               {service.credits_cost} NEURONS
                             </span>
+                            <span className="text-[8px] font-mono text-muted-foreground/40">
+                              ≈${(service.credits_cost * 0.01).toFixed(0) === "0" ? (service.credits_cost * 0.01).toFixed(2) : root2Display(service.credits_cost * 0.01)} USD
+                            </span>
                             <span className="text-[9px] text-muted-foreground/50 uppercase">
                               {CATEGORY_LABELS[service.category] || service.category}
                             </span>
