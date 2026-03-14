@@ -38,6 +38,7 @@ export default function Index() {
     pinnedIds, togglePin,
     searchQuery, searchResults, searching, handleSearch, clearSearch,
     handleDelete,
+    selectedIds, toggleSelect, selectAll, clearSelection, bulkDelete,
     processedNeurons, groupedNeurons, statuses,
   } = useNeuronList();
 
