@@ -272,11 +272,14 @@ export default function Library() {
                   className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
                   onClick={() => navigate(`/library/${artifact.id}`)}
                 >
-                  {/* Type + Status */}
+                   {/* Type + Status + Visibility */}
                   <div className="flex items-center justify-between mb-2">
-                    <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
-                      {typeConf.label}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
+                        {typeConf.label}
+                      </span>
+                      <VisibilityIcon visibility={artifact.status === "published" ? "public" : "private"} size="xs" />
+                    </div>
                     <div className="flex items-center gap-1.5">
                       <div className={cn("h-1.5 w-1.5 rounded-full", statusConf.dot)} />
                       <span className="text-[9px] text-muted-foreground">{statusConf.label}</span>
