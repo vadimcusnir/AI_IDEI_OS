@@ -141,6 +141,7 @@ const App = () => (
             <CookieConsent />
           </BrowserRouter>
         </TooltipProvider>
+        </WorkspaceProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
