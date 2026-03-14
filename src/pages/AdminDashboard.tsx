@@ -707,6 +707,13 @@ export default function AdminDashboard() {
           <TabsContent value="analytics">
             <AdminAnalyticsTab />
           </TabsContent>
+
+          {/* ─── Access Simulator ─── */}
+          <TabsContent value="access-sim">
+            <div className="bg-card border border-border rounded-xl p-5">
+              <AccessSimulator />
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     </div>

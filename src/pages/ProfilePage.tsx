@@ -404,6 +404,11 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* Achievements */}
+        <div className="bg-card border border-border rounded-xl p-5">
+          <AchievementsBadges />
+        </div>
+
         {/* Data & Privacy */}
         <Link
           to="/data-privacy"
