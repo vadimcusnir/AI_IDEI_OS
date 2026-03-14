@@ -43,7 +43,7 @@ export function NeuronMainEditor({
   const [hoveredBlock, setHoveredBlock] = useState<string | null>(null);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
-  const [hoveredBlock, setHoveredBlock] = useState<string | null>(null);
+  const [slashMenu, setSlashMenu] = useState<{ afterId: string; filter: string; position: { top: number; left: number } } | null>(null);
   const [slashMenu, setSlashMenu] = useState<{ afterId: string; filter: string; position: { top: number; left: number } } | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
 
