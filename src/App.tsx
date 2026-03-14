@@ -52,6 +52,7 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import DataPrivacy from "./pages/DataPrivacy";
 import PublicUserProfile from "./pages/PublicUserProfile";
+import ChatPage from "./pages/ChatPage";
 
 const queryClient = new QueryClient();
 
