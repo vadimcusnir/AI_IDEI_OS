@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
 import { Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch, MessageCircle, MessageSquarePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { ro } from "date-fns/locale";
+import { enUS, ro, ru } from "date-fns/locale";
+
+const DATE_LOCALES: Record<string, Locale> = { en: enUS, ro, ru };
 
 const NOTIF_ICONS: Record<string, React.ElementType> = {
   job_completed: CheckCircle2,
