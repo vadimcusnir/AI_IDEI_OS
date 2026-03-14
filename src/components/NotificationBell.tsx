@@ -31,6 +31,7 @@ const NOTIF_COLORS: Record<string, string> = {
 
 export function NotificationBell() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation("common");
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
   const [open, setOpen] = useState(false);
 
