@@ -75,6 +75,7 @@ export default function Library() {
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
   const [showFolders, setShowFolders] = useState(false);
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [publishArtifact, setPublishArtifact] = useState<Artifact | null>(null);
   const { assignments } = useFolderSidebar("library_folders");
 
   useEffect(() => {
