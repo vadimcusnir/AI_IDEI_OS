@@ -412,7 +412,7 @@ export default function Jobs() {
                             className="h-7 text-xs gap-1"
                             onClick={() => navigate(`/n/${job.neuron_id}`)}
                           >
-                            <Brain className="h-3 w-3" /> Vezi Neuronul
+                            <Brain className="h-3 w-3" /> {t("jobs.view_neuron")}
                           </Button>
                         </div>
                       </div>
