@@ -341,11 +341,11 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 | Faza 0 — Securitate | ~8 | P0 | ~90% DONE |
 | Faza 1 — UX Polish | ~35 | P0-P1 | ✅ 100% DONE |
 | Faza 2 — Extraction Engine | ~15 | P0-P1 | ✅ 100% DONE |
-| Faza 3 — Service Execution | ~12 | P0-P1 | ✅ ~95% DONE |
-| Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ ~75% DONE |
-| Faza 5 — Advanced Features | ~25 | P1-P2 | ~5% DONE |
+| Faza 3 — Service Execution | ~12 | P0-P1 | ✅ 100% DONE |
+| Faza 4 — Economic Layer | ~12 | P1-P2 | ✅ ~90% DONE |
+| Faza 5 — Advanced Features | ~25 | P1-P2 | ~35% DONE |
 | Faza 6 — Governance & Token | ~15 | P2-P3 | 0% |
-| **TOTAL** | **~122 sarcini** | | **~65% complet** |
+| **TOTAL** | **~122 sarcini** | | **~75% complet** |
 
 ---
 
