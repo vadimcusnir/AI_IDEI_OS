@@ -198,9 +198,9 @@ export default function Jobs() {
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
-              <h1 className="text-lg font-semibold tracking-tight">Istoric Execuții</h1>
+              <h1 className="text-lg font-semibold tracking-tight">{t("jobs.title")}</h1>
               <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-                {jobs.length} job-uri
+                {t("jobs.count", { count: jobs.length })}
               </span>
             </div>
           </div>
