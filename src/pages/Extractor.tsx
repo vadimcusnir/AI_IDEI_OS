@@ -508,7 +508,42 @@ export default function Extractor() {
     }
   };
 
-  // === Detect guests ===
+  // === Deep Extract (Phase 2 — Multi-Level) ===
+  const handleDeepExtract = async (episode: Episode) => {
+    if (!user || !episode.transcript?.trim()) {
+      toast.error("No transcript content. Add a transcript first.");
+      return;
+    }
+    setDeepExtractingId(episode.id);
+    setDeepExtractResult(null);
+    toast.info("Running Deep Extract — 8 levels of intelligence extraction…");
+    try {
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/deep-extract`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          },
+          body: JSON.stringify({ episode_id: episode.id }),
+        }
+      );
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
+      setDeepExtractResult(data);
+      toast.success(
+        `✅ Deep Extract complete: ${data.total_neurons} neurons across ${data.levels_processed} levels (${data.credits_spent} credits)`,
+        { duration: 10000 }
+      );
+      trackEvent({ name: "deep_extract_complete", params: { episode_id: episode.id, neurons: data.total_neurons, levels: data.levels_processed } });
+      fetchEpisodes();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Deep extraction failed");
+    } finally {
+      setDeepExtractingId(null);
+    }
+  };
   const [detectingGuests, setDetectingGuests] = useState<string | null>(null);
   const handleDetectGuests = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) { toast.error("No transcript available."); return; }
