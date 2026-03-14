@@ -208,20 +208,21 @@ export default function Extractor() {
     if (!file) return;
 
     try {
-      const text = await file.text();
-      let transcript = text;
-
-      // Parse SRT/VTT → plain text
-      if (file.name.endsWith(".srt") || file.name.endsWith(".vtt")) {
-        transcript = parseSrtToText(text);
+      let transcript: string;
+      if (file.name.endsWith(".pdf")) {
+        transcript = await extractTextFromPDF(file);
+      } else {
+        const text = await file.text();
+        transcript = text;
+        if (file.name.endsWith(".srt") || file.name.endsWith(".vtt")) {
+          transcript = parseSrtToText(text);
+        }
       }
 
       if (episodeId) {
-        // Importing into existing episode
         setEditTranscriptText(transcript);
         setEditingTranscriptId(episodeId);
       } else {
-        // Importing during creation (text mode)
         setContent(transcript);
         if (!title.trim()) {
           setTitle(file.name.replace(/\.\w+$/, "").replace(/[-_]/g, " "));
