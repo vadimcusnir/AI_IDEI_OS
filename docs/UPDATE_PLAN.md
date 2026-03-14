@@ -80,8 +80,8 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 |---|---------|--------|
 | 1.4.1 | ✅ Legendă statusuri cu explicații | DONE |
 | 1.4.2 | ✅ Ghid educativ pipeline | DONE |
-| 1.4.3 | Notificări automate la finalizare/eșuare job | TODO |
-| 1.4.4 | Retry automat cu UI feedback | TODO |
+| 1.4.3 | ✅ Notificări automate la finalizare/eșuare job | DONE — DB triggers existente |
+| 1.4.4 | ✅ Retry automat cu UI feedback | DONE — buton Reîncearcă pe job-uri failed |
 
 ### 1.5 Library Page
 | # | Sarcină | Status |
