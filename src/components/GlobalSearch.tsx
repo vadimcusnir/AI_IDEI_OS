@@ -25,6 +25,7 @@ const TYPE_CONFIG = {
   neuron: { icon: Brain, label: "Neuron", color: "text-primary" },
   artifact: { icon: FileText, label: "Artefact", color: "text-accent-foreground" },
   guest: { icon: Users, label: "Guest", color: "text-muted-foreground" },
+  entity: { icon: Sparkles, label: "Insight", color: "text-primary" },
 };
 
 export function GlobalSearch() {
