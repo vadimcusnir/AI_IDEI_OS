@@ -34,6 +34,14 @@ interface UserCredits {
 
 type JobStatus = "idle" | "creating" | "running" | "completed" | "failed";
 
+interface AccessVerdict {
+  verdict: "ALLOW" | "PAYWALL" | "DENY";
+  reason: string;
+  credits_cost?: number;
+  balance?: number;
+  deficit?: number;
+}
+
 export default function RunService() {
   const { serviceKey } = useParams<{ serviceKey: string }>();
   const { user, loading: authLoading } = useAuth();
@@ -45,6 +53,7 @@ export default function RunService() {
   const [jobStatus, setJobStatus] = useState<JobStatus>("idle");
   const [jobResult, setJobResult] = useState<string>("");
   const [jobId, setJobId] = useState<string | null>(null);
+  const [accessVerdict, setAccessVerdict] = useState<AccessVerdict | null>(null);
 
   useEffect(() => {
     if (authLoading) return;
