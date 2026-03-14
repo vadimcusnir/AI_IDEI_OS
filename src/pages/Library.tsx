@@ -337,6 +337,15 @@ export default function Library() {
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6"
+                        title="Publică pe Marketplace"
+                        onClick={(e) => { e.stopPropagation(); setPublishArtifact(artifact); }}
+                      >
+                        <Store className="h-3 w-3 text-primary" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
                         title={artifact.status === "published" ? "Fă privat" : "Publică"}
                         onClick={(e) => { e.stopPropagation(); handleToggleStatus(artifact.id, artifact.status); }}
                       >
