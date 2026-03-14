@@ -68,6 +68,13 @@ export default function NeuronEditor() {
     );
   }, []);
 
+  const handleToolbarInsertBlock = useCallback((type: string) => {
+    const lastBlockId = blocks[blocks.length - 1]?.id || "";
+    if (lastBlockId) {
+      handleAddBlock(lastBlockId, type as any);
+    }
+  }, [blocks, handleAddBlock]);
+
   const handleSaveVersion = useCallback(async () => {
     if (!neuron) return;
     const blocksSnapshot = blocks.map(b => ({
