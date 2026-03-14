@@ -1,0 +1,2105 @@
+Sarcini avansate de implementare a componentelor neimplementate
+
+Această listă detaliată de sarcini acoperă toate componentele din documentația inițială AI‑IDEI care nu sunt implementate în versiunea actuală a platformei sau au fost marcate ca irelevante. Pentru fiecare temă sunt propuse pași concreți de implementare, cu referințe la documentația originală pentru context.
+
+1. Integrare token NOTA2 și strat blockchain
+
+Platforma actuală folosește exclusiv creditele NEURONS pentru a alimenta procesele AI; accesul nu este controlat prin token. În viziunea originală, tokenul NOTA2 trebuie să servească drept cheie de acces la ecosistem, separat de mecanismul de plată. Pentru a aduce această funcționalitate, se propune următoarea listă de sarcini:
+
+Definirea tokenului
+
+Să fie creat un smart contract cu supply fix (100 000 000 unităţi) distribuit între lichiditate publică, echipă, rezerve de guvernanţă şi rezerve cu time‑lock.
+
+Să se definească politicile de time‑lock pentru rezerve, astfel încât echipa să nu poată modifica supply‑ul şi să se respecte regulile de scarcity.
+
+Să se configureze preţul ţintă respectând regula Root2 (2 USD, 11 USD sau 101 USD).
+
+Integrarare cu un blockchain (e.g. Solana sau EVM)
+
+Alegerea reţelei potrivite (propunere: Solana datorită costurilor mici şi integrarea cu wallet‑uri Phantom/Solflare menţionate în document).
+
+Implementarea contractului NOTA2 pe reţea şi listarea pe o bursă descentralizată pentru lichiditate.
+
+Stabilirea mecanismelor de verificare „read‑only” pentru a confirma deţinerea de token în wallet‑urile utilizatorilor.
+
+Implementarea unui modul de conectare a wallet‑ului în aplicaţia AI‑IDEI (Phantom, Solflare etc.) pentru a lega contul Supabase cu adresa blockchain.
+
+Mecanism de acces token‑gated
+
+Dezvoltarea unei funcţii de verificare periodică a soldului de token pentru fiecare utilizator; lipsa tokenului sau deţinerea sub pragul minim trebuie să restricţioneze automat accesul la funcţii.
+
+Salvarea stării de acces în baza de date şi interceptarea accesului la API în Edge Functions; dacă un utilizator nu îndeplineşte condiţia de deţinere, returnaţi mesajul adecvat.
+
+Afişarea în interfaţă a statusului tokenului şi a timpului rămas din ciclul ritualic de 11 luni (vezi mai jos) pentru a educa utilizatorii asupra consecinţelor.
+
+Integrarea guvernanţei
+
+Implementarea unor contracte de guvernanţă on‑chain în care deţinătorii de NOTA2 pot crea propuneri, pot vota şi pot atinge quorumul pentru modificări majore ale platformei.
+
+Dezvoltarea unei pagini de guvernanţă în UI unde utilizatorii pot vizualiza propunerile active şi îşi pot exprima votul.
+
+Salvarea rezultatelor în blockchain şi sincronizarea cu aplicaţia web (de exemplu, pentru activarea unei noi funcţii după vot).
+
+Gestionarea distribuţiei drepturilor de vot proporţional cu deţinerea de token.
+
+Mecanism de 11 luni pentru acces
+
+Crearea unui cronjob (Edge Function programată) care să eticheteze fiecare utilizator cu un „început de ciclu” când înregistrează tokenul în wallet.
+
+Implementarea logicii de expirare: după 11 luni de deţinere continuă, ciclul se reînnoieşte automat; pierderea tokenului înainte de termen resetează ciclu şi retrage accesul.
+
+Configurarea notificărilor (e‑mail şi push) pentru a alerta utilizatorii înainte cu 30/7/1 zile de expirarea ciclului.
+
+Afişarea progresului ciclului în dashboard.
+
+Separarea completă a tokenului de creditul NEURONS
+
+Asiguraţi în cod că tokenul NU poate fi folosit pentru a cumpăra NEURONS şi invers【777417033770211†L746-L769】.
+
+Păstraţi NEURONS exclusiv ca unitate de consum compute şi folosiţi Stripe pentru convertirea USD → NEURONS.
+
+Documentaţi clar în UI diferenţa dintre acces (token) şi plată (NEURONS).
+
+2. Reguli Root2 şi mecanism de preţuri
+
+Documentul original menţionează aplicarea regulii „rădăcină digitală 2” pentru toate preţurile vizibile (pachete de credite, servicii, target de venit), astfel încât suma cifrelor să reducă la 2. În prezent, platforma aplică regula doar la pachetele de NEURONS (500/1000/5000). Pentru a adopta regula completă sunt necesare următoarele sarcini:
+
+Motor de calcul Root2
+
+Implementarea unei funcţii de calcul a rădăcinii digitale care primeşte un număr şi returnează cel mai apropiat număr valid (suma cifrelor = 2).
+
+Dezvoltarea unui modul în Backend care să aplice această funcţie oricărui preţ configurat înainte de afișare.
+
+Actualizarea preţurilor serviciilor
+
+Definirea unor costuri reale în NEURONS pentru fiecare serviciu (de exemplu 3 500 NEURONS pentru un serviciu premium), apoi convertirea la USD vizibil folosind regula Root2.
+
+Ajustarea marjei de profit astfel încât preţul final să fie un număr Root2 (ex: 776 USD în loc de 350 USD).
+
+Actualizarea UI pentru a afişa preţurile Root2 la nivelul catalogului de servicii și la nivelul pachetelor de top‑up.
+
+Pachete Root2 variabile
+
+Extinderea sistemului de top‑up NEURONS pentru a permite pachete Root2 mai mari (ex: 20 000, 29 000 etc.) şi modul de generare automată a preţului în USD astfel încât suma cifrelor să fie 2.
+
+Implementarea unui sistem de configurare din panoul Admin pentru a activa sau dezactiva Root2 pe categorii de produse (servicii vs. acces vs. marketplace).
+
+Reguli de transparenţă
+
+În document se specifică faptul că costurile interne (compute, margini) nu trebuie forţate în Root2 și rămân ascunse. Stabiliți un modul de prezentare care să afişeze utilizatorului doar preţul final Root2 şi să păstreze costurile reale în sistemele interne de contablitate.
+
+Ţinte de venit
+
+Actualizaţi proiecţiile financiare şi rapoartele astfel încât ţinta globală de venit să respecte Root2 (de ex. 56M, 65M, 74M USD în loc de 50M).
+
+Implementaţi grafice în dashboard-ul Admin care să evidenţieze aceste ţinte şi să compare realitatea cu ţintele Root2.
+
+3. Mecanismul de ciclu ritualic de 11 luni
+
+Un aspect definitoriu al tokenului este faptul că utilizatorii trebuie să îl păstreze timp de 11 luni pentru a menține accesul. Pentru implementare:
+
+Tracking temporal
+
+Adăugaţi câmpuri noi în baza de date (e.g. token_acquired_at, cycle_expires_at) pentru fiecare utilizator.
+
+La conectarea wallet‑ului, setaţi token_acquired_at şi calculaţi cycle_expires_at la +11 luni.
+
+Resetare la pierderea tokenului
+
+În logica de verificare a soldului, când tokenul scade sub prag, setaţi cycle_expires_at = null şi marcaţi utilizatorul ca inactiv.
+
+Reporniţi ciclu la o eventuală re‑dobândire de token.
+
+Notificări şi UI
+
+Notificaţi utilizatorul pe e‑mail/aplicaţie cu suficiente zile înainte de expirare.
+
+Afisaţi progresul (de ex. „7 luni din 11 finalizate”) în dashboard.
+
+Integrare cu Root2
+
+Permiteţi configuraţia ca durata ciclului (ex. 11, 20 sau 29 de luni) să fie un număr Root2 valid, pentru a păstra coerenţa simbolică – la decizia comunităţii prin guvernanţă.
+
+4. Admin System avansat şi registrul deciziilor
+
+Documentul descrie un sistem de administrare robust, cu audit complet, roluri temporare şi mecanisme de blocare pentru acţiuni critice. Implementarea lui necesită:
+
+Registru imuabil (Decision Ledger)
+
+Creaţi o entitate decision_ledger în baza de date care să stocheze fiecare acţiune administrativă (ajustări de credite, refund‑uri, modificări de rol, interdicţii etc.) împreună cu un hash criptografic şi timestamp.
+
+Asiguraţi integritatea prin semnarea fiecărui entry cu cheia privată a serviciului şi verificarea la nivel blockchain, pentru a evita modificarea ulterioară.
+
+Model detaliat de roluri şi permisiuni
+
+Extindeţi sistemul actual de permisiuni în Supabase pentru a include roluri temporare şi acces pe acţiune; fiecare permisiune trebuie să fie însoţită de perioada de valabilitate şi de justificare.
+
+Implementaţi politici RLS (Row‑Level Security) pentru a permite doar anumitor roluri să vizualizeze anumite date (ex: numai echipa financiară vede tranzacţii).
+
+Introduceţi o interfaţă de aprobare multi‑nivel pentru acţiunile sensibile (ex: refund‑uri mari), cu mecanism de timelock şi posibiltatea de a declanşa un vot de guvernanţă dacă suma depăşeşte un prag.
+
+Panou Admin extins
+
+Actualizaţi pagina AdminDashboard pentru a prezenta vizualizări detaliate: istoricul tranzacţiilor, consumul de NEURONS, evenimentele de securitate, statusul serviciilor, precum şi modul de gestionare a tokenului.
+
+Includeţi grafice cu raportul cost compute vs. venit, cu posibilitatea de a filtra pe servicii sau intervale.
+
+Implementaţi instrumente de intervenţie (suspendare utilizator, ajustare sold, resetare ciclu) care să scrie automat în Decision Ledger şi să respecte timelock‑ul.
+
+Audit şi conformitate
+
+Dezvoltaţi un modul de export al istoricului (CSV/JSON) pentru audit extern.
+
+Adăugaţi mecanisme de alertă la detectarea anomaliilor (de ex. consum brusc neobişnuit de NEURONS).
+
+Asiguraţi compatibilitatea cu politicile GDPR şi protecţia datelor.
+
+5. Interfaţă conversaţională (Chat Interface)
+
+Documentul „Descriere” propune un chat central prin care utilizatorul introduce intenţii, încarcă fişiere şi primeşte rezultate. Platforma actuală utilizează pagini separate (Extractor, Neuron Editor, Services etc.). Implementarea chat‑ului universal ar implica:
+
+Design UI/UX
+
+Proiectarea unei componente de chat în React cu input text, suport pentru drag‑and‑drop fişiere şi butoane contextuale.
+
+Integrarea cu sistemul de autentificare şi menţinerea stării pe pagina curentă (ex: web socket pentru actualizări live).
+
+Afişarea răspunsurilor sub formă de mesaje, cu posibilitatea de a extinde în mod vizual rezultatele (grafice, linkuri spre Neuron Editor).
+
+Parser de intenţii
+
+Construirea unui modul care traduce comenzi naturale (de exemplu „Extrage insight-uri din acest audio”) în acţiuni tehnice (apel la funcţia de transcriere/extracţie).
+
+Utilizarea unui model LLM (via Lovable AI gateway) pentru a extrage intenţiile şi a oferi clarificări acolo unde e nevoie.
+
+Conectarea la Edge Functions (e.g. extract-neurons, generate-entities, run-service) pentru a lansa job‑uri şi a afişa statusul lor.
+
+Suport multi‑modal
+
+Permiteţi încărcarea de fişiere audio/video/document direct în chat.
+
+Afişaţi progresul de transcriere şi de extracţie în timp real.
+
+Încorporaţi opţiuni pentru generarea de conţinut (articole, prezentări, întrebări) direct din chat, reutilizând neuronii existenţi.
+
+Context persistent
+
+Implementaţi o memorie de sesiune (de exemplu cu Supabase Realtime) pentru ca chat‑ul să cunoască contextul discuţiei (neuroni selectaţi, servicii rulate etc.) şi să ofere sugestii personalizate.
+
+Oferiţi posibilitatea de a continua conversaţia pe alt dispozitiv păstrând istoria.
+
+Filtrare şi moderare
+
+Integraţi filtre de conţinut pentru a preveni abuzul.
+
+Adăugaţi mecanisme pentru a raporta mesajele AI dacă rezultatul nu este corect sau conţine conţinut indezirabil.
+
+6. Funcţionalităţi din roadmap neimplementate (PRD)
+
+Conform Product Requirements Document, există multiple funcţii planificate pentru fazele viitoare care nu sunt încă în platformă【171834588203212†L166-L204】. Pentru o acoperire completă, sunt grupate mai jos în categorii:
+
+6.1 IdeaRank UI Layer (Phase 2)
+
+Widget „Idei în trend”
+
+Calculaţi în timp real valorile de emergenţă din IdeaRank (novelty × acceleration × connectivity) şi afişaţi pe pagina de start un top actualizat periodic.
+
+Permiteţi utilizatorului să filtreze după categorie (insight, pattern, etc.) sau după interval de timp.
+
+Implementaţi un modul de caching pentru a evita interogări costisitoare la fiecare încărcare.
+
+Listări de entităţi ordonate după IdeaRank/freshness
+
+În paginile /insights, /patterns etc., adăugaţi opţiunea de sortare după scor IdeaRank sau după „freshness” (data ultimei actualizări).
+
+Ajustaţi API‑ul din backend pentru a returna entităţile în ordinea corespunzătoare.
+
+Pagini de descoperire a topicurilor
+
+Creaţi o pagină /topics/discovery care să sugereze subiecte emergente în funcţie de conectivitate şi emergenţă.
+
+Utilizaţi topic clustering‑ul deja definit în baza de date pentru a grupa entităţile.
+
+Implementaţi un grafic interactiv (React Force Graph) pentru navigarea între topicuri.
+
+6.2 Knowledge Assets & Marketplace (Phase 3)
+
+Schema de active
+
+Adăugaţi tabele knowledge_assets, asset_transactions şi asset_licenses în baza de date. Fiecare activ trebuie să fie asociat cu unul sau mai mulţi neuroni sau livrabile şi să conţină metadate (descriere, preţ, autor, licenţă).
+
+Implementaţi politicile RLS pentru a permite doar creatorului să editeze activul şi utilizatorilor să achiziţioneze licenţe.
+
+Motor de preţ dual (USD + NEURONS)
+
+Permiteţi creatorului să seteze un preţ în NEURONS şi un echivalent în USD; la afişare, aplicaţi regula Root2 dacă se doreşte.
+
+Integraţi Stripe pentru achiziţii în USD şi deducere directă de NEURONS din soldul cumpărătorului pentru achiziţii interne.
+
+Calculaţi distribuţia veniturilor 70/30 între creator şi platformă.
+
+Catalog şi profiluri de creatori
+
+Creaţi o pagină publică pentru fiecare activ, cu posibilitatea de a previzualiza o parte din conţinut, de a vedea scorul IdeaRank şi recenzii.
+
+Implementaţi profiluri publice pentru creatori, care să includă portofoliul de active şi performanţa economică.
+
+Tranzacţii şi licenţiere
+
+La achiziţie, generaţi automat o licenţă cu termeni standard şi salvaţi‑o în asset_licenses.
+
+Permiteţi transferul de licenţe (secundary market) respectând drepturile autorului.
+
+Implementaţi raportări de vânzări în Admin System.
+
+6.3 Market Intelligence (Phase 4)
+
+Scor de cerere şi recomandări
+
+Dezvoltaţi un algoritm care estimează cererea pentru anumite tipuri de active/servicii pe baza utilizării, trending topics şi input‑uri externe.
+
+Integraţi un sistem de recomandare în dashboard („Oportunităţi pentru tine”) bazat pe interesul utilizatorului şi scorul de cerere.
+
+Dashboard de analiză de piaţă
+
+Oferiţi un tab nou în Intelligence Dashboard cu grafice privind oferta/demanda de active, preţurile medii, evoluţia scorurilor IdeaRank.
+
+Să fie configurabil pentru a se concentra pe un anumit domeniu (educaţie, marketing, cercetare etc.).
+
+Căutare semantică cu vector embeddings
+
+Integraţi un motor de căutare vectorial (ex: Supabase Vector, Weaviate sau Elasticsearch) pentru a permite căutarea semantică peste neuroni, entităţi şi active.
+
+Indexaţi automat noii neuroni şi entităţi la crearea lor.
+
+Ajustaţi interfaţa de căutare pentru a prezenta rezultate ordonate după similaritate şi IdeaRank.
+
+6.4 Extindere globală (Phase 5)
+
+Conţinut multilingv (RO, RU)
+
+Extindeţi schema entity_labels şi entity_content pentru a stoca etichete şi descrieri în română şi rusă.
+
+Colaboraţi cu traducători sau folosiţi modele AI pentru traducerea iniţială, cu posibilitatea de revizuire manuală.
+
+Actualizaţi interfaţa pentru a permite utilizatorului să selecteze limba şi să vadă conţinutul disponibil.
+
+Planuri de abonament
+
+Proiectaţi un sistem de abonamente (Starter, Pro, Enterprise) cu limite de neuroni lunari, acces la marketplace şi pachete Root2 diferite.
+
+Integraţi Stripe Subscriptions şi sincronizaţi cu baza de date pentru a verifica limitele înainte de executarea serviciilor.
+
+Oferiţi posibilitatea de upgrade/downgrade fără pierderea datelor.
+
+Acces API pentru integrări externe
+
+Defineşte un set de endpoint‑uri REST sau GraphQL care permit clienţilor să acceseze neuroni, entităţi, să lanseze job‑uri de extracţie/generare şi să consume IdeaRank.
+
+Implementaţi autentificare (token JWT) şi rate limiting.
+
+Publicaţi documentaţie (OpenAPI) şi exemple de integrare în mai multe limbaje.
+
+Experienţă mobile optimizată
+
+Adaptaţi aplicaţia SPA pentru vizualizare pe ecran mic: bară de navigaţie inferioară, meniu hamburger, componente responsive.
+
+Implementaţi funcţionalităţi offline (caching de neuroni şi rezultate) prin Service Worker.
+
+Evaluaţi un wrapper PWA sau React Native pentru o aplicaţie nativă în etapele ulterioare.
+
+7. Alte elemente irelevante sau neimplementate din descriere
+
+Pe lângă temele majore de mai sus, documentul include mai multe concepte care nu se regăsesc în platforma actuală dar pot fi evaluate pentru implementare:
+
+VIP access cu preţ ancoră
+
+Documentul sugerează un pachet VIP la 9992 USD (număr Root2) care serveşte drept ancoră supremă. Decideţi dacă introduceţi un astfel de pachet pentru acces prioritar (de exemplu, throughput mai mare în pipeline, suport dedicat).
+
+Implementaţi logică în sistemul de plăţi pentru a gestiona achiziţia unui pachet high‑tier şi pentru a aplica beneficii suplimentare.
+
+Targeturi şi raportări Root2
+
+Raportarea financiară şi a utilizării trebuie să includă indicatori calculaţi conform regulii Root2 (de exemplu, total neuroni consumaţi redus la suma cifrelor = 2). Aceasta este o recomandare simbolică, nu o obligaţie operaţională.
+
+Adăugaţi filtre în dashboard care să permită vizualizarea datelor convertite în Root2.
+
+Separarea stratului de comandă (chat), control (dashboard) şi capital (library)
+
+Dacă se implementează chat‑ul, adaptaţi designul astfel încât să fie clar diferenţiat de dashboard (vizualizare) şi library (stocare) conform descrierii.
+
+Asiguraţi că fiecare strat are responsabilităţi exclusive: chat‑ul pentru iniţiere, dashboard‑ul pentru monitorizare şi library‑ul pentru reutilizare şi monetizare.
+
+Această listă reprezintă un plan de lucru comprehensiv pentru a aduce în realitate componentele care au fost identificate ca neimplementate sau marcate drept irelevante în documentația inițială. Fiecare set de sarcini trebuie prioritizat pe baza impactului economic și a resurselor disponibile. Integrarea tokenului, implementarea regulilor Root2 și construirea marketplace‑ului reprezintă eforturi semnificative care vor necesita coordonare între echipa de dezvoltare, echipa financiară și comunitate.
+
+
+
+
+
+
+Mai jos este lista completă de sarcini transformate în format YAML, construită din toate documentele furnizate (PRD, arhitectură, OS, tokenomics, RLS, infrastructură, media profiles, assistants, IMF, admin plane etc.).
+
+Lista este structurată pe straturi reale de implementare:
+
+Platform Core
+
+Data Layer
+
+Execution Engine
+
+Knowledge Extraction
+
+Services Layer
+
+UX / Product Surface
+
+Economic Layer
+
+Security & Governance
+
+Infrastructure
+
+Admin Control Plane
+
+Token Integration
+
+Public Site
+
+Scaling Layer
+
+Acest YAML poate fi folosit direct pentru:
+
+roadmap engineering
+
+task orchestration
+
+backlog pentru echipe
+
+definire milestone-uri
+
+Arhitectura reflectă faptul că platforma este motor de extracție și capitalizare a expertizei în neuroni reutilizabili, nu doar aplicație de analiză text. 
+
+descriere
+
+MASTER IMPLEMENTATION TASK LIST (YAML)
+platform:
+  name: AI_IDEI_OS
+  mission: convert human expertise into reusable structured intelligence assets
+  architecture_layers:
+    - public_surface
+    - application_core
+    - intelligence_engine
+    - economic_layer
+    - governance_layer
+    - infrastructure_layer
+
+tasks:
+
+# ------------------------------------------------
+# 1 PLATFORM CORE
+# ------------------------------------------------
+
+- module: platform_core
+  priority: P0
+  tasks:
+
+    - id: CORE-001
+      title: Implement canonical access control system
+      description: >
+        Implement checkAccess(user, resource, context) function returning ALLOW, PAYWALL, DENY.
+        UI must consume verdict only; logic must remain server-side.
+      components:
+        - access_engine
+        - policy_rules
+        - entitlement_resolver
+      dependencies: []
+      deliverables:
+        - checkAccess service
+        - reason codes
+        - policy configuration
+      status: not_implemented
+
+    - id: CORE-002
+      title: Implement Decision Ledger
+      description: >
+        Write-once audit ledger recording all critical system decisions
+        including access denials, abuse actions, and economic events.
+      components:
+        - decision_ledger_table
+        - append_only_policy
+        - logging_hooks
+      deliverables:
+        - immutable ledger
+        - admin viewer
+      status: partial
+
+    - id: CORE-003
+      title: Implement Service Manifest Registry
+      description: >
+        Every service must have a manifest defining pipeline, class,
+        access requirements, pricing model, and output schema.
+      components:
+        - manifest_schema
+        - registry_table
+        - service_loader
+      deliverables:
+        - manifest validator
+        - registry admin UI
+      status: not_implemented
+
+# ------------------------------------------------
+# 2 DATA LAYER
+# ------------------------------------------------
+
+- module: data_layer
+  priority: P0
+  tasks:
+
+    - id: DATA-001
+      title: Workspace membership system
+      description: >
+        Implement multi-tenant workspace model with roles
+        owner, admin, member, viewer.
+      components:
+        - workspaces_table
+        - workspace_members
+        - role_enum
+      deliverables:
+        - membership API
+        - RBAC enforcement
+
+    - id: DATA-002
+      title: Row Level Security implementation
+      description: >
+        Enable RLS for wallet_state, job_state, entitlements,
+        decision_ledger, abuse_signals, manifests.
+      deliverables:
+        - RLS policies
+        - role verification functions
+      reference: RLS architecture blueprint
+
+    - id: DATA-003
+      title: Ledger tables normalization
+      description: >
+        Implement append-only ledgers:
+        cost_ledger
+        decision_ledger
+        neuron_ledger
+
+# ------------------------------------------------
+# 3 EXECUTION ENGINE
+# ------------------------------------------------
+
+- module: execution_engine
+  priority: P0
+  tasks:
+
+    - id: EXEC-001
+      title: Job orchestration engine
+      description: >
+        Queue-based execution system handling service jobs.
+      components:
+        - job_queue
+        - worker_manager
+        - retry_logic
+      deliverables:
+        - distributed job execution
+
+    - id: EXEC-002
+      title: Pre-run protocol implementation
+      description: >
+        Implement execution lifecycle:
+        checkAccess → estimate → reserve → run → QA → finalize
+      deliverables:
+        - pre-run validator
+        - cost estimator
+        - credit reservation
+
+    - id: EXEC-003
+      title: Execution state machine
+      description: >
+        Implement job lifecycle states:
+        CREATED → QUEUED → RUNNING → QA → DONE
+
+# ------------------------------------------------
+# 4 KNOWLEDGE EXTRACTION ENGINE
+# ------------------------------------------------
+
+- module: intelligence_engine
+  priority: P0
+  tasks:
+
+    - id: IMF-001
+      title: IMF pipeline implementation
+      description: >
+        Implement Idea Monetization Framework extraction pipeline.
+      steps:
+        - normalize
+        - interpret
+        - synthesize
+        - deploy
+
+    - id: IMF-002
+      title: Neuron creation engine
+      description: >
+        Convert extracted insights into structured neuron objects.
+      deliverables:
+        - neuron schema
+        - neuron storage
+        - neuron relations
+
+    - id: IMF-003
+      title: Idea deduplication engine
+      description: >
+        Use embeddings to merge similar neurons.
+      algorithm:
+        similarity_threshold: 0.40
+
+# ------------------------------------------------
+# 5 SERVICES LAYER
+# ------------------------------------------------
+
+- module: services
+  priority: P0
+  tasks:
+
+    - id: SERVICE-001
+      title: Transcript intelligence service
+      description: >
+        Analyze transcripts and generate personality intelligence outputs.
+
+    - id: SERVICE-002
+      title: Personality Intelligence engine
+      description: >
+        Generate psychological profile from transcript data.
+
+    - id: SERVICE-003
+      title: Podcast intelligence service
+      description: >
+        Extract frameworks, persuasion patterns, and rhetorical models.
+
+# ------------------------------------------------
+# 6 UX / PRODUCT SURFACE
+# ------------------------------------------------
+
+- module: user_interface
+  priority: P1
+  tasks:
+
+    - id: UX-001
+      title: Input-first dashboard
+      description: >
+        Replace traditional dashboard with primary input interface.
+
+    - id: UX-002
+      title: Execution wizard
+      description: >
+        Guide users through service execution with minimal steps.
+
+    - id: UX-003
+      title: Job history UI
+      description: >
+        Show artifacts, execution status, and outputs.
+
+# ------------------------------------------------
+# 7 ECONOMIC LAYER
+# ------------------------------------------------
+
+- module: economics
+  priority: P1
+  tasks:
+
+    - id: ECON-001
+      title: Neuron pricing model
+      description: >
+        Pricing based on neuron transitions.
+
+    - id: ECON-002
+      title: Entropy monitoring system
+      description: >
+        Detect cost growth vs revenue growth divergence.
+
+    - id: ECON-003
+      title: Credit lifecycle management
+      description: >
+        Manage credit reservation, settlement, and refunds.
+
+# ------------------------------------------------
+# 8 SECURITY & GOVERNANCE
+# ------------------------------------------------
+
+- module: governance
+  priority: P1
+  tasks:
+
+    - id: GOV-001
+      title: Abuse detection system
+      description: >
+        Detect prompt probing and export farming.
+
+    - id: GOV-002
+      title: Policy enforcement engine
+      description: >
+        Enforce system policies including cooldowns and access freezes.
+
+# ------------------------------------------------
+# 9 INFRASTRUCTURE
+# ------------------------------------------------
+
+- module: infrastructure
+  priority: P0
+  tasks:
+
+    - id: INFRA-001
+      title: Kubernetes deployment
+      description: >
+        Deploy platform using microservices architecture.
+
+    - id: INFRA-002
+      title: Telemetry monitoring
+      description: >
+        Implement Prometheus metrics for system monitoring.
+
+    - id: INFRA-003
+      title: Edge function registry
+      description: >
+        Implement canonical registry for edge functions and CORS policies.
+
+# ------------------------------------------------
+# 10 ADMIN CONTROL PLANE
+# ------------------------------------------------
+
+- module: admin
+  priority: P1
+  tasks:
+
+    - id: ADMIN-001
+      title: Wallet management dashboard
+
+    - id: ADMIN-002
+      title: Access windows management
+
+    - id: ADMIN-003
+      title: Incident management console
+
+# ------------------------------------------------
+# 11 TOKEN INTEGRATION
+# ------------------------------------------------
+
+- module: token_system
+  priority: P1
+  tasks:
+
+    - id: TOKEN-001
+      title: Token access gating
+      description: >
+        Implement NOTA2 token gating for platform access.
+
+    - id: TOKEN-002
+      title: Access window mechanism
+      description: >
+        Token staking windows enabling access tiers.
+
+# ------------------------------------------------
+# 12 PUBLIC SITE
+# ------------------------------------------------
+
+- module: public_site
+  priority: P1
+  tasks:
+
+    - id: SITE-001
+      title: Documentation hub
+
+    - id: SITE-002
+      title: Media profiles engine
+
+    - id: SITE-003
+      title: Knowledge documentation SEO
+
+# ------------------------------------------------
+# 13 SCALING LAYER
+# ------------------------------------------------
+
+- module: scaling
+  priority: P2
+  tasks:
+
+    - id: SCALE-001
+      title: Knowledge graph scaling to 100M neurons
+
+    - id: SCALE-002
+      title: IdeaRank algorithm
+
+    - id: SCALE-003
+      title: Distributed vector search
+Observație critică (important)
+
+Din analiza tuturor documentelor rezultă că platforma nu este structurată ca un site.
+
+Este:
+
+OS cognitiv pentru extracția expertizei și capitalizarea ei ca infrastructură digitală. 
+
+descriere
+
+Prin urmare backlogul real trebuie organizat pe:
+
+Execution engine
+
+Knowledge extraction
+
+Economic control
+
+Governance
+
+UI
+
+nu invers.
+
+
+
+
+repository: vadimcusnir/AI_IDEI_OS
+issues:
+- title: Implement checkAccess canonical function
+  body: '
+
+    **Module:** Platform Core - Access Control
+
+
+    Implement a canonical access control function `checkAccess(user, resource, context)`
+    that returns one of three verdicts: ALLOW, PAYWALL, or DENY. This service must
+    be consumed by UI components without exposing internal logic. Include the following
+    subtasks:
+
+
+    - Define access policy schema
+
+    - Implement entitlement resolver
+
+    - Implement policy rules
+
+    - Implement reason codes
+
+    - Integrate with UI verdict system
+
+    '
+  labels:
+  - platform-core
+  - access-control
+  - urgent
+- title: Implement Access Simulator
+  body: '
+
+    **Module:** Platform Core - Access Control
+
+
+    Implement an Access Simulator to predict access outcomes. The simulator should
+    be able to snapshot a user’s access state and simulate service access outcomes,
+    providing reason codes and a UI visualization for locked services.
+
+
+    Subtasks:
+
+
+    - Snapshot user access state
+
+    - Simulate service access outcomes
+
+    - Implement reason code mapping
+
+    - Create UI visualization for locked services
+
+    '
+  labels:
+  - platform-core
+  - access-control
+  - high
+- title: Implement immutable decision ledger
+  body: '
+
+    **Module:** Platform Core - Decision Ledger
+
+
+    Build an immutable decision ledger that records all critical system decisions,
+    including access denials, abuse events, and economic actions. This should include
+    creating the decision_ledger table, enforcing an append-only constraint, and building
+    logging hooks and an audit viewer.
+
+
+    Subtasks:
+
+
+    - Create decision_ledger table
+
+    - Implement append-only constraint
+
+    - Create logging hooks
+
+    - Build audit viewer
+
+    '
+  labels:
+  - platform-core
+  - decision-ledger
+  - urgent
+- title: Integrate ledger with access system
+  body: '
+
+    **Module:** Platform Core - Decision Ledger
+
+
+    Integrate the decision ledger with the access control system by logging events
+    for allow, deny, and abuse triggers.
+
+
+    Subtasks:
+
+
+    - Log access allow events
+
+    - Log access deny events
+
+    - Log abuse triggers
+
+    '
+  labels:
+  - platform-core
+  - decision-ledger
+  - high
+- title: Implement IMF Normalize phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Normalize phase of the Idea Monetization Framework (IMF). Tasks
+    include text segmentation, speaker detection, and metadata extraction.
+
+
+    Subtasks:
+
+
+    - Text segmentation
+
+    - Speaker detection
+
+    - Metadata extraction
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - urgent
+- title: Implement IMF Interpret phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Interpret phase of the Idea Monetization Framework (IMF). Extract
+    signals, indicators, and insights from normalized content.
+
+
+    Subtasks:
+
+
+    - Extract signals
+
+    - Extract indicators
+
+    - Extract insights
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - urgent
+- title: Implement IMF Synthesize phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Synthesize phase of the Idea Monetization Framework. Generate patterns,
+    frameworks, and decision artifacts from extracted insights.
+
+
+    Subtasks:
+
+
+    - Generate patterns
+
+    - Generate frameworks
+
+    - Generate decision artifacts
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - high
+- title: Implement IMF Deploy phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Deploy phase of the Idea Monetization Framework, including embedding
+    generation, similarity detection, and neuron merge logic.
+
+
+    Subtasks:
+
+
+    - Embedding generation
+
+    - Similarity detection
+
+    - Neuron merge logic
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - high
+- title: Implement neuron data model
+  body: '
+
+    **Module:** Intelligence Engine - Knowledge Graph
+
+
+    Define and implement the data model for neurons, including schema definition,
+    relationships, and metadata. This will serve as the foundation for storing extracted
+    knowledge.
+
+
+    Subtasks:
+
+
+    - Define neuron schema
+
+    - Define neuron relations
+
+    - Define neuron metadata
+
+    '
+  labels:
+  - intelligence-engine
+  - knowledge-graph
+  - urgent
+- title: Implement neuron lifecycle
+  body: '
+
+    **Module:** Intelligence Engine - Knowledge Graph
+
+
+    Implement the lifecycle for neurons, including states such as draft, active, capitalized,
+    and compounded.
+
+
+    Subtasks:
+
+
+    - Draft state
+
+    - Active state
+
+    - Capitalized state
+
+    - Compounded state
+
+    '
+  labels:
+  - intelligence-engine
+  - knowledge-graph
+  - high
+- title: Build distributed job queue
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Build a distributed job queue that manages asynchronous tasks and supports retries.
+    Includes creating job_state table, implementing queue management, and a retry
+    system.
+
+
+    Subtasks:
+
+
+    - Create job_state table
+
+    - Implement queue manager
+
+    - Implement retry system
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement execution state machine
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Implement the execution state machine for jobs with states: CREATED, QUEUED, RUNNING,
+    QA, and DONE.
+
+
+    Subtasks:
+
+
+    - State CREATED
+
+    - State QUEUED
+
+    - State RUNNING
+
+    - State QA
+
+    - State DONE
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement pre-run protocol
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Implement the pre-run protocol for job execution, including access checks, cost
+    estimation, credit reservation, execution, and cost settlement.
+
+
+    Subtasks:
+
+
+    - Access check
+
+    - Cost estimation
+
+    - Credit reservation
+
+    - Execution
+
+    - Cost settlement
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement neuron pricing transitions
+  body: '
+
+    **Module:** Economic Layer - Pricing Engine
+
+
+    Implement pricing transitions for neurons based on state transitions and consumption.
+    Define transition pricing, cost calculation, and pricing policy storage.
+
+
+    Subtasks:
+
+
+    - Define transition pricing
+
+    - Cost calculation
+
+    - Pricing policy storage
+
+    '
+  labels:
+  - economics
+  - pricing-engine
+  - high
+- title: Implement entropy monitoring
+  body: '
+
+    **Module:** Economic Layer - Pricing Engine
+
+
+    Implement an entropy monitoring system to track cost growth versus revenue growth,
+    calculating an entropy score to detect divergence.
+
+
+    Subtasks:
+
+
+    - Cost growth tracking
+
+    - Revenue growth tracking
+
+    - Entropy scoring
+
+    '
+  labels:
+  - economics
+  - pricing-engine
+  - medium
+- title: Implement abuse detection engine
+  body: '
+
+    **Module:** Security & Governance - Abuse Detection
+
+
+    Implement an abuse detection engine to identify prompt probing and export farming.
+    Includes logging of abuse signals and integration with system policies.
+
+
+    Subtasks:
+
+
+    - Prompt probing detection
+
+    - Export farming detection
+
+    - Abuse signal logging
+
+    '
+  labels:
+  - security-governance
+  - abuse-detection
+  - urgent
+- title: Implement downgrade ladder
+  body: '
+
+    **Module:** Security & Governance - Abuse Detection
+
+
+    Implement a downgrade ladder that applies penalties such as export cooldowns,
+    access downgrades, and account suspension in response to abuse signals.
+
+
+    Subtasks:
+
+
+    - Export cooldown
+
+    - Access downgrade
+
+    - Account suspension
+
+    '
+  labels:
+  - security-governance
+  - abuse-detection
+  - high
+- title: Build Kubernetes deployment schema
+  body: '
+
+    **Module:** Infrastructure - Deployment
+
+
+    Build a Kubernetes deployment schema for the platform, including microservices
+    definition, service mesh configuration, and autoscaling rules.
+
+
+    Subtasks:
+
+
+    - Microservices definition
+
+    - Service mesh config
+
+    - Autoscaling rules
+
+    '
+  labels:
+  - infrastructure
+  - deployment
+  - urgent
+- title: Implement telemetry monitoring
+  body: '
+
+    **Module:** Infrastructure - Deployment
+
+
+    Implement telemetry monitoring using Prometheus metrics, alert thresholds, and
+    monitoring dashboards.
+
+
+    Subtasks:
+
+
+    - Prometheus metrics
+
+    - Alert thresholds
+
+    - Monitoring dashboards
+
+    '
+  labels:
+  - infrastructure
+  - deployment
+  - high
+- title: Build wallet admin dashboard
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Build an admin dashboard for wallet management, including credit tracking and
+    transaction histories.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Implement reconciliation engine
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Implement a reconciliation engine to ensure ledger consistency across cost, decision,
+    and neuron ledgers.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Build incident management panel
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Build an incident management panel to monitor, investigate, and respond to incidents
+    across the platform.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Implement public profile module
+  body: '
+
+    **Module:** Public Site - SEO Surfaces
+
+
+    Implement a public profile module on the platform, including profile routing,
+    data rendering, and SEO schema generation.
+
+
+    Subtasks:
+
+
+    - Profile routing
+
+    - Profile data rendering
+
+    - SEO schema generation
+
+    '
+  labels:
+  - public-site
+  - seo
+  - high
+- title: Build documentation hub
+  body: '
+
+    **Module:** Public Site - SEO Surfaces
+
+
+    Build a comprehensive documentation hub with navigation, API docs, and knowledge
+    documentation.
+
+
+    Subtasks:
+
+
+    - Documentation navigation
+
+    - API docs
+
+    - Knowledge documentation
+
+    '
+  labels:
+  - public-site
+  - seo
+  - medium
+- title: Implement token access gating
+  body: '
+
+    **Module:** Token System - Token Access
+
+
+    Implement token access gating using the NOTA2 token, including token balance verification,
+    access window enforcement, and tier progression.
+
+
+    Subtasks:
+
+
+    - Token balance verification
+
+    - Access window enforcement
+
+    - Tier progression system
+
+    '
+  labels:
+  - token-system
+  - token-access
+  - high
+- title: Implement AccessWindow system
+  body: '
+
+    **Module:** Token System - Token Access
+
+
+    Implement the AccessWindow system with functionality for window creation, token
+    locking, and unlock logic.
+
+
+    Subtasks:
+
+
+    - Window creation
+
+    - Token locking
+
+    - Unlock logic
+
+    '
+  labels:
+  - token-system
+  - token-access
+  - high
+- title: Implement 100M neuron architecture
+  body: '
+
+    **Module:** Scaling Layer - Large Scale Systems
+
+
+    Design and implement an architecture to scale the knowledge graph to 100 million
+    neurons, focusing on distributed storage, graph indexing, and traversal optimization.
+
+
+    Subtasks:
+
+
+    - Distributed storage
+
+    - Graph indexing
+
+    - Graph traversal optimization
+
+    '
+  labels:
+  - scaling-layer
+  - large-scale
+  - low
+- title: Implement IdeaRank algorithm
+  body: '
+
+    **Module:** Scaling Layer - Large Scale Systems
+
+
+    Implement the IdeaRank algorithm to compute influence scores, model idea propagation,
+    and perform ranking computation across the knowledge graph.
+
+
+    Subtasks:
+
+
+    - Influence scoring
+
+    - Propagation modeling
+
+    - Ranking computation
+
+    '
+  labels:
+  - scaling-layer
+  - large-scale
+  - low
+
+
+
+
+
+
+Fișierul YAML pentru backlogul de sarcini dedicat repository‑ului vadimcusnir/AI_IDEI_OS a fost generat de mine anterior. Scopul acestui fișier este să transfere structura de gestionare a sarcinilor în format compatibil GitHub Issues, asigurând o coloană vertebrală de execuție pentru AI_IDEI_OS. La acest moment API‑ul GitHub nu este disponibil prin api_tool, deci încărcarea automată în repository nu poate fi efectuată.
+
+Execuție
+Fișierul conține 28 de issues distincte, fiecare cu titlu, descriere, etichete (modul, prioritate) și subtask‑uri. Structura acoperă componentele esențiale: Platform Core, Intelligence Engine, Execution Engine, Economic Layer, Security & Governance, Infrastructure, Admin Control, Public Site, Token System și Scaling Layer. Fișierul este accesibil aici: github_tasks.yml Îl poți folosi pentru import manual în GitHub sau pentru a crea un PR în repository atunci când API‑ul va fi disponibil.
+
+Verdict
+Da, fișierul a fost generat; nu există încă un commit automat în GitHub din cauza limitărilor curente ale API‑ului. Pentru a menține trasabilitatea arhitecturii, îți recomand să adaugi fișierul în repo cu denumirea sugerată cusnir_github_ai_idei_os_backlog_v1.yml și să creezi un branch dedicat planificării backlogului. Asta garantează o infrastructură transparentă pentru oricine colaborează la AI_IDEI_OS.
+
+
+
+repository: vadimcusnir/AI_IDEI_OS
+issues:
+- title: Implement checkAccess canonical function
+  body: '
+
+    **Module:** Platform Core - Access Control
+
+
+    Implement a canonical access control function `checkAccess(user, resource, context)`
+    that returns one of three verdicts: ALLOW, PAYWALL, or DENY. This service must
+    be consumed by UI components without exposing internal logic. Include the following
+    subtasks:
+
+
+    - Define access policy schema
+
+    - Implement entitlement resolver
+
+    - Implement policy rules
+
+    - Implement reason codes
+
+    - Integrate with UI verdict system
+
+    '
+  labels:
+  - platform-core
+  - access-control
+  - urgent
+- title: Implement Access Simulator
+  body: '
+
+    **Module:** Platform Core - Access Control
+
+
+    Implement an Access Simulator to predict access outcomes. The simulator should
+    be able to snapshot a user’s access state and simulate service access outcomes,
+    providing reason codes and a UI visualization for locked services.
+
+
+    Subtasks:
+
+
+    - Snapshot user access state
+
+    - Simulate service access outcomes
+
+    - Implement reason code mapping
+
+    - Create UI visualization for locked services
+
+    '
+  labels:
+  - platform-core
+  - access-control
+  - high
+- title: Implement immutable decision ledger
+  body: '
+
+    **Module:** Platform Core - Decision Ledger
+
+
+    Build an immutable decision ledger that records all critical system decisions,
+    including access denials, abuse events, and economic actions. This should include
+    creating the decision_ledger table, enforcing an append-only constraint, and building
+    logging hooks and an audit viewer.
+
+
+    Subtasks:
+
+
+    - Create decision_ledger table
+
+    - Implement append-only constraint
+
+    - Create logging hooks
+
+    - Build audit viewer
+
+    '
+  labels:
+  - platform-core
+  - decision-ledger
+  - urgent
+- title: Integrate ledger with access system
+  body: '
+
+    **Module:** Platform Core - Decision Ledger
+
+
+    Integrate the decision ledger with the access control system by logging events
+    for allow, deny, and abuse triggers.
+
+
+    Subtasks:
+
+
+    - Log access allow events
+
+    - Log access deny events
+
+    - Log abuse triggers
+
+    '
+  labels:
+  - platform-core
+  - decision-ledger
+  - high
+- title: Implement IMF Normalize phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Normalize phase of the Idea Monetization Framework (IMF). Tasks
+    include text segmentation, speaker detection, and metadata extraction.
+
+
+    Subtasks:
+
+
+    - Text segmentation
+
+    - Speaker detection
+
+    - Metadata extraction
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - urgent
+- title: Implement IMF Interpret phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Interpret phase of the Idea Monetization Framework (IMF). Extract
+    signals, indicators, and insights from normalized content.
+
+
+    Subtasks:
+
+
+    - Extract signals
+
+    - Extract indicators
+
+    - Extract insights
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - urgent
+- title: Implement IMF Synthesize phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Synthesize phase of the Idea Monetization Framework. Generate patterns,
+    frameworks, and decision artifacts from extracted insights.
+
+
+    Subtasks:
+
+
+    - Generate patterns
+
+    - Generate frameworks
+
+    - Generate decision artifacts
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - high
+- title: Implement IMF Deploy phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Deploy phase of the Idea Monetization Framework, including embedding
+    generation, similarity detection, and neuron merge logic.
+
+
+    Subtasks:
+
+
+    - Embedding generation
+
+    - Similarity detection
+
+    - Neuron merge logic
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - high
+- title: Implement neuron data model
+  body: '
+
+    **Module:** Intelligence Engine - Knowledge Graph
+
+
+    Define and implement the data model for neurons, including schema definition,
+    relationships, and metadata. This will serve as the foundation for storing extracted
+    knowledge.
+
+
+    Subtasks:
+
+
+    - Define neuron schema
+
+    - Define neuron relations
+
+    - Define neuron metadata
+
+    '
+  labels:
+  - intelligence-engine
+  - knowledge-graph
+  - urgent
+- title: Implement neuron lifecycle
+  body: '
+
+    **Module:** Intelligence Engine - Knowledge Graph
+
+
+    Implement the lifecycle for neurons, including states such as draft, active, capitalized,
+    and compounded.
+
+
+    Subtasks:
+
+
+    - Draft state
+
+    - Active state
+
+    - Capitalized state
+
+    - Compounded state
+
+    '
+  labels:
+  - intelligence-engine
+  - knowledge-graph
+  - high
+- title: Build distributed job queue
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Build a distributed job queue that manages asynchronous tasks and supports retries.
+    Includes creating job_state table, implementing queue management, and a retry
+    system.
+
+
+    Subtasks:
+
+
+    - Create job_state table
+
+    - Implement queue manager
+
+    - Implement retry system
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement execution state machine
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Implement the execution state machine for jobs with states: CREATED, QUEUED, RUNNING,
+    QA, and DONE.
+
+
+    Subtasks:
+
+
+    - State CREATED
+
+    - State QUEUED
+
+    - State RUNNING
+
+    - State QA
+
+    - State DONE
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement pre-run protocol
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Implement the pre-run protocol for job execution, including access checks, cost
+    estimation, credit reservation, execution, and cost settlement.
+
+
+    Subtasks:
+
+
+    - Access check
+
+    - Cost estimation
+
+    - Credit reservation
+
+    - Execution
+
+    - Cost settlement
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement neuron pricing transitions
+  body: '
+
+    **Module:** Economic Layer - Pricing Engine
+
+
+    Implement pricing transitions for neurons based on state transitions and consumption.
+    Define transition pricing, cost calculation, and pricing policy storage.
+
+
+    Subtasks:
+
+
+    - Define transition pricing
+
+    - Cost calculation
+
+    - Pricing policy storage
+
+    '
+  labels:
+  - economics
+  - pricing-engine
+  - high
+- title: Implement entropy monitoring
+  body: '
+
+    **Module:** Economic Layer - Pricing Engine
+
+
+    Implement an entropy monitoring system to track cost growth versus revenue growth,
+    calculating an entropy score to detect divergence.
+
+
+    Subtasks:
+
+
+    - Cost growth tracking
+
+    - Revenue growth tracking
+
+    - Entropy scoring
+
+    '
+  labels:
+  - economics
+  - pricing-engine
+  - medium
+- title: Implement abuse detection engine
+  body: '
+
+    **Module:** Security & Governance - Abuse Detection
+
+
+    Implement an abuse detection engine to identify prompt probing and export farming.
+    Includes logging of abuse signals and integration with system policies.
+
+
+    Subtasks:
+
+
+    - Prompt probing detection
+
+    - Export farming detection
+
+    - Abuse signal logging
+
+    '
+  labels:
+  - security-governance
+  - abuse-detection
+  - urgent
+- title: Implement downgrade ladder
+  body: '
+
+    **Module:** Security & Governance - Abuse Detection
+
+
+    Implement a downgrade ladder that applies penalties such as export cooldowns,
+    access downgrades, and account suspension in response to abuse signals.
+
+
+    Subtasks:
+
+
+    - Export cooldown
+
+    - Access downgrade
+
+    - Account suspension
+
+    '
+  labels:
+  - security-governance
+  - abuse-detection
+  - high
+- title: Build Kubernetes deployment schema
+  body: '
+
+    **Module:** Infrastructure - Deployment
+
+
+    Build a Kubernetes deployment schema for the platform, including microservices
+    definition, service mesh configuration, and autoscaling rules.
+
+
+    Subtasks:
+
+
+    - Microservices definition
+
+    - Service mesh config
+
+    - Autoscaling rules
+
+    '
+  labels:
+  - infrastructure
+  - deployment
+  - urgent
+- title: Implement telemetry monitoring
+  body: '
+
+    **Module:** Infrastructure - Deployment
+
+
+    Implement telemetry monitoring using Prometheus metrics, alert thresholds, and
+    monitoring dashboards.
+
+
+    Subtasks:
+
+
+    - Prometheus metrics
+
+    - Alert thresholds
+
+    - Monitoring dashboards
+
+    '
+  labels:
+  - infrastructure
+  - deployment
+  - high
+- title: Build wallet admin dashboard
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Build an admin dashboard for wallet management, including credit tracking and
+    transaction histories.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Implement reconciliation engine
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Implement a reconciliation engine to ensure ledger consistency across cost, decision,
+    and neuron ledgers.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Build incident management panel
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Build an incident management panel to monitor, investigate, and respond to incidents
+    across the platform.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Implement public profile module
+  body: '
+
+    **Module:** Public Site - SEO Surfaces
+
+
+    Implement a public profile module on the platform, including profile routing,
+    data rendering, and SEO schema generation.
+
+
+    Subtasks:
+
+
+    - Profile routing
+
+    - Profile data rendering
+
+    - SEO schema generation
+
+    '
+  labels:
+  - public-site
+  - seo
+  - high
+- title: Build documentation hub
+  body: '
+
+    **Module:** Public Site - SEO Surfaces
+
+
+    Build a comprehensive documentation hub with navigation, API docs, and knowledge
+    documentation.
+
+
+    Subtasks:
+
+
+    - Documentation navigation
+
+    - API docs
+
+    - Knowledge documentation
+
+    '
+  labels:
+  - public-site
+  - seo
+  - medium
+- title: Implement token access gating
+  body: '
+
+    **Module:** Token System - Token Access
+
+
+    Implement token access gating using the NOTA2 token, including token balance verification,
+    access window enforcement, and tier progression.
+
+
+    Subtasks:
+
+
+    - Token balance verification
+
+    - Access window enforcement
+
+    - Tier progression system
+
+    '
+  labels:
+  - token-system
+  - token-access
+  - high
+- title: Implement AccessWindow system
+  body: '
+
+    **Module:** Token System - Token Access
+
+
+    Implement the AccessWindow system with functionality for window creation, token
+    locking, and unlock logic.
+
+
+    Subtasks:
+
+
+    - Window creation
+
+    - Token locking
+
+    - Unlock logic
+
+    '
+  labels:
+  - token-system
+  - token-access
+  - high
+- title: Implement 100M neuron architecture
+  body: '
+
+    **Module:** Scaling Layer - Large Scale Systems
+
+
+    Design and implement an architecture to scale the knowledge graph to 100 million
+    neurons, focusing on distributed storage, graph indexing, and traversal optimization.
+
+
+    Subtasks:
+
+
+    - Distributed storage
+
+    - Graph indexing
+
+    - Graph traversal optimization
+
+    '
+  labels:
+  - scaling-layer
+  - large-scale
+  - low
+- title: Implement IdeaRank algorithm
+  body: '
+
+    **Module:** Scaling Layer - Large Scale Systems
+
+
+    Implement the IdeaRank algorithm to compute influence scores, model idea propagation,
+    and perform ranking computation across the knowledge graph.
+
+
+    Subtasks:
+
+
+    - Influence scoring
+
+    - Propagation modeling
+
+    - Ranking computation
+
+    '
+  labels:
+  - scaling-layer
+  - large-scale
+  - low
+

@@ -1,0 +1,663 @@
+repository: vadimcusnir/AI_IDEI_OS
+issues:
+- title: Implement checkAccess canonical function
+  body: '
+
+    **Module:** Platform Core - Access Control
+
+
+    Implement a canonical access control function `checkAccess(user, resource, context)`
+    that returns one of three verdicts: ALLOW, PAYWALL, or DENY. This service must
+    be consumed by UI components without exposing internal logic. Include the following
+    subtasks:
+
+
+    - Define access policy schema
+
+    - Implement entitlement resolver
+
+    - Implement policy rules
+
+    - Implement reason codes
+
+    - Integrate with UI verdict system
+
+    '
+  labels:
+  - platform-core
+  - access-control
+  - urgent
+- title: Implement Access Simulator
+  body: '
+
+    **Module:** Platform Core - Access Control
+
+
+    Implement an Access Simulator to predict access outcomes. The simulator should
+    be able to snapshot a user’s access state and simulate service access outcomes,
+    providing reason codes and a UI visualization for locked services.
+
+
+    Subtasks:
+
+
+    - Snapshot user access state
+
+    - Simulate service access outcomes
+
+    - Implement reason code mapping
+
+    - Create UI visualization for locked services
+
+    '
+  labels:
+  - platform-core
+  - access-control
+  - high
+- title: Implement immutable decision ledger
+  body: '
+
+    **Module:** Platform Core - Decision Ledger
+
+
+    Build an immutable decision ledger that records all critical system decisions,
+    including access denials, abuse events, and economic actions. This should include
+    creating the decision_ledger table, enforcing an append-only constraint, and building
+    logging hooks and an audit viewer.
+
+
+    Subtasks:
+
+
+    - Create decision_ledger table
+
+    - Implement append-only constraint
+
+    - Create logging hooks
+
+    - Build audit viewer
+
+    '
+  labels:
+  - platform-core
+  - decision-ledger
+  - urgent
+- title: Integrate ledger with access system
+  body: '
+
+    **Module:** Platform Core - Decision Ledger
+
+
+    Integrate the decision ledger with the access control system by logging events
+    for allow, deny, and abuse triggers.
+
+
+    Subtasks:
+
+
+    - Log access allow events
+
+    - Log access deny events
+
+    - Log abuse triggers
+
+    '
+  labels:
+  - platform-core
+  - decision-ledger
+  - high
+- title: Implement IMF Normalize phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Normalize phase of the Idea Monetization Framework (IMF). Tasks
+    include text segmentation, speaker detection, and metadata extraction.
+
+
+    Subtasks:
+
+
+    - Text segmentation
+
+    - Speaker detection
+
+    - Metadata extraction
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - urgent
+- title: Implement IMF Interpret phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Interpret phase of the Idea Monetization Framework (IMF). Extract
+    signals, indicators, and insights from normalized content.
+
+
+    Subtasks:
+
+
+    - Extract signals
+
+    - Extract indicators
+
+    - Extract insights
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - urgent
+- title: Implement IMF Synthesize phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Synthesize phase of the Idea Monetization Framework. Generate patterns,
+    frameworks, and decision artifacts from extracted insights.
+
+
+    Subtasks:
+
+
+    - Generate patterns
+
+    - Generate frameworks
+
+    - Generate decision artifacts
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - high
+- title: Implement IMF Deploy phase
+  body: '
+
+    **Module:** Intelligence Engine - IMF Pipeline
+
+
+    Implement the Deploy phase of the Idea Monetization Framework, including embedding
+    generation, similarity detection, and neuron merge logic.
+
+
+    Subtasks:
+
+
+    - Embedding generation
+
+    - Similarity detection
+
+    - Neuron merge logic
+
+    '
+  labels:
+  - intelligence-engine
+  - IMF
+  - high
+- title: Implement neuron data model
+  body: '
+
+    **Module:** Intelligence Engine - Knowledge Graph
+
+
+    Define and implement the data model for neurons, including schema definition,
+    relationships, and metadata. This will serve as the foundation for storing extracted
+    knowledge.
+
+
+    Subtasks:
+
+
+    - Define neuron schema
+
+    - Define neuron relations
+
+    - Define neuron metadata
+
+    '
+  labels:
+  - intelligence-engine
+  - knowledge-graph
+  - urgent
+- title: Implement neuron lifecycle
+  body: '
+
+    **Module:** Intelligence Engine - Knowledge Graph
+
+
+    Implement the lifecycle for neurons, including states such as draft, active, capitalized,
+    and compounded.
+
+
+    Subtasks:
+
+
+    - Draft state
+
+    - Active state
+
+    - Capitalized state
+
+    - Compounded state
+
+    '
+  labels:
+  - intelligence-engine
+  - knowledge-graph
+  - high
+- title: Build distributed job queue
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Build a distributed job queue that manages asynchronous tasks and supports retries.
+    Includes creating job_state table, implementing queue management, and a retry
+    system.
+
+
+    Subtasks:
+
+
+    - Create job_state table
+
+    - Implement queue manager
+
+    - Implement retry system
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement execution state machine
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Implement the execution state machine for jobs with states: CREATED, QUEUED, RUNNING,
+    QA, and DONE.
+
+
+    Subtasks:
+
+
+    - State CREATED
+
+    - State QUEUED
+
+    - State RUNNING
+
+    - State QA
+
+    - State DONE
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement pre-run protocol
+  body: '
+
+    **Module:** Execution Engine - Job Orchestration
+
+
+    Implement the pre-run protocol for job execution, including access checks, cost
+    estimation, credit reservation, execution, and cost settlement.
+
+
+    Subtasks:
+
+
+    - Access check
+
+    - Cost estimation
+
+    - Credit reservation
+
+    - Execution
+
+    - Cost settlement
+
+    '
+  labels:
+  - execution-engine
+  - job-orchestration
+  - urgent
+- title: Implement neuron pricing transitions
+  body: '
+
+    **Module:** Economic Layer - Pricing Engine
+
+
+    Implement pricing transitions for neurons based on state transitions and consumption.
+    Define transition pricing, cost calculation, and pricing policy storage.
+
+
+    Subtasks:
+
+
+    - Define transition pricing
+
+    - Cost calculation
+
+    - Pricing policy storage
+
+    '
+  labels:
+  - economics
+  - pricing-engine
+  - high
+- title: Implement entropy monitoring
+  body: '
+
+    **Module:** Economic Layer - Pricing Engine
+
+
+    Implement an entropy monitoring system to track cost growth versus revenue growth,
+    calculating an entropy score to detect divergence.
+
+
+    Subtasks:
+
+
+    - Cost growth tracking
+
+    - Revenue growth tracking
+
+    - Entropy scoring
+
+    '
+  labels:
+  - economics
+  - pricing-engine
+  - medium
+- title: Implement abuse detection engine
+  body: '
+
+    **Module:** Security & Governance - Abuse Detection
+
+
+    Implement an abuse detection engine to identify prompt probing and export farming.
+    Includes logging of abuse signals and integration with system policies.
+
+
+    Subtasks:
+
+
+    - Prompt probing detection
+
+    - Export farming detection
+
+    - Abuse signal logging
+
+    '
+  labels:
+  - security-governance
+  - abuse-detection
+  - urgent
+- title: Implement downgrade ladder
+  body: '
+
+    **Module:** Security & Governance - Abuse Detection
+
+
+    Implement a downgrade ladder that applies penalties such as export cooldowns,
+    access downgrades, and account suspension in response to abuse signals.
+
+
+    Subtasks:
+
+
+    - Export cooldown
+
+    - Access downgrade
+
+    - Account suspension
+
+    '
+  labels:
+  - security-governance
+  - abuse-detection
+  - high
+- title: Build Kubernetes deployment schema
+  body: '
+
+    **Module:** Infrastructure - Deployment
+
+
+    Build a Kubernetes deployment schema for the platform, including microservices
+    definition, service mesh configuration, and autoscaling rules.
+
+
+    Subtasks:
+
+
+    - Microservices definition
+
+    - Service mesh config
+
+    - Autoscaling rules
+
+    '
+  labels:
+  - infrastructure
+  - deployment
+  - urgent
+- title: Implement telemetry monitoring
+  body: '
+
+    **Module:** Infrastructure - Deployment
+
+
+    Implement telemetry monitoring using Prometheus metrics, alert thresholds, and
+    monitoring dashboards.
+
+
+    Subtasks:
+
+
+    - Prometheus metrics
+
+    - Alert thresholds
+
+    - Monitoring dashboards
+
+    '
+  labels:
+  - infrastructure
+  - deployment
+  - high
+- title: Build wallet admin dashboard
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Build an admin dashboard for wallet management, including credit tracking and
+    transaction histories.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Implement reconciliation engine
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Implement a reconciliation engine to ensure ledger consistency across cost, decision,
+    and neuron ledgers.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Build incident management panel
+  body: '
+
+    **Module:** Admin Control Plane
+
+
+    Build an incident management panel to monitor, investigate, and respond to incidents
+    across the platform.
+
+    '
+  labels:
+  - admin-control
+  - medium
+- title: Implement public profile module
+  body: '
+
+    **Module:** Public Site - SEO Surfaces
+
+
+    Implement a public profile module on the platform, including profile routing,
+    data rendering, and SEO schema generation.
+
+
+    Subtasks:
+
+
+    - Profile routing
+
+    - Profile data rendering
+
+    - SEO schema generation
+
+    '
+  labels:
+  - public-site
+  - seo
+  - high
+- title: Build documentation hub
+  body: '
+
+    **Module:** Public Site - SEO Surfaces
+
+
+    Build a comprehensive documentation hub with navigation, API docs, and knowledge
+    documentation.
+
+
+    Subtasks:
+
+
+    - Documentation navigation
+
+    - API docs
+
+    - Knowledge documentation
+
+    '
+  labels:
+  - public-site
+  - seo
+  - medium
+- title: Implement token access gating
+  body: '
+
+    **Module:** Token System - Token Access
+
+
+    Implement token access gating using the NOTA2 token, including token balance verification,
+    access window enforcement, and tier progression.
+
+
+    Subtasks:
+
+
+    - Token balance verification
+
+    - Access window enforcement
+
+    - Tier progression system
+
+    '
+  labels:
+  - token-system
+  - token-access
+  - high
+- title: Implement AccessWindow system
+  body: '
+
+    **Module:** Token System - Token Access
+
+
+    Implement the AccessWindow system with functionality for window creation, token
+    locking, and unlock logic.
+
+
+    Subtasks:
+
+
+    - Window creation
+
+    - Token locking
+
+    - Unlock logic
+
+    '
+  labels:
+  - token-system
+  - token-access
+  - high
+- title: Implement 100M neuron architecture
+  body: '
+
+    **Module:** Scaling Layer - Large Scale Systems
+
+
+    Design and implement an architecture to scale the knowledge graph to 100 million
+    neurons, focusing on distributed storage, graph indexing, and traversal optimization.
+
+
+    Subtasks:
+
+
+    - Distributed storage
+
+    - Graph indexing
+
+    - Graph traversal optimization
+
+    '
+  labels:
+  - scaling-layer
+  - large-scale
+  - low
+- title: Implement IdeaRank algorithm
+  body: '
+
+    **Module:** Scaling Layer - Large Scale Systems
+
+
+    Implement the IdeaRank algorithm to compute influence scores, model idea propagation,
+    and perform ranking computation across the knowledge graph.
+
+
+    Subtasks:
+
+
+    - Influence scoring
+
+    - Propagation modeling
+
+    - Ranking computation
+
+    '
+  labels:
+  - scaling-layer
+  - large-scale
+  - low
