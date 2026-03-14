@@ -536,7 +536,7 @@ export default function Extractor() {
         `✅ Deep Extract complete: ${data.total_neurons} neurons across ${data.levels_processed} levels (${data.credits_spent} credits)`,
         { duration: 10000 }
       );
-      trackInternalEvent(AnalyticsEvents.NEURONS_EXTRACTED, { episode_id: episode.id, neurons_count: data.total_neurons, credits_spent: data.credits_spent });
+      trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.total_neurons, credits_spent: data.credits_spent } });
       fetchEpisodes();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Deep extraction failed");
