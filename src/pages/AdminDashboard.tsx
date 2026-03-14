@@ -366,6 +366,12 @@ export default function AdminDashboard() {
             <TabsTrigger value="wallets" className="text-xs gap-1">
               <Wallet className="h-3 w-3" /> Wallets
             </TabsTrigger>
+            <TabsTrigger value="reconciliation" className="text-xs gap-1">
+              <DollarSign className="h-3 w-3" /> Reconciliation
+            </TabsTrigger>
+            <TabsTrigger value="incidents" className="text-xs gap-1">
+              <AlertCircle className="h-3 w-3" /> Incidents
+            </TabsTrigger>
           </TabsList>
 
           {/* ─── Overview ─── */}
