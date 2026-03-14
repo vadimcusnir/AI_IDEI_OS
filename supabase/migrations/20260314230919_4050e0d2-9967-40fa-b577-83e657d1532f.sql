@@ -1,0 +1,22 @@
+INSERT INTO public.service_catalog (service_key, name, description, service_class, category, credits_cost, icon, is_active, access_tier) VALUES
+('hook-generator', 'Hook Generator', 'Generate viral scroll-stopping hooks for social media platforms with psychological analysis', 'A', 'production', 200, 'sparkles', true, 'free'),
+('objection-handler', 'Objection Handler', 'Identify customer objections and create sales handling scripts with reframe techniques', 'A', 'analysis', 250, 'message-square', true, 'free'),
+('email-sequence', 'Email Sequence Builder', 'Design complete 7-email nurture sequences with subject lines, body, and CTAs', 'B', 'production', 400, 'file-text', true, 'premium'),
+('social-carousel', 'Social Carousel Designer', 'Transform content into slide-by-slide carousel scripts for LinkedIn and Instagram', 'B', 'production', 300, 'layers', true, 'free'),
+('seo-article', 'SEO Article Writer', 'Generate fully optimized 2000+ word articles with keywords, meta tags, and schema markup', 'B', 'production', 500, 'file-text', true, 'premium'),
+('podcast-shownotes', 'Podcast Show Notes', 'Generate comprehensive show notes with timestamps, takeaways, and social snippets', 'A', 'production', 200, 'megaphone', true, 'free'),
+('video-script', 'Video Script Writer', 'Create YouTube-ready scripts with visual cues, chapters, and thumbnail suggestions', 'B', 'production', 400, 'file-text', true, 'premium'),
+('lead-magnet', 'Lead Magnet Designer', 'Design complete lead magnets with content, landing page copy, and thank-you page', 'B', 'production', 500, 'sparkles', true, 'premium'),
+('swipe-file', 'Swipe File Curator', 'Extract reusable copy patterns: headlines, CTAs, value props, ad variations', 'A', 'extraction', 250, 'layers', true, 'free'),
+('competitor-analysis', 'Competitor Analysis', 'Produce competitive intelligence with positioning maps, feature gaps, and pricing comparison', 'A', 'analysis', 350, 'bar-chart-3', true, 'premium'),
+('jtbd-extractor', 'JTBD Extractor', 'Extract Jobs-to-Be-Done patterns with functional, emotional, and social job dimensions', 'A', 'extraction', 300, 'brain', true, 'free'),
+('persuasion-map', 'Persuasion Mapper', 'Map all persuasion techniques: Cialdini principles, cognitive biases, emotional triggers', 'A', 'analysis', 300, 'brain', true, 'premium'),
+('newsletter-generator', 'Newsletter Generator', 'Transform content into ready-to-send newsletter editions with hooks and CTAs', 'B', 'production', 300, 'file-text', true, 'free'),
+('workshop-designer', 'Workshop Designer', 'Create complete workshop/webinar plans with exercises, handouts, and follow-up sequences', 'B', 'production', 400, 'graduation-cap', true, 'premium'),
+('case-study-builder', 'Case Study Builder', 'Transform content into compelling data-driven case studies with metrics and learnings', 'B', 'production', 350, 'file-text', true, 'premium'),
+('brand-voice', 'Brand Voice Analyzer', 'Define complete brand voice guide with archetypes, tone dimensions, and platform adjustments', 'A', 'analysis', 300, 'sparkles', true, 'free'),
+('pricing-strategy', 'Pricing Strategist', 'Design pricing architecture with Root2 validation, tier structure, and revenue projections', 'A', 'analysis', 400, 'bar-chart-3', true, 'premium'),
+('funnel-architect', 'Funnel Architect', 'Design complete conversion funnels with TOFU/MOFU/BOFU content and email sequences', 'B', 'production', 450, 'filter', true, 'premium'),
+('thought-leadership', 'Thought Leadership', 'Extract contrarian takes, frameworks, speaking topics, and media pitch angles', 'A', 'analysis', 300, 'brain', true, 'free'),
+('audience-avatar', 'Audience Avatar Builder', 'Build detailed customer avatars with psychographics, messaging, and channel recommendations', 'A', 'analysis', 250, 'help-circle', true, 'free')
+ON CONFLICT (service_key) DO NOTHING;
