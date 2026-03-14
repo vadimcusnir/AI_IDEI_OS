@@ -215,6 +215,7 @@ export default function RunService() {
 
   return (
     <div className="flex-1">
+      <SEOHead title={`${service?.name || "Service"} — AI-IDEI`} description={service?.description || "Run AI-powered knowledge service."} />
       {service && (
         <>
           <ServiceJsonLd service={service} />
