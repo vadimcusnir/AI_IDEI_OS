@@ -34,5 +34,13 @@
   "you_are_caught_up": "You're all caught up",
   "mark_all_read": "Mark all read",
   "clear_all": "Clear all",
-  "ago": "ago"
+  "ago": "ago",
+  "notifications": "Notifications",
+  "no_notifications": "No notifications",
+  "view_all_notifications": "View all notifications",
+  "search_placeholder": "Search neurons, artifacts, guests...",
+  "search_min_chars": "Type at least 2 characters to search",
+  "no_results_for": "No results for \"{{query}}\"",
+  "navigate": "navigate",
+  "select": "select"
 }
