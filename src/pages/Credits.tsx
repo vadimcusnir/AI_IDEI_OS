@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { ConsumptionChart } from "@/components/credits/ConsumptionChart";
+import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
 
 interface UserCredits {
   balance: number;
