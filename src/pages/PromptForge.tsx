@@ -25,10 +25,10 @@ import logo from "@/assets/logo.gif";
 const GOALS = [
   { value: "Extragere experiență", icon: User, color: "text-primary" },
   { value: "Descriere profil", icon: FileText, color: "text-ai-accent" },
-  { value: "Recomandare produse", icon: ShoppingBag, color: "text-status-validated" },
-  { value: "Structurare conținut", icon: LayoutList, color: "text-primary" },
-  { value: "Copy de vânzare", icon: PenTool, color: "text-destructive" },
-  { value: "Email sequence", icon: Mail, color: "text-ai-accent" },
+  { value: "Product Recommendation", icon: ShoppingBag, color: "text-status-validated" },
+  { value: "Content Structuring", icon: LayoutList, color: "text-primary" },
+  { value: "Sales Copy", icon: PenTool, color: "text-destructive" },
+  { value: "Email Sequence", icon: Mail, color: "text-ai-accent" },
 ];
 
 export default function PromptForge() {
