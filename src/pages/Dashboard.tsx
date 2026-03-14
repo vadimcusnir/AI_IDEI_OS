@@ -174,7 +174,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Activity Chart + Credit Gauge */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {/* Activity */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-4">
             <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
