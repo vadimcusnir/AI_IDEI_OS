@@ -92,13 +92,21 @@ export default function Library() {
   };
 
   const filtered = useMemo(() => {
-    return artifacts.filter(a => {
+    let list = artifacts.filter(a => {
       if (typeFilter !== "all" && a.artifact_type !== typeFilter) return false;
       if (statusFilter !== "all" && a.status !== statusFilter) return false;
       if (search && !a.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
-  }, [artifacts, search, typeFilter, statusFilter]);
+    list.sort((a, b) => {
+      let cmp = 0;
+      if (sortField === "title") cmp = a.title.localeCompare(b.title);
+      else if (sortField === "created_at") cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      else cmp = new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
+      return sortDir === "desc" ? -cmp : cmp;
+    });
+    return list;
+  }, [artifacts, search, typeFilter, statusFilter, sortField, sortDir]);
 
   // Extract unique types from data
   const types = useMemo(() => {
