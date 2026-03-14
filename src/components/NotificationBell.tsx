@@ -68,7 +68,7 @@ export function NotificationBell() {
               <div className="flex items-center gap-2">
                 {unreadCount > 0 && (
                   <button onClick={markAllRead} className="text-[10px] text-primary hover:underline">
-                    Marchează citite
+                    {t("mark_all_read")}
                   </button>
                 )}
               </div>
