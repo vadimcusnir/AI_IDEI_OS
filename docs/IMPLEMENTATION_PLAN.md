@@ -157,8 +157,11 @@
 
 #### T2.2 🟡 Extractors Suplimentari
 **Efort:** 10+ sesiuni (incremental)
-- [ ] ~100 extractori specializați (strategic, psych, media, content gen, SEO)
-- [ ] Batch extractor runner
+- [x] Sprint D: 20 extractori specializați (hook, email, SEO, video, funnel, JTBD, etc.)
+- [x] Prompts + artifact type mapping în run-service
+- [x] Service catalog DB entries (20 servicii noi)
+- [ ] ~80 extractori rămași (media, advanced content gen, AI coaching)
+- [ ] Batch extractor runner improvements
 - [ ] Extractor registry (admin-configurable)
 
 #### T2.3 ✅ Semantic Search UI
