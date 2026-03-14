@@ -83,13 +83,16 @@
 - ✅ Run service (Edge Function + SSE streaming)
 - ✅ Pre-Run protocol (checkAccess → create → run → settle)
 
-### Services & Marketplace (✅ 75%)
+### Services & Marketplace (✅ 95%)
 - ✅ Services catalog page cu filtering
 - ✅ RunService page cu SSE streaming
 - ✅ Marketplace page (knowledge assets)
 - ✅ Purchase flow (basic)
-- 🟡 Marketplace publish flow (creator side)
-- 🟡 Reviews & ratings system
+- ✅ Marketplace publish flow (creator side)
+- ✅ Reviews & ratings system (asset_reviews table + triggers + UI)
+- ✅ Featured assets section
+- ✅ Sort & advanced search (popular, newest, top rated, price)
+- 🟡 Purchase with NEURONS (credit deduction flow)
 
 ### Admin System (✅ 95%)
 - ✅ Admin dashboard (8 tabs)
