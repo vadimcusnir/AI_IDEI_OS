@@ -115,10 +115,11 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
   if (viewMode === "grid") {
     return (
       <div
-        onClick={() => navigate(`/n/${n.number}`)}
+        onClick={handleClick}
         className={cn(
           "group relative flex flex-col p-4 rounded-xl border border-border bg-card cursor-pointer transition-all hover:shadow-md hover:border-primary/20",
-          isPinned && "ring-1 ring-primary/20"
+          isPinned && "ring-1 ring-primary/20",
+          isSelected && "ring-1 ring-primary/40 bg-primary/5"
         )}
       >
         <div className="flex items-center justify-between mb-2">
