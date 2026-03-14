@@ -275,18 +275,18 @@ export default function Jobs() {
               <Sparkles className="h-8 w-8 opacity-20 mx-auto mb-3" />
               {jobs.length === 0 ? (
                 <>
-                  <p className="text-sm text-muted-foreground mb-1">Niciun job încă</p>
-                  <p className="text-[10px] text-muted-foreground/60 mb-6">Rulează un serviciu pentru a crea primul job.</p>
+                  <p className="text-sm text-muted-foreground mb-1">{t("jobs.no_jobs")}</p>
+                  <p className="text-[10px] text-muted-foreground/60 mb-6">{t("jobs.no_jobs_hint")}</p>
                   <Button onClick={() => navigate("/services")} className="gap-1.5">
                     <Sparkles className="h-4 w-4" />
-                    Servicii AI
+                    {t("jobs.ai_services")}
                   </Button>
                 </>
               ) : (
                 <>
-                  <p className="text-sm text-muted-foreground mb-2">Niciun rezultat pentru filtrul selectat</p>
+                  <p className="text-sm text-muted-foreground mb-2">{t("jobs.no_filter_results")}</p>
                   <Button variant="outline" size="sm" className="text-xs" onClick={() => { setStatusFilter("all"); setSearch(""); }}>
-                    Șterge filtrele
+                    {t("jobs.clear_filters")}
                   </Button>
                 </>
               )}
