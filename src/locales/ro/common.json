@@ -40,7 +40,7 @@
   "view_all_notifications": "Vezi toate notificările",
   "search_placeholder": "Caută neuroni, artefacte, guests...",
   "search_min_chars": "Scrie cel puțin 2 caractere pentru a căuta",
-  "no_results_for": "Niciun rezultat pentru „{{query}}"",
+  "no_results_for": "Niciun rezultat pentru \u201E{{query}}\u201D",
   "navigate": "navigare",
   "select": "selectare"
 }
