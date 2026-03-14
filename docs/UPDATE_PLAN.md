@@ -119,8 +119,8 @@ Planul este organizat pe **6 faze**, de la fundație la scalare, cu priorități
 ### 1.9 General UX
 | # | Sarcină | Status |
 |---|---------|--------|
-| 1.9.1 | Iconografie consistentă privat/public/gratuit/plătit | TODO |
-| 1.9.2 | Indicatoare cost NEURONS pe servicii | TODO |
+| 1.9.1 | ✅ Iconografie consistentă privat/public/gratuit/plătit | DONE — AccessIcons shared component |
+| 1.9.2 | ✅ Indicatoare cost NEURONS pe servicii | DONE — Coins + cost pe fiecare service card |
 | 1.9.3 | ✅ SEOHead pe toate paginile | DONE — adăugat pe Links, Auth, NotFound, Architecture, PromptForge, MediaProfiles, ResetPassword, PublicProfile, BatchRunner, RunService |
 
 ---
