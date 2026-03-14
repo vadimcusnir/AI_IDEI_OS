@@ -11,6 +11,7 @@ import { GlobalSearch } from "@/components/GlobalSearch";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
 import { Footer } from "@/components/global/Footer";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
