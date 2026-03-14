@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
+import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 
 interface RecentNeuron {
   id: number;
