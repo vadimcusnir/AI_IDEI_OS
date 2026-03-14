@@ -599,6 +599,12 @@ export default function Extractor() {
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
         {/* Page header */}
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
+        {/* SEO */}
+        <SEOHead title="Extractor — AI-IDEI" description="Upload content, transcribe audio/video, and extract knowledge neurons using AI." />
+
+        {/* Page header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
             <h1 className="text-lg font-semibold tracking-tight">Extractor</h1>
