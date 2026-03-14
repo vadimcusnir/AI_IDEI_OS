@@ -6,8 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   FileText, Search, Filter, Loader2, Plus, Download,
   Eye, Trash2, Tag, Clock, ArrowRight, BookOpen, Brain,
-  ArrowUpDown, SortAsc, SortDesc,
+  ArrowUpDown, SortAsc, SortDesc, Lock, Globe,
 } from "lucide-react";
+import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
