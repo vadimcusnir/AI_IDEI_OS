@@ -12,6 +12,7 @@ import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/Neuro
 import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.gif";
+import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 
 const STATUS_DOTS: Record<string, string> = {
   draft: "bg-muted-foreground/40",
