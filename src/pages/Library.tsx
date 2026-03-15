@@ -36,6 +36,7 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface Artifact {
   id: string;
@@ -171,7 +172,9 @@ export default function Library() {
         </div>
 
         {/* My contributions */}
-        <ContributionsList />
+        <ControlledSection elementId="library.contributions">
+          <ContributionsList />
+        </ControlledSection>
 
         {/* Library vs Neurons explainer */}
         <div className="rounded-xl border border-border bg-card p-4 mb-5">

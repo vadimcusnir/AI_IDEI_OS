@@ -16,6 +16,7 @@ import {
   TrendingUp, LayoutGrid, List, SlidersHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface Service {
   id: string;
@@ -177,6 +178,7 @@ export default function Services() {
         </div>
 
         {/* KPI strip */}
+        <ControlledSection elementId="services.kpi_strip">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
             { label: "Services", value: services.length, icon: Sparkles },
@@ -198,6 +200,7 @@ export default function Services() {
             </div>
           ))}
         </div>
+        </ControlledSection>
 
         {/* Search + Controls bar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-5">

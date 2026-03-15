@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
 import { loadPrompts } from "../_shared/prompt-loader.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 // Valid actions enum
 const VALID_ACTIONS = new Set([
@@ -58,6 +59,17 @@ Deno.serve(async (req) => {
         status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // ── Regime enforcement ──
+    const activeAction = (await req.clone().json()).action || "extract_insights";
+    const regime = await getRegimeConfig(activeAction);
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: "Service blocked", reason: blockReason, regime: regime.regime }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const isDryRun = regime.dryRun || regime.regime === "simulation";
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -129,6 +141,13 @@ Deno.serve(async (req) => {
     const userMessage = safeTitle
       ? `Neuron: "${safeTitle}"\n\nContent:\n${content}`
       : `Content:\n${content}`;
+
+    // ── Dry-run check ──
+    if (isDryRun) {
+      return new Response(JSON.stringify({ dry_run: true, regime: regime.regime, message: "Simulation mode — no AI call made" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Call Lovable AI Gateway with streaming
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
