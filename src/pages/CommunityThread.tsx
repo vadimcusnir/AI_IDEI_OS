@@ -61,7 +61,7 @@ function PostCard({ post, threadAuthorId, threadId }: { post: ForumPost; threadA
             {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
           </span>
           {post.is_solution && (
-            <Badge className="text-[9px] px-1.5 py-0 bg-green-500/15 text-green-600 border-green-500/30">
+            <Badge className="text-[9px] px-1.5 py-0 bg-status-validated/15 text-status-validated border-status-validated/30">
               <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />Solution
             </Badge>
           )}
