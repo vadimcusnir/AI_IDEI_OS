@@ -283,7 +283,20 @@ export default function Extractor() {
 
   // === Create episode ===
   const handleCreate = async () => {
-    if (!user || !title.trim()) return;
+    if (!user) return;
+    // Auto-generate title if empty
+    let finalTitle = title.trim();
+    if (!finalTitle) {
+      if (sourceType === "url" && content.trim()) {
+        finalTitle = extractTitleFromUrl(content.trim()) || `Episode ${new Date().toLocaleDateString()}`;
+      } else if (sourceType === "text" && content.trim()) {
+        finalTitle = content.slice(0, 60).replace(/\n/g, " ").trim() + (content.length > 60 ? "…" : "");
+      } else if (selectedFile) {
+        finalTitle = selectedFile.name.replace(/\.\w+$/, "").replace(/[-_]/g, " ");
+      } else {
+        finalTitle = `Episode ${new Date().toLocaleDateString()}`;
+      }
+    }
     setCreating(true);
 
     try {
