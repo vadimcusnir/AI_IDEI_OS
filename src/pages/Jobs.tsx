@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
