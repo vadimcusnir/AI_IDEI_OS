@@ -31,11 +31,6 @@ interface NavItem {
   /** UI control registry ID for dynamic visibility */
   controlId?: string;
 }
-  labelKey: string;
-  to: string;
-  icon: React.ElementType;
-  adminOnly?: boolean;
-}
 
 interface NavSection {
   labelKey: string;
