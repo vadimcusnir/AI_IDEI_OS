@@ -103,7 +103,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
         </div>
       </div>
       <MobileBottomNav />
-      <FeedbackFAB />
+      
       <ContextualFeedbackPrompt />
     </SidebarProvider>
   );
