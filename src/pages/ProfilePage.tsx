@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
+import { XPProgressBar } from "@/components/gamification/XPProgressBar";
 import { PageTransition, StaggerContainer, StaggerItem } from "@/components/motion/PageTransition";
 import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
 
