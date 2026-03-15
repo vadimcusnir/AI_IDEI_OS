@@ -183,8 +183,8 @@ export default function Home() {
         {/* Onboarding Checklist */}
         <OnboardingChecklist />
 
-        {/* New user onboarding CTA */}
-        {isNewUser && (
+        {/* Smart contextual CTA based on user state */}
+        {totalEpisodes === 0 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -194,10 +194,48 @@ export default function Home() {
             <Upload className="h-8 w-8 text-primary mx-auto mb-3" />
             <h2 className="text-base font-serif font-bold mb-1.5">First step: upload content</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Upload a podcast, text, or video. The system will automatically extract knowledge neurons.
+              Upload a podcast, paste a URL, or drop a transcript. The system will extract knowledge automatically.
             </p>
             <Button onClick={() => navigate("/extractor")} size="sm" className="gap-2">
               Open Extractor
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Button>
+          </motion.div>
+        )}
+
+        {totalEpisodes > 0 && totalNeurons === 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center"
+          >
+            <Brain className="h-8 w-8 text-primary mx-auto mb-3" />
+            <h2 className="text-base font-serif font-bold mb-1.5">Extract your first neurons</h2>
+            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
+              You have {totalEpisodes} episode{totalEpisodes > 1 ? "s" : ""} uploaded. Go to the Extractor to extract knowledge neurons from your transcripts.
+            </p>
+            <Button onClick={() => navigate("/extractor")} size="sm" className="gap-2">
+              Extract Neurons
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Button>
+          </motion.div>
+        )}
+
+        {totalNeurons > 0 && totalJobs === 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="mb-6 p-5 rounded-2xl border border-primary/20 bg-primary/5 text-center"
+          >
+            <Sparkles className="h-8 w-8 text-primary mx-auto mb-3" />
+            <h2 className="text-base font-serif font-bold mb-1.5">Run your first AI service</h2>
+            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
+              You have {totalNeurons} neuron{totalNeurons > 1 ? "s" : ""}. Use them to generate articles, strategies, and more.
+            </p>
+            <Button onClick={() => navigate("/services")} size="sm" className="gap-2">
+              Explore Services
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </motion.div>
