@@ -66,6 +66,7 @@ const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 const KnowledgeDashboard = lazy(() => import("./pages/KnowledgeDashboard"));
 const VIPDashboard = lazy(() => import("./pages/VIPDashboard"));
 const DataPipeline = lazy(() => import("./pages/DataPipeline"));
+const RuntimeDashboard = lazy(() => import("./pages/RuntimeDashboard"));
 
 function PageLoader() {
   return (
