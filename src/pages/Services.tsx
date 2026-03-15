@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Loader2, Sparkles, BarChart3, Search, X, Coins, Clock,
   ArrowRight, Zap, FileText, Brain, Target, Layers,
@@ -133,6 +134,7 @@ export default function Services() {
   }
 
   return (
+    <PageTransition>
     <div className="flex-1 overflow-y-auto">
       <SEOHead
         title="AI Services — AI-IDEI"
@@ -440,5 +442,6 @@ export default function Services() {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 }

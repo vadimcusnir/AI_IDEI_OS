@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
 import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
+import { PageTransition } from "@/components/motion/PageTransition";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
@@ -134,6 +135,7 @@ export default function Dashboard() {
   };
 
   return (
+    <PageTransition>
     <div className="flex-1">
       <SEOHead title="Dashboard — AI-IDEI" description="Full analytics dashboard: neurons, jobs, credits, pipeline status." />
       <div className="max-w-3xl mx-auto px-6 py-8">
@@ -309,6 +311,7 @@ export default function Dashboard() {
         </motion.div>
       </div>
     </div>
+    </PageTransition>
   );
 }
 

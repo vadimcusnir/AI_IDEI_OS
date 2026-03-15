@@ -4,6 +4,7 @@ import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -694,6 +695,7 @@ export default function Extractor() {
 
   return (
     <TooltipProvider delayDuration={300}>
+    <PageTransition>
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
         {/* SEO */}
@@ -1367,6 +1369,7 @@ export default function Extractor() {
         )}
       </div>
     </div>
+    </PageTransition>
     </TooltipProvider>
   );
 }

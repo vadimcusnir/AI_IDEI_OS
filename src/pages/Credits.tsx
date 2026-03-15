@@ -11,6 +11,7 @@ import {
   BarChart3, Filter, Search, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChart").then(m => ({ default: m.ConsumptionChart })));
 import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
@@ -166,6 +167,7 @@ export default function Credits() {
   }
 
   return (
+    <PageTransition>
     <div className="flex-1 overflow-y-auto">
       <SEOHead title="Credits — AI-IDEI" description="Manage your NEURONS credits balance, transaction history and top-ups." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
@@ -374,5 +376,6 @@ export default function Credits() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }

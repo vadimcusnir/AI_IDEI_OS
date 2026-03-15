@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { PublicTestimonials } from "@/components/landing/PublicTestimonials";
 import { Footer } from "@/components/global/Footer";
 import { useRef } from "react";
@@ -110,6 +111,7 @@ export default function Landing() {
   ];
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       <SEOHead
         title={t("seo.title")}
@@ -510,5 +512,6 @@ export default function Landing() {
         { question: "What deliverables can AI-IDEI generate?", answer: "Articles, marketing frameworks, courses, copywriting formulas, scripts, social media posts, psychological profiles, marketing funnels, and many more structured knowledge outputs." },
       ]} />
     </div>
+    </PageTransition>
   );
 }

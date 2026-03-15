@@ -11,6 +11,7 @@ import {
   Sparkles, Activity, Network, BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { KnowledgeGraph } from "@/components/intelligence/KnowledgeGraph";
 import { StatsOverview } from "@/components/intelligence/StatsOverview";
 import { DuplicateMergePanel } from "@/components/neurons/DuplicateMergePanel";
@@ -99,6 +100,7 @@ export default function Intelligence() {
   if (!stats) return null;
 
   return (
+    <PageTransition>
     <div className="flex-1 overflow-auto">
       <SEOHead title="Intelligence — AI-IDEI" description="Knowledge graph, stats overview and neuron analytics." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
@@ -141,5 +143,6 @@ export default function Intelligence() {
         </Tabs>
       </div>
     </div>
+    </PageTransition>
   );
 }

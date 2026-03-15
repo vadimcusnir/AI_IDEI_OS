@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
@@ -191,6 +192,7 @@ export default function Jobs() {
 
   return (
     <TooltipProvider>
+    <PageTransition>
       <div className="flex-1 overflow-y-auto">
         <SEOHead title="Jobs — AI-IDEI" description="Track AI service execution history, status and results." />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
@@ -424,6 +426,7 @@ export default function Jobs() {
           )}
         </div>
       </div>
+    </PageTransition>
     </TooltipProvider>
   );
 }

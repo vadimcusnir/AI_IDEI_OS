@@ -15,6 +15,7 @@ import { PublishToMarketplaceDialog } from "@/components/library/PublishToMarket
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Select,
   SelectContent,
@@ -143,6 +144,7 @@ export default function Library() {
   }
 
   return (
+    <PageTransition>
     <div className="flex-1 flex overflow-hidden">
       {showFolders && (
         <FolderSidebar storageKey="library_folders" items={artifacts.map(a => ({ id: a.id, label: a.title }))}
@@ -411,5 +413,6 @@ export default function Library() {
       )}
       </div>
     </div>
+    </PageTransition>
   );
 }

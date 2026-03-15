@@ -18,6 +18,7 @@ import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { motion } from "framer-motion";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
+import { PageTransition } from "@/components/motion/PageTransition";
 
 interface RecentNeuron {
   id: number;
@@ -118,6 +119,7 @@ export default function Home() {
   };
 
   return (
+    <PageTransition>
     <div className="flex-1 overflow-auto">
       <SEOHead title="Cockpit — AI-IDEI" description="Your AI-IDEI command center. Monitor neurons, episodes, jobs and credits." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
@@ -329,6 +331,7 @@ export default function Home() {
         </motion.div>
       </div>
     </div>
+    </PageTransition>
   );
 }
 
