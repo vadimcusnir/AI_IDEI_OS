@@ -235,6 +235,7 @@ export default function Dashboard() {
             </Button>
           </div>
         </motion.div>
+        </ControlledSection>
 
         {/* Categories + Status */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
