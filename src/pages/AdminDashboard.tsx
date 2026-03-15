@@ -20,6 +20,8 @@ import { WalletManagementTab } from "@/components/admin/WalletManagementTab";
 import { ReconciliationTab } from "@/components/admin/ReconciliationTab";
 import { IncidentManagementTab } from "@/components/admin/IncidentManagementTab";
 import { EntropyMonitoringTab } from "@/components/admin/EntropyMonitoringTab";
+import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
+import { AdminContributionsTab } from "@/components/admin/AdminContributionsTab";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { KPI, StatusBadge, LogLevelBadge, HealthRow, EconRow } from "@/components/admin/AdminSubComponents";
 import { PageTransition } from "@/components/motion/PageTransition";
