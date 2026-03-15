@@ -61,6 +61,8 @@ const PublicUserProfile = lazy(() => import("./pages/PublicUserProfile"));
 const ChatPage = lazy(() => import("./pages/ChatPage"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const WorkspaceSettings = lazy(() => import("./pages/WorkspaceSettings"));
+const Community = lazy(() => import("./pages/Community"));
+const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 
 function PageLoader() {
   return (
