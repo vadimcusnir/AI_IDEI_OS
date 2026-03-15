@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useForumThread, useForumPosts, useCreatePost, useForumVote, useMarkSolution, ForumPost } from "@/hooks/useForum";
+import { useForumThread, useForumPosts, useCreatePost, useForumVote, ForumPost } from "@/hooks/useForum";
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
+import { PostCard } from "@/components/community/PostCard";
+import { MentionTextarea } from "@/components/community/MentionTextarea";
 import {
   ArrowLeft, ChevronUp, ChevronDown, CheckCircle2, Pin, Lock,
-  MessageCircle, Clock, Award, Send,
+  MessageCircle, Clock, Send,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -38,48 +38,39 @@ function VoteButtons({ targetType, targetId, score }: { targetType: string; targ
   );
 }
 
-function PostCard({ post, threadAuthorId, threadId }: { post: ForumPost; threadAuthorId: string; threadId: string }) {
-  const { user } = useAuth();
-  const markSolution = useMarkSolution();
-  const authorName = post.author_profile?.display_name || "User";
-  const karma = post.author_karma?.karma || 0;
-  const canMarkSolution = user?.id === threadAuthorId && !post.is_solution;
+/** Build a tree from flat posts using reply_to_id */
+function buildPostTree(posts: ForumPost[]): { roots: ForumPost[]; childrenMap: Map<string, ForumPost[]> } {
+  const childrenMap = new Map<string, ForumPost[]>();
+  const roots: ForumPost[] = [];
 
+  for (const post of posts) {
+    if (!post.reply_to_id) {
+      roots.push(post);
+    } else {
+      const siblings = childrenMap.get(post.reply_to_id) || [];
+      siblings.push(post);
+      childrenMap.set(post.reply_to_id, siblings);
+    }
+  }
+  return { roots, childrenMap };
+}
+
+function PostTree({ post, childrenMap, threadAuthorId, threadId }: {
+  post: ForumPost;
+  childrenMap: Map<string, ForumPost[]>;
+  threadAuthorId: string;
+  threadId: string;
+}) {
+  const directReplies = childrenMap.get(post.id) || [];
+  // Recursively collect deeper replies for each child
   return (
-    <div className={`flex gap-3 p-4 rounded-lg ${post.is_solution ? "bg-status-validated/5 border border-status-validated/20" : ""}`}>
-      <VoteButtons targetType="post" targetId={post.id} score={post.vote_score} />
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-2">
-          <Avatar className="h-6 w-6">
-            <AvatarFallback className="text-[10px]">{authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <span className="text-xs font-medium">{authorName}</span>
-          <Badge variant="outline" className="text-[9px] px-1 py-0">
-            <Award className="h-2.5 w-2.5 mr-0.5" />{karma}
-          </Badge>
-          <span className="text-[10px] text-muted-foreground">
-            {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-          </span>
-          {post.is_solution && (
-            <Badge className="text-[9px] px-1.5 py-0 bg-status-validated/15 text-status-validated border-status-validated/30">
-              <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />Solution
-            </Badge>
-          )}
-        </div>
-        <div className="text-sm whitespace-pre-wrap">{post.content}</div>
-        {canMarkSolution && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-2 text-[10px] h-6"
-            onClick={() => markSolution.mutate({ threadId, postId: post.id })}
-            disabled={markSolution.isPending}
-          >
-            <CheckCircle2 className="h-3 w-3 mr-1" />Mark as Solution
-          </Button>
-        )}
-      </div>
-    </div>
+    <PostCard
+      post={post}
+      threadAuthorId={threadAuthorId}
+      threadId={threadId}
+      replies={directReplies}
+      depth={0}
+    />
   );
 }
 
@@ -91,6 +82,8 @@ export default function CommunityThread() {
   const { data: posts, isLoading: postsLoading } = useForumPosts(threadId);
   const createPost = useCreatePost();
   const [reply, setReply] = useState("");
+
+  const { roots, childrenMap } = useMemo(() => buildPostTree(posts || []), [posts]);
 
   const handleReply = async () => {
     if (!reply.trim() || !threadId) return;
@@ -127,7 +120,6 @@ export default function CommunityThread() {
     <PageTransition>
       <SEOHead title={`${thread.title} — Community`} description={thread.content.slice(0, 160)} />
       <div className="flex-1 overflow-auto p-4 md:p-6 max-w-4xl mx-auto">
-        {/* Back button */}
         <Button variant="ghost" size="sm" className="mb-4" onClick={() => navigate(`/community/${category}`)}>
           <ArrowLeft className="h-3.5 w-3.5 mr-1" />Back
         </Button>
@@ -166,30 +158,36 @@ export default function CommunityThread() {
           </CardContent>
         </Card>
 
-        {/* Posts */}
+        {/* Posts — threaded */}
         <div className="space-y-2 mb-4">
           <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             {thread.reply_count} {thread.reply_count === 1 ? "Reply" : "Replies"}
           </h3>
           {postsLoading ? (
             [1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-lg" />)
-          ) : posts && posts.length > 0 ? (
-            posts.map((post) => (
-              <PostCard key={post.id} post={post} threadAuthorId={thread.author_id} threadId={thread.id} />
+          ) : roots.length > 0 ? (
+            roots.map((post) => (
+              <PostTree
+                key={post.id}
+                post={post}
+                childrenMap={childrenMap}
+                threadAuthorId={thread.author_id}
+                threadId={thread.id}
+              />
             ))
           ) : (
             <p className="text-xs text-muted-foreground text-center py-6">No replies yet. Be the first to answer!</p>
           )}
         </div>
 
-        {/* Reply box */}
+        {/* Reply box with @mentions */}
         {user && !thread.is_locked ? (
           <Card>
             <CardContent className="p-4">
-              <Textarea
-                placeholder="Write your reply..."
+              <MentionTextarea
+                placeholder="Write your reply... Use @name to mention users"
                 value={reply}
-                onChange={(e) => setReply(e.target.value)}
+                onChange={setReply}
                 rows={4}
                 className="mb-3"
               />
