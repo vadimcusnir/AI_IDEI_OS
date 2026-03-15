@@ -405,9 +405,25 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
               </Button>
             )}
             {!isOwn && (
-              <Button size="sm" className="h-7 text-xs gap-1">
-                <ShoppingCart className="h-3 w-3" /> Get
-              </Button>
+              purchased ? (
+                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-emerald-600" disabled>
+                  <CheckCircle2 className="h-3 w-3" /> Owned
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  className="h-7 text-xs gap-1"
+                  onClick={handlePurchase}
+                  disabled={purchasing || (!isFree && !canAfford)}
+                >
+                  {purchasing ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <ShoppingCart className="h-3 w-3" />
+                  )}
+                  {isFree ? "Get Free" : `${price} N`}
+                </Button>
+              )
             )}
           </div>
         </div>
