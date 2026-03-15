@@ -134,6 +134,7 @@ function JobsGuide() {
 export default function Jobs() {
   const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
