@@ -159,13 +159,14 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 ## FAZA 5: DOCUMENTAȚIE
 
-### 5.1 🟢 Documentație utilizator
-- [ ] **D5.1** Crează pagina "Platform Overview" în docs
-- [ ] **D5.2** Crează pagina "Core Concepts" (ce sunt Neuronii, cum funcționează pipeline-ul)
-- [ ] **D5.3** Crează tutorial "First Extraction" (ghid pas-cu-pas)
-- [ ] **D5.4** Expandează Glossary cu toate termenii platformei
+### 5.1 ✅ Documentație utilizator — COMPLETAT
+Documentația user-facing este deja completă în `docsContent.ts`:
+- [x] **D5.1** ✅ Platform Overview (introduction + how-it-works)
+- [x] **D5.2** ✅ Core Concepts (neuron-model, intelligence-assets, knowledge-as-infrastructure)
+- [x] **D5.3** ✅ Tutorial "First Extraction" (your-first-neuron)
+- [x] **D5.4** ✅ Glossary complet cu toți termenii platformei
 
-**Efort:** 3-4 sesiuni | **Impact:** MEDIU (onboarding)
+**Efort:** 0 (completat) | **Impact:** MEDIU (onboarding)
 
 ### 5.2 🟢 Sincronizare documentație tehnică
 - [ ] **D5.5** Actualizează `DATABASE_SCHEMA.md` cu tabelele noi
