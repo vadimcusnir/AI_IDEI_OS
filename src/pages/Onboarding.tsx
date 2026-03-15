@@ -70,16 +70,17 @@ export default function Onboarding() {
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadStatus();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadStatus = async () => {
+    const wsId = currentWorkspace!.id;
     const [ep, ne, jo, ar] = await Promise.all([
-      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
+      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
     ]);
 
     const s = {

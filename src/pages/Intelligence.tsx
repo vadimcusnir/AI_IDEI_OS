@@ -39,14 +39,15 @@ export default function Intelligence() {
   const [activeTab, setActiveTab] = useState("graph");
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadStats();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadStats = async () => {
+    const wsId = currentWorkspace!.id;
     const [neuronsRes, episodesRes, creditsRes] = await Promise.all([
-      supabase.from("neurons").select("id, status, content_category, lifecycle, created_at").eq("author_id", user!.id),
-      supabase.from("episodes").select("id, status, created_at").eq("author_id", user!.id),
+      supabase.from("neurons").select("id, status, content_category, lifecycle, created_at").eq("workspace_id", wsId),
+      supabase.from("episodes").select("id, status, created_at").eq("workspace_id", wsId),
       supabase.from("user_credits").select("*").eq("user_id", user!.id).maybeSingle(),
     ]);
 
