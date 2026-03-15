@@ -181,43 +181,51 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* ═══ HERO ═══ */}
-      <section ref={heroRef} className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.04] via-transparent to-transparent" />
-        <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-primary/[0.06] rounded-full blur-[150px]" />
-        <div className="absolute top-40 right-1/4 w-[400px] h-[400px] bg-violet-500/[0.04] rounded-full blur-[120px]" />
+      <section ref={heroRef} className="relative overflow-hidden gradient-bg-animated noise-overlay">
+        <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-primary/[0.06] rounded-full blur-[150px] animate-float" />
+        <div className="absolute top-40 right-1/4 w-[400px] h-[400px] bg-violet-500/[0.04] rounded-full blur-[120px] animate-float" style={{ animationDelay: "3s" }} />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-primary/[0.03] rounded-full blur-[100px]" />
 
-        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="relative max-w-4xl mx-auto px-6 pt-24 pb-20 text-center">
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="mx-auto mb-8">
+        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="relative max-w-4xl mx-auto px-6 pt-16 sm:pt-24 pb-16 sm:pb-20 text-center">
+          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="mx-auto mb-6 sm:mb-8">
             <div className="relative inline-block">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/50 to-violet-500/30 blur-2xl animate-pulse" style={{ animationDuration: "3s" }} />
-              <img src={logo} alt="AI-IDEI" className="relative h-20 w-20 rounded-full border-2 border-primary/20 shadow-2xl shadow-primary/30" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/50 to-violet-500/30 blur-2xl animate-glow-pulse" />
+              <img src={logo} alt="AI-IDEI" className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-full border-2 border-primary/20 shadow-2xl shadow-primary/30" />
             </div>
           </motion.div>
 
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="text-[11px] font-bold uppercase tracking-[0.25em] text-primary mb-6">
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-primary mb-4 sm:mb-6">
             {t("hero.tagline")}
           </motion.p>
 
-          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6 leading-[1.1] tracking-tight">
+          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
             {t("hero.title_line1")}
             <br />
-            <span className="relative">
+            <span className="relative inline-block">
               {t("hero.title_line2")}
-              <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none">
-                <path d="M2 8C50 2 250 2 298 8" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" opacity="0.4" />
+              <svg className="absolute -bottom-1 sm:-bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none">
+                <motion.path
+                  d="M2 8C50 2 250 2 298 8"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  opacity="0.4"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ delay: 0.8, duration: 1, ease: "easeInOut" }}
+                />
               </svg>
             </span>
             <br />
-            <span className="text-primary">{t("hero.title_line3")}</span>
+            <span className="text-gradient-primary">{t("hero.title_line3")}</span>
           </motion.h1>
 
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }} className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-10">
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }} className="text-sm sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10">
             {t("hero.subtitle")}
           </motion.p>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
-            <Button size="lg" onClick={ctaAction} className="gap-2 text-sm px-10 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8 sm:mb-12">
+            <Button size="lg" onClick={ctaAction} className="btn-glow gap-2 text-sm px-10 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
               {ctaLabel}
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -227,13 +235,13 @@ export default function Landing() {
             </Button>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }} className="flex items-center justify-center gap-4 flex-wrap">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }} className="flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
             {[
               { icon: CheckCircle2, text: t("hero.trust_no_card") },
               { icon: Zap, text: t("hero.trust_credits") },
               { icon: Lock, text: t("hero.trust_gdpr") },
             ].map(item => (
-              <span key={item.text} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <span key={item.text} className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-muted-foreground">
                 <item.icon className="h-3.5 w-3.5 text-status-validated" />
                 {item.text}
               </span>
@@ -290,8 +298,10 @@ export default function Landing() {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* ═══ PIPELINE ═══ */}
-      <section id="pipeline" className="bg-card">
+      <section id="pipeline" className="bg-card noise-overlay relative">
         <div className="max-w-5xl mx-auto px-6 py-20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
             <div className="inline-flex items-center gap-2 mb-3">
