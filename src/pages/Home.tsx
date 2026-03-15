@@ -192,6 +192,7 @@ export default function Home() {
             </motion.button>
           ))}
         </motion.div>
+        </ControlledSection>
 
         {/* Onboarding Checklist */}
         <OnboardingChecklist />
