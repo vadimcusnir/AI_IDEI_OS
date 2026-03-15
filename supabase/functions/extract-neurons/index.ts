@@ -61,7 +61,7 @@ async function extractNeuronsFromChunk(
   chunkIndex: number,
   totalChunks: number
 ): Promise<any[]> {
-  const systemPrompt = `You are a neuron extraction engine for a Knowledge Operating System.
+  const fallbackPrompt = `You are a neuron extraction engine for a Knowledge Operating System.
 
 Analyze this transcript segment (chunk ${chunkIndex + 1}/${totalChunks}) and extract distinct knowledge units ("neurons").
 
@@ -78,6 +78,8 @@ Rules:
 - Classify accurately using the content_category enum
 - Use heading blocks for titles, text blocks for explanations, quote blocks for direct quotes, idea blocks for insights
 - Return ONLY a valid JSON array, no markdown wrapping`;
+
+  const { prompt: systemPrompt } = await loadPrompt("extract_neurons", fallbackPrompt);
 
   const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
