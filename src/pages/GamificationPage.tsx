@@ -45,11 +45,11 @@ export default function GamificationPage() {
     if (!user) return;
 
     Promise.all([
-      supabase.from("user_achievements").select("*, achievements(*)").eq("user_id", user.id).order("unlocked_at", { ascending: false }),
-      supabase.from("xp_events").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
+      supabase.from("user_achievements" as any).select("*, achievements(*)").eq("user_id", user.id).order("unlocked_at", { ascending: false }),
+      supabase.from("xp_events" as any).select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
     ]).then(([achRes, xpRes]) => {
       if (achRes.data) setAchievements(achRes.data as unknown as Achievement[]);
-      if (xpRes.data) setRecentXP(xpRes.data as XPEvent[]);
+      if (xpRes.data) setRecentXP(xpRes.data as unknown as XPEvent[]);
     });
   }, [user]);
 
