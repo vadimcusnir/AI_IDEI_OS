@@ -82,7 +82,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading || !user || !currentWorkspace) return;
+    if (authLoading) return;
+    if (!user || !currentWorkspace) { setLoading(false); return; }
     loadData();
   }, [user, authLoading, currentWorkspace]);
 

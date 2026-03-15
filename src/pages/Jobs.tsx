@@ -144,7 +144,8 @@ export default function Jobs() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (authLoading || !user || !currentWorkspace) return;
+    if (authLoading) return;
+    if (!user || !currentWorkspace) { setLoading(false); return; }
     fetchJobs();
     const channel = supabase
       .channel("jobs-realtime")

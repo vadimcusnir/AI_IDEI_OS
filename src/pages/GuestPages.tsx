@@ -70,7 +70,8 @@ export default function GuestPages() {
   const { assignments } = useFolderSidebar("guest_folders");
 
   useEffect(() => {
-    if (authLoading || !user || !currentWorkspace) return;
+    if (authLoading) return;
+    if (!user || !currentWorkspace) { setLoading(false); return; }
     loadGuests();
   }, [user, authLoading, currentWorkspace]);
 
