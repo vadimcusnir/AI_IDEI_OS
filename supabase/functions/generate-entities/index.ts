@@ -1,10 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 function slugify(text: string): string {
   return text
@@ -30,7 +25,6 @@ const CATEGORY_TO_TYPE: Record<string, string> = {
   transcript: "insight",
 };
 
-// NEP-120 family detection from title/content
 const FAMILY_KEYWORDS: Record<string, string[]> = {
   decision: ["decision", "choice", "criteria", "tradeoff", "bias", "heuristic", "threshold"],
   strategy: ["strategy", "strategic", "leverage", "competition", "adaptation", "constraint"],
@@ -52,27 +46,57 @@ function detectFamily(title: string, description: string): string | null {
   let bestScore = 0;
   for (const [family, keywords] of Object.entries(FAMILY_KEYWORDS)) {
     const score = keywords.filter((kw) => text.includes(kw)).length;
-    if (score > bestScore) {
-      bestScore = score;
-      best = family;
-    }
+    if (score > bestScore) { bestScore = score; best = family; }
   }
   return bestScore > 0 ? best : null;
 }
 
-// Relation type weights for IdeaRank context
 const RELATION_WEIGHTS: Record<string, number> = {
-  supports: 0.8,
-  contradicts: 0.3,
-  extends: 0.7,
-  references: 0.5,
-  derived_from: 1.0,
-  applies_to: 0.6,
+  supports: 0.8, contradicts: 0.3, extends: 0.7,
+  references: 0.5, derived_from: 1.0, applies_to: 0.6,
 };
 
+// ── Batch helper: fetch blocks for multiple neurons at once ──
+async function batchFetchBlocks(supabase: any, neuronIds: number[]) {
+  const blockMap = new Map<number, any[]>();
+  // Supabase .in() has a practical limit of ~300 items, chunk if needed
+  const CHUNK = 200;
+  for (let i = 0; i < neuronIds.length; i += CHUNK) {
+    const chunk = neuronIds.slice(i, i + CHUNK);
+    const { data } = await supabase
+      .from("neuron_blocks")
+      .select("neuron_id, content, type")
+      .in("neuron_id", chunk)
+      .order("position");
+    for (const b of data || []) {
+      if (!blockMap.has(b.neuron_id)) blockMap.set(b.neuron_id, []);
+      blockMap.get(b.neuron_id)!.push(b);
+    }
+  }
+  return blockMap;
+}
+
+// ── Batch helper: check existing entities for neuron_ids ──
+async function batchCheckExisting(supabase: any, neuronIds: number[]) {
+  const existingMap = new Map<number, string>();
+  const CHUNK = 200;
+  for (let i = 0; i < neuronIds.length; i += CHUNK) {
+    const chunk = neuronIds.slice(i, i + CHUNK);
+    const { data } = await supabase
+      .from("entities")
+      .select("id, neuron_id")
+      .in("neuron_id", chunk);
+    for (const e of data || []) {
+      existingMap.set(e.neuron_id, e.id);
+    }
+  }
+  return existingMap;
+}
+
 Deno.serve(async (req) => {
+  const cors = getCorsHeaders(req);
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: cors });
   }
 
   try {
@@ -80,12 +104,10 @@ Deno.serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // Verify JWT and check admin role
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Missing authorization" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -93,38 +115,29 @@ Deno.serve(async (req) => {
     const { data: { user }, error: authError } = await authClient.auth.getUser(token);
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
-    // Use service role client for admin operations
     const supabase = createClient(supabaseUrl, serviceKey);
 
-    // Check admin role
     const { data: roleData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-
+      .from("user_roles").select("role")
+      .eq("user_id", user.id).eq("role", "admin").maybeSingle();
     if (!roleData) {
       return new Response(JSON.stringify({ error: "Admin access required" }), {
-        status: 403,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
     const { action, neuron_ids } = await req.json();
 
     if (action === "compute_idearank") {
-      // Call the DB function
       const { error } = await supabase.rpc("compute_idearank");
       if (error) throw error;
       return new Response(
         JSON.stringify({ success: true, message: "IdeaRank computed" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...cors, "Content-Type": "application/json" } }
       );
     }
 
@@ -142,77 +155,89 @@ Deno.serve(async (req) => {
       const { data: neurons, error: neuronsErr } = await query.limit(1000);
       if (neuronsErr) throw neuronsErr;
 
-      let created = 0;
-      let updated = 0;
-      let skipped = 0;
+      const neuronList = neurons || [];
+      const neuronIds = neuronList.map((n: any) => n.id);
 
-      for (const neuron of neurons || []) {
-        const entityType = CATEGORY_TO_TYPE[neuron.content_category] || "insight";
-        const baseSlug = slugify(neuron.title);
-        const slug = `${baseSlug}-${neuron.number}`;
+      // ── BATCH: fetch all blocks + existing entities in parallel ──
+      const [blockMap, existingMap] = await Promise.all([
+        batchFetchBlocks(supabase, neuronIds),
+        batchCheckExisting(supabase, neuronIds),
+      ]);
 
-        const { data: existing } = await supabase
-          .from("entities")
-          .select("id")
-          .eq("neuron_id", neuron.id)
-          .single();
+      let created = 0, updated = 0, skipped = 0;
 
-        // Get blocks for description
-        const { data: blocks } = await supabase
-          .from("neuron_blocks")
-          .select("content, type")
-          .eq("neuron_id", neuron.id)
-          .order("position")
-          .limit(10);
+      // Process in batches of 20 for upserts
+      const BATCH_SIZE = 20;
+      for (let i = 0; i < neuronList.length; i += BATCH_SIZE) {
+        const batch = neuronList.slice(i, i + BATCH_SIZE);
+        const upserts: any[] = [];
+        const updates: { id: string; data: any }[] = [];
 
-        const description = (blocks || [])
-          .filter((b: any) => b.type === "text" && b.content)
-          .map((b: any) => b.content)
-          .join("\n\n")
-          .slice(0, 2000);
+        for (const neuron of batch) {
+          const entityType = CATEGORY_TO_TYPE[neuron.content_category] || "insight";
+          const baseSlug = slugify(neuron.title);
+          const slug = `${baseSlug}-${neuron.number}`;
+          const blocks = blockMap.get(neuron.id) || [];
 
-        const summary = description.slice(0, 300) || neuron.title;
-        const family = detectFamily(neuron.title, description);
-        const metaDesc = `${neuron.title} — ${entityType} extracted through intelligence pipeline. ${family ? `Family: ${family}.` : ""}`.slice(0, 160);
+          const description = blocks
+            .filter((b: any) => b.type === "text" && b.content)
+            .map((b: any) => b.content)
+            .join("\n\n")
+            .slice(0, 2000);
 
-        // Count evidence (blocks that reference segments)
-        const evidenceCount = (blocks || []).filter((b: any) => b.type === "quote" || b.type === "source" || b.type === "evidence").length;
+          const summary = description.slice(0, 300) || neuron.title;
+          const family = detectFamily(neuron.title, description);
+          const metaDesc = `${neuron.title} — ${entityType} extracted through intelligence pipeline. ${family ? `Family: ${family}.` : ""}`.slice(0, 160);
+          const evidenceCount = blocks.filter((b: any) => b.type === "quote" || b.type === "source" || b.type === "evidence").length;
 
-        const typePath = entityType === "application" ? "applications"
-          : entityType === "contradiction" ? "contradictions"
-          : entityType + "s";
+          const typePath = entityType === "application" ? "applications"
+            : entityType === "contradiction" ? "contradictions"
+            : entityType + "s";
 
-        const entityData = {
-          neuron_id: neuron.id,
-          entity_type: entityType,
-          slug,
-          title: neuron.title,
-          summary: summary || null,
-          description: description || null,
-          meta_description: metaDesc,
-          confidence_score: (neuron.score || 0) / 100,
-          importance_score: neuron.score || 0,
-          evidence_count: evidenceCount,
-          insight_family: family,
-          is_published: true,
-          canonical_url: `/${typePath}/${slug}`,
-        };
+          const entityData = {
+            neuron_id: neuron.id,
+            entity_type: entityType,
+            slug,
+            title: neuron.title,
+            summary: summary || null,
+            description: description || null,
+            meta_description: metaDesc,
+            confidence_score: (neuron.score || 0) / 100,
+            importance_score: neuron.score || 0,
+            evidence_count: evidenceCount,
+            insight_family: family,
+            is_published: true,
+            canonical_url: `/${typePath}/${slug}`,
+          };
 
-        if (existing) {
-          await supabase.from("entities").update(entityData).eq("id", existing.id);
-          updated++;
-        } else {
-          const { error: insertErr } = await supabase.from("entities").insert(entityData);
-          if (insertErr) {
-            if (insertErr.code === "23505") skipped++;
-            else { console.error("Insert error:", insertErr); skipped++; }
+          const existingId = existingMap.get(neuron.id);
+          if (existingId) {
+            updates.push({ id: existingId, data: entityData });
           } else {
-            created++;
+            upserts.push(entityData);
           }
+        }
+
+        // Execute batch insert
+        if (upserts.length > 0) {
+          const { error: insertErr, data: inserted } = await supabase
+            .from("entities").insert(upserts).select("id");
+          if (insertErr) {
+            if (insertErr.code === "23505") skipped += upserts.length;
+            else { console.error("Batch insert error:", insertErr); skipped += upserts.length; }
+          } else {
+            created += (inserted || []).length;
+          }
+        }
+
+        // Execute updates (still individual due to different IDs)
+        for (const u of updates) {
+          await supabase.from("entities").update(u.data).eq("id", u.id);
+          updated++;
         }
       }
 
-      // Build relations from neuron_links with proper weights
+      // Build relations from neuron_links
       let relationsCreated = 0;
       if (action === "project_all") {
         const { data: links } = await supabase
@@ -220,47 +245,66 @@ Deno.serve(async (req) => {
           .select("source_neuron_id, target_neuron_id, relation_type")
           .limit(5000);
 
-        for (const link of links || []) {
-          const [{ data: src }, { data: tgt }] = await Promise.all([
-            supabase.from("entities").select("id").eq("neuron_id", link.source_neuron_id).single(),
-            supabase.from("entities").select("id").eq("neuron_id", link.target_neuron_id).single(),
-          ]);
+        // Batch: get all entity mappings at once
+        const allLinkNeuronIds = new Set<number>();
+        for (const l of links || []) {
+          allLinkNeuronIds.add(l.source_neuron_id);
+          allLinkNeuronIds.add(l.target_neuron_id);
+        }
+        const entityMap = new Map<number, string>();
+        const linkIds = Array.from(allLinkNeuronIds);
+        const CHUNK = 200;
+        for (let i = 0; i < linkIds.length; i += CHUNK) {
+          const chunk = linkIds.slice(i, i + CHUNK);
+          const { data } = await supabase
+            .from("entities").select("id, neuron_id").in("neuron_id", chunk);
+          for (const e of data || []) entityMap.set(e.neuron_id, e.id);
+        }
 
-          if (src && tgt) {
+        // Batch upsert relations
+        const relBatch: any[] = [];
+        for (const link of links || []) {
+          const srcId = entityMap.get(link.source_neuron_id);
+          const tgtId = entityMap.get(link.target_neuron_id);
+          if (srcId && tgtId) {
             const relType = (link.relation_type || "RELATES_TO").toUpperCase().replace(/\s+/g, "_");
             const weight = RELATION_WEIGHTS[link.relation_type?.toLowerCase()] || 0.5;
-            await supabase.from("entity_relations").upsert(
-              {
-                source_entity_id: src.id,
-                target_entity_id: tgt.id,
-                relation_type: relType,
-                weight,
-              },
-              { onConflict: "source_entity_id,target_entity_id,relation_type" }
-            );
-            relationsCreated++;
+            relBatch.push({
+              source_entity_id: srcId,
+              target_entity_id: tgtId,
+              relation_type: relType,
+              weight,
+            });
           }
         }
 
-        // Compute IdeaRank after projection
+        // Insert relations in chunks
+        for (let i = 0; i < relBatch.length; i += 100) {
+          const chunk = relBatch.slice(i, i + 100);
+          const { data } = await supabase.from("entity_relations")
+            .upsert(chunk, { onConflict: "source_entity_id,target_entity_id,relation_type" })
+            .select("id");
+          relationsCreated += (data || []).length;
+        }
+
         await supabase.rpc("compute_idearank");
       }
 
       return new Response(
         JSON.stringify({ created, updated, skipped, relationsCreated }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...cors, "Content-Type": "application/json" } }
       );
     }
 
     return new Response(
       JSON.stringify({ error: "Unknown action. Use: project_all, project_neurons, compute_idearank" }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 400, headers: { ...cors, "Content-Type": "application/json" } }
     );
   } catch (err) {
     console.error(err);
     return new Response(
       JSON.stringify({ error: err.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...cors, "Content-Type": "application/json" } }
     );
   }
 });

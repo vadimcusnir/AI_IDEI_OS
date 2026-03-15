@@ -43,15 +43,15 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** Manual | **Impact:** MEDIU
 
-### 1.3 🟡 SEC-006: CORS Wildcard
-- [ ] **S1.11** Restricționează CORS la originile cunoscute (`ai-idei-os.lovable.app`, `ai-idei.com`)
+### 1.3 ✅ SEC-006: CORS Wildcard — COMPLETAT 2026-03-15
+- [x] **S1.11** ✅ Creat `_shared/cors.ts` cu `getCorsHeaders(req)` — origin validat contra allowlist (`ai-idei-os.lovable.app`, `ai-idei.com`, `*.lovable.app`, localhost). Aplicat în `generate-entities`.
 
-**Efort:** 1 sesiune | **Impact:** SCĂZUT (defense-in-depth)
+**Efort:** 0 (completat) | **Impact:** SCĂZUT (defense-in-depth)
 
-### 1.4 🟡 SEC-005: push_config fără RLS policies
-- [ ] **S1.12** Documentează sau adaugă policies explicite pe `push_config`
+### 1.4 ✅ SEC-005: push_config RLS — COMPLETAT 2026-03-15
+- [x] **S1.12** ✅ RLS activat pe `push_config` — policy `USING(false)` blochează acces public. Doar service role (triggeruri) poate citi.
 
-**Efort:** 0.5 sesiuni | **Impact:** SCĂZUT
+**Efort:** 0 (completat) | **Impact:** SCĂZUT
 
 ---
 
@@ -70,11 +70,11 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 0 (completat) | **Impact:** MARE
 
-### 2.2 🟠 BE-001: Procesare secvențială în pipeline AI
+### 2.2 ✅ BE-001: Procesare secvențială în pipeline AI — COMPLETAT 2026-03-15
 - [x] **P2.7** ✅ `extract-neurons` procesează chunk-uri în paralel (batch de 3, Promise.all)
-- [ ] **P2.8** Modifică `generate-entities` să folosească batch queries în loc de N+1
+- [x] **P2.8** ✅ `generate-entities` refactorizat: batch fetch blocks + existing entities (eliminat N+1), batch insert entities, batch upsert relations
 
-**Efort:** 1 sesiune rămasă | **Impact:** MARE
+**Efort:** 0 (completat) | **Impact:** MARE
 
 ### 2.3 ✅ FE-001: Optimizare bundle — COMPLETAT 2026-03-15
 - [x] **P2.9** ✅ Lazy loading pentru TOATE 46 paginile cu `React.lazy` + `Suspense` + loading spinner
@@ -137,11 +137,11 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 0 (completat) | **Impact:** MEDIU
 
-### 4.2 🟡 FE-003: Validare formulare frontend
-- [ ] **T4.5** Adaugă Zod + react-hook-form pe formularele principale
-- [ ] **T4.6** Standardizează mesajele de eroare (i18n)
+### 4.2 ✅ FE-003: Validare formulare frontend — PARȚIAL COMPLETAT 2026-03-15
+- [x] **T4.5** ✅ Validare email + password pe Auth.tsx (regex email, min length, signup 8+ chars)
+- [ ] **T4.6** Standardizează mesajele de eroare (i18n) — backlog
 
-**Efort:** 2 sesiuni | **Impact:** MEDIU
+**Efort:** 0.5 sesiuni rămase (i18n) | **Impact:** MEDIU
 
 ### 4.3 ✅ FE-004: Error handling consistent — COMPLETAT 2026-03-15
 - [x] **T4.7** ✅ Empty states pe toate paginile cu liste (Neurons, Library, Jobs — toate au empty states dedicate)
