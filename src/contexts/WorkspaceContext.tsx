@@ -69,7 +69,27 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         .select("*")
         .order("created_at");
 
-      const ws = (data || []) as Workspace[];
+      let ws = (data || []) as Workspace[];
+
+      // Auto-create workspace if none exist (trigger may have failed)
+      if (ws.length === 0 && user) {
+        const name = user.user_metadata?.full_name || user.email?.split("@")[0] || "My";
+        const slug = `${user.id.slice(0, 8)}-${Date.now().toString(36)}`;
+        const { data: created } = await supabase
+          .from("workspaces")
+          .insert({ name: `${name}'s Workspace`, slug, owner_id: user.id })
+          .select()
+          .single();
+
+        if (created) {
+          const newWs = created as Workspace;
+          await supabase
+            .from("workspace_members")
+            .insert({ workspace_id: newWs.id, user_id: user.id, role: "owner" as any });
+          ws = [newWs];
+        }
+      }
+
       setWorkspaces(ws);
 
       // Restore or pick first
