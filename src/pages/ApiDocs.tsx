@@ -270,6 +270,11 @@ curl -H "X-API-Key: aiidei_your_key_here" \\
           </div>
         </div>
 
+        {/* Webhooks */}
+        <div className="mb-8">
+          <WebhookManagement />
+        </div>
+
         {/* Response format */}
         <div className="mt-8 p-4 rounded-xl border border-border bg-card">
           <h3 className="text-xs font-semibold mb-2">Format răspuns</h3>
