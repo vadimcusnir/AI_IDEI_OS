@@ -65,6 +65,7 @@ const Community = lazy(() => import("./pages/Community"));
 const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 const KnowledgeDashboard = lazy(() => import("./pages/KnowledgeDashboard"));
 const VIPDashboard = lazy(() => import("./pages/VIPDashboard"));
+const DataPipeline = lazy(() => import("./pages/DataPipeline"));
 
 function PageLoader() {
   return (
@@ -162,6 +163,7 @@ const App = () => (
                 <Route path="/knowledge" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><VIPDashboard /></AppLayout></ProtectedRoute>} />
+                <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><DataPipeline /></AppLayout></ProtectedRoute>} />
 
                 {/* Admin route */}
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />

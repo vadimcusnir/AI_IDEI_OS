@@ -117,6 +117,6 @@ All P0 critical modules implemented. Wallet system added. New specs uploaded for
 | 01_GAMEFICATION | 40% (XP engine, streaks, levels, leaderboard, challenges) |
 | 01_KNOWLEDGE_DASHBOARD | 45% (DB schema, KB page, categories, search, learning paths) |
 | 01_CUSNIR_OS_VIP_TIER | 80% (DB schema, milestones, war rooms, progress UI, VIP page) |
-| 01_DATA_COLLECTION | 15% |
+| 01_DATA_COLLECTION | 75% (cognitive hierarchy, categories, units, training datasets, pipeline stats) |
 | 01_SYSTEM_ARCHITECTURE | 20% |
 | 02_ADMIN_PANEL_PROD | 30% |
