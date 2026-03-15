@@ -92,13 +92,40 @@ export default function Extractor() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [transcribingId, setTranscribingId] = useState<string | null>(null);
-  // Form state
+  // Form state — unified smart input
   const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState("");
   const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("url");
   const [content, setContent] = useState("");
   const [creating, setCreating] = useState(false);
   const [autoTitleApplied, setAutoTitleApplied] = useState(false);
+
+  // Auto-detect source type from input
+  const autoDetectSourceType = useCallback((input: string): "url" | "text" => {
+    const trimmed = input.trim();
+    try {
+      const url = new URL(trimmed);
+      if (url.protocol === "http:" || url.protocol === "https:") return "url";
+    } catch {}
+    return "text";
+  }, []);
+
+  // Smart input handler — auto-detects URL vs text
+  const handleSmartInput = useCallback(async (input: string) => {
+    const detected = autoDetectSourceType(input);
+    if (detected === "url" && sourceType !== "audio" && sourceType !== "video") {
+      setSourceType("url");
+      handleUrlChange(input);
+    } else if (detected === "text" && sourceType !== "audio" && sourceType !== "video") {
+      setSourceType("text");
+      setContent(input);
+      if (!title.trim() && input.length > 10) {
+        const autoTitle = input.slice(0, 60).replace(/\n/g, " ").trim();
+        setTitle(autoTitle + (input.length > 60 ? "…" : ""));
+        setAutoTitleApplied(true);
+      }
+    }
+  }, [sourceType, title, autoDetectSourceType]);
   const [fetchingTitle, setFetchingTitle] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);

@@ -114,7 +114,7 @@ export default function Onboarding() {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-serif font-bold mb-2">Get Started with AI-IDEI</h1>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Follow these 5 steps to turn your content into structured knowledge assets.
+            Follow these 4 steps to turn your content into structured knowledge assets.
             Each step builds on the previous one.
           </p>
         </div>

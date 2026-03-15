@@ -33,39 +33,34 @@ interface NavSection {
   items: NavItem[];
 }
 
-const NAV_SECTIONS: NavSection[] = [
-  {
-    labelKey: "dashboard_section",
-    items: [
-      { labelKey: "cockpit", to: "/home", icon: Home },
-      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3 },
-      { labelKey: "onboarding", to: "/onboarding", icon: Rocket },
-    ],
-  },
-  {
-    labelKey: "create_section",
-    items: [
-      { labelKey: "extractor", to: "/extractor", icon: Upload },
-      { labelKey: "neurons", to: "/neurons", icon: Brain },
-      { labelKey: "services", to: "/services", icon: Sparkles },
-      { labelKey: "chat", to: "/chat", icon: Bot },
-    ],
-  },
+// Core navigation — always visible
+const CORE_NAV: NavItem[] = [
+  { labelKey: "cockpit", to: "/home", icon: Home },
+  { labelKey: "extractor", to: "/extractor", icon: Upload },
+  { labelKey: "neurons", to: "/neurons", icon: Brain },
+  { labelKey: "services", to: "/services", icon: Sparkles },
+  { labelKey: "library", to: "/library", icon: BookOpen },
+  { labelKey: "jobs", to: "/jobs", icon: Briefcase },
+];
+
+// Expandable "More" section
+const MORE_SECTIONS: NavSection[] = [
   {
     labelKey: "explore_section",
     items: [
-      { labelKey: "library", to: "/library", icon: BookOpen },
+      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3 },
       { labelKey: "intelligence", to: "/intelligence", icon: Network },
       { labelKey: "topics", to: "/topics", icon: Lightbulb },
       { labelKey: "marketplace", to: "/marketplace", icon: Store },
       { labelKey: "guest_pages", to: "/guests", icon: Users },
+      { labelKey: "chat", to: "/chat", icon: Bot },
     ],
   },
   {
     labelKey: "operate_section",
     items: [
-      { labelKey: "jobs", to: "/jobs", icon: Briefcase },
       { labelKey: "pipeline", to: "/pipeline", icon: Layers },
+      { labelKey: "onboarding", to: "/onboarding", icon: Rocket },
       { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
     ],
   },

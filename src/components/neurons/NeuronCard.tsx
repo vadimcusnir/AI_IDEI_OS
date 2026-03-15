@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap } from "lucide-react";
+import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { NeuronListItem, ViewMode } from "@/hooks/useNeuronList";
 
