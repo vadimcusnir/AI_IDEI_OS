@@ -24,6 +24,7 @@ import { InstantActionSurface } from "@/components/extractor/InstantActionSurfac
 import { motion } from "framer-motion";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface RecentNeuron {
   id: number;
