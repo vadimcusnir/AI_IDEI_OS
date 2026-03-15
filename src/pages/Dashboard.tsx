@@ -15,6 +15,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
 import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
@@ -153,6 +154,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Pipeline Progress */}
+        <ControlledSection elementId="dashboard.pipeline">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }} className="bg-card border border-border rounded-xl p-4 mb-6">
           <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Activity className="h-3 w-3" /> Pipeline Progress
@@ -177,8 +179,10 @@ export default function Dashboard() {
             ))}
           </div>
         </motion.div>
+        </ControlledSection>
 
         {/* Activity Chart + Credit Gauge */}
+        <ControlledSection elementId="dashboard.activity_credits">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {/* Activity */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-4">
@@ -231,6 +235,7 @@ export default function Dashboard() {
             </Button>
           </div>
         </motion.div>
+        </ControlledSection>
 
         {/* Categories + Status */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
@@ -294,6 +299,7 @@ export default function Dashboard() {
         )}
 
         {/* Quick Actions */}
+        <ControlledSection elementId="dashboard.quick_actions">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45, duration: 0.4 }} className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
           {[
             { label: "New Neuron", icon: Brain, path: "/n/new" },
@@ -313,6 +319,7 @@ export default function Dashboard() {
             </motion.button>
           ))}
         </motion.div>
+        </ControlledSection>
       </div>
     </div>
     </PageTransition>

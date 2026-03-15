@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 function slugify(text: string): string {
   return text
@@ -132,7 +133,24 @@ Deno.serve(async (req) => {
 
     const { action, neuron_ids } = await req.json();
 
+    // ── Regime check ──
+    const regime = await getRegimeConfig("generate-entities");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(
+        JSON.stringify({ error: "Blocked by execution regime", reason: blockReason, regime: regime.regime }),
+        { status: 403, headers: { ...cors, "Content-Type": "application/json" } }
+      );
+    }
+    const isDryRun = regime.dryRun || regime.regime === "simulation";
+
     if (action === "compute_idearank") {
+      if (isDryRun) {
+        return new Response(
+          JSON.stringify({ success: true, message: "DRY RUN — IdeaRank skipped", dry_run: true }),
+          { headers: { ...cors, "Content-Type": "application/json" } }
+        );
+      }
       const { error } = await supabase.rpc("compute_idearank");
       if (error) throw error;
       return new Response(
@@ -291,7 +309,7 @@ Deno.serve(async (req) => {
       }
 
       return new Response(
-        JSON.stringify({ created, updated, skipped, relationsCreated }),
+        JSON.stringify({ created, updated, skipped, relationsCreated, dry_run: isDryRun, regime: regime.regime }),
         { headers: { ...cors, "Content-Type": "application/json" } }
       );
     }
