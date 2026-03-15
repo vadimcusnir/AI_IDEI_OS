@@ -22,6 +22,7 @@ export type GroupBy = "none" | "status" | "date";
 
 export function useNeuronList() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
