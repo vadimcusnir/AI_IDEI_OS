@@ -67,6 +67,7 @@ const QUICK_ACTIONS = [
 
 export default function Home() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<RecentNeuron[]>([]);
