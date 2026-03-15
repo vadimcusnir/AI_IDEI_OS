@@ -154,6 +154,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Pipeline Progress */}
+        <ControlledSection elementId="dashboard.pipeline">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }} className="bg-card border border-border rounded-xl p-4 mb-6">
           <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Activity className="h-3 w-3" /> Pipeline Progress
