@@ -144,6 +144,7 @@ export default function Library() {
   }
 
   return (
+    <PageTransition>
     <div className="flex-1 flex overflow-hidden">
       {showFolders && (
         <FolderSidebar storageKey="library_folders" items={artifacts.map(a => ({ id: a.id, label: a.title }))}
