@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert } from "lucide-react";
+import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -27,6 +27,7 @@ import { ComplianceLogTab } from "@/components/admin/ComplianceLogTab";
 import { FeatureFlagsTab } from "@/components/admin/FeatureFlagsTab";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { ForumModerationTab } from "@/components/admin/ForumModerationTab";
+import { ControlLayerTab } from "@/components/admin/ControlLayerTab";
 import { KPI, StatusBadge, LogLevelBadge, HealthRow, EconRow } from "@/components/admin/AdminSubComponents";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -91,6 +92,7 @@ const TABS = [
   { value: "compliance", label: "Compliance", icon: ScrollText },
   { value: "flags", label: "Flags", icon: Activity },
   { value: "moderation", label: "Moderation", icon: MessageCircle },
+  { value: "control-layer", label: "Control", icon: Layers },
 ];
 
 export default function AdminDashboard() {
@@ -629,6 +631,7 @@ export default function AdminDashboard() {
             <TabsContent value="compliance"><ComplianceLogTab /></TabsContent>
             <TabsContent value="flags"><FeatureFlagsTab /></TabsContent>
             <TabsContent value="moderation"><ForumModerationTab /></TabsContent>
+            <TabsContent value="control-layer"><ControlLayerTab /></TabsContent>
           </Tabs>
         </div>
       </div>
