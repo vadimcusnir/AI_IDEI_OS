@@ -38,7 +38,7 @@ export default function PublicUserProfile() {
       // Fetch profile
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("display_name, bio, avatar_url, username, created_at, user_id")
+        .select("display_name, bio, avatar_url, username, created_at")
         .eq("username", username)
         .maybeSingle();
 
