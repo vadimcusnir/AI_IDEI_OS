@@ -187,7 +187,7 @@ export default function Jobs() {
     return durations.length ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length) : 0;
   }, [jobs]);
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return <ListPageSkeleton columns={1} />;
   }
 

@@ -102,7 +102,7 @@ export default function Onboarding() {
   const totalCheckable = STEPS.filter(s => s.checkField).length;
   const progressPercent = Math.round((completedCount / totalCheckable) * 100);
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />

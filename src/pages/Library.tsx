@@ -141,7 +141,7 @@ export default function Library() {
     return Array.from(set);
   }, [artifacts]);
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return <ListPageSkeleton columns={3} />;
   }
 
