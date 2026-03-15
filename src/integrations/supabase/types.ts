@@ -77,6 +77,39 @@ export type Database = {
         }
         Relationships: []
       }
+      access_window_state: {
+        Row: {
+          created_at: string
+          entitlement_lock: boolean
+          last_verified_at: string | null
+          policy_version: string
+          tier: string
+          updated_at: string
+          user_id: string
+          window_status: string
+        }
+        Insert: {
+          created_at?: string
+          entitlement_lock?: boolean
+          last_verified_at?: string | null
+          policy_version?: string
+          tier?: string
+          updated_at?: string
+          user_id: string
+          window_status?: string
+        }
+        Update: {
+          created_at?: string
+          entitlement_lock?: boolean
+          last_verified_at?: string | null
+          policy_version?: string
+          tier?: string
+          updated_at?: string
+          user_id?: string
+          window_status?: string
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -3061,6 +3094,39 @@ export type Database = {
         }
         Relationships: []
       }
+      wallet_state: {
+        Row: {
+          available: number
+          chain_metadata: Json | null
+          created_at: string
+          locked: number
+          snapshot_ts: string
+          staked: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          available?: number
+          chain_metadata?: Json | null
+          created_at?: string
+          locked?: number
+          snapshot_ts?: string
+          staked?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          available?: number
+          chain_metadata?: Json | null
+          created_at?: string
+          locked?: number
+          snapshot_ts?: string
+          staked?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       webhook_deliveries: {
         Row: {
           attempt: number
@@ -3276,6 +3342,10 @@ export type Database = {
       }
       check_access_logged: {
         Args: { _ip_hint?: string; _service_key: string; _user_id: string }
+        Returns: Json
+      }
+      check_wallet_freshness: {
+        Args: { _max_age_seconds?: number; _user_id: string }
         Returns: Json
       }
       compute_idearank: { Args: never; Returns: undefined }
