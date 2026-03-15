@@ -110,6 +110,72 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_permissions: {
+        Row: {
+          expires_at: string | null
+          granted_at: string
+          granted_by: string | null
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          permission_key: string
+          user_id: string
+        }
+        Insert: {
+          expires_at?: string | null
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          permission_key: string
+          user_id: string
+        }
+        Update: {
+          expires_at?: string | null
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          permission_key?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      admin_sessions: {
+        Row: {
+          action_count: number
+          admin_id: string
+          id: string
+          ip_hint: string | null
+          last_action_at: string
+          metadata: Json | null
+          started_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          action_count?: number
+          admin_id: string
+          id?: string
+          ip_hint?: string | null
+          last_action_at?: string
+          metadata?: Json | null
+          started_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          action_count?: number
+          admin_id?: string
+          id?: string
+          ip_hint?: string | null
+          last_action_at?: string
+          metadata?: Json | null
+          started_at?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -754,6 +820,45 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_log: {
+        Row: {
+          action_type: string
+          actor_id: string
+          created_at: string
+          description: string
+          id: string
+          ip_hint: string | null
+          metadata: Json | null
+          severity: string
+          target_id: string | null
+          target_type: string
+        }
+        Insert: {
+          action_type: string
+          actor_id: string
+          created_at?: string
+          description?: string
+          id?: string
+          ip_hint?: string | null
+          metadata?: Json | null
+          severity?: string
+          target_id?: string | null
+          target_type?: string
+        }
+        Update: {
+          action_type?: string
+          actor_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          ip_hint?: string | null
+          metadata?: Json | null
+          severity?: string
+          target_id?: string | null
+          target_type?: string
+        }
+        Relationships: []
+      }
       content_contributions: {
         Row: {
           author_id: string
@@ -1011,6 +1116,48 @@ export type Database = {
           id?: string
           token?: string
           used_at?: string | null
+        }
+        Relationships: []
+      }
+      emergency_controls: {
+        Row: {
+          activated_at: string | null
+          activated_by: string | null
+          affected_scope: string
+          control_type: string
+          created_at: string
+          deactivated_at: string | null
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          reason: string
+          updated_at: string
+        }
+        Insert: {
+          activated_at?: string | null
+          activated_by?: string | null
+          affected_scope?: string
+          control_type: string
+          created_at?: string
+          deactivated_at?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          reason?: string
+          updated_at?: string
+        }
+        Update: {
+          activated_at?: string | null
+          activated_by?: string | null
+          affected_scope?: string
+          control_type?: string
+          created_at?: string
+          deactivated_at?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          reason?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -4299,6 +4446,10 @@ export type Database = {
       }
     }
     Functions: {
+      activate_emergency: {
+        Args: { _control_type: string; _reason: string; _scope?: string }
+        Returns: string
+      }
       add_credits: {
         Args: {
           _amount: number
@@ -4342,6 +4493,7 @@ export type Database = {
       }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
       compute_idearank: { Args: never; Returns: undefined }
+      deactivate_emergency: { Args: { _control_id: string }; Returns: boolean }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -4359,6 +4511,10 @@ export type Database = {
       forum_vote: {
         Args: { _target_id: string; _target_type: string; _vote_value: number }
         Returns: Json
+      }
+      has_admin_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
       }
       has_role: {
         Args: {
@@ -4386,6 +4542,17 @@ export type Database = {
       kb_track_view: {
         Args: { _article_id: string; _user_id: string }
         Returns: undefined
+      }
+      log_compliance: {
+        Args: {
+          _action: string
+          _actor_id: string
+          _description?: string
+          _severity?: string
+          _target_id?: string
+          _target_type: string
+        }
+        Returns: string
       }
       mark_units_llm_ready: {
         Args: { _category_id: string; _min_quality?: number }
