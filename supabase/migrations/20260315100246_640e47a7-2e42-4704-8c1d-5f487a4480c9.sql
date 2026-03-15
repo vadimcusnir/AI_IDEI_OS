@@ -1,0 +1,1 @@
+ALTER TABLE public.changes_raw ADD COLUMN IF NOT EXISTS processed_at timestamptz DEFAULT NULL;

@@ -589,6 +589,7 @@ export type Database = {
           id: string
           impact_level: string
           metadata: Json | null
+          processed_at: string | null
           source: string
           source_id: string | null
         }
@@ -601,6 +602,7 @@ export type Database = {
           id?: string
           impact_level?: string
           metadata?: Json | null
+          processed_at?: string | null
           source?: string
           source_id?: string | null
         }
@@ -613,6 +615,7 @@ export type Database = {
           id?: string
           impact_level?: string
           metadata?: Json | null
+          processed_at?: string | null
           source?: string
           source_id?: string | null
         }
