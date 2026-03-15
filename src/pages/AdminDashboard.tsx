@@ -86,6 +86,9 @@ const TABS = [
   { value: "incidents", label: "Incidents", icon: AlertCircle },
   { value: "entropy", label: "Entropy", icon: TrendingUp },
   { value: "contributions", label: "Contributions", icon: Brain },
+  { value: "emergency", label: "Emergency", icon: ShieldAlert },
+  { value: "compliance", label: "Compliance", icon: ScrollText },
+  { value: "flags", label: "Flags", icon: Activity },
 ];
 
 export default function AdminDashboard() {
