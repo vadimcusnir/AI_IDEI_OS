@@ -92,13 +92,40 @@ export default function Extractor() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [transcribingId, setTranscribingId] = useState<string | null>(null);
-  // Form state
+  // Form state — unified smart input
   const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState("");
   const [sourceType, setSourceType] = useState<"text" | "audio" | "video" | "url">("url");
   const [content, setContent] = useState("");
   const [creating, setCreating] = useState(false);
   const [autoTitleApplied, setAutoTitleApplied] = useState(false);
+
+  // Auto-detect source type from input
+  const autoDetectSourceType = useCallback((input: string): "url" | "text" => {
+    const trimmed = input.trim();
+    try {
+      const url = new URL(trimmed);
+      if (url.protocol === "http:" || url.protocol === "https:") return "url";
+    } catch {}
+    return "text";
+  }, []);
+
+  // Smart input handler — auto-detects URL vs text
+  const handleSmartInput = useCallback(async (input: string) => {
+    const detected = autoDetectSourceType(input);
+    if (detected === "url" && sourceType !== "audio" && sourceType !== "video") {
+      setSourceType("url");
+      handleUrlChange(input);
+    } else if (detected === "text" && sourceType !== "audio" && sourceType !== "video") {
+      setSourceType("text");
+      setContent(input);
+      if (!title.trim() && input.length > 10) {
+        const autoTitle = input.slice(0, 60).replace(/\n/g, " ").trim();
+        setTitle(autoTitle + (input.length > 60 ? "…" : ""));
+        setAutoTitleApplied(true);
+      }
+    }
+  }, [sourceType, title, autoDetectSourceType]);
   const [fetchingTitle, setFetchingTitle] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -256,7 +283,20 @@ export default function Extractor() {
 
   // === Create episode ===
   const handleCreate = async () => {
-    if (!user || !title.trim()) return;
+    if (!user) return;
+    // Auto-generate title if empty
+    let finalTitle = title.trim();
+    if (!finalTitle) {
+      if (sourceType === "url" && content.trim()) {
+        finalTitle = extractTitleFromUrl(content.trim()) || `Episode ${new Date().toLocaleDateString()}`;
+      } else if (sourceType === "text" && content.trim()) {
+        finalTitle = content.slice(0, 60).replace(/\n/g, " ").trim() + (content.length > 60 ? "…" : "");
+      } else if (selectedFile) {
+        finalTitle = selectedFile.name.replace(/\.\w+$/, "").replace(/[-_]/g, " ");
+      } else {
+        finalTitle = `Episode ${new Date().toLocaleDateString()}`;
+      }
+    }
     setCreating(true);
 
     try {
@@ -286,7 +326,7 @@ export default function Extractor() {
 
       const { data: ep, error } = await supabase.from("episodes").insert({
         author_id: user.id,
-        title: title.trim(),
+        title: finalTitle,
         source_type: sourceType,
         transcript: sourceType === "text" ? content : null,
         source_url: sourceType === "url" ? content : null,
@@ -711,15 +751,20 @@ export default function Extractor() {
               </div>
             )}
 
-            {/* URL input */}
-            {sourceType === "url" && (
+            {/* Smart input — URL or text, auto-detected */}
+            {(sourceType === "url" || sourceType === "text") && sourceType !== "text" && (
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                  Paste URL or text
+                  {sourceType === "url" && content.trim() && (
+                    <span className="text-primary/50 normal-case font-normal ml-1">· URL detected</span>
+                  )}
+                </label>
                 <input
                   ref={urlRef}
                   value={content}
-                  onChange={e => handleUrlChange(e.target.value)}
-                  placeholder="Paste a YouTube URL or other source — title auto-detects"
+                  onChange={e => handleSmartInput(e.target.value)}
+                  placeholder="Paste a YouTube URL, website link, or start typing text…"
                   className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
                   onKeyDown={e => { if (e.key === "Enter" && title.trim()) handleCreate(); }}
                 />
@@ -734,15 +779,18 @@ export default function Extractor() {
                       <Loader2 className="h-2.5 w-2.5 animate-spin" /> detecting…
                     </span>
                   )}
-                  {!fetchingTitle && sourceType === "url" && title && autoTitleApplied && (
+                  {!fetchingTitle && title && autoTitleApplied && (
                     <span className="text-primary/50 normal-case font-normal ml-1">· auto-detected</span>
+                  )}
+                  {!title.trim() && (
+                    <span className="text-muted-foreground/50 normal-case font-normal ml-1">· optional, auto-generated</span>
                   )}
                 </label>
                 <input
                   ref={titleRef}
                   value={title}
                   onChange={e => { setTitle(e.target.value); setAutoTitleApplied(false); }}
-                  placeholder="Episode title…"
+                  placeholder="Auto-generated from content…"
                   className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors"
                   onKeyDown={e => { if (e.key === "Enter" && sourceType !== "text") handleCreate(); }}
                 />
@@ -874,7 +922,7 @@ export default function Extractor() {
                   size="sm"
                   className="h-7 text-xs gap-1.5"
                   onClick={handleCreate}
-                  disabled={!title.trim() || creating || uploading || ((sourceType === "audio" || sourceType === "video") && !selectedFile)}
+                  disabled={creating || uploading || ((sourceType === "audio" || sourceType === "video") && !selectedFile) || (sourceType === "url" && !content.trim()) || (sourceType === "text" && !content.trim())}
                 >
                   {creating || uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
                   {uploading ? "Uploading…" : "Create Episode"}

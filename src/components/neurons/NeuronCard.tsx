@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap } from "lucide-react";
+import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { NeuronListItem, ViewMode } from "@/hooks/useNeuronList";
 
@@ -145,9 +146,19 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <h3 className="text-sm font-medium line-clamp-2 mb-auto">{n.title}</h3>
         <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
           <span className="text-[9px] text-muted-foreground/50">{formatDate(n.updated_at)}</span>
-          <span className={cn("text-[8px] font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
-            {n.status}
-          </span>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 px-1.5 text-[9px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={(e) => { e.stopPropagation(); navigate(`/services?neuron=${n.id}`); }}
+            >
+              <Sparkles className="h-3 w-3" /> Run
+            </Button>
+            <span className={cn("text-[8px] font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
+              {n.status}
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -181,13 +192,23 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <span className={cn("text-[8px] font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
           {n.status}
         </span>
-        {n.score > 0 && (
-          <div className="flex items-center gap-0.5">
-            <Star className="h-2.5 w-2.5 text-primary/30" />
-            <span className="text-[9px] text-primary/40">{n.score}</span>
-          </div>
-        )}
-        {contextMenu}
+        <div className="flex items-center gap-1">
+          {n.score > 0 && (
+            <div className="flex items-center gap-0.5">
+              <Star className="h-2.5 w-2.5 text-primary/30" />
+              <span className="text-[9px] text-primary/40">{n.score}</span>
+            </div>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 px-1.5 text-[9px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={(e) => { e.stopPropagation(); navigate(`/services?neuron=${n.id}`); }}
+          >
+            <Sparkles className="h-3 w-3" /> Run Service
+          </Button>
+          {contextMenu}
+        </div>
       </div>
     </div>
   );

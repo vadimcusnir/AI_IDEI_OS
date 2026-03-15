@@ -19,16 +19,6 @@ interface StepStatus {
 
 const STEPS = [
   {
-    key: "learn",
-    title: "Understand the Platform",
-    desc: "AI-IDEI turns your content into structured knowledge. Upload a podcast, interview, or text — and the system extracts insights, frameworks, and patterns automatically.",
-    icon: BookOpen,
-    action: "/docs/getting-started/introduction",
-    actionLabel: "Read Introduction",
-    checkField: null as keyof StepStatus | null,
-    example: "You record a 1-hour podcast → the system extracts 20+ reusable knowledge units from it.",
-  },
-  {
     key: "upload",
     title: "Upload Your First Content",
     desc: "Go to the Extractor and upload an audio file, paste text, or enter a YouTube URL. The system will transcribe and prepare your content.",
@@ -124,7 +114,7 @@ export default function Onboarding() {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-serif font-bold mb-2">Get Started with AI-IDEI</h1>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Follow these 5 steps to turn your content into structured knowledge assets.
+            Follow these 4 steps to turn your content into structured knowledge assets.
             Each step builds on the previous one.
           </p>
         </div>
