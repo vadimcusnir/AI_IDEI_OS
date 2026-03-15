@@ -29,6 +29,7 @@ interface DashboardData {
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
