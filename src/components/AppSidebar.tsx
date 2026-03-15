@@ -50,12 +50,12 @@ const NAV_SECTIONS: NavSection[] = [
   {
     labelKey: "pipeline_section",
     items: [
-      { labelKey: "cockpit", to: "/home", icon: Home },
-      { labelKey: "extractor", to: "/extractor", icon: Upload },
-      { labelKey: "neurons", to: "/neurons", icon: Brain },
-      { labelKey: "services", to: "/services", icon: Sparkles },
-      { labelKey: "jobs", to: "/jobs", icon: Briefcase },
-      { labelKey: "library", to: "/library", icon: BookOpen },
+      { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home" },
+      { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
+      { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
+      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+      { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
     ],
   },
   {
