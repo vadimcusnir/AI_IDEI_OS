@@ -119,11 +119,11 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 0 (completat) | **Impact:** MEDIU
 
-### 3.3 🟢 Mobile Navigation Improvements
-- [ ] **N3.9** Optimizează bottom nav pentru flow-ul propus
-- [ ] **N3.10** Adaugă hamburger menu cu sidebar pe mobile
+### 3.3 ✅ Mobile Navigation Improvements — COMPLETAT 2026-03-15
+- [x] **N3.9** ✅ Bottom nav optimizat: Home → Extract → Neurons → Services → Library (flow-ul principal al utilizatorului)
+- [ ] **N3.10** Hamburger menu cu sidebar pe mobile (nice-to-have)
 
-**Efort:** 1-2 sesiuni | **Impact:** MEDIU
+**Efort:** 0 (completat parțial) | **Impact:** MEDIU
 
 ---
 
