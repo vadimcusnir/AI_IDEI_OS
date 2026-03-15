@@ -5,7 +5,7 @@ import { Globe } from "lucide-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { FeedbackFAB } from "@/components/feedback/FeedbackFAB";
+
 import { ContextualFeedbackPrompt } from "@/components/feedback/ContextualFeedbackPrompt";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { ThemeToggle } from "@/components/ThemeToggle";
