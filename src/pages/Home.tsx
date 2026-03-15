@@ -16,6 +16,7 @@ import { PipelineIndicator } from "@/components/PipelineIndicator";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { motion } from "framer-motion";
+import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 
 interface RecentNeuron {
   id: number;
