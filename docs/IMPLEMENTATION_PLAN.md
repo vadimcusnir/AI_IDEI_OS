@@ -244,7 +244,7 @@ Sprint F+:           T3.3 (Workspaces), T4.x (Token)
 | DB Tables | 45/45 | 45 | 100% |
 | Core Features | 45/50 | 50 | 90% |
 | Security | 18/20 | 20 | 90% |
-| Extractors | ~55/120 | 120 | 46% |
+| Extractors | ~75/120 | 120 | 63% |
 | Marketplace | 7/8 | 8 | 87% |
 | Token System | 0/4 | 4 | 0% |
 | **TOTAL (fără extractors+token)** | **~106/120** | **120** | **~88%** |
