@@ -395,6 +395,11 @@ export default function ProfilePage() {
               </div>
             </StaggerItem>
 
+            {/* XP & Level Progress */}
+            <StaggerItem>
+              <XPProgressBar />
+            </StaggerItem>
+
             {/* Achievements */}
             <StaggerItem>
               <div className="bg-card border border-border rounded-xl p-5">
