@@ -70,7 +70,7 @@ export default function Onboarding() {
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadStatus();
   }, [user, authLoading, currentWorkspace]);

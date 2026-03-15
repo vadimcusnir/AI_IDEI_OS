@@ -84,7 +84,7 @@ export default function Library() {
   const { assignments } = useFolderSidebar("library_folders");
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadArtifacts();
   }, [user, authLoading, currentWorkspace]);
