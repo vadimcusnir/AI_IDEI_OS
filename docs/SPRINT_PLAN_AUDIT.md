@@ -130,12 +130,12 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 ## FAZA 4: VALIDARE & TESTING
 
 ### 4.1 🟡 BE-003: Input Validation cu Zod
-- [ ] **T4.1** Adaugă Zod schemas în `extract-neurons`
-- [ ] **T4.2** Adaugă Zod schemas în `chunk-transcript`
-- [ ] **T4.3** Adaugă Zod schemas în `run-service`
-- [ ] **T4.4** Adaugă Zod schemas în `neuron-chat`
+- [x] **T4.1** ✅ Zod schemas în `extract-neurons` (episode_id UUID validation)
+- [x] **T4.2** ✅ Zod schemas în `chunk-transcript` (episode_id, min_tokens, max_tokens)
+- [x] **T4.3** ✅ Zod schemas în `run-service` (job_id, service_key, neuron_id, inputs max 50k)
+- [x] **T4.4** ✅ Zod schemas în `neuron-chat` (messages array with role enum, neuron_context object)
 
-**Efort:** 2 sesiuni | **Impact:** MEDIU
+**Efort:** 0 (completat) | **Impact:** MEDIU
 
 ### 4.2 🟡 FE-003: Validare formulare frontend
 - [ ] **T4.5** Adaugă Zod + react-hook-form pe formularele principale
