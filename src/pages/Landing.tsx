@@ -111,6 +111,7 @@ export default function Landing() {
   ];
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       <SEOHead
         title={t("seo.title")}
