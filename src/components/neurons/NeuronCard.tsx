@@ -146,9 +146,19 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <h3 className="text-sm font-medium line-clamp-2 mb-auto">{n.title}</h3>
         <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
           <span className="text-[9px] text-muted-foreground/50">{formatDate(n.updated_at)}</span>
-          <span className={cn("text-[8px] font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
-            {n.status}
-          </span>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 px-1.5 text-[9px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={(e) => { e.stopPropagation(); navigate(`/services?neuron=${n.id}`); }}
+            >
+              <Sparkles className="h-3 w-3" /> Run
+            </Button>
+            <span className={cn("text-[8px] font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
+              {n.status}
+            </span>
+          </div>
         </div>
       </div>
     );
