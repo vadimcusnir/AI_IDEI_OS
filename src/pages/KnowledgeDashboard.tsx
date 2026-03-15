@@ -55,7 +55,15 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export default function KnowledgeDashboard() {
   const [activeCategory, setActiveCategory] = useState("all");
+  const { user } = useAuth();
+  const [kbStats, setKbStats] = useState<KBStats | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<KBItem | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.rpc("kb_dashboard_stats", { _user_id: user.id })
+      .then(({ data }) => { if (data) setKbStats(data as unknown as KBStats); });
+  }, [user]);
   const { items, loading, search, setSearch, categoryCounts, trackView } = useKnowledgeBase({
     status: "published",
     ...(activeCategory !== "all" ? { category: activeCategory } : {}),
