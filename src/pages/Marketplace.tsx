@@ -303,11 +303,16 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
     }
   };
 
+  const nav = useNavigate();
+
   return (
-    <div className={cn(
-      "bg-card border rounded-xl overflow-hidden hover:border-primary/30 transition-colors",
-      isFeatured ? "border-amber-500/30 ring-1 ring-amber-500/10" : "border-border"
-    )}>
+    <div
+      onClick={() => nav(`/marketplace/${asset.id}`)}
+      className={cn(
+        "bg-card border rounded-xl overflow-hidden hover:border-primary/30 transition-colors cursor-pointer",
+        isFeatured ? "border-amber-500/30 ring-1 ring-amber-500/10" : "border-border"
+      )}
+    >
       {isFeatured && (
         <div className="px-3 py-1 bg-amber-500/10 flex items-center gap-1.5">
           <Crown className="h-3 w-3 text-amber-500" />
