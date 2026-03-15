@@ -4,6 +4,7 @@ import { XPProgressBar } from "@/components/gamification/XPProgressBar";
 import { LeaderboardWidget } from "@/components/gamification/LeaderboardWidget";
 import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { AchievementGallery } from "@/components/gamification/AchievementGallery";
+import { TeamChallenges } from "@/components/gamification/TeamChallenges";
 import { useGamification } from "@/hooks/useGamification";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
