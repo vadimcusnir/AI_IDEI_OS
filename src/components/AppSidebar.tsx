@@ -8,7 +8,7 @@ import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
   BarChart3, Bell, BookOpen, Users, Network, Rocket,
-  FileText, Lightbulb, Bot, Store, Layers,
+  FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
