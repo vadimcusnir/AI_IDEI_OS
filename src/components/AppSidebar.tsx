@@ -21,8 +21,16 @@ import {
   SidebarSeparator, useSidebar,
 } from "@/components/ui/sidebar";
 import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
+import { ControlledNavItem } from "@/components/ControlledNavItem";
 
 interface NavItem {
+  labelKey: string;
+  to: string;
+  icon: React.ElementType;
+  adminOnly?: boolean;
+  /** UI control registry ID for dynamic visibility */
+  controlId?: string;
+}
   labelKey: string;
   to: string;
   icon: React.ElementType;
