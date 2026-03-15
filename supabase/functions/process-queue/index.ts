@@ -1,9 +1,9 @@
 /**
- * process-queue — Processes pending jobs with retry logic.
+ * process-queue — Processes pending jobs with retry logic + execution regime enforcement.
  * Called via pg_cron or manual trigger.
- * Picks up pending/scheduled jobs and dispatches them to run-service.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -59,11 +59,11 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // 1. Detect stale running jobs (stuck > 10 min)
+    // 1. Detect stale running jobs (stuck > timeout from regime or 10 min default)
     const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const { data: staleJobs } = await supabase
       .from("neuron_jobs")
-      .select("id, retry_count, max_retries")
+      .select("id, retry_count, max_retries, worker_type, credits_cost")
       .eq("status", "running")
       .lt("scheduled_at", tenMinAgo)
       .eq("dead_letter", false)
@@ -71,9 +71,26 @@ Deno.serve(async (req) => {
 
     let recoveredCount = 0;
     let deadLetteredCount = 0;
+    let regimeBlockedCount = 0;
 
     for (const job of staleJobs || []) {
-      if (job.retry_count < job.max_retries) {
+      // Check execution regime for this worker type
+      const regime = await getRegimeConfig(job.worker_type || "default");
+      const effectiveMaxRetries = regime.maxRetries ?? job.max_retries;
+
+      if (job.retry_count < effectiveMaxRetries) {
+        // Check regime block before retrying
+        const blockReason = checkRegimeBlock(regime, job.credits_cost || 0);
+        if (blockReason) {
+          await supabase.from("neuron_jobs").update({
+            status: "failed",
+            error_message: `Regime blocked: ${blockReason}`,
+            completed_at: new Date().toISOString(),
+          }).eq("id", job.id);
+          regimeBlockedCount++;
+          continue;
+        }
+
         await supabase.from("neuron_jobs").update({
           status: "pending",
           retry_count: job.retry_count + 1,
@@ -126,6 +143,7 @@ Deno.serve(async (req) => {
       processed: {
         stale_recovered: recoveredCount,
         dead_lettered: deadLetteredCount,
+        regime_blocked: regimeBlockedCount,
         retried: retriedCount,
       },
       queue_stats: {

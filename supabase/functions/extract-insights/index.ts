@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { loadPrompts } from "../_shared/prompt-loader.ts";
 
 // Valid actions enum
 const VALID_ACTIONS = new Set([
@@ -99,8 +100,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Select prompt based on action
-    const prompts: Record<string, string> = {
+    // Hardcoded fallbacks — overridden by prompt_registry if entries exist
+    const fallbackPrompts: Record<string, string> = {
       extract_insights: `You are a knowledge extraction engine. Analyze the content and extract 3-7 key insights. For each: a clear title, explanation (2-3 sentences), and "**Why it matters:**" line. Use ## headings.`,
       extract_frameworks: `You are a pattern recognition engine. Extract 2-5 mental models or frameworks. For each: name, core structure, when to use, example application. Use ## headings.`,
       extract_questions: `You are a Socratic analysis engine. Generate 5-10 important questions the content raises. Categories: Clarification, Challenge, Extension, Application. Use markdown formatting.`,
@@ -119,7 +120,10 @@ Deno.serve(async (req) => {
       influence_score: `You are an impact analysis engine. Evaluate this content's potential influence across dimensions: originality (1-10), actionability (1-10), depth (1-10), breadth of application (1-10). Provide detailed justification for each score and an overall influence assessment.`,
     };
 
-    const systemPrompt = prompts[action] || prompts.extract_insights;
+    // Load from prompt_registry (DB) with hardcoded fallback
+    const activeAction = action || "extract_insights";
+    const loadedPrompts = await loadPrompts([activeAction], fallbackPrompts);
+    const systemPrompt = loadedPrompts[activeAction]?.prompt || fallbackPrompts[activeAction] || fallbackPrompts.extract_insights;
 
     const safeTitle = neuron_title ? String(neuron_title).slice(0, 200) : "";
     const userMessage = safeTitle
