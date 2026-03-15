@@ -1032,6 +1032,199 @@ export type Database = {
         }
         Relationships: []
       }
+      forum_categories: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          is_active: boolean
+          name: string
+          parent_id: string | null
+          position: number
+          post_count: number
+          slug: string
+          thread_count: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          parent_id?: string | null
+          position?: number
+          post_count?: number
+          slug: string
+          thread_count?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          parent_id?: string | null
+          position?: number
+          post_count?: number
+          slug?: string
+          thread_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "forum_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_posts: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          is_solution: boolean
+          reply_to_id: string | null
+          thread_id: string
+          updated_at: string
+          vote_score: number
+        }
+        Insert: {
+          author_id: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_solution?: boolean
+          reply_to_id?: string | null
+          thread_id: string
+          updated_at?: string
+          vote_score?: number
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_solution?: boolean
+          reply_to_id?: string | null
+          thread_id?: string
+          updated_at?: string
+          vote_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_posts_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "forum_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forum_posts_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "forum_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_threads: {
+        Row: {
+          author_id: string
+          category_id: string
+          content: string
+          created_at: string
+          id: string
+          is_locked: boolean
+          is_pinned: boolean
+          is_solved: boolean
+          last_activity_at: string
+          reply_count: number
+          slug: string
+          solved_post_id: string | null
+          title: string
+          updated_at: string
+          view_count: number
+          vote_score: number
+        }
+        Insert: {
+          author_id: string
+          category_id: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_locked?: boolean
+          is_pinned?: boolean
+          is_solved?: boolean
+          last_activity_at?: string
+          reply_count?: number
+          slug: string
+          solved_post_id?: string | null
+          title: string
+          updated_at?: string
+          view_count?: number
+          vote_score?: number
+        }
+        Update: {
+          author_id?: string
+          category_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_locked?: boolean
+          is_pinned?: boolean
+          is_solved?: boolean
+          last_activity_at?: string
+          reply_count?: number
+          slug?: string
+          solved_post_id?: string | null
+          title?: string
+          updated_at?: string
+          view_count?: number
+          vote_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_threads_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "forum_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_votes: {
+        Row: {
+          created_at: string
+          id: string
+          target_id: string
+          target_type: string
+          user_id: string
+          vote_value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          target_id: string
+          target_type: string
+          user_id: string
+          vote_value?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          target_id?: string
+          target_type?: string
+          user_id?: string
+          vote_value?: number
+        }
+        Relationships: []
+      }
       guest_profiles: {
         Row: {
           author_id: string
@@ -2730,6 +2923,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_karma: {
+        Row: {
+          downvotes_received: number
+          karma: number
+          posts_created: number
+          solutions_given: number
+          threads_created: number
+          updated_at: string
+          upvotes_received: number
+          user_id: string
+        }
+        Insert: {
+          downvotes_received?: number
+          karma?: number
+          posts_created?: number
+          solutions_given?: number
+          threads_created?: number
+          updated_at?: string
+          upvotes_received?: number
+          user_id: string
+        }
+        Update: {
+          downvotes_received?: number
+          karma?: number
+          posts_created?: number
+          solutions_given?: number
+          threads_created?: number
+          updated_at?: string
+          upvotes_received?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_links: {
         Row: {
           created_at: string | null
@@ -2919,6 +3145,14 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      forum_mark_solution: {
+        Args: { _post_id: string; _thread_id: string }
+        Returns: Json
+      }
+      forum_vote: {
+        Args: { _target_id: string; _target_type: string; _vote_value: number }
+        Returns: Json
       }
       has_role: {
         Args: {
