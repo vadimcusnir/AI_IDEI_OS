@@ -1,10 +1,11 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
 import { GamificationToasts } from "@/components/gamification/GamificationToasts";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { prefetchUIControls } from "@/hooks/useUIControl";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 
