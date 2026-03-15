@@ -426,6 +426,7 @@ export default function Jobs() {
           )}
         </div>
       </div>
+    </PageTransition>
     </TooltipProvider>
   );
 }

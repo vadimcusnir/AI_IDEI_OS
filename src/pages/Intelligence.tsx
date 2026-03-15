@@ -143,5 +143,6 @@ export default function Intelligence() {
         </Tabs>
       </div>
     </div>
+    </PageTransition>
   );
 }

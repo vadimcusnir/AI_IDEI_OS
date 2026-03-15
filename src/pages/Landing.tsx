@@ -512,5 +512,6 @@ export default function Landing() {
         { question: "What deliverables can AI-IDEI generate?", answer: "Articles, marketing frameworks, courses, copywriting formulas, scripts, social media posts, psychological profiles, marketing funnels, and many more structured knowledge outputs." },
       ]} />
     </div>
+    </PageTransition>
   );
 }

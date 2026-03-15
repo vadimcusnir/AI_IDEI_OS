@@ -1369,6 +1369,7 @@ export default function Extractor() {
         )}
       </div>
     </div>
+    </PageTransition>
     </TooltipProvider>
   );
 }
