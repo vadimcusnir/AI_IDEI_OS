@@ -133,7 +133,24 @@ Deno.serve(async (req) => {
 
     const { action, neuron_ids } = await req.json();
 
+    // ── Regime check ──
+    const regime = await getRegimeConfig("generate-entities");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(
+        JSON.stringify({ error: "Blocked by execution regime", reason: blockReason, regime: regime.regime }),
+        { status: 403, headers: { ...cors, "Content-Type": "application/json" } }
+      );
+    }
+    const isDryRun = regime.dryRun || regime.regime === "simulation";
+
     if (action === "compute_idearank") {
+      if (isDryRun) {
+        return new Response(
+          JSON.stringify({ success: true, message: "DRY RUN — IdeaRank skipped", dry_run: true }),
+          { headers: { ...cors, "Content-Type": "application/json" } }
+        );
+      }
       const { error } = await supabase.rpc("compute_idearank");
       if (error) throw error;
       return new Response(
