@@ -738,15 +738,20 @@ export default function Extractor() {
               </div>
             )}
 
-            {/* URL input */}
-            {sourceType === "url" && (
+            {/* Smart input — URL or text, auto-detected */}
+            {(sourceType === "url" || sourceType === "text") && sourceType !== "text" && (
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">URL</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                  Paste URL or text
+                  {sourceType === "url" && content.trim() && (
+                    <span className="text-primary/50 normal-case font-normal ml-1">· URL detected</span>
+                  )}
+                </label>
                 <input
                   ref={urlRef}
                   value={content}
-                  onChange={e => handleUrlChange(e.target.value)}
-                  placeholder="Paste a YouTube URL or other source — title auto-detects"
+                  onChange={e => handleSmartInput(e.target.value)}
+                  placeholder="Paste a YouTube URL, website link, or start typing text…"
                   className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors font-mono text-xs"
                   onKeyDown={e => { if (e.key === "Enter" && title.trim()) handleCreate(); }}
                 />
