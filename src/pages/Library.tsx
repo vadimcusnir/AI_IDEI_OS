@@ -66,6 +66,7 @@ const STATUS_CONFIG: Record<string, { label: string; dot: string }> = {
 
 export default function Library() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [loading, setLoading] = useState(true);
