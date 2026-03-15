@@ -1809,6 +1809,41 @@ export type Database = {
           },
         ]
       }
+      kb_analytics: {
+        Row: {
+          article_id: string
+          created_at: string
+          event_type: string
+          id: string
+          metadata: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          article_id: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          article_id?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_analytics_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_assets: {
         Row: {
           artifact_ids: string[] | null
@@ -1870,6 +1905,157 @@ export type Database = {
           rating_count?: number | null
           sales_count?: number | null
           tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      knowledge_items: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          content: string
+          created_at: string
+          created_by: string
+          excerpt: string | null
+          id: string
+          is_public: boolean
+          last_viewed_at: string | null
+          reading_time: number
+          slug: string
+          status: string
+          subcategory: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          view_count: number
+          workspace_id: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          content?: string
+          created_at?: string
+          created_by: string
+          excerpt?: string | null
+          id?: string
+          is_public?: boolean
+          last_viewed_at?: string | null
+          reading_time?: number
+          slug: string
+          status?: string
+          subcategory?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          view_count?: number
+          workspace_id?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          content?: string
+          created_at?: string
+          created_by?: string
+          excerpt?: string | null
+          id?: string
+          is_public?: boolean
+          last_viewed_at?: string | null
+          reading_time?: number
+          slug?: string
+          status?: string
+          subcategory?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          view_count?: number
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_items_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_path_progress: {
+        Row: {
+          completed_at: string | null
+          completed_items: string[]
+          created_at: string
+          current_item_id: string | null
+          id: string
+          path_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_items?: string[]
+          created_at?: string
+          current_item_id?: string | null
+          id?: string
+          path_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_items?: string[]
+          created_at?: string
+          current_item_id?: string | null
+          id?: string
+          path_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_path_progress_path_id_fkey"
+            columns: ["path_id"]
+            isOneToOne: false
+            referencedRelation: "learning_paths"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_paths: {
+        Row: {
+          category_order: string[]
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          is_active: boolean
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_order?: string[]
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_order?: string[]
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean
+          slug?: string
           title?: string
           updated_at?: string
         }
@@ -3571,6 +3757,10 @@ export type Database = {
       is_workspace_member: {
         Args: { _user_id: string; _workspace_id: string }
         Returns: boolean
+      }
+      kb_track_view: {
+        Args: { _article_id: string; _user_id: string }
+        Returns: undefined
       }
       move_to_dlq: {
         Args: {
