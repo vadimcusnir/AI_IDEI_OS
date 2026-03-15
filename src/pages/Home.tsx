@@ -19,6 +19,7 @@ import { LeaderboardWidget } from "@/components/gamification/LeaderboardWidget";
 import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
+import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
 import { motion } from "framer-motion";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
