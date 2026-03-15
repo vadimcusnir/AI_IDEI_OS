@@ -10,6 +10,7 @@ import {
   Code2, Shield, Zap, Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { WebhookManagement } from "@/components/api/WebhookManagement";
 
 interface ApiKey {
   id: string;
