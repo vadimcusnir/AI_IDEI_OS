@@ -1,17 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { useKnowledgeBase, KBItem } from "@/hooks/useKnowledgeBase";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import {
   Search, BookOpen, Lightbulb, Wrench, Layers, FileCode,
-  Clock, Eye, ArrowRight, ArrowLeft,
+  Clock, Eye, ArrowRight, ArrowLeft, GraduationCap, Trophy,
+  BarChart3, CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
+
+interface LearningPath {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  difficulty: string;
+  estimated_hours: number;
+  total_items: number;
+  completed_items: number | null;
+}
+
+interface KBStats {
+  total_articles: number;
+  total_categories: number;
+  total_views: number;
+  articles_read: number;
+  paths_started: number;
+  paths_completed: number;
+  learning_paths: LearningPath[];
+}
 
 const CATEGORIES = [
   { key: "all", label: "All", icon: BookOpen },
