@@ -309,7 +309,7 @@ Deno.serve(async (req) => {
       }
 
       return new Response(
-        JSON.stringify({ created, updated, skipped, relationsCreated }),
+        JSON.stringify({ created, updated, skipped, relationsCreated, dry_run: isDryRun, regime: regime.regime }),
         { headers: { ...cors, "Content-Type": "application/json" } }
       );
     }

@@ -319,6 +319,7 @@ export default function Dashboard() {
             </motion.button>
           ))}
         </motion.div>
+        </ControlledSection>
       </div>
     </div>
     </PageTransition>
