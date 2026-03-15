@@ -130,6 +130,13 @@ export function AppSidebar() {
               </span>
             </div>
           </button>
+          {/* Streak + XP compact */}
+          <div className="flex items-center gap-2 px-1">
+            <StreakWidget />
+            <div className="flex-1 min-w-0">
+              <XPProgressBar compact />
+            </div>
+          </div>
         </div>
       )}
       {user && collapsed && (
