@@ -219,13 +219,21 @@ Deno.serve(async (req) => {
     const chunks = greedyChunk(transcript, 200, 800);
     console.log(`Transcript chunked into ${chunks.length} segments`);
 
-    // ── Process each chunk ──
+    // ── Process chunks in parallel batches of 3 ──
+    const BATCH_SIZE = 3;
     const allNeurons: any[] = [];
-    for (let i = 0; i < chunks.length; i++) {
-      const extracted = await extractNeuronsFromChunk(
-        LOVABLE_API_KEY, chunks[i], episode.title, i, chunks.length
+    for (let batchStart = 0; batchStart < chunks.length; batchStart += BATCH_SIZE) {
+      const batch = chunks.slice(batchStart, batchStart + BATCH_SIZE);
+      const batchResults = await Promise.all(
+        batch.map((chunk, idx) =>
+          extractNeuronsFromChunk(
+            LOVABLE_API_KEY, chunk, episode.title, batchStart + idx, chunks.length
+          )
+        )
       );
-      allNeurons.push(...extracted);
+      for (const extracted of batchResults) {
+        allNeurons.push(...extracted);
+      }
     }
 
     if (allNeurons.length === 0) {

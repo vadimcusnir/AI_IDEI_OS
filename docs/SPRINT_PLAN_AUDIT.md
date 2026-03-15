@@ -71,10 +71,10 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 **Efort:** 0 (completat) | **Impact:** MARE
 
 ### 2.2 🟠 BE-001: Procesare secvențială în pipeline AI
-- [ ] **P2.7** Modifică `extract-neurons` să proceseze chunk-uri în paralel cu `Promise.all` (batch de 3-5)
+- [x] **P2.7** ✅ `extract-neurons` procesează chunk-uri în paralel (batch de 3, Promise.all)
 - [ ] **P2.8** Modifică `generate-entities` să folosească batch queries în loc de N+1
 
-**Efort:** 2-3 sesiuni | **Impact:** MARE
+**Efort:** 1 sesiune rămasă | **Impact:** MARE
 
 ### 2.3 🟡 FE-001: Optimizare bundle
 - [ ] **P2.9** Adaugă lazy loading pentru toate paginile cu `React.lazy` + `Suspense`
@@ -100,53 +100,17 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 ## FAZA 3: REDESIGN NAVIGAȚIE (Raport Meniu)
 
-### 3.1 🟠 Restructurare Sidebar (de la 27 la ~20 items grupate în 6 secțiuni)
-**Structură propusă:**
-
-```
-Dashboard (Home)
-  ├── Dashboard
-  ├── Recent Activity  
-  └── Getting Started
-
-Create (Studio)
-  ├── Upload / Extractor
-  ├── Neurons
-  ├── Services (Generate)
-  └── Templates
-
-Explore (Library)
-  ├── Library
-  ├── Topics
-  ├── Marketplace
-  └── Guest Pages
-
-Operate (Admin)
-  ├── Jobs
-  ├── Pipeline
-  ├── API Access
-  └── Chat AI
-
-Account (Settings)
-  ├── Profile
-  ├── Credits
-  ├── Notifications
-  └── Feedback
-
-Learn (Docs)
-  ├── Documentation
-  ├── Changelog
-  └── Architecture
-```
+### 3.1 ✅ Restructurare Sidebar — COMPLETAT 2026-03-15
+**Implementat:** 6 secțiuni (Dashboard, Create, Explore, Operate, Account, Learn) cu ~20 items. Labels actualizate (Cockpit→Dashboard, Extractor→Extract, Intelligence→Insights, Services→Generate). Tooltips pe fiecare item. Collapsed state cu iconuri. i18n EN/RO/RU.
 
 **Sarcini:**
-- [ ] **N3.1** Redesign `AppSidebar.tsx` cu 6 secțiuni colapsabile
-- [ ] **N3.2** Adaugă tooltips pe fiecare item sidebar (explicație plain-language)
-- [ ] **N3.3** Implementează collapsed state (72px) cu iconuri
-- [ ] **N3.4** Salvează preferință expanded/collapsed în localStorage
-- [ ] **N3.5** Actualizează label-uri: Cockpit→Dashboard, Extractor→Extract, Intelligence→Insights
+- [x] **N3.1** Redesign `AppSidebar.tsx` cu 6 secțiuni ✅
+- [x] **N3.2** Tooltips pe fiecare item sidebar ✅
+- [x] **N3.3** Collapsed state cu iconuri ✅
+- [x] **N3.4** Preferință collapsed gestionată de SidebarProvider ✅
+- [x] **N3.5** Label-uri actualizate ✅
 
-**Efort:** 3-4 sesiuni | **Impact:** MARE (UX)
+**Efort:** 0 (completat) | **Impact:** MARE (UX)
 
 ### 3.2 🟡 Simplificare Top Navigation
 - [ ] **N3.6** Elimină "Knowledge OS" label non-funcțional

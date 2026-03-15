@@ -8,8 +8,7 @@ import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
   BarChart3, Bell, BookOpen, Users, Network, Rocket,
-  FileText, Lightbulb, Repeat2, FlaskConical, AlertTriangle, Layers,
-  Bot,
+  FileText, Lightbulb, Bot, Store, Layers,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
@@ -22,40 +21,69 @@ import {
 import { PipelineIndicator } from "@/components/PipelineIndicator";
 import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
 
-const MAIN_NAV = [
-  { labelKey: "cockpit", to: "/home", icon: Home },
-  { labelKey: "extractor", to: "/extractor", icon: Upload },
-  { labelKey: "neurons", to: "/neurons", icon: Brain },
-  { labelKey: "services", to: "/services", icon: Sparkles },
-  { labelKey: "jobs", to: "/jobs", icon: Briefcase },
-  { labelKey: "library", to: "/library", icon: BookOpen },
-  { labelKey: "guest_pages", to: "/guests", icon: Users },
-  { labelKey: "chat", to: "/chat", icon: Bot },
-];
+interface NavItem {
+  labelKey: string;
+  to: string;
+  icon: React.ElementType;
+  adminOnly?: boolean;
+}
 
-const SECONDARY_NAV = [
-  { labelKey: "intelligence", to: "/intelligence", icon: Network },
-  { labelKey: "prompt_forge", to: "/prompt-forge", icon: Sparkles },
-  { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users },
-  { labelKey: "credits", to: "/credits", icon: Coins },
-  { labelKey: "dashboard", to: "/dashboard", icon: BarChart3 },
-  { labelKey: "onboarding", to: "/onboarding", icon: Rocket },
-  { labelKey: "notifications", to: "/notifications", icon: Bell },
-  { labelKey: "feedback", to: "/feedback", icon: MessageCircle },
-  { labelKey: "changelog", to: "/changelog", icon: ScrollText },
-];
+interface NavSection {
+  labelKey: string;
+  items: NavItem[];
+}
 
-const KNOWLEDGE_NAV = [
-  { labelKey: "docs", to: "/docs", icon: FileText },
-  { labelKey: "insights", to: "/insights", icon: Lightbulb },
-  { labelKey: "patterns", to: "/patterns", icon: Repeat2 },
-  { labelKey: "formulas", to: "/formulas", icon: FlaskConical },
-  { labelKey: "contradictions", to: "/contradictions", icon: AlertTriangle },
-  { labelKey: "applications", to: "/applications", icon: Layers },
-  { labelKey: "profiles", to: "/profiles", icon: Users },
-  { labelKey: "topics", to: "/topics", icon: Brain },
-  { labelKey: "topic_discovery", to: "/topics/discovery", icon: Network },
-  { labelKey: "marketplace", to: "/marketplace", icon: Coins },
+const NAV_SECTIONS: NavSection[] = [
+  {
+    labelKey: "dashboard_section",
+    items: [
+      { labelKey: "cockpit", to: "/home", icon: Home },
+      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3 },
+      { labelKey: "onboarding", to: "/onboarding", icon: Rocket },
+    ],
+  },
+  {
+    labelKey: "create_section",
+    items: [
+      { labelKey: "extractor", to: "/extractor", icon: Upload },
+      { labelKey: "neurons", to: "/neurons", icon: Brain },
+      { labelKey: "services", to: "/services", icon: Sparkles },
+      { labelKey: "chat", to: "/chat", icon: Bot },
+    ],
+  },
+  {
+    labelKey: "explore_section",
+    items: [
+      { labelKey: "library", to: "/library", icon: BookOpen },
+      { labelKey: "intelligence", to: "/intelligence", icon: Network },
+      { labelKey: "topics", to: "/topics", icon: Lightbulb },
+      { labelKey: "marketplace", to: "/marketplace", icon: Store },
+      { labelKey: "guest_pages", to: "/guests", icon: Users },
+    ],
+  },
+  {
+    labelKey: "operate_section",
+    items: [
+      { labelKey: "jobs", to: "/jobs", icon: Briefcase },
+      { labelKey: "pipeline", to: "/pipeline", icon: Layers },
+      { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
+    ],
+  },
+  {
+    labelKey: "account_section",
+    items: [
+      { labelKey: "credits", to: "/credits", icon: Coins },
+      { labelKey: "notifications", to: "/notifications", icon: Bell },
+      { labelKey: "feedback", to: "/feedback", icon: MessageCircle },
+    ],
+  },
+  {
+    labelKey: "learn_section",
+    items: [
+      { labelKey: "docs", to: "/docs", icon: FileText },
+      { labelKey: "changelog", to: "/changelog", icon: ScrollText },
+    ],
+  },
 ];
 
 export function AppSidebar() {
@@ -68,7 +96,10 @@ export function AppSidebar() {
   const { isAdmin } = useAdminCheck();
   const { balance, loading: balanceLoading } = useCreditBalance();
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + "/");
+
+  const sectionHasActive = (section: NavSection) =>
+    section.items.some((item) => isActive(item.to));
 
   return (
     <Sidebar collapsible="icon">
@@ -103,73 +134,39 @@ export function AppSidebar() {
       )}
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("navigation:pipeline")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {MAIN_NAV.map((item) => (
-                <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={t(`navigation:${item.labelKey}`)}>
-                    <button onClick={() => navigate(item.to)} className="w-full">
-                      <item.icon className="h-4 w-4" />
-                      <span>{t(`navigation:${item.labelKey}`)}</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {NAV_SECTIONS.map((section, sIdx) => {
+          const visibleItems = section.items.filter(
+            (item) => !item.adminOnly || isAdmin
+          );
+          if (visibleItems.length === 0) return null;
 
-        <SidebarSeparator />
-
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("navigation:platform")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {SECONDARY_NAV.map((item) => (
-                <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={t(`navigation:${item.labelKey}`)}>
-                    <button onClick={() => navigate(item.to)} className="w-full">
-                      <item.icon className="h-4 w-4" />
-                      <span>{t(`navigation:${item.labelKey}`)}</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              {isAdmin && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isActive("/admin")} tooltip={t("navigation:admin")}>
-                    <button onClick={() => navigate("/admin")} className="w-full">
-                      <Shield className="h-4 w-4" />
-                      <span>{t("navigation:admin")}</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarSeparator />
-
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("navigation:knowledge")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {KNOWLEDGE_NAV.map((item) => (
-                <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={t(`navigation:${item.labelKey}`)}>
-                    <button onClick={() => navigate(item.to)} className="w-full">
-                      <item.icon className="h-4 w-4" />
-                      <span>{t(`navigation:${item.labelKey}`)}</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+          return (
+            <div key={section.labelKey}>
+              {sIdx > 0 && <SidebarSeparator />}
+              <SidebarGroup>
+                <SidebarGroupLabel>{t(`navigation:${section.labelKey}`)}</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {visibleItems.map((item) => (
+                      <SidebarMenuItem key={item.to}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isActive(item.to)}
+                          tooltip={t(`navigation:${item.labelKey}`)}
+                        >
+                          <button onClick={() => navigate(item.to)} className="w-full">
+                            <item.icon className="h-4 w-4" />
+                            <span>{t(`navigation:${item.labelKey}`)}</span>
+                          </button>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </div>
+          );
+        })}
 
         {!collapsed && (
           <>

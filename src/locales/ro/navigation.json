@@ -32,5 +32,11 @@
   "platform": "Platformă",
   "knowledge": "Cunoaștere",
   "pipeline_status": "Status Pipeline",
-  "chat": "AI Chat"
+  "chat": "AI Chat",
+  "dashboard_section": "Panou",
+  "create_section": "Creează",
+  "explore_section": "Explorează",
+  "operate_section": "Operează",
+  "account_section": "Cont",
+  "learn_section": "Învață"
 }

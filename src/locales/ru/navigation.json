@@ -32,5 +32,11 @@
   "platform": "Платформа",
   "knowledge": "Знания",
   "pipeline_status": "Статус конвейера",
-  "chat": "AI Чат"
+  "chat": "AI Чат",
+  "dashboard_section": "Панель",
+  "create_section": "Создать",
+  "explore_section": "Обзор",
+  "operate_section": "Управление",
+  "account_section": "Аккаунт",
+  "learn_section": "Обучение"
 }
