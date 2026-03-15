@@ -52,6 +52,7 @@ const SORT_OPTIONS: { value: SortOption; label: string; icon: typeof TrendingUp 
 
 export default function Marketplace() {
   const { user } = useAuth();
+  const { balance } = useCreditBalance();
   const [assets, setAssets] = useState<KnowledgeAsset[]>([]);
   const [featured, setFeatured] = useState<KnowledgeAsset[]>([]);
   const [loading, setLoading] = useState(true);
