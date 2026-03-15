@@ -4504,6 +4504,7 @@ export type Database = {
       }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
       compute_idearank: { Args: never; Returns: undefined }
+      data_pipeline_stats: { Args: never; Returns: Json }
       deactivate_emergency: { Args: { _control_id: string }; Returns: boolean }
       delete_email: {
         Args: { message_id: number; queue_name: string }
@@ -4550,6 +4551,7 @@ export type Database = {
         Args: { _user_id: string; _workspace_id: string }
         Returns: boolean
       }
+      kb_dashboard_stats: { Args: { _user_id: string }; Returns: Json }
       kb_track_view: {
         Args: { _article_id: string; _user_id: string }
         Returns: undefined
