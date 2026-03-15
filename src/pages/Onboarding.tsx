@@ -73,7 +73,7 @@ export default function Onboarding() {
     if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadStatus();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadStatus = async () => {
     const wsId = currentWorkspace!.id;

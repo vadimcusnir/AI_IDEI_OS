@@ -87,7 +87,7 @@ export default function Library() {
     if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadArtifacts();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadArtifacts = async () => {
     const { data } = await supabase

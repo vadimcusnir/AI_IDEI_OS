@@ -73,7 +73,7 @@ export default function GuestPages() {
     if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadGuests();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadGuests = async () => {
     const { data, error } = await supabase

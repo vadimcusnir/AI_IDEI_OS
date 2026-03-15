@@ -43,7 +43,7 @@ export default function Intelligence() {
     if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadStats();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadStats = async () => {
     const wsId = currentWorkspace!.id;

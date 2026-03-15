@@ -152,7 +152,7 @@ export default function Jobs() {
       .on("postgres_changes", { event: "*", schema: "public", table: "neuron_jobs" }, () => fetchJobs())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const fetchJobs = async () => {
     const { data, error } = await supabase
