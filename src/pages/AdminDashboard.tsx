@@ -89,6 +89,7 @@ const TABS = [
   { value: "emergency", label: "Emergency", icon: ShieldAlert },
   { value: "compliance", label: "Compliance", icon: ScrollText },
   { value: "flags", label: "Flags", icon: Activity },
+  { value: "moderation", label: "Moderation", icon: MessageCircle },
 ];
 
 export default function AdminDashboard() {
