@@ -108,11 +108,11 @@ All P0 critical modules implemented. Wallet system added. New specs uploaded for
 | NOTIFICATION_SYSTEM | 85% |
 | API_DOCUMENTATION | 95% |
 | CONTENT_LIB | 90% |
-| ANALYTIC_REPORTING | 60% |
+| ANALYTIC_REPORTING | 90% |
 | RELATIONSHIP_DOCS | 95% |
 | COMMUNITY_FORUM | 95% |
-| 01_WALLET | 40% (DB + UI done, Tasks 2-8 pending) |
-| 01_GAMEFICATION | 40% (XP engine, streaks, levels, leaderboard, challenges) |
+| 01_WALLET | 90% (wallet_reserve/settle/refund/add RPCs, transaction history, /wallet page) |
+| 01_GAMEFICATION | 85% (award_xp RPC, maintain_streak, daily cap, /gamification page) |
 | 01_KNOWLEDGE_DASHBOARD | 45% (DB schema, KB page, categories, search, learning paths) |
 | 01_CUSNIR_OS_VIP_TIER | 80% (DB schema, milestones, war rooms, progress UI, VIP page) |
 | 01_DATA_COLLECTION | 75% (cognitive hierarchy, categories, units, training datasets, pipeline stats) |
