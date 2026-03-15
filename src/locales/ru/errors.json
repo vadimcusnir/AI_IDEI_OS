@@ -6,5 +6,22 @@
   "server": "Ошибка сервера. Попробуйте позже.",
   "validation": "Неверные данные. Проверьте поля и попробуйте снова.",
   "insufficient_credits": "Недостаточно кредитов. Пополните баланс.",
-  "rate_limit": "Слишком много запросов. Подождите несколько минут."
+  "rate_limit": "Слишком много запросов. Подождите несколько минут.",
+  "save_failed": "Ошибка сохранения: {{message}}",
+  "username_taken": "Это имя пользователя уже занято.",
+  "fill_title_message": "Пожалуйста, заполните заголовок и сообщение.",
+  "select_rating": "Пожалуйста, выберите оценку.",
+  "submit_error": "Ошибка отправки: {{message}}",
+  "push_enable_failed": "Не удалось включить push-уведомления.",
+  "notification_denied": "Разрешение на уведомления отклонено.",
+  "invalid_amount": "Недопустимая сумма",
+  "add_description": "Добавьте описание",
+  "insufficient_balance": "Недостаточный баланс. Текущий: {{balance}}",
+  "payment_cancelled": "Платёж отменён.",
+  "payment_already_processed": "Платёж уже обработан.",
+  "payment_error": "Ошибка проверки платежа: {{message}}",
+  "checkout_error": "Ошибка создания сессии оплаты",
+  "checkout_url_missing": "URL оплаты не получен",
+  "transcript_upload_failed": "Загрузка транскрипта не удалась.",
+  "extraction_timeout": "Время извлечения истекло."
 }

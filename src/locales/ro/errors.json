@@ -6,5 +6,22 @@
   "server": "Eroare de server. Te rugăm să încerci mai târziu.",
   "validation": "Date invalide. Verifică câmpurile și încearcă din nou.",
   "insufficient_credits": "Credite insuficiente. Te rugăm să faci top-up.",
-  "rate_limit": "Prea multe cereri. Așteaptă câteva minute."
+  "rate_limit": "Prea multe cereri. Așteaptă câteva minute.",
+  "save_failed": "Eroare la salvare: {{message}}",
+  "username_taken": "Acest nume de utilizator este deja folosit.",
+  "fill_title_message": "Te rugăm să completezi titlul și mesajul.",
+  "select_rating": "Te rugăm să selectezi o evaluare.",
+  "submit_error": "Eroare la trimitere: {{message}}",
+  "push_enable_failed": "Nu s-au putut activa notificările push.",
+  "notification_denied": "Permisiunea de notificare a fost refuzată.",
+  "invalid_amount": "Sumă invalidă",
+  "add_description": "Adaugă o descriere",
+  "insufficient_balance": "Sold insuficient. Actual: {{balance}}",
+  "payment_cancelled": "Plata a fost anulată.",
+  "payment_already_processed": "Plata a fost deja procesată.",
+  "payment_error": "Eroare verificare plată: {{message}}",
+  "checkout_error": "Eroare la crearea sesiunii de plată",
+  "checkout_url_missing": "URL-ul de plată nu a fost primit",
+  "transcript_upload_failed": "Încărcarea transcriptului a eșuat.",
+  "extraction_timeout": "Extracția a expirat."
 }
