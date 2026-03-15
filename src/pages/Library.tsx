@@ -172,7 +172,9 @@ export default function Library() {
         </div>
 
         {/* My contributions */}
-        <ContributionsList />
+        <ControlledSection elementId="library.contributions">
+          <ContributionsList />
+        </ControlledSection>
 
         {/* Library vs Neurons explainer */}
         <div className="rounded-xl border border-border bg-card p-4 mb-5">
