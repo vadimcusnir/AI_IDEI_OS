@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -53,23 +54,28 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const { messages, neuron_context } = await req.json();
+    const MessageSchema = z.object({
+      role: z.enum(["user", "assistant", "system"]),
+      content: z.string().max(30_000, "Message too long"),
+    });
+    const InputSchema = z.object({
+      messages: z.array(MessageSchema).min(1, "Messages array required").max(50, "Too many messages"),
+      neuron_context: z.object({
+        title: z.string().max(500).optional(),
+        blocks: z.array(z.object({
+          type: z.string(),
+          content: z.string().max(50_000),
+        })).optional(),
+      }).optional(),
+    });
 
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return new Response(JSON.stringify({ error: "Messages array required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+    const parsed = InputSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    // Validate message sizes
-    for (const msg of messages) {
-      if (typeof msg.content === "string" && msg.content.length > 30_000) {
-        return new Response(JSON.stringify({ error: "Message content exceeds maximum length" }), {
-          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-    }
+    const { messages, neuron_context } = parsed.data;
 
     // Build context from neuron blocks
     let contextBlock = "";
