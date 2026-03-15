@@ -55,6 +55,7 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "intelligence", to: "/intelligence", icon: Network },
       { labelKey: "topics", to: "/topics", icon: Lightbulb },
       { labelKey: "marketplace", to: "/marketplace", icon: Store },
+      { labelKey: "community", to: "/community", icon: MessagesSquare },
       { labelKey: "chat", to: "/chat", icon: Bot },
     ],
   },
