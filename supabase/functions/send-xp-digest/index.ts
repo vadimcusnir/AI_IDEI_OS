@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
       const { count: newAchievements } = await supabase
         .from("user_achievements")
         .select("id", { count: "exact", head: true })
-        .eq("user_id", visitorId)
+        .eq("user_id", userId)
         .gte("unlocked_at", sevenDaysAgo);
 
       // Create digest notification
