@@ -142,7 +142,7 @@ export default function CommunityThread() {
                   {thread.is_pinned && <Pin className="h-3.5 w-3.5 text-primary" />}
                   {thread.is_locked && <Lock className="h-3.5 w-3.5 text-muted-foreground" />}
                   {thread.is_solved && (
-                    <Badge variant="outline" className="text-[9px] px-1 py-0 border-green-500 text-green-600">
+                    <Badge variant="outline" className="text-[9px] px-1 py-0 border-status-validated text-status-validated">
                       <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />Solved
                     </Badge>
                   )}

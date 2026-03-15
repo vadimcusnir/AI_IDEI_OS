@@ -71,7 +71,7 @@ function ThreadRow({ thread, onClick }: { thread: ForumThread; onClick: () => vo
         <div className="flex items-center gap-1.5 flex-wrap">
           {thread.is_pinned && <Pin className="h-3 w-3 text-primary" />}
           {thread.is_locked && <Lock className="h-3 w-3 text-muted-foreground" />}
-          {thread.is_solved && <Badge variant="outline" className="text-[9px] px-1 py-0 border-green-500 text-green-600"><CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />Solved</Badge>}
+          {thread.is_solved && <Badge variant="outline" className="text-[9px] px-1 py-0 border-status-validated text-status-validated"><CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />Solved</Badge>}
           <h4 className="font-medium text-sm truncate">{thread.title}</h4>
         </div>
         <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
