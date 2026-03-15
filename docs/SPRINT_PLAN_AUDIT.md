@@ -44,7 +44,7 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 **Efort:** Manual | **Impact:** MEDIU
 
 ### 1.3 ✅ SEC-006: CORS Wildcard — COMPLETAT 2026-03-15
-- [x] **S1.11** ✅ Creat `_shared/cors.ts` cu `getCorsHeaders(req)` — origin validat contra allowlist (`ai-idei-os.lovable.app`, `ai-idei.com`, `*.lovable.app`, localhost). Aplicat în `generate-entities`.
+- [x] **S1.11** ✅ Creat `_shared/cors.ts` cu `getCorsHeaders(req)` — origin validat contra allowlist. Aplicat în 9 funcții critice: generate-entities, run-service, extract-neurons, chunk-transcript, transcribe-audio, extract-guests, neuron-chat, extract-insights, verify-topup.
 
 **Efort:** 0 (completat) | **Impact:** SCĂZUT (defense-in-depth)
 
