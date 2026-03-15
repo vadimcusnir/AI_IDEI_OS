@@ -1,25 +1,19 @@
 /**
  * JSON-LD Structured Data Components
- * Renders schema.org structured data for SEO.
+ * Renders schema.org structured data inline for crawlability (no useEffect).
  */
-import { useEffect } from "react";
 
 interface JsonLdProps {
   data: Record<string, unknown>;
 }
 
 export function JsonLd({ data }: JsonLdProps) {
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.textContent = JSON.stringify(data);
-    script.setAttribute("data-jsonld", "true");
-    document.head.appendChild(script);
-    return () => {
-      script.remove();
-    };
-  }, [data]);
-  return null;
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
 }
 
 // ── Pre-built schemas ──

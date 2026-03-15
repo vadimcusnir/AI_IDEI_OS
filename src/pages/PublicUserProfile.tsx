@@ -35,35 +35,28 @@ export default function PublicUserProfile() {
   useEffect(() => {
     if (!username) return;
     const load = async () => {
-      // Fetch profile
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("display_name, bio, avatar_url, username, created_at")
-        .eq("username", username)
-        .maybeSingle();
+      // Use secure RPC — no user_id exposed to client
+      const { data: result } = await supabase.rpc("get_public_profile", { _username: username });
 
-      if (!profileData) {
+      if (!result || !(result as any).found) {
         setNotFound(true);
         setLoading(false);
         return;
       }
 
-      setProfile(profileData as unknown as PublicProfile);
-
-      // Fetch public neurons
-      const { data: neurons, count: neuronsCount } = await supabase
-        .from("neurons")
-        .select("id, number, title, status, lifecycle, content_category, created_at, score", { count: "exact" })
-        .eq("author_id", (profileData as any).user_id)
-        .eq("visibility", "public")
-        .order("score", { ascending: false })
-        .limit(12);
-
-      setPublicNeurons(neurons || []);
+      const r = result as any;
+      setProfile({
+        display_name: r.display_name,
+        bio: r.bio,
+        avatar_url: r.avatar_url,
+        username: r.username,
+        created_at: r.created_at,
+      });
+      setPublicNeurons(r.public_neurons || []);
       setStats({
-        neurons_count: neuronsCount || 0,
+        neurons_count: r.neurons_count || 0,
         artifacts_count: 0,
-        public_neurons_count: neuronsCount || 0,
+        public_neurons_count: r.neurons_count || 0,
       });
 
       setLoading(false);
