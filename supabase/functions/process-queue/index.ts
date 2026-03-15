@@ -1,9 +1,9 @@
 /**
- * process-queue — Processes pending jobs with retry logic.
+ * process-queue — Processes pending jobs with retry logic + execution regime enforcement.
  * Called via pg_cron or manual trigger.
- * Picks up pending/scheduled jobs and dispatches them to run-service.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
