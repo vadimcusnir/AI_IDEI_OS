@@ -41,6 +41,7 @@ export function AdminChangelogTab() {
   const { user } = useAuth();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [rawChanges, setRawChanges] = useState<RawChange[]>([]);
+  const [unprocessedCount, setUnprocessedCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -51,14 +52,17 @@ export function AdminChangelogTab() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [entriesRes, rawRes] = await Promise.all([
+    const [entriesRes, rawRes, unprocessedRes] = await Promise.all([
       supabase.from("changelog_entries").select("*")
         .order("release_date", { ascending: false }).order("position", { ascending: true }),
       supabase.from("changes_raw").select("id, source, component, diff_summary, impact_level, created_at")
         .order("created_at", { ascending: false }).limit(50),
+      supabase.from("changes_raw").select("id", { count: "exact", head: true })
+        .is("processed_at" as any, null).eq("impact_level", "user"),
     ]);
     setEntries((entriesRes.data as Entry[]) || []);
     setRawChanges((rawRes.data as RawChange[]) || []);
+    setUnprocessedCount(unprocessedRes.count ?? 0);
     setLoading(false);
   }, []);
 
