@@ -172,12 +172,12 @@ export function useCreateThread() {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ categoryId, title, content }: { categoryId: string; title: string; content: string }) => {
+    mutationFn: async ({ categoryId, title, content, tags }: { categoryId: string; title: string; content: string; tags?: string[] }) => {
       if (!user) throw new Error("Not authenticated");
       const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80);
       const { data, error } = await supabase
         .from("forum_threads")
-        .insert({ category_id: categoryId, author_id: user.id, title, slug: `${slug}-${Date.now()}`, content })
+        .insert({ category_id: categoryId, author_id: user.id, title, slug: `${slug}-${Date.now()}`, content, tags: tags || [] } as any)
         .select()
         .single();
       if (error) throw error;
