@@ -5046,6 +5046,7 @@ export type Database = {
         Args: { _target_id: string; _target_type: string; _vote_value: number }
         Returns: Json
       }
+      get_public_profile: { Args: { _username: string }; Returns: Json }
       has_admin_permission: {
         Args: { _permission: string; _user_id: string }
         Returns: boolean
