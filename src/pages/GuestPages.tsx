@@ -58,7 +58,7 @@ function findDuplicateCandidates(guests: GuestProfile[]): Map<string, string[]> 
 
 export default function GuestPages() {
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [guests, setGuests] = useState<GuestProfile[]>([]);
   const [loading, setLoading] = useState(true);
