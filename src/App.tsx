@@ -63,6 +63,7 @@ const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const WorkspaceSettings = lazy(() => import("./pages/WorkspaceSettings"));
 const Community = lazy(() => import("./pages/Community"));
 const CommunityThread = lazy(() => import("./pages/CommunityThread"));
+const KnowledgeDashboard = lazy(() => import("./pages/KnowledgeDashboard"));
 
 function PageLoader() {
   return (
@@ -157,6 +158,8 @@ const App = () => (
                 <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ApiDocs /></AppLayout></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
+                <Route path="/knowledge" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
+                <Route path="/kb/:category" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
 
                 {/* Admin route */}
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
