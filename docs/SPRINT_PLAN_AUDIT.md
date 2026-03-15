@@ -112,12 +112,12 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 0 (completat) | **Impact:** MARE (UX)
 
-### 3.2 🟡 Simplificare Top Navigation
-- [ ] **N3.6** Elimină "Knowledge OS" label non-funcțional
-- [ ] **N3.7** Adaugă breadcrumb dinamic bazat pe rută curentă
-- [ ] **N3.8** Mută Global Search (Ctrl+K) în centrul header-ului
+### 3.2 ✅ Simplificare Top Navigation — COMPLETAT 2026-03-15
+- [x] **N3.6** ✅ "Knowledge OS" label nu există în header/nav (doar în footer/branding — corect)
+- [x] **N3.7** ✅ Breadcrumb dinamic bazat pe rută curentă (AppBreadcrumbs.tsx)
+- [x] **N3.8** ✅ Global Search deja în header
 
-**Efort:** 2 sesiuni | **Impact:** MEDIU
+**Efort:** 0 (completat) | **Impact:** MEDIU
 
 ### 3.3 🟢 Mobile Navigation Improvements
 - [ ] **N3.9** Optimizează bottom nav pentru flow-ul propus
