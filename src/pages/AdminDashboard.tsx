@@ -26,6 +26,7 @@ import { EmergencyControlsTab } from "@/components/admin/EmergencyControlsTab";
 import { ComplianceLogTab } from "@/components/admin/ComplianceLogTab";
 import { FeatureFlagsTab } from "@/components/admin/FeatureFlagsTab";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
+import { ForumModerationTab } from "@/components/admin/ForumModerationTab";
 import { KPI, StatusBadge, LogLevelBadge, HealthRow, EconRow } from "@/components/admin/AdminSubComponents";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -89,6 +90,7 @@ const TABS = [
   { value: "emergency", label: "Emergency", icon: ShieldAlert },
   { value: "compliance", label: "Compliance", icon: ScrollText },
   { value: "flags", label: "Flags", icon: Activity },
+  { value: "moderation", label: "Moderation", icon: MessageCircle },
 ];
 
 export default function AdminDashboard() {
@@ -626,6 +628,7 @@ export default function AdminDashboard() {
             <TabsContent value="emergency"><EmergencyControlsTab /></TabsContent>
             <TabsContent value="compliance"><ComplianceLogTab /></TabsContent>
             <TabsContent value="flags"><FeatureFlagsTab /></TabsContent>
+            <TabsContent value="moderation"><ForumModerationTab /></TabsContent>
           </Tabs>
         </div>
       </div>

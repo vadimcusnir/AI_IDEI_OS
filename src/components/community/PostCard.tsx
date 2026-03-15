@@ -4,6 +4,7 @@ import { useCreatePost, useForumVote, useMarkSolution, ForumPost } from "@/hooks
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { ReportDialog } from "@/components/community/ReportDialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   ChevronUp, ChevronDown, CheckCircle2,
@@ -118,6 +119,7 @@ export function PostCard({ post, threadAuthorId, threadId, replies = [], depth =
                 <Reply className="h-3 w-3 mr-1" />Reply
               </Button>
             )}
+            <ReportDialog targetType="post" targetId={post.id} />
           </div>
 
           {/* Inline reply form */}
