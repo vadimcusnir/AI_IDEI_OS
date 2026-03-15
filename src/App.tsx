@@ -63,6 +63,7 @@ const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const WorkspaceSettings = lazy(() => import("./pages/WorkspaceSettings"));
 const Community = lazy(() => import("./pages/Community"));
 const CommunityThread = lazy(() => import("./pages/CommunityThread"));
+const KnowledgeDashboard = lazy(() => import("./pages/KnowledgeDashboard"));
 
 function PageLoader() {
   return (
