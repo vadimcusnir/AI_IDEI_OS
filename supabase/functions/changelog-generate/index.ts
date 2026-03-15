@@ -1,4 +1,3 @@
-
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -10,7 +9,6 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    // Verify admin via JWT
     const authHeader = req.headers.get("Authorization");
     const supabaseUser = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -28,24 +26,22 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { version, since } = await req.json();
-    const sinceDate = since || new Date(Date.now() - 7 * 86400000).toISOString();
+    const { version } = await req.json();
 
-    // Fetch unprocessed raw changes
+    // Only fetch UNPROCESSED raw changes (processed_at IS NULL)
     const { data: rawChanges } = await supabase
       .from("changes_raw")
       .select("*")
-      .gte("created_at", sinceDate)
+      .is("processed_at", null)
       .eq("impact_level", "user")
       .order("created_at", { ascending: true });
 
     if (!rawChanges?.length) {
-      return new Response(JSON.stringify({ drafts: 0, message: "No user-facing changes found" }), {
+      return new Response(JSON.stringify({ drafts: 0, message: "Nu sunt schimbări noi de procesat. Toate schimbările anterioare au fost deja transformate în changelog." }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Build prompt for AI
     const changesSummary = rawChanges.map((c: any) =>
       `- [${c.source}] ${c.component || "system"}: ${c.diff_summary || "change detected"}`
     ).join("\n");
@@ -60,18 +56,19 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "google/gemini-2.5-flash",
         messages: [
           {
             role: "system",
             content: `You are a product changelog writer for AI-IDEI, an AI-driven expertise capitalization platform.
 Generate user-facing changelog entries from technical changes. NEVER mention admin panels, internal tools, or infrastructure.
 Each entry must answer: "What changed for the user?"
+Group similar changes into single entries where possible. Aim for quality over quantity — fewer, more meaningful entries are better.
 Respond in Romanian.`
           },
           {
             role: "user",
-            content: `Generate changelog entries from these changes:\n\n${changesSummary}\n\nVersion: ${version || "next"}`
+            content: `Generate changelog entries from these ${rawChanges.length} changes:\n\n${changesSummary}\n\nVersion: ${version || "next"}\n\nIMPORTANT: Consolidate related changes into single entries. Maximum 8 entries total.`
           }
         ],
         tools: [{
@@ -149,7 +146,18 @@ Respond in Romanian.`
       .select("id, title");
     if (insertErr) throw insertErr;
 
-    return new Response(JSON.stringify({ drafts: inserted?.length || 0, entries: inserted }), {
+    // Mark raw changes as processed so they won't be picked up again
+    const processedIds = rawChanges.map((c: any) => c.id);
+    await supabase
+      .from("changes_raw")
+      .update({ processed_at: new Date().toISOString() })
+      .in("id", processedIds);
+
+    return new Response(JSON.stringify({
+      drafts: inserted?.length || 0,
+      entries: inserted,
+      raw_processed: processedIds.length,
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {

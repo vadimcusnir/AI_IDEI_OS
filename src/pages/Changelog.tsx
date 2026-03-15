@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
-import { Sparkles, Wrench, Bug, Palette, Zap, Plug, BookOpen, Calendar, Search, Filter } from "lucide-react";
+import { Sparkles, Wrench, Bug, Palette, Zap, Plug, BookOpen, Calendar, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,40 +28,48 @@ const CATEGORY_META: Record<string, { label: string; icon: React.ElementType; co
   documentation: { label: "Documentation", icon: BookOpen, color: "bg-muted text-muted-foreground" },
 };
 
+const PAGE_SIZE = 15;
+
 export default function Changelog() {
   const [entries, setEntries] = useState<ChangelogEntry[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+
+  // Reset page when filters change
+  useEffect(() => { setPage(0); }, [search, activeFilter]);
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
+      setLoading(true);
+      let query = supabase
         .from("changelog_entries")
-        .select("id, version, category, title, description, example, user_benefit, release_date, position")
+        .select("id, version, category, title, description, example, user_benefit, release_date, position", { count: "exact" })
         .eq("status", "published")
         .order("release_date", { ascending: false })
         .order("position", { ascending: true });
+
+      if (activeFilter) {
+        query = query.eq("category", activeFilter);
+      }
+      if (search.trim()) {
+        query = query.or(`title.ilike.%${search.trim()}%,description.ilike.%${search.trim()}%,version.ilike.%${search.trim()}%`);
+      }
+
+      query = query.range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+
+      const { data, count } = await query;
       setEntries((data as ChangelogEntry[]) || []);
+      setTotalCount(count ?? 0);
       setLoading(false);
     })();
-  }, []);
+  }, [page, search, activeFilter]);
 
-  const filtered = useMemo(() => {
-    let result = entries;
-    if (activeFilter) result = result.filter(e => e.category === activeFilter);
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(e =>
-        e.title.toLowerCase().includes(q) ||
-        e.description?.toLowerCase().includes(q) ||
-        e.version?.toLowerCase().includes(q)
-      );
-    }
-    return result;
-  }, [entries, search, activeFilter]);
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
-  const grouped = filtered.reduce<Record<string, { date: string; items: ChangelogEntry[] }>>((acc, e) => {
+  const grouped = entries.reduce<Record<string, { date: string; items: ChangelogEntry[] }>>((acc, e) => {
     const key = e.version || "Unreleased";
     if (!acc[key]) acc[key] = { date: e.release_date, items: [] };
     acc[key].items.push(e);
@@ -78,6 +86,11 @@ export default function Changelog() {
         <p className="text-sm text-muted-foreground max-w-[65ch]">
           Ce s-a schimbat pentru tine — funcționalități noi, îmbunătățiri și fix-uri.
         </p>
+        {totalCount > 0 && (
+          <p className="text-[10px] text-muted-foreground mt-1">
+            {totalCount} {totalCount === 1 ? "actualizare" : "actualizări"} publicate
+          </p>
+        )}
       </div>
 
       {/* Search + Filters */}
@@ -129,55 +142,84 @@ export default function Changelog() {
           </p>
         </div>
       ) : (
-        <div className="space-y-12">
-          {Object.entries(grouped).map(([version, { date, items }]) => (
-            <section key={version}>
-              <div className="flex items-center gap-3 mb-5 flex-wrap">
-                <h2 className="text-lg font-bold font-mono">{version}</h2>
-                <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                  <Calendar className="h-3 w-3" />
-                  {new Date(date).toLocaleDateString("ro-RO", { year: "numeric", month: "long", day: "numeric" })}
-                </span>
-                <span className="text-[9px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
-                  {items.length} {items.length === 1 ? "schimbare" : "schimbări"}
-                </span>
-              </div>
+        <>
+          <div className="space-y-12">
+            {Object.entries(grouped).map(([version, { date, items }]) => (
+              <section key={version}>
+                <div className="flex items-center gap-3 mb-5 flex-wrap">
+                  <h2 className="text-lg font-bold font-mono">{version}</h2>
+                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <Calendar className="h-3 w-3" />
+                    {new Date(date).toLocaleDateString("ro-RO", { year: "numeric", month: "long", day: "numeric" })}
+                  </span>
+                  <span className="text-[9px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                    {items.length} {items.length === 1 ? "schimbare" : "schimbări"}
+                  </span>
+                </div>
 
-              <div className="space-y-4 border-l-2 border-border pl-4 sm:pl-5 ml-1">
-                {items.map(entry => {
-                  const meta = CATEGORY_META[entry.category] || CATEGORY_META.improvement;
-                  const Icon = meta.icon;
-                  return (
-                    <div key={entry.id} className="relative">
-                      <div className="absolute -left-[21px] sm:-left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-border ring-2 ring-background" />
-                      <div className="bg-card border border-border rounded-xl p-3 sm:p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className={cn("flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full", meta.color)}>
-                            <Icon className="h-3 w-3" />
-                            {meta.label}
-                          </span>
-                        </div>
-                        <h3 className="text-sm font-semibold mb-1">{entry.title}</h3>
-                        {entry.description && (
-                          <p className="text-xs text-muted-foreground leading-relaxed mb-2 max-w-[65ch]">{entry.description}</p>
-                        )}
-                        {entry.example && (
-                          <div className="bg-muted/50 rounded-lg px-3 py-2 mb-2">
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Exemplu</p>
-                            <p className="text-xs">{entry.example}</p>
+                <div className="space-y-4 border-l-2 border-border pl-4 sm:pl-5 ml-1">
+                  {items.map(entry => {
+                    const meta = CATEGORY_META[entry.category] || CATEGORY_META.improvement;
+                    const Icon = meta.icon;
+                    return (
+                      <div key={entry.id} className="relative">
+                        <div className="absolute -left-[21px] sm:-left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-border ring-2 ring-background" />
+                        <div className="bg-card border border-border rounded-xl p-3 sm:p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className={cn("flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full", meta.color)}>
+                              <Icon className="h-3 w-3" />
+                              {meta.label}
+                            </span>
                           </div>
-                        )}
-                        {entry.user_benefit && (
-                          <p className="text-xs text-primary/80 italic">✦ {entry.user_benefit}</p>
-                        )}
+                          <h3 className="text-sm font-semibold mb-1">{entry.title}</h3>
+                          {entry.description && (
+                            <p className="text-xs text-muted-foreground leading-relaxed mb-2 max-w-[65ch]">{entry.description}</p>
+                          )}
+                          {entry.example && (
+                            <div className="bg-muted/50 rounded-lg px-3 py-2 mb-2">
+                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Exemplu</p>
+                              <p className="text-xs">{entry.example}</p>
+                            </div>
+                          )}
+                          {entry.user_benefit && (
+                            <p className="text-xs text-primary/80 italic">✦ {entry.user_benefit}</p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
-        </div>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-10 pt-6 border-t border-border">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-xs gap-1"
+                disabled={page === 0}
+                onClick={() => setPage(p => p - 1)}
+              >
+                <ChevronLeft className="h-3.5 w-3.5" /> Anterioare
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                {page + 1} / {totalPages}
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-xs gap-1"
+                disabled={page >= totalPages - 1}
+                onClick={() => setPage(p => p + 1)}
+              >
+                Următoare <ChevronRight className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
