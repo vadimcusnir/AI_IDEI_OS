@@ -121,7 +121,7 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 ### 3.3 ✅ Mobile Navigation Improvements — COMPLETAT 2026-03-15
 - [x] **N3.9** ✅ Bottom nav optimizat: Home → Extract → Neurons → Services → Library (flow-ul principal al utilizatorului)
-- [ ] **N3.10** Hamburger menu cu sidebar pe mobile (nice-to-have)
+- [x] **N3.10** ✅ Hamburger menu cu Sheet sidebar pe mobile — 5 secțiuni (Core, Explore, Operate, Account, Learn) + sign out
 
 **Efort:** 0 (completat parțial) | **Impact:** MEDIU
 
@@ -168,11 +168,11 @@ Documentația user-facing este deja completă în `docsContent.ts`:
 
 **Efort:** 0 (completat) | **Impact:** MEDIU (onboarding)
 
-### 5.2 🟢 Sincronizare documentație tehnică
-- [ ] **D5.5** Actualizează `DATABASE_SCHEMA.md` cu tabelele noi
-- [ ] **D5.6** Actualizează `SECURITY_AUDIT.md` cu remedierile aplicate
+### 5.2 ✅ Sincronizare documentație tehnică — COMPLETAT 2026-03-15
+- [x] **D5.5** ✅ `DATABASE_SCHEMA.md` actualizat — adăugate 15+ tabele noi, indexuri create, marketplace relations
+- [x] **D5.6** ✅ `SECURITY_AUDIT.md` actualizat — toate remedierile (SEC-001→008) documentate cu date și rezoluții
 
-**Efort:** 1-2 sesiuni | **Impact:** SCĂZUT
+**Efort:** 0 (completat) | **Impact:** SCĂZUT
 
 ---
 
