@@ -616,6 +616,7 @@ export default function AdminDashboard() {
             <TabsContent value="reconciliation"><ReconciliationTab /></TabsContent>
             <TabsContent value="incidents"><IncidentManagementTab /></TabsContent>
             <TabsContent value="entropy"><EntropyMonitoringTab /></TabsContent>
+            <TabsContent value="contributions"><AdminContributionsTab /></TabsContent>
           </Tabs>
         </div>
       </div>
