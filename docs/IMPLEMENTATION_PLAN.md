@@ -92,7 +92,7 @@
 - ✅ Reviews & ratings system (asset_reviews table + triggers + UI)
 - ✅ Featured assets section
 - ✅ Sort & advanced search (popular, newest, top rated, price)
-- 🟡 Purchase with NEURONS (credit deduction flow)
+- ✅ Purchase with NEURONS (credit deduction flow)
 
 ### Admin System (✅ 95%)
 - ✅ Admin dashboard (8 tabs)

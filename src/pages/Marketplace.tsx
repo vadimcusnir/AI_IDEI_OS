@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Store, Star, Coins, DollarSign, Search, Tag, ShoppingCart, Crown, TrendingUp, Clock, MessageSquare } from "lucide-react";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { Store, Star, Coins, DollarSign, Search, Tag, ShoppingCart, Crown, TrendingUp, Clock, MessageSquare, Loader2, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,7 @@ const SORT_OPTIONS: { value: SortOption; label: string; icon: typeof TrendingUp 
 
 export default function Marketplace() {
   const { user } = useAuth();
+  const { balance } = useCreditBalance();
   const [assets, setAssets] = useState<KnowledgeAsset[]>([]);
   const [featured, setFeatured] = useState<KnowledgeAsset[]>([]);
   const [loading, setLoading] = useState(true);
@@ -140,7 +142,7 @@ export default function Marketplace() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {featured.map(asset => (
-                <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} isFeatured />
+                <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} creditBalance={balance} isFeatured />
               ))}
             </div>
             <Separator className="mt-8" />
@@ -208,7 +210,7 @@ export default function Marketplace() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(asset => (
-              <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} />
+              <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} creditBalance={balance} />
             ))}
           </div>
         )}
@@ -217,7 +219,7 @@ export default function Marketplace() {
   );
 }
 
-function AssetCard({ asset, currentUserId, isFeatured }: { asset: KnowledgeAsset; currentUserId?: string; isFeatured?: boolean }) {
+function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { asset: KnowledgeAsset; currentUserId?: string; creditBalance?: number; isFeatured?: boolean }) {
   const [showReview, setShowReview] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [reviewText, setReviewText] = useState("");
@@ -225,8 +227,62 @@ function AssetCard({ asset, currentUserId, isFeatured }: { asset: KnowledgeAsset
   const [submitting, setSubmitting] = useState(false);
   const [reviews, setReviews] = useState<AssetReview[]>([]);
   const [loadingReviews, setLoadingReviews] = useState(false);
+  const [purchasing, setPurchasing] = useState(false);
+  const [purchased, setPurchased] = useState(false);
 
   const isOwn = currentUserId === asset.author_id;
+  const price = asset.price_neurons || 0;
+  const isFree = price === 0 && (!asset.price_usd || Number(asset.price_usd) === 0);
+  const canAfford = creditBalance >= price;
+
+  const handlePurchase = async () => {
+    if (!currentUserId) {
+      toast.error("Please sign in to purchase.");
+      return;
+    }
+    if (!isFree && !canAfford) {
+      toast.error(`Insufficient NEURONS. You need ${price} but have ${creditBalance}.`);
+      return;
+    }
+
+    setPurchasing(true);
+    try {
+      // Spend credits if not free
+      if (!isFree && price > 0) {
+        const { data: spent, error: spendErr } = await supabase.rpc("spend_credits", {
+          _user_id: currentUserId,
+          _amount: price,
+          _description: `Marketplace purchase: ${asset.title}`,
+        });
+        if (spendErr) throw new Error(spendErr.message);
+        if (!spent) throw new Error("Insufficient credits");
+      }
+
+      // Record transaction
+      const { error: txErr } = await supabase.from("asset_transactions").insert({
+        asset_id: asset.id,
+        buyer_id: currentUserId,
+        seller_id: asset.author_id,
+        amount_neurons: price,
+        amount_usd: asset.price_usd ? Number(asset.price_usd) : 0,
+        status: "completed",
+      } as any);
+      if (txErr) throw new Error(txErr.message);
+
+      // Increment sales_count
+      await supabase
+        .from("knowledge_assets")
+        .update({ sales_count: (asset.sales_count || 0) + 1 } as any)
+        .eq("id", asset.id);
+
+      setPurchased(true);
+      toast.success(isFree ? "Asset acquired!" : `Purchased for ${price} NEURONS!`);
+    } catch (err: any) {
+      toast.error("Purchase failed: " + (err.message || "Try again"));
+    } finally {
+      setPurchasing(false);
+    }
+  };
 
   const loadReviews = useCallback(async () => {
     setLoadingReviews(true);
@@ -349,9 +405,25 @@ function AssetCard({ asset, currentUserId, isFeatured }: { asset: KnowledgeAsset
               </Button>
             )}
             {!isOwn && (
-              <Button size="sm" className="h-7 text-xs gap-1">
-                <ShoppingCart className="h-3 w-3" /> Get
-              </Button>
+              purchased ? (
+                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-emerald-600" disabled>
+                  <CheckCircle2 className="h-3 w-3" /> Owned
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  className="h-7 text-xs gap-1"
+                  onClick={handlePurchase}
+                  disabled={purchasing || (!isFree && !canAfford)}
+                >
+                  {purchasing ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <ShoppingCart className="h-3 w-3" />
+                  )}
+                  {isFree ? "Get Free" : `${price} N`}
+                </Button>
+              )
             )}
           </div>
         </div>
