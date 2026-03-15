@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -62,22 +63,24 @@ const STEPS = [
 
 export default function Onboarding() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [status, setStatus] = useState<StepStatus>({ episodes: 0, neurons: 0, jobs: 0, artifacts: 0 });
   const [loading, setLoading] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadStatus();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadStatus = async () => {
+    const wsId = currentWorkspace!.id;
     const [ep, ne, jo, ar] = await Promise.all([
-      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
+      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
     ]);
 
     const s = {

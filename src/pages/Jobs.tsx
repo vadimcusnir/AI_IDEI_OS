@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -133,6 +134,7 @@ function JobsGuide() {
 export default function Jobs() {
   const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -141,19 +143,20 @@ export default function Jobs() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     fetchJobs();
     const channel = supabase
       .channel("jobs-realtime")
       .on("postgres_changes", { event: "*", schema: "public", table: "neuron_jobs" }, () => fetchJobs())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const fetchJobs = async () => {
     const { data, error } = await supabase
       .from("neuron_jobs")
       .select("id, neuron_id, worker_type, status, input, result, error_message, created_at, completed_at, retry_count, max_retries")
+      .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false })
       .limit(50);
     if (data) setJobs(data as Job[]);

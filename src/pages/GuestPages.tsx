@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -57,6 +58,7 @@ function findDuplicateCandidates(guests: GuestProfile[]): Map<string, string[]> 
 
 export default function GuestPages() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [guests, setGuests] = useState<GuestProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,15 +70,15 @@ export default function GuestPages() {
   const { assignments } = useFolderSidebar("guest_folders");
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadGuests();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadGuests = async () => {
     const { data, error } = await supabase
       .from("guest_profiles")
       .select("*")
-      .eq("author_id", user!.id)
+      .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false });
     if (data) setGuests(data as unknown as GuestProfile[]);
     if (error) toast.error("Error loading profiles");

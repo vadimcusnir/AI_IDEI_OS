@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
@@ -83,6 +84,7 @@ const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [extractingId, setExtractingId] = useState<string | null>(null);
@@ -142,9 +144,9 @@ export default function Extractor() {
   const transcriptFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     fetchEpisodes();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   useEffect(() => {
     if (!loading && episodes.length === 0) setShowForm(true);
@@ -159,6 +161,7 @@ export default function Extractor() {
     const { data, error } = await supabase
       .from("episodes")
       .select("*")
+      .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false });
     if (data) setEpisodes(data as Episode[]);
     if (error) toast.error("Failed to load episodes");
@@ -326,6 +329,7 @@ export default function Extractor() {
 
       const { data: ep, error } = await supabase.from("episodes").insert({
         author_id: user.id,
+        workspace_id: currentWorkspace!.id,
         title: finalTitle,
         source_type: sourceType,
         transcript: sourceType === "text" ? content : null,

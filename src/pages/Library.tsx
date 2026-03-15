@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -65,6 +66,7 @@ const STATUS_CONFIG: Record<string, { label: string; dot: string }> = {
 
 export default function Library() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,15 +82,15 @@ export default function Library() {
   const { assignments } = useFolderSidebar("library_folders");
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadArtifacts();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadArtifacts = async () => {
     const { data } = await supabase
       .from("artifacts")
       .select("id, title, artifact_type, format, content, status, tags, service_key, created_at, updated_at")
-      .eq("author_id", user!.id)
+      .eq("workspace_id", currentWorkspace!.id)
       .order("updated_at", { ascending: false });
     setArtifacts((data as Artifact[]) || []);
     setLoading(false);

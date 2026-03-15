@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload, Brain, Sparkles, Coins, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -37,21 +38,23 @@ const STAGES = [
 
 export function PipelineIndicator() {
   const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [stats, setStats] = useState<PipelineStats>({ episodes: 0, neurons: 0, jobs: 0, credits: 0 });
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !currentWorkspace) return;
+    const wsId = currentWorkspace.id;
     Promise.all([
-      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("author_id", user.id),
-      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user.id),
-      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("author_id", user.id).eq("status", "completed"),
+      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("workspace_id", wsId).eq("status", "completed"),
       supabase.from("credit_transactions").select("amount").eq("user_id", user.id),
     ]).then(([ep, ne, jo, cr]) => {
       const totalCredits = (cr.data as any[])?.reduce((sum: number, t: any) => sum + (t.amount || 0), 0) ?? 0;
       setStats({ episodes: ep.count ?? 0, neurons: ne.count ?? 0, jobs: jo.count ?? 0, credits: totalCredits });
     });
-  }, [user]);
+  }, [user, currentWorkspace]);
 
   const completedCount = STAGES.filter(s => s.check(stats)).length;
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
 import logo from "@/assets/logo.gif";
@@ -28,27 +29,28 @@ interface DashboardData {
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadDashboard();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadDashboard = async () => {
     const now = new Date();
     const weekAgo = new Date(now);
     weekAgo.setDate(weekAgo.getDate() - 7);
+    const wsId = currentWorkspace!.id;
 
     const [neuronsRes, episodesRes, creditsRes, jobsRes, artifactsRes] = await Promise.all([
-      supabase.from("neurons").select("id, status, content_category, created_at").eq("author_id", user!.id),
-      supabase.from("episodes").select("id, status").eq("author_id", user!.id),
+      supabase.from("neurons").select("id, status, content_category, created_at").eq("workspace_id", wsId),
+      supabase.from("episodes").select("id, status").eq("workspace_id", wsId),
       supabase.from("user_credits").select("*").eq("user_id", user!.id).maybeSingle(),
-      supabase.from("neuron_jobs").select("id, worker_type, status, created_at, completed_at").eq("author_id", user!.id).order("created_at", { ascending: false }).limit(50),
-      supabase.from("artifacts").select("id, created_at").eq("author_id", user!.id),
+      supabase.from("neuron_jobs").select("id, worker_type, status, created_at, completed_at").eq("workspace_id", wsId).order("created_at", { ascending: false }).limit(50),
+      supabase.from("artifacts").select("id, created_at").eq("workspace_id", wsId),
     ]);
 
     const neurons = neuronsRes.data || [];

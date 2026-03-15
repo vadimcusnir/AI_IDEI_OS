@@ -4,6 +4,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { WhatsNewWidget } from "@/components/home/WhatsNewWidget";
 import { TrendingIdeasWidget } from "@/components/home/TrendingIdeasWidget";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -66,6 +67,7 @@ const QUICK_ACTIONS = [
 
 export default function Home() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<RecentNeuron[]>([]);
@@ -76,19 +78,20 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadData();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadData = async () => {
+    const wsId = currentWorkspace!.id;
     const [neuronsRes, jobsRes, episodesRes, neuronsCount, jobsCount] = await Promise.all([
       supabase.from("neurons").select("id, number, title, status, updated_at")
-        .eq("author_id", user!.id).order("updated_at", { ascending: false }).limit(5),
+        .eq("workspace_id", wsId).order("updated_at", { ascending: false }).limit(5),
       supabase.from("neuron_jobs").select("id, worker_type, status, created_at")
-        .eq("author_id", user!.id).order("created_at", { ascending: false }).limit(5),
-      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
+        .eq("workspace_id", wsId).order("created_at", { ascending: false }).limit(5),
+      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
     ]);
 
     setNeurons(neuronsRes.data as RecentNeuron[] || []);

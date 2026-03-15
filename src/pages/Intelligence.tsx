@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -31,20 +32,22 @@ interface Stats {
 
 export default function Intelligence() {
   const { user, loading: authLoading } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("graph");
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadStats();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadStats = async () => {
+    const wsId = currentWorkspace!.id;
     const [neuronsRes, episodesRes, creditsRes] = await Promise.all([
-      supabase.from("neurons").select("id, status, content_category, lifecycle, created_at").eq("author_id", user!.id),
-      supabase.from("episodes").select("id, status, created_at").eq("author_id", user!.id),
+      supabase.from("neurons").select("id, status, content_category, lifecycle, created_at").eq("workspace_id", wsId),
+      supabase.from("episodes").select("id, status, created_at").eq("workspace_id", wsId),
       supabase.from("user_credits").select("*").eq("user_id", user!.id).maybeSingle(),
     ]);
 

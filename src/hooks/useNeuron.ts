@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { Block, BlockType, CodeLanguage, BLOCK_TYPE_CONFIG, ExecutionLog } from "@/components/neuron/types";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
@@ -18,6 +19,7 @@ interface NeuronData {
 
 export function useNeuron(neuronNumber?: number) {
   const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const [neuron, setNeuron] = useState<NeuronData | null>(null);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,7 +93,7 @@ export function useNeuron(neuronNumber?: number) {
           // Create new neuron
           const { data: n, error } = await supabase
             .from("neurons")
-            .insert({ author_id: user.id, title: "Untitled Neuron" })
+            .insert({ author_id: user.id, title: "Untitled Neuron", workspace_id: currentWorkspace?.id } as any)
             .select()
             .single();
 
