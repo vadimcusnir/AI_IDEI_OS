@@ -134,6 +134,7 @@ export default function Services() {
   }
 
   return (
+    <PageTransition>
     <div className="flex-1 overflow-y-auto">
       <SEOHead
         title="AI Services — AI-IDEI"
