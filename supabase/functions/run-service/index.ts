@@ -1,6 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
+import { loadPrompt } from "../_shared/prompt-loader.ts";
 
 const SERVICE_PROMPTS: Record<string, string> = {
   "insight-extractor": `You are a knowledge extraction engine. Analyze the provided content and extract the most important insights.
