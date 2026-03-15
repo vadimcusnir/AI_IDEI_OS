@@ -52,14 +52,18 @@ export default function GamificationPage() {
           </div>
 
           {/* Daily Challenges */}
-          <div className="mb-6">
-            <DailyChallenges />
-          </div>
+          <ControlledSection elementId="gamification.daily_challenges">
+            <div className="mb-6">
+              <DailyChallenges />
+            </div>
+          </ControlledSection>
 
           {/* Team Challenges */}
-          <div className="mb-6">
-            <TeamChallenges />
-          </div>
+          <ControlledSection elementId="gamification.team_challenges">
+            <div className="mb-6">
+              <TeamChallenges />
+            </div>
+          </ControlledSection>
 
           {/* Achievement Gallery */}
           <div className="mb-6">
