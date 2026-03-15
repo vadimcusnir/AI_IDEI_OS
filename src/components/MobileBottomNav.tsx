@@ -160,7 +160,7 @@ export function MobileBottomNav() {
                         key={item.path}
                         onClick={() => handleNav(item.path)}
                         className={cn(
-                          "flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors",
+                          "flex items-center gap-3 w-full px-4 py-3 text-sm transition-colors min-h-[44px]",
                           active
                             ? "text-primary bg-primary/10 font-medium"
                             : "text-foreground hover:bg-accent"
