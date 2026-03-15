@@ -23,6 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
+import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
 
 async function extractTextFromPDF(file: File): Promise<string> {
   const pdfjsLib = await import("pdfjs-dist");
