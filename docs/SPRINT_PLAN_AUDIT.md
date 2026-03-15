@@ -76,13 +76,13 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 1 sesiune rămasă | **Impact:** MARE
 
-### 2.3 🟡 FE-001: Optimizare bundle
-- [ ] **P2.9** Adaugă lazy loading pentru toate paginile cu `React.lazy` + `Suspense`
+### 2.3 ✅ FE-001: Optimizare bundle — PARȚIAL COMPLETAT
+- [x] **P2.9** ✅ Lazy loading pentru TOATE 46 paginile cu `React.lazy` + `Suspense` + loading spinner
 - [ ] **P2.10** Dynamic import pentru `react-force-graph-2d` (doar pe `/intelligence`)
 - [ ] **P2.11** Dynamic import pentru `recharts` (doar pe paginile cu grafice)
 - [ ] **P2.12** Verifică tree shaking și elimină importuri neutilizate
 
-**Efort:** 2 sesiuni | **Impact:** MEDIU
+**Efort:** 1 sesiune rămasă | **Impact:** MEDIU
 
 ### 2.4 🟡 FE-002: Memory leak KnowledgeGraph
 - [ ] **P2.13** Adaugă cleanup în `useEffect` pentru `react-force-graph-2d` (destroy on unmount)
