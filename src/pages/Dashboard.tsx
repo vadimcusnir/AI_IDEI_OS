@@ -179,8 +179,10 @@ export default function Dashboard() {
             ))}
           </div>
         </motion.div>
+        </ControlledSection>
 
         {/* Activity Chart + Credit Gauge */}
+        <ControlledSection elementId="dashboard.activity_credits">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {/* Activity */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-4">
