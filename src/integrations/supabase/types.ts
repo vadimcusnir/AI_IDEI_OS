@@ -4289,6 +4289,9 @@ export type Database = {
       user_credits: {
         Row: {
           balance: number
+          daily_spend_cap: number
+          daily_spent: number
+          daily_spent_date: string
           id: string
           total_earned: number
           total_spent: number
@@ -4297,6 +4300,9 @@ export type Database = {
         }
         Insert: {
           balance?: number
+          daily_spend_cap?: number
+          daily_spent?: number
+          daily_spent_date?: string
           id?: string
           total_earned?: number
           total_spent?: number
@@ -4305,6 +4311,9 @@ export type Database = {
         }
         Update: {
           balance?: number
+          daily_spend_cap?: number
+          daily_spent?: number
+          daily_spent_date?: string
           id?: string
           total_earned?: number
           total_spent?: number
@@ -5159,6 +5168,15 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      spend_credits_capped: {
+        Args: {
+          _amount: number
+          _description: string
+          _job_id?: string
+          _user_id: string
+        }
+        Returns: Json
       }
       wallet_add: {
         Args: { _amount: number; _description?: string; _user_id: string }
