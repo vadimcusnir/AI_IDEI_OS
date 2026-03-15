@@ -189,6 +189,11 @@ export default function Credits() {
           <TopUpDialog onSuccess={loadData} />
         </div>
 
+        {/* Wallet State */}
+        <div className="mb-6">
+          <WalletPanel />
+        </div>
+
         {/* Subscription Plans */}
         <div className="bg-card border border-border rounded-xl p-5 mb-6">
           <SubscriptionPlans />
