@@ -151,9 +151,9 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 ### 4.4 ✅ Teste automate — PARȚIAL COMPLETAT 2026-03-15
 - [x] **T4.9** ✅ 23 teste Vitest: cn utility (4), docsContent structure (4), neuron sort/group (8), breadcrumb logic (6), example (1)
-- [ ] **T4.10** Adaugă 5+ teste Playwright E2E (auth, extractor, marketplace)
+- [x] **T4.10** ✅ 5 fișiere Playwright E2E: landing (4 teste), auth (5 teste), navigation (6 teste), SEO (5 teste), responsive (3 teste) = 23 teste E2E
 
-**Efort:** 3-4 sesiuni rămase (E2E) | **Impact:** MARE (long-term)
+**Efort:** 0 (completat) | **Impact:** MARE (long-term)
 
 ---
 
