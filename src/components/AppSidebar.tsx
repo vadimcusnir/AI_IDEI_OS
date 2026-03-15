@@ -51,6 +51,8 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
       { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
       { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge" },
+      { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
     ],
   },
   {
