@@ -1649,6 +1649,45 @@ export type Database = {
           },
         ]
       }
+      forum_flags: {
+        Row: {
+          created_at: string
+          id: string
+          reason: string
+          reporter_id: string
+          resolution_note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reason?: string
+          reporter_id: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          target_id: string
+          target_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reason?: string
+          reporter_id?: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: []
+      }
       forum_posts: {
         Row: {
           author_id: string
@@ -1714,6 +1753,7 @@ export type Database = {
           reply_count: number
           slug: string
           solved_post_id: string | null
+          tags: string[] | null
           title: string
           updated_at: string
           view_count: number
@@ -1732,6 +1772,7 @@ export type Database = {
           reply_count?: number
           slug: string
           solved_post_id?: string | null
+          tags?: string[] | null
           title: string
           updated_at?: string
           view_count?: number
@@ -1750,6 +1791,7 @@ export type Database = {
           reply_count?: number
           slug?: string
           solved_post_id?: string | null
+          tags?: string[] | null
           title?: string
           updated_at?: string
           view_count?: number
@@ -3585,6 +3627,83 @@ export type Database = {
           updated_at?: string
           updated_by?: string | null
           value?: Json
+        }
+        Relationships: []
+      }
+      team_challenge_contributions: {
+        Row: {
+          amount: number
+          challenge_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          challenge_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          challenge_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_challenge_contributions_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "team_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_challenges: {
+        Row: {
+          created_at: string
+          current_value: number
+          description: string
+          ends_at: string
+          goal_metric: string
+          goal_value: number
+          id: string
+          is_active: boolean
+          neurons_reward: number
+          starts_at: string
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          created_at?: string
+          current_value?: number
+          description?: string
+          ends_at?: string
+          goal_metric: string
+          goal_value?: number
+          id?: string
+          is_active?: boolean
+          neurons_reward?: number
+          starts_at?: string
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          created_at?: string
+          current_value?: number
+          description?: string
+          ends_at?: string
+          goal_metric?: string
+          goal_value?: number
+          id?: string
+          is_active?: boolean
+          neurons_reward?: number
+          starts_at?: string
+          title?: string
+          xp_reward?: number
         }
         Relationships: []
       }
