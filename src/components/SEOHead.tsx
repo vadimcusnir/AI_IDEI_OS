@@ -1,5 +1,28 @@
 import { useEffect } from "react";
 
+const BASE_URL = "https://ai-idei.com";
+
+/** Route-to-OG image mapping for social media thumbnails */
+const OG_IMAGE_MAP: Record<string, string> = {
+  "/extractor": "/og/og-extractor.png",
+  "/intelligence": "/og/og-intelligence.png",
+  "/neurons": "/og/og-neurons.png",
+  "/services": "/og/og-services.png",
+  "/marketplace": "/og/og-marketplace.png",
+  "/community": "/og/og-community.png",
+  "/library": "/og/og-library.png",
+};
+
+function resolveOgImage(path: string, custom?: string): string {
+  if (custom) return custom;
+  // Check exact match first, then prefix match
+  if (OG_IMAGE_MAP[path]) return `${BASE_URL}${OG_IMAGE_MAP[path]}`;
+  for (const [route, img] of Object.entries(OG_IMAGE_MAP)) {
+    if (path.startsWith(route)) return `${BASE_URL}${img}`;
+  }
+  return `${BASE_URL}/og/og-default.png`;
+}
+
 interface SEOHeadProps {
   title: string;
   description?: string;
@@ -34,7 +57,13 @@ export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps
     setMeta("twitter:site", "@ai_idei");
     setMeta("twitter:title", fullTitle);
 
-    if (ogImage) setMeta("og:image", ogImage, true);
+    // Resolve OG image
+    const path = window.location.pathname;
+    const resolvedImage = resolveOgImage(path, ogImage);
+    setMeta("og:image", resolvedImage, true);
+    setMeta("twitter:image", resolvedImage);
+    setMeta("og:image:width", "1200", true);
+    setMeta("og:image:height", "630", true);
 
     const currentUrl = canonical || window.location.href;
     const canonicalUrl = currentUrl.replace("ai-idei-os.lovable.app", "ai-idei.com");
@@ -51,8 +80,6 @@ export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps
     setMeta("og:url", canonicalUrl, true);
 
     // Hreflang tags
-    const path = new URL(canonicalUrl).pathname;
-    const base = "https://ai-idei.com";
     const langs = ["en", "ro", "ru"];
     
     // Remove old hreflang links
@@ -62,14 +89,14 @@ export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps
       const hreflang = document.createElement("link");
       hreflang.setAttribute("rel", "alternate");
       hreflang.setAttribute("hreflang", lang);
-      hreflang.setAttribute("href", `${base}${path}?lang=${lang}`);
+      hreflang.setAttribute("href", `${BASE_URL}${path}?lang=${lang}`);
       document.head.appendChild(hreflang);
     }
     // x-default
     const xDefault = document.createElement("link");
     xDefault.setAttribute("rel", "alternate");
     xDefault.setAttribute("hreflang", "x-default");
-    xDefault.setAttribute("href", `${base}${path}`);
+    xDefault.setAttribute("href", `${BASE_URL}${path}`);
     document.head.appendChild(xDefault);
 
   }, [title, description, canonical, ogImage]);
