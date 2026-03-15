@@ -108,6 +108,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
       <MobileBottomNav />
       
       <ContextualFeedbackPrompt />
+      <GamificationToasts />
     </SidebarProvider>
   );
 }
