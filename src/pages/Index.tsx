@@ -12,6 +12,7 @@ import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/Neuro
 import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.gif";
+import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 
 const STATUS_DOTS: Record<string, string> = {
   draft: "bg-muted-foreground/40",
@@ -68,11 +69,7 @@ export default function Index() {
   const filteredCount = folderFilteredNeurons.reduce((sum, g) => sum + g.items.length, 0);
 
   if (authLoading || loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <ListPageSkeleton columns={3} />;
   }
 
   return (

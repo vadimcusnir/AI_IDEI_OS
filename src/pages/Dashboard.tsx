@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
+import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
@@ -117,11 +118,7 @@ export default function Dashboard() {
   };
 
   if (authLoading || loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (!data) return null;

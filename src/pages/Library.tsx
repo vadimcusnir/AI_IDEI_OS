@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 
 interface Artifact {
   id: string;
@@ -136,11 +137,7 @@ export default function Library() {
   }, [artifacts]);
 
   if (authLoading || loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <ListPageSkeleton columns={3} />;
   }
 
   return (
