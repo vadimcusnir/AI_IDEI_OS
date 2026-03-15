@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
+import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
