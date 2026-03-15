@@ -143,7 +143,7 @@ export function AppSidebar() {
           return (
             <div key={section.labelKey}>
               {sIdx > 0 && <SidebarSeparator />}
-              <SidebarGroup defaultOpen={sectionHasActive(section)}>
+              <SidebarGroup>
                 <SidebarGroupLabel>{t(`navigation:${section.labelKey}`)}</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
