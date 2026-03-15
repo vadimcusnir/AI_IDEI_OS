@@ -12,6 +12,7 @@ import {
 import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { PublishToMarketplaceDialog } from "@/components/library/PublishToMarketplaceDialog";
+import { ContributeDialog, ContributionsList } from "@/components/library/ContributeDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
