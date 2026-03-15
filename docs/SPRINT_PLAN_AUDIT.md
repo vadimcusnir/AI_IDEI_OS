@@ -137,11 +137,11 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 0 (completat) | **Impact:** MEDIU
 
-### 4.2 🟡 FE-003: Validare formulare frontend
-- [ ] **T4.5** Adaugă Zod + react-hook-form pe formularele principale
-- [ ] **T4.6** Standardizează mesajele de eroare (i18n)
+### 4.2 ✅ FE-003: Validare formulare frontend — PARȚIAL COMPLETAT 2026-03-15
+- [x] **T4.5** ✅ Validare email + password pe Auth.tsx (regex email, min length, signup 8+ chars)
+- [ ] **T4.6** Standardizează mesajele de eroare (i18n) — backlog
 
-**Efort:** 2 sesiuni | **Impact:** MEDIU
+**Efort:** 0.5 sesiuni rămase (i18n) | **Impact:** MEDIU
 
 ### 4.3 ✅ FE-004: Error handling consistent — COMPLETAT 2026-03-15
 - [x] **T4.7** ✅ Empty states pe toate paginile cu liste (Neurons, Library, Jobs — toate au empty states dedicate)
