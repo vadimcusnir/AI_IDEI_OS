@@ -82,15 +82,15 @@ export default function Library() {
   const { assignments } = useFolderSidebar("library_folders");
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     loadArtifacts();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadArtifacts = async () => {
     const { data } = await supabase
       .from("artifacts")
       .select("id, title, artifact_type, format, content, status, tags, service_key, created_at, updated_at")
-      .eq("author_id", user!.id)
+      .eq("workspace_id", currentWorkspace!.id)
       .order("updated_at", { ascending: false });
     setArtifacts((data as Artifact[]) || []);
     setLoading(false);

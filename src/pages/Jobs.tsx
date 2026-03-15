@@ -143,19 +143,20 @@ export default function Jobs() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     fetchJobs();
     const channel = supabase
       .channel("jobs-realtime")
       .on("postgres_changes", { event: "*", schema: "public", table: "neuron_jobs" }, () => fetchJobs())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const fetchJobs = async () => {
     const { data, error } = await supabase
       .from("neuron_jobs")
       .select("id, neuron_id, worker_type, status, input, result, error_message, created_at, completed_at, retry_count, max_retries")
+      .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false })
       .limit(50);
     if (data) setJobs(data as Job[]);
