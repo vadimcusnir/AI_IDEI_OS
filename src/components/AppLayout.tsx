@@ -13,6 +13,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { Footer } from "@/components/global/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
+import { UserMenu } from "@/components/UserMenu";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
