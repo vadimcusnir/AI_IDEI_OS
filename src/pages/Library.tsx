@@ -12,6 +12,7 @@ import {
 import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { PublishToMarketplaceDialog } from "@/components/library/PublishToMarketplaceDialog";
+import { ContributeDialog, ContributionsList } from "@/components/library/ContributeDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -165,7 +166,11 @@ export default function Library() {
               <p className="text-xs text-muted-foreground mt-0.5">{filtered.length} / {artifacts.length} artifacts</p>
             </div>
           </div>
+          <ContributeDialog />
         </div>
+
+        {/* My contributions */}
+        <ContributionsList />
 
         {/* Library vs Neurons explainer */}
         <div className="rounded-xl border border-border bg-card p-4 mb-5">

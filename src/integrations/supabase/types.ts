@@ -511,6 +511,60 @@ export type Database = {
         }
         Relationships: []
       }
+      content_contributions: {
+        Row: {
+          author_id: string
+          content: string
+          contribution_type: string
+          created_at: string
+          id: string
+          neurons_awarded: number
+          quality_score: number | null
+          review_note: string | null
+          reviewed_at: string | null
+          reviewer_id: string | null
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+          word_count: number
+        }
+        Insert: {
+          author_id: string
+          content?: string
+          contribution_type?: string
+          created_at?: string
+          id?: string
+          neurons_awarded?: number
+          quality_score?: number | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          word_count?: number
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          contribution_type?: string
+          created_at?: string
+          id?: string
+          neurons_awarded?: number
+          quality_score?: number | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          word_count?: number
+        }
+        Relationships: []
+      }
       credit_transactions: {
         Row: {
           amount: number
@@ -3007,6 +3061,95 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_deliveries: {
+        Row: {
+          attempt: number
+          created_at: string
+          delivered_at: string | null
+          endpoint_id: string
+          event_type: string
+          id: string
+          payload: Json
+          response_body: string | null
+          response_status: number | null
+          status: string
+        }
+        Insert: {
+          attempt?: number
+          created_at?: string
+          delivered_at?: string | null
+          endpoint_id: string
+          event_type: string
+          id?: string
+          payload?: Json
+          response_body?: string | null
+          response_status?: number | null
+          status?: string
+        }
+        Update: {
+          attempt?: number
+          created_at?: string
+          delivered_at?: string | null
+          endpoint_id?: string
+          event_type?: string
+          id?: string
+          payload?: Json
+          response_body?: string | null
+          response_status?: number | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_deliveries_endpoint_id_fkey"
+            columns: ["endpoint_id"]
+            isOneToOne: false
+            referencedRelation: "webhook_endpoints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhook_endpoints: {
+        Row: {
+          created_at: string
+          description: string
+          events: string[]
+          failure_count: number
+          id: string
+          is_active: boolean
+          last_triggered_at: string | null
+          secret: string
+          updated_at: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          is_active?: boolean
+          last_triggered_at?: string | null
+          secret?: string
+          updated_at?: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          is_active?: boolean
+          last_triggered_at?: string | null
+          secret?: string
+          updated_at?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       workspace_members: {
         Row: {
           id: string
@@ -3206,6 +3349,10 @@ export type Database = {
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
       root2_nearest: { Args: { _price: number }; Returns: number }
       root2_validate: { Args: { _price: number }; Returns: boolean }
+      score_contribution: {
+        Args: { _contribution_id: string }
+        Returns: number
+      }
       search_neurons_semantic: {
         Args: {
           _user_id?: string

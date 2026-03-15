@@ -10,6 +10,7 @@ import {
   Code2, Shield, Zap, Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { WebhookManagement } from "@/components/api/WebhookManagement";
 
 interface ApiKey {
   id: string;
@@ -268,6 +269,11 @@ curl -H "X-API-Key: aiidei_your_key_here" \\
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Webhooks */}
+        <div className="mb-8">
+          <WebhookManagement />
         </div>
 
         {/* Response format */}
