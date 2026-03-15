@@ -1,6 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { loadPrompt } from "../_shared/prompt-loader.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 // ── Chunking utilities ──
 
@@ -59,7 +61,7 @@ async function extractNeuronsFromChunk(
   chunkIndex: number,
   totalChunks: number
 ): Promise<any[]> {
-  const systemPrompt = `You are a neuron extraction engine for a Knowledge Operating System.
+  const fallbackPrompt = `You are a neuron extraction engine for a Knowledge Operating System.
 
 Analyze this transcript segment (chunk ${chunkIndex + 1}/${totalChunks}) and extract distinct knowledge units ("neurons").
 
@@ -76,6 +78,8 @@ Rules:
 - Classify accurately using the content_category enum
 - Use heading blocks for titles, text blocks for explanations, quote blocks for direct quotes, idea blocks for insights
 - Return ONLY a valid JSON array, no markdown wrapping`;
+
+  const { prompt: systemPrompt } = await loadPrompt("extract_neurons", fallbackPrompt);
 
   const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
@@ -196,8 +200,17 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Check & spend credits atomically via SECURITY DEFINER function ──
+    // ── Regime check ──
+    const regime = await getRegimeConfig("extract-neurons");
     const EXTRACTION_COST = 100;
+    const blockReason = checkRegimeBlock(regime, EXTRACTION_COST);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: blockReason }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Check & spend credits atomically via SECURITY DEFINER function ──
     const { data: spent } = await supabase.rpc("spend_credits", {
       _user_id: userId,
       _amount: EXTRACTION_COST,

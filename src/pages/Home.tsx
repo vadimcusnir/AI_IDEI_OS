@@ -24,6 +24,7 @@ import { InstantActionSurface } from "@/components/extractor/InstantActionSurfac
 import { motion } from "framer-motion";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface RecentNeuron {
   id: number;
@@ -165,6 +166,7 @@ export default function Home() {
         </motion.div>
 
         {/* Quick Actions — large cards */}
+        <ControlledSection elementId="home.quick_actions">
         <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {QUICK_ACTIONS.map(action => (
             <motion.button
@@ -190,6 +192,7 @@ export default function Home() {
             </motion.button>
           ))}
         </motion.div>
+        </ControlledSection>
 
         {/* Onboarding Checklist */}
         <OnboardingChecklist />

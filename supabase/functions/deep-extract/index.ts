@@ -4,6 +4,8 @@
  * on a transcript, creating scored neurons per level.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { loadPrompts } from "../_shared/prompt-loader.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -392,6 +394,27 @@ Deno.serve(async (req) => {
       : [chunks[0], chunks[Math.floor(chunks.length / 2)], chunks[chunks.length - 1]];
     const sampleText = sampleChunks.join("\n\n---\n\n");
 
+    // ── Regime check ──
+    const regime = await getRegimeConfig("deep-extract");
+    const blockReason = checkRegimeBlock(regime, totalCost);
+    if (blockReason) {
+      // Refund credits
+      await supabase.rpc("add_credits", { _user_id: userId, _amount: totalCost, _description: `REFUND: Regime blocked — ${blockReason}`, _type: "refund" });
+      return new Response(JSON.stringify({ error: blockReason }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Load dynamic prompts from registry ──
+    const promptFallbacks: Record<string, string> = {};
+    for (const l of requestedLevels) {
+      promptFallbacks[`deep_extract_${l.key}`] = l.systemPrompt;
+    }
+    const dynamicPrompts = await loadPrompts(
+      requestedLevels.map(l => `deep_extract_${l.key}`),
+      promptFallbacks
+    );
+
     // Run each extraction level
     const results: Array<{
       level: string;
@@ -403,9 +426,12 @@ Deno.serve(async (req) => {
     for (const level of requestedLevels) {
       console.log(`Running level: ${level.key}`);
 
+      const promptEntry = dynamicPrompts[`deep_extract_${level.key}`];
+      const systemPrompt = promptEntry?.prompt || level.systemPrompt;
+
       const extracted = await callAI(
         LOVABLE_API_KEY,
-        level.systemPrompt,
+        systemPrompt,
         `Episode: "${episode.title}"\n\nContent (${sampleChunks.length} segments):\n${sampleText.slice(0, 30000)}`
       );
 

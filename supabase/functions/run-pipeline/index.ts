@@ -4,6 +4,7 @@
  * Enables: 1 extraction → 50+ deliverables automatically.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -126,6 +127,19 @@ Deno.serve(async (req) => {
       const svc = serviceMap.get(step.service_key);
       if (!svc) {
         results.push({ service_key: step.service_key, status: "skipped", reason: "service not found" });
+        continue;
+      }
+
+      // ── Regime enforcement per step ──
+      const regime = await getRegimeConfig(step.service_key);
+      const blockReason = checkRegimeBlock(regime, svc.credits_cost || 0);
+      if (blockReason) {
+        results.push({ service_key: step.service_key, status: "blocked", reason: blockReason });
+        continue;
+      }
+
+      if (regime.dryRun) {
+        results.push({ service_key: step.service_key, status: "dry_run", reason: "Simulation mode — no real execution" });
         continue;
       }
 
