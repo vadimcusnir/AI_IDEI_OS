@@ -134,8 +134,38 @@ No edge function directly modifies the `user_credits` table. RLS policies restri
 | `imf_pipelines` | ✅ | Admins manage, users read active |
 | `imf_pipeline_runs` | ✅ | Users read own, admins read all |
 | `neuron_embeddings` | ✅ | Follow neuron visibility |
+| `forum_flags` | ✅ | Users create own, admins manage |
+| `team_challenges` | ✅ | Admins manage, users read active |
+| `team_challenge_contributions` | ✅ | Users read own, system inserts |
 
 ### Semantic Search Security
 - `search_neurons_semantic()` respects neuron visibility (public OR owner)
 - Requires `_user_id` parameter to filter private neurons
 - Uses `extensions.vector` type — no raw SQL exposed to clients
+
+## RLS Hardening (2026-03-15)
+
+### Privilege Escalation Prevention
+- `workspace_members` INSERT restricted to workspace owners only
+- `wallet_state` and `user_karma` UPDATE policies removed — mutations via SECURITY DEFINER only
+- `system_config`, `runtime_health`, `feature_flags`, `training_samples` restricted to admin read-only
+- `challenge_progress`, `vip_milestone_progress`, `team_challenge_contributions` restricted to SELECT-only for users
+- `content_contributions` restricted to INSERT + SELECT (no self-approval or deletion)
+
+## Performance Indexes (2026-03-15)
+
+| Index | Table | Purpose |
+|-------|-------|---------|
+| `idx_forum_threads_last_activity` | forum_threads | Thread listing by activity |
+| `idx_forum_flags_status` | forum_flags | Admin moderation queue |
+| `idx_forum_posts_thread_created` | forum_posts | Thread view pagination |
+| `idx_challenge_progress_user` | challenge_progress | User challenge lookup |
+| `idx_team_contrib_challenge` | team_challenge_contributions | Team progress aggregation |
+| `idx_notifications_user_read` | notifications | Bell count query |
+| `idx_knowledge_assets_published` | knowledge_assets | Marketplace browsing |
+| `idx_asset_tx_buyer/seller` | asset_transactions | Transaction history |
+| `idx_user_karma_karma` | user_karma | Leaderboard sorting |
+| `idx_user_xp_level` | user_xp | XP leaderboard |
+| `idx_entities_type_published` | entities | Entity listing pages |
+| `idx_entity_relations_target` | entity_relations | Graph traversal |
+| `idx_artifacts_job` | artifacts | Pipeline job lookup |
