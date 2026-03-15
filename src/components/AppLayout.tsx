@@ -60,6 +60,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             )}
           >
             <SidebarTrigger />
+            <AppBreadcrumbs />
             <div className="flex-1" />
             <GlobalSearch />
             <DropdownMenu>
