@@ -13,6 +13,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface KnowledgeAsset {
   id: string;
@@ -135,6 +136,7 @@ export default function Marketplace() {
 
         {/* Featured Section */}
         {featured.length > 0 && (
+          <ControlledSection elementId="marketplace.featured">
           <section>
             <div className="flex items-center gap-2 mb-4">
               <Crown className="h-4 w-4 text-amber-500" />
@@ -147,6 +149,7 @@ export default function Marketplace() {
             </div>
             <Separator className="mt-8" />
           </section>
+          </ControlledSection>
         )}
 
         {/* Filters & Sort */}
