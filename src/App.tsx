@@ -53,6 +53,7 @@ const MediaProfiles = lazy(() => import("./pages/MediaProfiles"));
 const PipelineOverview = lazy(() => import("./pages/PipelineOverview"));
 const TopicDiscovery = lazy(() => import("./pages/TopicDiscovery"));
 const Marketplace = lazy(() => import("./pages/Marketplace"));
+const MarketplaceDetail = lazy(() => import("./pages/MarketplaceDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
@@ -132,6 +133,7 @@ const App = () => (
                 <Route path="/topics/discovery" element={<AppLayout><TopicDiscovery /></AppLayout>} />
                 <Route path="/topics/:slug" element={<AppLayout><TopicDetail /></AppLayout>} />
                 <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
+                <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />

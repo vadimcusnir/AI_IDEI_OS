@@ -51,6 +51,8 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
       { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
       { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge" },
+      { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
     ],
   },
   {
@@ -61,7 +63,7 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
-      { labelKey: "chat", to: "/chat", icon: Bot, controlId: "nav.chat" },
+      { labelKey: "chat", to: "/chat", icon: MessagesSquare, controlId: "nav.chat" },
     ],
   },
   {
