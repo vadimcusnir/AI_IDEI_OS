@@ -299,6 +299,7 @@ export default function Dashboard() {
         )}
 
         {/* Quick Actions */}
+        <ControlledSection elementId="dashboard.quick_actions">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45, duration: 0.4 }} className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
           {[
             { label: "New Neuron", icon: Brain, path: "/n/new" },
