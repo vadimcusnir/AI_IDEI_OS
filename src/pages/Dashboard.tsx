@@ -30,19 +30,19 @@ interface DashboardData {
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) {
       setLoading(false);
       return;
     }
     loadDashboard();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadDashboard = async () => {
     const now = new Date();
@@ -124,7 +124,7 @@ export default function Dashboard() {
     setLoading(false);
   };
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return <DashboardSkeleton />;
   }
 

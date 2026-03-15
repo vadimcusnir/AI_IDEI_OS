@@ -58,7 +58,7 @@ function findDuplicateCandidates(guests: GuestProfile[]): Map<string, string[]> 
 
 export default function GuestPages() {
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [guests, setGuests] = useState<GuestProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,10 +70,10 @@ export default function GuestPages() {
   const { assignments } = useFolderSidebar("guest_folders");
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadGuests();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadGuests = async () => {
     const { data, error } = await supabase
@@ -149,7 +149,7 @@ export default function GuestPages() {
     return list;
   }, [guests, search, showDuplicates, duplicateIds, selectedFolderId, assignments]);
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />

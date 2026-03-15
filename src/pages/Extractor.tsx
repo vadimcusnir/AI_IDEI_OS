@@ -85,7 +85,7 @@ const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [extractingId, setExtractingId] = useState<string | null>(null);
@@ -145,13 +145,13 @@ export default function Extractor() {
   const transcriptFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) {
       setLoading(false);
       return;
     }
     fetchEpisodes();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   useEffect(() => {
     if (!loading && episodes.length === 0) setShowForm(true);
@@ -689,7 +689,7 @@ export default function Extractor() {
     setIsDragging(false);
   }, []);
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />

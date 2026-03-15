@@ -68,7 +68,7 @@ const STATUS_CONFIG: Record<string, { label: string; dot: string }> = {
 
 export default function Library() {
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,10 +84,10 @@ export default function Library() {
   const { assignments } = useFolderSidebar("library_folders");
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadArtifacts();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadArtifacts = async () => {
     const { data } = await supabase
@@ -141,7 +141,7 @@ export default function Library() {
     return Array.from(set);
   }, [artifacts]);
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return <ListPageSkeleton columns={3} />;
   }
 

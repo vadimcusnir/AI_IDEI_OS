@@ -71,7 +71,7 @@ const QUICK_ACTIONS = [
 
 export default function Home() {
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const { balance } = useCreditBalance();
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<RecentNeuron[]>([]);
@@ -82,10 +82,10 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadData();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadData = async () => {
     const wsId = currentWorkspace!.id;
@@ -107,7 +107,7 @@ export default function Home() {
     setLoading(false);
   };
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return <HomeSkeleton />;
   }
 

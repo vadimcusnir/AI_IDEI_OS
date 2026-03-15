@@ -63,17 +63,17 @@ const STEPS = [
 
 export default function Onboarding() {
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [status, setStatus] = useState<StepStatus>({ episodes: 0, neurons: 0, jobs: 0, artifacts: 0 });
   const [loading, setLoading] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadStatus();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadStatus = async () => {
     const wsId = currentWorkspace!.id;
@@ -102,7 +102,7 @@ export default function Onboarding() {
   const totalCheckable = STEPS.filter(s => s.checkField).length;
   const progressPercent = Math.round((completedCount / totalCheckable) * 100);
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />

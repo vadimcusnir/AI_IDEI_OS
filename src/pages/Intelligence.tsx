@@ -33,17 +33,17 @@ interface Stats {
 
 export default function Intelligence() {
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("graph");
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadStats();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadStats = async () => {
     const wsId = currentWorkspace!.id;
@@ -90,7 +90,7 @@ export default function Intelligence() {
     setLoading(false);
   };
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />

@@ -135,7 +135,7 @@ function JobsGuide() {
 export default function Jobs() {
   const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -144,7 +144,7 @@ export default function Jobs() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     fetchJobs();
     const channel = supabase
@@ -152,7 +152,7 @@ export default function Jobs() {
       .on("postgres_changes", { event: "*", schema: "public", table: "neuron_jobs" }, () => fetchJobs())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const fetchJobs = async () => {
     const { data, error } = await supabase
@@ -187,7 +187,7 @@ export default function Jobs() {
     return durations.length ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length) : 0;
   }, [jobs]);
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return <ListPageSkeleton columns={1} />;
   }
 
