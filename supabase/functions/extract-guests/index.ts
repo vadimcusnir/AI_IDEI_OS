@@ -1,5 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { loadPrompt } from "../_shared/prompt-loader.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 // ── Rate limiting ──
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -82,7 +84,17 @@ Deno.serve(async (req) => {
 
     const sample = transcript.slice(0, 6000);
 
-    const systemPrompt = `You are a guest/participant detection engine for podcast transcripts.
+    // ── Regime check ──
+    const regime = await getRegimeConfig("extract-guests");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: blockReason }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const isDryRun = regime.dryRun || regime.regime === "simulation";
+
+    const fallbackPrompt = `You are a guest/participant detection engine for podcast transcripts.
 
 Analyze this transcript and identify ALL distinct people mentioned or participating (host, guest, expert, etc.).
 
@@ -97,6 +109,8 @@ For each person return a JSON object with:
 
 Return ONLY a valid JSON array. No markdown wrapping.
 If no distinct people can be identified, return an empty array [].`;
+
+    const { prompt: systemPrompt } = await loadPrompt("extract_guests", fallbackPrompt);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -139,6 +153,15 @@ If no distinct people can be identified, return an empty array [].`;
       return new Response(JSON.stringify({ guests: [], message: "No guests detected" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // In simulation mode, return detected guests without persisting
+    if (isDryRun) {
+      return new Response(JSON.stringify({
+        success: true, dry_run: true, regime: regime.regime,
+        guests_detected: guests.length,
+        guests: guests.map((g: any) => ({ full_name: g.full_name, role: g.role })),
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     // Upsert guest profiles

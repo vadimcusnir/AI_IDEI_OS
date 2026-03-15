@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { ControlledSection } from "@/components/ControlledSection";
 import { WalletPanel } from "@/components/wallet/WalletPanel";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChart").then(m => ({ default: m.ConsumptionChart })));
@@ -196,14 +197,18 @@ export default function Credits() {
         </div>
 
         {/* Subscription Plans */}
-        <div className="bg-card border border-border rounded-xl p-5 mb-6">
-          <SubscriptionPlans />
-        </div>
+        <ControlledSection elementId="credits.subscription_plans">
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <SubscriptionPlans />
+          </div>
+        </ControlledSection>
 
         {/* VIP Progress */}
-        <div className="mb-6">
-          <VIPProgressTimeline />
-        </div>
+        <ControlledSection elementId="credits.vip_progress">
+          <div className="mb-6">
+            <VIPProgressTimeline />
+          </div>
+        </ControlledSection>
 
         {/* Balance + Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">

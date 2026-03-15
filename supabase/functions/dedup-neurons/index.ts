@@ -3,6 +3,7 @@
  * Finds similar neurons using cosine similarity on embeddings.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -55,6 +56,15 @@ Deno.serve(async (req) => {
     if (!checkRateLimit(userId)) {
       return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
         status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Regime check ──
+    const regime = await getRegimeConfig("dedup-neurons");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: blockReason }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 

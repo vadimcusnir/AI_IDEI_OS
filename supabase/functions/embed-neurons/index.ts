@@ -3,6 +3,7 @@
  * Stores in neuron_embeddings table for semantic search.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -60,6 +61,15 @@ Deno.serve(async (req) => {
         });
       }
       userId = user.id;
+    }
+
+    // ── Regime check ──
+    const regime = await getRegimeConfig("embed-neurons");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: blockReason }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const body = await req.json().catch(() => ({}));

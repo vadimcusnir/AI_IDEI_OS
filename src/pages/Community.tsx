@@ -13,6 +13,7 @@ import { CommunityStats } from "@/components/community/CommunityStats";
 import { CategoryList } from "@/components/community/CategoryList";
 import { ThreadRow } from "@/components/community/ThreadRow";
 import { NewThreadDialog } from "@/components/community/NewThreadDialog";
+import { ControlledSection } from "@/components/ControlledSection";
 import {
   MessageSquare, ArrowLeft, Search, Filter,
 } from "lucide-react";
@@ -60,10 +61,14 @@ export default function Community() {
         </div>
 
         {/* User stats bar */}
-        <CommunityStats />
+        <ControlledSection elementId="community.stats">
+          <CommunityStats />
+        </ControlledSection>
 
         {/* Rewards guide (collapsible) */}
-        {!categorySlug && <CommunityRewardsGuide />}
+        <ControlledSection elementId="community.rewards_guide">
+          {!categorySlug && <CommunityRewardsGuide />}
+        </ControlledSection>
 
         {/* Category listing */}
         {!categorySlug && (
