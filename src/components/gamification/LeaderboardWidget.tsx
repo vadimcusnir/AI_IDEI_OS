@@ -71,7 +71,7 @@ export function LeaderboardWidget() {
                 {MedalIcon ? (
                   <MedalIcon className={cn(
                     "h-3.5 w-3.5 mx-auto",
-                    i === 0 ? "text-yellow-500" : i === 1 ? "text-gray-400" : "text-amber-600"
+                    i === 0 ? "text-primary" : i === 1 ? "text-muted-foreground" : "text-accent-foreground"
                   )} />
                 ) : (
                   <span className="text-[10px] text-muted-foreground">{i + 1}</span>
