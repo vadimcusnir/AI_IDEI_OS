@@ -85,6 +85,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             </DropdownMenu>
             <ThemeToggle />
             {user && <NotificationBell />}
+            {user && <UserMenu />}
           </header>
 
           {fullHeight ? (
