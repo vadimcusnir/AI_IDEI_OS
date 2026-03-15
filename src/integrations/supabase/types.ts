@@ -421,6 +421,44 @@ export type Database = {
         }
         Relationships: []
       }
+      challenge_progress: {
+        Row: {
+          challenge_id: string
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          current_value: number
+          id: string
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          current_value?: number
+          id?: string
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          current_value?: number
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_progress_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "daily_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       changelog_entries: {
         Row: {
           approved_at: string | null
@@ -635,6 +673,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      daily_challenges: {
+        Row: {
+          active_date: string
+          challenge_type: string
+          created_at: string
+          description: string
+          goal_metric: string
+          goal_value: number
+          id: string
+          is_active: boolean
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          active_date?: string
+          challenge_type?: string
+          created_at?: string
+          description?: string
+          goal_metric: string
+          goal_value?: number
+          id?: string
+          is_active?: boolean
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          active_date?: string
+          challenge_type?: string
+          created_at?: string
+          description?: string
+          goal_metric?: string
+          goal_value?: number
+          id?: string
+          is_active?: boolean
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
       }
       decision_ledger: {
         Row: {
@@ -3094,6 +3171,75 @@ export type Database = {
         }
         Relationships: []
       }
+      user_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          freeze_tokens: number
+          freeze_tokens_reset_at: string
+          grace_period_used: boolean
+          last_active_date: string | null
+          longest_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          freeze_tokens?: number
+          freeze_tokens_reset_at?: string
+          grace_period_used?: boolean
+          last_active_date?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          freeze_tokens?: number
+          freeze_tokens_reset_at?: string
+          grace_period_used?: boolean
+          last_active_date?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_xp: {
+        Row: {
+          created_at: string
+          daily_xp_date: string
+          daily_xp_earned: number
+          level: number
+          rank_name: string
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_xp_date?: string
+          daily_xp_earned?: number
+          level?: number
+          rank_name?: string
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_xp_date?: string
+          daily_xp_earned?: number
+          level?: number
+          rank_name?: string
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       wallet_state: {
         Row: {
           available: number
@@ -3287,6 +3433,36 @@ export type Database = {
         }
         Relationships: []
       }
+      xp_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          metadata: Json | null
+          source: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string
+          id?: string
+          metadata?: Json | null
+          source: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          metadata?: Json | null
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       neuron_lifecycle_pricing: {
@@ -3336,6 +3512,16 @@ export type Database = {
         Returns: boolean
       }
       apply_abuse_ladder: { Args: { _user_id: string }; Returns: string }
+      award_xp: {
+        Args: {
+          _amount: number
+          _bypass_cap?: boolean
+          _description?: string
+          _source: string
+          _user_id: string
+        }
+        Returns: Json
+      }
       check_access: {
         Args: { _service_key: string; _user_id: string }
         Returns: Json
@@ -3407,6 +3593,7 @@ export type Database = {
           read_ct: number
         }[]
       }
+      record_daily_activity: { Args: { _user_id: string }; Returns: Json }
       refund_credits: {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean

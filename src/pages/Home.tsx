@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
+import { XPProgressBar } from "@/components/gamification/XPProgressBar";
+import { LeaderboardWidget } from "@/components/gamification/LeaderboardWidget";
+import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { motion } from "framer-motion";
@@ -312,8 +315,14 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right column: Pipeline + What's New */}
+          {/* Right column: Gamification + Pipeline + What's New */}
           <div className="space-y-4">
+            {/* XP Progress */}
+            <XPProgressBar />
+
+            {/* Daily Challenges */}
+            <DailyChallenges />
+
             {/* Pipeline Progress */}
             <div className="bg-card border border-border rounded-xl p-4">
               <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
@@ -321,6 +330,9 @@ export default function Home() {
               </h3>
               <PipelineIndicator />
             </div>
+
+            {/* Leaderboard */}
+            <LeaderboardWidget />
 
             {/* Trending Ideas */}
             <TrendingIdeasWidget />

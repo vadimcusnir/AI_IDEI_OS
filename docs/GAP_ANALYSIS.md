@@ -114,7 +114,7 @@ All P0 critical modules implemented. Wallet system added. New specs uploaded for
 | RELATIONSHIP_DOCS | 95% |
 | COMMUNITY_FORUM | 95% |
 | 01_WALLET | 40% (DB + UI done, Tasks 2-8 pending) |
-| 01_GAMEFICATION | 10% (basic XP exists) |
+| 01_GAMEFICATION | 40% (XP engine, streaks, levels, leaderboard, challenges) |
 | 01_KNOWLEDGE_DASHBOARD | 5% |
 | 01_CUSNIR_OS_VIP_TIER | 0% |
 | 01_DATA_COLLECTION | 15% |
