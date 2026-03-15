@@ -11,6 +11,7 @@ import {
   Sparkles, Activity, Network, BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ControlledSection } from "@/components/ControlledSection";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { KnowledgeGraph } from "@/components/intelligence/KnowledgeGraph";
 import { StatsOverview } from "@/components/intelligence/StatsOverview";
