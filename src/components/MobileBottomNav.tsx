@@ -51,6 +51,7 @@ const MENU_SECTIONS: MenuSection[] = [
       { path: "/intelligence", icon: Network, labelKey: "intelligence" },
       { path: "/topics", icon: Lightbulb, labelKey: "topics" },
       { path: "/marketplace", icon: Store, labelKey: "marketplace" },
+      { path: "/community", icon: Users, labelKey: "community" },
       { path: "/chat", icon: Bot, labelKey: "chat" },
     ],
   },
