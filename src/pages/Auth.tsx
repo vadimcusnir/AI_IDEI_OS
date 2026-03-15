@@ -23,10 +23,28 @@ export default function Auth() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Frontend validation
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    if (mode !== "forgot") {
+      if (password.length < 6) {
+        toast.error("Password must be at least 6 characters.");
+        return;
+      }
+      if (mode === "signup" && password.length < 8) {
+        toast.error("Password must be at least 8 characters for new accounts.");
+        return;
+      }
+    }
+
     setLoading(true);
 
     if (mode === "forgot") {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       if (error) toast.error(error.message);
@@ -36,14 +54,13 @@ export default function Auth() {
     }
 
     if (mode === "signup") {
-      const { error } = await signUp(email, password);
+      const { error } = await signUp(trimmedEmail, password);
       if (error) toast.error(error.message);
       else toast.success("Check your email to confirm your account.");
     } else {
-      const { error } = await signIn(email, password);
+      const { error } = await signIn(trimmedEmail, password);
       if (error) toast.error(error.message);
       else {
-        // Check if user has neurons — if not, redirect to onboarding
         const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
         navigate(count && count > 0 ? "/home" : "/onboarding");
       }
