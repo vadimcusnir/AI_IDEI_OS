@@ -582,6 +582,178 @@ export type Database = {
         }
         Relationships: []
       }
+      cognitive_categories: {
+        Row: {
+          created_at: string
+          depth: number
+          description: string
+          icon: string
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          name: string
+          parent_id: string | null
+          position: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          depth?: number
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          name: string
+          parent_id?: string | null
+          position?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          depth?: number
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          name?: string
+          parent_id?: string | null
+          position?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cognitive_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "cognitive_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cognitive_units: {
+        Row: {
+          author_id: string
+          category_id: string
+          confidence: number
+          content: string
+          created_at: string
+          episode_id: string | null
+          id: string
+          is_validated: boolean
+          llm_ready: boolean
+          metadata: Json | null
+          neuron_id: number | null
+          quality_score: number
+          source_context: string | null
+          tags: string[] | null
+          title: string
+          unit_type: string
+          updated_at: string
+          validated_at: string | null
+          validated_by: string | null
+        }
+        Insert: {
+          author_id: string
+          category_id: string
+          confidence?: number
+          content?: string
+          created_at?: string
+          episode_id?: string | null
+          id?: string
+          is_validated?: boolean
+          llm_ready?: boolean
+          metadata?: Json | null
+          neuron_id?: number | null
+          quality_score?: number
+          source_context?: string | null
+          tags?: string[] | null
+          title: string
+          unit_type?: string
+          updated_at?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Update: {
+          author_id?: string
+          category_id?: string
+          confidence?: number
+          content?: string
+          created_at?: string
+          episode_id?: string | null
+          id?: string
+          is_validated?: boolean
+          llm_ready?: boolean
+          metadata?: Json | null
+          neuron_id?: number | null
+          quality_score?: number
+          source_context?: string | null
+          tags?: string[] | null
+          title?: string
+          unit_type?: string
+          updated_at?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cognitive_units_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "cognitive_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collection_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          source_id: string | null
+          source_type: string
+          started_at: string
+          status: string
+          units_extracted: number
+          units_validated: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          source_id?: string | null
+          source_type?: string
+          started_at?: string
+          status?: string
+          units_extracted?: number
+          units_validated?: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          source_id?: string | null
+          source_type?: string
+          started_at?: string
+          status?: string
+          units_extracted?: number
+          units_validated?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       content_contributions: {
         Row: {
           author_id: string
@@ -3213,6 +3385,111 @@ export type Database = {
           },
         ]
       }
+      training_datasets: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dataset_type: string
+          description: string
+          export_format: string
+          id: string
+          last_exported_at: string | null
+          metadata: Json | null
+          name: string
+          quality_threshold: number
+          status: string
+          total_samples: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dataset_type?: string
+          description?: string
+          export_format?: string
+          id?: string
+          last_exported_at?: string | null
+          metadata?: Json | null
+          name: string
+          quality_threshold?: number
+          status?: string
+          total_samples?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dataset_type?: string
+          description?: string
+          export_format?: string
+          id?: string
+          last_exported_at?: string | null
+          metadata?: Json | null
+          name?: string
+          quality_threshold?: number
+          status?: string
+          total_samples?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      training_samples: {
+        Row: {
+          cognitive_unit_id: string | null
+          created_at: string
+          dataset_id: string
+          id: string
+          input_text: string
+          is_approved: boolean
+          metadata: Json | null
+          output_text: string
+          quality_score: number
+          reviewer_notes: string | null
+          system_prompt: string | null
+        }
+        Insert: {
+          cognitive_unit_id?: string | null
+          created_at?: string
+          dataset_id: string
+          id?: string
+          input_text: string
+          is_approved?: boolean
+          metadata?: Json | null
+          output_text: string
+          quality_score?: number
+          reviewer_notes?: string | null
+          system_prompt?: string | null
+        }
+        Update: {
+          cognitive_unit_id?: string | null
+          created_at?: string
+          dataset_id?: string
+          id?: string
+          input_text?: string
+          is_approved?: boolean
+          metadata?: Json | null
+          output_text?: string
+          quality_score?: number
+          reviewer_notes?: string | null
+          system_prompt?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_samples_cognitive_unit_id_fkey"
+            columns: ["cognitive_unit_id"]
+            isOneToOne: false
+            referencedRelation: "cognitive_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_samples_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "training_datasets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_achievements: {
         Row: {
           achievement_key: string
@@ -3915,6 +4192,7 @@ export type Database = {
         Args: { _max_age_seconds?: number; _user_id: string }
         Returns: Json
       }
+      collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
       compute_idearank: { Args: never; Returns: undefined }
       delete_email: {
         Args: { message_id: number; queue_name: string }
@@ -3956,6 +4234,10 @@ export type Database = {
       kb_track_view: {
         Args: { _article_id: string; _user_id: string }
         Returns: undefined
+      }
+      mark_units_llm_ready: {
+        Args: { _category_id: string; _min_quality?: number }
+        Returns: number
       }
       move_to_dlq: {
         Args: {
