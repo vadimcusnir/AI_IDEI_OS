@@ -627,6 +627,7 @@ export default function AdminDashboard() {
             <TabsContent value="emergency"><EmergencyControlsTab /></TabsContent>
             <TabsContent value="compliance"><ComplianceLogTab /></TabsContent>
             <TabsContent value="flags"><FeatureFlagsTab /></TabsContent>
+            <TabsContent value="moderation"><ForumModerationTab /></TabsContent>
           </Tabs>
         </div>
       </div>
