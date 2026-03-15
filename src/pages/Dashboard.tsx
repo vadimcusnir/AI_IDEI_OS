@@ -15,6 +15,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
 import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
