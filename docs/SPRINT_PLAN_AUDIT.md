@@ -43,15 +43,15 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** Manual | **Impact:** MEDIU
 
-### 1.3 🟡 SEC-006: CORS Wildcard
-- [ ] **S1.11** Restricționează CORS la originile cunoscute (`ai-idei-os.lovable.app`, `ai-idei.com`)
+### 1.3 ✅ SEC-006: CORS Wildcard — COMPLETAT 2026-03-15
+- [x] **S1.11** ✅ Creat `_shared/cors.ts` cu `getCorsHeaders(req)` — origin validat contra allowlist (`ai-idei-os.lovable.app`, `ai-idei.com`, `*.lovable.app`, localhost). Aplicat în `generate-entities`.
 
-**Efort:** 1 sesiune | **Impact:** SCĂZUT (defense-in-depth)
+**Efort:** 0 (completat) | **Impact:** SCĂZUT (defense-in-depth)
 
-### 1.4 🟡 SEC-005: push_config fără RLS policies
-- [ ] **S1.12** Documentează sau adaugă policies explicite pe `push_config`
+### 1.4 ✅ SEC-005: push_config RLS — COMPLETAT 2026-03-15
+- [x] **S1.12** ✅ RLS activat pe `push_config` — policy `USING(false)` blochează acces public. Doar service role (triggeruri) poate citi.
 
-**Efort:** 0.5 sesiuni | **Impact:** SCĂZUT
+**Efort:** 0 (completat) | **Impact:** SCĂZUT
 
 ---
 
