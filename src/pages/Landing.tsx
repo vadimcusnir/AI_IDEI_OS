@@ -298,8 +298,10 @@ export default function Landing() {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* ═══ PIPELINE ═══ */}
-      <section id="pipeline" className="bg-card">
+      <section id="pipeline" className="bg-card noise-overlay relative">
         <div className="max-w-5xl mx-auto px-6 py-20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
             <div className="inline-flex items-center gap-2 mb-3">
