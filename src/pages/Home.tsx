@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
+import { XPProgressBar } from "@/components/gamification/XPProgressBar";
+import { LeaderboardWidget } from "@/components/gamification/LeaderboardWidget";
+import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { motion } from "framer-motion";
