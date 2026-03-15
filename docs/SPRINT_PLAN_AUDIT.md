@@ -26,26 +26,22 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 ## FAZA 1: SECURITATE (Prioritate Maximă)
 
-### 1.1 🔴 SEC-001: Edge Functions acceptă user_id din client
-**Status:** PARȚIAL REZOLVAT — Multe funcții deja extrag din JWT, dar `extract-neurons`, `chunk-transcript`, `extract-guests`, `deep-extract` încă primesc `user_id` din body.
+### 1.1 ✅ SEC-001: Edge Functions acceptă user_id din client
+**Status:** COMPLET REZOLVAT — Audit confirmat 2026-03-15: TOATE funcțiile (extract-neurons, chunk-transcript, extract-guests, deep-extract, extract-insights) derivă user_id din JWT via `supabase.auth.getUser(token)`. Nicio funcție nu acceptă user_id din body.
 
 **Sarcini:**
-- [ ] **S1.1** Audit toate edge functions — identifică cele care acceptă `user_id` din payload
-- [ ] **S1.2** Modifică `extract-neurons` să extragă user_id din JWT via `supabase.auth.getUser(token)`
-- [ ] **S1.3** Modifică `chunk-transcript` — elimină user_id din body, extrage din JWT
-- [ ] **S1.4** Modifică `extract-guests` — elimină user_id din body
-- [ ] **S1.5** Modifică `deep-extract` — elimină user_id din body
-- [ ] **S1.6** Modifică `extract-insights` — elimină user_id din body
-- [ ] **S1.7** Actualizează `Extractor.tsx` — trimite `session.access_token` în loc de anon key
-- [ ] **S1.8** Actualizează `config.toml` — setează `verify_jwt = true` pentru funcțiile user-facing (nu pentru cele interne/webhook)
-- [ ] **S1.9** Testează fiecare funcție cu credențiale valide și invalide
+- [x] **S1.1** Audit toate edge functions — TOATE extrag user_id din JWT ✅
+- [x] **S1.2-S1.6** Toate funcțiile deja securizate ✅
+- [x] **S1.7** Extractor.tsx trimite session.access_token corect ✅
+- [x] **S1.8** config.toml — verify_jwt=false este corect (necesar pentru CORS preflight OPTIONS) ✅
+- [x] **S1.9** Verificat — toate funcțiile returnează 401 fără JWT valid ✅
 
-**Efort:** ~6-8 sesiuni | **Impact:** CRITIC
+**Efort:** 0 (deja implementat) | **Impact:** N/A
 
-### 1.2 🟠 SEC-004: Leaked Password Protection
-- [ ] **S1.10** Activează protecția parolelor compromise în setările de autentificare
+### 1.2 🟡 SEC-004: Leaked Password Protection
+- [ ] **S1.10** ⚠️ MANUAL: Necesită activare din dashboard-ul Lovable Cloud (Pro Plan). Nu poate fi automatizat.
 
-**Efort:** 1 sesiune | **Impact:** MEDIU
+**Efort:** Manual | **Impact:** MEDIU
 
 ### 1.3 🟡 SEC-006: CORS Wildcard
 - [ ] **S1.11** Restricționează CORS la originile cunoscute (`ai-idei-os.lovable.app`, `ai-idei.com`)
@@ -61,16 +57,18 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 ## FAZA 2: PERFORMANȚĂ & OPTIMIZARE
 
-### 2.1 🟠 DB-001: Indexuri lipsă
-**Sarcini:**
-- [ ] **P2.1** Crează index `idx_neurons_author_updated ON neurons(author_id, updated_at DESC)`
-- [ ] **P2.2** Crează index `idx_episodes_author_created ON episodes(author_id, created_at DESC)`
-- [ ] **P2.3** Crează index `idx_entities_neuron_published ON entities(neuron_id) WHERE is_published = true`
-- [ ] **P2.4** Crează index `idx_credit_tx_user_created ON credit_transactions(user_id, created_at DESC)`
-- [ ] **P2.5** Crează index `idx_neuron_jobs_author_created ON neuron_jobs(author_id, created_at DESC)`
-- [ ] **P2.6** Crează index `idx_neuron_jobs_status_active ON neuron_jobs(status) WHERE status NOT IN ('completed', 'failed')`
+### 2.1 ✅ DB-001: Indexuri lipsă
+**Status:** COMPLET — Toate 6 indexuri create pe 2026-03-15.
 
-**Efort:** 1 sesiune (o singură migrație SQL) | **Impact:** MARE
+**Sarcini:**
+- [x] **P2.1** `idx_neurons_author_updated ON neurons(author_id, updated_at DESC)` ✅
+- [x] **P2.2** `idx_episodes_author_created ON episodes(author_id, created_at DESC)` ✅
+- [x] **P2.3** `idx_entities_neuron_published ON entities(neuron_id) WHERE is_published = true` ✅
+- [x] **P2.4** `idx_credit_tx_user_created ON credit_transactions(user_id, created_at DESC)` ✅
+- [x] **P2.5** `idx_neuron_jobs_author_created ON neuron_jobs(author_id, created_at DESC)` ✅
+- [x] **P2.6** `idx_neuron_jobs_status_active ON neuron_jobs(status) WHERE status NOT IN ('completed', 'failed')` ✅
+
+**Efort:** 0 (completat) | **Impact:** MARE
 
 ### 2.2 🟠 BE-001: Procesare secvențială în pipeline AI
 - [ ] **P2.7** Modifică `extract-neurons` să proceseze chunk-uri în paralel cu `Promise.all` (batch de 3-5)
