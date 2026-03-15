@@ -67,19 +67,19 @@ const NAV_SECTIONS: NavSection[] = [
   {
     labelKey: "operate_section",
     items: [
-      { labelKey: "credits", to: "/credits", icon: Coins },
-      { labelKey: "guest_pages", to: "/guests", icon: Users },
-      { labelKey: "pipeline", to: "/pipeline", icon: Layers },
-      { labelKey: "onboarding", to: "/onboarding", icon: Rocket },
+      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { labelKey: "guest_pages", to: "/guests", icon: Users, controlId: "nav.guests" },
+      { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
+      { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },
     ],
   },
   {
     labelKey: "account_section",
     items: [
-      { labelKey: "notifications", to: "/notifications", icon: Bell },
-      { labelKey: "feedback", to: "/feedback", icon: MessageCircle },
-      { labelKey: "docs", to: "/docs", icon: FileText },
-      { labelKey: "changelog", to: "/changelog", icon: ScrollText },
+      { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
+      { labelKey: "feedback", to: "/feedback", icon: MessageCircle, controlId: "nav.feedback" },
+      { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
+      { labelKey: "changelog", to: "/changelog", icon: ScrollText, controlId: "nav.changelog" },
     ],
   },
   {
