@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2 } from "lucide-react";
+import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,6 +22,9 @@ import { IncidentManagementTab } from "@/components/admin/IncidentManagementTab"
 import { EntropyMonitoringTab } from "@/components/admin/EntropyMonitoringTab";
 import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
 import { AdminContributionsTab } from "@/components/admin/AdminContributionsTab";
+import { EmergencyControlsTab } from "@/components/admin/EmergencyControlsTab";
+import { ComplianceLogTab } from "@/components/admin/ComplianceLogTab";
+import { FeatureFlagsTab } from "@/components/admin/FeatureFlagsTab";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { KPI, StatusBadge, LogLevelBadge, HealthRow, EconRow } from "@/components/admin/AdminSubComponents";
 import { PageTransition } from "@/components/motion/PageTransition";
@@ -83,6 +86,9 @@ const TABS = [
   { value: "incidents", label: "Incidents", icon: AlertCircle },
   { value: "entropy", label: "Entropy", icon: TrendingUp },
   { value: "contributions", label: "Contributions", icon: Brain },
+  { value: "emergency", label: "Emergency", icon: ShieldAlert },
+  { value: "compliance", label: "Compliance", icon: ScrollText },
+  { value: "flags", label: "Flags", icon: Activity },
 ];
 
 export default function AdminDashboard() {
@@ -617,6 +623,9 @@ export default function AdminDashboard() {
             <TabsContent value="incidents"><IncidentManagementTab /></TabsContent>
             <TabsContent value="entropy"><EntropyMonitoringTab /></TabsContent>
             <TabsContent value="contributions"><AdminContributionsTab /></TabsContent>
+            <TabsContent value="emergency"><EmergencyControlsTab /></TabsContent>
+            <TabsContent value="compliance"><ComplianceLogTab /></TabsContent>
+            <TabsContent value="flags"><FeatureFlagsTab /></TabsContent>
           </Tabs>
         </div>
       </div>
