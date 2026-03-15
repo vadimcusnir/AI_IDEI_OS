@@ -922,7 +922,7 @@ export default function Extractor() {
                   size="sm"
                   className="h-7 text-xs gap-1.5"
                   onClick={handleCreate}
-                  disabled={!title.trim() || creating || uploading || ((sourceType === "audio" || sourceType === "video") && !selectedFile)}
+                  disabled={creating || uploading || ((sourceType === "audio" || sourceType === "video") && !selectedFile) || (sourceType === "url" && !content.trim()) || (sourceType === "text" && !content.trim())}
                 >
                   {creating || uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
                   {uploading ? "Uploading…" : "Create Episode"}
