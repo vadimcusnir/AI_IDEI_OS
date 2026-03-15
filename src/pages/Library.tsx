@@ -166,7 +166,11 @@ export default function Library() {
               <p className="text-xs text-muted-foreground mt-0.5">{filtered.length} / {artifacts.length} artifacts</p>
             </div>
           </div>
+          <ContributeDialog />
         </div>
+
+        {/* My contributions */}
+        <ContributionsList />
 
         {/* Library vs Neurons explainer */}
         <div className="rounded-xl border border-border bg-card p-4 mb-5">
