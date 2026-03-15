@@ -961,6 +961,54 @@ export type Database = {
         }
         Relationships: []
       }
+      control_change_log: {
+        Row: {
+          change_reason: string | null
+          change_type: string
+          changed_by: string | null
+          created_at: string
+          edit_mode: Database["public"]["Enums"]["edit_mode"]
+          id: string
+          item_id: string
+          new_value: Json | null
+          old_value: Json | null
+          registry_type: string
+          risk_level: Database["public"]["Enums"]["risk_level"] | null
+          rolled_back: boolean | null
+          rolled_back_at: string | null
+        }
+        Insert: {
+          change_reason?: string | null
+          change_type?: string
+          changed_by?: string | null
+          created_at?: string
+          edit_mode?: Database["public"]["Enums"]["edit_mode"]
+          id?: string
+          item_id: string
+          new_value?: Json | null
+          old_value?: Json | null
+          registry_type: string
+          risk_level?: Database["public"]["Enums"]["risk_level"] | null
+          rolled_back?: boolean | null
+          rolled_back_at?: string | null
+        }
+        Update: {
+          change_reason?: string | null
+          change_type?: string
+          changed_by?: string | null
+          created_at?: string
+          edit_mode?: Database["public"]["Enums"]["edit_mode"]
+          id?: string
+          item_id?: string
+          new_value?: Json | null
+          old_value?: Json | null
+          registry_type?: string
+          risk_level?: Database["public"]["Enums"]["risk_level"] | null
+          rolled_back?: boolean | null
+          rolled_back_at?: string | null
+        }
+        Relationships: []
+      }
       credit_transactions: {
         Row: {
           amount: number
@@ -1514,6 +1562,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      execution_regime_config: {
+        Row: {
+          cost_cap_action: string | null
+          created_at: string
+          dry_run: boolean | null
+          editable: boolean
+          fallback_regime:
+            | Database["public"]["Enums"]["execution_regime"]
+            | null
+          id: string
+          is_active: boolean
+          last_modified_by: string | null
+          max_cost_credits: number | null
+          max_retries: number | null
+          metadata: Json | null
+          output_marked: boolean | null
+          regime: Database["public"]["Enums"]["execution_regime"]
+          risk_level: Database["public"]["Enums"]["risk_level"]
+          scope: Database["public"]["Enums"]["control_scope"]
+          service_key: string
+          timeout_seconds: number | null
+          updated_at: string
+          validation_required: boolean | null
+          version: number
+        }
+        Insert: {
+          cost_cap_action?: string | null
+          created_at?: string
+          dry_run?: boolean | null
+          editable?: boolean
+          fallback_regime?:
+            | Database["public"]["Enums"]["execution_regime"]
+            | null
+          id?: string
+          is_active?: boolean
+          last_modified_by?: string | null
+          max_cost_credits?: number | null
+          max_retries?: number | null
+          metadata?: Json | null
+          output_marked?: boolean | null
+          regime?: Database["public"]["Enums"]["execution_regime"]
+          risk_level?: Database["public"]["Enums"]["risk_level"]
+          scope?: Database["public"]["Enums"]["control_scope"]
+          service_key: string
+          timeout_seconds?: number | null
+          updated_at?: string
+          validation_required?: boolean | null
+          version?: number
+        }
+        Update: {
+          cost_cap_action?: string | null
+          created_at?: string
+          dry_run?: boolean | null
+          editable?: boolean
+          fallback_regime?:
+            | Database["public"]["Enums"]["execution_regime"]
+            | null
+          id?: string
+          is_active?: boolean
+          last_modified_by?: string | null
+          max_cost_credits?: number | null
+          max_retries?: number | null
+          metadata?: Json | null
+          output_marked?: boolean | null
+          regime?: Database["public"]["Enums"]["execution_regime"]
+          risk_level?: Database["public"]["Enums"]["risk_level"]
+          scope?: Database["public"]["Enums"]["control_scope"]
+          service_key?: string
+          timeout_seconds?: number | null
+          updated_at?: string
+          validation_required?: boolean | null
+          version?: number
+        }
+        Relationships: []
       }
       feature_flags: {
         Row: {
@@ -3265,6 +3388,119 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_registry: {
+        Row: {
+          category: string
+          core_prompt: string
+          cost_profile: Json | null
+          created_at: string
+          editable: boolean
+          execution_mode: Database["public"]["Enums"]["execution_regime"]
+          id: string
+          input_schema: Json | null
+          is_active: boolean
+          last_modified_by: string | null
+          metadata: Json | null
+          modifiers: Json | null
+          output_schema: Json | null
+          purpose: string
+          risk_level: Database["public"]["Enums"]["risk_level"]
+          rollback_version: number | null
+          scope: Database["public"]["Enums"]["control_scope"]
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          category?: string
+          core_prompt: string
+          cost_profile?: Json | null
+          created_at?: string
+          editable?: boolean
+          execution_mode?: Database["public"]["Enums"]["execution_regime"]
+          id: string
+          input_schema?: Json | null
+          is_active?: boolean
+          last_modified_by?: string | null
+          metadata?: Json | null
+          modifiers?: Json | null
+          output_schema?: Json | null
+          purpose?: string
+          risk_level?: Database["public"]["Enums"]["risk_level"]
+          rollback_version?: number | null
+          scope?: Database["public"]["Enums"]["control_scope"]
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          category?: string
+          core_prompt?: string
+          cost_profile?: Json | null
+          created_at?: string
+          editable?: boolean
+          execution_mode?: Database["public"]["Enums"]["execution_regime"]
+          id?: string
+          input_schema?: Json | null
+          is_active?: boolean
+          last_modified_by?: string | null
+          metadata?: Json | null
+          modifiers?: Json | null
+          output_schema?: Json | null
+          purpose?: string
+          risk_level?: Database["public"]["Enums"]["risk_level"]
+          rollback_version?: number | null
+          scope?: Database["public"]["Enums"]["control_scope"]
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      prompt_versions: {
+        Row: {
+          change_reason: string | null
+          changed_by: string | null
+          core_prompt: string
+          cost_profile: Json | null
+          created_at: string
+          execution_mode: Database["public"]["Enums"]["execution_regime"]
+          id: string
+          modifiers: Json | null
+          prompt_id: string
+          version: number
+        }
+        Insert: {
+          change_reason?: string | null
+          changed_by?: string | null
+          core_prompt: string
+          cost_profile?: Json | null
+          created_at?: string
+          execution_mode?: Database["public"]["Enums"]["execution_regime"]
+          id?: string
+          modifiers?: Json | null
+          prompt_id: string
+          version: number
+        }
+        Update: {
+          change_reason?: string | null
+          changed_by?: string | null
+          core_prompt?: string
+          cost_profile?: Json | null
+          created_at?: string
+          execution_mode?: Database["public"]["Enums"]["execution_regime"]
+          id?: string
+          modifiers?: Json | null
+          prompt_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_versions_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       psychological_profiles: {
         Row: {
           agreeableness: number | null
@@ -3953,6 +4189,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ui_control_registry: {
+        Row: {
+          action: string | null
+          created_at: string
+          description: string | null
+          editable: boolean
+          element_type: string
+          enabled: boolean
+          id: string
+          label: string
+          last_modified_by: string | null
+          metadata: Json | null
+          permissions: string[] | null
+          risk_level: Database["public"]["Enums"]["risk_level"]
+          scope: Database["public"]["Enums"]["control_scope"]
+          sort_order: number | null
+          state_overrides: Json | null
+          updated_at: string
+          version: number
+          visible: boolean
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string
+          description?: string | null
+          editable?: boolean
+          element_type?: string
+          enabled?: boolean
+          id: string
+          label?: string
+          last_modified_by?: string | null
+          metadata?: Json | null
+          permissions?: string[] | null
+          risk_level?: Database["public"]["Enums"]["risk_level"]
+          scope?: Database["public"]["Enums"]["control_scope"]
+          sort_order?: number | null
+          state_overrides?: Json | null
+          updated_at?: string
+          version?: number
+          visible?: boolean
+        }
+        Update: {
+          action?: string | null
+          created_at?: string
+          description?: string | null
+          editable?: boolean
+          element_type?: string
+          enabled?: boolean
+          id?: string
+          label?: string
+          last_modified_by?: string | null
+          metadata?: Json | null
+          permissions?: string[] | null
+          risk_level?: Database["public"]["Enums"]["risk_level"]
+          scope?: Database["public"]["Enums"]["control_scope"]
+          sort_order?: number | null
+          state_overrides?: Json | null
+          updated_at?: string
+          version?: number
+          visible?: boolean
+        }
+        Relationships: []
       }
       user_achievements: {
         Row: {
@@ -4878,12 +5177,21 @@ export type Database = {
         | "narrative"
         | "psychological"
         | "commercial"
+      control_scope: "global" | "app" | "service" | "user"
+      edit_mode: "safe" | "strict" | "experimental" | "locked"
+      execution_regime:
+        | "fast"
+        | "balanced"
+        | "strict"
+        | "simulation"
+        | "emergency"
       neuron_lifecycle:
         | "ingested"
         | "structured"
         | "active"
         | "capitalized"
         | "compounded"
+      risk_level: "low" | "medium" | "high" | "critical"
       service_class: "A" | "B" | "C"
       workspace_role: "owner" | "admin" | "editor" | "viewer"
     }
@@ -5027,6 +5335,15 @@ export const Constants = {
         "psychological",
         "commercial",
       ],
+      control_scope: ["global", "app", "service", "user"],
+      edit_mode: ["safe", "strict", "experimental", "locked"],
+      execution_regime: [
+        "fast",
+        "balanced",
+        "strict",
+        "simulation",
+        "emergency",
+      ],
       neuron_lifecycle: [
         "ingested",
         "structured",
@@ -5034,6 +5351,7 @@ export const Constants = {
         "capitalized",
         "compounded",
       ],
+      risk_level: ["low", "medium", "high", "critical"],
       service_class: ["A", "B", "C"],
       workspace_role: ["owner", "admin", "editor", "viewer"],
     },
