@@ -53,6 +53,7 @@ const MediaProfiles = lazy(() => import("./pages/MediaProfiles"));
 const PipelineOverview = lazy(() => import("./pages/PipelineOverview"));
 const TopicDiscovery = lazy(() => import("./pages/TopicDiscovery"));
 const Marketplace = lazy(() => import("./pages/Marketplace"));
+const MarketplaceDetail = lazy(() => import("./pages/MarketplaceDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
