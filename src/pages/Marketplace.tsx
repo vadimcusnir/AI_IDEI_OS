@@ -142,7 +142,7 @@ export default function Marketplace() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {featured.map(asset => (
-                <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} isFeatured />
+                <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} creditBalance={balance} isFeatured />
               ))}
             </div>
             <Separator className="mt-8" />
