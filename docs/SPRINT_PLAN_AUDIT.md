@@ -57,16 +57,18 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 ## FAZA 2: PERFORMANȚĂ & OPTIMIZARE
 
-### 2.1 🟠 DB-001: Indexuri lipsă
-**Sarcini:**
-- [ ] **P2.1** Crează index `idx_neurons_author_updated ON neurons(author_id, updated_at DESC)`
-- [ ] **P2.2** Crează index `idx_episodes_author_created ON episodes(author_id, created_at DESC)`
-- [ ] **P2.3** Crează index `idx_entities_neuron_published ON entities(neuron_id) WHERE is_published = true`
-- [ ] **P2.4** Crează index `idx_credit_tx_user_created ON credit_transactions(user_id, created_at DESC)`
-- [ ] **P2.5** Crează index `idx_neuron_jobs_author_created ON neuron_jobs(author_id, created_at DESC)`
-- [ ] **P2.6** Crează index `idx_neuron_jobs_status_active ON neuron_jobs(status) WHERE status NOT IN ('completed', 'failed')`
+### 2.1 ✅ DB-001: Indexuri lipsă
+**Status:** COMPLET — Toate 6 indexuri create pe 2026-03-15.
 
-**Efort:** 1 sesiune (o singură migrație SQL) | **Impact:** MARE
+**Sarcini:**
+- [x] **P2.1** `idx_neurons_author_updated ON neurons(author_id, updated_at DESC)` ✅
+- [x] **P2.2** `idx_episodes_author_created ON episodes(author_id, created_at DESC)` ✅
+- [x] **P2.3** `idx_entities_neuron_published ON entities(neuron_id) WHERE is_published = true` ✅
+- [x] **P2.4** `idx_credit_tx_user_created ON credit_transactions(user_id, created_at DESC)` ✅
+- [x] **P2.5** `idx_neuron_jobs_author_created ON neuron_jobs(author_id, created_at DESC)` ✅
+- [x] **P2.6** `idx_neuron_jobs_status_active ON neuron_jobs(status) WHERE status NOT IN ('completed', 'failed')` ✅
+
+**Efort:** 0 (completat) | **Impact:** MARE
 
 ### 2.2 🟠 BE-001: Procesare secvențială în pipeline AI
 - [ ] **P2.7** Modifică `extract-neurons` să proceseze chunk-uri în paralel cu `Promise.all` (batch de 3-5)
