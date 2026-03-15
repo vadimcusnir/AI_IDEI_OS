@@ -213,6 +213,7 @@ export type Database = {
           tags: string[] | null
           title: string
           updated_at: string
+          workspace_id: string | null
         }
         Insert: {
           artifact_type?: string
@@ -228,6 +229,7 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+          workspace_id?: string | null
         }
         Update: {
           artifact_type?: string
@@ -243,6 +245,7 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+          workspace_id?: string | null
         }
         Relationships: [
           {
@@ -250,6 +253,13 @@ export type Database = {
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "neuron_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "artifacts_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -928,6 +938,7 @@ export type Database = {
           title: string
           transcript: string | null
           updated_at: string
+          workspace_id: string | null
         }
         Insert: {
           author_id: string
@@ -944,6 +955,7 @@ export type Database = {
           title?: string
           transcript?: string | null
           updated_at?: string
+          workspace_id?: string | null
         }
         Update: {
           author_id?: string
@@ -960,8 +972,17 @@ export type Database = {
           title?: string
           transcript?: string | null
           updated_at?: string
+          workspace_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "episodes_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       feedback: {
         Row: {
@@ -1029,6 +1050,7 @@ export type Database = {
           role: string
           slug: string
           updated_at: string
+          workspace_id: string | null
         }
         Insert: {
           author_id: string
@@ -1047,6 +1069,7 @@ export type Database = {
           role?: string
           slug: string
           updated_at?: string
+          workspace_id?: string | null
         }
         Update: {
           author_id?: string
@@ -1065,8 +1088,17 @@ export type Database = {
           role?: string
           slug?: string
           updated_at?: string
+          workspace_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "guest_profiles_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       idea_metrics: {
         Row: {
@@ -1796,6 +1828,7 @@ export type Database = {
           scheduled_at: string | null
           status: string
           worker_type: string
+          workspace_id: string | null
         }
         Insert: {
           author_id?: string | null
@@ -1814,6 +1847,7 @@ export type Database = {
           scheduled_at?: string | null
           status?: string
           worker_type: string
+          workspace_id?: string | null
         }
         Update: {
           author_id?: string | null
@@ -1832,6 +1866,7 @@ export type Database = {
           scheduled_at?: string | null
           status?: string
           worker_type?: string
+          workspace_id?: string | null
         }
         Relationships: [
           {
@@ -1853,6 +1888,13 @@ export type Database = {
             columns: ["neuron_id"]
             isOneToOne: false
             referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neuron_jobs_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -2053,6 +2095,7 @@ export type Database = {
           updated_at: string
           uuid: string
           visibility: string
+          workspace_id: string | null
         }
         Insert: {
           author_id?: string | null
@@ -2069,6 +2112,7 @@ export type Database = {
           updated_at?: string
           uuid?: string
           visibility?: string
+          workspace_id?: string | null
         }
         Update: {
           author_id?: string | null
@@ -2085,6 +2129,7 @@ export type Database = {
           updated_at?: string
           uuid?: string
           visibility?: string
+          workspace_id?: string | null
         }
         Relationships: [
           {
@@ -2092,6 +2137,13 @@ export type Database = {
             columns: ["episode_id"]
             isOneToOne: false
             referencedRelation: "episodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "neurons_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
