@@ -142,6 +142,13 @@ Deno.serve(async (req) => {
       ? `Neuron: "${safeTitle}"\n\nContent:\n${content}`
       : `Content:\n${content}`;
 
+    // ── Dry-run check ──
+    if (isDryRun) {
+      return new Response(JSON.stringify({ dry_run: true, regime: regime.regime, message: "Simulation mode — no AI call made" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Call Lovable AI Gateway with streaming
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

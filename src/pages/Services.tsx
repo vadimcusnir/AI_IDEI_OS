@@ -16,6 +16,7 @@ import {
   TrendingUp, LayoutGrid, List, SlidersHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface Service {
   id: string;

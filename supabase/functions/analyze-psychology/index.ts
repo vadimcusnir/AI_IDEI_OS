@@ -83,32 +83,15 @@ serve(async (req) => {
 
     logStep("Text gathered", { length: analysisText.length });
 
-    // ── Prompt from registry ──
-    const fallbackPrompt = `You are an expert psycholinguistic analyst. Analyze the following text and produce a psychological profile.`;
-    const analysisPrompt = `You are an expert psycholinguistic analyst. Analyze the following text and produce a psychological profile.
+    // ── Load prompt from registry ──
+    const hardcodedFallback = `You are an expert psycholinguistic analyst. Analyze the following text and produce a psychological profile.
 
 Return a JSON object with EXACTLY these fields (all scores 0-100):
 
 {
-  "big_five": {
-    "openness": <0-100>,
-    "conscientiousness": <0-100>,
-    "extraversion": <0-100>,
-    "agreeableness": <0-100>,
-    "neuroticism": <0-100>
-  },
-  "liwc_metrics": {
-    "analytical_thinking": <0-100>,
-    "emotional_tone": <0-100>,
-    "authenticity": <0-100>,
-    "clout": <0-100>
-  },
-  "communication": {
-    "dominance": <0-100>,
-    "empathy": <0-100>,
-    "cognitive_complexity": <0-100>,
-    "confidence_level": <0-100>
-  },
+  "big_five": { "openness": <0-100>, "conscientiousness": <0-100>, "extraversion": <0-100>, "agreeableness": <0-100>, "neuroticism": <0-100> },
+  "liwc_metrics": { "analytical_thinking": <0-100>, "emotional_tone": <0-100>, "authenticity": <0-100>, "clout": <0-100> },
+  "communication": { "dominance": <0-100>, "empathy": <0-100>, "cognitive_complexity": <0-100>, "confidence_level": <0-100> },
   "insights": {
     "communication_style": "<one of: Directive, Collaborative, Analytical, Expressive, Supportive>",
     "leadership_style": "<one of: Visionary, Democratic, Coaching, Commanding, Affiliative>",
@@ -116,30 +99,21 @@ Return a JSON object with EXACTLY these fields (all scores 0-100):
     "persuasion_approach": "<one of: Logical, Emotional, Authority, Social Proof, Storytelling>",
     "risk_tolerance": "<one of: Risk-Averse, Moderate, Risk-Seeking>"
   },
-  "lexical_features": {
-    "avg_sentence_length": <number>,
-    "vocabulary_diversity": <0-1>,
-    "pronoun_ratio_i": <0-1>,
-    "pronoun_ratio_we": <0-1>,
-    "emotion_word_ratio": <0-1>,
-    "cognitive_word_ratio": <0-1>,
-    "certainty_word_ratio": <0-1>,
-    "question_ratio": <0-1>
-  }
+  "lexical_features": { "avg_sentence_length": <number>, "vocabulary_diversity": <0-1>, "pronoun_ratio_i": <0-1>, "pronoun_ratio_we": <0-1>, "emotion_word_ratio": <0-1>, "cognitive_word_ratio": <0-1>, "certainty_word_ratio": <0-1>, "question_ratio": <0-1> }
 }
 
-Analyze based on:
-- Word choice patterns (formal vs informal, abstract vs concrete)
-- Pronoun usage (I vs we vs you — indicates focus orientation)
-- Sentence complexity and length
-- Emotional vs analytical language ratio
-- Certainty markers vs hedging language
-- Question frequency (curiosity/engagement)
-- Metaphor and storytelling usage
-- Authority markers and social proof references
+Analyze based on word choice, pronoun usage, sentence complexity, emotional vs analytical language, certainty markers, question frequency, metaphor usage, authority markers.`;
 
-TEXT TO ANALYZE:
-${analysisText.slice(0, 15000)}`;
+    const { prompt: systemPrompt } = await loadPrompt("analyze_psychology", hardcodedFallback);
+    const analysisPrompt = systemPrompt + `\n\nTEXT TO ANALYZE:\n${analysisText.slice(0, 15000)}`;
+
+    // ── Dry-run check ──
+    if (isDryRun) {
+      logStep("DRY RUN — skipping AI call");
+      return new Response(JSON.stringify({ success: false, dry_run: true, regime: regime.regime, message: "Simulation mode — no AI call made" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
     if (!lovableApiKey) throw new Error("LOVABLE_API_KEY not configured");
