@@ -1,0 +1,22 @@
+INSERT INTO public.service_catalog (service_key, name, description, credits_cost, category, is_active) VALUES
+('whitepaper-generator', 'Whitepaper Generator', 'Professional B2B whitepaper with executive summary, findings, and recommendations', 80, 'content', true),
+('product-launch', 'Product Launch Plan', 'Complete go-to-market launch strategy with timeline, messaging, and campaigns', 70, 'strategy', true),
+('faq-generator', 'FAQ Generator', 'Comprehensive FAQ section with 25-30 categorized questions and answers', 30, 'content', true),
+('manifesto-writer', 'Brand Manifesto', 'Powerful brand manifesto in multiple lengths with core beliefs and declarations', 50, 'content', true),
+('competitive-battlecard', 'Competitive Battlecards', 'Sales battlecards with competitor analysis, objection handlers, and trap questions', 60, 'analysis', true),
+('customer-journey-map', 'Customer Journey Map', 'Complete customer journey with touchpoints, emotions, pain points per stage', 65, 'strategy', true),
+('annual-report', 'Annual Report Content', 'Corporate annual report with CEO letter, metrics, highlights, and stories', 70, 'content', true),
+('podcast-series', 'Podcast Series Plan', '12-episode season plan with scripts, segments, and growth strategy', 60, 'content', true),
+('email-cold-outreach', 'Cold Outreach Campaign', 'B2B cold email sequence with personalization framework and response playbook', 50, 'content', true),
+('api-documentation', 'API Documentation', 'Technical API docs with endpoints, examples, SDKs, and best practices', 55, 'content', true),
+('event-playbook', 'Event Marketing Playbook', 'Complete event strategy with timeline, sponsorship, and content repurposing', 65, 'strategy', true),
+('upsell-playbook', 'Upsell & Cross-Sell Playbook', 'Revenue optimization with trigger-based scripts, bundles, and pricing psychology', 55, 'strategy', true),
+('culture-handbook', 'Culture Handbook', 'Company culture guide with values, norms, and decision frameworks', 50, 'content', true),
+('youtube-strategy', 'YouTube Channel Strategy', '30-video calendar with SEO, thumbnails, Shorts strategy, and growth plan', 60, 'strategy', true),
+('grant-proposal', 'Grant Proposal Framework', 'Complete grant proposal with SMART objectives, budget narrative, and evaluation', 70, 'content', true),
+('compliance-checklist', 'Compliance Checklist', 'Regulatory compliance checklists, policy templates, and audit preparation', 65, 'content', true),
+('referral-program', 'Referral Program Design', 'Viral referral program with tiers, rewards, fraud prevention, and launch plan', 55, 'strategy', true),
+('press-kit', 'Press Kit', 'Comprehensive media kit with bios, press releases, talking points, and Q&A', 50, 'content', true),
+('loyalty-program', 'Loyalty Program Design', 'Complete loyalty system with tiers, gamification, earning mechanics, and economics', 60, 'strategy', true),
+('personal-brand-audit', 'Personal Brand Audit', 'Brand audit with SWOT, 90-day improvement plan, and content strategy refresh', 55, 'analysis', true)
+ON CONFLICT (service_key) DO NOTHING;
