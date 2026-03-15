@@ -13,6 +13,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { ControlledSection } from "@/components/ControlledSection";
 
 interface KnowledgeAsset {
   id: string;
