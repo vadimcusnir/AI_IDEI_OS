@@ -163,9 +163,10 @@
 - [x] Sprint D: 20 extractori specializați (hook, email, SEO, video, funnel, JTBD, etc.)
 - [x] Sprint E: 20 extractori batch 2 (webinar, LinkedIn, sales page, coaching, ad copy, etc.)
 - [x] Sprint F: 20 extractori batch 3 (whitepaper, product launch, FAQ, battlecard, journey map, etc.)
+- [x] Sprint G: 20 extractori batch 4 (TikTok, SaaS metrics, affiliate, data storytelling, KB, etc.)
 - [x] Prompts + artifact type mapping în run-service
-- [x] Service catalog DB entries (60 servicii noi)
-- [ ] ~40 extractori rămași (advanced content gen, niche industries)
+- [x] Service catalog DB entries (80 servicii noi)
+- [ ] ~20 extractori rămași (niche industries, advanced workflows)
 - [ ] Batch extractor runner improvements
 - [ ] Extractor registry (admin-configurable)
 
@@ -244,7 +245,7 @@ Sprint F+:           T3.3 (Workspaces), T4.x (Token)
 | DB Tables | 45/45 | 45 | 100% |
 | Core Features | 45/50 | 50 | 90% |
 | Security | 18/20 | 20 | 90% |
-| Extractors | ~75/120 | 120 | 63% |
+| Extractors | ~95/120 | 120 | 79% |
 | Marketplace | 7/8 | 8 | 87% |
 | Token System | 0/4 | 4 | 0% |
 | **TOTAL (fără extractors+token)** | **~106/120** | **120** | **~88%** |
