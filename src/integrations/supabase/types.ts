@@ -3054,6 +3054,7 @@ export type Database = {
           email_feedback: boolean
           email_jobs: boolean
           id: string
+          monthly_digest: boolean
           push_credits: boolean
           push_enabled: boolean
           push_feedback: boolean
@@ -3063,6 +3064,7 @@ export type Database = {
           quiet_hours_start: number | null
           updated_at: string
           user_id: string
+          weekly_digest: boolean
         }
         Insert: {
           created_at?: string
@@ -3071,6 +3073,7 @@ export type Database = {
           email_feedback?: boolean
           email_jobs?: boolean
           id?: string
+          monthly_digest?: boolean
           push_credits?: boolean
           push_enabled?: boolean
           push_feedback?: boolean
@@ -3080,6 +3083,7 @@ export type Database = {
           quiet_hours_start?: number | null
           updated_at?: string
           user_id: string
+          weekly_digest?: boolean
         }
         Update: {
           created_at?: string
@@ -3088,6 +3092,7 @@ export type Database = {
           email_feedback?: boolean
           email_jobs?: boolean
           id?: string
+          monthly_digest?: boolean
           push_credits?: boolean
           push_enabled?: boolean
           push_feedback?: boolean
@@ -3097,6 +3102,7 @@ export type Database = {
           quiet_hours_start?: number | null
           updated_at?: string
           user_id?: string
+          weekly_digest?: boolean
         }
         Relationships: []
       }
