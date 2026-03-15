@@ -5,6 +5,7 @@ import { LeaderboardWidget } from "@/components/gamification/LeaderboardWidget";
 import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { AchievementGallery } from "@/components/gamification/AchievementGallery";
 import { TeamChallenges } from "@/components/gamification/TeamChallenges";
+import { ControlledSection } from "@/components/ControlledSection";
 import { useGamification } from "@/hooks/useGamification";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
@@ -51,30 +52,38 @@ export default function GamificationPage() {
           </div>
 
           {/* Daily Challenges */}
-          <div className="mb-6">
-            <DailyChallenges />
-          </div>
+          <ControlledSection elementId="gamification.daily_challenges">
+            <div className="mb-6">
+              <DailyChallenges />
+            </div>
+          </ControlledSection>
 
           {/* Team Challenges */}
-          <div className="mb-6">
-            <TeamChallenges />
-          </div>
+          <ControlledSection elementId="gamification.team_challenges">
+            <div className="mb-6">
+              <TeamChallenges />
+            </div>
+          </ControlledSection>
 
           {/* Achievement Gallery */}
-          <div className="mb-6">
-            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-              <Award className="h-3 w-3" /> Achievement Gallery
-            </h2>
-            <AchievementGallery />
-          </div>
+          <ControlledSection elementId="gamification.achievements">
+            <div className="mb-6">
+              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                <Award className="h-3 w-3" /> Achievement Gallery
+              </h2>
+              <AchievementGallery />
+            </div>
+          </ControlledSection>
 
           {/* Leaderboard */}
-          <div className="mb-6">
-            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-              <Medal className="h-3 w-3" /> Leaderboard
-            </h2>
-            <LeaderboardWidget />
-          </div>
+          <ControlledSection elementId="gamification.leaderboard">
+            <div className="mb-6">
+              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                <Medal className="h-3 w-3" /> Leaderboard
+              </h2>
+              <LeaderboardWidget />
+            </div>
+          </ControlledSection>
         </div>
       </div>
     </PageTransition>

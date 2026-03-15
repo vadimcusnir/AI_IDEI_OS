@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
+import { ControlledSection } from "@/components/ControlledSection";
 import { XPProgressBar } from "@/components/gamification/XPProgressBar";
 import { PageTransition, StaggerContainer, StaggerItem } from "@/components/motion/PageTransition";
 import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
@@ -242,6 +243,7 @@ export default function ProfilePage() {
 
             {/* ─── Notification Preferences ─── */}
             <StaggerItem>
+              <ControlledSection elementId="profile.notification_prefs">
               <div className="bg-card border border-border rounded-xl p-6">
                 <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
                   <Bell className="h-4 w-4 text-primary" />
@@ -372,6 +374,7 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
+              </ControlledSection>
             </StaggerItem>
 
             {/* Account info */}
