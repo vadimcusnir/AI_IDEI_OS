@@ -61,6 +61,8 @@ const PublicUserProfile = lazy(() => import("./pages/PublicUserProfile"));
 const ChatPage = lazy(() => import("./pages/ChatPage"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const WorkspaceSettings = lazy(() => import("./pages/WorkspaceSettings"));
+const Community = lazy(() => import("./pages/Community"));
+const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 
 function PageLoader() {
   return (
@@ -125,6 +127,9 @@ const App = () => (
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
+                <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
+                <Route path="/community/:category" element={<AppLayout><Community /></AppLayout>} />
+                <Route path="/community/:category/thread/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
 
                 {/* Protected routes — require authentication */}
                 <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />

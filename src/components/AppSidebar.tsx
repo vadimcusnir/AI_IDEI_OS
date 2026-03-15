@@ -8,7 +8,7 @@ import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
   BarChart3, Bell, BookOpen, Users, Network, Rocket,
-  FileText, Lightbulb, Bot, Store, Layers,
+  FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
@@ -55,6 +55,7 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "intelligence", to: "/intelligence", icon: Network },
       { labelKey: "topics", to: "/topics", icon: Lightbulb },
       { labelKey: "marketplace", to: "/marketplace", icon: Store },
+      { labelKey: "community", to: "/community", icon: MessagesSquare },
       { labelKey: "chat", to: "/chat", icon: Bot },
     ],
   },
