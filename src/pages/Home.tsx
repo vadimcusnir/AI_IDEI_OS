@@ -113,8 +113,8 @@ export default function Home() {
     visible: { transition: { staggerChildren: 0.06 } },
   };
   const fadeUp = {
-    hidden: { opacity: 0, y: 16 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const } },
   };
 
   return (
@@ -135,7 +135,7 @@ export default function Home() {
         </motion.div>
 
         {/* Stats row */}
-        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6">
           <motion.div variants={fadeUp}><StatCard icon={Brain} label="Neurons" value={totalNeurons} /></motion.div>
           <motion.div variants={fadeUp}><StatCard icon={FileText} label="Episodes" value={totalEpisodes} /></motion.div>
           <motion.div variants={fadeUp}><StatCard icon={Zap} label="Jobs" value={totalJobs} /></motion.div>

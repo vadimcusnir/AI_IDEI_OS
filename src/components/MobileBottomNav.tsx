@@ -106,7 +106,7 @@ export function MobileBottomNav() {
     <>
       {/* Fixed bottom bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-border bg-background/95 backdrop-blur-md safe-area-bottom">
-        <div className="flex items-center justify-around h-14 px-1">
+        <div className="flex items-center justify-around h-16 px-1">
           {BAR_ITEMS.map(({ path, icon: Icon, label }) => {
             const active = isActive(path);
             return (
@@ -114,7 +114,7 @@ export function MobileBottomNav() {
                 key={path}
                 onClick={() => navigate(path)}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-[56px]",
+                  "flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors min-w-[56px] min-h-[44px]",
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -126,7 +126,7 @@ export function MobileBottomNav() {
           <button
             onClick={() => setMenuOpen(true)}
             className={cn(
-              "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-[56px]",
+              "flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors min-w-[56px] min-h-[44px]",
               menuOpen ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -160,7 +160,7 @@ export function MobileBottomNav() {
                         key={item.path}
                         onClick={() => handleNav(item.path)}
                         className={cn(
-                          "flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors",
+                          "flex items-center gap-3 w-full px-4 py-3 text-sm transition-colors min-h-[44px]",
                           active
                             ? "text-primary bg-primary/10 font-medium"
                             : "text-foreground hover:bg-accent"

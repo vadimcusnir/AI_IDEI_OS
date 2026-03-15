@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -53,6 +53,14 @@
     --toolbar-bg: 220 16% 97%;
     --toolbar-border: 220 14% 90%;
     --toolbar-active: 25 95% 53%;
+
+    /* Semantic feedback colors */
+    --success: 152 60% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 210 75% 50%;
+    --info-foreground: 0 0% 100%;
 
     /* Status colors */
     --status-draft: 220 10% 46%;
@@ -131,6 +139,13 @@
     --toolbar-bg: 222 20% 11%;
     --toolbar-border: 220 16% 16%;
     --toolbar-active: 25 95% 55%;
+
+    --success: 152 60% 48%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 10%;
+    --info: 210 75% 55%;
+    --info-foreground: 0 0% 100%;
 
     --status-draft: 220 10% 58%;
     --status-validated: 152 60% 48%;
