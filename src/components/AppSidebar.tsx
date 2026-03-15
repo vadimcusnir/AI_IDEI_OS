@@ -61,12 +61,12 @@ const NAV_SECTIONS: NavSection[] = [
   {
     labelKey: "explore_section",
     items: [
-      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3 },
-      { labelKey: "intelligence", to: "/intelligence", icon: Network },
-      { labelKey: "topics", to: "/topics", icon: Lightbulb },
-      { labelKey: "marketplace", to: "/marketplace", icon: Store },
-      { labelKey: "community", to: "/community", icon: MessagesSquare },
-      { labelKey: "chat", to: "/chat", icon: Bot },
+      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3, controlId: "nav.dashboard" },
+      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
+      { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
+      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+      { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
+      { labelKey: "chat", to: "/chat", icon: Bot, controlId: "nav.chat" },
     ],
   },
   {
