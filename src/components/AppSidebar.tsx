@@ -11,6 +11,8 @@ import {
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { StreakWidget } from "@/components/gamification/StreakWidget";
+import { XPProgressBar } from "@/components/gamification/XPProgressBar";
 import { cn } from "@/lib/utils";
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup,
@@ -128,6 +130,13 @@ export function AppSidebar() {
               </span>
             </div>
           </button>
+          {/* Streak + XP compact */}
+          <div className="flex items-center gap-2 px-1">
+            <StreakWidget />
+            <div className="flex-1 min-w-0">
+              <XPProgressBar compact />
+            </div>
+          </div>
         </div>
       )}
       {user && collapsed && (
