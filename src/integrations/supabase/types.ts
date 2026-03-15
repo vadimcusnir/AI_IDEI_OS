@@ -110,6 +110,51 @@ export type Database = {
         }
         Relationships: []
       }
+      achievements_registry: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          description_ro: string
+          hidden: boolean
+          icon: string
+          id: string
+          name: string
+          name_ro: string
+          requirements: Json
+          tier: string
+          xp_reward: number
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string
+          description_ro?: string
+          hidden?: boolean
+          icon?: string
+          id: string
+          name: string
+          name_ro?: string
+          requirements?: Json
+          tier?: string
+          xp_reward?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          description_ro?: string
+          hidden?: boolean
+          icon?: string
+          id?: string
+          name?: string
+          name_ro?: string
+          requirements?: Json
+          tier?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       admin_permissions: {
         Row: {
           expires_at: string | null
@@ -4486,6 +4531,17 @@ export type Database = {
               _amount: number
               _bypass_cap?: boolean
               _description?: string
+              _source: string
+              _user_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              _amount: number
+              _bypass_cap?: boolean
+              _description?: string
+              _quality_multiplier?: number
               _source: string
               _user_id: string
             }
