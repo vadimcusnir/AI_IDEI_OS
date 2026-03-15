@@ -61,10 +61,14 @@ export default function Community() {
         </div>
 
         {/* User stats bar */}
-        <CommunityStats />
+        <ControlledSection elementId="community.stats">
+          <CommunityStats />
+        </ControlledSection>
 
         {/* Rewards guide (collapsible) */}
-        {!categorySlug && <CommunityRewardsGuide />}
+        <ControlledSection elementId="community.rewards_guide">
+          {!categorySlug && <CommunityRewardsGuide />}
+        </ControlledSection>
 
         {/* Category listing */}
         {!categorySlug && (

@@ -63,6 +63,15 @@ Deno.serve(async (req) => {
       userId = user.id;
     }
 
+    // ── Regime check ──
+    const regime = await getRegimeConfig("embed-neurons");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: blockReason }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const body = await req.json().catch(() => ({}));
     const { neuron_ids, batch_size = 10 } = body;
 

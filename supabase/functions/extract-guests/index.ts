@@ -153,6 +153,15 @@ If no distinct people can be identified, return an empty array [].`;
       });
     }
 
+    // In simulation mode, return detected guests without persisting
+    if (isDryRun) {
+      return new Response(JSON.stringify({
+        success: true, dry_run: true, regime: regime.regime,
+        guests_detected: guests.length,
+        guests: guests.map((g: any) => ({ full_name: g.full_name, role: g.role })),
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     // Upsert guest profiles
     const created: any[] = [];
     for (const guest of guests) {

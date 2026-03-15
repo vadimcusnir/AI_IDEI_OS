@@ -59,6 +59,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── Regime check ──
+    const regime = await getRegimeConfig("dedup-neurons");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: blockReason }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { threshold, limit } = await req.json();
     const similarityThreshold = Math.max(0.3, Math.min(0.95, Number(threshold) || 0.40));
     const maxResults = Math.max(1, Math.min(100, Number(limit) || 50));
