@@ -119,6 +119,7 @@ export function PostCard({ post, threadAuthorId, threadId, replies = [], depth =
                 <Reply className="h-3 w-3 mr-1" />Reply
               </Button>
             )}
+            <ReportDialog targetType="post" targetId={post.id} />
           </div>
 
           {/* Inline reply form */}

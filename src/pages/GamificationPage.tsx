@@ -55,6 +55,11 @@ export default function GamificationPage() {
             <DailyChallenges />
           </div>
 
+          {/* Team Challenges */}
+          <div className="mb-6">
+            <TeamChallenges />
+          </div>
+
           {/* Achievement Gallery */}
           <div className="mb-6">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
