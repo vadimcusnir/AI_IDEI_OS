@@ -90,11 +90,12 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { balance, loading: balanceLoading } = useCreditBalance();
+  const [showMore, setShowMore] = useState(false);
 
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + "/");
 
-  const sectionHasActive = (section: NavSection) =>
-    section.items.some((item) => isActive(item.to));
+  // Auto-expand "More" if current route is in a more section
+  const isMoreActive = MORE_SECTIONS.some(s => s.items.some(i => isActive(i.to)));
 
   return (
     <Sidebar collapsible="icon">
@@ -129,38 +130,98 @@ export function AppSidebar() {
       )}
 
       <SidebarContent>
-        {NAV_SECTIONS.map((section, sIdx) => {
-          const visibleItems = section.items.filter(
-            (item) => !item.adminOnly || isAdmin
-          );
-          if (visibleItems.length === 0) return null;
+        {/* Core navigation — always visible */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {CORE_NAV.map((item) => (
+                <SidebarMenuItem key={item.to}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(item.to)}
+                    tooltip={t(`navigation:${item.labelKey}`)}
+                  >
+                    <button onClick={() => navigate(item.to)} className="w-full">
+                      <item.icon className="h-4 w-4" />
+                      <span>{t(`navigation:${item.labelKey}`)}</span>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-          return (
-            <div key={section.labelKey}>
-              {sIdx > 0 && <SidebarSeparator />}
-              <SidebarGroup>
-                <SidebarGroupLabel>{t(`navigation:${section.labelKey}`)}</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {visibleItems.map((item) => (
-                      <SidebarMenuItem key={item.to}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={isActive(item.to)}
-                          tooltip={t(`navigation:${item.labelKey}`)}
-                        >
-                          <button onClick={() => navigate(item.to)} className="w-full">
-                            <item.icon className="h-4 w-4" />
-                            <span>{t(`navigation:${item.labelKey}`)}</span>
-                          </button>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            </div>
-          );
+        <SidebarSeparator />
+
+        {/* More sections — collapsible */}
+        {!collapsed && (
+          <SidebarGroup>
+            <SidebarGroupLabel
+              className="cursor-pointer select-none hover:text-foreground transition-colors"
+              onClick={() => setShowMore(v => !v)}
+            >
+              {showMore || isMoreActive ? "▾" : "▸"} {t("navigation:explore_section") || "More"}
+            </SidebarGroupLabel>
+            {(showMore || isMoreActive) && (
+              <SidebarGroupContent>
+                {MORE_SECTIONS.map((section) => {
+                  const visibleItems = section.items.filter(
+                    (item) => !item.adminOnly || isAdmin
+                  );
+                  if (visibleItems.length === 0) return null;
+                  return (
+                    <div key={section.labelKey} className="mb-2">
+                      <p className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground/50 px-2 mb-1">
+                        {t(`navigation:${section.labelKey}`)}
+                      </p>
+                      <SidebarMenu>
+                        {visibleItems.map((item) => (
+                          <SidebarMenuItem key={item.to}>
+                            <SidebarMenuButton
+                              asChild
+                              isActive={isActive(item.to)}
+                              tooltip={t(`navigation:${item.labelKey}`)}
+                            >
+                              <button onClick={() => navigate(item.to)} className="w-full">
+                                <item.icon className="h-4 w-4" />
+                                <span>{t(`navigation:${item.labelKey}`)}</span>
+                              </button>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </div>
+                  );
+                })}
+              </SidebarGroupContent>
+            )}
+          </SidebarGroup>
+        )}
+
+        {/* Collapsed: show all items as icons */}
+        {collapsed && MORE_SECTIONS.map((section) => {
+          const visibleItems = section.items.filter(i => !i.adminOnly || isAdmin);
+          return visibleItems.map((item) => (
+            <SidebarGroup key={item.to}>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(item.to)}
+                      tooltip={t(`navigation:${item.labelKey}`)}
+                    >
+                      <button onClick={() => navigate(item.to)} className="w-full">
+                        <item.icon className="h-4 w-4" />
+                        <span>{t(`navigation:${item.labelKey}`)}</span>
+                      </button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ));
         })}
 
         {!collapsed && (
