@@ -80,17 +80,18 @@ export default function Home() {
   useEffect(() => {
     if (authLoading || !user || !currentWorkspace) return;
     loadData();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   const loadData = async () => {
+    const wsId = currentWorkspace!.id;
     const [neuronsRes, jobsRes, episodesRes, neuronsCount, jobsCount] = await Promise.all([
       supabase.from("neurons").select("id, number, title, status, updated_at")
-        .eq("author_id", user!.id).order("updated_at", { ascending: false }).limit(5),
+        .eq("workspace_id", wsId).order("updated_at", { ascending: false }).limit(5),
       supabase.from("neuron_jobs").select("id, worker_type, status, created_at")
-        .eq("author_id", user!.id).order("created_at", { ascending: false }).limit(5),
-      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
+        .eq("workspace_id", wsId).order("created_at", { ascending: false }).limit(5),
+      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
     ]);
 
     setNeurons(neuronsRes.data as RecentNeuron[] || []);
