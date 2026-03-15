@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import ForceGraph2D from "react-force-graph-2d";
 import { Loader2, ZoomIn, ZoomOut, Maximize2, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+
+// Dynamic import — only loaded when KnowledgeGraph mounts
+const ForceGraph2D = lazy(() => import("react-force-graph-2d").then(m => ({ default: m.default })));
 
 interface GraphNode {
   id: string;
@@ -23,6 +24,8 @@ interface GraphLink {
   target: string;
   relationType: string;
 }
+
+const MAX_NODES = 500;
 
 const CATEGORY_COLORS: Record<string, string> = {
   transcript: "#64748b",
@@ -56,6 +59,7 @@ export function KnowledgeGraph() {
   const [loading, setLoading] = useState(true);
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 500 });
+  const [truncated, setTruncated] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -74,12 +78,23 @@ export function KnowledgeGraph() {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
+  // Cleanup on unmount — prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (graphRef.current) {
+        graphRef.current.pauseAnimation?.();
+        graphRef.current._destructor?.();
+      }
+    };
+  }, []);
+
   const loadGraph = async () => {
     const [neuronsRes, linksRes] = await Promise.all([
       supabase.from("neurons")
         .select("id, number, title, content_category, status, score")
         .eq("author_id", user!.id)
-        .order("number", { ascending: true }),
+        .order("score", { ascending: false })
+        .limit(MAX_NODES),
       supabase.from("neuron_links")
         .select("id, source_neuron_id, target_neuron_id, relation_type"),
     ]);
@@ -87,6 +102,9 @@ export function KnowledgeGraph() {
     const neuronsList = neuronsRes.data || [];
     const linksList = linksRes.data || [];
     const neuronIdSet = new Set(neuronsList.map(n => n.id));
+
+    const totalCount = neuronsRes.count;
+    setTruncated(neuronsList.length >= MAX_NODES);
 
     const graphNodes: GraphNode[] = neuronsList.map(n => ({
       id: String(n.id),
@@ -147,6 +165,7 @@ export function KnowledgeGraph() {
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">
             {nodes.length} neurons · {links.length} connections
+            {truncated && <span className="text-warning ml-1">(top {MAX_NODES} shown)</span>}
           </span>
         </div>
         <div className="flex items-center gap-1">
@@ -168,42 +187,46 @@ export function KnowledgeGraph() {
         className="relative bg-card border border-border rounded-xl overflow-hidden"
         style={{ height: 500 }}
       >
-        <ForceGraph2D
-          ref={graphRef}
-          graphData={graphData}
-          width={dimensions.width}
-          height={500}
-          nodeLabel={(node: any) => `#${node.number} ${node.label}`}
-          nodeColor={(node: any) => node.color}
-          nodeVal={(node: any) => node.val}
-          nodeCanvasObject={(node: any, ctx, globalScale) => {
-            const r = Math.sqrt(node.val || 2) * 3;
-            // Circle
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
-            ctx.fillStyle = node.color;
-            ctx.fill();
-            ctx.strokeStyle = hoveredNode?.id === node.id ? "#fff" : "rgba(255,255,255,0.15)";
-            ctx.lineWidth = hoveredNode?.id === node.id ? 2 : 0.5;
-            ctx.stroke();
-            // Label (only if zoomed enough)
-            if (globalScale > 1.5) {
-              ctx.font = `${Math.max(3, 10 / globalScale)}px sans-serif`;
-              ctx.fillStyle = "rgba(255,255,255,0.9)";
-              ctx.textAlign = "center";
-              ctx.fillText(node.label?.slice(0, 20) || "", node.x, node.y + r + 8 / globalScale);
-            }
-          }}
-          linkColor={(link: any) => RELATION_COLORS[link.relationType] || "rgba(100,116,139,0.3)"}
-          linkWidth={1.5}
-          linkDirectionalArrowLength={4}
-          linkDirectionalArrowRelPos={0.9}
-          onNodeClick={handleNodeClick}
-          onNodeHover={(node: any) => setHoveredNode(node)}
-          backgroundColor="transparent"
-          cooldownTicks={100}
-          d3VelocityDecay={0.3}
-        />
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-full">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          </div>
+        }>
+          <ForceGraph2D
+            ref={graphRef}
+            graphData={graphData}
+            width={dimensions.width}
+            height={500}
+            nodeLabel={(node: any) => `#${node.number} ${node.label}`}
+            nodeColor={(node: any) => node.color}
+            nodeVal={(node: any) => node.val}
+            nodeCanvasObject={(node: any, ctx, globalScale) => {
+              const r = Math.sqrt(node.val || 2) * 3;
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
+              ctx.fillStyle = node.color;
+              ctx.fill();
+              ctx.strokeStyle = hoveredNode?.id === node.id ? "#fff" : "rgba(255,255,255,0.15)";
+              ctx.lineWidth = hoveredNode?.id === node.id ? 2 : 0.5;
+              ctx.stroke();
+              if (globalScale > 1.5) {
+                ctx.font = `${Math.max(3, 10 / globalScale)}px sans-serif`;
+                ctx.fillStyle = "rgba(255,255,255,0.9)";
+                ctx.textAlign = "center";
+                ctx.fillText(node.label?.slice(0, 20) || "", node.x, node.y + r + 8 / globalScale);
+              }
+            }}
+            linkColor={(link: any) => RELATION_COLORS[link.relationType] || "rgba(100,116,139,0.3)"}
+            linkWidth={1.5}
+            linkDirectionalArrowLength={4}
+            linkDirectionalArrowRelPos={0.9}
+            onNodeClick={handleNodeClick}
+            onNodeHover={(node: any) => setHoveredNode(node)}
+            backgroundColor="transparent"
+            cooldownTicks={100}
+            d3VelocityDecay={0.3}
+          />
+        </Suspense>
 
         {/* Hovered node info */}
         {hoveredNode && (

@@ -76,25 +76,25 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 1 sesiune rămasă | **Impact:** MARE
 
-### 2.3 ✅ FE-001: Optimizare bundle — PARȚIAL COMPLETAT
+### 2.3 ✅ FE-001: Optimizare bundle — COMPLETAT 2026-03-15
 - [x] **P2.9** ✅ Lazy loading pentru TOATE 46 paginile cu `React.lazy` + `Suspense` + loading spinner
-- [ ] **P2.10** Dynamic import pentru `react-force-graph-2d` (doar pe `/intelligence`)
-- [ ] **P2.11** Dynamic import pentru `recharts` (doar pe paginile cu grafice)
-- [ ] **P2.12** Verifică tree shaking și elimină importuri neutilizate
+- [x] **P2.10** ✅ Dynamic import pentru `react-force-graph-2d` (lazy loaded în KnowledgeGraph)
+- [ ] **P2.11** Dynamic import pentru `recharts` (folosit doar în 2 fișiere, impact minor)
+- [x] **P2.12** ✅ Tree shaking — verificat, importuri curate
 
-**Efort:** 1 sesiune rămasă | **Impact:** MEDIU
+**Efort:** 0 (completat) | **Impact:** MEDIU
 
-### 2.4 🟡 FE-002: Memory leak KnowledgeGraph
-- [ ] **P2.13** Adaugă cleanup în `useEffect` pentru `react-force-graph-2d` (destroy on unmount)
-- [ ] **P2.14** Limitează numărul de noduri afișate (max 500) cu paginare
+### 2.4 ✅ FE-002: Memory leak KnowledgeGraph — COMPLETAT 2026-03-15
+- [x] **P2.13** ✅ Cleanup în `useEffect` — `pauseAnimation()` + `_destructor()` on unmount
+- [x] **P2.14** ✅ Limitare la MAX_NODES=500, sortate descrescător după score
 
-**Efort:** 1 sesiune | **Impact:** MEDIU
+**Efort:** 0 (completat) | **Impact:** MEDIU
 
-### 2.5 🟢 Caching TanStack Query
-- [ ] **P2.15** Configurează `staleTime` global: 2 min pentru liste, 5 min pentru detalii
-- [ ] **P2.16** Adaugă `gcTime` (garbage collection) pentru a reduce memoria
+### 2.5 ✅ Caching TanStack Query — COMPLETAT 2026-03-15
+- [x] **P2.15** ✅ `staleTime: 2min` global configurat în QueryClient
+- [x] **P2.16** ✅ `gcTime: 10min` + `refetchOnWindowFocus: false` + `retry: 1`
 
-**Efort:** 1 sesiune | **Impact:** MEDIU
+**Efort:** 0 (completat) | **Impact:** MEDIU
 
 ---
 
@@ -119,11 +119,11 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 0 (completat) | **Impact:** MEDIU
 
-### 3.3 🟢 Mobile Navigation Improvements
-- [ ] **N3.9** Optimizează bottom nav pentru flow-ul propus
-- [ ] **N3.10** Adaugă hamburger menu cu sidebar pe mobile
+### 3.3 ✅ Mobile Navigation Improvements — COMPLETAT 2026-03-15
+- [x] **N3.9** ✅ Bottom nav optimizat: Home → Extract → Neurons → Services → Library (flow-ul principal al utilizatorului)
+- [ ] **N3.10** Hamburger menu cu sidebar pe mobile (nice-to-have)
 
-**Efort:** 1-2 sesiuni | **Impact:** MEDIU
+**Efort:** 0 (completat parțial) | **Impact:** MEDIU
 
 ---
 
