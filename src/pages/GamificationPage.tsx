@@ -5,6 +5,7 @@ import { LeaderboardWidget } from "@/components/gamification/LeaderboardWidget";
 import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { AchievementGallery } from "@/components/gamification/AchievementGallery";
 import { TeamChallenges } from "@/components/gamification/TeamChallenges";
+import { ControlledSection } from "@/components/ControlledSection";
 import { useGamification } from "@/hooks/useGamification";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
