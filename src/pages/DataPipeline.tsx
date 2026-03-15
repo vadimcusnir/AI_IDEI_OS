@@ -1,10 +1,26 @@
+import { useEffect, useState } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { useDataCollection } from "@/hooks/useDataCollection";
-import { Loader2, Brain, Database, CheckCircle2, Sparkles, Layers, BarChart3 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Loader2, Brain, Database, CheckCircle2, Sparkles, Layers, BarChart3, FileDown, Beaker, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+
+interface PipelineStats {
+  total_units: number;
+  validated_units: number;
+  llm_ready_units: number;
+  avg_quality: number;
+  avg_confidence: number;
+  categories: number;
+  datasets: number;
+  total_samples: number;
+  validated_samples: number;
+  by_type: { unit_type: string; count: number; avg_quality: number }[];
+  recent_runs: { id: string; source_type: string; status: string; units_extracted: number; units_validated: number; created_at: string }[];
+}
 
 export default function DataPipeline() {
   const { categories, units, stats, loading, selectedCategory, setSelectedCategory } = useDataCollection();
