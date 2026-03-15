@@ -178,20 +178,32 @@ export function AppSidebar() {
               {idx > 0 && collapsed && <SidebarSeparator className="my-1" />}
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {visibleItems.map((item) => (
-                    <SidebarMenuItem key={item.to}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={isActive(item.to)}
-                        tooltip={t(`navigation:${item.labelKey}`)}
-                      >
-                        <button onClick={() => navigate(item.to)} className="w-full">
-                          <item.icon className="h-4 w-4" />
-                          <span>{t(`navigation:${item.labelKey}`)}</span>
-                        </button>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
+                  {visibleItems.map((item) => {
+                    const menuItem = (
+                      <SidebarMenuItem key={item.to}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isActive(item.to)}
+                          tooltip={t(`navigation:${item.labelKey}`)}
+                        >
+                          <button onClick={() => navigate(item.to)} className="w-full">
+                            <item.icon className="h-4 w-4" />
+                            <span>{t(`navigation:${item.labelKey}`)}</span>
+                          </button>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+
+                    if (item.controlId) {
+                      return (
+                        <ControlledNavItem key={item.to} elementId={item.controlId}>
+                          {menuItem}
+                        </ControlledNavItem>
+                      );
+                    }
+
+                    return menuItem;
+                  })}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>

@@ -47,6 +47,15 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   usePageTracking();
   useDailyActivity();
 
+  // Prefetch UI control registry once on mount
+  const prefetched = useRef(false);
+  useEffect(() => {
+    if (!prefetched.current) {
+      prefetched.current = true;
+      prefetchUIControls();
+    }
+  }, []);
+
   const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
 
   return (
