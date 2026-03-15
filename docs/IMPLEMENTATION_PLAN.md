@@ -162,9 +162,10 @@
 **Efort:** 10+ sesiuni (incremental)
 - [x] Sprint D: 20 extractori specializați (hook, email, SEO, video, funnel, JTBD, etc.)
 - [x] Sprint E: 20 extractori batch 2 (webinar, LinkedIn, sales page, coaching, ad copy, etc.)
+- [x] Sprint F: 20 extractori batch 3 (whitepaper, product launch, FAQ, battlecard, journey map, etc.)
 - [x] Prompts + artifact type mapping în run-service
-- [x] Service catalog DB entries (40 servicii noi)
-- [ ] ~60 extractori rămași (advanced content gen, niche industries)
+- [x] Service catalog DB entries (60 servicii noi)
+- [ ] ~40 extractori rămași (advanced content gen, niche industries)
 - [ ] Batch extractor runner improvements
 - [ ] Extractor registry (admin-configurable)
 
