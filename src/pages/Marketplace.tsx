@@ -136,6 +136,7 @@ export default function Marketplace() {
 
         {/* Featured Section */}
         {featured.length > 0 && (
+          <ControlledSection elementId="marketplace.featured">
           <section>
             <div className="flex items-center gap-2 mb-4">
               <Crown className="h-4 w-4 text-amber-500" />

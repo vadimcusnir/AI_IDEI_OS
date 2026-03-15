@@ -132,15 +132,21 @@ export default function Intelligence() {
           </TabsList>
 
           <TabsContent value="graph" className="mt-0">
-            <KnowledgeGraph />
+            <ControlledSection elementId="intelligence.graph">
+              <KnowledgeGraph />
+            </ControlledSection>
           </TabsContent>
 
           <TabsContent value="stats" className="mt-0">
-            <StatsOverview stats={stats} />
+            <ControlledSection elementId="intelligence.stats">
+              <StatsOverview stats={stats} />
+            </ControlledSection>
           </TabsContent>
 
           <TabsContent value="dedup" className="mt-0">
-            <DuplicateMergePanel />
+            <ControlledSection elementId="intelligence.dedup">
+              <DuplicateMergePanel />
+            </ControlledSection>
           </TabsContent>
         </Tabs>
       </div>
