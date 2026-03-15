@@ -3426,6 +3426,196 @@ export type Database = {
         }
         Relationships: []
       }
+      vip_milestone_progress: {
+        Row: {
+          claimed_reward: boolean
+          created_at: string
+          id: string
+          milestone_id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          claimed_reward?: boolean
+          created_at?: string
+          id?: string
+          milestone_id: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          claimed_reward?: boolean
+          created_at?: string
+          id?: string
+          milestone_id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_milestone_progress_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "vip_milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vip_milestones: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          is_active: boolean
+          month_number: number
+          position: number
+          reward_neurons: number
+          title: string
+          unlock_key: string
+          unlock_type: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          month_number: number
+          position?: number
+          reward_neurons?: number
+          title: string
+          unlock_key: string
+          unlock_type?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          month_number?: number
+          position?: number
+          reward_neurons?: number
+          title?: string
+          unlock_key?: string
+          unlock_type?: string
+        }
+        Relationships: []
+      }
+      vip_subscriptions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_month: number
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          paused_at: string | null
+          started_at: string
+          tier_override: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_month?: number
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          paused_at?: string | null
+          started_at?: string
+          tier_override?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_month?: number
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          paused_at?: string | null
+          started_at?: string
+          tier_override?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vip_war_room_members: {
+        Row: {
+          id: string
+          joined_at: string
+          role: string
+          user_id: string
+          war_room_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id: string
+          war_room_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+          war_room_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_war_room_members_war_room_id_fkey"
+            columns: ["war_room_id"]
+            isOneToOne: false
+            referencedRelation: "vip_war_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vip_war_rooms: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          is_active: boolean
+          max_members: number
+          metadata: Json | null
+          min_month: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean
+          max_members?: number
+          metadata?: Json | null
+          min_month?: number
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean
+          max_members?: number
+          metadata?: Json | null
+          min_month?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       wallet_state: {
         Row: {
           available: number
@@ -3697,6 +3887,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      advance_vip_month: { Args: { _user_id: string }; Returns: Json }
       apply_abuse_ladder: { Args: { _user_id: string }; Returns: string }
       award_xp: {
         Args: {
@@ -3715,6 +3906,10 @@ export type Database = {
       check_access_logged: {
         Args: { _ip_hint?: string; _service_key: string; _user_id: string }
         Returns: Json
+      }
+      check_vip_access: {
+        Args: { _unlock_key: string; _user_id: string }
+        Returns: boolean
       }
       check_wallet_freshness: {
         Args: { _max_age_seconds?: number; _user_id: string }
