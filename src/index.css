@@ -140,6 +140,13 @@
     --toolbar-border: 220 16% 16%;
     --toolbar-active: 25 95% 55%;
 
+    --success: 152 60% 48%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 10%;
+    --info: 210 75% 55%;
+    --info-foreground: 0 0% 100%;
+
     --status-draft: 220 10% 58%;
     --status-validated: 152 60% 48%;
     --status-published: 25 95% 55%;
