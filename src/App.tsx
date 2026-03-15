@@ -69,6 +69,9 @@ const DataPipeline = lazy(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazy(() => import("./pages/RuntimeDashboard"));
 const SecurityDocs = lazy(() => import("./pages/SecurityDocs"));
 const DatabaseRelations = lazy(() => import("./pages/DatabaseRelations"));
+const WalletPage = lazy(() => import("./pages/WalletPage"));
+const GamificationPage = lazy(() => import("./pages/GamificationPage"));
+const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
 
 function PageLoader() {
   return (
@@ -166,10 +169,12 @@ const App = () => (
                 <Route path="/knowledge" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><VIPDashboard /></AppLayout></ProtectedRoute>} />
-                <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><DataPipeline /></AppLayout></ProtectedRoute>} />
+                <Route path="/wallet" element={<ProtectedRoute><AppLayout><WalletPage /></AppLayout></ProtectedRoute>} />
+                <Route path="/gamification" element={<ProtectedRoute><AppLayout><GamificationPage /></AppLayout></ProtectedRoute>} />
 
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
+                <Route path="/analytics" element={<AdminRoute><AppLayout><AnalyticsDashboard /></AppLayout></AdminRoute>} />
                 <Route path="/security" element={<AdminRoute><AppLayout><SecurityDocs /></AppLayout></AdminRoute>} />
                 <Route path="/db-schema" element={<AdminRoute><AppLayout><DatabaseRelations /></AppLayout></AdminRoute>} />
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
