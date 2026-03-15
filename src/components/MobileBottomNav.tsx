@@ -106,7 +106,7 @@ export function MobileBottomNav() {
     <>
       {/* Fixed bottom bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-border bg-background/95 backdrop-blur-md safe-area-bottom">
-        <div className="flex items-center justify-around h-14 px-1">
+        <div className="flex items-center justify-around h-16 px-1">
           {BAR_ITEMS.map(({ path, icon: Icon, label }) => {
             const active = isActive(path);
             return (
