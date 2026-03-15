@@ -224,22 +224,111 @@ export default function KnowledgeDashboard() {
             </div>
           )}
 
-          {/* Learning path suggestion */}
-          <div className="mt-8 p-5 rounded-xl border border-dashed border-primary/30 bg-primary/5 text-center">
-            <Lightbulb className="h-6 w-6 text-primary mx-auto mb-2" />
-            <h3 className="text-sm font-semibold mb-1">Guided Learning Path</h3>
-            <p className="text-[11px] text-muted-foreground mb-3 max-w-md mx-auto">
-              Follow the Canon Cușnir progression: Principles → Methods → Frameworks → Blueprints
-            </p>
-            <Button
-              size="sm"
-              variant="outline"
-              className="gap-1.5 text-xs"
-              onClick={() => setActiveCategory("principle")}
-            >
-              Start with Principles <ArrowRight className="h-3 w-3" />
-            </Button>
-          </div>
+          {/* KB Stats */}
+          {kbStats && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+              <div className="bg-card border border-border rounded-xl p-3 text-center">
+                <BookOpen className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
+                <p className="text-lg font-bold font-mono">{kbStats.total_articles}</p>
+                <p className="text-[9px] text-muted-foreground">Articles</p>
+              </div>
+              <div className="bg-card border border-border rounded-xl p-3 text-center">
+                <Eye className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
+                <p className="text-lg font-bold font-mono">{kbStats.articles_read}</p>
+                <p className="text-[9px] text-muted-foreground">Read</p>
+              </div>
+              <div className="bg-card border border-border rounded-xl p-3 text-center">
+                <GraduationCap className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
+                <p className="text-lg font-bold font-mono">{kbStats.paths_started}</p>
+                <p className="text-[9px] text-muted-foreground">Paths Started</p>
+              </div>
+              <div className="bg-card border border-border rounded-xl p-3 text-center">
+                <Trophy className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
+                <p className="text-lg font-bold font-mono">{kbStats.paths_completed}</p>
+                <p className="text-[9px] text-muted-foreground">Completed</p>
+              </div>
+            </div>
+          )}
+
+          {/* Learning Paths */}
+          {kbStats && kbStats.learning_paths.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                <GraduationCap className="h-3 w-3" /> Learning Paths
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {kbStats.learning_paths.map(path => {
+                  const pct = path.total_items > 0 ? Math.round(((path.completed_items || 0) / path.total_items) * 100) : 0;
+                  const DIFF_COLORS: Record<string, string> = {
+                    beginner: "bg-status-validated/10 text-status-validated",
+                    intermediate: "bg-primary/10 text-primary",
+                    advanced: "bg-destructive/10 text-destructive",
+                  };
+                  return (
+                    <div key={path.id} className="bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-colors">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <p className="text-sm font-semibold">{path.title}</p>
+                          <p className="text-[10px] text-muted-foreground">{path.description}</p>
+                        </div>
+                        <Badge className={cn("text-[9px] shrink-0", DIFF_COLORS[path.difficulty] || "")}>
+                          {path.difficulty}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-[9px] text-muted-foreground">{path.estimated_hours}h</span>
+                        <span className="text-[9px] text-muted-foreground">·</span>
+                        <span className="text-[9px] text-muted-foreground">{path.total_items} items</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Progress value={pct} className="h-1.5 flex-1" />
+                        <span className="text-[9px] font-mono text-muted-foreground">{pct}%</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Articles grid heading */}
+          <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <BookOpen className="h-3 w-3" /> Articles
+          </h2>
+
+          {/* Articles grid */}
+          {items.length === 0 ? (
+            <div className="text-center py-12">
+              <BookOpen className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">
+                {search ? `No results for "${search}".` : "No articles in this category yet."}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleArticleClick(item)}
+                  className="text-left bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all group"
+                >
+                  <Badge variant="outline" className={cn("text-[9px] mb-2", CATEGORY_COLORS[item.category])}>
+                    {item.category}
+                  </Badge>
+                  <h3 className="text-sm font-semibold mb-1.5 group-hover:text-primary transition-colors line-clamp-2">
+                    {item.title}
+                  </h3>
+                  {item.excerpt && (
+                    <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3">{item.excerpt}</p>
+                  )}
+                  <div className="flex items-center justify-between text-[9px] text-muted-foreground">
+                    <span className="flex items-center gap-1"><Clock className="h-2.5 w-2.5" /> {item.reading_time} min</span>
+                    <span className="flex items-center gap-1"><Eye className="h-2.5 w-2.5" /> {item.view_count}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </PageTransition>

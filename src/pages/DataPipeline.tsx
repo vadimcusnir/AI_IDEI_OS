@@ -88,6 +88,91 @@ export default function DataPipeline() {
             </div>
           </div>
 
+          {/* Training Datasets & Type Breakdown */}
+          {pipelineStats && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              {/* Training Datasets */}
+              <div className="bg-card border border-border rounded-xl p-4">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <Beaker className="h-3 w-3" /> Training Datasets
+                </h3>
+                <div className="grid grid-cols-3 gap-2 mb-3">
+                  <div className="text-center">
+                    <p className="text-lg font-bold font-mono">{pipelineStats.datasets}</p>
+                    <p className="text-[9px] text-muted-foreground">Datasets</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold font-mono">{pipelineStats.total_samples}</p>
+                    <p className="text-[9px] text-muted-foreground">Samples</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold font-mono">{pipelineStats.validated_samples}</p>
+                    <p className="text-[9px] text-muted-foreground">Validated</p>
+                  </div>
+                </div>
+                {pipelineStats.total_samples > 0 && (
+                  <div>
+                    <div className="flex justify-between text-[9px] mb-1">
+                      <span className="text-muted-foreground">Sample validation</span>
+                      <span className="font-mono">{Math.round((pipelineStats.validated_samples / pipelineStats.total_samples) * 100)}%</span>
+                    </div>
+                    <Progress value={(pipelineStats.validated_samples / pipelineStats.total_samples) * 100} className="h-1.5" />
+                  </div>
+                )}
+              </div>
+
+              {/* Unit Type Breakdown */}
+              <div className="bg-card border border-border rounded-xl p-4">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <Layers className="h-3 w-3" /> By Unit Type
+                </h3>
+                {(pipelineStats.by_type || []).length === 0 ? (
+                  <p className="text-[10px] text-muted-foreground text-center py-4">No data yet</p>
+                ) : (
+                  <div className="space-y-2">
+                    {pipelineStats.by_type.slice(0, 6).map(t => (
+                      <div key={t.unit_type}>
+                        <div className="flex justify-between text-[10px] mb-0.5">
+                          <span className="font-mono">{t.unit_type}</span>
+                          <span className="text-muted-foreground">{t.count}</span>
+                        </div>
+                        <Progress value={(t.avg_quality || 0) * 100} className="h-1" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Recent Collection Runs */}
+          {pipelineStats && (pipelineStats.recent_runs || []).length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                <Clock className="h-3 w-3" /> Recent Collection Runs
+              </h3>
+              <div className="space-y-1">
+                {pipelineStats.recent_runs.map(run => (
+                  <div key={run.id} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-card border border-border">
+                    <Badge variant="outline" className={cn("text-[8px] px-1.5 py-0 h-4",
+                      run.status === "completed" ? "text-status-validated border-status-validated/30" :
+                      run.status === "failed" ? "text-destructive border-destructive/30" :
+                      "text-primary border-primary/30"
+                    )}>
+                      {run.status}
+                    </Badge>
+                    <span className="text-xs flex-1">{run.source_type}</span>
+                    <span className="text-[9px] text-muted-foreground">{run.units_extracted} extracted</span>
+                    <span className="text-[9px] text-muted-foreground">{run.units_validated} validated</span>
+                    <span className="text-[9px] text-muted-foreground/60 font-mono">
+                      {new Date(run.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Category pills */}
           <div className="flex flex-wrap gap-1.5 mb-5">
             <button
