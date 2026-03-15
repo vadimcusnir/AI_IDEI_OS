@@ -247,36 +247,17 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
 
     setPurchasing(true);
     try {
-      // Spend credits if not free
-      if (!isFree && price > 0) {
-        const { data: spent, error: spendErr } = await supabase.rpc("spend_credits", {
-          _user_id: currentUserId,
-          _amount: price,
-          _description: `Marketplace purchase: ${asset.title}`,
-        });
-        if (spendErr) throw new Error(spendErr.message);
-        if (!spent) throw new Error("Insufficient credits");
-      }
+      const { data, error } = await supabase.rpc("purchase_marketplace_asset", {
+        _buyer_id: currentUserId,
+        _asset_id: asset.id,
+      });
 
-      // Record transaction
-      const { error: txErr } = await supabase.from("asset_transactions").insert({
-        asset_id: asset.id,
-        buyer_id: currentUserId,
-        seller_id: asset.author_id,
-        amount_neurons: price,
-        amount_usd: asset.price_usd ? Number(asset.price_usd) : 0,
-        status: "completed",
-      } as any);
-      if (txErr) throw new Error(txErr.message);
-
-      // Increment sales_count
-      await supabase
-        .from("knowledge_assets")
-        .update({ sales_count: (asset.sales_count || 0) + 1 } as any)
-        .eq("id", asset.id);
+      if (error) throw new Error(error.message);
+      const result = data as any;
+      if (!result?.success) throw new Error(result?.error || "Purchase failed");
 
       setPurchased(true);
-      toast.success(isFree ? "Asset acquired!" : `Purchased for ${price} NEURONS!`);
+      toast.success(isFree ? "Asset acquired!" : `Purchased for ${result.price} NEURONS!`);
     } catch (err: any) {
       toast.error("Purchase failed: " + (err.message || "Try again"));
     } finally {
