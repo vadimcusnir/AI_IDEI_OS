@@ -4916,6 +4916,45 @@ export type Database = {
         }
         Relationships: []
       }
+      public_contributions: {
+        Row: {
+          content: string | null
+          contribution_type: string | null
+          created_at: string | null
+          id: string | null
+          neurons_awarded: number | null
+          status: string | null
+          tags: string[] | null
+          title: string | null
+          updated_at: string | null
+          word_count: number | null
+        }
+        Insert: {
+          content?: string | null
+          contribution_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          neurons_awarded?: number | null
+          status?: string | null
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string | null
+          word_count?: number | null
+        }
+        Update: {
+          content?: string | null
+          contribution_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          neurons_awarded?: number | null
+          status?: string | null
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string | null
+          word_count?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       activate_emergency: {
