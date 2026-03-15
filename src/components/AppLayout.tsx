@@ -44,6 +44,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   const { i18n } = useTranslation();
   const { user } = useAuth();
   usePageTracking();
+  useDailyActivity();
 
   const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
 
