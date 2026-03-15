@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
+/* Fonts loaded via index.html preload for performance */
 
 @tailwind base;
 @tailwind components;
