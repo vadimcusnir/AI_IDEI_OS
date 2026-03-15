@@ -12,6 +12,7 @@ import {
   Upload, Brain, Sparkles, Briefcase, Coins, ArrowRight,
   Loader2, Clock, Plus, Zap, TrendingUp, FileText,
 } from "lucide-react";
+import type {} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
 import { XPProgressBar } from "@/components/gamification/XPProgressBar";
