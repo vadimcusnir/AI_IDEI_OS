@@ -135,7 +135,7 @@ export default function Home() {
         </motion.div>
 
         {/* Stats row */}
-        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-4 gap-2 sm:gap-3 mb-6">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6">
           <motion.div variants={fadeUp}><StatCard icon={Brain} label="Neurons" value={totalNeurons} /></motion.div>
           <motion.div variants={fadeUp}><StatCard icon={FileText} label="Episodes" value={totalEpisodes} /></motion.div>
           <motion.div variants={fadeUp}><StatCard icon={Zap} label="Jobs" value={totalJobs} /></motion.div>
