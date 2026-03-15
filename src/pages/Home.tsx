@@ -18,6 +18,7 @@ import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { motion } from "framer-motion";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
+import { PageTransition } from "@/components/motion/PageTransition";
 
 interface RecentNeuron {
   id: number;

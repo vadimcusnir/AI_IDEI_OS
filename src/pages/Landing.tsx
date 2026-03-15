@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { PublicTestimonials } from "@/components/landing/PublicTestimonials";
 import { Footer } from "@/components/global/Footer";
 import { useRef } from "react";
