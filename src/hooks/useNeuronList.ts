@@ -46,19 +46,19 @@ export function useNeuronList() {
   const [searching, setSearching] = useState(false);
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     const fetchNeurons = async () => {
       const { data, error } = await supabase
         .from("neurons")
         .select("id, number, title, status, updated_at, created_at, score, visibility")
-        .eq("author_id", user.id)
+        .eq("workspace_id", currentWorkspace.id)
         .order("updated_at", { ascending: false });
       if (data) setNeurons(data as NeuronListItem[]);
       if (error) toast.error("Failed to load neurons");
       setLoading(false);
     };
     fetchNeurons();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   // Persist pins
   useEffect(() => {
