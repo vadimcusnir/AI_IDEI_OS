@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 
 interface Artifact {
   id: string;
