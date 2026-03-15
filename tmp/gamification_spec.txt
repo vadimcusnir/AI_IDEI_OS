@@ -1,0 +1,3163 @@
+# Comprehensive Gamification System
+
+## Overview
+
+Implement a sophisticated gamification layer across the AI-IDEI platform that drives retention, educates users on product capabilities, and creates meaningful identity within the creator economy. The system builds upon the existing `useXP` hook foundation while adding competitive elements, achievement complexity, and psychological engagement mechanics.
+
+## Problem Statement
+
+The platform currently has a basic XP system (levels, badges, streaks) but lacks:
+- **Retention mechanisms**: No compelling reason for daily/weekly return beyond core functionality
+- **Skill scaffolding**: Users don't understand the full capability spectrum or progression path
+- **Social proof**: No competitive or collaborative elements to drive engagement
+- **Identity formation**: Users can't express mastery or build reputation within the ecosystem
+
+This creates churn risk and underutilization of advanced features, particularly critical for one-person businesses and creators who need sustained engagement to extract value.
+
+## Strategic Goals
+
+### Primary: Retention & Habit Formation (Behavioral Control)
+- Increase DAU/WAU through daily/weekly usage loops
+- Reward consistency over intensity (streak mechanics with soft decay)
+- Make inactivity visible without punitive hard resets
+- Validate product-market fit through engagement metrics
+
+### Secondary: Skill Progression & User Education (Cognitive Scaffolding)
+- Unlock complexity gradually through XP-gated features
+- Signal readiness for advanced capabilities
+- Map actions to competence, not just time spent
+- Reduce misuse and support load through behavioral training
+
+### Tertiary: Motivation & Identity (Status Layer)
+- Create visible identity through named ranks and capability badges
+- Support future community dynamics
+- Build long-term brand affinity
+
+## Core Principles
+
+### Economic Separation (Non-Negotiable)
+**Rule Zero**: Soft economy (XP) must never mint hard economy (neurons/credits).
+
+- **XP ≠ Currency**: XP is a control signal, not value
+- **XP → Entitlement Modifiers**: Affects how credits are used, not balance
+- **XP as Trust Signal**: Modulates system trust and access levels
+- **Badges as Capability Flags**: Boolean unlocks, not point multipliers
+- **Streaks Affect Priority**: Queue priority, not quantity
+
+**Mental Model**: Credits = fuel, XP = license class. You need fuel to drive; XP determines which vehicles you can operate.
+
+## User Touchpoints to Gamify
+
+### High-Leverage Touchpoints (Core)
+
+#### 1. First Successful Value Delivery
+**Trigger**: First completed neuron output, first artifact exported, first deliverable generated
+
+**Why**: Anchors perceived value and sets baseline expectancy
+
+**Gamification**:
+- One-time XP spike: +100 XP
+- "Activation" badge (non-repeatable): "First Steps"
+- Celebratory notification with next milestone preview
+
+#### 2. Correct/High-Quality Usage
+**Trigger**: Using advanced features correctly, supplying clean inputs, low retry/error patterns
+
+**Why**: Trains behavior (not volume), reduces system cost and support load
+
+**Gamification**:
+- XP weighted by quality: Base XP × quality multiplier (1.0-2.0)
+- Silent multipliers (no fireworks, subtle UI indicator)
+- Quality badges: "Precision Operator", "Clean Input Master"
+
+#### 3. Consistency Over Time (Return Cycles)
+**Trigger**: Daily/weekly active return, completing multi-step flows, maintaining operational cadence
+
+**Why**: Predicts retention better than raw usage, stabilizes demand
+
+**Gamification**:
+- Streak system with soft decay (3-day grace period)
+- Small, capped daily XP: +10 XP base, +5 XP per streak day (max +50)
+- Streak milestone badges: 7-day, 30-day, 90-day, 365-day
+
+### Medium-Leverage Touchpoints (Selective)
+
+#### 4. Progression Milestones
+**Trigger**: Unlocking higher-risk actions, new modes, reduced friction paths
+
+**Why**: Converts learning into entitlement, makes XP operational
+
+**Gamification**:
+- Level-based unlocks (see Level System below)
+- Explicit capability badges: "Advanced Operator", "Power User"
+- Unlock notifications with feature tutorials
+
+#### 5. Resilience & Recovery
+**Trigger**: Successfully fixing failed jobs, recovering from errors, adapting after rejection
+
+**Why**: Teaches system boundaries, rewards maturity over perfection
+
+**Gamification**:
+- XP on successful recovery: +25 XP
+- Invisible trust score increments (affects future friction)
+- Resilience badges: "Problem Solver", "Persistent Creator"
+
+## XP & Level System
+
+### XP Calculation Formula
+```
+Level N requires: N² × 100 XP total
+Level 1: 0 XP
+Level 2: 100 XP
+Level 3: 400 XP
+Level 4: 900 XP
+Level 5: 1,600 XP
+...
+Level 10: 10,000 XP
+```
+
+### Level Progression & Unlocks
+
+| Level   | XP Required   | Named Rank   | Unlocks                                       |
+| ------- | ------------- | ------------ | --------------------------------------------- |
+| 1       | 0             | Novice       | Basic features, 1 concurrent job              |
+| 2       | 100           | Apprentice   | Batch processing (3 items)                    |
+| 3       | 400           | Creator      | Custom templates, 2 concurrent jobs           |
+| 5       | 1,600         | Artisan      | Advanced services, priority queue             |
+| 7       | 4,900         | Expert       | Reduced cooldowns, 5 concurrent jobs          |
+| 10      | 10,000        | Master       | All features, 10 concurrent jobs, beta access |
+| 15      | 22,500        | Virtuoso     | Custom integrations, API access               |
+| 20      | 40,000        | Legend       | White-label options, dedicated support        |
+
+### Daily XP Cap
+**Base cap**: 200 XP per day (prevents farming, encourages consistency)
+
+**Exceptions**:
+- First-time achievements: No cap
+- Weekly challenges: Bonus XP outside cap
+- Quality multipliers: Apply before cap calculation
+
+## Achievement System (50-75 Achievements)
+
+### Achievement Structure
+```typescript
+interface Achievement {
+  id: string;
+  name: string;
+  name_ro: string;
+  description_ro: string;
+  category: 'activation' | 'mastery' | 'consistency' | 'social' | 'quality' | 'resilience';
+  tier: 'bronze' | 'silver' | 'gold';
+  xp_reward: number;
+  icon: string;
+  hidden: boolean; // Discoverable achievements
+  requirements: AchievementRequirement[];
+}
+```
+
+### Achievement Categories & Examples
+
+#### Activation (10 achievements)
+- **First Steps** (Bronze, 100 XP): Complete first neuron
+- **Content Creator** (Bronze, 50 XP): Generate first deliverable
+- **Service Explorer** (Bronze, 75 XP): Use 3 different services
+- **Template Master** (Silver, 150 XP): Create first custom template
+- **Batch Pioneer** (Silver, 200 XP): Process first batch job
+
+#### Mastery (15 achievements, tiered)
+- **Neuron Architect** (Bronze/Silver/Gold): Create 10/50/100 neurons
+- **Deliverable Factory** (Bronze/Silver/Gold): Generate 25/100/500 deliverables
+- **Service Virtuoso** (Bronze/Silver/Gold): Use all services 5/25/100 times
+- **Quality Craftsman** (Bronze/Silver/Gold): Maintain 90%/95%/99% quality score over 10/50/100 jobs
+- **Speed Demon** (Gold, 500 XP): Complete 10 jobs with <2 min processing time
+
+#### Consistency (12 achievements)
+- **Week Warrior** (Bronze, 100 XP): 7-day streak
+- **Month Master** (Silver, 300 XP): 30-day streak
+- **Quarter Champion** (Gold, 1000 XP): 90-day streak
+- **Annual Legend** (Gold, 5000 XP): 365-day streak
+- **Daily Devotee** (Bronze/Silver/Gold): Login 30/100/365 days total
+- **Comeback Kid** (Bronze, 50 XP): Recover a broken streak within grace period
+
+#### Social (10 achievements)
+- **Leaderboard Debut** (Bronze, 50 XP): Appear on any leaderboard
+- **Top 10** (Silver, 200 XP): Reach top 10 in weekly leaderboard
+- **Podium Finish** (Gold, 500 XP): Reach top 3 in monthly leaderboard
+- **Challenge Accepted** (Bronze, 100 XP): Complete first challenge
+- **Team Player** (Silver, 250 XP): Complete 5 team challenges
+- **Challenge Master** (Gold, 1000 XP): Win 10 challenges
+
+#### Quality (8 achievements)
+- **Precision Operator** (Silver, 200 XP): 50 jobs with zero retries
+- **Clean Input Master** (Silver, 150 XP): 100 jobs with perfect input validation
+- **Low-Retry User** (Gold, 300 XP): Maintain <5% retry rate over 100 jobs
+- **Error-Free Month** (Gold, 500 XP): 30 days without failed jobs
+
+#### Resilience (10 achievements)
+- **Problem Solver** (Bronze, 75 XP): Successfully recover from 5 errors
+- **Persistent Creator** (Silver, 200 XP): Complete job after 3+ retries
+- **Bounce Back** (Bronze, 50 XP): Return within 24h after failed job
+- **Adaptive Learner** (Gold, 400 XP): Improve quality score by 20% over 50 jobs
+
+### Hidden Achievements (5-10)
+- **Night Owl**: Complete 10 jobs between 12am-5am
+- **Early Bird**: Complete 10 jobs between 5am-8am
+- **Weekend Warrior**: Complete 50 jobs on weekends
+- **Perfectionist**: Achieve 100% quality score on 25 consecutive jobs
+- **Explorer**: Use every service at least once in a single day
+
+## Streak System
+
+### Streak Mechanics
+- **Activation**: Any meaningful action (neuron creation, deliverable generation, service usage)
+- **Daily window**: 24-hour rolling window from last action
+- **Grace period**: 3-day soft decay (streak preserved but flagged)
+- **Decay notification**: Warning at 48h of inactivity
+- **Soft reset**: After 3 days, streak resets but "longest streak" preserved
+
+### Streak Rewards
+- **Daily XP bonus**: +5 XP per streak day (capped at +50)
+- **Milestone badges**: 7, 30, 90, 365 days
+- **Priority queue**: 30+ day streaks get queue priority
+- **Streak recovery**: One "Streak Freeze" token per month (preserves streak for 24h)
+
+### Streak Display
+```typescript
+interface StreakState {
+  current_streak: number;
+  longest_streak: number;
+  last_action_at: timestamp;
+  grace_period_active: boolean;
+  freeze_tokens: number;
+}
+```
+
+## Competitive & Social Features
+
+### Leaderboards
+
+#### Weekly Leaderboard
+- **Metric**: XP gained in last 7 days
+- **Reset**: Every Monday 00:00 UTC
+- **Display**: Top 100 users
+- **Rewards**: Top 10 get "Weekly Champion" badge, +100 bonus XP
+
+#### Monthly Leaderboard
+- **Metric**: XP gained in current month
+- **Reset**: First day of month
+- **Display**: Top 100 users
+- **Rewards**: Top 3 get "Monthly Legend" badge, +500 bonus XP
+
+#### All-Time Leaderboard
+- **Metric**: Total XP
+- **Display**: Top 100 users
+- **Rewards**: Prestige only
+
+#### Category Leaderboards
+- **Quality Score**: Average quality over last 100 jobs
+- **Consistency**: Longest current streak
+- **Productivity**: Total deliverables generated
+- **Mastery**: Number of achievements unlocked
+
+### Challenges
+
+#### Challenge Structure
+```typescript
+interface Challenge {
+  id: string;
+  name: string;
+  description: string;
+  type: 'individual' | 'team';
+  duration: number; // hours
+  start_time: timestamp;
+  end_time: timestamp;
+  goal: ChallengeGoal;
+  rewards: ChallengeReward[];
+  participants: string[]; // user_ids
+}
+```
+
+#### Individual Challenges (Weekly)
+- **Sprint Challenge**: Generate 50 deliverables in 7 days
+- **Quality Quest**: Maintain 95% quality score over 25 jobs
+- **Service Sampler**: Use 5 different services in 3 days
+- **Batch Master**: Process 10 batch jobs in 5 days
+
+#### Team Challenges (Monthly)
+- **Collective Goal**: Team generates 500 deliverables
+- **Quality Alliance**: Team maintains 90% average quality
+- **Streak Squad**: All team members maintain 7-day streak
+- **Service Specialists**: Team uses all services 100 times combined
+
+#### Challenge Rewards
+- **Individual**: 200-500 XP, exclusive badges
+- **Team**: 300-1000 XP per member, team badge, priority support for 1 week
+
+## Notification Strategy
+
+### Notification Levels (User-Configurable)
+
+#### Minimal (Default for new users)
+- Level up notifications
+- Major achievement unlocks (Gold tier only)
+- Streak milestones (7, 30, 90, 365 days)
+- Challenge completion
+
+#### Moderate (Recommended)
+- All Minimal notifications
+- Achievement unlocks (all tiers)
+- Weekly progress summary (every Monday)
+- Streak warnings (48h inactivity)
+- Leaderboard position changes (top 10 only)
+
+#### Active
+- All Moderate notifications
+- Real-time XP gains (batched every 5 min)
+- Daily progress summary
+- Challenge updates
+- Leaderboard position changes (any)
+
+### Notification Settings UI
+```typescript
+interface NotificationPreferences {
+  level: 'minimal' | 'moderate' | 'active';
+  channels: {
+    in_app: boolean;
+    email: boolean;
+    push: boolean;
+  };
+  quiet_hours: {
+    enabled: boolean;
+    start: string; // HH:MM
+    end: string; // HH:MM
+  };
+  frequency_cap: {
+    max_per_hour: number;
+    max_per_day: number;
+  };
+}
+```
+
+### Notification Content Examples
+
+**Level Up**:
+```
+🎉 Level Up! You're now a [Rank Name]
+
+You've reached Level [N] and unlocked:
+• [Feature 1]
+• [Feature 2]
+• [Feature 3]
+
+Next milestone: Level [N+1] ([XP needed] XP to go)
+```
+
+**Achievement Unlocked**:
+```
+🏆 Achievement Unlocked: [Achievement Name]
+
+[Description]
+
++[XP] XP earned
+[Progress to next level]
+```
+
+**Streak Warning**:
+```
+⚠️ Your [N]-day streak is at risk!
+
+You haven't been active in 48 hours. Complete any action in the next 24 hours to keep your streak alive.
+
+[Quick action button: Create Neuron]
+```
+
+**Weekly Summary**:
+```
+📊 Your Week in Review
+
+• XP Gained: +[N] XP
+• Level Progress: [%] to Level [N]
+• Achievements: [N] unlocked
+• Streak: [N] days
+• Leaderboard: #[N] (↑[N] positions)
+
+Keep it up! [Motivational message]
+```
+
+## Tier Integration (Hybrid Model)
+
+### Tier System Overview
+```typescript
+interface TierLevel {
+  name: 'free' | 'starter' | 'pro' | 'enterprise';
+  monthly_neuron_limit: number;
+  features: string[];
+}
+```
+
+### Gamification Perks by Tier
+
+#### Free Tier
+- **XP Boost**: None
+- **Leaderboard**: Visible, can compete
+- **Challenges**: Individual only
+- **Achievements**: All accessible
+- **Streak Benefits**: Queue priority at 30+ days
+
+#### Starter Tier ($29/mo)
+- **XP Boost**: +10% on all actions
+- **Leaderboard**: Highlighted profile
+- **Challenges**: Individual + team
+- **Achievements**: Exclusive "Supporter" badge
+- **Streak Benefits**: Queue priority at 14+ days, 2 freeze tokens/month
+
+#### Pro Tier ($99/mo)
+- **XP Boost**: +25% on all actions
+- **Leaderboard**: Premium badge, custom avatar
+- **Challenges**: All + early access to new challenges
+- **Achievements**: Exclusive "Pro" badge set (5 achievements)
+- **Streak Benefits**: Queue priority always, 4 freeze tokens/month
+
+#### Enterprise Tier (Custom)
+- **XP Boost**: +50% on all actions
+- **Leaderboard**: Custom branding
+- **Challenges**: Private team challenges
+- **Achievements**: Custom achievement creation
+- **Streak Benefits**: No limits, unlimited freeze tokens
+
+### XP Level → Tier Perks (Hybrid)
+
+**Temporary Feature Unlocks** (7-day trials):
+- **Level 10**: 7-day Pro tier trial
+- **Level 15**: 7-day Enterprise tier trial
+- **Level 20**: Permanent 10% discount on tier upgrades
+
+**Permanent Perks** (regardless of tier):
+- **Level 5**: +1 concurrent job (all tiers)
+- **Level 10**: Custom branding on exports (all tiers)
+- **Level 15**: API access (all tiers)
+- **Level 20**: Dedicated support channel (all tiers)
+
+## Data Model
+
+### User Levels (Extended)
+```typescript
+interface UserLevel {
+  user_id: uuid;
+  total_xp: number;
+  current_level: number;
+  streak_days: number;
+  longest_streak: number;
+  last_action_at: timestamp;
+  grace_period_active: boolean;
+  freeze_tokens: number;
+  badges: string[]; // achievement IDs
+  quality_score: number; // 0-100
+  trust_score: number; // 0-100, invisible to user
+  created_at: timestamp;
+  updated_at: timestamp;
+}
+```
+
+### Achievements (Registry)
+```typescript
+interface Achievement {
+  id: string; // Primary key
+  name: string;
+  name_ro: string;
+  description_ro: string;
+  category: string;
+  tier: string;
+  xp_reward: number;
+  icon: string;
+  hidden: boolean;
+  requirements: jsonb; // Flexible requirement structure
+  created_at: timestamp;
+}
+```
+
+### XP Events (Extended)
+```typescript
+interface XPEvent {
+  id: uuid;
+  user_id: uuid;
+  event_type: string;
+  xp_amount: number;
+  quality_multiplier: number;
+  metadata: jsonb;
+  created_at: timestamp;
+}
+```
+
+### User Achievements (Junction)
+```typescript
+interface UserAchievement {
+  user_id: uuid;
+  achievement_id: string;
+  unlocked_at: timestamp;
+  notification_sent: boolean;
+}
+```
+
+### Leaderboards (Materialized View)
+```typescript
+interface LeaderboardEntry {
+  user_id: uuid;
+  username: string;
+  avatar_url: string;
+  rank: number;
+  score: number; // XP or other metric
+  tier: string;
+  level: number;
+  badge_count: number;
+  period: 'weekly' | 'monthly' | 'all_time';
+  category: string;
+  updated_at: timestamp;
+}
+```
+
+### Challenges
+```typescript
+interface Challenge {
+  id: uuid;
+  name: string;
+  description: string;
+  type: 'individual' | 'team';
+  duration_hours: number;
+  start_time: timestamp;
+  end_time: timestamp;
+  goal_type: string;
+  goal_value: number;
+  xp_reward: number;
+  badge_reward: string;
+  max_participants: number;
+  status: 'upcoming' | 'active' | 'completed';
+  created_at: timestamp;
+}
+
+interface ChallengeParticipant {
+  challenge_id: uuid;
+  user_id: uuid;
+  team_id: uuid; // Nullable
+  progress: number;
+  completed: boolean;
+  completed_at: timestamp;
+  joined_at: timestamp;
+}
+```
+
+### Notification Preferences
+```typescript
+interface NotificationPreferences {
+  user_id: uuid;
+  level: string;
+  in_app: boolean;
+  email: boolean;
+  push: boolean;
+  quiet_hours_enabled: boolean;
+  quiet_hours_start: string;
+  quiet_hours_end: string;
+  max_per_hour: number;
+  max_per_day: number;
+  updated_at: timestamp;
+}
+```
+
+## Technical Requirements
+
+### Backend (Supabase)
+
+#### Database Functions
+
+**award_xp** (Enhanced)
+```sql
+CREATE OR REPLACE FUNCTION award_xp(
+  p_user_id UUID,
+  p_event_type TEXT,
+  p_xp_amount INTEGER,
+  p_quality_multiplier NUMERIC DEFAULT 1.0,
+  p_metadata JSONB DEFAULT '{}'
+) RETURNS TABLE (
+  new_xp INTEGER,
+  new_level INTEGER,
+  level_up BOOLEAN,
+  achievements_unlocked TEXT[]
+) AS $$
+DECLARE
+  v_current_xp INTEGER;
+  v_current_level INTEGER;
+  v_new_xp INTEGER;
+  v_new_level INTEGER;
+  v_daily_xp INTEGER;
+  v_xp_cap INTEGER := 200;
+  v_achievements TEXT[];
+BEGIN
+  -- Get current state
+  SELECT total_xp, current_level INTO v_current_xp, v_current_level
+  FROM user_levels
+  WHERE user_id = p_user_id
+  FOR UPDATE;
+
+  -- Check daily XP cap
+  SELECT COALESCE(SUM(xp_amount), 0) INTO v_daily_xp
+  FROM xp_events
+  WHERE user_id = p_user_id
+    AND created_at >= CURRENT_DATE;
+
+  -- Apply cap (unless first-time achievement)
+  IF v_daily_xp >= v_xp_cap AND p_event_type NOT LIKE 'achievement.%' THEN
+    RETURN QUERY SELECT v_current_xp, v_current_level, FALSE, ARRAY[]::TEXT[];
+    RETURN;
+  END IF;
+
+  -- Calculate XP with multiplier
+  v_new_xp := v_current_xp + FLOOR(p_xp_amount * p_quality_multiplier);
+
+  -- Calculate new level
+  v_new_level := FLOOR(SQRT(v_new_xp / 100));
+
+  -- Update user_levels
+  UPDATE user_levels
+  SET total_xp = v_new_xp,
+      current_level = v_new_level,
+      last_action_at = NOW(),
+      grace_period_active = FALSE,
+      updated_at = NOW()
+  WHERE user_id = p_user_id;
+
+  -- Insert XP event
+  INSERT INTO xp_events (user_id, event_type, xp_amount, quality_multiplier, metadata)
+  VALUES (p_user_id, p_event_type, p_xp_amount, p_quality_multiplier, p_metadata);
+
+  -- Check for new achievements
+  v_achievements := check_achievements(p_user_id);
+
+  -- Return results
+  RETURN QUERY SELECT v_new_xp, v_new_level, (v_new_level > v_current_level), v_achievements;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+**update_streak** (New)
+```sql
+CREATE OR REPLACE FUNCTION update_streak(
+  p_user_id UUID
+) RETURNS TABLE (
+  current_streak INTEGER,
+  grace_period_active BOOLEAN,
+  streak_broken BOOLEAN
+) AS $$
+DECLARE
+  v_last_action TIMESTAMP;
+  v_current_streak INTEGER;
+  v_longest_streak INTEGER;
+  v_grace_active BOOLEAN;
+  v_hours_since_action INTEGER;
+BEGIN
+  -- Get current state
+  SELECT last_action_at, streak_days, longest_streak, grace_period_active
+  INTO v_last_action, v_current_streak, v_longest_streak, v_grace_active
+  FROM user_levels
+  WHERE user_id = p_user_id
+  FOR UPDATE;
+
+  -- Calculate hours since last action
+  v_hours_since_action := EXTRACT(EPOCH FROM (NOW() - v_last_action)) / 3600;
+
+  -- Streak logic
+  IF v_hours_since_action <= 24 THEN
+    -- Within 24h: increment streak
+    v_current_streak := v_current_streak + 1;
+    v_grace_active := FALSE;
+    
+    -- Update longest streak
+    IF v_current_streak > v_longest_streak THEN
+      v_longest_streak := v_current_streak;
+    END IF;
+
+    UPDATE user_levels
+    SET streak_days = v_current_streak,
+        longest_streak = v_longest_streak,
+        grace_period_active = FALSE,
+        last_action_at = NOW()
+    WHERE user_id = p_user_id;
+
+    RETURN QUERY SELECT v_current_streak, FALSE, FALSE;
+
+  ELSIF v_hours_since_action <= 72 THEN
+    -- 24-72h: grace period
+    IF NOT v_grace_active THEN
+      UPDATE user_levels
+      SET grace_period_active = TRUE
+      WHERE user_id = p_user_id;
+    END IF;
+
+    RETURN QUERY SELECT v_current_streak, TRUE, FALSE;
+
+  ELSE
+    -- >72h: streak broken
+    UPDATE user_levels
+    SET streak_days = 0,
+        grace_period_active = FALSE
+    WHERE user_id = p_user_id;
+
+    RETURN QUERY SELECT 0, FALSE, TRUE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+**check_achievements** (New)
+```sql
+CREATE OR REPLACE FUNCTION check_achievements(
+  p_user_id UUID
+) RETURNS TEXT[] AS $$
+DECLARE
+  v_new_achievements TEXT[] := ARRAY[]::TEXT[];
+  v_achievement RECORD;
+BEGIN
+  -- Check each achievement's requirements
+  FOR v_achievement IN 
+    SELECT a.id, a.requirements
+    FROM achievements a
+    WHERE a.id NOT IN (
+      SELECT achievement_id FROM user_achievements WHERE user_id = p_user_id
+    )
+  LOOP
+    -- Evaluate requirements (simplified - actual logic would be more complex)
+    IF evaluate_achievement_requirements(p_user_id, v_achievement.requirements) THEN
+      -- Unlock achievement
+      INSERT INTO user_achievements (user_id, achievement_id)
+      VALUES (p_user_id, v_achievement.id);
+
+      -- Add to badges array
+      UPDATE user_levels
+      SET badges = array_append(badges, v_achievement.id)
+      WHERE user_id = p_user_id;
+
+      v_new_achievements := array_append(v_new_achievements, v_achievement.id);
+    END IF;
+  END LOOP;
+
+  RETURN v_new_achievements;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+#### Real-Time Subscriptions
+- **user_levels**: Subscribe to own user's XP/level changes
+- **user_achievements**: Subscribe to own achievement unlocks
+- **leaderboards**: Subscribe to relevant leaderboard updates
+- **challenges**: Subscribe to active challenge progress
+
+### Frontend (React/TypeScript)
+
+#### Enhanced useXP Hook
+```typescript
+export function useXP() {
+  const [user, setUser] = useState<User | null>(null);
+  const [userLevel, setUserLevel] = useState<UserLevel | null>(null);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [recentEvents, setRecentEvents] = useState<XPEvent[]>([]);
+  const [leaderboards, setLeaderboards] = useState<LeaderboardData>({});
+  const [activeChallenges, setActiveChallenges] = useState<Challenge[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // ... existing logic ...
+
+  // New: Subscribe to real-time updates
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('gamification-updates')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'user_levels',
+        filter: `user_id=eq.${user.id}`
+      }, (payload) => {
+        setUserLevel(payload.new as UserLevel);
+      })
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'user_achievements',
+        filter: `user_id=eq.${user.id}`
+      }, (payload) => {
+        // Show achievement notification
+        showAchievementNotification(payload.new.achievement_id);
+        fetchData(); // Refresh achievements
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
+
+  // New: Award XP with quality multiplier
+  const awardXP = async (
+    eventType: string,
+    amount: number,
+    qualityMultiplier = 1.0,
+    metadata = {}
+  ) => {
+    if (!user) return false;
+
+    const { data, error } = await supabase.rpc('award_xp', {
+      p_user_id: user.id,
+      p_event_type: eventType,
+      p_xp_amount: amount,
+      p_quality_multiplier: qualityMultiplier,
+      p_metadata: metadata
+    });
+
+    if (!error && data) {
+      // Handle level up
+      if (data.level_up) {
+        showLevelUpNotification(data.new_level);
+      }
+
+      // Handle new achievements
+      if (data.achievements_unlocked.length > 0) {
+        data.achievements_unlocked.forEach(showAchievementNotification);
+      }
+
+      await fetchData();
+      return true;
+    }
+    return false;
+  };
+
+  // New: Update streak
+  const updateStreak = async () => {
+    if (!user) return;
+
+    const { data } = await supabase.rpc('update_streak', {
+      p_user_id: user.id
+    });
+
+    if (data) {
+      if (data.grace_period_active) {
+        showStreakWarningNotification();
+      }
+      if (data.streak_broken) {
+        showStreakBrokenNotification();
+      }
+    }
+  };
+
+  return {
+    userLevel,
+    achievements,
+    recentEvents,
+    leaderboards,
+    activeChallenges,
+    loading,
+    getProgress,
+    awardXP,
+    updateStreak,
+    refresh: fetchData
+  };
+}
+```
+
+#### New Components
+
+**GamificationDashboard**
+- Overview of XP, level, streak
+- Progress bar to next level
+- Recent achievements (last 5)
+- Active challenges
+- Leaderboard position
+
+**AchievementGallery**
+- Grid view of all achievements
+- Filter by category, tier, unlocked/locked
+- Achievement details modal
+- Progress tracking for in-progress achievements
+
+**LeaderboardView**
+- Tabbed interface (Weekly, Monthly, All-Time, Categories)
+- User's position highlighted
+- Top 10 with avatars and badges
+- Pagination for full list
+
+**ChallengeHub**
+- Active challenges list
+- Challenge details and progress
+- Join/leave challenge actions
+- Team formation for team challenges
+- Challenge history
+
+**StreakWidget** (Global UI element)
+- Current streak display
+- Flame icon animation
+- Grace period warning indicator
+- Freeze token count
+
+**XPToast** (Notification component)
+- Animated XP gain notification
+- Batched updates (every 5 min)
+- Dismissible
+- Configurable position
+
+### Integration Points
+
+#### Existing Features to Integrate
+
+**Neuron Creation** (`src/pages/Upload.tsx`, `src/pages/UploadAndProcess.tsx`)
+```typescript
+// After successful neuron creation
+await awardXP(
+  EVENT_TYPES.NEURON_CREATED,
+  XP_REWARDS.NEURON_CREATED,
+  qualityScore, // 0.8-1.2 based on input quality
+  { neuron_id, source_type }
+);
+```
+
+**Deliverable Generation** (`src/pages/MyDeliverables.tsx`)
+```typescript
+// After successful deliverable generation
+await awardXP(
+  EVENT_TYPES.DELIVERABLE_GENERATED,
+  XP_REWARDS.DELIVERABLE_GENERATED,
+  qcScore, // From neuron_outputs.qc_score
+  { deliverable_code, neuron_id }
+);
+```
+
+**Service Usage** (All service pages)
+```typescript
+// After successful service execution
+await awardXP(
+  EVENT_TYPES.SERVICE_USED,
+  XP_REWARDS.SERVICE_USED,
+  1.0,
+  { service_id, execution_time }
+);
+```
+
+**Daily Login** (`src/lib/auth.tsx`)
+```typescript
+// On successful authentication
+const lastLogin = localStorage.getItem('last_login');
+const today = new Date().toDateString();
+
+if (lastLogin !== today) {
+  await awardXP(
+    EVENT_TYPES.DAILY_LOGIN,
+    XP_REWARDS.DAILY_LOGIN
+  );
+  await updateStreak();
+  localStorage.setItem('last_login', today);
+}
+```
+
+**Profile Page** (`src/pages/Profile.tsx`)
+- Add gamification stats section
+- Display level, XP, streak
+- Show top 5 achievements
+- Link to full achievement gallery
+
+**Notifications Page** (`src/pages/Notifications.tsx`)
+- Add gamification notification types
+- Filter by notification category
+- Mark gamification notifications as read
+
+## UX/UI Requirements
+
+### Visual Design Principles
+
+**Consistency with Existing Design System**
+- Use existing color palette (purple primary, emerald accents, zinc backgrounds)
+- Match typography scale and weights
+- Maintain border radius and shadow styles
+- Follow spacing system (4px grid)
+
+**Gamification-Specific Elements**
+- **XP Bar**: Gradient fill (purple-500 to purple-400), animated on gain
+- **Level Badge**: Circular, gradient background, white text, subtle glow
+- **Streak Flame**: Animated SVG, color intensity based on streak length
+- **Achievement Cards**: 3D effect on hover, unlock animation
+- **Leaderboard Ranks**: Gold/Silver/Bronze medals for top 3
+
+### Responsive Behavior
+
+**Mobile (<768px)**
+- Stack gamification widgets vertically
+- Collapse leaderboard to top 5
+- Simplified achievement cards (icon + name only)
+- Bottom sheet for achievement details
+
+**Tablet (768px-1024px)**
+- 2-column layout for achievement gallery
+- Side-by-side leaderboards
+- Expanded streak widget in header
+
+**Desktop (>1024px)**
+- 3-column achievement gallery
+- Persistent gamification sidebar (optional)
+- Inline leaderboard in dashboard
+- Hover effects and tooltips
+
+### Accessibility
+
+**WCAG 2.1 AA Compliance**
+- Color contrast ratio ≥4.5:1 for text
+- Keyboard navigation for all interactive elements
+- Screen reader labels for icons and badges
+- Focus indicators on all focusable elements
+- Reduced motion option (disable animations)
+
+**Specific Considerations**
+- XP gain announcements via aria-live regions
+- Achievement unlock announcements
+- Leaderboard navigation via arrow keys
+- Alternative text for all badge icons
+
+### Animation & Feedback
+
+**XP Gain**
+- Floating +XP text animation (1s duration)
+- Progress bar fill animation (300ms ease-out)
+- Subtle haptic feedback on mobile
+
+**Level Up**
+- Full-screen celebration modal
+- Confetti animation (3s)
+- Sound effect (optional, user-configurable)
+- New unlocks highlighted
+
+**Achievement Unlock**
+- Toast notification (5s duration)
+- Badge flip animation (800ms)
+- Glow effect on achievement card
+- Sound effect (optional)
+
+**Streak Update**
+- Flame flicker animation
+- Color shift based on streak length (blue → orange → red)
+- Pulse effect on milestone days
+
+## Error Handling
+
+### XP Award Failures
+- **Scenario**: Database error during award_xp call
+- **Handling**: Queue XP award for retry, show generic success message to user
+- **Recovery**: Background job retries failed awards every 5 minutes
+
+### Streak Calculation Errors
+- **Scenario**: Incorrect streak calculation due to timezone issues
+- **Handling**: Use UTC timestamps consistently, add timezone conversion layer
+- **Recovery**: Manual streak correction tool for support team
+
+### Achievement Unlock Failures
+- **Scenario**: Achievement requirements met but unlock fails
+- **Handling**: Log failure, queue for manual review
+- **Recovery**: Daily job checks for missed achievements
+
+### Leaderboard Sync Issues
+- **Scenario**: Leaderboard data stale or incorrect
+- **Handling**: Materialized view refresh every 5 minutes
+- **Recovery**: Manual refresh button for users, full rebuild job nightly
+
+## Performance Considerations
+
+### Database Optimization
+- **Indexes**: user_id on all gamification tables, composite index on (user_id, created_at) for xp_events
+- **Materialized Views**: Leaderboards refreshed every 5 minutes
+- **Partitioning**: xp_events table partitioned by month
+- **Archival**: Archive xp_events older than 1 year
+
+### Frontend Optimization
+- **Lazy Loading**: Achievement gallery loads 20 at a time
+- **Caching**: Cache leaderboard data for 5 minutes
+- **Debouncing**: Batch XP notifications every 5 minutes
+- **Virtualization**: Virtualize long leaderboard lists
+
+### Real-Time Optimization
+- **Channel Limits**: Max 3 real-time channels per user
+- **Throttling**: Limit real-time updates to 1 per second
+- **Batching**: Batch achievement checks every 30 seconds
+
+## Security Considerations
+
+### XP Manipulation Prevention
+- **Server-Side Validation**: All XP awards validated server-side
+- **Rate Limiting**: Max 100 XP awards per user per hour
+- **Anomaly Detection**: Flag users with suspicious XP patterns
+- **Audit Trail**: Log all XP transactions with metadata
+
+### Leaderboard Integrity
+- **RLS Policies**: Users can only read leaderboard data, not modify
+- **Cheating Detection**: Flag users with impossible progress rates
+- **Manual Review**: Support team can review flagged accounts
+
+### Achievement Unlock Validation
+- **Requirement Verification**: Double-check requirements before unlock
+- **Idempotency**: Prevent duplicate achievement unlocks
+- **Rollback**: Support team can revoke incorrectly awarded achievements
+
+## Testing Requirements
+
+### Unit Tests
+- XP calculation logic
+- Level progression formula
+- Streak update logic
+- Achievement requirement evaluation
+- Quality multiplier application
+
+### Integration Tests
+- award_xp function with various scenarios
+- update_streak function with edge cases
+- check_achievements function with complex requirements
+- Real-time subscription handling
+
+### E2E Tests (Playwright)
+- Complete user journey: signup → first neuron → level up → achievement unlock
+- Streak maintenance over multiple days (mocked time)
+- Leaderboard position updates
+- Challenge participation and completion
+- Notification preferences configuration
+
+### Performance Tests
+- Load test: 1000 concurrent users awarding XP
+- Stress test: 10,000 XP events per second
+- Leaderboard query performance with 100k users
+- Real-time subscription scalability
+
+## Monitoring & Analytics
+
+### Key Metrics
+
+**Engagement Metrics**
+- DAU/WAU/MAU
+- Average session duration
+- Actions per session
+- Streak retention rate (% of users maintaining 7+ day streaks)
+
+**Gamification Metrics**
+- XP distribution (histogram)
+- Level distribution
+- Achievement unlock rate
+- Leaderboard participation rate
+- Challenge completion rate
+
+**Economic Metrics**
+- XP → tier upgrade correlation
+- Gamification impact on neuron creation
+- Gamification impact on retention
+- Gamification impact on LTV
+
+### Dashboards
+
+**Admin Dashboard**
+- Real-time XP awards (last 100)
+- Level distribution chart
+- Achievement unlock timeline
+- Leaderboard top 100
+- Challenge participation stats
+- Anomaly alerts
+
+**User Dashboard** (Profile page)
+- Personal XP history (last 30 days)
+- Level progress
+- Achievement progress
+- Streak calendar
+- Leaderboard position history
+
+## Migration Strategy
+
+### Phase 1: Foundation (Week 1-2)
+- Extend existing user_levels table
+- Create achievements, user_achievements, xp_events tables
+- Implement award_xp and update_streak functions
+- Migrate existing XP data
+
+### Phase 2: Core Features (Week 3-4)
+- Implement achievement system
+- Build GamificationDashboard component
+- Integrate XP awards into existing features
+- Add streak widget to header
+
+### Phase 3: Social Features (Week 5-6)
+- Implement leaderboards (materialized views)
+- Build LeaderboardView component
+- Add leaderboard notifications
+
+### Phase 4: Challenges (Week 7-8)
+- Create challenges table and logic
+- Build ChallengeHub component
+- Implement challenge participation flow
+- Add team challenge support
+
+### Phase 5: Polish & Optimization (Week 9-10)
+- Add animations and sound effects
+- Optimize database queries
+- Implement caching strategies
+- Conduct performance testing
+- User acceptance testing
+
+## Out of Scope
+
+### Features Deferred to V2
+- **Custom Avatar System**: User-uploaded avatars with gamification unlocks
+  - **Why**: Requires moderation infrastructure
+  - **Trigger**: When user base exceeds 10,000 active users
+
+- **Social Sharing**: Share achievements on social media
+  - **Why**: Requires social media API integrations and compliance review
+  - **Trigger**: When marketing team requests social amplification
+
+- **Seasonal Events**: Time-limited challenges and exclusive badges
+  - **Why**: Requires content creation pipeline and event management system
+  - **Trigger**: After 6 months of stable operation
+
+- **Guild/Team System**: Persistent teams with shared goals
+  - **Why**: Requires complex social graph and team management features
+  - **Trigger**: When >30% of users request collaborative features
+
+- **Marketplace**: Trade or gift badges/achievements
+  - **Why**: Requires economic balancing and anti-fraud measures
+  - **Trigger**: Never (violates economic separation principle)
+
+### Technical Complexity Deferred
+- **Machine Learning-Based Anomaly Detection**: Automated cheating detection
+  - **Why**: Requires ML infrastructure and training data
+  - **Trigger**: When manual review becomes unsustainable (>100 flags/week)
+
+- **Real-Time Multiplayer Challenges**: Synchronous competitive events
+  - **Why**: Requires WebSocket infrastructure and complex state management
+  - **Trigger**: When user base supports critical mass for real-time events
+
+- **Cross-Platform Sync**: Mobile app with gamification sync
+  - **Why**: No mobile app exists yet
+  - **Trigger**: When mobile app development begins
+
+## Acceptance Criteria
+
+### XP & Level System
+- **Given** a user completes a gamifiable action (neuron creation, deliverable generation, service usage)
+- **When** the action is successful
+- **Then** XP is awarded based on action type and quality multiplier
+- **And** XP gain is reflected in user_levels table within 1 second
+- **And** user sees XP gain notification (if notifications enabled)
+- **And** progress bar updates to reflect new XP total
+
+- **Given** a user's total XP crosses a level threshold
+- **When** XP is awarded
+- **Then** current_level is incremented
+- **And** level-up notification is displayed
+- **And** new unlocks are highlighted
+- **And** level-up celebration animation plays (if animations enabled)
+
+- **Given** a user has earned 200 XP in the current day
+- **When** they attempt to earn more XP
+- **Then** XP award is capped (no additional XP)
+- **And** user sees "Daily XP cap reached" message
+- **And** cap resets at midnight UTC
+
+### Streak System
+- **Given** a user completes an action within 24 hours of their last action
+- **When** update_streak is called
+- **Then** streak_days increments by 1
+- **And** grace_period_active is set to FALSE
+- **And** longest_streak is updated if current streak exceeds it
+
+- **Given** a user has been inactive for 48 hours
+- **When** update_streak is called
+- **Then** grace_period_active is set to TRUE
+- **And** user receives streak warning notification
+- **And** streak is preserved (not reset)
+
+- **Given** a user has been inactive for 72+ hours
+- **When** update_streak is called
+- **Then** streak_days is reset to 0
+- **And** grace_period_active is set to FALSE
+- **And** user receives streak broken notification
+- **And** longest_streak is preserved
+
+- **Given** a user has a freeze token
+- **When** they activate it during grace period
+- **Then** streak is preserved for 24 hours
+- **And** freeze_tokens count decrements by 1
+- **And** user sees confirmation message
+
+### Achievement System
+- **Given** a user meets all requirements for an achievement
+- **When** check_achievements is called
+- **Then** achievement is unlocked (inserted into user_achievements)
+- **And** achievement ID is added to user_levels.badges array
+- **And** XP reward is awarded
+- **And** achievement unlock notification is displayed
+- **And** achievement card shows "Unlocked" state in gallery
+
+- **Given** a user views the achievement gallery
+- **When** the page loads
+- **Then** all achievements are displayed in grid layout
+- **And** unlocked achievements show unlock date
+- **And** locked achievements show progress (if applicable)
+- **And** hidden achievements show "???" until unlocked
+- **And** user can filter by category and tier
+
+- **Given** an achievement has tiered variants (bronze/silver/gold)
+- **When** user unlocks bronze tier
+- **Then** silver tier becomes visible (if hidden)
+- **And** progress toward silver tier is displayed
+- **And** bronze badge is added to profile
+
+### Leaderboard System
+- **Given** a user has earned XP in the current week
+- **When** they view the weekly leaderboard
+- **Then** they see their rank and XP total
+- **And** top 100 users are displayed
+- **And** their own entry is highlighted
+- **And** leaderboard updates every 5 minutes
+
+- **Given** a user reaches top 10 in weekly leaderboard
+- **When** leaderboard updates
+- **Then** user receives leaderboard position notification
+- **And** "Weekly Champion" badge is awarded (if top 10 at week end)
+
+- **Given** a user views category leaderboards
+- **When** they select a category (Quality, Consistency, Productivity, Mastery)
+- **Then** leaderboard shows rankings for that metric
+- **And** user's position in that category is highlighted
+
+### Challenge System
+- **Given** an active challenge exists
+- **When** user views ChallengeHub
+- **Then** challenge details are displayed (name, description, goal, duration, rewards)
+- **And** user can join the challenge
+- **And** current participants count is shown
+
+- **Given** a user joins a challenge
+- **When** they complete actions toward the goal
+- **Then** progress is tracked in challenge_participants table
+- **And** progress bar updates in real-time
+- **And** user sees progress notifications (if enabled)
+
+- **Given** a user completes a challenge goal
+- **When** goal is reached
+- **Then** completed flag is set to TRUE
+- **And** XP reward is awarded
+- **And** badge reward is unlocked
+- **And** completion notification is displayed
+- **And** challenge appears in "Completed" section
+
+- **Given** a team challenge exists
+- **When** user joins
+- **Then** they are assigned to a team (or create one)
+- **And** team progress is aggregated from all members
+- **And** team leaderboard shows team rankings
+
+### Notification System
+- **Given** a user has notification preferences set to "Moderate"
+- **When** they unlock an achievement
+- **Then** in-app notification is displayed
+- **And** email notification is sent (if email enabled)
+- **And** notification appears in Notifications page
+- **And** notification respects quiet hours (if configured)
+
+- **Given** a user has reached daily notification cap
+- **When** another notification is triggered
+- **Then** notification is queued for next period
+- **And** user does not receive immediate notification
+
+- **Given** a user changes notification preferences
+- **When** they save settings
+- **Then** preferences are updated in notification_preferences table
+- **And** future notifications respect new settings
+- **And** confirmation message is displayed
+
+### Tier Integration
+- **Given** a user reaches Level 10
+- **When** level-up occurs
+- **Then** 7-day Pro tier trial is activated
+- **And** user receives trial activation notification
+- **And** Pro features are unlocked for 7 days
+- **And** trial expiration date is displayed in profile
+
+- **Given** a user has Pro tier subscription
+- **When** they earn XP
+- **Then** XP is multiplied by 1.25 (25% boost)
+- **And** boosted XP is reflected in xp_events table
+- **And** user sees "Pro Boost" indicator on XP gains
+
+- **Given** a user reaches Level 20
+- **When** level-up occurs
+- **Then** permanent 10% discount on tier upgrades is applied
+- **And** discount is visible on pricing page
+- **And** discount is applied at checkout
+
+### UI/UX
+- **Given** a user views their profile
+- **When** the page loads
+- **Then** gamification stats section is displayed
+- **And** current level, XP, and progress bar are shown
+- **And** current streak with flame icon is displayed
+- **And** top 5 achievements are shown
+- **And** link to full achievement gallery is present
+
+- **Given** a user is on mobile (<768px)
+- **When** they view gamification features
+- **Then** all elements are responsive and usable
+- **And** touch targets are ≥44px
+- **And** text is readable without zooming
+- **And** animations are smooth (60fps)
+
+- **Given** a user has reduced motion preference enabled
+- **When** gamification events occur
+- **Then** animations are disabled or simplified
+- **And** static transitions are used instead
+- **And** functionality is not impaired
+
+### Performance
+- **Given** 1000 concurrent users are earning XP
+- **When** award_xp is called
+- **Then** 95th percentile response time is <500ms
+- **And** no database deadlocks occur
+- **And** all XP awards are processed successfully
+
+- **Given** leaderboard has 100,000 users
+- **When** user queries leaderboard
+- **Then** query completes in <1 second
+- **And** pagination works smoothly
+- **And** user's position is calculated accurately
+
+- **Given** user has 500+ achievements
+- **When** achievement gallery loads
+- **Then** initial 20 achievements load in <2 seconds
+- **And** lazy loading works for remaining achievements
+- **And** scroll performance is smooth (60fps)
+
+### Security
+- **Given** a malicious user attempts to manipulate XP
+- **When** they send crafted requests
+- **Then** requests are rejected by server-side validation
+- **And** rate limiting prevents abuse
+- **And** anomaly detection flags suspicious activity
+- **And** audit log records all attempts
+
+- **Given** a user attempts to unlock achievements without meeting requirements
+- **When** they manipulate client-side state
+- **Then** server-side validation prevents unlock
+- **And** no achievement is awarded
+- **And** attempt is logged for review
+
+### Accessibility
+- **Given** a user navigates with keyboard only
+- **When** they interact with gamification features
+- **Then** all interactive elements are reachable via Tab
+- **And** focus indicators are clearly visible
+- **And** Enter/Space activate buttons
+- **And** Escape closes modals
+
+- **Given** a user uses a screen reader
+- **When** gamification events occur
+- **Then** events are announced via aria-live regions
+- **And** all icons have descriptive labels
+- **And** progress bars have accessible names and values
+- **And** leaderboard is navigable with arrow keys
+
+
+
+# Task 1: Extend database schema for enhanced gamification system
+
+**Dependencies:** None
+
+### Goal
+Create the database foundation for the comprehensive gamification system by extending existing tables and adding new tables for achievements, leaderboards, challenges, and notification preferences.
+
+### Implementation Context
+**Files to Modify:**
+- `supabase/migrations/[timestamp]_gamification_schema.sql` (new migration file)
+
+**Key Requirements:**
+- Extend existing `user_levels` table with new fields: `longest_streak`, `last_action_at`, `grace_period_active`, `freeze_tokens`, `quality_score`, `trust_score`
+- Add `quality_multiplier` field to `xp_events` table
+- Create new tables: `achievements`, `user_achievements`, `leaderboards` (materialized view), `challenges`, `challenge_participants`, `notification_preferences`
+- All tables must have proper RLS policies for user data isolation
+- Use existing patterns from `20260130193600_economic_protocol.sql` for atomic operations
+
+**Technical Notes:**
+- Leverage existing Supabase migration patterns from `supabase/migrations/`
+- Follow RLS policy patterns from `20260123004000_rls_p0_safe_final.sql`
+- Use TIMESTAMPTZ for all timestamp fields (UTC consistency)
+- Implement CHECK constraints for status fields and valid ranges
+
+**Simplicity Decisions:**
+- Using materialized views for leaderboards instead of complex real-time aggregation (can add real-time if performance requires)
+- Starting with JSONB for achievement requirements (flexible schema) rather than rigid relational structure
+- Implementing manual refresh for leaderboards (5 min intervals) before considering more complex streaming solutions
+
+### Scope Definition
+**Deliverables:**
+- Migration file extending `user_levels` table with 7 new columns
+- Migration file extending `xp_events` table with `quality_multiplier` column
+- `achievements` table with category, tier, requirements, and i18n support
+- `user_achievements` junction table with unlock tracking
+- `leaderboards` materialized view with multiple period types
+- `challenges` and `challenge_participants` tables
+- `notification_preferences` table with user-configurable settings
+- RLS policies for all new tables ensuring user data isolation
+
+**Exclusions:**
+- Database functions (covered in Task 2)
+- Data seeding for achievements (covered in Task 3)
+- Indexes and performance optimization (covered in Task 10)
+
+### Implementation Steps
+1. Create new migration file with timestamp naming convention
+2. Add ALTER TABLE statements for `user_levels` with new columns (longest_streak, last_action_at, grace_period_active, freeze_tokens, quality_score, trust_score)
+3. Add ALTER TABLE statement for `xp_events` with quality_multiplier column
+4. Create `achievements` table with id (PK), name, name_ro, description_ro, category, tier, xp_reward, icon, hidden, requirements (JSONB)
+5. Create `user_achievements` junction table with composite PK (user_id, achievement_id), unlocked_at, notification_sent
+6. Create `challenges` table with id, name, description, type, duration_hours, goal_type, goal_value, rewards, status, timestamps
+7. Create `challenge_participants` table with challenge_id, user_id, team_id (nullable), progress, completed, timestamps
+8. Create `notification_preferences` table with user_id (PK), level, channels (in_app, email, push), quiet_hours, frequency_cap
+9. Create materialized view `leaderboards` aggregating user stats by period (weekly, monthly, all_time) and category
+10. Add RLS policies: users can read own data, achievements are public read-only, leaderboards are public read-only
+11. Add indexes on foreign keys and frequently queried columns (user_id, created_at, period, category)
+12. **Test: Schema validation**
+    - **Setup:** Apply migration to test database
+    - **Action:** Insert test records into all new tables
+    - **Expect:** All inserts succeed, RLS policies enforce user isolation, constraints validate data
+
+### Success Criteria
+- Migration applies cleanly without errors
+- All tables created with proper column types and constraints
+- RLS policies prevent unauthorized data access
+- Foreign key relationships maintain referential integrity
+- Existing `user_levels` and `xp_events` data preserved
+- No breaking changes to existing XP system functionality
+
+### Scope Constraint
+Implement only the database schema changes. Do not implement database functions, triggers, or application code.
+
+# Task 2: Implement database functions for XP, streaks, and achievements
+
+**Dependencies:** Task 1
+
+### Goal
+Create server-side database functions that handle XP awarding with quality multipliers, streak tracking with grace periods, and achievement requirement evaluation with automatic unlocking.
+
+### Implementation Context
+**Files to Modify:**
+- `supabase/migrations/[timestamp]_gamification_functions.sql` (new migration file)
+
+**Key Requirements:**
+- Enhance existing `award_xp` RPC function to support quality multipliers, daily XP caps, level-up detection, and achievement checking
+- Create new `update_streak` function with 24h/72h grace period logic
+- Create new `check_achievements` function to evaluate requirements and unlock badges
+- All functions must use row-level locking (FOR UPDATE) to prevent race conditions
+- Functions must return structured data for client-side handling (level_up boolean, achievements_unlocked array)
+- Daily XP cap: 200 XP with exceptions for first-time achievements and challenge rewards
+
+**Technical Notes:**
+- Reuse atomic transaction patterns from existing `deduct_neuroni` function in `20260130193600_economic_protocol.sql`
+- Use COALESCE for safe null handling in aggregations
+- Implement proper error handling with RETURN QUERY for early exits
+- Follow existing function naming conventions (lowercase with underscores)
+
+**Simplicity Decisions:**
+- Using simple SQL functions instead of complex triggers (easier to debug and maintain)
+- Implementing achievement evaluation in single function rather than distributed triggers
+- Starting with synchronous achievement checking (can optimize with async if needed)
+
+### Scope Definition
+**Deliverables:**
+- Enhanced `award_xp` function accepting quality_multiplier parameter
+- Daily XP cap logic within `award_xp` (200 XP limit with exceptions)
+- Level calculation using formula: level = FLOOR(SQRT(total_xp / 100))
+- `update_streak` function with 24h increment, 48-72h grace period, 72h+ reset logic
+- `check_achievements` function iterating through unearned achievements and evaluating requirements
+- Helper function `evaluate_achievement_requirements` for JSONB requirement parsing
+- Proper return types: award_xp returns (new_xp, new_level, level_up, achievements_unlocked)
+
+**Exclusions:**
+- Frontend integration (covered in Task 4)
+- Achievement requirement seeding (covered in Task 3)
+- Leaderboard refresh logic (covered in Task 7)
+
+### Implementation Steps
+1. Create new migration file for database functions
+2. Implement enhanced `award_xp` function:
+   - Add p_quality_multiplier parameter (default 1.0)
+   - Query current user state with FOR UPDATE lock
+   - Calculate daily XP total from xp_events (created_at >= CURRENT_DATE)
+   - Apply 200 XP cap unless event_type LIKE 'achievement.%'
+   - Calculate new XP: current + FLOOR(amount × multiplier)
+   - Calculate new level: FLOOR(SQRT(new_xp / 100))
+   - Update user_levels with new values and reset grace_period_active
+   - Insert xp_event record with quality_multiplier
+   - Call check_achievements and return results
+3. Implement `update_streak` function:
+   - Query user_levels with FOR UPDATE lock
+   - Calculate hours since last_action_at
+   - If ≤24h: increment streak, update longest_streak if exceeded
+   - If 24-72h: set grace_period_active = TRUE, preserve streak
+   - If >72h: reset streak to 0, preserve longest_streak
+   - Return current_streak, grace_period_active, streak_broken
+4. Implement `check_achievements` function:
+   - Query all achievements not in user's badges array
+   - For each achievement, evaluate requirements JSONB
+   - If requirements met: INSERT into user_achievements, UPDATE user_levels badges array
+   - Collect newly unlocked achievement IDs
+   - Return TEXT[] of new achievement IDs
+5. Implement `evaluate_achievement_requirements` helper:
+   - Parse JSONB requirements structure
+   - Query user stats (neuron count, deliverable count, quality metrics, etc.)
+   - Return boolean indicating if all requirements met
+6. **Test: award_xp with quality multiplier**
+   - **Setup:** User with 50 XP, quality_multiplier 1.5
+   - **Action:** Award 20 XP
+   - **Expect:** User receives 30 XP (20 × 1.5), total becomes 80 XP
+7. **Test: Daily XP cap enforcement**
+   - **Setup:** User has earned 190 XP today
+   - **Action:** Award 20 XP
+   - **Expect:** User receives 10 XP (capped at 200 total), function returns cap indicator
+8. **Test: Streak grace period**
+   - **Setup:** User last active 50 hours ago
+   - **Action:** Call update_streak
+   - **Expect:** grace_period_active = TRUE, streak preserved, warning returned
+
+### Success Criteria
+- All functions execute without errors
+- Row-level locking prevents race conditions under concurrent load
+- XP cap correctly enforces 200 XP daily limit with exceptions
+- Streak logic correctly handles 24h/72h thresholds
+- Achievement checking correctly evaluates requirements and unlocks badges
+- Functions return structured data for client-side handling
+- All tests pass
+
+### Scope Constraint
+Implement only the database functions. Do not modify frontend code or create UI components.
+
+# Task 3: Seed achievement registry with 50-75 tiered achievements
+
+**Dependencies:** Task 1
+
+### Goal
+Populate the achievements table with a complete set of 50-75 achievements across 6 categories (activation, mastery, consistency, social, quality, resilience) with bronze/silver/gold tiers and Romanian translations.
+
+### Implementation Context
+**Files to Modify:**
+- `supabase/migrations/[timestamp]_seed_achievements.sql` (new migration file)
+
+**Key Requirements:**
+- Create 50-75 achievements distributed across categories per requirements document
+- Each achievement must have: unique ID, English name, Romanian translation (name_ro, description_ro), category, tier, XP reward, icon identifier, hidden flag, requirements JSONB
+- Requirements JSONB structure must be evaluatable by check_achievements function
+- Include 5-10 hidden achievements for discovery
+- XP rewards must scale with tier: Bronze (50-100 XP), Silver (150-300 XP), Gold (400-1000 XP)
+
+**Technical Notes:**
+- Use INSERT statements with explicit column ordering for clarity
+- Icon identifiers should match Lucide React icon names (e.g., 'trophy', 'star', 'flame')
+- Requirements JSONB examples: `{"neuron_count": 10}`, `{"streak_days": 7}`, `{"quality_score_avg": 0.90, "job_count_min": 50}`
+- Follow i18n patterns from existing codebase (Romanian as primary language)
+
+**Simplicity Decisions:**
+- Using simple JSONB requirements structure instead of complex DSL (easier to parse and extend)
+- Hardcoding achievement definitions in migration rather than admin UI (faster to ship, can add UI later)
+- Starting with static achievement set (can add dynamic achievements in V2)
+
+### Scope Definition
+**Deliverables:**
+- 10 Activation achievements (first neuron, first deliverable, first service use, etc.)
+- 15 Mastery achievements with bronze/silver/gold tiers (10/50/100 neurons, 25/100/500 deliverables, etc.)
+- 12 Consistency achievements (7/30/90/365 day streaks, daily login milestones)
+- 10 Social achievements (leaderboard positions, challenge completions)
+- 8 Quality achievements (zero retries, perfect validation, low retry rate)
+- 10 Resilience achievements (error recovery, persistence, adaptation)
+- 5-10 Hidden achievements (Night Owl, Early Bird, Weekend Warrior, etc.)
+
+**Exclusions:**
+- Custom achievement creation UI (deferred to V2)
+- Dynamic achievement generation (deferred to V2)
+- Achievement localization beyond Romanian (can add later)
+
+### Implementation Steps
+1. Create new migration file for achievement seeding
+2. Define INSERT statements for Activation category (10 achievements):
+   - First Steps (Bronze, 100 XP): `{"first_neuron": true}`
+   - Content Creator (Bronze, 50 XP): `{"first_deliverable": true}`
+   - Service Explorer (Bronze, 75 XP): `{"services_used_count": 3}`
+   - Template Master (Silver, 150 XP): `{"custom_templates_created": 1}`
+   - Batch Pioneer (Silver, 200 XP): `{"batch_jobs_completed": 1}`
+   - (5 more activation achievements)
+3. Define INSERT statements for Mastery category (15 achievements with tiers):
+   - Neuron Architect Bronze/Silver/Gold: `{"neurons_created": 10/50/100}`
+   - Deliverable Factory Bronze/Silver/Gold: `{"deliverables_generated": 25/100/500}`
+   - Service Virtuoso Bronze/Silver/Gold: `{"all_services_used_count": 5/25/100}`
+   - Quality Craftsman Bronze/Silver/Gold: `{"quality_score_avg": 0.90/0.95/0.99, "job_count_min": 10/50/100}`
+   - Speed Demon Gold: `{"jobs_under_2min": 10}`
+4. Define INSERT statements for Consistency category (12 achievements):
+   - Week Warrior through Annual Legend: `{"streak_days": 7/30/90/365}`
+   - Daily Devotee tiers: `{"total_login_days": 30/100/365}`
+   - Comeback Kid: `{"streak_recovered_in_grace": true}`
+5. Define INSERT statements for Social category (10 achievements):
+   - Leaderboard Debut through Challenge Master
+   - Requirements based on leaderboard ranks and challenge completions
+6. Define INSERT statements for Quality category (8 achievements):
+   - Precision Operator, Clean Input Master, Low-Retry User, Error-Free Month
+7. Define INSERT statements for Resilience category (10 achievements):
+   - Problem Solver, Persistent Creator, Bounce Back, Adaptive Learner
+8. Define INSERT statements for Hidden achievements (5-10):
+   - Night Owl: `{"jobs_between_hours": {"start": 0, "end": 5, "count": 10}}`
+   - Early Bird: `{"jobs_between_hours": {"start": 5, "end": 8, "count": 10}}`
+   - Weekend Warrior: `{"weekend_jobs": 50}`
+   - Perfectionist: `{"consecutive_perfect_jobs": 25}`
+   - Explorer: `{"all_services_in_day": true}`
+9. **Test: Achievement data integrity**
+   - **Setup:** Apply migration
+   - **Action:** Query achievements table
+   - **Expect:** 50-75 achievements exist, all have valid JSONB requirements, Romanian translations present
+
+### Success Criteria
+- 50-75 achievements successfully inserted
+- All achievements have valid category, tier, XP rewards
+- Romanian translations (name_ro, description_ro) present for all achievements
+- Requirements JSONB is well-formed and parseable
+- Hidden achievements have hidden=true flag
+- No duplicate achievement IDs
+- XP rewards scale appropriately with tier difficulty
+
+### Scope Constraint
+Implement only the achievement data seeding. Do not implement achievement evaluation logic or UI components.
+
+# Task 4: Enhance useXP hook with quality multipliers and real-time subscriptions
+
+**Dependencies:** Task 2
+
+### Goal
+Extend the existing useXP hook to support quality-based XP awarding, real-time updates for XP/achievement changes, streak management, and leaderboard/challenge data fetching.
+
+### Implementation Context
+**Files to Modify:**
+- `src/hooks/useXP.ts`
+
+**Tests to Update:**
+- `src/hooks/useXP.test.ts` (new test file)
+
+**Key Requirements:**
+- Add quality_multiplier parameter to awardXP function (0.8-2.0 range)
+- Implement real-time Supabase subscriptions for user_levels and user_achievements tables
+- Add updateStreak function calling new database RPC
+- Add state management for leaderboards and activeChallenges
+- Maintain backward compatibility with existing XP_REWARDS and EVENT_TYPES exports
+- Add new event types: NEURON_CREATED, DELIVERABLE_GENERATED, SERVICE_USED
+
+**Technical Notes:**
+- Reuse existing Supabase real-time subscription pattern from `src/pages/Notifications.tsx`
+- Use existing `showToast` from `src/components/Toast.tsx` for XP gain notifications
+- Follow existing hook patterns from `src/hooks/` directory
+- Leverage existing `supabase` client from `src/lib/supabase.ts`
+
+**Simplicity Decisions:**
+- Using single real-time channel for all gamification updates instead of multiple channels (reduces connection overhead)
+- Batching XP notifications every 5 minutes on client-side rather than complex server-side batching
+- Starting with simple fetchData refresh pattern (can optimize with optimistic updates later)
+
+### Scope Definition
+**Deliverables:**
+- Enhanced awardXP function signature: `awardXP(eventType, amount, qualityMultiplier?, metadata?)`
+- New updateStreak function calling `update_streak` RPC
+- Real-time subscription setup in useEffect for user_levels and user_achievements
+- State variables for leaderboards and activeChallenges
+- Notification handlers: showLevelUpNotification, showAchievementNotification, showStreakWarningNotification
+- Updated XP_REWARDS with new event types (NEURON_CREATED: 30, DELIVERABLE_GENERATED: 20)
+- Updated EVENT_TYPES with new events
+
+**Exclusions:**
+- UI components for displaying gamification data (covered in Tasks 5-9)
+- Integration into existing pages (covered in Task 11)
+- Leaderboard data fetching logic (covered in Task 7)
+
+### Implementation Steps
+1. Add new state variables to useXP hook:
+   - `leaderboards: LeaderboardData` (object with weekly/monthly/all_time keys)
+   - `activeChallenges: Challenge[]`
+2. Update awardXP function signature to accept qualityMultiplier parameter (default 1.0)
+3. Modify awardXP RPC call to include p_quality_multiplier parameter
+4. Handle award_xp response data: check level_up boolean, achievements_unlocked array
+5. Implement showLevelUpNotification function using showToast with celebration message
+6. Implement showAchievementNotification function using showToast with achievement details
+7. Create updateStreak function:
+   - Call supabase.rpc('update_streak', { p_user_id })
+   - Handle response: grace_period_active, streak_broken
+   - Show appropriate notifications based on response
+8. Add real-time subscription in useEffect:
+   - Create channel 'gamification-updates'
+   - Subscribe to postgres_changes on user_levels (filter by user_id)
+   - Subscribe to postgres_changes on user_achievements (INSERT events, filter by user_id)
+   - Update state on payload events
+   - Clean up channel on unmount
+9. Add new event types to EVENT_TYPES constant:
+   - NEURON_CREATED: 'neuron.created'
+   - DELIVERABLE_GENERATED: 'deliverable.generated'
+   - SERVICE_USED: 'service.used'
+10. Add corresponding XP_REWARDS values:
+    - NEURON_CREATED: 30
+    - DELIVERABLE_GENERATED: 20
+    - SERVICE_USED: 30
+11. **Test: Quality multiplier XP awarding**
+    - **Setup:** Mock supabase.rpc to return success
+    - **Action:** Call awardXP with qualityMultiplier 1.5
+    - **Expect:** RPC called with correct p_quality_multiplier parameter
+12. **Test: Real-time achievement unlock**
+    - **Setup:** Mock Supabase channel subscription
+    - **Action:** Trigger INSERT event on user_achievements
+    - **Expect:** showAchievementNotification called, achievements state updated
+
+### Success Criteria
+- awardXP function accepts and passes quality multiplier to database
+- Real-time subscriptions update UI without page refresh
+- Level-up and achievement notifications display correctly
+- updateStreak function handles all streak states (active, grace, broken)
+- Backward compatibility maintained with existing XP system usage
+- All unit tests pass
+- No memory leaks from uncleaned subscriptions
+
+### Scope Constraint
+Implement only the useXP hook enhancements. Do not create UI components or integrate into existing pages.
+
+# Task 5: Build GamificationDashboard component with XP, level, and streak display
+
+**Dependencies:** Task 4
+
+### Goal
+Create a comprehensive dashboard component that displays user's XP progress, current level with named rank, streak status, recent achievements, and leaderboard position in a visually engaging layout.
+
+### Implementation Context
+**Files to Modify:**
+- `src/components/dashboard/GamificationDashboard.tsx` (new component)
+- `src/components/dashboard/GamificationDashboard.test.tsx` (new test file)
+
+**Key Requirements:**
+- Display current level with named rank (Novice, Apprentice, Creator, etc.)
+- Show XP progress bar to next level with current/required XP
+- Display current streak with flame icon animation
+- Show grace period warning if applicable
+- List last 5 achievements with unlock dates
+- Display user's leaderboard position (weekly/monthly/all-time)
+- Show active challenges count
+- Responsive design following existing patterns from Profile.tsx
+- Use existing design system (purple/emerald/zinc color palette)
+
+**Technical Notes:**
+- Leverage existing useXP hook from `src/hooks/useXP.ts`
+- Use existing card styling patterns from `src/pages/Profile.tsx` (trust score, token usage cards)
+- Reuse Lucide React icons from existing imports
+- Follow Tailwind CSS utility patterns from existing components
+- Use existing responsive breakpoints (<768px mobile, 768-1024px tablet, >1024px desktop)
+
+**Simplicity Decisions:**
+- Using CSS animations instead of complex animation libraries (lighter bundle, easier to maintain)
+- Displaying top 5 achievements inline rather than paginated list (simpler initial implementation)
+- Static flame icon with CSS animation rather than animated SVG (faster to implement)
+
+### Scope Definition
+**Deliverables:**
+- GamificationDashboard component with 5 main sections:
+  1. Level & XP progress card
+  2. Streak display card with flame icon
+  3. Recent achievements list (last 5)
+  4. Leaderboard position summary
+  5. Active challenges count
+- Responsive grid layout (1 column mobile, 2 columns tablet, 3 columns desktop)
+- Loading states for async data
+- Empty states when no data available
+- Animated XP progress bar on mount
+
+**Exclusions:**
+- Full achievement gallery (covered in Task 6)
+- Detailed leaderboard view (covered in Task 7)
+- Challenge hub (covered in Task 8)
+- XP gain toast notifications (covered in Task 4)
+
+### Implementation Steps
+1. Create GamificationDashboard component file in `src/components/dashboard/`
+2. Import useXP hook and destructure: `{ userLevel, achievements, leaderboards, activeChallenges, loading, getProgress }`
+3. Implement Level & XP card:
+   - Display current_level with named rank mapping (1: Novice, 2: Apprentice, etc.)
+   - Show circular level badge with gradient background
+   - Render progress bar using getProgress() percentage
+   - Display current/required XP text
+4. Implement Streak card:
+   - Display current streak_days with flame icon
+   - Add CSS animation for flame flicker effect
+   - Show grace period warning banner if grace_period_active
+   - Display longest_streak as secondary metric
+   - Show freeze_tokens count if > 0
+5. Implement Recent Achievements section:
+   - Filter achievements where unlocked === true
+   - Sort by unlock date descending
+   - Take first 5 achievements
+   - Display as grid with icon, name, tier badge, unlock date
+   - Show "View All" link to achievement gallery
+6. Implement Leaderboard Position card:
+   - Display weekly rank from leaderboards.weekly
+   - Show trend indicator (up/down arrow)
+   - Add "View Leaderboard" link
+7. Implement Active Challenges card:
+   - Display count of activeChallenges
+   - Show "View Challenges" link
+8. Add responsive grid layout with Tailwind classes
+9. Implement loading skeleton states
+10. Add empty states with encouraging messages
+11. **Test: Component renders with data**
+    - **Setup:** Mock useXP hook with sample data
+    - **Action:** Render GamificationDashboard
+    - **Expect:** All sections display correctly, progress bar shows accurate percentage
+12. **Test: Responsive layout**
+    - **Setup:** Render at different viewport sizes
+    - **Action:** Check layout structure
+    - **Expect:** 1 column on mobile, 2 on tablet, 3 on desktop
+
+### Success Criteria
+- Component displays all gamification metrics accurately
+- XP progress bar animates smoothly on mount
+- Streak flame icon has subtle animation
+- Grace period warning displays when applicable
+- Recent achievements show correct unlock dates
+- Responsive layout works across all breakpoints
+- Loading states prevent layout shift
+- Component integrates seamlessly with existing design system
+- All tests pass
+
+### Scope Constraint
+Implement only the GamificationDashboard component. Do not implement detailed views for achievements, leaderboards, or challenges.
+
+# Task 6: Build AchievementGallery component with filtering and progress tracking
+
+**Dependencies:** Task 4
+
+### Goal
+Create an achievement gallery that displays all 50-75 achievements in a filterable grid, showing unlock status, progress toward locked achievements, and detailed achievement information in a modal.
+
+### Implementation Context
+**Files to Modify:**
+- `src/components/dashboard/AchievementGallery.tsx` (new component)
+- `src/components/dashboard/AchievementModal.tsx` (new component for details)
+- `src/components/dashboard/AchievementGallery.test.tsx` (new test file)
+
+**Key Requirements:**
+- Display all achievements in responsive grid layout
+- Filter by category (activation, mastery, consistency, social, quality, resilience)
+- Filter by tier (bronze, silver, gold)
+- Filter by status (unlocked, locked, all)
+- Show progress bars for in-progress achievements (e.g., "25/100 deliverables")
+- Display hidden achievements as "???" until unlocked
+- Modal view for achievement details (description, requirements, unlock date)
+- Lazy loading: initial 20 achievements, load more on scroll
+
+**Technical Notes:**
+- Use existing useXP hook from `src/hooks/useXP.ts` for achievement data
+- Follow grid layout patterns from `src/pages/Homepage.tsx` (outputGridItems)
+- Reuse modal patterns from existing components
+- Use Radix UI primitives for accessible modal (already in dependencies)
+- Leverage existing Lucide icons for achievement icons
+
+**Simplicity Decisions:**
+- Using simple CSS grid instead of complex masonry layout (easier to maintain)
+- Client-side filtering rather than server-side (simpler for 50-75 items)
+- Lazy loading with simple scroll detection instead of intersection observer library
+
+### Scope Definition
+**Deliverables:**
+- AchievementGallery component with grid display
+- Filter controls for category, tier, and unlock status
+- Achievement cards showing: icon, name, tier badge, unlock status, progress (if applicable)
+- AchievementModal component for detailed view
+- Lazy loading implementation (20 items initially, load more on scroll)
+- Hidden achievement masking ("???" display)
+- Responsive grid: 1 column mobile, 2 columns tablet, 3 columns desktop
+
+**Exclusions:**
+- Achievement unlock animations (covered in Task 9)
+- Custom achievement creation (deferred to V2)
+- Achievement sharing (deferred to V2)
+
+### Implementation Steps
+1. Create AchievementGallery component in `src/components/dashboard/`
+2. Import useXP hook and extract achievements array
+3. Implement filter state management:
+   - categoryFilter: string | 'all'
+   - tierFilter: string | 'all'
+   - statusFilter: 'all' | 'unlocked' | 'locked'
+4. Implement filter logic:
+   - Filter achievements by selected category, tier, status
+   - Sort: unlocked first, then by tier (gold > silver > bronze), then by category
+5. Implement lazy loading:
+   - State: displayCount (initial 20)
+   - Scroll handler: increment displayCount by 20 when near bottom
+   - Slice filtered achievements to displayCount
+6. Implement achievement card rendering:
+   - If hidden && !unlocked: show "???" with mystery icon
+   - If unlocked: show icon, name, tier badge, unlock date
+   - If locked: show icon (grayed), name, tier badge, progress bar (if applicable)
+   - Add hover effect (3D lift) using Tailwind transforms
+7. Implement progress calculation for locked achievements:
+   - Parse requirements JSONB
+   - Query user stats from useXP or additional queries
+   - Calculate percentage: (current / required) × 100
+   - Display progress bar below achievement card
+8. Create AchievementModal component:
+   - Display full achievement details: icon, name, description_ro, tier, XP reward
+   - Show requirements in readable format
+   - Display unlock date if unlocked
+   - Show progress toward unlock if locked
+   - Add close button and backdrop click to dismiss
+9. Implement filter UI:
+   - Dropdown/button group for category filter
+   - Dropdown/button group for tier filter
+   - Toggle buttons for status filter (All, Unlocked, Locked)
+10. Add responsive grid with Tailwind: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4`
+11. Implement loading skeleton for initial load
+12. **Test: Filtering functionality**
+    - **Setup:** Mock 50 achievements across categories
+    - **Action:** Apply category filter "mastery"
+    - **Expect:** Only mastery achievements displayed
+13. **Test: Lazy loading**
+    - **Setup:** Mock 60 achievements
+    - **Action:** Scroll to bottom
+    - **Expect:** displayCount increments, more achievements rendered
+
+### Success Criteria
+- All 50-75 achievements display correctly in grid
+- Filtering works for category, tier, and unlock status
+- Hidden achievements show "???" until unlocked
+- Progress bars display accurate completion percentage
+- Modal shows detailed achievement information
+- Lazy loading prevents performance issues with large lists
+- Responsive grid adapts to screen size
+- Component matches existing design system aesthetics
+- All tests pass
+
+### Scope Constraint
+Implement only the achievement gallery and modal components. Do not implement achievement unlock animations or integration into other pages.
+
+# Task 7: Implement leaderboard system with materialized views and LeaderboardView component
+
+**Dependencies:** Tasks 1, 2
+
+### Goal
+Create a leaderboard system with materialized views for efficient ranking queries and a tabbed UI component displaying weekly, monthly, all-time, and category-based leaderboards with user position highlighting.
+
+### Implementation Context
+**Files to Modify:**
+- `supabase/migrations/[timestamp]_leaderboard_views.sql` (new migration file)
+- `src/components/dashboard/LeaderboardView.tsx` (new component)
+- `src/components/dashboard/LeaderboardView.test.tsx` (new test file)
+
+**Key Requirements:**
+- Materialized views for 4 leaderboard types: weekly XP, monthly XP, all-time XP, category-based (quality, consistency, productivity, mastery)
+- Refresh strategy: materialized views refresh every 5 minutes via cron job or manual trigger
+- Display top 100 users per leaderboard
+- Highlight current user's position regardless of rank
+- Show user avatar, username, level, tier badge, badge count
+- Pagination for viewing beyond top 100
+- Responsive tabbed interface
+
+**Technical Notes:**
+- Use existing Supabase materialized view patterns
+- Leverage existing user profile data for avatars and usernames
+- Follow tabbed interface patterns from existing components
+- Use existing pagination patterns if available in codebase
+- Reuse card styling from `src/pages/Profile.tsx`
+
+**Simplicity Decisions:**
+- Using materialized views with periodic refresh instead of real-time aggregation (simpler, more performant)
+- 5-minute refresh interval balances freshness with database load
+- Client-side pagination for top 100 (simpler than server-side for this scale)
+
+### Scope Definition
+**Deliverables:**
+- Materialized view `leaderboard_weekly` aggregating XP from last 7 days
+- Materialized view `leaderboard_monthly` aggregating XP from current month
+- Materialized view `leaderboard_all_time` using total_xp
+- Materialized view `leaderboard_categories` with quality, consistency, productivity, mastery metrics
+- Refresh function/trigger for materialized views (5-minute interval)
+- LeaderboardView component with tabbed interface
+- User position highlighting (different background color)
+- Top 3 special styling (gold/silver/bronze medals)
+- Pagination controls for viewing full list
+
+**Exclusions:**
+- Real-time leaderboard updates (using 5-min refresh)
+- Leaderboard notifications (covered in Task 11)
+- Team leaderboards (deferred to V2)
+
+### Implementation Steps
+1. Create migration file for leaderboard materialized views
+2. Create `leaderboard_weekly` materialized view:
+   - Aggregate SUM(xp_amount) from xp_events WHERE created_at >= NOW() - INTERVAL '7 days'
+   - JOIN with user_levels for level, badges
+   - JOIN with auth.users for username, avatar
+   - Rank users with ROW_NUMBER() OVER (ORDER BY xp_sum DESC)
+   - Include tier from wallet_state
+3. Create `leaderboard_monthly` materialized view:
+   - Similar to weekly but filter: created_at >= date_trunc('month', NOW())
+4. Create `leaderboard_all_time` materialized view:
+   - Use total_xp from user_levels directly
+   - Rank by total_xp DESC
+5. Create `leaderboard_categories` materialized view:
+   - Quality: AVG(qc_score) from neuron_outputs
+   - Consistency: MAX(streak_days) from user_levels
+   - Productivity: COUNT(deliverables) from neuron_outputs
+   - Mastery: COUNT(badges) from user_levels
+6. Create refresh function to update all materialized views
+7. Create LeaderboardView component in `src/components/dashboard/`
+8. Implement tabbed interface:
+   - Tabs: Weekly, Monthly, All-Time, Quality, Consistency, Productivity, Mastery
+   - State management for active tab
+   - Fetch appropriate leaderboard data based on active tab
+9. Implement leaderboard table rendering:
+   - Columns: Rank, User (avatar + username), Level, Tier Badge, Score, Badge Count
+   - Top 3 rows: special styling with medal icons
+   - Current user row: highlighted background
+   - Responsive: stack columns on mobile
+10. Implement user position finding:
+    - Find current user in leaderboard array
+    - If not in top 100, query user's specific rank
+    - Display "Your Position: #[rank]" banner
+11. Add pagination controls (if leaderboard > 100 users)
+12. **Test: Leaderboard data accuracy**
+    - **Setup:** Seed test users with known XP values
+    - **Action:** Query leaderboard_weekly view
+    - **Expect:** Users ranked correctly by weekly XP
+13. **Test: User position highlighting**
+    - **Setup:** Mock leaderboard with current user at rank 15
+    - **Action:** Render LeaderboardView
+    - **Expect:** Rank 15 row has highlighted background
+
+### Success Criteria
+- Materialized views return accurate rankings
+- Leaderboard refreshes every 5 minutes without manual intervention
+- Top 100 users display correctly for each leaderboard type
+- Current user's position is highlighted regardless of rank
+- Top 3 users have special medal styling
+- Tabbed interface switches between leaderboard types smoothly
+- Pagination works for viewing full leaderboard
+- Responsive layout works on all screen sizes
+- All tests pass
+
+### Scope Constraint
+Implement only the leaderboard views and display component. Do not implement leaderboard notifications or rewards distribution.
+
+# Task 8: Build challenge system with ChallengeHub component and participation flow
+
+**Dependencies:** Tasks 1, 4
+
+### Goal
+Create a challenge system allowing users to join individual and team challenges, track progress in real-time, and earn rewards upon completion. Includes ChallengeHub UI for browsing active/completed challenges.
+
+### Implementation Context
+**Files to Modify:**
+- `src/components/dashboard/ChallengeHub.tsx` (new component)
+- `src/components/dashboard/ChallengeCard.tsx` (new component)
+- `src/components/dashboard/ChallengeModal.tsx` (new component for details)
+- `src/hooks/useChallenges.ts` (new hook)
+- `src/components/dashboard/ChallengeHub.test.tsx` (new test file)
+
+**Key Requirements:**
+- Display active challenges with goal, duration, rewards, participant count
+- Join/leave challenge functionality
+- Real-time progress tracking for joined challenges
+- Team formation for team challenges (simple team assignment)
+- Challenge completion detection and reward distribution
+- Filter: Active, Upcoming, Completed challenges
+- Individual and team challenge support
+
+**Technical Notes:**
+- Use existing Supabase real-time subscription pattern from `src/pages/Notifications.tsx`
+- Leverage existing useXP hook for XP reward distribution
+- Follow card layout patterns from existing dashboard components
+- Use existing modal patterns with Radix UI primitives
+- Reuse progress bar components from achievement gallery
+
+**Simplicity Decisions:**
+- Simple team assignment (auto-assign to smallest team) rather than complex team formation UI
+- Synchronous progress updates (query on action) rather than complex event streaming
+- Starting with predefined challenge templates (can add custom challenges in V2)
+
+### Scope Definition
+**Deliverables:**
+- useChallenges hook for challenge data management and participation
+- ChallengeHub component with tabbed interface (Active, Upcoming, Completed)
+- ChallengeCard component displaying challenge details and progress
+- ChallengeModal for detailed challenge view and join action
+- Join/leave challenge functionality
+- Real-time progress tracking for active challenges
+- Challenge completion detection and reward distribution
+- Team assignment logic for team challenges
+
+**Exclusions:**
+- Custom challenge creation (deferred to V2)
+- Advanced team management (deferred to V2)
+- Challenge leaderboards within challenges (deferred to V2)
+
+### Implementation Steps
+1. Create useChallenges hook in `src/hooks/`:
+   - Fetch active, upcoming, completed challenges from challenges table
+   - Fetch user's challenge participations from challenge_participants
+   - Implement joinChallenge function (INSERT into challenge_participants)
+   - Implement leaveChallenge function (DELETE from challenge_participants)
+   - Implement updateProgress function (UPDATE challenge_participants.progress)
+   - Subscribe to real-time updates on challenge_participants for user
+2. Create ChallengeCard component:
+   - Display challenge name, description, type (individual/team)
+   - Show goal and current progress (if joined)
+   - Display duration remaining (countdown)
+   - Show participant count
+   - Display rewards (XP, badge)
+   - Add "Join" or "View Details" button
+3. Create ChallengeModal component:
+   - Full challenge details: name, description, goal, duration, rewards
+   - Participant list (top 10)
+   - Join/Leave button
+   - Progress tracking if already joined
+   - Team assignment display for team challenges
+4. Create ChallengeHub component:
+   - Import useChallenges hook
+   - Implement tabbed interface (Active, Upcoming, Completed)
+   - Render ChallengeCard grid for each tab
+   - Handle empty states for each tab
+   - Add filter/sort controls (by type, by reward)
+5. Implement joinChallenge logic:
+   - Check if challenge is active and not full
+   - For team challenges: auto-assign to smallest team or create new team
+   - INSERT into challenge_participants
+   - Show success toast notification
+6. Implement challenge progress tracking:
+   - Listen to user actions (neuron creation, deliverable generation, etc.)
+   - Calculate progress toward challenge goal
+   - UPDATE challenge_participants.progress
+   - Check if goal reached, set completed = TRUE
+7. Implement challenge completion handling:
+   - Detect when progress >= goal_value
+   - Award XP reward via useXP.awardXP
+   - Unlock badge reward via database function
+   - Show completion notification with rewards
+8. Add real-time subscription for challenge updates:
+   - Subscribe to challenge_participants changes for user
+   - Update progress bars in real-time
+   - Show notifications for challenge milestones
+9. **Test: Join challenge flow**
+   - **Setup:** Mock active challenge
+   - **Action:** Click "Join Challenge"
+   - **Expect:** User added to challenge_participants, progress tracking begins
+10. **Test: Challenge completion**
+    - **Setup:** User joined challenge with progress 95/100
+    - **Action:** Complete action bringing progress to 100
+    - **Expect:** Challenge marked complete, XP awarded, badge unlocked, notification shown
+
+### Success Criteria
+- Users can browse active, upcoming, and completed challenges
+- Join/leave functionality works correctly
+- Progress updates in real-time as user completes actions
+- Challenge completion triggers reward distribution
+- Team challenges assign users to teams automatically
+- Notifications display for challenge milestones and completion
+- Component matches existing design system
+- All tests pass
+
+### Scope Constraint
+Implement only the challenge system and ChallengeHub component. Do not implement custom challenge creation or advanced team management features.
+
+# Task 9: Implement notification preferences UI and gamification notification types
+
+**Dependencies:** Task 4
+
+### Goal
+Extend the existing notification system with gamification-specific notification types and create a user preferences UI for controlling notification frequency, channels, and quiet hours.
+
+### Implementation Context
+**Files to Modify:**
+- `src/pages/Notifications.tsx` (extend existing)
+- `src/pages/Settings.tsx` (add notification preferences section)
+- `src/components/settings/NotificationPreferences.tsx` (new component)
+
+**Key Requirements:**
+- Add gamification notification types: level_up, achievement_unlock, streak_warning, streak_broken, leaderboard_position, challenge_update, weekly_summary
+- Create notification preferences UI with 3 levels: Minimal, Moderate, Active
+- Support channel selection: in-app, email, push
+- Implement quiet hours configuration (start/end time)
+- Add frequency caps: max per hour, max per day
+- Store preferences in notification_preferences table
+- Filter notifications by type in Notifications page
+
+**Technical Notes:**
+- Extend existing Notification interface from `src/pages/Notifications.tsx`
+- Reuse existing notification rendering logic and real-time subscriptions
+- Follow form patterns from `src/pages/Settings.tsx`
+- Use existing time picker components if available
+- Leverage existing toast notification system from `src/components/Toast.tsx`
+
+**Simplicity Decisions:**
+- Using simple time string format (HH:MM) instead of complex date picker library
+- Client-side notification filtering rather than server-side (simpler for user preferences)
+- Starting with 3 preset levels (Minimal, Moderate, Active) rather than granular per-type control
+
+### Scope Definition
+**Deliverables:**
+- Extended Notification type with gamification categories
+- NotificationPreferences component with form controls
+- Notification level selector (Minimal, Moderate, Active)
+- Channel toggles (in-app, email, push)
+- Quiet hours time range picker
+- Frequency cap inputs (max per hour, max per day)
+- Save preferences functionality
+- Integration into Settings page
+- Notification filtering in Notifications page by gamification types
+
+**Exclusions:**
+- Email notification delivery (requires email service setup, deferred)
+- Push notification delivery (requires push service setup, deferred)
+- Advanced per-notification-type granular control (deferred to V2)
+
+### Implementation Steps
+1. Extend Notification interface in Notifications.tsx:
+   - Add new type values: 'level_up', 'achievement', 'streak_warning', 'streak_broken', 'leaderboard', 'challenge', 'weekly_summary'
+2. Update getIcon function in Notifications.tsx to handle new types:
+   - level_up: Trophy icon with purple color
+   - achievement: Award icon with gold color
+   - streak_warning: Flame icon with amber color
+   - streak_broken: FlameOff icon with red color
+   - leaderboard: TrendingUp icon with blue color
+   - challenge: Target icon with emerald color
+   - weekly_summary: BarChart icon with purple color
+3. Add category filter to Notifications page:
+   - Filter buttons: All, Gamification, System, Credits
+   - Filter logic based on notification type
+4. Create NotificationPreferences component in `src/components/settings/`:
+   - Import useAuth for current user
+   - Fetch current preferences from notification_preferences table
+   - Implement form state management with React Hook Form
+5. Implement notification level selector:
+   - Radio buttons for Minimal, Moderate, Active
+   - Description text explaining each level
+   - Visual preview of what notifications are included
+6. Implement channel toggles:
+   - Checkboxes for in_app, email, push
+   - Disable email/push with "Coming soon" label
+7. Implement quiet hours configuration:
+   - Two time inputs: start time, end time
+   - Enable/disable toggle
+   - Validation: end time must be after start time
+8. Implement frequency cap inputs:
+   - Number input for max_per_hour (default: 10)
+   - Number input for max_per_day (default: 50)
+   - Validation: must be positive integers
+9. Implement save functionality:
+   - UPSERT into notification_preferences table
+   - Show success toast on save
+   - Handle errors gracefully
+10. Integrate NotificationPreferences into Settings page:
+    - Add new section "Notification Preferences"
+    - Render NotificationPreferences component
+    - Follow existing Settings page layout patterns
+11. **Test: Notification filtering**
+    - **Setup:** Mock notifications with mixed types
+    - **Action:** Select "Gamification" filter
+    - **Expect:** Only gamification notifications displayed
+12. **Test: Preferences save**
+    - **Setup:** User changes notification level to "Active"
+    - **Action:** Click save
+    - **Expect:** Preferences saved to database, success toast shown
+
+### Success Criteria
+- Gamification notifications display with appropriate icons and colors
+- Notification filtering works correctly in Notifications page
+- Notification preferences UI is intuitive and clear
+- Preferences save successfully to database
+- Quiet hours configuration validates correctly
+- Frequency caps enforce limits (client-side validation)
+- Component integrates seamlessly into Settings page
+- All tests pass
+
+### Scope Constraint
+Implement only the notification preferences UI and type extensions. Do not implement email or push notification delivery systems.
+
+# Task 10: Build StreakWidget global component and integrate into header
+
+**Dependencies:** Task 5
+
+### Goal
+Create a persistent streak widget that displays in the application header, showing current streak status, grace period warnings, and freeze token availability with animated flame icon.
+
+### Implementation Context
+**Files to Modify:**
+- `src/components/widgets/StreakWidget.tsx` (new component)
+- `src/components/layout/Header.tsx` or main layout component (integrate widget)
+- `src/components/widgets/StreakWidget.test.tsx` (new test file)
+
+**Key Requirements:**
+- Display current streak count with flame icon
+- Animate flame based on streak length (color intensity: blue → orange → red)
+- Show grace period warning indicator (amber border/glow)
+- Display freeze token count when > 0
+- Clickable to show streak details tooltip/popover
+- Compact design suitable for header placement
+- Responsive: hide on very small screens (<640px), show on larger screens
+
+**Technical Notes:**
+- Use existing useXP hook from `src/hooks/useXP.ts` for streak data
+- Follow header component patterns from existing layout
+- Use Lucide React Flame icon
+- Leverage Radix UI Popover for streak details (already in dependencies)
+- Use existing Tailwind animation utilities
+
+**Simplicity Decisions:**
+- Using CSS color transitions for flame animation instead of complex SVG animations
+- Simple popover for details rather than full modal (lighter interaction)
+- Static widget position in header rather than draggable/customizable placement
+
+### Scope Definition
+**Deliverables:**
+- StreakWidget component with flame icon and streak count
+- Color animation based on streak length (0-7: blue, 8-29: orange, 30+: red)
+- Grace period warning visual indicator (amber glow)
+- Freeze token badge display
+- Popover with streak details: current streak, longest streak, last action time, freeze tokens
+- Integration into application header/navigation
+- Responsive visibility (hidden on mobile <640px)
+
+**Exclusions:**
+- Streak freeze token usage UI (deferred - requires additional logic)
+- Streak history calendar view (deferred to V2)
+- Streak recovery flow (deferred to V2)
+
+### Implementation Steps
+1. Create StreakWidget component in `src/components/widgets/`
+2. Import useXP hook and extract: `{ userLevel, loading }`
+3. Implement flame icon with dynamic color:
+   - Calculate color based on streak_days: 0-7 (blue-500), 8-29 (orange-500), 30+ (red-500)
+   - Add CSS animation for subtle flicker effect
+   - Apply grace period glow if grace_period_active (amber border, shadow)
+4. Implement streak count display:
+   - Show streak_days number next to flame
+   - Add "day" or "days" label
+   - Compact typography for header placement
+5. Implement freeze token badge:
+   - Show small badge with token count if freeze_tokens > 0
+   - Position in top-right corner of widget
+   - Use emerald color to indicate available resource
+6. Create streak details popover using Radix UI Popover:
+   - Trigger: click on StreakWidget
+   - Content: current streak, longest streak, last action timestamp, freeze tokens available
+   - Add motivational message based on streak length
+   - Show "Keep it up!" or "You're on fire!" messages
+7. Integrate StreakWidget into header component:
+   - Locate main header/navigation component
+   - Add StreakWidget between navigation items and user menu
+   - Ensure proper spacing and alignment
+8. Add responsive visibility:
+   - Use Tailwind `hidden sm:flex` to hide on mobile
+   - Ensure header layout doesn't break without widget
+9. Implement loading state:
+   - Show skeleton/placeholder while loading
+   - Prevent layout shift
+10. **Test: Streak color animation**
+    - **Setup:** Mock userLevel with streak_days = 35
+    - **Action:** Render StreakWidget
+    - **Expect:** Flame icon has red-500 color
+11. **Test: Grace period indicator**
+    - **Setup:** Mock userLevel with grace_period_active = true
+    - **Action:** Render StreakWidget
+    - **Expect:** Widget has amber glow/border
+12. **Test: Popover content**
+    - **Setup:** Mock userLevel with streak data
+    - **Action:** Click StreakWidget
+    - **Expect:** Popover displays current streak, longest streak, freeze tokens
+
+### Success Criteria
+- StreakWidget displays correctly in header
+- Flame color changes based on streak length
+- Grace period warning is visually distinct
+- Freeze token badge appears when tokens available
+- Popover shows detailed streak information
+- Widget is responsive and hides on mobile
+- Loading state prevents layout shift
+- Component matches existing design system
+- All tests pass
+
+### Scope Constraint
+Implement only the StreakWidget component and header integration. Do not implement streak freeze token usage functionality or streak recovery flows.
+
+# Task 11: Integrate XP awarding into existing user touchpoints
+
+**Dependencies:** Task 4
+
+### Goal
+Integrate quality-based XP awarding into existing user touchpoints: neuron creation, deliverable generation, service usage, and daily login, ensuring XP is awarded for high-leverage actions with appropriate quality multipliers.
+
+### Implementation Context
+**Files to Modify:**
+- `src/pages/Upload.tsx` (neuron creation)
+- `src/pages/UploadAndProcess.tsx` (neuron creation)
+- `src/pages/MyDeliverables.tsx` (deliverable generation)
+- `src/pages/ServiceArticle.tsx` (service usage)
+- `src/pages/ServiceAvatar.tsx` (service usage)
+- `src/pages/ServiceCarousel.tsx` (service usage)
+- `src/pages/ServiceCourseGenerator.tsx` (service usage)
+- `src/pages/ServiceHooks.tsx` (service usage)
+- `src/pages/ServiceIntelOS.tsx` (service usage)
+- `src/pages/ServiceMatricea.tsx` (service usage)
+- `src/pages/ServiceStrategy.tsx` (service usage)
+- `src/pages/ServiceSummarizer.tsx` (service usage)
+- `src/pages/ServiceToneOfVoice.tsx` (service usage)
+- `src/pages/ServiceTranscriptor.tsx` (service usage)
+- `src/lib/auth.tsx` (daily login tracking)
+
+**Key Requirements:**
+- Award XP after successful neuron creation with quality multiplier based on input quality
+- Award XP after successful deliverable generation with quality multiplier from qc_score
+- Award XP after successful service execution
+- Track daily login and award XP once per day
+- Call updateStreak on meaningful actions
+- Quality multiplier ranges: 0.8 (low quality) to 2.0 (exceptional quality)
+- Use existing EVENT_TYPES and XP_REWARDS from enhanced useXP hook
+
+**Technical Notes:**
+- Import useXP hook in each component: `const { awardXP, updateStreak } = useXP()`
+- Use existing success detection patterns from each page
+- Leverage existing qc_score from neuron_outputs table for quality multipliers
+- Follow existing error handling patterns
+- Use localStorage for daily login tracking (simple, no server state needed)
+
+**Simplicity Decisions:**
+- Using localStorage for daily login tracking instead of database queries (reduces load)
+- Awarding XP on client-side success rather than server-side triggers (simpler to debug)
+- Starting with basic quality multipliers (can refine based on analytics)
+
+### Scope Definition
+**Deliverables:**
+- XP awarding integration in Upload.tsx and UploadAndProcess.tsx (neuron creation)
+- XP awarding integration in MyDeliverables.tsx (deliverable generation with qc_score multiplier)
+- XP awarding integration in all 11 service pages (service execution)
+- Daily login XP tracking in auth.tsx with localStorage
+- updateStreak calls on all meaningful actions
+- Quality multiplier calculation based on input validation and qc_score
+- Error handling for XP awarding failures (silent failures, don't block user flow)
+
+**Exclusions:**
+- Batch XP awarding for bulk operations (can add later if needed)
+- XP awarding for admin actions (out of scope)
+- Retroactive XP for historical actions (one-time migration, separate task)
+
+### Implementation Steps
+1. Integrate into Upload.tsx and UploadAndProcess.tsx:
+   - Import useXP hook
+   - After successful neuron creation (API success response)
+   - Calculate quality multiplier based on: file size appropriate, valid format, no errors (0.8-1.2 range)
+   - Call `await awardXP(EVENT_TYPES.NEURON_CREATED, XP_REWARDS.NEURON_CREATED, qualityMultiplier, { neuron_id, source_type })`
+   - Call `await updateStreak()`
+2. Integrate into MyDeliverables.tsx:
+   - Import useXP hook
+   - After successful deliverable generation
+   - Extract qc_score from neuron_outputs (0-1 range)
+   - Calculate quality multiplier: 0.8 + (qc_score × 1.2) to get 0.8-2.0 range
+   - Call `await awardXP(EVENT_TYPES.DELIVERABLE_GENERATED, XP_REWARDS.DELIVERABLE_GENERATED, qualityMultiplier, { deliverable_code, neuron_id })`
+   - Call `await updateStreak()`
+3. Integrate into all service pages (11 files):
+   - Import useXP hook
+   - After successful service execution (job completed)
+   - Call `await awardXP(EVENT_TYPES.SERVICE_USED, XP_REWARDS.SERVICE_USED, 1.0, { service_id, execution_time })`
+   - Call `await updateStreak()`
+4. Integrate daily login tracking into auth.tsx:
+   - In AuthProvider's useEffect after successful auth
+   - Check localStorage for 'last_login_date'
+   - Compare with current date (use toDateString() for day comparison)
+   - If different day: call `awardXP(EVENT_TYPES.DAILY_LOGIN, XP_REWARDS.DAILY_LOGIN)` and `updateStreak()`
+   - Update localStorage with current date
+5. Add error handling for all XP awarding calls:
+   - Wrap in try-catch blocks
+   - Log errors silently (don't show to user)
+   - Don't block user flow if XP awarding fails
+6. **Test: Neuron creation XP award**
+   - **Setup:** Mock successful neuron creation
+   - **Action:** Complete upload flow
+   - **Expect:** awardXP called with NEURON_CREATED event and quality multiplier
+7. **Test: Daily login XP award**
+   - **Setup:** localStorage has yesterday's date
+   - **Action:** User authenticates
+   - **Expect:** awardXP called with DAILY_LOGIN event, localStorage updated
+8. **Test: Quality multiplier calculation**
+   - **Setup:** Deliverable with qc_score = 0.95
+   - **Action:** Generate deliverable
+   - **Expect:** awardXP called with multiplier ≈ 1.94 (0.8 + 0.95 × 1.2)
+
+### Success Criteria
+- XP awarded after neuron creation with quality-based multiplier
+- XP awarded after deliverable generation with qc_score-based multiplier
+- XP awarded after service execution
+- Daily login XP awarded once per day
+- updateStreak called on all meaningful actions
+- XP awarding failures don't block user workflows
+- Quality multipliers accurately reflect input/output quality
+- All integrations tested and working
+- No performance degradation from XP awarding
+
+### Scope Constraint
+Implement only XP awarding integration into existing touchpoints. Do not modify core functionality of existing pages or implement new features beyond XP integration.
+
+# Task 12: Integrate GamificationDashboard into Profile page
+
+**Dependencies:** Task 5
+
+### Goal
+Add the GamificationDashboard component to the Profile page, creating a dedicated section that displays user's gamification stats alongside existing profile information.
+
+### Implementation Context
+**Files to Modify:**
+- `src/pages/Profile.tsx`
+
+**Key Requirements:**
+- Add new "Gamification" section to Profile page
+- Display GamificationDashboard component below existing governance metrics
+- Maintain existing Profile page functionality (work context, execution defaults)
+- Add navigation links to full achievement gallery and leaderboard views
+- Ensure responsive layout consistency with existing Profile sections
+- Follow existing section styling patterns (trust score, token usage cards)
+
+**Technical Notes:**
+- Leverage existing Profile.tsx layout structure
+- Use existing card styling patterns from governance metrics section
+- Follow existing responsive grid patterns
+- Maintain existing Profile page state management
+- Reuse existing section header styling
+
+**Simplicity Decisions:**
+- Embedding GamificationDashboard directly rather than separate route (simpler navigation)
+- Using existing Profile page layout rather than creating new gamification page
+- Starting with single placement (can add to other pages later based on usage)
+
+### Scope Definition
+**Deliverables:**
+- New "Gamification" section in Profile page
+- GamificationDashboard component integration
+- Section header with icon and title
+- Navigation links to achievement gallery and leaderboard pages
+- Responsive layout maintaining existing Profile page structure
+- Smooth scrolling to gamification section (optional anchor link)
+
+**Exclusions:**
+- Separate gamification page/route (using Profile page integration)
+- Gamification widget in other pages (can add later)
+- Customizable dashboard layout (deferred to V2)
+
+### Implementation Steps
+1. Open `src/pages/Profile.tsx`
+2. Import GamificationDashboard component
+3. Locate the governance metrics section (trust score, risk level, token usage cards)
+4. Add new section after governance metrics:
+   - Section header: "Your Progress" with Zap or Trophy icon
+   - Subtitle: "Track your achievements and compete with the community"
+5. Render GamificationDashboard component within section
+6. Add navigation links below dashboard:
+   - "View All Achievements" → link to achievement gallery route
+   - "View Leaderboards" → link to leaderboard route
+   - "View Challenges" → link to challenge hub route
+7. Ensure responsive layout:
+   - Section should span full width
+   - Maintain existing Profile page grid structure
+   - Test on mobile, tablet, desktop breakpoints
+8. Add optional anchor link in Profile navigation (if exists):
+   - Add "Gamification" link to jump to section
+9. **Test: Component integration**
+   - **Setup:** Render Profile page
+   - **Action:** Scroll to gamification section
+   - **Expect:** GamificationDashboard displays correctly, navigation links work
+10. **Test: Responsive layout**
+    - **Setup:** Render Profile at different viewport sizes
+    - **Action:** Check layout structure
+    - **Expect:** Gamification section maintains responsive behavior
+
+### Success Criteria
+- GamificationDashboard displays correctly in Profile page
+- Section integrates seamlessly with existing Profile layout
+- Navigation links to achievement gallery, leaderboard, challenges work
+- Responsive layout maintains consistency across breakpoints
+- No breaking changes to existing Profile functionality
+- Section header matches existing Profile section styling
+- All tests pass
+
+### Scope Constraint
+Implement only the Profile page integration. Do not create separate gamification routes or integrate into other pages.
+
+# Task 13: Implement tier-based gamification perks and XP boost system
+
+**Dependencies:** Task 1
+
+### Goal
+Implement the hybrid tier integration system where paid tiers receive XP boosts, additional streak benefits, and exclusive achievements, while high XP levels unlock temporary tier trials and permanent perks.
+
+### Implementation Context
+**Files to Modify:**
+- `supabase/migrations/[timestamp]_tier_gamification_perks.sql` (new migration file)
+- `src/lib/tier-perks.ts` (new utility file)
+- `src/hooks/useTierPerks.ts` (new hook)
+
+**Key Requirements:**
+- XP boost multipliers by tier: Free (1.0x), Starter (1.1x), Pro (1.25x), Enterprise (1.5x)
+- Streak benefits by tier: freeze tokens per month (Free: 0, Starter: 2, Pro: 4, Enterprise: unlimited)
+- Queue priority thresholds by tier: Free (30+ days), Starter (14+ days), Pro (always), Enterprise (always)
+- Level-based tier trials: Level 10 (7-day Pro trial), Level 15 (7-day Enterprise trial)
+- Level-based permanent perks: Level 5 (+1 concurrent job), Level 10 (custom branding), Level 15 (API access), Level 20 (10% discount + dedicated support)
+- Exclusive tier achievements: Starter ("Supporter" badge), Pro (5 exclusive badges), Enterprise (custom achievements)
+
+**Technical Notes:**
+- Query tier_level from existing wallet_state table
+- Use existing tier system patterns from economic protocol
+- Store tier trial activations in user_levels or separate tier_trials table
+- Apply XP boost in award_xp function before XP calculation
+- Leverage existing tier checking logic if available
+
+**Simplicity Decisions:**
+- Storing tier trial state in user_levels (simpler than separate table)
+- Applying XP boost at database level (consistent, can't be bypassed)
+- Starting with simple tier trial activation (can add complex eligibility rules later)
+
+### Scope Definition
+**Deliverables:**
+- Database function to apply tier-based XP boost in award_xp
+- Tier trial activation logic (7-day Pro/Enterprise trials at levels 10/15)
+- Tier trial expiration tracking and enforcement
+- Freeze token allocation by tier (monthly grant)
+- Queue priority determination based on tier and streak
+- Exclusive tier achievement definitions
+- useTierPerks hook for querying active perks and trials
+- Tier perk display in Profile page
+
+**Exclusions:**
+- Tier upgrade flow (existing functionality)
+- Payment processing (existing functionality)
+- Custom achievement creation for Enterprise (deferred to V2)
+
+### Implementation Steps
+1. Create migration file for tier gamification perks
+2. Add columns to user_levels table:
+   - tier_trial_active: BOOLEAN (default FALSE)
+   - tier_trial_type: TEXT (nullable, 'pro' or 'enterprise')
+   - tier_trial_expires_at: TIMESTAMPTZ (nullable)
+   - last_freeze_token_grant: TIMESTAMPTZ (nullable)
+3. Modify award_xp function to apply tier boost:
+   - Query tier_level from wallet_state
+   - Query tier_trial_active and tier_trial_type from user_levels
+   - Determine effective tier (trial overrides base tier if active and not expired)
+   - Apply multiplier: Free (1.0), Starter (1.1), Pro (1.25), Enterprise (1.5)
+   - Multiply p_xp_amount by tier multiplier before quality multiplier
+4. Create function activate_tier_trial:
+   - Check if user is at qualifying level (10 for Pro, 15 for Enterprise)
+   - Check if trial not already used for this tier
+   - Set tier_trial_active = TRUE, tier_trial_type, tier_trial_expires_at = NOW() + 7 days
+   - Return trial activation details
+5. Create function check_tier_trial_expiration:
+   - Check if tier_trial_expires_at < NOW()
+   - If expired: set tier_trial_active = FALSE
+   - Return expiration status
+6. Create function grant_monthly_freeze_tokens:
+   - Query tier_level from wallet_state
+   - Check last_freeze_token_grant (must be > 30 days ago)
+   - Grant tokens: Starter (2), Pro (4), Enterprise (unlimited = 999)
+   - Update freeze_tokens and last_freeze_token_grant
+7. Create tier_perks.ts utility file:
+   - Export getTierXPBoost(tier): returns multiplier
+   - Export getFreezeTokensPerMonth(tier): returns token count
+   - Export getQueuePriorityThreshold(tier): returns streak days required
+   - Export getPermanentPerks(level): returns array of unlocked perks
+8. Create useTierPerks hook:
+   - Fetch user's tier from wallet_state
+   - Fetch tier trial status from user_levels
+   - Calculate effective tier (trial overrides if active)
+   - Return: effectiveTier, xpBoost, freezeTokensPerMonth, queuePriority, permanentPerks, trialActive, trialExpiresAt
+9. Add tier trial activation to level-up logic:
+   - In award_xp function, after level update
+   - If new_level = 10 AND no Pro trial used: activate Pro trial
+   - If new_level = 15 AND no Enterprise trial used: activate Enterprise trial
+   - Return trial activation in function response
+10. Add exclusive tier achievements to achievement seeding:
+    - Starter: "Supporter" badge (unlocked on first Starter subscription)
+    - Pro: 5 exclusive badges (unlocked at Pro tier)
+    - Enterprise: Custom achievement framework (placeholder for V2)
+11. **Test: XP boost application**
+    - **Setup:** User with Pro tier
+    - **Action:** Award 100 XP
+    - **Expect:** User receives 125 XP (100 × 1.25 boost)
+12. **Test: Tier trial activation**
+    - **Setup:** User reaches level 10
+    - **Action:** Level up occurs
+    - **Expect:** Pro trial activated, expires_at set to 7 days from now
+
+### Success Criteria
+- XP boost correctly applied based on user's tier
+- Tier trials activate automatically at levels 10 and 15
+- Tier trials expire after 7 days
+- Freeze tokens granted monthly based on tier
+- Queue priority determined by tier and streak combination
+- Exclusive tier achievements unlock correctly
+- useTierPerks hook returns accurate perk information
+- All tests pass
+
+### Scope Constraint
+Implement only tier-based gamification perks. Do not modify tier upgrade flows, payment processing, or create custom achievement builder.
+
+# Task 14: Implement comprehensive E2E tests for gamification user journeys
+
+**Dependencies:** Tasks 2, 11
+
+### Goal
+Create end-to-end Playwright tests covering complete gamification user journeys from signup through level-up, achievement unlocks, streak maintenance, leaderboard participation, and challenge completion.
+
+### Implementation Context
+**Files to Modify:**
+- `e2e/gamification.spec.ts` (new test file)
+- `e2e/fixtures/gamification-data.ts` (new test data fixtures)
+
+**Tests to Create:**
+- Complete user journey: signup → first neuron → level up → achievement unlock
+- Streak maintenance over multiple days (with mocked time)
+- Leaderboard position updates
+- Challenge participation and completion
+- Notification preferences configuration
+- Tier trial activation at level milestones
+
+**Key Requirements:**
+- Test complete user flow from onboarding through multiple gamification milestones
+- Mock time progression for streak testing (avoid waiting actual days)
+- Verify XP calculations, level-ups, and achievement unlocks
+- Test real-time updates and notifications
+- Verify tier integration and XP boosts
+- Test edge cases: daily XP cap, streak grace period, challenge completion
+
+**Technical Notes:**
+- Use existing Playwright configuration from `playwright.config.ts`
+- Follow existing E2E test patterns from `e2e/` directory
+- Use Playwright's clock mocking for time-based tests
+- Leverage existing test utilities and helpers
+- Use test database with seeded data
+
+**Simplicity Decisions:**
+- Using Playwright's built-in clock mocking instead of complex time manipulation
+- Testing critical paths only (not every edge case)
+- Starting with happy path tests (can add negative tests later)
+
+### Scope Definition
+**Deliverables:**
+- E2E test: Complete onboarding → first neuron → first achievement → level 2
+- E2E test: Streak maintenance with grace period (mock 3 days)
+- E2E test: Daily XP cap enforcement (earn 200 XP, verify cap)
+- E2E test: Achievement unlock flow (meet requirements, verify unlock, check notification)
+- E2E test: Leaderboard appearance after earning XP
+- E2E test: Challenge join → progress → completion → reward
+- E2E test: Notification preferences save and apply
+- E2E test: Tier trial activation at level 10
+- Test fixtures with sample achievements, challenges, users
+
+**Exclusions:**
+- Performance tests (covered in Task 15)
+- Security penetration tests (separate security testing)
+- Mobile app E2E tests (no mobile app yet)
+
+### Implementation Steps
+1. Create `e2e/gamification.spec.ts` test file
+2. Create `e2e/fixtures/gamification-data.ts` with test data:
+   - Sample achievements with various requirements
+   - Sample challenges (individual and team)
+   - Sample users with different XP levels
+3. Implement test: "Complete user onboarding and first achievement":
+   - Sign up new user
+   - Navigate to Upload page
+   - Upload first neuron (transcript file)
+   - Verify XP awarded (check notification or profile)
+   - Verify "First Steps" achievement unlocked
+   - Verify level progress bar updated
+4. Implement test: "Streak maintenance with grace period":
+   - Create user with existing streak
+   - Mock time: advance 25 hours (within 24h window)
+   - Perform action (create neuron)
+   - Verify streak incremented
+   - Mock time: advance 50 hours (grace period)
+   - Verify grace period warning shown
+   - Perform action within grace period
+   - Verify streak preserved
+5. Implement test: "Daily XP cap enforcement":
+   - Create user with 0 XP today
+   - Perform actions to earn 200 XP
+   - Attempt to earn more XP
+   - Verify cap message shown
+   - Verify total XP = 200 for the day
+6. Implement test: "Achievement unlock and notification":
+   - Create user with 9 neurons
+   - Create 10th neuron
+   - Verify "Neuron Architect Bronze" achievement unlocked
+   - Verify achievement notification displayed
+   - Verify achievement appears in profile
+7. Implement test: "Leaderboard position update":
+   - Create user and earn XP
+   - Navigate to leaderboard page
+   - Verify user appears in weekly leaderboard
+   - Verify rank is calculated correctly
+8. Implement test: "Challenge completion flow":
+   - Navigate to ChallengeHub
+   - Join active challenge
+   - Perform actions to complete challenge goal
+   - Verify challenge marked complete
+   - Verify XP reward awarded
+   - Verify badge reward unlocked
+9. Implement test: "Notification preferences":
+   - Navigate to Settings
+   - Change notification level to "Active"
+   - Set quiet hours
+   - Save preferences
+   - Verify preferences saved
+   - Trigger notification during quiet hours
+   - Verify notification queued (not shown immediately)
+10. Implement test: "Tier trial activation":
+    - Create user at level 9
+    - Earn XP to reach level 10
+    - Verify Pro trial activation notification
+    - Verify Pro features unlocked
+    - Verify trial expiration date displayed
+11. **Test execution**: Run all E2E tests in CI/CD pipeline
+12. **Test reporting**: Generate test reports with screenshots on failure
+
+### Success Criteria
+- All E2E tests pass consistently
+- Tests cover critical gamification user journeys
+- Time mocking works correctly for streak tests
+- Tests run in reasonable time (<10 minutes total)
+- Test failures provide clear error messages and screenshots
+- Tests are maintainable and well-documented
+- CI/CD integration successful
+
+### Scope Constraint
+Implement only E2E tests for gamification features. Do not implement performance tests, security tests, or mobile app tests.
+
+# Task 15: Implement performance optimization and monitoring for gamification system
+
+**Dependencies:** Tasks 2, 7, 8
+
+### Goal
+Optimize database queries, implement caching strategies, add performance monitoring, and ensure the gamification system scales efficiently to 100,000+ users without degrading application performance.
+
+### Implementation Context
+**Files to Modify:**
+- `supabase/migrations/[timestamp]_gamification_indexes.sql` (new migration file)
+- `src/lib/gamification-cache.ts` (new caching utility)
+- `src/lib/monitoring/gamification-metrics.ts` (new monitoring file)
+
+**Key Requirements:**
+- Database indexes on all foreign keys and frequently queried columns
+- Materialized view refresh optimization (5-minute intervals)
+- Frontend caching for leaderboard data (5-minute TTL)
+- XP event table partitioning by month
+- Archival strategy for old XP events (>1 year)
+- Performance monitoring: track XP award latency, leaderboard query time, achievement check duration
+- Real-time subscription optimization: max 3 channels per user, throttle updates to 1/second
+
+**Technical Notes:**
+- Use existing Supabase indexing patterns
+- Leverage browser localStorage or sessionStorage for caching
+- Follow existing monitoring patterns from `src/lib/telemetry.ts`
+- Use existing logger from `src/lib/logger.ts` for performance tracking
+- Implement lazy loading patterns from existing components
+
+**Simplicity Decisions:**
+- Using simple localStorage caching instead of complex cache invalidation system
+- Manual materialized view refresh (cron job) instead of automatic triggers
+- Starting with basic indexes (can add composite indexes based on query analysis)
+
+### Scope Definition
+**Deliverables:**
+- Database indexes on: user_levels(user_id), xp_events(user_id, created_at), user_achievements(user_id, achievement_id), challenge_participants(user_id, challenge_id)
+- Composite indexes on: xp_events(user_id, created_at), leaderboards(period, category)
+- Materialized view refresh function with 5-minute cron job
+- xp_events table partitioning by month (PARTITION BY RANGE created_at)
+- Archival function for xp_events older than 1 year
+- Frontend caching utility for leaderboard data (5-minute TTL)
+- Performance monitoring for: award_xp latency, leaderboard query time, achievement check duration
+- Real-time subscription throttling (max 1 update/second)
+- Lazy loading for achievement gallery (20 items per page)
+
+**Exclusions:**
+- Advanced query optimization (can tune based on production metrics)
+- CDN caching for static assets (infrastructure concern)
+- Database connection pooling (Supabase handles this)
+
+### Implementation Steps
+1. Create migration file for performance indexes
+2. Add indexes on foreign keys:
+   - CREATE INDEX idx_xp_events_user_id ON xp_events(user_id)
+   - CREATE INDEX idx_xp_events_created_at ON xp_events(created_at)
+   - CREATE INDEX idx_user_achievements_user_id ON user_achievements(user_id)
+   - CREATE INDEX idx_challenge_participants_user_id ON challenge_participants(user_id)
+3. Add composite indexes for common queries:
+   - CREATE INDEX idx_xp_events_user_created ON xp_events(user_id, created_at DESC)
+   - CREATE INDEX idx_leaderboards_period_category ON leaderboards(period, category)
+4. Implement xp_events table partitioning:
+   - Convert to partitioned table by month
+   - Create partitions for current month and next 3 months
+   - Add automatic partition creation function
+5. Create archival function for old xp_events:
+   - Move records older than 1 year to xp_events_archive table
+   - Run monthly via cron job
+6. Create materialized view refresh function:
+   - REFRESH MATERIALIZED VIEW CONCURRENTLY for all leaderboard views
+   - Schedule via pg_cron every 5 minutes
+7. Create gamification-cache.ts utility:
+   - Implement getCachedLeaderboard(period, category) with 5-minute TTL
+   - Implement setCachedLeaderboard(period, category, data)
+   - Use localStorage with timestamp-based expiration
+8. Integrate caching into LeaderboardView component:
+   - Check cache before fetching from database
+   - Update cache after successful fetch
+   - Add manual refresh button to bypass cache
+9. Create gamification-metrics.ts monitoring:
+   - Track award_xp execution time (p95, p99)
+   - Track leaderboard query time
+   - Track achievement check duration
+   - Log slow queries (>500ms)
+   - Export metrics for admin dashboard
+10. Implement real-time subscription throttling:
+    - Debounce state updates to max 1/second
+    - Batch multiple updates within throttle window
+    - Limit to 3 active channels per user
+11. Optimize achievement gallery lazy loading:
+    - Implement virtual scrolling if >100 achievements
+    - Preload next page on scroll
+12. **Test: Index performance improvement**
+    - **Setup:** Database with 100k users, 1M XP events
+    - **Action:** Query user's XP events
+    - **Expect:** Query completes in <100ms (vs >1s without index)
+13. **Test: Leaderboard caching**
+    - **Setup:** Fetch leaderboard data
+    - **Action:** Fetch again within 5 minutes
+    - **Expect:** Data served from cache, no database query
+
+### Success Criteria
+- award_xp function p95 latency <500ms with 1000 concurrent users
+- Leaderboard queries complete in <1 second with 100k users
+- Achievement gallery loads initial 20 items in <2 seconds
+- Materialized views refresh every 5 minutes without manual intervention
+- XP events table partitioning reduces query time by 50%+
+- Frontend caching reduces database load by 80%+ for leaderboards
+- Real-time subscriptions don't cause performance degradation
+- All performance tests pass
+
+### Scope Constraint
+Implement only performance optimization and monitoring. Do not implement new features or modify existing functionality beyond optimization.
+
+# Task 16: Implement security measures for XP manipulation prevention and audit logging
+
+**Dependencies:** Task 2
+
+### Goal
+Implement server-side security measures to prevent XP manipulation, detect anomalous behavior, enforce rate limiting, and maintain comprehensive audit trails for all gamification transactions.
+
+### Implementation Context
+**Files to Modify:**
+- `supabase/migrations/[timestamp]_gamification_security.sql` (new migration file)
+- `src/lib/gamification-security.ts` (new security utility)
+
+**Key Requirements:**
+- Server-side validation for all XP awards (prevent client-side manipulation)
+- Rate limiting: max 100 XP awards per user per hour
+- Anomaly detection: flag users with suspicious XP patterns (e.g., 1000+ XP in 1 hour)
+- Audit trail: log all XP transactions with metadata (user_id, event_type, amount, timestamp, IP address)
+- Achievement unlock validation: verify requirements before unlock, prevent duplicates
+- Leaderboard integrity: RLS policies prevent modification, detect impossible progress rates
+- Idempotency: prevent duplicate XP awards for same action
+
+**Technical Notes:**
+- Use existing RLS policy patterns from `20260123004000_rls_p0_safe_final.sql`
+- Leverage existing abuse detection patterns from `src/lib/abuse.ts`
+- Follow existing audit logging patterns from `src/lib/audit.ts`
+- Use Supabase RLS for access control
+- Implement rate limiting at database function level
+
+**Simplicity Decisions:**
+- Using simple time-window rate limiting (1 hour) instead of complex token bucket algorithm
+- Manual review for flagged accounts rather than automatic bans (safer, fewer false positives)
+- Starting with basic anomaly detection rules (can add ML-based detection in V2)
+
+### Scope Definition
+**Deliverables:**
+- Rate limiting logic in award_xp function (max 100 awards/hour)
+- Anomaly detection function flagging suspicious patterns
+- Audit log table for all XP transactions
+- RLS policies on all gamification tables (users can only modify own data)
+- Achievement unlock validation (double-check requirements, prevent duplicates)
+- Idempotency checks in award_xp (prevent duplicate awards for same action)
+- Admin dashboard query for flagged accounts
+- Support team tools for reviewing and correcting XP issues
+
+**Exclusions:**
+- Machine learning-based anomaly detection (deferred to V2)
+- Automated account suspension (requires manual review)
+- IP-based rate limiting (using user-based rate limiting)
+
+### Implementation Steps
+1. Create migration file for security measures
+2. Create gamification_audit_log table:
+   - Columns: id, user_id, action_type, details (JSONB), ip_address, user_agent, created_at
+   - Index on user_id and created_at
+3. Create gamification_flags table:
+   - Columns: id, user_id, flag_type, reason, flagged_at, reviewed, reviewed_by, resolved_at
+   - Track suspicious activity for manual review
+4. Add rate limiting to award_xp function:
+   - Count XP awards in last hour: SELECT COUNT(*) FROM xp_events WHERE user_id = p_user_id AND created_at >= NOW() - INTERVAL '1 hour'
+   - If count >= 100: RETURN early with rate_limited flag
+   - Log rate limit hit to audit log
+5. Create detect_xp_anomalies function:
+   - Check for patterns: >1000 XP in 1 hour, >5000 XP in 1 day, impossible achievement unlocks
+   - INSERT into gamification_flags if anomaly detected
+   - Return flag details
+6. Add idempotency check to award_xp:
+   - Accept optional idempotency_key in metadata
+   - Check if xp_event with same key exists
+   - If exists: return existing result without awarding again
+7. Enhance achievement unlock validation in check_achievements:
+   - Double-check requirements before INSERT
+   - Use ON CONFLICT DO NOTHING to prevent duplicate unlocks
+   - Log all unlock attempts to audit log
+8. Add RLS policies to all gamification tables:
+   - user_levels: users can SELECT/UPDATE own record only
+   - xp_events: users can SELECT own events only (INSERT via RPC only)
+   - user_achievements: users can SELECT own achievements only (INSERT via RPC only)
+   - achievements: public SELECT, no INSERT/UPDATE/DELETE
+   - leaderboards: public SELECT only (materialized view)
+   - challenges: public SELECT, users can INSERT/UPDATE own participations only
+9. Create admin query for flagged accounts:
+   - View in admin dashboard
+   - Show flag type, reason, user details, timestamp
+   - Provide review and resolve actions
+10. Create support tools for XP correction:
+    - Function to manually adjust user XP (with audit log)
+    - Function to revoke incorrectly awarded achievements
+    - Function to reset streak (with reason logging)
+11. **Test: Rate limiting enforcement**
+    - **Setup:** User attempts 101 XP awards in 1 hour
+    - **Action:** Call award_xp 101 times
+    - **Expect:** First 100 succeed, 101st returns rate_limited error
+12. **Test: Anomaly detection**
+    - **Setup:** User earns 1500 XP in 30 minutes
+    - **Action:** Trigger anomaly detection
+    - **Expect:** User flagged, entry in gamification_flags table
+
+### Success Criteria
+- Rate limiting prevents XP farming (max 100 awards/hour)
+- Anomaly detection flags suspicious activity
+- Audit log captures all XP transactions
+- RLS policies prevent unauthorized data access
+- Achievement unlock validation prevents duplicates and invalid unlocks
+- Idempotency prevents duplicate XP awards
+- Admin tools allow manual review and correction
+- All security tests pass
+
+### Scope Constraint
+Implement only security measures and audit logging. Do not implement automated account suspension or ML-based anomaly detection.

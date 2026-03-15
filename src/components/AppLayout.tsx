@@ -2,6 +2,8 @@ import { ReactNode, useEffect } from "react";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
+import { GamificationToasts } from "@/components/gamification/GamificationToasts";
+import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -42,6 +44,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   const { i18n } = useTranslation();
   const { user } = useAuth();
   usePageTracking();
+  useDailyActivity();
 
   const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
 
@@ -105,6 +108,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
       <MobileBottomNav />
       
       <ContextualFeedbackPrompt />
+      <GamificationToasts />
     </SidebarProvider>
   );
 }

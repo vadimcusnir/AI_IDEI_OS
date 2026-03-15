@@ -4,10 +4,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 
 function getKarmaTier(karma: number) {
-  if (karma >= 500) return { label: "Legend", color: "text-graph-highlight" };
-  if (karma >= 150) return { label: "Expert", color: "text-status-validated" };
-  if (karma >= 50) return { label: "Active Member", color: "text-primary" };
-  if (karma >= 10) return { label: "Contributor", color: "text-info" };
+  if (karma >= 10000) return { label: "Legend", color: "text-graph-highlight" };
+  if (karma >= 5000) return { label: "Expert", color: "text-status-validated" };
+  if (karma >= 2000) return { label: "Veteran", color: "text-primary" };
+  if (karma >= 500) return { label: "Regular", color: "text-primary" };
+  if (karma >= 100) return { label: "Contributor", color: "text-info" };
   return { label: "Newcomer", color: "text-muted-foreground" };
 }
 

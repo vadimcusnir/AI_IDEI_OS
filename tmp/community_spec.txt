@@ -1,0 +1,947 @@
+Community Forum & Engagement Platform - Requirements Specification
+Status: ACTIVE - Phase 2 Priority Layer: Community Engagement & Knowledge Sharing Dependencies: Economic Control System v1 (community bonuses), Content Library (knowledge base), Security System (moderation) Change Rate: Rapid (community-driven) Risk Level: Medium
+
+Overview
+Create a comprehensive community forum and engagement platform that enables users to ask questions, share knowledge, discuss platform features, and participate in governance discussions. The system rewards quality participation with Neuroni bonuses, implements robust moderation, builds user reputation through karma, and integrates with NOTA2 token governance for platform decision-making.
+
+Architectural Principles
+Integration Points:
+
+Economic Control System: Triggers bonus awards for community participation
+Content Library: Forum content feeds into searchable knowledge base
+NOTA2 Token (Future): Governance proposals and voting discussions
+Security System: Content moderation, spam prevention, abuse detection
+Analytics System: Tracks engagement metrics and community health
+Separation of Concerns:
+
+Forum manages community interactions only
+Economic Control handles bonus distribution
+Content Library indexes valuable forum content
+Security handles moderation and abuse
+No direct modification of other systems
+Problem Statement
+The platform needs a community forum to:
+
+Enable peer-to-peer support reducing support burden
+Build community engagement and platform loyalty
+Surface valuable insights from user discussions
+Reward helpful community members with bonuses
+Create space for governance discussions (NOTA2 future)
+Moderate content to maintain quality and safety
+Track user reputation and contributions
+Foster knowledge sharing and collaboration
+Jobs to Be Done
+When I have a question about platform services, I want to ask the community and get helpful answers, So I can solve problems quickly without waiting for support.
+
+When I know the answer to someone's question, I want to help them and earn recognition, So I can build reputation and earn Neuroni bonuses for my contributions.
+
+When exploring platform features, I want to see discussions about use cases and best practices, So I can learn from other users' experiences and optimize my usage.
+
+When governance decisions need community input (future), I want a dedicated space to discuss proposals and vote, So I can participate in platform direction with other token holders.
+
+Solution Components
+1. Forum Structure
+Category Hierarchy:
+
+Primary Categories:
+
+Getting Started: Onboarding, tutorials, first steps
+Services & Features: Service-specific discussions
+Extraction Services
+Analysis Services
+Generation Services
+Transformation Services
+Best Practices: Tips, workflows, optimization
+Technical Support: Troubleshooting, errors, bugs
+Feature Requests: Suggestions, ideas, feedback
+Governance (Future): NOTA2 proposals, voting discussions
+General Discussion: Off-topic, community chat
+Announcements: Official platform updates (admin-only posting)
+Thread Structure:
+
+Original post (question/discussion starter)
+Replies (answers, comments)
+Nested replies (up to 3 levels deep)
+Thread metadata (views, replies, last activity)
+Thread status (open, solved, closed, locked)
+Thread Types:
+
+Question: Seeking help or information
+Discussion: Open-ended conversation
+Announcement: Official platform news
+Proposal (Future): Governance proposals for voting
+2. Post Creation & Interaction
+Creating Posts:
+
+New Thread:
+
+Title (required, max 200 chars)
+Body (required, min 20 chars, max 10,000 chars)
+Category selection (required)
+Tags (optional, max 5 tags)
+Attachments (images, files - optional)
+Code formatting support (markdown)
+Preview before posting
+Replying:
+
+Reply to thread (top-level)
+Reply to specific comment (nested)
+Quote previous replies
+Mention users (@username)
+Rich text editor with formatting
+Code blocks with syntax highlighting
+Post Interactions:
+
+Upvote/Downvote: Vote on posts and replies
+Mark as Helpful: Original poster marks best answer
+Bookmark: Save posts for later
+Share: Generate shareable link
+Report: Flag inappropriate content
+Edit: Authors can edit their posts (with edit history)
+Delete: Soft delete with retention period
+3. Bonus & Reward System
+Community Participation Bonuses:
+
+New Thread Created:
+
+Trigger: User creates new thread
+Reward: 15 Neuroni (if quality-gated)
+Quality Gate: Thread must receive 3+ upvotes or 1+ reply within 24 hours
+Cap: Maximum 10 threads per month (150 Neuroni)
+Rationale: Encourage quality discussions
+Answer Provided:
+
+Trigger: User replies to thread
+Reward: 10 Neuroni (if marked helpful by original poster)
+Quality Gate: Must be marked "Helpful" by thread author
+Cap: Maximum 20 helpful answers per month (200 Neuroni)
+Rationale: Reward valuable assistance
+Help Other Users:
+
+Trigger: User's reply receives 5+ upvotes
+Reward: 5 Neuroni per highly-upvoted reply
+Quality Gate: Minimum 5 upvotes from different users
+Cap: Maximum 40 highly-upvoted replies per month (200 Neuroni)
+Rationale: Recognize community-validated quality
+Total Monthly Forum Cap:
+
+Maximum 400 Neuroni per month from community participation
+Separate from other bonus caps (uploads, contributions)
+Resets on 1st of each month
+Anti-Abuse Measures:
+
+Upvote manipulation detection (sock puppets)
+Self-upvoting prevention
+Minimum account age for voting (7 days)
+Rate limiting on thread creation
+Quality gates prevent spam threads
+Bonus clawback for detected abuse
+4. Reputation & Karma System
+Karma Calculation:
+
+// Calculate user karma score
+function calculateKarma(user: User): number {
+  const weights = {
+    threadCreated: 5,
+    replyPosted: 2,
+    helpfulAnswer: 20,
+    upvoteReceived: 1,
+    downvoteReceived: -2,
+    threadSolved: 15,
+    moderatorAction: -50 // Penalty for violations
+  }
+  
+  const karma = 
+    (user.threadsCreated * weights.threadCreated) +
+    (user.repliesPosted * weights.replyPosted) +
+    (user.helpfulAnswers * weights.helpfulAnswer) +
+    (user.upvotesReceived * weights.upvoteReceived) +
+    (user.downvotesReceived * weights.downvoteReceived) +
+    (user.threadsSolved * weights.threadSolved) +
+    (user.moderatorActions * weights.moderatorAction)
+  
+  return Math.max(karma, 0) // Never negative
+}
+Reputation Levels:
+
+Newcomer: 0-99 karma
+Contributor: 100-499 karma
+Regular: 500-1,999 karma
+Veteran: 2,000-4,999 karma
+Expert: 5,000-9,999 karma
+Legend: 10,000+ karma
+Reputation Benefits:
+
+Newcomer: Basic forum access
+Contributor: Can upvote/downvote
+Regular: Can edit wiki pages
+Veteran: Can close duplicate threads
+Expert: Can moderate flagged content
+Legend: Special badge, featured profile
+Karma Display:
+
+Visible on user profile
+Badge next to username in posts
+Leaderboard (top contributors)
+Karma history graph
+Breakdown by activity type
+5. "Helpful" Marking System
+Marking Answers as Helpful:
+
+Who Can Mark: Original thread author only
+When: Anytime after reply is posted
+Effect:
+Reply highlighted with "✓ Helpful Answer" badge
+Replier receives 10 Neuroni bonus
+Replier gains 20 karma points
+Thread marked as "Solved"
+Limit: One helpful answer per thread (can change selection)
+Helpful Answer Display:
+
+Highlighted with green border
+Pinned to top of replies
+"Marked as helpful by [author]" label
+Timestamp of when marked
+Visible in search results
+Thread Status:
+
+Open: No helpful answer yet
+Solved: Has helpful answer marked
+Closed: Locked, no new replies
+Locked: Admin/moderator locked
+6. User Profiles & Activity
+Public Profile:
+
+Username and display name
+Avatar/profile picture
+Karma score and reputation level
+Member since date
+Activity summary:
+Threads created
+Replies posted
+Helpful answers given
+Upvotes received
+NOTA2 holdings (if wallet connected)
+Recent activity feed
+Top contributions
+Badges and achievements
+Activity History:
+
+All threads created
+All replies posted
+Helpful answers marked
+Bookmarked threads
+Upvoted/downvoted posts
+Moderation actions (if any)
+Privacy Settings:
+
+Profile visibility (public, members-only, private)
+Activity visibility
+Email notification preferences
+Mention notifications
+7. Notification System
+Notification Types:
+
+Thread Notifications:
+
+New reply to your thread
+Your thread marked as solved
+Thread you're watching has new activity
+Thread closed/locked by moderator
+Reply Notifications:
+
+Your reply marked as helpful (+10 Neuroni!)
+Your reply received upvotes
+Someone replied to your reply
+Someone mentioned you (@username)
+Moderation Notifications:
+
+Your post was flagged
+Your post was removed
+Your post was edited by moderator
+Appeal decision
+Bonus Notifications:
+
+Bonus awarded for helpful answer
+Bonus awarded for highly-upvoted reply
+Monthly bonus cap reached
+Notification Delivery:
+
+In-app notifications (bell icon)
+Email notifications (configurable)
+Push notifications (future - mobile)
+Digest emails (daily/weekly summary)
+Notification Preferences:
+
+Enable/disable by type
+Email frequency (immediate, daily, weekly)
+Quiet hours (no notifications)
+Mention-only mode
+8. Search & Filtering
+Forum Search:
+
+Search across threads and replies
+Filter by category
+Filter by status (open, solved, closed)
+Filter by date range
+Filter by author
+Filter by tags
+Sort by: Relevance, recent, popular, unanswered
+Advanced Search:
+
+Boolean operators (AND, OR, NOT)
+Phrase search ("exact phrase")
+User search (from:username)
+Tag search (tag:marketing)
+Date search (after:2024-01-01)
+Status search (is:solved, is:unanswered)
+Search Results:
+
+Thread title and snippet
+Category and tags
+Reply count and views
+Last activity timestamp
+Solved status indicator
+Author and karma level
+Functional Requirements
+Thread Management
+Create Thread: Post new discussion or question
+Edit Thread: Author can edit (with history)
+Delete Thread: Soft delete by author or admin
+Close Thread: Mark as solved or lock
+Pin Thread: Admins can pin important threads
+Move Thread: Admins can recategorize
+Merge Threads: Combine duplicate threads
+Reply Management
+Post Reply: Add reply to thread
+Edit Reply: Author can edit (with history)
+Delete Reply: Soft delete by author or admin
+Quote Reply: Quote previous reply in response
+Mention User: Notify specific user with @mention
+Mark Helpful: Thread author marks best answer
+Voting System
+Upvote: Indicate helpful/quality content
+Downvote: Indicate unhelpful/low-quality content
+Vote Limits: One vote per user per post
+Vote Change: Can change vote anytime
+Vote Display: Show net score (upvotes - downvotes)
+Vote Privacy: Individual votes not public
+Moderation
+Flag Content: Users report inappropriate posts
+Review Queue: Moderators review flagged content
+Moderation Actions: Remove, edit, lock, ban
+Appeal Process: Users can appeal moderation decisions
+Moderator Notes: Internal notes on decisions
+Audit Trail: Log all moderation actions
+User Reputation
+Karma Tracking: Real-time karma calculation
+Reputation Levels: Automatic level assignment
+Badges: Award badges for achievements
+Leaderboard: Top contributors by karma
+Activity Stats: Track all user activities
+Profile Customization: Avatar, bio, links
+Notifications
+Real-time Notifications: In-app notification center
+Email Notifications: Configurable email alerts
+Notification Grouping: Combine similar notifications
+Mark as Read: Individual or bulk mark read
+Notification History: View past notifications
+Preferences: Granular notification controls
+Technical Requirements
+API Endpoints
+Thread Management APIs:
+
+POST /api/v1/forum/threads
+
+Create new thread
+Request: { title, body, category, tags[], threadType: 'question' | 'discussion' }
+Response: { threadId, status, qualityGateRequired }
+Authentication: User JWT required
+Rate limit: 10 threads/day per user
+GET /api/v1/forum/threads
+
+List threads with filters
+Request: { category?, status?, tags?, authorId?, limit?, offset? }
+Response: { threads: [...], pagination }
+Authentication: Optional (public access)
+GET /api/v1/forum/threads/:threadId
+
+Get thread with all replies
+Response: { thread, replies: [...], author, stats }
+Authentication: Optional
+Increments view count
+PUT /api/v1/forum/threads/:threadId
+
+Update thread (author only)
+Request: { title?, body?, tags? }
+Response: { thread, updated, editHistory }
+Authentication: User JWT required
+DELETE /api/v1/forum/threads/:threadId
+
+Delete thread (author or admin)
+Response: { success, bonusClawed? }
+Authentication: User JWT required
+POST /api/v1/forum/threads/:threadId/close
+
+Close/solve thread
+Request: { reason: 'solved' | 'duplicate' | 'off-topic' }
+Response: { success, status }
+Authentication: User JWT required (author or admin)
+Reply Management APIs:
+
+POST /api/v1/forum/threads/:threadId/replies
+
+Post reply to thread
+Request: { body, parentReplyId?, mentions[] }
+Response: { replyId, status }
+Authentication: User JWT required
+Rate limit: 50 replies/hour per user
+PUT /api/v1/forum/replies/:replyId
+
+Edit reply (author only)
+Request: { body }
+Response: { reply, updated, editHistory }
+Authentication: User JWT required
+DELETE /api/v1/forum/replies/:replyId
+
+Delete reply (author or admin)
+Response: { success }
+Authentication: User JWT required
+POST /api/v1/forum/replies/:replyId/mark-helpful
+
+Mark reply as helpful answer
+Response: { success, bonusAwarded, karmaAwarded }
+Authentication: User JWT required (thread author only)
+Triggers 10 Neuroni bonus to replier
+Voting APIs:
+
+POST /api/v1/forum/posts/:postId/vote
+
+Upvote or downvote post
+Request: { voteType: 'upvote' | 'downvote' }
+Response: { success, newScore, karmaChange }
+Authentication: User JWT required
+Rate limit: 100 votes/hour per user
+DELETE /api/v1/forum/posts/:postId/vote
+
+Remove vote
+Response: { success, newScore }
+Authentication: User JWT required
+User Profile APIs:
+
+GET /api/v1/forum/users/:userId/profile
+
+Get user forum profile
+Response: { user, karma, reputation, stats, recentActivity, badges }
+Authentication: Optional (public profiles)
+GET /api/v1/forum/users/:userId/threads
+
+Get user's threads
+Request: { status?, limit?, offset? }
+Response: { threads: [...], pagination }
+Authentication: Optional
+GET /api/v1/forum/users/:userId/replies
+
+Get user's replies
+Request: { limit?, offset? }
+Response: { replies: [...], pagination }
+Authentication: Optional
+GET /api/v1/forum/leaderboard
+
+Get top contributors
+Request: { period: 'week' | 'month' | 'all-time', metric: 'karma' | 'helpful-answers', limit? }
+Response: { leaderboard: [...] }
+Authentication: Optional (public)
+Moderation APIs:
+
+POST /api/v1/forum/posts/:postId/report
+
+Report inappropriate content
+Request: { reason, details? }
+Response: { reportId, status }
+Authentication: User JWT required
+GET /api/v1/admin/forum/moderation/queue
+
+Get moderation queue
+Request: { status?, priority?, category? }
+Response: { queue: [...], stats }
+Authentication: Admin JWT required
+POST /api/v1/admin/forum/posts/:postId/moderate
+
+Take moderation action
+Request: { action: 'approve' | 'remove' | 'edit' | 'lock', reason, notifyUser? }
+Response: { success, actionTaken }
+Authentication: Admin JWT required
+Notification APIs:
+
+GET /api/v1/forum/notifications
+
+Get user's notifications
+Request: { unreadOnly?, limit?, offset? }
+Response: { notifications: [...], unreadCount, pagination }
+Authentication: User JWT required
+POST /api/v1/forum/notifications/:notificationId/read
+
+Mark notification as read
+Response: { success }
+Authentication: User JWT required
+POST /api/v1/forum/notifications/read-all
+
+Mark all notifications as read
+Response: { success, markedCount }
+Authentication: User JWT required
+PUT /api/v1/forum/notifications/preferences
+
+Update notification preferences
+Request: { emailEnabled, types: { replies, mentions, helpful, moderation } }
+Response: { preferences, updated }
+Authentication: User JWT required
+Data Model
+ForumThread
+
+id (uuid, PK): Thread identifier
+authorId (uuid, FK): User who created thread
+categoryId (uuid, FK): Category identifier
+threadType (enum): 'question' | 'discussion' | 'announcement' | 'proposal'
+title (string): Thread title
+body (text): Thread content
+tags (array): Thread tags
+status (enum): 'open' | 'solved' | 'closed' | 'locked'
+isPinned (boolean): Pinned by admin
+viewCount (integer): Total views
+replyCount (integer): Total replies
+upvotes (integer): Total upvotes
+downvotes (integer): Total downvotes
+helpfulReplyId (uuid, nullable, FK): Marked helpful reply
+lastActivityAt (timestamp): Last reply timestamp
+createdAt (timestamp): Thread creation time
+updatedAt (timestamp): Last edit time
+closedAt (timestamp, nullable): When closed/solved
+deletedAt (timestamp, nullable): Soft delete timestamp
+ForumReply
+
+id (uuid, PK): Reply identifier
+threadId (uuid, FK): Parent thread
+authorId (uuid, FK): User who posted reply
+parentReplyId (uuid, nullable, FK): Parent reply (for nesting)
+body (text): Reply content
+upvotes (integer): Total upvotes
+downvotes (integer): Total downvotes
+isHelpful (boolean): Marked as helpful answer
+markedHelpfulAt (timestamp, nullable): When marked helpful
+markedHelpfulBy (uuid, nullable, FK): Who marked helpful
+nestingLevel (integer): Reply depth (0-3)
+createdAt (timestamp): Reply creation time
+updatedAt (timestamp): Last edit time
+deletedAt (timestamp, nullable): Soft delete timestamp
+ForumCategory
+
+id (uuid, PK): Category identifier
+name (string): Category name
+slug (string): URL-friendly slug
+description (text): Category description
+parentCategoryId (uuid, nullable, FK): Parent category
+displayOrder (integer): Sort order
+threadCount (integer): Total threads
+postCount (integer): Total posts (threads + replies)
+icon (string): Icon identifier
+color (string): Category color
+moderatorIds (array): Assigned moderators
+isActive (boolean): Whether category is active
+ForumVote
+
+id (uuid, PK): Vote identifier
+userId (uuid, FK): User who voted
+postId (uuid, FK): Thread or reply voted on
+postType (enum): 'thread' | 'reply'
+voteType (enum): 'upvote' | 'downvote'
+createdAt (timestamp): Vote timestamp
+unique: (userId, postId) // One vote per user per post
+UserKarma
+
+userId (uuid, PK, FK): User identifier
+karmaScore (integer): Total karma points
+reputationLevel (enum): Current reputation level
+threadsCreated (integer): Total threads created
+repliesPosted (integer): Total replies posted
+helpfulAnswers (integer): Replies marked helpful
+upvotesReceived (integer): Total upvotes
+downvotesReceived (integer): Total downvotes
+threadsSolved (integer): Threads with helpful answer
+moderatorActions (integer): Moderation penalties
+badges (array): Earned badges
+updatedAt (timestamp): Last karma update
+ForumNotification
+
+id (uuid, PK): Notification identifier
+userId (uuid, FK): Recipient user
+notificationType (enum): 'reply' | 'mention' | 'helpful' | 'upvote' | 'moderation'
+threadId (uuid, nullable, FK): Related thread
+replyId (uuid, nullable, FK): Related reply
+actorId (uuid, nullable, FK): User who triggered notification
+message (string): Notification message
+isRead (boolean): Read status
+readAt (timestamp, nullable): When read
+createdAt (timestamp): Notification timestamp
+retention: 90 days
+ContentReport
+
+id (uuid, PK): Report identifier
+postId (uuid, FK): Reported thread or reply
+postType (enum): 'thread' | 'reply'
+reportedBy (uuid, FK): User who reported
+reason (enum): 'spam' | 'inappropriate' | 'harassment' | 'off-topic' | 'other'
+details (text): Additional details
+status (enum): 'pending' | 'reviewing' | 'resolved' | 'dismissed'
+reviewedBy (uuid, nullable, FK): Moderator who reviewed
+resolution (text, nullable): Resolution notes
+actionTaken (enum, nullable): 'removed' | 'edited' | 'warned' | 'no-action'
+createdAt (timestamp): Report timestamp
+resolvedAt (timestamp, nullable): Resolution timestamp
+Integration Points
+Economic Control System:
+
+// Award bonus for new quality thread
+await economicControl.awardBonus({
+  userId: author.id,
+  bonusType: 'forum_thread',
+  amount: 15,
+  reason: `Quality thread created: ${thread.title}`,
+  metadata: {
+    threadId: thread.id,
+    upvotes: thread.upvotes
+  }
+})
+
+// Award bonus for helpful answer
+await economicControl.awardBonus({
+  userId: replier.id,
+  bonusType: 'forum_helpful_answer',
+  amount: 10,
+  reason: `Helpful answer in thread: ${thread.title}`,
+  metadata: {
+    threadId: thread.id,
+    replyId: reply.id
+  }
+})
+
+// Award bonus for highly-upvoted reply
+await economicControl.awardBonus({
+  userId: replier.id,
+  bonusType: 'forum_quality_reply',
+  amount: 5,
+  reason: `Highly-upvoted reply (${upvotes} upvotes)`,
+  metadata: {
+    replyId: reply.id,
+    upvotes
+  }
+})
+Content Library:
+
+// Index valuable forum content
+if (thread.upvotes >= 10 || reply.isHelpful) {
+  await contentLibrary.indexForumContent({
+    contentId: generateId(),
+    sourceType: 'forum',
+    sourceId: thread.id || reply.id,
+    title: thread.title,
+    body: thread.body || reply.body,
+    category: thread.category,
+    tags: thread.tags,
+    qualityScore: calculateQualityFromVotes(upvotes, downvotes)
+  })
+}
+NOTA2 Token (Future):
+
+// Governance proposal threads
+if (thread.threadType === 'proposal' && user.nota2Balance >= 100_000) {
+  await governanceSystem.createProposal({
+    proposerId: user.id,
+    title: thread.title,
+    description: thread.body,
+    discussionThreadId: thread.id
+  })
+}
+UI Components
+Thread Components:
+
+ThreadList: List of threads with filters
+ThreadCard: Individual thread preview
+ThreadDetail: Full thread view with replies
+CreateThreadButton: Start new thread
+ThreadEditor: Rich text editor for threads
+CategorySelector: Choose category
+TagInput: Add/remove tags
+ThreadStatus: Visual status indicator
+Reply Components:
+
+ReplyList: Nested reply display
+ReplyCard: Individual reply
+ReplyEditor: Rich text editor for replies
+QuoteButton: Quote previous reply
+MentionAutocomplete: @mention suggestions
+MarkHelpfulButton: Mark answer as helpful
+HelpfulBadge: Visual indicator for helpful answers
+Voting Components:
+
+VoteButtons: Upvote/downvote buttons
+VoteScore: Display net vote count
+VoteIndicator: Show user's current vote
+Profile Components:
+
+UserProfileCard: User summary card
+KarmaDisplay: Karma score with level badge
+ActivityFeed: Recent user activity
+BadgeCollection: Earned badges display
+ContributionStats: Contribution metrics
+ReputationProgress: Progress to next level
+Moderation Components:
+
+ReportButton: Report inappropriate content
+ModerationQueue: List of flagged content
+ModerationPanel: Review and action interface
+ModerationHistory: Past moderation actions
+AppealForm: Submit moderation appeal
+Notification Components:
+
+NotificationBell: Icon with unread count
+NotificationDropdown: Recent notifications
+NotificationList: Full notification history
+NotificationPreferences: Configure settings
+User Experience
+Creating Thread Flow
+User clicks "New Thread"
+Thread creation modal appears
+User selects category: "Technical Support"
+User enters title: "How to optimize extraction costs?"
+User writes body with details (250 words)
+User adds tags: extraction, costs, optimization
+Preview shown
+User clicks "Post Thread"
+Quality gate check: Requires 3 upvotes or 1 reply for bonus
+Thread published immediately
+User notified: "Thread created! Earn 15 Neuroni if it gets engagement"
+Thread appears in category
+Answering Question Flow
+User browses "Technical Support" category
+Sees unanswered question about costs
+Clicks thread to read details
+User knows the answer
+Clicks "Reply"
+Writes helpful answer (150 words)
+Includes code example
+Clicks "Post Reply"
+Reply published immediately
+Thread author receives notification
+Author reads reply: "This solved my problem!"
+Author clicks "Mark as Helpful"
+Reply highlighted with ✓ badge
+Replier receives notification: "Your answer was marked helpful! +10 Neuroni, +20 karma"
+Bonus credited to account
+Upvoting Quality Content Flow
+User reads helpful thread
+Clicks upvote button
+Vote registered: Score increases
+Author gains 1 karma point
+If reply reaches 5 upvotes:
+System triggers quality bonus check
+Replier receives: "Your reply received 5 upvotes! +5 Neuroni bonus"
+Bonus credited automatically
+Moderation Flow (User Reports)
+User sees spam thread
+Clicks "Report" button
+Selects reason: "Spam"
+Adds details: "Promotional content, multiple links"
+Submits report
+Confirmation: "Thank you for reporting"
+Content flagged for moderator review
+Moderator reviews within 24 hours
+Moderator removes thread
+Reporter notified: "Content removed, thanks for keeping community safe"
+Thread author warned (first offense)
+Reputation Progression Flow
+New user starts with 0 karma (Newcomer)
+Creates first quality thread: +5 karma
+Posts 10 helpful replies: +20 karma
+Receives 50 upvotes: +50 karma
+2 answers marked helpful: +40 karma
+Total: 115 karma → "Contributor" level unlocked
+Badge displayed on profile
+Can now upvote/downvote posts
+Continues contributing
+Reaches 500 karma → "Regular" level
+Can now edit wiki pages
+Profile shows progression graph
+Notification Management Flow
+User receives notification: "New reply to your thread"
+Bell icon shows: (1) unread
+User clicks bell
+Notification dropdown shows recent notifications
+User clicks notification
+Navigates to thread with new reply
+Notification marked as read
+User replies to continue discussion
+Original replier notified
+Conversation continues
+Business Rules
+Thread Creation
+Minimum body length: 20 characters
+Maximum body length: 10,000 characters
+Title required (max 200 chars)
+Category required
+Maximum 10 threads per day per user
+Quality gate: 3 upvotes or 1 reply within 24 hours for bonus
+Reply Posting
+Minimum length: 10 characters
+Maximum length: 5,000 characters
+Maximum nesting: 3 levels deep
+Maximum 50 replies per hour per user
+Cannot reply to locked threads
+Voting
+One vote per user per post
+Can change vote anytime
+Cannot vote on own posts
+Minimum account age: 7 days
+Upvote: +1 karma to author
+Downvote: -2 karma to author (but not below 0)
+Helpful Marking
+Only thread author can mark
+Only one helpful answer per thread
+Can change selection
+Awards 10 Neuroni to replier
+Awards 20 karma to replier
+Marks thread as "Solved"
+Bonus Awards
+New thread: 15 Neuroni (if quality gate passed)
+Helpful answer: 10 Neuroni (immediate)
+Highly-upvoted reply: 5 Neuroni (at 5 upvotes)
+Monthly cap: 400 Neuroni from forum
+Quality gates prevent spam bonuses
+Reputation
+Karma never goes below 0
+Reputation level based on total karma
+Badges awarded for milestones
+Leaderboard updates hourly
+Moderation penalties affect karma
+Content Moderation
+Flagged content reviewed within 24 hours
+Removed content: Author notified
+First offense: Warning
+Second offense: 7-day forum ban
+Third offense: Permanent forum ban
+Appeals reviewed within 48 hours
+Security Considerations
+Content Security
+XSS prevention (sanitize HTML)
+SQL injection prevention
+Malware scanning for attachments
+Link validation (prevent phishing)
+Content encryption at rest
+Spam Prevention
+Rate limiting on posts
+Duplicate content detection
+Automated spam scoring
+CAPTCHA for suspicious activity
+Shadow banning for spammers
+Vote Manipulation
+Sock puppet detection
+Vote ring detection
+IP-based vote limiting
+Temporal vote patterns
+Automatic vote invalidation
+Harassment Prevention
+User blocking capability
+Report harassment option
+Moderator intervention
+Temporary/permanent bans
+IP bans for severe cases
+Privacy Protection
+Optional anonymous posting
+Profile privacy settings
+Activity visibility controls
+Email privacy (not shown publicly)
+GDPR-compliant data handling
+Out of Scope (Phase 1)
+Private Messaging - Deferred to Phase 2
+
+Direct messages between users
+Message threads
+Trigger: When users request DM feature (200+ requests)
+Wiki/Documentation - Deferred to Phase 2
+
+Community-editable wiki pages
+Documentation collaboration
+Trigger: When forum content reaches 1,000+ threads
+Badges & Achievements - Deferred to Phase 2
+
+Custom badge system
+Achievement unlocks
+Gamification elements
+Trigger: When engagement metrics show need for additional incentives
+Advanced Moderation - Deferred to Phase 2
+
+AI-powered content moderation
+Automatic spam removal
+Sentiment analysis
+Trigger: When moderation volume exceeds manual capacity
+Forum Analytics Dashboard - Deferred to Phase 2
+
+Detailed forum health metrics
+Engagement trends
+Topic analysis
+Trigger: When forum has 5,000+ threads
+Mobile App Forum - Deferred to Phase 2
+
+Native mobile forum experience
+Push notifications
+Trigger: When mobile app is developed
+Acceptance Criteria
+Thread Creation
+Given a user creates a thread with valid content, When thread is submitted, Then thread is published immediately, appears in category, and user is notified of quality gate requirement.
+
+Given a thread receives 3 upvotes within 24 hours, When quality gate is met, Then 15 Neuroni bonus is awarded to author and transaction is logged.
+
+Given a thread does not meet quality gate, When 24 hours pass, Then no bonus is awarded but thread remains published.
+
+Helpful Answer
+Given a thread author marks a reply as helpful, When helpful marking is confirmed, Then reply is highlighted, 10 Neuroni bonus is awarded to replier, 20 karma is added, and thread status changes to "Solved".
+
+Given a reply is marked helpful, When bonus is awarded, Then replier receives notification with bonus confirmation and updated balance.
+
+Voting
+Given a user upvotes a post, When vote is cast, Then vote is recorded, post score increases, author gains 1 karma, and vote is saved.
+
+Given a user tries to vote on their own post, When vote is attempted, Then vote is rejected with message "Cannot vote on your own posts".
+
+Given a reply reaches 5 upvotes, When 5th upvote is cast, Then 5 Neuroni quality bonus is awarded to author and notification is sent.
+
+Search & Discovery
+Given a user searches forum content, When search query is entered, Then relevant threads and replies are returned ranked by relevance within 2 seconds.
+
+Given a user filters by category and status, When filters are applied, Then results update to show only matching threads.
+
+Notifications
+Given a user receives a reply to their thread, When reply is posted, Then user receives in-app and email notification (based on preferences) within 30 seconds.
+
+Given a user is mentioned in a reply, When @mention is posted, Then mentioned user receives notification with link to reply.
+
+Moderation
+Given a user reports inappropriate content, When report is submitted, Then content is flagged, moderator is notified, and reporter receives confirmation.
+
+Given a moderator reviews flagged content, When moderation action is taken, Then content is removed/edited/approved, author is notified, and action is logged.
+
+Reputation
+Given a user earns karma through activities, When karma threshold is reached, Then reputation level is upgraded, user is notified, and new permissions are granted.
+
+Given a user views leaderboard, When leaderboard loads, Then top contributors are displayed with karma scores, helpful answers, and reputation levels.
+
+Error Handling
+Given bonus distribution fails, When Economic Control returns error, Then helpful marking is preserved, bonus is queued for retry, and admin is alerted.
+
+Given notification service is unavailable, When notification should be sent, Then notification is queued for retry and delivered when service recovers.
+
+
+
+
+
+
