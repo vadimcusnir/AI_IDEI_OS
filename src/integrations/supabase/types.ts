@@ -4460,17 +4460,28 @@ export type Database = {
         Returns: boolean
       }
       advance_vip_month: { Args: { _user_id: string }; Returns: Json }
+      analytics_summary: { Args: { _days?: number }; Returns: Json }
       apply_abuse_ladder: { Args: { _user_id: string }; Returns: string }
-      award_xp: {
-        Args: {
-          _amount: number
-          _bypass_cap?: boolean
-          _description?: string
-          _source: string
-          _user_id: string
-        }
-        Returns: Json
-      }
+      award_xp:
+        | {
+            Args: {
+              _amount: number
+              _source?: string
+              _source_id?: string
+              _user_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              _amount: number
+              _bypass_cap?: boolean
+              _description?: string
+              _source: string
+              _user_id: string
+            }
+            Returns: Json
+          }
       check_access: {
         Args: { _service_key: string; _user_id: string }
         Returns: Json
@@ -4554,6 +4565,7 @@ export type Database = {
         }
         Returns: string
       }
+      maintain_streak: { Args: { _user_id: string }; Returns: Json }
       mark_units_llm_ready: {
         Args: { _category_id: string; _min_quality?: number }
         Returns: number
@@ -4622,6 +4634,48 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      wallet_add: {
+        Args: { _amount: number; _description?: string; _user_id: string }
+        Returns: Json
+      }
+      wallet_history: {
+        Args: { _limit?: number; _user_id: string }
+        Returns: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          job_id: string
+          type: string
+        }[]
+      }
+      wallet_refund: {
+        Args: {
+          _amount: number
+          _description?: string
+          _job_id?: string
+          _user_id: string
+        }
+        Returns: Json
+      }
+      wallet_reserve: {
+        Args: {
+          _amount: number
+          _description?: string
+          _job_id?: string
+          _user_id: string
+        }
+        Returns: Json
+      }
+      wallet_settle: {
+        Args: {
+          _amount: number
+          _description?: string
+          _job_id?: string
+          _user_id: string
+        }
+        Returns: Json
       }
     }
     Enums: {
