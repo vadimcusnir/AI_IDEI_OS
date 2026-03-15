@@ -66,6 +66,7 @@ const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 const KnowledgeDashboard = lazy(() => import("./pages/KnowledgeDashboard"));
 const VIPDashboard = lazy(() => import("./pages/VIPDashboard"));
 const DataPipeline = lazy(() => import("./pages/DataPipeline"));
+const RuntimeDashboard = lazy(() => import("./pages/RuntimeDashboard"));
 
 function PageLoader() {
   return (
@@ -165,7 +166,8 @@ const App = () => (
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><VIPDashboard /></AppLayout></ProtectedRoute>} />
                 <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><DataPipeline /></AppLayout></ProtectedRoute>} />
 
-                {/* Admin route */}
+                {/* Admin routes */}
+                <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
