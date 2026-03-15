@@ -35,8 +35,10 @@
   "chat": "AI Чат",
   "dashboard_section": "Панель",
   "create_section": "Создать",
+  "pipeline_section": "Конвейер",
   "explore_section": "Обзор",
   "operate_section": "Управление",
-  "account_section": "Аккаунт",
+  "account_section": "Поддержка",
+  "admin_section": "Админ",
   "learn_section": "Обучение"
 }

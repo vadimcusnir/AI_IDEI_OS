@@ -35,8 +35,10 @@
   "chat": "AI Chat",
   "dashboard_section": "Panou",
   "create_section": "Creează",
+  "pipeline_section": "Pipeline",
   "explore_section": "Explorează",
-  "operate_section": "Operează",
-  "account_section": "Cont",
+  "operate_section": "Gestionează",
+  "account_section": "Suport",
+  "admin_section": "Admin",
   "learn_section": "Învață"
 }
