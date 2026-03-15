@@ -46,7 +46,7 @@ function PostCard({ post, threadAuthorId, threadId }: { post: ForumPost; threadA
   const canMarkSolution = user?.id === threadAuthorId && !post.is_solution;
 
   return (
-    <div className={`flex gap-3 p-4 rounded-lg ${post.is_solution ? "bg-green-500/5 border border-green-500/20" : ""}`}>
+    <div className={`flex gap-3 p-4 rounded-lg ${post.is_solution ? "bg-status-validated/5 border border-status-validated/20" : ""}`}>
       <VoteButtons targetType="post" targetId={post.id} score={post.vote_score} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-2">
