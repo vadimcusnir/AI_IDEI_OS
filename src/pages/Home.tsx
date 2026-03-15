@@ -82,10 +82,10 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
     loadData();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   const loadData = async () => {
     const wsId = currentWorkspace!.id;
