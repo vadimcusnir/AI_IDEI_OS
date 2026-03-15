@@ -4,6 +4,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { WhatsNewWidget } from "@/components/home/WhatsNewWidget";
 import { TrendingIdeasWidget } from "@/components/home/TrendingIdeasWidget";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
