@@ -4,6 +4,8 @@
  * on a transcript, creating scored neurons per level.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { loadPrompts } from "../_shared/prompt-loader.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
