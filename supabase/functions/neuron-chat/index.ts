@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { loadPrompt } from "../_shared/prompt-loader.ts";
 
 // Rate limiting — 30 requests per hour per user
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -15,6 +16,24 @@ function checkRateLimit(userId: string): boolean {
   entry.count++;
   return true;
 }
+
+const FALLBACK_SYSTEM_PROMPT = `You are the AI assistant embedded in a Knowledge Operating System called AI-IDEI.
+
+You have full context of the current Neuron (a structured knowledge document) the user is working on.
+
+Your capabilities:
+- Answer questions about the neuron's content
+- Explain concepts mentioned in the neuron
+- Suggest improvements, connections, or expansions
+- Help refine ideas, arguments, and frameworks
+- Generate related content on request
+
+Rules:
+- Be concise but thorough
+- Use markdown formatting
+- Reference specific parts of the neuron content when relevant
+- If the neuron is empty, suggest what the user could add
+- Speak in the same language as the user`;
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
@@ -83,23 +102,9 @@ Deno.serve(async (req) => {
       contextBlock = `\n\nCurrent Neuron: "${title || "Untitled"}"\n\nNeuron Content:\n${content}`;
     }
 
-    const systemPrompt = `You are the AI assistant embedded in a Knowledge Operating System called AI-IDEI.
-
-You have full context of the current Neuron (a structured knowledge document) the user is working on.
-
-Your capabilities:
-- Answer questions about the neuron's content
-- Explain concepts mentioned in the neuron
-- Suggest improvements, connections, or expansions
-- Help refine ideas, arguments, and frameworks
-- Generate related content on request
-
-Rules:
-- Be concise but thorough
-- Use markdown formatting
-- Reference specific parts of the neuron content when relevant
-- If the neuron is empty, suggest what the user could add
-- Speak in the same language as the user${contextBlock}`;
+    // Load prompt from registry (falls back to hardcoded if no DB entry)
+    const { prompt: basePrompt } = await loadPrompt("neuron_chat", FALLBACK_SYSTEM_PROMPT);
+    const systemPrompt = basePrompt + contextBlock;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -111,7 +116,7 @@ Rules:
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          ...messages.slice(-20), // Limit context window
+          ...messages.slice(-20),
         ],
         stream: true,
       }),

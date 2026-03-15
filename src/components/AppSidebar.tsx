@@ -21,12 +21,15 @@ import {
   SidebarSeparator, useSidebar,
 } from "@/components/ui/sidebar";
 import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
+import { ControlledNavItem } from "@/components/ControlledNavItem";
 
 interface NavItem {
   labelKey: string;
   to: string;
   icon: React.ElementType;
   adminOnly?: boolean;
+  /** UI control registry ID for dynamic visibility */
+  controlId?: string;
 }
 
 interface NavSection {
@@ -42,23 +45,23 @@ const NAV_SECTIONS: NavSection[] = [
   {
     labelKey: "pipeline_section",
     items: [
-      { labelKey: "cockpit", to: "/home", icon: Home },
-      { labelKey: "extractor", to: "/extractor", icon: Upload },
-      { labelKey: "neurons", to: "/neurons", icon: Brain },
-      { labelKey: "services", to: "/services", icon: Sparkles },
-      { labelKey: "jobs", to: "/jobs", icon: Briefcase },
-      { labelKey: "library", to: "/library", icon: BookOpen },
+      { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home" },
+      { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
+      { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
+      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+      { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
     ],
   },
   {
     labelKey: "explore_section",
     items: [
-      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3 },
-      { labelKey: "intelligence", to: "/intelligence", icon: Network },
-      { labelKey: "topics", to: "/topics", icon: Lightbulb },
-      { labelKey: "marketplace", to: "/marketplace", icon: Store },
-      { labelKey: "community", to: "/community", icon: MessagesSquare },
-      { labelKey: "chat", to: "/chat", icon: Bot },
+      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3, controlId: "nav.dashboard" },
+      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
+      { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
+      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+      { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
+      { labelKey: "chat", to: "/chat", icon: Bot, controlId: "nav.chat" },
     ],
   },
   {
@@ -170,20 +173,32 @@ export function AppSidebar() {
               {idx > 0 && collapsed && <SidebarSeparator className="my-1" />}
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {visibleItems.map((item) => (
-                    <SidebarMenuItem key={item.to}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={isActive(item.to)}
-                        tooltip={t(`navigation:${item.labelKey}`)}
-                      >
-                        <button onClick={() => navigate(item.to)} className="w-full">
-                          <item.icon className="h-4 w-4" />
-                          <span>{t(`navigation:${item.labelKey}`)}</span>
-                        </button>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
+                  {visibleItems.map((item) => {
+                    const menuItem = (
+                      <SidebarMenuItem key={item.to}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isActive(item.to)}
+                          tooltip={t(`navigation:${item.labelKey}`)}
+                        >
+                          <button onClick={() => navigate(item.to)} className="w-full">
+                            <item.icon className="h-4 w-4" />
+                            <span>{t(`navigation:${item.labelKey}`)}</span>
+                          </button>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+
+                    if (item.controlId) {
+                      return (
+                        <ControlledNavItem key={item.to} elementId={item.controlId}>
+                          {menuItem}
+                        </ControlledNavItem>
+                      );
+                    }
+
+                    return menuItem;
+                  })}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
