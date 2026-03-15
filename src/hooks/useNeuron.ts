@@ -19,6 +19,7 @@ interface NeuronData {
 
 export function useNeuron(neuronNumber?: number) {
   const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const [neuron, setNeuron] = useState<NeuronData | null>(null);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [loading, setLoading] = useState(true);
