@@ -379,6 +379,27 @@ const SERVICE_ARTIFACT_TYPE: Record<string, string> = {
   "retention-engine": "strategy",
   "speaking-kit": "document",
   "assessment-builder": "document",
+  // Batch 3
+  "whitepaper-generator": "document",
+  "product-launch": "strategy",
+  "faq-generator": "document",
+  "manifesto-writer": "document",
+  "competitive-battlecard": "document",
+  "customer-journey-map": "strategy",
+  "annual-report": "report",
+  "podcast-series": "strategy",
+  "email-cold-outreach": "document",
+  "api-documentation": "document",
+  "event-playbook": "strategy",
+  "upsell-playbook": "strategy",
+  "culture-handbook": "document",
+  "youtube-strategy": "strategy",
+  "grant-proposal": "document",
+  "compliance-checklist": "document",
+  "referral-program": "strategy",
+  "press-kit": "document",
+  "loyalty-program": "strategy",
+  "personal-brand-audit": "report",
 };
 
 // Valid service keys for input validation
