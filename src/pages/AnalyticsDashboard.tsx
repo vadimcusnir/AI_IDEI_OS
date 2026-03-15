@@ -283,10 +283,10 @@ export default function AnalyticsDashboard() {
                                 <span
                                   className={cn(
                                     "inline-block px-1.5 py-0.5 rounded text-[9px] font-bold",
-                                    pct >= 80 ? "bg-green-500/20 text-green-700 dark:text-green-400" :
-                                    pct >= 50 ? "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400" :
-                                    pct >= 20 ? "bg-orange-500/20 text-orange-700 dark:text-orange-400" :
-                                    "bg-red-500/20 text-red-700 dark:text-red-400"
+                                    pct >= 80 ? "bg-primary/20 text-primary" :
+                                    pct >= 50 ? "bg-accent text-accent-foreground" :
+                                    pct >= 20 ? "bg-muted text-muted-foreground" :
+                                    "bg-destructive/20 text-destructive"
                                   )}
                                 >
                                   {pct}%
