@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { WalletPanel } from "@/components/wallet/WalletPanel";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChart").then(m => ({ default: m.ConsumptionChart })));
 import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
