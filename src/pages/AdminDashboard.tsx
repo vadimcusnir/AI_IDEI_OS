@@ -26,6 +26,7 @@ import { EmergencyControlsTab } from "@/components/admin/EmergencyControlsTab";
 import { ComplianceLogTab } from "@/components/admin/ComplianceLogTab";
 import { FeatureFlagsTab } from "@/components/admin/FeatureFlagsTab";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
+import { ForumModerationTab } from "@/components/admin/ForumModerationTab";
 import { KPI, StatusBadge, LogLevelBadge, HealthRow, EconRow } from "@/components/admin/AdminSubComponents";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
