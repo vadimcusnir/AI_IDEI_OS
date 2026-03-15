@@ -1,14 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Home, Brain, Beaker, BookOpen, BarChart3 } from "lucide-react";
+import { Home, Brain, Beaker, BookOpen, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { path: "/home", icon: Home, label: "Home" },
-  { path: "/neurons", icon: Brain, label: "Neuroni" },
   { path: "/extractor", icon: Beaker, label: "Extract" },
+  { path: "/neurons", icon: Brain, label: "Neurons" },
+  { path: "/services", icon: Briefcase, label: "Services" },
   { path: "/library", icon: BookOpen, label: "Library" },
-  { path: "/dashboard", icon: BarChart3, label: "Dashboard" },
 ];
 
 export function MobileBottomNav() {
