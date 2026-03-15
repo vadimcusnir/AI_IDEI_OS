@@ -36,7 +36,11 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading || !user || !currentWorkspace) return;
+    if (authLoading) return;
+    if (!user || !currentWorkspace) {
+      setLoading(false);
+      return;
+    }
     loadDashboard();
   }, [user, authLoading, currentWorkspace]);
 

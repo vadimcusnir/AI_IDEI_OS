@@ -145,7 +145,11 @@ export default function Extractor() {
   const transcriptFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (authLoading || !user || !currentWorkspace) return;
+    if (authLoading) return;
+    if (!user || !currentWorkspace) {
+      setLoading(false);
+      return;
+    }
     fetchEpisodes();
   }, [user, authLoading, currentWorkspace]);
 
