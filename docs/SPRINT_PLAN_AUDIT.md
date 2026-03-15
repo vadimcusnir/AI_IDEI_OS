@@ -168,11 +168,11 @@ Documentația user-facing este deja completă în `docsContent.ts`:
 
 **Efort:** 0 (completat) | **Impact:** MEDIU (onboarding)
 
-### 5.2 🟢 Sincronizare documentație tehnică
-- [ ] **D5.5** Actualizează `DATABASE_SCHEMA.md` cu tabelele noi
-- [ ] **D5.6** Actualizează `SECURITY_AUDIT.md` cu remedierile aplicate
+### 5.2 ✅ Sincronizare documentație tehnică — COMPLETAT 2026-03-15
+- [x] **D5.5** ✅ `DATABASE_SCHEMA.md` actualizat — adăugate 15+ tabele noi, indexuri create, marketplace relations
+- [x] **D5.6** ✅ `SECURITY_AUDIT.md` actualizat — toate remedierile (SEC-001→008) documentate cu date și rezoluții
 
-**Efort:** 1-2 sesiuni | **Impact:** SCĂZUT
+**Efort:** 0 (completat) | **Impact:** SCĂZUT
 
 ---
 
