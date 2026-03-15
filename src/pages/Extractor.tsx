@@ -739,28 +739,28 @@ export default function Extractor() {
           )}
         </div>
 
-        {/* Create form */}
-        <div className={cn(
-          "overflow-hidden transition-all duration-200 ease-in-out",
-          showForm ? "max-h-[600px] opacity-100 mb-6" : "max-h-0 opacity-0 mb-0"
-        )}>
-          <div
-            className={cn(
-              "border rounded-xl bg-card p-5 space-y-4 transition-colors",
-              isDragging ? "border-primary border-dashed bg-primary/5" : "border-border"
-            )}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-          >
-            {episodes.length === 0 && (
-              <div className="mb-2">
-                <h3 className="text-base font-semibold mb-1">Add your first episode</h3>
-                <p className="text-xs text-muted-foreground">
-                  Episodes are raw materials. Paste a URL, upload audio/video, or import a transcript file.
-                </p>
-              </div>
-            )}
+        {/* Instant Action Surface — single trigger pipeline */}
+        <div className="mb-6">
+          <InstantActionSurface onComplete={fetchEpisodes} compact />
+        </div>
+
+        {/* Legacy form toggle — for advanced users */}
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-[10px] text-muted-foreground/60">
+            {episodes.length > 0 ? `${stats.total} episodes · ${stats.transcribed} transcribed · ${stats.analyzed} analyzed` : ""}
+          </p>
+          {episodes.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 gap-1.5 text-[10px] text-muted-foreground"
+              onClick={() => setShowForm(f => !f)}
+            >
+              {showForm ? <ChevronUp className="h-3 w-3" /> : <Upload className="h-3 w-3" />}
+              {showForm ? "Hide advanced" : "Advanced input"}
+            </Button>
+          )}
+        </div>
 
             {/* Smart input — URL or text, auto-detected */}
             {(sourceType === "url" || sourceType === "text") && sourceType !== "text" && (
