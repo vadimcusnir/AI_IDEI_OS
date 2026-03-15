@@ -67,6 +67,8 @@ const KnowledgeDashboard = lazy(() => import("./pages/KnowledgeDashboard"));
 const VIPDashboard = lazy(() => import("./pages/VIPDashboard"));
 const DataPipeline = lazy(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazy(() => import("./pages/RuntimeDashboard"));
+const SecurityDocs = lazy(() => import("./pages/SecurityDocs"));
+const DatabaseRelations = lazy(() => import("./pages/DatabaseRelations"));
 
 function PageLoader() {
   return (
@@ -168,6 +170,8 @@ const App = () => (
 
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
+                <Route path="/security" element={<AdminRoute><AppLayout><SecurityDocs /></AppLayout></AdminRoute>} />
+                <Route path="/db-schema" element={<AdminRoute><AppLayout><DatabaseRelations /></AppLayout></AdminRoute>} />
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

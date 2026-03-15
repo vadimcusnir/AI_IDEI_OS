@@ -78,15 +78,13 @@ All P0 critical modules implemented. Wallet system added. New specs uploaded for
 **Status:** 18 tabs exist, RBAC enhancement pending
 **Scope:** Granular permissions, compliance features, emergency controls
 
-### Phase Next+6: Security Documentation
+### ✅ Phase Next+6: Security Documentation — DONE
 **Spec:** `01_DOCUMENTATION_OF_SAAS.txt` (503 lines)
-**Status:** Partial (SECURITY_AUDIT.md exists)
-**Scope:** Full security architecture docs, threat modeling
+**Status:** ✅ Complete — /security page with audit findings, threat model, hardening measures
 
-### Phase Next+7: Database Relations Analysis
+### ✅ Phase Next+7: Database Relations Analysis — DONE
 **Spec:** `01_DATABASE_RELATIONS.txt` (904 lines)
-**Status:** Not started
-**Scope:** ERD generation, schema analysis, cleanup candidates
+**Status:** ✅ Complete — /db-schema page with 43 tables, relations, RLS coverage, category filtering
 
 ---
 
