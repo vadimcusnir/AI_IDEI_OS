@@ -70,11 +70,11 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 0 (completat) | **Impact:** MARE
 
-### 2.2 🟠 BE-001: Procesare secvențială în pipeline AI
+### 2.2 ✅ BE-001: Procesare secvențială în pipeline AI — COMPLETAT 2026-03-15
 - [x] **P2.7** ✅ `extract-neurons` procesează chunk-uri în paralel (batch de 3, Promise.all)
-- [ ] **P2.8** Modifică `generate-entities` să folosească batch queries în loc de N+1
+- [x] **P2.8** ✅ `generate-entities` refactorizat: batch fetch blocks + existing entities (eliminat N+1), batch insert entities, batch upsert relations
 
-**Efort:** 1 sesiune rămasă | **Impact:** MARE
+**Efort:** 0 (completat) | **Impact:** MARE
 
 ### 2.3 ✅ FE-001: Optimizare bundle — COMPLETAT 2026-03-15
 - [x] **P2.9** ✅ Lazy loading pentru TOATE 46 paginile cu `React.lazy` + `Suspense` + loading spinner
