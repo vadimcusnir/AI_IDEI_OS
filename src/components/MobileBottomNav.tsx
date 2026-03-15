@@ -4,73 +4,82 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import {
-  Home, Brain, Beaker, BookOpen, Briefcase, Menu,
-  BarChart3, Network, Lightbulb, Store, Users, Bot,
-  Layers, Rocket, Shield, Coins, Bell, MessageCircle,
-  FileText, ScrollText, User, LogOut,
+  Home, Brain, Upload, BookOpen, Menu,
+  Sparkles, Briefcase, BarChart3, Network, Lightbulb,
+  Store, Users, Bot, Layers, Rocket, Shield,
+  Coins, Bell, MessageCircle, FileText, ScrollText,
+  User, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
 
-const NAV_ITEMS = [
+/* Bottom bar: 5 pipeline-essential tabs */
+const BAR_ITEMS = [
   { path: "/home", icon: Home, label: "Home" },
-  { path: "/extractor", icon: Beaker, label: "Extract" },
+  { path: "/extractor", icon: Upload, label: "Extract" },
   { path: "/neurons", icon: Brain, label: "Neurons" },
-  { path: "/services", icon: Briefcase, label: "Services" },
+  { path: "/library", icon: BookOpen, label: "Library" },
 ];
 
+/* Full menu sections — matches sidebar architecture */
 interface MenuSection {
   label: string;
+  labelKey: string;
   items: { path: string; icon: React.ElementType; labelKey: string; adminOnly?: boolean }[];
 }
 
 const MENU_SECTIONS: MenuSection[] = [
   {
-    label: "Core",
+    label: "Pipeline",
+    labelKey: "pipeline_section",
     items: [
       { path: "/home", icon: Home, labelKey: "cockpit" },
-      { path: "/extractor", icon: Beaker, labelKey: "extractor" },
+      { path: "/extractor", icon: Upload, labelKey: "extractor" },
       { path: "/neurons", icon: Brain, labelKey: "neurons" },
-      { path: "/services", icon: Briefcase, labelKey: "services" },
-      { path: "/library", icon: BookOpen, labelKey: "library" },
+      { path: "/services", icon: Sparkles, labelKey: "services" },
       { path: "/jobs", icon: Briefcase, labelKey: "jobs" },
+      { path: "/library", icon: BookOpen, labelKey: "library" },
     ],
   },
   {
     label: "Explore",
+    labelKey: "explore_section",
     items: [
       { path: "/dashboard", icon: BarChart3, labelKey: "dashboard" },
       { path: "/intelligence", icon: Network, labelKey: "intelligence" },
       { path: "/topics", icon: Lightbulb, labelKey: "topics" },
       { path: "/marketplace", icon: Store, labelKey: "marketplace" },
-      { path: "/guests", icon: Users, labelKey: "guest_pages" },
       { path: "/chat", icon: Bot, labelKey: "chat" },
     ],
   },
   {
-    label: "Operate",
+    label: "Manage",
+    labelKey: "operate_section",
     items: [
+      { path: "/credits", icon: Coins, labelKey: "credits" },
+      { path: "/guests", icon: Users, labelKey: "guest_pages" },
       { path: "/pipeline", icon: Layers, labelKey: "pipeline" },
       { path: "/onboarding", icon: Rocket, labelKey: "onboarding" },
-      { path: "/admin", icon: Shield, labelKey: "admin", adminOnly: true },
     ],
   },
   {
-    label: "Account",
+    label: "Support",
+    labelKey: "account_section",
     items: [
-      { path: "/credits", icon: Coins, labelKey: "credits" },
       { path: "/notifications", icon: Bell, labelKey: "notifications" },
       { path: "/feedback", icon: MessageCircle, labelKey: "feedback" },
+      { path: "/docs", icon: FileText, labelKey: "docs" },
+      { path: "/changelog", icon: ScrollText, labelKey: "changelog" },
       { path: "/profile", icon: User, labelKey: "profile" },
     ],
   },
   {
-    label: "Learn",
+    label: "Admin",
+    labelKey: "admin_section",
     items: [
-      { path: "/docs", icon: FileText, labelKey: "docs" },
-      { path: "/changelog", icon: ScrollText, labelKey: "changelog" },
+      { path: "/admin", icon: Shield, labelKey: "admin", adminOnly: true },
     ],
   },
 ];
@@ -95,9 +104,10 @@ export function MobileBottomNav() {
 
   return (
     <>
+      {/* Fixed bottom bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-border bg-background/95 backdrop-blur-md safe-area-bottom">
         <div className="flex items-center justify-around h-14 px-1">
-          {NAV_ITEMS.map(({ path, icon: Icon, label }) => {
+          {BAR_ITEMS.map(({ path, icon: Icon, label }) => {
             const active = isActive(path);
             return (
               <button
@@ -115,29 +125,33 @@ export function MobileBottomNav() {
           })}
           <button
             onClick={() => setMenuOpen(true)}
-            className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-[56px] text-muted-foreground hover:text-foreground"
+            className={cn(
+              "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-[56px]",
+              menuOpen ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            )}
           >
             <Menu className="h-5 w-5" />
-            <span className="text-[9px] font-medium leading-none">Menu</span>
+            <span className="text-[9px] font-medium leading-none">More</span>
           </button>
         </div>
       </nav>
 
+      {/* Slide-out full menu */}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="w-[280px] p-0 overflow-y-auto">
           <SheetHeader className="p-4 pb-2">
-            <SheetTitle className="text-base">Menu</SheetTitle>
+            <SheetTitle className="text-base font-bold">AI-IDEI</SheetTitle>
           </SheetHeader>
-          <div className="flex flex-col gap-1 pb-20">
+          <div className="flex flex-col gap-0.5 pb-20">
             {MENU_SECTIONS.map((section) => {
               const visibleItems = section.items.filter(
                 (item) => !item.adminOnly || isAdmin
               );
               if (visibleItems.length === 0) return null;
               return (
-                <div key={section.label}>
+                <div key={section.labelKey}>
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground px-4 pt-3 pb-1">
-                    {section.label}
+                    {t(`navigation:${section.labelKey}`)}
                   </p>
                   {visibleItems.map((item) => {
                     const active = isActive(item.path);
@@ -160,6 +174,8 @@ export function MobileBottomNav() {
                 </div>
               );
             })}
+
+            {/* Sign out */}
             <div className="border-t border-border mt-2 pt-2 px-4">
               <button
                 onClick={() => { signOut(); setMenuOpen(false); }}
