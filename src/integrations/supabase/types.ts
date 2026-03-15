@@ -1320,6 +1320,42 @@ export type Database = {
           },
         ]
       }
+      feature_flags: {
+        Row: {
+          allowed_roles: string[] | null
+          created_at: string
+          description: string
+          enabled: boolean
+          key: string
+          metadata: Json | null
+          rollout_percentage: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allowed_roles?: string[] | null
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          key: string
+          metadata?: Json | null
+          rollout_percentage?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allowed_roles?: string[] | null
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          key?: string
+          metadata?: Json | null
+          rollout_percentage?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           admin_responded_at: string | null
@@ -3129,6 +3165,84 @@ export type Database = {
         }
         Relationships: []
       }
+      runtime_health: {
+        Row: {
+          avg_latency_ms: number
+          circuit_opened_at: string | null
+          circuit_state: string
+          consecutive_failures: number
+          cooldown_until: string | null
+          error_rate_1h: number
+          last_check_at: string
+          metadata: Json | null
+          service_key: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          avg_latency_ms?: number
+          circuit_opened_at?: string | null
+          circuit_state?: string
+          consecutive_failures?: number
+          cooldown_until?: string | null
+          error_rate_1h?: number
+          last_check_at?: string
+          metadata?: Json | null
+          service_key: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          avg_latency_ms?: number
+          circuit_opened_at?: string | null
+          circuit_state?: string
+          consecutive_failures?: number
+          cooldown_until?: string | null
+          error_rate_1h?: number
+          last_check_at?: string
+          metadata?: Json | null
+          service_key?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      runtime_validations: {
+        Row: {
+          created_at: string
+          id: string
+          latency_ms: number | null
+          metadata: Json | null
+          reason: string | null
+          service_key: string
+          user_id: string | null
+          validation_type: string
+          verdict: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          latency_ms?: number | null
+          metadata?: Json | null
+          reason?: string | null
+          service_key: string
+          user_id?: string | null
+          validation_type?: string
+          verdict: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          latency_ms?: number | null
+          metadata?: Json | null
+          reason?: string | null
+          service_key?: string
+          user_id?: string | null
+          validation_type?: string
+          verdict?: string
+        }
+        Relationships: []
+      }
       service_catalog: {
         Row: {
           access_tier: string
@@ -3240,6 +3354,36 @@ export type Database = {
           id?: string
           metadata?: Json | null
           reason?: string
+        }
+        Relationships: []
+      }
+      system_config: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
         }
         Relationships: []
       }
@@ -4184,6 +4328,10 @@ export type Database = {
         Args: { _ip_hint?: string; _service_key: string; _user_id: string }
         Returns: Json
       }
+      check_access_safe: {
+        Args: { _ip_hint?: string; _service_key: string; _user_id: string }
+        Returns: Json
+      }
       check_vip_access: {
         Args: { _unlock_key: string; _user_id: string }
         Returns: boolean
@@ -4225,6 +4373,10 @@ export type Database = {
           _user_id: string
           _workspace_id: string
         }
+        Returns: boolean
+      }
+      is_feature_enabled: {
+        Args: { _key: string; _user_id?: string }
         Returns: boolean
       }
       is_workspace_member: {
@@ -4273,6 +4425,7 @@ export type Database = {
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
       root2_nearest: { Args: { _price: number }; Returns: number }
       root2_validate: { Args: { _price: number }; Returns: boolean }
+      runtime_system_stats: { Args: never; Returns: Json }
       score_contribution: {
         Args: { _contribution_id: string }
         Returns: number
