@@ -93,7 +93,7 @@ export function useNeuron(neuronNumber?: number) {
           // Create new neuron
           const { data: n, error } = await supabase
             .from("neurons")
-            .insert({ author_id: user.id, title: "Untitled Neuron" })
+            .insert({ author_id: user.id, title: "Untitled Neuron", workspace_id: currentWorkspace?.id } as any)
             .select()
             .single();
 

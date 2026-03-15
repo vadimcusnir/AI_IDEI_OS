@@ -329,6 +329,7 @@ export default function Extractor() {
 
       const { data: ep, error } = await supabase.from("episodes").insert({
         author_id: user.id,
+        workspace_id: currentWorkspace!.id,
         title: finalTitle,
         source_type: sourceType,
         transcript: sourceType === "text" ? content : null,
