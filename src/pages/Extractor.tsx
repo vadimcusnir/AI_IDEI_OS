@@ -161,6 +161,7 @@ export default function Extractor() {
     const { data, error } = await supabase
       .from("episodes")
       .select("*")
+      .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false });
     if (data) setEpisodes(data as Episode[]);
     if (error) toast.error("Failed to load episodes");
