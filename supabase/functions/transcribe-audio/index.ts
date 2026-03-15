@@ -65,6 +65,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── Regime enforcement ──
+    const regime = await getRegimeConfig("transcribe-audio");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: "Service blocked", reason: blockReason, regime: regime.regime }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { episode_id, file_path, language } = await req.json();
 
     if (!episode_id || typeof episode_id !== "string") {

@@ -108,6 +108,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── Regime enforcement ──
+    const regime = await getRegimeConfig("chunk-transcript");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: "Service blocked", reason: blockReason, regime: regime.regime }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const InputSchema = z.object({
       episode_id: z.string().uuid("Invalid episode_id format"),
       min_tokens: z.number().int().min(50).max(2000).optional().default(200),
