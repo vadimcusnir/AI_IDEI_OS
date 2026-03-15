@@ -149,6 +149,7 @@ export default function Marketplace() {
             </div>
             <Separator className="mt-8" />
           </section>
+          </ControlledSection>
         )}
 
         {/* Filters & Sort */}
