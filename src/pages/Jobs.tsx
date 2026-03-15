@@ -20,6 +20,7 @@ import {
 import {
   Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 
 interface Job {
   id: string;
