@@ -145,13 +145,13 @@ export default function Extractor() {
   const transcriptFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) {
       setLoading(false);
       return;
     }
     fetchEpisodes();
-  }, [user, authLoading, currentWorkspace]);
+  }, [user, authLoading, wsLoading, currentWorkspace]);
 
   useEffect(() => {
     if (!loading && episodes.length === 0) setShowForm(true);

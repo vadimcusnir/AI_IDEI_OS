@@ -107,7 +107,7 @@ export default function Home() {
     setLoading(false);
   };
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return <HomeSkeleton />;
   }
 

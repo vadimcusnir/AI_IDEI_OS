@@ -124,7 +124,7 @@ export default function Dashboard() {
     setLoading(false);
   };
 
-  if (authLoading || loading) {
+  if (authLoading || wsLoading || loading) {
     return <DashboardSkeleton />;
   }
 
