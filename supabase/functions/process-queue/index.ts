@@ -143,6 +143,7 @@ Deno.serve(async (req) => {
       processed: {
         stale_recovered: recoveredCount,
         dead_lettered: deadLetteredCount,
+        regime_blocked: regimeBlockedCount,
         retried: retriedCount,
       },
       queue_stats: {
