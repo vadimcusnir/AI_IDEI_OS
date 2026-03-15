@@ -23,6 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
+import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
 
 async function extractTextFromPDF(file: File): Promise<string> {
   const pdfjsLib = await import("pdfjs-dist");
@@ -706,61 +707,49 @@ export default function Extractor() {
         <SEOHead title="Extractor — AI-IDEI" description="Upload content, transcribe audio/video, and extract knowledge neurons using AI." />
 
         {/* Page header */}
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold tracking-tight">Extractor</h1>
-            {episodes.length > 0 && (
-              <div className="flex items-center gap-3 ml-1">
-                {[
-                  { label: "Total", value: stats.total },
-                  { label: "Transcribed", value: stats.transcribed, color: "text-status-validated" },
-                  { label: "Analyzed", value: stats.analyzed, color: "text-primary" },
-                  { label: "Pending", value: stats.pending },
-                ].filter(s => s.value > 0).map(s => (
-                  <div key={s.label} className="flex items-center gap-1">
-                    <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">{s.label}</span>
-                    <span className={cn("text-xs font-mono font-bold", s.color)}>{s.value}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+        <div className="mb-5">
+          <h1 className="text-lg font-semibold tracking-tight">Extractor</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Paste a link, drop a file — the system handles everything.
+          </p>
+        </div>
+
+        {/* Instant Action Surface — single trigger pipeline */}
+        <div className="mb-6">
+          <InstantActionSurface onComplete={fetchEpisodes} compact />
+        </div>
+
+        {/* Legacy form toggle — for advanced users */}
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-[10px] text-muted-foreground/60">
+            {episodes.length > 0 ? `${stats.total} episodes · ${stats.transcribed} transcribed · ${stats.analyzed} analyzed` : ""}
+          </p>
           {episodes.length > 0 && (
             <Button
-              variant={showForm ? "secondary" : "default"}
+              variant="ghost"
               size="sm"
-              className="h-8 gap-1.5 text-xs"
+              className="h-7 gap-1.5 text-[10px] text-muted-foreground"
               onClick={() => setShowForm(f => !f)}
             >
-              {showForm ? <ChevronUp className="h-3.5 w-3.5" /> : <Upload className="h-3.5 w-3.5" />}
-              {showForm ? "Hide" : "New Episode"}
+              {showForm ? <ChevronUp className="h-3 w-3" /> : <Upload className="h-3 w-3" />}
+              {showForm ? "Hide advanced" : "Advanced input"}
             </Button>
           )}
         </div>
 
-        {/* Create form */}
+        {/* Legacy advanced form */}
         <div className={cn(
           "overflow-hidden transition-all duration-200 ease-in-out",
           showForm ? "max-h-[600px] opacity-100 mb-6" : "max-h-0 opacity-0 mb-0"
         )}>
-          <div
-            className={cn(
-              "border rounded-xl bg-card p-5 space-y-4 transition-colors",
-              isDragging ? "border-primary border-dashed bg-primary/5" : "border-border"
-            )}
+          <div className={cn(
+            "border rounded-xl bg-card p-5 space-y-4 transition-colors",
+            isDragging ? "border-primary border-dashed bg-primary/5" : "border-border"
+          )}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
           >
-            {episodes.length === 0 && (
-              <div className="mb-2">
-                <h3 className="text-base font-semibold mb-1">Add your first episode</h3>
-                <p className="text-xs text-muted-foreground">
-                  Episodes are raw materials. Paste a URL, upload audio/video, or import a transcript file.
-                </p>
-              </div>
-            )}
-
             {/* Smart input — URL or text, auto-detected */}
             {(sourceType === "url" || sourceType === "text") && sourceType !== "text" && (
               <div>

@@ -12,6 +12,7 @@ import {
   Upload, Brain, Sparkles, Briefcase, Coins, ArrowRight,
   Loader2, Clock, Plus, Zap, TrendingUp, FileText,
 } from "lucide-react";
+import type {} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
 import { XPProgressBar } from "@/components/gamification/XPProgressBar";
@@ -19,6 +20,7 @@ import { LeaderboardWidget } from "@/components/gamification/LeaderboardWidget";
 import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
+import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
 import { motion } from "framer-motion";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
@@ -192,44 +194,24 @@ export default function Home() {
         {/* Onboarding Checklist */}
         <OnboardingChecklist />
 
-        {/* Smart contextual CTA based on user state */}
-        {totalEpisodes === 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center"
-          >
-            <Upload className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h2 className="text-base font-serif font-bold mb-1.5">First step: upload content</h2>
-            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Upload a podcast, paste a URL, or drop a transcript. The system will extract knowledge automatically.
+        {/* Instant Action Surface — single input, full pipeline */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="mb-6"
+        >
+          <div className="mb-3">
+            <h2 className="text-sm font-semibold flex items-center gap-1.5">
+              <Zap className="h-3.5 w-3.5 text-primary" />
+              {isNewUser ? "Start here — paste a link and let AI do the rest" : "Quick analyze"}
+            </h2>
+            <p className="text-[10px] text-muted-foreground mt-0.5">
+              Paste a URL, drop a file, or type text. The system will transcribe, extract neurons, and build your knowledge graph automatically.
             </p>
-            <Button onClick={() => navigate("/extractor")} size="sm" className="gap-2">
-              Open Extractor
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
-          </motion.div>
-        )}
-
-        {totalEpisodes > 0 && totalNeurons === 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="mb-6 p-5 rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 text-center"
-          >
-            <Brain className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h2 className="text-base font-serif font-bold mb-1.5">Extract your first neurons</h2>
-            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              You have {totalEpisodes} episode{totalEpisodes > 1 ? "s" : ""} uploaded. Go to the Extractor to extract knowledge neurons from your transcripts.
-            </p>
-            <Button onClick={() => navigate("/extractor")} size="sm" className="gap-2">
-              Extract Neurons
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
-          </motion.div>
-        )}
+          </div>
+          <InstantActionSurface onComplete={loadData} compact />
+        </motion.div>
 
         {totalNeurons > 0 && totalJobs === 0 && (
           <motion.div
