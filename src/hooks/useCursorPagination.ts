@@ -44,7 +44,7 @@ export function useCursorPagination<T = Record<string, unknown>>({
     queryKey: [...queryKey, "cursor", currentCursor, pageSize],
     enabled,
     queryFn: async () => {
-      let q = (supabase.from(table) as any)
+      let q = (supabase.from(table as any) as any)
         .select(select)
         .order(orderColumn, { ascending })
         .limit(pageSize + 1); // fetch one extra to detect hasMore
