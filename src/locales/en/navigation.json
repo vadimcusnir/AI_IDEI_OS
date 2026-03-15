@@ -35,8 +35,10 @@
   "chat": "AI Chat",
   "dashboard_section": "Dashboard",
   "create_section": "Create",
+  "pipeline_section": "Pipeline",
   "explore_section": "Explore",
-  "operate_section": "Operate",
-  "account_section": "Account",
+  "operate_section": "Manage",
+  "account_section": "Support",
+  "admin_section": "Admin",
   "learn_section": "Learn"
 }
