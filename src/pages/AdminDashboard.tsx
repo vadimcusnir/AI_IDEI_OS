@@ -82,6 +82,7 @@ const TABS = [
   { value: "reconciliation", label: "Reconciliation", icon: DollarSign },
   { value: "incidents", label: "Incidents", icon: AlertCircle },
   { value: "entropy", label: "Entropy", icon: TrendingUp },
+  { value: "contributions", label: "Contributions", icon: Brain },
 ];
 
 export default function AdminDashboard() {
