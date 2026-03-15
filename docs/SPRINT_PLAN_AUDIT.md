@@ -143,11 +143,11 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 2 sesiuni | **Impact:** MEDIU
 
-### 4.3 🟢 FE-004: Error handling consistent
-- [ ] **T4.7** Adaugă empty states pe toate paginile cu liste
-- [ ] **T4.8** Adaugă loading skeletons pe Dashboard, Library, Neurons
+### 4.3 ✅ FE-004: Error handling consistent — COMPLETAT 2026-03-15
+- [x] **T4.7** ✅ Empty states pe toate paginile cu liste (Neurons, Library, Jobs — toate au empty states dedicate)
+- [x] **T4.8** ✅ Loading skeletons pe Dashboard, Library, Neurons, Jobs, Home (DashboardSkeleton, HomeSkeleton, ListPageSkeleton)
 
-**Efort:** 2 sesiuni | **Impact:** MEDIU
+**Efort:** 0 (completat) | **Impact:** MEDIU
 
 ### 4.4 ⬜ Teste automate
 - [ ] **T4.9** Adaugă 10+ teste Vitest pentru hooks critice (useNeuron, useCreditBalance)
