@@ -175,15 +175,23 @@ export function AdminChangelogTab() {
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="h-4 w-4 text-primary" />
           <span className="text-xs font-semibold">AI Narrative Generator</span>
+          {unprocessedCount > 0 && (
+            <span className="text-[9px] bg-primary/15 text-primary px-1.5 py-0.5 rounded-full font-bold">
+              {unprocessedCount} schimbări neprocesate
+            </span>
+          )}
         </div>
         <p className="text-[10px] text-muted-foreground mb-3">
-          Generează drafturi din schimbările brute detectate în ultimele 7 zile. AI-ul transformă evenimentele tehnice în narativ user-facing.
+          {unprocessedCount > 0
+            ? `Sunt ${unprocessedCount} schimbări noi de transformat în changelog. Odată procesate, nu vor mai fi regenerate.`
+            : "Toate schimbările au fost procesate. Adaugă schimbări noi prin Raw Events sau webhook."
+          }
         </p>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center flex-wrap">
           <Input placeholder="Versiune (ex: v1.5)" value={genVersion} onChange={e => setGenVersion(e.target.value)} className="text-xs h-8 w-40" />
-          <Button size="sm" className="gap-1.5 text-xs h-8" onClick={generateDrafts} disabled={generating}>
+          <Button size="sm" className="gap-1.5 text-xs h-8" onClick={generateDrafts} disabled={generating || unprocessedCount === 0}>
             {generating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
-            {generating ? "Generez..." : "Generează drafturi"}
+            {generating ? "Generez..." : unprocessedCount === 0 ? "Nimic de procesat" : "Generează drafturi"}
           </Button>
           {draftCount > 0 && (
             <Button size="sm" variant="outline" className="gap-1.5 text-xs h-8" onClick={publishAllDrafts}>
