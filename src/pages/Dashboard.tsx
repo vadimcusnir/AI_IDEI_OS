@@ -135,6 +135,7 @@ export default function Dashboard() {
   };
 
   return (
+    <PageTransition>
     <div className="flex-1">
       <SEOHead title="Dashboard — AI-IDEI" description="Full analytics dashboard: neurons, jobs, credits, pipeline status." />
       <div className="max-w-3xl mx-auto px-6 py-8">
