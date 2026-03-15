@@ -25,19 +25,14 @@ const DEFAULT_CONFIG: UIControlConfig = {
 const cache = new Map<string, UIControlConfig>();
 const pendingFetches = new Map<string, Promise<UIControlConfig>>();
 
-async function fetchControl(elementId: string): Promise<UIControlConfig> {
-  const { data, error } = await supabase
-    .from("ui_control_registry")
-    .select("visible, enabled, label, action, permissions, state_overrides")
-    .eq("element_id", elementId)
-    .eq("is_active", true)
-    .maybeSingle();
-
-  if (error || !data) {
-    // No override = default (visible + enabled)
-    return { ...DEFAULT_CONFIG, loading: false };
-  }
-
+function mapRow(data: {
+  visible: boolean;
+  enabled: boolean;
+  label: string;
+  action: string | null;
+  permissions: string[] | null;
+  state_overrides: unknown;
+}): UIControlConfig {
   return {
     visible: data.visible ?? true,
     enabled: data.enabled ?? true,
@@ -47,6 +42,20 @@ async function fetchControl(elementId: string): Promise<UIControlConfig> {
     state_overrides: (data.state_overrides as Record<string, unknown>) ?? {},
     loading: false,
   };
+}
+
+async function fetchControl(elementId: string): Promise<UIControlConfig> {
+  const { data, error } = await supabase
+    .from("ui_control_registry")
+    .select("visible, enabled, label, action, permissions, state_overrides")
+    .eq("id", elementId)
+    .maybeSingle();
+
+  if (error || !data) {
+    return { ...DEFAULT_CONFIG, loading: false };
+  }
+
+  return mapRow(data);
 }
 
 /**
@@ -65,7 +74,6 @@ export function useUIControl(elementId: string): UIControlConfig {
       return;
     }
 
-    // Deduplicate concurrent fetches for the same element
     let promise = pendingFetches.get(elementId);
     if (!promise) {
       promise = fetchControl(elementId);
@@ -84,25 +92,15 @@ export function useUIControl(elementId: string): UIControlConfig {
 
 /**
  * Bulk prefetch — call once on app mount to prime the cache.
- * Fetches ALL active UI controls in a single query.
  */
 export async function prefetchUIControls(): Promise<void> {
   const { data } = await supabase
     .from("ui_control_registry")
-    .select("element_id, visible, enabled, label, action, permissions, state_overrides")
-    .eq("is_active", true);
+    .select("id, visible, enabled, label, action, permissions, state_overrides");
 
   if (data) {
     for (const row of data) {
-      cache.set(row.element_id, {
-        visible: row.visible ?? true,
-        enabled: row.enabled ?? true,
-        label: row.label ?? null,
-        action: row.action ?? null,
-        permissions: (row.permissions as string[]) ?? [],
-        state_overrides: (row.state_overrides as Record<string, unknown>) ?? {},
-        loading: false,
-      });
+      cache.set(row.id, mapRow(row));
     }
   }
 }
