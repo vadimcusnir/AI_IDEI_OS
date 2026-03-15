@@ -363,29 +363,20 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const { job_id, service_key, neuron_id, inputs } = await req.json();
+    const InputSchema = z.object({
+      job_id: z.string().uuid("Invalid job_id"),
+      service_key: z.string().min(1, "Missing service_key").max(100),
+      neuron_id: z.number().int().optional(),
+      inputs: z.record(z.string().max(50_000, "Input value too long")).optional(),
+    });
 
-    if (!job_id || typeof job_id !== "string") {
-      return new Response(JSON.stringify({ error: "Missing or invalid job_id" }), {
+    const parsed = InputSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    if (!service_key || typeof service_key !== "string") {
-      return new Response(JSON.stringify({ error: "Missing or invalid service_key" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    // Validate input lengths
-    if (inputs && typeof inputs === "object") {
-      for (const [key, value] of Object.entries(inputs)) {
-        if (typeof value === "string" && value.length > 50_000) {
-          return new Response(JSON.stringify({ error: `Input '${key}' exceeds maximum length (50000 chars)` }), {
-            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
-      }
-    }
+    const { job_id, service_key, neuron_id, inputs } = parsed.data;
 
     // ── Update job to running, track retry count ──
     const { data: currentJob } = await supabase

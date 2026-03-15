@@ -54,11 +54,22 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const { messages, neuron_context } = await req.json();
+    const MessageSchema = z.object({
+      role: z.enum(["user", "assistant", "system"]),
+      content: z.string().max(30_000, "Message too long"),
+    });
+    const InputSchema = z.object({
+      messages: z.array(MessageSchema).min(1, "Messages array required").max(50, "Too many messages"),
+      neuron_context: z.string().max(50_000).optional(),
+    });
 
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return new Response(JSON.stringify({ error: "Messages array required" }), {
-        status: 400,
+    const parsed = InputSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { messages, neuron_context } = parsed.data;
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
