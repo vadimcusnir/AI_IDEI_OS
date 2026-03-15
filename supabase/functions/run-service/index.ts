@@ -766,8 +766,22 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Execute AI pipeline ──
-    const systemPrompt = SERVICE_PROMPTS[service_key] || SERVICE_PROMPTS["insight-extractor"];
+    // ── Execute AI pipeline (with prompt-loader + dry-run) ──
+    const hardcodedPrompt = SERVICE_PROMPTS[service_key] || SERVICE_PROMPTS["insight-extractor"];
+    const { prompt: systemPrompt } = await loadPrompt(service_key, hardcodedPrompt);
+
+    if (isDryRun) {
+      await supabase.from("neuron_jobs").update({
+        status: "completed", completed_at: new Date().toISOString(),
+        result: { dry_run: true, regime: regime.regime, message: "Simulation mode — no AI call made" },
+      }).eq("id", job_id);
+      // Refund credits in simulation
+      await supabase.rpc("refund_credits", { _user_id: user_id, _amount: service.credits_cost, _job_id: job_id });
+      return new Response(JSON.stringify({ dry_run: true, regime: regime.regime }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const inputText = Object.entries(inputs || {})
       .filter(([_, v]) => v && String(v).trim())
       .map(([k, v]) => `${k}: ${v}`).join("\n\n");
