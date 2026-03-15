@@ -1,0 +1,125 @@
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "@/contexts/AuthContext";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
+import {
+  User, Settings, CreditCard, Shield, Bell, MessageCircle,
+  FileText, ScrollText, Code2, LogOut, Landmark, ChevronDown,
+  Wrench, Bot, Network,
+} from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+
+export function UserMenu() {
+  const { user, signOut } = useAuth();
+  const { isAdmin } = useAdminCheck();
+  const { t } = useTranslation(["navigation", "common"]);
+  const navigate = useNavigate();
+
+  if (!user) return null;
+
+  const initials = (user.email || "U").slice(0, 2).toUpperCase();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="h-8 gap-1.5 px-1.5">
+          <Avatar className="h-6 w-6">
+            <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-semibold">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <ChevronDown className="h-3 w-3 text-muted-foreground" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        {/* Account */}
+        <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+          Account
+        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => navigate("/profile")} className="gap-2 text-xs">
+            <User className="h-3.5 w-3.5" /> Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/workspace")} className="gap-2 text-xs">
+            <Settings className="h-3.5 w-3.5" /> Workspace Settings
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/credits")} className="gap-2 text-xs">
+            <CreditCard className="h-3.5 w-3.5" /> Credits & Billing
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/data-privacy")} className="gap-2 text-xs">
+            <Shield className="h-3.5 w-3.5" /> Data Privacy
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        {/* Activity */}
+        <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+          Activity
+        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => navigate("/notifications")} className="gap-2 text-xs">
+            <Bell className="h-3.5 w-3.5" /> Notifications
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/feedback")} className="gap-2 text-xs">
+            <MessageCircle className="h-3.5 w-3.5" /> Feedback
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/prompt-forge")} className="gap-2 text-xs">
+            <Wrench className="h-3.5 w-3.5" /> Prompt Forge
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        {/* Platform */}
+        <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+          Platform
+        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => navigate("/docs")} className="gap-2 text-xs">
+            <FileText className="h-3.5 w-3.5" /> Documentation
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/api")} className="gap-2 text-xs">
+            <Code2 className="h-3.5 w-3.5" /> API & Webhooks
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/architecture")} className="gap-2 text-xs">
+            <Network className="h-3.5 w-3.5" /> Architecture
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/changelog")} className="gap-2 text-xs">
+            <ScrollText className="h-3.5 w-3.5" /> Changelog
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        {/* Admin */}
+        {isAdmin && (
+          <>
+            <DropdownMenuItem onClick={() => navigate("/admin")} className="gap-2 text-xs">
+              <Landmark className="h-3.5 w-3.5" /> Admin Panel
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+
+        {/* Sign Out */}
+        <DropdownMenuItem
+          onClick={() => signOut()}
+          className="gap-2 text-xs text-destructive focus:text-destructive"
+        >
+          <LogOut className="h-3.5 w-3.5" /> {t("common:sign_out")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
