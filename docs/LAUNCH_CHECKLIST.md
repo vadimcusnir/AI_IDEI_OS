@@ -24,6 +24,10 @@
 - [x] CodeQL scanning (weekly + PR)
 - [x] Dependabot weekly updates (npm + github-actions)
 - [x] Dependency review on PRs (fail-on-severity: high)
+- [x] Secure RPC functions (SECURITY DEFINER) for all financial ops
+- [x] Daily credit spend cap (5000 NEURONS/day)
+- [x] Public contributions view (restricted columns)
+- [x] Security invoker on pricing views
 
 ### Core Features
 - [x] Episode upload + transcription (ElevenLabs Scribe v2)
@@ -46,6 +50,19 @@
 - [x] Public profile pages (/u/:username)
 - [x] Guest profile pages (/guest/:slug)
 - [x] Admin dashboard with KPIs
+- [x] Marketplace with asset details & reviews
+- [x] Community forum with categories & moderation
+- [x] Gamification (XP, streaks, challenges, leaderboard)
+- [x] VIP/CusnirOS tier system
+- [x] Knowledge Dashboard with learning paths
+- [x] Wallet state management (SSOT)
+
+### Legal & Compliance
+- [x] Terms of Service page (/terms)
+- [x] Privacy Policy page (/privacy)
+- [x] Cookie consent banner (GDPR)
+- [x] GDPR data export/delete (edge function)
+- [x] Compliance audit log
 
 ### CI/CD
 - [x] GitHub Actions: lint → typecheck → test → security → build
@@ -53,30 +70,23 @@
 - [x] CodeQL analysis on push + PR
 - [x] Dependency review on PRs
 
+### Performance (Post-Audit)
+- [x] 40+ database indexes on critical paths
+- [x] Cursor-based pagination hook (useCursorPagination)
+- [x] pgvector for semantic search (neuron_embeddings)
+
 ## ⚠️ RECOMMENDED BEFORE SCALE
 
-### Performance
-- [ ] Add database indexes (neuron_versions, guest_profiles, credit_transactions, neuron_jobs)
-- [ ] Implement cursor-based pagination for large listings
-- [ ] Add pgvector for semantic search
-
 ### Security
+- [ ] Enable Leaked Password Protection (manual dashboard config)
 - [ ] Enable MFA for admin accounts
 - [ ] Add CSRF protection tokens
 - [ ] Implement API key rotation policy
-- [ ] Add audit logging for admin actions
 
 ### Monitoring
 - [ ] Sentry for error tracking
 - [ ] PostHog for product analytics
 - [ ] Edge function latency monitoring
-- [ ] Credit balance alerts
-
-### Content
-- [ ] Terms of Service page
-- [ ] Privacy Policy page
-- [ ] Cookie consent banner
-- [ ] GDPR data export/delete
 
 ## 🚀 LAUNCH STATUS: READY
 
@@ -87,3 +97,5 @@ The platform can safely handle:
 - Service execution with credit accounting
 - Public knowledge pages with SEO
 - User authentication and role management
+- Community engagement and gamification
+- Marketplace transactions
