@@ -766,15 +766,18 @@ export default function Extractor() {
                       <Loader2 className="h-2.5 w-2.5 animate-spin" /> detecting…
                     </span>
                   )}
-                  {!fetchingTitle && sourceType === "url" && title && autoTitleApplied && (
+                  {!fetchingTitle && title && autoTitleApplied && (
                     <span className="text-primary/50 normal-case font-normal ml-1">· auto-detected</span>
+                  )}
+                  {!title.trim() && (
+                    <span className="text-muted-foreground/50 normal-case font-normal ml-1">· optional, auto-generated</span>
                   )}
                 </label>
                 <input
                   ref={titleRef}
                   value={title}
                   onChange={e => { setTitle(e.target.value); setAutoTitleApplied(false); }}
-                  placeholder="Episode title…"
+                  placeholder="Auto-generated from content…"
                   className="w-full bg-muted/50 rounded-lg px-3 py-2 text-sm outline-none border border-border focus:border-primary transition-colors"
                   onKeyDown={e => { if (e.key === "Enter" && sourceType !== "text") handleCreate(); }}
                 />
