@@ -13,6 +13,7 @@ import { CommunityStats } from "@/components/community/CommunityStats";
 import { CategoryList } from "@/components/community/CategoryList";
 import { ThreadRow } from "@/components/community/ThreadRow";
 import { NewThreadDialog } from "@/components/community/NewThreadDialog";
+import { ControlledSection } from "@/components/ControlledSection";
 import {
   MessageSquare, ArrowLeft, Search, Filter,
 } from "lucide-react";
