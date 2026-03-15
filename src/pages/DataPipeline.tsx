@@ -1,0 +1,170 @@
+import { SEOHead } from "@/components/SEOHead";
+import { PageTransition } from "@/components/motion/PageTransition";
+import { useDataCollection } from "@/hooks/useDataCollection";
+import { Loader2, Brain, Database, CheckCircle2, Sparkles, Layers, BarChart3 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+
+export default function DataPipeline() {
+  const { categories, units, stats, loading, selectedCategory, setSelectedCategory } = useDataCollection();
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const validationRate = stats && stats.total_units > 0
+    ? Math.round((stats.validated_units / stats.total_units) * 100) : 0;
+  const llmReadyRate = stats && stats.total_units > 0
+    ? Math.round((stats.llm_ready_units / stats.total_units) * 100) : 0;
+
+  return (
+    <PageTransition>
+      <div className="flex-1 overflow-y-auto">
+        <SEOHead title="Data Pipeline — AI-IDEI" description="Cognitive data collection pipeline — knowledge extraction and LLM training readiness." />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
+
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Database className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-lg font-serif font-bold tracking-tight">Data Collection Pipeline</h1>
+              <p className="text-[10px] text-muted-foreground">Cognitive hierarchy & LLM training readiness</p>
+            </div>
+          </div>
+
+          {/* Stats overview */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <StatCard icon={Brain} label="Cognitive Units" value={stats?.total_units ?? 0} />
+            <StatCard icon={CheckCircle2} label="Validated" value={stats?.validated_units ?? 0} accent="text-status-validated" />
+            <StatCard icon={Sparkles} label="LLM Ready" value={stats?.llm_ready_units ?? 0} accent="text-primary" />
+            <StatCard icon={BarChart3} label="Avg Quality" value={`${((stats?.avg_quality ?? 0) * 100).toFixed(0)}%`} />
+          </div>
+
+          {/* Progress bars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <div className="bg-card border border-border rounded-xl p-4">
+              <div className="flex justify-between text-[10px] mb-1.5">
+                <span className="text-muted-foreground font-semibold uppercase tracking-wider">Validation Rate</span>
+                <span className="font-mono">{validationRate}%</span>
+              </div>
+              <Progress value={validationRate} className="h-2" />
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4">
+              <div className="flex justify-between text-[10px] mb-1.5">
+                <span className="text-muted-foreground font-semibold uppercase tracking-wider">LLM Readiness</span>
+                <span className="font-mono">{llmReadyRate}%</span>
+              </div>
+              <Progress value={llmReadyRate} className="h-2" />
+            </div>
+          </div>
+
+          {/* Category pills */}
+          <div className="flex flex-wrap gap-1.5 mb-5">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={cn(
+                "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
+                !selectedCategory ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
+              )}
+            >
+              All Categories
+            </button>
+            {categories.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={cn(
+                  "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
+                  selectedCategory === cat.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Units list */}
+          {units.length === 0 ? (
+            <div className="text-center py-16">
+              <Layers className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground mb-1">No cognitive units yet</p>
+              <p className="text-[10px] text-muted-foreground/60">
+                Run extraction services on your content to generate cognitive units.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {units.map(unit => {
+                const cat = categories.find(c => c.id === unit.category_id);
+                return (
+                  <div key={unit.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-card transition-colors">
+                    <div className={cn(
+                      "h-7 w-7 rounded-lg flex items-center justify-center shrink-0",
+                      unit.llm_ready ? "bg-primary/10" :
+                      unit.is_validated ? "bg-status-validated/10" :
+                      "bg-muted"
+                    )}>
+                      {unit.llm_ready ? (
+                        <Sparkles className="h-3.5 w-3.5 text-primary" />
+                      ) : unit.is_validated ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 text-status-validated" />
+                      ) : (
+                        <Brain className="h-3.5 w-3.5 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-xs font-medium truncate">{unit.title}</p>
+                        {cat && (
+                          <Badge variant="outline" className="text-[8px] px-1.5 py-0 h-4 shrink-0">
+                            {cat.name}
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-muted-foreground truncate">{unit.content.slice(0, 100)}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-[10px] font-mono text-muted-foreground">
+                        {(unit.quality_score * 100).toFixed(0)}%
+                      </span>
+                      <div className={cn(
+                        "h-1.5 w-1.5 rounded-full",
+                        unit.confidence > 0.7 ? "bg-status-validated" :
+                        unit.confidence > 0.4 ? "bg-primary" :
+                        "bg-destructive"
+                      )} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </PageTransition>
+  );
+}
+
+function StatCard({ icon: Icon, label, value, accent }: {
+  icon: React.ElementType;
+  label: string;
+  value: number | string;
+  accent?: string;
+}) {
+  return (
+    <div className="bg-card border border-border rounded-xl p-4">
+      <div className="flex items-center gap-1.5 mb-2">
+        <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+      </div>
+      <span className={cn("text-xl font-bold font-mono", accent)}>{value}</span>
+    </div>
+  );
+}
