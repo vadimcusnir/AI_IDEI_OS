@@ -374,6 +374,7 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
+              </ControlledSection>
             </StaggerItem>
 
             {/* Account info */}
