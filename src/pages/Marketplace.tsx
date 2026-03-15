@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Store, Star, Coins, DollarSign, Search, Tag, ShoppingCart, Crown, TrendingUp, Clock, MessageSquare } from "lucide-react";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { Store, Star, Coins, DollarSign, Search, Tag, ShoppingCart, Crown, TrendingUp, Clock, MessageSquare, Loader2, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
