@@ -44,7 +44,7 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 **Efort:** Manual | **Impact:** MEDIU
 
 ### 1.3 ✅ SEC-006: CORS Wildcard — COMPLETAT 2026-03-15
-- [x] **S1.11** ✅ Creat `_shared/cors.ts` cu `getCorsHeaders(req)` — origin validat contra allowlist (`ai-idei-os.lovable.app`, `ai-idei.com`, `*.lovable.app`, localhost). Aplicat în `generate-entities`.
+- [x] **S1.11** ✅ Creat `_shared/cors.ts` cu `getCorsHeaders(req)` — origin validat contra allowlist. Aplicat în 9 funcții critice: generate-entities, run-service, extract-neurons, chunk-transcript, transcribe-audio, extract-guests, neuron-chat, extract-insights, verify-topup.
 
 **Efort:** 0 (completat) | **Impact:** SCĂZUT (defense-in-depth)
 
@@ -79,7 +79,7 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 ### 2.3 ✅ FE-001: Optimizare bundle — COMPLETAT 2026-03-15
 - [x] **P2.9** ✅ Lazy loading pentru TOATE 46 paginile cu `React.lazy` + `Suspense` + loading spinner
 - [x] **P2.10** ✅ Dynamic import pentru `react-force-graph-2d` (lazy loaded în KnowledgeGraph)
-- [ ] **P2.11** Dynamic import pentru `recharts` (folosit doar în 2 fișiere, impact minor)
+- [x] **P2.11** ✅ Dynamic import pentru `recharts` (lazy loaded ConsumptionChart în Credits page)
 - [x] **P2.12** ✅ Tree shaking — verificat, importuri curate
 
 **Efort:** 0 (completat) | **Impact:** MEDIU

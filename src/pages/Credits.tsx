@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
-import { ConsumptionChart } from "@/components/credits/ConsumptionChart";
+const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChart").then(m => ({ default: m.ConsumptionChart })));
 import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
 
 interface UserCredits {
@@ -252,7 +252,9 @@ export default function Credits() {
         </div>
 
         {/* Consumption chart */}
-        <ConsumptionChart transactions={transactions} />
+        <Suspense fallback={<div className="h-40 bg-card border border-border rounded-xl animate-pulse" />}>
+          <ConsumptionChart transactions={transactions} />
+        </Suspense>
 
         {/* Service consumption breakdown */}
         {Object.keys(serviceStats).length > 0 && (
