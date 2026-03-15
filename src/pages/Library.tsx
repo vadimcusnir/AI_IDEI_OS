@@ -137,11 +137,7 @@ export default function Library() {
   }, [artifacts]);
 
   if (authLoading || loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <ListPageSkeleton columns={3} />;
   }
 
   return (

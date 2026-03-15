@@ -100,11 +100,7 @@ export default function Home() {
   };
 
   if (authLoading || loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <HomeSkeleton />;
   }
 
   const isNewUser = neurons.length === 0 && jobs.length === 0;

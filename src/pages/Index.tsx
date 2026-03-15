@@ -69,11 +69,7 @@ export default function Index() {
   const filteredCount = folderFilteredNeurons.reduce((sum, g) => sum + g.items.length, 0);
 
   if (authLoading || loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <ListPageSkeleton columns={3} />;
   }
 
   return (
