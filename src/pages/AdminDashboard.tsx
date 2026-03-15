@@ -22,6 +22,9 @@ import { IncidentManagementTab } from "@/components/admin/IncidentManagementTab"
 import { EntropyMonitoringTab } from "@/components/admin/EntropyMonitoringTab";
 import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
 import { AdminContributionsTab } from "@/components/admin/AdminContributionsTab";
+import { EmergencyControlsTab } from "@/components/admin/EmergencyControlsTab";
+import { ComplianceLogTab } from "@/components/admin/ComplianceLogTab";
+import { FeatureFlagsTab } from "@/components/admin/FeatureFlagsTab";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { KPI, StatusBadge, LogLevelBadge, HealthRow, EconRow } from "@/components/admin/AdminSubComponents";
 import { PageTransition } from "@/components/motion/PageTransition";
