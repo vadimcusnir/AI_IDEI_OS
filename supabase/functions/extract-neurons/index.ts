@@ -172,13 +172,17 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const { episode_id } = await req.json();
+    const InputSchema = z.object({
+      episode_id: z.string().uuid("Invalid episode_id format"),
+    });
 
-    if (!episode_id || typeof episode_id !== "string") {
-      return new Response(JSON.stringify({ error: "Missing or invalid episode_id" }), {
+    const parsed = InputSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const { episode_id } = parsed.data;
 
     // ── Fetch episode ──
     const { data: episode, error: epErr } = await supabase

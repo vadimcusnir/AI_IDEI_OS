@@ -112,17 +112,23 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { episode_id, min_tokens, max_tokens } = await req.json();
+    const InputSchema = z.object({
+      episode_id: z.string().uuid("Invalid episode_id format"),
+      min_tokens: z.number().int().min(50).max(2000).optional().default(200),
+      max_tokens: z.number().int().min(100).max(5000).optional().default(800),
+    });
 
-    if (!episode_id || typeof episode_id !== "string") {
-      return new Response(JSON.stringify({ error: "Missing or invalid episode_id" }), {
+    const parsed = InputSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const { episode_id, min_tokens, max_tokens } = parsed.data;
 
-    // Validate token parameters
-    const minT = Math.max(50, Math.min(2000, Number(min_tokens) || 200));
-    const maxT = Math.max(minT + 50, Math.min(5000, Number(max_tokens) || 800));
+    // Ensure max > min
+    const minT = min_tokens;
+    const maxT = Math.max(minT + 50, max_tokens);
 
     // Fetch episode
     const { data: episode, error: epErr } = await supabase
