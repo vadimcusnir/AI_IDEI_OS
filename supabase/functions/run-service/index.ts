@@ -747,21 +747,30 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Spend credits atomically via SECURITY DEFINER function ──
-    const { data: spent } = await supabase.rpc("spend_credits", {
+    // ── Spend credits with daily cap enforcement ──
+    const { data: spendResult } = await supabase.rpc("spend_credits_capped", {
       _user_id: user_id,
       _amount: service.credits_cost,
       _description: `SPEND: ${service.name}`,
       _job_id: job_id,
     });
 
-    if (!spent) {
+    if (!spendResult?.success) {
+      const reasonCode = spendResult?.error === "DAILY_CAP_EXCEEDED"
+        ? "RC.CREDITS.DAILY_CAP"
+        : "RC.CREDITS.INSUFFICIENT";
       await supabase.from("neuron_jobs").update({
         status: "failed", completed_at: new Date().toISOString(),
-        result: { error: "RC.CREDITS.INSUFFICIENT", reason: `Need ${service.credits_cost} credits` },
+        result: { error: reasonCode, reason: spendResult?.error || `Need ${service.credits_cost} credits` },
       }).eq("id", job_id);
 
-      return new Response(JSON.stringify({ error: "Insufficient credits", reason_code: "RC.CREDITS.INSUFFICIENT" }), {
+      return new Response(JSON.stringify({
+        error: spendResult?.error === "DAILY_CAP_EXCEEDED"
+          ? "Daily spend cap exceeded. Try again tomorrow or increase your limit."
+          : "Insufficient credits",
+        reason_code: reasonCode,
+        ...spendResult,
+      }), {
         status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
