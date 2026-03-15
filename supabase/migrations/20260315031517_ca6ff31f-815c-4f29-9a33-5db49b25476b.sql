@@ -1,0 +1,22 @@
+INSERT INTO public.service_catalog (service_key, name, description, credits_cost, category, is_active) VALUES
+('tiktok-strategy', 'TikTok Strategy', '30-day TikTok content plan with scripts, hashtags, and growth tactics', 55, 'strategy', true),
+('saas-metrics-dashboard', 'SaaS Metrics Dashboard', 'Complete KPI framework with AARRR metrics, cohort analysis, and board deck', 65, 'analysis', true),
+('affiliate-program', 'Affiliate Program Design', 'Full affiliate program with commissions, onboarding, and fraud detection', 60, 'strategy', true),
+('internal-newsletter', 'Internal Newsletter Plan', 'Employee newsletter template with 12-issue calendar and sample first issue', 40, 'content', true),
+('customer-win-story', 'Customer Win Story', 'Multi-format customer success story: case study, video script, social proof', 50, 'content', true),
+('ai-prompt-library', 'AI Prompt Library', '20-30 ready-to-use prompts organized by category with chain sequences', 55, 'content', true),
+('employee-handbook', 'Employee Handbook', 'Comprehensive HR handbook with policies, benefits, and code of conduct', 65, 'content', true),
+('market-entry', 'Market Entry Strategy', 'International market entry analysis with localization and go-to-market plan', 70, 'strategy', true),
+('content-audit', 'Content Audit Framework', 'Full content audit with scoring rubric, gap analysis, and priority queue', 55, 'analysis', true),
+('data-storytelling', 'Data Storytelling', 'Transform data into narratives with chart recommendations and presentations', 50, 'content', true),
+('ecosystem-map', 'Ecosystem Map', 'Business ecosystem analysis with value flows, partnerships, and positioning', 60, 'strategy', true),
+('training-curriculum', 'Training Curriculum', 'Complete L&D program with modules, assessments, and certification criteria', 65, 'content', true),
+('investor-update', 'Investor Update', 'Monthly investor update template with metrics dashboard and sample version', 45, 'content', true),
+('vendor-rfp', 'Vendor RFP', 'Request for Proposal document with evaluation criteria and scoring matrix', 55, 'content', true),
+('crisis-communication', 'Crisis Communication Kit', 'Crisis templates for all stakeholders with decision trees and recovery plan', 60, 'content', true),
+('pricing-page', 'Pricing Page Content', 'Complete pricing page copy with tiers, FAQ, testimonials, and objection handlers', 50, 'content', true),
+('ab-test-playbook', 'A/B Test Playbook', 'CRO playbook with 20 test ideas, hypothesis templates, and analysis framework', 55, 'strategy', true),
+('changelog-writer', 'Changelog Writer', 'Product updates transformed into multi-format changelog and announcements', 35, 'content', true),
+('knowledge-base', 'Knowledge Base Builder', 'Complete KB structure with 30 article outlines, templates, and style guide', 65, 'content', true),
+('stakeholder-report', 'Stakeholder Report', 'Management report with RAG status, risks, budget, and stakeholder summaries', 55, 'analysis', true)
+ON CONFLICT (service_key) DO NOTHING;
