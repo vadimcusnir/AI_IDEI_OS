@@ -39,6 +39,9 @@ export function ThreadRow({ thread, onClick }: ThreadRowProps) {
             </Badge>
           )}
           <h4 className="font-medium text-sm truncate">{thread.title}</h4>
+          {(thread as any).tags?.map((tag: string) => (
+            <Badge key={tag} variant="secondary" className="text-[8px] px-1 py-0">{tag}</Badge>
+          ))}
         </div>
         <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
           <span className="font-medium text-foreground/70">{authorName}</span>
