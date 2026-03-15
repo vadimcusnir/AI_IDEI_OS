@@ -63,7 +63,7 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
-      { labelKey: "chat", to: "/chat", icon: Bot, controlId: "nav.chat" },
+      { labelKey: "chat", to: "/chat", icon: MessagesSquare, controlId: "nav.chat" },
     ],
   },
   {
