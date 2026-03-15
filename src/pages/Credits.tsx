@@ -200,6 +200,11 @@ export default function Credits() {
           <SubscriptionPlans />
         </div>
 
+        {/* VIP Progress */}
+        <div className="mb-6">
+          <VIPProgressTimeline />
+        </div>
+
         {/* Balance + Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
           {/* Main balance */}

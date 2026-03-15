@@ -161,6 +161,7 @@ const App = () => (
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
                 <Route path="/knowledge" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
+                <Route path="/vip" element={<ProtectedRoute><AppLayout><VIPDashboard /></AppLayout></ProtectedRoute>} />
 
                 {/* Admin route */}
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
