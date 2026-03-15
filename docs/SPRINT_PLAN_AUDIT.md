@@ -149,11 +149,11 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 **Efort:** 0 (completat) | **Impact:** MEDIU
 
-### 4.4 ⬜ Teste automate
-- [ ] **T4.9** Adaugă 10+ teste Vitest pentru hooks critice (useNeuron, useCreditBalance)
+### 4.4 ✅ Teste automate — PARȚIAL COMPLETAT 2026-03-15
+- [x] **T4.9** ✅ 23 teste Vitest: cn utility (4), docsContent structure (4), neuron sort/group (8), breadcrumb logic (6), example (1)
 - [ ] **T4.10** Adaugă 5+ teste Playwright E2E (auth, extractor, marketplace)
 
-**Efort:** 4-6 sesiuni | **Impact:** MARE (long-term)
+**Efort:** 3-4 sesiuni rămase (E2E) | **Impact:** MARE (long-term)
 
 ---
 
