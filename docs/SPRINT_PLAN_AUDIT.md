@@ -79,7 +79,7 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 ### 2.3 ✅ FE-001: Optimizare bundle — COMPLETAT 2026-03-15
 - [x] **P2.9** ✅ Lazy loading pentru TOATE 46 paginile cu `React.lazy` + `Suspense` + loading spinner
 - [x] **P2.10** ✅ Dynamic import pentru `react-force-graph-2d` (lazy loaded în KnowledgeGraph)
-- [ ] **P2.11** Dynamic import pentru `recharts` (folosit doar în 2 fișiere, impact minor)
+- [x] **P2.11** ✅ Dynamic import pentru `recharts` (lazy loaded ConsumptionChart în Credits page)
 - [x] **P2.12** ✅ Tree shaking — verificat, importuri curate
 
 **Efort:** 0 (completat) | **Impact:** MEDIU
