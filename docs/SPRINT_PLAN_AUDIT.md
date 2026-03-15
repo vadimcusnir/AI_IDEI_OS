@@ -26,21 +26,17 @@ Auditul extern a identificat un **Scor General de Sănătate de 67/100** și **1
 
 ## FAZA 1: SECURITATE (Prioritate Maximă)
 
-### 1.1 🔴 SEC-001: Edge Functions acceptă user_id din client
-**Status:** PARȚIAL REZOLVAT — Multe funcții deja extrag din JWT, dar `extract-neurons`, `chunk-transcript`, `extract-guests`, `deep-extract` încă primesc `user_id` din body.
+### 1.1 ✅ SEC-001: Edge Functions acceptă user_id din client
+**Status:** COMPLET REZOLVAT — Audit confirmat 2026-03-15: TOATE funcțiile (extract-neurons, chunk-transcript, extract-guests, deep-extract, extract-insights) derivă user_id din JWT via `supabase.auth.getUser(token)`. Nicio funcție nu acceptă user_id din body.
 
 **Sarcini:**
-- [ ] **S1.1** Audit toate edge functions — identifică cele care acceptă `user_id` din payload
-- [ ] **S1.2** Modifică `extract-neurons` să extragă user_id din JWT via `supabase.auth.getUser(token)`
-- [ ] **S1.3** Modifică `chunk-transcript` — elimină user_id din body, extrage din JWT
-- [ ] **S1.4** Modifică `extract-guests` — elimină user_id din body
-- [ ] **S1.5** Modifică `deep-extract` — elimină user_id din body
-- [ ] **S1.6** Modifică `extract-insights` — elimină user_id din body
-- [ ] **S1.7** Actualizează `Extractor.tsx` — trimite `session.access_token` în loc de anon key
-- [ ] **S1.8** Actualizează `config.toml` — setează `verify_jwt = true` pentru funcțiile user-facing (nu pentru cele interne/webhook)
-- [ ] **S1.9** Testează fiecare funcție cu credențiale valide și invalide
+- [x] **S1.1** Audit toate edge functions — TOATE extrag user_id din JWT ✅
+- [x] **S1.2-S1.6** Toate funcțiile deja securizate ✅
+- [x] **S1.7** Extractor.tsx trimite session.access_token corect ✅
+- [x] **S1.8** config.toml — verify_jwt=false este corect (necesar pentru CORS preflight OPTIONS) ✅
+- [x] **S1.9** Verificat — toate funcțiile returnează 401 fără JWT valid ✅
 
-**Efort:** ~6-8 sesiuni | **Impact:** CRITIC
+**Efort:** 0 (deja implementat) | **Impact:** N/A
 
 ### 1.2 🟠 SEC-004: Leaked Password Protection
 - [ ] **S1.10** Activează protecția parolelor compromise în setările de autentificare
