@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
 import { loadPrompts } from "../_shared/prompt-loader.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 // Valid actions enum
 const VALID_ACTIONS = new Set([

@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
+import { loadPrompt } from "../_shared/prompt-loader.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

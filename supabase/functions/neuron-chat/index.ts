@@ -2,6 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
+import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 // Rate limiting — 30 requests per hour per user
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
