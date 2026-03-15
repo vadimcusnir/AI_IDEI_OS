@@ -92,6 +92,7 @@ const TABS = [
   { value: "compliance", label: "Compliance", icon: ScrollText },
   { value: "flags", label: "Flags", icon: Activity },
   { value: "moderation", label: "Moderation", icon: MessageCircle },
+  { value: "control-layer", label: "Control", icon: Layers },
 ];
 
 export default function AdminDashboard() {
