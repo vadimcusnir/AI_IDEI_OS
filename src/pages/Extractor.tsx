@@ -695,6 +695,7 @@ export default function Extractor() {
 
   return (
     <TooltipProvider delayDuration={300}>
+    <PageTransition>
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
         {/* SEO */}
