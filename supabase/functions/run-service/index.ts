@@ -708,6 +708,16 @@ Deno.serve(async (req) => {
     }
     const { job_id, service_key, neuron_id, inputs } = parsed.data;
 
+    // ── Regime enforcement ──
+    const regime = await getRegimeConfig(service_key);
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: "Service blocked by execution regime", reason: blockReason, regime: regime.regime }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const isDryRun = regime.dryRun || regime.regime === "simulation";
+
     // ── Update job to running, track retry count ──
     const { data: currentJob } = await supabase
       .from("neuron_jobs")
