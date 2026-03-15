@@ -482,6 +482,27 @@ const SERVICE_ARTIFACT_TYPE: Record<string, string> = {
   "press-kit": "document",
   "loyalty-program": "strategy",
   "personal-brand-audit": "report",
+  // Batch 4
+  "tiktok-strategy": "strategy",
+  "saas-metrics-dashboard": "report",
+  "affiliate-program": "strategy",
+  "internal-newsletter": "document",
+  "customer-win-story": "document",
+  "ai-prompt-library": "document",
+  "employee-handbook": "document",
+  "market-entry": "strategy",
+  "content-audit": "report",
+  "data-storytelling": "document",
+  "ecosystem-map": "strategy",
+  "training-curriculum": "course",
+  "investor-update": "document",
+  "vendor-rfp": "document",
+  "crisis-communication": "document",
+  "pricing-page": "document",
+  "ab-test-playbook": "strategy",
+  "changelog-writer": "document",
+  "knowledge-base": "document",
+  "stakeholder-report": "report",
 };
 
 // Valid service keys for input validation
