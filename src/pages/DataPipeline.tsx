@@ -24,6 +24,13 @@ interface PipelineStats {
 
 export default function DataPipeline() {
   const { categories, units, stats, loading, selectedCategory, setSelectedCategory } = useDataCollection();
+  const [pipelineStats, setPipelineStats] = useState<PipelineStats | null>(null);
+
+  useEffect(() => {
+    supabase.rpc("data_pipeline_stats").then(({ data }) => {
+      if (data) setPipelineStats(data as unknown as PipelineStats);
+    });
+  }, []);
 
   if (loading) {
     return (
