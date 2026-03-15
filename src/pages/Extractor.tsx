@@ -144,9 +144,9 @@ export default function Extractor() {
   const transcriptFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || !currentWorkspace) return;
     fetchEpisodes();
-  }, [user, authLoading]);
+  }, [user, authLoading, currentWorkspace]);
 
   useEffect(() => {
     if (!loading && episodes.length === 0) setShowForm(true);
