@@ -60,7 +60,13 @@ Deno.serve(async (req) => {
     });
     const InputSchema = z.object({
       messages: z.array(MessageSchema).min(1, "Messages array required").max(50, "Too many messages"),
-      neuron_context: z.string().max(50_000).optional(),
+      neuron_context: z.object({
+        title: z.string().max(500).optional(),
+        blocks: z.array(z.object({
+          type: z.string(),
+          content: z.string().max(50_000),
+        })).optional(),
+      }).optional(),
     });
 
     const parsed = InputSchema.safeParse(await req.json());
