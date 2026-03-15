@@ -200,8 +200,17 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Check & spend credits atomically via SECURITY DEFINER function ──
+    // ── Regime check ──
+    const regime = await getRegimeConfig("extract-neurons");
     const EXTRACTION_COST = 100;
+    const blockReason = checkRegimeBlock(regime, EXTRACTION_COST);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: blockReason }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Check & spend credits atomically via SECURITY DEFINER function ──
     const { data: spent } = await supabase.rpc("spend_credits", {
       _user_id: userId,
       _amount: EXTRACTION_COST,

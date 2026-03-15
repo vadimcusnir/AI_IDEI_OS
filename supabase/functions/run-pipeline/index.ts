@@ -130,6 +130,19 @@ Deno.serve(async (req) => {
         continue;
       }
 
+      // ── Regime enforcement per step ──
+      const regime = await getRegimeConfig(step.service_key);
+      const blockReason = checkRegimeBlock(regime, svc.credits_cost || 0);
+      if (blockReason) {
+        results.push({ service_key: step.service_key, status: "blocked", reason: blockReason });
+        continue;
+      }
+
+      if (regime.dryRun) {
+        results.push({ service_key: step.service_key, status: "dry_run", reason: "Simulation mode — no real execution" });
+        continue;
+      }
+
       try {
         // Create neuron for this step's output
         const { data: neuron } = await supabase
