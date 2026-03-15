@@ -70,18 +70,6 @@ Deno.serve(async (req) => {
       });
     }
     const { messages, neuron_context } = parsed.data;
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    // Validate message sizes
-    for (const msg of messages) {
-      if (typeof msg.content === "string" && msg.content.length > 30_000) {
-        return new Response(JSON.stringify({ error: "Message content exceeds maximum length" }), {
-          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-    }
 
     // Build context from neuron blocks
     let contextBlock = "";
