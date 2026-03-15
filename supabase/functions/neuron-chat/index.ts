@@ -66,6 +66,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── Regime enforcement ──
+    const regime = await getRegimeConfig("neuron-chat");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: "Service blocked", reason: blockReason, regime: regime.regime }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 

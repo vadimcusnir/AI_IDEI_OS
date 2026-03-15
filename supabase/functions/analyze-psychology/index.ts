@@ -37,7 +37,15 @@ serve(async (req) => {
     const { guest_profile_id } = await req.json();
     if (!guest_profile_id) throw new Error("guest_profile_id is required");
 
-    // Get guest profile with transcript data
+    // ── Regime enforcement ──
+    const regime = await getRegimeConfig("analyze-psychology");
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: "Service blocked", reason: blockReason, regime: regime.regime }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const isDryRun = regime.dryRun || regime.regime === "simulation";
     const { data: guest, error: guestError } = await supabase
       .from("guest_profiles")
       .select("*")

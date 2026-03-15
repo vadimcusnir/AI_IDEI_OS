@@ -60,6 +60,17 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── Regime enforcement ──
+    const activeAction = (await req.clone().json()).action || "extract_insights";
+    const regime = await getRegimeConfig(activeAction);
+    const blockReason = checkRegimeBlock(regime, 0);
+    if (blockReason) {
+      return new Response(JSON.stringify({ error: "Service blocked", reason: blockReason, regime: regime.regime }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const isDryRun = regime.dryRun || regime.regime === "simulation";
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
