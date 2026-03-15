@@ -707,36 +707,11 @@ export default function Extractor() {
         <SEOHead title="Extractor — AI-IDEI" description="Upload content, transcribe audio/video, and extract knowledge neurons using AI." />
 
         {/* Page header */}
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold tracking-tight">Extractor</h1>
-            {episodes.length > 0 && (
-              <div className="flex items-center gap-3 ml-1">
-                {[
-                  { label: "Total", value: stats.total },
-                  { label: "Transcribed", value: stats.transcribed, color: "text-status-validated" },
-                  { label: "Analyzed", value: stats.analyzed, color: "text-primary" },
-                  { label: "Pending", value: stats.pending },
-                ].filter(s => s.value > 0).map(s => (
-                  <div key={s.label} className="flex items-center gap-1">
-                    <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">{s.label}</span>
-                    <span className={cn("text-xs font-mono font-bold", s.color)}>{s.value}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          {episodes.length > 0 && (
-            <Button
-              variant={showForm ? "secondary" : "default"}
-              size="sm"
-              className="h-8 gap-1.5 text-xs"
-              onClick={() => setShowForm(f => !f)}
-            >
-              {showForm ? <ChevronUp className="h-3.5 w-3.5" /> : <Upload className="h-3.5 w-3.5" />}
-              {showForm ? "Hide" : "New Episode"}
-            </Button>
-          )}
+        <div className="mb-5">
+          <h1 className="text-lg font-semibold tracking-tight">Extractor</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Paste a link, drop a file — the system handles everything.
+          </p>
         </div>
 
         {/* Instant Action Surface — single trigger pipeline */}
