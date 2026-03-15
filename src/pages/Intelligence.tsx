@@ -40,7 +40,8 @@ export default function Intelligence() {
   const [activeTab, setActiveTab] = useState("graph");
 
   useEffect(() => {
-    if (authLoading || !user || !currentWorkspace) return;
+    if (authLoading) return;
+    if (!user || !currentWorkspace) { setLoading(false); return; }
     loadStats();
   }, [user, authLoading, currentWorkspace]);
 
