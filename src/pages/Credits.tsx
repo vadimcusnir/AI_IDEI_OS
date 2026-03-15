@@ -252,7 +252,9 @@ export default function Credits() {
         </div>
 
         {/* Consumption chart */}
-        <ConsumptionChart transactions={transactions} />
+        <Suspense fallback={<div className="h-40 bg-card border border-border rounded-xl animate-pulse" />}>
+          <ConsumptionChart transactions={transactions} />
+        </Suspense>
 
         {/* Service consumption breakdown */}
         {Object.keys(serviceStats).length > 0 && (
