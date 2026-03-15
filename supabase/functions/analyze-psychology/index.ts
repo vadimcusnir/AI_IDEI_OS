@@ -83,7 +83,8 @@ serve(async (req) => {
 
     logStep("Text gathered", { length: analysisText.length });
 
-    // Use Lovable AI for analysis
+    // ── Prompt from registry ──
+    const fallbackPrompt = `You are an expert psycholinguistic analyst. Analyze the following text and produce a psychological profile.`;
     const analysisPrompt = `You are an expert psycholinguistic analyst. Analyze the following text and produce a psychological profile.
 
 Return a JSON object with EXACTLY these fields (all scores 0-100):
