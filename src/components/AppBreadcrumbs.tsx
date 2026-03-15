@@ -53,6 +53,8 @@ const ROUTE_LABELS: Record<string, string> = {
   discovery: "Discovery",
   privacy: "Privacy Policy",
   terms: "Terms of Service",
+  knowledge: "Knowledge Base",
+  kb: "Knowledge Base",
   batch: "Batch Runner",
 };
 

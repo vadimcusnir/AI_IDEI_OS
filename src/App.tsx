@@ -158,6 +158,8 @@ const App = () => (
                 <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ApiDocs /></AppLayout></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
+                <Route path="/knowledge" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
+                <Route path="/kb/:category" element={<ProtectedRoute><AppLayout><KnowledgeDashboard /></AppLayout></ProtectedRoute>} />
 
                 {/* Admin route */}
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
