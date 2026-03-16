@@ -54,7 +54,7 @@ export function HomePricingSection() {
       </div>
 
       {/* Top-up packages row */}
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5">
         {TOP_UP_PACKAGES.map(pkg => {
           const Icon = pkg.icon;
           return (
