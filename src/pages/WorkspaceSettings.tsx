@@ -103,7 +103,7 @@ export default function WorkspaceSettings() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Membri ({members.length})
+              {t("workspace.members")} ({members.length})
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
