@@ -31,6 +31,7 @@ interface Service {
   credits_cost: number;
   input_schema: any[];
   deliverables_schema: any[];
+  access_tier: string;
 }
 
 interface UserCredits {
