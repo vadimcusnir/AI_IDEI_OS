@@ -16,6 +16,7 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import { KnowledgeGraph } from "@/components/intelligence/KnowledgeGraph";
 import { StatsOverview } from "@/components/intelligence/StatsOverview";
 import { DuplicateMergePanel } from "@/components/neurons/DuplicateMergePanel";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 import { GitMerge } from "lucide-react";
 
 interface Stats {
