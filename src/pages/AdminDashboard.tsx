@@ -406,10 +406,10 @@ export default function AdminDashboard() {
                     <Coins className="h-3 w-3" /> {t("admin.economy_title")}
                   </h3>
                   <div className="space-y-3">
-                    <EconRow label="Credits in circulation" value={stats.totalCreditsCirculating} />
-                    <EconRow label="Credits consumed" value={stats.totalCreditsSpent} />
-                    <EconRow label="Estimated revenue" value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
-                    <EconRow label="Neurons per user" value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
+                    <EconRow label={t("admin.economy.in_circulation")} value={stats.totalCreditsCirculating} />
+                    <EconRow label={t("admin.economy.consumed")} value={stats.totalCreditsSpent} />
+                    <EconRow label={t("admin.economy.estimated_revenue")} value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
+                    <EconRow label={t("admin.economy.neurons_per_user")} value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
                   </div>
                 </div>
 
