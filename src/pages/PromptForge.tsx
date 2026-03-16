@@ -36,15 +36,22 @@ const GOALS = [
 export default function PromptForge() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { balance } = useCreditBalance();
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState("");
   const [details, setDetails] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const estimatedCost = 200; // Prompt Forge typical cost
+
   const handleGenerate = useCallback(async () => {
     if (!user) { toast.error("Autentifică-te pentru a genera prompturi"); return; }
     if (!context.trim() || !goal) { toast.error("Completează contextul și obiectivul"); return; }
+    if (balance < estimatedCost) {
+      toast.error(`Credite insuficiente. Ai nevoie de ~${estimatedCost} NEURONS.`);
+      return;
+    }
 
     setLoading(true);
     setResult("");
