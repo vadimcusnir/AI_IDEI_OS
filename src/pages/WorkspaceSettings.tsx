@@ -115,8 +115,8 @@ export default function WorkspaceSettings() {
                     <RoleIcon className="h-3.5 w-3.5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{m.user_id === user?.id ? "Tu" : m.user_id.slice(0, 8)}</p>
-                    <p className="text-xs text-muted-foreground">Joined {new Date(m.joined_at).toLocaleDateString()}</p>
+                    <p className="text-sm font-medium truncate">{m.user_id === user?.id ? t("workspace.you") : m.user_id.slice(0, 8)}</p>
+                    <p className="text-xs text-muted-foreground">{t("workspace.joined")} {new Date(m.joined_at).toLocaleDateString()}</p>
                   </div>
                   {isOwnerOrAdmin && m.role !== "owner" ? (
                     <Select value={m.role} onValueChange={(r) => updateMemberRole(m.id, r)}>
