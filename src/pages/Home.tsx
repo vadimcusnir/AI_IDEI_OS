@@ -133,6 +133,15 @@ export default function Home() {
   return (
     <PageTransition>
     <div className="flex-1 overflow-auto">
+      <WelcomeModal />
+      <GuidedTooltip
+        tourId="home"
+        steps={[
+          { target: "[data-tour='upload']", title: "Upload Content", description: "Start here — add a podcast, video, or text to begin extracting knowledge.", position: "bottom" },
+          { target: "[data-tour='neurons']", title: "Your Neurons", description: "Extracted atomic knowledge units appear here. Each neuron is reusable forever.", position: "bottom" },
+          { target: "[data-tour='services']", title: "AI Services", description: "Run services to transform neurons into professional deliverables.", position: "bottom" },
+        ]}
+      />
       <SEOHead title="Cockpit — AI-IDEI" description="Your AI-IDEI command center. Monitor neurons, episodes, jobs and credits." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 sm:space-y-10">
 
