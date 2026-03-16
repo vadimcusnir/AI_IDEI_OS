@@ -163,7 +163,17 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
             {contextMenu}
           </div>
         </div>
-        <h3 className="text-sm font-medium line-clamp-2 mb-auto">{n.title}</h3>
+        <h3 className="text-sm font-medium line-clamp-2 mb-1">{n.title}</h3>
+        {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
+          const cat = CATEGORY_CONFIG[n.content_category!];
+          const CatIcon = cat.icon;
+          return (
+            <span className={cn("inline-flex items-center gap-0.5 text-[8px] font-medium px-1.5 py-0.5 rounded-md w-fit mt-1", cat.color)}>
+              <CatIcon className="h-2.5 w-2.5" />
+              {cat.label}
+            </span>
+          );
+        })()}
         <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
           <span className="text-[9px] text-muted-foreground/50">{formatDate(n.updated_at)}</span>
           <div className="flex items-center gap-1">
