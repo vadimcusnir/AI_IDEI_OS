@@ -346,9 +346,9 @@ export default function ProfilePage() {
 
                       {prefs.email_digest !== "none" && (
                         <div className="ml-6 space-y-2">
-                          <PrefToggle icon={Briefcase} label="Jobs report" checked={prefs.email_jobs} onChange={(v) => updatePrefs({ email_jobs: v })} />
-                          <PrefToggle icon={Coins} label="Credits report" checked={prefs.email_credits} onChange={(v) => updatePrefs({ email_credits: v })} />
-                          <PrefToggle icon={MessageCircle} label="Feedback report" checked={prefs.email_feedback} onChange={(v) => updatePrefs({ email_feedback: v })} />
+                          <PrefToggle icon={Briefcase} label={t("profile.jobs_report")} checked={prefs.email_jobs} onChange={(v) => updatePrefs({ email_jobs: v })} />
+                          <PrefToggle icon={Coins} label={t("profile.credits_report")} checked={prefs.email_credits} onChange={(v) => updatePrefs({ email_credits: v })} />
+                          <PrefToggle icon={MessageCircle} label={t("profile.feedback_report")} checked={prefs.email_feedback} onChange={(v) => updatePrefs({ email_feedback: v })} />
                         </div>
                       )}
                     </div>
