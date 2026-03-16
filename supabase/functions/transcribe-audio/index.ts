@@ -4,7 +4,7 @@ import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 // ── Rate limiting ──
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 5; // per hour
+const RATE_LIMIT = 5;
 const RATE_WINDOW = 3600_000;
 
 function checkRateLimit(userId: string): boolean {
@@ -28,18 +28,13 @@ Deno.serve(async (req) => {
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
-
-  if (!ELEVENLABS_API_KEY) {
-    return new Response(
-      JSON.stringify({ error: "ELEVENLABS_API_KEY is not configured" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
-  }
+  const TRANSCRIPTION_SERVICE_URL = Deno.env.get("TRANSCRIPTION_SERVICE_URL");
+  const TRANSCRIPTION_API_SECRET = Deno.env.get("TRANSCRIPTION_API_SECRET");
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    // ── Authenticate via JWT (strict) ──
+    // ── Auth ──
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -58,14 +53,14 @@ Deno.serve(async (req) => {
     }
     const callerId = caller.id;
 
-    // ── Rate limit check ──
+    // ── Rate limit ──
     if (!checkRateLimit(callerId)) {
       return new Response(JSON.stringify({ error: "Rate limit exceeded (5 transcriptions/hour)" }), {
         status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // ── Regime enforcement ──
+    // ── Regime ──
     const regime = await getRegimeConfig("transcribe-audio");
     const blockReason = checkRegimeBlock(regime, 0);
     if (blockReason) {
@@ -74,28 +69,16 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { episode_id, file_path, language } = await req.json();
+    const body = await req.json();
+    const { episode_id, file_path, language, source_url } = body;
 
     if (!episode_id || typeof episode_id !== "string") {
-      return new Response(
-        JSON.stringify({ error: "Missing or invalid episode_id" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-    if (!file_path || typeof file_path !== "string") {
-      return new Response(
-        JSON.stringify({ error: "Missing or invalid file_path" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-    if (language && typeof language !== "string") {
-      return new Response(
-        JSON.stringify({ error: "Invalid language parameter" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Missing or invalid episode_id" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Fetch the episode — verify ownership
+    // Verify ownership
     const { data: episode, error: epErr } = await supabase
       .from("episodes")
       .select("*")
@@ -104,14 +87,124 @@ Deno.serve(async (req) => {
       .single();
 
     if (!episode || epErr) {
+      return new Response(JSON.stringify({ error: "Episode not found or access denied" }), {
+        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    await supabase.from("episodes").update({ status: "transcribing" }).eq("id", episode_id);
+
+    // ═══════════════════════════════════════════
+    // Strategy 1: External transcription service
+    //   Supports URL-based transcription via yt-dlp + faster-whisper
+    // ═══════════════════════════════════════════
+    if (TRANSCRIPTION_SERVICE_URL && source_url) {
+      console.log(`[transcribe] Using external service: ${TRANSCRIPTION_SERVICE_URL}`);
+
+      const extHeaders: Record<string, string> = { "Content-Type": "application/json" };
+      if (TRANSCRIPTION_API_SECRET) {
+        extHeaders["Authorization"] = `Bearer ${TRANSCRIPTION_API_SECRET}`;
+      }
+
+      const extResp = await fetch(`${TRANSCRIPTION_SERVICE_URL}/transcribe`, {
+        method: "POST",
+        headers: extHeaders,
+        body: JSON.stringify({
+          url: source_url,
+          language: language || null,
+          prefer_subtitles: true,
+        }),
+      });
+
+      if (!extResp.ok) {
+        const errBody = await extResp.text();
+        console.error(`External transcription failed: ${extResp.status} ${errBody}`);
+        await supabase.from("episodes").update({ status: "error" }).eq("id", episode_id);
+        return new Response(
+          JSON.stringify({ error: `Transcription service error: ${extResp.status}` }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const extResult = await extResp.json();
+      const fullText = extResult.transcript_text || "";
+
+      if (!fullText.trim()) {
+        await supabase.from("episodes").update({ status: "error" }).eq("id", episode_id);
+        return new Response(JSON.stringify({ error: "Transcription returned empty text" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Build SRT from segments
+      let srtContent = "";
+      if (extResult.segments?.length > 0) {
+        let idx = 1;
+        for (const seg of extResult.segments) {
+          srtContent += `${idx}\n${formatSrtTime(seg.start)} --> ${formatSrtTime(seg.end)}\n${seg.text}\n\n`;
+          idx++;
+        }
+      }
+
+      await supabase.from("episodes").update({
+        transcript: fullText,
+        status: "transcribed",
+        duration_seconds: extResult.duration_seconds || null,
+        language: extResult.language || null,
+        metadata: {
+          ...(typeof episode.metadata === "object" && episode.metadata ? episode.metadata : {}),
+          transcribed_at: new Date().toISOString(),
+          transcription_service: extResult.source === "subtitles" ? "subtitles" : "faster_whisper",
+          transcription_source: extResult.source,
+          word_count: extResult.word_count || fullText.split(/\s+/).length,
+          has_srt: !!srtContent,
+          segment_count: extResult.segments?.length || 0,
+          metadata_title: extResult.metadata?.title,
+          metadata_uploader: extResult.metadata?.uploader,
+          metadata_thumbnail: extResult.metadata?.thumbnail_url,
+        },
+      } as any).eq("id", episode_id);
+
+      // Update episode title from metadata if generic
+      if (extResult.metadata?.title && episode.title?.startsWith("Episode ")) {
+        await supabase.from("episodes").update({ title: extResult.metadata.title }).eq("id", episode_id);
+      }
+
       return new Response(
-        JSON.stringify({ error: "Episode not found or access denied" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({
+          success: true,
+          episode_id,
+          transcript: fullText,
+          transcript_length: fullText.length,
+          word_count: extResult.word_count || fullText.split(/\s+/).length,
+          duration_seconds: extResult.duration_seconds,
+          language: extResult.language,
+          source: extResult.source,
+          has_srt: !!srtContent,
+          srt: srtContent || null,
+          segments: extResult.segments || [],
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Update status to transcribing
-    await supabase.from("episodes").update({ status: "transcribing" }).eq("id", episode_id);
+    // ═══════════════════════════════════════════
+    // Strategy 2: ElevenLabs STT (file-based)
+    // ═══════════════════════════════════════════
+    if (!ELEVENLABS_API_KEY) {
+      await supabase.from("episodes").update({ status: "error" }).eq("id", episode_id);
+      return new Response(
+        JSON.stringify({ error: "No transcription backend configured. Set ELEVENLABS_API_KEY or TRANSCRIPTION_SERVICE_URL." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!file_path || typeof file_path !== "string") {
+      await supabase.from("episodes").update({ status: "error" }).eq("id", episode_id);
+      return new Response(JSON.stringify({ error: "Missing file_path for ElevenLabs transcription" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Download file from storage
     const { data: fileData, error: dlErr } = await supabase.storage
@@ -120,16 +213,13 @@ Deno.serve(async (req) => {
 
     if (!fileData || dlErr) {
       await supabase.from("episodes").update({ status: "error" }).eq("id", episode_id);
-      return new Response(
-        JSON.stringify({ error: "Failed to download file from storage" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Failed to download file from storage" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Determine file name from path
     const fileName = file_path.split("/").pop() || "audio.mp3";
 
-    // Send to ElevenLabs STT
     const apiFormData = new FormData();
     apiFormData.append("file", new File([fileData], fileName, { type: fileData.type }));
     apiFormData.append("model_id", "scribe_v2");
@@ -139,13 +229,11 @@ Deno.serve(async (req) => {
       apiFormData.append("language_code", language);
     }
 
-    console.log(`Transcribing file: ${fileName} (${(fileData.size / 1024 / 1024).toFixed(2)} MB)`);
+    console.log(`[transcribe] ElevenLabs: ${fileName} (${(fileData.size / 1024 / 1024).toFixed(2)} MB)`);
 
     const sttResponse = await fetch("https://api.elevenlabs.io/v1/speech-to-text", {
       method: "POST",
-      headers: {
-        "xi-api-key": ELEVENLABS_API_KEY,
-      },
+      headers: { "xi-api-key": ELEVENLABS_API_KEY },
       body: apiFormData,
     });
 
@@ -164,15 +252,14 @@ Deno.serve(async (req) => {
 
     if (!fullText.trim()) {
       await supabase.from("episodes").update({ status: "error" }).eq("id", episode_id);
-      return new Response(
-        JSON.stringify({ error: "Transcription returned empty text" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Transcription returned empty text" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Build SRT from word timestamps if available
+    // Build SRT
     let srtContent = "";
-    if (transcription.words && transcription.words.length > 0) {
+    if (transcription.words?.length > 0) {
       const words = transcription.words;
       const blockSize = 10;
       let blockIndex = 1;
@@ -181,21 +268,16 @@ Deno.serve(async (req) => {
         const startTime = block[0].start;
         const endTime = block[block.length - 1].end;
         const text = block.map((w: any) => w.text).join(" ");
-        srtContent += `${blockIndex}\n`;
-        srtContent += `${formatSrtTime(startTime)} --> ${formatSrtTime(endTime)}\n`;
-        srtContent += `${text}\n\n`;
+        srtContent += `${blockIndex}\n${formatSrtTime(startTime)} --> ${formatSrtTime(endTime)}\n${text}\n\n`;
         blockIndex++;
       }
     }
 
-    // Calculate duration
     let durationSeconds: number | null = null;
-    if (transcription.words && transcription.words.length > 0) {
-      const lastWord = transcription.words[transcription.words.length - 1];
-      durationSeconds = Math.ceil(lastWord.end);
+    if (transcription.words?.length > 0) {
+      durationSeconds = Math.ceil(transcription.words[transcription.words.length - 1].end);
     }
 
-    // Update episode with transcript
     await supabase.from("episodes").update({
       transcript: fullText,
       status: "transcribed",
@@ -215,12 +297,12 @@ Deno.serve(async (req) => {
       JSON.stringify({
         success: true,
         episode_id,
+        transcript: fullText,
         transcript_length: fullText.length,
         word_count: fullText.split(/\s+/).length,
         duration_seconds: durationSeconds,
         has_srt: !!srtContent,
         srt: srtContent || null,
-        text: fullText,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
