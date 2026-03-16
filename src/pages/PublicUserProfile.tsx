@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
+import { useTranslation } from "react-i18next";
 
 interface PublicProfile {
   display_name: string;
@@ -26,6 +27,7 @@ interface ProfileStats {
 
 export default function PublicUserProfile() {
   const { username } = useParams<{ username: string }>();
+  const { t } = useTranslation("pages");
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats>({ neurons_count: 0, artifacts_count: 0, public_neurons_count: 0 });
   const [publicNeurons, setPublicNeurons] = useState<any[]>([]);
@@ -35,7 +37,6 @@ export default function PublicUserProfile() {
   useEffect(() => {
     if (!username) return;
     const load = async () => {
-      // Use secure RPC — no user_id exposed to client
       const { data: result } = await supabase.rpc("get_public_profile", { _username: username });
 
       if (!result || !(result as any).found) {
@@ -76,9 +77,9 @@ export default function PublicUserProfile() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <User className="h-12 w-12 text-muted-foreground/20 mb-4" />
-        <h1 className="text-xl font-serif font-bold mb-2">User not found</h1>
+        <h1 className="text-xl font-serif font-bold mb-2">{t("public_user_profile.not_found_title")}</h1>
         <p className="text-sm text-muted-foreground text-center max-w-sm">
-          No public profile exists for @{username}.
+          {t("public_user_profile.not_found_desc", { username })}
         </p>
       </div>
     );
@@ -118,7 +119,6 @@ export default function PublicUserProfile() {
 
         <div className="relative max-w-2xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-8 sm:pb-10">
           <div className="text-center">
-            {/* Avatar */}
             <div className="relative inline-block mb-5">
               {profile.avatar_url ? (
                 <img
@@ -144,16 +144,15 @@ export default function PublicUserProfile() {
               </p>
             )}
 
-            {/* Stats row */}
             <div className="flex items-center justify-center gap-6 mt-6 text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Brain className="h-3.5 w-3.5 text-primary/60" />
-                <strong className="text-foreground">{stats.public_neurons_count}</strong> public neurons
+                <strong className="text-foreground">{stats.public_neurons_count}</strong> {t("public_user_profile.public_neurons")}
               </span>
               <span className="h-3 w-px bg-border" />
               <span className="flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5 text-primary/60" />
-                Member since <strong className="text-foreground">{memberSince}</strong>
+                {t("public_user_profile.member_since")} <strong className="text-foreground">{memberSince}</strong>
               </span>
             </div>
           </div>
@@ -163,19 +162,17 @@ export default function PublicUserProfile() {
       {/* Content */}
       <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 space-y-6 sm:space-y-8">
 
-        {/* Achievements */}
         <section className="bg-card border border-border rounded-xl p-5">
           <AchievementsBadges />
         </section>
 
-        {/* Public Neurons */}
         {publicNeurons.length > 0 && (
           <section>
             <div className="flex items-center gap-3 mb-4">
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                 <Brain className="h-4 w-4 text-primary" />
               </div>
-              <h2 className="text-sm font-semibold">Public Knowledge</h2>
+              <h2 className="text-sm font-semibold">{t("public_user_profile.public_knowledge")}</h2>
               <div className="flex-1 h-px bg-border" />
               <span className="text-[10px] text-muted-foreground">{stats.public_neurons_count} neurons</span>
             </div>
@@ -224,23 +221,22 @@ export default function PublicUserProfile() {
         {publicNeurons.length === 0 && (
           <div className="text-center py-12">
             <Globe className="h-8 w-8 text-muted-foreground/20 mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">No public neurons yet.</p>
+            <p className="text-sm text-muted-foreground">{t("public_user_profile.no_public_neurons")}</p>
           </div>
         )}
 
         {/* CTA */}
         <div className="rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-transparent p-6 text-center">
           <Sparkles className="h-6 w-6 text-primary mx-auto mb-2" />
-          <h3 className="text-sm font-semibold mb-1">Extract Your Own Knowledge</h3>
+          <h3 className="text-sm font-semibold mb-1">{t("public_user_profile.cta_title")}</h3>
           <p className="text-[11px] text-muted-foreground max-w-sm mx-auto mb-4">
-            AI-IDEI transforms your expertise into structured digital assets.
-            Upload content, extract insights, generate deliverables.
+            {t("public_user_profile.cta_desc")}
           </p>
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-xs font-medium text-primary hover:underline"
           >
-            Get Started <ArrowRight className="h-3 w-3" />
+            {t("public_user_profile.get_started")} <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
 

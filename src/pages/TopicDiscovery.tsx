@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { SEOHead } from "@/components/SEOHead";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface TopicCluster {
   id: string;
@@ -25,6 +26,7 @@ interface EmergingEntity {
 }
 
 export default function TopicDiscovery() {
+  const { t } = useTranslation("pages");
   const [topics, setTopics] = useState<TopicCluster[]>([]);
   const [emerging, setEmerging] = useState<EmergingEntity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +59,6 @@ export default function TopicDiscovery() {
     ? topics.filter(t => t.title.toLowerCase().includes(search.toLowerCase()))
     : topics;
 
-  // Group topics by size for visual clustering
   const large = filtered.filter(t => t.entity_count >= 10);
   const medium = filtered.filter(t => t.entity_count >= 3 && t.entity_count < 10);
   const small = filtered.filter(t => t.entity_count < 3);
@@ -83,11 +84,11 @@ export default function TopicDiscovery() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Knowledge Discovery</span>
+            <span>{t("topic_discovery.breadcrumb")}</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">Discovery</h1>
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("topic_discovery.title")}</h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">
-            Explore emerging ideas, trending topics, and knowledge clusters across the intelligence graph.
+            {t("topic_discovery.desc")}
           </p>
         </div>
       </div>
@@ -99,12 +100,11 @@ export default function TopicDiscovery() {
           </div>
         ) : (
           <>
-            {/* Emerging Ideas */}
             {emerging.length > 0 && (
               <section>
                 <h2 className="text-lg font-serif font-bold mb-4 flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-primary" />
-                  Emerging Ideas
+                  {t("topic_discovery.emerging_ideas")}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {emerging.slice(0, 8).map((e, i) => (
@@ -124,7 +124,7 @@ export default function TopicDiscovery() {
                       </h3>
                       <div className="flex items-center gap-2 mt-2">
                         <span className="text-[9px] font-mono text-muted-foreground">
-                          Score: {(e.importance_score || 0).toFixed(1)}
+                          {t("topic_discovery.score", { score: (e.importance_score || 0).toFixed(1) })}
                         </span>
                       </div>
                     </Link>
@@ -133,17 +133,16 @@ export default function TopicDiscovery() {
               </section>
             )}
 
-            {/* Topic Clusters */}
             <section>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-serif font-bold flex items-center gap-2">
                   <Layers className="h-4 w-4 text-primary" />
-                  Topic Clusters
+                  {t("topic_discovery.topic_clusters")}
                 </h2>
                 <div className="relative w-64">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                   <Input
-                    placeholder="Filter topics..."
+                    placeholder={t("topic_discovery.filter_placeholder")}
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     className="pl-9 h-8 text-xs"
@@ -151,50 +150,47 @@ export default function TopicDiscovery() {
                 </div>
               </div>
 
-              {/* Large clusters */}
               {large.length > 0 && (
                 <div className="mb-6">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                    Major Clusters ({large.length})
+                    {t("topic_discovery.major_clusters", { count: large.length })}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {large.map(t => (
-                      <TopicCard key={t.id} topic={t} size="large" />
+                    {large.map(tc => (
+                      <TopicCard key={tc.id} topic={tc} size="large" entitiesLabel={t("topic_discovery.entities", { count: tc.entity_count })} />
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Medium clusters */}
               {medium.length > 0 && (
                 <div className="mb-6">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                    Growing Clusters ({medium.length})
+                    {t("topic_discovery.growing_clusters", { count: medium.length })}
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                    {medium.map(t => (
-                      <TopicCard key={t.id} topic={t} size="medium" />
+                    {medium.map(tc => (
+                      <TopicCard key={tc.id} topic={tc} size="medium" entitiesLabel={t("topic_discovery.entities", { count: tc.entity_count })} />
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Small clusters */}
               {small.length > 0 && (
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                    Emerging Topics ({small.length})
+                    {t("topic_discovery.emerging_topics", { count: small.length })}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {small.map(t => (
+                    {small.map(tc => (
                       <Link
-                        key={t.id}
-                        to={`/topics/${t.slug}`}
+                        key={tc.id}
+                        to={`/topics/${tc.slug}`}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted/40 border border-border rounded-full text-xs hover:border-primary/30 hover:text-primary transition-colors"
                       >
                         <Tag className="h-2.5 w-2.5" />
-                        {t.title}
-                        <span className="text-muted-foreground">({t.entity_count})</span>
+                        {tc.title}
+                        <span className="text-muted-foreground">({tc.entity_count})</span>
                       </Link>
                     ))}
                   </div>
@@ -205,7 +201,7 @@ export default function TopicDiscovery() {
                 <div className="text-center py-16">
                   <Layers className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
                   <p className="text-sm text-muted-foreground">
-                    {search ? "No topics match your search." : "No topics discovered yet."}
+                    {search ? t("topic_discovery.no_topics_search") : t("topic_discovery.no_topics")}
                   </p>
                 </div>
               )}
@@ -217,7 +213,7 @@ export default function TopicDiscovery() {
   );
 }
 
-function TopicCard({ topic, size }: { topic: TopicCluster; size: "large" | "medium" }) {
+function TopicCard({ topic, size, entitiesLabel }: { topic: TopicCluster; size: "large" | "medium"; entitiesLabel: string }) {
   return (
     <Link
       to={`/topics/${topic.slug}`}
@@ -242,7 +238,7 @@ function TopicCard({ topic, size }: { topic: TopicCluster; size: "large" | "medi
         {size === "large" && topic.description && (
           <p className="text-[10px] text-muted-foreground truncate mt-0.5">{topic.description}</p>
         )}
-        <span className="text-[9px] text-muted-foreground">{topic.entity_count} entities</span>
+        <span className="text-[9px] text-muted-foreground">{entitiesLabel}</span>
       </div>
       <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary shrink-0" />
     </Link>

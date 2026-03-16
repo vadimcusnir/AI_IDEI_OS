@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, ExternalLink, Brain, Sparkles, Mail } from "lucide-react";
 import logo from "@/assets/logo.gif";
+import { useTranslation } from "react-i18next";
 
 interface ProfileData {
   display_name: string;
@@ -15,13 +16,12 @@ interface ProfileData {
 
 export default function PublicProfile() {
   const { username } = useParams<{ username: string }>();
+  const { t } = useTranslation("pages");
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    // For now, show a placeholder profile page
-    // In production, this would fetch from a profiles table
     setLoading(false);
     setNotFound(true);
   }, [username]);
@@ -38,15 +38,15 @@ export default function PublicProfile() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <img src={logo} alt="AI-IDEI" className="h-16 w-16 rounded-full mb-4 opacity-30" />
-        <h1 className="text-xl font-serif font-bold mb-2">@{username}</h1>
+        <h1 className="text-xl font-serif font-bold mb-2">{t("public_profile.not_found_title", { username })}</h1>
         <p className="text-sm text-muted-foreground mb-6 text-center max-w-sm">
-          Acest profil nu există încă. Creează-ți profilul public din dashboard.
+          {t("public_profile.not_found_desc")}
         </p>
         <a
           href="/"
           className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
         >
-          Creează profil
+          {t("public_profile.create_profile")}
         </a>
       </div>
     );
@@ -93,7 +93,7 @@ export default function PublicProfile() {
         {profile?.products && profile.products.length > 0 && (
           <div className="mb-8">
             <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
-              Produse & Servicii
+              {t("public_profile.products_services")}
             </h2>
             <div className="space-y-2">
               {profile.products.map((product, i) => (

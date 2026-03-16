@@ -699,5 +699,64 @@
     "job_failed_desc": "Credits released if reserved. You can try again.",
     "job_completed": "Job completed — results audited and saved",
     "service_not_found": "Service not found"
+  },
+  "batch_runner": {
+    "title": "Batch Execution",
+    "neuron_label": "Neuron:",
+    "balance": "Balance",
+    "total_cost": "Total Cost",
+    "selected": "Selected",
+    "progress": "Progress: {{done}} / {{total}}",
+    "select_services": "Select services",
+    "deselect_all": "Deselect all",
+    "select_all": "Select all",
+    "execute_button": "Execute {{count}} services ({{cost}} NEURONS)",
+    "execution_status": "Execution status",
+    "view_library": "View Library",
+    "run_again": "Run again",
+    "batch_complete": "Batch complete: {{count}} services executed!"
+  },
+  "public_profile": {
+    "not_found_title": "@{{username}}",
+    "not_found_desc": "This profile does not exist yet. Create your public profile from the dashboard.",
+    "create_profile": "Create profile",
+    "products_services": "Products & Services"
+  },
+  "public_user_profile": {
+    "not_found_title": "User not found",
+    "not_found_desc": "No public profile exists for @{{username}}.",
+    "public_neurons": "public neurons",
+    "member_since": "Member since",
+    "public_knowledge": "Public Knowledge",
+    "no_public_neurons": "No public neurons yet.",
+    "cta_title": "Extract Your Own Knowledge",
+    "cta_desc": "AI-IDEI transforms your expertise into structured digital assets. Upload content, extract insights, generate deliverables.",
+    "get_started": "Get Started"
+  },
+  "topic_discovery": {
+    "breadcrumb": "Knowledge Discovery",
+    "title": "Discovery",
+    "desc": "Explore emerging ideas, trending topics, and knowledge clusters across the intelligence graph.",
+    "emerging_ideas": "Emerging Ideas",
+    "topic_clusters": "Topic Clusters",
+    "filter_placeholder": "Filter topics...",
+    "major_clusters": "Major Clusters ({{count}})",
+    "growing_clusters": "Growing Clusters ({{count}})",
+    "emerging_topics": "Emerging Topics ({{count}})",
+    "no_topics_search": "No topics match your search.",
+    "no_topics": "No topics discovered yet.",
+    "entities": "{{count}} entities",
+    "score": "Score: {{score}}"
+  },
+  "media_profiles": {
+    "breadcrumb": "Intelligence Derivatives",
+    "breadcrumb_current": "Profiles",
+    "title": "Intelligence Profiles",
+    "desc": "Analytical profiles synthesized from transcript intelligence — cognitive patterns, decision styles, and strategic behaviors extracted from real conversations.",
+    "search_placeholder": "Search profiles...",
+    "no_match": "No profiles match your search.",
+    "no_profiles": "No public profiles available yet.",
+    "cognitive_signals": "{{count}} cognitive signals",
+    "frameworks": "{{count}} frameworks"
   }
 }

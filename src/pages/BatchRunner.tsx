@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { PremiumGate } from "@/components/premium/PremiumGate";
+import { useTranslation } from "react-i18next";
 
 interface Service {
   id: string;
@@ -35,6 +36,7 @@ export default function BatchRunner() {
   const { neuronId } = useParams<{ neuronId: string }>();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation("pages");
   const [services, setServices] = useState<Service[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
@@ -60,7 +62,6 @@ export default function BatchRunner() {
     if (servicesRes.data) setServices(servicesRes.data as Service[]);
     if (neuronRes.data) {
       setNeuronTitle(neuronRes.data.title);
-      // Get neuron blocks content
       const { data: blocks } = await supabase
         .from("neuron_blocks")
         .select("content")
@@ -110,7 +111,6 @@ export default function BatchRunner() {
       setJobs(prev => prev.map((j, idx) => idx === i ? { ...j, status: "running" } : j));
 
       try {
-        // Create job
         const { data: job } = await supabase
           .from("neuron_jobs")
           .insert({
@@ -125,7 +125,6 @@ export default function BatchRunner() {
 
         if (!job) throw new Error("Failed to create job");
 
-        // Run service
         const resp = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/run-service`,
           {
@@ -148,7 +147,6 @@ export default function BatchRunner() {
           throw new Error(err.error || `Error ${resp.status}`);
         }
 
-        // Consume streaming response
         const reader = resp.body?.getReader();
         if (reader) {
           const decoder = new TextDecoder();
@@ -168,9 +166,8 @@ export default function BatchRunner() {
 
     setCurrentIndex(-1);
     setRunning(false);
-    toast.success(`Batch complet: ${batchJobs.length} servicii executate!`);
+    toast.success(t("batch_runner.batch_complete", { count: batchJobs.length }));
 
-    // Refresh balance
     const { data: newCredits } = await supabase.from("user_credits").select("balance").eq("user_id", user.id).maybeSingle();
     if (newCredits) setBalance(newCredits.balance);
   };
@@ -198,9 +195,9 @@ export default function BatchRunner() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-lg font-semibold">Batch Execution</h1>
+            <h1 className="text-lg font-semibold">{t("batch_runner.title")}</h1>
             <p className="text-xs text-muted-foreground">
-              Neuron: <span className="font-medium text-foreground">{neuronTitle}</span>
+              {t("batch_runner.neuron_label")} <span className="font-medium text-foreground">{neuronTitle}</span>
             </p>
           </div>
         </div>
@@ -208,17 +205,17 @@ export default function BatchRunner() {
         {/* Balance + Cost */}
         <div className="flex items-center gap-4 mb-6 p-4 rounded-xl border border-border bg-card">
           <div className="flex-1">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Balanță</span>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("batch_runner.balance")}</span>
             <p className="text-xl font-bold font-mono">{balance} <span className="text-xs font-normal text-muted-foreground">NEURONS</span></p>
           </div>
           <div className="flex-1">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Cost Total</span>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("batch_runner.total_cost")}</span>
             <p className={cn("text-xl font-bold font-mono", canAfford ? "text-foreground" : "text-destructive")}>
               {totalCost} <span className="text-xs font-normal text-muted-foreground">NEURONS</span>
             </p>
           </div>
           <div className="flex-1">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Selectate</span>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("batch_runner.selected")}</span>
             <p className="text-xl font-bold font-mono">{selected.size} <span className="text-xs font-normal text-muted-foreground">/ {services.length}</span></p>
           </div>
         </div>
@@ -228,7 +225,7 @@ export default function BatchRunner() {
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-muted-foreground">
-                Progres: {completedCount + failedCount} / {jobs.length}
+                {t("batch_runner.progress", { done: completedCount + failedCount, total: jobs.length })}
               </span>
               <span className="text-xs font-mono">{Math.round(progress)}%</span>
             </div>
@@ -240,9 +237,9 @@ export default function BatchRunner() {
         {!running && jobs.length === 0 ? (
           <>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Selectează serviciile</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("batch_runner.select_services")}</h2>
               <button onClick={selectAll} className="text-[10px] text-primary hover:underline">
-                {selected.size === services.length ? "Deselectează tot" : "Selectează tot"}
+                {selected.size === services.length ? t("batch_runner.deselect_all") : t("batch_runner.select_all")}
               </button>
             </div>
             <div className="space-y-1.5 mb-6">
@@ -281,7 +278,7 @@ export default function BatchRunner() {
               size="lg"
             >
               <Zap className="h-4 w-4" />
-              Execută {selected.size} servicii ({totalCost} NEURONS)
+              {t("batch_runner.execute_button", { count: selected.size, cost: totalCost })}
             </Button>
             {!canAfford && selected.size > 0 && (
               <div className="mt-3">
@@ -291,7 +288,7 @@ export default function BatchRunner() {
           </>
         ) : (
           <>
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Status execuție</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("batch_runner.execution_status")}</h2>
             <div className="space-y-1.5 mb-6">
               {jobs.map((job, i) => (
                 <div
@@ -317,10 +314,10 @@ export default function BatchRunner() {
             {!running && (
               <div className="flex gap-2">
                 <Button variant="outline" className="flex-1" onClick={() => navigate(`/library`)}>
-                  Vezi Biblioteca
+                  {t("batch_runner.view_library")}
                 </Button>
                 <Button className="flex-1" onClick={() => { setJobs([]); setSelected(new Set()); }}>
-                  Rulează din nou
+                  {t("batch_runner.run_again")}
                 </Button>
               </div>
             )}
