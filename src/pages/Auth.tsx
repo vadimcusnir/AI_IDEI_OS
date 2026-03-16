@@ -1,31 +1,68 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
 import logo from "@/assets/logo.gif";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 type AuthMode = "login" | "signup" | "forgot";
+
+/* ─── Password strength logic ─── */
+interface PasswordCheck {
+  label: string;
+  test: (pw: string) => boolean;
+}
+
+const PASSWORD_CHECKS: PasswordCheck[] = [
+  { label: "At least 8 characters", test: (pw) => pw.length >= 8 },
+  { label: "One uppercase letter", test: (pw) => /[A-Z]/.test(pw) },
+  { label: "One number", test: (pw) => /\d/.test(pw) },
+  { label: "One special character", test: (pw) => /[^A-Za-z0-9]/.test(pw) },
+];
+
+function getStrength(pw: string): { score: number; label: string; color: string } {
+  const passed = PASSWORD_CHECKS.filter((c) => c.test(pw)).length;
+  if (passed <= 1) return { score: 1, label: "Weak", color: "bg-destructive" };
+  if (passed === 2) return { score: 2, label: "Fair", color: "bg-amber-500" };
+  if (passed === 3) return { score: 3, label: "Good", color: "bg-primary" };
+  return { score: 4, label: "Strong", color: "bg-emerald-500" };
+}
+
+/* ─── Friendly error messages ─── */
+function friendlyError(msg: string): string {
+  const lower = msg.toLowerCase();
+  if (lower.includes("invalid login credentials")) return "Incorrect email or password. Please try again.";
+  if (lower.includes("email not confirmed")) return "Please check your inbox and confirm your email first.";
+  if (lower.includes("user already registered")) return "An account with this email already exists. Try signing in.";
+  if (lower.includes("password") && lower.includes("leak")) return "This password has been found in a data breach. Please choose a different one.";
+  if (lower.includes("rate limit") || lower.includes("too many")) return "Too many attempts. Please wait a moment and try again.";
+  if (lower.includes("weak password")) return "Password is too weak. Please include uppercase, numbers, and special characters.";
+  return msg;
+}
 
 export default function Auth() {
   const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
   if (user) { navigate("/home", { replace: true }); return null; }
 
+  const strength = useMemo(() => getStrength(password), [password]);
+  const checks = useMemo(() => PASSWORD_CHECKS.map((c) => ({ ...c, passed: c.test(password) })), [password]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Frontend validation
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       toast.error("Please enter a valid email address.");
@@ -36,8 +73,8 @@ export default function Auth() {
         toast.error("Password must be at least 6 characters.");
         return;
       }
-      if (mode === "signup" && password.length < 8) {
-        toast.error("Password must be at least 8 characters for new accounts.");
+      if (mode === "signup" && strength.score < 2) {
+        toast.error("Please choose a stronger password.");
         return;
       }
     }
@@ -48,7 +85,7 @@ export default function Auth() {
       const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
-      if (error) toast.error(error.message);
+      if (error) toast.error(friendlyError(error.message));
       else toast.success("Reset link has been sent to your email.");
       setLoading(false);
       return;
@@ -56,11 +93,11 @@ export default function Auth() {
 
     if (mode === "signup") {
       const { error } = await signUp(trimmedEmail, password);
-      if (error) toast.error(error.message);
+      if (error) toast.error(friendlyError(error.message));
       else toast.success("Check your email to confirm your account.");
     } else {
       const { error } = await signIn(trimmedEmail, password);
-      if (error) toast.error(error.message);
+      if (error) toast.error(friendlyError(error.message));
       else {
         const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
         navigate(count && count > 0 ? "/home" : "/onboarding");
@@ -77,7 +114,6 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-background gradient-bg-animated noise-overlay relative flex items-center justify-center px-4">
-      {/* Decorative orbs */}
       <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/[0.05] rounded-full blur-[150px] animate-float" />
       <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-500/[0.04] rounded-full blur-[120px] animate-float" style={{ animationDelay: "3s" }} />
 
@@ -98,15 +134,18 @@ export default function Auth() {
         </button>
 
         <div className="bg-card/80 backdrop-blur-md rounded-2xl border border-border shadow-xl shadow-primary/[0.03] p-6 sm:p-8">
-          <motion.div
-            key={mode}
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h2 className="text-lg font-serif font-semibold mb-1">{titles[mode].heading}</h2>
-            <p className="text-sm text-muted-foreground mb-6">{titles[mode].sub}</p>
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={mode}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.25 }}
+            >
+              <h2 className="text-lg font-serif font-semibold mb-1">{titles[mode].heading}</h2>
+              <p className="text-sm text-muted-foreground mb-6">{titles[mode].sub}</p>
+            </motion.div>
+          </AnimatePresence>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -123,9 +162,68 @@ export default function Auth() {
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
-                  <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} placeholder="••••••••"
-                    className="w-full h-11 pl-10 pr-3 rounded-xl border border-input bg-background/80 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    placeholder="••••••••"
+                    className="w-full h-11 pl-10 pr-10 rounded-xl border border-input bg-background/80 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
+
+                {/* Password strength indicator — signup only */}
+                {mode === "signup" && password.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-3 space-y-2"
+                  >
+                    {/* Strength bar */}
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 flex gap-1">
+                        {[1, 2, 3, 4].map((i) => (
+                          <div
+                            key={i}
+                            className={cn(
+                              "h-1 flex-1 rounded-full transition-all duration-300",
+                              i <= strength.score ? strength.color : "bg-muted"
+                            )}
+                          />
+                        ))}
+                      </div>
+                      <span className={cn("text-[10px] font-medium", strength.score >= 3 ? "text-emerald-600" : "text-muted-foreground")}>
+                        {strength.label}
+                      </span>
+                    </div>
+
+                    {/* Requirements checklist */}
+                    <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+                      {checks.map((check) => (
+                        <div key={check.label} className="flex items-center gap-1.5">
+                          {check.passed ? (
+                            <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
+                          ) : (
+                            <XCircle className="h-3 w-3 text-muted-foreground/40 shrink-0" />
+                          )}
+                          <span className={cn("text-[10px]", check.passed ? "text-foreground" : "text-muted-foreground/60")}>
+                            {check.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
               </div>
             )}
 
