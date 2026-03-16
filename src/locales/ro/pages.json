@@ -51,6 +51,7 @@
     "no_transactions": "Nicio tranzacție încă",
     "no_transactions_hint": "Rulează un serviciu pentru prima tranzacție.",
     "no_filter_results": "Niciun rezultat pentru filtrul selectat",
+    "filter_all": "Toate",
     "topup": "Încărcări",
     "spend": "Cheltuieli",
     "bonus": "Bonus",
@@ -91,7 +92,9 @@
     "account_info": "Info Cont",
     "user_id": "ID Utilizator",
     "created": "Creat",
-    "profile_updated": "Profil actualizat cu succes!"
+    "profile_updated": "Profil actualizat cu succes!",
+    "data_privacy": "Date & Confidențialitate",
+    "data_privacy_desc": "Exportă datele tale sau șterge-ți contul (GDPR)"
   },
   "notifications": {
     "title": "Notificări",
@@ -299,5 +302,12 @@
     "content_structuring": "Structurare conținut",
     "sales_copy": "Copy de vânzare",
     "copied": "Copiat în clipboard!"
+  },
+  "extractor": {
+    "title": "Extractor",
+    "subtitle": "Lipește un link, trage un fișier — sistemul se ocupă de tot.",
+    "no_episodes": "Niciun episod încă",
+    "no_episodes_hint": "Încarcă primul podcast, video sau text pentru a extrage cunoaștere.",
+    "supported_formats": "Suportă YouTube, MP3, MP4, PDF și text simplu"
   }
 }

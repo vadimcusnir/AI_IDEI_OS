@@ -17,6 +17,7 @@ import {
   Briefcase, Coins, MessageCircle, GitBranch, Star, ExternalLink, Crown, Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
 import { ControlledSection } from "@/components/ControlledSection";
 import { XPProgressBar } from "@/components/gamification/XPProgressBar";
@@ -31,6 +32,7 @@ interface Profile {
 }
 
 export default function ProfilePage() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { tier } = useUserTier();
@@ -97,7 +99,7 @@ export default function ProfilePage() {
       }
     } else {
       setSaved(true);
-      toast.success("Profile updated successfully!");
+      toast.success(t("profile.profile_updated"));
       setTimeout(() => setSaved(false), 2000);
     }
     setSaving(false);
@@ -107,7 +109,7 @@ export default function ProfilePage() {
     const permission = await requestPermission();
     if (permission === "granted") {
       await updatePrefs({ push_enabled: true });
-      toast.success("Browser notifications enabled!");
+      toast.success(t("profile.push_enabled"));
     } else {
       toast.error("Notification permission was denied.");
     }
@@ -130,7 +132,7 @@ export default function ProfilePage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-serif font-bold tracking-tight">My Profile</h1>
+                <h1 className="text-lg font-serif font-bold tracking-tight">{t("profile.title")}</h1>
                 {(tier === "pro" || tier === "vip") && (
                   <Badge variant="outline" className="text-[8px] px-1.5 py-0 gap-0.5 border-primary/30 text-primary">
                     <Crown className="h-2.5 w-2.5" />
@@ -264,7 +266,7 @@ export default function ProfilePage() {
               <div className="bg-card border border-border rounded-xl p-6">
                 <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
                   <Bell className="h-4 w-4 text-primary" />
-                  Notification Preferences
+                  {t("profile.notification_prefs")}
                 </h2>
 
                 {prefsLoading ? (
@@ -279,9 +281,9 @@ export default function ProfilePage() {
                         <div className="flex items-center gap-2">
                           <BellRing className="h-4 w-4 text-primary" />
                           <div>
-                            <p className="text-xs font-medium">Browser Notifications</p>
+                            <p className="text-xs font-medium">{t("profile.browser_notifications")}</p>
                             <p className="text-[10px] text-muted-foreground">
-                              Receive desktop alerts even when you're not on the page
+                              {t("profile.browser_notifications_desc")}
                             </p>
                           </div>
                         </div>
@@ -299,10 +301,10 @@ export default function ProfilePage() {
 
                       {prefs.push_enabled && (
                         <div className="ml-6 space-y-2">
-                          <PrefToggle icon={Briefcase} label="Completed / failed jobs" checked={prefs.push_jobs} onChange={(v) => updatePrefs({ push_jobs: v })} />
-                          <PrefToggle icon={Coins} label="Low credits alerts" checked={prefs.push_credits} onChange={(v) => updatePrefs({ push_credits: v })} />
-                          <PrefToggle icon={MessageCircle} label="Feedback and responses" checked={prefs.push_feedback} onChange={(v) => updatePrefs({ push_feedback: v })} />
-                          <PrefToggle icon={GitBranch} label="New versions saved" checked={prefs.push_versions} onChange={(v) => updatePrefs({ push_versions: v })} />
+                          <PrefToggle icon={Briefcase} label={t("profile.jobs_label")} checked={prefs.push_jobs} onChange={(v) => updatePrefs({ push_jobs: v })} />
+                          <PrefToggle icon={Coins} label={t("profile.credits_label")} checked={prefs.push_credits} onChange={(v) => updatePrefs({ push_credits: v })} />
+                          <PrefToggle icon={MessageCircle} label={t("profile.feedback_label")} checked={prefs.push_feedback} onChange={(v) => updatePrefs({ push_feedback: v })} />
+                          <PrefToggle icon={GitBranch} label={t("profile.versions_label")} checked={prefs.push_versions} onChange={(v) => updatePrefs({ push_versions: v })} />
                         </div>
                       )}
                     </div>
@@ -314,18 +316,18 @@ export default function ProfilePage() {
                       <div className="flex items-center gap-2 mb-3">
                         <Mail className="h-4 w-4 text-primary" />
                         <div>
-                          <p className="text-xs font-medium">Email Digest</p>
+                           <p className="text-xs font-medium">{t("profile.email_digest")}</p>
                           <p className="text-[10px] text-muted-foreground">
-                            Periodic summary sent via email
+                            {t("profile.email_digest_desc")}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex gap-1.5 mb-3 ml-6">
                         {([
-                          { key: "none", label: "Disabled" },
-                          { key: "daily", label: "Daily" },
-                          { key: "weekly", label: "Weekly" },
+                          { key: "none", label: t("profile.digest_none") },
+                          { key: "daily", label: t("profile.digest_daily") },
+                          { key: "weekly", label: t("profile.digest_weekly") },
                         ] as const).map((opt) => (
                           <button
                             key={opt.key}
@@ -344,9 +346,9 @@ export default function ProfilePage() {
 
                       {prefs.email_digest !== "none" && (
                         <div className="ml-6 space-y-2">
-                          <PrefToggle icon={Briefcase} label="Jobs report" checked={prefs.email_jobs} onChange={(v) => updatePrefs({ email_jobs: v })} />
-                          <PrefToggle icon={Coins} label="Credits report" checked={prefs.email_credits} onChange={(v) => updatePrefs({ email_credits: v })} />
-                          <PrefToggle icon={MessageCircle} label="Feedback report" checked={prefs.email_feedback} onChange={(v) => updatePrefs({ email_feedback: v })} />
+                          <PrefToggle icon={Briefcase} label={t("profile.jobs_report")} checked={prefs.email_jobs} onChange={(v) => updatePrefs({ email_jobs: v })} />
+                          <PrefToggle icon={Coins} label={t("profile.credits_report")} checked={prefs.email_credits} onChange={(v) => updatePrefs({ email_credits: v })} />
+                          <PrefToggle icon={MessageCircle} label={t("profile.feedback_report")} checked={prefs.email_feedback} onChange={(v) => updatePrefs({ email_feedback: v })} />
                         </div>
                       )}
                     </div>
@@ -358,9 +360,9 @@ export default function ProfilePage() {
                       <div className="flex items-center gap-2 mb-3">
                         <Clock className="h-4 w-4 text-muted-foreground" />
                         <div>
-                          <p className="text-xs font-medium">Quiet Hours</p>
+                          <p className="text-xs font-medium">{t("profile.quiet_hours")}</p>
                           <p className="text-[10px] text-muted-foreground">
-                            No browser notifications during this interval
+                            {t("profile.quiet_hours_desc")}
                           </p>
                         </div>
                       </div>
@@ -397,18 +399,18 @@ export default function ProfilePage() {
             {/* Account info */}
             <StaggerItem>
               <div className="bg-card border border-border rounded-xl p-6">
-                <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Account Info</h2>
+                <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("profile.account_info")}</h2>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">Email</span>
                     <span className="text-xs font-mono">{user?.email}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">User ID</span>
+                    <span className="text-xs text-muted-foreground">{t("profile.user_id")}</span>
                     <span className="text-[10px] font-mono text-muted-foreground/50">{user?.id.slice(0, 8)}...</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Created</span>
+                    <span className="text-xs text-muted-foreground">{t("profile.created")}</span>
                     <span className="text-xs">{user?.created_at ? new Date(user.created_at).toLocaleDateString("en-US") : "—"}</span>
                   </div>
                 </div>
@@ -435,9 +437,9 @@ export default function ProfilePage() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium">Data & Privacy</p>
+                    <p className="text-sm font-medium">{t("profile.data_privacy")}</p>
                     <p className="text-[10px] text-muted-foreground mt-0.5">
-                      Export your data or delete your account (GDPR)
+                      {t("profile.data_privacy_desc")}
                     </p>
                   </div>
                   <span className="text-xs text-primary">→</span>

@@ -11,6 +11,7 @@ import {
   BarChart3, Filter, Search, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ControlledSection } from "@/components/ControlledSection";
 import { WalletPanel } from "@/components/wallet/WalletPanel";
@@ -35,19 +36,20 @@ interface Transaction {
   job_id: string | null;
 }
 
-const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  spend: { icon: ArrowDownRight, color: "text-destructive", label: "Spend" },
-  reserve: { icon: Clock, color: "text-primary", label: "Reserved" },
-  release: { icon: ArrowUpRight, color: "text-status-validated", label: "Released" },
-  denied: { icon: TrendingDown, color: "text-muted-foreground", label: "Denied" },
-  topup: { icon: TrendingUp, color: "text-status-validated", label: "Top-up" },
-  bonus: { icon: Gift, color: "text-ai-accent", label: "Bonus" },
-  adjustment: { icon: Coins, color: "text-primary", label: "Adjustment" },
+const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; labelKey: string }> = {
+  spend: { icon: ArrowDownRight, color: "text-destructive", labelKey: "credits.spend" },
+  reserve: { icon: Clock, color: "text-primary", labelKey: "credits.reserved" },
+  release: { icon: ArrowUpRight, color: "text-status-validated", labelKey: "credits.released" },
+  denied: { icon: TrendingDown, color: "text-muted-foreground", labelKey: "credits.denied" },
+  topup: { icon: TrendingUp, color: "text-status-validated", labelKey: "credits.topup" },
+  bonus: { icon: Gift, color: "text-ai-accent", labelKey: "credits.bonus" },
+  adjustment: { icon: Coins, color: "text-primary", labelKey: "credits.adjustment" },
 };
 
 type TxFilter = "all" | "spend" | "topup" | "bonus" | "reserve" | "release";
 
 export default function Credits() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const [credits, setCredits] = useState<UserCredits | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -178,14 +180,14 @@ export default function Credits() {
         {/* Page title */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold tracking-tight">NEURONS Credits</h1>
+            <h1 className="text-lg font-semibold tracking-tight">{t("credits.title")}</h1>
             <span className={cn(
               "text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
               balanceHealth === "healthy" ? "bg-status-validated/15 text-status-validated" :
               balanceHealth === "warning" ? "bg-primary/15 text-primary" :
               "bg-destructive/15 text-destructive"
             )}>
-              {balanceHealth === "healthy" ? "Healthy" : balanceHealth === "warning" ? "Low" : "Critical"}
+              {balanceHealth === "healthy" ? t("credits.healthy") : balanceHealth === "warning" ? t("credits.low") : t("credits.critical")}
             </span>
           </div>
           <TopUpDialog onSuccess={loadData} />
@@ -215,7 +217,7 @@ export default function Credits() {
           {/* Main balance */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Current Balance</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("credits.current_balance")}</p>
               <div className={cn(
                 "h-10 w-10 rounded-xl flex items-center justify-center",
                 balanceHealth === "healthy" ? "bg-status-validated/10" :
@@ -234,15 +236,15 @@ export default function Credits() {
             </div>
             <div className="flex gap-4">
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Earned</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.earned")}</p>
                 <p className="text-xs font-bold font-mono text-status-validated">+{credits?.total_earned ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Spent</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.spent")}</p>
                 <p className="text-xs font-bold font-mono text-destructive">-{credits?.total_spent ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Utilization</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.utilization")}</p>
                 <p className="text-xs font-bold font-mono">{utilization}%</p>
               </div>
             </div>
@@ -250,22 +252,22 @@ export default function Credits() {
 
           {/* Quick stats */}
           <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Transactions</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("credits.transactions")}</p>
             <span className="text-2xl font-bold font-mono">{transactions.length}</span>
             <p className="text-[10px] text-muted-foreground mt-1">
               {transactions.filter(t => {
                 const d = new Date(t.created_at);
                 const now = new Date();
                 return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-              }).length} this month
+              }).length} {t("credits.this_month")}
             </p>
           </div>
 
           <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Services Used</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("credits.services_used")}</p>
             <span className="text-2xl font-bold font-mono">{Object.keys(serviceStats).length}</span>
             <p className="text-[10px] text-muted-foreground mt-1">
-              {transactions.filter(t => t.type === "spend").length} executions
+              {transactions.filter(t => t.type === "spend").length} {t("credits.executions")}
             </p>
           </div>
         </div>
@@ -279,7 +281,7 @@ export default function Credits() {
         {Object.keys(serviceStats).length > 0 && (
           <div className="mb-6">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2.5 flex items-center gap-1.5">
-              <BarChart3 className="h-3 w-3" /> Consumption per Service
+              <BarChart3 className="h-3 w-3" /> {t("credits.consumption_per_service")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {Object.entries(serviceStats)
@@ -301,7 +303,7 @@ export default function Credits() {
         <div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-3">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 shrink-0">
-              Transaction History
+              {t("credits.transaction_history")}
               <span className="text-muted-foreground/40 font-normal">{filteredTx.length}</span>
             </h2>
             <div className="flex-1" />
@@ -325,11 +327,11 @@ export default function Credits() {
             {/* Filter chips */}
             <div className="flex items-center gap-0.5 flex-wrap">
               {([
-                { value: "all" as TxFilter, label: "All" },
-                { value: "spend" as TxFilter, label: "Spend" },
-                { value: "topup" as TxFilter, label: "Top-ups" },
-                { value: "bonus" as TxFilter, label: "Bonus" },
-              ]).map(f => (
+                { value: "all" as TxFilter, labelKey: "credits.filter_all" },
+                { value: "spend" as TxFilter, labelKey: "credits.spend" },
+                { value: "topup" as TxFilter, labelKey: "credits.topup" },
+                { value: "bonus" as TxFilter, labelKey: "credits.bonus" },
+              ] as const).map(f => (
                 <button
                   key={f.value}
                   onClick={() => setTxFilter(f.value)}
@@ -338,7 +340,7 @@ export default function Credits() {
                     txFilter === f.value ? "bg-primary/10 text-primary" : "text-muted-foreground/60 hover:text-foreground"
                   )}
                 >
-                  {f.label}
+                  {t(f.labelKey)}
                 </button>
               ))}
             </div>
@@ -349,12 +351,12 @@ export default function Credits() {
               <Coins className="h-8 w-8 opacity-20 mx-auto mb-3" />
               {transactions.length === 0 ? (
                 <>
-                  <p className="text-sm text-muted-foreground mb-1">No transactions yet</p>
-                  <p className="text-[10px] text-muted-foreground/60">Run a service to see your first transaction.</p>
+                   <p className="text-sm text-muted-foreground mb-1">{t("credits.no_transactions")}</p>
+                  <p className="text-[10px] text-muted-foreground/60">{t("credits.no_transactions_hint")}</p>
                 </>
               ) : (
                 <>
-                  <p className="text-sm text-muted-foreground mb-2">No results for the selected filter</p>
+                  <p className="text-sm text-muted-foreground mb-2">{t("credits.no_filter_results")}</p>
                   <Button variant="outline" size="sm" className="text-xs" onClick={() => { setTxFilter("all"); setTxSearch(""); }}>
                     Clear filters
                   </Button>
@@ -376,7 +378,7 @@ export default function Credits() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium truncate">{tx.description}</p>
                       <p className="text-[10px] text-muted-foreground">
-                        {new Date(tx.created_at).toLocaleString("en-US")} · <span className="uppercase">{cfg.label}</span>
+                        {new Date(tx.created_at).toLocaleString()} · <span className="uppercase">{t(cfg.labelKey)}</span>
                       </p>
                     </div>
                     <span className={cn(

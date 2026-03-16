@@ -20,6 +20,7 @@ import {
   Layers, Users, Save, Download, FileUp, Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
@@ -87,6 +88,7 @@ const ACCEPTED_FILE_TYPES: Record<string, string> = {
 const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 
 export default function Extractor() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const { tier } = useUserTier();
@@ -435,9 +437,9 @@ export default function Extractor() {
 
         {/* Page header */}
         <div className="mb-5">
-          <h1 className="text-lg font-semibold tracking-tight">Extractor</h1>
+          <h1 className="text-lg font-semibold tracking-tight">{t("extractor.title")}</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Paste a link, drop a file — the system handles everything.
+            {t("extractor.subtitle")}
           </p>
         </div>
 
@@ -459,11 +461,11 @@ export default function Extractor() {
             <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <FileText className="h-7 w-7 text-primary/40" />
             </div>
-            <h3 className="text-base font-serif font-semibold mb-1.5">No episodes yet</h3>
+            <h3 className="text-base font-serif font-semibold mb-1.5">{t("extractor.no_episodes")}</h3>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto mb-1">
-              Upload your first podcast, video, or text above to begin extracting knowledge.
+              {t("extractor.no_episodes_hint")}
             </p>
-            <p className="text-xs text-muted-foreground/50">Supports YouTube, MP3, MP4, PDF, and plain text</p>
+            <p className="text-xs text-muted-foreground/50">{t("extractor.supported_formats")}</p>
           </div>
         )}
         {episodes.length > 0 && (

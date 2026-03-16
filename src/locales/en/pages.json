@@ -51,6 +51,7 @@
     "no_transactions": "No transactions yet",
     "no_transactions_hint": "Run a service to see your first transaction.",
     "no_filter_results": "No results for the selected filter",
+    "filter_all": "All",
     "topup": "Top-ups",
     "spend": "Spend",
     "bonus": "Bonus",
@@ -91,7 +92,9 @@
     "account_info": "Account Info",
     "user_id": "User ID",
     "created": "Created",
-    "profile_updated": "Profile updated successfully!"
+    "profile_updated": "Profile updated successfully!",
+    "data_privacy": "Data & Privacy",
+    "data_privacy_desc": "Export your data or delete your account (GDPR)"
   },
   "notifications": {
     "title": "Notifications",
@@ -299,5 +302,12 @@
     "content_structuring": "Content Structuring",
     "sales_copy": "Sales Copy",
     "copied": "Copied to clipboard!"
+  },
+  "extractor": {
+    "title": "Extractor",
+    "subtitle": "Paste a link, drop a file — the system handles everything.",
+    "no_episodes": "No episodes yet",
+    "no_episodes_hint": "Upload your first podcast, video, or text above to begin extracting knowledge.",
+    "supported_formats": "Supports YouTube, MP3, MP4, PDF, and plain text"
   }
 }
