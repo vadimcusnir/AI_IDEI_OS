@@ -187,10 +187,10 @@ export default function Notifications() {
   const handleTogglePush = async () => {
     if (isSubscribed) {
       await unsubscribe();
-      toast.success("Push notifications disabled.");
+      toast.success(t("notifications.push_disabled_toast"));
     } else {
       const ok = await subscribe();
-      if (ok) toast.success("Push notifications enabled!");
+      if (ok) toast.success(t("notifications.push_enabled_toast"));
       else toast.error("Could not enable push notifications.");
     }
   };
