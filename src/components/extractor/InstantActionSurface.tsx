@@ -78,25 +78,49 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
   const detectedType = input.trim() ? detectType(input) : null;
 
-  const fetchYouTubeTitle = async (url: string): Promise<string | null> => {
+  // Source detection result for URLs
+  const sourceInfo: SourceDetectionResult | null = 
+    detectedType === "url" ? detectSource(input) : null;
+
+  /** Fetch metadata via edge function */
+  const fetchMetadata = async (url: string, platform: string, token: string) => {
     try {
-      const resp = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
-      if (resp.ok) return (await resp.json()).title || null;
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-metadata`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ url, platform }),
+        }
+      );
+      if (resp.ok) return await resp.json();
     } catch {}
     return null;
   };
 
-  const extractTitleFromUrl = (url: string): string => {
+  /** Fetch subtitles via edge function */
+  const fetchSubtitles = async (url: string, episodeId: string, token: string) => {
     try {
-      const parsed = new URL(url);
-      const pathParts = parsed.pathname.split("/").filter(Boolean);
-      if (pathParts.length > 0) {
-        const last = decodeURIComponent(pathParts[pathParts.length - 1])
-          .replace(/[-_]/g, " ").replace(/\.\w+$/, "").replace(/\b\w/g, c => c.toUpperCase());
-        if (last.length > 2) return last;
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-subtitles`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ url, episode_id: episodeId }),
+        }
+      );
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.subtitle_text) return data;
       }
-      return parsed.hostname.replace("www.", "");
-    } catch { return `Episode ${new Date().toLocaleDateString()}`; }
+    } catch {}
+    return null;
   };
 
   const parseSrtToText = (srt: string): string => {
