@@ -301,10 +301,10 @@ export default function ProfilePage() {
 
                       {prefs.push_enabled && (
                         <div className="ml-6 space-y-2">
-                          <PrefToggle icon={Briefcase} label="Completed / failed jobs" checked={prefs.push_jobs} onChange={(v) => updatePrefs({ push_jobs: v })} />
-                          <PrefToggle icon={Coins} label="Low credits alerts" checked={prefs.push_credits} onChange={(v) => updatePrefs({ push_credits: v })} />
-                          <PrefToggle icon={MessageCircle} label="Feedback and responses" checked={prefs.push_feedback} onChange={(v) => updatePrefs({ push_feedback: v })} />
-                          <PrefToggle icon={GitBranch} label="New versions saved" checked={prefs.push_versions} onChange={(v) => updatePrefs({ push_versions: v })} />
+                          <PrefToggle icon={Briefcase} label={t("profile.jobs_label")} checked={prefs.push_jobs} onChange={(v) => updatePrefs({ push_jobs: v })} />
+                          <PrefToggle icon={Coins} label={t("profile.credits_label")} checked={prefs.push_credits} onChange={(v) => updatePrefs({ push_credits: v })} />
+                          <PrefToggle icon={MessageCircle} label={t("profile.feedback_label")} checked={prefs.push_feedback} onChange={(v) => updatePrefs({ push_feedback: v })} />
+                          <PrefToggle icon={GitBranch} label={t("profile.versions_label")} checked={prefs.push_versions} onChange={(v) => updatePrefs({ push_versions: v })} />
                         </div>
                       )}
                     </div>
