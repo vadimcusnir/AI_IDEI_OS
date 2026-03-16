@@ -18,6 +18,7 @@ import { StatsOverview } from "@/components/intelligence/StatsOverview";
 import { DuplicateMergePanel } from "@/components/neurons/DuplicateMergePanel";
 import { PremiumGate } from "@/components/premium/PremiumGate";
 import { GitMerge } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Stats {
   totalNeurons: number;
