@@ -4,9 +4,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
+import { motion, AnimatePresence } from "framer-motion";
+import { PageTransition } from "@/components/motion/PageTransition";
 import {
-  Upload, Brain, Sparkles, TrendingUp, BookOpen,
-  Check, ArrowRight, Loader2, Play,
+  Upload, Brain, Sparkles, TrendingUp,
+  Check, ArrowRight, Loader2, Play, Zap, Gift, Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -21,43 +23,55 @@ interface StepStatus {
 const STEPS = [
   {
     key: "upload",
-    title: "Upload Your First Content",
-    desc: "Go to the Extractor and upload an audio file, paste text, or enter a YouTube URL. The system will transcribe and prepare your content.",
+    title: "Upload Your Content",
+    subtitle: "The journey starts here",
+    desc: "Drop an MP3, paste a YouTube link, or type text directly. Our AI transcribes and prepares everything automatically.",
     icon: Upload,
     action: "/extractor",
     actionLabel: "Open Extractor",
     checkField: "episodes" as keyof StepStatus,
-    example: "Drag an MP3 file, paste a YouTube link, or type/paste text directly.",
+    reward: "+25 XP",
+    gradient: "from-primary/20 to-primary/5",
+    tip: "Tip: YouTube links get auto-transcribed with speaker detection.",
   },
   {
     key: "extract",
-    title: "Extract Knowledge Neurons",
-    desc: "The AI analyzes your content and pulls out atomic knowledge units — insights, patterns, formulas, and frameworks. Each one is reusable forever.",
+    title: "Extract Neurons",
+    subtitle: "Atomic knowledge units",
+    desc: "AI analyzes your content and extracts frameworks, insights, patterns, and formulas. Each neuron is reusable forever.",
     icon: Brain,
     action: "/neurons",
     actionLabel: "View Neurons",
     checkField: "neurons" as keyof StepStatus,
-    example: "From one episode, you might get: 5 insights + 3 patterns + 2 formulas + 1 framework.",
+    reward: "+25 XP per neuron",
+    gradient: "from-ai-accent/20 to-ai-accent/5",
+    tip: "One episode typically yields 5-15 unique neurons.",
   },
   {
     key: "execute",
-    title: "Run Your First AI Service",
-    desc: "Pick a service from the catalog — article writer, strategy generator, copywriting engine — and let AI transform your neurons into professional deliverables.",
+    title: "Run AI Services",
+    subtitle: "Transform neurons into deliverables",
+    desc: "Pick a service — article writer, strategy builder, copy engine — and let AI transform your neurons into professional outputs.",
     icon: Sparkles,
     action: "/services",
     actionLabel: "Explore Services",
     checkField: "jobs" as keyof StepStatus,
-    example: "Select 'Article Writer' → pick 3 neurons → get a 1500-word article in 2 minutes.",
+    reward: "+15 XP per job",
+    gradient: "from-status-validated/20 to-status-validated/5",
+    tip: "Start with 'Quick Extract' — it's the fastest way to see results.",
   },
   {
     key: "capitalize",
-    title: "Review & Reuse Your Artifacts",
-    desc: "Every generated output is saved in your Library. Edit, export, or use them as building blocks for more complex deliverables.",
+    title: "Capitalize & Reuse",
+    subtitle: "Your knowledge library grows",
+    desc: "Every output is saved in your Library. Edit, export, share, or use them as inputs for more complex deliverables.",
     icon: TrendingUp,
     action: "/library",
     actionLabel: "Open Library",
     checkField: "artifacts" as keyof StepStatus,
-    example: "Your library grows with every service run. 10 runs = 50+ professional deliverables.",
+    reward: "Unlocks Intelligence",
+    gradient: "from-destructive/15 to-destructive/5",
+    tip: "10 service runs = 50+ professional deliverables.",
   },
 ];
 
@@ -92,15 +106,14 @@ export default function Onboarding() {
     };
     setStatus(s);
 
-    // Auto-select first incomplete step (skip step 0 "learn" which has no checkField)
-    const firstIncomplete = STEPS.findIndex(step => step.checkField && s[step.checkField] === 0);
+    const firstIncomplete = STEPS.findIndex(step => s[step.checkField] === 0);
     setActiveStep(firstIncomplete >= 0 ? firstIncomplete : STEPS.length - 1);
     setLoading(false);
   };
 
-  const completedCount = STEPS.filter(s => s.checkField && status[s.checkField!] > 0).length;
-  const totalCheckable = STEPS.filter(s => s.checkField).length;
-  const progressPercent = Math.round((completedCount / totalCheckable) * 100);
+  const completedCount = STEPS.filter(s => status[s.checkField] > 0).length;
+  const progressPercent = Math.round((completedCount / STEPS.length) * 100);
+  const allDone = completedCount === STEPS.length;
 
   if (authLoading || wsLoading || loading) {
     return (
@@ -111,141 +124,236 @@ export default function Onboarding() {
   }
 
   return (
+    <PageTransition>
     <div className="flex-1 overflow-y-auto">
-      <SEOHead title="Onboarding — AI-IDEI" description="Get started with AI-IDEI: upload content, extract neurons, run AI services." />
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-serif font-bold mb-2">Get Started with AI-IDEI</h1>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Follow these 4 steps to turn your content into structured knowledge assets.
-            Each step builds on the previous one.
+      <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 4 steps." />
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+        {/* Hero Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider mb-4">
+            <Zap className="h-3 w-3" />
+            4 Steps to Knowledge Assets
+          </div>
+          <h1 className="text-xl sm:text-2xl font-serif font-bold mb-2">
+            Welcome to AI-IDEI
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+            Upload once. Extract forever. Each step brings you closer to an infinite knowledge library.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Progress bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-muted-foreground">Progress</span>
-            <span className="text-xs font-mono font-bold text-primary">{completedCount}/{totalCheckable} completed</span>
-          </div>
-          <div className="h-2 rounded-full bg-muted overflow-hidden">
-            <div
-              className="h-full rounded-full bg-primary transition-all duration-700 ease-out"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-        </div>
+        {/* Visual Progress Pipeline */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8"
+        >
+          <div className="flex items-center gap-1 sm:gap-2">
+            {STEPS.map((step, idx) => {
+              const isCompleted = status[step.checkField] > 0;
+              const isActive = idx === activeStep;
+              const Icon = step.icon;
 
-        {/* Steps */}
-        <div className="space-y-3">
-          {STEPS.map((step, idx) => {
-            const Icon = step.icon;
-            const isCompleted = step.checkField ? status[step.checkField] > 0 : false;
-            const isActive = idx === activeStep;
-
-            return (
-              <div
-                key={step.key}
-                onClick={() => setActiveStep(idx)}
-                className={cn(
-                  "rounded-xl border transition-all duration-200 cursor-pointer",
-                  isActive
-                    ? "border-primary/30 bg-primary/5 shadow-sm"
-                    : isCompleted
-                    ? "border-border bg-card"
-                    : "border-border bg-card hover:border-primary/20"
-                )}
-              >
-                <div className="flex items-center gap-4 p-4">
-                  <div className={cn(
-                    "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
-                    isCompleted ? "bg-primary/10" : isActive ? "bg-primary/10" : "bg-muted"
-                  )}>
-                    {isCompleted ? (
-                      <Check className="h-5 w-5 text-primary" />
-                    ) : (
-                      <Icon className={cn("h-5 w-5", isActive ? "text-primary" : "text-muted-foreground")} />
+              return (
+                <div key={step.key} className="flex items-center flex-1">
+                  <button
+                    onClick={() => setActiveStep(idx)}
+                    className={cn(
+                      "flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl transition-all",
+                      isActive ? "bg-primary/10" : "hover:bg-muted/50",
                     )}
-                  </div>
+                  >
+                    <div className={cn(
+                      "h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center transition-all border-2",
+                      isCompleted
+                        ? "bg-primary border-primary text-primary-foreground"
+                        : isActive
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-muted-foreground/20 bg-muted text-muted-foreground"
+                    )}>
+                      {isCompleted ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Icon className="h-4 w-4" />
+                      )}
+                    </div>
+                    <span className={cn(
+                      "text-[9px] sm:text-[10px] font-semibold tracking-wide",
+                      isActive ? "text-primary" : isCompleted ? "text-foreground" : "text-muted-foreground"
+                    )}>
+                      {step.key.charAt(0).toUpperCase() + step.key.slice(1)}
+                    </span>
+                  </button>
+                  {idx < STEPS.length - 1 && (
+                    <div className={cn(
+                      "h-0.5 w-3 sm:w-6 rounded-full transition-colors shrink-0",
+                      status[STEPS[idx].checkField] > 0 ? "bg-primary" : "bg-muted-foreground/15"
+                    )} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {/* Text progress */}
+          <div className="flex items-center justify-between mt-3 px-1">
+            <span className="text-[10px] text-muted-foreground">{completedCount}/{STEPS.length} completed</span>
+            <div className="flex items-center gap-1.5">
+              <div className="w-24 h-1.5 rounded-full bg-muted overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full bg-primary"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progressPercent}%` }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                />
+              </div>
+              <span className="text-[10px] font-mono font-bold text-primary">{progressPercent}%</span>
+            </div>
+          </div>
+        </motion.div>
 
-                  <div className="flex-1 min-w-0">
+        {/* Active Step Detail Card */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeStep}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.25 }}
+          >
+            {(() => {
+              const step = STEPS[activeStep];
+              const Icon = step.icon;
+              const isCompleted = status[step.checkField] > 0;
+
+              return (
+                <div className={cn(
+                  "rounded-2xl border p-5 sm:p-6 transition-all",
+                  isCompleted
+                    ? "border-primary/20 bg-primary/5"
+                    : "border-border bg-card"
+                )}>
+                  {/* Step number + reward */}
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
-                        Step {idx + 1}
+                        Step {activeStep + 1} of {STEPS.length}
                       </span>
                       {isCompleted && (
                         <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                          ✓ Done
+                          ✓ Completed
                         </span>
                       )}
                     </div>
-                    <h3 className="text-sm font-semibold mt-0.5">{step.title}</h3>
-                  </div>
-
-                  <ArrowRight className={cn(
-                    "h-4 w-4 text-muted-foreground/40 transition-transform",
-                    isActive && "rotate-90"
-                  )} />
-                </div>
-
-                {isActive && (
-                  <div className="px-4 pb-4 pt-0">
-                    <div className="pl-14 space-y-3">
-                      <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
-
-                      {/* Example callout */}
-                      <div className="rounded-lg bg-muted/50 border border-border/50 p-3">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <Play className="h-3 w-3 text-primary" />
-                          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Example</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground italic">{step.example}</p>
-                      </div>
-
-                      {isCompleted && step.checkField && (
-                        <p className="text-xs text-primary font-medium">
-                          {status[step.checkField]} {step.checkField} created
-                        </p>
-                      )}
-
-                      <Button
-                        size="sm"
-                        variant={isCompleted ? "outline" : "default"}
-                        className="gap-2 text-xs"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(step.action);
-                        }}
-                      >
-                        {step.actionLabel}
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </Button>
+                    <div className="flex items-center gap-1 text-[9px] font-semibold text-primary/70">
+                      <Gift className="h-3 w-3" />
+                      {step.reward}
                     </div>
                   </div>
-                )}
-              </div>
-            );
-          })}
+
+                  {/* Icon + Title */}
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className={cn(
+                      "h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br",
+                      step.gradient
+                    )}>
+                      <Icon className={cn("h-6 w-6", isCompleted ? "text-primary" : "text-foreground")} />
+                    </div>
+                    <div>
+                      <h2 className="text-base sm:text-lg font-serif font-bold">{step.title}</h2>
+                      <p className="text-[10px] text-muted-foreground font-medium">{step.subtitle}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-muted-foreground leading-relaxed mb-4">{step.desc}</p>
+
+                  {/* Tip */}
+                  <div className="rounded-lg bg-muted/50 border border-border/50 p-3 mb-4">
+                    <div className="flex items-center gap-1.5">
+                      <Play className="h-3 w-3 text-primary shrink-0" />
+                      <p className="text-[10px] text-muted-foreground italic">{step.tip}</p>
+                    </div>
+                  </div>
+
+                  {/* Status + Action */}
+                  <div className="flex items-center justify-between">
+                    {isCompleted && (
+                      <p className="text-xs text-primary font-medium">
+                        {status[step.checkField]} {step.checkField} created
+                      </p>
+                    )}
+                    {!isCompleted && <div />}
+
+                    <Button
+                      size="sm"
+                      variant={isCompleted ? "outline" : "default"}
+                      className="gap-2 text-xs"
+                      onClick={() => navigate(step.action)}
+                    >
+                      {step.actionLabel}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              );
+            })()}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation arrows */}
+        <div className="flex items-center justify-between mt-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs"
+            disabled={activeStep === 0}
+            onClick={() => setActiveStep(s => s - 1)}
+          >
+            ← Previous
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs"
+            disabled={activeStep === STEPS.length - 1}
+            onClick={() => setActiveStep(s => s + 1)}
+          >
+            Next →
+          </Button>
         </div>
 
         {/* Completion CTA */}
-        {completedCount === totalCheckable && (
-          <div className="mt-8 p-6 rounded-2xl border-2 border-primary/30 bg-primary/5 text-center">
-            <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
-              <TrendingUp className="h-6 w-6 text-primary" />
+        {allDone && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-8 p-6 rounded-2xl border-2 border-primary/30 bg-primary/5 text-center"
+          >
+            <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
+              <Crown className="h-7 w-7 text-primary" />
             </div>
-            <h2 className="text-lg font-serif font-bold mb-1.5">Your pipeline is active! 🎉</h2>
+            <h2 className="text-lg font-serif font-bold mb-1.5">Pipeline Active! 🎉</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              You've completed all steps. Keep uploading content and running services to grow your knowledge library.
+              You've mastered the basics. Keep uploading content and running services to grow your knowledge empire.
             </p>
-            <Button onClick={() => navigate("/home")} className="gap-2">
-              Back to Cockpit
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
+            <div className="flex items-center justify-center gap-2">
+              <Button onClick={() => navigate("/home")} className="gap-2">
+                Go to Cockpit
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" onClick={() => navigate("/extractor")} className="gap-2 text-xs">
+                Upload More
+              </Button>
+            </div>
+          </motion.div>
         )}
       </div>
     </div>
+    </PageTransition>
   );
 }
