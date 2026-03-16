@@ -5,12 +5,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { detectSource, detectFileSource, type SourceDetectionResult } from "@/lib/sourceDetection";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
   Zap, Globe, FileAudio, Film, Type,
   ChevronDown, CheckCircle2, Brain, Layers, FileUp,
-  Sparkles, Network, Scissors, Loader2,
+  Sparkles, Network, Scissors, Loader2, Coins,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
