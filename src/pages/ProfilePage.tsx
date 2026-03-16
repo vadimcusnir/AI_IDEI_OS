@@ -33,6 +33,8 @@ interface Profile {
 export default function ProfilePage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { tier } = useUserTier();
+  const { subscriptionEnd, manageSubscription } = useSubscription();
   const [profile, setProfile] = useState<Profile>({
     display_name: "",
     bio: "",
