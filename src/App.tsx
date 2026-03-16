@@ -12,6 +12,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminRoute } from "@/components/AdminRoute";
 import { CookieConsent } from "@/components/global/CookieConsent";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { Loader2 } from "lucide-react";
 
 // ── Lazy-loaded pages ──
@@ -103,6 +104,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Suspense fallback={<PageLoader />}>
+              <ScrollToTop />
               <Routes>
                 {/* Public routes — accessible without login */}
                 <Route path="/" element={<Landing />} />
