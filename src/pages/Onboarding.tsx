@@ -255,11 +255,11 @@ export default function Onboarding() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
-                        Step {activeStep + 1} of {STEPS.length}
+                        {t("onboarding.step", { number: activeStep + 1 })} of {STEPS.length}
                       </span>
                       {isCompleted && (
                         <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                          ✓ Completed
+                          {t("onboarding.step_completed")}
                         </span>
                       )}
                     </div>
