@@ -72,27 +72,27 @@ export default function WorkspaceSettings() {
       <div className="max-w-3xl mx-auto p-6 space-y-6">
         <div className="flex items-center gap-3">
           <Building2 className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold">Setări Workspace</h1>
+          <h1 className="text-2xl font-bold">{t("workspace.title")}</h1>
         </div>
 
         {/* General Settings */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">General</CardTitle>
-            <CardDescription>Numele și descrierea workspace-ului.</CardDescription>
+            <CardTitle className="text-base">{t("workspace.general")}</CardTitle>
+            <CardDescription>{t("workspace.general_desc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-xs font-medium text-muted-foreground">Nume</label>
+              <label className="text-xs font-medium text-muted-foreground">{t("workspace.name_label")}</label>
               <Input value={name} onChange={(e) => setName(e.target.value)} disabled={!isOwnerOrAdmin} />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground">Descriere</label>
+              <label className="text-xs font-medium text-muted-foreground">{t("workspace.description_label")}</label>
               <Textarea value={description} onChange={(e) => setDescription(e.target.value)} disabled={!isOwnerOrAdmin} rows={3} />
             </div>
             {isOwnerOrAdmin && (
               <Button onClick={handleSave} disabled={saving} size="sm">
-                {saving ? "Se salvează…" : "Salvează"}
+                {saving ? t("workspace.saving") : t("workspace.save")}
               </Button>
             )}
           </CardContent>
