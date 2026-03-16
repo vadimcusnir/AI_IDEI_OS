@@ -115,7 +115,7 @@ export function MobileBottomNav() {
                 key={path}
                 onClick={() => navigate(path)}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-200 min-w-[56px] min-h-[44px]",
+                  "relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-200 min-w-[56px] min-h-[44px]",
                   active
                     ? "text-primary scale-105"
                     : "text-muted-foreground hover:text-foreground active:scale-95"
