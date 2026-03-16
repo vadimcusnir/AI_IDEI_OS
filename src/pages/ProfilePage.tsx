@@ -6,12 +6,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useUserTier } from "@/hooks/useUserTier";
+import { useSubscription } from "@/hooks/useSubscription";
 import {
   User, Save, CheckCircle2,
   Bell, BellRing, Mail, Clock,
-  Briefcase, Coins, MessageCircle, GitBranch, Star, ExternalLink,
+  Briefcase, Coins, MessageCircle, GitBranch, Star, ExternalLink, Crown, Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
