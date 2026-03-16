@@ -138,7 +138,7 @@ export function MobileBottomNav() {
             )}
           >
             <Menu className="h-5 w-5" />
-            <span className="text-[9px] font-medium leading-none">More</span>
+            <span className="text-[9px] font-medium leading-none">{t("common:more")}</span>
           </button>
         </div>
       </nav>
