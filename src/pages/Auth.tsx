@@ -227,9 +227,9 @@ export default function Auth() {
             <Button type="submit" disabled={loading} className="btn-glow w-full h-11 gap-2 rounded-xl text-sm font-medium">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
                 <>
-                  {mode === "login" && "Sign In"}
-                  {mode === "signup" && "Create Account"}
-                  {mode === "forgot" && "Send Link"}
+                  {mode === "login" && t("auth.sign_in")}
+                  {mode === "signup" && t("auth.create_account")}
+                  {mode === "forgot" && t("auth.send_link")}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
