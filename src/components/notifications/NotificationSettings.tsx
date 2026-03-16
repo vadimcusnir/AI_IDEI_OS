@@ -238,15 +238,17 @@ function ToggleRow({
   description,
   checked,
   onChange,
+  disabled = false,
 }: {
   icon: React.ElementType;
   label: string;
   description: string;
   checked: boolean;
   onChange: (v: boolean) => void;
+  disabled?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className={cn("flex items-center justify-between", disabled && "opacity-50")}>
       <div className="flex items-center gap-2.5">
         <Icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
         <div>
@@ -254,7 +256,7 @@ function ToggleRow({
           <p className="text-[10px] text-muted-foreground">{description}</p>
         </div>
       </div>
-      <Switch checked={checked} onCheckedChange={onChange} />
+      <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} />
     </div>
   );
 }
