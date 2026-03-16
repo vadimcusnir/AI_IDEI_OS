@@ -145,7 +145,7 @@ export default function Dashboard() {
       <SEOHead title="Dashboard — AI-IDEI" description="Full analytics dashboard: neurons, jobs, credits, pipeline status." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* KPI Row */}
-        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 mb-6">
           <motion.div variants={fadeUp}><KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} /></motion.div>
           <motion.div variants={fadeUp}><KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} /></motion.div>
           <motion.div variants={fadeUp}><KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" /></motion.div>
