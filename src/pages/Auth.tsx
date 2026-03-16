@@ -156,7 +156,7 @@ export default function Auth() {
 
             {mode !== "forgot" && (
               <div>
-                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Password</label>
+                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("auth.password_label")}</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
                   <input
