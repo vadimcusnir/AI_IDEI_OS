@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { AgentSlashMenu } from "./AgentSlashMenu";
 
 interface Message {
   id: string;
