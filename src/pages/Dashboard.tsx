@@ -166,7 +166,7 @@ export default function Dashboard() {
               { label: "Extract", value: data.pipeline.analyzed, icon: Brain },
               { label: "Deliver", value: data.pipeline.serviced, icon: Sparkles },
             ].map((step, i, arr) => (
-              <div key={step.label} className="flex items-center gap-2 flex-1">
+              <div key={step.label} className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
                 <div className="flex-1 text-center">
                   <step.icon className={cn("h-4 w-4 mx-auto mb-1", step.value > 0 ? "text-primary" : "text-muted-foreground/30")} />
                   <p className="text-lg font-bold font-mono">{step.value}</p>
