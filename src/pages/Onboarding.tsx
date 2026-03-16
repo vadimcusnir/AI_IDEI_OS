@@ -117,6 +117,15 @@ export default function Onboarding() {
   const progressPercent = Math.round((completedCount / STEPS.length) * 100);
   const allDone = completedCount === STEPS.length;
 
+  // Fire confetti when all steps complete
+  useEffect(() => {
+    if (allDone && !prevAllDoneRef.current) {
+      fireFinalConfetti();
+      if (user) localStorage.setItem(`onboarding_completed_${user.id}`, "true");
+    }
+    prevAllDoneRef.current = allDone;
+  }, [allDone]);
+
   if (authLoading || wsLoading || loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
