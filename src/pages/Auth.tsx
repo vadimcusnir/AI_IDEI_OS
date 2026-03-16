@@ -14,40 +14,10 @@ import { useTranslation } from "react-i18next";
 
 type AuthMode = "login" | "signup" | "forgot";
 
-/* ─── Password strength logic ─── */
-interface PasswordCheck {
-  label: string;
-  test: (pw: string) => boolean;
-}
-
-const PASSWORD_CHECKS: PasswordCheck[] = [
-  { label: "At least 8 characters", test: (pw) => pw.length >= 8 },
-  { label: "One uppercase letter", test: (pw) => /[A-Z]/.test(pw) },
-  { label: "One number", test: (pw) => /\d/.test(pw) },
-  { label: "One special character", test: (pw) => /[^A-Za-z0-9]/.test(pw) },
-];
-
-function getStrength(pw: string): { score: number; label: string; color: string } {
-  const passed = PASSWORD_CHECKS.filter((c) => c.test(pw)).length;
-  if (passed <= 1) return { score: 1, label: "Weak", color: "bg-destructive" };
-  if (passed === 2) return { score: 2, label: "Fair", color: "bg-amber-500" };
-  if (passed === 3) return { score: 3, label: "Good", color: "bg-primary" };
-  return { score: 4, label: "Strong", color: "bg-emerald-500" };
-}
-
-/* ─── Friendly error messages ─── */
-function friendlyError(msg: string): string {
-  const lower = msg.toLowerCase();
-  if (lower.includes("invalid login credentials")) return "Incorrect email or password. Please try again.";
-  if (lower.includes("email not confirmed")) return "Please check your inbox and confirm your email first.";
-  if (lower.includes("user already registered")) return "An account with this email already exists. Try signing in.";
-  if (lower.includes("password") && lower.includes("leak")) return "This password has been found in a data breach. Please choose a different one.";
-  if (lower.includes("rate limit") || lower.includes("too many")) return "Too many attempts. Please wait a moment and try again.";
-  if (lower.includes("weak password")) return "Password is too weak. Please include uppercase, numbers, and special characters.";
-  return msg;
-}
+/* ─── Password strength & error helpers use t() now ─── */
 
 export default function Auth() {
+  const { t } = useTranslation("pages");
   const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,6 +25,32 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+
+  const PASSWORD_CHECKS = useMemo(() => [
+    { label: t("auth.pw_8_chars"), test: (pw: string) => pw.length >= 8 },
+    { label: t("auth.pw_uppercase"), test: (pw: string) => /[A-Z]/.test(pw) },
+    { label: t("auth.pw_number"), test: (pw: string) => /\d/.test(pw) },
+    { label: t("auth.pw_special"), test: (pw: string) => /[^A-Za-z0-9]/.test(pw) },
+  ], [t]);
+
+  function getStrength(pw: string): { score: number; label: string; color: string } {
+    const passed = PASSWORD_CHECKS.filter((c) => c.test(pw)).length;
+    if (passed <= 1) return { score: 1, label: t("auth.pw_weak"), color: "bg-destructive" };
+    if (passed === 2) return { score: 2, label: t("auth.pw_fair"), color: "bg-amber-500" };
+    if (passed === 3) return { score: 3, label: t("auth.pw_good"), color: "bg-primary" };
+    return { score: 4, label: t("auth.pw_strong"), color: "bg-emerald-500" };
+  }
+
+  function friendlyError(msg: string): string {
+    const lower = msg.toLowerCase();
+    if (lower.includes("invalid login credentials")) return t("auth.error_invalid_login");
+    if (lower.includes("email not confirmed")) return t("auth.error_email_not_confirmed");
+    if (lower.includes("user already registered")) return t("auth.error_user_exists");
+    if (lower.includes("password") && lower.includes("leak")) return t("auth.error_password_leak");
+    if (lower.includes("rate limit") || lower.includes("too many")) return t("auth.error_rate_limit");
+    if (lower.includes("weak password")) return t("auth.error_weak_password");
+    return msg;
+  }
 
   const strength = useMemo(() => getStrength(password), [password]);
   const checks = useMemo(() => PASSWORD_CHECKS.map((c) => ({ ...c, passed: c.test(password) })), [password]);
