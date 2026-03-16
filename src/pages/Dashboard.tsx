@@ -159,7 +159,7 @@ export default function Dashboard() {
           <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Activity className="h-3 w-3" /> Pipeline Progress
           </h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto">
             {[
               { label: "Upload", value: data.pipeline.uploaded, icon: FileAudio },
               { label: "Transcribe", value: data.pipeline.transcribed, icon: Layers },
