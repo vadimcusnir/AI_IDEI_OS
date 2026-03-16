@@ -101,27 +101,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     return null;
   };
 
-  /** Fetch subtitles via edge function */
-  const fetchSubtitles = async (url: string, episodeId: string, token: string) => {
-    try {
-      const resp = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-subtitles`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ url, episode_id: episodeId }),
-        }
-      );
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.subtitle_text) return data;
-      }
-    } catch {}
-    return null;
-  };
 
   const parseSrtToText = (srt: string): string => {
     return srt
@@ -165,7 +144,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       let transcript: string | null = null;
       let filePath: string | null = null;
       let fileSize: number | null = null;
-      let subtitlesUsed = false;
+      
 
       if (selectedFile) {
         const ext = selectedFile.name.split(".").pop()?.toLowerCase() || "";
@@ -198,9 +177,9 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
           fileSize = selectedFile.size;
         }
       } else if (urlSource) {
-        // Fetch metadata for URL sources
+        // Quick metadata fetch for title (full transcription pipeline handles the rest)
         const metadata = await fetchMetadata(urlSource.canonical_url, urlSource.platform, accessToken);
-        title = metadata?.title || new URL(urlSource.canonical_url).hostname;
+        title = metadata?.title || new URL(urlSource.canonical_url).hostname.replace("www.", "");
       } else {
         transcript = input.trim();
         title = input.slice(0, 60).replace(/\n/g, " ").trim() + (input.length > 60 ? "…" : "");
@@ -235,22 +214,11 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       });
 
       // === TRANSCRIBE ===
-      if (!transcript && urlSource?.platform === "youtube") {
-        // Try subtitles first for YouTube
-        setStage("transcribe");
-        const subs = await fetchSubtitles(urlSource.canonical_url, ep.id, accessToken);
-        if (subs?.subtitle_text) {
-          transcript = subs.subtitle_text;
-          subtitlesUsed = true;
-          toast.info(`📝 Using ${subs.subtitle_language?.toUpperCase()} captions (${subs.segment_count} segments)`);
-        }
-      }
-
-      if (!transcript && filePath) {
-      if (!transcript && !subtitlesUsed && (filePath || urlSource)) {
+      // Unified pipeline: detect → subtitles (fast) → STT (fallback)
+      if (!transcript && (urlSource || filePath)) {
         setStage("transcribe");
         const resp = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-audio`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-source`,
           {
             method: "POST",
             headers: {
@@ -258,16 +226,19 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
               Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
+              url: urlSource?.canonical_url || undefined,
               episode_id: ep.id,
               file_path: filePath || undefined,
-              source_url: urlSource?.canonical_url || undefined,
-              language: undefined,
             }),
           }
         );
         const data = await resp.json();
         if (!resp.ok) throw new Error(data.error || "Transcription failed");
         transcript = data.transcript || "done";
+
+        if (data.source === "subtitles") {
+          toast.info(`📝 Using ${data.language?.toUpperCase() || ""} captions (${data.segments?.length || 0} segments)`);
+        }
       }
 
       // === SEGMENT + EXTRACT ===
