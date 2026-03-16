@@ -35,6 +35,7 @@ interface Stats {
 }
 
 export default function Intelligence() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
