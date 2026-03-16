@@ -6,11 +6,15 @@ import { usePushSubscription } from "@/hooks/usePushSubscription";
 import {
   Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch,
   CheckCheck, Trash2, Filter, Loader2, BellRing, BellOff,
+  Settings, MessageSquarePlus, MessageCircle, Trophy, ShoppingBag,
+  Newspaper, Star, Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { NotificationSettings } from "@/components/notifications/NotificationSettings";
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   job_completed: { icon: CheckCircle2, color: "text-emerald-500", label: "Job Completed" },
@@ -18,6 +22,15 @@ const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; labe
   extraction_done: { icon: Zap, color: "text-primary", label: "Extraction" },
   credits_low: { icon: Coins, color: "text-amber-500", label: "Credits" },
   version_created: { icon: GitBranch, color: "text-muted-foreground", label: "Version" },
+  feedback_new: { icon: MessageSquarePlus, color: "text-primary", label: "Feedback" },
+  feedback_response: { icon: MessageCircle, color: "text-emerald-500", label: "Response" },
+  forum_reply: { icon: MessageCircle, color: "text-primary", label: "Forum Reply" },
+  forum_mention: { icon: Users, color: "text-primary", label: "Mention" },
+  changelog: { icon: Newspaper, color: "text-primary", label: "Changelog" },
+  level_up: { icon: Trophy, color: "text-amber-500", label: "Level Up" },
+  vip_milestone: { icon: Star, color: "text-amber-500", label: "VIP" },
+  artifact_created: { icon: CheckCircle2, color: "text-emerald-500", label: "Artifact" },
+  marketplace_sale: { icon: ShoppingBag, color: "text-emerald-500", label: "Sale" },
   info: { icon: Bell, color: "text-muted-foreground", label: "Info" },
 };
 
