@@ -283,7 +283,17 @@ export default function Home() {
                 </Button>
               </div>
               {neurons.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-6 text-center">No neurons yet.</p>
+                <div className="flex flex-col items-center py-8 text-center">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3">
+                    <Brain className="h-6 w-6 text-primary/50" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">No neurons yet</p>
+                  <p className="text-xs text-muted-foreground/60 mb-3">Upload content to start extracting knowledge</p>
+                  <Button variant="outline" size="sm" className="gap-1.5 text-xs h-8" onClick={() => navigate("/extractor")}>
+                    <Upload className="h-3.5 w-3.5" />
+                    Upload First Content
+                  </Button>
+                </div>
               ) : (
                 <div className="space-y-0.5">
                   {neurons.map(n => (
