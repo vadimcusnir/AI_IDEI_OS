@@ -236,15 +236,15 @@ export default function Credits() {
             </div>
             <div className="flex gap-4">
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Earned</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.earned")}</p>
                 <p className="text-xs font-bold font-mono text-status-validated">+{credits?.total_earned ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Spent</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.spent")}</p>
                 <p className="text-xs font-bold font-mono text-destructive">-{credits?.total_spent ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Utilization</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.utilization")}</p>
                 <p className="text-xs font-bold font-mono">{utilization}%</p>
               </div>
             </div>
