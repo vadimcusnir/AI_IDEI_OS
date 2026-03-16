@@ -153,10 +153,10 @@ export default function Onboarding() {
             4 Steps to Knowledge Assets
           </div>
           <h1 className="text-xl sm:text-2xl font-serif font-bold mb-2">
-            Welcome to AI-IDEI
+            {t("onboarding.title")}
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-            Upload once. Extract forever. Each step brings you closer to an infinite knowledge library.
+            {t("onboarding.subtitle")}
           </p>
         </motion.div>
 
