@@ -53,7 +53,7 @@ export function useNeuronList() {
     const fetchNeurons = async () => {
       const { data, error } = await supabase
         .from("neurons")
-        .select("id, number, title, status, updated_at, created_at, score, visibility")
+        .select("id, number, title, status, updated_at, created_at, score, visibility, content_category, lifecycle, episode_id")
         .eq("workspace_id", currentWorkspace.id)
         .order("updated_at", { ascending: false });
       if (data) setNeurons(data as NeuronListItem[]);
