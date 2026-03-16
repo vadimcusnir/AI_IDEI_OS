@@ -73,21 +73,20 @@ export function OnboardingChecklist() {
   }, [user, currentWorkspace]);
 
   const checkSteps = async () => {
-    if (!currentWorkspace) return;
+    if (!currentWorkspace || !user) return;
     const wsId = currentWorkspace.id;
     const completed = new Set<string>();
 
-    const results = await Promise.all(
-      STEPS.map(step =>
-        supabase
-          .from(step.table)
-          .select("id", { count: "exact", head: true })
-          .eq("workspace_id", wsId)
-      )
-    );
+    const [epRes, neRes, joRes, arRes] = await Promise.all([
+      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("author_id", user.id),
+      supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("author_id", user.id),
+    ]);
 
+    const counts = [epRes.count ?? 0, neRes.count ?? 0, joRes.count ?? 0, arRes.count ?? 0];
     STEPS.forEach((step, i) => {
-      if ((results[i].count ?? 0) > 0) completed.add(step.id);
+      if (counts[i] > 0) completed.add(step.id);
     });
 
     setCompletedSteps(completed);
