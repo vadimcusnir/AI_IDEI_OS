@@ -3,50 +3,46 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
-function estimateTokens(text: string): number {
-  return Math.ceil(text.length / 4);
-}
+// ══════════════════════════════════════════════════
+// Character-based chunking with overlap
+// ══════════════════════════════════════════════════
+
+const DEFAULT_MIN_CHARS = 1200;
+const DEFAULT_MAX_CHARS = 1800;
+const DEFAULT_OVERLAP = 175;
 
 function splitSentences(text: string): string[] {
   return text.split(/(?<=[.!?…])\s+/).map((s) => s.trim()).filter((s) => s.length > 0);
 }
 
-function greedyChunk(text: string, minTokens = 200, maxTokens = 800): string[] {
-  const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter((p) => p.length > 0);
+function chunkWithOverlap(
+  text: string,
+  minChars = DEFAULT_MIN_CHARS,
+  maxChars = DEFAULT_MAX_CHARS,
+  overlapChars = DEFAULT_OVERLAP
+): string[] {
+  const sentences = splitSentences(text);
   const chunks: string[] = [];
   let buffer = "";
-  let bufferTokens = 0;
 
-  for (const para of paragraphs) {
-    const sentences = splitSentences(para);
-    for (const sentence of sentences) {
-      const sentTokens = estimateTokens(sentence);
-      if (bufferTokens + sentTokens > maxTokens && bufferTokens >= minTokens) {
-        chunks.push(buffer.trim());
-        buffer = "";
-        bufferTokens = 0;
-      }
-      if (sentTokens > maxTokens && buffer.trim()) {
-        if (bufferTokens > 0) {
-          chunks.push(buffer.trim());
-          buffer = "";
-          bufferTokens = 0;
-        }
-        chunks.push(sentence);
-        continue;
-      }
-      buffer += (buffer ? " " : "") + sentence;
-      bufferTokens += sentTokens;
-    }
-    if (bufferTokens >= minTokens) {
+  for (const sentence of sentences) {
+    if (buffer.length + sentence.length + 1 > maxChars && buffer.length >= minChars) {
       chunks.push(buffer.trim());
-      buffer = "";
-      bufferTokens = 0;
+      // Overlap: keep tail of previous chunk
+      const overlapStart = Math.max(0, buffer.length - overlapChars);
+      buffer = buffer.slice(overlapStart) + " " + sentence;
+    } else if (sentence.length > maxChars && buffer.trim()) {
+      if (buffer.length > 0) { chunks.push(buffer.trim()); }
+      chunks.push(sentence);
+      buffer = sentence.slice(Math.max(0, sentence.length - overlapChars));
+      continue;
+    } else {
+      buffer += (buffer ? " " : "") + sentence;
     }
   }
 
   if (buffer.trim()) {
-    if (chunks.length > 0 && bufferTokens < minTokens) {
+    if (chunks.length > 0 && buffer.length < minChars) {
       chunks[chunks.length - 1] += " " + buffer.trim();
     } else {
       chunks.push(buffer.trim());
@@ -82,7 +78,7 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    // ── Authenticate via JWT ──
+    // ── Auth ──
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -101,7 +97,6 @@ Deno.serve(async (req) => {
     }
     const userId = caller.id;
 
-    // ── Rate limit check ──
     if (!checkRateLimit(userId)) {
       return new Response(JSON.stringify({ error: "Rate limit exceeded (20 chunk operations/hour)" }), {
         status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -119,8 +114,9 @@ Deno.serve(async (req) => {
 
     const InputSchema = z.object({
       episode_id: z.string().uuid("Invalid episode_id format"),
-      min_tokens: z.number().int().min(50).max(2000).optional().default(200),
-      max_tokens: z.number().int().min(100).max(5000).optional().default(800),
+      min_chars: z.number().int().min(200).max(5000).optional().default(DEFAULT_MIN_CHARS),
+      max_chars: z.number().int().min(400).max(10000).optional().default(DEFAULT_MAX_CHARS),
+      overlap_chars: z.number().int().min(0).max(500).optional().default(DEFAULT_OVERLAP),
     });
 
     const parsed = InputSchema.safeParse(await req.json());
@@ -129,11 +125,10 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { episode_id, min_tokens, max_tokens } = parsed.data;
+    const { episode_id, min_chars, max_chars, overlap_chars } = parsed.data;
 
-    // Ensure max > min
-    const minT = min_tokens;
-    const maxT = Math.max(minT + 50, max_tokens);
+    const minC = min_chars;
+    const maxC = Math.max(minC + 200, max_chars);
 
     // Fetch episode
     const { data: episode, error: epErr } = await supabase
@@ -156,15 +151,16 @@ Deno.serve(async (req) => {
       });
     }
 
-    const chunks = greedyChunk(transcript, minT, maxT);
+    const chunks = chunkWithOverlap(transcript, minC, maxC, overlap_chars);
 
     const result = chunks.map((content, index) => ({
       index,
       content,
-      token_estimate: estimateTokens(content),
       char_count: content.length,
+      token_estimate: Math.ceil(content.length / 4),
     }));
 
+    // For a 1h podcast (~80k chars), expect 80-120 chunks at 1200-1800 chars
     if (episode.status === "transcribed" || episode.status === "uploaded") {
       await supabase
         .from("episodes")
@@ -173,7 +169,7 @@ Deno.serve(async (req) => {
           metadata: {
             ...(typeof episode.metadata === "object" && episode.metadata ? episode.metadata : {}),
             chunks_count: result.length,
-            chunk_params: { min_tokens: minT, max_tokens: maxT },
+            chunk_params: { min_chars: minC, max_chars: maxC, overlap_chars },
             chunked_at: new Date().toISOString(),
           },
         } as any)
@@ -185,7 +181,9 @@ Deno.serve(async (req) => {
         success: true,
         episode_id,
         total_chunks: result.length,
+        total_chars: result.reduce((s, c) => s + c.char_count, 0),
         total_tokens: result.reduce((s, c) => s + c.token_estimate, 0),
+        params: { min_chars: minC, max_chars: maxC, overlap_chars },
         chunks: result,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

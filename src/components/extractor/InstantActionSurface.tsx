@@ -63,7 +63,15 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
   const [isDragging, setIsDragging] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [extractionDepth, setExtractionDepth] = useState<"quick" | "deep">("deep");
-  const [result, setResult] = useState<{ neurons: number; episode_id: string } | null>(null);
+  const [result, setResult] = useState<{
+    neurons: number;
+    episode_id: string;
+    type_distribution?: Record<string, number>;
+    frameworks?: number;
+    raw_extracted?: number;
+    after_dedup?: number;
+    meta?: { major_insights?: string[]; emerging_themes?: string[]; unexpected_ideas?: string[] };
+  } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const isRunning = !["idle", "complete", "error"].includes(stage);
@@ -306,7 +314,15 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
         // === COMPLETE ===
         setStage("complete");
-        setResult({ neurons: neuronsCreated, episode_id: ep.id });
+        setResult({
+          neurons: neuronsCreated,
+          episode_id: ep.id,
+          type_distribution: data.type_distribution,
+          frameworks: data.frameworks,
+          raw_extracted: data.raw_extracted,
+          after_dedup: data.after_dedup,
+          meta: data.meta,
+        });
         toast.success(`✅ ${neuronsCreated} neurons extracted! (${creditsSpent} credits)`, { duration: 8000 });
         trackEvent({
           name: "neurons_extracted",
@@ -523,12 +539,28 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                     {currentStage.label}
                   </p>
                   {result && stage === "complete" && (
-                    <p className="text-xs text-muted-foreground">
-                      {result.neurons > 0
-                        ? `${result.neurons} knowledge neurons extracted and indexed`
-                        : "Episode created — add audio to extract neurons"
-                      }
-                    </p>
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        {result.neurons > 0
+                          ? `${result.neurons} neurons extracted${result.frameworks ? ` · ${result.frameworks} frameworks` : ""}${result.raw_extracted ? ` · ${result.raw_extracted} raw → ${result.after_dedup} deduped` : ""}`
+                          : "Episode created — add audio to extract neurons"
+                        }
+                      </p>
+                      {result.type_distribution && Object.keys(result.type_distribution).length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-1.5">
+                          {Object.entries(result.type_distribution).map(([type, count]) => (
+                            <span key={type} className="text-[9px] px-1.5 py-0.5 rounded-md bg-primary/10 text-primary font-medium">
+                              {type} {count}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {result.meta?.emerging_themes && result.meta.emerging_themes.length > 0 && (
+                        <p className="text-[10px] text-muted-foreground/70 mt-1">
+                          Themes: {result.meta.emerging_themes.slice(0, 3).join(", ")}
+                        </p>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
