@@ -104,10 +104,10 @@ export function HomePricingSection() {
             <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
               5.000 NEURONS/lună, toate serviciile AI, Knowledge Graph, suport prioritar.
             </p>
-            <div className="flex items-center gap-3 mt-2">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
               {["Extracție nelimitată", "Suport prioritar", "Knowledge Graph"].map(f => (
                 <span key={f} className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                  <Check className="h-2.5 w-2.5 text-primary" /> {f}
+                  <Check className="h-2.5 w-2.5 text-primary shrink-0" /> {f}
                 </span>
               ))}
             </div>
