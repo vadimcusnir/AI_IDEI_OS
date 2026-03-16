@@ -249,7 +249,7 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
       toast.error(`Credite insuficiente. Ai nevoie de ${price} NEURONS dar ai doar ${creditBalance}.`, {
         action: {
           label: "Top-up",
-          onClick: () => navigate("/credits"),
+          onClick: () => cardNavigate("/credits"),
         },
       });
       return;
