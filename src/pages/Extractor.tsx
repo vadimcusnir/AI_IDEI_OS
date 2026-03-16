@@ -89,6 +89,9 @@ const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
+  const { tier } = useUserTier();
+  const isPro = tier === "pro" || tier === "vip";
+  const [paywallOpen, setPaywallOpen] = useState(false);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [extractingId, setExtractingId] = useState<string | null>(null);
