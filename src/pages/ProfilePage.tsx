@@ -32,6 +32,7 @@ interface Profile {
 }
 
 export default function ProfilePage() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { tier } = useUserTier();
