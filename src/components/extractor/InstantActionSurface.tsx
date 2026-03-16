@@ -344,6 +344,16 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       onComplete?.();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Pipeline failed";
+      
+      // Detect insufficient credits error from edge functions
+      if (msg.includes("Insufficient credits") || msg.includes("RC.CREDITS.INSUFFICIENT")) {
+        const neededMatch = msg.match(/(\d+)/);
+        const needed = neededMatch ? parseInt(neededMatch[1]) : estimatedCost;
+        setInsufficientCredits({ needed });
+        setStage("idle");
+        return;
+      }
+      
       toast.error(msg);
       setStage("error");
       setTimeout(() => setStage("idle"), 3000);
