@@ -593,9 +593,10 @@ Deno.serve(async (req) => {
     }
 
     // ═══════════════════════════════════════
-    // PERSIST — Store relations from frameworks
+    // PERSIST — Store neuron_links from Pass 2 frameworks
     // ═══════════════════════════════════════
     const neuronByTitle = new Map(createdNeurons.map(n => [normalizeTitle(n.title), n.id]));
+    const linkInserts: Array<{ source_neuron_id: number; target_neuron_id: number; relation_type: string }> = [];
 
     for (const fw of frameworks) {
       if (!Array.isArray(fw.relations)) continue;
@@ -603,10 +604,25 @@ Deno.serve(async (req) => {
         const sourceId = neuronByTitle.get(normalizeTitle(rel.source));
         const targetId = neuronByTitle.get(normalizeTitle(rel.target));
         if (sourceId && targetId && sourceId !== targetId) {
-          // Store as entity relation if entities exist, otherwise skip
-          // The project-neurons function will handle entity creation later
+          const relType = (rel.type || "related_to").toLowerCase().replace(/\s+/g, "_");
+          linkInserts.push({
+            source_neuron_id: sourceId,
+            target_neuron_id: targetId,
+            relation_type: relType,
+          });
         }
       }
+    }
+
+    let relationsCreated = 0;
+    if (linkInserts.length > 0) {
+      const { data: inserted, error: linkErr } = await supabase
+        .from("neuron_links")
+        .upsert(linkInserts, { onConflict: "source_neuron_id,target_neuron_id,relation_type" })
+        .select("id");
+      if (linkErr) console.error("neuron_links insert error:", linkErr);
+      else relationsCreated = (inserted || []).length;
+      console.log(`Stored ${relationsCreated} neuron relations from ${frameworks.length} frameworks`);
     }
 
     // ── Finalize ──
@@ -639,6 +655,7 @@ Deno.serve(async (req) => {
       after_dedup: deduplicated.length,
       type_distribution: typeCounts,
       frameworks: frameworks.length,
+      relations_created: relationsCreated,
       meta,
       neurons: createdNeurons,
       credits_spent: EXTRACTION_COST,
