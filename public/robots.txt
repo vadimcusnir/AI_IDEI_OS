@@ -26,5 +26,8 @@ Disallow: /runtime
 Disallow: /analytics
 Disallow: /security
 Disallow: /db-schema
+Disallow: /onboarding
+Disallow: /data-privacy
+Disallow: /workspace
 
 Sitemap: https://ai-idei.com/sitemap-static.xml
