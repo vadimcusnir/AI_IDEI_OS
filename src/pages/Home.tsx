@@ -198,6 +198,7 @@ export default function Home() {
                 whileHover={{ y: -3, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => navigate(action.path)}
+                data-tour={action.path === "/extractor" ? "upload" : action.path === "/neurons" ? "neurons" : action.path === "/services" ? "services" : undefined}
                 className={cn(
                   "group relative flex flex-col items-start gap-3 p-4 rounded-xl border border-border",
                   "bg-gradient-to-br hover:border-primary/30 hover:shadow-lg transition-all duration-200",
