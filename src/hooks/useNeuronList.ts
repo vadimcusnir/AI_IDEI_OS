@@ -91,7 +91,7 @@ export function useNeuronList() {
     if (error) {
       const { data: fallback } = await supabase
         .from("neurons")
-        .select("id, number, title, status, updated_at, created_at, score, visibility")
+        .select("id, number, title, status, updated_at, created_at, score, visibility, content_category, lifecycle, episode_id")
         .ilike("title", `%${query}%`)
         .order("updated_at", { ascending: false })
         .limit(20);
