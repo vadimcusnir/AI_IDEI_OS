@@ -132,8 +132,10 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
       </div>
       <MobileBottomNav />
       
-      <ContextualFeedbackPrompt />
-      <GamificationToasts />
+      <Suspense fallback={null}>
+        <ContextualFeedbackPrompt />
+        <GamificationToasts />
+      </Suspense>
     </SidebarProvider>
   );
 }
