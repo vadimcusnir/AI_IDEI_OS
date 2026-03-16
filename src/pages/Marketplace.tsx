@@ -224,6 +224,7 @@ export default function Marketplace() {
 }
 
 function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { asset: KnowledgeAsset; currentUserId?: string; creditBalance?: number; isFeatured?: boolean }) {
+  const cardNavigate = useNavigate();
   const [showReview, setShowReview] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [reviewText, setReviewText] = useState("");
