@@ -350,9 +350,9 @@ export default function Onboarding() {
             <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
               <Crown className="h-7 w-7 text-primary" />
             </div>
-            <h2 className="text-lg font-serif font-bold mb-1.5">Pipeline Active! 🎉</h2>
+            <h2 className="text-lg font-serif font-bold mb-1.5">{t("onboarding.pipeline_active_title")}</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              You've mastered the basics. Keep uploading content and running services to grow your knowledge empire.
+              {t("onboarding.pipeline_active_desc")}
             </p>
             <div className="flex items-center justify-center gap-2">
               <Button onClick={() => navigate("/home")} className="gap-2">
