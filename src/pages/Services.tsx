@@ -490,7 +490,12 @@ export default function Services() {
                     <Coins className="h-3 w-3 text-ai-accent" />
                     <span className="text-xs font-bold font-mono w-8 text-right">{service.credits_cost}</span>
                   </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary shrink-0" />
+                  <TierBadge tier={service.access_tier} />
+                  {!tierSatisfied(userTier, service.access_tier) ? (
+                    <Lock className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />
+                  ) : (
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary shrink-0" />
+                  )}
                 </motion.div>
               );
             })}
