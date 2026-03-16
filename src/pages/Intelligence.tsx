@@ -148,7 +148,9 @@ export default function Intelligence() {
 
           <TabsContent value="dedup" className="mt-0">
             <ControlledSection elementId="intelligence.dedup">
-              <DuplicateMergePanel />
+              <PremiumGate requiredTier="pro" featureName="Deduplication">
+                <DuplicateMergePanel />
+              </PremiumGate>
             </ControlledSection>
           </TabsContent>
         </Tabs>
