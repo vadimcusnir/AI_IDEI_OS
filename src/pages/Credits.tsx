@@ -356,7 +356,7 @@ export default function Credits() {
                 </>
               ) : (
                 <>
-                  <p className="text-sm text-muted-foreground mb-2">No results for the selected filter</p>
+                  <p className="text-sm text-muted-foreground mb-2">{t("credits.no_filter_results")}</p>
                   <Button variant="outline" size="sm" className="text-xs" onClick={() => { setTxFilter("all"); setTxSearch(""); }}>
                     Clear filters
                   </Button>
