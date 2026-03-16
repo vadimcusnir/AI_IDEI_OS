@@ -4,6 +4,7 @@ import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { detectSource, detectFileSource, type SourceDetectionResult } from "@/lib/sourceDetection";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
