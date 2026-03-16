@@ -5,7 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
-  "theme_color": "#6366f1",
+  "theme_color": "#f97316",
   "orientation": "any",
   "icons": [
     {
@@ -16,9 +16,12 @@
     {
       "src": "/favicon.gif",
       "sizes": "any",
-      "type": "image/gif"
+      "type": "image/gif",
+      "purpose": "any"
     }
   ],
   "categories": ["productivity", "business", "education"],
-  "lang": "en"
+  "lang": "en",
+  "scope": "/",
+  "prefer_related_applications": false
 }
