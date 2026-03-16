@@ -125,10 +125,10 @@ export function AdminKnowledgeGraphTab() {
         body: { action: "project_all" },
       });
       if (error) throw error;
-      toast.success(`Projected: ${data.created} new, ${data.updated} updated, ${data.relationsCreated} relations`);
+      toast.success(t("common:projected_entities", { created: data.created, updated: data.updated, relations: data.relationsCreated }));
       await loadStats();
     } catch (err: any) {
-      toast.error(err.message || "Projection failed");
+      toast.error(err.message || t("errors:projection_failed"));
     } finally {
       setProjecting(false);
     }
