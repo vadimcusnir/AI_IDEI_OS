@@ -8,12 +8,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
+import { useTranslation } from "react-i18next";
 
 interface PipelineStage {
   icon: React.ElementType;
   key: string;
-  label: string;
-  description: string;
+  labelKey: string;
+  descKey: string;
   status: "active" | "coming";
   link?: string;
   outputs: string[];
@@ -21,56 +22,33 @@ interface PipelineStage {
 
 const STAGES: PipelineStage[] = [
   {
-    icon: Globe,
-    key: "source",
-    label: "SOURCE",
-    description: "Ingest raw content: YouTube, audio, video, PDF, text, URLs. Automatic format detection and metadata extraction.",
-    status: "active",
-    link: "/extractor",
+    icon: Globe, key: "source", labelKey: "source_label", descKey: "source_desc",
+    status: "active", link: "/extractor",
     outputs: ["Episode", "Metadata", "Raw file"],
   },
   {
-    icon: FileAudio,
-    key: "transcribe",
-    label: "TRANSCRIBE",
-    description: "AI transcription with speaker diarization and language detection. Supports 50+ languages.",
-    status: "active",
-    link: "/extractor",
+    icon: FileAudio, key: "transcribe", labelKey: "transcribe_label", descKey: "transcribe_desc",
+    status: "active", link: "/extractor",
     outputs: ["Transcript", "Speaker segments", "Timestamps"],
   },
   {
-    icon: Scissors,
-    key: "segment",
-    label: "SEGMENT",
-    description: "Semantic chunking into 300-800 token blocks with context overlap for precise extraction.",
+    icon: Scissors, key: "segment", labelKey: "segment_label", descKey: "segment_desc",
     status: "active",
     outputs: ["Semantic chunks", "Context links"],
   },
   {
-    icon: Brain,
-    key: "extract",
-    label: "EXTRACT NEURONS",
-    description: "Multi-axis AI extraction: insights, frameworks, patterns, psychological signals, JTBD patterns across 9 specialized prompts.",
-    status: "active",
-    link: "/neurons",
+    icon: Brain, key: "extract", labelKey: "extract_label", descKey: "extract_desc",
+    status: "active", link: "/neurons",
     outputs: ["Neurons", "Entities", "Relations"],
   },
   {
-    icon: Network,
-    key: "link",
-    label: "LINK KNOWLEDGE",
-    description: "Build knowledge graph: connect neurons, compute IdeaRank scores, cluster topics, detect patterns.",
-    status: "active",
-    link: "/intelligence",
+    icon: Network, key: "link", labelKey: "link_label", descKey: "link_desc",
+    status: "active", link: "/intelligence",
     outputs: ["Graph nodes", "Topic clusters", "IdeaRank"],
   },
   {
-    icon: Sparkles,
-    key: "generate",
-    label: "GENERATE ASSETS",
-    description: "Produce 50+ deliverable types: articles, courses, frameworks, scripts, social posts, reports.",
-    status: "active",
-    link: "/services",
+    icon: Sparkles, key: "generate", labelKey: "generate_label", descKey: "generate_desc",
+    status: "active", link: "/services",
     outputs: ["50+ deliverables", "Artifacts", "Exports"],
   },
 ];
@@ -85,12 +63,13 @@ const fadeUp = {
 
 export default function PipelineOverview() {
   const navigate = useNavigate();
+  const { t } = useTranslation("pages");
 
   return (
     <div className="flex-1 overflow-auto">
       <SEOHead
-        title="Pipeline — AI-IDEI"
-        description="Complete knowledge extraction pipeline: from raw content to structured deliverables in 6 stages."
+        title={`${t("pipeline_overview.title")} — AI-IDEI`}
+        description={t("pipeline_overview.subtitle")}
       />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Header */}
@@ -100,14 +79,13 @@ export default function PipelineOverview() {
           className="mb-10"
         >
           <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight mb-2">
-            Knowledge Pipeline
+            {t("pipeline_overview.title")}
           </h1>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            One upload → 6 stages → 50+ deliverables. The complete flow from raw content to structured knowledge assets.
+            {t("pipeline_overview.subtitle")}
           </p>
         </motion.div>
 
-        {/* Instant Action Surface — the single primary action */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -131,14 +109,12 @@ export default function PipelineOverview() {
                 animate="visible"
                 variants={fadeUp}
               >
-                {/* Stage card */}
                 <div
                   className={cn(
                     "group relative flex items-start gap-4 rounded-xl border p-4 transition-all",
                     "bg-card border-border hover:border-primary/25 hover:shadow-sm"
                   )}
                 >
-                  {/* Icon node */}
                   <div className="relative z-10 shrink-0">
                     <div className={cn(
                       "h-11 w-11 rounded-xl flex items-center justify-center border transition-all",
@@ -148,11 +124,10 @@ export default function PipelineOverview() {
                     </div>
                   </div>
 
-                  {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-[9px] font-mono text-muted-foreground/40">L{i}</span>
-                      <h3 className="text-sm font-bold tracking-wide">{stage.label}</h3>
+                      <h3 className="text-sm font-bold tracking-wide">{t(`pipeline_overview.${stage.labelKey}`)}</h3>
                       {stage.link && (
                         <Button
                           variant="ghost"
@@ -160,12 +135,12 @@ export default function PipelineOverview() {
                           className="h-5 text-[9px] gap-1 text-primary ml-auto px-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
                           onClick={() => navigate(stage.link!)}
                         >
-                          Open <ArrowRight className="h-2.5 w-2.5" />
+                          {t("pipeline_overview.open")} <ArrowRight className="h-2.5 w-2.5" />
                         </Button>
                       )}
                     </div>
                     <p className="text-[11px] text-muted-foreground leading-relaxed mb-2">
-                      {stage.description}
+                      {t(`pipeline_overview.${stage.descKey}`)}
                     </p>
                     <div className="flex items-center gap-1.5 flex-wrap">
                       {stage.outputs.map((out, j) => (
@@ -178,7 +153,6 @@ export default function PipelineOverview() {
                   </div>
                 </div>
 
-                {/* Connector arrow */}
                 {!isLast && (
                   <div className="flex justify-center py-1.5">
                     <ArrowDown className="h-4 w-4 text-border" />
@@ -196,9 +170,9 @@ export default function PipelineOverview() {
           transition={{ delay: 0.6 }}
           className="mt-10 rounded-xl border border-primary/20 bg-primary/5 p-5 text-center"
         >
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">Complete Pipeline</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{t("pipeline_overview.complete_pipeline")}</p>
           <p className="text-sm font-medium">
-            1 upload → {STAGES.length} stages → 50+ deliverables
+            {t("pipeline_overview.summary", { stages: STAGES.length })}
           </p>
         </motion.div>
       </div>

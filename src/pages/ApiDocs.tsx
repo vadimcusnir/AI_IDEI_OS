@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { WebhookManagement } from "@/components/api/WebhookManagement";
+import { useTranslation } from "react-i18next";
 
 interface ApiKey {
   id: string;
@@ -54,6 +55,7 @@ const METHOD_COLORS: Record<string, string> = {
 
 export default function ApiDocs() {
   const { user } = useAuth();
+  const { t } = useTranslation("pages");
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -79,13 +81,11 @@ export default function ApiDocs() {
     if (!user || !newKeyName.trim()) return;
     setCreating(true);
 
-    // Generate random key
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
     const rawKey = "aiidei_" + Array.from(array).map(b => b.toString(16).padStart(2, "0")).join("");
     const prefix = rawKey.slice(0, 14) + "...";
 
-    // Hash the key
     const encoder = new TextEncoder();
     const data = encoder.encode(rawKey);
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
@@ -100,10 +100,10 @@ export default function ApiDocs() {
     });
 
     if (error) {
-      toast.error("Failed to create API key");
+      toast.error(t("api_docs.create_error"));
     } else {
       setRevealedKey(rawKey);
-      toast.success("API key created! Copy it now — it won't be shown again.");
+      toast.success(t("api_docs.create_success"));
       setNewKeyName("");
       loadKeys();
     }
@@ -112,7 +112,7 @@ export default function ApiDocs() {
 
   const deleteKey = async (id: string) => {
     await supabase.from("api_keys").delete().eq("id", id);
-    toast.success("API key deleted");
+    toast.success(t("api_docs.delete_success"));
     loadKeys();
   };
 
@@ -120,31 +120,29 @@ export default function ApiDocs() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <SEOHead title="API Documentation — AI-IDEI" description="Public REST API documentation for AI-IDEI platform" />
+      <SEOHead title={`${t("api_docs.title")} — AI-IDEI`} description={t("api_docs.subtitle")} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-xl font-bold mb-1">API Documentation</h1>
-          <p className="text-sm text-muted-foreground">
-            Accesează programatic neuronii, entitățile și job-urile tale prin REST API.
-          </p>
+          <h1 className="text-xl font-bold mb-1">{t("api_docs.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("api_docs.subtitle")}</p>
         </div>
 
         {/* Quick start */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
           <div className="p-4 rounded-xl border border-border bg-card">
             <Shield className="h-5 w-5 text-primary mb-2" />
-            <p className="text-xs font-semibold mb-1">Autentificare</p>
+            <p className="text-xs font-semibold mb-1">{t("api_docs.auth_title")}</p>
             <p className="text-[10px] text-muted-foreground">Header: <code className="bg-muted px-1 rounded">X-API-Key: aiidei_xxx</code></p>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card">
             <Zap className="h-5 w-5 text-ai-accent mb-2" />
-            <p className="text-xs font-semibold mb-1">Rate Limit</p>
-            <p className="text-[10px] text-muted-foreground">1,000 requests/day per key</p>
+            <p className="text-xs font-semibold mb-1">{t("api_docs.rate_limit_title")}</p>
+            <p className="text-[10px] text-muted-foreground">{t("api_docs.rate_limit_desc")}</p>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card">
             <Globe className="h-5 w-5 text-status-validated mb-2" />
-            <p className="text-xs font-semibold mb-1">Base URL</p>
+            <p className="text-xs font-semibold mb-1">{t("api_docs.base_url_title")}</p>
             <p className="text-[10px] text-muted-foreground font-mono break-all">/functions/v1/neuron-api</p>
           </div>
         </div>
@@ -152,13 +150,12 @@ export default function ApiDocs() {
         {/* API Keys Management */}
         <div className="mb-8">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
-            <Key className="h-4 w-4" /> API Keys
+            <Key className="h-4 w-4" /> {t("api_docs.api_keys")}
           </h2>
 
-          {/* Revealed key banner */}
           {revealedKey && (
             <div className="mb-4 p-4 rounded-xl border-2 border-primary/30 bg-primary/5">
-              <p className="text-xs font-semibold text-primary mb-2">🔑 Cheia ta nouă (copiaz-o acum!):</p>
+              <p className="text-xs font-semibold text-primary mb-2">🔑 {t("api_docs.new_key_banner")}</p>
               <div className="flex items-center gap-2">
                 <code className="text-[10px] bg-muted px-2 py-1 rounded font-mono flex-1 break-all">{revealedKey}</code>
                 <Button size="sm" variant="ghost" className="h-7" onClick={() => { navigator.clipboard.writeText(revealedKey); toast.success("Copied!"); }}>
@@ -166,19 +163,18 @@ export default function ApiDocs() {
                 </Button>
               </div>
               <Button size="sm" variant="outline" className="mt-2 text-[10px]" onClick={() => setRevealedKey(null)}>
-                Am copiat, ascunde
+                {t("api_docs.copied_hide")}
               </Button>
             </div>
           )}
 
-          {/* Create new key */}
           <div className="flex items-end gap-2 mb-4">
             <div className="flex-1">
-              <label className="text-[10px] text-muted-foreground mb-1 block">Nume cheie</label>
+              <label className="text-[10px] text-muted-foreground mb-1 block">{t("api_docs.key_name_label")}</label>
               <Input
                 value={newKeyName}
                 onChange={e => setNewKeyName(e.target.value)}
-                placeholder="ex: Production App"
+                placeholder={t("api_docs.key_name_placeholder")}
                 className="h-8 text-xs"
               />
             </div>
@@ -200,11 +196,10 @@ export default function ApiDocs() {
             </div>
             <Button size="sm" className="h-8 gap-1" onClick={generateKey} disabled={creating || !newKeyName.trim()}>
               {creating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
-              Generează
+              {t("api_docs.generate")}
             </Button>
           </div>
 
-          {/* Existing keys */}
           <div className="space-y-1.5">
             {keys.map(key => (
               <div key={key.id} className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card">
@@ -214,7 +209,7 @@ export default function ApiDocs() {
                   <span className="text-[10px] text-muted-foreground ml-2 font-mono">{key.key_prefix}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] text-muted-foreground">{key.requests_today}/{key.daily_limit} today</span>
+                  <span className="text-[9px] text-muted-foreground">{key.requests_today}/{key.daily_limit} {t("api_docs.today")}</span>
                   {key.scopes.map(s => (
                     <span key={s} className="text-[8px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground uppercase">{s}</span>
                   ))}
@@ -225,9 +220,7 @@ export default function ApiDocs() {
               </div>
             ))}
             {keys.length === 0 && !loading && (
-              <p className="text-xs text-muted-foreground text-center py-4">
-                Nicio cheie API creată. Generează una pentru a începe.
-              </p>
+              <p className="text-xs text-muted-foreground text-center py-4">{t("api_docs.no_keys")}</p>
             )}
           </div>
         </div>
@@ -235,7 +228,7 @@ export default function ApiDocs() {
         {/* Example */}
         <div className="mb-8">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
-            <Code2 className="h-4 w-4" /> Exemplu cURL
+            <Code2 className="h-4 w-4" /> {t("api_docs.curl_example")}
           </h2>
           <pre className="bg-muted rounded-xl p-4 text-[10px] font-mono overflow-x-auto whitespace-pre-wrap text-muted-foreground">
 {`curl -H "X-API-Key: aiidei_your_key_here" \\
@@ -256,7 +249,7 @@ curl -H "X-API-Key: aiidei_your_key_here" \\
 
         {/* Endpoints */}
         <div>
-          <h2 className="text-sm font-semibold mb-3">Endpoints</h2>
+          <h2 className="text-sm font-semibold mb-3">{t("api_docs.endpoints")}</h2>
           <div className="space-y-1">
             {ENDPOINTS.map((ep, i) => (
               <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg border border-border bg-card hover:border-primary/20 transition-colors">
@@ -278,9 +271,9 @@ curl -H "X-API-Key: aiidei_your_key_here" \\
 
         {/* Response format */}
         <div className="mt-8 p-4 rounded-xl border border-border bg-card">
-          <h3 className="text-xs font-semibold mb-2">Format răspuns</h3>
+          <h3 className="text-xs font-semibold mb-2">{t("api_docs.response_format")}</h3>
           <pre className="text-[10px] font-mono text-muted-foreground">
-{`// Listuri paginate
+{`// ${t("api_docs.paginated_lists")}
 {
   "data": [...],
   "total": 42,
@@ -288,9 +281,9 @@ curl -H "X-API-Key: aiidei_your_key_here" \\
   "per_page": 20
 }
 
-// Erori
+// ${t("api_docs.errors")}
 {
-  "error": "Descriere eroare"
+  "error": "Error description"
 }`}
           </pre>
         </div>

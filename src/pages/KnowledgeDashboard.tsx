@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
+import { useTranslation } from "react-i18next";
 
 interface LearningPath {
   id: string;
@@ -56,6 +57,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function KnowledgeDashboard() {
   const [activeCategory, setActiveCategory] = useState("all");
   const { user } = useAuth();
+  const { t } = useTranslation("pages");
   const [kbStats, setKbStats] = useState<KBStats | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<KBItem | null>(null);
 
@@ -81,10 +83,10 @@ export default function KnowledgeDashboard() {
     return (
       <PageTransition>
         <div className="flex-1 overflow-auto">
-          <SEOHead title={`${selectedArticle.title} — Knowledge Base`} description={selectedArticle.excerpt || ""} />
+          <SEOHead title={`${selectedArticle.title} — ${t("knowledge_dashboard.title")}`} description={selectedArticle.excerpt || ""} />
           <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
             <Button variant="ghost" size="sm" className="gap-1.5 text-xs mb-4" onClick={() => setSelectedArticle(null)}>
-              <ArrowLeft className="h-3 w-3" /> Back to Knowledge Base
+              <ArrowLeft className="h-3 w-3" /> {t("knowledge_dashboard.back_to_kb")}
             </Button>
 
             <div className="space-y-4">
@@ -97,8 +99,8 @@ export default function KnowledgeDashboard() {
                 )}
                 <h1 className="text-xl font-serif font-bold mt-1">{selectedArticle.title}</h1>
                 <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
-                  <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {selectedArticle.reading_time} min read</span>
-                  <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {selectedArticle.view_count} views</span>
+                  <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {t("knowledge_dashboard.min_read", { count: selectedArticle.reading_time })}</span>
+                  <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {t("knowledge_dashboard.views", { count: selectedArticle.view_count })}</span>
                 </div>
               </div>
 
@@ -119,7 +121,7 @@ export default function KnowledgeDashboard() {
 
             {/* Next category suggestion */}
             <div className="mt-8 pt-4 border-t border-border">
-              <p className="text-[10px] text-muted-foreground mb-2">Continue learning</p>
+              <p className="text-[10px] text-muted-foreground mb-2">{t("knowledge_dashboard.continue_learning")}</p>
               <div className="flex gap-2">
                 {CATEGORIES.filter(c => c.key !== "all" && c.key !== selectedArticle.category).slice(0, 2).map(cat => (
                   <Button
@@ -144,14 +146,12 @@ export default function KnowledgeDashboard() {
   return (
     <PageTransition>
       <div className="flex-1 overflow-auto">
-        <SEOHead title="Knowledge Base — AI-IDEI" description="Browse principles, methods, frameworks and blueprints of the Canon Cușnir methodology." />
+        <SEOHead title={`${t("knowledge_dashboard.title")} — AI-IDEI`} description={t("knowledge_dashboard.subtitle")} />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-xl font-serif font-bold">Knowledge Base</h1>
-            <p className="text-xs text-muted-foreground mt-1">
-              Explore the Canon Cușnir methodology — from principles to ready-to-use blueprints.
-            </p>
+            <h1 className="text-xl font-serif font-bold">{t("knowledge_dashboard.title")}</h1>
+            <p className="text-xs text-muted-foreground mt-1">{t("knowledge_dashboard.subtitle")}</p>
           </div>
 
           {/* Search */}
@@ -160,7 +160,7 @@ export default function KnowledgeDashboard() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search articles..."
+              placeholder={t("knowledge_dashboard.search_placeholder")}
               className="pl-9 h-10"
             />
           </div>
@@ -195,7 +195,7 @@ export default function KnowledgeDashboard() {
             <div className="text-center py-12">
               <BookOpen className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">
-                {search ? `No results for "${search}". Try different keywords.` : "No articles in this category yet."}
+                {search ? t("knowledge_dashboard.no_results", { search }) : t("knowledge_dashboard.no_articles")}
               </p>
             </div>
           ) : (
@@ -230,22 +230,22 @@ export default function KnowledgeDashboard() {
               <div className="bg-card border border-border rounded-xl p-3 text-center">
                 <BookOpen className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                 <p className="text-lg font-bold font-mono">{kbStats.total_articles}</p>
-                <p className="text-[9px] text-muted-foreground">Articles</p>
+                <p className="text-[9px] text-muted-foreground">{t("knowledge_dashboard.articles")}</p>
               </div>
               <div className="bg-card border border-border rounded-xl p-3 text-center">
                 <Eye className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                 <p className="text-lg font-bold font-mono">{kbStats.articles_read}</p>
-                <p className="text-[9px] text-muted-foreground">Read</p>
+                <p className="text-[9px] text-muted-foreground">{t("knowledge_dashboard.read")}</p>
               </div>
               <div className="bg-card border border-border rounded-xl p-3 text-center">
                 <GraduationCap className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                 <p className="text-lg font-bold font-mono">{kbStats.paths_started}</p>
-                <p className="text-[9px] text-muted-foreground">Paths Started</p>
+                <p className="text-[9px] text-muted-foreground">{t("knowledge_dashboard.paths_started")}</p>
               </div>
               <div className="bg-card border border-border rounded-xl p-3 text-center">
                 <Trophy className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                 <p className="text-lg font-bold font-mono">{kbStats.paths_completed}</p>
-                <p className="text-[9px] text-muted-foreground">Completed</p>
+                <p className="text-[9px] text-muted-foreground">{t("knowledge_dashboard.completed")}</p>
               </div>
             </div>
           )}
@@ -254,7 +254,7 @@ export default function KnowledgeDashboard() {
           {kbStats && kbStats.learning_paths.length > 0 && (
             <div className="mb-8">
               <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                <GraduationCap className="h-3 w-3" /> Learning Paths
+                <GraduationCap className="h-3 w-3" /> {t("knowledge_dashboard.learning_paths")}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {kbStats.learning_paths.map(path => {
@@ -293,7 +293,7 @@ export default function KnowledgeDashboard() {
 
           {/* Articles grid heading */}
           <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-            <BookOpen className="h-3 w-3" /> Articles
+            <BookOpen className="h-3 w-3" /> {t("knowledge_dashboard.articles")}
           </h2>
 
           {/* Articles grid */}
@@ -301,7 +301,7 @@ export default function KnowledgeDashboard() {
             <div className="text-center py-12">
               <BookOpen className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">
-                {search ? `No results for "${search}".` : "No articles in this category yet."}
+                {search ? t("knowledge_dashboard.no_results", { search }) : t("knowledge_dashboard.no_articles")}
               </p>
             </div>
           ) : (
