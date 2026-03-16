@@ -1,98 +1,86 @@
 import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import {
-  Upload, FileAudio, Scissors, Brain, Users, Network,
-  Sparkles, BarChart3, FileText, ArrowRight, CheckCircle2,
+  Globe, FileAudio, Scissors, Brain, Network,
+  Sparkles, ArrowRight, ArrowDown, CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
 
 interface PipelineStage {
   icon: React.ElementType;
+  key: string;
   label: string;
   description: string;
-  status: "active" | "ready" | "coming";
+  status: "active" | "coming";
   link?: string;
   outputs: string[];
 }
 
 const STAGES: PipelineStage[] = [
   {
-    icon: Upload,
-    label: "Input Layer",
-    description: "Upload media: YouTube, MP3, MP4, text, PDF. Normalizare și validare format.",
+    icon: Globe,
+    key: "source",
+    label: "SOURCE",
+    description: "Ingest raw content: YouTube, audio, video, PDF, text, URLs. Automatic format detection and metadata extraction.",
     status: "active",
     link: "/extractor",
-    outputs: ["Episode creat", "Fișier stocat"],
+    outputs: ["Episode", "Metadata", "Raw file"],
   },
   {
     icon: FileAudio,
-    label: "Transcription",
-    description: "Transcriere audio/video cu detectare limbă și speaker diarization.",
+    key: "transcribe",
+    label: "TRANSCRIBE",
+    description: "AI transcription with speaker diarization and language detection. Supports 50+ languages.",
     status: "active",
     link: "/extractor",
-    outputs: ["Transcript text", "Speaker segments"],
+    outputs: ["Transcript", "Speaker segments", "Timestamps"],
   },
   {
     icon: Scissors,
-    label: "Segmentation",
-    description: "Chunking semantic 300-800 tokens cu păstrare context și overlap.",
+    key: "segment",
+    label: "SEGMENT",
+    description: "Semantic chunking into 300-800 token blocks with context overlap for precise extraction.",
     status: "active",
-    outputs: ["Segment blocks", "Overlap links"],
+    outputs: ["Semantic chunks", "Context links"],
   },
   {
     icon: Brain,
-    label: "Extraction Engine",
-    description: "Extracție multi-nivel: insights, frameworks, patterns, quotes, prompts.",
+    key: "extract",
+    label: "EXTRACT NEURONS",
+    description: "Multi-axis AI extraction: insights, frameworks, patterns, psychological signals, JTBD patterns across 9 specialized prompts.",
     status: "active",
     link: "/neurons",
     outputs: ["Neurons", "Entities", "Relations"],
   },
   {
-    icon: Users,
-    label: "Profile Synthesis",
-    description: "Generare profile pentru speakeri: competențe, trăsături psihologice, citate.",
-    status: "active",
-    link: "/guests",
-    outputs: ["Guest profiles", "Expertise scores"],
-  },
-  {
     icon: Network,
-    label: "Knowledge Graph",
-    description: "Construcție graph: noduri (entități), edge-uri (relații), clustering tematic.",
+    key: "link",
+    label: "LINK KNOWLEDGE",
+    description: "Build knowledge graph: connect neurons, compute IdeaRank scores, cluster topics, detect patterns.",
     status: "active",
     link: "/intelligence",
-    outputs: ["Entity nodes", "Topic clusters", "IdeaRank scores"],
+    outputs: ["Graph nodes", "Topic clusters", "IdeaRank"],
   },
   {
     icon: Sparkles,
-    label: "Service Execution",
-    description: "Orchestrarea serviciilor AI: analiză, producție, transformare. Credit system.",
+    key: "generate",
+    label: "GENERATE ASSETS",
+    description: "Produce 50+ deliverable types: articles, courses, frameworks, scripts, social posts, reports.",
     status: "active",
     link: "/services",
-    outputs: ["Jobs", "Artifacts", "Deliverables"],
-  },
-  {
-    icon: BarChart3,
-    label: "Scoring & Ranking",
-    description: "Evaluare calitate: novelty × density × utility × demand. Praguri premium/standard.",
-    status: "coming",
-    outputs: ["Insight scores", "Premium flag"],
-  },
-  {
-    icon: FileText,
-    label: "Content Production",
-    description: "Generare deliverables finale: articole, cursuri, scripturi, social posts, rapoarte.",
-    status: "active",
-    link: "/library",
-    outputs: ["50+ deliverable types"],
+    outputs: ["50+ deliverables", "Artifacts", "Exports"],
   },
 ];
 
-const STATUS_CONFIG = {
-  active: { label: "Active", color: "bg-status-validated text-primary-foreground" },
-  ready: { label: "Ready", color: "bg-primary/15 text-primary" },
-  coming: { label: "In Development", color: "bg-muted text-muted-foreground" },
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.08, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as const },
+  }),
 };
 
 export default function PipelineOverview() {
@@ -101,99 +89,118 @@ export default function PipelineOverview() {
   return (
     <div className="flex-1 overflow-auto">
       <SEOHead
-        title="Pipeline Overview — AI-IDEI"
-        description="Complete knowledge extraction pipeline: from media upload to structured deliverables."
+        title="Pipeline — AI-IDEI"
+        description="Complete knowledge extraction pipeline: from raw content to structured deliverables in 6 stages."
       />
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-xl sm:text-2xl font-serif font-bold tracking-tight mb-2">
-            Pipeline de Extracție
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-10"
+        >
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight mb-2">
+            Knowledge Pipeline
           </h1>
-          <p className="text-sm text-muted-foreground max-w-lg leading-relaxed">
-            Procesul complet de transformare a conținutului brut în active de cunoaștere structurate.
-            Fiecare etapă procesează, îmbogățește și conectează informația.
+          <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+            One upload → 6 stages → 50+ deliverables. The complete flow from raw content to structured knowledge assets.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Pipeline flow */}
+        {/* Instant Action Surface — the single primary action */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="mb-12"
+        >
+          <InstantActionSurface />
+        </motion.div>
+
+        {/* Pipeline stages */}
         <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-[23px] top-4 bottom-4 w-px bg-border" />
+          {STAGES.map((stage, i) => {
+            const Icon = stage.icon;
+            const isLast = i === STAGES.length - 1;
 
-          <div className="space-y-1">
-            {STAGES.map((stage, i) => {
-              const statusConf = STATUS_CONFIG[stage.status];
-              const Icon = stage.icon;
-
-              return (
-                <div key={i} className="relative flex gap-4 group">
-                  {/* Node */}
+            return (
+              <motion.div
+                key={stage.key}
+                custom={i}
+                initial="hidden"
+                animate="visible"
+                variants={fadeUp}
+              >
+                {/* Stage card */}
+                <div
+                  className={cn(
+                    "group relative flex items-start gap-4 rounded-xl border p-4 transition-all",
+                    "bg-card border-border hover:border-primary/25 hover:shadow-sm"
+                  )}
+                >
+                  {/* Icon node */}
                   <div className="relative z-10 shrink-0">
                     <div className={cn(
-                      "h-12 w-12 rounded-xl flex items-center justify-center border transition-all",
-                      stage.status === "active"
-                        ? "bg-primary/10 border-primary/20 group-hover:border-primary/40 group-hover:shadow-sm"
-                        : stage.status === "coming"
-                          ? "bg-muted border-border"
-                          : "bg-card border-border"
+                      "h-11 w-11 rounded-xl flex items-center justify-center border transition-all",
+                      "bg-primary/10 border-primary/20 group-hover:border-primary/40 group-hover:shadow-sm"
                     )}>
-                      <Icon className={cn(
-                        "h-5 w-5",
-                        stage.status === "active" ? "text-primary" : "text-muted-foreground"
-                      )} />
+                      <Icon className="h-5 w-5 text-primary" />
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className={cn(
-                    "flex-1 rounded-xl border p-4 mb-2 transition-all",
-                    stage.status === "active"
-                      ? "bg-card border-border hover:border-primary/20 hover:shadow-sm"
-                      : "bg-muted/30 border-border/50"
-                  )}>
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-[9px] font-mono text-muted-foreground/50">L{i}</span>
-                      <h3 className="text-sm font-semibold">{stage.label}</h3>
-                      <span className={cn("text-[8px] font-semibold uppercase px-1.5 py-0.5 rounded-full ml-auto", statusConf.color)}>
-                        {statusConf.label}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed mb-2">
-                      {stage.description}
-                    </p>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {stage.outputs.map((out, j) => (
-                        <span key={j} className="text-[9px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <CheckCircle2 className="h-2.5 w-2.5 text-status-validated" />
-                          {out}
-                        </span>
-                      ))}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[9px] font-mono text-muted-foreground/40">L{i}</span>
+                      <h3 className="text-sm font-bold tracking-wide">{stage.label}</h3>
                       {stage.link && (
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-5 text-[9px] gap-1 text-primary ml-auto px-1.5"
+                          className="h-5 text-[9px] gap-1 text-primary ml-auto px-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
                           onClick={() => navigate(stage.link!)}
                         >
-                          Deschide <ArrowRight className="h-2.5 w-2.5" />
+                          Open <ArrowRight className="h-2.5 w-2.5" />
                         </Button>
                       )}
                     </div>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed mb-2">
+                      {stage.description}
+                    </p>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {stage.outputs.map((out, j) => (
+                        <span key={j} className="text-[9px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <CheckCircle2 className="h-2.5 w-2.5 text-primary/50" />
+                          {out}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
+
+                {/* Connector arrow */}
+                {!isLast && (
+                  <div className="flex justify-center py-1.5">
+                    <ArrowDown className="h-4 w-4 text-border" />
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Summary */}
-        <div className="mt-8 rounded-xl border border-primary/20 bg-primary/5 p-5 text-center">
-          <p className="text-xs text-muted-foreground mb-1">Pipeline complet</p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-10 rounded-xl border border-primary/20 bg-primary/5 p-5 text-center"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">Complete Pipeline</p>
           <p className="text-sm font-medium">
-            1 upload → {STAGES.length} etape → 50+ deliverables
+            1 upload → {STAGES.length} stages → 50+ deliverables
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

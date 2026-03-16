@@ -7,32 +7,42 @@ import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
-  Upload, Loader2, Zap, Globe, FileAudio, Film, Type,
+  Zap, Globe, FileAudio, Film, Type,
   ChevronDown, CheckCircle2, Brain, Layers, FileUp,
-  Sparkles,
+  Sparkles, Network, Scissors, Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 type PipelineStage =
   | "idle"
-  | "importing"
-  | "creating"
-  | "transcribing"
-  | "extracting"
-  | "linking"
+  | "source"
+  | "transcribe"
+  | "segment"
+  | "extract"
+  | "link"
+  | "generate"
   | "complete"
   | "error";
 
-const STAGE_CONFIG: Record<PipelineStage, { label: string; icon: React.ElementType; progress: number }> = {
-  idle: { label: "", icon: Zap, progress: 0 },
-  importing: { label: "Importing source…", icon: Upload, progress: 10 },
-  creating: { label: "Creating episode…", icon: Sparkles, progress: 20 },
-  transcribing: { label: "Transcribing audio…", icon: FileAudio, progress: 40 },
-  extracting: { label: "Extracting ideas…", icon: Brain, progress: 70 },
-  linking: { label: "Building knowledge graph…", icon: Layers, progress: 90 },
-  complete: { label: "Ideas ready!", icon: CheckCircle2, progress: 100 },
-  error: { label: "Pipeline failed", icon: Zap, progress: 0 },
+interface StageConf { label: string; icon: React.ElementType; progress: number }
+
+const STAGE_CONFIG: Record<PipelineStage, StageConf> = {
+  idle:       { label: "",                          icon: Zap,           progress: 0 },
+  source:     { label: "Importing source…",         icon: Globe,         progress: 8 },
+  transcribe: { label: "Transcribing audio…",       icon: FileAudio,     progress: 25 },
+  segment:    { label: "Segmenting content…",       icon: Scissors,      progress: 40 },
+  extract:    { label: "Extracting neurons…",       icon: Brain,         progress: 60 },
+  link:       { label: "Linking knowledge graph…",  icon: Network,       progress: 80 },
+  generate:   { label: "Generating assets…",        icon: Sparkles,      progress: 92 },
+  complete:   { label: "Pipeline complete!",        icon: CheckCircle2,  progress: 100 },
+  error:      { label: "Pipeline failed",           icon: Zap,           progress: 0 },
+};
+
+const PIPELINE_STEPS: PipelineStage[] = ["source", "transcribe", "segment", "extract", "link", "generate", "complete"];
+const PIPELINE_LABELS: Record<string, string> = {
+  source: "Source", transcribe: "Transcribe", segment: "Segment",
+  extract: "Extract", link: "Link", generate: "Generate", complete: "Done",
 };
 
 const ACCEPTED_MEDIA = ".mp3,.wav,.m4a,.ogg,.webm,.flac,.mp4,.mov,.avi";
@@ -55,9 +65,8 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
   const [result, setResult] = useState<{ neurons: number; episode_id: string } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const isRunning = stage !== "idle" && stage !== "complete" && stage !== "error";
+  const isRunning = !["idle", "complete", "error"].includes(stage);
 
-  // Detect input type
   const detectType = useCallback((val: string): "url" | "text" => {
     try {
       const u = new URL(val.trim());
@@ -68,7 +77,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
   const detectedType = input.trim() ? detectType(input) : null;
 
-  // YouTube title fetch
   const fetchYouTubeTitle = async (url: string): Promise<string | null> => {
     try {
       const resp = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
@@ -119,8 +127,8 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       : detectType(input);
 
     try {
-      // === Stage 1: Import / prepare ===
-      setStage("importing");
+      // === SOURCE ===
+      setStage("source");
       let title = "";
       let transcript: string | null = null;
       let filePath: string | null = null;
@@ -131,7 +139,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         const transcriptExts = ["txt", "srt", "vtt", "md"];
 
         if (transcriptExts.includes(ext)) {
-          // Text file → use as transcript directly
           let text = await selectedFile.text();
           if (ext === "srt" || ext === "vtt") text = parseSrtToText(text);
           transcript = text;
@@ -150,7 +157,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
           transcript = pages.join("\n\n");
           title = selectedFile.name.replace(/\.\w+$/, "").replace(/[-_]/g, " ");
         } else {
-          // Audio/video → upload to storage
           title = selectedFile.name.replace(/\.\w+$/, "").replace(/[-_]/g, " ");
           const storagePath = `${user.id}/${Date.now()}.${ext}`;
           const { error: uploadErr } = await supabase.storage.from("episode-files").upload(storagePath, selectedFile);
@@ -163,13 +169,11 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         const isYT = url.includes("youtube.com") || url.includes("youtu.be");
         title = isYT ? (await fetchYouTubeTitle(url)) || extractTitleFromUrl(url) : extractTitleFromUrl(url);
       } else {
-        // Plain text
         transcript = input.trim();
         title = input.slice(0, 60).replace(/\n/g, " ").trim() + (input.length > 60 ? "…" : "");
       }
 
-      // === Stage 2: Create episode ===
-      setStage("creating");
+      // Create episode
       const sourceType = selectedFile
         ? (filePath ? (selectedFile.type.startsWith("video/") ? "video" : "audio") : "text")
         : type;
@@ -190,9 +194,9 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
       trackEvent({ name: "transcript_uploaded", params: { source_type: sourceType, episode_id: ep.id } });
 
-      // === Stage 3: Transcribe if needed ===
+      // === TRANSCRIBE ===
       if (!transcript && filePath) {
-        setStage("transcribing");
+        setStage("transcribe");
         const session = await supabase.auth.getSession();
         const resp = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-audio`,
@@ -210,9 +214,12 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         transcript = data.transcript || "done";
       }
 
-      // === Stage 4: Extract neurons ===
+      // === SEGMENT + EXTRACT ===
       if (transcript || filePath) {
-        setStage("extracting");
+        setStage("segment");
+        await new Promise(r => setTimeout(r, 600));
+
+        setStage("extract");
         const extractEndpoint = extractionDepth === "deep" ? "deep-extract" : "extract-neurons";
         const session = await supabase.auth.getSession();
         const resp = await fetch(
@@ -232,10 +239,15 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         const neuronsCreated = data.total_neurons || data.neurons_created || 0;
         const creditsSpent = data.credits_spent || 0;
 
-        setStage("linking");
-        // Small delay to show the linking stage
-        await new Promise(r => setTimeout(r, 800));
+        // === LINK ===
+        setStage("link");
+        await new Promise(r => setTimeout(r, 700));
 
+        // === GENERATE ===
+        setStage("generate");
+        await new Promise(r => setTimeout(r, 500));
+
+        // === COMPLETE ===
         setStage("complete");
         setResult({ neurons: neuronsCreated, episode_id: ep.id });
         toast.success(`✅ ${neuronsCreated} neurons extracted! (${creditsSpent} credits)`, { duration: 8000 });
@@ -244,7 +256,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
           params: { episode_id: ep.id, neurons_count: neuronsCreated, credits_spent: creditsSpent },
         });
       } else {
-        // URL without audio — episode created but can't auto-extract
         setStage("complete");
         setResult({ neurons: 0, episode_id: ep.id });
         toast.success("Episode created. Upload an audio file to extract neurons automatically.");
@@ -266,7 +277,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     setResult(null);
   };
 
-  // File handling
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) setSelectedFile(file);
@@ -300,7 +310,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
       >
-        {/* Main input area */}
         <AnimatePresence mode="wait">
           {stage === "idle" || stage === "error" ? (
             <motion.div
@@ -342,7 +351,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                       onKeyDown={e => { if (e.key === "Enter" && (input.trim() || selectedFile)) runPipeline(); }}
                     />
                   )}
-                  {/* Type indicator */}
                   {detectedType && !selectedFile && input.trim() && (
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
                       {detectedType === "url" ? (
@@ -354,7 +362,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                   )}
                 </div>
 
-                {/* File upload button */}
                 <input ref={fileRef} type="file" accept={`${ACCEPTED_MEDIA},${ACCEPTED_TRANSCRIPTS}`} className="hidden" onChange={handleFileSelect} />
                 <Button
                   variant="outline"
@@ -365,7 +372,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                   <FileUp className="h-4 w-4" />
                 </Button>
 
-                {/* Analyze button */}
                 <Button
                   size="lg"
                   className="h-11 gap-2 rounded-xl px-5 font-semibold shrink-0"
@@ -382,7 +388,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                 <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
                   <span className="flex items-center gap-1"><Globe className="h-2.5 w-2.5" /> YouTube, URLs</span>
                   <span className="flex items-center gap-1"><FileAudio className="h-2.5 w-2.5" /> Audio/Video</span>
-                  <span className="flex items-center gap-1"><Type className="h-2.5 w-2.5" /> Text</span>
+                  <span className="flex items-center gap-1"><Type className="h-2.5 w-2.5" /> Text, PDF</span>
                 </div>
                 <button
                   onClick={() => setShowSettings(s => !s)}
@@ -393,7 +399,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                 </button>
               </div>
 
-              {/* Progressive settings (collapsed by default) */}
+              {/* Progressive settings */}
               <AnimatePresence>
                 {showSettings && (
                   <motion.div
@@ -407,8 +413,8 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                         <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-24">Extraction</span>
                         <div className="flex gap-1">
                           {([
-                            { value: "quick", label: "Quick (100 credits)", icon: Brain },
-                            { value: "deep", label: "Deep (500 credits)", icon: Layers },
+                            { value: "quick", label: "Quick · 100 cr", icon: Brain },
+                            { value: "deep", label: "Deep · 500 cr", icon: Layers },
                           ] as const).map(opt => (
                             <button
                               key={opt.value}
@@ -432,7 +438,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
               </AnimatePresence>
             </motion.div>
           ) : (
-            /* Pipeline progress view */
+            /* Pipeline progress */
             <motion.div
               key="pipeline"
               initial={{ opacity: 0 }}
@@ -440,17 +446,18 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
               exit={{ opacity: 0 }}
               className="p-5 sm:p-6"
             >
-              {/* Stage indicator */}
+              {/* Active stage */}
               <div className="flex items-center gap-3 mb-4">
-                {stage === "complete" ? (
-                  <div className="h-10 w-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                <div className={cn(
+                  "h-10 w-10 rounded-xl flex items-center justify-center",
+                  stage === "complete" ? "bg-primary/15" : "bg-primary/10"
+                )}>
+                  {stage === "complete" ? (
                     <CheckCircle2 className="h-5 w-5 text-primary" />
-                  </div>
-                ) : (
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  ) : (
                     <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                  </div>
-                )}
+                  )}
+                </div>
                 <div className="flex-1">
                   <p className={cn(
                     "text-sm font-semibold",
@@ -470,27 +477,35 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
               </div>
 
               {/* Progress bar */}
-              <Progress value={currentStage.progress} className="h-1.5 mb-3" />
+              <Progress value={currentStage.progress} className="h-1.5 mb-4" />
 
-              {/* Pipeline stages visualization */}
-              <div className="flex items-center gap-1 justify-between">
-                {(["importing", "creating", "transcribing", "extracting", "linking", "complete"] as PipelineStage[]).map((s, i) => {
+              {/* 7-step pipeline visualization */}
+              <div className="flex items-center justify-between">
+                {PIPELINE_STEPS.map((s, i) => {
                   const isActive = stage === s;
                   const isPast = currentStage.progress > STAGE_CONFIG[s].progress;
                   const StageIcon = STAGE_CONFIG[s].icon;
                   return (
-                    <div key={s} className="flex items-center gap-1">
-                      <div className={cn(
-                        "h-6 w-6 rounded-full flex items-center justify-center transition-all duration-300",
-                        isActive ? "bg-primary text-primary-foreground scale-110" :
-                        isPast ? "bg-primary/20 text-primary" :
-                        "bg-muted text-muted-foreground/40"
-                      )}>
-                        <StageIcon className="h-3 w-3" />
-                      </div>
-                      {i < 5 && (
+                    <div key={s} className="flex items-center gap-0.5">
+                      <div className="flex flex-col items-center gap-1">
                         <div className={cn(
-                          "h-0.5 w-3 sm:w-6 rounded-full transition-colors",
+                          "h-7 w-7 rounded-full flex items-center justify-center transition-all duration-300",
+                          isActive ? "bg-primary text-primary-foreground scale-110 shadow-sm" :
+                          isPast ? "bg-primary/20 text-primary" :
+                          "bg-muted text-muted-foreground/40"
+                        )}>
+                          <StageIcon className="h-3 w-3" />
+                        </div>
+                        <span className={cn(
+                          "text-[8px] leading-none font-medium hidden sm:block",
+                          isActive ? "text-primary" : isPast ? "text-primary/60" : "text-muted-foreground/40"
+                        )}>
+                          {PIPELINE_LABELS[s]}
+                        </span>
+                      </div>
+                      {i < PIPELINE_STEPS.length - 1 && (
+                        <div className={cn(
+                          "h-0.5 w-2 sm:w-4 rounded-full transition-colors mx-0.5",
                           isPast ? "bg-primary/30" : "bg-border"
                         )} />
                       )}
@@ -504,7 +519,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 mt-4 pt-3 border-t border-border"
+                  className="flex items-center gap-2 mt-5 pt-3 border-t border-border"
                 >
                   <Button variant="outline" size="sm" className="h-8 text-xs" onClick={reset}>
                     New Analysis
