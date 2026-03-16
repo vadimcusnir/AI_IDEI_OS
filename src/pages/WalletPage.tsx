@@ -11,6 +11,7 @@ import {
   Wallet, ArrowDownLeft, ArrowUpRight, RefreshCw, Lock,
   Loader2, Clock, TrendingUp, TrendingDown, Minus,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Transaction {
   id: string;
@@ -21,17 +22,18 @@ interface Transaction {
   created_at: string;
 }
 
-const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  add: { icon: ArrowDownLeft, color: "text-status-validated", label: "Credit" },
-  spend: { icon: ArrowUpRight, color: "text-destructive", label: "Spend" },
-  reserve: { icon: Lock, color: "text-primary", label: "Reserve" },
-  refund: { icon: RefreshCw, color: "text-status-validated", label: "Refund" },
-};
-
 export default function WalletPage() {
+  const { t } = useTranslation("pages");
   const { user } = useAuth();
   const [txns, setTxns] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
+    add: { icon: ArrowDownLeft, color: "text-status-validated", label: t("wallet.type_credit") },
+    spend: { icon: ArrowUpRight, color: "text-destructive", label: t("wallet.type_spend") },
+    reserve: { icon: Lock, color: "text-primary", label: t("wallet.type_reserve") },
+    refund: { icon: RefreshCw, color: "text-status-validated", label: t("wallet.type_refund") },
+  };
 
   useEffect(() => {
     if (!user) return;
