@@ -9,6 +9,7 @@ import { ControlledSection } from "@/components/ControlledSection";
 import { useGamification } from "@/hooks/useGamification";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 import {
   Trophy, Flame, Zap, Medal, Award,
   Loader2,
@@ -17,6 +18,7 @@ import {
 export default function GamificationPage() {
   const { user } = useAuth();
   const { xp, streak, loading } = useGamification();
+  const { t } = useTranslation("pages");
 
   if (loading) {
     return (
@@ -38,8 +40,8 @@ export default function GamificationPage() {
               <Trophy className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">Gamification</h1>
-              <p className="text-[10px] text-muted-foreground">XP, levels, streaks, achievements, and daily challenges</p>
+              <h1 className="text-lg font-serif font-bold tracking-tight">{t("gamification.title")}</h1>
+              <p className="text-[10px] text-muted-foreground">{t("gamification.subtitle")}</p>
             </div>
             <Badge className="ml-auto text-[10px] bg-primary/10 text-primary border-0">
               Level {xp.level} — {xp.rank_name}
@@ -69,7 +71,7 @@ export default function GamificationPage() {
           <ControlledSection elementId="gamification.achievements">
             <div className="mb-6">
               <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                <Award className="h-3 w-3" /> Achievement Gallery
+                <Award className="h-3 w-3" /> {t("gamification.achievement_gallery")}
               </h2>
               <AchievementGallery />
             </div>
@@ -79,7 +81,7 @@ export default function GamificationPage() {
           <ControlledSection elementId="gamification.leaderboard">
             <div className="mb-6">
               <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                <Medal className="h-3 w-3" /> Leaderboard
+                <Medal className="h-3 w-3" /> {t("gamification.leaderboard")}
               </h2>
               <LeaderboardWidget />
             </div>

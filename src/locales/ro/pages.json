@@ -529,5 +529,65 @@
     "invite_error": "Utilizatorul nu a fost găsit sau eroare la invitare",
     "delete_error": "Nu poți șterge workspace-ul principal",
     "no_workspace": "Niciun workspace selectat."
+  },
+  "gamification": {
+    "title": "Gamification",
+    "subtitle": "XP, nivele, streak-uri, realizări și provocări zilnice",
+    "achievement_gallery": "Galerie Realizări",
+    "leaderboard": "Clasament"
+  },
+  "vip": {
+    "title": "CusnirOS VIP",
+    "subtitle": "Programul de 11 luni — acces progresiv la ecosistem",
+    "month_progress": "Luna {{current}}/11",
+    "war_rooms": "War Rooms",
+    "month_required": "Luna {{month}}+",
+    "access_active": "Acces activ"
+  },
+  "changelog": {
+    "title": "Changelog",
+    "subtitle": "Ce s-a schimbat pentru tine — funcționalități noi, îmbunătățiri și fix-uri.",
+    "updates_count": "{{count}} actualizare/actualizări publicate",
+    "search_placeholder": "Caută în changelog...",
+    "filter_all": "Toate",
+    "cat_new_feature": "Funcție Nouă",
+    "cat_improvement": "Îmbunătățire",
+    "cat_bug_fix": "Corecție Bug",
+    "cat_ui_ux": "Actualizare UI/UX",
+    "cat_performance": "Performanță",
+    "cat_integration": "Integrare",
+    "cat_documentation": "Documentație",
+    "no_filter_results": "Niciun rezultat pentru filtrele selectate.",
+    "no_entries": "Nicio actualizare publicată încă.",
+    "changes_count": "{{count}} schimbare/schimbări",
+    "example_label": "Exemplu",
+    "previous": "Anterioare",
+    "next": "Următoare"
+  },
+  "not_found": {
+    "title": "404",
+    "message": "Ups! Pagina nu a fost găsită",
+    "back_home": "Înapoi la Acasă"
+  },
+  "prompt_forge": {
+    "title": "Prompt Forge ⚒️",
+    "subtitle": "Generează prompturi specializate pentru site-uri personale: extragere experiență, descrieri, produse, conținut structurat.",
+    "goal_label": "Obiectivul promptului",
+    "goal_experience": "Extragere experiență",
+    "goal_profile": "Descriere profil",
+    "context_label": "Context (industrie, nișă, public-țintă)",
+    "context_placeholder": "Ex: Sunt consultant de marketing digital pentru startup-uri SaaS B2B. Publicul meu sunt fondatorii tehnici care au nevoie de strategie go-to-market...",
+    "details_label": "Detalii suplimentare (opțional)",
+    "details_placeholder": "Ex: Vreau un ton prietenos dar profesional. Focus pe rezultate măsurabile...",
+    "generating": "Se generează...",
+    "generate_button": "Generează Prompt (~{{cost}} N)",
+    "balance_label": "Balanță: {{balance}} NEURONS",
+    "result_label": "Rezultat",
+    "copy": "Copiază",
+    "empty_hint": "Selectează un obiectiv și completează contextul pentru a genera un prompt",
+    "success": "Prompt generat cu succes!",
+    "error_auth": "Autentifică-te pentru a genera prompturi",
+    "error_fields": "Completează contextul și obiectivul",
+    "error_credits": "Credite insuficiente. Ai nevoie de ~{{cost}} NEURONS."
   }
 }

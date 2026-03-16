@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 
 interface WarRoom {
   id: string;
@@ -21,6 +22,7 @@ export default function VIPDashboard() {
   const { user, loading: authLoading } = useAuth();
   const { isVIP, currentMonth, loading: vipLoading } = useVIPTier();
   const [warRooms, setWarRooms] = useState<WarRoom[]>([]);
+  const { t } = useTranslation("pages");
 
   useEffect(() => {
     if (!user) return;
@@ -48,12 +50,12 @@ export default function VIPDashboard() {
               <Crown className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">CusnirOS VIP</h1>
-              <p className="text-[10px] text-muted-foreground">Programul de 11 luni — acces progresiv la ecosistem</p>
+              <h1 className="text-lg font-serif font-bold tracking-tight">{t("vip.title")}</h1>
+              <p className="text-[10px] text-muted-foreground">{t("vip.subtitle")}</p>
             </div>
             {isVIP && (
               <Badge className="ml-auto text-[10px] bg-primary/10 text-primary border-0">
-                Luna {currentMonth}/11
+                {t("vip.month_progress", { current: currentMonth })}
               </Badge>
             )}
           </div>
@@ -67,7 +69,7 @@ export default function VIPDashboard() {
           {warRooms.length > 0 && (
             <div>
               <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                <Shield className="h-3 w-3" /> War Rooms
+                <Shield className="h-3 w-3" /> {t("vip.war_rooms")}
               </h2>
               <div className="grid gap-3">
                 {warRooms.map(wr => {
@@ -89,9 +91,9 @@ export default function VIPDashboard() {
                           <p className="text-[10px] text-muted-foreground truncate">{wr.description}</p>
                         </div>
                         {locked ? (
-                          <Badge variant="outline" className="text-[9px] shrink-0">Luna {wr.min_month}+</Badge>
+                          <Badge variant="outline" className="text-[9px] shrink-0">{t("vip.month_required", { month: wr.min_month })}</Badge>
                         ) : (
-                          <Badge variant="secondary" className="text-[9px] shrink-0">Acces activ</Badge>
+                          <Badge variant="secondary" className="text-[9px] shrink-0">{t("vip.access_active")}</Badge>
                         )}
                       </div>
                     </div>
