@@ -129,8 +129,20 @@ export default function ProfilePage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">My Profile</h1>
-              <p className="text-[10px] text-muted-foreground mt-0.5">Manage your identity and preferences</p>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-serif font-bold tracking-tight">My Profile</h1>
+                {(tier === "pro" || tier === "vip") && (
+                  <Badge variant="outline" className="text-[8px] px-1.5 py-0 gap-0.5 border-primary/30 text-primary">
+                    <Crown className="h-2.5 w-2.5" />
+                    {tier === "vip" ? "VIP" : "PRO"}
+                  </Badge>
+                )}
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-0.5">
+                {(tier === "pro" || tier === "vip") && subscriptionEnd
+                  ? `${tier.toUpperCase()} until ${new Date(subscriptionEnd).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                  : "Manage your identity and preferences"}
+              </p>
             </div>
             <Button
               onClick={handleSave}
