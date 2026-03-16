@@ -9,6 +9,7 @@ import {
   LogOut, Home, User, MessageCircle, ScrollText,
   BarChart3, Bell, BookOpen, Users, Network, Rocket,
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
+  Lock,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
@@ -30,6 +31,8 @@ interface NavItem {
   adminOnly?: boolean;
   /** UI control registry ID for dynamic visibility */
   controlId?: string;
+  /** Marks this nav item as requiring Pro tier */
+  proOnly?: boolean;
 }
 
 interface NavSection {
@@ -59,7 +62,7 @@ const NAV_SECTIONS: NavSection[] = [
     labelKey: "explore_section",
     items: [
       { labelKey: "dashboard", to: "/dashboard", icon: BarChart3, controlId: "nav.dashboard" },
-      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
+      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true },
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
@@ -185,7 +188,10 @@ export function AppSidebar() {
                         >
                           <button onClick={() => navigate(item.to)} className="w-full">
                             <item.icon className="h-4 w-4" />
-                            <span>{t(`navigation:${item.labelKey}`)}</span>
+                            <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
+                            {item.proOnly && !collapsed && (
+                              <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
+                            )}
                           </button>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
