@@ -699,5 +699,64 @@
     "job_failed_desc": "Creditele au fost eliberate dacă erau rezervate. Poți încerca din nou.",
     "job_completed": "Job finalizat — rezultate auditate și salvate",
     "service_not_found": "Serviciu negăsit"
+  },
+  "batch_runner": {
+    "title": "Execuție în Serie",
+    "neuron_label": "Neuron:",
+    "balance": "Balanță",
+    "total_cost": "Cost Total",
+    "selected": "Selectate",
+    "progress": "Progres: {{done}} / {{total}}",
+    "select_services": "Selectează serviciile",
+    "deselect_all": "Deselectează tot",
+    "select_all": "Selectează tot",
+    "execute_button": "Execută {{count}} servicii ({{cost}} NEURONS)",
+    "execution_status": "Status execuție",
+    "view_library": "Vezi Biblioteca",
+    "run_again": "Rulează din nou",
+    "batch_complete": "Batch complet: {{count}} servicii executate!"
+  },
+  "public_profile": {
+    "not_found_title": "@{{username}}",
+    "not_found_desc": "Acest profil nu există încă. Creează-ți profilul public din dashboard.",
+    "create_profile": "Creează profil",
+    "products_services": "Produse & Servicii"
+  },
+  "public_user_profile": {
+    "not_found_title": "Utilizator negăsit",
+    "not_found_desc": "Nu există profil public pentru @{{username}}.",
+    "public_neurons": "neuroni publici",
+    "member_since": "Membru din",
+    "public_knowledge": "Cunoștințe Publice",
+    "no_public_neurons": "Niciun neuron public încă.",
+    "cta_title": "Extrage-ți Propria Cunoaștere",
+    "cta_desc": "AI-IDEI transformă expertiza ta în active digitale structurate. Încarcă conținut, extrage insight-uri, generează livrabile.",
+    "get_started": "Începe Acum"
+  },
+  "topic_discovery": {
+    "breadcrumb": "Descoperire Cunoștințe",
+    "title": "Descoperire",
+    "desc": "Explorează idei emergente, subiecte în tendință și clustere de cunoștințe în graful de inteligență.",
+    "emerging_ideas": "Idei Emergente",
+    "topic_clusters": "Clustere de Subiecte",
+    "filter_placeholder": "Filtrează subiecte...",
+    "major_clusters": "Clustere Majore ({{count}})",
+    "growing_clusters": "Clustere în Creștere ({{count}})",
+    "emerging_topics": "Subiecte Emergente ({{count}})",
+    "no_topics_search": "Niciun subiect nu corespunde căutării.",
+    "no_topics": "Niciun subiect descoperit încă.",
+    "entities": "{{count}} entități",
+    "score": "Scor: {{score}}"
+  },
+  "media_profiles": {
+    "breadcrumb": "Derivate de Inteligență",
+    "breadcrumb_current": "Profile",
+    "title": "Profile de Inteligență",
+    "desc": "Profile analitice sintetizate din inteligența transcripturilor — tipare cognitive, stiluri de decizie și comportamente strategice extrase din conversații reale.",
+    "search_placeholder": "Caută profile...",
+    "no_match": "Niciun profil nu corespunde căutării.",
+    "no_profiles": "Niciun profil public disponibil încă.",
+    "cognitive_signals": "{{count}} semnale cognitive",
+    "frameworks": "{{count}} framework-uri"
   }
 }

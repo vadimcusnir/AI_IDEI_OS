@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Users, Search, ChevronRight, ArrowRight, Brain } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface Profile {
   id: string;
@@ -19,6 +20,7 @@ interface Profile {
 }
 
 export default function MediaProfiles() {
+  const { t } = useTranslation("pages");
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -51,17 +53,15 @@ export default function MediaProfiles() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Users className="h-3.5 w-3.5" />
-            <span>Intelligence Derivatives</span>
+            <span>{t("media_profiles.breadcrumb")}</span>
             <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground">Profiles</span>
+            <span className="text-foreground">{t("media_profiles.breadcrumb_current")}</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">
-            Intelligence Profiles
+            {t("media_profiles.title")}
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">
-            Analytical profiles synthesized from transcript intelligence —
-            cognitive patterns, decision styles, and strategic behaviors extracted
-            from real conversations.
+            {t("media_profiles.desc")}
           </p>
         </div>
       </div>
@@ -89,7 +89,7 @@ export default function MediaProfiles() {
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search profiles..."
+            placeholder={t("media_profiles.search_placeholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10 text-sm"
@@ -104,7 +104,7 @@ export default function MediaProfiles() {
           <div className="text-center py-20">
             <Users className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">
-              {search ? "No profiles match your search." : "No public profiles available yet."}
+              {search ? t("media_profiles.no_match") : t("media_profiles.no_profiles")}
             </p>
           </div>
         ) : (
@@ -115,7 +115,6 @@ export default function MediaProfiles() {
                 to={`/guest/${profile.slug}`}
                 className="bg-card border border-border rounded-xl p-5 hover:border-primary/30 transition-colors group"
               >
-                {/* Name & Role */}
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">
@@ -126,14 +125,12 @@ export default function MediaProfiles() {
                   <ArrowRight className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary transition-colors mt-0.5" />
                 </div>
 
-                {/* Bio snippet */}
                 {profile.bio && (
                   <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mb-3">
                     {profile.bio}
                   </p>
                 )}
 
-                {/* Expertise tags */}
                 {profile.expertise_areas && profile.expertise_areas.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-2">
                     {profile.expertise_areas.slice(0, 4).map((area) => (
@@ -152,13 +149,12 @@ export default function MediaProfiles() {
                   </div>
                 )}
 
-                {/* Cognitive indicators */}
                 <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
                   {profile.psychological_traits && (
-                    <span>{profile.psychological_traits.length} cognitive signals</span>
+                    <span>{t("media_profiles.cognitive_signals", { count: profile.psychological_traits.length })}</span>
                   )}
                   {profile.frameworks_mentioned && (
-                    <span>{profile.frameworks_mentioned.length} frameworks</span>
+                    <span>{t("media_profiles.frameworks", { count: profile.frameworks_mentioned.length })}</span>
                   )}
                 </div>
               </Link>
