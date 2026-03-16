@@ -1,13 +1,17 @@
 import { useNotificationPreferences, NotificationPrefs } from "@/hooks/useNotificationPreferences";
+import { usePushSubscription } from "@/hooks/usePushSubscription";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Bell, Mail, Clock, BellRing, Zap, Coins,
-  MessageCircle, GitBranch, Loader2, Moon,
+  MessageCircle, GitBranch, Loader2, Moon, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => ({
   value: i,
