@@ -403,7 +403,7 @@ export default function AdminDashboard() {
 
                 <div className="bg-card border border-border rounded-xl p-5">
                   <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
-                    <Coins className="h-3 w-3" /> Platform Economy
+                    <Coins className="h-3 w-3" /> {t("admin.economy_title")}
                   </h3>
                   <div className="space-y-3">
                     <EconRow label="Credits in circulation" value={stats.totalCreditsCirculating} />
