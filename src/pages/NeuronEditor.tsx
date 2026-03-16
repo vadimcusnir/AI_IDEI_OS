@@ -18,11 +18,13 @@ import { SaveAsTemplateDialog } from "@/components/neuron/SaveAsTemplateDialog";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { NeuronVersion } from "@/hooks/useNeuronGraph";
+import { useTranslation } from "react-i18next";
 
 export default function NeuronEditor() {
   const { number } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { t } = useTranslation("pages");
   const neuronNumber = number ? parseInt(number, 10) : undefined;
 
   const {
@@ -163,7 +165,7 @@ export default function NeuronEditor() {
       <div className="flex-1 flex items-center justify-center bg-background">
         <div className="flex items-center gap-3 text-muted-foreground">
           <Loader2 className="h-5 w-5 animate-spin" />
-          <span className="text-sm">{loading ? "Loading neuron..." : "Creating neuron..."}</span>
+          <span className="text-sm">{loading ? t("neuron_editor.loading") : t("neuron_editor.creating")}</span>
         </div>
       </div>
     );
@@ -278,7 +280,7 @@ export default function NeuronEditor() {
       {saving && (
         <div className="fixed bottom-12 right-4 flex items-center gap-1.5 bg-card border border-border rounded-lg px-3 py-1.5 text-xs text-muted-foreground shadow-sm">
           <Loader2 className="h-3 w-3 animate-spin" />
-          Saving...
+          {t("neuron_editor.saving")}
         </div>
       )}
     </div>

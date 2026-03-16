@@ -2,6 +2,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import {
   Shield, Lock, Key, AlertTriangle, CheckCircle2, Eye,
   Network, FileWarning, ShieldCheck, Bug, Layers, Server,
@@ -59,12 +60,13 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function SecurityDocs() {
+  const { t } = useTranslation("pages");
   const fixedCount = FINDINGS.filter(f => f.status === "fixed").length;
 
   return (
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
-        <SEOHead title="Security Architecture — AI-IDEI" description="Security audit, threat model, and hardening documentation for the AI-IDEI platform." />
+        <SEOHead title={`${t("security_docs.title")} — AI-IDEI`} description={t("security_docs.subtitle")} />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-5">
 
           {/* Header */}
@@ -73,18 +75,18 @@ export default function SecurityDocs() {
               <Shield className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">Security Architecture</h1>
-              <p className="text-[10px] text-muted-foreground">Audit results, threat model, and hardening documentation</p>
+              <h1 className="text-lg font-serif font-bold tracking-tight">{t("security_docs.title")}</h1>
+              <p className="text-[10px] text-muted-foreground">{t("security_docs.subtitle")}</p>
             </div>
             <Badge className="ml-auto text-[10px] bg-status-validated/10 text-status-validated border-0">
-              {fixedCount}/{FINDINGS.length} Fixed
+              {t("security_docs.fixed_count", { fixed: fixedCount, total: FINDINGS.length })}
             </Badge>
           </div>
 
           {/* Risk Matrix */}
           <section className="mb-8">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-              <AlertTriangle className="h-3 w-3" /> Security Findings
+              <AlertTriangle className="h-3 w-3" /> {t("security_docs.findings_title")}
             </h2>
             <div className="space-y-1.5">
               {FINDINGS.map(f => (
@@ -106,22 +108,22 @@ export default function SecurityDocs() {
           {/* Threat Model */}
           <section className="mb-8">
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-              <Bug className="h-3 w-3" /> Threat Model
+              <Bug className="h-3 w-3" /> {t("security_docs.threat_model_title")}
             </h2>
             <div className="grid gap-3">
-              {THREAT_MODEL.map(t => {
-                const Icon = t.icon;
+              {THREAT_MODEL.map(tm => {
+                const Icon = tm.icon;
                 return (
-                  <div key={t.threat} className="bg-card border border-border rounded-xl p-4">
+                  <div key={tm.threat} className="bg-card border border-border rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
                         <Icon className="h-3.5 w-3.5 text-primary" />
                       </div>
-                      <p className="text-xs font-semibold">{t.threat}</p>
+                      <p className="text-xs font-semibold">{tm.threat}</p>
                     </div>
                     <div className="ml-9 space-y-1">
-                      <p className="text-[10px] text-muted-foreground"><span className="font-medium text-foreground">Vector:</span> {t.vector}</p>
-                      <p className="text-[10px] text-muted-foreground"><span className="font-medium text-foreground">Mitigation:</span> {t.mitigation}</p>
+                      <p className="text-[10px] text-muted-foreground"><span className="font-medium text-foreground">{t("security_docs.vector")}:</span> {tm.vector}</p>
+                      <p className="text-[10px] text-muted-foreground"><span className="font-medium text-foreground">{t("security_docs.mitigation")}:</span> {tm.mitigation}</p>
                     </div>
                   </div>
                 );
@@ -132,7 +134,7 @@ export default function SecurityDocs() {
           {/* Hardening */}
           <section>
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-              <ShieldCheck className="h-3 w-3" /> Hardening Measures
+              <ShieldCheck className="h-3 w-3" /> {t("security_docs.hardening_title")}
             </h2>
             <div className="grid gap-2">
               {HARDENING.map(h => {

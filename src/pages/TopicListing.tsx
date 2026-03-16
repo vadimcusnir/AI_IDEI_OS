@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Tag, Search, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "react-i18next";
 
 interface Topic {
   id: string;
@@ -13,6 +14,7 @@ interface Topic {
 }
 
 export default function TopicListing() {
+  const { t } = useTranslation("pages");
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -30,7 +32,7 @@ export default function TopicListing() {
   }, []);
 
   const filtered = search.trim()
-    ? topics.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()))
+    ? topics.filter((tp) => tp.title.toLowerCase().includes(search.toLowerCase()))
     : topics;
 
   return (
@@ -39,11 +41,11 @@ export default function TopicListing() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Tag className="h-3.5 w-3.5" />
-            <span>Knowledge Context</span>
+            <span>{t("topic_listing.breadcrumb")}</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">Topics</h1>
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("topic_listing.title")}</h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">
-            Knowledge domains and concepts connecting intelligence entities across the graph.
+            {t("topic_listing.desc")}
           </p>
         </div>
       </div>
@@ -51,7 +53,7 @@ export default function TopicListing() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search topics..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 text-sm" />
+          <Input placeholder={t("topic_listing.search_placeholder")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 text-sm" />
         </div>
 
         {loading ? (
@@ -62,7 +64,7 @@ export default function TopicListing() {
           <div className="text-center py-20">
             <Tag className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">
-              {search ? "No topics match your search." : "No topics available yet."}
+              {search ? t("topic_listing.no_match") : t("topic_listing.no_topics")}
             </p>
           </div>
         ) : (
@@ -81,7 +83,7 @@ export default function TopicListing() {
                   {topic.description && (
                     <p className="text-[10px] text-muted-foreground truncate mt-0.5">{topic.description}</p>
                   )}
-                  <span className="text-[10px] text-muted-foreground">{topic.entity_count} entities</span>
+                  <span className="text-[10px] text-muted-foreground">{t("topic_listing.entities_count", { count: topic.entity_count })}</span>
                 </div>
                 <ArrowRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary shrink-0" />
               </Link>

@@ -11,10 +11,12 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import logo from "@/assets/logo.gif";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileExtractor() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation("pages");
   const [experience, setExperience] = useState("");
   const [skills, setSkills] = useState("");
   const [products, setProducts] = useState("");
@@ -23,8 +25,8 @@ export default function ProfileExtractor() {
   const [loading, setLoading] = useState(false);
 
   const handleExtract = useCallback(async () => {
-    if (!user) { toast.error("Autentifică-te"); return; }
-    if (!experience.trim() || !skills.trim()) { toast.error("Completează experiența și competențele"); return; }
+    if (!user) { toast.error(t("profile_extractor.error_auth")); return; }
+    if (!experience.trim() || !skills.trim()) { toast.error(t("profile_extractor.error_fields")); return; }
 
     setLoading(true);
     setResult("");
@@ -106,17 +108,17 @@ export default function ProfileExtractor() {
         }
       }
 
-      toast.success("Profile generated!");
+      toast.success(t("profile_extractor.success"));
     } catch (e: any) {
       toast.error(e.message || "Extraction failed");
     }
     setLoading(false);
-  }, [user, experience, skills, products, tone]);
+  }, [user, experience, skills, products, tone, t]);
 
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(result);
-    toast.success("Copied to clipboard!");
-  }, [result]);
+    toast.success(t("profile_extractor.copied"));
+  }, [result, t]);
 
   const TONES = ["profesional", "prietenos", "bold", "academic", "casual"];
 
@@ -125,9 +127,9 @@ export default function ProfileExtractor() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Hero */}
         <div className="mb-8">
-          <h1 className="text-2xl font-serif font-bold mb-2">Profile Extractor 🧬</h1>
+          <h1 className="text-2xl font-serif font-bold mb-2">{t("profile_extractor.title")} 🧬</h1>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
-            Introdu experiența și competențele tale. AI-ul va genera texte gata de folosit pentru pagina ta de profil: hero, bio, produse și neuroni de cunoștințe.
+            {t("profile_extractor.desc")}
           </p>
         </div>
 
@@ -136,12 +138,12 @@ export default function ProfileExtractor() {
           <div className="space-y-4">
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                Experiența ta *
+                {t("profile_extractor.experience_label")}
               </label>
               <Textarea
                 value={experience}
                 onChange={e => setExperience(e.target.value)}
-                placeholder="Ex: 8 ani în marketing digital, am condus echipe de 5+ persoane, am gestionat bugete de $500K+, am lucrat cu 30+ startup-uri SaaS..."
+                placeholder={t("profile_extractor.experience_placeholder")}
                 rows={4}
                 className="text-sm"
               />
@@ -149,12 +151,12 @@ export default function ProfileExtractor() {
 
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                Competențe și abilități cheie *
+                {t("profile_extractor.skills_label")}
               </label>
               <Textarea
                 value={skills}
                 onChange={e => setSkills(e.target.value)}
-                placeholder="Ex: Growth marketing, SEO, Content strategy, Paid ads (Meta, Google), Analytics, Team leadership, Public speaking..."
+                placeholder={t("profile_extractor.skills_placeholder")}
                 rows={3}
                 className="text-sm"
               />
@@ -162,12 +164,12 @@ export default function ProfileExtractor() {
 
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                Produse / Servicii oferite (opțional)
+                {t("profile_extractor.products_label")}
               </label>
               <Textarea
                 value={products}
                 onChange={e => setProducts(e.target.value)}
-                placeholder="Ex: Consultanță go-to-market ($2000), Curs de growth hacking ($297), Audit SEO ($500)..."
+                placeholder={t("profile_extractor.products_placeholder")}
                 rows={3}
                 className="text-sm"
               />
@@ -175,20 +177,20 @@ export default function ProfileExtractor() {
 
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                Tonul dorit
+                {t("profile_extractor.tone_label")}
               </label>
               <div className="flex flex-wrap gap-1.5">
-                {TONES.map(t => (
+                {TONES.map(t2 => (
                   <button
-                    key={t}
-                    onClick={() => setTone(t)}
+                    key={t2}
+                    onClick={() => setTone(t2)}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                      tone === t
+                      tone === t2
                         ? "border-primary bg-primary/5 text-primary"
                         : "border-border text-muted-foreground hover:border-primary/30"
                     }`}
                   >
-                    {t}
+                    {t2}
                   </button>
                 ))}
               </div>
@@ -202,18 +204,18 @@ export default function ProfileExtractor() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Se extrage...
+                  {t("profile_extractor.extracting")}
                 </>
               ) : (
                 <>
                   <Brain className="h-4 w-4" />
-                  Extrage & Generează Profil
+                  {t("profile_extractor.extract_button")}
                 </>
               )}
             </Button>
 
             <p className="text-[10px] text-muted-foreground/50 text-center">
-              Cost: 75 NEURONS · Include: hero, bio, produse, 5-8 neuroni extrași
+              {t("profile_extractor.cost_info")}
             </p>
           </div>
 
@@ -223,11 +225,11 @@ export default function ProfileExtractor() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                    Profilul tău generat
+                    {t("profile_extractor.result_label")}
                   </span>
                   <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={copyToClipboard}>
                     <Copy className="h-3 w-3" />
-                    Copiază
+                    {t("profile_extractor.copy")}
                   </Button>
                 </div>
                 <div className="prose prose-sm max-w-none dark:prose-invert">
@@ -238,7 +240,7 @@ export default function ProfileExtractor() {
               <div className="h-full flex flex-col items-center justify-center text-center">
                 <UserCheck className="h-10 w-10 text-muted-foreground/20 mb-3" />
                 <p className="text-sm text-muted-foreground/50">
-                  Completează formularul pentru a genera conținutul profilului tău
+                  {t("profile_extractor.empty_hint")}
                 </p>
               </div>
             )}

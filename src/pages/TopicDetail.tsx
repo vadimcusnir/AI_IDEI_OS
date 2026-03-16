@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Tag, ChevronRight, ArrowRight, Brain, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Topic {
   id: string;
@@ -30,6 +31,7 @@ const TYPE_PATH: Record<string, string> = {
 
 export default function TopicDetail() {
   const { slug } = useParams<{ slug: string }>();
+  const { t } = useTranslation("pages");
   const [topic, setTopic] = useState<Topic | null>(null);
   const [entities, setEntities] = useState<TopicEntity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,19 +40,19 @@ export default function TopicDetail() {
     if (!slug) return;
     setLoading(true);
     (async () => {
-      const { data: t } = await supabase
+      const { data: topicData } = await supabase
         .from("topics")
         .select("*")
         .eq("slug", slug)
         .single();
 
-      if (!t) { setTopic(null); setLoading(false); return; }
-      setTopic(t as Topic);
+      if (!topicData) { setTopic(null); setLoading(false); return; }
+      setTopic(topicData as Topic);
 
       const { data: junctions } = await supabase
         .from("entity_topics")
         .select("entity_id")
-        .eq("topic_id", t.id);
+        .eq("topic_id", topicData.id);
 
       const entityIds = (junctions || []).map((j: any) => j.entity_id);
       if (entityIds.length > 0) {
@@ -79,8 +81,8 @@ export default function TopicDetail() {
     return (
       <div className="min-h-screen bg-background text-center py-20">
         <Tag className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-        <h1 className="text-2xl font-serif font-bold">Topic Not Found</h1>
-        <Link to="/topics" className="text-sm text-primary hover:underline mt-4 inline-block">← Back to Topics</Link>
+        <h1 className="text-2xl font-serif font-bold">{t("topic_detail.not_found_title")}</h1>
+        <Link to="/topics" className="text-sm text-primary hover:underline mt-4 inline-block">← {t("topic_detail.back_to_topics")}</Link>
       </div>
     );
   }
@@ -98,7 +100,7 @@ export default function TopicDetail() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Tag className="h-3.5 w-3.5" />
-            <Link to="/topics" className="hover:text-foreground transition-colors">Topics</Link>
+            <Link to="/topics" className="hover:text-foreground transition-colors">{t("topic_listing.title")}</Link>
             <ChevronRight className="h-3 w-3" />
             <span className="text-foreground">{topic.title}</span>
           </div>
@@ -106,7 +108,7 @@ export default function TopicDetail() {
           {topic.description && (
             <p className="text-sm text-muted-foreground leading-relaxed max-w-[60ch]">{topic.description}</p>
           )}
-          <p className="text-xs text-muted-foreground mt-3">{entities.length} entities in this topic</p>
+          <p className="text-xs text-muted-foreground mt-3">{t("topic_detail.entities_count", { count: entities.length })}</p>
         </div>
       </div>
 
@@ -135,7 +137,7 @@ export default function TopicDetail() {
         {entities.length === 0 && (
           <div className="text-center py-16">
             <Brain className="h-8 w-8 text-muted-foreground/20 mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">No entities linked to this topic yet.</p>
+            <p className="text-sm text-muted-foreground">{t("topic_detail.no_entities")}</p>
           </div>
         )}
       </div>
