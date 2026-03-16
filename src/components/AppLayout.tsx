@@ -10,6 +10,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 
 import { ContextualFeedbackPrompt } from "@/components/feedback/ContextualFeedbackPrompt";
+import { LowBalanceBanner } from "@/components/credits/LowBalanceBanner";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
@@ -100,6 +101,8 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             {user && <NotificationBell />}
             {user && <UserMenu />}
           </header>
+
+          <LowBalanceBanner />
 
           {fullHeight ? (
             <main className="flex-1 flex flex-col min-h-0">
