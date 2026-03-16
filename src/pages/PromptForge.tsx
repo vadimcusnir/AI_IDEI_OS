@@ -269,5 +269,6 @@ export default function PromptForge() {
         </div>
       </div>
     </div>
+    </PremiumGate>
   );
 }
