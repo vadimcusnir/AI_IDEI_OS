@@ -211,7 +211,7 @@ export default function PromptForge() {
 
             <Button
               onClick={handleGenerate}
-              disabled={loading || !context.trim() || !goal}
+              disabled={loading || !context.trim() || !goal || balance < estimatedCost}
               className="w-full gap-2"
             >
               {loading ? (
@@ -222,13 +222,19 @@ export default function PromptForge() {
               ) : (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Generează Prompt
+                  Generează Prompt (~{estimatedCost} N)
                 </>
               )}
             </Button>
 
+            {balance < estimatedCost && !loading && (
+              <div className="mt-3">
+                <InlineTopUp needed={estimatedCost} balance={balance} compact />
+              </div>
+            )}
+
             <p className="text-[10px] text-muted-foreground/50 text-center">
-              Cost: 25 NEURONS per generare
+              Balanță: {balance} NEURONS
             </p>
           </div>
 
