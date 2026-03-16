@@ -597,6 +597,13 @@ export default function RunService() {
           </motion.div>
         )}
       </div>
+
+      <PremiumPaywall
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        requiredTier={service?.access_tier}
+        serviceName={service?.name}
+      />
     </div>
   );
 }
