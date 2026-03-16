@@ -316,9 +316,9 @@ export default function ProfilePage() {
                       <div className="flex items-center gap-2 mb-3">
                         <Mail className="h-4 w-4 text-primary" />
                         <div>
-                          <p className="text-xs font-medium">Email Digest</p>
+                           <p className="text-xs font-medium">{t("profile.email_digest")}</p>
                           <p className="text-[10px] text-muted-foreground">
-                            Periodic summary sent via email
+                            {t("profile.email_digest_desc")}
                           </p>
                         </div>
                       </div>
