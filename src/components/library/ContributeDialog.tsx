@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCreateContribution, useMyContributions } from "@/hooks/useContributions";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,6 +31,7 @@ const TYPES = [
 
 export function ContributeDialog() {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation("common");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [type, setType] = useState("text");
@@ -54,20 +56,20 @@ export function ContributeDialog() {
       <DialogTrigger asChild>
         <Button size="sm" variant="outline" className="gap-1.5">
           <PenTool className="h-3.5 w-3.5" />
-          Contribute
+          {t("contribute")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <PenTool className="h-4 w-4 text-primary" />
-            Submit Contribution
+            {t("submit_contribution")}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
           <div className="flex gap-2">
             <Input
-              placeholder="Title..."
+              placeholder={`${t("title")}...`}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="flex-1 h-8 text-xs"
@@ -85,7 +87,7 @@ export function ContributeDialog() {
           </div>
 
           <Textarea
-            placeholder="Write your contribution... Detailed content earns higher quality scores and more NEURONS."
+            placeholder={t("contribution_review_hint")}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={10}
@@ -93,7 +95,7 @@ export function ContributeDialog() {
           />
 
           <Input
-            placeholder="Tags (comma separated): marketing, framework, ai"
+            placeholder={t("tags_comma")}
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
             className="h-8 text-xs"
@@ -102,21 +104,20 @@ export function ContributeDialog() {
           <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50 border border-border">
             <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
               <span className="flex items-center gap-1">
-                <FileText className="h-3 w-3" />{wordCount} words
+                <FileText className="h-3 w-3" />{wordCount} {t("words")}
               </span>
               <span className="flex items-center gap-1">
-                <Tag className="h-3 w-3" />{tagsInput.split(",").filter((t) => t.trim()).length} tags
+                <Tag className="h-3 w-3" />{tagsInput.split(",").filter((t) => t.trim()).length} {t("tags")}
               </span>
             </div>
             <div className="flex items-center gap-1 text-xs font-medium text-primary">
               <Coins className="h-3.5 w-3.5" />
-              ~{estimatedBonus} NEURONS reward
+              {t("neurons_reward", { count: estimatedBonus })}
             </div>
           </div>
 
           <p className="text-[10px] text-muted-foreground">
-            Contributions are reviewed before approval. Quality score is calculated automatically based on length,
-            detail, and tags. Higher scores = more NEURONS. Minimum 50 words required.
+            {t("contribution_review_hint")}
           </p>
 
           <Button
@@ -124,7 +125,7 @@ export function ContributeDialog() {
             disabled={createContribution.isPending || !title.trim() || wordCount < 50}
             className="w-full"
           >
-            {createContribution.isPending ? "Submitting..." : "Submit for Review"}
+            {createContribution.isPending ? t("submitting") : t("submit_for_review")}
           </Button>
         </div>
       </DialogContent>
@@ -134,12 +135,13 @@ export function ContributeDialog() {
 
 export function ContributionsList() {
   const { data: contributions, isLoading } = useMyContributions();
+  const { t } = useTranslation("common");
 
   if (isLoading || !contributions?.length) return null;
 
   return (
     <div className="mb-4">
-      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Your Contributions</h3>
+      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{t("your_contributions")}</h3>
       <div className="space-y-1.5">
         {contributions.slice(0, 5).map((c) => {
           const statusCfg = STATUS_CONFIG[c.status] || STATUS_CONFIG.pending;

@@ -1,5 +1,6 @@
 import { useNotificationPreferences, NotificationPrefs } from "@/hooks/useNotificationPreferences";
 import { usePushSubscription } from "@/hooks/usePushSubscription";
+import { useTranslation } from "react-i18next";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -21,6 +22,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => ({
 export function NotificationSettings() {
   const { prefs, loading, saving, updatePrefs } = useNotificationPreferences();
   const { isSupported, isSubscribed, loading: pushLoading, subscribe, unsubscribe } = usePushSubscription();
+  const { t } = useTranslation(["common", "errors"]);
 
   if (loading) {
     return (
@@ -33,20 +35,20 @@ export function NotificationSettings() {
   const handlePushToggle = async (enabled: boolean) => {
     if (enabled) {
       if (!isSupported) {
-        toast.error("Browser-ul tău nu suportă push notifications");
+        toast.error(t("errors:push_not_supported"));
         return;
       }
       const success = await subscribe();
       if (success) {
         await updatePrefs({ push_enabled: true });
-        toast.success("Push notifications activate!");
+        toast.success(t("common:push_enabled"));
       } else {
-        toast.error("Nu am putut activa push notifications. Verifică permisiunile browser-ului.");
+        toast.error(t("errors:push_enable_failed"));
       }
     } else {
       await unsubscribe();
       await updatePrefs({ push_enabled: false });
-      toast("Push notifications dezactivate");
+      toast(t("common:push_disabled"));
     }
   };
 
@@ -58,10 +60,10 @@ export function NotificationSettings() {
       <section>
         <div className="flex items-center gap-2 mb-3">
           <BellRing className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold">Push Notifications</h3>
+          <h3 className="text-sm font-semibold">{t("common:notification_settings.push_title")}</h3>
           {pushActive && (
             <Badge variant="outline" className="text-[10px] h-5 bg-primary/10 text-primary border-primary/30">
-              Active
+              {t("common:active")}
             </Badge>
           )}
         </div>
@@ -69,13 +71,13 @@ export function NotificationSettings() {
           {!isSupported && (
             <div className="flex items-center gap-2 text-[10px] text-destructive bg-destructive/10 rounded-lg p-2.5 mb-2">
               <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-destructive" />
-              <span>Browser-ul tău nu suportă push notifications</span>
+              <span>{t("errors:push_not_supported")}</span>
             </div>
           )}
           <ToggleRow
             icon={Bell}
-            label="Enable push notifications"
-            description="Receive browser alerts even when you're away"
+            label={t("common:notification_settings.push_enable")}
+            description={t("common:notification_settings.push_enable_desc")}
             checked={pushActive}
             onChange={handlePushToggle}
             disabled={pushLoading || !isSupported}
@@ -85,29 +87,29 @@ export function NotificationSettings() {
               <Separator />
               <ToggleRow
                 icon={Zap}
-                label="Job updates"
-                description="When jobs complete or fail"
+                label={t("common:notification_settings.job_updates")}
+                description={t("common:notification_settings.job_updates_desc")}
                 checked={prefs.push_jobs}
                 onChange={(v) => updatePrefs({ push_jobs: v })}
               />
               <ToggleRow
                 icon={Coins}
-                label="Credit alerts"
-                description="Low balance warnings"
+                label={t("common:notification_settings.credit_alerts")}
+                description={t("common:notification_settings.credit_alerts_desc")}
                 checked={prefs.push_credits}
                 onChange={(v) => updatePrefs({ push_credits: v })}
               />
               <ToggleRow
                 icon={MessageCircle}
-                label="Feedback responses"
-                description="When admins reply to your feedback"
+                label={t("common:notification_settings.feedback_responses")}
+                description={t("common:notification_settings.feedback_responses_desc")}
                 checked={prefs.push_feedback}
                 onChange={(v) => updatePrefs({ push_feedback: v })}
               />
               <ToggleRow
                 icon={GitBranch}
-                label="Version updates"
-                description="When new neuron versions are saved"
+                label={t("common:notification_settings.version_updates")}
+                description={t("common:notification_settings.version_updates_desc")}
                 checked={prefs.push_versions}
                 onChange={(v) => updatePrefs({ push_versions: v })}
               />
@@ -120,13 +122,13 @@ export function NotificationSettings() {
       <section>
         <div className="flex items-center gap-2 mb-3">
           <Mail className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold">Email Digest</h3>
+          <h3 className="text-sm font-semibold">{t("common:notification_settings.email_digest")}</h3>
         </div>
         <div className="space-y-3 rounded-xl border border-border p-4 bg-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium">Digest frequency</p>
-              <p className="text-[10px] text-muted-foreground">How often to receive email summaries</p>
+              <p className="text-xs font-medium">{t("common:notification_settings.digest_frequency")}</p>
+              <p className="text-[10px] text-muted-foreground">{t("common:notification_settings.digest_frequency_desc")}</p>
             </div>
             <Select
               value={prefs.email_digest}
@@ -136,10 +138,10 @@ export function NotificationSettings() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="realtime">Real-time</SelectItem>
-                <SelectItem value="daily">Daily</SelectItem>
-                <SelectItem value="weekly">Weekly</SelectItem>
-                <SelectItem value="none">Off</SelectItem>
+                <SelectItem value="realtime">{t("common:notification_settings.realtime")}</SelectItem>
+                <SelectItem value="daily">{t("common:notification_settings.daily")}</SelectItem>
+                <SelectItem value="weekly">{t("common:notification_settings.weekly")}</SelectItem>
+                <SelectItem value="none">{t("common:notification_settings.off")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -148,22 +150,22 @@ export function NotificationSettings() {
               <Separator />
               <ToggleRow
                 icon={Zap}
-                label="Job notifications"
-                description="Include job status in digest"
+                label={t("common:notification_settings.job_notifications")}
+                description={t("common:notification_settings.job_notifications_desc")}
                 checked={prefs.email_jobs}
                 onChange={(v) => updatePrefs({ email_jobs: v })}
               />
               <ToggleRow
                 icon={Coins}
-                label="Credit alerts"
-                description="Include credit warnings in digest"
+                label={t("common:notification_settings.credit_alerts_email")}
+                description={t("common:notification_settings.credit_alerts_email_desc")}
                 checked={prefs.email_credits}
                 onChange={(v) => updatePrefs({ email_credits: v })}
               />
               <ToggleRow
                 icon={MessageCircle}
-                label="Feedback updates"
-                description="Include feedback activity in digest"
+                label={t("common:notification_settings.feedback_updates")}
+                description={t("common:notification_settings.feedback_updates_desc")}
                 checked={prefs.email_feedback}
                 onChange={(v) => updatePrefs({ email_feedback: v })}
               />
@@ -176,24 +178,24 @@ export function NotificationSettings() {
       <section>
         <div className="flex items-center gap-2 mb-3">
           <Moon className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold">Quiet Hours</h3>
+          <h3 className="text-sm font-semibold">{t("common:notification_settings.quiet_hours")}</h3>
         </div>
         <div className="rounded-xl border border-border p-4 bg-card">
           <p className="text-[10px] text-muted-foreground mb-3">
-            Suppress push notifications during these hours (UTC)
+            {t("common:notification_settings.quiet_hours_desc")}
           </p>
           <div className="flex items-center gap-3">
             <div className="flex-1">
-              <Label className="text-[10px] text-muted-foreground mb-1 block">From</Label>
+              <Label className="text-[10px] text-muted-foreground mb-1 block">{t("common:notification_settings.from")}</Label>
               <Select
                 value={prefs.quiet_hours_start?.toString() ?? "none"}
                 onValueChange={(v) => updatePrefs({ quiet_hours_start: v === "none" ? null : Number(v) })}
               >
                 <SelectTrigger className="h-8 text-xs">
-                  <SelectValue placeholder="Off" />
+                  <SelectValue placeholder={t("common:notification_settings.off")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Off</SelectItem>
+                  <SelectItem value="none">{t("common:notification_settings.off")}</SelectItem>
                   {HOURS.map((h) => (
                     <SelectItem key={h.value} value={h.value.toString()}>
                       {h.label}
@@ -203,16 +205,16 @@ export function NotificationSettings() {
               </Select>
             </div>
             <div className="flex-1">
-              <Label className="text-[10px] text-muted-foreground mb-1 block">To</Label>
+              <Label className="text-[10px] text-muted-foreground mb-1 block">{t("common:notification_settings.to")}</Label>
               <Select
                 value={prefs.quiet_hours_end?.toString() ?? "none"}
                 onValueChange={(v) => updatePrefs({ quiet_hours_end: v === "none" ? null : Number(v) })}
               >
                 <SelectTrigger className="h-8 text-xs">
-                  <SelectValue placeholder="Off" />
+                  <SelectValue placeholder={t("common:notification_settings.off")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Off</SelectItem>
+                  <SelectItem value="none">{t("common:notification_settings.off")}</SelectItem>
                   {HOURS.map((h) => (
                     <SelectItem key={h.value} value={h.value.toString()}>
                       {h.label}
@@ -226,7 +228,7 @@ export function NotificationSettings() {
       </section>
 
       {saving && (
-        <p className="text-[10px] text-muted-foreground text-center animate-pulse">Saving…</p>
+        <p className="text-[10px] text-muted-foreground text-center animate-pulse">{t("common:saving")}</p>
       )}
     </div>
   );

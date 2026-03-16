@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 import { Brain, Zap, RefreshCw, Loader2, BarChart3, Link2, Tag, TrendingUp, Activity, Sparkles, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -39,6 +40,7 @@ interface PVSMetrics {
 }
 
 export function AdminKnowledgeGraphTab() {
+  const { t } = useTranslation(["common", "errors"]);
   const [stats, setStats] = useState<KGStats | null>(null);
   const [pvsMetrics, setPvsMetrics] = useState<PVSMetrics[]>([]);
   const [emergingIdeas, setEmergingIdeas] = useState<PVSMetrics[]>([]);
@@ -123,10 +125,10 @@ export function AdminKnowledgeGraphTab() {
         body: { action: "project_all" },
       });
       if (error) throw error;
-      toast.success(`Projected: ${data.created} new, ${data.updated} updated, ${data.relationsCreated} relations`);
+      toast.success(t("common:projected_entities", { created: data.created, updated: data.updated, relations: data.relationsCreated }));
       await loadStats();
     } catch (err: any) {
-      toast.error(err.message || "Projection failed");
+      toast.error(err.message || t("errors:projection_failed"));
     } finally {
       setProjecting(false);
     }
@@ -139,10 +141,10 @@ export function AdminKnowledgeGraphTab() {
         body: { action: "compute_idearank" },
       });
       if (error) throw error;
-      toast.success("PVS + Emergence computed (pvs-emergence-v1)");
+      toast.success(t("common:pvs_computed"));
       await loadStats();
     } catch (err: any) {
-      toast.error(err.message || "Computation failed");
+      toast.error(err.message || t("errors:computation_failed"));
     } finally {
       setComputing(false);
     }
