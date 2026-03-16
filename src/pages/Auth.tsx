@@ -91,7 +91,7 @@ export default function Auth() {
     if (mode === "signup") {
       const { error } = await signUp(trimmedEmail, password);
       if (error) toast.error(friendlyError(error.message));
-      else toast.success("Check your email to confirm your account.");
+      else toast.success(t("auth.confirm_email"));
     } else {
       const { error } = await signIn(trimmedEmail, password);
       if (error) toast.error(friendlyError(error.message));
