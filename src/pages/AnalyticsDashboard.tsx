@@ -11,6 +11,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 interface AnalyticsSummary {
   total_events: number;
@@ -21,7 +22,6 @@ interface AnalyticsSummary {
   top_pages: { page_path: string; views: number }[] | null;
 }
 
-// ── Cohort helpers ──
 interface CohortRow {
   cohort: string;
   total: number;
@@ -30,7 +30,6 @@ interface CohortRow {
 
 function buildCohorts(daily: { day: string; users: number }[] | null): CohortRow[] {
   if (!daily || daily.length < 7) return [];
-  // Group weeks as cohorts
   const weeks: { label: string; days: { day: string; users: number }[] }[] = [];
   for (let i = 0; i < daily.length; i += 7) {
     const slice = daily.slice(i, i + 7);
@@ -47,39 +46,36 @@ function buildCohorts(daily: { day: string; users: number }[] | null): CohortRow
   });
 }
 
-// ── Funnel helpers ──
-interface FunnelStep { label: string; event: string; }
-const FUNNELS: { name: string; steps: FunnelStep[] }[] = [
-  {
-    name: "Onboarding → First Service",
-    steps: [
-      { label: "Page View", event: "page_view" },
-      { label: "Neuron Created", event: "neuron_created" },
-      { label: "Service Started", event: "service_started" },
-      { label: "Service Completed", event: "service_completed" },
-    ],
-  },
-  {
-    name: "Content Pipeline",
-    steps: [
-      { label: "Episode Uploaded", event: "episode_uploaded" },
-      { label: "Transcript Done", event: "transcript_completed" },
-      { label: "Extraction Started", event: "extraction_started" },
-      { label: "Extraction Done", event: "extraction_completed" },
-    ],
-  },
-];
-
 export default function AnalyticsDashboard() {
+  const { t } = useTranslation("pages");
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const [data, setData] = useState<AnalyticsSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(30);
   const [activeTab, setActiveTab] = useState("overview");
-
-  // Funnel data
   const [funnelData, setFunnelData] = useState<Record<string, number>>({});
   const [funnelIdx, setFunnelIdx] = useState(0);
+
+  const FUNNELS = [
+    {
+      name: t("analytics.funnel_onboarding"),
+      steps: [
+        { label: t("analytics.step_page_view"), event: "page_view" },
+        { label: t("analytics.step_neuron_created"), event: "neuron_created" },
+        { label: t("analytics.step_service_started"), event: "service_started" },
+        { label: t("analytics.step_service_completed"), event: "service_completed" },
+      ],
+    },
+    {
+      name: t("analytics.funnel_pipeline"),
+      steps: [
+        { label: t("analytics.step_episode_uploaded"), event: "episode_uploaded" },
+        { label: t("analytics.step_transcript_done"), event: "transcript_completed" },
+        { label: t("analytics.step_extraction_started"), event: "extraction_started" },
+        { label: t("analytics.step_extraction_done"), event: "extraction_completed" },
+      ],
+    },
+  ];
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -91,7 +87,6 @@ export default function AnalyticsDashboard() {
       });
   }, [isAdmin, days]);
 
-  // Load funnel counts
   useEffect(() => {
     if (!isAdmin || activeTab !== "funnel") return;
     const funnel = FUNNELS[funnelIdx];
@@ -125,7 +120,7 @@ export default function AnalyticsDashboard() {
     return (
       <div className="text-center py-16">
         <BarChart3 className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">No analytics data available</p>
+        <p className="text-sm text-muted-foreground">{t("analytics.no_data")}</p>
       </div>
     );
   }
@@ -134,10 +129,16 @@ export default function AnalyticsDashboard() {
   const maxPageViews = Math.max(...(data.top_pages || []).map(p => p.views), 1);
   const funnel = FUNNELS[funnelIdx];
 
+  const statCards = [
+    { label: t("analytics.total_events"), value: data.total_events, icon: Activity },
+    { label: t("analytics.unique_users"), value: data.unique_users, icon: Users },
+    { label: t("analytics.sessions"), value: data.unique_sessions, icon: Globe },
+  ];
+
   return (
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
-        <SEOHead title="Analytics — AI-IDEI" description="Platform analytics dashboard with cohort analysis, funnels, and event tracking." />
+        <SEOHead title={t("analytics.seo_title")} description={t("analytics.seo_desc")} />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
           {/* Header */}
@@ -146,8 +147,8 @@ export default function AnalyticsDashboard() {
               <BarChart3 className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">Analytics</h1>
-              <p className="text-[10px] text-muted-foreground">Cohort analysis · Funnels · Event tracking</p>
+              <h1 className="text-lg font-serif font-bold tracking-tight">{t("analytics.title")}</h1>
+              <p className="text-[10px] text-muted-foreground">{t("analytics.subtitle")}</p>
             </div>
             <div className="ml-auto flex gap-1">
               {[7, 30, 90].map(d => (
@@ -167,11 +168,7 @@ export default function AnalyticsDashboard() {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-3 gap-3 mb-6">
-            {[
-              { label: "Total Events", value: data.total_events, icon: Activity },
-              { label: "Unique Users", value: data.unique_users, icon: Users },
-              { label: "Sessions", value: data.unique_sessions, icon: Globe },
-            ].map(s => (
+            {statCards.map(s => (
               <div key={s.label} className="bg-card border border-border rounded-xl p-4 text-center">
                 <s.icon className="h-4 w-4 text-primary mx-auto mb-1.5" />
                 <p className="text-lg font-bold font-mono">{(s.value || 0).toLocaleString()}</p>
@@ -183,9 +180,9 @@ export default function AnalyticsDashboard() {
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-4">
-              <TabsTrigger value="overview" className="text-xs gap-1"><MousePointerClick className="h-3 w-3" />Overview</TabsTrigger>
-              <TabsTrigger value="cohort" className="text-xs gap-1"><Layers className="h-3 w-3" />Cohorts</TabsTrigger>
-              <TabsTrigger value="funnel" className="text-xs gap-1"><Filter className="h-3 w-3" />Funnels</TabsTrigger>
+              <TabsTrigger value="overview" className="text-xs gap-1"><MousePointerClick className="h-3 w-3" />{t("analytics.overview")}</TabsTrigger>
+              <TabsTrigger value="cohort" className="text-xs gap-1"><Layers className="h-3 w-3" />{t("analytics.cohorts")}</TabsTrigger>
+              <TabsTrigger value="funnel" className="text-xs gap-1"><Filter className="h-3 w-3" />{t("analytics.funnels")}</TabsTrigger>
             </TabsList>
 
             {/* ── Overview Tab ── */}
@@ -193,7 +190,7 @@ export default function AnalyticsDashboard() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                    <MousePointerClick className="h-3 w-3" /> Top Events
+                    <MousePointerClick className="h-3 w-3" /> {t("analytics.top_events")}
                   </h2>
                   <div className="bg-card border border-border rounded-xl p-4 space-y-2.5">
                     {(data.top_events || []).map(ev => (
@@ -206,13 +203,13 @@ export default function AnalyticsDashboard() {
                       </div>
                     ))}
                     {(!data.top_events || data.top_events.length === 0) && (
-                      <p className="text-[10px] text-muted-foreground text-center py-4">No events tracked</p>
+                      <p className="text-[10px] text-muted-foreground text-center py-4">{t("analytics.no_events")}</p>
                     )}
                   </div>
                 </div>
                 <div>
                   <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                    <Eye className="h-3 w-3" /> Top Pages
+                    <Eye className="h-3 w-3" /> {t("analytics.top_pages")}
                   </h2>
                   <div className="bg-card border border-border rounded-xl p-4 space-y-2.5">
                     {(data.top_pages || []).map(pg => (
@@ -225,7 +222,7 @@ export default function AnalyticsDashboard() {
                       </div>
                     ))}
                     {(!data.top_pages || data.top_pages.length === 0) && (
-                      <p className="text-[10px] text-muted-foreground text-center py-4">No page views tracked</p>
+                      <p className="text-[10px] text-muted-foreground text-center py-4">{t("analytics.no_pages")}</p>
                     )}
                   </div>
                 </div>
@@ -234,7 +231,7 @@ export default function AnalyticsDashboard() {
               {data.daily_breakdown && data.daily_breakdown.length > 0 && (
                 <div className="mt-6">
                   <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                    <TrendingUp className="h-3 w-3" /> Daily Activity
+                    <TrendingUp className="h-3 w-3" /> {t("analytics.daily_activity")}
                   </h2>
                   <div className="bg-card border border-border rounded-xl p-4 space-y-1">
                     {data.daily_breakdown.slice(0, 14).map(d => {
@@ -257,17 +254,17 @@ export default function AnalyticsDashboard() {
             <TabsContent value="cohort">
               <div className="bg-card border border-border rounded-xl p-4">
                 <h2 className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                  <Layers className="h-3.5 w-3.5 text-primary" /> Weekly Retention Cohorts
+                  <Layers className="h-3.5 w-3.5 text-primary" /> {t("analytics.weekly_retention")}
                 </h2>
                 {cohorts.length === 0 ? (
-                  <p className="text-[10px] text-muted-foreground text-center py-8">Need at least 7 days of data for cohort analysis.</p>
+                  <p className="text-[10px] text-muted-foreground text-center py-8">{t("analytics.cohort_min_data")}</p>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full text-[10px]">
                       <thead>
                         <tr>
-                          <th className="text-left font-medium text-muted-foreground pb-2 pr-3">Cohort</th>
-                          <th className="text-right font-medium text-muted-foreground pb-2 pr-3">Users</th>
+                          <th className="text-left font-medium text-muted-foreground pb-2 pr-3">{t("analytics.cohort_label")}</th>
+                          <th className="text-right font-medium text-muted-foreground pb-2 pr-3">{t("analytics.users_label")}</th>
                           {cohorts[0]?.retained.map((_, i) => (
                             <th key={i} className="text-center font-medium text-muted-foreground pb-2 w-12">W+{i}</th>
                           ))}
@@ -307,7 +304,7 @@ export default function AnalyticsDashboard() {
               <div className="bg-card border border-border rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-4">
                   <GitBranch className="h-3.5 w-3.5 text-primary" />
-                  <h2 className="text-xs font-semibold">Funnel Visualization</h2>
+                  <h2 className="text-xs font-semibold">{t("analytics.funnel_viz")}</h2>
                   <div className="ml-auto flex gap-1">
                     {FUNNELS.map((f, i) => (
                       <button
