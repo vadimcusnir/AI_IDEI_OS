@@ -149,6 +149,7 @@ export default function PromptForge() {
   }, [result]);
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Prompt Forge" fallback="overlay">
     <div className="flex-1">
       <SEOHead title="Prompt Forge — AI-IDEI" description="Generate AI prompts for marketing, copywriting and content creation." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
