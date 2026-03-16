@@ -24,20 +24,22 @@ import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.gif";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { useTranslation } from "react-i18next";
 
 const GOALS = [
-  { value: "Extragere experiență", icon: User, color: "text-primary" },
-  { value: "Descriere profil", icon: FileText, color: "text-ai-accent" },
-  { value: "Product Recommendation", icon: ShoppingBag, color: "text-status-validated" },
-  { value: "Content Structuring", icon: LayoutList, color: "text-primary" },
-  { value: "Sales Copy", icon: PenTool, color: "text-destructive" },
-  { value: "Email Sequence", icon: Mail, color: "text-ai-accent" },
+  { key: "prompt_forge.goal_experience", value: "Extragere experiență", icon: User, color: "text-primary" },
+  { key: "prompt_forge.goal_profile", value: "Descriere profil", icon: FileText, color: "text-ai-accent" },
+  { key: "prompt_forge.product_recommendation", value: "Product Recommendation", icon: ShoppingBag, color: "text-status-validated" },
+  { key: "prompt_forge.content_structuring", value: "Content Structuring", icon: LayoutList, color: "text-primary" },
+  { key: "prompt_forge.sales_copy", value: "Sales Copy", icon: PenTool, color: "text-destructive" },
+  { key: "prompt_forge.email_sequence", value: "Email Sequence", icon: Mail, color: "text-ai-accent" },
 ];
 
 export default function PromptForge() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { balance } = useCreditBalance();
+  const { t } = useTranslation("pages");
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState("");
   const [details, setDetails] = useState("");
@@ -47,10 +49,10 @@ export default function PromptForge() {
   const estimatedCost = 200; // Prompt Forge typical cost
 
   const handleGenerate = useCallback(async () => {
-    if (!user) { toast.error("Autentifică-te pentru a genera prompturi"); return; }
-    if (!context.trim() || !goal) { toast.error("Completează contextul și obiectivul"); return; }
+    if (!user) { toast.error(t("prompt_forge.error_auth")); return; }
+    if (!context.trim() || !goal) { toast.error(t("prompt_forge.error_fields")); return; }
     if (balance < estimatedCost) {
-      toast.error(`Credite insuficiente. Ai nevoie de ~${estimatedCost} NEURONS.`);
+      toast.error(t("prompt_forge.error_credits", { cost: estimatedCost }));
       return;
     }
 
@@ -136,17 +138,17 @@ export default function PromptForge() {
         }
       }
 
-      toast.success("Prompt generat cu succes!");
+      toast.success(t("prompt_forge.success"));
     } catch (e: any) {
-      toast.error(e.message || "Generarea a eșuat");
+      toast.error(e.message || "Generation failed");
     }
     setLoading(false);
-  }, [user, context, goal, details]);
+  }, [user, context, goal, details, t, balance, estimatedCost]);
 
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(result);
-    toast.success("Copied to clipboard!");
-  }, [result]);
+    toast.success(t("prompt_forge.copied"));
+  }, [result, t]);
 
   return (
     <PremiumGate requiredTier="pro" featureName="Prompt Forge" fallback="overlay">
@@ -155,9 +157,9 @@ export default function PromptForge() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Hero */}
         <div className="mb-8">
-          <h1 className="text-2xl font-serif font-bold mb-2">Prompt Forge ⚒️</h1>
+          <h1 className="text-2xl font-serif font-bold mb-2">{t("prompt_forge.title")}</h1>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
-            Generează prompturi specializate pentru site-uri personale: extragere experiență, descrieri, produse, conținut structurat.
+            {t("prompt_forge.subtitle")}
           </p>
         </div>
 
@@ -165,7 +167,7 @@ export default function PromptForge() {
           {/* Input panel */}
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Obiectivul promptului</label>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("prompt_forge.goal_label")}</label>
               <div className="grid grid-cols-2 gap-2">
                 {GOALS.map(g => (
                   <button
@@ -179,7 +181,7 @@ export default function PromptForge() {
                     )}
                   >
                     <g.icon className={cn("h-3.5 w-3.5", goal === g.value ? "text-primary" : g.color)} />
-                    {g.value}
+                    {t(g.key)}
                   </button>
                 ))}
               </div>
@@ -187,12 +189,12 @@ export default function PromptForge() {
 
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                Context (industrie, nișă, public-țintă)
+                {t("prompt_forge.context_label")}
               </label>
               <Textarea
                 value={context}
                 onChange={e => setContext(e.target.value)}
-                placeholder="Ex: Sunt consultant de marketing digital pentru startup-uri SaaS B2B. Publicul meu sunt fondatorii tehnici care au nevoie de strategie go-to-market..."
+                placeholder={t("prompt_forge.context_placeholder")}
                 rows={4}
                 className="text-sm"
               />
@@ -200,12 +202,12 @@ export default function PromptForge() {
 
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                Detalii suplimentare (opțional)
+                {t("prompt_forge.details_label")}
               </label>
               <Textarea
                 value={details}
                 onChange={e => setDetails(e.target.value)}
-                placeholder="Ex: Vreau un ton prietenos dar profesional. Focus pe rezultate măsurabile..."
+                placeholder={t("prompt_forge.details_placeholder")}
                 rows={3}
                 className="text-sm"
               />
@@ -219,12 +221,12 @@ export default function PromptForge() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Se generează...
+                  {t("prompt_forge.generating")}
                 </>
               ) : (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Generează Prompt (~{estimatedCost} N)
+                  {t("prompt_forge.generate_button", { cost: estimatedCost })}
                 </>
               )}
             </Button>
@@ -236,7 +238,7 @@ export default function PromptForge() {
             )}
 
             <p className="text-[10px] text-muted-foreground/50 text-center">
-              Balanță: {balance} NEURONS
+              {t("prompt_forge.balance_label", { balance })}
             </p>
           </div>
 
@@ -246,11 +248,11 @@ export default function PromptForge() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                    Rezultat
+                    {t("prompt_forge.result_label")}
                   </span>
                   <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={copyToClipboard}>
                     <Copy className="h-3 w-3" />
-                    Copiază
+                    {t("prompt_forge.copy")}
                   </Button>
                 </div>
                 <div className="prose prose-sm max-w-none dark:prose-invert">
@@ -261,7 +263,7 @@ export default function PromptForge() {
               <div className="h-full flex flex-col items-center justify-center text-center">
                 <Wand2 className="h-10 w-10 text-muted-foreground/20 mb-3" />
                 <p className="text-sm text-muted-foreground/50">
-                  Selectează un obiectiv și completează contextul pentru a genera un prompt
+                  {t("prompt_forge.empty_hint")}
                 </p>
               </div>
             )}

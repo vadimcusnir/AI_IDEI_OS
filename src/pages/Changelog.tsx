@@ -5,6 +5,7 @@ import { Sparkles, Wrench, Bug, Palette, Zap, Plug, BookOpen, Calendar, Search, 
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 interface ChangelogEntry {
   id: string;
@@ -18,19 +19,20 @@ interface ChangelogEntry {
   position: number;
 }
 
-const CATEGORY_META: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  new_feature: { label: "New Feature", icon: Sparkles, color: "bg-primary/10 text-primary" },
-  improvement: { label: "Improvement", icon: Wrench, color: "bg-status-validated/15 text-status-validated" },
-  bug_fix: { label: "Bug Fix", icon: Bug, color: "bg-destructive/10 text-destructive" },
-  ui_ux: { label: "UI/UX Update", icon: Palette, color: "bg-ai-accent/15 text-ai-accent" },
-  performance: { label: "Performance", icon: Zap, color: "bg-orange-500/10 text-orange-600" },
-  integration: { label: "Integration", icon: Plug, color: "bg-primary/10 text-primary" },
-  documentation: { label: "Documentation", icon: BookOpen, color: "bg-muted text-muted-foreground" },
+const CATEGORY_KEYS: Record<string, { key: string; icon: React.ElementType; color: string }> = {
+  new_feature: { key: "changelog.cat_new_feature", icon: Sparkles, color: "bg-primary/10 text-primary" },
+  improvement: { key: "changelog.cat_improvement", icon: Wrench, color: "bg-status-validated/15 text-status-validated" },
+  bug_fix: { key: "changelog.cat_bug_fix", icon: Bug, color: "bg-destructive/10 text-destructive" },
+  ui_ux: { key: "changelog.cat_ui_ux", icon: Palette, color: "bg-ai-accent/15 text-ai-accent" },
+  performance: { key: "changelog.cat_performance", icon: Zap, color: "bg-orange-500/10 text-orange-600" },
+  integration: { key: "changelog.cat_integration", icon: Plug, color: "bg-primary/10 text-primary" },
+  documentation: { key: "changelog.cat_documentation", icon: BookOpen, color: "bg-muted text-muted-foreground" },
 };
 
 const PAGE_SIZE = 15;
 
 export default function Changelog() {
+  const { t } = useTranslation("pages");
   const [entries, setEntries] = useState<ChangelogEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -76,19 +78,19 @@ export default function Changelog() {
     return acc;
   }, {});
 
-  const filterCategories = Object.entries(CATEGORY_META);
+  const filterCategories = Object.entries(CATEGORY_KEYS);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <SEOHead title="Changelog — AI-IDEI" description="Latest updates, features and improvements to the AI-IDEI platform." />
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-2">Changelog</h1>
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-2">{t("changelog.title")}</h1>
         <p className="text-sm text-muted-foreground max-w-[65ch]">
-          Ce s-a schimbat pentru tine — funcționalități noi, îmbunătățiri și fix-uri.
+          {t("changelog.subtitle")}
         </p>
         {totalCount > 0 && (
           <p className="text-[10px] text-muted-foreground mt-1">
-            {totalCount} {totalCount === 1 ? "actualizare" : "actualizări"} publicate
+            {t("changelog.updates_count", { count: totalCount })}
           </p>
         )}
       </div>
@@ -98,7 +100,7 @@ export default function Changelog() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Caută în changelog..."
+            placeholder={t("changelog.search_placeholder")}
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="pl-10 text-sm"
@@ -111,7 +113,7 @@ export default function Changelog() {
             className="h-7 text-[10px] px-2.5"
             onClick={() => setActiveFilter(null)}
           >
-            <Filter className="h-3 w-3 mr-1" /> Toate
+            <Filter className="h-3 w-3 mr-1" /> {t("changelog.filter_all")}
           </Button>
           {filterCategories.map(([key, meta]) => {
             const Icon = meta.icon;
@@ -123,7 +125,7 @@ export default function Changelog() {
                 className="h-7 text-[10px] px-2.5"
                 onClick={() => setActiveFilter(activeFilter === key ? null : key)}
               >
-                <Icon className="h-3 w-3 mr-1" /> {meta.label}
+                <Icon className="h-3 w-3 mr-1" /> {t(meta.key)}
               </Button>
             );
           })}
@@ -138,7 +140,7 @@ export default function Changelog() {
         <div className="text-center py-20">
           <Sparkles className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">
-            {search || activeFilter ? "Niciun rezultat pentru filtrele selectate." : "Nicio actualizare publicată încă."}
+            {search || activeFilter ? t("changelog.no_filter_results") : t("changelog.no_entries")}
           </p>
         </div>
       ) : (
@@ -150,16 +152,16 @@ export default function Changelog() {
                   <h2 className="text-lg font-bold font-mono">{version}</h2>
                   <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                     <Calendar className="h-3 w-3" />
-                    {new Date(date).toLocaleDateString("ro-RO", { year: "numeric", month: "long", day: "numeric" })}
+                    {new Date(date).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
                   </span>
                   <span className="text-[9px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
-                    {items.length} {items.length === 1 ? "schimbare" : "schimbări"}
+                    {t("changelog.changes_count", { count: items.length })}
                   </span>
                 </div>
 
                 <div className="space-y-4 border-l-2 border-border pl-4 sm:pl-5 ml-1">
                   {items.map(entry => {
-                    const meta = CATEGORY_META[entry.category] || CATEGORY_META.improvement;
+                    const meta = CATEGORY_KEYS[entry.category] || CATEGORY_KEYS.improvement;
                     const Icon = meta.icon;
                     return (
                       <div key={entry.id} className="relative">
@@ -168,7 +170,7 @@ export default function Changelog() {
                           <div className="flex items-center gap-2 mb-2">
                             <span className={cn("flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full", meta.color)}>
                               <Icon className="h-3 w-3" />
-                              {meta.label}
+                              {t(meta.key)}
                             </span>
                           </div>
                           <h3 className="text-sm font-semibold mb-1">{entry.title}</h3>
@@ -177,7 +179,7 @@ export default function Changelog() {
                           )}
                           {entry.example && (
                             <div className="bg-muted/50 rounded-lg px-3 py-2 mb-2">
-                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Exemplu</p>
+                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("changelog.example_label")}</p>
                               <p className="text-xs">{entry.example}</p>
                             </div>
                           )}
@@ -203,7 +205,7 @@ export default function Changelog() {
                 disabled={page === 0}
                 onClick={() => setPage(p => p - 1)}
               >
-                <ChevronLeft className="h-3.5 w-3.5" /> Anterioare
+                <ChevronLeft className="h-3.5 w-3.5" /> {t("changelog.previous")}
               </Button>
               <span className="text-xs text-muted-foreground">
                 {page + 1} / {totalPages}
@@ -215,7 +217,7 @@ export default function Changelog() {
                 disabled={page >= totalPages - 1}
                 onClick={() => setPage(p => p + 1)}
               >
-                Următoare <ChevronRight className="h-3.5 w-3.5" />
+                {t("changelog.next")} <ChevronRight className="h-3.5 w-3.5" />
               </Button>
             </div>
           )}
