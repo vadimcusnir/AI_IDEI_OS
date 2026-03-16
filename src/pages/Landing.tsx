@@ -259,7 +259,7 @@ export default function Landing() {
                 <div className="h-1 w-6 rounded-full bg-destructive" />
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-destructive">{t("problem.label")}</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
+              <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
                 {t("problem.title")}
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: t("problem.desc") }} />
