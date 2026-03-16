@@ -328,5 +328,6 @@ export default function BatchRunner() {
         )}
       </div>
     </div>
+    </PremiumGate>
   );
 }

@@ -47,6 +47,7 @@ export default function DataPipeline() {
     ? Math.round((stats.llm_ready_units / stats.total_units) * 100) : 0;
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Data Pipeline" fallback="overlay">
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
         <SEOHead title="Data Pipeline — AI-IDEI" description="Cognitive data collection pipeline — knowledge extraction and LLM training readiness." />
