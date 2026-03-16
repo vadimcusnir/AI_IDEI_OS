@@ -17,6 +17,7 @@ import {
   Briefcase, Coins, MessageCircle, GitBranch, Star, ExternalLink, Crown, Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
 import { ControlledSection } from "@/components/ControlledSection";
 import { XPProgressBar } from "@/components/gamification/XPProgressBar";
