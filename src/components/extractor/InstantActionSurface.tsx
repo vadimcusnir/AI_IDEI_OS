@@ -365,6 +365,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     setSelectedFile(null);
     setStage("idle");
     setResult(null);
+    setInsufficientCredits(null);
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
