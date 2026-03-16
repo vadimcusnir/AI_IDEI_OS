@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -102,6 +103,7 @@ const TABS = [
 ];
 
 export default function AdminDashboard() {
+  const { t } = useTranslation("pages");
   const { isAdmin, loading, user } = useAdminCheck();
   const navigate = useNavigate();
   const [stats, setStats] = useState<PlatformStats | null>(null);
@@ -345,7 +347,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-serif font-bold">Admin Control Panel</h1>
-                <p className="text-xs text-muted-foreground">Monitoring and control for the AI-IDEI platform</p>
+                <p className="text-xs text-muted-foreground">{t("admin.subtitle")}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={loadAll} className="gap-1.5">
@@ -355,14 +357,14 @@ export default function AdminDashboard() {
 
           {/* KPI Row — animated stagger */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
-            <KPI label="Users" value={stats.totalUsers} icon={Users} index={0} />
-            <KPI label="Neurons" value={stats.totalNeurons} icon={Brain} index={1} />
-            <KPI label="Published" value={stats.publishedNeurons} icon={Brain} color="text-primary" index={2} />
-            <KPI label="Draft" value={stats.draftNeurons} icon={Brain} index={3} />
-            <KPI label="Episodes" value={stats.totalEpisodes} icon={Activity} index={4} />
-            <KPI label="Jobs" value={stats.totalJobs} icon={Briefcase} index={5} />
-            <KPI label="Credits circ." value={stats.totalCreditsCirculating} icon={Coins} color="text-primary" index={6} />
-            <KPI label="Credits spent" value={stats.totalCreditsSpent} icon={Coins} color="text-destructive" index={7} />
+            <KPI label={t("admin.users")} value={stats.totalUsers} icon={Users} index={0} />
+            <KPI label={t("admin.neurons")} value={stats.totalNeurons} icon={Brain} index={1} />
+            <KPI label={t("admin.published")} value={stats.publishedNeurons} icon={Brain} color="text-primary" index={2} />
+            <KPI label={t("admin.draft")} value={stats.draftNeurons} icon={Brain} index={3} />
+            <KPI label={t("admin.episodes")} value={stats.totalEpisodes} icon={Activity} index={4} />
+            <KPI label={t("admin.jobs")} value={stats.totalJobs} icon={Briefcase} index={5} />
+            <KPI label={t("admin.credits_circulating")} value={stats.totalCreditsCirculating} icon={Coins} color="text-primary" index={6} />
+            <KPI label={t("admin.credits_spent")} value={stats.totalCreditsSpent} icon={Coins} color="text-destructive" index={7} />
           </div>
 
           {/* Tabs — scrollable on mobile */}
@@ -401,19 +403,19 @@ export default function AdminDashboard() {
 
                 <div className="bg-card border border-border rounded-xl p-5">
                   <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
-                    <Coins className="h-3 w-3" /> Platform Economy
+                    <Coins className="h-3 w-3" /> {t("admin.economy_title")}
                   </h3>
                   <div className="space-y-3">
-                    <EconRow label="Credits in circulation" value={stats.totalCreditsCirculating} />
-                    <EconRow label="Credits consumed" value={stats.totalCreditsSpent} />
-                    <EconRow label="Estimated revenue" value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
-                    <EconRow label="Neurons per user" value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
+                    <EconRow label={t("admin.economy.in_circulation")} value={stats.totalCreditsCirculating} />
+                    <EconRow label={t("admin.economy.consumed")} value={stats.totalCreditsSpent} />
+                    <EconRow label={t("admin.economy.estimated_revenue")} value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
+                    <EconRow label={t("admin.economy.neurons_per_user")} value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
                   </div>
                 </div>
 
                 <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
                   <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-                    Last 10 Neurons
+                    {t("admin.last_10_neurons")}
                   </h3>
                   <div className="space-y-1">
                     {neurons.slice(0, 10).map(n => (
@@ -446,13 +448,13 @@ export default function AdminDashboard() {
                   <TableHeader>
                     <TableRow>
                       <TableHead className="text-[10px] w-16">#</TableHead>
-                      <TableHead className="text-[10px]">Title</TableHead>
-                      <TableHead className="text-[10px]">Status</TableHead>
-                      <TableHead className="text-[10px]">Visibility</TableHead>
-                      <TableHead className="text-[10px]">Lifecycle</TableHead>
-                      <TableHead className="text-[10px] text-right">Score</TableHead>
-                      <TableHead className="text-[10px]">Created</TableHead>
-                      <TableHead className="text-[10px] w-24">Actions</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.title")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.status")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.visibility")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.lifecycle")}</TableHead>
+                      <TableHead className="text-[10px] text-right">{t("admin.table.score")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.created")}</TableHead>
+                      <TableHead className="text-[10px] w-24">{t("common:actions")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -471,10 +473,10 @@ export default function AdminDashboard() {
                         <TableCell className="text-[10px] text-muted-foreground">{new Date(n.created_at).toLocaleDateString()}</TableCell>
                         <TableCell>
                           <div className="flex gap-1">
-                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toggleNeuronVisibility(n.id, n.visibility)} title="Toggle visibility">
+                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toggleNeuronVisibility(n.id, n.visibility)} title={t("admin.toggle_visibility")}>
                               {n.visibility === "public" ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => deleteNeuron(n.id)} title="Delete neuron">
+                            <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => deleteNeuron(n.id)} title={t("admin.delete_neuron")}>
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
                           </div>
@@ -529,13 +531,13 @@ export default function AdminDashboard() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-[10px]">Key</TableHead>
-                      <TableHead className="text-[10px]">Name</TableHead>
-                      <TableHead className="text-[10px]">Category</TableHead>
-                      <TableHead className="text-[10px]">Class</TableHead>
-                      <TableHead className="text-[10px] text-right">Cost (credits)</TableHead>
-                      <TableHead className="text-[10px]">Status</TableHead>
-                      <TableHead className="text-[10px] w-20">Actions</TableHead>
+                       <TableHead className="text-[10px]">Key</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.name")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.category")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.class")}</TableHead>
+                      <TableHead className="text-[10px] text-right">{t("admin.table.cost")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.status")}</TableHead>
+                      <TableHead className="text-[10px] w-20">{t("common:actions")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -565,7 +567,7 @@ export default function AdminDashboard() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={() => toggleServiceActive(s.id, s.is_active)}
-                            title={s.is_active ? "Deactivate" : "Activate"}
+                            title={s.is_active ? t("admin.deactivate") : t("admin.activate")}
                           >
                             {s.is_active ? <EyeOff className="h-3.5 w-3.5 text-destructive" /> : <Eye className="h-3.5 w-3.5 text-primary" />}
                           </Button>
@@ -582,7 +584,7 @@ export default function AdminDashboard() {
               <div className="bg-card border border-border rounded-xl p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                    <ScrollText className="h-3 w-3" /> Operational Logs — Transactions & Errors
+                    <ScrollText className="h-3 w-3" /> {t("admin.logs_title")}
                   </h3>
                   <Button variant="outline" size="sm" className="h-7 text-xs" onClick={loadLogs}>
                     <RefreshCw className="h-3 w-3 mr-1" /> Refresh
@@ -590,7 +592,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {logs.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center py-8">No recent logs.</p>
+                  <p className="text-xs text-muted-foreground text-center py-8">{t("admin.no_logs")}</p>
                 ) : (
                   <div className="space-y-0.5 max-h-[600px] overflow-y-auto font-mono text-[11px]">
                     {logs.map(log => (

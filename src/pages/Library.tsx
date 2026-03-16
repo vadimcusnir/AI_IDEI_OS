@@ -37,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { ControlledSection } from "@/components/ControlledSection";
+import { useTranslation } from "react-i18next";
 
 interface Artifact {
   id: string;
@@ -51,23 +52,24 @@ interface Artifact {
   updated_at: string;
 }
 
-const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
-  document: { label: "Document", color: "bg-primary/10 text-primary" },
-  article: { label: "Articol", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
-  script: { label: "Script", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
-  framework: { label: "Framework", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
-  course: { label: "Curs", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
-  social_post: { label: "Social", color: "bg-pink-500/10 text-pink-600 dark:text-pink-400" },
-  copy: { label: "Copy", color: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400" },
+const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
+  document: { labelKey: "artifacts.type_document", color: "bg-primary/10 text-primary" },
+  article: { labelKey: "artifacts.type_article", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
+  script: { labelKey: "artifacts.type_script", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
+  framework: { labelKey: "artifacts.type_framework", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
+  course: { labelKey: "artifacts.type_course", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
+  social_post: { labelKey: "artifacts.type_social", color: "bg-pink-500/10 text-pink-600 dark:text-pink-400" },
+  copy: { labelKey: "artifacts.type_copy", color: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400" },
 };
 
-const STATUS_CONFIG: Record<string, { label: string; dot: string }> = {
-  draft: { label: "Draft", dot: "bg-muted-foreground/40" },
-  final: { label: "Final", dot: "bg-primary" },
-  published: { label: "Publicat", dot: "bg-status-validated" },
+const STATUS_KEYS: Record<string, { labelKey: string; dot: string }> = {
+  draft: { labelKey: "library.status_draft", dot: "bg-muted-foreground/40" },
+  final: { labelKey: "library.status_final", dot: "bg-primary" },
+  published: { labelKey: "library.status_published", dot: "bg-status-validated" },
 };
 
 export default function Library() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
@@ -136,7 +138,6 @@ export default function Library() {
     return list;
   }, [artifacts, search, typeFilter, statusFilter, sortField, sortDir, selectedFolderId, assignments]);
 
-  // Extract unique types from data
   const types = useMemo(() => {
     const set = new Set(artifacts.map(a => a.artifact_type));
     return Array.from(set);
@@ -151,7 +152,7 @@ export default function Library() {
     <div className="flex-1 flex overflow-hidden">
       {showFolders && (
         <FolderSidebar storageKey="library_folders" items={artifacts.map(a => ({ id: a.id, label: a.title }))}
-          selectedFolderId={selectedFolderId} onSelectFolder={setSelectedFolderId} allLabel="All Artifacts" headerLabel="Library Folders" />
+          selectedFolderId={selectedFolderId} onSelectFolder={setSelectedFolderId} allLabel={t("library.all_artifacts")} headerLabel={t("library.folders_header")} />
       )}
       <div className="flex-1 overflow-auto">
       <SEOHead title="Library — AI-IDEI" description="Browse and manage your generated artifacts, documents and deliverables." />
@@ -163,9 +164,9 @@ export default function Library() {
             </Button>
             <div>
               <h1 className="text-xl font-serif font-bold flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-primary" /> Library
+                <BookOpen className="h-5 w-5 text-primary" /> {t("library.title")}
               </h1>
-              <p className="text-xs text-muted-foreground mt-0.5">{filtered.length} / {artifacts.length} artifacts</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{t("library.artifact_count", { filtered: filtered.length, total: artifacts.length })}</p>
             </div>
           </div>
           <ContributeDialog />
@@ -183,19 +184,19 @@ export default function Library() {
               <BookOpen className="h-4 w-4 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-xs font-semibold mb-1">Bibliotecă vs. Neuroni — care e diferența?</h3>
+              <h3 className="text-xs font-semibold mb-1">{t("library.explainer_title")}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-muted-foreground leading-relaxed">
                 <div className="bg-muted/30 rounded-lg p-2.5">
                   <p className="font-semibold text-foreground mb-0.5 flex items-center gap-1">
-                    <Brain className="h-3 w-3 text-primary" /> Neuroni
+                    <Brain className="h-3 w-3 text-primary" /> {t("library.explainer_neurons_title")}
                   </p>
-                  <p>Unități atomice de cunoaștere extrase din conținut — frameworks, idei, structuri, pattern-uri. Sursa brută a inteligenței.</p>
+                  <p>{t("library.explainer_neurons_desc")}</p>
                 </div>
                 <div className="bg-primary/5 rounded-lg p-2.5">
                   <p className="font-semibold text-foreground mb-0.5 flex items-center gap-1">
-                    <BookOpen className="h-3 w-3 text-primary" /> Artefacte (Bibliotecă)
+                    <BookOpen className="h-3 w-3 text-primary" /> {t("library.explainer_artifacts_title")}
                   </p>
-                  <p>Livrabile finale generate de AI: articole, scripturi, cursuri, social posts. Produsele gata de utilizat.</p>
+                  <p>{t("library.explainer_artifacts_desc")}</p>
                 </div>
               </div>
             </div>
@@ -207,7 +208,7 @@ export default function Library() {
           <div className="relative flex-1 min-w-[180px] max-w-xs">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input
-              placeholder="Caută artefacte..."
+              placeholder={t("library.search_placeholder")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-8 h-8 text-xs"
@@ -216,39 +217,39 @@ export default function Library() {
           <Select value={typeFilter} onValueChange={setTypeFilter}>
             <SelectTrigger className="w-[130px] h-8 text-xs">
               <Filter className="h-3 w-3 mr-1" />
-              <SelectValue placeholder="Tip" />
+              <SelectValue placeholder={t("library.all_types")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Toate tipurile</SelectItem>
-              {types.map(t => (
-                <SelectItem key={t} value={t}>
-                  {TYPE_CONFIG[t]?.label || t}
+              <SelectItem value="all">{t("library.all_types")}</SelectItem>
+              {types.map(tp => (
+                <SelectItem key={tp} value={tp}>
+                  {TYPE_CONFIG[tp] ? t(TYPE_CONFIG[tp].labelKey) : tp}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-[120px] h-8 text-xs">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={t("library.all_statuses")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Toate</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="final">Final</SelectItem>
-              <SelectItem value="published">Publicat</SelectItem>
+              <SelectItem value="all">{t("library.all_statuses")}</SelectItem>
+              <SelectItem value="draft">{t("library.status_draft")}</SelectItem>
+              <SelectItem value="final">{t("library.status_final")}</SelectItem>
+              <SelectItem value="published">{t("library.status_published")}</SelectItem>
             </SelectContent>
           </Select>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-                <ArrowUpDown className="h-3 w-3" /> Sort
+                <ArrowUpDown className="h-3 w-3" /> {t("library.sort_label")}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
               {([
-                { field: "updated_at" as const, label: "Ultima modificare" },
-                { field: "created_at" as const, label: "Data creării" },
-                { field: "title" as const, label: "Titlu" },
+                { field: "updated_at" as const, label: t("library.sort_updated") },
+                { field: "created_at" as const, label: t("library.sort_created") },
+                { field: "title" as const, label: t("library.sort_title") },
               ]).map(({ field, label }) => (
                 <DropdownMenuItem
                   key={field}
@@ -267,7 +268,7 @@ export default function Library() {
             </DropdownMenuContent>
           </DropdownMenu>
           <span className="text-[10px] text-muted-foreground ml-auto">
-            {filtered.length} rezultate
+            {t("library.results_count", { count: filtered.length })}
           </span>
         </div>
 
@@ -275,24 +276,27 @@ export default function Library() {
         {artifacts.length === 0 ? (
           <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
             <FileText className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-            <h2 className="text-base font-serif font-bold mb-1">Niciun artefact încă</h2>
+            <h2 className="text-base font-serif font-bold mb-1">{t("library.no_artifacts")}</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Artefactele sunt generate automat când rulezi servicii AI. Începe prin a rula un serviciu.
+              {t("library.no_artifacts_hint")}
             </p>
             <Button size="sm" onClick={() => navigate("/services")} className="gap-2">
-              Vezi Servicii <ArrowRight className="h-3.5 w-3.5" />
+              {t("library.view_services")} <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-sm text-muted-foreground">Niciun artefact nu corespunde filtrelor.</p>
+            <p className="text-sm text-muted-foreground">{t("library.no_filter_match")}</p>
           </div>
         ) : (
-          /* Artifact grid */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {filtered.map(artifact => {
-              const typeConf = TYPE_CONFIG[artifact.artifact_type] || { label: artifact.artifact_type, color: "bg-muted text-muted-foreground" };
-              const statusConf = STATUS_CONFIG[artifact.status] || { label: artifact.status, dot: "bg-muted-foreground/40" };
+              const typeConf = TYPE_CONFIG[artifact.artifact_type];
+              const typeLabel = typeConf ? t(typeConf.labelKey) : artifact.artifact_type;
+              const typeColor = typeConf?.color || "bg-muted text-muted-foreground";
+              const statusConf = STATUS_KEYS[artifact.status];
+              const statusLabel = statusConf ? t(statusConf.labelKey) : artifact.status;
+              const statusDot = statusConf?.dot || "bg-muted-foreground/40";
 
               return (
                 <div
@@ -300,29 +304,24 @@ export default function Library() {
                   className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
                   onClick={() => navigate(`/library/${artifact.id}`)}
                 >
-                   {/* Type + Status + Visibility */}
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-1.5">
-                      <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
-                        {typeConf.label}
+                      <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeColor)}>
+                        {typeLabel}
                       </span>
                       <VisibilityIcon visibility={artifact.status === "published" ? "public" : "private"} size="xs" />
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <div className={cn("h-1.5 w-1.5 rounded-full", statusConf.dot)} />
-                      <span className="text-[9px] text-muted-foreground">{statusConf.label}</span>
+                      <div className={cn("h-1.5 w-1.5 rounded-full", statusDot)} />
+                      <span className="text-[9px] text-muted-foreground">{statusLabel}</span>
                     </div>
                   </div>
 
-                  {/* Title */}
                   <h3 className="text-sm font-medium mb-1.5 line-clamp-2">{artifact.title}</h3>
-
-                  {/* Preview snippet */}
                   <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
                     {artifact.content.slice(0, 150)}
                   </p>
 
-                  {/* Tags */}
                   {artifact.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-2">
                       {artifact.tags.slice(0, 3).map(tag => (
@@ -336,7 +335,6 @@ export default function Library() {
                     </div>
                   )}
 
-                  {/* Footer */}
                   <div className="flex items-center justify-between pt-2 border-t border-border">
                     <span className="text-[9px] text-muted-foreground flex items-center gap-1">
                       <Clock className="h-2.5 w-2.5" />
@@ -347,7 +345,7 @@ export default function Library() {
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6"
-                        title="Publică pe Marketplace"
+                        title={t("library.publish_marketplace")}
                         onClick={(e) => { e.stopPropagation(); setPublishArtifact(artifact); }}
                       >
                         <Store className="h-3 w-3 text-primary" />
@@ -356,7 +354,7 @@ export default function Library() {
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6"
-                        title={artifact.status === "published" ? "Fă privat" : "Publică"}
+                        title={artifact.status === "published" ? t("library.make_private") : t("library.publish")}
                         onClick={(e) => { e.stopPropagation(); handleToggleStatus(artifact.id, artifact.status); }}
                       >
                         {artifact.status === "published" ? <Globe className="h-3 w-3 text-status-validated" /> : <Lock className="h-3 w-3" />}
@@ -399,7 +397,7 @@ export default function Library() {
                   "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded",
                   TYPE_CONFIG[previewArtifact.artifact_type]?.color || "bg-muted text-muted-foreground"
                 )}>
-                  {TYPE_CONFIG[previewArtifact.artifact_type]?.label || previewArtifact.artifact_type}
+                  {TYPE_CONFIG[previewArtifact.artifact_type] ? t(TYPE_CONFIG[previewArtifact.artifact_type].labelKey) : previewArtifact.artifact_type}
                 </span>
                 <span className="text-[10px] text-muted-foreground">
                   {format(new Date(previewArtifact.created_at), "dd MMM yyyy HH:mm")}
@@ -412,7 +410,6 @@ export default function Library() {
           )}
         </DialogContent>
       </Dialog>
-      {/* Publish to Marketplace Dialog */}
       {publishArtifact && (
         <PublishToMarketplaceDialog
           open={!!publishArtifact}
