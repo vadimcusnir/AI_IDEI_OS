@@ -327,11 +327,11 @@ export default function Credits() {
             {/* Filter chips */}
             <div className="flex items-center gap-0.5 flex-wrap">
               {([
-                { value: "all" as TxFilter, label: "All" },
-                { value: "spend" as TxFilter, label: "Spend" },
-                { value: "topup" as TxFilter, label: "Top-ups" },
-                { value: "bonus" as TxFilter, label: "Bonus" },
-              ]).map(f => (
+                { value: "all" as TxFilter, labelKey: "credits.filter_all" },
+                { value: "spend" as TxFilter, labelKey: "credits.spend" },
+                { value: "topup" as TxFilter, labelKey: "credits.topup" },
+                { value: "bonus" as TxFilter, labelKey: "credits.bonus" },
+              ] as const).map(f => (
                 <button
                   key={f.value}
                   onClick={() => setTxFilter(f.value)}
