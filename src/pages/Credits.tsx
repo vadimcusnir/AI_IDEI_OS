@@ -11,6 +11,7 @@ import {
   BarChart3, Filter, Search, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ControlledSection } from "@/components/ControlledSection";
 import { WalletPanel } from "@/components/wallet/WalletPanel";
