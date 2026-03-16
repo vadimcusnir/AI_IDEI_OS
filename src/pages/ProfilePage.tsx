@@ -109,7 +109,7 @@ export default function ProfilePage() {
     const permission = await requestPermission();
     if (permission === "granted") {
       await updatePrefs({ push_enabled: true });
-      toast.success("Browser notifications enabled!");
+      toast.success(t("profile.push_enabled"));
     } else {
       toast.error("Notification permission was denied.");
     }
