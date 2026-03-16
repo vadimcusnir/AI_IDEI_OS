@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.gif";
+import { InlineTopUp } from "@/components/credits/InlineTopUp";
 
 const GOALS = [
   { value: "Extragere experiență", icon: User, color: "text-primary" },
@@ -34,15 +36,22 @@ const GOALS = [
 export default function PromptForge() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { balance } = useCreditBalance();
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState("");
   const [details, setDetails] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const estimatedCost = 200; // Prompt Forge typical cost
+
   const handleGenerate = useCallback(async () => {
     if (!user) { toast.error("Autentifică-te pentru a genera prompturi"); return; }
     if (!context.trim() || !goal) { toast.error("Completează contextul și obiectivul"); return; }
+    if (balance < estimatedCost) {
+      toast.error(`Credite insuficiente. Ai nevoie de ~${estimatedCost} NEURONS.`);
+      return;
+    }
 
     setLoading(true);
     setResult("");
@@ -202,7 +211,7 @@ export default function PromptForge() {
 
             <Button
               onClick={handleGenerate}
-              disabled={loading || !context.trim() || !goal}
+              disabled={loading || !context.trim() || !goal || balance < estimatedCost}
               className="w-full gap-2"
             >
               {loading ? (
@@ -213,13 +222,19 @@ export default function PromptForge() {
               ) : (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Generează Prompt
+                  Generează Prompt (~{estimatedCost} N)
                 </>
               )}
             </Button>
 
+            {balance < estimatedCost && !loading && (
+              <div className="mt-3">
+                <InlineTopUp needed={estimatedCost} balance={balance} compact />
+              </div>
+            )}
+
             <p className="text-[10px] text-muted-foreground/50 text-center">
-              Cost: 25 NEURONS per generare
+              Balanță: {balance} NEURONS
             </p>
           </div>
 
