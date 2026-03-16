@@ -619,25 +619,25 @@ export default function AdminDashboard() {
             </TabsContent>
 
             {/* ─── Feedback ─── */}
-            <TabsContent value="feedback"><AdminFeedbackTab /></TabsContent>
-            <TabsContent value="changelog"><AdminChangelogTab /></TabsContent>
-            <TabsContent value="knowledge-graph"><AdminKnowledgeGraphTab /></TabsContent>
-            <TabsContent value="analytics"><AdminAnalyticsTab /></TabsContent>
+            <TabsContent value="feedback"><Suspense fallback={<TabLoader />}><AdminFeedbackTab /></Suspense></TabsContent>
+            <TabsContent value="changelog"><Suspense fallback={<TabLoader />}><AdminChangelogTab /></Suspense></TabsContent>
+            <TabsContent value="knowledge-graph"><Suspense fallback={<TabLoader />}><AdminKnowledgeGraphTab /></Suspense></TabsContent>
+            <TabsContent value="analytics"><Suspense fallback={<TabLoader />}><AdminAnalyticsTab /></Suspense></TabsContent>
             <TabsContent value="access-sim">
-              <div className="bg-card border border-border rounded-xl p-5"><AccessSimulator /></div>
+              <Suspense fallback={<TabLoader />}><div className="bg-card border border-border rounded-xl p-5"><AccessSimulator /></div></Suspense>
             </TabsContent>
-            <TabsContent value="ledger"><DecisionLedgerTab /></TabsContent>
-            <TabsContent value="abuse"><AbuseDetectionTab /></TabsContent>
-            <TabsContent value="wallets"><WalletManagementTab /></TabsContent>
-            <TabsContent value="reconciliation"><ReconciliationTab /></TabsContent>
-            <TabsContent value="incidents"><IncidentManagementTab /></TabsContent>
-            <TabsContent value="entropy"><EntropyMonitoringTab /></TabsContent>
-            <TabsContent value="contributions"><AdminContributionsTab /></TabsContent>
-            <TabsContent value="emergency"><EmergencyControlsTab /></TabsContent>
-            <TabsContent value="compliance"><ComplianceLogTab /></TabsContent>
-            <TabsContent value="flags"><FeatureFlagsTab /></TabsContent>
-            <TabsContent value="moderation"><ForumModerationTab /></TabsContent>
-            <TabsContent value="control-layer"><ControlLayerTab /></TabsContent>
+            <TabsContent value="ledger"><Suspense fallback={<TabLoader />}><DecisionLedgerTab /></Suspense></TabsContent>
+            <TabsContent value="abuse"><Suspense fallback={<TabLoader />}><AbuseDetectionTab /></Suspense></TabsContent>
+            <TabsContent value="wallets"><Suspense fallback={<TabLoader />}><WalletManagementTab /></Suspense></TabsContent>
+            <TabsContent value="reconciliation"><Suspense fallback={<TabLoader />}><ReconciliationTab /></Suspense></TabsContent>
+            <TabsContent value="incidents"><Suspense fallback={<TabLoader />}><IncidentManagementTab /></Suspense></TabsContent>
+            <TabsContent value="entropy"><Suspense fallback={<TabLoader />}><EntropyMonitoringTab /></Suspense></TabsContent>
+            <TabsContent value="contributions"><Suspense fallback={<TabLoader />}><AdminContributionsTab /></Suspense></TabsContent>
+            <TabsContent value="emergency"><Suspense fallback={<TabLoader />}><EmergencyControlsTab /></Suspense></TabsContent>
+            <TabsContent value="compliance"><Suspense fallback={<TabLoader />}><ComplianceLogTab /></Suspense></TabsContent>
+            <TabsContent value="flags"><Suspense fallback={<TabLoader />}><FeatureFlagsTab /></Suspense></TabsContent>
+            <TabsContent value="moderation"><Suspense fallback={<TabLoader />}><ForumModerationTab /></Suspense></TabsContent>
+            <TabsContent value="control-layer"><Suspense fallback={<TabLoader />}><ControlLayerTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
