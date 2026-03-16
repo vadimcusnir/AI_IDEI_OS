@@ -1,7 +1,9 @@
 import { SEOHead } from "@/components/SEOHead";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function PrivacyPolicy() {
+  const { t } = useTranslation("pages");
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
       <SEOHead
@@ -10,110 +12,77 @@ export default function PrivacyPolicy() {
         canonical="https://ai-idei-os.lovable.app/privacy"
       />
 
-      <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-6">Privacy Policy</h1>
-      <p className="text-xs text-muted-foreground mb-8">Last updated: March 10, 2026</p>
+      <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-6">{t("privacy.title")}</h1>
+      <p className="text-xs text-muted-foreground mb-8">{t("privacy.last_updated")}</p>
 
       <article className="prose-custom space-y-6 text-sm leading-relaxed text-foreground/90">
         <section>
-          <h2 className="text-lg font-semibold mb-2">1. Information We Collect</h2>
-          <p>We collect information you provide directly:</p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s1_title")}</h2>
+          <p>{t("privacy.s1_intro")}</p>
           <ul className="list-disc pl-5 space-y-1 mt-2">
-            <li><strong>Account data:</strong> email address, display name, avatar</li>
-            <li><strong>Content:</strong> transcripts, audio files, text you upload for processing</li>
-            <li><strong>Usage data:</strong> service runs, credit transactions, feature interactions</li>
+            <li><strong>{t("privacy.s1_account")}</strong></li>
+            <li><strong>{t("privacy.s1_content")}</strong></li>
+            <li><strong>{t("privacy.s1_usage")}</strong></li>
           </ul>
-          <p className="mt-2">
-            We also collect technical data automatically: IP address, browser type, device information,
-            and page visit timestamps.
-          </p>
+          <p className="mt-2">{t("privacy.s1_auto")}</p>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">2. How We Use Your Data</h2>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s2_title")}</h2>
           <ul className="list-disc pl-5 space-y-1">
-            <li>To provide and improve the Service</li>
-            <li>To process your content through AI pipelines</li>
-            <li>To manage your account and credit balance</li>
-            <li>To send important service notifications</li>
-            <li>To detect and prevent abuse</li>
+            <li>{t("privacy.s2_item1")}</li>
+            <li>{t("privacy.s2_item2")}</li>
+            <li>{t("privacy.s2_item3")}</li>
+            <li>{t("privacy.s2_item4")}</li>
+            <li>{t("privacy.s2_item5")}</li>
           </ul>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">3. Data Processing</h2>
-          <p>
-            Your uploaded content is processed by AI models to extract knowledge units. This processing
-            happens on secure infrastructure. We do not use your private content to train our models
-            without your explicit consent.
-          </p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s3_title")}</h2>
+          <p>{t("privacy.s3_text")}</p>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">4. Data Storage & Security</h2>
-          <p>
-            Your data is stored securely using industry-standard encryption. We use Row Level Security
-            (RLS) to ensure users can only access their own data. Authentication is handled via
-            secure JWT tokens.
-          </p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s4_title")}</h2>
+          <p>{t("privacy.s4_text")}</p>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">5. Data Sharing</h2>
-          <p>We do not sell your personal data. We may share data with:</p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s5_title")}</h2>
+          <p>{t("privacy.s5_intro")}</p>
           <ul className="list-disc pl-5 space-y-1 mt-2">
-            <li><strong>AI providers:</strong> to process your content (e.g., transcription, extraction)</li>
-            <li><strong>Payment processors:</strong> to handle credit top-ups</li>
-            <li><strong>Law enforcement:</strong> when required by law</li>
+            <li><strong>{t("privacy.s5_item1")}</strong></li>
+            <li><strong>{t("privacy.s5_item2")}</strong></li>
+            <li><strong>{t("privacy.s5_item3")}</strong></li>
           </ul>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">6. Your Rights (GDPR)</h2>
-          <p>If you are in the EU/EEA, you have the right to:</p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s6_title")}</h2>
+          <p>{t("privacy.s6_intro")}</p>
           <ul className="list-disc pl-5 space-y-1 mt-2">
-            <li>Access your personal data</li>
-            <li>Correct inaccurate data</li>
-            <li>Request deletion of your data</li>
-            <li>Export your data in a portable format</li>
-            <li>Object to or restrict processing</li>
+            <li>{t("privacy.s6_item1")}</li>
+            <li>{t("privacy.s6_item2")}</li>
+            <li>{t("privacy.s6_item3")}</li>
+            <li>{t("privacy.s6_item4")}</li>
+            <li>{t("privacy.s6_item5")}</li>
           </ul>
           <p className="mt-2">
-            To exercise these rights, contact us via the{" "}
-            <Link to="/feedback" className="text-primary hover:underline">feedback form</Link>.
+            {t("privacy.s6_contact")}{" "}
+            <Link to="/feedback" className="text-primary hover:underline">{t("privacy.s6_link")}</Link>.
           </p>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">7. Cookies</h2>
-          <p>
-            We use essential cookies for authentication and session management. We do not use
-            third-party advertising cookies. Analytics cookies (if enabled) are used to understand
-            platform usage patterns.
-          </p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s7_title")}</h2>
+          <p>{t("privacy.s7_text")}</p>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">8. Data Retention</h2>
-          <p>
-            We retain your data for as long as your account is active. Upon account deletion,
-            we remove your personal data within 30 days, except where retention is required by law.
-          </p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s8_title")}</h2>
+          <p>{t("privacy.s8_text")}</p>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">9. Children's Privacy</h2>
-          <p>
-            The Service is not directed to children under 16. We do not knowingly collect data
-            from children.
-          </p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s9_title")}</h2>
+          <p>{t("privacy.s9_text")}</p>
         </section>
-
         <section>
-          <h2 className="text-lg font-semibold mb-2">10. Changes to This Policy</h2>
-          <p>
-            We may update this policy periodically. We will notify you of significant changes
-            via email or in-app notification.
-          </p>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s10_title")}</h2>
+          <p>{t("privacy.s10_text")}</p>
         </section>
       </article>
     </div>

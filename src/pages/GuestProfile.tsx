@@ -11,6 +11,7 @@ import {
 import logo from "@/assets/logo.gif";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 interface GuestData {
   full_name: string;
@@ -64,9 +65,7 @@ function StatCard({ icon: Icon, value, label, accent }: {
   return (
     <div className={cn(
       "rounded-2xl border p-5 text-center transition-all hover:scale-[1.02]",
-      accent
-        ? "border-primary/20 bg-primary/5"
-        : "border-border bg-card"
+      accent ? "border-primary/20 bg-primary/5" : "border-border bg-card"
     )}>
       <div className={cn(
         "h-10 w-10 rounded-xl mx-auto mb-3 flex items-center justify-center",
@@ -103,7 +102,7 @@ function SectionHeader({ icon: Icon, label, count }: {
 }
 
 /* ── Paywall overlay ── */
-function PaywallSection({ children, title }: { children: React.ReactNode; title: string }) {
+function PaywallSection({ children, title, premiumDesc, previewLabel }: { children: React.ReactNode; title: string; premiumDesc: string; previewLabel: string }) {
   const [unlocked, setUnlocked] = useState(false);
   if (unlocked) return <>{children}</>;
   return (
@@ -116,10 +115,10 @@ function PaywallSection({ children, title }: { children: React.ReactNode; title:
           </div>
           <h3 className="text-sm font-semibold text-foreground">{title}</h3>
           <p className="text-[11px] text-muted-foreground leading-relaxed">
-            Advanced analysis available with a premium account.
+            {premiumDesc}
           </p>
           <Button size="sm" className="h-8 text-xs gap-1.5" onClick={() => setUnlocked(true)}>
-            <Sparkles className="h-3 w-3" /> Preview Premium
+            <Sparkles className="h-3 w-3" /> {previewLabel}
           </Button>
         </div>
       </div>
@@ -128,7 +127,7 @@ function PaywallSection({ children, title }: { children: React.ReactNode; title:
 }
 
 /* ── Quotes with expand ── */
-function QuotesSection({ quotes, authorName }: { quotes: string[]; authorName: string }) {
+function QuotesSection({ quotes, authorName, showAllLabel, sectionLabel }: { quotes: string[]; authorName: string; showAllLabel: string; sectionLabel: string }) {
   const [showAll, setShowAll] = useState(false);
   const FREE_LIMIT = 3;
   const visible = showAll ? quotes : quotes.slice(0, FREE_LIMIT);
@@ -136,7 +135,7 @@ function QuotesSection({ quotes, authorName }: { quotes: string[]; authorName: s
 
   return (
     <section>
-      <SectionHeader icon={Quote} label="Memorable Quotes" count={quotes.length} />
+      <SectionHeader icon={Quote} label={sectionLabel} count={quotes.length} />
       <div className="space-y-4">
         {visible.map((q, i) => (
           <blockquote key={i} className="relative rounded-2xl border border-border bg-card p-5 pl-6 hover:border-primary/20 transition-colors">
@@ -151,7 +150,7 @@ function QuotesSection({ quotes, authorName }: { quotes: string[]; authorName: s
         {hasMore && !showAll && (
           <div className="text-center">
             <Button variant="outline" size="sm" className="h-8 text-xs gap-1.5" onClick={() => setShowAll(true)}>
-              <Quote className="h-3 w-3" /> Show all {quotes.length} quotes
+              <Quote className="h-3 w-3" /> {showAllLabel}
             </Button>
           </div>
         )}
@@ -163,6 +162,7 @@ function QuotesSection({ quotes, authorName }: { quotes: string[]; authorName: s
 /* ── Main component ── */
 export default function GuestProfile() {
   const { slug } = useParams<{ slug: string }>();
+  const { t } = useTranslation("pages");
   const [guest, setGuest] = useState<GuestData | null>(null);
   const [psychProfile, setPsychProfile] = useState<PsychologicalProfileData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -183,7 +183,6 @@ export default function GuestProfile() {
         setNotFound(true);
       } else {
         setGuest(data as unknown as GuestData);
-        // Fetch psychological profile
         const { data: pp } = await supabase
           .from("psychological_profiles" as any)
           .select("*")
@@ -208,9 +207,9 @@ export default function GuestProfile() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <Users className="h-12 w-12 text-muted-foreground/20 mb-4" />
-        <h1 className="text-xl font-serif font-bold mb-2">Profil inexistent</h1>
+        <h1 className="text-xl font-serif font-bold mb-2">{t("guest_profile.not_found_title")}</h1>
         <p className="text-sm text-muted-foreground text-center max-w-sm">
-          Acest profil nu există sau nu este public.
+          {t("guest_profile.not_found_desc")}
         </p>
       </div>
     );
@@ -224,19 +223,17 @@ export default function GuestProfile() {
     <div className="min-h-screen bg-background">
       <SEOHead
         title={`${guest.full_name} — Expert Profile | AI-IDEI`}
-        description={guest.bio?.slice(0, 155) || `Profilul de expert al ${guest.full_name}`}
+        description={guest.bio?.slice(0, 155) || `Expert profile of ${guest.full_name}`}
       />
 
       {/* ═══════ HERO ═══════ */}
       <div className="relative overflow-hidden">
-        {/* Decorative gradient mesh */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/3 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
 
         <div className="relative max-w-2xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-10 sm:pb-14">
           <div className="text-center">
-            {/* Avatar ring */}
             <div className="relative inline-block mb-6">
               <div className="h-28 w-28 rounded-full bg-gradient-to-br from-primary/40 via-primary/15 to-accent/20 flex items-center justify-center ring-[3px] ring-primary/20 ring-offset-4 ring-offset-background shadow-xl">
                 <span className="text-4xl font-bold font-serif text-primary">{initials}</span>
@@ -258,21 +255,20 @@ export default function GuestProfile() {
               {guest.bio}
             </p>
 
-            {/* Quick stats row */}
             <div className="flex items-center justify-center gap-6 mt-6 text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Brain className="h-3.5 w-3.5 text-primary/60" />
-                <strong className="text-foreground">{guest.expertise_areas.length}</strong> competențe
+                <strong className="text-foreground">{guest.expertise_areas.length}</strong> {t("guest_profile.competences")}
               </span>
               <span className="h-3 w-px bg-border" />
               <span className="flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5 text-primary/60" />
-                <strong className="text-foreground">{guest.frameworks_mentioned.length}</strong> frameworks
+                <strong className="text-foreground">{guest.frameworks_mentioned.length}</strong> {t("guest_profile.frameworks")}
               </span>
               <span className="h-3 w-px bg-border" />
               <span className="flex items-center gap-1.5">
                 <Quote className="h-3.5 w-3.5 text-primary/60" />
-                <strong className="text-foreground">{guest.key_quotes.length}</strong> citate
+                <strong className="text-foreground">{guest.key_quotes.length}</strong> {t("guest_profile.quotes")}
               </span>
             </div>
           </div>
@@ -282,10 +278,9 @@ export default function GuestProfile() {
       {/* ═══════ CONTENT ═══════ */}
       <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20 space-y-10 sm:space-y-12">
 
-        {/* ── Expertise with animated progress bars ── */}
         {expertiseScores.length > 0 && (
           <section>
-            <SectionHeader icon={Brain} label="Expertise & Competențe" count={expertiseScores.length} />
+            <SectionHeader icon={Brain} label={t("guest_profile.expertise_title")} count={expertiseScores.length} />
             <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
               {expertiseScores.map((item, i) => (
                 <ExpertiseBar key={i} label={item.label} value={item.value} delay={150 + i * 100} />
@@ -294,18 +289,16 @@ export default function GuestProfile() {
           </section>
         )}
 
-        {/* ── Deep Psychological Profile (from AI analysis) ── */}
         {psychProfile && (
           <section>
-            <SectionHeader icon={Brain} label="Deep Psychological Analysis" />
+            <SectionHeader icon={Brain} label={t("guest_profile.deep_psych")} />
             <PsychologicalProfileSection profile={psychProfile} />
           </section>
         )}
 
-        {/* ── Basic Psychological Radar Chart (fallback from traits) ── */}
         {!psychProfile && guest.psychological_traits.length >= 3 && (
           <section>
-            <SectionHeader icon={Brain} label="Psychological Profile" count={guest.psychological_traits.length} />
+            <SectionHeader icon={Brain} label={t("guest_profile.psych_profile")} count={guest.psychological_traits.length} />
             <div className="rounded-2xl border border-border bg-card p-5 flex items-center justify-center">
               <RadarChart
                 data={guest.psychological_traits.slice(0, 8).map((trait, i) => ({
@@ -318,51 +311,46 @@ export default function GuestProfile() {
           </section>
         )}
 
-        {/* ── Frameworks in editorial cards ── */}
         {guest.frameworks_mentioned.length > 0 && (
           <section>
-            <SectionHeader icon={Sparkles} label="Frameworks & Modele Mentale" count={guest.frameworks_mentioned.length} />
+            <SectionHeader icon={Sparkles} label={t("guest_profile.frameworks_title")} count={guest.frameworks_mentioned.length} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {guest.frameworks_mentioned.map((f, i) => {
-                const explanations: Record<string, string> = {
-                  default: "Structură cognitivă identificată din analiza conversației — oferă un cadru organizat de gândire aplicabil în context profesional.",
-                };
-                const explanation = explanations[f.toLowerCase()] || explanations.default;
-
-                return (
-                  <div
-                    key={i}
-                    className="group relative rounded-2xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all duration-300"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                        <Target className="h-4 w-4 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-semibold text-foreground leading-tight">{f}</h3>
-                        <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
-                          {explanation}
-                        </p>
-                      </div>
+              {guest.frameworks_mentioned.map((f, i) => (
+                <div
+                  key={i}
+                  className="group relative rounded-2xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all duration-300"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                      <Target className="h-4 w-4 text-primary" />
                     </div>
-                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ArrowRight className="h-3.5 w-3.5 text-primary/40" />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-semibold text-foreground leading-tight">{f}</h3>
+                      <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+                        {t("guest_profile.framework_default_desc")}
+                      </p>
                     </div>
                   </div>
-                );
-              })}
+                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ArrowRight className="h-3.5 w-3.5 text-primary/40" />
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         )}
 
-        {/* ── PREMIUM: Communication Style ── */}
         {guest.psychological_traits.length > 0 && (
-          <PaywallSection title="Communication Profile — Premium">
+          <PaywallSection
+            title={t("guest_profile.communication_profile")}
+            premiumDesc={t("guest_profile.premium_desc")}
+            previewLabel={t("guest_profile.preview_premium")}
+          >
             <section>
-              <SectionHeader icon={MessageCircle} label="Communication Profile" count={guest.psychological_traits.length} />
+              <SectionHeader icon={MessageCircle} label={t("guest_profile.communication_section")} count={guest.psychological_traits.length} />
               <div className="rounded-2xl border border-border bg-card p-5">
                 <div className="flex flex-wrap gap-2.5">
-                  {guest.psychological_traits.map((t, i) => {
+                  {guest.psychological_traits.map((trait, i) => {
                     const styles = [
                       "bg-primary/10 text-primary border-primary/15",
                       "bg-status-validated/10 text-status-validated border-status-validated/15",
@@ -373,7 +361,7 @@ export default function GuestProfile() {
                       <span key={i} className={cn(
                         "text-xs px-3.5 py-2 rounded-xl font-medium border transition-transform hover:scale-105",
                         styles[i % styles.length]
-                      )}>{t}</span>
+                      )}>{trait}</span>
                     );
                   })}
                 </div>
@@ -382,37 +370,37 @@ export default function GuestProfile() {
           </PaywallSection>
         )}
 
-        {/* ── Key Quotes — Free preview + expandable ── */}
         {guest.key_quotes.length > 0 && (
-          <QuotesSection quotes={guest.key_quotes} authorName={guest.full_name} />
+          <QuotesSection
+            quotes={guest.key_quotes}
+            authorName={guest.full_name}
+            sectionLabel={t("guest_profile.memorable_quotes")}
+            showAllLabel={t("guest_profile.show_all_quotes", { count: guest.key_quotes.length })}
+          />
         )}
 
-        {/* ── Summary stat cards ── */}
         <section>
           <div className="grid grid-cols-3 gap-3">
-            <StatCard icon={Brain} value={guest.expertise_areas.length} label="Competențe" accent />
-            <StatCard icon={Sparkles} value={guest.frameworks_mentioned.length} label="Frameworks" />
-            <StatCard icon={Lightbulb} value={totalInsights} label="Total insights" />
+            <StatCard icon={Brain} value={guest.expertise_areas.length} label={t("guest_profile.competences")} accent />
+            <StatCard icon={Sparkles} value={guest.frameworks_mentioned.length} label={t("guest_profile.frameworks")} />
+            <StatCard icon={Lightbulb} value={totalInsights} label={t("guest_profile.total_insights")} />
           </div>
         </section>
 
-        {/* ── CTA banner ── */}
         <section className="rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-transparent p-6 text-center">
           <TrendingUp className="h-6 w-6 text-primary mx-auto mb-2" />
-          <h3 className="text-sm font-semibold text-foreground mb-1">Descoperă mai mult</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-1">{t("guest_profile.cta_title")}</h3>
           <p className="text-[11px] text-muted-foreground max-w-sm mx-auto mb-4">
-            Acest profil este generat automat din analiza AI a conținutului public.
-            Accesează AI-IDEI pentru a extrage cunoștințe din propriile tale interviuri.
+            {t("guest_profile.cta_desc")}
           </p>
           <a
             href="/"
             className="inline-flex items-center gap-2 text-xs font-medium text-primary hover:underline"
           >
-            Explorează platforma <ArrowRight className="h-3 w-3" />
+            {t("guest_profile.cta_link")} <ArrowRight className="h-3 w-3" />
           </a>
         </section>
 
-        {/* ── Footer ── */}
         <div className="text-center pt-6 border-t border-border">
           <a href="/" className="inline-flex items-center gap-2 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
             <img src={logo} className="h-5 w-5 rounded-full" alt="AI-IDEI" />
