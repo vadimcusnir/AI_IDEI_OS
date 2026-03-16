@@ -280,7 +280,7 @@ export default function NeuronEditor() {
       {saving && (
         <div className="fixed bottom-12 right-4 flex items-center gap-1.5 bg-card border border-border rounded-lg px-3 py-1.5 text-xs text-muted-foreground shadow-sm">
           <Loader2 className="h-3 w-3 animate-spin" />
-          Saving...
+          {t("neuron_editor.saving")}
         </div>
       )}
     </div>
