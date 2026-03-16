@@ -188,7 +188,10 @@ export function AppSidebar() {
                         >
                           <button onClick={() => navigate(item.to)} className="w-full">
                             <item.icon className="h-4 w-4" />
-                            <span>{t(`navigation:${item.labelKey}`)}</span>
+                            <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
+                            {item.proOnly && !collapsed && (
+                              <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
+                            )}
                           </button>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
