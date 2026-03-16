@@ -113,6 +113,8 @@ export default function Home() {
     setLoading(false);
   };
 
+  useOnboardingRedirect();
+
   if (authLoading || wsLoading || loading) {
     return <HomeSkeleton />;
   }
