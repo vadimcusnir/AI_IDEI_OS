@@ -573,12 +573,13 @@ export default function Extractor() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button variant="default" size="sm" className="h-7 text-xs gap-1"
-                              onClick={() => handleDeepExtract(ep)}>
+                              onClick={() => isPro ? handleDeepExtract(ep) : setPaywallOpen(true)}>
+                              {!isPro && <Crown className="h-3 w-3" />}
                               <Layers className="h-3 w-3" /> Deep Extract
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent className="max-w-[260px] text-center">
-                            Multi-level extraction: atomic, entities, frameworks, psychological, narrative, commercial, patterns, synthesis (~500 credits)
+                            {isPro ? "Multi-level extraction: atomic, entities, frameworks, psychological, narrative, commercial, patterns, synthesis (~500 credits)" : "Pro feature — upgrade to unlock Deep Extract"}
                           </TooltipContent>
                         </Tooltip>
                       </div>
