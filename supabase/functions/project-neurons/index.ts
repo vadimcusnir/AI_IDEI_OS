@@ -97,12 +97,16 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { episode_id } = await req.json();
-    if (!episode_id) {
-      return new Response(JSON.stringify({ error: "Missing episode_id" }), {
+    const ProjectSchema = z.object({
+      episode_id: z.string().uuid("Invalid episode_id format"),
+    });
+    const parsed = ProjectSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const { episode_id } = parsed.data;
 
     // ── Get neurons for this episode, owned by this user ──
     const { data: neurons, error: nErr } = await supabase
