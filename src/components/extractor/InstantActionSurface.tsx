@@ -63,7 +63,15 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
   const [isDragging, setIsDragging] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [extractionDepth, setExtractionDepth] = useState<"quick" | "deep">("deep");
-  const [result, setResult] = useState<{ neurons: number; episode_id: string } | null>(null);
+  const [result, setResult] = useState<{
+    neurons: number;
+    episode_id: string;
+    type_distribution?: Record<string, number>;
+    frameworks?: number;
+    raw_extracted?: number;
+    after_dedup?: number;
+    meta?: { major_insights?: string[]; emerging_themes?: string[]; unexpected_ideas?: string[] };
+  } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const isRunning = !["idle", "complete", "error"].includes(stage);
