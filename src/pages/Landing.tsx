@@ -380,7 +380,7 @@ export default function Landing() {
                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/15 transition-colors">
                   <p.icon className="h-5 w-5 text-primary" />
                 </div>
-                <span className="text-3xl sm:text-4xl font-bold font-mono text-primary block">{p.value}</span>
+                <span className="text-2xl sm:text-4xl font-bold font-mono text-primary block">{p.value}</span>
                 <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest">{p.label}</p>
               </motion.div>
             ))}
