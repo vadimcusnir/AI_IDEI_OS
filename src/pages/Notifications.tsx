@@ -207,7 +207,7 @@ export default function Notifications() {
       >
         <h1 className="text-xl font-bold flex items-center gap-2">
           <Bell className="h-5 w-5 text-primary" />
-          Notifications
+          {t("notifications.title")}
         </h1>
       </motion.div>
 
