@@ -11,5 +11,21 @@
   "email_label": "Email",
   "email_placeholder": "email@exemplu.com",
   "password_label": "Parolă",
-  "password_placeholder": "Introdu parola"
+  "password_placeholder": "Introdu parola",
+  "short_title": "Titlu scurt",
+  "your_name": "Numele tău",
+  "describe_yourself": "Descrie-te pe scurt...",
+  "avatar_url_hint": "Introdu un URL pentru imaginea de profil.",
+  "avatar_placeholder": "https://example.com/avatar.jpg",
+  "display_name": "Nume afișat",
+  "username": "Nume de utilizator",
+  "bio": "Bio",
+  "public_profile_hint": "Profilul tău public va fi accesibil la /u/{{username}}",
+  "transaction_description": "Descrierea tranzacției",
+  "feedback_placeholder": {
+    "testimonial": "Împărtășește experiența ta cu AI-IDEI...",
+    "complaint": "Descrie problema pe care ai întâmpinat-o...",
+    "proposal": "Ce funcționalitate ai vrea să vezi?",
+    "default": "Scrie feedback-ul tău..."
+  }
 }
