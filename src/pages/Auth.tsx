@@ -55,10 +55,10 @@ export default function Auth() {
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
-  if (user) { navigate("/home", { replace: true }); return null; }
-
   const strength = useMemo(() => getStrength(password), [password]);
   const checks = useMemo(() => PASSWORD_CHECKS.map((c) => ({ ...c, passed: c.test(password) })), [password]);
+
+  if (user) { navigate("/home", { replace: true }); return null; }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
