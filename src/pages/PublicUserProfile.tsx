@@ -116,7 +116,7 @@ export default function PublicUserProfile() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3" />
         <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
 
-        <div className="relative max-w-2xl mx-auto px-6 pt-16 pb-10">
+        <div className="relative max-w-2xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-8 sm:pb-10">
           <div className="text-center">
             {/* Avatar */}
             <div className="relative inline-block mb-5">
@@ -161,7 +161,7 @@ export default function PublicUserProfile() {
       </div>
 
       {/* Content */}
-      <div className="max-w-2xl mx-auto px-6 pb-16 space-y-8">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 space-y-6 sm:space-y-8">
 
         {/* Achievements */}
         <section className="bg-card border border-border rounded-xl p-5">

@@ -234,7 +234,7 @@ export default function GuestProfile() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/3 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
 
-        <div className="relative max-w-2xl mx-auto px-6 pt-20 pb-14">
+        <div className="relative max-w-2xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-10 sm:pb-14">
           <div className="text-center">
             {/* Avatar ring */}
             <div className="relative inline-block mb-6">
@@ -280,7 +280,7 @@ export default function GuestProfile() {
       </div>
 
       {/* ═══════ CONTENT ═══════ */}
-      <div className="max-w-2xl mx-auto px-6 pb-20 space-y-12">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20 space-y-10 sm:space-y-12">
 
         {/* ── Expertise with animated progress bars ── */}
         {expertiseScores.length > 0 && (

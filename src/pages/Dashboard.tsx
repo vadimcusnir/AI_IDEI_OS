@@ -143,9 +143,9 @@ export default function Dashboard() {
     <PageTransition>
     <div className="flex-1">
       <SEOHead title="Dashboard — AI-IDEI" description="Full analytics dashboard: neurons, jobs, credits, pipeline status." />
-      <div className="max-w-3xl mx-auto px-6 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* KPI Row */}
-        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+        <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 mb-6">
           <motion.div variants={fadeUp}><KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} /></motion.div>
           <motion.div variants={fadeUp}><KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} /></motion.div>
           <motion.div variants={fadeUp}><KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" /></motion.div>
@@ -159,21 +159,21 @@ export default function Dashboard() {
           <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Activity className="h-3 w-3" /> Pipeline Progress
           </h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto">
             {[
               { label: "Upload", value: data.pipeline.uploaded, icon: FileAudio },
               { label: "Transcribe", value: data.pipeline.transcribed, icon: Layers },
               { label: "Extract", value: data.pipeline.analyzed, icon: Brain },
               { label: "Deliver", value: data.pipeline.serviced, icon: Sparkles },
             ].map((step, i, arr) => (
-              <div key={step.label} className="flex items-center gap-2 flex-1">
+              <div key={step.label} className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
                 <div className="flex-1 text-center">
                   <step.icon className={cn("h-4 w-4 mx-auto mb-1", step.value > 0 ? "text-primary" : "text-muted-foreground/30")} />
-                  <p className="text-lg font-bold font-mono">{step.value}</p>
+                  <p className="text-base sm:text-lg font-bold font-mono">{step.value}</p>
                   <p className="text-[9px] text-muted-foreground">{step.label}</p>
                 </div>
                 {i < arr.length - 1 && (
-                  <div className={cn("h-0.5 w-6 rounded-full shrink-0", step.value > 0 ? "bg-primary/40" : "bg-muted")} />
+                  <div className={cn("h-0.5 w-3 sm:w-6 rounded-full shrink-0", step.value > 0 ? "bg-primary/40" : "bg-muted")} />
                 )}
               </div>
             ))}
@@ -221,7 +221,7 @@ export default function Dashboard() {
           <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between">
             <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Credit Economy</h3>
             <div className="text-center py-2">
-              <span className="text-3xl font-bold font-mono">{data.credits.balance}</span>
+              <span className="text-2xl sm:text-3xl font-bold font-mono">{data.credits.balance}</span>
               <p className="text-[10px] text-muted-foreground mt-0.5">NEURONS available</p>
             </div>
             <div className="h-2 bg-muted/50 rounded-full overflow-hidden">

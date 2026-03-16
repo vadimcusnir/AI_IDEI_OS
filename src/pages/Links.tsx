@@ -136,7 +136,7 @@ function HeroBlock() {
   return (
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-ai-accent/4 to-transparent" />
-      <div className="relative max-w-lg mx-auto px-6 pt-10 pb-6 text-center">
+      <div className="relative max-w-lg mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-6 text-center">
         <div className="relative mx-auto mb-5 h-20 w-20">
           <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-ai-accent/20 blur-xl" />
           <img src={logo} alt="AI-IDEI" className="relative h-20 w-20 rounded-full border-2 border-primary/20 shadow-lg shadow-primary/20 object-cover" />
@@ -259,7 +259,7 @@ export default function Links() {
       <SEOHead title="Links — AI-IDEI" description="Your AI-IDEI hub: quick links, resources, community and knowledge assets." />
       <HeroBlock />
 
-      <div className="max-w-lg mx-auto px-6 pb-16">
+      <div className="max-w-lg mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
         {/* Primary CTA */}
         {user ? (
           <CTAButton item={CTA_PRIMARY} onClick={() => handleClick(CTA_PRIMARY)} />
