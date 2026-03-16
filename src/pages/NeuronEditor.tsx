@@ -165,7 +165,7 @@ export default function NeuronEditor() {
       <div className="flex-1 flex items-center justify-center bg-background">
         <div className="flex items-center gap-3 text-muted-foreground">
           <Loader2 className="h-5 w-5 animate-spin" />
-          <span className="text-sm">{loading ? "Loading neuron..." : "Creating neuron..."}</span>
+          <span className="text-sm">{loading ? t("neuron_editor.loading") : t("neuron_editor.creating")}</span>
         </div>
       </div>
     );
