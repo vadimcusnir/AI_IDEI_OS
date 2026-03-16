@@ -267,7 +267,7 @@ export default function Feedback() {
         <div className="text-center py-16">
           <MessageCircle className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">
-            {items.length === 0 ? "No feedback submitted yet — use the form above!" : "No results for the selected filter"}
+            {items.length === 0 ? t("feedback.no_feedback") : t("feedback.no_filter_results")}
           </p>
         </div>
       ) : (
