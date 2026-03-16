@@ -282,9 +282,9 @@ export default function BatchRunner() {
               Execută {selected.size} servicii ({totalCost} NEURONS)
             </Button>
             {!canAfford && selected.size > 0 && (
-              <p className="text-xs text-destructive text-center mt-2">
-                Credite insuficiente. Ai nevoie de {totalCost - balance} NEURONS în plus.
-              </p>
+              <div className="mt-3">
+                <InlineTopUp needed={totalCost} balance={balance} compact />
+              </div>
             )}
           </>
         ) : (
