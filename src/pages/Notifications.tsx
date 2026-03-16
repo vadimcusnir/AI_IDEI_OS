@@ -243,10 +243,10 @@ export default function Notifications() {
                 )}
                 <div>
                   <p className="text-xs font-semibold">
-                    {isSubscribed ? "Push notifications active" : "Enable push notifications"}
+                    {isSubscribed ? t("notifications.push_active") : t("notifications.push_enable")}
                   </p>
                   <p className="text-[10px] text-muted-foreground">
-                    {isSubscribed ? "You receive alerts even when you're not on the site." : "Get notified when a job completes or credits run low."}
+                    {isSubscribed ? t("notifications.push_active_desc") : t("notifications.push_enable_desc")}
                   </p>
                 </div>
               </div>
