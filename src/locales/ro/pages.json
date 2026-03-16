@@ -51,6 +51,7 @@
     "no_transactions": "Nicio tranzacție încă",
     "no_transactions_hint": "Rulează un serviciu pentru prima tranzacție.",
     "no_filter_results": "Niciun rezultat pentru filtrul selectat",
+    "filter_all": "Toate",
     "topup": "Încărcări",
     "spend": "Cheltuieli",
     "bonus": "Bonus",
