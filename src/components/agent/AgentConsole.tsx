@@ -54,6 +54,7 @@ export function AgentConsole() {
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
