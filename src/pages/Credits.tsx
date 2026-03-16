@@ -36,14 +36,14 @@ interface Transaction {
   job_id: string | null;
 }
 
-const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  spend: { icon: ArrowDownRight, color: "text-destructive", label: "Spend" },
-  reserve: { icon: Clock, color: "text-primary", label: "Reserved" },
-  release: { icon: ArrowUpRight, color: "text-status-validated", label: "Released" },
-  denied: { icon: TrendingDown, color: "text-muted-foreground", label: "Denied" },
-  topup: { icon: TrendingUp, color: "text-status-validated", label: "Top-up" },
-  bonus: { icon: Gift, color: "text-ai-accent", label: "Bonus" },
-  adjustment: { icon: Coins, color: "text-primary", label: "Adjustment" },
+const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; labelKey: string }> = {
+  spend: { icon: ArrowDownRight, color: "text-destructive", labelKey: "credits.spend" },
+  reserve: { icon: Clock, color: "text-primary", labelKey: "credits.reserved" },
+  release: { icon: ArrowUpRight, color: "text-status-validated", labelKey: "credits.released" },
+  denied: { icon: TrendingDown, color: "text-muted-foreground", labelKey: "credits.denied" },
+  topup: { icon: TrendingUp, color: "text-status-validated", labelKey: "credits.topup" },
+  bonus: { icon: Gift, color: "text-ai-accent", labelKey: "credits.bonus" },
+  adjustment: { icon: Coins, color: "text-primary", labelKey: "credits.adjustment" },
 };
 
 type TxFilter = "all" | "spend" | "topup" | "bonus" | "reserve" | "release";
