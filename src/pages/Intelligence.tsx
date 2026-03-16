@@ -113,10 +113,10 @@ export default function Intelligence() {
           <div>
             <h1 className="text-xl font-serif font-bold flex items-center gap-2">
               <Network className="h-5 w-5 text-primary" />
-              Intelligence
+              {t("intelligence.title")}
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Knowledge Graph & Analytics
+              {t("intelligence.subtitle")}
             </p>
           </div>
         </div>
@@ -124,13 +124,13 @@ export default function Intelligence() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="h-9">
             <TabsTrigger value="graph" className="text-xs gap-1.5">
-              <Network className="h-3.5 w-3.5" /> Knowledge Graph
+              <Network className="h-3.5 w-3.5" /> {t("intelligence.tab_graph")}
             </TabsTrigger>
             <TabsTrigger value="stats" className="text-xs gap-1.5">
-              <BarChart3 className="h-3.5 w-3.5" /> Analytics
+              <BarChart3 className="h-3.5 w-3.5" /> {t("intelligence.tab_analytics")}
             </TabsTrigger>
             <TabsTrigger value="dedup" className="text-xs gap-1.5">
-              <GitMerge className="h-3.5 w-3.5" /> Deduplication
+              <GitMerge className="h-3.5 w-3.5" /> {t("intelligence.tab_dedup")}
             </TabsTrigger>
           </TabsList>
 
