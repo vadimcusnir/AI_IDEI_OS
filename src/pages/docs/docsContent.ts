@@ -228,9 +228,9 @@ Every AI service has a fixed credit cost. You see the price before you run anyth
 
 ## Pricing
 
-**1000 credits = 10 USD**
+**1000 credits = 11 USD**
 
-That means 1 credit costs $0.01.
+That means 1 credit costs $0.011.
 
 ## Example cost
 
@@ -746,7 +746,7 @@ Yes! Every extracted neuron is fully editable. You can change the title, modify 
 
 ## What are NEURONS credits?
 
-NEURONS are the compute currency of the platform. Every AI operation costs a fixed number of credits. 1000 credits = $10. You always see the price before running anything.
+NEURONS are the compute currency of the platform. Every AI operation costs a fixed number of credits. 1000 credits = $11. You always see the price before running anything.
 
 ## Is my content private?
 
@@ -796,7 +796,7 @@ A single execution of a service. Jobs track status (queued, processing, complete
 A content unit within a neuron. Types include text, insight, formula, prompt, code, and more.
 
 ## NEURONS (credits)
-The compute currency. Powers all AI operations. 1000 credits = $10 USD.
+The compute currency. Powers all AI operations. 1000 credits = $11 USD.
 
 ## Extraction
 The process of analyzing content to identify and structure knowledge units (neurons).

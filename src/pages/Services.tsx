@@ -13,10 +13,11 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Loader2, Sparkles, BarChart3, Search, X, Coins, Clock,
   ArrowRight, Zap, FileText, Brain, Target, Layers,
-  TrendingUp, LayoutGrid, List, SlidersHorizontal,
+  TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
 
 interface Service {
   id: string;
@@ -61,6 +62,7 @@ type SortBy = "name" | "cost-asc" | "cost-desc" | "category";
 export default function Services() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { balance, loading: balanceLoading } = useCreditBalance();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -176,6 +178,33 @@ export default function Services() {
             Transform any content into professional deliverables. Each service uses specialized AI to extract, analyze, and produce structured outputs.
           </p>
         </div>
+
+        {/* Low balance upsell */}
+        {!balanceLoading && balance < 100 && user && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 flex items-center gap-3 px-4 py-3 rounded-xl border border-destructive/20 bg-destructive/5"
+          >
+            <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium">
+                Balanță scăzută: <span className="font-mono font-bold">{balance}</span> NEURONS
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                Majoritatea serviciilor necesită minim 20-60 NEURONS. Adaugă credite pentru a rula servicii.
+              </p>
+            </div>
+            <Button
+              size="sm"
+              className="shrink-0 text-xs gap-1"
+              onClick={() => navigate("/credits")}
+            >
+              <Coins className="h-3 w-3" />
+              Top-up
+            </Button>
+          </motion.div>
+        )}
 
         {/* KPI strip */}
         <ControlledSection elementId="services.kpi_strip">

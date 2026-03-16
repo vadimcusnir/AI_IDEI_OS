@@ -16,10 +16,10 @@ interface MonetizationItem {
 }
 
 const MONETIZATION_ITEMS: MonetizationItem[] = [
-  { title: "Curs: Codul Cușnir Masterclass", description: "Toate formulele de copywriting într-un singur curs", icon: GraduationCap, priceUsd: "$97", priceNeurons: "500 NEURONS", color: "text-ai-accent", badge: "Curs", accessLevel: "public" },
-  { title: "Consultanță AI-Powered", description: "Sesiune 1:1 de knowledge extraction cu AI", icon: Briefcase, priceUsd: "$149", priceNeurons: "750 NEURONS", color: "text-primary", badge: "Service", accessLevel: "auth" },
-  { title: "Pachet Neuroni Premium", description: "100 neuroni structurați din conținutul tău", icon: Flame, priceUsd: "$49", priceNeurons: "250 NEURONS", color: "text-status-validated", badge: "Pachet", accessLevel: "auth" },
-  { title: "Knowledge Audit", description: "Analiză completă a cunoștințelor tale cu raport detaliat", icon: BarChart3, priceUsd: "$199", priceNeurons: "1000 NEURONS", color: "text-destructive", badge: "Service", accessLevel: "paid" },
+  { title: "Curs: Codul Cușnir Masterclass", description: "Toate formulele de copywriting într-un singur curs", icon: GraduationCap, priceUsd: "$92", priceNeurons: "500 NEURONS", color: "text-ai-accent", badge: "Curs", accessLevel: "public" },
+  { title: "Consultanță AI-Powered", description: "Sesiune 1:1 de knowledge extraction cu AI", icon: Briefcase, priceUsd: "$146", priceNeurons: "750 NEURONS", color: "text-primary", badge: "Service", accessLevel: "auth" },
+  { title: "Pachet Neuroni Premium", description: "100 neuroni structurați din conținutul tău", icon: Flame, priceUsd: "$47", priceNeurons: "250 NEURONS", color: "text-status-validated", badge: "Pachet", accessLevel: "auth" },
+  { title: "Knowledge Audit", description: "Analiză completă a cunoștințelor tale cu raport detaliat", icon: BarChart3, priceUsd: "$200", priceNeurons: "1000 NEURONS", color: "text-destructive", badge: "Service", accessLevel: "paid" },
 ];
 
 export function MonetizationBlock() {
