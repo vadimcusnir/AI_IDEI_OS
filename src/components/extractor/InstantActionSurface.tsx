@@ -235,21 +235,11 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       });
 
       // === TRANSCRIBE ===
-      if (!transcript && urlSource?.platform === "youtube") {
-        // Try subtitles first for YouTube
-        setStage("transcribe");
-        const subs = await fetchSubtitles(urlSource.canonical_url, ep.id, accessToken);
-        if (subs?.subtitle_text) {
-          transcript = subs.subtitle_text;
-          subtitlesUsed = true;
-          toast.info(`📝 Using ${subs.subtitle_language?.toUpperCase()} captions (${subs.segment_count} segments)`);
-        }
-      }
-
-      if (!transcript && !subtitlesUsed && (filePath || urlSource)) {
+      // Unified pipeline: detect → subtitles (fast) → STT (fallback)
+      if (!transcript && (urlSource || filePath)) {
         setStage("transcribe");
         const resp = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-audio`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-source`,
           {
             method: "POST",
             headers: {
@@ -257,16 +247,19 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
               Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
+              url: urlSource?.canonical_url || undefined,
               episode_id: ep.id,
               file_path: filePath || undefined,
-              source_url: urlSource?.canonical_url || undefined,
-              language: undefined,
             }),
           }
         );
         const data = await resp.json();
         if (!resp.ok) throw new Error(data.error || "Transcription failed");
         transcript = data.transcript || "done";
+
+        if (data.source === "subtitles") {
+          toast.info(`📝 Using ${data.language?.toUpperCase() || ""} captions (${data.segments?.length || 0} segments)`);
+        }
       }
 
       // === SEGMENT + EXTRACT ===
