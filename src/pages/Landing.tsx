@@ -252,7 +252,7 @@ export default function Landing() {
 
       {/* ═══ THE PROBLEM ═══ */}
       <section className="relative border-y border-border">
-        <div className="max-w-4xl mx-auto px-6 py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
               <div className="inline-flex items-center gap-2 mb-4">
