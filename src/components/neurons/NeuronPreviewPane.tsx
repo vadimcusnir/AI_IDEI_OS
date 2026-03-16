@@ -1,11 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { X, ExternalLink, Loader2, Zap, Tag, Clock, Brain } from "lucide-react";
+import { X, ExternalLink, Loader2, Zap, Tag, Clock, Brain, Lightbulb, Layers, Network, MessageSquareQuote, Target, Boxes } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { NeuronListItem } from "@/hooks/useNeuronList";
+
+const CATEGORY_BADGE: Record<string, { icon: React.ElementType; color: string; label: string }> = {
+  insight: { icon: Lightbulb, color: "text-amber-500 bg-amber-500/10", label: "Insight" },
+  framework: { icon: Layers, color: "text-blue-500 bg-blue-500/10", label: "Framework" },
+  pattern: { icon: Network, color: "text-purple-500 bg-purple-500/10", label: "Pattern" },
+  narrative: { icon: MessageSquareQuote, color: "text-emerald-500 bg-emerald-500/10", label: "Narrative" },
+  commercial: { icon: Target, color: "text-rose-500 bg-rose-500/10", label: "Commercial" },
+  psychological: { icon: Brain, color: "text-pink-500 bg-pink-500/10", label: "Psychological" },
+  strategy: { icon: Boxes, color: "text-cyan-500 bg-cyan-500/10", label: "Strategy" },
+};
 
 interface Block {
   id: string;
@@ -84,6 +94,21 @@ export function NeuronPreviewPane({ neuron, onClose }: Props) {
           {neuron.score > 0 && (
             <span className="text-[10px] text-primary/60 flex items-center gap-0.5">
               <Brain className="h-2.5 w-2.5" /> {neuron.score}
+            </span>
+          )}
+          {neuron.content_category && CATEGORY_BADGE[neuron.content_category] && (() => {
+            const cat = CATEGORY_BADGE[neuron.content_category!];
+            const CatIcon = cat.icon;
+            return (
+              <span className={cn("flex items-center gap-0.5 text-[9px] font-medium px-1.5 py-0.5 rounded-md", cat.color)}>
+                <CatIcon className="h-2.5 w-2.5" />
+                {cat.label}
+              </span>
+            );
+          })()}
+          {neuron.lifecycle && (
+            <span className="text-[9px] text-muted-foreground/50 px-1.5 py-0.5 rounded-md bg-muted">
+              {neuron.lifecycle}
             </span>
           )}
         </div>

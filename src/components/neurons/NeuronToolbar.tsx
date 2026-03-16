@@ -120,6 +120,7 @@ export function NeuronToolbar({
           {([
             { value: "none" as GroupBy, label: "Fără grupare" },
             { value: "status" as GroupBy, label: "După status" },
+            { value: "category" as GroupBy, label: "După categorie" },
             { value: "date" as GroupBy, label: "După dată" },
           ]).map(({ value, label }) => (
             <DropdownMenuItem
