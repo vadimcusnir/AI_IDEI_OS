@@ -115,20 +115,25 @@ export function MobileBottomNav() {
                 key={path}
                 onClick={() => navigate(path)}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors min-w-[56px] min-h-[44px]",
-                  active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  "flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-200 min-w-[56px] min-h-[44px]",
+                  active
+                    ? "text-primary scale-105"
+                    : "text-muted-foreground hover:text-foreground active:scale-95"
                 )}
               >
-                <Icon className={cn("h-5 w-5", active && "stroke-[2.5]")} />
-                <span className="text-[9px] font-medium leading-none">{label}</span>
+                <Icon className={cn("h-5 w-5 transition-all", active && "stroke-[2.5]")} />
+                <span className={cn("text-[9px] leading-none transition-all", active ? "font-bold" : "font-medium")}>{label}</span>
+                {active && (
+                  <span className="absolute bottom-1 h-0.5 w-4 rounded-full bg-primary" />
+                )}
               </button>
             );
           })}
           <button
             onClick={() => setMenuOpen(true)}
             className={cn(
-              "flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors min-w-[56px] min-h-[44px]",
-              menuOpen ? "text-primary" : "text-muted-foreground hover:text-foreground"
+              "flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-200 min-w-[56px] min-h-[44px]",
+              menuOpen ? "text-primary" : "text-muted-foreground hover:text-foreground active:scale-95"
             )}
           >
             <Menu className="h-5 w-5" />
