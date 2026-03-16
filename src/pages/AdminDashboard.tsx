@@ -436,7 +436,7 @@ export default function AdminDashboard() {
 
             {/* ─── Users (enhanced) ─── */}
             <TabsContent value="users">
-              <AdminUserManagement />
+              <Suspense fallback={<TabLoader />}><AdminUserManagement /></Suspense>
             </TabsContent>
 
             {/* ─── Neurons ─── */}
