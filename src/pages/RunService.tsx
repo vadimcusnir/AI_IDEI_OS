@@ -14,10 +14,12 @@ import {
   ArrowLeft, Loader2, Play, CheckCircle2,
   Clock, AlertCircle, Coins, Lock, Shield,
   Sparkles, ChevronRight, FileText, BarChart3, Brain,
-  Target, Layers, Zap,
+  Target, Layers, Zap, Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { useSubscription } from "@/hooks/useSubscription";
+import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 
 interface Service {
   id: string;
