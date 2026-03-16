@@ -886,6 +886,7 @@ export default function Extractor() {
       </div>
     </div>
     </PageTransition>
+    <PremiumPaywall open={paywallOpen} onOpenChange={setPaywallOpen} requiredTier="pro" serviceName="Deep Extract & Guest Detection" />
     </TooltipProvider>
   );
 }

@@ -41,6 +41,12 @@ export function UserMenu() {
               {initials}
             </AvatarFallback>
           </Avatar>
+          {(tier === "pro" || tier === "vip") && (
+            <Badge variant="outline" className="text-[7px] px-1 py-0 h-3.5 gap-0.5 border-primary/30 text-primary">
+              <Crown className="h-2 w-2" />
+              {tier === "vip" ? "VIP" : "PRO"}
+            </Badge>
+          )}
           <ChevronDown className="h-3 w-3 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
