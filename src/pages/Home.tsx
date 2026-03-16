@@ -390,17 +390,20 @@ function StatCard({ icon: Icon, label, value, highlight }: {
   icon: React.ElementType; label: string; value: number; highlight?: boolean;
 }) {
   return (
-    <div className={cn(
-      "rounded-xl p-4 border transition-colors h-full",
-      highlight
-        ? "bg-primary/5 border-primary/20"
-        : "bg-card border-border"
-    )}>
+    <motion.div
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      className={cn(
+        "rounded-xl p-4 border transition-all duration-200 h-full cursor-default",
+        highlight
+          ? "bg-primary/5 border-primary/20 hover:shadow-md hover:shadow-primary/5"
+          : "bg-card border-border hover:shadow-md hover:border-border/80"
+      )}
+    >
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn("h-4 w-4", highlight ? "text-primary" : "text-muted-foreground")} />
         <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-xl font-bold font-mono", highlight && "text-primary")}>{value.toLocaleString()}</p>
-    </div>
+    </motion.div>
   );
 }
