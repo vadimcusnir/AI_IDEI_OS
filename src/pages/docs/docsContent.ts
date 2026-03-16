@@ -228,9 +228,9 @@ Every AI service has a fixed credit cost. You see the price before you run anyth
 
 ## Pricing
 
-**1000 credits = 10 USD**
+**1000 credits = 11 USD**
 
-That means 1 credit costs $0.01.
+That means 1 credit costs $0.011.
 
 ## Example cost
 
