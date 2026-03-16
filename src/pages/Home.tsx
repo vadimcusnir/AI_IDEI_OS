@@ -167,7 +167,12 @@ export default function Home() {
         </motion.section>
         </ControlledSection>
 
-        {/* ═══════════ SCROLL 3: Quick Actions ═══════════ */}
+        {/* ═══════════ SCROLL 3: Pricing & Conversion ═══════════ */}
+        <ControlledSection elementId="home.pricing_section">
+          <HomePricingSection />
+        </ControlledSection>
+
+        {/* ═══════════ SCROLL 4: Quick Actions ═══════════ */}
         <ControlledSection elementId="home.quick_actions">
         <motion.section variants={stagger} initial="hidden" animate="visible">
           <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Quick Actions</h2>
