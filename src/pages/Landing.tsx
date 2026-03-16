@@ -281,7 +281,7 @@ export default function Landing() {
                 <div className="h-1 w-6 rounded-full bg-status-validated" />
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-status-validated">{t("solution.label")}</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
+              <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
                 {t("solution.title_line1")}<br />{t("solution.title_line2")}
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: t("solution.desc") }} />
