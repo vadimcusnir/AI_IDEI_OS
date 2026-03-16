@@ -198,7 +198,7 @@ export default function Landing() {
             {t("hero.tagline")}
           </motion.p>
 
-          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
+          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-2xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
             {t("hero.title_line1")}
             <br />
             <span className="relative inline-block">
