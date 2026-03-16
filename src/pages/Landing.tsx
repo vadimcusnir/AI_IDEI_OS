@@ -343,7 +343,7 @@ export default function Landing() {
       </section>
 
       {/* ═══ CAPABILITIES ═══ */}
-      <section id="capabilities" className="max-w-5xl mx-auto px-6 py-20">
+      <section id="capabilities" className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
           <div className="inline-flex items-center gap-2 mb-3">
             <div className="h-1 w-6 rounded-full bg-primary" />
