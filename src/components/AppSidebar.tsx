@@ -30,6 +30,8 @@ interface NavItem {
   adminOnly?: boolean;
   /** UI control registry ID for dynamic visibility */
   controlId?: string;
+  /** Marks this nav item as requiring Pro tier */
+  proOnly?: boolean;
 }
 
 interface NavSection {
