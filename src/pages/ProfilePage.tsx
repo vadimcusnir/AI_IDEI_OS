@@ -360,9 +360,9 @@ export default function ProfilePage() {
                       <div className="flex items-center gap-2 mb-3">
                         <Clock className="h-4 w-4 text-muted-foreground" />
                         <div>
-                          <p className="text-xs font-medium">Quiet Hours</p>
+                          <p className="text-xs font-medium">{t("profile.quiet_hours")}</p>
                           <p className="text-[10px] text-muted-foreground">
-                            No browser notifications during this interval
+                            {t("profile.quiet_hours_desc")}
                           </p>
                         </div>
                       </div>
