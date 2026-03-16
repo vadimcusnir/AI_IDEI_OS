@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PostCard } from "@/components/community/PostCard";
 import { MentionTextarea } from "@/components/community/MentionTextarea";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft, ChevronUp, ChevronDown, CheckCircle2, Pin, Lock,
   MessageCircle, Clock, Send,
@@ -62,7 +63,6 @@ function PostTree({ post, childrenMap, threadAuthorId, threadId }: {
   threadId: string;
 }) {
   const directReplies = childrenMap.get(post.id) || [];
-  // Recursively collect deeper replies for each child
   return (
     <PostCard
       post={post}
@@ -78,6 +78,7 @@ export default function CommunityThread() {
   const { threadId, category } = useParams<{ threadId: string; category: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation("pages");
   const { data: thread, isLoading: threadLoading } = useForumThread(threadId);
   const { data: posts, isLoading: postsLoading } = useForumPosts(threadId);
   const createPost = useCreatePost();
@@ -107,8 +108,8 @@ export default function CommunityThread() {
     return (
       <PageTransition>
         <div className="p-4 md:p-6 max-w-4xl mx-auto text-center py-20">
-          <p className="text-muted-foreground">Thread not found.</p>
-          <Button variant="link" onClick={() => navigate("/community")}>Back to Community</Button>
+          <p className="text-muted-foreground">{t("community_thread.not_found")}</p>
+          <Button variant="link" onClick={() => navigate("/community")}>{t("community_thread.back_community")}</Button>
         </div>
       </PageTransition>
     );
@@ -121,7 +122,7 @@ export default function CommunityThread() {
       <SEOHead title={`${thread.title} — Community`} description={thread.content.slice(0, 160)} />
       <div className="flex-1 overflow-auto p-4 md:p-6 max-w-4xl mx-auto">
         <Button variant="ghost" size="sm" className="mb-4" onClick={() => navigate(`/community/${category}`)}>
-          <ArrowLeft className="h-3.5 w-3.5 mr-1" />Back
+          <ArrowLeft className="h-3.5 w-3.5 mr-1" />{t("community_thread.back")}
         </Button>
 
         {/* Thread header */}
@@ -135,7 +136,7 @@ export default function CommunityThread() {
                   {thread.is_locked && <Lock className="h-3.5 w-3.5 text-muted-foreground" />}
                   {thread.is_solved && (
                     <Badge variant="outline" className="text-[9px] px-1 py-0 border-status-validated text-status-validated">
-                      <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />Solved
+                      <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />{t("community_thread.solved")}
                     </Badge>
                   )}
                   <h1 className="text-lg font-bold">{thread.title}</h1>
@@ -150,7 +151,7 @@ export default function CommunityThread() {
                   <span>{formatDistanceToNow(new Date(thread.created_at), { addSuffix: true })}</span>
                   <span>·</span>
                   <MessageCircle className="h-2.5 w-2.5" />
-                  <span>{thread.reply_count} replies</span>
+                  <span>{t("community_thread.replies_label", { count: thread.reply_count })}</span>
                 </div>
                 <div className="text-sm whitespace-pre-wrap">{thread.content}</div>
               </div>
@@ -161,7 +162,9 @@ export default function CommunityThread() {
         {/* Posts — threaded */}
         <div className="space-y-2 mb-4">
           <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            {thread.reply_count} {thread.reply_count === 1 ? "Reply" : "Replies"}
+            {thread.reply_count === 1
+              ? t("community_thread.reply_count", { count: thread.reply_count })
+              : t("community_thread.reply_count_plural", { count: thread.reply_count })}
           </h3>
           {postsLoading ? (
             [1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-lg" />)
@@ -176,7 +179,7 @@ export default function CommunityThread() {
               />
             ))
           ) : (
-            <p className="text-xs text-muted-foreground text-center py-6">No replies yet. Be the first to answer!</p>
+            <p className="text-xs text-muted-foreground text-center py-6">{t("community_thread.no_replies")}</p>
           )}
         </div>
 
@@ -185,7 +188,7 @@ export default function CommunityThread() {
           <Card>
             <CardContent className="p-4">
               <MentionTextarea
-                placeholder="Write your reply... Use @name to mention users"
+                placeholder={t("community_thread.reply_placeholder")}
                 value={reply}
                 onChange={setReply}
                 rows={4}
@@ -197,17 +200,17 @@ export default function CommunityThread() {
                 size="sm"
               >
                 <Send className="h-3.5 w-3.5 mr-1" />
-                {createPost.isPending ? "Posting..." : "Post Reply"}
+                {createPost.isPending ? t("community_thread.posting") : t("community_thread.post_reply")}
               </Button>
             </CardContent>
           </Card>
         ) : thread.is_locked ? (
           <p className="text-xs text-muted-foreground text-center py-4">
-            <Lock className="h-3.5 w-3.5 inline mr-1" />This thread is locked.
+            <Lock className="h-3.5 w-3.5 inline mr-1" />{t("community_thread.thread_locked")}
           </p>
         ) : (
           <p className="text-xs text-muted-foreground text-center py-4">
-            <a href="/auth" className="text-primary hover:underline">Sign in</a> to reply.
+            <a href="/auth" className="text-primary hover:underline">{t("community_thread.sign_in_reply")}</a>
           </p>
         )}
       </div>

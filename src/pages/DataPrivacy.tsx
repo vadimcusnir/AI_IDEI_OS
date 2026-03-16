@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   Download, Trash2, Loader2, AlertTriangle, ShieldCheck,
 } from "lucide-react";
@@ -15,6 +16,7 @@ import {
 
 export default function DataPrivacy() {
   const { user, session, signOut } = useAuth();
+  const { t } = useTranslation("pages");
   const [exporting, setExporting] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmText, setConfirmText] = useState("");
@@ -35,9 +37,9 @@ export default function DataPrivacy() {
       a.download = `ai-idei-data-export-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success("Data exported successfully!");
+      toast.success(t("data_privacy.export_success"));
     } catch (err: any) {
-      toast.error("Export failed: " + (err.message || "Unknown error"));
+      toast.error(t("data_privacy.export_failed") + ": " + (err.message || "Unknown error"));
     } finally {
       setExporting(false);
     }
@@ -51,10 +53,10 @@ export default function DataPrivacy() {
         body: { action: "delete" },
       });
       if (error) throw error;
-      toast.success("Account and all data deleted.");
+      toast.success(t("data_privacy.delete_success"));
       await signOut();
     } catch (err: any) {
-      toast.error("Delete failed: " + (err.message || "Unknown error"));
+      toast.error(t("data_privacy.delete_failed") + ": " + (err.message || "Unknown error"));
     } finally {
       setDeleting(false);
     }
@@ -69,12 +71,11 @@ export default function DataPrivacy() {
 
       <div className="flex items-center gap-2 mb-6">
         <ShieldCheck className="h-5 w-5 text-primary" />
-        <h1 className="text-lg font-semibold tracking-tight">Data & Privacy</h1>
+        <h1 className="text-lg font-semibold tracking-tight">{t("data_privacy.title")}</h1>
       </div>
 
       <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-        You have full control over your data. Export everything we store about you,
-        or permanently delete your account and all associated data.
+        {t("data_privacy.description")}
       </p>
 
       {/* Export Section */}
@@ -82,11 +83,9 @@ export default function DataPrivacy() {
         <div className="flex items-start gap-3">
           <Download className="h-5 w-5 text-primary mt-0.5" />
           <div className="flex-1">
-            <h2 className="text-sm font-semibold mb-1">Export Your Data</h2>
+            <h2 className="text-sm font-semibold mb-1">{t("data_privacy.export_title")}</h2>
             <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-              Download a JSON file containing all your data: profile, neurons,
-              episodes, artifacts, credits, feedback, and more. This file is
-              portable and can be imported into other systems.
+              {t("data_privacy.export_desc")}
             </p>
             <Button
               onClick={handleExport}
@@ -100,7 +99,7 @@ export default function DataPrivacy() {
               ) : (
                 <Download className="h-3.5 w-3.5" />
               )}
-              {exporting ? "Exporting..." : "Download My Data"}
+              {exporting ? t("data_privacy.exporting") : t("data_privacy.download")}
             </Button>
           </div>
         </div>
@@ -112,12 +111,10 @@ export default function DataPrivacy() {
           <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
           <div className="flex-1">
             <h2 className="text-sm font-semibold text-destructive mb-1">
-              Delete Account & Data
+              {t("data_privacy.delete_title")}
             </h2>
             <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-              Permanently delete your account and all associated data including
-              neurons, episodes, artifacts, credits, and feedback. This action
-              is <strong>irreversible</strong>.
+              {t("data_privacy.delete_desc")}
             </p>
 
             <AlertDialog>
@@ -128,20 +125,17 @@ export default function DataPrivacy() {
                   className="gap-1.5 text-xs"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  Delete My Account
+                  {t("data_privacy.delete_button")}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogTitle>{t("data_privacy.delete_confirm_title")}</AlertDialogTitle>
                   <AlertDialogDescription className="space-y-3">
-                    <p>
-                      This will permanently delete your account and all data.
-                      This action cannot be undone.
-                    </p>
+                    <p>{t("data_privacy.delete_confirm_desc")}</p>
                     <div>
                       <label className="text-xs font-medium text-foreground block mb-1.5">
-                        Type <strong>DELETE</strong> to confirm:
+                        {t("data_privacy.delete_confirm_label")}
                       </label>
                       <input
                         type="text"
@@ -155,7 +149,7 @@ export default function DataPrivacy() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel onClick={() => setConfirmText("")}>
-                    Cancel
+                    {t("data_privacy.cancel")}
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDelete}
@@ -165,7 +159,7 @@ export default function DataPrivacy() {
                     {deleting ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />
                     ) : null}
-                    Delete Everything
+                    {t("data_privacy.delete_everything")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
