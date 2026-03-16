@@ -1,15 +1,13 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, lazy, Suspense } from "react";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
-import { GamificationToasts } from "@/components/gamification/GamificationToasts";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { prefetchUIControls } from "@/hooks/useUIControl";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 
-import { ContextualFeedbackPrompt } from "@/components/feedback/ContextualFeedbackPrompt";
 import { LowBalanceBanner } from "@/components/credits/LowBalanceBanner";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -18,6 +16,20 @@ import { Footer } from "@/components/global/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
 import { UserMenu } from "@/components/UserMenu";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+// Lazy-load non-critical overlay components
+const ContextualFeedbackPrompt = lazy(() => import("@/components/feedback/ContextualFeedbackPrompt").then(m => ({ default: m.ContextualFeedbackPrompt })));
+const GamificationToasts = lazy(() => import("@/components/gamification/GamificationToasts").then(m => ({ default: m.GamificationToasts })));
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
