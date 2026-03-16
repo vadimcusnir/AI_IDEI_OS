@@ -502,6 +502,13 @@ export default function Services() {
           </div>
         )}
       </div>
+
+      <PremiumPaywall
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        requiredTier={paywallService?.tier}
+        serviceName={paywallService?.name}
+      />
     </div>
     </PageTransition>
   );
