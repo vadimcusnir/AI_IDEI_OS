@@ -109,7 +109,7 @@ export default function Feedback() {
     if (error) {
       toast.error("Error: " + error.message);
     } else {
-      toast.success("Thank you for your feedback! 🙏");
+      toast.success(t("feedback.thank_you"));
       trackInternalEvent({ event: AnalyticsEvents.FEEDBACK_SUBMITTED, params: { type, rating } });
       setTitle("");
       setMessage("");
