@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { WhatsNewWidget } from "@/components/home/WhatsNewWidget";
 import { TrendingIdeasWidget } from "@/components/home/TrendingIdeasWidget";
+import { HomePricingSection } from "@/components/home/HomePricingSection";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
