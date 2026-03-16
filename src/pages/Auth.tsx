@@ -104,9 +104,9 @@ export default function Auth() {
   };
 
   const titles: Record<AuthMode, { heading: string; sub: string }> = {
-    login: { heading: "Welcome Back", sub: "Sign in to Knowledge OS" },
-    signup: { heading: "Create Account", sub: "Start capitalizing your expertise" },
-    forgot: { heading: "Reset Password", sub: "We'll send a reset link to your email" },
+    login: { heading: t("auth.login_heading"), sub: t("auth.login_sub") },
+    signup: { heading: t("auth.signup_heading"), sub: t("auth.signup_sub") },
+    forgot: { heading: t("auth.forgot_heading"), sub: t("auth.forgot_sub") },
   };
 
   return (
