@@ -215,7 +215,7 @@ export default function Onboarding() {
           </div>
           {/* Text progress */}
           <div className="flex items-center justify-between mt-3 px-1">
-            <span className="text-[10px] text-muted-foreground">{completedCount}/{STEPS.length} completed</span>
+            <span className="text-[10px] text-muted-foreground">{completedCount}/{STEPS.length} {t("onboarding.completed")}</span>
             <div className="flex items-center gap-1.5">
               <div className="w-24 h-1.5 rounded-full bg-muted overflow-hidden">
                 <motion.div
