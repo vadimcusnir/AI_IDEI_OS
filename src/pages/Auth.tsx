@@ -241,7 +241,7 @@ export default function Auth() {
               <div className="relative my-5">
                 <div className="absolute inset-0 flex items-center"><div className="w-full section-divider" /></div>
                 <div className="relative flex justify-center">
-                  <span className="bg-card/80 px-3 text-[10px] text-muted-foreground uppercase tracking-wider">or</span>
+                  <span className="bg-card/80 px-3 text-[10px] text-muted-foreground uppercase tracking-wider">{t("auth.or")}</span>
                 </div>
               </div>
               <button type="button" onClick={async () => {
