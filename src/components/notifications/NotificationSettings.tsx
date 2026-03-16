@@ -60,7 +60,7 @@ export function NotificationSettings() {
           <BellRing className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold">Push Notifications</h3>
           {pushActive && (
-            <Badge variant="outline" className="text-[10px] h-5 bg-green-500/10 text-green-600 border-green-500/30">
+            <Badge variant="outline" className="text-[10px] h-5 bg-primary/10 text-primary border-primary/30">
               Active
             </Badge>
           )}
