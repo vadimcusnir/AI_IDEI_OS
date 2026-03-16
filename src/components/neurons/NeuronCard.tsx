@@ -215,6 +215,17 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <span className="text-[9px] text-muted-foreground/50 ml-auto">{formatDate(n.updated_at)}</span>
       </div>
       <h3 className="text-base font-serif font-medium line-clamp-2 mb-1">{n.title}</h3>
+      {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
+        const cat = CATEGORY_CONFIG[n.content_category!];
+        const CatIcon = cat.icon;
+        return (
+          <span className={cn("inline-flex items-center gap-1 text-[9px] font-medium px-2 py-0.5 rounded-md w-fit mb-2", cat.color)}>
+            <CatIcon className="h-3 w-3" />
+            {cat.label}
+            {n.lifecycle && <span className="opacity-60">· {n.lifecycle}</span>}
+          </span>
+        );
+      })()}
       {n.title === "Untitled Neuron" && (
         <p className="text-[11px] text-muted-foreground/60 line-clamp-2 mb-3">Neuron gol — click pentru a edita</p>
       )}
