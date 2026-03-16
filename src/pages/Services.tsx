@@ -20,6 +20,7 @@ import { ControlledSection } from "@/components/ControlledSection";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
+import { useTranslation } from "react-i18next";
 
 interface Service {
   id: string;
@@ -62,6 +63,7 @@ type ViewMode = "grid" | "list";
 type SortBy = "name" | "cost-asc" | "cost-desc" | "category";
 
 export default function Services() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { balance, loading: balanceLoading } = useCreditBalance();
@@ -98,12 +100,11 @@ export default function Services() {
         .eq("is_active", true)
         .order("name");
       if (data) setServices(data as Service[]);
-      if (error) toast.error("Failed to load services");
+      if (error) toast.error(t("services.failed_load"));
       setLoading(false);
     })();
   }, [user, authLoading]);
 
-  // Derive categories from data
   const categories = useMemo(() => {
     const cats = new Map<string, number>();
     services.forEach(s => cats.set(s.category, (cats.get(s.category) || 0) + 1));
@@ -112,16 +113,13 @@ export default function Services() {
 
   const filtered = useMemo(() => {
     let list = services;
-
     if (activeCategory) list = list.filter(s => s.category === activeCategory);
-
     const range = COST_RANGES[costRange];
     if (range && range.max !== Infinity) {
       list = list.filter(s => s.credits_cost >= range.min && s.credits_cost <= range.max);
     } else if (range && range.min > 0) {
       list = list.filter(s => s.credits_cost >= range.min);
     }
-
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(s =>
@@ -130,19 +128,15 @@ export default function Services() {
         s.service_key.toLowerCase().includes(q)
       );
     }
-
-    // Sort
     switch (sortBy) {
       case "cost-asc": list = [...list].sort((a, b) => a.credits_cost - b.credits_cost); break;
       case "cost-desc": list = [...list].sort((a, b) => b.credits_cost - a.credits_cost); break;
       case "category": list = [...list].sort((a, b) => a.category.localeCompare(b.category)); break;
       default: list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     }
-
     return list;
   }, [services, activeCategory, costRange, search, sortBy]);
 
-  // Stats
   const avgCost = services.length ? Math.round(services.reduce((s, x) => s + x.credits_cost, 0) / services.length) : 0;
 
   if (authLoading || loading) {
@@ -186,13 +180,13 @@ export default function Services() {
         {/* Hero header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-2xl font-serif font-medium tracking-tight">AI Services</h1>
+            <h1 className="text-2xl font-serif font-medium tracking-tight">{t("services.title")}</h1>
             <Badge variant="secondary" className="text-[10px] font-mono">
-              {services.length} available
+              {t("services.available", { count: services.length })}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground max-w-xl">
-            Transform any content into professional deliverables. Each service uses specialized AI to extract, analyze, and produce structured outputs.
+            {t("services.description")}
           </p>
         </div>
 
@@ -206,10 +200,10 @@ export default function Services() {
             <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium">
-                Balanță scăzută: <span className="font-mono font-bold">{balance}</span> NEURONS
+                {t("services.low_balance")}: <span className="font-mono font-bold">{balance}</span> NEURONS
               </p>
               <p className="text-[10px] text-muted-foreground">
-                Majoritatea serviciilor necesită minim 20-60 NEURONS. Adaugă credite pentru a rula servicii.
+                {t("services.low_balance_hint")}
               </p>
             </div>
             <Button
@@ -218,7 +212,7 @@ export default function Services() {
               onClick={() => navigate("/credits")}
             >
               <Coins className="h-3 w-3" />
-              Top-up
+              {t("services.topup")}
             </Button>
           </motion.div>
         )}
@@ -227,10 +221,10 @@ export default function Services() {
         <ControlledSection elementId="services.kpi_strip">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
-            { label: "Services", value: services.length, icon: Sparkles },
-            { label: "Categories", value: categories.length, icon: Layers },
-            { label: "Avg. Cost", value: `${avgCost}`, suffix: "N", icon: Coins },
-            { label: "New this month", value: "25", icon: TrendingUp },
+            { label: t("services.kpi_services"), value: services.length, icon: Sparkles },
+            { label: t("services.kpi_categories"), value: categories.length, icon: Layers },
+            { label: t("services.kpi_avg_cost"), value: `${avgCost}`, suffix: "N", icon: Coins },
+            { label: t("services.kpi_new_month"), value: "25", icon: TrendingUp },
           ].map((kpi, i) => (
             <div key={i} className="bg-card border border-border rounded-xl p-3.5 flex items-center gap-3">
               <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
@@ -255,7 +249,7 @@ export default function Services() {
             <Input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search services..."
+              placeholder={t("services.search_placeholder")}
               className="pl-9 pr-8 h-10 text-sm bg-card"
             />
             {search && (
@@ -272,7 +266,7 @@ export default function Services() {
               onClick={() => setShowFilters(!showFilters)}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
-              Filters
+              {t("services.filters")}
               {(activeCategory || costRange > 0) && (
                 <span className="ml-1 bg-primary text-primary-foreground rounded-full h-4 w-4 text-[9px] flex items-center justify-center">
                   {(activeCategory ? 1 : 0) + (costRange > 0 ? 1 : 0)}
@@ -284,10 +278,10 @@ export default function Services() {
               onChange={e => setSortBy(e.target.value as SortBy)}
               className="h-8 rounded-md border border-border bg-card px-2 text-xs outline-none"
             >
-              <option value="name">A → Z</option>
-              <option value="cost-asc">Cost ↑</option>
-              <option value="cost-desc">Cost ↓</option>
-              <option value="category">Category</option>
+              <option value="name">{t("services.sort_az")}</option>
+              <option value="cost-asc">{t("services.sort_cost_asc")}</option>
+              <option value="cost-desc">{t("services.sort_cost_desc")}</option>
+              <option value="category">{t("services.sort_category")}</option>
             </select>
             <div className="flex border border-border rounded-md overflow-hidden">
               <button
@@ -318,7 +312,7 @@ export default function Services() {
               <div className="bg-card border border-border rounded-xl p-4 space-y-4">
                 {/* Category filter */}
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Category</p>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("services.filter_category")}</p>
                   <div className="flex flex-wrap gap-1.5">
                     <button
                       onClick={() => setActiveCategory(null)}
@@ -354,7 +348,7 @@ export default function Services() {
 
                 {/* Cost filter */}
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Credit Cost</p>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("services.filter_cost")}</p>
                   <div className="flex gap-1.5">
                     {COST_RANGES.map((range, i) => (
                       <button
@@ -381,7 +375,7 @@ export default function Services() {
                     className="text-xs text-muted-foreground"
                     onClick={() => { setActiveCategory(null); setCostRange(0); }}
                   >
-                    <X className="h-3 w-3 mr-1" /> Clear all filters
+                    <X className="h-3 w-3 mr-1" /> {t("services.clear_filters")}
                   </Button>
                 )}
               </div>
@@ -393,8 +387,8 @@ export default function Services() {
         <div className="flex items-center justify-between mb-4">
           <p className="text-xs text-muted-foreground">
             {filtered.length === services.length
-              ? `Showing all ${filtered.length} services`
-              : `${filtered.length} of ${services.length} services`}
+              ? t("services.showing_all", { count: filtered.length })
+              : t("services.showing_filtered", { filtered: filtered.length, total: services.length })}
           </p>
         </div>
 
@@ -402,10 +396,10 @@ export default function Services() {
         {filtered.length === 0 ? (
           <div className="text-center py-20">
             <Search className="h-10 w-10 mx-auto mb-4 text-muted-foreground/20" />
-            <p className="text-sm text-muted-foreground mb-1">No services match your filters</p>
-            <p className="text-xs text-muted-foreground/60 mb-4">Try adjusting your search or category selection</p>
+            <p className="text-sm text-muted-foreground mb-1">{t("services.no_match")}</p>
+            <p className="text-xs text-muted-foreground/60 mb-4">{t("services.no_match_hint")}</p>
             <Button variant="outline" size="sm" className="text-xs" onClick={() => { setSearch(""); setActiveCategory(null); setCostRange(0); }}>
-              Clear all filters
+              {t("services.clear_filters")}
             </Button>
           </div>
         ) : viewMode === "grid" ? (
@@ -427,7 +421,6 @@ export default function Services() {
                     !tierSatisfied(userTier, service.access_tier) && "opacity-75"
                   )}
                 >
-                  {/* Category dot */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
                       {catCfg && <catCfg.icon className={cn("h-4 w-4", catCfg.color)} />}
@@ -448,7 +441,6 @@ export default function Services() {
                     {service.description}
                   </p>
 
-                  {/* Footer */}
                   <div className="flex items-center justify-between pt-3 border-t border-border">
                     <div className="flex items-center gap-1.5">
                       <Coins className="h-3 w-3 text-ai-accent" />
@@ -462,7 +454,6 @@ export default function Services() {
             })}
           </div>
         ) : (
-          /* List view */
           <div className="space-y-1.5">
             {filtered.map((service, i) => {
               const catCfg = CATEGORY_CONFIG[service.category];
