@@ -17,8 +17,10 @@ import { ControlledSection } from "@/components/ControlledSection";
 import {
   MessageSquare, ArrowLeft, Search, Filter,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Community() {
+  const { t } = useTranslation("pages");
   const { category: categorySlug } = useParams<{ category?: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -29,9 +31,8 @@ export default function Community() {
 
   const selectedCategory = categories?.find((c) => c.slug === categorySlug);
 
-  // Filter and sort threads
   const filteredThreads = (threads || [])
-    .filter((t) => !search || t.title.toLowerCase().includes(search.toLowerCase()))
+    .filter((th) => !search || th.title.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       if (sortBy === "top") return b.vote_score - a.vote_score;
       if (sortBy === "unsolved") return (a.is_solved ? 1 : 0) - (b.is_solved ? 1 : 0);
@@ -50,9 +51,9 @@ export default function Community() {
             </Button>
           )}
           <div className="flex-1">
-            <h1 className="text-xl font-bold">{selectedCategory?.name || "Community"}</h1>
+            <h1 className="text-xl font-bold">{selectedCategory?.name || t("community.title")}</h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              {selectedCategory?.description || "Ask questions, share knowledge, earn karma & NEURONS"}
+              {selectedCategory?.description || t("community.description")}
             </p>
           </div>
           {categorySlug && user && selectedCategory && (
@@ -93,7 +94,7 @@ export default function Community() {
               <div className="relative flex-1">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <Input
-                  placeholder="Search threads..."
+                  placeholder={t("community.search_threads")}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="pl-8 h-8 text-xs"
@@ -108,7 +109,7 @@ export default function Community() {
                     className="text-[10px] h-7 px-2"
                     onClick={() => setSortBy(s)}
                   >
-                    {s === "recent" ? "Recent" : s === "top" ? "Top" : "Unsolved"}
+                    {s === "recent" ? t("community.sort_recent") : s === "top" ? t("community.sort_top") : t("community.sort_unsolved")}
                   </Button>
                 ))}
               </div>
@@ -134,14 +135,13 @@ export default function Community() {
                   <div className="text-center py-12">
                     <MessageSquare className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
                     <p className="text-sm text-muted-foreground">
-                      {search ? "No threads match your search." : "No threads yet. Be the first to start a discussion!"}
+                      {search ? t("community.no_threads_search") : t("community.no_threads")}
                     </p>
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            {/* Inline rewards hint when inside category */}
             <CommunityRewardsGuide />
           </>
         )}
