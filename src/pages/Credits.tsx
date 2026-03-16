@@ -252,14 +252,14 @@ export default function Credits() {
 
           {/* Quick stats */}
           <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Transactions</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("credits.transactions")}</p>
             <span className="text-2xl font-bold font-mono">{transactions.length}</span>
             <p className="text-[10px] text-muted-foreground mt-1">
               {transactions.filter(t => {
                 const d = new Date(t.created_at);
                 const now = new Date();
                 return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-              }).length} this month
+              }).length} {t("credits.this_month")}
             </p>
           </div>
 
