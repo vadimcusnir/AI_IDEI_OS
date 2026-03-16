@@ -62,7 +62,7 @@ export function HomePricingSection() {
               key={pkg.key}
               onClick={() => navigate("/credits")}
               className={cn(
-                "flex flex-col items-center gap-2 p-4 rounded-xl border transition-all hover:shadow-md",
+                "flex flex-col items-center gap-1.5 sm:gap-2 p-3 sm:p-4 rounded-xl border transition-all hover:shadow-md",
                 pkg.popular
                   ? "border-primary/40 bg-primary/5 hover:border-primary ring-1 ring-primary/15"
                   : "border-border bg-card hover:border-primary/30"
