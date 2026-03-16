@@ -121,6 +121,16 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <div className={cn("h-2 w-2 rounded-full shrink-0", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
         <span className="text-[11px] font-mono text-primary/70 w-10 shrink-0">#{n.number}</span>
         <span className="flex-1 text-sm truncate">{n.title}</span>
+        {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
+          const cat = CATEGORY_CONFIG[n.content_category!];
+          const CatIcon = cat.icon;
+          return (
+            <span className={cn("flex items-center gap-0.5 text-[8px] font-medium px-1.5 py-0.5 rounded-md shrink-0", cat.color)}>
+              <CatIcon className="h-2.5 w-2.5" />
+              {cat.label}
+            </span>
+          );
+        })()}
         <span className="text-[10px] text-muted-foreground/60 shrink-0">{formatDate(n.updated_at)}</span>
         {n.score > 0 && (
           <div className="flex items-center gap-0.5 shrink-0">
