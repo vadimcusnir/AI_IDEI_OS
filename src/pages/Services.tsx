@@ -13,11 +13,13 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Loader2, Sparkles, BarChart3, Search, X, Coins, Clock,
   ArrowRight, Zap, FileText, Brain, Target, Layers,
-  TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle,
+  TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle, Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { useSubscription } from "@/hooks/useSubscription";
+import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 
 interface Service {
   id: string;
