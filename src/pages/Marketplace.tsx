@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { ControlledSection } from "@/components/ControlledSection";
+import { useTranslation } from "react-i18next";
 
 interface KnowledgeAsset {
   id: string;
@@ -44,15 +45,8 @@ interface AssetReview {
 
 type SortOption = "popular" | "newest" | "rating" | "price_low" | "price_high";
 
-const SORT_OPTIONS: { value: SortOption; label: string; icon: typeof TrendingUp }[] = [
-  { value: "popular", label: "Popular", icon: TrendingUp },
-  { value: "newest", label: "Newest", icon: Clock },
-  { value: "rating", label: "Top Rated", icon: Star },
-  { value: "price_low", label: "Price ↑", icon: Coins },
-  { value: "price_high", label: "Price ↓", icon: Coins },
-];
-
 export default function Marketplace() {
+  const { t } = useTranslation("pages");
   const { user } = useAuth();
   const { balance } = useCreditBalance();
   const [assets, setAssets] = useState<KnowledgeAsset[]>([]);
@@ -62,11 +56,17 @@ export default function Marketplace() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [sort, setSort] = useState<SortOption>("popular");
 
+  const SORT_OPTIONS: { value: SortOption; label: string; icon: typeof TrendingUp }[] = [
+    { value: "popular", label: t("marketplace.sort_popular"), icon: TrendingUp },
+    { value: "newest", label: t("marketplace.sort_newest"), icon: Clock },
+    { value: "rating", label: t("marketplace.sort_rating"), icon: Star },
+    { value: "price_low", label: t("marketplace.sort_price_asc"), icon: Coins },
+    { value: "price_high", label: t("marketplace.sort_price_desc"), icon: Coins },
+  ];
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-
-      // Featured assets
       const featuredQuery: any = supabase
         .from("knowledge_assets")
         .select("*")
@@ -75,18 +75,13 @@ export default function Marketplace() {
       const { data: featuredData } = await featuredQuery
         .order("sales_count", { ascending: false })
         .limit(6);
-
       setFeatured((featuredData as KnowledgeAsset[]) || []);
 
-      // All assets
       let query = supabase
         .from("knowledge_assets")
         .select("*")
         .eq("is_published", true);
-
       if (selectedType) query = query.eq("asset_type", selectedType);
-
-      // Sort
       switch (sort) {
         case "popular": query = query.order("sales_count", { ascending: false }); break;
         case "newest": query = query.order("created_at", { ascending: false }); break;
@@ -94,7 +89,6 @@ export default function Marketplace() {
         case "price_low": query = query.order("price_neurons", { ascending: true }); break;
         case "price_high": query = query.order("price_neurons", { ascending: false }); break;
       }
-
       const { data } = await query.limit(100);
       setAssets((data as KnowledgeAsset[]) || []);
       setLoading(false);
@@ -106,7 +100,7 @@ export default function Marketplace() {
     ? assets.filter(a =>
         a.title.toLowerCase().includes(search.toLowerCase()) ||
         (a.description || "").toLowerCase().includes(search.toLowerCase()) ||
-        (a.tags || []).some(t => t.toLowerCase().includes(search.toLowerCase()))
+        (a.tags || []).some(tg => tg.toLowerCase().includes(search.toLowerCase()))
       )
     : assets;
 
@@ -124,24 +118,23 @@ export default function Marketplace() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Store className="h-3.5 w-3.5" />
-            <span>Knowledge Marketplace</span>
+            <span>{t("marketplace.breadcrumb")}</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">Marketplace</h1>
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("marketplace.title")}</h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">
-            Browse knowledge assets, templates, and intelligence packages created by the community.
+            {t("marketplace.description")}
           </p>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-
         {/* Featured Section */}
         {featured.length > 0 && (
           <ControlledSection elementId="marketplace.featured">
           <section>
             <div className="flex items-center gap-2 mb-4">
               <Crown className="h-4 w-4 text-amber-500" />
-              <h2 className="text-sm font-semibold">Featured Assets</h2>
+              <h2 className="text-sm font-semibold">{t("marketplace.featured")}</h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {featured.map(asset => (
@@ -158,7 +151,7 @@ export default function Marketplace() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search assets, tags..."
+              placeholder={t("marketplace.search_placeholder")}
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="pl-10 text-sm"
@@ -166,7 +159,7 @@ export default function Marketplace() {
           </div>
           <Select value={sort} onValueChange={(v) => setSort(v as SortOption)}>
             <SelectTrigger className="w-40 text-xs h-9">
-              <SelectValue placeholder="Sort by" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {SORT_OPTIONS.map(o => (
@@ -184,17 +177,17 @@ export default function Marketplace() {
             className="text-xs h-7"
             onClick={() => setSelectedType(null)}
           >
-            All
+            {t("marketplace.all")}
           </Button>
-          {types.map(t => (
+          {types.map(tp => (
             <Button
-              key={t}
-              variant={selectedType === t ? "default" : "outline"}
+              key={tp}
+              variant={selectedType === tp ? "default" : "outline"}
               size="sm"
               className="text-xs h-7"
-              onClick={() => setSelectedType(t)}
+              onClick={() => setSelectedType(tp)}
             >
-              {t}
+              {tp}
             </Button>
           ))}
         </div>
@@ -208,7 +201,7 @@ export default function Marketplace() {
           <div className="text-center py-20">
             <Store className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">
-              {search ? "No assets match your search." : "No assets published yet."}
+              {search ? t("marketplace.no_search_match") : t("marketplace.no_assets")}
             </p>
           </div>
         ) : (
@@ -224,6 +217,7 @@ export default function Marketplace() {
 }
 
 function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { asset: KnowledgeAsset; currentUserId?: string; creditBalance?: number; isFeatured?: boolean }) {
+  const { t } = useTranslation("pages");
   const cardNavigate = useNavigate();
   const [showReview, setShowReview] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
@@ -242,11 +236,11 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
 
   const handlePurchase = async () => {
     if (!currentUserId) {
-      toast.error("Please sign in to purchase.");
+      toast.error(t("marketplace.sign_in_purchase"));
       return;
     }
     if (!isFree && !canAfford) {
-      toast.error(`Credite insuficiente. Ai nevoie de ${price} NEURONS dar ai doar ${creditBalance}.`, {
+      toast.error(t("marketplace.insufficient_credits", { price, balance: creditBalance }), {
         action: {
           label: "Top-up",
           onClick: () => cardNavigate("/credits"),
@@ -261,15 +255,14 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
         _buyer_id: currentUserId,
         _asset_id: asset.id,
       });
-
       if (error) throw new Error(error.message);
       const result = data as any;
-      if (!result?.success) throw new Error(result?.error || "Purchase failed");
+      if (!result?.success) throw new Error(result?.error || t("marketplace.purchase_failed"));
 
       setPurchased(true);
-      toast.success(isFree ? "Asset acquired!" : `Purchased for ${result.price} NEURONS!`);
+      toast.success(isFree ? t("marketplace.asset_acquired") : t("marketplace.purchased_for", { price: result.price }));
     } catch (err: any) {
-      toast.error("Purchase failed: " + (err.message || "Try again"));
+      toast.error(t("marketplace.purchase_failed") + ": " + (err.message || "Try again"));
     } finally {
       setPurchasing(false);
     }
@@ -301,9 +294,9 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
 
     setSubmitting(false);
     if (error) {
-      toast.error("Failed to submit review");
+      toast.error(t("marketplace.review_failed"));
     } else {
-      toast.success("Review submitted!");
+      toast.success(t("marketplace.review_submitted"));
       setShowReview(false);
       setReviewText("");
     }
@@ -369,10 +362,10 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
             onClick={() => { setShowReviews(true); loadReviews(); }}
             className="text-[9px] text-muted-foreground hover:text-primary transition-colors"
           >
-            {(asset.rating_avg || 0).toFixed(1)} ({asset.rating_count || 0} reviews)
+            {(asset.rating_avg || 0).toFixed(1)} ({asset.rating_count || 0} {t("marketplace.reviews")})
           </button>
           <span className="text-[9px] text-muted-foreground ml-auto">
-            {asset.sales_count || 0} sales
+            {asset.sales_count || 0} {t("marketplace.sales")}
           </span>
         </div>
 
@@ -390,20 +383,20 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
               </span>
             )}
             {(!asset.price_neurons || asset.price_neurons === 0) && (!asset.price_usd || Number(asset.price_usd) === 0) && (
-              <span className="text-xs font-semibold text-primary">FREE</span>
+              <span className="text-xs font-semibold text-primary">{t("marketplace.free")}</span>
             )}
           </div>
 
           <div className="flex gap-1.5">
             {currentUserId && !isOwn && (
               <Button variant="ghost" size="sm" className="h-7 text-[10px] gap-1" onClick={() => setShowReview(true)}>
-                <Star className="h-3 w-3" /> Review
+                <Star className="h-3 w-3" /> {t("marketplace.review_label")}
               </Button>
             )}
             {!isOwn && (
               purchased ? (
                 <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-emerald-600" disabled>
-                  <CheckCircle2 className="h-3 w-3" /> Owned
+                  <CheckCircle2 className="h-3 w-3" /> {t("marketplace.owned")}
                 </Button>
               ) : (
                 <Button
@@ -417,7 +410,7 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
                   ) : (
                     <ShoppingCart className="h-3 w-3" />
                   )}
-                  {isFree ? "Get Free" : `${price} N`}
+                  {isFree ? t("marketplace.get_free") : `${price} N`}
                 </Button>
               )
             )}
@@ -429,7 +422,7 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
       <Dialog open={showReview} onOpenChange={setShowReview}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-sm">Review: {asset.title}</DialogTitle>
+            <DialogTitle className="text-sm">{t("marketplace.review_label")}: {asset.title}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="flex items-center gap-1 justify-center">
@@ -443,13 +436,13 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
               ))}
             </div>
             <Textarea
-              placeholder="Share your experience..."
+              placeholder={t("marketplace.share_experience")}
               value={reviewText}
               onChange={e => setReviewText(e.target.value)}
               rows={4}
             />
             <Button className="w-full" onClick={handleSubmitReview} disabled={submitting}>
-              {submitting ? "Submitting…" : "Submit Review"}
+              {submitting ? t("marketplace.submitting") : t("marketplace.submit_review")}
             </Button>
           </div>
         </DialogContent>
@@ -461,7 +454,7 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
           <DialogHeader>
             <DialogTitle className="text-sm flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              Reviews for {asset.title}
+              {t("marketplace.reviews_for")} {asset.title}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3 max-h-[60vh] overflow-y-auto">
@@ -470,7 +463,7 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
                 <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               </div>
             ) : reviews.length === 0 ? (
-              <p className="text-xs text-muted-foreground text-center py-8">No reviews yet.</p>
+              <p className="text-xs text-muted-foreground text-center py-8">{t("marketplace.no_reviews")}</p>
             ) : (
               reviews.map(r => (
                 <div key={r.id} className="p-3 bg-muted/30 rounded-lg space-y-1.5">

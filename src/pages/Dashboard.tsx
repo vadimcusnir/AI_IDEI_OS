@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ControlledSection } from "@/components/ControlledSection";
+import { useTranslation } from "react-i18next";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
@@ -30,6 +31,7 @@ interface DashboardData {
 }
 
 export default function Dashboard() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
@@ -80,7 +82,6 @@ export default function Dashboard() {
         }, 0) / completedJobs.length
       : 0;
 
-    // Weekly activity
     const weeklyActivity: { date: string; neurons: number; jobs: number }[] = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now);
@@ -146,25 +147,25 @@ export default function Dashboard() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* KPI Row */}
         <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 mb-6">
-          <motion.div variants={fadeUp}><KPI icon={Brain} label="Neurons" value={data.neurons.total} sub={`+${data.neurons.thisWeek} this week`} /></motion.div>
-          <motion.div variants={fadeUp}><KPI icon={Zap} label="Jobs Run" value={data.jobs.total} sub={`${data.jobs.completed} completed`} /></motion.div>
-          <motion.div variants={fadeUp}><KPI icon={Coins} label="Balance" value={data.credits.balance} sub="NEURONS" color="text-status-validated" /></motion.div>
-          <motion.div variants={fadeUp}><KPI icon={TrendingUp} label="Spent" value={data.credits.spent} sub={`of ${data.credits.earned} earned`} color="text-destructive" /></motion.div>
-          <motion.div variants={fadeUp}><KPI icon={Layers} label="Artifacts" value={data.artifacts.total} sub={`+${data.artifacts.thisWeek} this week`} /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Brain} label={t("dashboard.neurons")} value={data.neurons.total} sub={t("dashboard.this_week", { count: data.neurons.thisWeek })} /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Zap} label={t("dashboard.jobs_run")} value={data.jobs.total} sub={t("dashboard.jobs_completed", { count: data.jobs.completed })} /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Coins} label={t("dashboard.balance")} value={data.credits.balance} sub="NEURONS" color="text-status-validated" /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={TrendingUp} label={t("dashboard.spent")} value={data.credits.spent} sub={t("dashboard.of_earned", { earned: data.credits.earned })} color="text-destructive" /></motion.div>
+          <motion.div variants={fadeUp}><KPI icon={Layers} label={t("dashboard.artifacts")} value={data.artifacts.total} sub={t("dashboard.this_week", { count: data.artifacts.thisWeek })} /></motion.div>
         </motion.div>
 
         {/* Pipeline Progress */}
         <ControlledSection elementId="dashboard.pipeline">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }} className="bg-card border border-border rounded-xl p-4 mb-6">
           <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-            <Activity className="h-3 w-3" /> Pipeline Progress
+            <Activity className="h-3 w-3" /> {t("dashboard.pipeline_progress")}
           </h3>
           <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto">
             {[
-              { label: "Upload", value: data.pipeline.uploaded, icon: FileAudio },
-              { label: "Transcribe", value: data.pipeline.transcribed, icon: Layers },
-              { label: "Extract", value: data.pipeline.analyzed, icon: Brain },
-              { label: "Deliver", value: data.pipeline.serviced, icon: Sparkles },
+              { label: t("dashboard.upload"), value: data.pipeline.uploaded, icon: FileAudio },
+              { label: t("dashboard.transcribe"), value: data.pipeline.transcribed, icon: Layers },
+              { label: t("dashboard.extract"), value: data.pipeline.analyzed, icon: Brain },
+              { label: t("dashboard.deliver"), value: data.pipeline.serviced, icon: Sparkles },
             ].map((step, i, arr) => (
               <div key={step.label} className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
                 <div className="flex-1 text-center">
@@ -187,7 +188,7 @@ export default function Dashboard() {
           {/* Activity */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-4">
             <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-              <Activity className="h-3 w-3" /> 7-Day Activity
+              <Activity className="h-3 w-3" /> {t("dashboard.activity_7d")}
             </h3>
             <div className="flex items-end gap-1 h-24">
               {data.weeklyActivity.map((day, i) => {
@@ -212,17 +213,17 @@ export default function Dashboard() {
               })}
             </div>
             <div className="flex items-center gap-4 mt-2">
-              <span className="flex items-center gap-1 text-[9px] text-muted-foreground"><span className="w-2 h-2 rounded bg-primary inline-block" /> Neurons</span>
+              <span className="flex items-center gap-1 text-[9px] text-muted-foreground"><span className="w-2 h-2 rounded bg-primary inline-block" /> {t("dashboard.neurons")}</span>
               <span className="flex items-center gap-1 text-[9px] text-muted-foreground"><span className="w-2 h-2 rounded bg-primary/30 inline-block" /> Jobs</span>
             </div>
           </div>
 
           {/* Credit Gauge */}
           <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between">
-            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Credit Economy</h3>
+            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("dashboard.credit_economy")}</h3>
             <div className="text-center py-2">
               <span className="text-2xl sm:text-3xl font-bold font-mono">{data.credits.balance}</span>
-              <p className="text-[10px] text-muted-foreground mt-0.5">NEURONS available</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{t("dashboard.neurons_available")}</p>
             </div>
             <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
               <div
@@ -231,7 +232,7 @@ export default function Dashboard() {
               />
             </div>
             <Button variant="outline" size="sm" className="text-xs mt-2 w-full" onClick={() => navigate("/credits")}>
-              View Ledger
+              {t("dashboard.view_ledger")}
             </Button>
           </div>
         </motion.div>
@@ -242,7 +243,7 @@ export default function Dashboard() {
           {Object.keys(data.categories).length > 0 && (
             <div className="bg-card border border-border rounded-xl p-4">
               <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                <Layers className="h-3 w-3" /> Categories
+                <Layers className="h-3 w-3" /> {t("dashboard.categories")}
               </h3>
               <div className="space-y-1.5">
                 {Object.entries(data.categories)
@@ -260,14 +261,14 @@ export default function Dashboard() {
 
           <div className="bg-card border border-border rounded-xl p-4">
             <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-              <BarChart3 className="h-3 w-3" /> System Status
+              <BarChart3 className="h-3 w-3" /> {t("dashboard.system_status")}
             </h3>
             <div className="space-y-2">
-              <StatusRow label="Neurons" value={data.neurons.total} detail={`${data.neurons.draft} draft · ${data.neurons.published} published`} />
-              <StatusRow label="Episodes" value={data.episodes.total} detail={`${data.episodes.analyzed} analyzed`} />
-              <StatusRow label="Jobs" value={data.jobs.total} detail={`${data.jobs.failed} failed`} />
+              <StatusRow label={t("dashboard.neurons")} value={data.neurons.total} detail={`${data.neurons.draft} ${t("dashboard.draft")} · ${data.neurons.published} ${t("dashboard.published")}`} />
+              <StatusRow label="Episodes" value={data.episodes.total} detail={`${data.episodes.analyzed} ${t("dashboard.analyzed")}`} />
+              <StatusRow label="Jobs" value={data.jobs.total} detail={`${data.jobs.failed} ${t("dashboard.failed")}`} />
               {data.jobs.avgDuration > 0 && (
-                <StatusRow label="Avg Duration" value={data.jobs.avgDuration} detail="seconds" />
+                <StatusRow label={t("dashboard.avg_duration")} value={data.jobs.avgDuration} detail={t("dashboard.seconds")} />
               )}
             </div>
           </div>
@@ -278,9 +279,9 @@ export default function Dashboard() {
           <div className="bg-card border border-border rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                <Clock className="h-3 w-3" /> Recent Jobs
+                <Clock className="h-3 w-3" /> {t("dashboard.recent_jobs")}
               </h3>
-              <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/jobs")}>View All</Button>
+              <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/jobs")}>{t("dashboard.view_all")}</Button>
             </div>
             <div className="space-y-1">
               {data.recentJobs.map(job => (
@@ -302,10 +303,10 @@ export default function Dashboard() {
         <ControlledSection elementId="dashboard.quick_actions">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45, duration: 0.4 }} className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
           {[
-            { label: "New Neuron", icon: Brain, path: "/n/new" },
-            { label: "Extractor", icon: FileAudio, path: "/extractor" },
-            { label: "Services", icon: Sparkles, path: "/services" },
-            { label: "Intelligence", icon: BarChart3, path: "/intelligence" },
+            { label: t("dashboard.quick_new_neuron"), icon: Brain, path: "/n/new" },
+            { label: t("dashboard.quick_extractor"), icon: FileAudio, path: "/extractor" },
+            { label: t("dashboard.quick_services"), icon: Sparkles, path: "/services" },
+            { label: t("dashboard.quick_intelligence"), icon: BarChart3, path: "/intelligence" },
           ].map(action => (
             <motion.button
               key={action.label}
