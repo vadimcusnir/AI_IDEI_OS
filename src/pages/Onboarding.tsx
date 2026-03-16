@@ -83,6 +83,7 @@ export default function Onboarding() {
   const [status, setStatus] = useState<StepStatus>({ episodes: 0, neurons: 0, jobs: 0, artifacts: 0 });
   const [loading, setLoading] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
+  const prevAllDoneRef = useRef(false);
 
   useEffect(() => {
     if (authLoading || wsLoading) return;
