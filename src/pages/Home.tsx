@@ -325,7 +325,17 @@ export default function Home() {
                 </Button>
               </div>
               {jobs.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-6 text-center">No jobs run yet.</p>
+                <div className="flex flex-col items-center py-8 text-center">
+                  <div className="h-12 w-12 rounded-2xl bg-muted flex items-center justify-center mb-3">
+                    <Sparkles className="h-6 w-6 text-muted-foreground/40" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">No jobs run yet</p>
+                  <p className="text-xs text-muted-foreground/60 mb-3">Run an AI service to generate deliverables</p>
+                  <Button variant="outline" size="sm" className="gap-1.5 text-xs h-8" onClick={() => navigate("/services")}>
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Browse Services
+                  </Button>
+                </div>
               ) : (
                 <div className="space-y-0.5">
                   {jobs.map(job => (
