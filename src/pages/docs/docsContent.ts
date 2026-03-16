@@ -796,7 +796,7 @@ A single execution of a service. Jobs track status (queued, processing, complete
 A content unit within a neuron. Types include text, insight, formula, prompt, code, and more.
 
 ## NEURONS (credits)
-The compute currency. Powers all AI operations. 1000 credits = $10 USD.
+The compute currency. Powers all AI operations. 1000 credits = $11 USD.
 
 ## Extraction
 The process of analyzing content to identify and structure knowledge units (neurons).
