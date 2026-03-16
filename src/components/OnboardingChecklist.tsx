@@ -59,6 +59,7 @@ export function OnboardingChecklist() {
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const prevCompletedRef = useRef<number>(0);
 
   useEffect(() => {
     if (!user || !currentWorkspace) { setLoading(false); return; }
