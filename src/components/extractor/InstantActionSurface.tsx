@@ -59,12 +59,14 @@ interface InstantActionSurfaceProps {
 export function InstantActionSurface({ onComplete, compact = false }: InstantActionSurfaceProps) {
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
+  const { balance, loading: balanceLoading } = useCreditBalance();
   const [input, setInput] = useState("");
   const [stage, setStage] = useState<PipelineStage>("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [extractionDepth, setExtractionDepth] = useState<"quick" | "deep">("deep");
+  const [insufficientCredits, setInsufficientCredits] = useState<{ needed: number } | null>(null);
   const [result, setResult] = useState<{
     neurons: number;
     episode_id: string;
@@ -75,6 +77,9 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     meta?: { major_insights?: string[]; emerging_themes?: string[]; unexpected_ideas?: string[] };
   } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const estimatedCost = extractionDepth === "deep" ? 500 : 100;
+  const hasEnoughCredits = balance >= estimatedCost;
 
   const isRunning = !["idle", "complete", "error"].includes(stage);
 
