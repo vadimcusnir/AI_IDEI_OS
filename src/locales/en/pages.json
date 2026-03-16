@@ -435,12 +435,6 @@
     "status_ready": "Ready",
     "status_coming": "In Development"
   },
-  "prompt_forge": {
-    "product_recommendation": "Product Recommendation",
-    "content_structuring": "Content Structuring",
-    "sales_copy": "Sales Copy",
-    "copied": "Copied to clipboard!"
-  },
   "extractor": {
     "title": "Extractor",
     "subtitle": "Paste a link, drop a file — the system handles everything.",
@@ -529,5 +523,70 @@
     "invite_error": "User not found or invitation error",
     "delete_error": "Cannot delete the main workspace",
     "no_workspace": "No workspace selected."
+  },
+  "gamification": {
+    "title": "Gamification",
+    "subtitle": "XP, levels, streaks, achievements, and daily challenges",
+    "achievement_gallery": "Achievement Gallery",
+    "leaderboard": "Leaderboard"
+  },
+  "vip": {
+    "title": "CusnirOS VIP",
+    "subtitle": "The 11-month program — progressive access to the ecosystem",
+    "month_progress": "Month {{current}}/11",
+    "war_rooms": "War Rooms",
+    "month_required": "Month {{month}}+",
+    "access_active": "Active access"
+  },
+  "changelog": {
+    "title": "Changelog",
+    "subtitle": "What changed for you — new features, improvements, and fixes.",
+    "updates_count": "{{count}} update(s) published",
+    "search_placeholder": "Search changelog...",
+    "filter_all": "All",
+    "cat_new_feature": "New Feature",
+    "cat_improvement": "Improvement",
+    "cat_bug_fix": "Bug Fix",
+    "cat_ui_ux": "UI/UX Update",
+    "cat_performance": "Performance",
+    "cat_integration": "Integration",
+    "cat_documentation": "Documentation",
+    "no_filter_results": "No results for the selected filters.",
+    "no_entries": "No updates published yet.",
+    "changes_count": "{{count}} change(s)",
+    "example_label": "Example",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "not_found": {
+    "title": "404",
+    "message": "Oops! Page not found",
+    "back_home": "Return to Home"
+  },
+  "prompt_forge": {
+    "title": "Prompt Forge ⚒️",
+    "subtitle": "Generate specialized prompts for personal sites: experience extraction, descriptions, products, structured content.",
+    "goal_label": "Prompt objective",
+    "goal_experience": "Experience Extraction",
+    "goal_profile": "Profile Description",
+    "product_recommendation": "Product Recommendation",
+    "content_structuring": "Content Structuring",
+    "sales_copy": "Sales Copy",
+    "email_sequence": "Email Sequence",
+    "context_label": "Context (industry, niche, target audience)",
+    "context_placeholder": "E.g.: I'm a digital marketing consultant for B2B SaaS startups. My audience is technical founders who need go-to-market strategy...",
+    "details_label": "Additional details (optional)",
+    "details_placeholder": "E.g.: I want a friendly but professional tone. Focus on measurable results...",
+    "generating": "Generating...",
+    "generate_button": "Generate Prompt (~{{cost}} N)",
+    "balance_label": "Balance: {{balance}} NEURONS",
+    "result_label": "Result",
+    "copy": "Copy",
+    "empty_hint": "Select an objective and fill in the context to generate a prompt",
+    "success": "Prompt generated successfully!",
+    "error_auth": "Sign in to generate prompts",
+    "error_fields": "Fill in context and objective",
+    "error_credits": "Insufficient credits. You need ~{{cost}} NEURONS.",
+    "copied": "Copied to clipboard!"
   }
 }

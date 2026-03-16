@@ -435,12 +435,6 @@
     "status_ready": "Готов",
     "status_coming": "В разработке"
   },
-  "prompt_forge": {
-    "product_recommendation": "Рекомендация продуктов",
-    "content_structuring": "Структурирование контента",
-    "sales_copy": "Продающий текст",
-    "copied": "Скопировано в буфер!"
-  },
   "extractor": {
     "title": "Экстрактор",
     "subtitle": "Вставьте ссылку, перетащите файл — система сделает всё сама.",
@@ -529,5 +523,70 @@
     "invite_error": "Пользователь не найден или ошибка приглашения",
     "delete_error": "Нельзя удалить основной workspace",
     "no_workspace": "Workspace не выбран."
+  },
+  "gamification": {
+    "title": "Геймификация",
+    "subtitle": "XP, уровни, серии, достижения и ежедневные задания",
+    "achievement_gallery": "Галерея Достижений",
+    "leaderboard": "Рейтинг"
+  },
+  "vip": {
+    "title": "CusnirOS VIP",
+    "subtitle": "11-месячная программа — прогрессивный доступ к экосистеме",
+    "month_progress": "Месяц {{current}}/11",
+    "war_rooms": "War Rooms",
+    "month_required": "Месяц {{month}}+",
+    "access_active": "Активный доступ"
+  },
+  "changelog": {
+    "title": "Журнал изменений",
+    "subtitle": "Что изменилось — новые функции, улучшения и исправления.",
+    "updates_count": "{{count}} обновлений опубликовано",
+    "search_placeholder": "Поиск в журнале...",
+    "filter_all": "Все",
+    "cat_new_feature": "Новая функция",
+    "cat_improvement": "Улучшение",
+    "cat_bug_fix": "Исправление",
+    "cat_ui_ux": "Обновление UI/UX",
+    "cat_performance": "Производительность",
+    "cat_integration": "Интеграция",
+    "cat_documentation": "Документация",
+    "no_filter_results": "Нет результатов для выбранных фильтров.",
+    "no_entries": "Обновлений пока нет.",
+    "changes_count": "{{count}} изменение(й)",
+    "example_label": "Пример",
+    "previous": "Предыдущие",
+    "next": "Следующие"
+  },
+  "not_found": {
+    "title": "404",
+    "message": "Упс! Страница не найдена",
+    "back_home": "Вернуться на главную"
+  },
+  "prompt_forge": {
+    "title": "Prompt Forge ⚒️",
+    "subtitle": "Генерируйте специализированные промпты для персональных сайтов: извлечение опыта, описания, продукты, структурированный контент.",
+    "goal_label": "Цель промпта",
+    "goal_experience": "Извлечение опыта",
+    "goal_profile": "Описание профиля",
+    "product_recommendation": "Рекомендация продуктов",
+    "content_structuring": "Структурирование контента",
+    "sales_copy": "Продающий текст",
+    "email_sequence": "Email-последовательность",
+    "context_label": "Контекст (отрасль, ниша, целевая аудитория)",
+    "context_placeholder": "Напр.: Я консультант по цифровому маркетингу для B2B SaaS стартапов. Моя аудитория — технические основатели, которым нужна стратегия выхода на рынок...",
+    "details_label": "Дополнительные детали (необязательно)",
+    "details_placeholder": "Напр.: Хочу дружелюбный, но профессиональный тон. Фокус на измеримых результатах...",
+    "generating": "Генерация...",
+    "generate_button": "Сгенерировать промпт (~{{cost}} N)",
+    "balance_label": "Баланс: {{balance}} NEURONS",
+    "result_label": "Результат",
+    "copy": "Копировать",
+    "empty_hint": "Выберите цель и заполните контекст для генерации промпта",
+    "success": "Промпт сгенерирован успешно!",
+    "error_auth": "Войдите для генерации промптов",
+    "error_fields": "Заполните контекст и цель",
+    "error_credits": "Недостаточно кредитов. Нужно ~{{cost}} NEURONS.",
+    "copied": "Скопировано в буфер!"
   }
 }
