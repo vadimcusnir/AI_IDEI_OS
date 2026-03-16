@@ -101,27 +101,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     return null;
   };
 
-  /** Fetch subtitles via edge function */
-  const fetchSubtitles = async (url: string, episodeId: string, token: string) => {
-    try {
-      const resp = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-subtitles`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ url, episode_id: episodeId }),
-        }
-      );
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.subtitle_text) return data;
-      }
-    } catch {}
-    return null;
-  };
 
   const parseSrtToText = (srt: string): string => {
     return srt
