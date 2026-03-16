@@ -10,43 +10,14 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 type AuthMode = "login" | "signup" | "forgot";
 
-/* ─── Password strength logic ─── */
-interface PasswordCheck {
-  label: string;
-  test: (pw: string) => boolean;
-}
-
-const PASSWORD_CHECKS: PasswordCheck[] = [
-  { label: "At least 8 characters", test: (pw) => pw.length >= 8 },
-  { label: "One uppercase letter", test: (pw) => /[A-Z]/.test(pw) },
-  { label: "One number", test: (pw) => /\d/.test(pw) },
-  { label: "One special character", test: (pw) => /[^A-Za-z0-9]/.test(pw) },
-];
-
-function getStrength(pw: string): { score: number; label: string; color: string } {
-  const passed = PASSWORD_CHECKS.filter((c) => c.test(pw)).length;
-  if (passed <= 1) return { score: 1, label: "Weak", color: "bg-destructive" };
-  if (passed === 2) return { score: 2, label: "Fair", color: "bg-amber-500" };
-  if (passed === 3) return { score: 3, label: "Good", color: "bg-primary" };
-  return { score: 4, label: "Strong", color: "bg-emerald-500" };
-}
-
-/* ─── Friendly error messages ─── */
-function friendlyError(msg: string): string {
-  const lower = msg.toLowerCase();
-  if (lower.includes("invalid login credentials")) return "Incorrect email or password. Please try again.";
-  if (lower.includes("email not confirmed")) return "Please check your inbox and confirm your email first.";
-  if (lower.includes("user already registered")) return "An account with this email already exists. Try signing in.";
-  if (lower.includes("password") && lower.includes("leak")) return "This password has been found in a data breach. Please choose a different one.";
-  if (lower.includes("rate limit") || lower.includes("too many")) return "Too many attempts. Please wait a moment and try again.";
-  if (lower.includes("weak password")) return "Password is too weak. Please include uppercase, numbers, and special characters.";
-  return msg;
-}
+/* ─── Password strength & error helpers use t() now ─── */
 
 export default function Auth() {
+  const { t } = useTranslation("pages");
   const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,6 +25,32 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+
+  const PASSWORD_CHECKS = useMemo(() => [
+    { label: t("auth.pw_8_chars"), test: (pw: string) => pw.length >= 8 },
+    { label: t("auth.pw_uppercase"), test: (pw: string) => /[A-Z]/.test(pw) },
+    { label: t("auth.pw_number"), test: (pw: string) => /\d/.test(pw) },
+    { label: t("auth.pw_special"), test: (pw: string) => /[^A-Za-z0-9]/.test(pw) },
+  ], [t]);
+
+  function getStrength(pw: string): { score: number; label: string; color: string } {
+    const passed = PASSWORD_CHECKS.filter((c) => c.test(pw)).length;
+    if (passed <= 1) return { score: 1, label: t("auth.pw_weak"), color: "bg-destructive" };
+    if (passed === 2) return { score: 2, label: t("auth.pw_fair"), color: "bg-amber-500" };
+    if (passed === 3) return { score: 3, label: t("auth.pw_good"), color: "bg-primary" };
+    return { score: 4, label: t("auth.pw_strong"), color: "bg-emerald-500" };
+  }
+
+  function friendlyError(msg: string): string {
+    const lower = msg.toLowerCase();
+    if (lower.includes("invalid login credentials")) return t("auth.error_invalid_login");
+    if (lower.includes("email not confirmed")) return t("auth.error_email_not_confirmed");
+    if (lower.includes("user already registered")) return t("auth.error_user_exists");
+    if (lower.includes("password") && lower.includes("leak")) return t("auth.error_password_leak");
+    if (lower.includes("rate limit") || lower.includes("too many")) return t("auth.error_rate_limit");
+    if (lower.includes("weak password")) return t("auth.error_weak_password");
+    return msg;
+  }
 
   const strength = useMemo(() => getStrength(password), [password]);
   const checks = useMemo(() => PASSWORD_CHECKS.map((c) => ({ ...c, passed: c.test(password) })), [password]);
@@ -65,16 +62,16 @@ export default function Auth() {
 
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      toast.error("Please enter a valid email address.");
+      toast.error(t("auth.invalid_email"));
       return;
     }
     if (mode !== "forgot") {
       if (password.length < 6) {
-        toast.error("Password must be at least 6 characters.");
+        toast.error(t("auth.password_min"));
         return;
       }
       if (mode === "signup" && strength.score < 2) {
-        toast.error("Please choose a stronger password.");
+        toast.error(t("auth.password_stronger"));
         return;
       }
     }
@@ -86,7 +83,7 @@ export default function Auth() {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       if (error) toast.error(friendlyError(error.message));
-      else toast.success("Reset link has been sent to your email.");
+      else toast.success(t("auth.reset_sent"));
       setLoading(false);
       return;
     }
@@ -94,7 +91,7 @@ export default function Auth() {
     if (mode === "signup") {
       const { error } = await signUp(trimmedEmail, password);
       if (error) toast.error(friendlyError(error.message));
-      else toast.success("Check your email to confirm your account.");
+      else toast.success(t("auth.confirm_email"));
     } else {
       const { error } = await signIn(trimmedEmail, password);
       if (error) toast.error(friendlyError(error.message));
@@ -107,9 +104,9 @@ export default function Auth() {
   };
 
   const titles: Record<AuthMode, { heading: string; sub: string }> = {
-    login: { heading: "Welcome Back", sub: "Sign in to Knowledge OS" },
-    signup: { heading: "Create Account", sub: "Start capitalizing your expertise" },
-    forgot: { heading: "Reset Password", sub: "We'll send a reset link to your email" },
+    login: { heading: t("auth.login_heading"), sub: t("auth.login_sub") },
+    signup: { heading: t("auth.signup_heading"), sub: t("auth.signup_sub") },
+    forgot: { heading: t("auth.forgot_heading"), sub: t("auth.forgot_sub") },
   };
 
   return (
@@ -149,7 +146,7 @@ export default function Auth() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Email</label>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("auth.email_label")}</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@example.com"
@@ -159,7 +156,7 @@ export default function Auth() {
 
             {mode !== "forgot" && (
               <div>
-                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Password</label>
+                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("auth.password_label")}</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
                   <input
@@ -230,9 +227,9 @@ export default function Auth() {
             <Button type="submit" disabled={loading} className="btn-glow w-full h-11 gap-2 rounded-xl text-sm font-medium">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
                 <>
-                  {mode === "login" && "Sign In"}
-                  {mode === "signup" && "Create Account"}
-                  {mode === "forgot" && "Send Link"}
+                  {mode === "login" && t("auth.sign_in")}
+                  {mode === "signup" && t("auth.create_account")}
+                  {mode === "forgot" && t("auth.send_link")}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
@@ -244,7 +241,7 @@ export default function Auth() {
               <div className="relative my-5">
                 <div className="absolute inset-0 flex items-center"><div className="w-full section-divider" /></div>
                 <div className="relative flex justify-center">
-                  <span className="bg-card/80 px-3 text-[10px] text-muted-foreground uppercase tracking-wider">or</span>
+                  <span className="bg-card/80 px-3 text-[10px] text-muted-foreground uppercase tracking-wider">{t("auth.or")}</span>
                 </div>
               </div>
               <button type="button" onClick={async () => {
@@ -257,7 +254,7 @@ export default function Auth() {
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
-                Continue with Google
+                {t("auth.continue_google")}
               </button>
             </>
           )}
@@ -265,17 +262,17 @@ export default function Auth() {
           <div className="mt-5 space-y-2 text-center">
             {mode === "login" && (
               <>
-                <button onClick={() => setMode("forgot")} className="text-xs text-muted-foreground hover:text-primary transition-colors block mx-auto">Forgot password?</button>
-                <button onClick={() => setMode("signup")} className="text-xs text-muted-foreground hover:text-primary transition-colors block mx-auto">Don't have an account? <span className="text-primary font-medium">Create one</span></button>
+                <button onClick={() => setMode("forgot")} className="text-xs text-muted-foreground hover:text-primary transition-colors block mx-auto">{t("auth.forgot_password")}</button>
+                <button onClick={() => setMode("signup")} className="text-xs text-muted-foreground hover:text-primary transition-colors block mx-auto">{t("auth.no_account")} <span className="text-primary font-medium">{t("auth.create_one")}</span></button>
               </>
             )}
-            {mode === "signup" && <button onClick={() => setMode("login")} className="text-xs text-muted-foreground hover:text-primary transition-colors">Already have an account? <span className="text-primary font-medium">Sign in</span></button>}
-            {mode === "forgot" && <button onClick={() => setMode("login")} className="text-xs text-muted-foreground hover:text-primary transition-colors">← Back to sign in</button>}
+            {mode === "signup" && <button onClick={() => setMode("login")} className="text-xs text-muted-foreground hover:text-primary transition-colors">{t("auth.have_account")} <span className="text-primary font-medium">{t("auth.sign_in_link")}</span></button>}
+            {mode === "forgot" && <button onClick={() => setMode("login")} className="text-xs text-muted-foreground hover:text-primary transition-colors">{t("auth.back_to_sign_in")}</button>}
           </div>
         </div>
 
         <p className="text-center text-[10px] text-muted-foreground/50 mt-4">
-          Knowledge OS · Secure · GDPR Compliant
+          {t("auth.footer")}
         </p>
       </motion.div>
     </div>

@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Building2, Users, Crown, Shield, Pencil, Eye, Trash2, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { SEOHead } from "@/components/SEOHead";
+import { useTranslation } from "react-i18next";
 
 const ROLE_ICONS: Record<string, typeof Crown> = {
   owner: Crown,
@@ -27,6 +28,7 @@ const ROLE_COLORS: Record<string, string> = {
 };
 
 export default function WorkspaceSettings() {
+  const { t } = useTranslation("pages");
   const { currentWorkspace, members, updateWorkspace, inviteMember, removeMember, updateMemberRole, currentRole, deleteWorkspace } = useWorkspace();
   const { user } = useAuth();
   const [name, setName] = useState(currentWorkspace?.name || "");
@@ -43,8 +45,8 @@ export default function WorkspaceSettings() {
     setSaving(true);
     const ok = await updateWorkspace(currentWorkspace.id, { name, description });
     setSaving(false);
-    if (ok) toast.success("Workspace actualizat");
-    else toast.error("Eroare la salvare");
+    if (ok) toast.success(t("workspace.workspace_updated"));
+    else toast.error(t("workspace.save_error"));
   };
 
   const handleInvite = async () => {
@@ -53,15 +55,15 @@ export default function WorkspaceSettings() {
     const ok = await inviteMember(inviteEmail.trim(), inviteRole);
     setInviting(false);
     if (ok) {
-      toast.success(`${inviteEmail} a fost invitat`);
+      toast.success(t("workspace.invite_success", { email: inviteEmail }));
       setInviteEmail("");
     } else {
-      toast.error("Utilizatorul nu a fost găsit sau eroare la invitare");
+      toast.error(t("workspace.invite_error"));
     }
   };
 
   if (!currentWorkspace) {
-    return <div className="p-8 text-center text-muted-foreground">Niciun workspace selectat.</div>;
+    return <div className="p-8 text-center text-muted-foreground">{t("workspace.no_workspace")}</div>;
   }
 
   return (
@@ -70,27 +72,27 @@ export default function WorkspaceSettings() {
       <div className="max-w-3xl mx-auto p-6 space-y-6">
         <div className="flex items-center gap-3">
           <Building2 className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold">Setări Workspace</h1>
+          <h1 className="text-2xl font-bold">{t("workspace.title")}</h1>
         </div>
 
         {/* General Settings */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">General</CardTitle>
-            <CardDescription>Numele și descrierea workspace-ului.</CardDescription>
+            <CardTitle className="text-base">{t("workspace.general")}</CardTitle>
+            <CardDescription>{t("workspace.general_desc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-xs font-medium text-muted-foreground">Nume</label>
+              <label className="text-xs font-medium text-muted-foreground">{t("workspace.name_label")}</label>
               <Input value={name} onChange={(e) => setName(e.target.value)} disabled={!isOwnerOrAdmin} />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground">Descriere</label>
+              <label className="text-xs font-medium text-muted-foreground">{t("workspace.description_label")}</label>
               <Textarea value={description} onChange={(e) => setDescription(e.target.value)} disabled={!isOwnerOrAdmin} rows={3} />
             </div>
             {isOwnerOrAdmin && (
               <Button onClick={handleSave} disabled={saving} size="sm">
-                {saving ? "Se salvează…" : "Salvează"}
+                {saving ? t("workspace.saving") : t("workspace.save")}
               </Button>
             )}
           </CardContent>
@@ -101,7 +103,7 @@ export default function WorkspaceSettings() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Membri ({members.length})
+              {t("workspace.members")} ({members.length})
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -113,8 +115,8 @@ export default function WorkspaceSettings() {
                     <RoleIcon className="h-3.5 w-3.5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{m.user_id === user?.id ? "Tu" : m.user_id.slice(0, 8)}</p>
-                    <p className="text-xs text-muted-foreground">Joined {new Date(m.joined_at).toLocaleDateString()}</p>
+                    <p className="text-sm font-medium truncate">{m.user_id === user?.id ? t("workspace.you") : m.user_id.slice(0, 8)}</p>
+                    <p className="text-xs text-muted-foreground">{t("workspace.joined")} {new Date(m.joined_at).toLocaleDateString()}</p>
                   </div>
                   {isOwnerOrAdmin && m.role !== "owner" ? (
                     <Select value={m.role} onValueChange={(r) => updateMemberRole(m.id, r)}>
@@ -144,7 +146,7 @@ export default function WorkspaceSettings() {
                 <Separator />
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Email utilizator"
+                    placeholder={t("workspace.invite_placeholder")}
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     className="flex-1"
@@ -161,7 +163,7 @@ export default function WorkspaceSettings() {
                   </Select>
                   <Button onClick={handleInvite} disabled={inviting} size="sm">
                     <UserPlus className="h-4 w-4 mr-1" />
-                    {inviting ? "…" : "Invită"}
+                    {inviting ? "…" : t("workspace.invite")}
                   </Button>
                 </div>
               </>
@@ -173,21 +175,21 @@ export default function WorkspaceSettings() {
         {currentRole === "owner" && (
           <Card className="border-destructive/30">
             <CardHeader>
-              <CardTitle className="text-base text-destructive">Zonă Periculoasă</CardTitle>
+              <CardTitle className="text-base text-destructive">{t("workspace.danger_zone")}</CardTitle>
             </CardHeader>
             <CardContent>
               <Button
                 variant="destructive"
                 size="sm"
                 onClick={async () => {
-                  if (!confirm("Sigur vrei să ștergi acest workspace? Acțiunea este ireversibilă.")) return;
+                  if (!confirm(t("workspace.delete_confirm"))) return;
                   const ok = await deleteWorkspace(currentWorkspace.id);
-                  if (ok) toast.success("Workspace șters");
-                  else toast.error("Nu poți șterge workspace-ul principal");
+                  if (ok) toast.success(t("workspace.workspace_deleted"));
+                  else toast.error(t("workspace.delete_error"));
                 }}
               >
                 <Trash2 className="h-4 w-4 mr-1" />
-                Șterge Workspace
+                {t("workspace.delete_workspace")}
               </Button>
             </CardContent>
           </Card>
