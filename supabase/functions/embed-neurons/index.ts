@@ -1,6 +1,8 @@
 /**
  * embed-neurons — Generates vector embeddings for neurons using Lovable AI.
  * Stores in neuron_embeddings table for semantic search.
+ * 
+ * Accepts: { episode_id?: string, neuron_ids?: number[], batch_size?: number }
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
@@ -33,7 +35,6 @@ Deno.serve(async (req) => {
     let userId: string | null = null;
     let isInternal = false;
 
-    // Check internal secret for cron jobs
     const { data: configSecret } = await supabase
       .from("push_config")
       .select("value")
@@ -73,17 +74,28 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const { neuron_ids, batch_size = 10 } = body;
+    const { episode_id, neuron_ids, batch_size = 50 } = body;
 
     // Determine which neurons to embed
     let query = supabase
       .from("neurons")
       .select("id, title")
       .order("created_at", { ascending: false })
-      .limit(Math.min(batch_size, 50));
+      .limit(Math.min(batch_size, 100));
 
-    if (neuron_ids && Array.isArray(neuron_ids)) {
-      query = query.in("id", neuron_ids.slice(0, 50));
+    if (episode_id) {
+      // Embed all neurons from a specific episode
+      query = supabase
+        .from("neurons")
+        .select("id, title")
+        .eq("episode_id", episode_id)
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (userId && !isInternal) {
+        query = query.eq("author_id", userId);
+      }
+    } else if (neuron_ids && Array.isArray(neuron_ids)) {
+      query = query.in("id", neuron_ids.slice(0, 100));
     } else if (userId && !isInternal) {
       query = query.eq("author_id", userId);
     }
@@ -97,44 +109,50 @@ Deno.serve(async (req) => {
 
     // Fetch blocks for each neuron to build content
     const neuronIds = neurons.map(n => n.id);
-    const { data: blocks } = await supabase
-      .from("neuron_blocks")
-      .select("neuron_id, content, type")
-      .in("neuron_id", neuronIds)
-      .order("position", { ascending: true });
+    const CHUNK = 200;
+    const allBlocks: any[] = [];
+    for (let i = 0; i < neuronIds.length; i += CHUNK) {
+      const chunk = neuronIds.slice(i, i + CHUNK);
+      const { data } = await supabase
+        .from("neuron_blocks")
+        .select("neuron_id, content, type")
+        .in("neuron_id", chunk)
+        .order("position", { ascending: true });
+      if (data) allBlocks.push(...data);
+    }
 
     const contentMap = new Map<number, string>();
-    for (const block of blocks || []) {
+    for (const block of allBlocks) {
       const existing = contentMap.get(block.neuron_id) || "";
       contentMap.set(block.neuron_id, existing + "\n" + block.content);
     }
 
     // Generate embeddings via Lovable AI
     let embeddedCount = 0;
+    let skippedCount = 0;
     const errors: string[] = [];
 
-    for (const neuron of neurons) {
-      const content = `${neuron.title}\n${contentMap.get(neuron.id) || ""}`.trim();
-      if (!content || content.length < 10) continue;
+    // Process in batches of 5 for parallel execution
+    const EMBED_BATCH = 5;
+    for (let batchStart = 0; batchStart < neurons.length; batchStart += EMBED_BATCH) {
+      const batch = neurons.slice(batchStart, batchStart + EMBED_BATCH);
+      
+      const batchResults = await Promise.allSettled(batch.map(async (neuron) => {
+        const content = `${neuron.title}\n${contentMap.get(neuron.id) || ""}`.trim();
+        if (!content || content.length < 10) return "skip";
 
-      // Use text content to create a hash for change detection
-      const contentHash = btoa(content.slice(0, 200)).slice(0, 32);
+        const contentHash = btoa(content.slice(0, 200)).slice(0, 32);
 
-      // Check if embedding already exists with same content
-      const { data: existing } = await supabase
-        .from("neuron_embeddings")
-        .select("content_hash")
-        .eq("neuron_id", neuron.id)
-        .eq("model", "text-embedding-004")
-        .single();
+        // Check if embedding already exists with same content
+        const { data: existing } = await supabase
+          .from("neuron_embeddings")
+          .select("content_hash")
+          .eq("neuron_id", neuron.id)
+          .eq("model", "text-embedding-004")
+          .single();
 
-      if (existing?.content_hash === contentHash) {
-        continue; // Skip — content unchanged
-      }
+        if (existing?.content_hash === contentHash) return "skip";
 
-      try {
-        // Use Lovable AI to generate embedding via chat completion
-        // We'll extract a dense semantic summary and use it as a proxy embedding
         const embResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -148,43 +166,26 @@ Deno.serve(async (req) => {
                 role: "system",
                 content: `You are a semantic embedding generator. Given content, output EXACTLY 768 comma-separated floating point numbers between -1 and 1 that represent the semantic meaning of the content. Output ONLY the numbers, no other text. The numbers should capture: topic, sentiment, complexity, domain, abstraction level, and key concepts.`,
               },
-              {
-                role: "user",
-                content: content.slice(0, 4000),
-              },
+              { role: "user", content: content.slice(0, 4000) },
             ],
             temperature: 0,
             max_tokens: 8000,
           }),
         });
 
-        if (!embResponse.ok) {
-          errors.push(`Neuron ${neuron.id}: AI error ${embResponse.status}`);
-          continue;
-        }
+        if (!embResponse.ok) throw new Error(`AI error ${embResponse.status}`);
 
         const embData = await embResponse.json();
         const embText = embData.choices?.[0]?.message?.content?.trim();
+        if (!embText) throw new Error("empty response");
 
-        if (!embText) {
-          errors.push(`Neuron ${neuron.id}: empty response`);
-          continue;
-        }
-
-        // Parse the embedding vector
         const numbers = embText.split(",").map((n: string) => parseFloat(n.trim())).filter((n: number) => !isNaN(n));
+        while (numbers.length < 768) numbers.push(0);
+        if (numbers.length > 768) numbers.length = 768;
 
-        if (numbers.length !== 768) {
-          // Pad or truncate to 768
-          while (numbers.length < 768) numbers.push(0);
-          if (numbers.length > 768) numbers.length = 768;
-        }
-
-        // Normalize to unit vector
         const magnitude = Math.sqrt(numbers.reduce((s: number, n: number) => s + n * n, 0));
         const normalized = magnitude > 0 ? numbers.map((n: number) => n / magnitude) : numbers;
 
-        // Upsert embedding
         const vectorStr = `[${normalized.join(",")}]`;
         await supabase.from("neuron_embeddings").upsert({
           neuron_id: neuron.id,
@@ -193,16 +194,24 @@ Deno.serve(async (req) => {
           model: "text-embedding-004",
         }, { onConflict: "neuron_id,model" });
 
-        embeddedCount++;
-      } catch (e) {
-        errors.push(`Neuron ${neuron.id}: ${e instanceof Error ? e.message : "unknown"}`);
+        return "embedded";
+      }));
+
+      for (let i = 0; i < batchResults.length; i++) {
+        const r = batchResults[i];
+        if (r.status === "fulfilled") {
+          if (r.value === "embedded") embeddedCount++;
+          else if (r.value === "skip") skippedCount++;
+        } else {
+          errors.push(`Neuron ${batch[i].id}: ${r.reason}`);
+        }
       }
     }
 
     return new Response(JSON.stringify({
       embedded: embeddedCount,
       total: neurons.length,
-      skipped: neurons.length - embeddedCount - errors.length,
+      skipped: skippedCount,
       errors: errors.length > 0 ? errors : undefined,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

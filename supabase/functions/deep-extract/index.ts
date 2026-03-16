@@ -193,37 +193,36 @@ Extract 2-4 syntheses. Return ONLY a valid JSON array.`,
   },
 ];
 
-// ── Chunking ──
-function estimateTokens(text: string): number {
-  return Math.ceil(text.length / 4);
+// ── Character-based chunking (aligned with extract-neurons) ──
+const CHUNK_MIN = 1200;
+const CHUNK_MAX = 1800;
+const CHUNK_OVERLAP = 175;
+
+function splitSentences(text: string): string[] {
+  return text.split(/(?<=[.!?…])\s+/).map(s => s.trim()).filter(s => s.length > 0);
 }
 
-function greedyChunk(text: string, minTokens = 300, maxTokens = 800): string[] {
-  const paragraphs = text.split(/\n{2,}/).map(p => p.trim()).filter(p => p.length > 0);
+function chunkWithOverlap(text: string): string[] {
+  const sentences = splitSentences(text);
   const chunks: string[] = [];
   let buffer = "";
-  let bufferTokens = 0;
 
-  for (const para of paragraphs) {
-    const sentences = para.split(/(?<=[.!?…])\s+/).map(s => s.trim()).filter(s => s.length > 0);
-    for (const sentence of sentences) {
-      const sentTokens = estimateTokens(sentence);
-      if (bufferTokens + sentTokens > maxTokens && bufferTokens >= minTokens) {
-        chunks.push(buffer.trim());
-        buffer = "";
-        bufferTokens = 0;
-      }
-      buffer += (buffer ? " " : "") + sentence;
-      bufferTokens += sentTokens;
-    }
-    if (bufferTokens >= minTokens) {
+  for (const sentence of sentences) {
+    if (buffer.length + sentence.length + 1 > CHUNK_MAX && buffer.length >= CHUNK_MIN) {
       chunks.push(buffer.trim());
-      buffer = "";
-      bufferTokens = 0;
+      const overlapStart = Math.max(0, buffer.length - CHUNK_OVERLAP);
+      buffer = buffer.slice(overlapStart) + " " + sentence;
+    } else if (sentence.length > CHUNK_MAX && buffer.trim()) {
+      if (buffer.length > 0) { chunks.push(buffer.trim()); }
+      chunks.push(sentence);
+      buffer = sentence.slice(Math.max(0, sentence.length - CHUNK_OVERLAP));
+      continue;
+    } else {
+      buffer += (buffer ? " " : "") + sentence;
     }
   }
   if (buffer.trim()) {
-    if (chunks.length > 0 && bufferTokens < minTokens) {
+    if (chunks.length > 0 && buffer.length < CHUNK_MIN) {
       chunks[chunks.length - 1] += " " + buffer.trim();
     } else {
       chunks.push(buffer.trim());
@@ -386,12 +385,19 @@ Deno.serve(async (req) => {
     // Update status
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);
 
-    // Chunk transcript
-    const chunks = greedyChunk(transcript, 300, 800);
-    // Use representative sample (first + middle + last chunks, max 3)
-    const sampleChunks = chunks.length <= 3
-      ? chunks
-      : [chunks[0], chunks[Math.floor(chunks.length / 2)], chunks[chunks.length - 1]];
+    // Chunk transcript using character-based chunking
+    const chunks = chunkWithOverlap(transcript);
+    console.log(`Deep extract: ${chunks.length} chunks (${CHUNK_MIN}-${CHUNK_MAX} chars, ${CHUNK_OVERLAP} overlap)`);
+    
+    // Use representative sample: for long transcripts pick evenly-spaced chunks (max 5)
+    const maxSampleChunks = 5;
+    let sampleChunks: string[];
+    if (chunks.length <= maxSampleChunks) {
+      sampleChunks = chunks;
+    } else {
+      const step = (chunks.length - 1) / (maxSampleChunks - 1);
+      sampleChunks = Array.from({ length: maxSampleChunks }, (_, i) => chunks[Math.round(i * step)]);
+    }
     const sampleText = sampleChunks.join("\n\n---\n\n");
 
     // ── Regime check ──
