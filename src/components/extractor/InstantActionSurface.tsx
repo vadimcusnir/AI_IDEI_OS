@@ -4,6 +4,7 @@ import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { detectSource, detectFileSource, type SourceDetectionResult } from "@/lib/sourceDetection";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -77,25 +78,49 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
   const detectedType = input.trim() ? detectType(input) : null;
 
-  const fetchYouTubeTitle = async (url: string): Promise<string | null> => {
+  // Source detection result for URLs
+  const sourceInfo: SourceDetectionResult | null = 
+    detectedType === "url" ? detectSource(input) : null;
+
+  /** Fetch metadata via edge function */
+  const fetchMetadata = async (url: string, platform: string, token: string) => {
     try {
-      const resp = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
-      if (resp.ok) return (await resp.json()).title || null;
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-metadata`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ url, platform }),
+        }
+      );
+      if (resp.ok) return await resp.json();
     } catch {}
     return null;
   };
 
-  const extractTitleFromUrl = (url: string): string => {
+  /** Fetch subtitles via edge function */
+  const fetchSubtitles = async (url: string, episodeId: string, token: string) => {
     try {
-      const parsed = new URL(url);
-      const pathParts = parsed.pathname.split("/").filter(Boolean);
-      if (pathParts.length > 0) {
-        const last = decodeURIComponent(pathParts[pathParts.length - 1])
-          .replace(/[-_]/g, " ").replace(/\.\w+$/, "").replace(/\b\w/g, c => c.toUpperCase());
-        if (last.length > 2) return last;
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-subtitles`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ url, episode_id: episodeId }),
+        }
+      );
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.subtitle_text) return data;
       }
-      return parsed.hostname.replace("www.", "");
-    } catch { return `Episode ${new Date().toLocaleDateString()}`; }
+    } catch {}
+    return null;
   };
 
   const parseSrtToText = (srt: string): string => {
@@ -122,9 +147,16 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     }
 
     setResult(null);
+    const session = await supabase.auth.getSession();
+    const accessToken = session.data.session?.access_token || "";
+
+    // Detect source type
     const type = selectedFile
       ? (selectedFile.type.startsWith("audio/") ? "audio" : selectedFile.type.startsWith("video/") ? "video" : "text")
       : detectType(input);
+
+    const urlSource = !selectedFile && type === "url" ? detectSource(input) : null;
+    const fileSource = selectedFile ? detectFileSource(selectedFile) : null;
 
     try {
       // === SOURCE ===
@@ -133,6 +165,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       let transcript: string | null = null;
       let filePath: string | null = null;
       let fileSize: number | null = null;
+      let subtitlesUsed = false;
 
       if (selectedFile) {
         const ext = selectedFile.name.split(".").pop()?.toLowerCase() || "";
@@ -164,10 +197,10 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
           filePath = storagePath;
           fileSize = selectedFile.size;
         }
-      } else if (type === "url") {
-        const url = input.trim();
-        const isYT = url.includes("youtube.com") || url.includes("youtu.be");
-        title = isYT ? (await fetchYouTubeTitle(url)) || extractTitleFromUrl(url) : extractTitleFromUrl(url);
+      } else if (urlSource) {
+        // Fetch metadata for URL sources
+        const metadata = await fetchMetadata(urlSource.canonical_url, urlSource.platform, accessToken);
+        title = metadata?.title || new URL(urlSource.canonical_url).hostname;
       } else {
         transcript = input.trim();
         title = input.slice(0, 60).replace(/\n/g, " ").trim() + (input.length > 60 ? "…" : "");
@@ -175,8 +208,8 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
       // Create episode
       const sourceType = selectedFile
-        ? (filePath ? (selectedFile.type.startsWith("video/") ? "video" : "audio") : "text")
-        : type;
+        ? (filePath ? (fileSource?.source_type || "audio") : "text")
+        : (urlSource?.source_type || type);
 
       const { data: ep, error: epError } = await supabase.from("episodes").insert({
         author_id: user.id,
@@ -184,27 +217,44 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         title,
         source_type: sourceType,
         transcript: transcript || null,
-        source_url: type === "url" ? input.trim() : null,
+        source_url: urlSource ? urlSource.canonical_url : (type === "url" ? input.trim() : null),
         file_path: filePath,
         file_size: fileSize,
         status: transcript ? "transcribed" : "uploaded",
+        metadata: urlSource ? { platform: urlSource.platform, detected_source_type: urlSource.source_type } : null,
       } as any).select("*").single();
 
       if (epError || !ep) throw new Error("Failed to create episode");
 
-      trackEvent({ name: "transcript_uploaded", params: { source_type: sourceType, episode_id: ep.id } });
+      trackEvent({
+        name: "transcript_uploaded",
+        params: {
+          source_type: sourceType,
+          episode_id: ep.id,
+        },
+      });
 
       // === TRANSCRIBE ===
+      if (!transcript && urlSource?.platform === "youtube") {
+        // Try subtitles first for YouTube
+        setStage("transcribe");
+        const subs = await fetchSubtitles(urlSource.canonical_url, ep.id, accessToken);
+        if (subs?.subtitle_text) {
+          transcript = subs.subtitle_text;
+          subtitlesUsed = true;
+          toast.info(`📝 Using ${subs.subtitle_language?.toUpperCase()} captions (${subs.segment_count} segments)`);
+        }
+      }
+
       if (!transcript && filePath) {
         setStage("transcribe");
-        const session = await supabase.auth.getSession();
         const resp = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-audio`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${session.data.session?.access_token}`,
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ episode_id: ep.id, file_path: filePath }),
           }
