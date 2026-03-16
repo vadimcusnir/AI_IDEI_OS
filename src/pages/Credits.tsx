@@ -351,8 +351,8 @@ export default function Credits() {
               <Coins className="h-8 w-8 opacity-20 mx-auto mb-3" />
               {transactions.length === 0 ? (
                 <>
-                  <p className="text-sm text-muted-foreground mb-1">No transactions yet</p>
-                  <p className="text-[10px] text-muted-foreground/60">Run a service to see your first transaction.</p>
+                   <p className="text-sm text-muted-foreground mb-1">{t("credits.no_transactions")}</p>
+                  <p className="text-[10px] text-muted-foreground/60">{t("credits.no_transactions_hint")}</p>
                 </>
               ) : (
                 <>
