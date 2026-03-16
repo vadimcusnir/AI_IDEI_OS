@@ -655,6 +655,7 @@ Deno.serve(async (req) => {
       after_dedup: deduplicated.length,
       type_distribution: typeCounts,
       frameworks: frameworks.length,
+      relations_created: relationsCreated,
       meta,
       neurons: createdNeurons,
       credits_spent: EXTRACTION_COST,
