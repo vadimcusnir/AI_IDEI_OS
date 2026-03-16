@@ -51,6 +51,7 @@
     "no_transactions": "No transactions yet",
     "no_transactions_hint": "Run a service to see your first transaction.",
     "no_filter_results": "No results for the selected filter",
+    "filter_all": "All",
     "topup": "Top-ups",
     "spend": "Spend",
     "bonus": "Bonus",
