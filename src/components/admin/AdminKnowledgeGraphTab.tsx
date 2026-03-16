@@ -40,6 +40,7 @@ interface PVSMetrics {
 }
 
 export function AdminKnowledgeGraphTab() {
+  const { t } = useTranslation(["common", "errors"]);
   const [stats, setStats] = useState<KGStats | null>(null);
   const [pvsMetrics, setPvsMetrics] = useState<PVSMetrics[]>([]);
   const [emergingIdeas, setEmergingIdeas] = useState<PVSMetrics[]>([]);
