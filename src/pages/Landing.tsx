@@ -373,7 +373,7 @@ export default function Landing() {
 
       {/* ═══ SOCIAL PROOF ═══ */}
       <section className="bg-card border-y border-border">
-        <div className="max-w-5xl mx-auto px-6 py-14">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {PROVEN_RESULTS.map((p, i) => (
               <motion.div key={p.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="text-center group">
