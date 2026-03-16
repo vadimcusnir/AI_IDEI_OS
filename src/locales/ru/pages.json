@@ -92,7 +92,9 @@
     "account_info": "Информация об Аккаунте",
     "user_id": "ID Пользователя",
     "created": "Создан",
-    "profile_updated": "Профиль успешно обновлён!"
+    "profile_updated": "Профиль успешно обновлён!",
+    "data_privacy": "Данные и Конфиденциальность",
+    "data_privacy_desc": "Экспорт данных или удаление аккаунта (GDPR)"
   },
   "notifications": {
     "title": "Уведомления",
