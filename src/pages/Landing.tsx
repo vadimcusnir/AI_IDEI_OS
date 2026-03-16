@@ -481,13 +481,59 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ═══ ROI CALCULATOR STRIP ═══ */}
+      <section className="border-y border-border bg-card">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 mb-3">
+              <div className="h-1 w-6 rounded-full bg-primary" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">ROI Calculator</span>
+              <div className="h-1 w-6 rounded-full bg-primary" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-2">{t("economics.title")}</h2>
+            <p className="text-muted-foreground text-sm max-w-md mx-auto">Compară costul tradițional vs. AI-IDEI pentru aceleași deliverables</p>
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {/* Traditional */}
+            <div className="p-5 rounded-xl border border-destructive/20 bg-destructive/[0.03]">
+              <p className="text-[10px] uppercase tracking-widest text-destructive/70 font-bold mb-3">Mod tradițional</p>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between"><span className="text-muted-foreground">1 podcast → 1 articol</span><span className="font-mono font-semibold text-destructive">~$200</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Timp freelancer</span><span className="font-mono font-semibold text-destructive">3-5 zile</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">50 deliverables</span><span className="font-mono font-semibold text-destructive">~$10,000</span></div>
+              </div>
+            </div>
+            {/* AI-IDEI */}
+            <div className="p-5 rounded-xl border border-primary/30 bg-primary/[0.03] ring-1 ring-primary/10">
+              <p className="text-[10px] uppercase tracking-widest text-primary font-bold mb-3">Cu AI-IDEI</p>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between"><span className="text-muted-foreground">1 podcast → 50+ outputs</span><span className="font-mono font-semibold text-primary">~$35</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Timp procesare</span><span className="font-mono font-semibold text-primary">3 min</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Cost per deliverable</span><span className="font-mono font-semibold text-primary">$0.007</span></div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2} variants={fadeUp} className="text-center mt-6">
+            <p className="text-xs text-muted-foreground">
+              <span className="text-primary font-bold">285x</span> mai eficient decât abordarea tradițională
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ═══ FINAL CTA ═══ */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.04] via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/[0.06] rounded-full blur-[150px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.06] via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/[0.08] rounded-full blur-[150px]" />
 
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
+            <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5">
+              <Gem className="h-3.5 w-3.5 text-primary" />
+              <span className="text-[11px] font-semibold text-primary">500 NEURONS gratuit • Fără card de credit</span>
+            </div>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
               {t("final_cta.title_line1")}
               <br />
@@ -495,7 +541,7 @@ export default function Landing() {
             </h2>
             <p className="text-muted-foreground mb-8 max-w-lg mx-auto">{t("final_cta.subtitle")}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button size="lg" onClick={ctaAction} className="gap-2 px-10 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
+              <Button size="lg" onClick={ctaAction} className="btn-glow gap-2 px-10 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
                 {ctaLabel}
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -504,7 +550,18 @@ export default function Landing() {
                 {t("final_cta.read_docs")}
               </Button>
             </div>
-            <p className="mt-6 text-[11px] text-muted-foreground">{t("final_cta.footer")}</p>
+            <div className="mt-6 flex items-center justify-center gap-4 flex-wrap">
+              {[
+                { icon: CheckCircle2, text: t("hero.trust_no_card") },
+                { icon: Zap, text: t("hero.trust_credits") },
+                { icon: Lock, text: t("hero.trust_gdpr") },
+              ].map(item => (
+                <span key={item.text} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                  <item.icon className="h-3.5 w-3.5 text-status-validated" />
+                  {item.text}
+                </span>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
