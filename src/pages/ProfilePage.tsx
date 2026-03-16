@@ -399,18 +399,18 @@ export default function ProfilePage() {
             {/* Account info */}
             <StaggerItem>
               <div className="bg-card border border-border rounded-xl p-6">
-                <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Account Info</h2>
+                <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("profile.account_info")}</h2>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">Email</span>
                     <span className="text-xs font-mono">{user?.email}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">User ID</span>
+                    <span className="text-xs text-muted-foreground">{t("profile.user_id")}</span>
                     <span className="text-[10px] font-mono text-muted-foreground/50">{user?.id.slice(0, 8)}...</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Created</span>
+                    <span className="text-xs text-muted-foreground">{t("profile.created")}</span>
                     <span className="text-xs">{user?.created_at ? new Date(user.created_at).toLocaleDateString("en-US") : "—"}</span>
                   </div>
                 </div>
