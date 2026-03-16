@@ -83,7 +83,7 @@ export default function Auth() {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       if (error) toast.error(friendlyError(error.message));
-      else toast.success("Reset link has been sent to your email.");
+      else toast.success(t("auth.reset_sent"));
       setLoading(false);
       return;
     }
