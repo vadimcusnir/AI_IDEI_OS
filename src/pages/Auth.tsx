@@ -254,7 +254,7 @@ export default function Auth() {
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
-                Continue with Google
+                {t("auth.continue_google")}
               </button>
             </>
           )}
@@ -262,17 +262,17 @@ export default function Auth() {
           <div className="mt-5 space-y-2 text-center">
             {mode === "login" && (
               <>
-                <button onClick={() => setMode("forgot")} className="text-xs text-muted-foreground hover:text-primary transition-colors block mx-auto">Forgot password?</button>
-                <button onClick={() => setMode("signup")} className="text-xs text-muted-foreground hover:text-primary transition-colors block mx-auto">Don't have an account? <span className="text-primary font-medium">Create one</span></button>
+                <button onClick={() => setMode("forgot")} className="text-xs text-muted-foreground hover:text-primary transition-colors block mx-auto">{t("auth.forgot_password")}</button>
+                <button onClick={() => setMode("signup")} className="text-xs text-muted-foreground hover:text-primary transition-colors block mx-auto">{t("auth.no_account")} <span className="text-primary font-medium">{t("auth.create_one")}</span></button>
               </>
             )}
-            {mode === "signup" && <button onClick={() => setMode("login")} className="text-xs text-muted-foreground hover:text-primary transition-colors">Already have an account? <span className="text-primary font-medium">Sign in</span></button>}
-            {mode === "forgot" && <button onClick={() => setMode("login")} className="text-xs text-muted-foreground hover:text-primary transition-colors">← Back to sign in</button>}
+            {mode === "signup" && <button onClick={() => setMode("login")} className="text-xs text-muted-foreground hover:text-primary transition-colors">{t("auth.have_account")} <span className="text-primary font-medium">{t("auth.sign_in_link")}</span></button>}
+            {mode === "forgot" && <button onClick={() => setMode("login")} className="text-xs text-muted-foreground hover:text-primary transition-colors">{t("auth.back_to_sign_in")}</button>}
           </div>
         </div>
 
         <p className="text-center text-[10px] text-muted-foreground/50 mt-4">
-          Knowledge OS · Secure · GDPR Compliant
+          {t("auth.footer")}
         </p>
       </motion.div>
     </div>

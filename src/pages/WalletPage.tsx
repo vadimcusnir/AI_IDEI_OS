@@ -55,8 +55,8 @@ export default function WalletPage() {
               <Wallet className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">Wallet</h1>
-              <p className="text-[10px] text-muted-foreground">NEURONS credits — balance, reserves, and transaction history</p>
+              <h1 className="text-lg font-serif font-bold tracking-tight">{t("wallet.title")}</h1>
+              <p className="text-[10px] text-muted-foreground">{t("wallet.subtitle")}</p>
             </div>
           </div>
 
@@ -66,7 +66,7 @@ export default function WalletPage() {
 
           {/* Transaction History */}
           <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-            <Clock className="h-3 w-3" /> Transaction History
+            <Clock className="h-3 w-3" /> {t("wallet.transaction_history")}
           </h2>
 
           {loading ? (
@@ -74,7 +74,7 @@ export default function WalletPage() {
           ) : txns.length === 0 ? (
             <div className="text-center py-16">
               <Wallet className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground">No transactions yet</p>
+              <p className="text-sm text-muted-foreground">{t("wallet.no_transactions")}</p>
             </div>
           ) : (
             <div className="space-y-1">

@@ -175,21 +175,21 @@ export default function WorkspaceSettings() {
         {currentRole === "owner" && (
           <Card className="border-destructive/30">
             <CardHeader>
-              <CardTitle className="text-base text-destructive">Zonă Periculoasă</CardTitle>
+              <CardTitle className="text-base text-destructive">{t("workspace.danger_zone")}</CardTitle>
             </CardHeader>
             <CardContent>
               <Button
                 variant="destructive"
                 size="sm"
                 onClick={async () => {
-                  if (!confirm("Sigur vrei să ștergi acest workspace? Acțiunea este ireversibilă.")) return;
+                  if (!confirm(t("workspace.delete_confirm"))) return;
                   const ok = await deleteWorkspace(currentWorkspace.id);
-                  if (ok) toast.success("Workspace șters");
-                  else toast.error("Nu poți șterge workspace-ul principal");
+                  if (ok) toast.success(t("workspace.workspace_deleted"));
+                  else toast.error(t("workspace.delete_error"));
                 }}
               >
                 <Trash2 className="h-4 w-4 mr-1" />
-                Șterge Workspace
+                {t("workspace.delete_workspace")}
               </Button>
             </CardContent>
           </Card>
