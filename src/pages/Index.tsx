@@ -13,6 +13,7 @@ import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.gif";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
+import { useTranslation } from "react-i18next";
 
 const STATUS_DOTS: Record<string, string> = {
   draft: "bg-muted-foreground/40",
@@ -23,6 +24,7 @@ const STATUS_DOTS: Record<string, string> = {
 
 export default function Index() {
   const navigate = useNavigate();
+  const { t } = useTranslation("pages");
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [showExportImport, setShowExportImport] = useState(false);
   const [showFolders, setShowFolders] = useState(false);
@@ -74,8 +76,8 @@ export default function Index() {
 
   return (
     <div className="flex-1 flex overflow-hidden">
-      <SEOHead title="Neurons — AI-IDEI" description="Browse, search and manage your neuron library." />
-      {/* Folder sidebar — slides in/out */}
+      <SEOHead title={`${t("neurons_index.title")} — AI-IDEI`} description="Browse, search and manage your neuron library." />
+      {/* Folder sidebar */}
       <div
         className={cn(
           "shrink-0 border-r border-border bg-card/50 transition-all duration-200 ease-in-out overflow-hidden",
@@ -100,14 +102,14 @@ export default function Index() {
           {/* Page title row with actions */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
-              <h1 className="text-lg font-semibold tracking-tight">Neuroni</h1>
+              <h1 className="text-lg font-semibold tracking-tight">{t("neurons_index.title")}</h1>
               {neurons.length > 0 && (
                 <div className="flex items-center gap-3 ml-1">
                   {[
-                    { label: "Total", value: neurons.length },
-                    { label: "Publicați", value: neurons.filter(n => n.status === "published").length, color: "text-status-validated" },
-                    { label: "Draft", value: neurons.filter(n => n.status === "draft").length },
-                    { label: "Pinned", value: pinnedIds.size, color: "text-primary" },
+                    { label: t("neurons_index.total"), value: neurons.length },
+                    { label: t("neurons_index.published"), value: neurons.filter(n => n.status === "published").length, color: "text-status-validated" },
+                    { label: t("neurons_index.draft"), value: neurons.filter(n => n.status === "draft").length },
+                    { label: t("neurons_index.pinned"), value: pinnedIds.size, color: "text-primary" },
                   ].filter(s => s.value > 0).map(s => (
                     <div key={s.label} className="flex items-center gap-1">
                       <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">{s.label}</span>
@@ -123,17 +125,16 @@ export default function Index() {
                 size="sm"
                 className="h-8 gap-1.5 text-xs"
                 onClick={() => setShowFolders(f => !f)}
-                title="Organizare foldere"
+                title={t("neurons_index.organize_folders")}
               >
                 <FolderTree className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Foldere</span>
+                <span className="hidden sm:inline">{t("neurons_index.folders")}</span>
               </Button>
               <Button
                 variant={previewNeuron ? "secondary" : "ghost"}
                 size="sm"
                 className="h-8 gap-1.5 text-xs hidden md:flex"
                 onClick={() => setPreviewNeuron(prev => prev ? null : (processedNeurons[0] || null))}
-                title="Previzualizare rapidă"
               >
                 <PanelRightOpen className="h-3.5 w-3.5" />
               </Button>
@@ -141,7 +142,7 @@ export default function Index() {
                 <Download className="h-3.5 w-3.5" />
               </Button>
               <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
-                <Plus className="h-3.5 w-3.5" /> Neuron Nou
+                <Plus className="h-3.5 w-3.5" /> {t("neurons_index.new_neuron")}
               </Button>
             </div>
           </div>
@@ -167,16 +168,16 @@ export default function Index() {
           {/* Bulk action bar */}
           {selectedIds.size > 0 && (
             <div className="flex items-center gap-2 mb-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-2">
-              <span className="text-xs font-medium text-primary">{selectedIds.size} selectat{selectedIds.size > 1 ? "e" : ""}</span>
+              <span className="text-xs font-medium text-primary">{t("neurons_index.selected", { count: selectedIds.size })}</span>
               <div className="flex-1" />
               <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={selectAll}>
-                <CheckSquare className="h-3 w-3" /> Selectează tot
+                <CheckSquare className="h-3 w-3" /> {t("neurons_index.select_all")}
               </Button>
               <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={clearSelection}>
-                <XSquare className="h-3 w-3" /> Deselectează
+                <XSquare className="h-3 w-3" /> {t("neurons_index.deselect")}
               </Button>
               <Button variant="destructive" size="sm" className="h-7 text-xs gap-1" onClick={bulkDelete}>
-                <Trash2 className="h-3 w-3" /> Șterge ({selectedIds.size})
+                <Trash2 className="h-3 w-3" /> {t("neurons_index.delete_selected", { count: selectedIds.size })}
               </Button>
             </div>
           )}
@@ -186,12 +187,12 @@ export default function Index() {
             <div className="flex items-center gap-2 mb-3 flex-wrap">
               {searchResults !== null && (
                 <span className="text-[10px] text-muted-foreground">
-                  {searchResults.length} rezultat{searchResults.length !== 1 ? "e" : ""} pentru „{searchQuery}"
+                  {t("neurons_index.results_for", { count: searchResults.length, query: searchQuery })}
                 </span>
               )}
               {selectedFolderId && selectedFolderId !== "__unassigned" && (
                 <span className="inline-flex items-center gap-1 text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                  Folder activ · {filteredCount}
+                  {t("neurons_index.folder_active")} · {filteredCount}
                   <button onClick={() => setSelectedFolderId(null)} className="ml-0.5 hover:text-primary/70">✕</button>
                 </span>
               )}
@@ -204,34 +205,34 @@ export default function Index() {
               {searchResults !== null ? (
                 <>
                   <Search className="h-8 w-8 opacity-20 mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground mb-4">Niciun neuron nu corespunde căutării.</p>
-                  <Button variant="outline" onClick={clearSearch} className="gap-1.5 text-xs">Șterge căutarea</Button>
+                  <p className="text-sm text-muted-foreground mb-4">{t("neurons_index.no_search_results")}</p>
+                  <Button variant="outline" onClick={clearSearch} className="gap-1.5 text-xs">{t("neurons_index.clear_search")}</Button>
                 </>
               ) : filterStatus ? (
                 <>
                   <Filter className="h-8 w-8 opacity-20 mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground mb-4">Niciun neuron „{filterStatus}".</p>
-                  <Button variant="outline" onClick={() => setFilterStatus(null)} className="gap-1.5 text-xs">Șterge filtrul</Button>
+                  <p className="text-sm text-muted-foreground mb-4">{t("neurons_index.no_filter_status", { status: filterStatus })}</p>
+                  <Button variant="outline" onClick={() => setFilterStatus(null)} className="gap-1.5 text-xs">{t("neurons_index.clear_filter")}</Button>
                 </>
               ) : selectedFolderId ? (
                 <>
                   <Filter className="h-8 w-8 opacity-20 mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground mb-4">Niciun neuron în acest folder.</p>
-                  <Button variant="outline" onClick={() => setSelectedFolderId(null)} className="gap-1.5 text-xs">Arată toți neuronii</Button>
+                  <p className="text-sm text-muted-foreground mb-4">{t("neurons_index.no_folder_neurons")}</p>
+                  <Button variant="outline" onClick={() => setSelectedFolderId(null)} className="gap-1.5 text-xs">{t("neurons_index.show_all")}</Button>
                 </>
               ) : (
                 <>
                   <img src={logo} className="h-12 w-12 opacity-30 mx-auto mb-4" alt="" />
-                  <h3 className="text-lg font-serif font-medium mb-2">Niciun neuron încă</h3>
+                  <h3 className="text-lg font-serif font-medium mb-2">{t("neurons_index.empty_title")}</h3>
                   <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
-                    Creează primul tău atom de cunoaștere. Extrage idei, structurează-le și transformă-le în active digitale.
+                    {t("neurons_index.empty_desc")}
                   </p>
                   <div className="flex items-center justify-center gap-3">
                     <Button onClick={() => setShowTemplatePicker(true)} className="gap-1.5">
-                      <Plus className="h-4 w-4" /> Creează Neuron
+                      <Plus className="h-4 w-4" /> {t("neurons_index.create_neuron")}
                     </Button>
                     <Button variant="outline" onClick={() => navigate("/extractor")} className="gap-1.5">
-                      Extractor
+                      {t("neurons_index.extractor")}
                     </Button>
                   </div>
                 </>

@@ -1,6 +1,7 @@
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { useRuntimeHealth } from "@/hooks/useRuntimeHealth";
+import { useTranslation } from "react-i18next";
 import {
   Loader2, Activity, Shield, ShieldAlert, ShieldOff,
   Zap, Clock, AlertTriangle, ToggleLeft, ToggleRight,
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 export default function RuntimeDashboard() {
   const { stats, services, flags, loading, reload } = useRuntimeHealth();
+  const { t } = useTranslation("pages");
 
   if (loading) {
     return (
@@ -30,7 +32,7 @@ export default function RuntimeDashboard() {
   return (
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
-        <SEOHead title="System Runtime — AI-IDEI" description="Real-time system health, circuit breakers and feature flags." />
+        <SEOHead title={`${t("runtime_dashboard.title")} — AI-IDEI`} description={t("runtime_dashboard.subtitle")} />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
           {/* Header */}
@@ -48,60 +50,36 @@ export default function RuntimeDashboard() {
                 )} />
               </div>
               <div>
-                <h1 className="text-lg font-serif font-bold tracking-tight">System Runtime</h1>
-                <p className="text-[10px] text-muted-foreground">Health monitoring, circuit breakers & feature flags</p>
+                <h1 className="text-lg font-serif font-bold tracking-tight">{t("runtime_dashboard.title")}</h1>
+                <p className="text-[10px] text-muted-foreground">{t("runtime_dashboard.subtitle")}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={reload}>
-              <RefreshCw className="h-3 w-3" /> Refresh
+              <RefreshCw className="h-3 w-3" /> {t("runtime_dashboard.refresh")}
             </Button>
           </div>
 
           {/* Stats grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            <StatCard
-              icon={Shield}
-              label="Healthy"
-              value={stats?.services_healthy ?? 0}
-              accent="text-status-validated"
-            />
-            <StatCard
-              icon={ShieldAlert}
-              label="Degraded"
-              value={stats?.services_degraded ?? 0}
-              accent="text-primary"
-            />
-            <StatCard
-              icon={ShieldOff}
-              label="Down"
-              value={stats?.services_down ?? 0}
-              accent={stats && stats.services_down > 0 ? "text-destructive" : "text-muted-foreground"}
-            />
-            <StatCard
-              icon={Clock}
-              label="Avg Latency"
-              value={`${Math.round(stats?.avg_latency_ms ?? 0)}ms`}
-            />
+            <StatCard icon={Shield} label={t("runtime_dashboard.healthy")} value={stats?.services_healthy ?? 0} accent="text-status-validated" />
+            <StatCard icon={ShieldAlert} label={t("runtime_dashboard.degraded")} value={stats?.services_degraded ?? 0} accent="text-primary" />
+            <StatCard icon={ShieldOff} label={t("runtime_dashboard.down")} value={stats?.services_down ?? 0} accent={stats && stats.services_down > 0 ? "text-destructive" : "text-muted-foreground"} />
+            <StatCard icon={Clock} label={t("runtime_dashboard.avg_latency")} value={`${Math.round(stats?.avg_latency_ms ?? 0)}ms`} />
           </div>
 
           {/* Second stats row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            <StatCard icon={Zap} label="Validations/1h" value={stats?.validations_1h ?? 0} />
-            <StatCard
-              icon={AlertTriangle}
-              label="Denials/1h"
-              value={stats?.denials_1h ?? 0}
-              accent={stats && stats.denials_1h > 10 ? "text-destructive" : undefined}
-            />
-            <StatCard icon={ToggleRight} label="Active Flags" value={stats?.feature_flags_active ?? 0} accent="text-primary" />
-            <StatCard icon={Activity} label="Active Jobs" value={stats?.active_jobs ?? 0} />
+            <StatCard icon={Zap} label={t("runtime_dashboard.validations_1h")} value={stats?.validations_1h ?? 0} />
+            <StatCard icon={AlertTriangle} label={t("runtime_dashboard.denials_1h")} value={stats?.denials_1h ?? 0} accent={stats && stats.denials_1h > 10 ? "text-destructive" : undefined} />
+            <StatCard icon={ToggleRight} label={t("runtime_dashboard.active_flags")} value={stats?.feature_flags_active ?? 0} accent="text-primary" />
+            <StatCard icon={Activity} label={t("runtime_dashboard.active_jobs")} value={stats?.active_jobs ?? 0} />
           </div>
 
           {/* Service Health */}
           {services.length > 0 && (
             <div className="mb-6">
               <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                Circuit Breaker Status
+                {t("runtime_dashboard.circuit_breaker")}
               </h2>
               <div className="space-y-1">
                 {services.map(svc => (
@@ -122,7 +100,7 @@ export default function RuntimeDashboard() {
                     </Badge>
                     <span className="text-[10px] font-mono text-muted-foreground">{svc.avg_latency_ms}ms</span>
                     {svc.consecutive_failures > 0 && (
-                      <span className="text-[10px] font-mono text-destructive">{svc.consecutive_failures} fails</span>
+                      <span className="text-[10px] font-mono text-destructive">{svc.consecutive_failures} {t("runtime_dashboard.fails")}</span>
                     )}
                   </div>
                 ))}
@@ -133,10 +111,10 @@ export default function RuntimeDashboard() {
           {/* Feature Flags */}
           <div>
             <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-              Feature Flags
+              {t("runtime_dashboard.feature_flags")}
             </h2>
             {flags.length === 0 ? (
-              <p className="text-xs text-muted-foreground text-center py-8">No feature flags configured</p>
+              <p className="text-xs text-muted-foreground text-center py-8">{t("runtime_dashboard.no_flags")}</p>
             ) : (
               <div className="space-y-1">
                 {flags.map(flag => (
