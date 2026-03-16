@@ -84,6 +84,8 @@ export function useNotifications() {
           setNotifications((prev) => [newNotif, ...prev].slice(0, 50));
           // Show browser notification
           showBrowserNotification(newNotif);
+          // Show in-app toast
+          showToast(newNotif);
         }
       )
       .subscribe();
