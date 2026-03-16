@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
@@ -32,6 +33,7 @@ interface FeedbackDialogProps {
 export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel }: FeedbackDialogProps) {
   const { user } = useAuth();
   const location = useLocation();
+  const { t } = useTranslation(["common", "errors", "forms"]);
   const [open, setOpen] = useState(false);
   const [type, setType] = useState(defaultType);
   const [title, setTitle] = useState("");
@@ -44,11 +46,11 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
   const handleSubmit = async () => {
     if (!user) return;
     if (!title.trim() || !message.trim()) {
-      toast.error("Please fill in the title and message.");
+      toast.error(t("errors:fill_title_message"));
       return;
     }
     if (needsRating && !rating) {
-      toast.error("Please select a rating.");
+      toast.error(t("errors:select_rating"));
       return;
     }
 
@@ -63,9 +65,9 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
     } as any);
 
     if (error) {
-      toast.error("Error submitting: " + error.message);
+      toast.error(t("errors:submit_error", { message: error.message }));
     } else {
-      toast.success("Thank you for your feedback! 🙏");
+      toast.success(t("common:feedback_thanks") + " 🙏");
       setOpen(false);
       setTitle("");
       setMessage("");
@@ -82,13 +84,13 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
         {trigger || (
           <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
             <MessageSquarePlus className="h-3.5 w-3.5" />
-            Feedback
+            {t("common:feedback")}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base">Submit Feedback</DialogTitle>
+          <DialogTitle className="text-base">{t("common:submit_feedback")}</DialogTitle>
         </DialogHeader>
 
         {/* Type selector */}
@@ -116,7 +118,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
         {/* Rating */}
         {needsRating && (
           <div className="flex items-center gap-1">
-            <span className="text-xs text-muted-foreground mr-2">Rating:</span>
+            <span className="text-xs text-muted-foreground mr-2">{t("common:rating")}:</span>
             {[1, 2, 3, 4, 5].map((s) => (
               <button
                 key={s}
@@ -136,7 +138,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
 
         {/* Form */}
         <Input
-          placeholder="Short title"
+          placeholder={t("forms:short_title")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={200}
@@ -144,10 +146,10 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
         />
         <Textarea
           placeholder={
-            type === "testimonial" ? "Share your experience with AI-IDEI..." :
-            type === "complaint" ? "Describe the issue you encountered..." :
-            type === "proposal" ? "What feature would you like to see?" :
-            "Write your feedback..."
+            type === "testimonial" ? t("forms:feedback_placeholder.testimonial") :
+            type === "complaint" ? t("forms:feedback_placeholder.complaint") :
+            type === "proposal" ? t("forms:feedback_placeholder.proposal") :
+            t("forms:feedback_placeholder.default")
           }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -159,7 +161,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
 
         <Button onClick={handleSubmit} disabled={loading} className="w-full gap-2">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-          Submit
+          {t("common:submit")}
         </Button>
       </DialogContent>
     </Dialog>

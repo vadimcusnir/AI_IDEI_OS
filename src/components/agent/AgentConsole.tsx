@@ -6,6 +6,7 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,30 +29,31 @@ interface Message {
 
 const AGENT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agent-console`;
 
-const WELCOME_MSG: Message = {
-  id: "welcome",
-  role: "assistant",
-  content: "**Knowledge OS Agent** ready.\n\nI can orchestrate your entire knowledge pipeline. Paste a URL, drop a file, or tell me what you need.\n\n**Quick commands:**\n- `Analyze [URL]` — full pipeline extraction\n- `Extract neurons from [source]`\n- `Generate [article/framework/course]`\n- `Search [topic]` in your knowledge graph",
-  timestamp: new Date(),
-};
-
-const COMMAND_HINTS = [
-  { label: "Analyze YouTube video", icon: Globe, example: "Analyze this YouTube video: https://..." },
-  { label: "Extract neurons", icon: Brain, example: "Extract neurons from my latest episode" },
-  { label: "Generate article", icon: FileText, example: "Generate an article from neurons about leadership" },
-  { label: "Search knowledge", icon: Network, example: "Show all neurons about persuasion techniques" },
-];
-
 export function AgentConsole() {
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
   const navigate = useNavigate();
+  const { t } = useTranslation(["common", "errors"]);
   const {
     sessionId, sessions, isLoadingSessions,
     saveMessage, loadSession, loadCurrentSession,
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
+
+  const WELCOME_MSG: Message = {
+    id: "welcome",
+    role: "assistant",
+    content: `**${t("common:knowledge_os_agent")}** ready.\n\nI can orchestrate your entire knowledge pipeline. Paste a URL, drop a file, or tell me what you need.\n\n**Quick commands:**\n- \`Analyze [URL]\` — full pipeline extraction\n- \`Extract neurons from [source]\`\n- \`Generate [article/framework/course]\`\n- \`Search [topic]\` in your knowledge graph`,
+    timestamp: new Date(),
+  };
+
+  const COMMAND_HINTS = [
+    { label: t("common:analyze_youtube"), icon: Globe, example: "Analyze this YouTube video: https://..." },
+    { label: t("common:extract_neurons_hint"), icon: Brain, example: "Extract neurons from my latest episode" },
+    { label: t("common:generate_article_hint"), icon: FileText, example: "Generate an article from neurons about leadership" },
+    { label: t("common:search_knowledge_hint"), icon: Network, example: "Show all neurons about persuasion techniques" },
+  ];
 
   const [messages, setMessages] = useState<Message[]>([WELCOME_MSG]);
   const [input, setInput] = useState("");
@@ -74,7 +76,6 @@ export function AgentConsole() {
 
   useEffect(scrollToBottom, [messages, scrollToBottom]);
 
-  // Auto-load last session on mount
   useEffect(() => {
     if (!user || sessionLoaded) return;
     setSessionLoaded(true);
@@ -85,7 +86,6 @@ export function AgentConsole() {
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
-  // Fetch user stats for context
   useEffect(() => {
     if (!user || !currentWorkspace) return;
     const wsId = currentWorkspace.id;
@@ -103,13 +103,13 @@ export function AgentConsole() {
     if (!user) return;
 
     if (balance < 20) {
-      toast.error("Credite insuficiente pentru a rula comenzi AI. Reîncarcă NEURONS.", {
-        action: { label: "Top-up", onClick: () => navigate("/credits") },
+      toast.error(t("errors:insufficient_credits_agent"), {
+        action: { label: t("common:top_up"), onClick: () => navigate("/credits") },
       });
       return;
     }
 
-    const userContent = input.trim() + (files.length > 0 ? `\n\n[${files.length} file(s) attached: ${files.map(f => f.name).join(", ")}]` : "");
+    const userContent = input.trim() + (files.length > 0 ? `\n\n[${t("common:files_attached", { count: files.length, names: files.map(f => f.name).join(", ") })}]` : "");
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
@@ -164,19 +164,18 @@ export function AgentConsole() {
       if (!resp.ok) {
         const errBody = await resp.json().catch(() => ({}));
         if (resp.status === 429) {
-          toast.error("Rate limit atins. Încearcă din nou în câteva secunde.");
+          toast.error(t("errors:rate_limit_agent"));
           throw new Error("Rate limit exceeded");
         }
         if (resp.status === 402) {
-          toast.error("Credite AI epuizate. Adaugă credite pentru a continua.", {
-            action: { label: "Top-up", onClick: () => navigate("/credits") },
+          toast.error(t("errors:credits_exhausted"), {
+            action: { label: t("common:top_up"), onClick: () => navigate("/credits") },
           });
           throw new Error("AI credits exhausted");
         }
         throw new Error(errBody.error || `Error ${resp.status}`);
       }
 
-      // Stream response
       let fullContent = "";
       const assistantId = crypto.randomUUID();
 
@@ -222,7 +221,6 @@ export function AgentConsole() {
           }
         }
 
-        // Flush remaining
         if (buffer.trim()) {
           for (let raw of buffer.split("\n")) {
             if (!raw) continue;
@@ -245,7 +243,7 @@ export function AgentConsole() {
       }
 
       if (!fullContent) {
-        fullContent = "Unable to generate a response. Please try again.";
+        fullContent = t("common:no_response");
         setMessages(prev => [
           ...prev,
           { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() },
@@ -255,10 +253,10 @@ export function AgentConsole() {
       saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
     } catch (e) {
       if ((e as Error).name === "AbortError") return;
-      toast.error("Agent error: " + (e instanceof Error ? e.message : "Unknown"));
+      toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
       setMessages(prev => [
         ...prev,
-        { id: crypto.randomUUID(), role: "assistant", content: "An error occurred. Please try again.", timestamp: new Date() },
+        { id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() },
       ]);
     } finally {
       setLoading(false);
@@ -293,7 +291,7 @@ export function AgentConsole() {
   const clearChat = () => {
     newSession();
     setMessages([
-      { id: "welcome-reset", role: "assistant", content: "Session reset. What would you like to do?", timestamp: new Date() },
+      { id: "welcome-reset", role: "assistant", content: t("common:session_reset"), timestamp: new Date() },
     ]);
   };
 
@@ -306,7 +304,7 @@ export function AgentConsole() {
   const handleDeleteSession = async (sid: string, e: React.MouseEvent) => {
     e.stopPropagation();
     await deleteSession(sid);
-    toast.success("Session deleted");
+    toast.success(t("common:session_deleted"));
   };
 
   const handleHintClick = (example: string) => {
@@ -325,13 +323,13 @@ export function AgentConsole() {
             <Terminal className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <p className="text-xs font-bold">Knowledge OS Agent</p>
+            <p className="text-xs font-bold">{t("common:knowledge_os_agent")}</p>
             <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
-              <span>{totalNeurons} neurons</span>
+              <span>{totalNeurons} {t("common:neurons_label")}</span>
               <span>·</span>
-              <span>{totalEpisodes} episodes</span>
+              <span>{totalEpisodes} {t("common:episodes_label")}</span>
               <span>·</span>
-              <span className="text-primary font-medium">{balance.toLocaleString()} credits</span>
+              <span className="text-primary font-medium">{balance.toLocaleString()} {t("common:credits_label")}</span>
             </div>
           </div>
         </div>
@@ -357,14 +355,14 @@ export function AgentConsole() {
             <div className="bg-muted/30 px-4 py-3 max-h-48 overflow-y-auto space-y-1">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Previous sessions {isLoadingSessions && <Loader2 className="inline h-2.5 w-2.5 animate-spin ml-1" />}
+                  {t("common:previous_sessions")} {isLoadingSessions && <Loader2 className="inline h-2.5 w-2.5 animate-spin ml-1" />}
                 </p>
                 <button onClick={() => setShowHistory(false)} className="text-muted-foreground hover:text-foreground">
                   <ChevronLeft className="h-3 w-3" />
                 </button>
               </div>
               {sessions.length === 0 && (
-                <p className="text-[10px] text-muted-foreground">No saved sessions</p>
+                <p className="text-[10px] text-muted-foreground">{t("common:no_saved_sessions")}</p>
               )}
               {sessions.map(s => (
                 <button
@@ -434,7 +432,7 @@ export function AgentConsole() {
             <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-3 w-3 animate-spin text-primary" />
-                <span className="text-[10px] text-muted-foreground">Processing…</span>
+                <span className="text-[10px] text-muted-foreground">{t("common:processing")}</span>
               </div>
             </div>
           </div>
@@ -458,142 +456,117 @@ export function AgentConsole() {
       )}
 
       {/* Input */}
-      <div className="px-4 py-3 border-t border-border bg-card relative">
-        <AgentSlashMenu
-          input={input}
-          visible={showSlashMenu}
-          onSelect={(template) => {
-            setInput(template);
-            setShowSlashMenu(false);
-            inputRef.current?.focus();
-          }}
-          onClose={() => setShowSlashMenu(false)}
-        />
+      <div className="border-t border-border p-3">
         <div className="flex items-end gap-2">
-          <input ref={fileInputRef} type="file" className="hidden" multiple accept=".txt,.md,.csv,.json,.pdf,.mp3,.wav,.m4a,.mp4" onChange={handleFileSelect} />
-          <Button variant="ghost" size="sm" className="h-9 w-9 p-0 shrink-0" onClick={() => fileInputRef.current?.click()}>
-            <FileUp className="h-4 w-4" />
-          </Button>
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={e => {
-              const val = e.target.value;
-              setInput(val);
-              setShowSlashMenu(val === "/" || (val.startsWith("/") && !val.includes(" ")));
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder="Type / for commands or tell me what you need..."
-            rows={1}
-            className="flex-1 bg-muted/50 rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-primary transition-colors resize-none min-h-[38px] max-h-[120px] placeholder:text-muted-foreground/50"
-            style={{ height: "auto", overflow: "hidden" }}
-            onInput={(e) => {
-              const el = e.target as HTMLTextAreaElement;
-              el.style.height = "auto";
-              el.style.height = Math.min(el.scrollHeight, 120) + "px";
-            }}
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept=".txt,.md,.csv,.json,text/*"
+            className="hidden"
+            onChange={handleFileSelect}
           />
-          {isStreaming ? (
-            <Button size="sm" className="h-9 w-9 p-0 shrink-0 rounded-xl bg-destructive hover:bg-destructive/90" onClick={handleStop}>
-              <X className="h-4 w-4" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 shrink-0"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Paperclip className="h-3.5 w-3.5" />
+          </Button>
+          <div className="flex-1 relative">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                if (e.target.value === "/") setShowSlashMenu(true);
+                else setShowSlashMenu(false);
+              }}
+              onKeyDown={handleKeyDown}
+              placeholder="Type a message or / for commands..."
+              className="w-full resize-none rounded-xl border border-border bg-background px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary/30 min-h-[36px] max-h-[120px]"
+              rows={1}
+              style={{ height: "auto" }}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = "auto";
+                target.style.height = Math.min(target.scrollHeight, 120) + "px";
+              }}
+            />
+            {showSlashMenu && (
+              <AgentSlashMenu
+                onSelect={(cmd) => {
+                  setInput(cmd + " ");
+                  setShowSlashMenu(false);
+                  inputRef.current?.focus();
+                }}
+                onClose={() => setShowSlashMenu(false)}
+              />
+            )}
+          </div>
+          {loading ? (
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 shrink-0" onClick={handleStop}>
+              <X className="h-3.5 w-3.5" />
             </Button>
           ) : (
-            <Button size="sm" className="h-9 w-9 p-0 shrink-0 rounded-xl" disabled={loading || (!input.trim() && files.length === 0)} onClick={handleSend}>
-              <Send className="h-4 w-4" />
+            <Button
+              size="sm"
+              className="h-8 w-8 p-0 shrink-0"
+              onClick={handleSend}
+              disabled={!input.trim() && files.length === 0}
+            >
+              <Send className="h-3.5 w-3.5" />
             </Button>
           )}
         </div>
-        <div className="flex items-center gap-3 mt-2 text-[9px] text-muted-foreground/50">
-          <span className="flex items-center gap-1"><Zap className="h-2.5 w-2.5" /> Type <kbd className="px-1 py-0.5 bg-muted rounded text-[8px] font-mono">/</kbd> for commands</span>
-          <span className="flex items-center gap-1"><Globe className="h-2.5 w-2.5" /> URLs</span>
-          <span className="flex items-center gap-1"><FileAudio className="h-2.5 w-2.5" /> Audio</span>
-          <span className="ml-auto">⌘ + Enter to send</span>
-        </div>
       </div>
     </div>
   );
 }
 
-// ── Message Bubble with markdown rendering ──
-function AgentBubble({ msg, onNavigate, isStreaming }: { msg: Message; onNavigate: (path: string) => void; isStreaming?: boolean }) {
+function AgentBubble({
+  msg,
+  onNavigate,
+  isStreaming,
+}: {
+  msg: Message;
+  onNavigate: (path: string) => void;
+  isStreaming?: boolean;
+}) {
   const isUser = msg.role === "user";
-  const actionLinks = extractActionLinks(msg.content);
 
   return (
-    <div className={cn("flex gap-2.5", isUser ? "flex-row-reverse" : "flex-row")}>
-      <div className={cn(
-        "h-6 w-6 rounded-full flex items-center justify-center shrink-0 mt-0.5",
-        isUser ? "bg-primary/10" : "bg-primary/10"
-      )}>
-        {isUser ? <User className="h-3 w-3 text-primary" /> : <Terminal className="h-3 w-3 text-primary" />}
-      </div>
-      <div className={cn(
-        "max-w-[85%] rounded-2xl px-4 py-3",
-        isUser
-          ? "bg-primary text-primary-foreground rounded-br-md"
-          : "bg-muted text-foreground rounded-bl-md"
-      )}>
+    <div className={cn("flex gap-2.5", isUser ? "justify-end" : "justify-start")}>
+      {!isUser && (
+        <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+          <Terminal className="h-3 w-3 text-primary" />
+        </div>
+      )}
+      <div
+        className={cn(
+          "rounded-2xl px-4 py-3 max-w-[85%] text-xs leading-relaxed",
+          isUser
+            ? "bg-primary text-primary-foreground rounded-br-md"
+            : "bg-muted rounded-bl-md"
+        )}
+      >
         {isUser ? (
-          <p className="whitespace-pre-wrap text-xs">{msg.content}</p>
+          <p className="whitespace-pre-wrap">{msg.content}</p>
         ) : (
-          <div className="prose prose-sm dark:prose-invert max-w-none text-xs leading-relaxed [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2 [&_h1]:text-sm [&_h2]:text-xs [&_h3]:text-xs [&_code]:text-[10px] [&_code]:bg-background/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre]:text-[10px] [&_pre]:bg-background/50 [&_pre]:rounded-lg [&_strong]:text-foreground">
+          <div className="prose prose-xs dark:prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2 [&_h1]:text-sm [&_h2]:text-xs [&_h3]:text-xs [&_li]:text-xs [&_code]:text-[10px] [&_code]:bg-background/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded">
             <ReactMarkdown>{msg.content}</ReactMarkdown>
-            {isStreaming && (
-              <span className="inline-block w-1.5 h-3.5 bg-primary/70 animate-pulse rounded-sm ml-0.5 -mb-0.5" />
-            )}
           </div>
         )}
-
-        {/* Quick action buttons */}
-        {!isUser && !isStreaming && actionLinks.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-border/50">
-            {actionLinks.map((link, i) => (
-              <Button
-                key={i}
-                variant="ghost"
-                size="sm"
-                className="h-6 text-[9px] gap-1 px-2"
-                onClick={() => onNavigate(link.path)}
-              >
-                <link.icon className="h-2.5 w-2.5" />
-                {link.label}
-                <ArrowRight className="h-2 w-2" />
-              </Button>
-            ))}
-          </div>
+        {isStreaming && (
+          <span className="inline-block w-1.5 h-3 bg-primary/60 animate-pulse ml-0.5 rounded-sm" />
         )}
-
-        <p className={cn(
-          "text-[8px] mt-1.5",
-          isUser ? "text-primary-foreground/50 text-right" : "text-muted-foreground/50"
-        )}>
-          {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-        </p>
       </div>
+      {isUser && (
+        <div className="h-6 w-6 rounded-full bg-foreground/10 flex items-center justify-center shrink-0 mt-0.5">
+          <User className="h-3 w-3" />
+        </div>
+      )}
     </div>
   );
-}
-
-// ── Extract navigation action links from AI response ──
-function extractActionLinks(content: string): Array<{ label: string; path: string; icon: React.ElementType }> {
-  const links: Array<{ label: string; path: string; icon: React.ElementType }> = [];
-  const lower = content.toLowerCase();
-
-  if (lower.includes("neuron") && (lower.includes("view") || lower.includes("see") || lower.includes("browse"))) {
-    links.push({ label: "View Neurons", path: "/neurons", icon: Brain });
-  }
-  if (lower.includes("extractor") || lower.includes("upload") || lower.includes("pipeline")) {
-    links.push({ label: "Open Extractor", path: "/extractor", icon: Zap });
-  }
-  if (lower.includes("service") || lower.includes("generate") || lower.includes("produce")) {
-    links.push({ label: "Services", path: "/services", icon: Sparkles });
-  }
-  if (lower.includes("knowledge graph") || lower.includes("intelligence")) {
-    links.push({ label: "Intelligence", path: "/intelligence", icon: Network });
-  }
-  if (lower.includes("library") || lower.includes("artifact") || lower.includes("deliverable")) {
-    links.push({ label: "Library", path: "/library", icon: FileText });
-  }
-
-  return links.slice(0, 3);
 }

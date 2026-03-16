@@ -141,10 +141,10 @@ export function AdminKnowledgeGraphTab() {
         body: { action: "compute_idearank" },
       });
       if (error) throw error;
-      toast.success("PVS + Emergence computed (pvs-emergence-v1)");
+      toast.success(t("common:pvs_computed"));
       await loadStats();
     } catch (err: any) {
-      toast.error(err.message || "Computation failed");
+      toast.error(err.message || t("errors:computation_failed"));
     } finally {
       setComputing(false);
     }
