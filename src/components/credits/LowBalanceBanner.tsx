@@ -63,22 +63,22 @@ export function LowBalanceBanner() {
           exit={{ height: 0, opacity: 0 }}
           className="overflow-hidden"
         >
-          <div className={cn("flex items-center gap-2 px-3 py-2 border-b text-xs", config.bg)}>
+          <div className={cn("flex items-center gap-2 px-3 py-2 border-b text-xs flex-wrap sm:flex-nowrap", config.bg)}>
             <AlertTriangle className={cn("h-3.5 w-3.5 shrink-0", config.icon)} />
             <span className={cn("font-medium", config.text)}>{config.label}</span>
             <span className="text-muted-foreground">
               — <span className="font-mono font-semibold">{balance}</span> NEURONS
             </span>
-            <div className="flex-1" />
+            <div className="flex-1 hidden sm:block" />
             <button
               onClick={() => navigate("/credits")}
-              className={cn("flex items-center gap-1 font-semibold hover:underline", config.text)}
+              className={cn("flex items-center gap-1 font-semibold hover:underline ml-auto sm:ml-0", config.text)}
             >
               {config.cta} <ArrowRight className="h-3 w-3" />
             </button>
             <button
               onClick={handleDismiss}
-              className="text-muted-foreground/50 hover:text-muted-foreground ml-1"
+              className="text-muted-foreground/50 hover:text-muted-foreground"
             >
               <X className="h-3.5 w-3.5" />
             </button>
