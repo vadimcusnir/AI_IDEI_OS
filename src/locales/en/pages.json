@@ -92,7 +92,9 @@
     "account_info": "Account Info",
     "user_id": "User ID",
     "created": "Created",
-    "profile_updated": "Profile updated successfully!"
+    "profile_updated": "Profile updated successfully!",
+    "data_privacy": "Data & Privacy",
+    "data_privacy_desc": "Export your data or delete your account (GDPR)"
   },
   "notifications": {
     "title": "Notifications",
