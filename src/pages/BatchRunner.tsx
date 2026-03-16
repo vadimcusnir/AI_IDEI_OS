@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 
 interface Service {
   id: string;
@@ -187,6 +188,7 @@ export default function BatchRunner() {
   }
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Batch Runner" fallback="replace">
     <div className="flex-1 overflow-auto">
       <SEOHead title="Batch Runner — AI-IDEI" description="Run multiple AI services in batch on your neurons and content." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
@@ -326,5 +328,6 @@ export default function BatchRunner() {
         )}
       </div>
     </div>
+    </PremiumGate>
   );
 }

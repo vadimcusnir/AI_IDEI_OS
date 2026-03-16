@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -148,6 +149,7 @@ export default function PromptForge() {
   }, [result]);
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Prompt Forge" fallback="overlay">
     <div className="flex-1">
       <SEOHead title="Prompt Forge — AI-IDEI" description="Generate AI prompts for marketing, copywriting and content creation." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
@@ -267,5 +269,6 @@ export default function PromptForge() {
         </div>
       </div>
     </div>
+    </PremiumGate>
   );
 }

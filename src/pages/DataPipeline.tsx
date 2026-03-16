@@ -7,6 +7,7 @@ import { Loader2, Brain, Database, CheckCircle2, Sparkles, Layers, BarChart3, Fi
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 
 interface PipelineStats {
   total_units: number;
@@ -46,6 +47,7 @@ export default function DataPipeline() {
     ? Math.round((stats.llm_ready_units / stats.total_units) * 100) : 0;
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Data Pipeline" fallback="overlay">
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
         <SEOHead title="Data Pipeline — AI-IDEI" description="Cognitive data collection pipeline — knowledge extraction and LLM training readiness." />
@@ -257,6 +259,7 @@ export default function DataPipeline() {
         </div>
       </div>
     </PageTransition>
+    </PremiumGate>
   );
 }
 
