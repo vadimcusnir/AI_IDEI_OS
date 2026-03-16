@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,28 +9,34 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { AdminFeedbackTab } from "@/components/feedback/AdminFeedbackTab";
-import { AdminChangelogTab } from "@/components/admin/AdminChangelogTab";
-import { AdminKnowledgeGraphTab } from "@/components/admin/AdminKnowledgeGraphTab";
-import { AdminAnalyticsTab } from "@/components/admin/AdminAnalyticsTab";
-import { AccessSimulator } from "@/components/admin/AccessSimulator";
-import { DecisionLedgerTab } from "@/components/admin/DecisionLedgerTab";
-import { AbuseDetectionTab } from "@/components/admin/AbuseDetectionTab";
-import { WalletManagementTab } from "@/components/admin/WalletManagementTab";
-import { ReconciliationTab } from "@/components/admin/ReconciliationTab";
-import { IncidentManagementTab } from "@/components/admin/IncidentManagementTab";
-import { EntropyMonitoringTab } from "@/components/admin/EntropyMonitoringTab";
-import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
-import { AdminContributionsTab } from "@/components/admin/AdminContributionsTab";
-import { EmergencyControlsTab } from "@/components/admin/EmergencyControlsTab";
-import { ComplianceLogTab } from "@/components/admin/ComplianceLogTab";
-import { FeatureFlagsTab } from "@/components/admin/FeatureFlagsTab";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
-import { ForumModerationTab } from "@/components/admin/ForumModerationTab";
-import { ControlLayerTab } from "@/components/admin/ControlLayerTab";
 import { KPI, StatusBadge, LogLevelBadge, HealthRow, EconRow } from "@/components/admin/AdminSubComponents";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+
+// ── Lazy-loaded admin tabs (code-split per tab) ──
+const AdminFeedbackTab = lazy(() => import("@/components/feedback/AdminFeedbackTab").then(m => ({ default: m.AdminFeedbackTab })));
+const AdminChangelogTab = lazy(() => import("@/components/admin/AdminChangelogTab").then(m => ({ default: m.AdminChangelogTab })));
+const AdminKnowledgeGraphTab = lazy(() => import("@/components/admin/AdminKnowledgeGraphTab").then(m => ({ default: m.AdminKnowledgeGraphTab })));
+const AdminAnalyticsTab = lazy(() => import("@/components/admin/AdminAnalyticsTab").then(m => ({ default: m.AdminAnalyticsTab })));
+const AccessSimulator = lazy(() => import("@/components/admin/AccessSimulator").then(m => ({ default: m.AccessSimulator })));
+const DecisionLedgerTab = lazy(() => import("@/components/admin/DecisionLedgerTab").then(m => ({ default: m.DecisionLedgerTab })));
+const AbuseDetectionTab = lazy(() => import("@/components/admin/AbuseDetectionTab").then(m => ({ default: m.AbuseDetectionTab })));
+const WalletManagementTab = lazy(() => import("@/components/admin/WalletManagementTab").then(m => ({ default: m.WalletManagementTab })));
+const ReconciliationTab = lazy(() => import("@/components/admin/ReconciliationTab").then(m => ({ default: m.ReconciliationTab })));
+const IncidentManagementTab = lazy(() => import("@/components/admin/IncidentManagementTab").then(m => ({ default: m.IncidentManagementTab })));
+const EntropyMonitoringTab = lazy(() => import("@/components/admin/EntropyMonitoringTab").then(m => ({ default: m.EntropyMonitoringTab })));
+const AdminUserManagement = lazy(() => import("@/components/admin/AdminUserManagement").then(m => ({ default: m.AdminUserManagement })));
+const AdminContributionsTab = lazy(() => import("@/components/admin/AdminContributionsTab").then(m => ({ default: m.AdminContributionsTab })));
+const EmergencyControlsTab = lazy(() => import("@/components/admin/EmergencyControlsTab").then(m => ({ default: m.EmergencyControlsTab })));
+const ComplianceLogTab = lazy(() => import("@/components/admin/ComplianceLogTab").then(m => ({ default: m.ComplianceLogTab })));
+const FeatureFlagsTab = lazy(() => import("@/components/admin/FeatureFlagsTab").then(m => ({ default: m.FeatureFlagsTab })));
+const ForumModerationTab = lazy(() => import("@/components/admin/ForumModerationTab").then(m => ({ default: m.ForumModerationTab })));
+const ControlLayerTab = lazy(() => import("@/components/admin/ControlLayerTab").then(m => ({ default: m.ControlLayerTab })));
+
+function TabLoader() {
+  return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
+}
 
 // ─── Types ──────────────────────────────────────────
 interface PlatformStats {
