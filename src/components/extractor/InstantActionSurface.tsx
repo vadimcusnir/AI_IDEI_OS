@@ -246,7 +246,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         }
       }
 
-      if (!transcript && filePath) {
       if (!transcript && !subtitlesUsed && (filePath || urlSource)) {
         setStage("transcribe");
         const resp = await fetch(
