@@ -21,7 +21,7 @@ export interface NeuronListItem {
 export type ViewMode = "list" | "grid" | "cards";
 export type SortField = "updated_at" | "created_at" | "title" | "number" | "score";
 export type SortDir = "asc" | "desc";
-export type GroupBy = "none" | "status" | "date";
+export type GroupBy = "none" | "status" | "date" | "category";
 
 export function useNeuronList() {
   const { user, loading: authLoading } = useAuth();
