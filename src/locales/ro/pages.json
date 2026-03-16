@@ -569,6 +569,10 @@
     "goal_label": "Obiectivul promptului",
     "goal_experience": "Extragere experiență",
     "goal_profile": "Descriere profil",
+    "product_recommendation": "Recomandare produse",
+    "content_structuring": "Structurare conținut",
+    "sales_copy": "Copy de vânzare",
+    "email_sequence": "Secvență Email",
     "context_label": "Context (industrie, nișă, public-țintă)",
     "context_placeholder": "Ex: Sunt consultant de marketing digital pentru startup-uri SaaS B2B. Publicul meu sunt fondatorii tehnici care au nevoie de strategie go-to-market...",
     "details_label": "Detalii suplimentare (opțional)",
@@ -582,6 +586,7 @@
     "success": "Prompt generat cu succes!",
     "error_auth": "Autentifică-te pentru a genera prompturi",
     "error_fields": "Completează contextul și obiectivul",
-    "error_credits": "Credite insuficiente. Ai nevoie de ~{{cost}} NEURONS."
+    "error_credits": "Credite insuficiente. Ai nevoie de ~{{cost}} NEURONS.",
+    "copied": "Copiat în clipboard!"
   }
 }
