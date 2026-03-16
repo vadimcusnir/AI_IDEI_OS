@@ -179,6 +179,17 @@ export function useNeuronList() {
       });
       return Object.entries(groups).map(([label, items]) => ({ label, items }));
     }
+    if (groupBy === "category") {
+      const groups: Record<string, NeuronListItem[]> = {};
+      processedNeurons.forEach(n => {
+        const cat = n.content_category || "uncategorized";
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(n);
+      });
+      return Object.entries(groups)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([label, items]) => ({ label: label.charAt(0).toUpperCase() + label.slice(1), items }));
+    }
     if (groupBy === "date") {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
