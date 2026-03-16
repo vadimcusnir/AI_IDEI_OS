@@ -137,10 +137,10 @@ export default function Feedback() {
       <div className="mb-6">
         <h1 className="text-xl font-bold flex items-center gap-2">
           <MessageCircle className="h-5 w-5 text-primary" />
-          Feedback
+          {t("feedback.title")}
         </h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          {stats.total} submitted · {stats.pending} pending · {stats.responded} with response
+          {stats.total} {t("feedback.submitted")} · {stats.pending} {t("feedback.pending")} · {stats.responded} {t("feedback.with_response")}
         </p>
       </div>
 
