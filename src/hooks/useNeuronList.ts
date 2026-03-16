@@ -13,6 +13,9 @@ export interface NeuronListItem {
   created_at: string;
   score: number;
   visibility: string;
+  content_category: string | null;
+  lifecycle: string | null;
+  episode_id: string | null;
 }
 
 export type ViewMode = "list" | "grid" | "cards";
