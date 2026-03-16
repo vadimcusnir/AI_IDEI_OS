@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Upload, Brain, Sparkles, Coins, Check } from "lucide-react";
+import { Globe, FileAudio, Scissors, Brain, Network, Sparkles, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -15,24 +15,34 @@ interface PipelineStats { episodes: number; neurons: number; jobs: number; credi
 
 const STAGES = [
   {
-    key: "upload", label: "Upload", icon: Upload, to: "/extractor",
-    description: "Încarcă episoade — audio, video, text sau URL",
+    key: "source", label: "Source", icon: Globe, to: "/extractor",
+    description: "Upload content — audio, video, text or URL",
     check: (s: PipelineStats) => s.episodes > 0,
   },
   {
-    key: "extract", label: "Extract", icon: Brain, to: "/neurons",
-    description: "Extrage neuroni de cunoștințe din transcrieri",
+    key: "transcribe", label: "Transcribe", icon: FileAudio, to: "/extractor",
+    description: "Transcribe audio/video with AI",
+    check: (s: PipelineStats) => s.episodes > 0,
+  },
+  {
+    key: "segment", label: "Segment", icon: Scissors, to: "/extractor",
+    description: "Semantic chunking of transcripts",
     check: (s: PipelineStats) => s.neurons > 0,
   },
   {
-    key: "execute", label: "Execute", icon: Sparkles, to: "/jobs",
-    description: "Rulează servicii AI pentru a genera livrabile",
-    check: (s: PipelineStats) => s.jobs > 0,
+    key: "extract", label: "Extract", icon: Brain, to: "/neurons",
+    description: "Extract knowledge neurons",
+    check: (s: PipelineStats) => s.neurons > 0,
   },
   {
-    key: "capitalize", label: "Capitalize", icon: Coins, to: "/library",
-    description: "Livrabile generate — articole, cursuri, framework-uri",
-    check: (s: PipelineStats) => s.credits > 100,
+    key: "link", label: "Link", icon: Network, to: "/intelligence",
+    description: "Build knowledge graph connections",
+    check: (s: PipelineStats) => s.neurons > 5,
+  },
+  {
+    key: "generate", label: "Generate", icon: Sparkles, to: "/services",
+    description: "Generate deliverables via AI services",
+    check: (s: PipelineStats) => s.jobs > 0,
   },
 ] as const;
 
