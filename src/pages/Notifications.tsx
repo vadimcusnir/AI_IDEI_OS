@@ -153,11 +153,11 @@ export default function Notifications() {
   const groups = groupByDay(filtered);
 
   const typeFilters = [
-    { key: "all", label: "All" },
-    { key: "unread", label: `Unread (${unreadCount})` },
-    { key: "job_completed", label: "Completed" },
-    { key: "job_failed", label: "Failed" },
-    { key: "credits_low", label: "Credits" },
+    { key: "all", label: t("notifications.title") === "Notifications" ? "All" : t("jobs.filter_all") },
+    { key: "unread", label: t("notifications.unread_count", { count: unreadCount }) },
+    { key: "job_completed", label: t("notifications.completed") },
+    { key: "job_failed", label: t("notifications.failed") },
+    { key: "credits_low", label: t("notifications.credits") },
     { key: "forum_reply", label: "Forum" },
     { key: "level_up", label: "XP" },
   ];
