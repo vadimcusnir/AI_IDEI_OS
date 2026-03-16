@@ -1,11 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { X, ExternalLink, Loader2, Zap, Tag, Clock, Brain } from "lucide-react";
+import { X, ExternalLink, Loader2, Zap, Tag, Clock, Brain, Lightbulb, Layers, Network, MessageSquareQuote, Target, Boxes } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { NeuronListItem } from "@/hooks/useNeuronList";
+
+const CATEGORY_BADGE: Record<string, { icon: React.ElementType; color: string; label: string }> = {
+  insight: { icon: Lightbulb, color: "text-amber-500 bg-amber-500/10", label: "Insight" },
+  framework: { icon: Layers, color: "text-blue-500 bg-blue-500/10", label: "Framework" },
+  pattern: { icon: Network, color: "text-purple-500 bg-purple-500/10", label: "Pattern" },
+  narrative: { icon: MessageSquareQuote, color: "text-emerald-500 bg-emerald-500/10", label: "Narrative" },
+  commercial: { icon: Target, color: "text-rose-500 bg-rose-500/10", label: "Commercial" },
+  psychological: { icon: Brain, color: "text-pink-500 bg-pink-500/10", label: "Psychological" },
+  strategy: { icon: Boxes, color: "text-cyan-500 bg-cyan-500/10", label: "Strategy" },
+};
 
 interface Block {
   id: string;
