@@ -11,5 +11,21 @@
   "email_label": "Эл. почта",
   "email_placeholder": "email@example.com",
   "password_label": "Пароль",
-  "password_placeholder": "Введите пароль"
+  "password_placeholder": "Введите пароль",
+  "short_title": "Краткий заголовок",
+  "your_name": "Ваше имя",
+  "describe_yourself": "Кратко опишите себя...",
+  "avatar_url_hint": "Введите URL для изображения профиля.",
+  "avatar_placeholder": "https://example.com/avatar.jpg",
+  "display_name": "Отображаемое имя",
+  "username": "Имя пользователя",
+  "bio": "О себе",
+  "public_profile_hint": "Ваш публичный профиль будет доступен по адресу /u/{{username}}",
+  "transaction_description": "Описание транзакции",
+  "feedback_placeholder": {
+    "testimonial": "Поделитесь вашим опытом с AI-IDEI...",
+    "complaint": "Опишите проблему, с которой вы столкнулись...",
+    "proposal": "Какую функцию вы хотели бы видеть?",
+    "default": "Напишите ваш отзыв..."
+  }
 }

@@ -1,5 +1,12 @@
 {
   "generic": "Something went wrong. Please try again.",
+  "network": "Network error. Check your internet connection.",
+  "unauthorized": "You don't have access to this resource.",
+  "not_found": "Page not found.",
+  "server": "Server error. Please try again later.",
+  "validation": "Invalid data. Check the fields and try again.",
+  "insufficient_credits": "Insufficient credits. Please top up.",
+  "rate_limit": "Too many requests. Please wait a few minutes.",
   "save_failed": "Save error: {{message}}",
   "username_taken": "This username is already taken.",
   "fill_title_message": "Please fill in the title and message.",
