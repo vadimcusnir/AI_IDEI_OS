@@ -247,6 +247,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       }
 
       if (!transcript && filePath) {
+      if (!transcript && !subtitlesUsed && (filePath || urlSource)) {
         setStage("transcribe");
         const resp = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-audio`,
@@ -256,7 +257,12 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
               "Content-Type": "application/json",
               Authorization: `Bearer ${accessToken}`,
             },
-            body: JSON.stringify({ episode_id: ep.id, file_path: filePath }),
+            body: JSON.stringify({
+              episode_id: ep.id,
+              file_path: filePath || undefined,
+              source_url: urlSource?.canonical_url || undefined,
+              language: undefined,
+            }),
           }
         );
         const data = await resp.json();
