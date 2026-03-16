@@ -415,7 +415,7 @@ export default function AdminDashboard() {
 
                 <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
                   <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-                    Last 10 Neurons
+                    {t("admin.last_10_neurons")}
                   </h3>
                   <div className="space-y-1">
                     {neurons.slice(0, 10).map(n => (
