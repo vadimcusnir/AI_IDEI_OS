@@ -347,7 +347,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-serif font-bold">Admin Control Panel</h1>
-                <p className="text-xs text-muted-foreground">Monitoring and control for the AI-IDEI platform</p>
+                <p className="text-xs text-muted-foreground">{t("admin.subtitle")}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={loadAll} className="gap-1.5">
