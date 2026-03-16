@@ -14,6 +14,7 @@ import {
   ArrowLeft, Star, Coins, DollarSign, Tag, ShoppingCart, Crown,
   TrendingUp, MessageSquare, Loader2, CheckCircle2, Store, Clock,
 } from "lucide-react";
+import { InlineTopUp } from "@/components/credits/InlineTopUp";
 
 interface KnowledgeAsset {
   id: string;
@@ -217,36 +218,43 @@ export default function MarketplaceDetail() {
         )}
 
         {/* Purchase CTA */}
-        <div className="bg-card border border-border rounded-xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-3">
-              {price > 0 && (
-                <span className="flex items-center gap-1 text-lg font-bold font-mono text-primary">
-                  <Coins className="h-4 w-4" /> {price}
-                </span>
+        <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-3">
+                {price > 0 && (
+                  <span className="flex items-center gap-1 text-lg font-bold font-mono text-primary">
+                    <Coins className="h-4 w-4" /> {price}
+                  </span>
+                )}
+                {asset.price_usd && Number(asset.price_usd) > 0 && (
+                  <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <DollarSign className="h-3.5 w-3.5" /> {Number(asset.price_usd).toFixed(2)}
+                  </span>
+                )}
+                {isFree && <span className="text-sm font-semibold text-emerald-600">Free</span>}
+              </div>
+              {!isFree && user && (
+                <p className="text-[10px] text-muted-foreground">Your balance: {balance} NEURONS</p>
               )}
-              {asset.price_usd && Number(asset.price_usd) > 0 && (
-                <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <DollarSign className="h-3.5 w-3.5" /> {Number(asset.price_usd).toFixed(2)}
-                </span>
-              )}
-              {isFree && <span className="text-sm font-semibold text-emerald-600">Free</span>}
             </div>
-            {!isFree && user && (
-              <p className="text-[10px] text-muted-foreground">Your balance: {balance} NEURONS</p>
-            )}
+            <Button
+              onClick={handlePurchase}
+              disabled={purchasing || purchased || isOwn || (!isFree && !canAfford)}
+              className="gap-2"
+            >
+              {purchased ? <><CheckCircle2 className="h-4 w-4" /> Acquired</> :
+                purchasing ? <><Loader2 className="h-4 w-4 animate-spin" /> Processing...</> :
+                isOwn ? "Your Asset" :
+                <><ShoppingCart className="h-4 w-4" /> {isFree ? "Get Free" : `Buy · ${price} N`}</>
+              }
+            </Button>
           </div>
-          <Button
-            onClick={handlePurchase}
-            disabled={purchasing || purchased || isOwn || (!isFree && !canAfford)}
-            className="gap-2"
-          >
-            {purchased ? <><CheckCircle2 className="h-4 w-4" /> Acquired</> :
-              purchasing ? <><Loader2 className="h-4 w-4 animate-spin" /> Processing...</> :
-              isOwn ? "Your Asset" :
-              <><ShoppingCart className="h-4 w-4" /> {isFree ? "Get Free" : `Buy · ${price} N`}</>
-            }
-          </Button>
+
+          {/* Inline upsell when can't afford */}
+          {!isFree && !canAfford && user && !purchased && (
+            <InlineTopUp needed={price} balance={balance} compact />
+          )}
         </div>
 
         <Separator />
