@@ -20,6 +20,7 @@ import {
   Layers, Users, Save, Download, FileUp, Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
