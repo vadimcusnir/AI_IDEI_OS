@@ -586,6 +586,7 @@
     "success": "Prompt generated successfully!",
     "error_auth": "Sign in to generate prompts",
     "error_fields": "Fill in context and objective",
-    "error_credits": "Insufficient credits. You need ~{{cost}} NEURONS."
+    "error_credits": "Insufficient credits. You need ~{{cost}} NEURONS.",
+    "copied": "Copied to clipboard!"
   }
 }
