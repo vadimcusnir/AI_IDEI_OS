@@ -357,14 +357,14 @@ export default function AdminDashboard() {
 
           {/* KPI Row — animated stagger */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
-            <KPI label="Users" value={stats.totalUsers} icon={Users} index={0} />
-            <KPI label="Neurons" value={stats.totalNeurons} icon={Brain} index={1} />
-            <KPI label="Published" value={stats.publishedNeurons} icon={Brain} color="text-primary" index={2} />
-            <KPI label="Draft" value={stats.draftNeurons} icon={Brain} index={3} />
-            <KPI label="Episodes" value={stats.totalEpisodes} icon={Activity} index={4} />
-            <KPI label="Jobs" value={stats.totalJobs} icon={Briefcase} index={5} />
-            <KPI label="Credits circ." value={stats.totalCreditsCirculating} icon={Coins} color="text-primary" index={6} />
-            <KPI label="Credits spent" value={stats.totalCreditsSpent} icon={Coins} color="text-destructive" index={7} />
+            <KPI label={t("admin.users")} value={stats.totalUsers} icon={Users} index={0} />
+            <KPI label={t("admin.neurons")} value={stats.totalNeurons} icon={Brain} index={1} />
+            <KPI label={t("admin.published")} value={stats.publishedNeurons} icon={Brain} color="text-primary" index={2} />
+            <KPI label={t("admin.draft")} value={stats.draftNeurons} icon={Brain} index={3} />
+            <KPI label={t("admin.episodes")} value={stats.totalEpisodes} icon={Activity} index={4} />
+            <KPI label={t("admin.jobs")} value={stats.totalJobs} icon={Briefcase} index={5} />
+            <KPI label={t("admin.credits_circulating")} value={stats.totalCreditsCirculating} icon={Coins} color="text-primary" index={6} />
+            <KPI label={t("admin.credits_spent")} value={stats.totalCreditsSpent} icon={Coins} color="text-destructive" index={7} />
           </div>
 
           {/* Tabs — scrollable on mobile */}
