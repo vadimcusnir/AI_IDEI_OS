@@ -325,9 +325,9 @@ export default function ProfilePage() {
 
                       <div className="flex gap-1.5 mb-3 ml-6">
                         {([
-                          { key: "none", label: "Disabled" },
-                          { key: "daily", label: "Daily" },
-                          { key: "weekly", label: "Weekly" },
+                          { key: "none", label: t("profile.digest_none") },
+                          { key: "daily", label: t("profile.digest_daily") },
+                          { key: "weekly", label: t("profile.digest_weekly") },
                         ] as const).map((opt) => (
                           <button
                             key={opt.key}
