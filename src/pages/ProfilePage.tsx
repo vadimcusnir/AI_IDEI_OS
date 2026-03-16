@@ -437,9 +437,9 @@ export default function ProfilePage() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium">Data & Privacy</p>
+                    <p className="text-sm font-medium">{t("profile.data_privacy")}</p>
                     <p className="text-[10px] text-muted-foreground mt-0.5">
-                      Export your data or delete your account (GDPR)
+                      {t("profile.data_privacy_desc")}
                     </p>
                   </div>
                   <span className="text-xs text-primary">→</span>
