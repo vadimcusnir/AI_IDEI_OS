@@ -5,12 +5,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { detectSource, detectFileSource, type SourceDetectionResult } from "@/lib/sourceDetection";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
   Zap, Globe, FileAudio, Film, Type,
   ChevronDown, CheckCircle2, Brain, Layers, FileUp,
-  Sparkles, Network, Scissors, Loader2,
+  Sparkles, Network, Scissors, Loader2, Coins,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -57,12 +59,14 @@ interface InstantActionSurfaceProps {
 export function InstantActionSurface({ onComplete, compact = false }: InstantActionSurfaceProps) {
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
+  const { balance, loading: balanceLoading } = useCreditBalance();
   const [input, setInput] = useState("");
   const [stage, setStage] = useState<PipelineStage>("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [extractionDepth, setExtractionDepth] = useState<"quick" | "deep">("deep");
+  const [insufficientCredits, setInsufficientCredits] = useState<{ needed: number } | null>(null);
   const [result, setResult] = useState<{
     neurons: number;
     episode_id: string;
@@ -73,6 +77,9 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     meta?: { major_insights?: string[]; emerging_themes?: string[]; unexpected_ideas?: string[] };
   } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const estimatedCost = extractionDepth === "deep" ? 500 : 100;
+  const hasEnoughCredits = balance >= estimatedCost;
 
   const isRunning = !["idle", "complete", "error"].includes(stage);
 
@@ -337,6 +344,16 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       onComplete?.();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Pipeline failed";
+      
+      // Detect insufficient credits error from edge functions
+      if (msg.includes("Insufficient credits") || msg.includes("RC.CREDITS.INSUFFICIENT")) {
+        const neededMatch = msg.match(/(\d+)/);
+        const needed = neededMatch ? parseInt(neededMatch[1]) : estimatedCost;
+        setInsufficientCredits({ needed });
+        setStage("idle");
+        return;
+      }
+      
       toast.error(msg);
       setStage("error");
       setTimeout(() => setStage("idle"), 3000);
@@ -348,6 +365,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     setSelectedFile(null);
     setStage("idle");
     setResult(null);
+    setInsufficientCredits(null);
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -447,7 +465,10 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
                 <Button
                   size="lg"
-                  className="h-11 gap-2 rounded-xl px-5 font-semibold shrink-0"
+                  className={cn(
+                    "h-11 gap-2 rounded-xl px-5 font-semibold shrink-0",
+                    !hasEnoughCredits && (input.trim() || selectedFile) && "opacity-70"
+                  )}
                   onClick={runPipeline}
                   disabled={(!input.trim() && !selectedFile) || isRunning}
                 >
@@ -456,12 +477,24 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                 </Button>
               </div>
 
-              {/* Quick hints */}
+              {/* Balance indicator + hints */}
               <div className="flex items-center justify-between mt-3">
                 <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
+                  {!balanceLoading && user && (
+                    <span className={cn(
+                      "flex items-center gap-1 font-mono font-medium",
+                      balance < estimatedCost
+                        ? "text-destructive/70"
+                        : balance < estimatedCost * 2
+                          ? "text-amber-500/70"
+                          : "text-muted-foreground/60"
+                    )}>
+                      <Coins className="h-2.5 w-2.5" />
+                      {balance} NEURONS
+                    </span>
+                  )}
                   <span className="flex items-center gap-1"><Globe className="h-2.5 w-2.5" /> YouTube, URLs</span>
-                  <span className="flex items-center gap-1"><FileAudio className="h-2.5 w-2.5" /> Audio/Video</span>
-                  <span className="flex items-center gap-1"><Type className="h-2.5 w-2.5" /> Text, PDF</span>
+                  <span className="flex items-center gap-1 hidden sm:flex"><FileAudio className="h-2.5 w-2.5" /> Audio</span>
                 </div>
                 <button
                   onClick={() => setShowSettings(s => !s)}
@@ -471,6 +504,52 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                   <ChevronDown className={cn("h-2.5 w-2.5 transition-transform", showSettings && "rotate-180")} />
                 </button>
               </div>
+
+              {/* Low balance warning (before running) */}
+              {!hasEnoughCredits && !insufficientCredits && user && !balanceLoading && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-3 p-3 rounded-xl border border-destructive/20 bg-destructive/5 flex items-center gap-3">
+                    <Coins className="h-4 w-4 text-destructive/60 shrink-0" />
+                    <p className="text-[11px] text-muted-foreground flex-1">
+                      {extractionDepth === "deep" ? "Deep" : "Quick"} analysis needs <span className="font-mono font-semibold text-foreground">{estimatedCost}</span> NEURONS. 
+                      You have <span className="font-mono font-semibold text-destructive">{balance}</span>.
+                    </p>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-[10px] px-3 shrink-0 border-destructive/30 text-destructive hover:bg-destructive/10"
+                      onClick={() => setInsufficientCredits({ needed: estimatedCost })}
+                    >
+                      Top Up
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Insufficient credits inline upsell */}
+              <AnimatePresence>
+                {insufficientCredits && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-3 pt-3 border-t border-border">
+                      <InlineTopUp
+                        needed={insufficientCredits.needed}
+                        balance={balance}
+                        onDismiss={() => setInsufficientCredits(null)}
+                        compact={compact}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Progressive settings */}
               <AnimatePresence>
@@ -491,7 +570,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
                           ] as const).map(opt => (
                             <button
                               key={opt.value}
-                              onClick={() => setExtractionDepth(opt.value)}
+                              onClick={() => { setExtractionDepth(opt.value); setInsufficientCredits(null); }}
                               className={cn(
                                 "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors",
                                 extractionDepth === opt.value
