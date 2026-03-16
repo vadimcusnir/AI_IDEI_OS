@@ -22,6 +22,9 @@ import { TopUpDialog } from "@/components/credits/TopUpDialog";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
 import { motion } from "framer-motion";
+import { useOnboardingRedirect } from "@/hooks/useOnboardingRedirect";
+import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
+import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ControlledSection } from "@/components/ControlledSection";
@@ -110,6 +113,8 @@ export default function Home() {
     setLoading(false);
   };
 
+  useOnboardingRedirect();
+
   if (authLoading || wsLoading || loading) {
     return <HomeSkeleton />;
   }
@@ -128,6 +133,15 @@ export default function Home() {
   return (
     <PageTransition>
     <div className="flex-1 overflow-auto">
+      <WelcomeModal />
+      <GuidedTooltip
+        tourId="home"
+        steps={[
+          { target: "[data-tour='upload']", title: "Upload Content", description: "Start here — add a podcast, video, or text to begin extracting knowledge.", position: "bottom" },
+          { target: "[data-tour='neurons']", title: "Your Neurons", description: "Extracted atomic knowledge units appear here. Each neuron is reusable forever.", position: "bottom" },
+          { target: "[data-tour='services']", title: "AI Services", description: "Run services to transform neurons into professional deliverables.", position: "bottom" },
+        ]}
+      />
       <SEOHead title="Cockpit — AI-IDEI" description="Your AI-IDEI command center. Monitor neurons, episodes, jobs and credits." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 sm:space-y-10">
 
@@ -184,6 +198,7 @@ export default function Home() {
                 whileHover={{ y: -3, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => navigate(action.path)}
+                data-tour={action.path === "/extractor" ? "upload" : action.path === "/neurons" ? "neurons" : action.path === "/services" ? "services" : undefined}
                 className={cn(
                   "group relative flex flex-col items-start gap-3 p-4 rounded-xl border border-border",
                   "bg-gradient-to-br hover:border-primary/30 hover:shadow-lg transition-all duration-200",

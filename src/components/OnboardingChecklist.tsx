@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { fireStepConfetti, fireFinalConfetti } from "@/components/onboarding/useConfetti";
 
 interface StepDef {
   id: string;
@@ -58,6 +59,7 @@ export function OnboardingChecklist() {
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const prevCompletedRef = useRef<number>(0);
 
   useEffect(() => {
     if (!user || !currentWorkspace) { setLoading(false); return; }
@@ -88,6 +90,17 @@ export function OnboardingChecklist() {
     STEPS.forEach((step, i) => {
       if (counts[i] > 0) completed.add(step.id);
     });
+
+    // Fire confetti on newly completed steps
+    if (prevCompletedRef.current > 0 && completed.size > prevCompletedRef.current) {
+      if (completed.size === STEPS.length) {
+        fireFinalConfetti();
+        if (user) localStorage.setItem(`onboarding_completed_${user.id}`, "true");
+      } else {
+        fireStepConfetti();
+      }
+    }
+    prevCompletedRef.current = completed.size;
 
     setCompletedSteps(completed);
     setLoading(false);

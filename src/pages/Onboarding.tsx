@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { fireFinalConfetti } from "@/components/onboarding/useConfetti";
 
 interface StepStatus {
   episodes: number;
@@ -82,6 +83,7 @@ export default function Onboarding() {
   const [status, setStatus] = useState<StepStatus>({ episodes: 0, neurons: 0, jobs: 0, artifacts: 0 });
   const [loading, setLoading] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
+  const prevAllDoneRef = useRef(false);
 
   useEffect(() => {
     if (authLoading || wsLoading) return;
@@ -114,6 +116,15 @@ export default function Onboarding() {
   const completedCount = STEPS.filter(s => status[s.checkField] > 0).length;
   const progressPercent = Math.round((completedCount / STEPS.length) * 100);
   const allDone = completedCount === STEPS.length;
+
+  // Fire confetti when all steps complete
+  useEffect(() => {
+    if (allDone && !prevAllDoneRef.current) {
+      fireFinalConfetti();
+      if (user) localStorage.setItem(`onboarding_completed_${user.id}`, "true");
+    }
+    prevAllDoneRef.current = allDone;
+  }, [allDone]);
 
   if (authLoading || wsLoading || loading) {
     return (
