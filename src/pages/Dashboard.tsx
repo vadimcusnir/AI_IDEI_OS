@@ -330,14 +330,17 @@ function KPI({ icon: Icon, label, value, sub, color }: {
   icon: React.ElementType; label: string; value: number; sub?: string; color?: string;
 }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-3">
+    <motion.div
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      className="bg-card border border-border rounded-xl p-3 hover:shadow-md hover:border-primary/20 transition-all cursor-default"
+    >
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className="h-3 w-3 text-muted-foreground" />
         <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-xl font-bold font-mono", color)}>{value}</p>
       {sub && <p className="text-[9px] text-muted-foreground">{sub}</p>}
-    </div>
+    </motion.div>
   );
 }
 
