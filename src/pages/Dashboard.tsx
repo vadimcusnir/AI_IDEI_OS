@@ -173,7 +173,7 @@ export default function Dashboard() {
                   <p className="text-[9px] text-muted-foreground">{step.label}</p>
                 </div>
                 {i < arr.length - 1 && (
-                  <div className={cn("h-0.5 w-6 rounded-full shrink-0", step.value > 0 ? "bg-primary/40" : "bg-muted")} />
+                  <div className={cn("h-0.5 w-3 sm:w-6 rounded-full shrink-0", step.value > 0 ? "bg-primary/40" : "bg-muted")} />
                 )}
               </div>
             ))}
