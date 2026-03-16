@@ -454,6 +454,22 @@ export default function Extractor() {
         )}
 
         {/* Episodes list */}
+        {episodes.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-16 bg-card border border-dashed border-border rounded-2xl"
+          >
+            <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <FileText className="h-7 w-7 text-primary/40" />
+            </div>
+            <h3 className="text-base font-serif font-semibold mb-1.5">No episodes yet</h3>
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto mb-1">
+              Upload your first podcast, video, or text above to begin extracting knowledge.
+            </p>
+            <p className="text-xs text-muted-foreground/50">Supports YouTube, MP3, MP4, PDF, and plain text</p>
+          </motion.div>
+        )}
         {episodes.length > 0 && (
           <div className="space-y-1.5">
             {episodes.map(ep => {
