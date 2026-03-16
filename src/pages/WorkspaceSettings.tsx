@@ -146,7 +146,7 @@ export default function WorkspaceSettings() {
                 <Separator />
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Email utilizator"
+                    placeholder={t("workspace.invite_placeholder")}
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     className="flex-1"
@@ -163,7 +163,7 @@ export default function WorkspaceSettings() {
                   </Select>
                   <Button onClick={handleInvite} disabled={inviting} size="sm">
                     <UserPlus className="h-4 w-4 mr-1" />
-                    {inviting ? "…" : "Invită"}
+                    {inviting ? "…" : t("workspace.invite")}
                   </Button>
                 </div>
               </>
