@@ -62,16 +62,16 @@ export default function Auth() {
 
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      toast.error("Please enter a valid email address.");
+      toast.error(t("auth.invalid_email"));
       return;
     }
     if (mode !== "forgot") {
       if (password.length < 6) {
-        toast.error("Password must be at least 6 characters.");
+        toast.error(t("auth.password_min"));
         return;
       }
       if (mode === "signup" && strength.score < 2) {
-        toast.error("Please choose a stronger password.");
+        toast.error(t("auth.password_stronger"));
         return;
       }
     }
