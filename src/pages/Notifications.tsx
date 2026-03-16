@@ -318,7 +318,7 @@ export default function Notifications() {
                 <Inbox className="h-8 w-8 text-muted-foreground/30" />
               </div>
               <p className="text-sm font-medium text-muted-foreground">
-                {filter === "all" ? "No notifications yet" : "No notifications for this filter"}
+                {filter === "all" ? t("notifications.no_notifications") : t("notifications.no_filter_results")}
               </p>
               <p className="text-[11px] text-muted-foreground/60 mt-1">
                 {filter === "all"

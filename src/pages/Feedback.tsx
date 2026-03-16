@@ -310,7 +310,7 @@ export default function Feedback() {
                     {item.admin_response && (
                       <div className="bg-primary/5 border border-primary/10 rounded-lg p-3 mt-2">
                         <p className="text-[10px] font-semibold text-primary mb-1 flex items-center gap-1">
-                          <CheckCircle2 className="h-3 w-3" /> Admin Response
+                          <CheckCircle2 className="h-3 w-3" /> {t("feedback.admin_response")}
                         </p>
                         <p className="text-xs text-muted-foreground">{item.admin_response}</p>
                       </div>
