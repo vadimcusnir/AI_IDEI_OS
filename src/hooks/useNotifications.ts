@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export interface AppNotification {
   id: string;
@@ -58,6 +59,20 @@ export function useNotifications() {
     }
   }, []);
 
+  // Show sonner toast for real-time notifications
+  const showToast = useCallback((notif: AppNotification) => {
+    const isError = notif.type === "job_failed" || notif.type === "credits_low";
+    const isSuccess = notif.type === "job_completed" || notif.type === "artifact_created" || notif.type === "level_up";
+
+    if (isError) {
+      toast.error(notif.title, { description: notif.message, duration: 5000 });
+    } else if (isSuccess) {
+      toast.success(notif.title, { description: notif.message, duration: 4000 });
+    } else {
+      toast(notif.title, { description: notif.message, duration: 4000 });
+    }
+  }, []);
+
   // Initial fetch + realtime subscription
   useEffect(() => {
     if (!user) {
@@ -83,6 +98,8 @@ export function useNotifications() {
           setNotifications((prev) => [newNotif, ...prev].slice(0, 50));
           // Show browser notification
           showBrowserNotification(newNotif);
+          // Show in-app toast
+          showToast(newNotif);
         }
       )
       .subscribe();
