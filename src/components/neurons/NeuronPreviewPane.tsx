@@ -96,6 +96,21 @@ export function NeuronPreviewPane({ neuron, onClose }: Props) {
               <Brain className="h-2.5 w-2.5" /> {neuron.score}
             </span>
           )}
+          {neuron.content_category && CATEGORY_BADGE[neuron.content_category] && (() => {
+            const cat = CATEGORY_BADGE[neuron.content_category!];
+            const CatIcon = cat.icon;
+            return (
+              <span className={cn("flex items-center gap-0.5 text-[9px] font-medium px-1.5 py-0.5 rounded-md", cat.color)}>
+                <CatIcon className="h-2.5 w-2.5" />
+                {cat.label}
+              </span>
+            );
+          })()}
+          {neuron.lifecycle && (
+            <span className="text-[9px] text-muted-foreground/50 px-1.5 py-0.5 rounded-md bg-muted">
+              {neuron.lifecycle}
+            </span>
+          )}
         </div>
       </div>
 
