@@ -17,13 +17,15 @@ import {
   FileText, X, Clock, Trash2, Pencil,
   FileAudio, Film, Type, Globe, Loader2, Brain,
   ChevronDown, Copy, ExternalLink,
-  Layers, Users, Save, Download, FileUp,
+  Layers, Users, Save, Download, FileUp, Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
 import { ControlledSection } from "@/components/ControlledSection";
+import { useUserTier } from "@/hooks/useUserTier";
+import { PremiumPaywall } from "@/components/premium/PremiumPaywall";
 
 async function extractTextFromPDF(file: File): Promise<string> {
   const pdfjsLib = await import("pdfjs-dist");
