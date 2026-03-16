@@ -1,13 +1,17 @@
 import { useNotificationPreferences, NotificationPrefs } from "@/hooks/useNotificationPreferences";
+import { usePushSubscription } from "@/hooks/usePushSubscription";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Bell, Mail, Clock, BellRing, Zap, Coins,
-  MessageCircle, GitBranch, Loader2, Moon,
+  MessageCircle, GitBranch, Loader2, Moon, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => ({
   value: i,
@@ -16,6 +20,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => ({
 
 export function NotificationSettings() {
   const { prefs, loading, saving, updatePrefs } = useNotificationPreferences();
+  const { isSupported, isSubscribed, loading: pushLoading, subscribe, unsubscribe } = usePushSubscription();
 
   if (loading) {
     return (
@@ -25,6 +30,28 @@ export function NotificationSettings() {
     );
   }
 
+  const handlePushToggle = async (enabled: boolean) => {
+    if (enabled) {
+      if (!isSupported) {
+        toast.error("Browser-ul tău nu suportă push notifications");
+        return;
+      }
+      const success = await subscribe();
+      if (success) {
+        await updatePrefs({ push_enabled: true });
+        toast.success("Push notifications activate!");
+      } else {
+        toast.error("Nu am putut activa push notifications. Verifică permisiunile browser-ului.");
+      }
+    } else {
+      await unsubscribe();
+      await updatePrefs({ push_enabled: false });
+      toast("Push notifications dezactivate");
+    }
+  };
+
+  const pushActive = prefs.push_enabled && isSubscribed;
+
   return (
     <div className="space-y-6">
       {/* Push Notifications */}
@@ -32,16 +59,28 @@ export function NotificationSettings() {
         <div className="flex items-center gap-2 mb-3">
           <BellRing className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold">Push Notifications</h3>
+          {pushActive && (
+            <Badge variant="outline" className="text-[10px] h-5 bg-primary/10 text-primary border-primary/30">
+              Active
+            </Badge>
+          )}
         </div>
         <div className="space-y-3 rounded-xl border border-border p-4 bg-card">
+          {!isSupported && (
+            <div className="flex items-center gap-2 text-[10px] text-destructive bg-destructive/10 rounded-lg p-2.5 mb-2">
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-destructive" />
+              <span>Browser-ul tău nu suportă push notifications</span>
+            </div>
+          )}
           <ToggleRow
             icon={Bell}
             label="Enable push notifications"
             description="Receive browser alerts even when you're away"
-            checked={prefs.push_enabled}
-            onChange={(v) => updatePrefs({ push_enabled: v })}
+            checked={pushActive}
+            onChange={handlePushToggle}
+            disabled={pushLoading || !isSupported}
           />
-          {prefs.push_enabled && (
+          {pushActive && (
             <>
               <Separator />
               <ToggleRow
@@ -199,15 +238,17 @@ function ToggleRow({
   description,
   checked,
   onChange,
+  disabled = false,
 }: {
   icon: React.ElementType;
   label: string;
   description: string;
   checked: boolean;
   onChange: (v: boolean) => void;
+  disabled?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className={cn("flex items-center justify-between", disabled && "opacity-50")}>
       <div className="flex items-center gap-2.5">
         <Icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
         <div>
@@ -215,7 +256,7 @@ function ToggleRow({
           <p className="text-[10px] text-muted-foreground">{description}</p>
         </div>
       </div>
-      <Switch checked={checked} onCheckedChange={onChange} />
+      <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} />
     </div>
   );
 }
