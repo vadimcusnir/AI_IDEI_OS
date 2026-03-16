@@ -283,7 +283,17 @@ export default function Home() {
                 </Button>
               </div>
               {neurons.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-6 text-center">No neurons yet.</p>
+                <div className="flex flex-col items-center py-8 text-center">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3">
+                    <Brain className="h-6 w-6 text-primary/50" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">No neurons yet</p>
+                  <p className="text-xs text-muted-foreground/60 mb-3">Upload content to start extracting knowledge</p>
+                  <Button variant="outline" size="sm" className="gap-1.5 text-xs h-8" onClick={() => navigate("/extractor")}>
+                    <Upload className="h-3.5 w-3.5" />
+                    Upload First Content
+                  </Button>
+                </div>
               ) : (
                 <div className="space-y-0.5">
                   {neurons.map(n => (
@@ -315,7 +325,17 @@ export default function Home() {
                 </Button>
               </div>
               {jobs.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-6 text-center">No jobs run yet.</p>
+                <div className="flex flex-col items-center py-8 text-center">
+                  <div className="h-12 w-12 rounded-2xl bg-muted flex items-center justify-center mb-3">
+                    <Sparkles className="h-6 w-6 text-muted-foreground/40" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">No jobs run yet</p>
+                  <p className="text-xs text-muted-foreground/60 mb-3">Run an AI service to generate deliverables</p>
+                  <Button variant="outline" size="sm" className="gap-1.5 text-xs h-8" onClick={() => navigate("/services")}>
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Browse Services
+                  </Button>
+                </div>
               ) : (
                 <div className="space-y-0.5">
                   {jobs.map(job => (
@@ -370,17 +390,20 @@ function StatCard({ icon: Icon, label, value, highlight }: {
   icon: React.ElementType; label: string; value: number; highlight?: boolean;
 }) {
   return (
-    <div className={cn(
-      "rounded-xl p-4 border transition-colors h-full",
-      highlight
-        ? "bg-primary/5 border-primary/20"
-        : "bg-card border-border"
-    )}>
+    <motion.div
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      className={cn(
+        "rounded-xl p-4 border transition-all duration-200 h-full cursor-default",
+        highlight
+          ? "bg-primary/5 border-primary/20 hover:shadow-md hover:shadow-primary/5"
+          : "bg-card border-border hover:shadow-md hover:border-border/80"
+      )}
+    >
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn("h-4 w-4", highlight ? "text-primary" : "text-muted-foreground")} />
         <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-xl font-bold font-mono", highlight && "text-primary")}>{value.toLocaleString()}</p>
-    </div>
+    </motion.div>
   );
 }
