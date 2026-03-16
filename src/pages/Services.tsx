@@ -418,10 +418,12 @@ export default function Services() {
                   key={service.id}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                  whileTap={{ scale: 0.98 }}
                   transition={{ delay: Math.min(i * 0.02, 0.3) }}
                   onClick={() => handleServiceClick(service)}
                   className={cn(
-                    "group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer",
+                    "group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer",
                     !tierSatisfied(userTier, service.access_tier) && "opacity-75"
                   )}
                 >
