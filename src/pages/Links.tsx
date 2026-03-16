@@ -259,7 +259,7 @@ export default function Links() {
       <SEOHead title="Links — AI-IDEI" description="Your AI-IDEI hub: quick links, resources, community and knowledge assets." />
       <HeroBlock />
 
-      <div className="max-w-lg mx-auto px-6 pb-16">
+      <div className="max-w-lg mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
         {/* Primary CTA */}
         {user ? (
           <CTAButton item={CTA_PRIMARY} onClick={() => handleClick(CTA_PRIMARY)} />

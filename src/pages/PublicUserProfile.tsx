@@ -161,7 +161,7 @@ export default function PublicUserProfile() {
       </div>
 
       {/* Content */}
-      <div className="max-w-2xl mx-auto px-6 pb-16 space-y-8">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 space-y-6 sm:space-y-8">
 
         {/* Achievements */}
         <section className="bg-card border border-border rounded-xl p-5">
