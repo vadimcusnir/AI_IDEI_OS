@@ -84,6 +84,42 @@ export default function Notifications() {
             <Bell className="h-5 w-5 text-primary" />
             Notifications
           </h1>
+        </div>
+      </div>
+
+      <Tabs defaultValue="inbox" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2 h-9">
+          <TabsTrigger value="inbox" className="text-xs gap-1.5">
+            <Bell className="h-3.5 w-3.5" />
+            Inbox {unreadCount > 0 && `(${unreadCount})`}
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="text-xs gap-1.5">
+            <Settings className="h-3.5 w-3.5" />
+            Settings
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="inbox" className="space-y-4">
+          {/* Actions bar */}
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              {unreadCount > 0 ? `${unreadCount} unread` : "You're all caught up"}
+            </p>
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <Button variant="outline" size="sm" onClick={markAllRead} className="text-xs gap-1.5">
+                  <CheckCheck className="h-3.5 w-3.5" />
+                  Mark all read
+                </Button>
+              )}
+              {notifications.length > 0 && (
+                <Button variant="ghost" size="sm" onClick={clearAll} className="text-xs gap-1.5 text-muted-foreground">
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Clear
+                </Button>
+              )}
+            </div>
+          </div>
           <p className="text-sm text-muted-foreground mt-0.5">
             {unreadCount > 0 ? `${unreadCount} unread` : "You're all caught up"}
           </p>
