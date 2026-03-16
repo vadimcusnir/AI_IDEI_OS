@@ -134,7 +134,9 @@ export default function Intelligence() {
 
           <TabsContent value="graph" className="mt-0">
             <ControlledSection elementId="intelligence.graph">
-              <KnowledgeGraph />
+              <PremiumGate requiredTier="pro" featureName="Knowledge Graph">
+                <KnowledgeGraph />
+              </PremiumGate>
             </ControlledSection>
           </TabsContent>
 
