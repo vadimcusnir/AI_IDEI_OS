@@ -177,9 +177,9 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
           fileSize = selectedFile.size;
         }
       } else if (urlSource) {
-        // Fetch metadata for URL sources
+        // Quick metadata fetch for title (full transcription pipeline handles the rest)
         const metadata = await fetchMetadata(urlSource.canonical_url, urlSource.platform, accessToken);
-        title = metadata?.title || new URL(urlSource.canonical_url).hostname;
+        title = metadata?.title || new URL(urlSource.canonical_url).hostname.replace("www.", "");
       } else {
         transcript = input.trim();
         title = input.slice(0, 60).replace(/\n/g, " ").trim() + (input.length > 60 ? "…" : "");
