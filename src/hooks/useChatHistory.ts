@@ -28,7 +28,7 @@ export function useChatHistory() {
   });
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
-  const refreshTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Persist current session ID
   useEffect(() => {
