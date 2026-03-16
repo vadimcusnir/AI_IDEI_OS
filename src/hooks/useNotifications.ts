@@ -59,6 +59,20 @@ export function useNotifications() {
     }
   }, []);
 
+  // Show sonner toast for real-time notifications
+  const showToast = useCallback((notif: AppNotification) => {
+    const isError = notif.type === "job_failed" || notif.type === "credits_low";
+    const isSuccess = notif.type === "job_completed" || notif.type === "artifact_created" || notif.type === "level_up";
+
+    if (isError) {
+      toast.error(notif.title, { description: notif.message, duration: 5000 });
+    } else if (isSuccess) {
+      toast.success(notif.title, { description: notif.message, duration: 4000 });
+    } else {
+      toast(notif.title, { description: notif.message, duration: 4000 });
+    }
+  }, []);
+
   // Initial fetch + realtime subscription
   useEffect(() => {
     if (!user) {
