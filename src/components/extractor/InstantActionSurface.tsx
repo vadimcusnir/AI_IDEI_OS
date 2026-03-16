@@ -266,13 +266,43 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         const neuronsCreated = data.total_neurons || data.neurons_created || 0;
         const creditsSpent = data.credits_spent || 0;
 
-        // === LINK ===
+        // === LINK (project neurons → knowledge graph entities) ===
         setStage("link");
-        await new Promise(r => setTimeout(r, 700));
+        try {
+          const linkSession = await supabase.auth.getSession();
+          await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/project-neurons`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${linkSession.data.session?.access_token}`,
+              },
+              body: JSON.stringify({ episode_id: ep.id }),
+            }
+          );
+        } catch (linkErr) {
+          console.warn("Entity projection skipped:", linkErr);
+        }
 
-        // === GENERATE ===
+        // === GENERATE (embed neurons for semantic search) ===
         setStage("generate");
-        await new Promise(r => setTimeout(r, 500));
+        try {
+          const embedSession = await supabase.auth.getSession();
+          await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/embed-neurons`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${embedSession.data.session?.access_token}`,
+              },
+              body: JSON.stringify({ episode_id: ep.id }),
+            }
+          );
+        } catch (embedErr) {
+          console.warn("Embedding skipped:", embedErr);
+        }
 
         // === COMPLETE ===
         setStage("complete");
