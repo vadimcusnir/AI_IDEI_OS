@@ -9,6 +9,7 @@ import {
   LogOut, Home, User, MessageCircle, ScrollText,
   BarChart3, Bell, BookOpen, Users, Network, Rocket,
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
+  Lock,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
