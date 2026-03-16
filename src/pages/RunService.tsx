@@ -406,15 +406,12 @@ export default function RunService() {
 
                 {/* Access verdict */}
                 {accessVerdict?.verdict === "PAYWALL" && (
-                  <div className="flex items-center gap-3 p-4 bg-destructive/5 border-t border-destructive/10">
-                    <Lock className="h-5 w-5 text-destructive shrink-0" />
-                    <div>
-                      <p className="text-xs font-semibold text-destructive">Insufficient credits</p>
-                      <p className="text-[11px] text-muted-foreground">
-                        Need {accessVerdict.deficit} more NEURONS.{" "}
-                        <button onClick={() => navigate("/credits")} className="text-primary underline hover:no-underline">Top up →</button>
-                      </p>
-                    </div>
+                  <div className="p-4 bg-destructive/5 border-t border-destructive/10">
+                    <InlineTopUp
+                      needed={service.credits_cost}
+                      balance={credits?.balance ?? 0}
+                      compact
+                    />
                   </div>
                 )}
                 {accessVerdict?.verdict === "ALLOW" && (
