@@ -4,6 +4,7 @@
  * on a transcript, creating scored neurons per level.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { loadPrompts } from "../_shared/prompt-loader.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
@@ -331,13 +332,17 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const { episode_id, levels } = await req.json();
-
-    if (!episode_id || typeof episode_id !== "string") {
-      return new Response(JSON.stringify({ error: "Missing episode_id" }), {
+    const DeepExtractSchema = z.object({
+      episode_id: z.string().uuid("Invalid episode_id format"),
+      levels: z.array(z.string().max(30)).max(12).optional(),
+    });
+    const parsed = DeepExtractSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const { episode_id, levels } = parsed.data;
 
     // Fetch episode
     const { data: episode, error: epErr } = await supabase

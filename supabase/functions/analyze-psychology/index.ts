@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
 
@@ -34,8 +35,16 @@ serve(async (req) => {
     const userId = userData.user.id;
     logStep("Authenticated", { userId });
 
-    const { guest_profile_id } = await req.json();
-    if (!guest_profile_id) throw new Error("guest_profile_id is required");
+    const PsychSchema = z.object({
+      guest_profile_id: z.string().uuid("Invalid guest_profile_id format"),
+    });
+    const parsed = PsychSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { guest_profile_id } = parsed.data;
 
     // ── Regime enforcement ──
     const regime = await getRegimeConfig("analyze-psychology");
