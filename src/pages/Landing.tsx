@@ -121,15 +121,15 @@ export default function Landing() {
 
       {/* ═══ NAV ═══ */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group">
-            <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full group-hover:shadow-lg group-hover:shadow-primary/20 transition-shadow" />
-            <span className="text-base font-serif font-bold">AI-IDEI</span>
-            <span className="text-[9px] uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold hidden sm:inline">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <button onClick={() => navigate("/")} className="flex items-center gap-2 group shrink-0">
+            <img src={logo} alt="AI-IDEI" className="h-7 w-7 sm:h-8 sm:w-8 rounded-full group-hover:shadow-lg group-hover:shadow-primary/20 transition-shadow" />
+            <span className="text-sm sm:text-base font-serif font-bold">AI-IDEI</span>
+            <span className="text-[9px] uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold hidden lg:inline">
               {t("nav.knowledge_os")}
             </span>
           </button>
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-6">
             {NAV_LINKS.map(link => (
               <button
                 key={link.label}
@@ -140,7 +140,7 @@ export default function Landing() {
               </button>
             ))}
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
@@ -162,18 +162,18 @@ export default function Landing() {
             </DropdownMenu>
             <ThemeToggle />
             {user ? (
-              <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5">
+              <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5 text-xs h-8">
                 <Brain className="h-3.5 w-3.5" />
-                {t("nav.dashboard")}
+                <span className="hidden sm:inline">{t("nav.dashboard")}</span>
               </Button>
             ) : (
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs">
+              <div className="flex items-center gap-1.5">
+                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex">
                   {t("nav.login")}
                 </Button>
-                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5">
+                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1 text-xs h-8">
                   {t("nav.start_free")}
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-3 w-3" />
                 </Button>
               </div>
             )}
