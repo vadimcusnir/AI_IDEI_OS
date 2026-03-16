@@ -864,13 +864,13 @@ export default function Extractor() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                                  disabled={detectingGuests === ep.id} onClick={() => handleDetectGuests(ep)}>
-                                  {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
+                                  disabled={detectingGuests === ep.id} onClick={() => isPro ? handleDetectGuests(ep) : setPaywallOpen(true)}>
+                                  {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : isPro ? <Users className="h-3 w-3" /> : <Crown className="h-3 w-3 text-primary" />}
                                   Guests
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent className="max-w-[220px] text-center">
-                                Detect and create profiles for people mentioned in the transcript
+                                {isPro ? "Detect and create profiles for people mentioned in the transcript" : "Pro feature — upgrade to unlock Guest Detection"}
                               </TooltipContent>
                             </Tooltip>
                           )}
