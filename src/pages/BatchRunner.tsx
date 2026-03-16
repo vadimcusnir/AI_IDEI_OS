@@ -11,6 +11,7 @@ import {
   Clock, Coins, Brain, ArrowLeft, Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { InlineTopUp } from "@/components/credits/InlineTopUp";
 
 interface Service {
   id: string;
