@@ -531,13 +531,13 @@ export default function AdminDashboard() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-[10px]">Key</TableHead>
-                      <TableHead className="text-[10px]">Name</TableHead>
-                      <TableHead className="text-[10px]">Category</TableHead>
-                      <TableHead className="text-[10px]">Class</TableHead>
-                      <TableHead className="text-[10px] text-right">Cost (credits)</TableHead>
-                      <TableHead className="text-[10px]">Status</TableHead>
-                      <TableHead className="text-[10px] w-20">Actions</TableHead>
+                       <TableHead className="text-[10px]">Key</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.name")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.category")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.class")}</TableHead>
+                      <TableHead className="text-[10px] text-right">{t("admin.table.cost")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.status")}</TableHead>
+                      <TableHead className="text-[10px] w-20">{t("common:actions")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
