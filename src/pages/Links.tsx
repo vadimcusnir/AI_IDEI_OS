@@ -19,6 +19,7 @@ import { MonetizationBlock } from "@/components/links/MonetizationBlock";
 import { FavoritesBlock } from "@/components/links/FavoritesBlock";
 import { PopularNeuronsBlock, RecommendedTemplatesBlock, LatestVersionsBlock } from "@/components/links/DynamicSections";
 import { LiveStatsBlock } from "@/components/links/LiveStatsBlock";
+import { useTranslation } from "react-i18next";
 
 /* ─── Types ─── */
 interface LinkItem {
@@ -38,86 +39,6 @@ interface Section {
   items: LinkItem[];
 }
 
-/* ─── Data ─── */
-const HERO = {
-  name: "AI-IDEI.com",
-  tagline: "Knowledge Operating System — Extract, structure, and capitalize human expertise through atomic neurons and AI.",
-  pills: [
-    { icon: Brain, label: "Knowledge Extraction" },
-    { icon: Sparkles, label: "AI-Powered" },
-    { icon: Network, label: "Graph Relations" },
-  ],
-};
-
-const CTA_PRIMARY: LinkItem = {
-  title: "🚀 Start here — Create your first Neuron",
-  icon: Plus,
-  to: "/n/new",
-  color: "text-primary-foreground",
-  accessLevel: "auth",
-};
-
-const SECTIONS: Section[] = [
-  {
-    id: "product",
-    title: "Product",
-    items: [
-      { title: "Documentation", description: "Learn how AI-IDEI works — from first upload to advanced services", icon: BookOpen, to: "/docs", color: "text-primary", accessLevel: "public" },
-      { title: "Architecture", description: "Technical architecture, database schema, and system design", icon: Layers, to: "/architecture", color: "text-muted-foreground", accessLevel: "public" },
-      { title: "Knowledge Graph", description: "Explore how neurons connect and form intelligence networks", icon: Network, to: "/intelligence", color: "text-status-validated", accessLevel: "auth" },
-      { title: "Service Catalog", description: "AI services with fixed credit costs — articles, strategies, copy", icon: Sparkles, to: "/services", color: "text-ai-accent", accessLevel: "auth" },
-      { title: "Changelog", description: "Latest updates, new features, and improvements", icon: Newspaper, to: "/changelog", color: "text-muted-foreground", accessLevel: "public" },
-    ],
-  },
-  {
-    id: "platform",
-    title: "Platform",
-    items: [
-      { title: "Dashboard", description: "Monitor your KPIs and pipeline health", icon: LayoutDashboard, to: "/dashboard", color: "text-primary", accessLevel: "auth" },
-      { title: "Extractor", description: "Upload and ingest content — audio, video, text, URLs", icon: Upload, to: "/extractor", color: "text-status-validated", accessLevel: "auth", badge: "Core" },
-      { title: "Neurons", description: "Browse and manage your knowledge library", icon: Brain, to: "/neurons", color: "text-primary", accessLevel: "auth" },
-      { title: "Library", description: "All your generated artifacts in one place", icon: FileText, to: "/library", color: "text-muted-foreground", accessLevel: "auth" },
-      { title: "Jobs", description: "Monitor AI service executions in real-time", icon: ClipboardList, to: "/jobs", color: "text-muted-foreground", accessLevel: "auth" },
-      { title: "Credits", description: "Check balance, buy credits, view transaction history", icon: Coins, to: "/credits", color: "text-primary", accessLevel: "auth" },
-    ],
-  },
-  {
-    id: "tools",
-    title: "Tools",
-    items: [
-      { title: "Profile Extractor", description: "Generate guest profiles from podcast transcripts", icon: UserCheck, to: "/profile-extractor", color: "text-primary", accessLevel: "auth", badge: "New" },
-      { title: "Prompt Forge", description: "Create and test specialized AI prompts", icon: Wand2, to: "/prompt-forge", color: "text-ai-accent", accessLevel: "auth", badge: "New" },
-      { title: "Onboarding", description: "Step-by-step guide to get started with the platform", icon: Rocket, to: "/onboarding", color: "text-status-validated", accessLevel: "auth" },
-    ],
-  },
-  {
-    id: "resources",
-    title: "Resources",
-    items: [
-      { title: "Getting Started", description: "5-minute intro to using the platform", icon: Rocket, to: "/docs/getting-started/introduction", color: "text-status-validated", accessLevel: "public" },
-      { title: "FAQ", description: "Answers to common questions", icon: HelpCircle, to: "/docs/reference/faq", color: "text-muted-foreground", accessLevel: "public" },
-      { title: "Feedback", description: "Share ideas, report issues, suggest improvements", icon: MessageSquare, to: "/feedback", color: "text-ai-accent", accessLevel: "auth" },
-    ],
-  },
-  {
-    id: "explore",
-    title: "Explore Knowledge",
-    items: [
-      { title: "Insights", description: "Non-obvious mechanisms extracted from content", icon: Brain, to: "/insights", color: "text-primary", accessLevel: "public" },
-      { title: "Patterns", description: "Recurring cognitive and strategic structures", icon: Map, to: "/patterns", color: "text-status-validated", accessLevel: "public" },
-      { title: "Formulas", description: "Actionable rules you can apply immediately", icon: Sparkles, to: "/formulas", color: "text-ai-accent", accessLevel: "public" },
-      { title: "Topics", description: "Browse knowledge by subject area", icon: Globe, to: "/topics", color: "text-muted-foreground", accessLevel: "public" },
-    ],
-  },
-  {
-    id: "admin",
-    title: "Administration",
-    items: [
-      { title: "Admin Dashboard", description: "Global monitoring and platform control", icon: Shield, to: "/admin", color: "text-destructive", accessLevel: "admin", badge: "Admin" },
-    ],
-  },
-];
-
 /* ─── Access Engine ─── */
 function resolveAccess(
   level: "public" | "auth" | "paid" | "admin",
@@ -132,7 +53,13 @@ function resolveAccess(
 }
 
 /* ─── Sub-components ─── */
-function HeroBlock() {
+function HeroBlock({ t }: { t: (k: string) => string }) {
+  const pills = [
+    { icon: Brain, label: t("links.knowledge_extraction") },
+    { icon: Sparkles, label: t("links.ai_powered") },
+    { icon: Network, label: t("links.graph_relations") },
+  ];
+
   return (
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-ai-accent/4 to-transparent" />
@@ -141,12 +68,12 @@ function HeroBlock() {
           <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-ai-accent/20 blur-xl" />
           <img src={logo} alt="AI-IDEI" className="relative h-20 w-20 rounded-full border-2 border-primary/20 shadow-lg shadow-primary/20 object-cover" />
         </div>
-        <h1 className="text-2xl font-serif font-bold mb-2">{HERO.name}</h1>
+        <h1 className="text-2xl font-serif font-bold mb-2">AI-IDEI.com</h1>
         <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
-          {HERO.tagline}
+          {t("links.tagline")}
         </p>
         <div className="flex items-center justify-center gap-3 mt-4 flex-wrap">
-          {HERO.pills.map(p => (
+          {pills.map(p => (
             <span key={p.label} className="flex items-center gap-1.5 text-[10px] text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-full">
               <p.icon className="h-3 w-3 text-primary" />
               {p.label}
@@ -158,7 +85,7 @@ function HeroBlock() {
   );
 }
 
-function CTAButton({ item, onClick }: { item: LinkItem; onClick: () => void }) {
+function CTAButton({ title, onClick }: { title: string; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -167,7 +94,7 @@ function CTAButton({ item, onClick }: { item: LinkItem; onClick: () => void }) {
         hover:scale-[1.02] active:scale-[0.98]
         transition-all duration-200 mb-6"
     >
-      {item.title}
+      {title}
     </button>
   );
 }
@@ -235,9 +162,71 @@ function LinkCard({ item, onClick, locked }: { item: LinkItem; onClick: () => vo
 
 /* ─── Page ─── */
 export default function Links() {
+  const { t } = useTranslation("pages");
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isAdmin } = useAdminCheck();
+
+  const SECTIONS: Section[] = [
+    {
+      id: "product",
+      title: t("links.section_product"),
+      items: [
+        { title: t("links.doc_title"), description: t("links.doc_desc"), icon: BookOpen, to: "/docs", color: "text-primary", accessLevel: "public" },
+        { title: t("links.arch_title"), description: t("links.arch_desc"), icon: Layers, to: "/architecture", color: "text-muted-foreground", accessLevel: "public" },
+        { title: t("links.kg_title"), description: t("links.kg_desc"), icon: Network, to: "/intelligence", color: "text-status-validated", accessLevel: "auth" },
+        { title: t("links.services_title"), description: t("links.services_desc"), icon: Sparkles, to: "/services", color: "text-ai-accent", accessLevel: "auth" },
+        { title: t("links.changelog_title"), description: t("links.changelog_desc"), icon: Newspaper, to: "/changelog", color: "text-muted-foreground", accessLevel: "public" },
+      ],
+    },
+    {
+      id: "platform",
+      title: t("links.section_platform"),
+      items: [
+        { title: t("links.dashboard_title"), description: t("links.dashboard_desc"), icon: LayoutDashboard, to: "/dashboard", color: "text-primary", accessLevel: "auth" },
+        { title: t("links.extractor_title"), description: t("links.extractor_desc"), icon: Upload, to: "/extractor", color: "text-status-validated", accessLevel: "auth", badge: "Core" },
+        { title: t("links.neurons_title"), description: t("links.neurons_desc"), icon: Brain, to: "/neurons", color: "text-primary", accessLevel: "auth" },
+        { title: t("links.library_title"), description: t("links.library_desc"), icon: FileText, to: "/library", color: "text-muted-foreground", accessLevel: "auth" },
+        { title: t("links.jobs_title"), description: t("links.jobs_desc"), icon: ClipboardList, to: "/jobs", color: "text-muted-foreground", accessLevel: "auth" },
+        { title: t("links.credits_title"), description: t("links.credits_desc"), icon: Coins, to: "/credits", color: "text-primary", accessLevel: "auth" },
+      ],
+    },
+    {
+      id: "tools",
+      title: t("links.section_tools"),
+      items: [
+        { title: t("links.profile_extractor_title"), description: t("links.profile_extractor_desc"), icon: UserCheck, to: "/profile-extractor", color: "text-primary", accessLevel: "auth", badge: "New" },
+        { title: t("links.prompt_forge_title"), description: t("links.prompt_forge_desc"), icon: Wand2, to: "/prompt-forge", color: "text-ai-accent", accessLevel: "auth", badge: "New" },
+        { title: t("links.onboarding_title"), description: t("links.onboarding_desc"), icon: Rocket, to: "/onboarding", color: "text-status-validated", accessLevel: "auth" },
+      ],
+    },
+    {
+      id: "resources",
+      title: t("links.section_resources"),
+      items: [
+        { title: t("links.getting_started_title"), description: t("links.getting_started_desc"), icon: Rocket, to: "/docs/getting-started/introduction", color: "text-status-validated", accessLevel: "public" },
+        { title: t("links.faq_title"), description: t("links.faq_desc"), icon: HelpCircle, to: "/docs/reference/faq", color: "text-muted-foreground", accessLevel: "public" },
+        { title: t("links.feedback_title"), description: t("links.feedback_desc"), icon: MessageSquare, to: "/feedback", color: "text-ai-accent", accessLevel: "auth" },
+      ],
+    },
+    {
+      id: "explore",
+      title: t("links.section_explore"),
+      items: [
+        { title: t("links.insights_title"), description: t("links.insights_desc"), icon: Brain, to: "/insights", color: "text-primary", accessLevel: "public" },
+        { title: t("links.patterns_title"), description: t("links.patterns_desc"), icon: Map, to: "/patterns", color: "text-status-validated", accessLevel: "public" },
+        { title: t("links.formulas_title"), description: t("links.formulas_desc"), icon: Sparkles, to: "/formulas", color: "text-ai-accent", accessLevel: "public" },
+        { title: t("links.topics_title"), description: t("links.topics_desc"), icon: Globe, to: "/topics", color: "text-muted-foreground", accessLevel: "public" },
+      ],
+    },
+    {
+      id: "admin",
+      title: t("links.section_admin"),
+      items: [
+        { title: t("links.admin_title"), description: t("links.admin_desc"), icon: Shield, to: "/admin", color: "text-destructive", accessLevel: "admin", badge: "Admin" },
+      ],
+    },
+  ];
 
   const handleClick = (item: LinkItem) => {
     if (item.href) window.open(item.href, "_blank", "noopener");
@@ -256,23 +245,15 @@ export default function Links() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Links — AI-IDEI" description="Your AI-IDEI hub: quick links, resources, community and knowledge assets." />
-      <HeroBlock />
+      <SEOHead title={t("links.seo_title")} description={t("links.seo_desc")} />
+      <HeroBlock t={t} />
 
       <div className="max-w-lg mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
         {/* Primary CTA */}
         {user ? (
-          <CTAButton item={CTA_PRIMARY} onClick={() => handleClick(CTA_PRIMARY)} />
+          <CTAButton title={`🚀 ${t("links.cta_start")}`} onClick={() => navigate("/n/new")} />
         ) : (
-          <button
-            onClick={() => navigate("/auth")}
-            className="w-full py-3.5 px-6 rounded-xl bg-primary text-primary-foreground font-semibold text-sm
-              shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30
-              hover:scale-[1.02] active:scale-[0.98]
-              transition-all duration-200 mb-6"
-          >
-            🔐 Sign up for free
-          </button>
+          <CTAButton title={`🔐 ${t("links.cta_signup")}`} onClick={() => navigate("/auth")} />
         )}
 
         {/* Live Stats */}

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
@@ -62,17 +62,18 @@ function groupByDay(notifications: AppNotification[]) {
   return groups;
 }
 
-// Swipeable notification row
 function SwipeableNotifRow({
   notif,
   index,
   onClick,
   onDismiss,
+  openLabel,
 }: {
   notif: AppNotification;
   index: number;
   onClick: () => void;
   onDismiss: (id: string) => void;
+  openLabel: string;
 }) {
   const x = useMotionValue(0);
   const opacity = useTransform(x, [-150, -80, 0], [0, 0.5, 1]);
@@ -127,7 +128,7 @@ function SwipeableNotifRow({
         </div>
         {notif.link && (
           <span className="text-[10px] text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1 shrink-0">
-            Open →
+            {openLabel} →
           </span>
         )}
       </motion.button>
@@ -170,9 +171,9 @@ export default function Notifications() {
   const handleDismiss = useCallback((id: string) => {
     setDismissed((prev) => new Set(prev).add(id));
     markRead(id);
-    toast("Notification dismissed", {
+    toast(t("notifications_extra.dismissed"), {
       action: {
-        label: "Undo",
+        label: t("notifications_extra.undo"),
         onClick: () => setDismissed((prev) => {
           const next = new Set(prev);
           next.delete(id);
@@ -180,7 +181,7 @@ export default function Notifications() {
         }),
       },
     });
-  }, [markRead]);
+  }, [markRead, t]);
 
   const { isSupported, isSubscribed, subscribe, unsubscribe, loading: pushLoading } = usePushSubscription();
 
@@ -197,7 +198,7 @@ export default function Notifications() {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
-      <SEOHead title="Notifications — AI-IDEI" description="Your notifications: job updates, credit alerts, version changes." />
+      <SEOHead title={`${t("notifications.title")} — AI-IDEI`} description={t("notifications.description")} />
 
       {/* Header */}
       <motion.div
@@ -215,11 +216,11 @@ export default function Notifications() {
         <TabsList className="grid w-full grid-cols-2 h-9">
           <TabsTrigger value="inbox" className="text-xs gap-1.5">
             <Bell className="h-3.5 w-3.5" />
-            Inbox {unreadCount > 0 && `(${unreadCount})`}
+            {t("notifications_extra.inbox")} {unreadCount > 0 && `(${unreadCount})`}
           </TabsTrigger>
           <TabsTrigger value="settings" className="text-xs gap-1.5">
             <Settings className="h-3.5 w-3.5" />
-            Settings
+            {t("notifications_extra.settings")}
           </TabsTrigger>
         </TabsList>
 
@@ -258,7 +259,7 @@ export default function Notifications() {
                 disabled={pushLoading}
               >
                 {pushLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-                {isSubscribed ? "Disable" : "Enable"}
+                {isSubscribed ? t("notifications_extra.disable") : t("notifications_extra.enable")}
               </Button>
             </motion.div>
           )}
@@ -266,19 +267,19 @@ export default function Notifications() {
           {/* Actions */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              {unreadCount > 0 ? `${unreadCount} unread` : "You're all caught up ✓"}
+              {unreadCount > 0 ? `${unreadCount} ${t("notifications_extra.unread")}` : `${t("notifications_extra.all_caught_up")} ✓`}
             </p>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
                 <Button variant="outline" size="sm" onClick={markAllRead} className="text-xs gap-1.5">
                   <CheckCheck className="h-3.5 w-3.5" />
-                  Mark all read
+                  {t("notifications_extra.mark_all_read")}
                 </Button>
               )}
               {notifications.length > 0 && (
                 <Button variant="ghost" size="sm" onClick={clearAll} className="text-xs gap-1.5 text-muted-foreground">
                   <Trash2 className="h-3.5 w-3.5" />
-                  Clear
+                  {t("notifications_extra.clear")}
                 </Button>
               )}
             </div>
@@ -322,8 +323,8 @@ export default function Notifications() {
               </p>
               <p className="text-[11px] text-muted-foreground/60 mt-1">
                 {filter === "all"
-                  ? "When something happens, you'll see it here."
-                  : "Try a different filter to see more."}
+                  ? t("notifications_extra.empty_hint")
+                  : t("notifications_extra.filter_hint")}
               </p>
               {filter !== "all" && (
                 <Button
@@ -332,7 +333,7 @@ export default function Notifications() {
                   onClick={() => setFilter("all")}
                   className="mt-3 text-xs"
                 >
-                  Show all
+                  {t("notifications_extra.show_all")}
                 </Button>
               )}
             </motion.div>
@@ -368,6 +369,7 @@ export default function Notifications() {
                             index={i}
                             onClick={() => handleClick(notif)}
                             onDismiss={handleDismiss}
+                            openLabel={t("notifications_extra.open")}
                           />
                         ))}
                       </AnimatePresence>
@@ -379,7 +381,7 @@ export default function Notifications() {
               {/* Swipe hint for mobile */}
               {filtered.length > 0 && (
                 <p className="text-center text-[10px] text-muted-foreground/40 md:hidden">
-                  ← Swipe left to dismiss
+                  ← {t("notifications_extra.swipe_hint")}
                 </p>
               )}
             </div>

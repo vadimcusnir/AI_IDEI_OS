@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface GuestProfile {
   id: string;
@@ -42,7 +43,6 @@ function findDuplicateCandidates(guests: GuestProfile[]): Map<string, string[]> 
     for (let j = i + 1; j < guests.length; j++) {
       const a = normalize(guests[i].full_name);
       const b = normalize(guests[j].full_name);
-      // Check if names share a significant word (>3 chars) or one contains the other
       const wordsA = a.split(/\s+/).filter(w => w.length > 3);
       const wordsB = b.split(/\s+/).filter(w => w.length > 3);
       const overlap = wordsA.some(w => wordsB.includes(w)) || a.includes(b) || b.includes(a);
@@ -57,6 +57,7 @@ function findDuplicateCandidates(guests: GuestProfile[]): Map<string, string[]> 
 }
 
 export default function GuestPages() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ export default function GuestPages() {
       .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false });
     if (data) setGuests(data as unknown as GuestProfile[]);
-    if (error) toast.error("Error loading profiles");
+    if (error) toast.error(t("guest_pages.error_loading"));
     setLoading(false);
   };
 
@@ -102,27 +103,27 @@ export default function GuestPages() {
       .from("guest_profiles")
       .update({ is_public: newState } as any)
       .eq("id", guest.id);
-    if (error) { toast.error("Eroare"); return; }
+    if (error) { toast.error(t("guest_pages.error_generic")); return; }
     setGuests(prev => prev.map(g => g.id === guest.id ? { ...g, is_public: newState } : g));
 
     if (newState) {
       const publicUrl = `${window.location.origin}/guest/${guest.slug}`;
       toast.success(
-        `✅ Profilul „${guest.full_name}" este acum public!`,
+        `✅ ${t("guest_pages.profile_now_public", { name: guest.full_name })}`,
         {
-          description: `Pagina este accesibilă la ${publicUrl} — indexabilă de motoarele de căutare, partajabilă pe rețele sociale. Folosește acest link pentru a crește vizibilitatea expertului.`,
+          description: t("guest_pages.profile_public_desc", { url: publicUrl }),
           duration: 10000,
           action: {
-            label: "Copiază URL",
+            label: t("guest_pages.copy_url"),
             onClick: () => {
               navigator.clipboard.writeText(publicUrl);
-              toast.info("URL copiat în clipboard!");
+              toast.info(t("guest_pages.url_copied_clipboard"));
             },
           },
         }
       );
     } else {
-      toast.success("Profil ascuns — nu mai este vizibil public.");
+      toast.success(t("guest_pages.profile_hidden"));
     }
   };
 
@@ -130,7 +131,7 @@ export default function GuestPages() {
     e.stopPropagation();
     const url = `${window.location.origin}/guest/${guest.slug}`;
     navigator.clipboard.writeText(url);
-    toast.success("URL copiat!");
+    toast.success(t("guest_pages.url_copied"));
   };
 
   const filtered = useMemo(() => {
@@ -162,19 +163,19 @@ export default function GuestPages() {
       <div className="flex-1 flex overflow-hidden">
         {showFolders && (
           <FolderSidebar storageKey="guest_folders" items={guests.map(g => ({ id: g.id, label: g.full_name }))}
-            selectedFolderId={selectedFolderId} onSelectFolder={setSelectedFolderId} allLabel="All Guests" headerLabel="Guest Folders" />
+            selectedFolderId={selectedFolderId} onSelectFolder={setSelectedFolderId} allLabel={t("guest_pages.all_guests")} headerLabel={t("guest_pages.guest_folders")} />
         )}
         <div className="flex-1 overflow-y-auto">
-        <SEOHead title="Guest Pages — AI-IDEI" description="Manage auto-generated guest profiles extracted from your transcriptions." />
+        <SEOHead title={`${t("guest_pages.title")} — AI-IDEI`} description={t("guest_pages.auto_generated")} />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 w-7 p-0" onClick={() => setShowFolders(!showFolders)}>
                 <FolderTree className="h-3.5 w-3.5" />
               </Button>
-              <h1 className="text-lg font-semibold tracking-tight">Guest Pages</h1>
+              <h1 className="text-lg font-semibold tracking-tight">{t("guest_pages.title")}</h1>
               <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-                {guests.length} profile
+                {t("guest_pages.profiles_count", { count: guests.length })}
               </span>
             </div>
             {duplicates.size > 0 && (
@@ -187,11 +188,11 @@ export default function GuestPages() {
                     onClick={() => setShowDuplicates(!showDuplicates)}
                   >
                     <AlertTriangle className="h-3 w-3" />
-                    {duplicates.size} posibile duplicate
+                    {t("guest_pages.possible_duplicates", { count: duplicates.size })}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="max-w-[220px] text-[10px]">
-                  Am detectat profile cu nume similare care ar putea fi aceeași persoană. Apasă pentru a le vedea.
+                  {t("guest_pages.duplicate_tooltip")}
                 </TooltipContent>
               </Tooltip>
             )}
@@ -205,16 +206,13 @@ export default function GuestPages() {
               </div>
               <div className="space-y-1.5">
                 <p className="text-xs text-foreground font-medium">
-                  Profile auto-generate din transcrierile tale
+                  {t("guest_pages.auto_generated")}
                 </p>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Fiecare persoană detectată în episoadele tale primește un profil cu bio, competențe, framework-uri și citate cheie.
-                  Publică profilele pentru a crea <strong>pagini SEO-optimizate</strong> care atrag trafic organic și cresc autoritatea expertului.
-                </p>
+                <p className="text-[11px] text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: t("guest_pages.auto_generated_desc") }} />
                 <div className="flex flex-wrap gap-3 pt-1 text-[10px] text-muted-foreground/70">
-                  <span className="flex items-center gap-1"><TrendingUp className="h-3 w-3" /> Trafic organic</span>
-                  <span className="flex items-center gap-1"><Share2 className="h-3 w-3" /> Partajare socială</span>
-                  <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" /> Conținut viral</span>
+                  <span className="flex items-center gap-1"><TrendingUp className="h-3 w-3" /> {t("guest_pages.organic_traffic")}</span>
+                  <span className="flex items-center gap-1"><Share2 className="h-3 w-3" /> {t("guest_pages.social_sharing")}</span>
+                  <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" /> {t("guest_pages.viral_content")}</span>
                 </div>
               </div>
             </div>
@@ -226,7 +224,7 @@ export default function GuestPages() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search people..."
+              placeholder={t("guest_pages.search_placeholder")}
               className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
             />
             {search && (
@@ -241,15 +239,15 @@ export default function GuestPages() {
               <Users className="h-10 w-10 opacity-20 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground mb-2">
                 {guests.length === 0
-                  ? "Niciun profil guest încă. Rulează extracția pe un episod pentru a detecta participanții."
+                  ? t("guest_pages.no_profiles")
                   : showDuplicates
-                    ? "Nicio sugestie de duplicare."
-                    : "Niciun rezultat pentru căutare."
+                    ? t("guest_pages.no_duplicates")
+                    : t("guest_pages.no_search_results")
                 }
               </p>
               {guests.length === 0 && (
                 <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate("/extractor")}>
-                  Mergi la Extractor
+                  {t("guest_pages.go_to_extractor")}
                 </Button>
               )}
             </div>
@@ -271,7 +269,7 @@ export default function GuestPages() {
                     {showDuplicates && isDuplicate && (
                       <div className="flex items-center gap-1.5 text-[9px] text-yellow-600 dark:text-yellow-400 mb-2">
                         <AlertTriangle className="h-3 w-3" />
-                        <span>Posibil duplicat — verifică și unește manual dacă este aceeași persoană</span>
+                        <span>{t("guest_pages.possible_duplicate_warning")}</span>
                       </div>
                     )}
 
@@ -299,7 +297,7 @@ export default function GuestPages() {
                                 <Copy className="h-3 w-3" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent side="top" className="text-[10px]">Copiază URL public</TooltipContent>
+                            <TooltipContent side="top" className="text-[10px]">{t("guest_pages.copy_public_url")}</TooltipContent>
                           </Tooltip>
                         )}
                         <Tooltip>
@@ -319,8 +317,8 @@ export default function GuestPages() {
                           </TooltipTrigger>
                           <TooltipContent side="top" className="text-[10px] max-w-[180px]">
                             {guest.is_public
-                              ? "Profile is public and indexable. Disable to hide it."
-                              : "Enable to publish the SEO page of this expert."
+                              ? t("guest_pages.profile_public_tooltip")
+                              : t("guest_pages.profile_private_tooltip")
                             }
                           </TooltipContent>
                         </Tooltip>
@@ -348,13 +346,13 @@ export default function GuestPages() {
                     <div className="flex items-center gap-3 text-[9px] text-muted-foreground/60">
                       <span className="flex items-center gap-0.5">
                         <Brain className="h-2.5 w-2.5" />
-                        {guest.frameworks_mentioned?.length || 0} frameworks
+                        {guest.frameworks_mentioned?.length || 0} {t("guest_pages.frameworks").toLowerCase()}
                       </span>
                       <span className="flex items-center gap-0.5">
                         <Quote className="h-2.5 w-2.5" />
-                        {guest.key_quotes?.length || 0} citate
+                        {t("guest_pages.quotes_count", { count: guest.key_quotes?.length || 0 })}
                       </span>
-                      <span>{guest.episode_ids?.length || 0} episoade</span>
+                      <span>{t("guest_pages.episodes_count", { count: guest.episode_ids?.length || 0 })}</span>
                     </div>
 
                     {/* Expanded detail */}
@@ -363,7 +361,7 @@ export default function GuestPages() {
                         {guest.frameworks_mentioned.length > 0 && (
                           <div>
                             <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
-                              Frameworks
+                              {t("guest_pages.frameworks")}
                             </span>
                             <div className="flex flex-wrap gap-1">
                               {guest.frameworks_mentioned.map((f, i) => (
@@ -377,12 +375,12 @@ export default function GuestPages() {
                         {guest.psychological_traits.length > 0 && (
                           <div>
                             <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
-                              Trăsături
+                              {t("guest_pages.traits")}
                             </span>
                             <div className="flex flex-wrap gap-1">
-                              {guest.psychological_traits.map((t, i) => (
+                              {guest.psychological_traits.map((tr, i) => (
                                 <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-accent/15 text-accent-foreground">
-                                  {t}
+                                  {tr}
                                 </span>
                               ))}
                             </div>
@@ -391,7 +389,7 @@ export default function GuestPages() {
                         {guest.key_quotes.length > 0 && (
                           <div>
                             <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
-                              Citate cheie
+                              {t("guest_pages.key_quotes")}
                             </span>
                             <div className="space-y-1">
                               {guest.key_quotes.map((q, i) => (
@@ -412,7 +410,7 @@ export default function GuestPages() {
                               onClick={e => e.stopPropagation()}
                             >
                               <ExternalLink className="h-3 w-3" />
-                              Vizualizează pagina publică
+                              {t("guest_pages.view_public_page")}
                             </a>
                           )}
                         </div>
