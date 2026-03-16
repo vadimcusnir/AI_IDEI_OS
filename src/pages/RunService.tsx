@@ -290,6 +290,7 @@ export default function RunService() {
                 <Badge variant="secondary" className="text-[9px] font-mono uppercase">
                   {service.category}
                 </Badge>
+                <TierBadge tier={service.access_tier} />
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
             </div>
