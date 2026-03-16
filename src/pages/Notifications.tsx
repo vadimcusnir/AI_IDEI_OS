@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { format, isToday, isYesterday, isThisWeek } from "date-fns";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
@@ -135,6 +136,7 @@ function SwipeableNotifRow({
 }
 
 export default function Notifications() {
+  const { t } = useTranslation("pages");
   const navigate = useNavigate();
   const { notifications, unreadCount, markRead, markAllRead, clearAll, loading } = useNotifications();
   const [filter, setFilter] = useState<FilterType>("all");
@@ -151,11 +153,11 @@ export default function Notifications() {
   const groups = groupByDay(filtered);
 
   const typeFilters = [
-    { key: "all", label: "All" },
-    { key: "unread", label: `Unread (${unreadCount})` },
-    { key: "job_completed", label: "Completed" },
-    { key: "job_failed", label: "Failed" },
-    { key: "credits_low", label: "Credits" },
+    { key: "all", label: t("notifications.title") === "Notifications" ? "All" : t("jobs.filter_all") },
+    { key: "unread", label: t("notifications.unread_count", { count: unreadCount }) },
+    { key: "job_completed", label: t("notifications.completed") },
+    { key: "job_failed", label: t("notifications.failed") },
+    { key: "credits_low", label: t("notifications.credits") },
     { key: "forum_reply", label: "Forum" },
     { key: "level_up", label: "XP" },
   ];
@@ -185,10 +187,10 @@ export default function Notifications() {
   const handleTogglePush = async () => {
     if (isSubscribed) {
       await unsubscribe();
-      toast.success("Push notifications disabled.");
+      toast.success(t("notifications.push_disabled_toast"));
     } else {
       const ok = await subscribe();
-      if (ok) toast.success("Push notifications enabled!");
+      if (ok) toast.success(t("notifications.push_enabled_toast"));
       else toast.error("Could not enable push notifications.");
     }
   };
@@ -205,7 +207,7 @@ export default function Notifications() {
       >
         <h1 className="text-xl font-bold flex items-center gap-2">
           <Bell className="h-5 w-5 text-primary" />
-          Notifications
+          {t("notifications.title")}
         </h1>
       </motion.div>
 
@@ -241,10 +243,10 @@ export default function Notifications() {
                 )}
                 <div>
                   <p className="text-xs font-semibold">
-                    {isSubscribed ? "Push notifications active" : "Enable push notifications"}
+                    {isSubscribed ? t("notifications.push_active") : t("notifications.push_enable")}
                   </p>
                   <p className="text-[10px] text-muted-foreground">
-                    {isSubscribed ? "You receive alerts even when you're not on the site." : "Get notified when a job completes or credits run low."}
+                    {isSubscribed ? t("notifications.push_active_desc") : t("notifications.push_enable_desc")}
                   </p>
                 </div>
               </div>
@@ -316,7 +318,7 @@ export default function Notifications() {
                 <Inbox className="h-8 w-8 text-muted-foreground/30" />
               </div>
               <p className="text-sm font-medium text-muted-foreground">
-                {filter === "all" ? "No notifications yet" : "No notifications for this filter"}
+                {filter === "all" ? t("notifications.no_notifications") : t("notifications.no_filter_results")}
               </p>
               <p className="text-[11px] text-muted-foreground/60 mt-1">
                 {filter === "all"

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { fireFinalConfetti } from "@/components/onboarding/useConfetti";
 
 interface StepStatus {
@@ -77,6 +78,7 @@ const STEPS = [
 ];
 
 export default function Onboarding() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
@@ -151,10 +153,10 @@ export default function Onboarding() {
             4 Steps to Knowledge Assets
           </div>
           <h1 className="text-xl sm:text-2xl font-serif font-bold mb-2">
-            Welcome to AI-IDEI
+            {t("onboarding.title")}
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-            Upload once. Extract forever. Each step brings you closer to an infinite knowledge library.
+            {t("onboarding.subtitle")}
           </p>
         </motion.div>
 
@@ -213,7 +215,7 @@ export default function Onboarding() {
           </div>
           {/* Text progress */}
           <div className="flex items-center justify-between mt-3 px-1">
-            <span className="text-[10px] text-muted-foreground">{completedCount}/{STEPS.length} completed</span>
+            <span className="text-[10px] text-muted-foreground">{completedCount}/{STEPS.length} {t("onboarding.completed")}</span>
             <div className="flex items-center gap-1.5">
               <div className="w-24 h-1.5 rounded-full bg-muted overflow-hidden">
                 <motion.div
@@ -253,11 +255,11 @@ export default function Onboarding() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
-                        Step {activeStep + 1} of {STEPS.length}
+                        {t("onboarding.step", { number: activeStep + 1 })} of {STEPS.length}
                       </span>
                       {isCompleted && (
                         <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                          ✓ Completed
+                          {t("onboarding.step_completed")}
                         </span>
                       )}
                     </div>
@@ -295,7 +297,7 @@ export default function Onboarding() {
                   <div className="flex items-center justify-between">
                     {isCompleted && (
                       <p className="text-xs text-primary font-medium">
-                        {status[step.checkField]} {step.checkField} created
+                        {status[step.checkField]} {step.checkField} {t("onboarding.created_suffix")}
                       </p>
                     )}
                     {!isCompleted && <div />}
@@ -348,13 +350,13 @@ export default function Onboarding() {
             <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
               <Crown className="h-7 w-7 text-primary" />
             </div>
-            <h2 className="text-lg font-serif font-bold mb-1.5">Pipeline Active! 🎉</h2>
+            <h2 className="text-lg font-serif font-bold mb-1.5">{t("onboarding.pipeline_active_title")}</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              You've mastered the basics. Keep uploading content and running services to grow your knowledge empire.
+              {t("onboarding.pipeline_active_desc")}
             </p>
             <div className="flex items-center justify-center gap-2">
               <Button onClick={() => navigate("/home")} className="gap-2">
-                Go to Cockpit
+                {t("onboarding.back_to_cockpit")}
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button variant="outline" onClick={() => navigate("/extractor")} className="gap-2 text-xs">

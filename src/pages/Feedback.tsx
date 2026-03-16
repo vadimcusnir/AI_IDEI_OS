@@ -13,6 +13,7 @@ import {
   Send, ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 
@@ -53,6 +54,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 };
 
 export default function Feedback() {
+  const { t } = useTranslation("pages");
   const { user } = useAuth();
   const location = useLocation();
   const [items, setItems] = useState<FeedbackItem[]>([]);
@@ -107,7 +109,7 @@ export default function Feedback() {
     if (error) {
       toast.error("Error: " + error.message);
     } else {
-      toast.success("Thank you for your feedback! 🙏");
+      toast.success(t("feedback.thank_you"));
       trackInternalEvent({ event: AnalyticsEvents.FEEDBACK_SUBMITTED, params: { type, rating } });
       setTitle("");
       setMessage("");
@@ -135,10 +137,10 @@ export default function Feedback() {
       <div className="mb-6">
         <h1 className="text-xl font-bold flex items-center gap-2">
           <MessageCircle className="h-5 w-5 text-primary" />
-          Feedback
+          {t("feedback.title")}
         </h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          {stats.total} submitted · {stats.pending} pending · {stats.responded} with response
+          {stats.total} {t("feedback.submitted")} · {stats.pending} {t("feedback.pending")} · {stats.responded} {t("feedback.with_response")}
         </p>
       </div>
 
@@ -150,7 +152,7 @@ export default function Feedback() {
         >
           <span className="text-sm font-medium flex items-center gap-2">
             <Send className="h-4 w-4 text-primary" />
-            Submit New Feedback
+            {t("feedback.submit_new")}
           </span>
           <ChevronUp className={cn(
             "h-4 w-4 text-muted-foreground transition-transform",
@@ -265,7 +267,7 @@ export default function Feedback() {
         <div className="text-center py-16">
           <MessageCircle className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">
-            {items.length === 0 ? "No feedback submitted yet — use the form above!" : "No results for the selected filter"}
+            {items.length === 0 ? t("feedback.no_feedback") : t("feedback.no_filter_results")}
           </p>
         </div>
       ) : (
@@ -308,7 +310,7 @@ export default function Feedback() {
                     {item.admin_response && (
                       <div className="bg-primary/5 border border-primary/10 rounded-lg p-3 mt-2">
                         <p className="text-[10px] font-semibold text-primary mb-1 flex items-center gap-1">
-                          <CheckCircle2 className="h-3 w-3" /> Admin Response
+                          <CheckCircle2 className="h-3 w-3" /> {t("feedback.admin_response")}
                         </p>
                         <p className="text-xs text-muted-foreground">{item.admin_response}</p>
                       </div>
