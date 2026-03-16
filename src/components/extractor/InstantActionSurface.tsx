@@ -144,7 +144,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       let transcript: string | null = null;
       let filePath: string | null = null;
       let fileSize: number | null = null;
-      let subtitlesUsed = false;
+      
 
       if (selectedFile) {
         const ext = selectedFile.name.split(".").pop()?.toLowerCase() || "";
