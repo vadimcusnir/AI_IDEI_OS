@@ -1,11 +1,21 @@
 import { useNavigate } from "react-router-dom";
-import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles } from "lucide-react";
+import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles, Brain, Lightbulb, Network, MessageSquareQuote, BarChart3, HelpCircle, Layers, Target, Boxes } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { NeuronListItem, ViewMode } from "@/hooks/useNeuronList";
+
+const CATEGORY_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
+  insight: { icon: Lightbulb, color: "text-amber-500 bg-amber-500/10", label: "Insight" },
+  framework: { icon: Layers, color: "text-blue-500 bg-blue-500/10", label: "Framework" },
+  pattern: { icon: Network, color: "text-purple-500 bg-purple-500/10", label: "Pattern" },
+  narrative: { icon: MessageSquareQuote, color: "text-emerald-500 bg-emerald-500/10", label: "Narrative" },
+  commercial: { icon: Target, color: "text-rose-500 bg-rose-500/10", label: "Commercial" },
+  psychological: { icon: Brain, color: "text-pink-500 bg-pink-500/10", label: "Psychological" },
+  strategy: { icon: Boxes, color: "text-cyan-500 bg-cyan-500/10", label: "Strategy" },
+};
 
 const STATUS_COLORS: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
