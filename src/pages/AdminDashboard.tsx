@@ -103,6 +103,7 @@ const TABS = [
 ];
 
 export default function AdminDashboard() {
+  const { t } = useTranslation("pages");
   const { isAdmin, loading, user } = useAdminCheck();
   const navigate = useNavigate();
   const [stats, setStats] = useState<PlatformStats | null>(null);
