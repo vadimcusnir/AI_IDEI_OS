@@ -91,6 +91,17 @@ export function OnboardingChecklist() {
       if (counts[i] > 0) completed.add(step.id);
     });
 
+    // Fire confetti on newly completed steps
+    if (prevCompletedRef.current > 0 && completed.size > prevCompletedRef.current) {
+      if (completed.size === STEPS.length) {
+        fireFinalConfetti();
+        if (user) localStorage.setItem(`onboarding_completed_${user.id}`, "true");
+      } else {
+        fireStepConfetti();
+      }
+    }
+    prevCompletedRef.current = completed.size;
+
     setCompletedSteps(completed);
     setLoading(false);
   };
