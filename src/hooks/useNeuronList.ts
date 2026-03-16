@@ -13,12 +13,15 @@ export interface NeuronListItem {
   created_at: string;
   score: number;
   visibility: string;
+  content_category: string | null;
+  lifecycle: string | null;
+  episode_id: string | null;
 }
 
 export type ViewMode = "list" | "grid" | "cards";
 export type SortField = "updated_at" | "created_at" | "title" | "number" | "score";
 export type SortDir = "asc" | "desc";
-export type GroupBy = "none" | "status" | "date";
+export type GroupBy = "none" | "status" | "date" | "category";
 
 export function useNeuronList() {
   const { user, loading: authLoading } = useAuth();
@@ -50,7 +53,7 @@ export function useNeuronList() {
     const fetchNeurons = async () => {
       const { data, error } = await supabase
         .from("neurons")
-        .select("id, number, title, status, updated_at, created_at, score, visibility")
+        .select("id, number, title, status, updated_at, created_at, score, visibility, content_category, lifecycle, episode_id")
         .eq("workspace_id", currentWorkspace.id)
         .order("updated_at", { ascending: false });
       if (data) setNeurons(data as NeuronListItem[]);
@@ -80,7 +83,7 @@ export function useNeuronList() {
     setSearching(true);
     const { data, error } = await supabase
       .from("neurons")
-      .select("id, number, title, status, updated_at, created_at, score, visibility")
+      .select("id, number, title, status, updated_at, created_at, score, visibility, content_category, lifecycle, episode_id")
       .textSearch("title", query)
       .order("updated_at", { ascending: false })
       .limit(20);
@@ -88,7 +91,7 @@ export function useNeuronList() {
     if (error) {
       const { data: fallback } = await supabase
         .from("neurons")
-        .select("id, number, title, status, updated_at, created_at, score, visibility")
+        .select("id, number, title, status, updated_at, created_at, score, visibility, content_category, lifecycle, episode_id")
         .ilike("title", `%${query}%`)
         .order("updated_at", { ascending: false })
         .limit(20);
@@ -175,6 +178,17 @@ export function useNeuronList() {
         groups[n.status].push(n);
       });
       return Object.entries(groups).map(([label, items]) => ({ label, items }));
+    }
+    if (groupBy === "category") {
+      const groups: Record<string, NeuronListItem[]> = {};
+      processedNeurons.forEach(n => {
+        const cat = n.content_category || "uncategorized";
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(n);
+      });
+      return Object.entries(groups)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([label, items]) => ({ label: label.charAt(0).toUpperCase() + label.slice(1), items }));
     }
     if (groupBy === "date") {
       const now = new Date();

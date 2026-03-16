@@ -1,11 +1,21 @@
 import { useNavigate } from "react-router-dom";
-import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles } from "lucide-react";
+import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles, Brain, Lightbulb, Network, MessageSquareQuote, BarChart3, HelpCircle, Layers, Target, Boxes } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { NeuronListItem, ViewMode } from "@/hooks/useNeuronList";
+
+const CATEGORY_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
+  insight: { icon: Lightbulb, color: "text-amber-500 bg-amber-500/10", label: "Insight" },
+  framework: { icon: Layers, color: "text-blue-500 bg-blue-500/10", label: "Framework" },
+  pattern: { icon: Network, color: "text-purple-500 bg-purple-500/10", label: "Pattern" },
+  narrative: { icon: MessageSquareQuote, color: "text-emerald-500 bg-emerald-500/10", label: "Narrative" },
+  commercial: { icon: Target, color: "text-rose-500 bg-rose-500/10", label: "Commercial" },
+  psychological: { icon: Brain, color: "text-pink-500 bg-pink-500/10", label: "Psychological" },
+  strategy: { icon: Boxes, color: "text-cyan-500 bg-cyan-500/10", label: "Strategy" },
+};
 
 const STATUS_COLORS: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
@@ -111,6 +121,16 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <div className={cn("h-2 w-2 rounded-full shrink-0", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
         <span className="text-[11px] font-mono text-primary/70 w-10 shrink-0">#{n.number}</span>
         <span className="flex-1 text-sm truncate">{n.title}</span>
+        {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
+          const cat = CATEGORY_CONFIG[n.content_category!];
+          const CatIcon = cat.icon;
+          return (
+            <span className={cn("flex items-center gap-0.5 text-[8px] font-medium px-1.5 py-0.5 rounded-md shrink-0", cat.color)}>
+              <CatIcon className="h-2.5 w-2.5" />
+              {cat.label}
+            </span>
+          );
+        })()}
         <span className="text-[10px] text-muted-foreground/60 shrink-0">{formatDate(n.updated_at)}</span>
         {n.score > 0 && (
           <div className="flex items-center gap-0.5 shrink-0">
@@ -143,7 +163,17 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
             {contextMenu}
           </div>
         </div>
-        <h3 className="text-sm font-medium line-clamp-2 mb-auto">{n.title}</h3>
+        <h3 className="text-sm font-medium line-clamp-2 mb-1">{n.title}</h3>
+        {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
+          const cat = CATEGORY_CONFIG[n.content_category!];
+          const CatIcon = cat.icon;
+          return (
+            <span className={cn("inline-flex items-center gap-0.5 text-[8px] font-medium px-1.5 py-0.5 rounded-md w-fit mt-1", cat.color)}>
+              <CatIcon className="h-2.5 w-2.5" />
+              {cat.label}
+            </span>
+          );
+        })()}
         <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
           <span className="text-[9px] text-muted-foreground/50">{formatDate(n.updated_at)}</span>
           <div className="flex items-center gap-1">
@@ -185,6 +215,17 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <span className="text-[9px] text-muted-foreground/50 ml-auto">{formatDate(n.updated_at)}</span>
       </div>
       <h3 className="text-base font-serif font-medium line-clamp-2 mb-1">{n.title}</h3>
+      {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
+        const cat = CATEGORY_CONFIG[n.content_category!];
+        const CatIcon = cat.icon;
+        return (
+          <span className={cn("inline-flex items-center gap-1 text-[9px] font-medium px-2 py-0.5 rounded-md w-fit mb-2", cat.color)}>
+            <CatIcon className="h-3 w-3" />
+            {cat.label}
+            {n.lifecycle && <span className="opacity-60">· {n.lifecycle}</span>}
+          </span>
+        );
+      })()}
       {n.title === "Untitled Neuron" && (
         <p className="text-[11px] text-muted-foreground/60 line-clamp-2 mb-3">Neuron gol — click pentru a edita</p>
       )}
