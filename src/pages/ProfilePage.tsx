@@ -99,7 +99,7 @@ export default function ProfilePage() {
       }
     } else {
       setSaved(true);
-      toast.success("Profile updated successfully!");
+      toast.success(t("profile.profile_updated"));
       setTimeout(() => setSaved(false), 2000);
     }
     setSaving(false);
