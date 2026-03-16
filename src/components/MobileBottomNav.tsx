@@ -125,8 +125,7 @@ export function MobileBottomNav() {
                 <span className={cn("text-[9px] leading-none transition-all", active ? "font-bold" : "font-medium")}>{t(`navigation:${labelKey}`)}</span>
                 {active && (
                   <span className="absolute bottom-1 h-0.5 w-4 rounded-full bg-primary" />
-                )}
-                )}
+                )
               </button>
             );
           })}
