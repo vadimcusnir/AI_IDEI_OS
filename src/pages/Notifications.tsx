@@ -136,6 +136,7 @@ function SwipeableNotifRow({
 }
 
 export default function Notifications() {
+  const { t } = useTranslation("pages");
   const navigate = useNavigate();
   const { notifications, unreadCount, markRead, markAllRead, clearAll, loading } = useNotifications();
   const [filter, setFilter] = useState<FilterType>("all");
