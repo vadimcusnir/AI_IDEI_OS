@@ -2,12 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useUserTier } from "@/hooks/useUserTier";
 import {
   User, Settings, CreditCard, Shield, Bell, MessageCircle,
   FileText, ScrollText, Code2, LogOut, Landmark, ChevronDown,
-  Wrench, Bot, Network,
+  Wrench, Bot, Network, Crown,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +24,7 @@ import { Button } from "@/components/ui/button";
 export function UserMenu() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
+  const { tier } = useUserTier();
   const { t } = useTranslation(["navigation", "common"]);
   const navigate = useNavigate();
 
@@ -38,6 +41,12 @@ export function UserMenu() {
               {initials}
             </AvatarFallback>
           </Avatar>
+          {(tier === "pro" || tier === "vip") && (
+            <Badge variant="outline" className="text-[7px] px-1 py-0 h-3.5 gap-0.5 border-primary/30 text-primary">
+              <Crown className="h-2 w-2" />
+              {tier === "vip" ? "VIP" : "PRO"}
+            </Badge>
+          )}
           <ChevronDown className="h-3 w-3 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>

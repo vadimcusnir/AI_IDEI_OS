@@ -17,13 +17,15 @@ import {
   FileText, X, Clock, Trash2, Pencil,
   FileAudio, Film, Type, Globe, Loader2, Brain,
   ChevronDown, Copy, ExternalLink,
-  Layers, Users, Save, Download, FileUp,
+  Layers, Users, Save, Download, FileUp, Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
 import { ControlledSection } from "@/components/ControlledSection";
+import { useUserTier } from "@/hooks/useUserTier";
+import { PremiumPaywall } from "@/components/premium/PremiumPaywall";
 
 async function extractTextFromPDF(file: File): Promise<string> {
   const pdfjsLib = await import("pdfjs-dist");
@@ -87,6 +89,9 @@ const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 export default function Extractor() {
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
+  const { tier } = useUserTier();
+  const isPro = tier === "pro" || tier === "vip";
+  const [paywallOpen, setPaywallOpen] = useState(false);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [extractingId, setExtractingId] = useState<string | null>(null);
@@ -568,12 +573,13 @@ export default function Extractor() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button variant="default" size="sm" className="h-7 text-xs gap-1"
-                              onClick={() => handleDeepExtract(ep)}>
+                              onClick={() => isPro ? handleDeepExtract(ep) : setPaywallOpen(true)}>
+                              {!isPro && <Crown className="h-3 w-3" />}
                               <Layers className="h-3 w-3" /> Deep Extract
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent className="max-w-[260px] text-center">
-                            Multi-level extraction: atomic, entities, frameworks, psychological, narrative, commercial, patterns, synthesis (~500 credits)
+                            {isPro ? "Multi-level extraction: atomic, entities, frameworks, psychological, narrative, commercial, patterns, synthesis (~500 credits)" : "Pro feature — upgrade to unlock Deep Extract"}
                           </TooltipContent>
                         </Tooltip>
                       </div>
@@ -858,13 +864,13 @@ export default function Extractor() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                                  disabled={detectingGuests === ep.id} onClick={() => handleDetectGuests(ep)}>
-                                  {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Users className="h-3 w-3" />}
+                                  disabled={detectingGuests === ep.id} onClick={() => isPro ? handleDetectGuests(ep) : setPaywallOpen(true)}>
+                                  {detectingGuests === ep.id ? <Loader2 className="h-3 w-3 animate-spin" /> : isPro ? <Users className="h-3 w-3" /> : <Crown className="h-3 w-3 text-primary" />}
                                   Guests
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent className="max-w-[220px] text-center">
-                                Detect and create profiles for people mentioned in the transcript
+                                {isPro ? "Detect and create profiles for people mentioned in the transcript" : "Pro feature — upgrade to unlock Guest Detection"}
                               </TooltipContent>
                             </Tooltip>
                           )}
@@ -880,6 +886,7 @@ export default function Extractor() {
       </div>
     </div>
     </PageTransition>
+    <PremiumPaywall open={paywallOpen} onOpenChange={setPaywallOpen} requiredTier="pro" serviceName="Deep Extract & Guest Detection" />
     </TooltipProvider>
   );
 }
