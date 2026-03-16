@@ -236,14 +236,14 @@ That means 1 credit costs $0.011.
 
 You upload a podcast. The full pipeline:
 
-- Transcription: 300 credits ($3)
-- Extraction: 1500 credits ($15)
-- 3 articles: 900 credits ($9)
-- Total: 2700 credits ($27)
+- Transcription: 200 credits
+- Extraction: 1500 credits
+- 3 articles: 900 credits
+- Total: 2600 credits (~$29)
 
 You get: 15-30 neurons + 3 articles + guest profile.
 
-Cost per deliverable: less than $1.
+Cost per deliverable: ~$1.1.
 
 ## Getting credits
 
