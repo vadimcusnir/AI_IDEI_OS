@@ -221,7 +221,7 @@ export default function Dashboard() {
           <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between">
             <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Credit Economy</h3>
             <div className="text-center py-2">
-              <span className="text-3xl font-bold font-mono">{data.credits.balance}</span>
+              <span className="text-2xl sm:text-3xl font-bold font-mono">{data.credits.balance}</span>
               <p className="text-[10px] text-muted-foreground mt-0.5">NEURONS available</p>
             </div>
             <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
