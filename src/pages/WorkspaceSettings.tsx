@@ -28,6 +28,7 @@ const ROLE_COLORS: Record<string, string> = {
 };
 
 export default function WorkspaceSettings() {
+  const { t } = useTranslation("pages");
   const { currentWorkspace, members, updateWorkspace, inviteMember, removeMember, updateMemberRole, currentRole, deleteWorkspace } = useWorkspace();
   const { user } = useAuth();
   const [name, setName] = useState(currentWorkspace?.name || "");
@@ -44,8 +45,8 @@ export default function WorkspaceSettings() {
     setSaving(true);
     const ok = await updateWorkspace(currentWorkspace.id, { name, description });
     setSaving(false);
-    if (ok) toast.success("Workspace actualizat");
-    else toast.error("Eroare la salvare");
+    if (ok) toast.success(t("workspace.workspace_updated"));
+    else toast.error(t("workspace.save_error"));
   };
 
   const handleInvite = async () => {
@@ -54,15 +55,15 @@ export default function WorkspaceSettings() {
     const ok = await inviteMember(inviteEmail.trim(), inviteRole);
     setInviting(false);
     if (ok) {
-      toast.success(`${inviteEmail} a fost invitat`);
+      toast.success(t("workspace.invite_success", { email: inviteEmail }));
       setInviteEmail("");
     } else {
-      toast.error("Utilizatorul nu a fost găsit sau eroare la invitare");
+      toast.error(t("workspace.invite_error"));
     }
   };
 
   if (!currentWorkspace) {
-    return <div className="p-8 text-center text-muted-foreground">Niciun workspace selectat.</div>;
+    return <div className="p-8 text-center text-muted-foreground">{t("workspace.no_workspace")}</div>;
   }
 
   return (
