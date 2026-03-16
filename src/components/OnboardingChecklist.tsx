@@ -17,7 +17,6 @@ interface StepDef {
   label: string;
   description: string;
   route: string;
-  table: string;
 }
 
 const STEPS: StepDef[] = [
@@ -27,7 +26,6 @@ const STEPS: StepDef[] = [
     label: "Upload Content",
     description: "Add your first episode — audio, video, or text",
     route: "/extractor",
-    table: "episodes",
   },
   {
     id: "neuron",
@@ -35,7 +33,6 @@ const STEPS: StepDef[] = [
     label: "Create a Neuron",
     description: "Extract an atomic knowledge unit",
     route: "/neurons",
-    table: "neurons",
   },
   {
     id: "service",
@@ -43,7 +40,6 @@ const STEPS: StepDef[] = [
     label: "Run an AI Service",
     description: "Generate deliverables from your neurons",
     route: "/services",
-    table: "neuron_jobs",
   },
   {
     id: "library",
@@ -51,7 +47,6 @@ const STEPS: StepDef[] = [
     label: "Review Library",
     description: "View your generated artifacts",
     route: "/library",
-    table: "artifacts",
   },
 ];
 
