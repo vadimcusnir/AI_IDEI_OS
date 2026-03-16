@@ -75,25 +75,25 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const { blocks, neuron_title, action } = await req.json();
+    const InsightsSchema = z.object({
+      blocks: z.array(z.object({
+        type: z.string().max(50),
+        content: z.string().max(50_000, "Block content too long"),
+      })).min(1, "No blocks provided").max(100, "Too many blocks (max 100)"),
+      neuron_title: z.string().max(500).optional(),
+      action: z.string().max(50).optional(),
+    });
+    const parsed = InsightsSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { blocks, neuron_title, action } = parsed.data;
 
     // Validate action
     if (action && !VALID_ACTIONS.has(action)) {
       return new Response(JSON.stringify({ error: "Invalid action" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    if (!blocks || !Array.isArray(blocks) || blocks.length === 0) {
-      return new Response(JSON.stringify({ error: "No blocks provided" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    if (blocks.length > 100) {
-      return new Response(JSON.stringify({ error: "Too many blocks (max 100)" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
