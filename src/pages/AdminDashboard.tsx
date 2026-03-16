@@ -567,7 +567,7 @@ export default function AdminDashboard() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={() => toggleServiceActive(s.id, s.is_active)}
-                            title={s.is_active ? "Deactivate" : "Activate"}
+                            title={s.is_active ? t("admin.deactivate") : t("admin.activate")}
                           >
                             {s.is_active ? <EyeOff className="h-3.5 w-3.5 text-destructive" /> : <Eye className="h-3.5 w-3.5 text-primary" />}
                           </Button>
