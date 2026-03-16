@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Building2, Users, Crown, Shield, Pencil, Eye, Trash2, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { SEOHead } from "@/components/SEOHead";
+import { useTranslation } from "react-i18next";
 
 const ROLE_ICONS: Record<string, typeof Crown> = {
   owner: Crown,
