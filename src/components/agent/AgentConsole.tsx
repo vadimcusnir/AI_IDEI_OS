@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { AgentSlashMenu } from "./AgentSlashMenu";
 
 interface Message {
   id: string;
@@ -53,6 +54,7 @@ export function AgentConsole() {
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -394,7 +396,17 @@ export function AgentConsole() {
       )}
 
       {/* Input */}
-      <div className="px-4 py-3 border-t border-border bg-card">
+      <div className="px-4 py-3 border-t border-border bg-card relative">
+        <AgentSlashMenu
+          input={input}
+          visible={showSlashMenu}
+          onSelect={(template) => {
+            setInput(template);
+            setShowSlashMenu(false);
+            inputRef.current?.focus();
+          }}
+          onClose={() => setShowSlashMenu(false)}
+        />
         <div className="flex items-end gap-2">
           <input ref={fileInputRef} type="file" className="hidden" multiple accept=".txt,.md,.csv,.json,.pdf,.mp3,.wav,.m4a,.mp4" onChange={handleFileSelect} />
           <Button variant="ghost" size="sm" className="h-9 w-9 p-0 shrink-0" onClick={() => fileInputRef.current?.click()}>
@@ -403,9 +415,13 @@ export function AgentConsole() {
           <textarea
             ref={inputRef}
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={e => {
+              const val = e.target.value;
+              setInput(val);
+              setShowSlashMenu(val === "/" || (val.startsWith("/") && !val.includes(" ")));
+            }}
             onKeyDown={handleKeyDown}
-            placeholder="Tell the system what you want to do..."
+            placeholder="Type / for commands or tell me what you need..."
             rows={1}
             className="flex-1 bg-muted/50 rounded-xl px-4 py-2.5 text-sm outline-none border border-border focus:border-primary transition-colors resize-none min-h-[38px] max-h-[120px] placeholder:text-muted-foreground/50"
             style={{ height: "auto", overflow: "hidden" }}
@@ -420,9 +436,9 @@ export function AgentConsole() {
           </Button>
         </div>
         <div className="flex items-center gap-3 mt-2 text-[9px] text-muted-foreground/50">
+          <span className="flex items-center gap-1"><Zap className="h-2.5 w-2.5" /> Type <kbd className="px-1 py-0.5 bg-muted rounded text-[8px] font-mono">/</kbd> for commands</span>
           <span className="flex items-center gap-1"><Globe className="h-2.5 w-2.5" /> URLs</span>
           <span className="flex items-center gap-1"><FileAudio className="h-2.5 w-2.5" /> Audio</span>
-          <span className="flex items-center gap-1"><Type className="h-2.5 w-2.5" /> Text</span>
           <span className="ml-auto">⌘ + Enter to send</span>
         </div>
       </div>
