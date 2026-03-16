@@ -281,9 +281,9 @@ export default function ProfilePage() {
                         <div className="flex items-center gap-2">
                           <BellRing className="h-4 w-4 text-primary" />
                           <div>
-                            <p className="text-xs font-medium">Browser Notifications</p>
+                            <p className="text-xs font-medium">{t("profile.browser_notifications")}</p>
                             <p className="text-[10px] text-muted-foreground">
-                              Receive desktop alerts even when you're not on the page
+                              {t("profile.browser_notifications_desc")}
                             </p>
                           </div>
                         </div>
