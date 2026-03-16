@@ -448,13 +448,13 @@ export default function AdminDashboard() {
                   <TableHeader>
                     <TableRow>
                       <TableHead className="text-[10px] w-16">#</TableHead>
-                      <TableHead className="text-[10px]">Title</TableHead>
-                      <TableHead className="text-[10px]">Status</TableHead>
-                      <TableHead className="text-[10px]">Visibility</TableHead>
-                      <TableHead className="text-[10px]">Lifecycle</TableHead>
-                      <TableHead className="text-[10px] text-right">Score</TableHead>
-                      <TableHead className="text-[10px]">Created</TableHead>
-                      <TableHead className="text-[10px] w-24">Actions</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.title")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.status")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.visibility")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.lifecycle")}</TableHead>
+                      <TableHead className="text-[10px] text-right">{t("admin.table.score")}</TableHead>
+                      <TableHead className="text-[10px]">{t("admin.table.created")}</TableHead>
+                      <TableHead className="text-[10px] w-24">{t("common:actions")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
