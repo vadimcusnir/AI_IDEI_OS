@@ -14,6 +14,7 @@ import {
   ArrowLeft, Star, Coins, DollarSign, Tag, ShoppingCart, Crown,
   TrendingUp, MessageSquare, Loader2, CheckCircle2, Store, Clock,
 } from "lucide-react";
+import { InlineTopUp } from "@/components/credits/InlineTopUp";
 
 interface KnowledgeAsset {
   id: string;
