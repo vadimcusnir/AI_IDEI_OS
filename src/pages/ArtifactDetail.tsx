@@ -13,6 +13,7 @@ import { ArtifactExportMenu } from "@/components/library/ArtifactExportMenu";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface Artifact {
   id: string;
@@ -50,6 +51,7 @@ export default function ArtifactDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { t } = useTranslation("pages");
   const [artifact, setArtifact] = useState<Artifact | null>(null);
   const [linkedNeurons, setLinkedNeurons] = useState<LinkedNeuron[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,7 +72,6 @@ export default function ArtifactDetail() {
       setArtifact(artRes.data as any);
     }
 
-    // Fetch neuron details for linked neurons
     const links = (linksRes.data || []) as LinkedNeuron[];
     if (links.length > 0) {
       const neuronIds = links.map(l => l.neuron_id);
@@ -95,7 +96,7 @@ export default function ArtifactDetail() {
     if (!artifact) return;
     await navigator.clipboard.writeText(artifact.content);
     setCopied(true);
-    toast.success("Conținut copiat");
+    toast.success(t("artifact_detail.content_copied"));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -111,7 +112,7 @@ export default function ArtifactDetail() {
       URL.revokeObjectURL(url);
     } else {
       const html = `<!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -142,14 +143,14 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
       a.click();
       URL.revokeObjectURL(url);
     }
-    toast.success("File downloaded");
+    toast.success(t("artifact_detail.file_downloaded"));
   };
 
   const handleDelete = async () => {
     if (!artifact) return;
     await supabase.from("artifact_neurons").delete().eq("artifact_id", artifact.id);
     await supabase.from("artifacts").delete().eq("id", artifact.id);
-    toast.success("Artefact șters");
+    toast.success(t("artifact_detail.artifact_deleted"));
     navigate("/library");
   };
 
@@ -164,9 +165,9 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
   if (!artifact) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-3">
-        <p className="text-sm text-muted-foreground">Artefactul nu a fost găsit.</p>
+        <p className="text-sm text-muted-foreground">{t("artifact_detail.not_found")}</p>
         <Button variant="outline" size="sm" onClick={() => navigate("/library")}>
-          <ArrowLeft className="h-3.5 w-3.5 mr-1.5" /> Înapoi la Bibliotecă
+          <ArrowLeft className="h-3.5 w-3.5 mr-1.5" /> {t("artifact_detail.back_library")}
         </Button>
       </div>
     );
@@ -180,12 +181,12 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
         {/* Back + Actions */}
         <div className="flex items-center justify-between mb-5">
           <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={() => navigate("/library")}>
-            <ArrowLeft className="h-3.5 w-3.5" /> Bibliotecă
+            <ArrowLeft className="h-3.5 w-3.5" /> {t("artifact_detail.back_library")}
           </Button>
           <div className="flex items-center gap-1.5">
             <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCopy}>
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-              {copied ? "Copiat" : "Copiază"}
+              {copied ? t("artifact_detail.copied") : t("artifact_detail.copy")}
             </Button>
             <ArtifactExportMenu
               title={artifact.title}
@@ -227,7 +228,7 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
         {linkedNeurons.length > 0 && (
           <div className="mb-6 bg-card border border-border rounded-xl p-4">
             <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
-              <Brain className="h-3 w-3" /> Neuroni sursă
+              <Brain className="h-3 w-3" /> {t("artifact_detail.source_neurons")}
             </h3>
             <div className="space-y-1">
               {linkedNeurons.map(ln => (
@@ -257,7 +258,7 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
         {/* Metadata */}
         {artifact.metadata && Object.keys(artifact.metadata).length > 0 && (
           <div className="mt-4 bg-muted/30 border border-border rounded-xl p-4">
-            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Metadata</h3>
+            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("artifact_detail.metadata")}</h3>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(artifact.metadata).map(([key, val]) => (
                 <div key={key}>

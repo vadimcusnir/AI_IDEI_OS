@@ -8,6 +8,7 @@ import {
   Database, Table2, Link2, Layers, ArrowRight, Loader2,
   Shield, Lock, Unlock, BarChart3,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface TableInfo {
   name: string;
@@ -88,6 +89,7 @@ const CAT_COLORS: Record<string, string> = {
 
 export default function DatabaseRelations() {
   const [filter, setFilter] = useState<string | null>(null);
+  const { t } = useTranslation("pages");
 
   const filtered = filter
     ? TABLE_CATALOG.filter(t => t.category === filter)
@@ -99,7 +101,7 @@ export default function DatabaseRelations() {
   return (
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
-        <SEOHead title="Database Schema — AI-IDEI" description="Entity relationship diagram and schema analysis for the AI-IDEI platform." />
+        <SEOHead title={`${t("database_relations.title")} — AI-IDEI`} description={t("database_relations.subtitle")} />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-5">
 
           {/* Header */}
@@ -108,18 +110,18 @@ export default function DatabaseRelations() {
               <Database className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">Database Schema</h1>
-              <p className="text-[10px] text-muted-foreground">Entity relationships, schema analysis, and security coverage</p>
+              <h1 className="text-lg font-serif font-bold tracking-tight">{t("database_relations.title")}</h1>
+              <p className="text-[10px] text-muted-foreground">{t("database_relations.subtitle")}</p>
             </div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-4 gap-3 mb-6">
             {[
-              { label: "Tables", value: TABLE_CATALOG.length, icon: Table2 },
-              { label: "Relations", value: totalRelations, icon: Link2 },
-              { label: "RLS Active", value: `${rlsCount}/${TABLE_CATALOG.length}`, icon: Shield },
-              { label: "Categories", value: CATEGORIES.length, icon: Layers },
+              { label: t("database_relations.tables"), value: TABLE_CATALOG.length, icon: Table2 },
+              { label: t("database_relations.relations"), value: totalRelations, icon: Link2 },
+              { label: t("database_relations.rls_active"), value: `${rlsCount}/${TABLE_CATALOG.length}`, icon: Shield },
+              { label: t("database_relations.categories"), value: CATEGORIES.length, icon: Layers },
             ].map(s => (
               <div key={s.label} className="bg-card border border-border rounded-xl p-3 text-center">
                 <s.icon className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
@@ -138,7 +140,7 @@ export default function DatabaseRelations() {
                 !filter ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
               )}
             >
-              All ({TABLE_CATALOG.length})
+              {t("database_relations.all")} ({TABLE_CATALOG.length})
             </button>
             {CATEGORIES.map(cat => (
               <button
@@ -164,7 +166,7 @@ export default function DatabaseRelations() {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-mono font-medium">{table.name}</p>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[9px] text-muted-foreground">{table.columns} cols</span>
+                    <span className="text-[9px] text-muted-foreground">{t("database_relations.cols", { count: table.columns })}</span>
                     {table.relationsOut.length > 0 && (
                       <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
                         <ArrowRight className="h-2.5 w-2.5" />

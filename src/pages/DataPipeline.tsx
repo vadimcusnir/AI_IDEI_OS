@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { PremiumGate } from "@/components/premium/PremiumGate";
+import { useTranslation } from "react-i18next";
 
 interface PipelineStats {
   total_units: number;
@@ -26,6 +27,7 @@ interface PipelineStats {
 export default function DataPipeline() {
   const { categories, units, stats, loading, selectedCategory, setSelectedCategory } = useDataCollection();
   const [pipelineStats, setPipelineStats] = useState<PipelineStats | null>(null);
+  const { t } = useTranslation("pages");
 
   useEffect(() => {
     supabase.rpc("data_pipeline_stats").then(({ data }) => {
@@ -50,7 +52,7 @@ export default function DataPipeline() {
     <PremiumGate requiredTier="pro" featureName="Data Pipeline" fallback="overlay">
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
-        <SEOHead title="Data Pipeline — AI-IDEI" description="Cognitive data collection pipeline — knowledge extraction and LLM training readiness." />
+        <SEOHead title={`${t("data_pipeline.title")} — AI-IDEI`} description={t("data_pipeline.subtitle")} />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
           {/* Header */}
@@ -59,31 +61,31 @@ export default function DataPipeline() {
               <Database className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">Data Collection Pipeline</h1>
-              <p className="text-[10px] text-muted-foreground">Cognitive hierarchy & LLM training readiness</p>
+              <h1 className="text-lg font-serif font-bold tracking-tight">{t("data_pipeline.title")}</h1>
+              <p className="text-[10px] text-muted-foreground">{t("data_pipeline.subtitle")}</p>
             </div>
           </div>
 
           {/* Stats overview */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            <StatCard icon={Brain} label="Cognitive Units" value={stats?.total_units ?? 0} />
-            <StatCard icon={CheckCircle2} label="Validated" value={stats?.validated_units ?? 0} accent="text-status-validated" />
-            <StatCard icon={Sparkles} label="LLM Ready" value={stats?.llm_ready_units ?? 0} accent="text-primary" />
-            <StatCard icon={BarChart3} label="Avg Quality" value={`${((stats?.avg_quality ?? 0) * 100).toFixed(0)}%`} />
+            <StatCard icon={Brain} label={t("data_pipeline.cognitive_units")} value={stats?.total_units ?? 0} />
+            <StatCard icon={CheckCircle2} label={t("data_pipeline.validated")} value={stats?.validated_units ?? 0} accent="text-status-validated" />
+            <StatCard icon={Sparkles} label={t("data_pipeline.llm_ready")} value={stats?.llm_ready_units ?? 0} accent="text-primary" />
+            <StatCard icon={BarChart3} label={t("data_pipeline.avg_quality")} value={`${((stats?.avg_quality ?? 0) * 100).toFixed(0)}%`} />
           </div>
 
           {/* Progress bars */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="flex justify-between text-[10px] mb-1.5">
-                <span className="text-muted-foreground font-semibold uppercase tracking-wider">Validation Rate</span>
+                <span className="text-muted-foreground font-semibold uppercase tracking-wider">{t("data_pipeline.validation_rate")}</span>
                 <span className="font-mono">{validationRate}%</span>
               </div>
               <Progress value={validationRate} className="h-2" />
             </div>
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="flex justify-between text-[10px] mb-1.5">
-                <span className="text-muted-foreground font-semibold uppercase tracking-wider">LLM Readiness</span>
+                <span className="text-muted-foreground font-semibold uppercase tracking-wider">{t("data_pipeline.llm_readiness")}</span>
                 <span className="font-mono">{llmReadyRate}%</span>
               </div>
               <Progress value={llmReadyRate} className="h-2" />
@@ -93,29 +95,28 @@ export default function DataPipeline() {
           {/* Training Datasets & Type Breakdown */}
           {pipelineStats && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              {/* Training Datasets */}
               <div className="bg-card border border-border rounded-xl p-4">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                  <Beaker className="h-3 w-3" /> Training Datasets
+                  <Beaker className="h-3 w-3" /> {t("data_pipeline.training_datasets")}
                 </h3>
                 <div className="grid grid-cols-3 gap-2 mb-3">
                   <div className="text-center">
                     <p className="text-lg font-bold font-mono">{pipelineStats.datasets}</p>
-                    <p className="text-[9px] text-muted-foreground">Datasets</p>
+                    <p className="text-[9px] text-muted-foreground">{t("data_pipeline.datasets")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold font-mono">{pipelineStats.total_samples}</p>
-                    <p className="text-[9px] text-muted-foreground">Samples</p>
+                    <p className="text-[9px] text-muted-foreground">{t("data_pipeline.samples")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold font-mono">{pipelineStats.validated_samples}</p>
-                    <p className="text-[9px] text-muted-foreground">Validated</p>
+                    <p className="text-[9px] text-muted-foreground">{t("data_pipeline.validated")}</p>
                   </div>
                 </div>
                 {pipelineStats.total_samples > 0 && (
                   <div>
                     <div className="flex justify-between text-[9px] mb-1">
-                      <span className="text-muted-foreground">Sample validation</span>
+                      <span className="text-muted-foreground">{t("data_pipeline.sample_validation")}</span>
                       <span className="font-mono">{Math.round((pipelineStats.validated_samples / pipelineStats.total_samples) * 100)}%</span>
                     </div>
                     <Progress value={(pipelineStats.validated_samples / pipelineStats.total_samples) * 100} className="h-1.5" />
@@ -123,22 +124,21 @@ export default function DataPipeline() {
                 )}
               </div>
 
-              {/* Unit Type Breakdown */}
               <div className="bg-card border border-border rounded-xl p-4">
                 <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                  <Layers className="h-3 w-3" /> By Unit Type
+                  <Layers className="h-3 w-3" /> {t("data_pipeline.by_unit_type")}
                 </h3>
                 {(pipelineStats.by_type || []).length === 0 ? (
-                  <p className="text-[10px] text-muted-foreground text-center py-4">No data yet</p>
+                  <p className="text-[10px] text-muted-foreground text-center py-4">{t("data_pipeline.no_data")}</p>
                 ) : (
                   <div className="space-y-2">
-                    {pipelineStats.by_type.slice(0, 6).map(t => (
-                      <div key={t.unit_type}>
+                    {pipelineStats.by_type.slice(0, 6).map(tp => (
+                      <div key={tp.unit_type}>
                         <div className="flex justify-between text-[10px] mb-0.5">
-                          <span className="font-mono">{t.unit_type}</span>
-                          <span className="text-muted-foreground">{t.count}</span>
+                          <span className="font-mono">{tp.unit_type}</span>
+                          <span className="text-muted-foreground">{tp.count}</span>
                         </div>
-                        <Progress value={(t.avg_quality || 0) * 100} className="h-1" />
+                        <Progress value={(tp.avg_quality || 0) * 100} className="h-1" />
                       </div>
                     ))}
                   </div>
@@ -151,7 +151,7 @@ export default function DataPipeline() {
           {pipelineStats && (pipelineStats.recent_runs || []).length > 0 && (
             <div className="mb-6">
               <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                <Clock className="h-3 w-3" /> Recent Collection Runs
+                <Clock className="h-3 w-3" /> {t("data_pipeline.recent_runs")}
               </h3>
               <div className="space-y-1">
                 {pipelineStats.recent_runs.map(run => (
@@ -164,8 +164,8 @@ export default function DataPipeline() {
                       {run.status}
                     </Badge>
                     <span className="text-xs flex-1">{run.source_type}</span>
-                    <span className="text-[9px] text-muted-foreground">{run.units_extracted} extracted</span>
-                    <span className="text-[9px] text-muted-foreground">{run.units_validated} validated</span>
+                    <span className="text-[9px] text-muted-foreground">{run.units_extracted} {t("data_pipeline.extracted")}</span>
+                    <span className="text-[9px] text-muted-foreground">{run.units_validated} {t("data_pipeline.validated").toLowerCase()}</span>
                     <span className="text-[9px] text-muted-foreground/60 font-mono">
                       {new Date(run.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </span>
@@ -184,7 +184,7 @@ export default function DataPipeline() {
                 !selectedCategory ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
               )}
             >
-              All Categories
+              {t("data_pipeline.all_categories")}
             </button>
             {categories.map(cat => (
               <button
@@ -204,10 +204,8 @@ export default function DataPipeline() {
           {units.length === 0 ? (
             <div className="text-center py-16">
               <Layers className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground mb-1">No cognitive units yet</p>
-              <p className="text-[10px] text-muted-foreground/60">
-                Run extraction services on your content to generate cognitive units.
-              </p>
+              <p className="text-sm text-muted-foreground mb-1">{t("data_pipeline.no_units")}</p>
+              <p className="text-[10px] text-muted-foreground/60">{t("data_pipeline.no_units_hint")}</p>
             </div>
           ) : (
             <div className="space-y-1">
