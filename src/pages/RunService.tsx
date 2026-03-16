@@ -70,6 +70,7 @@ export default function RunService() {
   const { serviceKey } = useParams<{ serviceKey: string }>();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { subscribed, tier: subTier } = useSubscription();
   const [service, setService] = useState<Service | null>(null);
   const [credits, setCredits] = useState<UserCredits | null>(null);
   const [loading, setLoading] = useState(true);
@@ -78,6 +79,9 @@ export default function RunService() {
   const [jobResult, setJobResult] = useState("");
   const [jobId, setJobId] = useState<string | null>(null);
   const [accessVerdict, setAccessVerdict] = useState<AccessVerdict | null>(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+
+  const userTier = subscribed ? (subTier || "pro") : "free";
 
   useEffect(() => {
     if (authLoading) return;
