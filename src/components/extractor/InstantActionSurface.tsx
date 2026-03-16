@@ -314,7 +314,15 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
         // === COMPLETE ===
         setStage("complete");
-        setResult({ neurons: neuronsCreated, episode_id: ep.id });
+        setResult({
+          neurons: neuronsCreated,
+          episode_id: ep.id,
+          type_distribution: data.type_distribution,
+          frameworks: data.frameworks,
+          raw_extracted: data.raw_extracted,
+          after_dedup: data.after_dedup,
+          meta: data.meta,
+        });
         toast.success(`✅ ${neuronsCreated} neurons extracted! (${creditsSpent} credits)`, { duration: 8000 });
         trackEvent({
           name: "neurons_extracted",
