@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
-import { useChatHistory } from "@/hooks/useChatHistory";
+import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -12,7 +12,7 @@ import {
   Send, Loader2, Bot, User, Terminal, Upload,
   X, Paperclip, RotateCcw, History, ChevronLeft,
   Globe, Brain, Sparkles, FileText, Network, Zap,
-  ArrowRight, FileUp, FileAudio, Film, Type,
+  ArrowRight, FileUp, FileAudio, Film, Type, Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,6 +28,13 @@ interface Message {
 
 const AGENT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agent-console`;
 
+const WELCOME_MSG: Message = {
+  id: "welcome",
+  role: "assistant",
+  content: "**Knowledge OS Agent** ready.\n\nI can orchestrate your entire knowledge pipeline. Paste a URL, drop a file, or tell me what you need.\n\n**Quick commands:**\n- `Analyze [URL]` — full pipeline extraction\n- `Extract neurons from [source]`\n- `Generate [article/framework/course]`\n- `Search [topic]` in your knowledge graph",
+  timestamp: new Date(),
+};
+
 const COMMAND_HINTS = [
   { label: "Analyze YouTube video", icon: Globe, example: "Analyze this YouTube video: https://..." },
   { label: "Extract neurons", icon: Brain, example: "Extract neurons from my latest episode" },
@@ -40,32 +47,43 @@ export function AgentConsole() {
   const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
   const navigate = useNavigate();
-  const { saveMessage, sessions, loadSession, newSession } = useChatHistory();
-  
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "welcome",
-      role: "assistant",
-      content: "**Knowledge OS Agent** ready.\n\nI can orchestrate your entire knowledge pipeline. Paste a URL, drop a file, or tell me what you need.\n\n**Quick commands:**\n- `Analyze [URL]` — full pipeline extraction\n- `Extract neurons from [source]`\n- `Generate [article/framework/course]`\n- `Search [topic]` in your knowledge graph",
-      timestamp: new Date(),
-    },
-  ]);
+  const {
+    sessionId, sessions, isLoadingSessions,
+    saveMessage, loadSession, loadCurrentSession,
+    deleteSession, newSession, refreshSessions,
+  } = useChatHistory();
+
+  const [messages, setMessages] = useState<Message[]>([WELCOME_MSG]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   useEffect(scrollToBottom, [messages, scrollToBottom]);
+
+  // Auto-load last session on mount
+  useEffect(() => {
+    if (!user || sessionLoaded) return;
+    setSessionLoaded(true);
+    loadCurrentSession().then((loaded) => {
+      if (loaded.length > 0) {
+        setMessages(loaded);
+      }
+    });
+  }, [user, sessionLoaded, loadCurrentSession]);
 
   // Fetch user stats for context
   useEffect(() => {
@@ -84,7 +102,6 @@ export function AgentConsole() {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
 
-    // Credit gate: warn if balance is critically low
     if (balance < 20) {
       toast.error("Credite insuficiente pentru a rula comenzi AI. Reîncarcă NEURONS.", {
         action: { label: "Top-up", onClick: () => navigate("/credits") },
@@ -105,10 +122,13 @@ export function AgentConsole() {
     setInput("");
     setFiles([]);
     setLoading(true);
+    setIsStreaming(false);
     saveMessage(userMessage);
 
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     try {
-      // Read text files
       let fileContent = "";
       for (const file of files) {
         if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md")) {
@@ -117,7 +137,7 @@ export function AgentConsole() {
       }
 
       const apiMessages = messages
-        .filter(m => m.role !== "system" && m.id !== "welcome" && !m.id.startsWith("welcome"))
+        .filter(m => m.role !== "system" && !m.id.startsWith("welcome"))
         .slice(-20)
         .map(m => ({ role: m.role, content: m.content }));
 
@@ -138,10 +158,21 @@ export function AgentConsole() {
             credit_balance: balance,
           },
         }),
+        signal: controller.signal,
       });
 
       if (!resp.ok) {
         const errBody = await resp.json().catch(() => ({}));
+        if (resp.status === 429) {
+          toast.error("Rate limit atins. Încearcă din nou în câteva secunde.");
+          throw new Error("Rate limit exceeded");
+        }
+        if (resp.status === 402) {
+          toast.error("Credite AI epuizate. Adaugă credite pentru a continua.", {
+            action: { label: "Top-up", onClick: () => navigate("/credits") },
+          });
+          throw new Error("AI credits exhausted");
+        }
         throw new Error(errBody.error || `Error ${resp.status}`);
       }
 
@@ -150,6 +181,7 @@ export function AgentConsole() {
       const assistantId = crypto.randomUUID();
 
       if (resp.body) {
+        setIsStreaming(true);
         const reader = resp.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
@@ -186,7 +218,7 @@ export function AgentConsole() {
                   ];
                 });
               }
-            } catch { /* partial */ }
+            } catch { /* partial JSON */ }
           }
         }
 
@@ -222,6 +254,7 @@ export function AgentConsole() {
 
       saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
     } catch (e) {
+      if ((e as Error).name === "AbortError") return;
       toast.error("Agent error: " + (e instanceof Error ? e.message : "Unknown"));
       setMessages(prev => [
         ...prev,
@@ -229,7 +262,15 @@ export function AgentConsole() {
       ]);
     } finally {
       setLoading(false);
+      setIsStreaming(false);
+      abortRef.current = null;
     }
+  };
+
+  const handleStop = () => {
+    abortRef.current?.abort();
+    setLoading(false);
+    setIsStreaming(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -260,6 +301,12 @@ export function AgentConsole() {
     const loaded = await loadSession(sid);
     if (loaded.length > 0) setMessages(loaded);
     setShowHistory(false);
+  };
+
+  const handleDeleteSession = async (sid: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await deleteSession(sid);
+    toast.success("Session deleted");
   };
 
   const handleHintClick = (example: string) => {
@@ -309,7 +356,9 @@ export function AgentConsole() {
           >
             <div className="bg-muted/30 px-4 py-3 max-h-48 overflow-y-auto space-y-1">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Previous sessions</p>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Previous sessions {isLoadingSessions && <Loader2 className="inline h-2.5 w-2.5 animate-spin ml-1" />}
+                </p>
                 <button onClick={() => setShowHistory(false)} className="text-muted-foreground hover:text-foreground">
                   <ChevronLeft className="h-3 w-3" />
                 </button>
@@ -321,10 +370,23 @@ export function AgentConsole() {
                 <button
                   key={s.session_id}
                   onClick={() => handleLoadSession(s.session_id)}
-                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors"
+                  className={cn(
+                    "w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors group flex items-center justify-between",
+                    s.session_id === sessionId && "bg-primary/5 border border-primary/20"
+                  )}
                 >
-                  <p className="text-[10px] truncate">{s.last_message || "Session"}</p>
-                  <p className="text-[8px] text-muted-foreground">{new Date(s.created_at).toLocaleDateString()}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] truncate">{s.last_message || "Session"}</p>
+                    <p className="text-[8px] text-muted-foreground">
+                      {new Date(s.created_at).toLocaleDateString()} · {s.message_count} msgs
+                    </p>
+                  </div>
+                  <button
+                    onClick={(e) => handleDeleteSession(s.session_id, e)}
+                    className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-opacity ml-2 shrink-0"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
                 </button>
               ))}
             </div>
@@ -335,7 +397,7 @@ export function AgentConsole() {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((msg) => (
-          <AgentBubble key={msg.id} msg={msg} onNavigate={navigate} />
+          <AgentBubble key={msg.id} msg={msg} onNavigate={navigate} isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"} />
         ))}
 
         {/* Command hints — only in empty state */}
@@ -364,7 +426,7 @@ export function AgentConsole() {
           </motion.div>
         )}
 
-        {loading && (
+        {loading && !isStreaming && (
           <div className="flex gap-2.5">
             <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
               <Terminal className="h-3 w-3 text-primary" />
@@ -431,9 +493,15 @@ export function AgentConsole() {
               el.style.height = Math.min(el.scrollHeight, 120) + "px";
             }}
           />
-          <Button size="sm" className="h-9 w-9 p-0 shrink-0 rounded-xl" disabled={loading || (!input.trim() && files.length === 0)} onClick={handleSend}>
-            <Send className="h-4 w-4" />
-          </Button>
+          {isStreaming ? (
+            <Button size="sm" className="h-9 w-9 p-0 shrink-0 rounded-xl bg-destructive hover:bg-destructive/90" onClick={handleStop}>
+              <X className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button size="sm" className="h-9 w-9 p-0 shrink-0 rounded-xl" disabled={loading || (!input.trim() && files.length === 0)} onClick={handleSend}>
+              <Send className="h-4 w-4" />
+            </Button>
+          )}
         </div>
         <div className="flex items-center gap-3 mt-2 text-[9px] text-muted-foreground/50">
           <span className="flex items-center gap-1"><Zap className="h-2.5 w-2.5" /> Type <kbd className="px-1 py-0.5 bg-muted rounded text-[8px] font-mono">/</kbd> for commands</span>
@@ -447,10 +515,8 @@ export function AgentConsole() {
 }
 
 // ── Message Bubble with markdown rendering ──
-function AgentBubble({ msg, onNavigate }: { msg: Message; onNavigate: (path: string) => void }) {
+function AgentBubble({ msg, onNavigate, isStreaming }: { msg: Message; onNavigate: (path: string) => void; isStreaming?: boolean }) {
   const isUser = msg.role === "user";
-
-  // Detect action links in content
   const actionLinks = extractActionLinks(msg.content);
 
   return (
@@ -472,11 +538,14 @@ function AgentBubble({ msg, onNavigate }: { msg: Message; onNavigate: (path: str
         ) : (
           <div className="prose prose-sm dark:prose-invert max-w-none text-xs leading-relaxed [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2 [&_h1]:text-sm [&_h2]:text-xs [&_h3]:text-xs [&_code]:text-[10px] [&_code]:bg-background/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre]:text-[10px] [&_pre]:bg-background/50 [&_pre]:rounded-lg [&_strong]:text-foreground">
             <ReactMarkdown>{msg.content}</ReactMarkdown>
+            {isStreaming && (
+              <span className="inline-block w-1.5 h-3.5 bg-primary/70 animate-pulse rounded-sm ml-0.5 -mb-0.5" />
+            )}
           </div>
         )}
 
-        {/* Quick action buttons extracted from response */}
-        {!isUser && actionLinks.length > 0 && (
+        {/* Quick action buttons */}
+        {!isUser && !isStreaming && actionLinks.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-border/50">
             {actionLinks.map((link, i) => (
               <Button
@@ -526,5 +595,5 @@ function extractActionLinks(content: string): Array<{ label: string; path: strin
     links.push({ label: "Library", path: "/library", icon: FileText });
   }
 
-  return links.slice(0, 3); // Max 3 action links
+  return links.slice(0, 3);
 }
