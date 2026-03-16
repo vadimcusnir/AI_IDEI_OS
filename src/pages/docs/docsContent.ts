@@ -746,7 +746,7 @@ Yes! Every extracted neuron is fully editable. You can change the title, modify 
 
 ## What are NEURONS credits?
 
-NEURONS are the compute currency of the platform. Every AI operation costs a fixed number of credits. 1000 credits = $10. You always see the price before running anything.
+NEURONS are the compute currency of the platform. Every AI operation costs a fixed number of credits. 1000 credits = $11. You always see the price before running anything.
 
 ## Is my content private?
 
