@@ -302,5 +302,12 @@
     "content_structuring": "Content Structuring",
     "sales_copy": "Sales Copy",
     "copied": "Copied to clipboard!"
+  },
+  "extractor": {
+    "title": "Extractor",
+    "subtitle": "Paste a link, drop a file — the system handles everything.",
+    "no_episodes": "No episodes yet",
+    "no_episodes_hint": "Upload your first podcast, video, or text above to begin extracting knowledge.",
+    "supported_formats": "Supports YouTube, MP3, MP4, PDF, and plain text"
   }
 }

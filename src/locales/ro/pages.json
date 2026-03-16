@@ -302,5 +302,12 @@
     "content_structuring": "Structurare conținut",
     "sales_copy": "Copy de vânzare",
     "copied": "Copiat în clipboard!"
+  },
+  "extractor": {
+    "title": "Extractor",
+    "subtitle": "Lipește un link, trage un fișier — sistemul se ocupă de tot.",
+    "no_episodes": "Niciun episod încă",
+    "no_episodes_hint": "Încarcă primul podcast, video sau text pentru a extrage cunoaștere.",
+    "supported_formats": "Suportă YouTube, MP3, MP4, PDF și text simplu"
   }
 }
