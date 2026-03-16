@@ -486,7 +486,7 @@ export default function Landing() {
         <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.04] via-transparent to-transparent" />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/[0.06] rounded-full blur-[150px]" />
 
-        <div className="relative max-w-3xl mx-auto px-6 py-24 text-center">
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
               {t("final_cta.title_line1")}
