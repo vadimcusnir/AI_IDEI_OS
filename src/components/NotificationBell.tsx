@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useNotifications, AppNotification } from "@/hooks/useNotifications";
-import { Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch, MessageCircle, MessageSquarePlus } from "lucide-react";
+import { Bell, CheckCircle2, AlertCircle, Coins, Zap, GitBranch, MessageCircle, MessageSquarePlus, Trophy, Newspaper, Star, Users, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, ro, ru } from "date-fns/locale";
@@ -17,6 +17,13 @@ const NOTIF_ICONS: Record<string, React.ElementType> = {
   version_created: GitBranch,
   feedback_new: MessageSquarePlus,
   feedback_response: MessageCircle,
+  forum_reply: MessageCircle,
+  forum_mention: Users,
+  changelog: Newspaper,
+  level_up: Trophy,
+  vip_milestone: Star,
+  artifact_created: CheckCircle2,
+  marketplace_sale: ShoppingBag,
 };
 
 const NOTIF_COLORS: Record<string, string> = {
@@ -27,6 +34,13 @@ const NOTIF_COLORS: Record<string, string> = {
   version_created: "text-muted-foreground",
   feedback_new: "text-primary",
   feedback_response: "text-emerald-500",
+  forum_reply: "text-primary",
+  forum_mention: "text-primary",
+  changelog: "text-primary",
+  level_up: "text-amber-500",
+  vip_milestone: "text-amber-500",
+  artifact_created: "text-emerald-500",
+  marketplace_sale: "text-emerald-500",
 };
 
 export function NotificationBell() {
