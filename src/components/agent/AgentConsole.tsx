@@ -82,6 +82,14 @@ export function AgentConsole() {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
 
+    // Credit gate: warn if balance is critically low
+    if (balance < 20) {
+      toast.error("Credite insuficiente pentru a rula comenzi AI. Reîncarcă NEURONS.", {
+        action: { label: "Top-up", onClick: () => navigate("/credits") },
+      });
+      return;
+    }
+
     const userContent = input.trim() + (files.length > 0 ? `\n\n[${files.length} file(s) attached: ${files.map(f => f.name).join(", ")}]` : "");
 
     const userMessage: Message = {

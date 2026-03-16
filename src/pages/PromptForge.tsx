@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.gif";
+import { InlineTopUp } from "@/components/credits/InlineTopUp";
 
 const GOALS = [
   { value: "Extragere experiență", icon: User, color: "text-primary" },
