@@ -1,14 +1,14 @@
 import { SEOHead } from "@/components/SEOHead";
-import { PlatformChat } from "@/components/chat/PlatformChat";
+import { AgentConsole } from "@/components/agent/AgentConsole";
 
 export default function ChatPage() {
   return (
     <div className="flex-1 flex flex-col h-[calc(100vh-4rem)]">
       <SEOHead
-        title="AI Assistant — AI-IDEI"
-        description="Chat with the AI-IDEI assistant to extract knowledge, run services, and navigate the platform."
+        title="Agent Console — AI-IDEI"
+        description="Knowledge OS command interface. Orchestrate extraction pipelines, generate assets, and search your knowledge graph."
       />
-      <PlatformChat />
+      <AgentConsole />
     </div>
   );
 }
