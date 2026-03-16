@@ -10,6 +10,7 @@ import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft, Loader2, Play, CheckCircle2,
   Clock, AlertCircle, Coins, Lock, Shield,
@@ -59,18 +60,12 @@ const CATEGORY_ICON: Record<string, React.ElementType> = {
   document: FileText,
 };
 
-const PIPELINE_STEPS = [
-  { label: "Creating job", key: "creating" },
-  { label: "Reserving credits", key: "reserving" },
-  { label: "AI pipeline running", key: "running" },
-  { label: "Auditing & saving", key: "auditing" },
-];
-
 export default function RunService() {
   const { serviceKey } = useParams<{ serviceKey: string }>();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { subscribed, tier: subTier } = useSubscription();
+  const { t } = useTranslation("pages");
   const [service, setService] = useState<Service | null>(null);
   const [credits, setCredits] = useState<UserCredits | null>(null);
   const [loading, setLoading] = useState(true);
@@ -82,6 +77,13 @@ export default function RunService() {
   const [paywallOpen, setPaywallOpen] = useState(false);
 
   const userTier = subscribed ? (subTier || "pro") : "free";
+
+  const PIPELINE_STEPS = [
+    { label: t("run_service.step_creating"), key: "creating" },
+    { label: t("run_service.step_reserving"), key: "reserving" },
+    { label: t("run_service.step_running"), key: "running" },
+    { label: t("run_service.step_auditing"), key: "auditing" },
+  ];
 
   useEffect(() => {
     if (authLoading) return;
@@ -96,7 +98,7 @@ export default function RunService() {
     ]);
 
     if (serviceRes.data) setService(serviceRes.data as Service);
-    else { toast.error("Service not found"); navigate("/services"); return; }
+    else { toast.error(t("run_service.service_not_found")); navigate("/services"); return; }
 
     if (creditsRes.data) {
       setCredits(creditsRes.data as UserCredits);
@@ -117,7 +119,7 @@ export default function RunService() {
   const handleRun = async () => {
     if (!service || !user || !credits) return;
     if (credits.balance < service.credits_cost) {
-      toast.error(`Insufficient credits. Need ${service.credits_cost}, have ${credits.balance}.`);
+      toast.error(t("run_service.insufficient_error", { need: service.credits_cost, have: credits.balance }));
       return;
     }
 
@@ -218,7 +220,7 @@ export default function RunService() {
       if (updatedCredits) setCredits(updatedCredits as UserCredits);
 
       setJobStatus("completed");
-      toast.success("Job completed — results audited and saved");
+      toast.success(t("run_service.job_completed"));
       trackEvent({ name: "service_executed", params: { service_key: service.service_key, job_id: jobId || undefined, credits_cost: service.credits_cost } });
       trackInternalEvent({ event: AnalyticsEvents.SERVICE_COMPLETED, params: { service_key: service.service_key, job_id: jobId, credits_cost: service.credits_cost } });
     } catch (e) {
@@ -270,7 +272,7 @@ export default function RunService() {
           className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6 group"
         >
           <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
-          All Services
+          {t("run_service.all_services")}
         </motion.button>
 
         {/* Service header */}
@@ -306,12 +308,12 @@ export default function RunService() {
             {deliverables.length > 0 && (
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-status-validated" />
-                <span className="text-xs text-muted-foreground">{deliverables.length} deliverables</span>
+                <span className="text-xs text-muted-foreground">{t("run_service.deliverables_count", { count: deliverables.length })}</span>
               </div>
             )}
             <div className="flex items-center gap-1.5">
               <Clock className="h-4 w-4 text-muted-foreground/50" />
-              <span className="text-xs text-muted-foreground">~1-3 min</span>
+              <span className="text-xs text-muted-foreground">{t("run_service.duration_estimate")}</span>
             </div>
           </div>
         </motion.div>
@@ -329,7 +331,7 @@ export default function RunService() {
               {/* Input fields */}
               <div className="mb-6">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                  <FileText className="h-3 w-3" /> Define Context
+                  <FileText className="h-3 w-3" /> {t("run_service.define_context")}
                 </h2>
                 <div className="space-y-3">
                   {inputFields.length > 0 ? inputFields.map((field: any, i: number) => (
@@ -361,7 +363,7 @@ export default function RunService() {
                     <textarea
                       value={inputs.context || ""}
                       onChange={e => setInputs({ context: e.target.value })}
-                      placeholder="Describe what you want to analyze or produce..."
+                      placeholder={t("run_service.context_placeholder")}
                       rows={5}
                       className="w-full bg-card rounded-xl px-4 py-3 text-sm outline-none border border-border focus:border-primary/50 focus:ring-2 focus:ring-primary/10 transition-all resize-none"
                     />
@@ -373,7 +375,7 @@ export default function RunService() {
               {deliverables.length > 0 && (
                 <div className="mb-6">
                   <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                    <CheckCircle2 className="h-3 w-3" /> What You'll Receive
+                    <CheckCircle2 className="h-3 w-3" /> {t("run_service.deliverables_title")}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {deliverables.map((d: any, i: number) => (
@@ -390,21 +392,21 @@ export default function RunService() {
               <div className="mb-6 rounded-2xl border border-border bg-card overflow-hidden">
                 <div className="p-4">
                   <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
-                    <Coins className="h-3 w-3" /> Cost Preview
+                    <Coins className="h-3 w-3" /> {t("run_service.cost_preview")}
                   </h2>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <p className="text-[10px] text-muted-foreground mb-0.5">Service Cost</p>
+                      <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.service_cost")}</p>
                       <p className="text-2xl font-bold font-mono">{service.credits_cost}</p>
                       <p className="text-[9px] text-muted-foreground">NEURONS</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground mb-0.5">Your Balance</p>
+                      <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.your_balance")}</p>
                       <p className="text-2xl font-bold font-mono">{credits?.balance ?? 0}</p>
                       <p className="text-[9px] text-muted-foreground">NEURONS</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground mb-0.5">After Run</p>
+                      <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.after_run")}</p>
                       <p className={cn("text-2xl font-bold font-mono", hasEnoughCredits ? "text-status-validated" : "text-destructive")}>
                         {(credits?.balance ?? 0) - service.credits_cost}
                       </p>
@@ -413,7 +415,6 @@ export default function RunService() {
                   </div>
                 </div>
 
-                {/* Access verdict */}
                 {accessVerdict?.verdict === "PAYWALL" && (
                   <div className="p-4 bg-destructive/5 border-t border-destructive/10">
                     <InlineTopUp
@@ -426,7 +427,7 @@ export default function RunService() {
                 {accessVerdict?.verdict === "ALLOW" && (
                   <div className="flex items-center gap-3 p-4 bg-status-validated/5 border-t border-status-validated/10">
                     <Shield className="h-5 w-5 text-status-validated shrink-0" />
-                    <p className="text-xs text-status-validated font-medium">Access verified — ready to run</p>
+                    <p className="text-xs text-status-validated font-medium">{t("run_service.access_verified")}</p>
                   </div>
                 )}
               </div>
@@ -436,13 +437,13 @@ export default function RunService() {
                 <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-center gap-3">
                   <Crown className="h-5 w-5 text-amber-500 shrink-0" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Subscription Required</p>
+                    <p className="text-sm font-medium">{t("run_service.subscription_required")}</p>
                     <p className="text-xs text-muted-foreground">
-                      This service requires a {service.access_tier === "vip" ? "VIP" : "Pro"} plan.
+                      {t("run_service.subscription_desc", { tier: service.access_tier === "vip" ? "VIP" : "Pro" })}
                     </p>
                   </div>
                   <Button size="sm" className="text-xs gap-1 shrink-0" onClick={() => setPaywallOpen(true)}>
-                    <Zap className="h-3 w-3" /> Upgrade
+                    <Zap className="h-3 w-3" /> {t("run_service.upgrade")}
                   </Button>
                 </div>
               )}
@@ -460,12 +461,12 @@ export default function RunService() {
                   size="lg"
                 >
                   {hasTierAccess ? <Play className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-                  {hasTierAccess ? `Run Service — ${service.credits_cost} NEURONS` : "Unlock with Pro"}
+                  {hasTierAccess ? t("run_service.run_button", { cost: service.credits_cost }) : t("run_service.unlock_pro")}
                 </Button>
                 {hasTierAccess && !hasEnoughCredits && (
                   <div className="flex items-center gap-1.5 text-destructive">
                     <AlertCircle className="h-3.5 w-3.5" />
-                    <span className="text-xs">Insufficient credits</span>
+                    <span className="text-xs">{t("run_service.insufficient_credits")}</span>
                   </div>
                 )}
               </div>
@@ -481,7 +482,7 @@ export default function RunService() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-8"
             >
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-5">Execution Pipeline</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-5">{t("run_service.execution_pipeline")}</h2>
               <div className="space-y-1">
                 {PIPELINE_STEPS.map((step, i) => {
                   const isDone = (i === 0 && jobStatus !== "creating") ||
@@ -518,7 +519,7 @@ export default function RunService() {
                         {step.label}
                       </span>
                       {isActive && (
-                        <span className="ml-auto text-[10px] text-primary/60 animate-pulse">Processing...</span>
+                        <span className="ml-auto text-[10px] text-primary/60 animate-pulse">{t("run_service.processing")}</span>
                       )}
                     </motion.div>
                   );
@@ -539,12 +540,12 @@ export default function RunService() {
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                   <Sparkles className="h-3 w-3" />
-                  {jobStatus === "completed" ? "Results (Audited)" : "Generating..."}
+                  {jobStatus === "completed" ? t("run_service.results_audited") : t("run_service.generating")}
                 </h2>
                 {jobStatus === "running" && (
                   <div className="flex items-center gap-1.5">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                    <span className="text-[10px] text-primary">Live</span>
+                    <span className="text-[10px] text-primary">{t("run_service.live")}</span>
                   </div>
                 )}
               </div>
@@ -560,13 +561,13 @@ export default function RunService() {
                   className="flex flex-wrap items-center gap-2 mt-4"
                 >
                   <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/jobs")}>
-                    View All Jobs
+                    {t("run_service.view_all_jobs")}
                   </Button>
                   <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/credits")}>
-                    <Coins className="h-3 w-3" /> View Credits
+                    <Coins className="h-3 w-3" /> {t("run_service.view_credits")}
                   </Button>
                   <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/library")}>
-                    <FileText className="h-3 w-3" /> View in Library
+                    <FileText className="h-3 w-3" /> {t("run_service.view_in_library")}
                   </Button>
                   <Button variant="default" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => {
                     setJobStatus("idle");
@@ -574,7 +575,7 @@ export default function RunService() {
                     setJobId(null);
                     loadData();
                   }}>
-                    <Play className="h-3 w-3" /> Run Again
+                    <Play className="h-3 w-3" /> {t("run_service.run_again")}
                   </Button>
                 </motion.div>
               )}
@@ -591,8 +592,8 @@ export default function RunService() {
           >
             <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
             <div>
-              <p className="text-sm font-medium text-destructive">Job failed</p>
-              <p className="text-xs text-muted-foreground">Credits released if reserved. You can try again.</p>
+              <p className="text-sm font-medium text-destructive">{t("run_service.job_failed")}</p>
+              <p className="text-xs text-muted-foreground">{t("run_service.job_failed_desc")}</p>
             </div>
           </motion.div>
         )}
