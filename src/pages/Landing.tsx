@@ -121,15 +121,15 @@ export default function Landing() {
 
       {/* ═══ NAV ═══ */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group">
-            <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full group-hover:shadow-lg group-hover:shadow-primary/20 transition-shadow" />
-            <span className="text-base font-serif font-bold">AI-IDEI</span>
-            <span className="text-[9px] uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold hidden sm:inline">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <button onClick={() => navigate("/")} className="flex items-center gap-2 group shrink-0">
+            <img src={logo} alt="AI-IDEI" className="h-7 w-7 sm:h-8 sm:w-8 rounded-full group-hover:shadow-lg group-hover:shadow-primary/20 transition-shadow" />
+            <span className="text-sm sm:text-base font-serif font-bold">AI-IDEI</span>
+            <span className="text-[9px] uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold hidden lg:inline">
               {t("nav.knowledge_os")}
             </span>
           </button>
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-6">
             {NAV_LINKS.map(link => (
               <button
                 key={link.label}
@@ -140,7 +140,7 @@ export default function Landing() {
               </button>
             ))}
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
@@ -162,18 +162,18 @@ export default function Landing() {
             </DropdownMenu>
             <ThemeToggle />
             {user ? (
-              <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5">
+              <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5 text-xs h-8">
                 <Brain className="h-3.5 w-3.5" />
-                {t("nav.dashboard")}
+                <span className="hidden sm:inline">{t("nav.dashboard")}</span>
               </Button>
             ) : (
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs">
+              <div className="flex items-center gap-1.5">
+                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex">
                   {t("nav.login")}
                 </Button>
-                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5">
+                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1 text-xs h-8">
                   {t("nav.start_free")}
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-3 w-3" />
                 </Button>
               </div>
             )}
@@ -186,7 +186,7 @@ export default function Landing() {
         <div className="absolute top-40 right-1/4 w-[400px] h-[400px] bg-violet-500/[0.04] rounded-full blur-[120px] animate-float" style={{ animationDelay: "3s" }} />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-primary/[0.03] rounded-full blur-[100px]" />
 
-        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="relative max-w-4xl mx-auto px-6 pt-16 sm:pt-24 pb-16 sm:pb-20 text-center">
+        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-12 sm:pt-24 pb-12 sm:pb-20 text-center">
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="mx-auto mb-6 sm:mb-8">
             <div className="relative inline-block">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/50 to-violet-500/30 blur-2xl animate-glow-pulse" />
@@ -198,7 +198,7 @@ export default function Landing() {
             {t("hero.tagline")}
           </motion.p>
 
-          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
+          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-2xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
             {t("hero.title_line1")}
             <br />
             <span className="relative inline-block">
@@ -252,14 +252,14 @@ export default function Landing() {
 
       {/* ═══ THE PROBLEM ═══ */}
       <section className="relative border-y border-border">
-        <div className="max-w-4xl mx-auto px-6 py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
               <div className="inline-flex items-center gap-2 mb-4">
                 <div className="h-1 w-6 rounded-full bg-destructive" />
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-destructive">{t("problem.label")}</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
+              <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
                 {t("problem.title")}
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: t("problem.desc") }} />
@@ -281,7 +281,7 @@ export default function Landing() {
                 <div className="h-1 w-6 rounded-full bg-status-validated" />
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-status-validated">{t("solution.label")}</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
+              <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
                 {t("solution.title_line1")}<br />{t("solution.title_line2")}
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: t("solution.desc") }} />
@@ -302,7 +302,7 @@ export default function Landing() {
 
       {/* ═══ PIPELINE ═══ */}
       <section id="pipeline" className="bg-card noise-overlay relative">
-        <div className="max-w-5xl mx-auto px-6 py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="h-1 w-6 rounded-full bg-primary" />
@@ -343,7 +343,7 @@ export default function Landing() {
       </section>
 
       {/* ═══ CAPABILITIES ═══ */}
-      <section id="capabilities" className="max-w-5xl mx-auto px-6 py-20">
+      <section id="capabilities" className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
           <div className="inline-flex items-center gap-2 mb-3">
             <div className="h-1 w-6 rounded-full bg-primary" />
@@ -373,14 +373,14 @@ export default function Landing() {
 
       {/* ═══ SOCIAL PROOF ═══ */}
       <section className="bg-card border-y border-border">
-        <div className="max-w-5xl mx-auto px-6 py-14">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {PROVEN_RESULTS.map((p, i) => (
               <motion.div key={p.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="text-center group">
                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/15 transition-colors">
                   <p.icon className="h-5 w-5 text-primary" />
                 </div>
-                <span className="text-3xl sm:text-4xl font-bold font-mono text-primary block">{p.value}</span>
+                <span className="text-2xl sm:text-4xl font-bold font-mono text-primary block">{p.value}</span>
                 <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest">{p.label}</p>
               </motion.div>
             ))}
@@ -389,7 +389,7 @@ export default function Landing() {
       </section>
 
       {/* ═══ USE CASES ═══ */}
-      <section id="use-cases" className="max-w-5xl mx-auto px-6 py-20">
+      <section id="use-cases" className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
           <div className="inline-flex items-center gap-2 mb-3">
             <div className="h-1 w-6 rounded-full bg-primary" />
@@ -417,7 +417,7 @@ export default function Landing() {
 
       {/* ═══ ECONOMICS STRIP ═══ */}
       <section className="border-y border-border bg-gradient-to-r from-primary/[0.03] via-transparent to-violet-500/[0.03]">
-        <div className="max-w-4xl mx-auto px-6 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="h-1 w-6 rounded-full bg-primary" />
@@ -449,7 +449,7 @@ export default function Landing() {
 
       {/* ═══ EXPLORE KNOWLEDGE ═══ */}
       <section className="bg-card border-y border-border">
-        <div className="max-w-5xl mx-auto px-6 py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="h-1 w-6 rounded-full bg-primary" />
@@ -486,7 +486,7 @@ export default function Landing() {
         <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.04] via-transparent to-transparent" />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/[0.06] rounded-full blur-[150px]" />
 
-        <div className="relative max-w-3xl mx-auto px-6 py-24 text-center">
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
               {t("final_cta.title_line1")}
