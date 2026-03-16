@@ -54,6 +54,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 };
 
 export default function Feedback() {
+  const { t } = useTranslation("pages");
   const { user } = useAuth();
   const location = useLocation();
   const [items, setItems] = useState<FeedbackItem[]>([]);
