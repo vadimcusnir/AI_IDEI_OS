@@ -49,6 +49,7 @@ const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; labe
 type TxFilter = "all" | "spend" | "topup" | "bonus" | "reserve" | "release";
 
 export default function Credits() {
+  const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const [credits, setCredits] = useState<UserCredits | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
