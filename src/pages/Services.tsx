@@ -13,10 +13,11 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Loader2, Sparkles, BarChart3, Search, X, Coins, Clock,
   ArrowRight, Zap, FileText, Brain, Target, Layers,
-  TrendingUp, LayoutGrid, List, SlidersHorizontal,
+  TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
 
 interface Service {
   id: string;
