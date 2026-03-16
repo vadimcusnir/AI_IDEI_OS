@@ -297,7 +297,7 @@ export default function Onboarding() {
                   <div className="flex items-center justify-between">
                     {isCompleted && (
                       <p className="text-xs text-primary font-medium">
-                        {status[step.checkField]} {step.checkField} created
+                        {status[step.checkField]} {step.checkField} {t("onboarding.created_suffix")}
                       </p>
                     )}
                     {!isCompleted && <div />}
