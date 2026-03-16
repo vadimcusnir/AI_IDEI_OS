@@ -437,9 +437,9 @@ export default function Extractor() {
 
         {/* Page header */}
         <div className="mb-5">
-          <h1 className="text-lg font-semibold tracking-tight">Extractor</h1>
+          <h1 className="text-lg font-semibold tracking-tight">{t("extractor.title")}</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Paste a link, drop a file — the system handles everything.
+            {t("extractor.subtitle")}
           </p>
         </div>
 
