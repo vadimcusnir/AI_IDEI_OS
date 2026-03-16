@@ -385,12 +385,19 @@ Deno.serve(async (req) => {
     // Update status
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);
 
-    // Chunk transcript
-    const chunks = greedyChunk(transcript, 300, 800);
-    // Use representative sample (first + middle + last chunks, max 3)
-    const sampleChunks = chunks.length <= 3
-      ? chunks
-      : [chunks[0], chunks[Math.floor(chunks.length / 2)], chunks[chunks.length - 1]];
+    // Chunk transcript using character-based chunking
+    const chunks = chunkWithOverlap(transcript);
+    console.log(`Deep extract: ${chunks.length} chunks (${CHUNK_MIN}-${CHUNK_MAX} chars, ${CHUNK_OVERLAP} overlap)`);
+    
+    // Use representative sample: for long transcripts pick evenly-spaced chunks (max 5)
+    const maxSampleChunks = 5;
+    let sampleChunks: string[];
+    if (chunks.length <= maxSampleChunks) {
+      sampleChunks = chunks;
+    } else {
+      const step = (chunks.length - 1) / (maxSampleChunks - 1);
+      sampleChunks = Array.from({ length: maxSampleChunks }, (_, i) => chunks[Math.round(i * step)]);
+    }
     const sampleText = sampleChunks.join("\n\n---\n\n");
 
     // ── Regime check ──
