@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { format, isToday, isYesterday, isThisWeek } from "date-fns";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
