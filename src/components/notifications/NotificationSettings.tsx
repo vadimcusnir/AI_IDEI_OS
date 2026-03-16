@@ -67,7 +67,7 @@ export function NotificationSettings() {
         </div>
         <div className="space-y-3 rounded-xl border border-border p-4 bg-card">
           {!isSupported && (
-            <div className="flex items-center gap-2 text-[10px] text-amber-600 bg-amber-500/10 rounded-lg p-2.5 mb-2">
+            <div className="flex items-center gap-2 text-[10px] text-destructive bg-destructive/10 rounded-lg p-2.5 mb-2">
               <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-destructive" />
               <span>Browser-ul tău nu suportă push notifications</span>
             </div>
