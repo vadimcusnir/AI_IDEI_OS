@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 
 interface Service {
   id: string;
