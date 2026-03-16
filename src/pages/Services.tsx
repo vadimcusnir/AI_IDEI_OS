@@ -62,6 +62,7 @@ type SortBy = "name" | "cost-asc" | "cost-desc" | "category";
 export default function Services() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { balance, loading: balanceLoading } = useCreditBalance();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
