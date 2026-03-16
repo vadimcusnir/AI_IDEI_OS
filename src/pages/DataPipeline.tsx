@@ -7,6 +7,7 @@ import { Loader2, Brain, Database, CheckCircle2, Sparkles, Layers, BarChart3, Fi
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 
 interface PipelineStats {
   total_units: number;
