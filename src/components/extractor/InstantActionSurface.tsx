@@ -465,7 +465,10 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
                 <Button
                   size="lg"
-                  className="h-11 gap-2 rounded-xl px-5 font-semibold shrink-0"
+                  className={cn(
+                    "h-11 gap-2 rounded-xl px-5 font-semibold shrink-0",
+                    !hasEnoughCredits && (input.trim() || selectedFile) && "opacity-70"
+                  )}
                   onClick={runPipeline}
                   disabled={(!input.trim() && !selectedFile) || isRunning}
                 >
