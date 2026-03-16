@@ -17,10 +17,10 @@ import {
 
 /* Bottom bar: 5 pipeline-essential tabs */
 const BAR_ITEMS = [
-  { path: "/home", icon: Home, label: "Home" },
-  { path: "/extractor", icon: Upload, label: "Extract" },
-  { path: "/neurons", icon: Brain, label: "Neurons" },
-  { path: "/library", icon: BookOpen, label: "Library" },
+  { path: "/home", icon: Home, labelKey: "home" },
+  { path: "/extractor", icon: Upload, labelKey: "extractor" },
+  { path: "/neurons", icon: Brain, labelKey: "neurons" },
+  { path: "/library", icon: BookOpen, labelKey: "library" },
 ];
 
 /* Full menu sections — matches sidebar architecture */

@@ -11,47 +11,25 @@ import {
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { fireStepConfetti, fireFinalConfetti } from "@/components/onboarding/useConfetti";
+import { useTranslation } from "react-i18next";
 
 interface StepDef {
   id: string;
   icon: React.ElementType;
-  label: string;
-  description: string;
+  labelKey: string;
+  descKey: string;
   route: string;
 }
 
 const STEPS: StepDef[] = [
-  {
-    id: "upload",
-    icon: Upload,
-    label: "Upload Content",
-    description: "Add your first episode — audio, video, or text",
-    route: "/extractor",
-  },
-  {
-    id: "neuron",
-    icon: Brain,
-    label: "Create a Neuron",
-    description: "Extract an atomic knowledge unit",
-    route: "/neurons",
-  },
-  {
-    id: "service",
-    icon: Sparkles,
-    label: "Run an AI Service",
-    description: "Generate deliverables from your neurons",
-    route: "/services",
-  },
-  {
-    id: "library",
-    icon: TrendingUp,
-    label: "Review Library",
-    description: "View your generated artifacts",
-    route: "/library",
-  },
+  { id: "upload", icon: Upload, labelKey: "onboarding_upload_label", descKey: "onboarding_upload_desc", route: "/extractor" },
+  { id: "neuron", icon: Brain, labelKey: "onboarding_neuron_label", descKey: "onboarding_neuron_desc", route: "/neurons" },
+  { id: "service", icon: Sparkles, labelKey: "onboarding_service_label", descKey: "onboarding_service_desc", route: "/services" },
+  { id: "library", icon: TrendingUp, labelKey: "onboarding_library_label", descKey: "onboarding_library_desc", route: "/library" },
 ];
 
 export function OnboardingChecklist() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const navigate = useNavigate();
@@ -91,7 +69,6 @@ export function OnboardingChecklist() {
       if (counts[i] > 0) completed.add(step.id);
     });
 
-    // Fire confetti on newly completed steps
     if (prevCompletedRef.current > 0 && completed.size > prevCompletedRef.current) {
       if (completed.size === STEPS.length) {
         fireFinalConfetti();
@@ -106,7 +83,6 @@ export function OnboardingChecklist() {
     setLoading(false);
   };
 
-  const progress = completedSteps.size / STEPS.length;
   const allDone = completedSteps.size === STEPS.length;
 
   if (!user || loading || dismissed || allDone) return null;
@@ -127,14 +103,13 @@ export function OnboardingChecklist() {
             <Rocket className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold">Getting Started</h3>
+            <h3 className="text-sm font-semibold">{t("getting_started")}</h3>
             <p className="text-[10px] text-muted-foreground">
-              {completedSteps.size}/{STEPS.length} completed
+              {t("completed_count", { done: completedSteps.size, total: STEPS.length })}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {/* Progress segments */}
           <div className="flex items-center gap-0.5">
             {STEPS.map((step) => (
               <div
@@ -205,16 +180,16 @@ export function OnboardingChecklist() {
                         "text-xs font-medium",
                         done && "line-through text-muted-foreground/60"
                       )}>
-                        {step.label}
+                        {t(step.labelKey)}
                       </span>
-                      <p className="text-[10px] text-muted-foreground/60 truncate">{step.description}</p>
+                      <p className="text-[10px] text-muted-foreground/60 truncate">{t(step.descKey)}</p>
                     </div>
                     {!done && (
                       <span className={cn(
                         "flex items-center gap-0.5 text-[10px] font-medium transition-opacity",
                         isNext ? "text-primary opacity-100" : "text-primary opacity-0 group-hover:opacity-100"
                       )}>
-                        Start <ArrowRight className="h-2.5 w-2.5" />
+                        {t("start")} <ArrowRight className="h-2.5 w-2.5" />
                       </span>
                     )}
                   </button>
