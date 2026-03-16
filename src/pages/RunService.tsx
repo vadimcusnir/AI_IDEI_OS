@@ -431,18 +431,38 @@ export default function RunService() {
                 )}
               </div>
 
+              {/* Tier gate */}
+              {!hasTierAccess && (
+                <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-center gap-3">
+                  <Crown className="h-5 w-5 text-amber-500 shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Subscription Required</p>
+                    <p className="text-xs text-muted-foreground">
+                      This service requires a {service.access_tier === "vip" ? "VIP" : "Pro"} plan.
+                    </p>
+                  </div>
+                  <Button size="sm" className="text-xs gap-1 shrink-0" onClick={() => setPaywallOpen(true)}>
+                    <Zap className="h-3 w-3" /> Upgrade
+                  </Button>
+                </div>
+              )}
+
               {/* Run button */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Button
-                  onClick={handleRun}
-                  disabled={!hasEnoughCredits || accessVerdict?.verdict !== "ALLOW"}
-                  className="gap-2 h-12 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow"
+                  onClick={hasTierAccess ? handleRun : () => setPaywallOpen(true)}
+                  disabled={hasTierAccess && (!hasEnoughCredits || accessVerdict?.verdict !== "ALLOW")}
+                  className={cn(
+                    "gap-2 h-12 text-sm font-semibold rounded-xl shadow-lg transition-shadow",
+                    hasTierAccess ? "shadow-primary/20 hover:shadow-primary/30" : "shadow-amber-500/20"
+                  )}
+                  variant={hasTierAccess ? "default" : "secondary"}
                   size="lg"
                 >
-                  <Play className="h-4 w-4" />
-                  Run Service — {service.credits_cost} NEURONS
+                  {hasTierAccess ? <Play className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+                  {hasTierAccess ? `Run Service — ${service.credits_cost} NEURONS` : "Unlock with Pro"}
                 </Button>
-                {!hasEnoughCredits && (
+                {hasTierAccess && !hasEnoughCredits && (
                   <div className="flex items-center gap-1.5 text-destructive">
                     <AlertCircle className="h-3.5 w-3.5" />
                     <span className="text-xs">Insufficient credits</span>
