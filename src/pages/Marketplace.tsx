@@ -245,7 +245,12 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
       return;
     }
     if (!isFree && !canAfford) {
-      toast.error(`Insufficient NEURONS. You need ${price} but have ${creditBalance}.`);
+      toast.error(`Credite insuficiente. Ai nevoie de ${price} NEURONS dar ai doar ${creditBalance}.`, {
+        action: {
+          label: "Top-up",
+          onClick: () => navigate("/credits"),
+        },
+      });
       return;
     }
 
