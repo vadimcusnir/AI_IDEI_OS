@@ -230,7 +230,6 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         name: "transcript_uploaded",
         params: {
           source_type: sourceType,
-          platform: urlSource?.platform || "direct",
           episode_id: ep.id,
         },
       });
