@@ -470,8 +470,11 @@ export default function Services() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: Math.min(i * 0.01, 0.2) }}
-                  onClick={() => navigate(`/run/${service.service_key}`)}
-                  className="group flex items-center gap-4 p-3 rounded-lg border border-border bg-card hover:border-primary/30 transition-all cursor-pointer"
+                  onClick={() => handleServiceClick(service)}
+                  className={cn(
+                    "group flex items-center gap-4 p-3 rounded-lg border border-border bg-card hover:border-primary/30 transition-all cursor-pointer",
+                    !tierSatisfied(userTier, service.access_tier) && "opacity-75"
+                  )}
                 >
                   <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                     {catCfg && <catCfg.icon className={cn("h-3.5 w-3.5", catCfg.color)} />}
