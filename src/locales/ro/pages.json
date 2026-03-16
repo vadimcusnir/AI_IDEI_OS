@@ -435,12 +435,6 @@
     "status_ready": "Pregătit",
     "status_coming": "În dezvoltare"
   },
-  "prompt_forge": {
-    "product_recommendation": "Recomandare produse",
-    "content_structuring": "Structurare conținut",
-    "sales_copy": "Copy de vânzare",
-    "copied": "Copiat în clipboard!"
-  },
   "extractor": {
     "title": "Extractor",
     "subtitle": "Lipește un link, trage un fișier — sistemul se ocupă de tot.",

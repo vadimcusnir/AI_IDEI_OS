@@ -435,12 +435,6 @@
     "status_ready": "Готов",
     "status_coming": "В разработке"
   },
-  "prompt_forge": {
-    "product_recommendation": "Рекомендация продуктов",
-    "content_structuring": "Структурирование контента",
-    "sales_copy": "Продающий текст",
-    "copied": "Скопировано в буфер!"
-  },
   "extractor": {
     "title": "Экстрактор",
     "subtitle": "Вставьте ссылку, перетащите файл — система сделает всё сама.",

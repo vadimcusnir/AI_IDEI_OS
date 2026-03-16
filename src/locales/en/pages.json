@@ -435,12 +435,6 @@
     "status_ready": "Ready",
     "status_coming": "In Development"
   },
-  "prompt_forge": {
-    "product_recommendation": "Product Recommendation",
-    "content_structuring": "Content Structuring",
-    "sales_copy": "Sales Copy",
-    "copied": "Copied to clipboard!"
-  },
   "extractor": {
     "title": "Extractor",
     "subtitle": "Paste a link, drop a file — the system handles everything.",
