@@ -13,11 +13,13 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Loader2, Sparkles, BarChart3, Search, X, Coins, Clock,
   ArrowRight, Zap, FileText, Brain, Target, Layers,
-  TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle,
+  TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle, Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { useSubscription } from "@/hooks/useSubscription";
+import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 
 interface Service {
   id: string;
@@ -63,6 +65,7 @@ export default function Services() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { balance, loading: balanceLoading } = useCreditBalance();
+  const { subscribed, tier: subTier } = useSubscription();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -71,6 +74,20 @@ export default function Services() {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortBy>("name");
   const [showFilters, setShowFilters] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
+
+  const userTier = subscribed ? (subTier || "pro") : "free";
+
+  const handleServiceClick = (service: Service) => {
+    const requiredTier = service.access_tier || "free";
+    if (!tierSatisfied(userTier, requiredTier)) {
+      setPaywallService({ name: service.name, tier: requiredTier });
+      setPaywallOpen(true);
+      return;
+    }
+    navigate(`/run/${service.service_key}`);
+  };
 
   useEffect(() => {
     if (authLoading || !user) return;
@@ -402,8 +419,11 @@ export default function Services() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                  onClick={() => navigate(`/run/${service.service_key}`)}
-                  className="group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer"
+                  onClick={() => handleServiceClick(service)}
+                  className={cn(
+                    "group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer",
+                    !tierSatisfied(userTier, service.access_tier) && "opacity-75"
+                  )}
                 >
                   {/* Category dot */}
                   <div className="flex items-start justify-between mb-3">
@@ -416,6 +436,7 @@ export default function Services() {
                     <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md", clsBadge.className)}>
                       {clsBadge.label}
                     </span>
+                    <TierBadge tier={service.access_tier} />
                   </div>
 
                   <h3 className="text-sm font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
@@ -449,8 +470,11 @@ export default function Services() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: Math.min(i * 0.01, 0.2) }}
-                  onClick={() => navigate(`/run/${service.service_key}`)}
-                  className="group flex items-center gap-4 p-3 rounded-lg border border-border bg-card hover:border-primary/30 transition-all cursor-pointer"
+                  onClick={() => handleServiceClick(service)}
+                  className={cn(
+                    "group flex items-center gap-4 p-3 rounded-lg border border-border bg-card hover:border-primary/30 transition-all cursor-pointer",
+                    !tierSatisfied(userTier, service.access_tier) && "opacity-75"
+                  )}
                 >
                   <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                     {catCfg && <catCfg.icon className={cn("h-3.5 w-3.5", catCfg.color)} />}
@@ -466,13 +490,25 @@ export default function Services() {
                     <Coins className="h-3 w-3 text-ai-accent" />
                     <span className="text-xs font-bold font-mono w-8 text-right">{service.credits_cost}</span>
                   </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary shrink-0" />
+                  <TierBadge tier={service.access_tier} />
+                  {!tierSatisfied(userTier, service.access_tier) ? (
+                    <Lock className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />
+                  ) : (
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary shrink-0" />
+                  )}
                 </motion.div>
               );
             })}
           </div>
         )}
       </div>
+
+      <PremiumPaywall
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        requiredTier={paywallService?.tier}
+        serviceName={paywallService?.name}
+      />
     </div>
     </PageTransition>
   );

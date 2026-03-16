@@ -14,10 +14,12 @@ import {
   ArrowLeft, Loader2, Play, CheckCircle2,
   Clock, AlertCircle, Coins, Lock, Shield,
   Sparkles, ChevronRight, FileText, BarChart3, Brain,
-  Target, Layers, Zap,
+  Target, Layers, Zap, Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { useSubscription } from "@/hooks/useSubscription";
+import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 
 interface Service {
   id: string;
@@ -29,6 +31,7 @@ interface Service {
   credits_cost: number;
   input_schema: any[];
   deliverables_schema: any[];
+  access_tier: string;
 }
 
 interface UserCredits {
@@ -67,6 +70,7 @@ export default function RunService() {
   const { serviceKey } = useParams<{ serviceKey: string }>();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { subscribed, tier: subTier } = useSubscription();
   const [service, setService] = useState<Service | null>(null);
   const [credits, setCredits] = useState<UserCredits | null>(null);
   const [loading, setLoading] = useState(true);
@@ -75,6 +79,9 @@ export default function RunService() {
   const [jobResult, setJobResult] = useState("");
   const [jobId, setJobId] = useState<string | null>(null);
   const [accessVerdict, setAccessVerdict] = useState<AccessVerdict | null>(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+
+  const userTier = subscribed ? (subTier || "pro") : "free";
 
   useEffect(() => {
     if (authLoading) return;
@@ -242,6 +249,7 @@ export default function RunService() {
   const deliverables = Array.isArray(service.deliverables_schema) ? service.deliverables_schema : [];
   const canRun = jobStatus === "idle" || jobStatus === "failed";
   const hasEnoughCredits = credits && credits.balance >= service.credits_cost;
+  const hasTierAccess = tierSatisfied(userTier, service.access_tier || "free");
   const CatIcon = CATEGORY_ICON[service.category] || Sparkles;
 
   return (
@@ -282,6 +290,7 @@ export default function RunService() {
                 <Badge variant="secondary" className="text-[9px] font-mono uppercase">
                   {service.category}
                 </Badge>
+                <TierBadge tier={service.access_tier} />
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
             </div>
@@ -422,18 +431,38 @@ export default function RunService() {
                 )}
               </div>
 
+              {/* Tier gate */}
+              {!hasTierAccess && (
+                <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-center gap-3">
+                  <Crown className="h-5 w-5 text-amber-500 shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Subscription Required</p>
+                    <p className="text-xs text-muted-foreground">
+                      This service requires a {service.access_tier === "vip" ? "VIP" : "Pro"} plan.
+                    </p>
+                  </div>
+                  <Button size="sm" className="text-xs gap-1 shrink-0" onClick={() => setPaywallOpen(true)}>
+                    <Zap className="h-3 w-3" /> Upgrade
+                  </Button>
+                </div>
+              )}
+
               {/* Run button */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Button
-                  onClick={handleRun}
-                  disabled={!hasEnoughCredits || accessVerdict?.verdict !== "ALLOW"}
-                  className="gap-2 h-12 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow"
+                  onClick={hasTierAccess ? handleRun : () => setPaywallOpen(true)}
+                  disabled={hasTierAccess && (!hasEnoughCredits || accessVerdict?.verdict !== "ALLOW")}
+                  className={cn(
+                    "gap-2 h-12 text-sm font-semibold rounded-xl shadow-lg transition-shadow",
+                    hasTierAccess ? "shadow-primary/20 hover:shadow-primary/30" : "shadow-amber-500/20"
+                  )}
+                  variant={hasTierAccess ? "default" : "secondary"}
                   size="lg"
                 >
-                  <Play className="h-4 w-4" />
-                  Run Service — {service.credits_cost} NEURONS
+                  {hasTierAccess ? <Play className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+                  {hasTierAccess ? `Run Service — ${service.credits_cost} NEURONS` : "Unlock with Pro"}
                 </Button>
-                {!hasEnoughCredits && (
+                {hasTierAccess && !hasEnoughCredits && (
                   <div className="flex items-center gap-1.5 text-destructive">
                     <AlertCircle className="h-3.5 w-3.5" />
                     <span className="text-xs">Insufficient credits</span>
@@ -568,6 +597,13 @@ export default function RunService() {
           </motion.div>
         )}
       </div>
+
+      <PremiumPaywall
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        requiredTier={service?.access_tier}
+        serviceName={service?.name}
+      />
     </div>
   );
 }
