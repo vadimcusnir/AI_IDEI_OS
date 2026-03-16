@@ -20,6 +20,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => ({
 
 export function NotificationSettings() {
   const { prefs, loading, saving, updatePrefs } = useNotificationPreferences();
+  const { isSupported, isSubscribed, loading: pushLoading, subscribe, unsubscribe } = usePushSubscription();
 
   if (loading) {
     return (
@@ -29,6 +30,28 @@ export function NotificationSettings() {
     );
   }
 
+  const handlePushToggle = async (enabled: boolean) => {
+    if (enabled) {
+      if (!isSupported) {
+        toast.error("Browser-ul tău nu suportă push notifications");
+        return;
+      }
+      const success = await subscribe();
+      if (success) {
+        await updatePrefs({ push_enabled: true });
+        toast.success("Push notifications activate!");
+      } else {
+        toast.error("Nu am putut activa push notifications. Verifică permisiunile browser-ului.");
+      }
+    } else {
+      await unsubscribe();
+      await updatePrefs({ push_enabled: false });
+      toast("Push notifications dezactivate");
+    }
+  };
+
+  const pushActive = prefs.push_enabled && isSubscribed;
+
   return (
     <div className="space-y-6">
       {/* Push Notifications */}
@@ -36,16 +59,28 @@ export function NotificationSettings() {
         <div className="flex items-center gap-2 mb-3">
           <BellRing className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold">Push Notifications</h3>
+          {pushActive && (
+            <Badge variant="outline" className="text-[10px] h-5 bg-green-500/10 text-green-600 border-green-500/30">
+              Active
+            </Badge>
+          )}
         </div>
         <div className="space-y-3 rounded-xl border border-border p-4 bg-card">
+          {!isSupported && (
+            <div className="flex items-center gap-2 text-[10px] text-amber-600 bg-amber-500/10 rounded-lg p-2.5 mb-2">
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+              <span>Browser-ul tău nu suportă push notifications</span>
+            </div>
+          )}
           <ToggleRow
             icon={Bell}
             label="Enable push notifications"
             description="Receive browser alerts even when you're away"
-            checked={prefs.push_enabled}
-            onChange={(v) => updatePrefs({ push_enabled: v })}
+            checked={pushActive}
+            onChange={handlePushToggle}
+            disabled={pushLoading || !isSupported}
           />
-          {prefs.push_enabled && (
+          {pushActive && (
             <>
               <Separator />
               <ToggleRow
