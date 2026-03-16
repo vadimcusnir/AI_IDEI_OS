@@ -496,6 +496,8 @@ export function AgentConsole() {
             />
             {showSlashMenu && (
               <AgentSlashMenu
+                input={input}
+                visible={showSlashMenu}
                 onSelect={(cmd) => {
                   setInput(cmd + " ");
                   setShowSlashMenu(false);
