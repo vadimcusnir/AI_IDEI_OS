@@ -419,8 +419,11 @@ export default function Services() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                  onClick={() => navigate(`/run/${service.service_key}`)}
-                  className="group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer"
+                  onClick={() => handleServiceClick(service)}
+                  className={cn(
+                    "group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer",
+                    !tierSatisfied(userTier, service.access_tier) && "opacity-75"
+                  )}
                 >
                   {/* Category dot */}
                   <div className="flex items-start justify-between mb-3">
