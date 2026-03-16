@@ -417,7 +417,7 @@ export default function Landing() {
 
       {/* ═══ ECONOMICS STRIP ═══ */}
       <section className="border-y border-border bg-gradient-to-r from-primary/[0.03] via-transparent to-violet-500/[0.03]">
-        <div className="max-w-4xl mx-auto px-6 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="h-1 w-6 rounded-full bg-primary" />
