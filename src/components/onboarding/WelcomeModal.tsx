@@ -10,8 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Rocket, Play, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export function WelcomeModal() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
 
@@ -26,6 +28,12 @@ export function WelcomeModal() {
     setOpen(false);
   };
 
+  const steps = [
+    t("welcome_step_1"),
+    t("welcome_step_2"),
+    t("welcome_step_3"),
+  ];
+
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) handleClose(); }}>
       <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-primary/20">
@@ -38,13 +46,12 @@ export function WelcomeModal() {
             className="flex items-center justify-center"
           >
             <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-background/80 border border-border shadow-lg flex items-center justify-center">
-              {/* Placeholder video thumbnail — replace src with real video */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
               <div className="flex flex-col items-center gap-2 z-10">
                 <div className="h-14 w-14 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
                   <Play className="h-6 w-6 text-primary ml-0.5" />
                 </div>
-                <span className="text-[10px] text-muted-foreground font-medium">Tutorial · 2 min</span>
+                <span className="text-[10px] text-muted-foreground font-medium">{t("tutorial_duration")}</span>
               </div>
             </div>
           </motion.div>
@@ -54,22 +61,18 @@ export function WelcomeModal() {
           <DialogHeader className="text-left mb-4">
             <div className="flex items-center gap-2 mb-1">
               <Rocket className="h-4 w-4 text-primary" />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">Bine ai venit</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">{t("welcome")}</span>
             </div>
             <DialogTitle className="text-lg font-serif">
-              Transformă expertiza în active digitale
+              {t("welcome_title")}
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground leading-relaxed mt-1">
-              Încarcă un podcast, un interviu sau un text. AI-IDEI extrage automat cunoștințe, pattern-uri și framework-uri — și le transformă în zeci de deliverable-uri profesionale.
+              {t("welcome_desc")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-2 mb-4">
-            {[
-              "Încarcă conținut → transcriere automată",
-              "Extrage neuroni → cunoștințe atomice reutilizabile",
-              "Rulează servicii AI → 50+ deliverable-uri",
-            ].map((step, i) => (
+            {steps.map((step, i) => (
               <div key={i} className="flex items-center gap-2 text-[11px] text-muted-foreground">
                 <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[9px] font-bold shrink-0">
                   {i + 1}
@@ -81,11 +84,11 @@ export function WelcomeModal() {
 
           <div className="flex gap-2">
             <Button onClick={handleClose} className="flex-1 gap-2 text-xs">
-              Începe acum
+              {t("start_now")}
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
             <Button variant="ghost" size="sm" onClick={handleClose} className="text-xs text-muted-foreground">
-              Mai târziu
+              {t("later")}
             </Button>
           </div>
         </div>

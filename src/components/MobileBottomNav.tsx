@@ -17,10 +17,10 @@ import {
 
 /* Bottom bar: 5 pipeline-essential tabs */
 const BAR_ITEMS = [
-  { path: "/home", icon: Home, label: "Home" },
-  { path: "/extractor", icon: Upload, label: "Extract" },
-  { path: "/neurons", icon: Brain, label: "Neurons" },
-  { path: "/library", icon: BookOpen, label: "Library" },
+  { path: "/home", icon: Home, labelKey: "home" },
+  { path: "/extractor", icon: Upload, labelKey: "extractor" },
+  { path: "/neurons", icon: Brain, labelKey: "neurons" },
+  { path: "/library", icon: BookOpen, labelKey: "library" },
 ];
 
 /* Full menu sections — matches sidebar architecture */
@@ -108,7 +108,7 @@ export function MobileBottomNav() {
       {/* Fixed bottom bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-border bg-background/95 backdrop-blur-md safe-area-bottom">
         <div className="flex items-center justify-around h-16 px-1">
-          {BAR_ITEMS.map(({ path, icon: Icon, label }) => {
+          {BAR_ITEMS.map(({ path, icon: Icon, labelKey }) => {
             const active = isActive(path);
             return (
               <button
@@ -122,7 +122,7 @@ export function MobileBottomNav() {
                 )}
               >
                 <Icon className={cn("h-5 w-5 transition-all", active && "stroke-[2.5]")} />
-                <span className={cn("text-[9px] leading-none transition-all", active ? "font-bold" : "font-medium")}>{label}</span>
+                <span className={cn("text-[9px] leading-none transition-all", active ? "font-bold" : "font-medium")}>{t(`navigation:${labelKey}`)}</span>
                 {active && (
                   <span className="absolute bottom-1 h-0.5 w-4 rounded-full bg-primary" />
                 )}
@@ -137,7 +137,7 @@ export function MobileBottomNav() {
             )}
           >
             <Menu className="h-5 w-5" />
-            <span className="text-[9px] font-medium leading-none">More</span>
+            <span className="text-[9px] font-medium leading-none">{t("common:more")}</span>
           </button>
         </div>
       </nav>

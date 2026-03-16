@@ -53,20 +53,20 @@ export function UserMenu() {
       <DropdownMenuContent align="end" className="w-56">
         {/* Account */}
         <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-          Account
+          {t("common:account")}
         </DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate("/profile")} className="gap-2 text-xs">
-            <User className="h-3.5 w-3.5" /> Profile
+            <User className="h-3.5 w-3.5" /> {t("navigation:profile")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/workspace")} className="gap-2 text-xs">
-            <Settings className="h-3.5 w-3.5" /> Workspace Settings
+            <Settings className="h-3.5 w-3.5" /> {t("common:workspace_settings")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/credits")} className="gap-2 text-xs">
-            <CreditCard className="h-3.5 w-3.5" /> Credits & Billing
+            <CreditCard className="h-3.5 w-3.5" /> {t("common:credits_billing")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/data-privacy")} className="gap-2 text-xs">
-            <Shield className="h-3.5 w-3.5" /> Data Privacy
+            <Shield className="h-3.5 w-3.5" /> {t("common:data_privacy")}
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
@@ -74,17 +74,17 @@ export function UserMenu() {
 
         {/* Activity */}
         <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-          Activity
+          {t("common:activity")}
         </DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate("/notifications")} className="gap-2 text-xs">
-            <Bell className="h-3.5 w-3.5" /> Notifications
+            <Bell className="h-3.5 w-3.5" /> {t("navigation:notifications")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/feedback")} className="gap-2 text-xs">
-            <MessageCircle className="h-3.5 w-3.5" /> Feedback
+            <MessageCircle className="h-3.5 w-3.5" /> {t("navigation:feedback")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/prompt-forge")} className="gap-2 text-xs">
-            <Wrench className="h-3.5 w-3.5" /> Prompt Forge
+            <Wrench className="h-3.5 w-3.5" /> {t("navigation:prompt_forge")}
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
@@ -92,20 +92,20 @@ export function UserMenu() {
 
         {/* Platform */}
         <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-          Platform
+          {t("navigation:platform")}
         </DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate("/docs")} className="gap-2 text-xs">
-            <FileText className="h-3.5 w-3.5" /> Documentation
+            <FileText className="h-3.5 w-3.5" /> {t("common:documentation")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/api")} className="gap-2 text-xs">
-            <Code2 className="h-3.5 w-3.5" /> API & Webhooks
+            <Code2 className="h-3.5 w-3.5" /> {t("common:api_webhooks")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/architecture")} className="gap-2 text-xs">
-            <Network className="h-3.5 w-3.5" /> Architecture
+            <Network className="h-3.5 w-3.5" /> {t("common:architecture")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/changelog")} className="gap-2 text-xs">
-            <ScrollText className="h-3.5 w-3.5" /> Changelog
+            <ScrollText className="h-3.5 w-3.5" /> {t("navigation:changelog")}
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
@@ -115,7 +115,7 @@ export function UserMenu() {
         {isAdmin && (
           <>
             <DropdownMenuItem onClick={() => navigate("/admin")} className="gap-2 text-xs">
-              <Landmark className="h-3.5 w-3.5" /> Admin Panel
+              <Landmark className="h-3.5 w-3.5" /> {t("common:admin_panel")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>
