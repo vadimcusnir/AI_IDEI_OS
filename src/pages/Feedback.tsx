@@ -54,7 +54,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 };
 
 export default function Feedback() {
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "errors"]);
   const { user } = useAuth();
   const location = useLocation();
   const [items, setItems] = useState<FeedbackItem[]>([]);
@@ -89,11 +89,11 @@ export default function Feedback() {
   const handleSubmit = async () => {
     if (!user) return;
     if (!title.trim() || !message.trim()) {
-      toast.error("Please fill in the title and message.");
+      toast.error(t("errors:fill_title_message"));
       return;
     }
     if (needsRating && !rating) {
-      toast.error("Please select a rating.");
+      toast.error(t("errors:select_rating"));
       return;
     }
     setSending(true);
@@ -107,9 +107,9 @@ export default function Feedback() {
     } as any);
 
     if (error) {
-      toast.error("Error: " + error.message);
+      toast.error(t("errors:submit_error", { message: error.message }));
     } else {
-      toast.success(t("feedback.thank_you"));
+      toast.success(t("pages:feedback.thank_you"));
       trackInternalEvent({ event: AnalyticsEvents.FEEDBACK_SUBMITTED, params: { type, rating } });
       setTitle("");
       setMessage("");

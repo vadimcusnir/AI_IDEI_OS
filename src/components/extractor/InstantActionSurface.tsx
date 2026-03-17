@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { trackEvent } from "@/lib/analytics";
 import { detectSource, detectFileSource, type SourceDetectionResult } from "@/lib/sourceDetection";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
@@ -57,6 +58,7 @@ interface InstantActionSurfaceProps {
 }
 
 export function InstantActionSurface({ onComplete, compact = false }: InstantActionSurfaceProps) {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance, loading: balanceLoading } = useCreditBalance();
@@ -136,7 +138,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
   const runPipeline = async () => {
     if (!user || !currentWorkspace) return;
     if (!input.trim() && !selectedFile) {
-      toast.error("Paste a link, drop a file, or type content to analyze.");
+      toast.error(t("paste_or_drop_hint"));
       return;
     }
 
@@ -252,7 +254,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         transcript = data.transcript || "done";
 
         if (data.source === "subtitles") {
-          toast.info(`📝 Using ${data.language?.toUpperCase() || ""} captions (${data.segments?.length || 0} segments)`);
+          toast.info(t("using_captions", { language: data.language?.toUpperCase() || "", segments: data.segments?.length || 0 }));
         }
       }
 
@@ -330,7 +332,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
           after_dedup: data.after_dedup,
           meta: data.meta,
         });
-        toast.success(`✅ ${neuronsCreated} neurons extracted! (${creditsSpent} credits)`, { duration: 8000 });
+        toast.success(t("neurons_extracted_instant", { neurons: neuronsCreated, credits: creditsSpent }), { duration: 8000 });
         trackEvent({
           name: "neurons_extracted",
           params: { episode_id: ep.id, neurons_count: neuronsCreated, credits_spent: creditsSpent },
@@ -338,7 +340,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       } else {
         setStage("complete");
         setResult({ neurons: 0, episode_id: ep.id });
-        toast.success("Episode created. Upload an audio file to extract neurons automatically.");
+        toast.success(t("episode_created_hint"));
       }
 
       onComplete?.();

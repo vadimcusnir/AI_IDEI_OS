@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import i18next from "i18next";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
 export interface NeuronTemplate {
@@ -48,7 +49,7 @@ export function useNeuronTemplates() {
       .single();
 
     if (nErr || !neuron) {
-      toast.error("Failed to create neuron from template");
+      toast.error(i18next.t("common:template_create_failed"));
       return null;
     }
 
@@ -74,7 +75,7 @@ export function useNeuronTemplates() {
       .eq("id", templateId);
     trackInternalEvent({ event: AnalyticsEvents.TEMPLATE_USED, params: { template_id: templateId, template_name: template.name } });
 
-    toast.success(`Created neuron from "${template.name}" template`);
+    toast.success(i18next.t("common:template_created", { name: template.name }));
     return neuron;
   }, [user, templates]);
 
@@ -103,11 +104,11 @@ export function useNeuronTemplates() {
       .single();
 
     if (error) {
-      toast.error("Failed to save template");
+      toast.error(i18next.t("common:template_save_failed"));
       return null;
     }
 
-    toast.success("Template saved");
+    toast.success(i18next.t("common:template_saved"));
     await fetchTemplates();
     return data;
   }, [user, fetchTemplates]);

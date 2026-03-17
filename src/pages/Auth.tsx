@@ -17,7 +17,7 @@ type AuthMode = "login" | "signup" | "forgot";
 /* ─── Password strength & error helpers use t() now ─── */
 
 export default function Auth() {
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "common"]);
   const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -246,7 +246,7 @@ export default function Auth() {
               </div>
               <button type="button" onClick={async () => {
                 const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-                if (error) toast.error("Google Sign-in error: " + error.message);
+                if (error) toast.error(t("common:google_signin_error", { message: error.message }));
               }} className="w-full h-11 flex items-center justify-center gap-2 rounded-xl border border-input bg-background/80 hover:bg-muted/50 hover:border-primary/20 transition-all duration-200 text-sm font-medium">
                 <svg className="h-4 w-4" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />

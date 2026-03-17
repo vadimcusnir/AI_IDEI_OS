@@ -93,9 +93,9 @@ export default function ProfilePage() {
 
     if (error) {
       if (error.message.includes("unique")) {
-        toast.error("This username is already taken.");
+        toast.error(t("errors:username_taken"));
       } else {
-        toast.error("Save error: " + error.message);
+        toast.error(t("errors:save_failed", { message: error.message }));
       }
     } else {
       setSaved(true);
@@ -111,7 +111,7 @@ export default function ProfilePage() {
       await updatePrefs({ push_enabled: true });
       toast.success(t("profile.push_enabled"));
     } else {
-      toast.error("Notification permission was denied.");
+      toast.error(t("errors:notification_denied"));
     }
   };
 

@@ -9,6 +9,7 @@ import {
   CheckCircle2, XCircle, Clock, Eye, FileText, Coins,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,7 @@ interface Contribution {
 }
 
 export function AdminContributionsTab() {
+  const { t } = useTranslation("common");
   const qc = useQueryClient();
   const [reviewNote, setReviewNote] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -54,7 +56,7 @@ export function AdminContributionsTab() {
     },
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["admin-contributions"] });
-      toast.success(`Contribution ${vars.status}`);
+      toast.success(t("contribution_status", { status: vars.status }));
       setExpandedId(null);
       setReviewNote("");
     },

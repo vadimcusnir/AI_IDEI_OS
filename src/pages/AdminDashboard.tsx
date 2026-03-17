@@ -256,7 +256,7 @@ export default function AdminDashboard() {
     const { error } = await supabase.from("service_catalog")
       .update({ is_active: !currentActive }).eq("id", serviceId);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Service ${!currentActive ? "activated" : "deactivated"}`);
+    toast.success(t("common:service_toggled", { state: !currentActive ? t("common:active").toLowerCase() : t("common:inactive").toLowerCase() }));
     loadServices();
     loadStats();
   };
@@ -265,7 +265,7 @@ export default function AdminDashboard() {
     if (hasAdmin) {
       const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "admin");
       if (error) { toast.error(error.message); return; }
-      toast.success("Admin role revoked");
+      toast.success(t("common:admin_role_revoked"));
     } else {
       const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
       if (error) { toast.error(error.message); return; }
@@ -316,7 +316,7 @@ export default function AdminDashboard() {
   const deleteNeuron = async (neuronId: number) => {
     const { error } = await supabase.from("neurons").delete().eq("id", neuronId);
     if (error) { toast.error(error.message); return; }
-    toast.success("Neuron deleted");
+    toast.success(t("common:neuron_deleted"));
     loadNeurons();
     loadStats();
   };
@@ -325,7 +325,7 @@ export default function AdminDashboard() {
     const newVis = currentVis === "public" ? "private" : "public";
     const { error } = await supabase.from("neurons").update({ visibility: newVis }).eq("id", neuronId);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Visibility changed: ${newVis}`);
+    toast.success(t("common:visibility_changed", { visibility: newVis }));
     loadNeurons();
   };
 

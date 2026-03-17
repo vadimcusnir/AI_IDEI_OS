@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface UserLink {
   id: string;
@@ -18,6 +19,7 @@ interface UserLink {
 }
 
 export function FavoritesBlock() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const [links, setLinks] = useState<UserLink[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,20 +51,20 @@ export function FavoritesBlock() {
       position: links.length,
     });
     if (error) {
-      toast.error("Nu s-a putut adăuga linkul");
+      toast.error(t("link_add_failed"));
       return;
     }
     setNewTitle("");
     setNewHref("");
     setAdding(false);
     fetchLinks();
-    toast.success("Link adăugat!");
+    toast.success(t("link_added"));
   };
 
   const handleDelete = async (id: string) => {
     await supabase.from("user_links").delete().eq("id", id);
     setLinks(prev => prev.filter(l => l.id !== id));
-    toast.success("Link șters");
+    toast.success(t("link_deleted"));
   };
 
   if (!user) return null;

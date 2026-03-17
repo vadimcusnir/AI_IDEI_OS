@@ -134,7 +134,7 @@ export default function NeuronEditor() {
     if (AI_ACTIONS.includes(action)) {
       extract(action, blocks, neuron?.title || "", selectedEpisodeTranscript || undefined);
     } else {
-      toast.info(`Action "${action}" — use AI Services for advanced processing.`);
+      toast.info(t("common:action_use_services_hint", { action }));
     }
   }, [extract, blocks, neuron?.title, selectedEpisodeTranscript]);
 
@@ -203,8 +203,8 @@ export default function NeuronEditor() {
           loadingLinks={loadingLinks}
           onAddLink={async (targetId, relationType) => {
             const result = await addLink(targetId, relationType);
-            if (result?.error) toast.error("Failed to add link");
-            else toast.success("Link added");
+            if (result?.error) toast.error(t("common:link_add_error"));
+            else toast.success(t("common:link_add_success"));
           }}
           onRemoveLink={handleRemoveLink}
         />

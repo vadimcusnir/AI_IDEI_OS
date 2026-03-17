@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface AbuseEvent {
   id: string;
@@ -18,6 +19,7 @@ interface AbuseEvent {
 }
 
 export function AbuseDetectionTab() {
+  const { t } = useTranslation("common");
   const [events, setEvents] = useState<AbuseEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +42,7 @@ export function AbuseDetectionTab() {
       .update({ action_taken: action, resolved_at: new Date().toISOString() })
       .eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Event marked as ${action}`);
+    toast.success(t("event_marked_as", { action }));
     load();
   };
 

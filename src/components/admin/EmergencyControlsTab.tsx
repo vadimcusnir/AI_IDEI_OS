@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import {
   ShieldAlert, ShieldOff, Power, PowerOff,
@@ -35,13 +36,15 @@ export function EmergencyControlsTab() {
 
   useEffect(() => { load(); }, [load]);
 
+  const { t } = useTranslation("common");
+
   const toggleControl = async (ctrl: EmergencyControl) => {
     setToggling(ctrl.id);
     try {
       if (ctrl.is_active) {
         const { data, error } = await supabase.rpc("deactivate_emergency", { _control_id: ctrl.id });
         if (error) throw error;
-        toast.success(`${ctrl.control_type} deactivated`);
+        toast.success(t("control_deactivated", { type: ctrl.control_type }));
       } else {
         const { data, error } = await supabase.rpc("activate_emergency", {
           _control_type: ctrl.control_type,
@@ -49,11 +52,11 @@ export function EmergencyControlsTab() {
           _scope: ctrl.affected_scope,
         });
         if (error) throw error;
-        toast.warning(`⚠️ ${ctrl.control_type} ACTIVATED`);
+        toast.warning(t("control_activated", { type: ctrl.control_type }));
       }
       await load();
     } catch (e: any) {
-      toast.error(e.message || "Failed to toggle control");
+      toast.error(e.message || t("control_toggle_failed"));
     }
     setToggling(null);
   };
