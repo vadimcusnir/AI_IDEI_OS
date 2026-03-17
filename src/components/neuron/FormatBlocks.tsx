@@ -291,7 +291,7 @@ export function DiagramBlock({ block, onContentChange, onExecute }: FormatBlockP
         value={block.content}
         onChange={(e) => onContentChange(e.target.value)}
         className="w-full px-3 py-2 font-mono text-sm bg-transparent border-none outline-none resize-none min-h-[40px] text-foreground"
-        placeholder="graph TD&#10;  A[Start] --> B[End]"
+        placeholder={t("common:neuron_editor.diagram_placeholder")}
         rows={Math.max(2, block.content.split("\n").length)}
         spellCheck={false}
       />
