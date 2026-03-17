@@ -25,6 +25,7 @@ export type SortDir = "asc" | "desc";
 export type GroupBy = "none" | "status" | "date" | "category";
 
 export function useNeuronList() {
+  const { t } = useTranslation("common");
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
