@@ -19,6 +19,7 @@ interface LedgerEntry {
 }
 
 export function DecisionLedgerTab() {
+  const { t } = useTranslation("common");
   const [entries, setEntries] = useState<LedgerEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [integrityOk, setIntegrityOk] = useState<boolean | null>(null);
