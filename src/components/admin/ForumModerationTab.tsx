@@ -83,13 +83,13 @@ export function ForumModerationTab() {
       const flag = flags.find(f => f.id === flagId);
       if (flag?.target_type === "post") {
         await supabase.from("forum_posts").delete().eq("id", flag.target_id);
-        toast.success("Post removed and flag resolved.");
+        toast.success(t("common:post_removed"));
       } else if (flag?.target_type === "thread") {
         await supabase.from("forum_threads").update({ is_locked: true }).eq("id", flag.target_id);
-        toast.success("Thread locked and flag resolved.");
+        toast.success(t("common:thread_locked"));
       }
     } else {
-      toast.success("Flag dismissed.");
+      toast.success(t("common:flag_dismissed"));
     }
     loadFlags();
   };

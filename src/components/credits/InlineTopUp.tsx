@@ -41,9 +41,9 @@ export function InlineTopUp({ needed, balance = 0, onDismiss, compact = false }:
       if (!data?.url) throw new Error("Checkout URL not received");
 
       window.open(data.url, "_blank");
-      toast.info("Complete payment in the opened window. Credits will be added instantly.");
+      toast.info(t("pages:credits.topup_complete_payment"));
     } catch (err: any) {
-      toast.error("Error: " + (err.message || "Try again"));
+      toast.error(err.message || t("errors:generic"));
     } finally {
       setProcessing(null);
     }

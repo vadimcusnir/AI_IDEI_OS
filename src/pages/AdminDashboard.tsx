@@ -302,7 +302,7 @@ export default function AdminDashboard() {
         description: `ADMIN: ${adjustDescription}`,
       });
 
-      toast.success(`${amount > 0 ? "+" : ""}${amount} credits applied`);
+      toast.success(t("common:credits_applied", { amount: `${amount > 0 ? "+" : ""}${amount}` }));
       setAdjustingUser(null);
       setAdjustAmount("");
       setAdjustDescription("");

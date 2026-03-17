@@ -64,7 +64,7 @@ export function IncidentManagementTab() {
     if (status === "resolved") update.resolved_at = new Date().toISOString();
     const { error } = await supabase.from("incidents").update(update).eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Incident ${status}`);
+    toast.success(t("common:incident_status_updated", { status }));
     load();
   };
 

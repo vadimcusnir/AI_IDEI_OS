@@ -133,7 +133,7 @@ export function useAIExtraction() {
         }
       }
 
-      toast.success(`${label} complete`);
+      toast.success(t("common:action_complete", { label }));
       setIsExtracting(false);
       setActiveAction("");
       return fullResult;

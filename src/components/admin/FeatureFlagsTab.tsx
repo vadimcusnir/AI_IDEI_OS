@@ -56,9 +56,9 @@ export function FeatureFlagsTab() {
       .eq("key", key);
 
     if (error) {
-      toast.error("Failed to update rollout");
+      toast.error(t("rollout_update_failed"));
     } else {
-      toast.success(`${key} rollout set to ${percentage}%`);
+      toast.success(t("rollout_updated", { key, percentage }));
       setFlags(prev => prev.map(f => f.key === key ? { ...f, rollout_percentage: percentage } : f));
     }
     setSaving(null);

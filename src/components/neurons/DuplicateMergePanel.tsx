@@ -146,7 +146,7 @@ export function DuplicateMergePanel() {
 
       setDuplicates(prev => prev.filter(d => d.id !== dup.id));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Action failed");
+      toast.error(e instanceof Error ? e.message : t("errors:generic"));
     } finally {
       setProcessing(false);
       setActionDialog(null);

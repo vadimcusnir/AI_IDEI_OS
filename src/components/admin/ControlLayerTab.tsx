@@ -214,7 +214,7 @@ export function ControlLayerTab() {
     const { error } = await supabase.from("ui_control_registry" as any)
       .update({ [field]: !item[field], last_modified_by: user?.id } as any)
       .eq("id", item.id);
-    if (error) toast.error("Failed to update");
+    if (error) toast.error(t("common:update_failed"));
     else loadData();
   };
 
