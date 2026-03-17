@@ -2,6 +2,7 @@ import { X, Loader2, Copy, Plus, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface AIResultsPanelProps {
   result: string;
