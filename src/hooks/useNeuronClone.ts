@@ -81,7 +81,7 @@ export function useNeuronClone() {
       .from("neurons")
       .insert({ author_id: user.id, title: `${source.title} (fork)` })
       .select().single();
-    if (!forked) { toast.error("Failed to fork"); return null; }
+    if (!forked) { toast.error(t("fork_failed")); return null; }
 
     // Copy blocks
     const { data: srcBlocks } = await supabase
