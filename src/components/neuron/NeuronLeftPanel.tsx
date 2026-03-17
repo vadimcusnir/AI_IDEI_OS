@@ -321,7 +321,7 @@ export function NeuronLeftPanel({
         {!loadingLinks && (
           <>
             <LinkSection
-              title="Outgoing Links"
+              title={t("neuron_editor.outgoing_links")}
               icon={Link2}
               items={filteredLinks}
               direction="outgoing"
