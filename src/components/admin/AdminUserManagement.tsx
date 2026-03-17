@@ -229,7 +229,7 @@ export function AdminUserManagement() {
           {selectedUser && (
             <>
               <SheetHeader>
-                <SheetTitle className="text-sm">User Detail</SheetTitle>
+                <SheetTitle className="text-sm">{t("user_detail")}</SheetTitle>
               </SheetHeader>
               <div className="space-y-4 mt-4">
                 {/* User info */}
