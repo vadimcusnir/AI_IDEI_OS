@@ -435,7 +435,11 @@
     "earned": "Earned",
     "spent": "Spent",
     "last_update": "Last Update",
-    "recent_transactions": "Recent Transactions"
+    "recent_transactions": "Recent Transactions",
+    "search_users": "Search by user ID or email...",
+    "users_label": "users",
+    "roles": "Roles",
+    "amount_placeholder": "±amount"
   },
   "folders": {
     "folders": "Folders",
@@ -504,7 +508,12 @@
     "programmable_object": "Programmable knowledge object",
     "todo_placeholder": "To do...",
     "search_by_number": "Search by # or title...",
-    "search_graph": "Search graph..."
+    "search_graph": "Search graph...",
+    "comments_coming_soon": "Comments are coming soon.",
+    "add_comment": "Add a comment...",
+    "csv_placeholder": "header1,header2,header3\nval1,val2,val3",
+    "diagram_placeholder": "graph TD\n  A[Start] --> B[End]",
+    "ai_worker_placeholder": "Describe what the AI worker should do..."
   },
   "webhook": {
     "url_placeholder": "https://your-server.com/webhook",

@@ -484,7 +484,7 @@ export function AgentConsole() {
                 else setShowSlashMenu(false);
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Type a message or / for commands..."
+              placeholder={t("common:type_message")}
               className="w-full resize-none rounded-xl border border-border bg-background px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary/30 min-h-[36px] max-h-[120px]"
               rows={1}
               style={{ height: "auto" }}

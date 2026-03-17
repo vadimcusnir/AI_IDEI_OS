@@ -435,7 +435,11 @@
     "earned": "Заработано",
     "spent": "Потрачено",
     "last_update": "Последнее обновление",
-    "recent_transactions": "Последние транзакции"
+    "recent_transactions": "Последние транзакции",
+    "search_users": "Поиск по ID или email...",
+    "users_label": "пользователей",
+    "roles": "Роли",
+    "amount_placeholder": "±сумма"
   },
   "folders": {
     "folders": "Папки",
@@ -504,7 +508,12 @@
     "programmable_object": "Программируемый объект знаний",
     "todo_placeholder": "Сделать...",
     "search_by_number": "Поиск по # или названию...",
-    "search_graph": "Поиск по графу..."
+    "search_graph": "Поиск по графу...",
+    "comments_coming_soon": "Комментарии скоро будут доступны.",
+    "add_comment": "Добавить комментарий...",
+    "csv_placeholder": "заголовок1,заголовок2,заголовок3\nзнач1,знач2,знач3",
+    "diagram_placeholder": "graph TD\n  A[Начало] --> B[Конец]",
+    "ai_worker_placeholder": "Опишите, что должен делать ИИ-работник..."
   },
   "webhook": {
     "url_placeholder": "https://ваш-сервер.com/webhook",

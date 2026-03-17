@@ -314,7 +314,7 @@ export default function Credits() {
               <input
                 value={txSearch}
                 onChange={e => setTxSearch(e.target.value)}
-                placeholder="Search..."
+                placeholder={t("common:search")}
                 className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
               />
               {txSearch && (

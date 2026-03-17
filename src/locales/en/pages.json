@@ -606,6 +606,7 @@
     "delete_confirm_title": "Are you absolutely sure?",
     "delete_confirm_desc": "This will permanently delete your account and all data. This action cannot be undone.",
     "delete_confirm_label": "Type DELETE to confirm:",
+    "delete_keyword": "DELETE",
     "cancel": "Cancel",
     "delete_everything": "Delete Everything",
     "delete_success": "Account and all data deleted.",

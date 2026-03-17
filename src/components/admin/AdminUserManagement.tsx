@@ -137,13 +137,13 @@ export function AdminUserManagement() {
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
-            placeholder="Search by user ID or email..."
+            placeholder={t("admin.search_users")}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(0); }}
             className="pl-8 h-8 text-xs"
           />
         </div>
-        <Badge variant="outline" className="text-[10px]">{filteredUsers.length} users</Badge>
+        <Badge variant="outline" className="text-[10px]">{filteredUsers.length} {t("admin.users_label")}</Badge>
       </div>
 
       {/* Users table */}
@@ -151,12 +151,12 @@ export function AdminUserManagement() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-[10px]">User</TableHead>
-              <TableHead className="text-[10px]">Roles</TableHead>
-              <TableHead className="text-[10px] text-right">Neurons</TableHead>
-              <TableHead className="text-[10px] text-right">Balance</TableHead>
-              <TableHead className="text-[10px] text-right">Spent</TableHead>
-              <TableHead className="text-[10px] w-24">Actions</TableHead>
+              <TableHead className="text-[10px]">{t("admin.user_id")}</TableHead>
+              <TableHead className="text-[10px]">{t("admin.roles")}</TableHead>
+              <TableHead className="text-[10px] text-right">{t("common:neurons_currency")}</TableHead>
+              <TableHead className="text-[10px] text-right">{t("admin.balance")}</TableHead>
+              <TableHead className="text-[10px] text-right">{t("admin.spent")}</TableHead>
+              <TableHead className="text-[10px] w-24">{t("actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -287,12 +287,12 @@ export function AdminUserManagement() {
                       <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t("adjust_credits")}</p>
                       <div className="flex gap-2">
                         <Input
-                          type="number" placeholder="±amount"
+                          type="number" placeholder={t("admin.amount_placeholder")}
                           value={adjustAmount} onChange={(e) => setAdjustAmount(e.target.value)}
                           className="h-7 text-xs w-24"
                         />
                         <Input
-                          placeholder="Reason..."
+                          placeholder={t("admin.reason")}
                           value={adjustDescription} onChange={(e) => setAdjustDescription(e.target.value)}
                           className="h-7 text-xs flex-1"
                         />

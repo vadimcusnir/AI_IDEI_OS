@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Block, BLOCK_TYPE_CONFIG, CodeLanguage, ExecutionStatus } from "./types";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface FormatBlockProps {
   block: Block;
@@ -226,6 +227,7 @@ export function PromptBlock({ block, onContentChange, onExecute }: FormatBlockPr
 
 // Dataset / Table Block
 export function DatasetBlock({ block, onContentChange, onExecute }: FormatBlockProps) {
+  const { t } = useTranslation("common");
   const rows = parseTableData(block.content);
 
   return (
@@ -264,7 +266,7 @@ export function DatasetBlock({ block, onContentChange, onExecute }: FormatBlockP
           value={block.content}
           onChange={(e) => onContentChange(e.target.value)}
           className="w-full font-mono text-[10px] bg-transparent border-none outline-none resize-none min-h-[30px] text-muted-foreground"
-          placeholder="header1,header2,header3&#10;val1,val2,val3"
+          placeholder={t("common:neuron_editor.csv_placeholder")}
           rows={2}
           spellCheck={false}
         />
@@ -276,6 +278,7 @@ export function DatasetBlock({ block, onContentChange, onExecute }: FormatBlockP
 
 // Diagram Block
 export function DiagramBlock({ block, onContentChange, onExecute }: FormatBlockProps) {
+  const { t } = useTranslation("common");
   return (
     <div className="rounded-md border border-graph-highlight/20 overflow-hidden bg-card">
       <BlockHeader block={block} onExecute={() => onExecute(block.id)}>
@@ -290,7 +293,7 @@ export function DiagramBlock({ block, onContentChange, onExecute }: FormatBlockP
         value={block.content}
         onChange={(e) => onContentChange(e.target.value)}
         className="w-full px-3 py-2 font-mono text-sm bg-transparent border-none outline-none resize-none min-h-[40px] text-foreground"
-        placeholder="graph TD&#10;  A[Start] --> B[End]"
+        placeholder={t("common:neuron_editor.diagram_placeholder")}
         rows={Math.max(2, block.content.split("\n").length)}
         spellCheck={false}
       />
@@ -301,6 +304,7 @@ export function DiagramBlock({ block, onContentChange, onExecute }: FormatBlockP
 
 // AI Action Block
 export function AIActionBlock({ block, onContentChange, onExecute }: FormatBlockProps) {
+  const { t } = useTranslation("common");
   return (
     <div className="rounded-md border border-ai-accent/30 overflow-hidden bg-ai/30">
       <BlockHeader block={block} onExecute={() => onExecute(block.id)}>
@@ -312,7 +316,7 @@ export function AIActionBlock({ block, onContentChange, onExecute }: FormatBlock
         value={block.content}
         onChange={(e) => onContentChange(e.target.value)}
         className="w-full px-3 py-2 text-sm bg-transparent border-none outline-none resize-none min-h-[40px] text-foreground"
-        placeholder="Describe what the AI worker should do..."
+        placeholder={t("common:neuron_editor.ai_worker_placeholder")}
         rows={Math.max(2, block.content.split("\n").length)}
       />
       <ExecutionResult result={block.executionResult} status={block.executionStatus} />
