@@ -215,11 +215,11 @@ function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (
         onChange={e => setRelationType(e.target.value)}
         className="w-full text-[10px] bg-muted/50 rounded-md px-2 py-1 outline-none border border-border"
       >
-        <option value="supports">Supports</option>
-        <option value="contradicts">Contradicts</option>
-        <option value="extends">Extends</option>
-        <option value="references">References</option>
-        <option value="derived_from">Derived from</option>
+        <option value="supports">{t("neuron_editor.rel_supports")}</option>
+        <option value="contradicts">{t("neuron_editor.rel_contradicts")}</option>
+        <option value="extends">{t("neuron_editor.rel_extends")}</option>
+        <option value="references">{t("neuron_editor.rel_references")}</option>
+        <option value="derived_from">{t("neuron_editor.rel_derived_from")}</option>
       </select>
     </div>
   );
