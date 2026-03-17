@@ -161,7 +161,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       }
 
       if (!fullContent) {
-        fullContent = "Îmi pare rău, nu am putut genera un răspuns. Încearcă din nou.";
+        fullContent = t("chat_no_response");
         setMessages(prev => [
           ...prev,
           { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() },
@@ -172,10 +172,10 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
 
     } catch (e) {
-      toast.error("Chat error: " + (e instanceof Error ? e.message : "Unknown"));
+      toast.error(t("chat_error", { message: e instanceof Error ? e.message : "Unknown" }));
       setMessages(prev => [
         ...prev,
-        { id: crypto.randomUUID(), role: "assistant", content: "A apărut o eroare. Te rog să încerci din nou.", timestamp: new Date() },
+        { id: crypto.randomUUID(), role: "assistant", content: t("chat_error_fallback"), timestamp: new Date() },
       ]);
     } finally {
       setLoading(false);
