@@ -325,7 +325,7 @@ export default function AdminDashboard() {
     const newVis = currentVis === "public" ? "private" : "public";
     const { error } = await supabase.from("neurons").update({ visibility: newVis }).eq("id", neuronId);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Visibility changed: ${newVis}`);
+    toast.success(t("common:visibility_changed", { visibility: newVis }));
     loadNeurons();
   };
 

@@ -104,11 +104,11 @@ export function useNeuronTemplates() {
       .single();
 
     if (error) {
-      toast.error("Failed to save template");
+      toast.error(i18next.t("common:template_save_failed"));
       return null;
     }
 
-    toast.success("Template saved");
+    toast.success(i18next.t("common:template_saved"));
     await fetchTemplates();
     return data;
   }, [user, fetchTemplates]);

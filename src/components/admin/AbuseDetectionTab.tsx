@@ -41,7 +41,7 @@ export function AbuseDetectionTab() {
       .update({ action_taken: action, resolved_at: new Date().toISOString() })
       .eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Event marked as ${action}`);
+    toast.success(t("event_marked_as", { action }));
     load();
   };
 

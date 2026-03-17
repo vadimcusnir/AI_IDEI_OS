@@ -276,7 +276,7 @@ export default function Extractor() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       setChunkPreview({ episodeId: episode.id, chunks: data.chunks });
-      toast.success(`${data.total_chunks} segments generated (${data.total_tokens} tokens)`);
+      toast.success(t("common:segments_generated", { chunks: data.total_chunks, tokens: data.total_tokens }));
     } catch (e) {
       toast.error(e instanceof Error ? e.message : t("errors:generic"));
     } finally {

@@ -339,7 +339,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
       } else {
         setStage("complete");
         setResult({ neurons: 0, episode_id: ep.id });
-        toast.success("Episode created. Upload an audio file to extract neurons automatically.");
+        toast.success(t("episode_created_hint"));
       }
 
       onComplete?.();

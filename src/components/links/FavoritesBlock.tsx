@@ -50,20 +50,20 @@ export function FavoritesBlock() {
       position: links.length,
     });
     if (error) {
-      toast.error("Nu s-a putut adăuga linkul");
+      toast.error(t("link_add_failed"));
       return;
     }
     setNewTitle("");
     setNewHref("");
     setAdding(false);
     fetchLinks();
-    toast.success("Link adăugat!");
+    toast.success(t("link_added"));
   };
 
   const handleDelete = async (id: string) => {
     await supabase.from("user_links").delete().eq("id", id);
     setLinks(prev => prev.filter(l => l.id !== id));
-    toast.success("Link șters");
+    toast.success(t("link_deleted"));
   };
 
   if (!user) return null;

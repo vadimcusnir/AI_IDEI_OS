@@ -84,27 +84,27 @@ export default function Credits() {
             }
           );
           if (resp.ok) {
-            toast.success(`Top-up reușit! +${neurons || ""} NEURONS adăugați.`);
+            toast.success(t("common:topup_success", { neurons: neurons || "" }));
           } else {
-            toast.error("Verificarea top-up a eșuat.");
+            toast.error(t("common:topup_verify_failed"));
           }
         } catch {
-          toast.error("Eroare la verificarea plății.");
+          toast.error(t("common:topup_payment_error"));
         }
         setSearchParams({});
         loadData();
       })();
     } else if (topup === "cancelled") {
-      toast.info("Top-up anulat.");
+      toast.info(t("common:topup_cancelled"));
       setSearchParams({});
     }
 
     const subscription = searchParams.get("subscription");
     if (subscription === "success") {
-      toast.success("Abonament activat cu succes!");
+      toast.success(t("common:subscription_activated"));
       setSearchParams({});
     } else if (subscription === "cancel") {
-      toast.info("Abonare anulată.");
+      toast.info(t("common:subscription_cancelled"));
       setSearchParams({});
     }
   }, [searchParams, user, authLoading]);

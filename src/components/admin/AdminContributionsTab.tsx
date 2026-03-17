@@ -55,7 +55,7 @@ export function AdminContributionsTab() {
     },
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["admin-contributions"] });
-      toast.success(`Contribution ${vars.status}`);
+      toast.success(t("contribution_status", { status: vars.status }));
       setExpandedId(null);
       setReviewNote("");
     },
