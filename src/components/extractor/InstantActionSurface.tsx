@@ -253,7 +253,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         transcript = data.transcript || "done";
 
         if (data.source === "subtitles") {
-          toast.info(`📝 Using ${data.language?.toUpperCase() || ""} captions (${data.segments?.length || 0} segments)`);
+          toast.info(t("using_captions", { language: data.language?.toUpperCase() || "", segments: data.segments?.length || 0 }));
         }
       }
 
