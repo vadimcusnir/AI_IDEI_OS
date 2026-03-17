@@ -9,6 +9,7 @@ import {
   CheckCircle2, XCircle, Clock, Eye, FileText, Coins,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 
