@@ -285,7 +285,7 @@ export function NeuronLeftPanel({
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search graph..."
+            placeholder={t("neuron_editor.search_graph")}
             className="text-xs bg-transparent border-none outline-none w-full text-foreground placeholder:text-muted-foreground/50"
           />
           {searchQuery && (
