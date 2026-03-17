@@ -253,17 +253,17 @@ export function AdminUserManagement() {
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <Brain className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.neuron_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Neurons</p>
+                        <p className="text-[9px] text-muted-foreground">{t("common:neurons_currency")}</p>
                       </div>
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <FileText className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.artifact_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Artifacts</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.artifacts")}</p>
                       </div>
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <Briefcase className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.episode_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Episodes</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.episodes")}</p>
                       </div>
                     </div>
 
