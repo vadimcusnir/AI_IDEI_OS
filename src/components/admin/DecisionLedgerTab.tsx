@@ -59,7 +59,7 @@ export function DecisionLedgerTab() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = `ledger-${Date.now()}.json`; a.click();
     URL.revokeObjectURL(url);
-    toast.success("JSON exported");
+    toast.success(t("json_exported"));
   };
 
   const verdictIcon = (v: string | null) => {

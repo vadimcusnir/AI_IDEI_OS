@@ -162,7 +162,7 @@ export default function Jobs() {
       .order("created_at", { ascending: false })
       .limit(50);
     if (data) setJobs(data as Job[]);
-    if (error) toast.error("Failed to load jobs");
+    if (error) toast.error(t("jobs.failed_to_load"));
     setLoading(false);
   };
 

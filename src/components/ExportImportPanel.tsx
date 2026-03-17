@@ -263,7 +263,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
           <div className="flex items-center gap-2 mt-3">
             <Button size="sm" className="text-xs gap-1.5" onClick={handleImport} disabled={importing || !importText.trim()}>
               {importing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
-              Import
+              {t("import")}
             </Button>
             {importResult && (
               <span className="text-xs text-status-validated flex items-center gap-1">

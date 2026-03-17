@@ -158,7 +158,7 @@ export default function ApiDocs() {
               <p className="text-xs font-semibold text-primary mb-2">🔑 {t("api_docs.new_key_banner")}</p>
               <div className="flex items-center gap-2">
                 <code className="text-[10px] bg-muted px-2 py-1 rounded font-mono flex-1 break-all">{revealedKey}</code>
-                <Button size="sm" variant="ghost" className="h-7" onClick={() => { navigator.clipboard.writeText(revealedKey); toast.success("Copied!"); }}>
+                <Button size="sm" variant="ghost" className="h-7" onClick={() => { navigator.clipboard.writeText(revealedKey); toast.success(t("api_docs.copied")); }}>
                   <Copy className="h-3 w-3" />
                 </Button>
               </div>

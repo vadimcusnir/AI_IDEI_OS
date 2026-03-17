@@ -99,7 +99,7 @@ export function AccessSimulator() {
 
       {history.length > 0 && (
         <div className="space-y-1">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Istoric simulări</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("simulation_history")}</p>
           {history.map((h, i) => (
             <div key={i} className="flex items-center gap-2 text-[10px] py-1 border-b border-border/50 last:border-0">
               {verdictIcon(h.result.verdict)}
