@@ -163,10 +163,10 @@ export default function Extractor() {
       );
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
-      toast.success(`Transcription complete — ${data.word_count} words`);
+      toast.success(t("common:transcription_complete", { count: data.word_count }));
       fetchEpisodes();
     } catch (e: any) {
-      toast.error(e.message || "Transcription failed");
+      toast.error(e.message || t("errors:generic"));
     }
     setTranscribingId(null);
   };
