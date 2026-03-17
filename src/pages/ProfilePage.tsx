@@ -238,7 +238,7 @@ export default function ProfilePage() {
                   )}
                   {!profile.username && (
                     <p className="text-[10px] text-muted-foreground mt-1">
-                      Set a username to enable your public profile
+                      {t("common:profile.set_username_hint")}
                     </p>
                   )}
                 </div>
