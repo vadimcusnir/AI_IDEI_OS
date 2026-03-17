@@ -169,10 +169,10 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
       <div className="flex items-center justify-between px-3 py-2 border-b border-ai-border">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-ai-accent flex items-center gap-1.5">
           <MessageCircle className="h-3 w-3" />
-          Neuron Chat
+          {t("neuron_editor.neuron_chat")}
         </span>
         {messages.length > 0 && (
-          <button onClick={clearChat} className="text-muted-foreground hover:text-destructive transition-colors" title="Clear chat">
+          <button onClick={clearChat} className="text-muted-foreground hover:text-destructive transition-colors" title={t("neuron_editor.clear_chat")}>
             <Trash2 className="h-3 w-3" />
           </button>
         )}
