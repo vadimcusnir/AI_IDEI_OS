@@ -6,6 +6,7 @@ import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { useTranslation } from "react-i18next";
 
 export function useNeuronClone() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
 
   const cloneNeuron = useCallback(async (sourceNeuronId: number) => {
