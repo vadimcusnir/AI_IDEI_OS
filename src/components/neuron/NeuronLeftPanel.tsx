@@ -328,7 +328,7 @@ export function NeuronLeftPanel({
               onRemoveLink={onRemoveLink}
             />
             <LinkSection
-              title="Backlinks"
+              title={t("neuron_editor.backlinks")}
               icon={AtSign}
               items={filteredLinks}
               direction="incoming"
