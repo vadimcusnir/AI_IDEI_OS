@@ -164,7 +164,7 @@ export function useNeuron(neuronNumber?: number) {
       })
       .eq("id", neuron.id);
 
-    if (error) toast.error("Failed to save");
+    if (error) toast.error(t("errors:save_failed", { message: error.message }));
     setSaving(false);
   }, [neuron]);
 
