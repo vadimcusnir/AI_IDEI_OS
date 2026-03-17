@@ -234,6 +234,7 @@ export function NeuronLeftPanel({
   onAddLink,
   onRemoveLink,
 }: NeuronLeftPanelProps) {
+  const { t } = useTranslation("common");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredLinks = searchQuery
