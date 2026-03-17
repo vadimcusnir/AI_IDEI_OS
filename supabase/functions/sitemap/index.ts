@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const BASE_URL = "https://ai-idei-os.lovable.app";
+const BASE_URL = "https://ai-idei.com";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
