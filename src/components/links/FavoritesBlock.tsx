@@ -134,7 +134,7 @@ export function FavoritesBlock() {
               />
               <div className="flex gap-2 pt-1">
                 <Button size="sm" className="h-7 text-xs" onClick={handleAdd}>
-                  Salvează
+                  {t("common:save")}
                 </Button>
                 <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setAdding(false)}>
                   <X className="h-3 w-3" />

@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Loader2, ScrollText, ShieldCheck, AlertTriangle, Info } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ComplianceEntry {
   id: string;
@@ -16,6 +17,7 @@ interface ComplianceEntry {
 }
 
 export function ComplianceLogTab() {
+  const { t } = useTranslation("common");
   const [entries, setEntries] = useState<ComplianceEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -45,7 +47,7 @@ export function ComplianceLogTab() {
     return (
       <div className="text-center py-16">
         <ShieldCheck className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">No compliance events recorded yet</p>
+        <p className="text-sm text-muted-foreground">{t("admin.no_compliance_events")}</p>
       </div>
     );
   }

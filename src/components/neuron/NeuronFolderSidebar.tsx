@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
@@ -26,7 +27,6 @@ interface NeuronFolderSidebarProps {
   aiSuggesting: boolean;
 }
 
-// Persist folders in localStorage
 const FOLDERS_KEY = "neuron_folders";
 const ASSIGNMENTS_KEY = "neuron_folder_assignments";
 
@@ -79,10 +79,7 @@ export function useNeuronFolders() {
   const renameFolder = useCallback((folderId: string, name: string) => {
     setFolders(prev => {
       const rename = (nodes: FolderNode[]): FolderNode[] =>
-        nodes.map(n => n.id === folderId
-          ? { ...n, name }
-          : { ...n, children: rename(n.children) }
-        );
+        nodes.map(n => n.id === folderId ? { ...n, name } : { ...n, children: rename(n.children) });
       return rename(prev);
     });
   }, []);
@@ -93,7 +90,6 @@ export function useNeuronFolders() {
         nodes.filter(n => n.id !== folderId).map(n => ({ ...n, children: remove(n.children) }));
       return remove(prev);
     });
-    // Remove assignments for this folder
     setAssignments(prev => {
       const next = { ...prev };
       for (const [k, v] of Object.entries(next)) {
@@ -147,14 +143,13 @@ export function useNeuronFolders() {
 export function NeuronFolderSidebar({
   neurons, selectedFolderId, onSelectFolder, onAISuggest, aiSuggesting
 }: NeuronFolderSidebarProps) {
+  const { t } = useTranslation("common");
   const { folders, assignments, addFolder, renameFolder, deleteFolder, assignNeuron } = useNeuronFolders();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [addingTo, setAddingTo] = useState<string | null | "root">(null);
   const [newName, setNewName] = useState("");
-
-  // Drag state
   const [dragNeuronId, setDragNeuronId] = useState<number | null>(null);
 
   const toggle = (id: string) => {
@@ -242,21 +237,20 @@ export function NeuronFolderSidebar({
             <DropdownMenuContent align="end" className="w-36">
               <DropdownMenuItem onClick={e => { e.stopPropagation(); setAddingTo(folder.id); setNewName(""); }}>
                 <FolderPlus className="h-3 w-3 mr-2" />
-                Add subfolder
+                {t("folders.add_subfolder")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={e => { e.stopPropagation(); setEditingId(folder.id); setEditName(folder.name); }}>
                 <Pencil className="h-3 w-3 mr-2" />
-                Rename
+                {t("folders.rename")}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-destructive" onClick={e => { e.stopPropagation(); deleteFolder(folder.id); }}>
                 <Trash2 className="h-3 w-3 mr-2" />
-                Delete
+                {t("delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
 
-        {/* Add subfolder input */}
         {addingTo === folder.id && (
           <form
             className="flex items-center gap-1 py-1 ml-3"
@@ -268,14 +262,13 @@ export function NeuronFolderSidebar({
               autoFocus
               value={newName}
               onChange={e => setNewName(e.target.value)}
-              placeholder="Subfolder name..."
+              placeholder={t("folders.subfolder_name")}
               className="flex-1 bg-transparent text-xs outline-none border-b border-primary/30 px-0.5"
               onBlur={() => handleAdd(folder.id)}
             />
           </form>
         )}
 
-        {/* Children */}
         {isExpanded && folder.children.map(child => renderFolder(child, depth + 1))}
       </div>
     );
@@ -284,20 +277,20 @@ export function NeuronFolderSidebar({
   return (
     <div className="w-56 shrink-0 border-r border-border bg-card/50 flex flex-col h-full overflow-hidden">
       <div className="px-3 py-2.5 border-b border-border flex items-center justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Folders</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("folders.folders")}</span>
         <div className="flex items-center gap-0.5">
           <button
             onClick={onAISuggest}
             disabled={aiSuggesting}
             className="h-6 w-6 flex items-center justify-center rounded hover:bg-primary/10 text-primary/60 hover:text-primary transition-colors"
-            title="AI: Suggest folder structure"
+            title={t("folders.ai_suggest")}
           >
             {aiSuggesting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
           </button>
           <button
             onClick={() => { setAddingTo("root"); setNewName(""); }}
             className="h-6 w-6 flex items-center justify-center rounded hover:bg-accent text-muted-foreground/60 hover:text-foreground transition-colors"
-            title="New folder"
+            title={t("folders.new_folder")}
           >
             <Plus className="h-3 w-3" />
           </button>
@@ -305,7 +298,6 @@ export function NeuronFolderSidebar({
       </div>
 
       <div className="flex-1 overflow-y-auto px-1.5 py-1.5 space-y-0.5">
-        {/* All neurons */}
         <div
           className={cn(
             "flex items-center gap-1.5 py-1 px-2 rounded cursor-pointer transition-colors text-sm",
@@ -314,11 +306,10 @@ export function NeuronFolderSidebar({
           onClick={() => onSelectFolder(null)}
         >
           <Folder className="h-3.5 w-3.5" />
-          <span className="flex-1 text-xs">All Neurons</span>
+          <span className="flex-1 text-xs">{t("folders.all_neurons")}</span>
           <span className="text-[9px] text-muted-foreground/50">{neurons.length}</span>
         </div>
 
-        {/* Unassigned */}
         {unassignedCount > 0 && unassignedCount < neurons.length && (
           <div
             className={cn(
@@ -328,18 +319,15 @@ export function NeuronFolderSidebar({
             onClick={() => onSelectFolder(selectedFolderId === "__unassigned" ? null : "__unassigned")}
           >
             <Folder className="h-3.5 w-3.5 text-muted-foreground/40" />
-            <span className="flex-1 text-xs text-muted-foreground">Uncategorized</span>
+            <span className="flex-1 text-xs text-muted-foreground">{t("folders.uncategorized")}</span>
             <span className="text-[9px] text-muted-foreground/50">{unassignedCount}</span>
           </div>
         )}
 
-        {/* Separator */}
         {folders.length > 0 && <div className="h-px bg-border/50 my-1" />}
 
-        {/* Folder tree */}
         {folders.map(f => renderFolder(f, 0))}
 
-        {/* Add root folder input */}
         {addingTo === "root" && (
           <form className="flex items-center gap-1.5 py-1 px-2" onSubmit={e => { e.preventDefault(); handleAdd(null); }}>
             <FolderPlus className="h-3.5 w-3.5 text-primary/60 shrink-0" />
@@ -347,7 +335,7 @@ export function NeuronFolderSidebar({
               autoFocus
               value={newName}
               onChange={e => setNewName(e.target.value)}
-              placeholder="Folder name..."
+              placeholder={t("folders.folder_name")}
               className="flex-1 bg-transparent text-xs outline-none border-b border-primary/30"
               onBlur={() => handleAdd(null)}
             />

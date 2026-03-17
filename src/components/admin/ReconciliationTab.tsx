@@ -4,6 +4,7 @@ import { DollarSign, RefreshCw, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface ServiceRecon {
   service_key: string;
@@ -16,6 +17,7 @@ interface ServiceRecon {
 }
 
 export function ReconciliationTab() {
+  const { t } = useTranslation("common");
   const [data, setData] = useState<ServiceRecon[]>([]);
   const [loading, setLoading] = useState(true);
   const [totals, setTotals] = useState({ totalRuns: 0, totalRevenue: 0, totalUsd: "0.00" });
@@ -30,7 +32,6 @@ export function ReconciliationTab() {
     const services = servicesRes.data || [];
     const jobs = jobsRes.data || [];
 
-    // Count jobs per worker_type
     const jobCounts: Record<string, { total: number; completed: number }> = {};
     jobs.forEach((j: any) => {
       if (!jobCounts[j.worker_type]) jobCounts[j.worker_type] = { total: 0, completed: 0 };
@@ -66,42 +67,40 @@ export function ReconciliationTab() {
 
   return (
     <div className="space-y-4">
-      {/* Summary */}
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-card border border-border rounded-xl p-4">
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Total Runs</span>
+          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.total_runs")}</span>
           <p className="text-xl font-bold font-mono">{totals.totalRuns}</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Revenue (Credits)</span>
+          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.revenue_credits")}</span>
           <p className="text-xl font-bold font-mono text-primary">{totals.totalRevenue}</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Revenue (USD)</span>
+          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.revenue_usd")}</span>
           <p className="text-xl font-bold font-mono text-primary">${totals.totalUsd}</p>
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-card border border-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-            <DollarSign className="h-3 w-3" /> Service Reconciliation — Cost vs Revenue
+            <DollarSign className="h-3 w-3" /> {t("admin.service_reconciliation")}
           </h3>
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
-            <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> Refresh
+            <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> {t("admin.refresh")}
           </Button>
         </div>
         <div className="overflow-auto max-h-[500px]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Service</TableHead>
-                <TableHead className="text-[10px] text-right">Cost/Run</TableHead>
-                <TableHead className="text-[10px] text-right">Total Runs</TableHead>
-                <TableHead className="text-[10px] text-right">Completed</TableHead>
-                <TableHead className="text-[10px] text-right">Revenue (Credits)</TableHead>
-                <TableHead className="text-[10px] text-right">Revenue (USD)</TableHead>
+                <TableHead className="text-[10px]">{t("admin.service")}</TableHead>
+                <TableHead className="text-[10px] text-right">{t("admin.cost_per_run")}</TableHead>
+                <TableHead className="text-[10px] text-right">{t("admin.total_runs")}</TableHead>
+                <TableHead className="text-[10px] text-right">{t("admin.completed")}</TableHead>
+                <TableHead className="text-[10px] text-right">{t("admin.revenue_credits")}</TableHead>
+                <TableHead className="text-[10px] text-right">{t("admin.revenue_usd")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

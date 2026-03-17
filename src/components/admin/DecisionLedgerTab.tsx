@@ -32,7 +32,7 @@ export function DecisionLedgerTab() {
       .order("created_at", { ascending: false })
       .limit(200);
     setEntries((data as LedgerEntry[]) || []);
-    setIntegrityOk(true); // hash chain enforced by DB trigger
+    setIntegrityOk(true);
     setLoading(false);
   };
 
@@ -73,12 +73,12 @@ export function DecisionLedgerTab() {
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-          <ScrollText className="h-3 w-3" /> Decision Ledger — Append-Only Audit Trail
+          <ScrollText className="h-3 w-3" /> {t("admin.decision_ledger")}
           {integrityOk !== null && (
             <span className={cn("text-[8px] px-1.5 py-0.5 rounded font-mono ml-1",
               integrityOk ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"
             )}>
-              {integrityOk ? "🔗 HASH CHAIN OK" : "⚠ INTEGRITY ERROR"}
+              {integrityOk ? `🔗 ${t("admin.hash_chain_ok")}` : `⚠ ${t("admin.integrity_error")}`}
             </span>
           )}
         </h3>
@@ -90,24 +90,24 @@ export function DecisionLedgerTab() {
             <Download className="h-3 w-3" /> JSON
           </Button>
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
-            <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> Refresh
+            <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> {t("admin.refresh")}
           </Button>
         </div>
       </div>
 
       {entries.length === 0 ? (
-        <p className="text-xs text-muted-foreground text-center py-8">No ledger entries yet.</p>
+        <p className="text-xs text-muted-foreground text-center py-8">{t("admin.no_ledger_entries")}</p>
       ) : (
         <div className="overflow-auto max-h-[600px]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Time</TableHead>
-                <TableHead className="text-[10px]">Event</TableHead>
-                <TableHead className="text-[10px]">Actor</TableHead>
-                <TableHead className="text-[10px]">Resource</TableHead>
-                <TableHead className="text-[10px]">Verdict</TableHead>
-                <TableHead className="text-[10px]">Reason</TableHead>
+                <TableHead className="text-[10px]">{t("admin.time")}</TableHead>
+                <TableHead className="text-[10px]">{t("admin.event")}</TableHead>
+                <TableHead className="text-[10px]">{t("admin.actor")}</TableHead>
+                <TableHead className="text-[10px]">{t("admin.resource")}</TableHead>
+                <TableHead className="text-[10px]">{t("admin.verdict")}</TableHead>
+                <TableHead className="text-[10px]">{t("admin.reason")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

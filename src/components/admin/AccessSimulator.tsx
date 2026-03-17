@@ -55,18 +55,18 @@ export function AccessSimulator() {
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-3">
         <Shield className="h-4 w-4 text-primary" />
-        <h3 className="text-sm font-semibold">Access Simulator</h3>
+        <h3 className="text-sm font-semibold">{t("admin.access_simulator")}</h3>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <Input
-          placeholder="User ID (UUID)"
+          placeholder={t("admin.user_id_placeholder")}
           value={userId}
           onChange={e => setUserId(e.target.value)}
           className="text-xs h-8"
         />
         <Input
-          placeholder="Service Key"
+          placeholder={t("admin.service_key_placeholder")}
           value={serviceKey}
           onChange={e => setServiceKey(e.target.value)}
           className="text-xs h-8"
