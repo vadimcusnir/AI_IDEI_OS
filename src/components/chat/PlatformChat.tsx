@@ -31,12 +31,13 @@ Be concise, professional, and use Romanian when the user writes in Romanian.`;
 
 export function PlatformChat({ neuronContext }: { neuronContext?: { title: string; blocks: Array<{ type: string; content: string }> } }) {
   const { user } = useAuth();
+  const { t } = useTranslation("common");
   const { saveMessage, sessions, loadSession, newSession } = useChatHistory();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
       role: "assistant",
-      content: "Bun venit! Sunt asistentul AI-IDEI. Te pot ajuta să extragi cunoștințe, să rulezi servicii AI sau să navighezi platforma. Cu ce te pot ajuta?",
+      content: t("chat_welcome"),
       timestamp: new Date(),
     },
   ]);
