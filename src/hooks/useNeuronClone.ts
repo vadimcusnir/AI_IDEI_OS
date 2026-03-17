@@ -32,7 +32,7 @@ export function useNeuronClone() {
       .single();
 
     if (cloneErr || !cloned) {
-      toast.error("Failed to clone neuron");
+      toast.error(t("clone_failed"));
       return null;
     }
 
