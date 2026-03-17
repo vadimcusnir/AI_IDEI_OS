@@ -402,9 +402,9 @@ export default function Extractor() {
       }
       setEditTranscriptText(transcript);
       setEditingTranscriptId(episodeId);
-      toast.success(`Imported ${file.name}`);
+      toast.success(t("common:file_imported", { name: file.name }));
     } catch {
-      toast.error("Failed to read file");
+      toast.error(t("errors:generic"));
     }
     e.target.value = "";
   };
