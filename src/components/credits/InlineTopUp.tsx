@@ -22,6 +22,7 @@ interface InlineTopUpProps {
 }
 
 export function InlineTopUp({ needed, balance = 0, onDismiss, compact = false }: InlineTopUpProps) {
+  const { t } = useTranslation(["common", "errors", "pages"]);
   const { user } = useAuth();
   const [processing, setProcessing] = useState<string | null>(null);
 
