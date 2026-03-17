@@ -508,7 +508,12 @@
     "programmable_object": "Программируемый объект знаний",
     "todo_placeholder": "Сделать...",
     "search_by_number": "Поиск по # или названию...",
-    "search_graph": "Поиск по графу..."
+    "search_graph": "Поиск по графу...",
+    "comments_coming_soon": "Комментарии скоро будут доступны.",
+    "add_comment": "Добавить комментарий...",
+    "csv_placeholder": "заголовок1,заголовок2,заголовок3\nзнач1,знач2,знач3",
+    "diagram_placeholder": "graph TD\n  A[Начало] --> B[Конец]",
+    "ai_worker_placeholder": "Опишите, что должен делать ИИ-работник..."
   },
   "webhook": {
     "url_placeholder": "https://ваш-сервер.com/webhook",

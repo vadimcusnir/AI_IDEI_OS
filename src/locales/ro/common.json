@@ -508,7 +508,12 @@
     "programmable_object": "Obiect de cunoastere programabil",
     "todo_placeholder": "De facut...",
     "search_by_number": "Cauta dupa # sau titlu...",
-    "search_graph": "Cauta in graf..."
+    "search_graph": "Cauta in graf...",
+    "comments_coming_soon": "Comentariile vor fi disponibile in curand.",
+    "add_comment": "Adauga un comentariu...",
+    "csv_placeholder": "antet1,antet2,antet3\nval1,val2,val3",
+    "diagram_placeholder": "graph TD\n  A[Start] --> B[Sfarsit]",
+    "ai_worker_placeholder": "Descrie ce ar trebui sa faca AI worker-ul..."
   },
   "webhook": {
     "url_placeholder": "https://serverul-tau.com/webhook",
