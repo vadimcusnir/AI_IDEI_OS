@@ -435,7 +435,11 @@
     "earned": "Earned",
     "spent": "Spent",
     "last_update": "Last Update",
-    "recent_transactions": "Recent Transactions"
+    "recent_transactions": "Recent Transactions",
+    "search_users": "Search by user ID or email...",
+    "users_label": "users",
+    "roles": "Roles",
+    "amount_placeholder": "±amount"
   },
   "folders": {
     "folders": "Folders",
