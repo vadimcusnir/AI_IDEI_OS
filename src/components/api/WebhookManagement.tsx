@@ -69,6 +69,7 @@ function DeliveryLog({ endpointId }: { endpointId: string }) {
 }
 
 export function WebhookManagement() {
+  const { t } = useTranslation("common");
   const { data: endpoints, isLoading } = useWebhookEndpoints();
   const createEndpoint = useCreateWebhookEndpoint();
   const deleteEndpoint = useDeleteWebhookEndpoint();

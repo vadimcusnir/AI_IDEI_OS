@@ -24,6 +24,7 @@ interface Duplicate {
 }
 
 export function DuplicateMergePanel() {
+  const { t } = useTranslation(["common", "errors"]);
   const { user } = useAuth();
   const [duplicates, setDuplicates] = useState<Duplicate[]>([]);
   const [loading, setLoading] = useState(true);

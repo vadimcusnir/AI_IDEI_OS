@@ -114,6 +114,7 @@ const RegimeBadge = ({ regime }: { regime: string }) => {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════
 export function ControlLayerTab() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const [subTab, setSubTab] = useState("prompts");
   const [prompts, setPrompts] = useState<PromptItem[]>([]);

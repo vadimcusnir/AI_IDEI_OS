@@ -24,6 +24,7 @@ interface ForumFlag {
 }
 
 export function ForumModerationTab() {
+  const { t } = useTranslation("common");
   const [flags, setFlags] = useState<ForumFlag[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("pending");
