@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Shield, Play, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface SimulationResult {
   verdict: string;
