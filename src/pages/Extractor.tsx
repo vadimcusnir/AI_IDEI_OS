@@ -376,11 +376,11 @@ export default function Extractor() {
       const result = await resp.json();
       if (!resp.ok) throw new Error(result.error || "Failed");
       toast.success(
-        `✅ ${result.guests_processed} guest profiles detected!`,
+        t("common:guests_detected", { count: result.guests_processed }),
         { duration: 8000 }
       );
     } catch (e: any) {
-      toast.error(e.message || "Guest detection failed");
+      toast.error(e.message || t("errors:generic"));
     }
     setDetectingGuests(null);
   };
