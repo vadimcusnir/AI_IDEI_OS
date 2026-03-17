@@ -114,6 +114,7 @@
     "push_enable_desc": "Получайте уведомления о завершении заданий или низком балансе.",
     "push_disabled_toast": "Push-уведомления отключены.",
     "push_enabled_toast": "Push-уведомления включены!",
+    "push_enable_failed": "Не удалось включить push-уведомления.",
     "no_notifications": "Уведомлений пока нет",
     "no_filter_results": "Нет уведомлений для этого фильтра"
   },

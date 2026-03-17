@@ -113,7 +113,8 @@
     "push_active_desc": "Primești alerte chiar când nu ești pe site.",
     "push_enable_desc": "Fii notificat când un job se finalizează sau creditele scad.",
     "push_disabled_toast": "Notificări push dezactivate.",
-    "push_enabled_toast": "Notificări push activate!",
+    "push_enabled_toast": "Notificari push activate!",
+    "push_enable_failed": "Nu s-au putut activa notificarile push.",
     "no_notifications": "Nicio notificare încă",
     "no_filter_results": "Nicio notificare pentru acest filtru"
   },
