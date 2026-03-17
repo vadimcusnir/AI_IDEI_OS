@@ -40,9 +40,9 @@ export function FeatureFlagsTab() {
       .eq("key", key);
     
     if (error) {
-      toast.error("Failed to update flag");
+      toast.error(t("flag_update_failed"));
     } else {
-      toast.success(`${key} ${enabled ? "enabled" : "disabled"}`);
+      toast.success(t("flag_toggled", { key, state: enabled ? t("enabled") : t("disabled") }));
       setFlags(prev => prev.map(f => f.key === key ? { ...f, enabled } : f));
     }
     setSaving(null);
