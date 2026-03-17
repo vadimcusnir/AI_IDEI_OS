@@ -94,7 +94,7 @@ export function WalletPanel() {
       <div className="flex items-center justify-between px-5 py-2.5 border-t border-border text-[11px] text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <Clock className="h-3 w-3" />
-          <span>Snapshot: {Math.round(wallet.snapshotAgeSec)}s ago</span>
+          <span>Snapshot: {Math.round(wallet.snapshotAgeSec)}s {t("ago")}</span>
           {isFresh ? (
             <CheckCircle2 className="h-3 w-3 text-status-validated" />
           ) : (
