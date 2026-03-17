@@ -18,6 +18,7 @@ interface FeatureFlag {
 }
 
 export function FeatureFlagsTab() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const [flags, setFlags] = useState<FeatureFlag[]>([]);
   const [loading, setLoading] = useState(true);
