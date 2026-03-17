@@ -287,7 +287,7 @@ export function AdminUserManagement() {
                       <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t("adjust_credits")}</p>
                       <div className="flex gap-2">
                         <Input
-                          type="number" placeholder="±amount"
+                          type="number" placeholder={t("admin.amount_placeholder")}
                           value={adjustAmount} onChange={(e) => setAdjustAmount(e.target.value)}
                           className="h-7 text-xs w-24"
                         />
