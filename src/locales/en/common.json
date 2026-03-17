@@ -439,7 +439,10 @@
     "search_users": "Search by user ID or email...",
     "users_label": "users",
     "roles": "Roles",
-    "amount_placeholder": "±amount"
+    "amount_placeholder": "±amount",
+    "page_info": "Page {{current}} of {{total}}",
+    "artifacts": "Artifacts",
+    "episodes": "Episodes"
   },
   "folders": {
     "folders": "Folders",
