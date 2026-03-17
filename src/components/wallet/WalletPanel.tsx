@@ -56,7 +56,7 @@ export function WalletPanel() {
       <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/30">
         <div className="flex items-center gap-2">
           <Wallet className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold">Wallet State</h3>
+          <h3 className="text-sm font-semibold">{t("wallet.wallet_state")}</h3>
         </div>
         <div className="flex items-center gap-2">
           {access && (
