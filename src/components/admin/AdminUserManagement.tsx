@@ -121,7 +121,7 @@ export function AdminUserManagement() {
     });
     if (error) toast.error(error.message);
     else {
-      toast.success(`${amount > 0 ? "+" : ""}${amount} credits applied`);
+      toast.success(t("credits_applied", { amount: `${amount > 0 ? "+" : ""}${amount}` }));
       setAdjustAmount("");
       setAdjustDescription("");
       loadUsers();
