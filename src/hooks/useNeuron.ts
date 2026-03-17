@@ -48,7 +48,7 @@ export function useNeuron(neuronNumber?: number) {
             .single();
 
           if (error || !n) {
-            toast.error("Neuron not found");
+            toast.error(t("common:neuron_not_found"));
             setLoading(false);
             return;
           }
