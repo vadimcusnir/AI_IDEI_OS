@@ -197,7 +197,7 @@ export function useNeuronList() {
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const weekAgo = new Date(today.getTime() - 7 * 86400000);
       const monthAgo = new Date(today.getTime() - 30 * 86400000);
-      const groups: Record<string, NeuronListItem[]> = { "Azi": [], "Săptămâna asta": [], "Luna asta": [], "Mai vechi": [] };
+      const groups: Record<string, NeuronListItem[]> = { [t("today_label")]: [], [t("this_week")]: [], [t("this_month")]: [], [t("older")]: [] };
       processedNeurons.forEach(n => {
         const d = new Date(n.updated_at);
         if (d >= today) groups["Azi"].push(n);
