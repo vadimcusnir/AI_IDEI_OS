@@ -49,7 +49,7 @@ export function useNeuronTemplates() {
       .single();
 
     if (nErr || !neuron) {
-      toast.error("Failed to create neuron from template");
+      toast.error(i18next.t("common:template_create_failed"));
       return null;
     }
 
