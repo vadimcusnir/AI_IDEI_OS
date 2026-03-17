@@ -913,7 +913,8 @@
     "endpoints": "Endpoint-uri",
     "response_format": "Format răspuns",
     "paginated_lists": "Liste paginate",
-    "errors": "Erori"
+    "errors": "Erori",
+    "copied": "Copiat!"
   },
   "database_relations": {
     "title": "Schema Bazei de Date",
