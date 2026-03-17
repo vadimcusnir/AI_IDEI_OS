@@ -17,6 +17,7 @@ const ACTION_LABELS: Record<string, string> = {
 };
 
 export function useAIExtraction() {
+  const { t } = useTranslation(["common", "errors"]);
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractionResult, setExtractionResult] = useState<string>("");
   const [activeAction, setActiveAction] = useState<string>("");
