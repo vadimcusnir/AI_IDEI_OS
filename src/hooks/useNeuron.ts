@@ -100,7 +100,7 @@ export function useNeuron(neuronNumber?: number) {
             .single();
 
           if (error || !n) {
-            toast.error("Failed to create neuron");
+            toast.error(t("common:neuron_create_failed"));
             setLoading(false);
             return;
           }
