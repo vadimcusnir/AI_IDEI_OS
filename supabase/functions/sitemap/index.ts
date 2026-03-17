@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
   try {
     if (type === "index") {
       // Sitemap index
-      const types = ["insights", "patterns", "formulas", "contradictions", "applications", "profiles", "topics"];
+      const types = ["insights", "patterns", "formulas", "contradictions", "applications", "profiles", "topics", "docs"];
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap><loc>${BASE_URL}/sitemap-static.xml</loc></sitemap>
