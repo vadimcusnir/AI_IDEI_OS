@@ -220,69 +220,69 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
 
           <div className="flex-1 overflow-y-auto">
             <CollapsibleSection
-              title="AI Extraction"
+              title={t("neuron_editor.ai_extraction")}
               icon={Sparkles}
               color="text-ai-accent"
               items={[
-                { icon: Brain, label: "Extract Insights", description: "Key takeaways from content", action: "extract_insights" },
-                { icon: BookOpen, label: "Extract Frameworks", description: "Structured mental models", action: "extract_frameworks" },
-                { icon: MessageSquareQuote, label: "Extract Questions", description: "Questions this raises", action: "extract_questions" },
-                { icon: Target, label: "Extract Quotes", description: "Quotable statements", action: "extract_quotes" },
-                { icon: Lightbulb, label: "Extract Prompts", description: "Auto-generate prompts", action: "extract_prompts" },
+                { icon: Brain, label: t("neuron_editor.extract_insights"), description: t("neuron_editor.extract_insights_desc"), action: "extract_insights" },
+                { icon: BookOpen, label: t("neuron_editor.extract_frameworks"), description: t("neuron_editor.extract_frameworks_desc"), action: "extract_frameworks" },
+                { icon: MessageSquareQuote, label: t("neuron_editor.extract_questions"), description: t("neuron_editor.extract_questions_desc"), action: "extract_questions" },
+                { icon: Target, label: t("neuron_editor.extract_quotes"), description: t("neuron_editor.extract_quotes_desc"), action: "extract_quotes" },
+                { icon: Lightbulb, label: t("neuron_editor.extract_prompts"), description: t("neuron_editor.extract_prompts_desc"), action: "extract_prompts" },
               ]}
               onAction={handleAIAction}
             />
 
             <CollapsibleSection
-              title="Code Tools"
+              title={t("neuron_editor.code_tools")}
               icon={Code}
               color="text-status-validated"
               items={[
-                { icon: Bug, label: "Debug Code", description: "Find and fix errors", action: "debug_code" },
-                { icon: Gauge, label: "Optimize Code", description: "Performance improvements", action: "optimize_code" },
-                { icon: TestTube, label: "Generate Tests", description: "Auto-create test cases", action: "generate_tests" },
-                { icon: FileCode, label: "Explain Code", description: "Line-by-line explanation", action: "explain_code" },
+                { icon: Bug, label: t("neuron_editor.debug_code"), description: t("neuron_editor.debug_code_desc"), action: "debug_code" },
+                { icon: Gauge, label: t("neuron_editor.optimize_code"), description: t("neuron_editor.optimize_code_desc"), action: "optimize_code" },
+                { icon: TestTube, label: t("neuron_editor.generate_tests"), description: t("neuron_editor.generate_tests_desc"), action: "generate_tests" },
+                { icon: FileCode, label: t("neuron_editor.explain_code"), description: t("neuron_editor.explain_code_desc"), action: "explain_code" },
               ]}
               onAction={handleAIAction}
               defaultOpen={false}
             />
 
             <CollapsibleSection
-              title="Pipeline Execution"
+              title={t("neuron_editor.pipeline_execution")}
               icon={Play}
               color="text-primary"
               items={[
-                { icon: Play, label: "Run Pipeline", description: "Execute YAML pipeline", action: "run_pipeline" },
-                { icon: Settings2, label: "Simulate", description: "Dry-run without side effects", action: "simulate" },
-                { icon: Calendar, label: "Schedule", description: "Set automated execution", action: "schedule" },
-                { icon: Braces, label: "Validate Schema", description: "Check data structures", action: "validate_schema" },
+                { icon: Play, label: t("neuron_editor.run_pipeline"), description: t("neuron_editor.run_pipeline_desc"), action: "run_pipeline" },
+                { icon: Settings2, label: t("neuron_editor.simulate"), description: t("neuron_editor.simulate_desc"), action: "simulate" },
+                { icon: Calendar, label: t("neuron_editor.schedule"), description: t("neuron_editor.schedule_desc"), action: "schedule" },
+                { icon: Braces, label: t("neuron_editor.validate_schema"), description: t("neuron_editor.validate_schema_desc"), action: "validate_schema" },
               ]}
               onAction={handleAIAction}
               defaultOpen={false}
             />
 
             <CollapsibleSection
-              title="AI Transformation"
+              title={t("neuron_editor.ai_transformation")}
               icon={Zap}
               color="text-primary"
               items={[
-                { icon: FileText, label: "→ Article", description: "Full article format", action: "transform_article" },
-                { icon: Twitter, label: "→ Twitter Thread", description: "Thread of tweets", action: "transform_twitter" },
-                { icon: Video, label: "→ Script", description: "Video/podcast script", action: "transform_script" },
-                { icon: Presentation, label: "→ Course Slide", description: "Teaching material", action: "transform_slide" },
+                { icon: FileText, label: t("neuron_editor.to_article"), description: t("neuron_editor.to_article_desc"), action: "transform_article" },
+                { icon: Twitter, label: t("neuron_editor.to_twitter"), description: t("neuron_editor.to_twitter_desc"), action: "transform_twitter" },
+                { icon: Video, label: t("neuron_editor.to_script"), description: t("neuron_editor.to_script_desc"), action: "transform_script" },
+                { icon: Presentation, label: t("neuron_editor.to_slide"), description: t("neuron_editor.to_slide_desc"), action: "transform_slide" },
               ]}
               onAction={handleAIAction}
               defaultOpen={false}
             />
 
             <CollapsibleSection
-              title="Graph Analysis"
+              title={t("neuron_editor.graph_analysis")}
               icon={Network}
               color="text-graph-highlight"
               items={[
-                { icon: Network, label: "Related Neurons", description: "Similar content", action: "find_related" },
-                { icon: Radar, label: "Idea Clusters", description: "Thematic groupings", action: "idea_clusters" },
-                { icon: TrendingUp, label: "Influence Score", description: "Impact measurement", action: "influence_score" },
+                { icon: Network, label: t("neuron_editor.related_neurons"), description: t("neuron_editor.related_neurons_desc"), action: "find_related" },
+                { icon: Radar, label: t("neuron_editor.idea_clusters"), description: t("neuron_editor.idea_clusters_desc"), action: "idea_clusters" },
+                { icon: TrendingUp, label: t("neuron_editor.influence_score"), description: t("neuron_editor.influence_score_desc"), action: "influence_score" },
               ]}
               onAction={handleAIAction}
               defaultOpen={false}
@@ -292,11 +292,11 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
           {/* Metadata footer */}
           <div className="px-3 py-2 border-t border-border bg-panel-header shrink-0">
             <div className="grid grid-cols-2 gap-y-1 text-[10px]">
-              <span className="text-muted-foreground">Total Blocks</span>
+              <span className="text-muted-foreground">{t("neuron_editor.total_blocks")}</span>
               <span className="text-right font-medium">{blocks.length}</span>
-              <span className="text-muted-foreground">Executable</span>
+              <span className="text-muted-foreground">{t("neuron_editor.executable")}</span>
               <span className="text-right font-medium text-primary">{executableCount}</span>
-              <span className="text-muted-foreground">Format Types</span>
+              <span className="text-muted-foreground">{t("neuron_editor.format_types")}</span>
               <span className="text-right font-medium">{new Set(blocks.map(b => b.type)).size}</span>
             </div>
           </div>

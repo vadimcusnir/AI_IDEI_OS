@@ -350,13 +350,13 @@ export function NeuronLeftPanel({
       {/* Footer stats */}
       <div className="px-3 py-2 border-t border-border bg-panel-header">
         <div className="grid grid-cols-2 gap-y-1 text-[10px]">
-          <span className="text-muted-foreground">Total Links</span>
+          <span className="text-muted-foreground">{t("neuron_editor.total_links")}</span>
           <span className="text-right font-medium">{links.length}</span>
-          <span className="text-muted-foreground">Outgoing</span>
+          <span className="text-muted-foreground">{t("neuron_editor.outgoing")}</span>
           <span className="text-right font-medium text-primary">{outgoing.length}</span>
-          <span className="text-muted-foreground">Backlinks</span>
+          <span className="text-muted-foreground">{t("neuron_editor.backlinks")}</span>
           <span className="text-right font-medium">{backlinks.length}</span>
-          <span className="text-muted-foreground">Addresses</span>
+          <span className="text-muted-foreground">{t("neuron_editor.addresses")}</span>
           <span className="text-right font-medium">{addresses.length}</span>
         </div>
       </div>

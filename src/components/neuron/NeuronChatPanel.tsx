@@ -184,7 +184,7 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
           <div className="flex flex-col items-center justify-center h-full text-center px-4 py-8">
             <Sparkles className="h-6 w-6 text-ai-accent/30 mb-2" />
             <p className="text-[10px] text-muted-foreground leading-relaxed">
-              Ask anything about this neuron's content. I have full context of your blocks.
+              {t("neuron_editor.chat_hint")}
             </p>
           </div>
         )}
