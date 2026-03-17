@@ -614,5 +614,46 @@
     "default_placeholder": "Scrie feedback-ul tau...",
     "search_placeholder": "Cauta..."
   },
-  "paste_transcript": "Lipeste transcriptul aici..."
+  "paste_transcript": "Lipeste transcriptul aici...",
+  "stats": {
+    "total_neurons": "Total neuroni",
+    "episodes": "Episoade",
+    "analyzed": "analizate",
+    "credits_spent": "Credite cheltuite",
+    "balance": "Sold",
+    "neuron_status": "Status neuroni",
+    "lifecycle": "Ciclu de viata",
+    "content_categories": "Categorii de continut",
+    "seven_day_activity": "Activitate 7 zile",
+    "credit_economy": "Economie credite",
+    "view_ledger": "Vezi registrul"
+  },
+  "wallet": {
+    "wallet_state": "Stare portofel",
+    "not_initialized": "Portofel neinitializat",
+    "available": "Disponibil",
+    "staked": "Blocat (stake)",
+    "locked": "Blocat",
+    "status_open": "Deschis",
+    "status_restricted": "Restrictionat",
+    "status_locked": "Blocat",
+    "status_suspended": "Suspendat"
+  },
+  "search": {
+    "type_neuron": "Neuron",
+    "type_artifact": "Artefact",
+    "type_guest": "Invitat",
+    "type_insight": "Idee"
+  },
+  "community": {
+    "tier_legend": "Legenda",
+    "tier_expert": "Expert",
+    "tier_veteran": "Veteran",
+    "tier_regular": "Obisnuit",
+    "tier_contributor": "Contributor",
+    "tier_newcomer": "Nou venit",
+    "threads": "fire",
+    "posts": "postari",
+    "solutions": "solutii"
+  }
 }
