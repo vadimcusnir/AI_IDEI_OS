@@ -193,7 +193,7 @@ export default function ProfilePage() {
                       type="url"
                       value={profile.avatar_url}
                       onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                      placeholder="https://example.com/avatar.jpg"
+                      placeholder={t("common:profile.avatar_url_placeholder")}
                       className="w-full h-9 px-3 rounded-lg border border-input bg-background text-xs outline-none focus-ring transition-colors"
                     />
                   </div>
