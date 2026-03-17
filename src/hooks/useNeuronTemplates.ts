@@ -75,7 +75,7 @@ export function useNeuronTemplates() {
       .eq("id", templateId);
     trackInternalEvent({ event: AnalyticsEvents.TEMPLATE_USED, params: { template_id: templateId, template_name: template.name } });
 
-    toast.success(`Created neuron from "${template.name}" template`);
+    toast.success(i18next.t("common:template_created", { name: template.name }));
     return neuron;
   }, [user, templates]);
 
