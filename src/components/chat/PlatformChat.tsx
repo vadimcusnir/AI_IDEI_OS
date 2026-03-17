@@ -255,7 +255,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
               onClick={() => handleLoadSession(s.session_id)}
               className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors"
             >
-              <p className="text-[10px] truncate">{s.last_message || "Conversație"}</p>
+              <p className="text-[10px] truncate">{s.last_message || t("conversation")}</p>
               <p className="text-[8px] text-muted-foreground">{new Date(s.created_at).toLocaleDateString()}</p>
             </button>
           ))}
