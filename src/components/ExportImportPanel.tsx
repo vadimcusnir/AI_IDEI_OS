@@ -87,7 +87,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
         .eq("author_id", user.id)
         .order("number");
 
-      if (!neurons?.length) { toast.error("No neurons to export"); setExporting(false); return; }
+      if (!neurons?.length) { toast.error(t("no_neurons_to_export")); setExporting(false); return; }
 
       let md = `# AI-IDEI Knowledge Export\n\n_Exported: ${new Date().toLocaleString()}_\n\n---\n\n`;
 
