@@ -9,14 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { Flag } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
-const REASONS = [
-  { value: "spam", label: "Spam or advertising" },
-  { value: "offensive", label: "Offensive or abusive" },
-  { value: "off-topic", label: "Off-topic content" },
-  { value: "misinformation", label: "Misinformation" },
-  { value: "other", label: "Other" },
-];
+const REASON_KEYS = ["spam", "offensive", "off_topic", "misinformation", "other"] as const;
 
 interface ReportDialogProps {
   targetType: "post" | "thread";
@@ -25,6 +20,7 @@ interface ReportDialogProps {
 
 export function ReportDialog({ targetType, targetId }: ReportDialogProps) {
   const { user } = useAuth();
+  const { t } = useTranslation(["common", "errors"]);
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [details, setDetails] = useState("");
@@ -33,24 +29,25 @@ export function ReportDialog({ targetType, targetId }: ReportDialogProps) {
   if (!user) return null;
 
   const handleSubmit = async () => {
-    if (!reason) { toast.error("Please select a reason."); return; }
+    if (!reason) { toast.error(t("errors:select_report_reason")); return; }
     setSubmitting(true);
 
+    const reasonLabel = t(`common:report_reasons.${reason}`);
     const { error } = await supabase.from("forum_flags").insert({
       target_type: targetType,
       target_id: targetId,
       reporter_id: user.id,
-      reason: `${REASONS.find(r => r.value === reason)?.label || reason}${details ? ': ' + details : ''}`,
+      reason: `${reasonLabel}${details ? ': ' + details : ''}`,
     });
 
     setSubmitting(false);
     if (error) {
-      if (error.code === "23505") toast.info("You already reported this.");
+      if (error.code === "23505") toast.info(t("common:already_reported"));
       else toast.error(error.message);
       return;
     }
 
-    toast.success("Report submitted. Thank you!");
+    toast.success(t("common:report_submitted"));
     setOpen(false);
     setReason("");
     setDetails("");
@@ -60,28 +57,28 @@ export function ReportDialog({ targetType, targetId }: ReportDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm" className="text-[10px] h-6 text-muted-foreground hover:text-destructive">
-          <Flag className="h-3 w-3 mr-0.5" />Report
+          <Flag className="h-3 w-3 mr-0.5" />{t("common:report")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-sm">Report {targetType}</DialogTitle>
+          <DialogTitle className="text-sm">{t("common:report_target", { target: targetType })}</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
           <Select value={reason} onValueChange={setReason}>
             <SelectTrigger className="text-xs h-8">
-              <SelectValue placeholder="Select a reason..." />
+              <SelectValue placeholder={t("common:select_reason")} />
             </SelectTrigger>
             <SelectContent>
-              {REASONS.map((r) => (
-                <SelectItem key={r.value} value={r.value} className="text-xs">
-                  {r.label}
+              {REASON_KEYS.map((key) => (
+                <SelectItem key={key} value={key} className="text-xs">
+                  {t(`common:report_reasons.${key}`)}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Textarea
-            placeholder="Additional details (optional)..."
+            placeholder={t("common:additional_details")}
             value={details}
             onChange={(e) => setDetails(e.target.value)}
             rows={3}
@@ -93,7 +90,7 @@ export function ReportDialog({ targetType, targetId }: ReportDialogProps) {
             className="w-full"
             size="sm"
           >
-            {submitting ? "Submitting..." : "Submit Report"}
+            {submitting ? t("common:submitting") : t("common:submit_report")}
           </Button>
         </div>
       </DialogContent>

@@ -37,5 +37,7 @@
   "checkout_error": "Error creating checkout session",
   "checkout_url_missing": "Checkout URL not received",
   "transcript_upload_failed": "Transcript upload failed.",
-  "extraction_timeout": "Extraction timed out."
+  "extraction_timeout": "Extraction timed out.",
+  "select_report_reason": "Please select a reason.",
+  "complete_payment_error": "Error: {{message}}"
 }

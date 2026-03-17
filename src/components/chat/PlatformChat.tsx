@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useChatHistory } from "@/hooks/useChatHistory";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Send, Loader2, Bot, User, Sparkles, Upload,
@@ -30,12 +31,13 @@ Be concise, professional, and use Romanian when the user writes in Romanian.`;
 
 export function PlatformChat({ neuronContext }: { neuronContext?: { title: string; blocks: Array<{ type: string; content: string }> } }) {
   const { user } = useAuth();
+  const { t } = useTranslation("common");
   const { saveMessage, sessions, loadSession, newSession } = useChatHistory();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
       role: "assistant",
-      content: "Bun venit! Sunt asistentul AI-IDEI. Te pot ajuta să extragi cunoștințe, să rulezi servicii AI sau să navighezi platforma. Cu ce te pot ajuta?",
+      content: t("chat_welcome"),
       timestamp: new Date(),
     },
   ]);
@@ -159,7 +161,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       }
 
       if (!fullContent) {
-        fullContent = "Îmi pare rău, nu am putut genera un răspuns. Încearcă din nou.";
+        fullContent = t("chat_no_response");
         setMessages(prev => [
           ...prev,
           { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() },
@@ -170,10 +172,10 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
 
     } catch (e) {
-      toast.error("Chat error: " + (e instanceof Error ? e.message : "Unknown"));
+      toast.error(t("chat_error", { message: e instanceof Error ? e.message : "Unknown" }));
       setMessages(prev => [
         ...prev,
-        { id: crypto.randomUUID(), role: "assistant", content: "A apărut o eroare. Te rog să încerci din nou.", timestamp: new Date() },
+        { id: crypto.randomUUID(), role: "assistant", content: t("chat_error_fallback"), timestamp: new Date() },
       ]);
     } finally {
       setLoading(false);
@@ -200,7 +202,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
   const clearChat = () => {
     newSession();
     setMessages([
-      { id: "welcome-reset", role: "assistant", content: "Conversație resetată. Cu ce te pot ajuta?", timestamp: new Date() },
+      { id: "welcome-reset", role: "assistant", content: t("chat_reset"), timestamp: new Date() },
     ]);
   };
 
@@ -239,13 +241,13 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       {showHistory && (
         <div className="border-b border-border bg-muted/30 px-4 py-3 max-h-48 overflow-y-auto space-y-1">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Conversații anterioare</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("previous_conversations")}</p>
             <button onClick={() => setShowHistory(false)} className="text-muted-foreground hover:text-foreground">
               <ChevronLeft className="h-3 w-3" />
             </button>
           </div>
           {sessions.length === 0 && (
-            <p className="text-[10px] text-muted-foreground">Nicio conversație salvată</p>
+            <p className="text-[10px] text-muted-foreground">{t("no_saved_conversations")}</p>
           )}
           {sessions.map(s => (
             <button
@@ -253,7 +255,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
               onClick={() => handleLoadSession(s.session_id)}
               className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors"
             >
-              <p className="text-[10px] truncate">{s.last_message || "Conversație"}</p>
+              <p className="text-[10px] truncate">{s.last_message || t("conversation")}</p>
               <p className="text-[8px] text-muted-foreground">{new Date(s.created_at).toLocaleDateString()}</p>
             </button>
           ))}
@@ -309,7 +311,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Scrie un mesaj..."
+            placeholder={t("type_message")}
             rows={1}
             className="flex-1 bg-muted/50 rounded-xl px-3.5 py-2 text-sm outline-none border border-border focus:border-primary transition-colors resize-none min-h-[36px] max-h-[120px]"
             style={{ height: "auto", overflow: "hidden" }}

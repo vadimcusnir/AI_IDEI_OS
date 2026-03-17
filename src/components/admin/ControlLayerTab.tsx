@@ -570,13 +570,14 @@ function NewPromptDialog({ open, onClose, onCreate }: {
   onClose: () => void;
   onCreate: (data: { id: string; purpose: string; category: string; core_prompt: string }) => void;
 }) {
+  const { t } = useTranslation("common");
   const [id, setId] = useState("");
   const [purpose, setPurpose] = useState("");
   const [category, setCategory] = useState("extraction");
   const [corePrompt, setCorePrompt] = useState("");
 
   const handleCreate = () => {
-    if (!id.trim() || !corePrompt.trim()) { toast.error("ID and prompt are required"); return; }
+    if (!id.trim() || !corePrompt.trim()) { toast.error(t("id_prompt_required")); return; }
     onCreate({ id: id.trim(), purpose, category, core_prompt: corePrompt });
     setId(""); setPurpose(""); setCorePrompt("");
   };

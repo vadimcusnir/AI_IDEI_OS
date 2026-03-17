@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
-import { ro } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
 
 interface FeedbackRow {
   id: string;
@@ -35,20 +35,21 @@ const TYPE_COLORS: Record<string, string> = {
   proposal: "text-amber-500", complaint: "text-destructive",
 };
 
-const STATUS_OPTIONS = [
-  { key: "pending", label: "Pending" },
-  { key: "reviewed", label: "Revizuit" },
-  { key: "resolved", label: "Rezolvat" },
-  { key: "published", label: "Publicat" },
-];
-
 export function AdminFeedbackTab() {
+  const { t } = useTranslation("common");
   const [items, setItems] = useState<FeedbackRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [respondingId, setRespondingId] = useState<string | null>(null);
   const [responseText, setResponseText] = useState("");
   const [sendingResponse, setSendingResponse] = useState(false);
+
+  const STATUS_OPTIONS = [
+    { key: "pending", label: "Pending" },
+    { key: "reviewed", label: t("status") },
+    { key: "resolved", label: t("status") },
+    { key: "published", label: t("published") },
+  ];
 
   const loadFeedback = useCallback(async () => {
     const { data } = await supabase
@@ -68,7 +69,7 @@ export function AdminFeedbackTab() {
       .update({ status } as any)
       .eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Status actualizat: ${status}`);
+    toast.success(t("status_updated", { status }));
     loadFeedback();
   };
 
@@ -80,7 +81,7 @@ export function AdminFeedbackTab() {
       .update(updatePayload)
       .eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success(!current ? "Publicat" : "Ascuns de pe pagina publică");
+    toast.success(!current ? t("published") : t("hidden_from_public"));
     loadFeedback();
   };
 
@@ -97,7 +98,7 @@ export function AdminFeedbackTab() {
       .eq("id", id);
     if (error) { toast.error(error.message); }
     else {
-      toast.success("Răspuns trimis");
+      toast.success(t("response_sent"));
       setRespondingId(null);
       setResponseText("");
       loadFeedback();
@@ -122,7 +123,7 @@ export function AdminFeedbackTab() {
   };
 
   const exportCSV = () => {
-    const headers = ["ID", "Tip", "Titlu", "Mesaj", "Rating", "Status", "Public", "Pagina", "Răspuns Admin", "Data"];
+    const headers = ["ID", "Type", "Title", "Message", "Rating", "Status", "Public", "Page", "Admin Response", "Date"];
     const rows = items.map((i) => [
       i.id,
       i.type,
@@ -130,7 +131,7 @@ export function AdminFeedbackTab() {
       `"${i.message.replace(/"/g, '""')}"`,
       i.rating ?? "",
       i.status,
-      i.is_public ? "Da" : "Nu",
+      i.is_public ? "Yes" : "No",
       i.context_page ?? "",
       i.admin_response ? `"${i.admin_response.replace(/"/g, '""')}"` : "",
       i.created_at,
@@ -143,7 +144,7 @@ export function AdminFeedbackTab() {
     a.download = `feedback-export-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("CSV exportat");
+    toast.success(t("csv_exported"));
   };
 
   if (loading) {
@@ -156,14 +157,12 @@ export function AdminFeedbackTab() {
 
   return (
     <div>
-      {/* Export + Stats */}
       <div className="flex items-center justify-end mb-3">
         <Button variant="outline" size="sm" onClick={exportCSV} className="text-xs gap-1.5">
           <Download className="h-3.5 w-3.5" />
-          Export CSV
+          {t("export")} CSV
         </Button>
       </div>
-      {/* Stats row */}
       <div className="grid grid-cols-4 gap-3 mb-4">
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <p className="text-lg font-bold font-mono">{stats.total}</p>
@@ -175,24 +174,23 @@ export function AdminFeedbackTab() {
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <p className="text-lg font-bold font-mono text-destructive">{stats.complaints}</p>
-          <p className="text-[9px] text-muted-foreground uppercase">Plângeri</p>
+          <p className="text-[9px] text-muted-foreground uppercase">{t("complaints")}</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <p className="text-lg font-bold font-mono text-primary">{stats.avgRating}</p>
-          <p className="text-[9px] text-muted-foreground uppercase">Rating mediu</p>
+          <p className="text-[9px] text-muted-foreground uppercase">{t("avg_rating")}</p>
         </div>
       </div>
 
-      {/* Filters */}
       <div className="flex items-center gap-1.5 mb-4 overflow-x-auto">
         <Filter className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
         {[
-          { key: "all", label: "Toate" },
+          { key: "all", label: t("all_filter") },
           { key: "pending", label: `Pending (${stats.pending})` },
-          { key: "complaint", label: "Plângeri" },
-          { key: "proposal", label: "Propuneri" },
-          { key: "testimonial", label: "Testimoniale" },
-          { key: "review", label: "Recenzii" },
+          { key: "complaint", label: t("complaints") },
+          { key: "proposal", label: t("proposals") },
+          { key: "testimonial", label: t("testimonials") },
+          { key: "review", label: t("reviews") },
         ].map((f) => (
           <button
             key={f.key}
@@ -209,14 +207,13 @@ export function AdminFeedbackTab() {
         ))}
       </div>
 
-      {/* List */}
       {filtered.length === 0 ? (
-        <p className="text-center py-8 text-sm text-muted-foreground">Niciun feedback.</p>
+        <p className="text-center py-8 text-sm text-muted-foreground">{t("no_feedback")}</p>
       ) : (
         <div className="space-y-2">
           {filtered.map((item) => {
             const Icon = TYPE_ICONS[item.type] || MessageCircle;
-            const timeAgo = formatDistanceToNow(new Date(item.created_at), { addSuffix: true, locale: ro });
+            const timeAgo = formatDistanceToNow(new Date(item.created_at), { addSuffix: true });
 
             return (
               <div key={item.id} className="bg-card border border-border rounded-xl p-4">
@@ -259,7 +256,7 @@ export function AdminFeedbackTab() {
                     {item.admin_response && (
                       <div className="bg-primary/5 border border-primary/10 rounded-lg p-2 mb-2">
                         <p className="text-[10px] font-semibold text-primary mb-0.5 flex items-center gap-1">
-                          <CheckCircle2 className="h-3 w-3" /> Răspuns
+                          <CheckCircle2 className="h-3 w-3" /> {t("admin_response_label")}
                         </p>
                         <p className="text-[11px] text-muted-foreground">{item.admin_response}</p>
                       </div>
@@ -271,7 +268,6 @@ export function AdminFeedbackTab() {
                       <span>• {item.user_id.substring(0, 8)}…</span>
                     </div>
 
-                    {/* Actions */}
                     <div className="flex items-center gap-1.5 mt-2 flex-wrap">
                       {STATUS_OPTIONS.filter((s) => s.key !== item.status).map((s) => (
                         <button
@@ -287,21 +283,20 @@ export function AdminFeedbackTab() {
                         className="text-[9px] px-2 py-0.5 rounded border border-border hover:bg-muted transition-colors flex items-center gap-1"
                       >
                         <Eye className="h-2.5 w-2.5" />
-                        {item.is_public ? "Ascunde" : "Publică"}
+                        {item.is_public ? t("hide") : t("make_public")}
                       </button>
                       <button
                         onClick={() => { setRespondingId(item.id); setResponseText(item.admin_response || ""); }}
                         className="text-[9px] px-2 py-0.5 rounded border border-primary/30 text-primary hover:bg-primary/10 transition-colors flex items-center gap-1"
                       >
-                        <Send className="h-2.5 w-2.5" /> Răspunde
+                        <Send className="h-2.5 w-2.5" /> {t("respond")}
                       </button>
                     </div>
 
-                    {/* Response input */}
                     {respondingId === item.id && (
                       <div className="mt-3 space-y-2">
                         <Textarea
-                          placeholder="Scrie răspunsul..."
+                          placeholder={t("write_response")}
                           value={responseText}
                           onChange={(e) => setResponseText(e.target.value)}
                           rows={3}
@@ -310,10 +305,10 @@ export function AdminFeedbackTab() {
                         <div className="flex items-center gap-2">
                           <Button size="sm" onClick={() => sendResponse(item.id)} disabled={sendingResponse} className="text-xs gap-1">
                             {sendingResponse ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3" />}
-                            Trimite
+                            {t("send")}
                           </Button>
                           <Button size="sm" variant="ghost" onClick={() => setRespondingId(null)} className="text-xs">
-                            Anulează
+                            {t("cancel")}
                           </Button>
                         </div>
                       </div>

@@ -3,15 +3,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { FeedbackDialog } from "./FeedbackDialog";
 import { MessageSquarePlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-/**
- * Listens for completed jobs via realtime and prompts feedback after first completion.
- * Shows a subtle prompt — not intrusive.
- */
 export function ContextualFeedbackPrompt() {
   const { user } = useAuth();
+  const { t } = useTranslation("common");
   const [showPrompt, setShowPrompt] = useState(false);
-  const [contextLabel, setContextLabel] = useState("După job completat");
+  const [contextLabel, setContextLabel] = useState(t("after_job_completed"));
 
   useEffect(() => {
     if (!user) return;
@@ -30,10 +28,9 @@ export function ContextualFeedbackPrompt() {
           const newStatus = payload.new?.status;
           const oldStatus = payload.old?.status;
           if (newStatus === "completed" && oldStatus !== "completed") {
-            // Check if user has given feedback before
             const dismissed = sessionStorage.getItem("feedback-prompt-dismissed");
             if (!dismissed) {
-              setContextLabel(`Job finalizat: ${payload.new?.worker_type?.replace(/-/g, " ") || "serviciu"}`);
+              setContextLabel(t("job_completed_context", { service: payload.new?.worker_type?.replace(/-/g, " ") || "service" }));
               setShowPrompt(true);
             }
           }
@@ -42,7 +39,7 @@ export function ContextualFeedbackPrompt() {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [user]);
+  }, [user, t]);
 
   if (!showPrompt) return null;
 
@@ -54,9 +51,9 @@ export function ContextualFeedbackPrompt() {
   return (
     <div className="fixed bottom-20 right-6 z-40 animate-in slide-in-from-bottom-4 fade-in duration-500">
       <div className="bg-card border border-primary/20 shadow-lg rounded-xl p-4 max-w-xs">
-        <p className="text-sm font-medium mb-1">Job finalizat! 🎉</p>
+        <p className="text-sm font-medium mb-1">{t("job_completed_title")}</p>
         <p className="text-xs text-muted-foreground mb-3">
-          Cum a fost experiența? Feedback-ul tău ne ajută să îmbunătățim platforma.
+          {t("job_completed_feedback")}
         </p>
         <div className="flex items-center gap-2">
           <FeedbackDialog
@@ -65,7 +62,7 @@ export function ContextualFeedbackPrompt() {
             trigger={
               <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
                 <MessageSquarePlus className="h-3.5 w-3.5" />
-                Trimite feedback
+                {t("send_feedback")}
               </button>
             }
           />
@@ -73,7 +70,7 @@ export function ContextualFeedbackPrompt() {
             onClick={handleDismiss}
             className="text-[10px] text-muted-foreground hover:text-foreground px-2 py-1"
           >
-            Mai târziu
+            {t("later")}
           </button>
         </div>
       </div>
