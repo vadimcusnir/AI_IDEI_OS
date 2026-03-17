@@ -93,7 +93,7 @@ export function DuplicateMergePanel() {
           })
           .eq("id", dup.id);
 
-        toast.success("Duplicate dismissed");
+        toast.success(t("common:duplicate_dismissed"));
       } else {
         // Merge: keep neuron_a, archive neuron_b
         // 1. Copy blocks from neuron_b to neuron_a
