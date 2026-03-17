@@ -216,7 +216,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Username</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("common:profile.username")}</label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">@</span>
                     <input
