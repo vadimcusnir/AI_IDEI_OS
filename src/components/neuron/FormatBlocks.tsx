@@ -304,6 +304,7 @@ export function DiagramBlock({ block, onContentChange, onExecute }: FormatBlockP
 
 // AI Action Block
 export function AIActionBlock({ block, onContentChange, onExecute }: FormatBlockProps) {
+  const { t } = useTranslation("common");
   return (
     <div className="rounded-md border border-ai-accent/30 overflow-hidden bg-ai/30">
       <BlockHeader block={block} onExecute={() => onExecute(block.id)}>
