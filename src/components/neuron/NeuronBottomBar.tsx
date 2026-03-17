@@ -68,6 +68,7 @@ export function NeuronBottomBar({
   const [activeTab, setActiveTab] = useState<BottomTab>("relations");
   const [commentText, setCommentText] = useState("");
   const navigate = useNavigate();
+  const { t } = useTranslation("common");
 
   return (
     <div className={cn("border-t border-border bg-card shrink-0 transition-all", isExpanded ? "h-48" : "h-9")}>
