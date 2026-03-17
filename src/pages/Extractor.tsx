@@ -287,12 +287,12 @@ export default function Extractor() {
   // === Extract neurons ===
   const handleExtractNeurons = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
-      toast.error("No transcript content. Add a transcript first.");
+      toast.error(t("common:no_transcript"));
       return;
     }
     setExtractingId(episode.id);
     setExtractionProgress({ chunks: 0, neurons: 0 });
-    toast.info("Extracting neurons… (100 credits)");
+    toast.info(t("common:extracting_neurons"));
     try {
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-neurons`,
