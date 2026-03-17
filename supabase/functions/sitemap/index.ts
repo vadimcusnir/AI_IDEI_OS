@@ -34,6 +34,33 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (type === "docs") {
+      // Static docs sitemap generated from known sections/topics
+      const docsSections = [
+        { key: "getting-started", topics: ["introduction", "how-it-works", "your-first-neuron", "credits-system"] },
+        { key: "foundation", topics: ["what-is-ai-idei", "neuron-model", "intelligence-assets"] },
+        { key: "pipeline", topics: ["transcript-refinery", "signal-extraction", "pattern-detection", "synthesis-layer"] },
+        { key: "architecture", topics: ["knowledge-graph", "neuron-library", "service-manifests", "job-engine"] },
+        { key: "derivatives", topics: ["insights", "patterns", "formulas", "profiles", "decision-artifacts"] },
+        { key: "reference", topics: ["faq", "glossary", "security"] },
+      ];
+      const urls = docsSections.flatMap((s) =>
+        s.topics.map((t) => `  <url>
+    <loc>${BASE_URL}/docs/${s.key}/${t}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`)
+      );
+      return new Response(
+        `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>${BASE_URL}/docs</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+${urls.join("\n")}
+</urlset>`,
+        { headers: { ...corsHeaders, "Content-Type": "application/xml" } }
+      );
+    }
+
     if (type === "topics") {
       const { data: topics } = await supabase
         .from("topics")
