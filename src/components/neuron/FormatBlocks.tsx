@@ -278,6 +278,7 @@ export function DatasetBlock({ block, onContentChange, onExecute }: FormatBlockP
 
 // Diagram Block
 export function DiagramBlock({ block, onContentChange, onExecute }: FormatBlockProps) {
+  const { t } = useTranslation("common");
   return (
     <div className="rounded-md border border-graph-highlight/20 overflow-hidden bg-card">
       <BlockHeader block={block} onExecute={() => onExecute(block.id)}>
