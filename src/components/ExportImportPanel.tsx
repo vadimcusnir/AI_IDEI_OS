@@ -22,6 +22,7 @@ interface ExportedNeuron {
 
 export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { user } = useAuth();
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
