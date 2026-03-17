@@ -158,8 +158,8 @@ export function ControlLayerTab() {
         last_modified_by: user?.id,
       } as any)
       .eq("id", prompt.id);
-    if (error) toast.error("Failed to save prompt");
-    else { toast.success("Prompt updated (v" + (prompt.version + 1) + ")"); loadData(); }
+    if (error) toast.error(t("common:prompt_save_failed"));
+    else { toast.success(t("common:prompt_updated", { version: prompt.version + 1 })); loadData(); }
     setEditPrompt(null);
   };
 
