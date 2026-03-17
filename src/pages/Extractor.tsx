@@ -345,13 +345,13 @@ export default function Extractor() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       toast.success(
-        `✅ Deep Extract complete: ${data.total_neurons} neurons across ${data.levels_processed} levels (${data.credits_spent} credits)`,
+        t("common:deep_extract_result", { neurons: data.total_neurons, levels: data.levels_processed, credits: data.credits_spent }),
         { duration: 10000 }
       );
       trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.total_neurons, credits_spent: data.credits_spent } });
       fetchEpisodes();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Deep extraction failed");
+      toast.error(e instanceof Error ? e.message : t("errors:generic"));
     } finally {
       setDeepExtractingId(null);
     }
