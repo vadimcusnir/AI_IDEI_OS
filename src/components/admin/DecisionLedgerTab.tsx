@@ -50,7 +50,7 @@ export function DecisionLedgerTab() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = `ledger-${Date.now()}.csv`; a.click();
     URL.revokeObjectURL(url);
-    toast.success("CSV exported");
+    toast.success(t("csv_exported"));
   };
 
   const exportJSON = () => {
