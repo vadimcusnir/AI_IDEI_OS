@@ -38,8 +38,20 @@ export default function DocsTopic({ section, topic }: Props) {
   const prev = currentIdx > 0 ? allTopics[currentIdx - 1] : null;
   const next = currentIdx < allTopics.length - 1 ? allTopics[currentIdx + 1] : null;
 
+  const metaDesc = content.content.replace(/[#*\n]/g, " ").trim().slice(0, 155) + "…";
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${content.title} — AI-IDEI Docs`}
+        description={metaDesc}
+        canonical={`https://ai-idei.com/docs/${section}/${topic}`}
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Docs", url: "https://ai-idei.com/docs" },
+        { name: sectionData?.label || section, url: `https://ai-idei.com/docs#${section}` },
+        { name: content.title, url: `https://ai-idei.com/docs/${section}/${topic}` },
+      ]} />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-6">
           <Link to="/docs" className="hover:text-foreground transition-colors">Docs</Link>

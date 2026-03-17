@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { BookOpen, Layers, Network, Boxes, Rocket, HelpCircle, ChevronRight } from "lucide-react";
 import { DOCS_SECTIONS } from "./docsContent";
+import { SEOHead } from "@/components/SEOHead";
+import { OrganizationJsonLd } from "@/components/seo/JsonLd";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Rocket, BookOpen, Layers, Network, Boxes, HelpCircle,
@@ -9,6 +11,11 @@ const ICON_MAP: Record<string, React.ElementType> = {
 export default function DocsIndex() {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Documentation — AI-IDEI Knowledge Platform"
+        description="Complete documentation for AI-IDEI: knowledge extraction, neuron model, AI pipeline, credits system, and more. Learn to transform expertise into digital assets."
+      />
+      <OrganizationJsonLd />
       <div className="border-b border-border bg-card">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
