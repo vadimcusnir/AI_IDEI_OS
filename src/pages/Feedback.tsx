@@ -206,7 +206,7 @@ export default function Feedback() {
             )}
 
             <Input
-              placeholder="Short title"
+              placeholder={t("common:feedback_form.short_title")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={200}
