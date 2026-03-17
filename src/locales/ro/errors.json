@@ -37,5 +37,7 @@
   "checkout_error": "Eroare la crearea sesiunii de plata",
   "checkout_url_missing": "URL-ul de plata nu a fost primit",
   "transcript_upload_failed": "Incarcarea transcriptului a esuat.",
-  "extraction_timeout": "Extractia a expirat."
+  "extraction_timeout": "Extractia a expirat.",
+  "select_report_reason": "Te rugam sa selectezi un motiv.",
+  "complete_payment_error": "Eroare: {{message}}"
 }

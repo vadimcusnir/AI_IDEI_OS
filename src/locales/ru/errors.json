@@ -37,5 +37,7 @@
   "checkout_error": "Ошибка создания сессии оплаты",
   "checkout_url_missing": "URL оплаты не получен",
   "transcript_upload_failed": "Загрузка транскрипта не удалась.",
-  "extraction_timeout": "Время извлечения истекло."
+  "extraction_timeout": "Время извлечения истекло.",
+  "select_report_reason": "Пожалуйста, выберите причину.",
+  "complete_payment_error": "Ошибка: {{message}}"
 }
