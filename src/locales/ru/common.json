@@ -435,7 +435,11 @@
     "earned": "Заработано",
     "spent": "Потрачено",
     "last_update": "Последнее обновление",
-    "recent_transactions": "Последние транзакции"
+    "recent_transactions": "Последние транзакции",
+    "search_users": "Поиск по ID или email...",
+    "users_label": "пользователей",
+    "roles": "Роли",
+    "amount_placeholder": "±сумма"
   },
   "folders": {
     "folders": "Папки",
