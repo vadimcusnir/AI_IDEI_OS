@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { trackEvent } from "@/lib/analytics";
 import { detectSource, detectFileSource, type SourceDetectionResult } from "@/lib/sourceDetection";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
