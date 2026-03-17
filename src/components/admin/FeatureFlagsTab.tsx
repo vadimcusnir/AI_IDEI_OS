@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Loader2, ToggleRight, ToggleLeft, Save } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface FeatureFlag {
   key: string;
@@ -17,6 +18,7 @@ interface FeatureFlag {
 }
 
 export function FeatureFlagsTab() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const [flags, setFlags] = useState<FeatureFlag[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,9 +40,9 @@ export function FeatureFlagsTab() {
       .eq("key", key);
     
     if (error) {
-      toast.error("Failed to update flag");
+      toast.error(t("flag_update_failed"));
     } else {
-      toast.success(`${key} ${enabled ? "enabled" : "disabled"}`);
+      toast.success(t("flag_toggled", { key, state: enabled ? t("enabled") : t("disabled") }));
       setFlags(prev => prev.map(f => f.key === key ? { ...f, enabled } : f));
     }
     setSaving(null);
@@ -54,9 +56,9 @@ export function FeatureFlagsTab() {
       .eq("key", key);
 
     if (error) {
-      toast.error("Failed to update rollout");
+      toast.error(t("rollout_update_failed"));
     } else {
-      toast.success(`${key} rollout set to ${percentage}%`);
+      toast.success(t("rollout_updated", { key, percentage }));
       setFlags(prev => prev.map(f => f.key === key ? { ...f, rollout_percentage: percentage } : f));
     }
     setSaving(null);

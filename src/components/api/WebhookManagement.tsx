@@ -21,6 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 const AVAILABLE_EVENTS = [
   { key: "job.completed", label: "Job Completed" },
@@ -68,6 +69,7 @@ function DeliveryLog({ endpointId }: { endpointId: string }) {
 }
 
 export function WebhookManagement() {
+  const { t } = useTranslation("common");
   const { data: endpoints, isLoading } = useWebhookEndpoints();
   const createEndpoint = useCreateWebhookEndpoint();
   const deleteEndpoint = useDeleteWebhookEndpoint();
@@ -187,7 +189,7 @@ export function WebhookManagement() {
                     </div>
                     <Button
                       size="sm" variant="ghost" className="h-6 w-6 p-0"
-                      onClick={() => { navigator.clipboard.writeText(ep.secret); toast.success("Secret copied!"); }}
+                      onClick={() => { navigator.clipboard.writeText(ep.secret); toast.success(t("common:copied")); }}
                     >
                       <Copy className="h-3 w-3" />
                     </Button>

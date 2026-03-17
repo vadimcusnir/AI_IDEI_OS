@@ -6,6 +6,7 @@ import { Block, BlockType, CodeLanguage, BLOCK_TYPE_CONFIG, ExecutionLog } from 
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
+import { useTranslation } from "react-i18next";
 
 interface NeuronData {
   id: number;
@@ -18,6 +19,7 @@ interface NeuronData {
 }
 
 export function useNeuron(neuronNumber?: number) {
+  const { t } = useTranslation(["common", "errors"]);
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const [neuron, setNeuron] = useState<NeuronData | null>(null);
@@ -46,7 +48,7 @@ export function useNeuron(neuronNumber?: number) {
             .single();
 
           if (error || !n) {
-            toast.error("Neuron not found");
+            toast.error(t("common:neuron_not_found"));
             setLoading(false);
             return;
           }
@@ -98,7 +100,7 @@ export function useNeuron(neuronNumber?: number) {
             .single();
 
           if (error || !n) {
-            toast.error("Failed to create neuron");
+            toast.error(t("common:neuron_create_failed"));
             setLoading(false);
             return;
           }
@@ -141,7 +143,7 @@ export function useNeuron(neuronNumber?: number) {
         }
       } catch (err) {
         console.error(err);
-        toast.error("Error loading neuron");
+        toast.error(t("common:neuron_load_error"));
       }
       setLoading(false);
     };
@@ -162,7 +164,7 @@ export function useNeuron(neuronNumber?: number) {
       })
       .eq("id", neuron.id);
 
-    if (error) toast.error("Failed to save");
+    if (error) toast.error(t("errors:save_failed", { message: error.message }));
     setSaving(false);
   }, [neuron]);
 
@@ -383,7 +385,7 @@ export function useNeuron(neuronNumber?: number) {
           ? { ...l, status: "error" as const, result: err instanceof Error ? err.message : "Failed" }
           : l
       ));
-      toast.error("Block execution failed");
+      toast.error(t("common:block_execution_failed"));
     }
   }, [neuron, blocks, user]);
 

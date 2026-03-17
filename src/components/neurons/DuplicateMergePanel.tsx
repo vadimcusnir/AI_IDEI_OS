@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -23,6 +24,7 @@ interface Duplicate {
 }
 
 export function DuplicateMergePanel() {
+  const { t } = useTranslation(["common", "errors"]);
   const { user } = useAuth();
   const [duplicates, setDuplicates] = useState<Duplicate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +48,7 @@ export function DuplicateMergePanel() {
       .limit(20);
 
     if (error) {
-      toast.error("Failed to load duplicates");
+      toast.error(t("common:duplicates_load_failed"));
       setLoading(false);
       return;
     }
@@ -92,7 +94,7 @@ export function DuplicateMergePanel() {
           })
           .eq("id", dup.id);
 
-        toast.success("Duplicate dismissed");
+        toast.success(t("common:duplicate_dismissed"));
       } else {
         // Merge: keep neuron_a, archive neuron_b
         // 1. Copy blocks from neuron_b to neuron_a
@@ -140,12 +142,12 @@ export function DuplicateMergePanel() {
           })
           .eq("id", dup.id);
 
-        toast.success(`Merged into Neuron #${dup.neuron_a}`);
+        toast.success(t("common:merged_into_neuron", { id: dup.neuron_a }));
       }
 
       setDuplicates(prev => prev.filter(d => d.id !== dup.id));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Action failed");
+      toast.error(e instanceof Error ? e.message : t("errors:generic"));
     } finally {
       setProcessing(false);
       setActionDialog(null);

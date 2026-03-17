@@ -269,24 +269,24 @@ export default function AdminDashboard() {
     } else {
       const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
       if (error) { toast.error(error.message); return; }
-      toast.success("Admin role granted");
+      toast.success(t("common:admin_role_granted"));
     }
     loadUsers();
   };
 
   const adjustCredits = async (userId: string) => {
     const amount = parseInt(adjustAmount);
-    if (isNaN(amount) || amount === 0) { toast.error("Invalid amount"); return; }
-    if (!adjustDescription.trim()) { toast.error("Add a description"); return; }
+    if (isNaN(amount) || amount === 0) { toast.error(t("errors:invalid_amount")); return; }
+    if (!adjustDescription.trim()) { toast.error(t("errors:add_description")); return; }
 
     setAdjustLoading(true);
     try {
       const { data: current } = await supabase.from("user_credits")
         .select("balance, total_earned").eq("user_id", userId).single();
-      if (!current) { toast.error("User credits not found"); return; }
+      if (!current) { toast.error(t("common:user_credits_not_found")); return; }
 
       const newBalance = current.balance + amount;
-      if (newBalance < 0) { toast.error(`Insufficient balance. Current: ${current.balance}`); return; }
+      if (newBalance < 0) { toast.error(t("errors:insufficient_balance", { balance: current.balance })); return; }
 
       const updateData: any = { balance: newBalance, updated_at: new Date().toISOString() };
       if (amount > 0) updateData.total_earned = current.total_earned + amount;
@@ -302,7 +302,7 @@ export default function AdminDashboard() {
         description: `ADMIN: ${adjustDescription}`,
       });
 
-      toast.success(`${amount > 0 ? "+" : ""}${amount} credits applied`);
+      toast.success(t("common:credits_applied", { amount: `${amount > 0 ? "+" : ""}${amount}` }));
       setAdjustingUser(null);
       setAdjustAmount("");
       setAdjustDescription("");

@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 interface Incident {
   id: string;
@@ -23,6 +24,7 @@ interface Incident {
 }
 
 export function IncidentManagementTab() {
+  const { t } = useTranslation(["common", "errors"]);
   const { user } = useAuth();
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ export function IncidentManagementTab() {
   useEffect(() => { load(); }, []);
 
   const create = async () => {
-    if (!form.title.trim()) { toast.error("Title required"); return; }
+    if (!form.title.trim()) { toast.error(t("errors:title_required")); return; }
     const { error } = await supabase.from("incidents").insert({
       title: form.title,
       description: form.description,
@@ -51,7 +53,7 @@ export function IncidentManagementTab() {
       assigned_to: user?.id,
     });
     if (error) { toast.error(error.message); return; }
-    toast.success("Incident created");
+    toast.success(t("common:incident_created"));
     setForm({ title: "", description: "", severity: "medium" });
     setDialogOpen(false);
     load();
@@ -62,7 +64,7 @@ export function IncidentManagementTab() {
     if (status === "resolved") update.resolved_at = new Date().toISOString();
     const { error } = await supabase.from("incidents").update(update).eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Incident ${status}`);
+    toast.success(t("common:incident_status_updated", { status }));
     load();
   };
 

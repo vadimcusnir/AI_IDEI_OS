@@ -17,14 +17,14 @@ import { AIResultsPanel } from "@/components/neuron/AIResultsPanel";
 import { SaveAsTemplateDialog } from "@/components/neuron/SaveAsTemplateDialog";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { NeuronVersion } from "@/hooks/useNeuronGraph";
 import { useTranslation } from "react-i18next";
+import { NeuronVersion } from "@/hooks/useNeuronGraph";
 
 export default function NeuronEditor() {
   const { number } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "common", "errors"]);
   const neuronNumber = number ? parseInt(number, 10) : undefined;
 
   const {
@@ -85,8 +85,8 @@ export default function NeuronEditor() {
       checked: b.checked, executionMode: b.executionMode,
     }));
     const result = await createVersion(neuron.title, blocksSnapshot);
-    if (result?.error) toast.error("Failed to save version");
-    else toast.success("Version saved");
+    if (result?.error) toast.error(t("common:version_save_failed"));
+    else toast.success(t("common:version_saved"));
   }, [neuron, blocks, createVersion]);
 
   // Keyboard shortcuts: Ctrl+S = save version, Ctrl+Enter = run all
@@ -109,16 +109,16 @@ export default function NeuronEditor() {
 
   const handleRestoreVersion = useCallback(async (version: NeuronVersion) => {
     if (!version.blocksSnapshot || !Array.isArray(version.blocksSnapshot)) {
-      toast.error("Invalid version snapshot");
+      toast.error(t("common:invalid_version_snapshot"));
       return;
     }
     await restoreBlocks(version.blocksSnapshot);
-    toast.success(`Restored to v${version.version}`);
+    toast.success(t("common:version_restored", { version: version.version }));
   }, [restoreBlocks]);
 
   const handleRemoveLink = useCallback(async (linkId: string) => {
     const result = await removeLink(linkId);
-    if (result?.error) toast.error("Failed to remove link");
+    if (result?.error) toast.error(t("common:link_remove_failed"));
   }, [removeLink]);
 
   const AI_ACTIONS = [

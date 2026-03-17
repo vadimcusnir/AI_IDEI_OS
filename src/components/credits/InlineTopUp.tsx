@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Coins, Zap, Sparkles, Crown, Loader2, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ interface InlineTopUpProps {
 }
 
 export function InlineTopUp({ needed, balance = 0, onDismiss, compact = false }: InlineTopUpProps) {
+  const { t } = useTranslation(["common", "errors", "pages"]);
   const { user } = useAuth();
   const [processing, setProcessing] = useState<string | null>(null);
 
@@ -39,9 +41,9 @@ export function InlineTopUp({ needed, balance = 0, onDismiss, compact = false }:
       if (!data?.url) throw new Error("Checkout URL not received");
 
       window.open(data.url, "_blank");
-      toast.info("Complete payment in the opened window. Credits will be added instantly.");
+      toast.info(t("pages:credits.topup_complete_payment"));
     } catch (err: any) {
-      toast.error("Error: " + (err.message || "Try again"));
+      toast.error(err.message || t("errors:generic"));
     } finally {
       setProcessing(null);
     }

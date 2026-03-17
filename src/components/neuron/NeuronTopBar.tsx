@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   Share2, Copy, Download, ArrowRightLeft,
@@ -61,6 +62,7 @@ export function NeuronTopBar({
   onTitleChange, onStatusChange, onVisibilityChange, onTagsChange, onRunAll,
   onClone, onFork, onSaveAsTemplate, onConvert, blocks,
 }: NeuronTopBarProps) {
+  const { t } = useTranslation("common");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTag, setNewTag] = useState("");
   const [cloning, setCloning] = useState(false);
@@ -84,7 +86,7 @@ export function NeuronTopBar({
   const handleShare = useCallback(() => {
     const url = `${window.location.origin}/n/${neuronNumber}`;
     navigator.clipboard.writeText(url);
-    toast.success("Link copied to clipboard");
+    toast.success(t("copied"));
   }, [neuronNumber]);
 
   const handleDownload = useCallback(() => {
@@ -108,7 +110,7 @@ export function NeuronTopBar({
     a.download = `neuron-${neuronNumber}-${title.toLowerCase().replace(/\s+/g, "-").slice(0, 30)}.md`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Downloaded as Markdown");
+    toast.success(t("downloaded_markdown"));
   }, [blocks, title, neuronNumber]);
 
   const handleValidate = useCallback(async () => {
@@ -125,9 +127,9 @@ export function NeuronTopBar({
 
     if (issues.length === 0) {
       onStatusChange("validated");
-      toast.success("Neuron validated ✓ — status updated");
+      toast.success(t("neuron_validated"));
     } else {
-      toast.warning(`Validation issues: ${issues.join(", ")}`);
+      toast.warning(t("validation_issues", { issues: issues.join(", ") }));
     }
     setValidating(false);
   }, [blocks, title, tags, onStatusChange]);
@@ -138,7 +140,7 @@ export function NeuronTopBar({
     } else {
       // Default: navigate to run service with neuron context
       navigate(`/services`);
-      toast.info(`Use AI Services to convert this neuron to ${format}`);
+      toast.info(t("convert_hint", { format }));
     }
   }, [onConvert, navigate]);
 

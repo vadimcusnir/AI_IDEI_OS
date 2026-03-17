@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -113,6 +114,7 @@ const RegimeBadge = ({ regime }: { regime: string }) => {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════
 export function ControlLayerTab() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const [subTab, setSubTab] = useState("prompts");
   const [prompts, setPrompts] = useState<PromptItem[]>([]);
@@ -157,8 +159,8 @@ export function ControlLayerTab() {
         last_modified_by: user?.id,
       } as any)
       .eq("id", prompt.id);
-    if (error) toast.error("Failed to save prompt");
-    else { toast.success("Prompt updated (v" + (prompt.version + 1) + ")"); loadData(); }
+    if (error) toast.error(t("common:prompt_save_failed"));
+    else { toast.success(t("common:prompt_updated", { version: prompt.version + 1 })); loadData(); }
     setEditPrompt(null);
   };
 
@@ -168,14 +170,14 @@ export function ControlLayerTab() {
       last_modified_by: user?.id,
     } as any);
     if (error) toast.error(error.message);
-    else { toast.success("Prompt created"); loadData(); }
+    else { toast.success(t("common:prompt_created_success")); loadData(); }
     setNewPromptOpen(false);
   };
 
   const rollbackPrompt = async (promptId: string, toVersion: number) => {
     const { data: ver } = await supabase.from("prompt_versions" as any)
       .select("*").eq("prompt_id", promptId).eq("version", toVersion).single();
-    if (!ver) { toast.error("Version not found"); return; }
+    if (!ver) { toast.error(t("common:version_not_found")); return; }
     const { error } = await supabase.from("prompt_registry" as any)
       .update({
         core_prompt: (ver as any).core_prompt,
@@ -184,8 +186,8 @@ export function ControlLayerTab() {
         last_modified_by: user?.id,
       } as any)
       .eq("id", promptId);
-    if (error) toast.error("Rollback failed");
-    else { toast.success(`Rolled back to v${toVersion}`); loadData(); }
+    if (error) toast.error(t("common:rollback_failed"));
+    else { toast.success(t("common:rolled_back", { version: toVersion })); loadData(); }
   };
 
   // ─── Regime CRUD ──────────────────────────
@@ -203,8 +205,8 @@ export function ControlLayerTab() {
         last_modified_by: user?.id,
       } as any)
       .eq("id", regime.id);
-    if (error) toast.error("Failed to save regime");
-    else { toast.success("Regime updated"); loadData(); }
+    if (error) toast.error(t("common:regime_save_failed"));
+    else { toast.success(t("common:regime_updated")); loadData(); }
     setEditRegime(null);
   };
 
@@ -213,7 +215,7 @@ export function ControlLayerTab() {
     const { error } = await supabase.from("ui_control_registry" as any)
       .update({ [field]: !item[field], last_modified_by: user?.id } as any)
       .eq("id", item.id);
-    if (error) toast.error("Failed to update");
+    if (error) toast.error(t("common:update_failed"));
     else loadData();
   };
 

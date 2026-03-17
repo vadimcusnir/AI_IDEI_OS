@@ -88,7 +88,7 @@ const ACCEPTED_FILE_TYPES: Record<string, string> = {
 const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 
 export default function Extractor() {
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "common", "errors"]);
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const { tier } = useUserTier();
@@ -126,7 +126,7 @@ export default function Extractor() {
       .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false });
     if (data) setEpisodes(data as Episode[]);
-    if (error) toast.error("Failed to load episodes");
+    if (error) toast.error(t("errors:generic"));
     setLoading(false);
   };
 
@@ -163,10 +163,10 @@ export default function Extractor() {
       );
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
-      toast.success(`Transcription complete — ${data.word_count} words`);
+      toast.success(t("common:transcription_complete", { count: data.word_count }));
       fetchEpisodes();
     } catch (e: any) {
-      toast.error(e.message || "Transcription failed");
+      toast.error(e.message || t("errors:generic"));
     }
     setTranscribingId(null);
   };
@@ -180,9 +180,9 @@ export default function Extractor() {
     }
     const { error } = await supabase.from("episodes").delete().eq("id", id);
     if (error) {
-      toast.error("Failed to delete episode");
+      toast.error(t("common:failed_to_delete"));
     } else {
-      toast.success("Episode deleted");
+      toast.success(t("common:deleted"));
       setEpisodes(prev => prev.filter(e => e.id !== id));
       if (expandedId === id) setExpandedId(null);
     }
@@ -191,16 +191,16 @@ export default function Extractor() {
 
   // === Save transcript ===
   const handleSaveTranscript = async (episodeId: string) => {
-    if (!editTranscriptText.trim()) { toast.error("Transcript cannot be empty"); return; }
+    if (!editTranscriptText.trim()) { toast.error(t("common:transcript_empty")); return; }
     setSavingTranscript(true);
     const { error } = await supabase.from("episodes").update({
       transcript: editTranscriptText.trim(),
       status: "transcribed",
     } as any).eq("id", episodeId);
     if (error) {
-      toast.error("Failed to save transcript");
+      toast.error(t("errors:save_failed", { message: error.message }));
     } else {
-      toast.success("Transcript saved — you can now extract neurons!");
+      toast.success(t("common:transcript_saved"));
       setEditingTranscriptId(null);
       setEditTranscriptText("");
       fetchEpisodes();
@@ -278,7 +278,7 @@ export default function Extractor() {
       setChunkPreview({ episodeId: episode.id, chunks: data.chunks });
       toast.success(`${data.total_chunks} segments generated (${data.total_tokens} tokens)`);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Chunking failed");
+      toast.error(e instanceof Error ? e.message : t("errors:generic"));
     } finally {
       setChunkingId(null);
     }
@@ -287,12 +287,12 @@ export default function Extractor() {
   // === Extract neurons ===
   const handleExtractNeurons = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
-      toast.error("No transcript content. Add a transcript first.");
+      toast.error(t("common:no_transcript"));
       return;
     }
     setExtractingId(episode.id);
     setExtractionProgress({ chunks: 0, neurons: 0 });
-    toast.info("Extracting neurons… (100 credits)");
+    toast.info(t("common:extracting_neurons"));
     try {
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-neurons`,
@@ -309,14 +309,14 @@ export default function Extractor() {
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       setExtractionProgress({ chunks: data.chunks_processed || 0, neurons: data.neurons_created });
       toast.success(
-        `✅ ${data.neurons_created} neurons extracted from ${data.chunks_processed || 1} segments! (${data.credits_spent} credits)`,
+        t("common:neurons_extracted_result", { neurons: data.neurons_created, chunks: data.chunks_processed || 1, credits: data.credits_spent }),
         { duration: 8000 }
       );
       trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.neurons_created, credits_spent: data.credits_spent } });
       setChunkPreview(null);
       fetchEpisodes();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Extraction failed");
+      toast.error(e instanceof Error ? e.message : t("errors:generic"));
     } finally {
       setTimeout(() => { setExtractingId(null); setExtractionProgress(null); }, 2000);
     }
@@ -325,11 +325,11 @@ export default function Extractor() {
   // === Deep Extract ===
   const handleDeepExtract = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
-      toast.error("No transcript content. Add a transcript first.");
+      toast.error(t("common:no_transcript"));
       return;
     }
     setDeepExtractingId(episode.id);
-    toast.info("Running Deep Extract — 8 levels of intelligence extraction…");
+    toast.info(t("common:deep_extract_running"));
     try {
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/deep-extract`,
@@ -345,13 +345,13 @@ export default function Extractor() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       toast.success(
-        `✅ Deep Extract complete: ${data.total_neurons} neurons across ${data.levels_processed} levels (${data.credits_spent} credits)`,
+        t("common:deep_extract_result", { neurons: data.total_neurons, levels: data.levels_processed, credits: data.credits_spent }),
         { duration: 10000 }
       );
       trackEvent({ name: "neurons_extracted", params: { episode_id: episode.id, neurons_count: data.total_neurons, credits_spent: data.credits_spent } });
       fetchEpisodes();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Deep extraction failed");
+      toast.error(e instanceof Error ? e.message : t("errors:generic"));
     } finally {
       setDeepExtractingId(null);
     }
@@ -359,7 +359,7 @@ export default function Extractor() {
 
   // === Detect guests ===
   const handleDetectGuests = async (episode: Episode) => {
-    if (!user || !episode.transcript?.trim()) { toast.error("No transcript available."); return; }
+    if (!user || !episode.transcript?.trim()) { toast.error(t("common:no_transcript")); return; }
     setDetectingGuests(episode.id);
     try {
       const resp = await fetch(
@@ -376,11 +376,11 @@ export default function Extractor() {
       const result = await resp.json();
       if (!resp.ok) throw new Error(result.error || "Failed");
       toast.success(
-        `✅ ${result.guests_processed} guest profiles detected!`,
+        t("common:guests_detected", { count: result.guests_processed }),
         { duration: 8000 }
       );
     } catch (e: any) {
-      toast.error(e.message || "Guest detection failed");
+      toast.error(e.message || t("errors:generic"));
     }
     setDetectingGuests(null);
   };
@@ -402,16 +402,16 @@ export default function Extractor() {
       }
       setEditTranscriptText(transcript);
       setEditingTranscriptId(episodeId);
-      toast.success(`Imported ${file.name}`);
+      toast.success(t("common:file_imported", { name: file.name }));
     } catch {
-      toast.error("Failed to read file");
+      toast.error(t("errors:generic"));
     }
     e.target.value = "";
   };
 
   const copyTranscript = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard");
+    toast.success(t("common:copied"));
   };
 
   const stats = {

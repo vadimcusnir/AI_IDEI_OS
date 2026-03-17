@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { Block } from "@/components/neuron/types";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 
 const AI_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-insights`;
 
@@ -16,6 +17,7 @@ const ACTION_LABELS: Record<string, string> = {
 };
 
 export function useAIExtraction() {
+  const { t } = useTranslation(["common", "errors"]);
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractionResult, setExtractionResult] = useState<string>("");
   const [activeAction, setActiveAction] = useState<string>("");
@@ -32,7 +34,7 @@ export function useAIExtraction() {
     
     // Allow extraction even with empty blocks if we have additional context
     if (contentBlocks.length === 0 && !additionalContext?.trim()) {
-      toast.error("No content to analyze. Add some text or select a source transcript.");
+      toast.error(t("common:no_content_to_analyze"));
       return null;
     }
 
@@ -41,7 +43,7 @@ export function useAIExtraction() {
     setExtractionResult("");
 
     const label = ACTION_LABELS[action] || action;
-    toast.info(`Running ${label}...`);
+    toast.info(t("common:running_action", { label }));
 
     try {
       // Build blocks array: include neuron blocks + additional context if provided
@@ -131,7 +133,7 @@ export function useAIExtraction() {
         }
       }
 
-      toast.success(`${label} complete`);
+      toast.success(t("common:action_complete", { label }));
       setIsExtracting(false);
       setActiveAction("");
       return fullResult;
