@@ -263,7 +263,8 @@
     "retry_failed": "Retry failed",
     "job_rescheduled": "Job rescheduled",
     "retry": "Retry",
-    "view_neuron": "View Neuron"
+    "view_neuron": "View Neuron",
+    "failed_to_load": "Failed to load jobs"
   },
   "services": {
     "title": "AI Services",
