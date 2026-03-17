@@ -110,10 +110,10 @@ export function useNeuronList() {
   const handleDelete = useCallback(async (id: number, e?: React.MouseEvent) => {
     e?.stopPropagation();
     const { error } = await supabase.from("neurons").delete().eq("id", id);
-    if (error) { toast.error("Failed to delete"); return; }
+    if (error) { toast.error(t("failed_to_delete")); return; }
     setNeurons(prev => prev.filter(n => n.id !== id));
     setSelectedIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-    toast.success("Neuron deleted");
+    toast.success(t("neuron_deleted"));
   }, []);
 
   const toggleSelect = useCallback((id: number, e?: React.MouseEvent) => {
