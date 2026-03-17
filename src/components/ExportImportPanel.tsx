@@ -69,10 +69,10 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
       a.download = `ai-idei-neurons-${new Date().toISOString().split("T")[0]}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success(`Exported ${exported.length} neurons`);
+      toast.success(t("exported_neurons_count", { count: exported.length }));
       trackInternalEvent({ event: AnalyticsEvents.EXPORT_TRIGGERED, params: { format: "json", count: exported.length } });
     } catch (e) {
-      toast.error("Export failed");
+      toast.error(t("export_failed"));
     }
     setExporting(false);
   };
