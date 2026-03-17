@@ -41,6 +41,7 @@ export function NeuronMainEditor({
   title, blocks, onTitleChange, onBlockChange, onBlockToggle,
   onAddBlock, onDeleteBlock, onBlockExecute, onBlockLanguageChange, onReorderBlock,
 }: NeuronMainEditorProps) {
+  const { t } = useTranslation("common");
   const [hoveredBlock, setHoveredBlock] = useState<string | null>(null);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
