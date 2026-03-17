@@ -111,7 +111,7 @@ export function AdminContributionsTab() {
                   </div>
                 )}
                 <Textarea
-                  placeholder="Review note (optional)..."
+                  placeholder={t("review_note_placeholder")}
                   value={reviewNote}
                   onChange={(e) => setReviewNote(e.target.value)}
                   className="text-xs"

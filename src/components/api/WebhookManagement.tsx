@@ -117,7 +117,7 @@ export function WebhookManagement() {
             className="h-8 text-xs"
           />
           <Input
-            placeholder="Description (optional)"
+            placeholder={t("webhook.description_placeholder")}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="h-8 text-xs"

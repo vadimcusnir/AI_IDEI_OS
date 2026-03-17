@@ -189,7 +189,7 @@ function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (
       <input
         value={targetNumber}
         onChange={e => { setTargetNumber(e.target.value); searchNeurons(e.target.value); }}
-        placeholder="Search by # or title..."
+        placeholder={t("common:neuron_editor.search_by_number")}
         className="w-full text-xs bg-muted/50 rounded-md px-2 py-1.5 outline-none border border-border focus:border-primary transition-colors"
       />
       {suggestions.length > 0 && (

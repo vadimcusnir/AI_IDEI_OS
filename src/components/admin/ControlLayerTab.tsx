@@ -586,16 +586,16 @@ function NewPromptDialog({ open, onClose, onCreate }: {
     <Dialog open={open} onOpenChange={o => !o && onClose()}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle className="text-sm">Register New Prompt</DialogTitle>
+          <DialogTitle className="text-sm">{t("register_new_prompt")}</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Prompt ID</label>
-              <Input value={id} onChange={e => setId(e.target.value)} placeholder="e.g. extract-neurons-v1" className="mt-1 h-8 text-xs" />
+              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.prompt_id")}</label>
+              <Input value={id} onChange={e => setId(e.target.value)} placeholder={t("admin.prompt_id_placeholder")} className="mt-1 h-8 text-xs" />
             </div>
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Category</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("template.category")}</label>
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger className="mt-1 h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -607,17 +607,17 @@ function NewPromptDialog({ open, onClose, onCreate }: {
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Purpose</label>
-            <Input value={purpose} onChange={e => setPurpose(e.target.value)} placeholder="What this prompt does..." className="mt-1 h-8 text-xs" />
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.purpose")}</label>
+            <Input value={purpose} onChange={e => setPurpose(e.target.value)} placeholder={t("admin.purpose_placeholder")} className="mt-1 h-8 text-xs" />
           </div>
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Core Prompt</label>
-            <Textarea value={corePrompt} onChange={e => setCorePrompt(e.target.value)} placeholder="System prompt content..." className="mt-1 text-xs font-mono min-h-[150px]" />
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.core_prompt")}</label>
+            <Textarea value={corePrompt} onChange={e => setCorePrompt(e.target.value)} placeholder={t("admin.core_prompt_placeholder")} className="mt-1 text-xs font-mono min-h-[150px]" />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose}>Cancel</Button>
-          <Button size="sm" onClick={handleCreate} disabled={!id.trim() || !corePrompt.trim()}>Create</Button>
+          <Button variant="outline" size="sm" onClick={onClose}>{t("cancel")}</Button>
+          <Button size="sm" onClick={handleCreate} disabled={!id.trim() || !corePrompt.trim()}>{t("create")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
