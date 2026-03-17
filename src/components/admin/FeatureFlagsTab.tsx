@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Loader2, ToggleRight, ToggleLeft, Save } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface FeatureFlag {
   key: string;
