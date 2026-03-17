@@ -137,7 +137,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
   const runPipeline = async () => {
     if (!user || !currentWorkspace) return;
     if (!input.trim() && !selectedFile) {
-      toast.error("Paste a link, drop a file, or type content to analyze.");
+      toast.error(t("paste_or_drop_hint"));
       return;
     }
 
