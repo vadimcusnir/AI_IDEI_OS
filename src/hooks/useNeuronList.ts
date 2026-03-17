@@ -136,10 +136,10 @@ export function useNeuronList() {
     const ids = [...selectedIds];
     if (!ids.length) return;
     const { error } = await supabase.from("neurons").delete().in("id", ids);
-    if (error) { toast.error("Bulk delete failed"); return; }
+    if (error) { toast.error(t("bulk_delete_failed")); return; }
     setNeurons(prev => prev.filter(n => !selectedIds.has(n.id)));
     setSelectedIds(new Set());
-    toast.success(`${ids.length} neuroni șterși`);
+    toast.success(t("neurons_deleted_count", { count: ids.length }));
   }, [selectedIds]);
 
   const toggleSort = useCallback((field: SortField) => {
