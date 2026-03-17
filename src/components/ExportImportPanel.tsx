@@ -191,10 +191,10 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
         created++;
       }
 
-      setImportResult(`Imported ${created} neuron${created !== 1 ? "s" : ""} successfully.`);
-      toast.success(`Imported ${created} neurons`);
+      setImportResult(t("imported_result", { count: created }));
+      toast.success(t("imported_neurons_count", { count: created }));
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Import failed";
+      const msg = e instanceof Error ? e.message : t("import_failed");
       toast.error(msg);
       setImportResult(`Error: ${msg}`);
     }
