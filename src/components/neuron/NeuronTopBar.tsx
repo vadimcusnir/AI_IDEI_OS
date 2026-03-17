@@ -86,7 +86,7 @@ export function NeuronTopBar({
   const handleShare = useCallback(() => {
     const url = `${window.location.origin}/n/${neuronNumber}`;
     navigator.clipboard.writeText(url);
-    toast.success("Link copied to clipboard");
+    toast.success(t("copied"));
   }, [neuronNumber]);
 
   const handleDownload = useCallback(() => {
