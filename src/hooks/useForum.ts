@@ -211,7 +211,7 @@ export function useCreatePost() {
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["forum-posts", vars.threadId] });
       qc.invalidateQueries({ queryKey: ["forum-thread", vars.threadId] });
-      toast.success("Răspuns postat!");
+      toast.success(i18next.t("common:reply_posted"));
     },
     onError: (e: any) => toast.error(e.message),
   });
