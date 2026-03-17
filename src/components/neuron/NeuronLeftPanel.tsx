@@ -302,7 +302,7 @@ export function NeuronLeftPanel({
         <div className="panel-section">
           <div className="panel-section-title flex items-center gap-1.5">
             <FolderTree className="h-3 w-3" />
-            Graph Position
+            {t("neuron_editor.graph_position")}
           </div>
           <AddressTree addresses={addresses} />
         </div>
