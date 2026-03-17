@@ -215,11 +215,11 @@ function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (
         onChange={e => setRelationType(e.target.value)}
         className="w-full text-[10px] bg-muted/50 rounded-md px-2 py-1 outline-none border border-border"
       >
-        <option value="supports">Supports</option>
-        <option value="contradicts">Contradicts</option>
-        <option value="extends">Extends</option>
-        <option value="references">References</option>
-        <option value="derived_from">Derived from</option>
+        <option value="supports">{t("neuron_editor.rel_supports")}</option>
+        <option value="contradicts">{t("neuron_editor.rel_contradicts")}</option>
+        <option value="extends">{t("neuron_editor.rel_extends")}</option>
+        <option value="references">{t("neuron_editor.rel_references")}</option>
+        <option value="derived_from">{t("neuron_editor.rel_derived_from")}</option>
       </select>
     </div>
   );
@@ -272,7 +272,7 @@ export function NeuronLeftPanel({
     <div className="w-56 border-r border-border bg-card flex flex-col shrink-0 overflow-hidden transition-all duration-200">
       {/* Header */}
       <div className="h-9 flex items-center justify-between px-3 border-b border-border">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Knowledge Graph</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("neuron_editor.knowledge_graph")}</span>
         <button onClick={onToggle} className="text-muted-foreground hover:text-foreground transition-colors">
           <ChevronRight className="h-3.5 w-3.5 rotate-180" />
         </button>
@@ -285,7 +285,7 @@ export function NeuronLeftPanel({
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search graph..."
+            placeholder={t("neuron_editor.search_graph")}
             className="text-xs bg-transparent border-none outline-none w-full text-foreground placeholder:text-muted-foreground/50"
           />
           {searchQuery && (
@@ -302,7 +302,7 @@ export function NeuronLeftPanel({
         <div className="panel-section">
           <div className="panel-section-title flex items-center gap-1.5">
             <FolderTree className="h-3 w-3" />
-            Graph Position
+            {t("neuron_editor.graph_position")}
           </div>
           <AddressTree addresses={addresses} />
         </div>
@@ -321,14 +321,14 @@ export function NeuronLeftPanel({
         {!loadingLinks && (
           <>
             <LinkSection
-              title="Outgoing Links"
+              title={t("neuron_editor.outgoing_links")}
               icon={Link2}
               items={filteredLinks}
               direction="outgoing"
               onRemoveLink={onRemoveLink}
             />
             <LinkSection
-              title="Backlinks"
+              title={t("neuron_editor.backlinks")}
               icon={AtSign}
               items={filteredLinks}
               direction="incoming"
@@ -341,8 +341,8 @@ export function NeuronLeftPanel({
         {!loadingLinks && links.length === 0 && (
           <div className="px-3 py-6 text-center">
             <Network className="h-8 w-8 text-muted-foreground/20 mx-auto mb-2" />
-            <p className="text-[11px] text-muted-foreground/50">No connections yet.</p>
-            <p className="text-[10px] text-muted-foreground/30 mt-1">Links will appear here as you connect neurons.</p>
+            <p className="text-[11px] text-muted-foreground/50">{t("neuron_editor.no_connections")}</p>
+            <p className="text-[10px] text-muted-foreground/30 mt-1">{t("neuron_editor.no_connections_hint")}</p>
           </div>
         )}
       </div>
@@ -350,13 +350,13 @@ export function NeuronLeftPanel({
       {/* Footer stats */}
       <div className="px-3 py-2 border-t border-border bg-panel-header">
         <div className="grid grid-cols-2 gap-y-1 text-[10px]">
-          <span className="text-muted-foreground">Total Links</span>
+          <span className="text-muted-foreground">{t("neuron_editor.total_links")}</span>
           <span className="text-right font-medium">{links.length}</span>
-          <span className="text-muted-foreground">Outgoing</span>
+          <span className="text-muted-foreground">{t("neuron_editor.outgoing")}</span>
           <span className="text-right font-medium text-primary">{outgoing.length}</span>
-          <span className="text-muted-foreground">Backlinks</span>
+          <span className="text-muted-foreground">{t("neuron_editor.backlinks")}</span>
           <span className="text-right font-medium">{backlinks.length}</span>
-          <span className="text-muted-foreground">Addresses</span>
+          <span className="text-muted-foreground">{t("neuron_editor.addresses")}</span>
           <span className="text-right font-medium">{addresses.length}</span>
         </div>
       </div>

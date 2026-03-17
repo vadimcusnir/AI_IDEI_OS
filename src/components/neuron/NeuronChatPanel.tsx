@@ -3,6 +3,7 @@ import { Send, Loader2, Sparkles, Trash2, MessageCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Block } from "./types";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -18,6 +19,7 @@ interface NeuronChatPanelProps {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/neuron-chat`;
 
 export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPanelProps) {
+  const { t } = useTranslation("common");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
@@ -168,10 +170,10 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
       <div className="flex items-center justify-between px-3 py-2 border-b border-ai-border">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-ai-accent flex items-center gap-1.5">
           <MessageCircle className="h-3 w-3" />
-          Neuron Chat
+          {t("neuron_editor.neuron_chat")}
         </span>
         {messages.length > 0 && (
-          <button onClick={clearChat} className="text-muted-foreground hover:text-destructive transition-colors" title="Clear chat">
+          <button onClick={clearChat} className="text-muted-foreground hover:text-destructive transition-colors" title={t("neuron_editor.clear_chat")}>
             <Trash2 className="h-3 w-3" />
           </button>
         )}
@@ -183,7 +185,7 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
           <div className="flex flex-col items-center justify-center h-full text-center px-4 py-8">
             <Sparkles className="h-6 w-6 text-ai-accent/30 mb-2" />
             <p className="text-[10px] text-muted-foreground leading-relaxed">
-              Ask anything about this neuron's content. I have full context of your blocks.
+              {t("neuron_editor.chat_hint")}
             </p>
           </div>
         )}

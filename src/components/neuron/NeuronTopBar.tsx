@@ -233,9 +233,9 @@ export function NeuronTopBar({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-36">
-          <DropdownMenuItem onClick={() => onStatusChange("draft")}>Draft</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onStatusChange("validated")}>Validated</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onStatusChange("published")}>Published</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onStatusChange("draft")}>{t("neuron_editor.status_draft")}</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onStatusChange("validated")}>{t("neuron_editor.status_validated")}</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onStatusChange("published")}>{t("neuron_editor.status_published")}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
