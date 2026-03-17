@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Brain, Coins, FileAudio, TrendingUp, Layers, Sparkles, Activity,
 } from "lucide-react";
@@ -35,6 +36,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export function StatsOverview({ stats }: { stats: Stats }) {
   const navigate = useNavigate();
+  const { t } = useTranslation("common");
   const maxCat = Math.max(...Object.values(stats.categories), 1);
   const maxActivity = Math.max(...stats.recentActivity.map(a => a.count), 1);
 
@@ -42,23 +44,23 @@ export function StatsOverview({ stats }: { stats: Stats }) {
     <div className="max-w-2xl space-y-6">
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <KPICard icon={Brain} label="Total Neurons" value={stats.totalNeurons} />
-        <KPICard icon={FileAudio} label="Episodes" value={stats.totalEpisodes} sub={`${stats.analyzedEpisodes} analyzed`} />
-        <KPICard icon={Coins} label="Credits Spent" value={stats.creditsSpent} color="text-destructive" />
-        <KPICard icon={TrendingUp} label="Balance" value={stats.creditsBalance} color="text-primary" />
+        <KPICard icon={Brain} label={t("stats.total_neurons")} value={stats.totalNeurons} />
+        <KPICard icon={FileAudio} label={t("stats.episodes")} value={stats.totalEpisodes} sub={`${stats.analyzedEpisodes} ${t("stats.analyzed")}`} />
+        <KPICard icon={Coins} label={t("stats.credits_spent")} value={stats.creditsSpent} color="text-destructive" />
+        <KPICard icon={TrendingUp} label={t("stats.balance")} value={stats.creditsBalance} color="text-primary" />
       </div>
 
       {/* Status + Lifecycle */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-card border border-border rounded-xl p-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Neuron Status</h3>
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("stats.neuron_status")}</h3>
           <div className="space-y-2">
-            <StatusBar label="Draft" value={stats.draftNeurons} total={stats.totalNeurons} className="bg-muted-foreground" />
-            <StatusBar label="Published" value={stats.publishedNeurons} total={stats.totalNeurons} className="bg-primary" />
+            <StatusBar label={t("neuron_editor.status_draft")} value={stats.draftNeurons} total={stats.totalNeurons} className="bg-muted-foreground" />
+            <StatusBar label={t("neuron_editor.status_published")} value={stats.publishedNeurons} total={stats.totalNeurons} className="bg-primary" />
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Lifecycle</h3>
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("stats.lifecycle")}</h3>
           <div className="space-y-2">
             {Object.entries(stats.lifecycles).sort(([, a], [, b]) => b - a).map(([key, val]) => (
               <StatusBar key={key} label={key} value={val} total={stats.totalNeurons} className="bg-primary/70" />
@@ -71,7 +73,7 @@ export function StatsOverview({ stats }: { stats: Stats }) {
       {Object.keys(stats.categories).length > 0 && (
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-            <Layers className="h-3.5 w-3.5" /> Content Categories
+            <Layers className="h-3.5 w-3.5" /> {t("stats.content_categories")}
           </h2>
           <div className="bg-card border border-border rounded-xl p-4 space-y-2">
             {Object.entries(stats.categories).sort(([, a], [, b]) => b - a).map(([cat, count]) => (
@@ -90,7 +92,7 @@ export function StatsOverview({ stats }: { stats: Stats }) {
       {/* 7-Day Activity */}
       <div>
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-          <Activity className="h-3.5 w-3.5" /> 7-Day Activity
+          <Activity className="h-3.5 w-3.5" /> {t("stats.seven_day_activity")}
         </h2>
         <div className="bg-card border border-border rounded-xl p-4">
           <div className="flex items-end gap-1.5 h-20">
@@ -109,22 +111,22 @@ export function StatsOverview({ stats }: { stats: Stats }) {
       {/* Credits */}
       <div>
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5" /> Credit Economy
+          <Sparkles className="h-3.5 w-3.5" /> {t("stats.credit_economy")}
         </h2>
         <div className="bg-card border border-border rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div>
               <span className="text-2xl font-bold font-mono">{stats.creditsBalance}</span>
-              <span className="text-xs text-muted-foreground ml-1.5">NEURONS</span>
+              <span className="text-xs text-muted-foreground ml-1.5">{t("neurons_currency")}</span>
             </div>
-            <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate("/credits")}>View Ledger</Button>
+            <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate("/credits")}>{t("stats.view_ledger")}</Button>
           </div>
           <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
             <div className="h-full bg-primary rounded-full" style={{ width: `${stats.creditsEarned > 0 ? (stats.creditsBalance / stats.creditsEarned) * 100 : 100}%` }} />
           </div>
           <div className="flex justify-between mt-2">
-            <span className="text-[10px] text-muted-foreground">{stats.creditsSpent} spent</span>
-            <span className="text-[10px] text-muted-foreground">{stats.creditsEarned} earned</span>
+            <span className="text-[10px] text-muted-foreground">{stats.creditsSpent} {t("admin.spent").toLowerCase()}</span>
+            <span className="text-[10px] text-muted-foreground">{stats.creditsEarned} {t("admin.earned").toLowerCase()}</span>
           </div>
         </div>
       </div>

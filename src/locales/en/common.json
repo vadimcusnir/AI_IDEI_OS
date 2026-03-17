@@ -439,7 +439,10 @@
     "search_users": "Search by user ID or email...",
     "users_label": "users",
     "roles": "Roles",
-    "amount_placeholder": "±amount"
+    "amount_placeholder": "±amount",
+    "page_info": "Page {{current}} of {{total}}",
+    "artifacts": "Artifacts",
+    "episodes": "Episodes"
   },
   "folders": {
     "folders": "Folders",
@@ -614,5 +617,46 @@
     "default_placeholder": "Write your feedback...",
     "search_placeholder": "Search..."
   },
-  "paste_transcript": "Paste your transcript here..."
+  "paste_transcript": "Paste your transcript here...",
+  "stats": {
+    "total_neurons": "Total Neurons",
+    "episodes": "Episodes",
+    "analyzed": "analyzed",
+    "credits_spent": "Credits Spent",
+    "balance": "Balance",
+    "neuron_status": "Neuron Status",
+    "lifecycle": "Lifecycle",
+    "content_categories": "Content Categories",
+    "seven_day_activity": "7-Day Activity",
+    "credit_economy": "Credit Economy",
+    "view_ledger": "View Ledger"
+  },
+  "wallet": {
+    "wallet_state": "Wallet State",
+    "not_initialized": "Wallet not initialized",
+    "available": "Available",
+    "staked": "Staked",
+    "locked": "Locked",
+    "status_open": "Open",
+    "status_restricted": "Restricted",
+    "status_locked": "Locked",
+    "status_suspended": "Suspended"
+  },
+  "search": {
+    "type_neuron": "Neuron",
+    "type_artifact": "Artefact",
+    "type_guest": "Guest",
+    "type_insight": "Insight"
+  },
+  "community": {
+    "tier_legend": "Legend",
+    "tier_expert": "Expert",
+    "tier_veteran": "Veteran",
+    "tier_regular": "Regular",
+    "tier_contributor": "Contributor",
+    "tier_newcomer": "Newcomer",
+    "threads": "threads",
+    "posts": "posts",
+    "solutions": "solutions"
+  }
 }

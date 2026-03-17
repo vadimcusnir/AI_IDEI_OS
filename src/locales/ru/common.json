@@ -439,7 +439,10 @@
     "search_users": "Поиск по ID или email...",
     "users_label": "пользователей",
     "roles": "Роли",
-    "amount_placeholder": "±сумма"
+    "amount_placeholder": "±сумма",
+    "page_info": "Страница {{current}} из {{total}}",
+    "artifacts": "Артефакты",
+    "episodes": "Эпизоды"
   },
   "folders": {
     "folders": "Папки",
@@ -614,5 +617,46 @@
     "default_placeholder": "Напишите отзыв...",
     "search_placeholder": "Поиск..."
   },
-  "paste_transcript": "Вставьте транскрипт сюда..."
+  "paste_transcript": "Вставьте транскрипт сюда...",
+  "stats": {
+    "total_neurons": "Всего нейронов",
+    "episodes": "Эпизоды",
+    "analyzed": "проанализировано",
+    "credits_spent": "Потрачено кредитов",
+    "balance": "Баланс",
+    "neuron_status": "Статус нейронов",
+    "lifecycle": "Жизненный цикл",
+    "content_categories": "Категории контента",
+    "seven_day_activity": "Активность за 7 дней",
+    "credit_economy": "Экономика кредитов",
+    "view_ledger": "Открыть реестр"
+  },
+  "wallet": {
+    "wallet_state": "Состояние кошелька",
+    "not_initialized": "Кошелёк не инициализирован",
+    "available": "Доступно",
+    "staked": "В стейкинге",
+    "locked": "Заблокировано",
+    "status_open": "Открыт",
+    "status_restricted": "Ограничен",
+    "status_locked": "Заблокирован",
+    "status_suspended": "Приостановлен"
+  },
+  "search": {
+    "type_neuron": "Нейрон",
+    "type_artifact": "Артефакт",
+    "type_guest": "Гость",
+    "type_insight": "Идея"
+  },
+  "community": {
+    "tier_legend": "Легенда",
+    "tier_expert": "Эксперт",
+    "tier_veteran": "Ветеран",
+    "tier_regular": "Постоянный",
+    "tier_contributor": "Участник",
+    "tier_newcomer": "Новичок",
+    "threads": "тем",
+    "posts": "постов",
+    "solutions": "решений"
+  }
 }

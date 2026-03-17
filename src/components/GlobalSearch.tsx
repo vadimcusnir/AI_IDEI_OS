@@ -22,10 +22,10 @@ interface SearchResult {
 }
 
 const TYPE_CONFIG = {
-  neuron: { icon: Brain, label: "Neuron", color: "text-primary" },
-  artifact: { icon: FileText, label: "Artefact", color: "text-accent-foreground" },
-  guest: { icon: Users, label: "Guest", color: "text-muted-foreground" },
-  entity: { icon: Sparkles, label: "Insight", color: "text-primary" },
+  neuron: { icon: Brain, labelKey: "search.type_neuron", color: "text-primary" },
+  artifact: { icon: FileText, labelKey: "search.type_artifact", color: "text-accent-foreground" },
+  guest: { icon: Users, labelKey: "search.type_guest", color: "text-muted-foreground" },
+  entity: { icon: Sparkles, labelKey: "search.type_insight", color: "text-primary" },
 };
 
 export function GlobalSearch() {
@@ -238,7 +238,7 @@ export function GlobalSearch() {
                         <p className="text-sm font-medium truncate">{result.title}</p>
                         <p className="text-[10px] text-muted-foreground truncate">{result.subtitle}</p>
                       </div>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground/50 shrink-0">{cfg.label}</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground/50 shrink-0">{t(cfg.labelKey)}</span>
                       {idx === selectedIndex && <ArrowRight className="h-3 w-3 text-primary shrink-0" />}
                     </button>
                   );

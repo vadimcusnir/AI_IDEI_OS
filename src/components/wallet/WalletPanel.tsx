@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const TIER_COLORS: Record<string, string> = {
   free: "bg-muted text-muted-foreground",
@@ -23,6 +24,7 @@ const STATUS_CONFIG = {
 
 export function WalletPanel() {
   const { wallet, access, loading, isFresh, refresh } = useWalletState();
+  const { t } = useTranslation("common");
 
   if (loading) {
     return (
@@ -39,7 +41,7 @@ export function WalletPanel() {
     return (
       <div className="rounded-xl border border-border bg-card p-6 text-center">
         <Wallet className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-        <p className="text-sm text-muted-foreground">Wallet not initialized</p>
+        <p className="text-sm text-muted-foreground">{t("wallet.not_initialized")}</p>
       </div>
     );
   }
@@ -54,7 +56,7 @@ export function WalletPanel() {
       <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/30">
         <div className="flex items-center gap-2">
           <Wallet className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold">Wallet State</h3>
+          <h3 className="text-sm font-semibold">{t("wallet.wallet_state")}</h3>
         </div>
         <div className="flex items-center gap-2">
           {access && (
@@ -71,18 +73,18 @@ export function WalletPanel() {
       {/* Balances */}
       <div className="grid grid-cols-3 gap-px bg-border">
         <BalanceCell
-          label="Available"
+          label={t("wallet.available")}
           value={wallet.available}
           icon={<TrendingUp className="h-3.5 w-3.5 text-status-validated" />}
           highlight
         />
         <BalanceCell
-          label="Staked"
+          label={t("wallet.staked")}
           value={wallet.staked}
           icon={<Lock className="h-3.5 w-3.5 text-primary" />}
         />
         <BalanceCell
-          label="Locked"
+          label={t("wallet.locked")}
           value={wallet.locked}
           icon={<Shield className="h-3.5 w-3.5 text-amber-500" />}
         />
@@ -92,7 +94,7 @@ export function WalletPanel() {
       <div className="flex items-center justify-between px-5 py-2.5 border-t border-border text-[11px] text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <Clock className="h-3 w-3" />
-          <span>Snapshot: {Math.round(wallet.snapshotAgeSec)}s ago</span>
+          <span>Snapshot: {Math.round(wallet.snapshotAgeSec)}s {t("ago")}</span>
           {isFresh ? (
             <CheckCircle2 className="h-3 w-3 text-status-validated" />
           ) : (
@@ -102,7 +104,7 @@ export function WalletPanel() {
         {status && (
           <div className={cn("flex items-center gap-1", status.color)}>
             <StatusIcon className="h-3 w-3" />
-            <span className="font-medium">{status.label}</span>
+            <span className="font-medium">{t(`wallet.status_${access?.windowStatus}`)}</span>
           </div>
         )}
       </div>

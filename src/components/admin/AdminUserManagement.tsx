@@ -214,11 +214,11 @@ export function AdminUserManagement() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-3">
           <Button variant="ghost" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            <ChevronLeft className="h-3.5 w-3.5 mr-1" />Prev
+            <ChevronLeft className="h-3.5 w-3.5 mr-1" />{t("back")}
           </Button>
-          <span className="text-[10px] text-muted-foreground">Page {page + 1} of {totalPages}</span>
+          <span className="text-[10px] text-muted-foreground">{t("admin.page_info", { current: page + 1, total: totalPages })}</span>
           <Button variant="ghost" size="sm" disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>
-            Next<ChevronRight className="h-3.5 w-3.5 ml-1" />
+            {t("next")}<ChevronRight className="h-3.5 w-3.5 ml-1" />
           </Button>
         </div>
       )}
@@ -253,32 +253,32 @@ export function AdminUserManagement() {
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <Brain className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.neuron_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Neurons</p>
+                        <p className="text-[9px] text-muted-foreground">{t("common:neurons_currency")}</p>
                       </div>
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <FileText className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.artifact_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Artifacts</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.artifacts")}</p>
                       </div>
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <Briefcase className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.episode_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Episodes</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.episodes")}</p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-3 gap-2 text-center">
                       <div className="p-2 rounded-lg bg-primary/5">
                         <p className="text-sm font-bold text-primary">{selectedUser.balance}</p>
-                        <p className="text-[9px] text-muted-foreground">Balance</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.balance")}</p>
                       </div>
                       <div className="p-2 rounded-lg bg-muted/50">
                         <p className="text-sm font-bold">{selectedUser.total_spent}</p>
-                        <p className="text-[9px] text-muted-foreground">Spent</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.spent")}</p>
                       </div>
                       <div className="p-2 rounded-lg bg-muted/50">
                         <p className="text-sm font-bold">{selectedUser.total_earned}</p>
-                        <p className="text-[9px] text-muted-foreground">Earned</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.earned")}</p>
                       </div>
                     </div>
 
