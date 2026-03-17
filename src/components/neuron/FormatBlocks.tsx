@@ -227,6 +227,7 @@ export function PromptBlock({ block, onContentChange, onExecute }: FormatBlockPr
 
 // Dataset / Table Block
 export function DatasetBlock({ block, onContentChange, onExecute }: FormatBlockProps) {
+  const { t } = useTranslation("common");
   const rows = parseTableData(block.content);
 
   return (
