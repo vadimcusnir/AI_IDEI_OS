@@ -118,7 +118,7 @@ export default function NeuronEditor() {
 
   const handleRemoveLink = useCallback(async (linkId: string) => {
     const result = await removeLink(linkId);
-    if (result?.error) toast.error("Failed to remove link");
+    if (result?.error) toast.error(t("common:link_remove_failed"));
   }, [removeLink]);
 
   const AI_ACTIONS = [
