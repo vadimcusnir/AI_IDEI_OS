@@ -233,7 +233,7 @@ export default function Extractor() {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success(`Exported as ${format.toUpperCase()}`);
+    toast.success(t("common:exported_as", { format: format.toUpperCase() }));
   };
 
   const textToSrt = (text: string): string => {
