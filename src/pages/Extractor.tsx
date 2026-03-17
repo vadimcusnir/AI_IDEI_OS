@@ -88,7 +88,7 @@ const ACCEPTED_FILE_TYPES: Record<string, string> = {
 const ACCEPTED_TRANSCRIPT_FILES = ".txt,.srt,.vtt,.md,.pdf";
 
 export default function Extractor() {
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "common", "errors"]);
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const { tier } = useUserTier();

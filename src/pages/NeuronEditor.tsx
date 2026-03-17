@@ -17,6 +17,7 @@ import { AIResultsPanel } from "@/components/neuron/AIResultsPanel";
 import { SaveAsTemplateDialog } from "@/components/neuron/SaveAsTemplateDialog";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { NeuronVersion } from "@/hooks/useNeuronGraph";
 import { useTranslation } from "react-i18next";
 

@@ -385,7 +385,7 @@ export function useNeuron(neuronNumber?: number) {
           ? { ...l, status: "error" as const, result: err instanceof Error ? err.message : "Failed" }
           : l
       ));
-      toast.error("Block execution failed");
+      toast.error(t("common:block_execution_failed"));
     }
   }, [neuron, blocks, user]);
 
