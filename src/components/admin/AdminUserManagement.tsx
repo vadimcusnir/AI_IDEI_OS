@@ -40,6 +40,7 @@ interface UserActivity {
 }
 
 export function AdminUserManagement() {
+  const { t } = useTranslation("common");
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
