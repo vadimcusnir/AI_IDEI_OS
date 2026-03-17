@@ -134,7 +134,7 @@ export default function NeuronEditor() {
     if (AI_ACTIONS.includes(action)) {
       extract(action, blocks, neuron?.title || "", selectedEpisodeTranscript || undefined);
     } else {
-      toast.info(`Action "${action}" — use AI Services for advanced processing.`);
+      toast.info(t("common:action_use_services_hint", { action }));
     }
   }, [extract, blocks, neuron?.title, selectedEpisodeTranscript]);
 
