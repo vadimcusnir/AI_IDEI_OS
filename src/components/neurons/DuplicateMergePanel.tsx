@@ -141,7 +141,7 @@ export function DuplicateMergePanel() {
           })
           .eq("id", dup.id);
 
-        toast.success(`Merged into Neuron #${dup.neuron_a}`);
+        toast.success(t("common:merged_into_neuron", { id: dup.neuron_a }));
       }
 
       setDuplicates(prev => prev.filter(d => d.id !== dup.id));
