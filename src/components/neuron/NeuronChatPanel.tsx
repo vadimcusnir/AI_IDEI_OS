@@ -3,6 +3,7 @@ import { Send, Loader2, Sparkles, Trash2, MessageCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Block } from "./types";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface ChatMessage {
   role: "user" | "assistant";
