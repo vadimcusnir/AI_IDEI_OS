@@ -53,14 +53,14 @@ export function StatsOverview({ stats }: { stats: Stats }) {
       {/* Status + Lifecycle */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-card border border-border rounded-xl p-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Neuron Status</h3>
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("stats.neuron_status")}</h3>
           <div className="space-y-2">
-            <StatusBar label="Draft" value={stats.draftNeurons} total={stats.totalNeurons} className="bg-muted-foreground" />
-            <StatusBar label="Published" value={stats.publishedNeurons} total={stats.totalNeurons} className="bg-primary" />
+            <StatusBar label={t("neuron_editor.status_draft")} value={stats.draftNeurons} total={stats.totalNeurons} className="bg-muted-foreground" />
+            <StatusBar label={t("neuron_editor.status_published")} value={stats.publishedNeurons} total={stats.totalNeurons} className="bg-primary" />
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Lifecycle</h3>
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("stats.lifecycle")}</h3>
           <div className="space-y-2">
             {Object.entries(stats.lifecycles).sort(([, a], [, b]) => b - a).map(([key, val]) => (
               <StatusBar key={key} label={key} value={val} total={stats.totalNeurons} className="bg-primary/70" />
