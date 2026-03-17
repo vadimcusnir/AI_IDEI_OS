@@ -336,7 +336,7 @@ export function AdminUserManagement() {
                           </div>
                         ))}
                         {userActivity.recent_transactions.length === 0 && (
-                          <p className="text-[10px] text-muted-foreground text-center py-2">No transactions</p>
+                          <p className="text-[10px] text-muted-foreground text-center py-2">{t("no_transactions")}</p>
                         )}
                       </div>
                     </div>
