@@ -311,7 +311,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Scrie un mesaj..."
+            placeholder={t("type_message")}
             rows={1}
             className="flex-1 bg-muted/50 rounded-xl px-3.5 py-2 text-sm outline-none border border-border focus:border-primary transition-colors resize-none min-h-[36px] max-h-[120px]"
             style={{ height: "auto", overflow: "hidden" }}
