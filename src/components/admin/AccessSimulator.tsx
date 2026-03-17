@@ -16,6 +16,7 @@ interface SimulationResult {
 }
 
 export function AccessSimulator() {
+  const { t } = useTranslation("common");
   const [userId, setUserId] = useState("");
   const [serviceKey, setServiceKey] = useState("");
   const [result, setResult] = useState<SimulationResult | null>(null);
