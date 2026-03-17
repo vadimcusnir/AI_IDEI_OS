@@ -5,6 +5,7 @@ import {
   Terminal, CheckCircle2, XCircle, Loader2, Zap,
   Trash2, Plus, Save
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
