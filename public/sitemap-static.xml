@@ -4,6 +4,29 @@
   <url><loc>https://ai-idei.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://ai-idei.com/auth</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://ai-idei.com/docs</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ai-idei.com/docs/getting-started/introduction</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-idei.com/docs/getting-started/how-it-works</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-idei.com/docs/getting-started/your-first-neuron</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-idei.com/docs/getting-started/credits-system</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-idei.com/docs/foundation/what-is-ai-idei</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/foundation/neuron-model</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/foundation/intelligence-assets</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/pipeline/transcript-refinery</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/pipeline/signal-extraction</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/pipeline/pattern-detection</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/pipeline/synthesis-layer</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/architecture/knowledge-graph</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/architecture/neuron-library</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/architecture/service-manifests</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/architecture/job-engine</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/derivatives/insights</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/derivatives/patterns</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/derivatives/formulas</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/derivatives/profiles</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/derivatives/decision-artifacts</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/docs/reference/faq</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ai-idei.com/docs/reference/glossary</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ai-idei.com/docs/reference/security</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://ai-idei.com/insights</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://ai-idei.com/patterns</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://ai-idei.com/formulas</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
