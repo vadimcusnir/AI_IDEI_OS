@@ -205,7 +205,7 @@ export default function ProfilePage() {
             <StaggerItem>
               <div className="bg-card border border-border rounded-xl p-6 space-y-5">
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Display Name</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("common:profile.display_name")}</label>
                   <input
                     type="text"
                     value={profile.display_name}
