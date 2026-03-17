@@ -94,7 +94,7 @@ export function useDeleteWebhookEndpoint() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["webhook-endpoints"] });
-      toast.success("Webhook endpoint deleted");
+      toast.success(i18next.t("common:webhook_deleted"));
     },
     onError: (e: any) => toast.error(e.message),
   });

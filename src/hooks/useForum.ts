@@ -253,7 +253,7 @@ export function useMarkSolution() {
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["forum-posts", vars.threadId] });
       qc.invalidateQueries({ queryKey: ["forum-thread", vars.threadId] });
-      toast.success("Soluție marcată! +5 NEURONS bonus acordat.");
+      toast.success(i18next.t("common:solution_marked"));
     },
     onError: (e: any) => toast.error(e.message),
   });

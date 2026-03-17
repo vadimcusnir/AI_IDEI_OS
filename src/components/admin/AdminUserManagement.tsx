@@ -358,7 +358,7 @@ export function AdminUserManagement() {
                           </div>
                         ))}
                         {userActivity.recent_jobs.length === 0 && (
-                          <p className="text-[10px] text-muted-foreground text-center py-2">No jobs</p>
+                          <p className="text-[10px] text-muted-foreground text-center py-2">{t("no_jobs")}</p>
                         )}
                       </div>
                     </div>
