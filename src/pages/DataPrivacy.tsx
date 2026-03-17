@@ -141,7 +141,7 @@ export default function DataPrivacy() {
                         type="text"
                         value={confirmText}
                         onChange={(e) => setConfirmText(e.target.value)}
-                        placeholder="DELETE"
+                        placeholder={t("data_privacy.delete_keyword")}
                         className="w-full h-9 px-3 rounded-md border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-destructive/20"
                       />
                     </div>

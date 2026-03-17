@@ -292,7 +292,7 @@ export function AdminUserManagement() {
                           className="h-7 text-xs w-24"
                         />
                         <Input
-                          placeholder="Reason..."
+                          placeholder={t("admin.reason")}
                           value={adjustDescription} onChange={(e) => setAdjustDescription(e.target.value)}
                           className="h-7 text-xs flex-1"
                         />

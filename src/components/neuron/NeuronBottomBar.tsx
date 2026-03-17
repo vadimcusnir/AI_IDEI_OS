@@ -247,13 +247,13 @@ export function NeuronBottomBar({
           {activeTab === "comments" && (
             <div className="space-y-2">
               <div className="text-xs text-muted-foreground/50 text-center py-2">
-                Comments are coming soon.
+                {t("common:neuron_editor.comments_coming_soon")}
               </div>
               <div className="flex gap-2 mt-2">
                 <input
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Add a comment..."
+                  placeholder={t("common:neuron_editor.add_comment")}
                   className="flex-1 text-xs bg-muted/50 rounded-md px-2.5 py-1.5 outline-none border-none placeholder:text-muted-foreground/40"
                 />
               </div>

@@ -313,7 +313,7 @@ export function AIActionBlock({ block, onContentChange, onExecute }: FormatBlock
         value={block.content}
         onChange={(e) => onContentChange(e.target.value)}
         className="w-full px-3 py-2 text-sm bg-transparent border-none outline-none resize-none min-h-[40px] text-foreground"
-        placeholder="Describe what the AI worker should do..."
+        placeholder={t("common:neuron_editor.ai_worker_placeholder")}
         rows={Math.max(2, block.content.split("\n").length)}
       />
       <ExecutionResult result={block.executionResult} status={block.executionStatus} />
