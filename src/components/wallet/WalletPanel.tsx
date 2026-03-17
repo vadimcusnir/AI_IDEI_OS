@@ -24,6 +24,7 @@ const STATUS_CONFIG = {
 
 export function WalletPanel() {
   const { wallet, access, loading, isFresh, refresh } = useWalletState();
+  const { t } = useTranslation("common");
 
   if (loading) {
     return (
