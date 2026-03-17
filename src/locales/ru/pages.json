@@ -913,7 +913,8 @@
     "endpoints": "Эндпоинты",
     "response_format": "Формат ответа",
     "paginated_lists": "Постраничные списки",
-    "errors": "Ошибки"
+    "errors": "Ошибки",
+    "copied": "Скопировано!"
   },
   "database_relations": {
     "title": "Схема Базы Данных",
