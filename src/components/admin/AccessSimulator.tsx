@@ -90,9 +90,9 @@ export function AccessSimulator() {
             <span className="text-xs text-muted-foreground">— {result.reason}</span>
           </div>
           <div className="flex gap-4 text-xs text-muted-foreground">
-            {result.credits_cost !== undefined && <span>Cost: <strong>{result.credits_cost}</strong> NEURONS</span>}
-            {result.balance !== undefined && <span>Balanță: <strong>{result.balance}</strong></span>}
-            {result.deficit !== undefined && result.deficit > 0 && <span className="text-destructive">Deficit: <strong>{result.deficit}</strong></span>}
+            {result.credits_cost !== undefined && <span>{t("cost_label")}: <strong>{result.credits_cost}</strong> NEURONS</span>}
+            {result.balance !== undefined && <span>{t("balance_label")}: <strong>{result.balance}</strong></span>}
+            {result.deficit !== undefined && result.deficit > 0 && <span className="text-destructive">{t("deficit_label")}: <strong>{result.deficit}</strong></span>}
           </div>
         </div>
       )}
