@@ -19,6 +19,7 @@ interface UserLink {
 }
 
 export function FavoritesBlock() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const [links, setLinks] = useState<UserLink[]>([]);
   const [loading, setLoading] = useState(true);

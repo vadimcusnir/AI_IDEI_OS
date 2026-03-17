@@ -28,6 +28,7 @@ interface Contribution {
 }
 
 export function AdminContributionsTab() {
+  const { t } = useTranslation("common");
   const qc = useQueryClient();
   const [reviewNote, setReviewNote] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);

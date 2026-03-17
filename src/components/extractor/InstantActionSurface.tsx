@@ -58,6 +58,7 @@ interface InstantActionSurfaceProps {
 }
 
 export function InstantActionSurface({ onComplete, compact = false }: InstantActionSurfaceProps) {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance, loading: balanceLoading } = useCreditBalance();

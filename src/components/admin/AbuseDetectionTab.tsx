@@ -19,6 +19,7 @@ interface AbuseEvent {
 }
 
 export function AbuseDetectionTab() {
+  const { t } = useTranslation("common");
   const [events, setEvents] = useState<AbuseEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
