@@ -176,7 +176,7 @@ export function ControlLayerTab() {
   const rollbackPrompt = async (promptId: string, toVersion: number) => {
     const { data: ver } = await supabase.from("prompt_versions" as any)
       .select("*").eq("prompt_id", promptId).eq("version", toVersion).single();
-    if (!ver) { toast.error("Version not found"); return; }
+    if (!ver) { toast.error(t("common:version_not_found")); return; }
     const { error } = await supabase.from("prompt_registry" as any)
       .update({
         core_prompt: (ver as any).core_prompt,
@@ -185,8 +185,8 @@ export function ControlLayerTab() {
         last_modified_by: user?.id,
       } as any)
       .eq("id", promptId);
-    if (error) toast.error("Rollback failed");
-    else { toast.success(`Rolled back to v${toVersion}`); loadData(); }
+    if (error) toast.error(t("common:rollback_failed"));
+    else { toast.success(t("common:rolled_back", { version: toVersion })); loadData(); }
   };
 
   // ─── Regime CRUD ──────────────────────────
