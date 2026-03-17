@@ -325,11 +325,11 @@ export default function Extractor() {
   // === Deep Extract ===
   const handleDeepExtract = async (episode: Episode) => {
     if (!user || !episode.transcript?.trim()) {
-      toast.error("No transcript content. Add a transcript first.");
+      toast.error(t("common:no_transcript"));
       return;
     }
     setDeepExtractingId(episode.id);
-    toast.info("Running Deep Extract — 8 levels of intelligence extraction…");
+    toast.info(t("common:deep_extract_running"));
     try {
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/deep-extract`,
