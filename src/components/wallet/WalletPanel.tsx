@@ -41,7 +41,7 @@ export function WalletPanel() {
     return (
       <div className="rounded-xl border border-border bg-card p-6 text-center">
         <Wallet className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-        <p className="text-sm text-muted-foreground">Wallet not initialized</p>
+        <p className="text-sm text-muted-foreground">{t("wallet.not_initialized")}</p>
       </div>
     );
   }
