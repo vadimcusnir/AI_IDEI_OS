@@ -73,7 +73,7 @@ export function StatsOverview({ stats }: { stats: Stats }) {
       {Object.keys(stats.categories).length > 0 && (
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-            <Layers className="h-3.5 w-3.5" /> Content Categories
+            <Layers className="h-3.5 w-3.5" /> {t("stats.content_categories")}
           </h2>
           <div className="bg-card border border-border rounded-xl p-4 space-y-2">
             {Object.entries(stats.categories).sort(([, a], [, b]) => b - a).map(([cat, count]) => (
