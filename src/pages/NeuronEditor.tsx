@@ -109,11 +109,11 @@ export default function NeuronEditor() {
 
   const handleRestoreVersion = useCallback(async (version: NeuronVersion) => {
     if (!version.blocksSnapshot || !Array.isArray(version.blocksSnapshot)) {
-      toast.error("Invalid version snapshot");
+      toast.error(t("common:invalid_version_snapshot"));
       return;
     }
     await restoreBlocks(version.blocksSnapshot);
-    toast.success(`Restored to v${version.version}`);
+    toast.success(t("common:version_restored", { version: version.version }));
   }, [restoreBlocks]);
 
   const handleRemoveLink = useCallback(async (linkId: string) => {
