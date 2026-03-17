@@ -16,6 +16,7 @@ import { ScorePanel } from "./right-panel/ScorePanel";
 import { NeuronChatPanel } from "./NeuronChatPanel";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 interface EpisodeSource {
   id: string;
