@@ -19,6 +19,7 @@ interface NeuronData {
 }
 
 export function useNeuron(neuronNumber?: number) {
+  const { t } = useTranslation(["common", "errors"]);
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const [neuron, setNeuron] = useState<NeuronData | null>(null);
