@@ -113,7 +113,8 @@
     "push_active_desc": "Primești alerte chiar când nu ești pe site.",
     "push_enable_desc": "Fii notificat când un job se finalizează sau creditele scad.",
     "push_disabled_toast": "Notificări push dezactivate.",
-    "push_enabled_toast": "Notificări push activate!",
+    "push_enabled_toast": "Notificari push activate!",
+    "push_enable_failed": "Nu s-au putut activa notificarile push.",
     "no_notifications": "Nicio notificare încă",
     "no_filter_results": "Nicio notificare pentru acest filtru"
   },
@@ -263,7 +264,8 @@
     "retry_failed": "Reîncercarea a eșuat",
     "job_rescheduled": "Job reprogramat",
     "retry": "Reîncearcă",
-    "view_neuron": "Vezi Neuronul"
+    "view_neuron": "Vezi Neuronul",
+    "failed_to_load": "Eroare la incarcarea job-urilor"
   },
   "services": {
     "title": "Servicii AI",
@@ -912,7 +914,8 @@
     "endpoints": "Endpoint-uri",
     "response_format": "Format răspuns",
     "paginated_lists": "Liste paginate",
-    "errors": "Erori"
+    "errors": "Erori",
+    "copied": "Copiat!"
   },
   "database_relations": {
     "title": "Schema Bazei de Date",

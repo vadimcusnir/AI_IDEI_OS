@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 interface UserRow {
   user_id: string;
@@ -39,6 +40,7 @@ interface UserActivity {
 }
 
 export function AdminUserManagement() {
+  const { t } = useTranslation("common");
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -99,10 +101,10 @@ export function AdminUserManagement() {
   const toggleUserRole = async (userId: string, hasAdmin: boolean) => {
     if (hasAdmin) {
       await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "admin");
-      toast.success("Admin role revoked");
+      toast.success(t("admin_role_revoked"));
     } else {
       await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
-      toast.success("Admin role granted");
+      toast.success(t("admin_role_granted"));
     }
     loadUsers();
   };
@@ -119,7 +121,7 @@ export function AdminUserManagement() {
     });
     if (error) toast.error(error.message);
     else {
-      toast.success(`${amount > 0 ? "+" : ""}${amount} credits applied`);
+      toast.success(t("credits_applied", { amount: `${amount > 0 ? "+" : ""}${amount}` }));
       setAdjustAmount("");
       setAdjustDescription("");
       loadUsers();
@@ -227,7 +229,7 @@ export function AdminUserManagement() {
           {selectedUser && (
             <>
               <SheetHeader>
-                <SheetTitle className="text-sm">User Detail</SheetTitle>
+                <SheetTitle className="text-sm">{t("user_detail")}</SheetTitle>
               </SheetHeader>
               <div className="space-y-4 mt-4">
                 {/* User info */}
@@ -282,7 +284,7 @@ export function AdminUserManagement() {
 
                     {/* Credit adjustment */}
                     <div className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Adjust Credits</p>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t("adjust_credits")}</p>
                       <div className="flex gap-2">
                         <Input
                           type="number" placeholder="±amount"
@@ -311,16 +313,16 @@ export function AdminUserManagement() {
                         onClick={() => toggleUserRole(selectedUser.user_id, selectedUser.roles.includes("admin"))}
                       >
                         {selectedUser.roles.includes("admin") ? (
-                          <><UserMinus className="h-3.5 w-3.5 text-destructive" />Revoke Admin</>
+                          <><UserMinus className="h-3.5 w-3.5 text-destructive" />{t("revoke_admin")}</>
                         ) : (
-                          <><ShieldCheck className="h-3.5 w-3.5" />Grant Admin</>
+                          <><ShieldCheck className="h-3.5 w-3.5" />{t("grant_admin")}</>
                         )}
                       </Button>
                     </div>
 
                     {/* Recent transactions */}
                     <div>
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Transactions</p>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">{t("recent_transactions")}</p>
                       <div className="space-y-1 max-h-40 overflow-y-auto">
                         {userActivity.recent_transactions.map((tx) => (
                           <div key={tx.id} className="flex items-center gap-2 p-2 rounded bg-muted/30 text-[10px]">
@@ -334,14 +336,14 @@ export function AdminUserManagement() {
                           </div>
                         ))}
                         {userActivity.recent_transactions.length === 0 && (
-                          <p className="text-[10px] text-muted-foreground text-center py-2">No transactions</p>
+                          <p className="text-[10px] text-muted-foreground text-center py-2">{t("no_transactions")}</p>
                         )}
                       </div>
                     </div>
 
                     {/* Recent jobs */}
                     <div>
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Jobs</p>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">{t("recent_jobs")}</p>
                       <div className="space-y-1 max-h-40 overflow-y-auto">
                         {userActivity.recent_jobs.map((job) => (
                           <div key={job.id} className="flex items-center gap-2 p-2 rounded bg-muted/30 text-[10px]">
@@ -356,7 +358,7 @@ export function AdminUserManagement() {
                           </div>
                         ))}
                         {userActivity.recent_jobs.length === 0 && (
-                          <p className="text-[10px] text-muted-foreground text-center py-2">No jobs</p>
+                          <p className="text-[10px] text-muted-foreground text-center py-2">{t("no_jobs")}</p>
                         )}
                       </div>
                     </div>

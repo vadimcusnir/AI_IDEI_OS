@@ -192,7 +192,7 @@ export default function Notifications() {
     } else {
       const ok = await subscribe();
       if (ok) toast.success(t("notifications.push_enabled_toast"));
-      else toast.error("Could not enable push notifications.");
+      else toast.error(t("notifications.push_enable_failed"));
     }
   };
 

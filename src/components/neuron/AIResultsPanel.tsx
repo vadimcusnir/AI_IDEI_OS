@@ -2,6 +2,7 @@ import { X, Loader2, Copy, Plus, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface AIResultsPanelProps {
   result: string;
@@ -22,14 +23,16 @@ const ACTION_TITLES: Record<string, string> = {
 export function AIResultsPanel({ result, isExtracting, activeAction, onClose, onInsertAsBlock }: AIResultsPanelProps) {
   if (!result && !isExtracting) return null;
 
+  const { t } = useTranslation("common");
+
   const handleCopy = () => {
     navigator.clipboard.writeText(result);
-    toast.success("Copied to clipboard");
+    toast.success(t("copied_to_clipboard"));
   };
 
   const handleInsert = () => {
     onInsertAsBlock?.(result);
-    toast.success("Inserted as markdown block");
+    toast.success(t("inserted_as_block"));
   };
 
   return (

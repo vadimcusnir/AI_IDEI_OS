@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import i18next from "i18next";
 
 export interface ForumCategory {
   id: string;
@@ -186,7 +187,7 @@ export function useCreateThread() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["forum-threads"] });
       qc.invalidateQueries({ queryKey: ["forum-categories"] });
-      toast.success("Thread creat cu succes!");
+      toast.success(i18next.t("common:thread_created"));
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -210,7 +211,7 @@ export function useCreatePost() {
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["forum-posts", vars.threadId] });
       qc.invalidateQueries({ queryKey: ["forum-thread", vars.threadId] });
-      toast.success("Răspuns postat!");
+      toast.success(i18next.t("common:reply_posted"));
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -252,7 +253,7 @@ export function useMarkSolution() {
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["forum-posts", vars.threadId] });
       qc.invalidateQueries({ queryKey: ["forum-thread", vars.threadId] });
-      toast.success("Soluție marcată! +5 NEURONS bonus acordat.");
+      toast.success(i18next.t("common:solution_marked"));
     },
     onError: (e: any) => toast.error(e.message),
   });

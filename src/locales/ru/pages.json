@@ -114,6 +114,7 @@
     "push_enable_desc": "Получайте уведомления о завершении заданий или низком балансе.",
     "push_disabled_toast": "Push-уведомления отключены.",
     "push_enabled_toast": "Push-уведомления включены!",
+    "push_enable_failed": "Не удалось включить push-уведомления.",
     "no_notifications": "Уведомлений пока нет",
     "no_filter_results": "Нет уведомлений для этого фильтра"
   },
@@ -263,7 +264,8 @@
     "retry_failed": "Повтор не удался",
     "job_rescheduled": "Задание перепланировано",
     "retry": "Повторить",
-    "view_neuron": "Посмотреть Нейрон"
+    "view_neuron": "Посмотреть Нейрон",
+    "failed_to_load": "Ошибка загрузки задач"
   },
   "services": {
     "title": "AI Сервисы",
@@ -912,7 +914,8 @@
     "endpoints": "Эндпоинты",
     "response_format": "Формат ответа",
     "paginated_lists": "Постраничные списки",
-    "errors": "Ошибки"
+    "errors": "Ошибки",
+    "copied": "Скопировано!"
   },
   "database_relations": {
     "title": "Схема Базы Данных",

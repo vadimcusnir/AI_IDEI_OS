@@ -3,8 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
+import { useTranslation } from "react-i18next";
 
 export function useNeuronClone() {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
 
   const cloneNeuron = useCallback(async (sourceNeuronId: number) => {
@@ -18,7 +20,7 @@ export function useNeuronClone() {
       .single();
 
     if (srcErr || !source) {
-      toast.error("Source neuron not found");
+      toast.error(t("source_not_found"));
       return null;
     }
 
@@ -30,7 +32,7 @@ export function useNeuronClone() {
       .single();
 
     if (cloneErr || !cloned) {
-      toast.error("Failed to clone neuron");
+      toast.error(t("clone_failed"));
       return null;
     }
 
@@ -63,7 +65,7 @@ export function useNeuronClone() {
       clone_type: "full",
     } as any);
 
-    toast.success(`Cloned "${source.title}" → #${cloned.number}`);
+    toast.success(t("cloned_neuron", { title: source.title, number: cloned.number }));
     trackInternalEvent({ event: AnalyticsEvents.NEURON_CLONED, params: { source_id: source.id, clone_id: cloned.id } });
     return cloned;
   }, [user]);
@@ -73,13 +75,13 @@ export function useNeuronClone() {
 
     const { data: source } = await supabase
       .from("neurons").select("*").eq("id", sourceNeuronId).single();
-    if (!source) { toast.error("Source not found"); return null; }
+    if (!source) { toast.error(t("source_not_found")); return null; }
 
     const { data: forked } = await supabase
       .from("neurons")
       .insert({ author_id: user.id, title: `${source.title} (fork)` })
       .select().single();
-    if (!forked) { toast.error("Failed to fork"); return null; }
+    if (!forked) { toast.error(t("fork_failed")); return null; }
 
     // Copy blocks
     const { data: srcBlocks } = await supabase
@@ -104,7 +106,7 @@ export function useNeuronClone() {
       relation_type: "derived_from",
     });
 
-    toast.success(`Forked "${source.title}" → #${forked.number}`);
+    toast.success(t("forked_neuron", { title: source.title, number: forked.number }));
     return forked;
   }, [user]);
 

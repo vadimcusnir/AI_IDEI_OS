@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import i18next from "i18next";
 
 export interface ContentContribution {
   id: string;
@@ -64,7 +65,7 @@ export function useCreateContribution() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["my-contributions"] });
-      toast.success("Contribution submitted for review!");
+      toast.success(i18next.t("common:contribution_submitted"));
     },
     onError: (e: any) => toast.error(e.message),
   });

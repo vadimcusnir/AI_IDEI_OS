@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface LedgerEntry {
   id: string;
@@ -18,6 +19,7 @@ interface LedgerEntry {
 }
 
 export function DecisionLedgerTab() {
+  const { t } = useTranslation("common");
   const [entries, setEntries] = useState<LedgerEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [integrityOk, setIntegrityOk] = useState<boolean | null>(null);
@@ -37,7 +39,7 @@ export function DecisionLedgerTab() {
   useEffect(() => { load(); }, []);
 
   const exportCSV = () => {
-    if (entries.length === 0) { toast.error("No data to export"); return; }
+    if (entries.length === 0) { toast.error(t("no_data_to_export")); return; }
     const headers = ["timestamp", "event_type", "actor_id", "target_resource", "verdict", "reason"];
     const rows = entries.map(e => [
       e.created_at, e.event_type, e.actor_id ?? "", e.target_resource ?? "",
@@ -48,16 +50,16 @@ export function DecisionLedgerTab() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = `ledger-${Date.now()}.csv`; a.click();
     URL.revokeObjectURL(url);
-    toast.success("CSV exported");
+    toast.success(t("csv_exported"));
   };
 
   const exportJSON = () => {
-    if (entries.length === 0) { toast.error("No data to export"); return; }
+    if (entries.length === 0) { toast.error(t("no_data_to_export")); return; }
     const blob = new Blob([JSON.stringify(entries, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = `ledger-${Date.now()}.json`; a.click();
     URL.revokeObjectURL(url);
-    toast.success("JSON exported");
+    toast.success(t("json_exported"));
   };
 
   const verdictIcon = (v: string | null) => {

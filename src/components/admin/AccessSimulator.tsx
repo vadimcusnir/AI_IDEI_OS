@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Shield, Play, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface SimulationResult {
   verdict: string;
@@ -15,6 +16,7 @@ interface SimulationResult {
 }
 
 export function AccessSimulator() {
+  const { t } = useTranslation("common");
   const [userId, setUserId] = useState("");
   const [serviceKey, setServiceKey] = useState("");
   const [result, setResult] = useState<SimulationResult | null>(null);
@@ -23,7 +25,7 @@ export function AccessSimulator() {
 
   const runSimulation = async () => {
     if (!userId.trim() || !serviceKey.trim()) {
-      toast.error("User ID și Service Key sunt obligatorii");
+      toast.error(t("user_id_service_key_required"));
       return;
     }
     setLoading(true);
@@ -37,7 +39,7 @@ export function AccessSimulator() {
       setResult(res);
       setHistory(prev => [{ userId: userId.trim(), serviceKey: serviceKey.trim(), result: res, ts: new Date() }, ...prev.slice(0, 19)]);
     } catch (e: any) {
-      toast.error(e.message || "Simulation failed");
+      toast.error(e.message || t("simulation_failed"));
     } finally {
       setLoading(false);
     }
@@ -71,7 +73,7 @@ export function AccessSimulator() {
         />
         <Button size="sm" className="h-8" onClick={runSimulation} disabled={loading}>
           <Play className="h-3 w-3 mr-1" />
-          Simulează
+          {t("simulate")}
         </Button>
       </div>
 
@@ -88,16 +90,16 @@ export function AccessSimulator() {
             <span className="text-xs text-muted-foreground">— {result.reason}</span>
           </div>
           <div className="flex gap-4 text-xs text-muted-foreground">
-            {result.credits_cost !== undefined && <span>Cost: <strong>{result.credits_cost}</strong> NEURONS</span>}
-            {result.balance !== undefined && <span>Balanță: <strong>{result.balance}</strong></span>}
-            {result.deficit !== undefined && result.deficit > 0 && <span className="text-destructive">Deficit: <strong>{result.deficit}</strong></span>}
+            {result.credits_cost !== undefined && <span>{t("cost_label")}: <strong>{result.credits_cost}</strong> NEURONS</span>}
+            {result.balance !== undefined && <span>{t("balance_label")}: <strong>{result.balance}</strong></span>}
+            {result.deficit !== undefined && result.deficit > 0 && <span className="text-destructive">{t("deficit_label")}: <strong>{result.deficit}</strong></span>}
           </div>
         </div>
       )}
 
       {history.length > 0 && (
         <div className="space-y-1">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Istoric simulări</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("simulation_history")}</p>
           {history.map((h, i) => (
             <div key={i} className="flex items-center gap-2 text-[10px] py-1 border-b border-border/50 last:border-0">
               {verdictIcon(h.result.verdict)}

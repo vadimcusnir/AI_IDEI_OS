@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export interface NeuronListItem {
   id: number;
@@ -24,6 +25,7 @@ export type SortDir = "asc" | "desc";
 export type GroupBy = "none" | "status" | "date" | "category";
 
 export function useNeuronList() {
+  const { t } = useTranslation("common");
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const [neurons, setNeurons] = useState<NeuronListItem[]>([]);
@@ -57,7 +59,7 @@ export function useNeuronList() {
         .eq("workspace_id", currentWorkspace.id)
         .order("updated_at", { ascending: false });
       if (data) setNeurons(data as NeuronListItem[]);
-      if (error) toast.error("Failed to load neurons");
+      if (error) toast.error(t("failed_to_load_neurons"));
       setLoading(false);
     };
     fetchNeurons();
@@ -108,10 +110,10 @@ export function useNeuronList() {
   const handleDelete = useCallback(async (id: number, e?: React.MouseEvent) => {
     e?.stopPropagation();
     const { error } = await supabase.from("neurons").delete().eq("id", id);
-    if (error) { toast.error("Failed to delete"); return; }
+    if (error) { toast.error(t("failed_to_delete")); return; }
     setNeurons(prev => prev.filter(n => n.id !== id));
     setSelectedIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-    toast.success("Neuron deleted");
+    toast.success(t("neuron_deleted"));
   }, []);
 
   const toggleSelect = useCallback((id: number, e?: React.MouseEvent) => {
@@ -134,10 +136,10 @@ export function useNeuronList() {
     const ids = [...selectedIds];
     if (!ids.length) return;
     const { error } = await supabase.from("neurons").delete().in("id", ids);
-    if (error) { toast.error("Bulk delete failed"); return; }
+    if (error) { toast.error(t("bulk_delete_failed")); return; }
     setNeurons(prev => prev.filter(n => !selectedIds.has(n.id)));
     setSelectedIds(new Set());
-    toast.success(`${ids.length} neuroni șterși`);
+    toast.success(t("neurons_deleted_count", { count: ids.length }));
   }, [selectedIds]);
 
   const toggleSort = useCallback((field: SortField) => {
@@ -195,13 +197,13 @@ export function useNeuronList() {
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const weekAgo = new Date(today.getTime() - 7 * 86400000);
       const monthAgo = new Date(today.getTime() - 30 * 86400000);
-      const groups: Record<string, NeuronListItem[]> = { "Azi": [], "Săptămâna asta": [], "Luna asta": [], "Mai vechi": [] };
+      const groups: Record<string, NeuronListItem[]> = { [t("today_label")]: [], [t("this_week")]: [], [t("this_month")]: [], [t("older")]: [] };
       processedNeurons.forEach(n => {
         const d = new Date(n.updated_at);
-        if (d >= today) groups["Azi"].push(n);
-        else if (d >= weekAgo) groups["Săptămâna asta"].push(n);
-        else if (d >= monthAgo) groups["Luna asta"].push(n);
-        else groups["Mai vechi"].push(n);
+        if (d >= today) groups[t("today_label")].push(n);
+        else if (d >= weekAgo) groups[t("this_week")].push(n);
+        else if (d >= monthAgo) groups[t("this_month")].push(n);
+        else groups[t("older")].push(n);
       });
       return Object.entries(groups).filter(([, items]) => items.length > 0).map(([label, items]) => ({ label, items }));
     }

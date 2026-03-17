@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import i18next from "i18next";
 
 export interface WebhookEndpoint {
   id: string;
@@ -78,7 +79,7 @@ export function useCreateWebhookEndpoint() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["webhook-endpoints"] });
-      toast.success("Webhook endpoint created");
+      toast.success(i18next.t("common:webhook_created"));
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -93,7 +94,7 @@ export function useDeleteWebhookEndpoint() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["webhook-endpoints"] });
-      toast.success("Webhook endpoint deleted");
+      toast.success(i18next.t("common:webhook_deleted"));
     },
     onError: (e: any) => toast.error(e.message),
   });

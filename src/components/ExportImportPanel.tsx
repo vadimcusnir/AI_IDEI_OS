@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Download, Upload, FileJson, FileText, Loader2, X, CheckCircle2,
@@ -21,6 +22,7 @@ interface ExportedNeuron {
 
 export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { user } = useAuth();
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -40,7 +42,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
         .eq("author_id", user.id)
         .order("number");
 
-      if (!neurons?.length) { toast.error("No neurons to export"); setExporting(false); return; }
+      if (!neurons?.length) { toast.error(t("no_neurons_to_export")); setExporting(false); return; }
 
       const exported: ExportedNeuron[] = [];
       for (const n of neurons) {
@@ -67,10 +69,10 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
       a.download = `ai-idei-neurons-${new Date().toISOString().split("T")[0]}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success(`Exported ${exported.length} neurons`);
+      toast.success(t("exported_neurons_count", { count: exported.length }));
       trackInternalEvent({ event: AnalyticsEvents.EXPORT_TRIGGERED, params: { format: "json", count: exported.length } });
     } catch (e) {
-      toast.error("Export failed");
+      toast.error(t("export_failed"));
     }
     setExporting(false);
   };
@@ -85,7 +87,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
         .eq("author_id", user.id)
         .order("number");
 
-      if (!neurons?.length) { toast.error("No neurons to export"); setExporting(false); return; }
+      if (!neurons?.length) { toast.error(t("no_neurons_to_export")); setExporting(false); return; }
 
       let md = `# AI-IDEI Knowledge Export\n\n_Exported: ${new Date().toLocaleString()}_\n\n---\n\n`;
 
@@ -121,9 +123,9 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
       a.download = `ai-idei-neurons-${new Date().toISOString().split("T")[0]}.md`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success(`Exported ${neurons.length} neurons as Markdown`);
+      toast.success(t("exported_neurons_md", { count: neurons.length }));
     } catch (e) {
-      toast.error("Export failed");
+      toast.error(t("export_failed"));
     }
     setExporting(false);
   };
@@ -189,10 +191,10 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
         created++;
       }
 
-      setImportResult(`Imported ${created} neuron${created !== 1 ? "s" : ""} successfully.`);
-      toast.success(`Imported ${created} neurons`);
+      setImportResult(t("imported_result", { count: created }));
+      toast.success(t("imported_neurons_count", { count: created }));
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Import failed";
+      const msg = e instanceof Error ? e.message : t("import_failed");
       toast.error(msg);
       setImportResult(`Error: ${msg}`);
     }
@@ -204,8 +206,8 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
       <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-border sticky top-0 bg-card z-10">
           <div>
-            <h2 className="text-base font-serif">Export & Import</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Move knowledge in and out of your system</p>
+            <h2 className="text-base font-serif">{t("export_import_title")}</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">{t("export_import_desc")}</p>
           </div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X className="h-4 w-4" />
@@ -214,22 +216,22 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
 
         {/* Export */}
         <div className="px-5 py-4 border-b border-border">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Export All Neurons</h3>
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("export_all_neurons")}</h3>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="text-xs gap-1.5 flex-1" onClick={handleExportJSON} disabled={exporting}>
               {exporting ? <Loader2 className="h-3 w-3 animate-spin" /> : <FileJson className="h-3 w-3" />}
-              Export JSON
+              {t("export_json")}
             </Button>
             <Button variant="outline" size="sm" className="text-xs gap-1.5 flex-1" onClick={handleExportMarkdown} disabled={exporting}>
               {exporting ? <Loader2 className="h-3 w-3 animate-spin" /> : <FileText className="h-3 w-3" />}
-              Export Markdown
+              {t("export_markdown")}
             </Button>
           </div>
         </div>
 
         {/* Import */}
         <div className="px-5 py-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Import Content</h3>
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("import_content")}</h3>
 
           <div className="flex gap-1.5 mb-3">
             {(["text", "markdown", "json"] as const).map(fmt => (
@@ -261,7 +263,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
           <div className="flex items-center gap-2 mt-3">
             <Button size="sm" className="text-xs gap-1.5" onClick={handleImport} disabled={importing || !importText.trim()}>
               {importing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
-              Import
+              {t("import")}
             </Button>
             {importResult && (
               <span className="text-xs text-status-validated flex items-center gap-1">
