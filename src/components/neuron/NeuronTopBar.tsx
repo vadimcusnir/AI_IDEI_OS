@@ -140,7 +140,7 @@ export function NeuronTopBar({
     } else {
       // Default: navigate to run service with neuron context
       navigate(`/services`);
-      toast.info(`Use AI Services to convert this neuron to ${format}`);
+      toast.info(t("convert_hint", { format }));
     }
   }, [onConvert, navigate]);
 
