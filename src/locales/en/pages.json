@@ -913,7 +913,8 @@
     "endpoints": "Endpoints",
     "response_format": "Response Format",
     "paginated_lists": "Paginated lists",
-    "errors": "Errors"
+    "errors": "Errors",
+    "copied": "Copied!"
   },
   "database_relations": {
     "title": "Database Schema",
