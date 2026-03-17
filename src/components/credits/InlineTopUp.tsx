@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Coins, Zap, Sparkles, Crown, Loader2, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
