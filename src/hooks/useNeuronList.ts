@@ -59,7 +59,7 @@ export function useNeuronList() {
         .eq("workspace_id", currentWorkspace.id)
         .order("updated_at", { ascending: false });
       if (data) setNeurons(data as NeuronListItem[]);
-      if (error) toast.error("Failed to load neurons");
+      if (error) toast.error(t("failed_to_load_neurons"));
       setLoading(false);
     };
     fetchNeurons();
