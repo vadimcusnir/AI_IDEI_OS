@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Block, BLOCK_TYPE_CONFIG, CodeLanguage, ExecutionStatus } from "./types";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface FormatBlockProps {
   block: Block;
