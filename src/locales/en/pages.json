@@ -114,6 +114,7 @@
     "push_enable_desc": "Get notified when a job completes or credits run low.",
     "push_disabled_toast": "Push notifications disabled.",
     "push_enabled_toast": "Push notifications enabled!",
+    "push_enable_failed": "Could not enable push notifications.",
     "no_notifications": "No notifications yet",
     "no_filter_results": "No notifications for this filter"
   },
