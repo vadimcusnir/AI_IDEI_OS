@@ -24,6 +24,7 @@ interface Incident {
 }
 
 export function IncidentManagementTab() {
+  const { t } = useTranslation(["common", "errors"]);
   const { user } = useAuth();
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loading, setLoading] = useState(true);
