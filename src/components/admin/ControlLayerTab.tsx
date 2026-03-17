@@ -169,7 +169,7 @@ export function ControlLayerTab() {
       last_modified_by: user?.id,
     } as any);
     if (error) toast.error(error.message);
-    else { toast.success("Prompt created"); loadData(); }
+    else { toast.success(t("common:prompt_created_success")); loadData(); }
     setNewPromptOpen(false);
   };
 
