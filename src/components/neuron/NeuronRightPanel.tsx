@@ -41,6 +41,7 @@ type RightPanelTab = "tools" | "chat";
 
 export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, neuronId, neuronTitle, onAIAction, selectedEpisodeTranscript, onEpisodeSelect }: NeuronRightPanelProps) {
   const { user } = useAuth();
+  const { t } = useTranslation("common");
   const [activeTab, setActiveTab] = useState<RightPanelTab>("tools");
   const [episodes, setEpisodes] = useState<EpisodeSource[]>([]);
   const [selectedEpisodeId, setSelectedEpisodeId] = useState<string | null>(null);

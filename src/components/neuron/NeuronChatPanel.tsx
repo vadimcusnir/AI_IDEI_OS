@@ -19,6 +19,7 @@ interface NeuronChatPanelProps {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/neuron-chat`;
 
 export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPanelProps) {
+  const { t } = useTranslation("common");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
