@@ -204,8 +204,8 @@ export function ControlLayerTab() {
         last_modified_by: user?.id,
       } as any)
       .eq("id", regime.id);
-    if (error) toast.error("Failed to save regime");
-    else { toast.success("Regime updated"); loadData(); }
+    if (error) toast.error(t("common:regime_save_failed"));
+    else { toast.success(t("common:regime_updated")); loadData(); }
     setEditRegime(null);
   };
 
