@@ -343,7 +343,7 @@ export function AdminUserManagement() {
 
                     {/* Recent jobs */}
                     <div>
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Jobs</p>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">{t("recent_jobs")}</p>
                       <div className="space-y-1 max-h-40 overflow-y-auto">
                         {userActivity.recent_jobs.map((job) => (
                           <div key={job.id} className="flex items-center gap-2 p-2 rounded bg-muted/30 text-[10px]">
