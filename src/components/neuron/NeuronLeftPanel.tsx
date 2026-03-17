@@ -140,6 +140,7 @@ function LinkSection({
 }
 
 function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (targetId: number, relationType: string) => void }) {
+  const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
   const [targetNumber, setTargetNumber] = useState("");
   const [relationType, setRelationType] = useState("supports");
