@@ -43,7 +43,7 @@ export function useAIExtraction() {
     setExtractionResult("");
 
     const label = ACTION_LABELS[action] || action;
-    toast.info(`Running ${label}...`);
+    toast.info(t("common:running_action", { label }));
 
     try {
       // Build blocks array: include neuron blocks + additional context if provided
