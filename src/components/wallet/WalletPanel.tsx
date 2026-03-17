@@ -73,18 +73,18 @@ export function WalletPanel() {
       {/* Balances */}
       <div className="grid grid-cols-3 gap-px bg-border">
         <BalanceCell
-          label="Available"
+          label={t("wallet.available")}
           value={wallet.available}
           icon={<TrendingUp className="h-3.5 w-3.5 text-status-validated" />}
           highlight
         />
         <BalanceCell
-          label="Staked"
+          label={t("wallet.staked")}
           value={wallet.staked}
           icon={<Lock className="h-3.5 w-3.5 text-primary" />}
         />
         <BalanceCell
-          label="Locked"
+          label={t("wallet.locked")}
           value={wallet.locked}
           icon={<Shield className="h-3.5 w-3.5 text-amber-500" />}
         />
