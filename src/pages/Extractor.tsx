@@ -411,7 +411,7 @@ export default function Extractor() {
 
   const copyTranscript = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard");
+    toast.success(t("common:copied"));
   };
 
   const stats = {
