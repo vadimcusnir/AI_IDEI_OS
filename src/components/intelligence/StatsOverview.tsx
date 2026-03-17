@@ -44,10 +44,10 @@ export function StatsOverview({ stats }: { stats: Stats }) {
     <div className="max-w-2xl space-y-6">
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <KPICard icon={Brain} label="Total Neurons" value={stats.totalNeurons} />
-        <KPICard icon={FileAudio} label="Episodes" value={stats.totalEpisodes} sub={`${stats.analyzedEpisodes} analyzed`} />
-        <KPICard icon={Coins} label="Credits Spent" value={stats.creditsSpent} color="text-destructive" />
-        <KPICard icon={TrendingUp} label="Balance" value={stats.creditsBalance} color="text-primary" />
+        <KPICard icon={Brain} label={t("stats.total_neurons")} value={stats.totalNeurons} />
+        <KPICard icon={FileAudio} label={t("stats.episodes")} value={stats.totalEpisodes} sub={`${stats.analyzedEpisodes} ${t("stats.analyzed")}`} />
+        <KPICard icon={Coins} label={t("stats.credits_spent")} value={stats.creditsSpent} color="text-destructive" />
+        <KPICard icon={TrendingUp} label={t("stats.balance")} value={stats.creditsBalance} color="text-primary" />
       </div>
 
       {/* Status + Lifecycle */}
