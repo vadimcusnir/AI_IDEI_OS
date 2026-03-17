@@ -39,7 +39,7 @@ export function DecisionLedgerTab() {
   useEffect(() => { load(); }, []);
 
   const exportCSV = () => {
-    if (entries.length === 0) { toast.error("No data to export"); return; }
+    if (entries.length === 0) { toast.error(t("no_data_to_export")); return; }
     const headers = ["timestamp", "event_type", "actor_id", "target_resource", "verdict", "reason"];
     const rows = entries.map(e => [
       e.created_at, e.event_type, e.actor_id ?? "", e.target_resource ?? "",
