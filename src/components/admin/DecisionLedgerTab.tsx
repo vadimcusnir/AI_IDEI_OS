@@ -54,7 +54,7 @@ export function DecisionLedgerTab() {
   };
 
   const exportJSON = () => {
-    if (entries.length === 0) { toast.error("No data to export"); return; }
+    if (entries.length === 0) { toast.error(t("no_data_to_export")); return; }
     const blob = new Blob([JSON.stringify(entries, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = `ledger-${Date.now()}.json`; a.click();
