@@ -331,7 +331,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
           after_dedup: data.after_dedup,
           meta: data.meta,
         });
-        toast.success(`✅ ${neuronsCreated} neurons extracted! (${creditsSpent} credits)`, { duration: 8000 });
+        toast.success(t("neurons_extracted_instant", { neurons: neuronsCreated, credits: creditsSpent }), { duration: 8000 });
         trackEvent({
           name: "neurons_extracted",
           params: { episode_id: ep.id, neurons_count: neuronsCreated, credits_spent: creditsSpent },
