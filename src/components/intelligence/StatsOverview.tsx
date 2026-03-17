@@ -36,6 +36,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export function StatsOverview({ stats }: { stats: Stats }) {
   const navigate = useNavigate();
+  const { t } = useTranslation("common");
   const maxCat = Math.max(...Object.values(stats.categories), 1);
   const maxActivity = Math.max(...stats.recentActivity.map(a => a.count), 1);
 
