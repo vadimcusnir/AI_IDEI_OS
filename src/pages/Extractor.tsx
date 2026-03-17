@@ -126,7 +126,7 @@ export default function Extractor() {
       .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false });
     if (data) setEpisodes(data as Episode[]);
-    if (error) toast.error("Failed to load episodes");
+    if (error) toast.error(t("errors:generic"));
     setLoading(false);
   };
 
