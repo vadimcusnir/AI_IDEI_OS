@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
+import { useTranslation } from "react-i18next";
 
 export function useNeuronClone() {
   const { user } = useAuth();
