@@ -123,9 +123,9 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
       a.download = `ai-idei-neurons-${new Date().toISOString().split("T")[0]}.md`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success(`Exported ${neurons.length} neurons as Markdown`);
+      toast.success(t("exported_neurons_md", { count: neurons.length }));
     } catch (e) {
-      toast.error("Export failed");
+      toast.error(t("export_failed"));
     }
     setExporting(false);
   };
