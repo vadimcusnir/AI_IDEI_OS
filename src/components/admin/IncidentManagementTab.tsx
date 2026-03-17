@@ -53,7 +53,7 @@ export function IncidentManagementTab() {
       assigned_to: user?.id,
     });
     if (error) { toast.error(error.message); return; }
-    toast.success("Incident created");
+    toast.success(t("common:incident_created"));
     setForm({ title: "", description: "", severity: "medium" });
     setDialogOpen(false);
     load();
