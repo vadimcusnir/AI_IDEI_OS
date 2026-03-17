@@ -45,7 +45,7 @@ export function IncidentManagementTab() {
   useEffect(() => { load(); }, []);
 
   const create = async () => {
-    if (!form.title.trim()) { toast.error("Title required"); return; }
+    if (!form.title.trim()) { toast.error(t("errors:title_required")); return; }
     const { error } = await supabase.from("incidents").insert({
       title: form.title,
       description: form.description,
