@@ -85,8 +85,8 @@ export default function NeuronEditor() {
       checked: b.checked, executionMode: b.executionMode,
     }));
     const result = await createVersion(neuron.title, blocksSnapshot);
-    if (result?.error) toast.error("Failed to save version");
-    else toast.success("Version saved");
+    if (result?.error) toast.error(t("common:version_save_failed"));
+    else toast.success(t("common:version_saved"));
   }, [neuron, blocks, createVersion]);
 
   // Keyboard shortcuts: Ctrl+S = save version, Ctrl+Enter = run all
