@@ -313,9 +313,9 @@ export function AdminUserManagement() {
                         onClick={() => toggleUserRole(selectedUser.user_id, selectedUser.roles.includes("admin"))}
                       >
                         {selectedUser.roles.includes("admin") ? (
-                          <><UserMinus className="h-3.5 w-3.5 text-destructive" />Revoke Admin</>
+                          <><UserMinus className="h-3.5 w-3.5 text-destructive" />{t("revoke_admin")}</>
                         ) : (
-                          <><ShieldCheck className="h-3.5 w-3.5" />Grant Admin</>
+                          <><ShieldCheck className="h-3.5 w-3.5" />{t("grant_admin")}</>
                         )}
                       </Button>
                     </div>
