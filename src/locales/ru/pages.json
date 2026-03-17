@@ -606,6 +606,7 @@
     "delete_confirm_title": "Вы абсолютно уверены?",
     "delete_confirm_desc": "Это навсегда удалит ваш аккаунт и все данные. Действие нельзя отменить.",
     "delete_confirm_label": "Введите DELETE для подтверждения:",
+    "delete_keyword": "DELETE",
     "cancel": "Отмена",
     "delete_everything": "Удалить Всё",
     "delete_success": "Аккаунт и все данные удалены.",

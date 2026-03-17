@@ -606,6 +606,7 @@
     "delete_confirm_title": "Ești absolut sigur?",
     "delete_confirm_desc": "Aceasta va șterge permanent contul și toate datele. Acțiunea nu poate fi anulată.",
     "delete_confirm_label": "Scrie DELETE pentru confirmare:",
+    "delete_keyword": "DELETE",
     "cancel": "Anulează",
     "delete_everything": "Șterge Tot",
     "delete_success": "Contul și toate datele au fost șterse.",
