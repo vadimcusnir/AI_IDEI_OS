@@ -151,12 +151,12 @@ export function AdminUserManagement() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-[10px]">User</TableHead>
-              <TableHead className="text-[10px]">Roles</TableHead>
-              <TableHead className="text-[10px] text-right">Neurons</TableHead>
-              <TableHead className="text-[10px] text-right">Balance</TableHead>
-              <TableHead className="text-[10px] text-right">Spent</TableHead>
-              <TableHead className="text-[10px] w-24">Actions</TableHead>
+              <TableHead className="text-[10px]">{t("admin.user_id")}</TableHead>
+              <TableHead className="text-[10px]">{t("admin.roles")}</TableHead>
+              <TableHead className="text-[10px] text-right">{t("common:neurons_currency")}</TableHead>
+              <TableHead className="text-[10px] text-right">{t("admin.balance")}</TableHead>
+              <TableHead className="text-[10px] text-right">{t("admin.spent")}</TableHead>
+              <TableHead className="text-[10px] w-24">{t("actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
