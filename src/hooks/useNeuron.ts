@@ -6,6 +6,7 @@ import { Block, BlockType, CodeLanguage, BLOCK_TYPE_CONFIG, ExecutionLog } from 
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
+import { useTranslation } from "react-i18next";
 
 interface NeuronData {
   id: number;
