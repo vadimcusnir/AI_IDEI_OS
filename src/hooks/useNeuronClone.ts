@@ -106,7 +106,7 @@ export function useNeuronClone() {
       relation_type: "derived_from",
     });
 
-    toast.success(`Forked "${source.title}" → #${forked.number}`);
+    toast.success(t("forked_neuron", { title: source.title, number: forked.number }));
     return forked;
   }, [user]);
 

@@ -200,10 +200,10 @@ export function useNeuronList() {
       const groups: Record<string, NeuronListItem[]> = { [t("today_label")]: [], [t("this_week")]: [], [t("this_month")]: [], [t("older")]: [] };
       processedNeurons.forEach(n => {
         const d = new Date(n.updated_at);
-        if (d >= today) groups["Azi"].push(n);
-        else if (d >= weekAgo) groups["Săptămâna asta"].push(n);
-        else if (d >= monthAgo) groups["Luna asta"].push(n);
-        else groups["Mai vechi"].push(n);
+        if (d >= today) groups[t("today_label")].push(n);
+        else if (d >= weekAgo) groups[t("this_week")].push(n);
+        else if (d >= monthAgo) groups[t("this_month")].push(n);
+        else groups[t("older")].push(n);
       });
       return Object.entries(groups).filter(([, items]) => items.length > 0).map(([label, items]) => ({ label, items }));
     }
