@@ -17,7 +17,7 @@ type AuthMode = "login" | "signup" | "forgot";
 /* ─── Password strength & error helpers use t() now ─── */
 
 export default function Auth() {
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "common"]);
   const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
