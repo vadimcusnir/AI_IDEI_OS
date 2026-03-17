@@ -278,7 +278,7 @@ export default function Extractor() {
       setChunkPreview({ episodeId: episode.id, chunks: data.chunks });
       toast.success(`${data.total_chunks} segments generated (${data.total_tokens} tokens)`);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Chunking failed");
+      toast.error(e instanceof Error ? e.message : t("errors:generic"));
     } finally {
       setChunkingId(null);
     }
