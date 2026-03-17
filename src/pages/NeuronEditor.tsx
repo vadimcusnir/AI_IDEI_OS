@@ -19,7 +19,6 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { NeuronVersion } from "@/hooks/useNeuronGraph";
-import { useTranslation } from "react-i18next";
 
 export default function NeuronEditor() {
   const { number } = useParams();
