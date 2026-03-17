@@ -210,7 +210,7 @@ export default function ProfilePage() {
                     type="text"
                     value={profile.display_name}
                     onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-                    placeholder="Your name"
+                    placeholder={t("common:profile.display_name_placeholder")}
                     className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm outline-none focus-ring transition-colors"
                   />
                 </div>
