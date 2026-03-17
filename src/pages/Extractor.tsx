@@ -359,7 +359,7 @@ export default function Extractor() {
 
   // === Detect guests ===
   const handleDetectGuests = async (episode: Episode) => {
-    if (!user || !episode.transcript?.trim()) { toast.error("No transcript available."); return; }
+    if (!user || !episode.transcript?.trim()) { toast.error(t("common:no_transcript")); return; }
     setDetectingGuests(episode.id);
     try {
       const resp = await fetch(
