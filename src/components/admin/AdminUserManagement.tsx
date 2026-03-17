@@ -143,7 +143,7 @@ export function AdminUserManagement() {
             className="pl-8 h-8 text-xs"
           />
         </div>
-        <Badge variant="outline" className="text-[10px]">{filteredUsers.length} users</Badge>
+        <Badge variant="outline" className="text-[10px]">{filteredUsers.length} {t("admin.users_label")}</Badge>
       </div>
 
       {/* Users table */}
