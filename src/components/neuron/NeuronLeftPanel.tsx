@@ -272,7 +272,7 @@ export function NeuronLeftPanel({
     <div className="w-56 border-r border-border bg-card flex flex-col shrink-0 overflow-hidden transition-all duration-200">
       {/* Header */}
       <div className="h-9 flex items-center justify-between px-3 border-b border-border">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Knowledge Graph</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("neuron_editor.knowledge_graph")}</span>
         <button onClick={onToggle} className="text-muted-foreground hover:text-foreground transition-colors">
           <ChevronRight className="h-3.5 w-3.5 rotate-180" />
         </button>
