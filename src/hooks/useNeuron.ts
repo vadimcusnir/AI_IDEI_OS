@@ -143,7 +143,7 @@ export function useNeuron(neuronNumber?: number) {
         }
       } catch (err) {
         console.error(err);
-        toast.error("Error loading neuron");
+        toast.error(t("common:neuron_load_error"));
       }
       setLoading(false);
     };
