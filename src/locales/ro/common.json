@@ -439,7 +439,10 @@
     "search_users": "Cauta dupa ID sau email...",
     "users_label": "utilizatori",
     "roles": "Roluri",
-    "amount_placeholder": "±suma"
+    "amount_placeholder": "±suma",
+    "page_info": "Pagina {{current}} din {{total}}",
+    "artifacts": "Artefacte",
+    "episodes": "Episoade"
   },
   "folders": {
     "folders": "Foldere",

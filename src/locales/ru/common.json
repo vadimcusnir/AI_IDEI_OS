@@ -439,7 +439,10 @@
     "search_users": "Поиск по ID или email...",
     "users_label": "пользователей",
     "roles": "Роли",
-    "amount_placeholder": "±сумма"
+    "amount_placeholder": "±сумма",
+    "page_info": "Страница {{current}} из {{total}}",
+    "artifacts": "Артефакты",
+    "episodes": "Эпизоды"
   },
   "folders": {
     "folders": "Папки",
