@@ -20,7 +20,7 @@ export function useNeuronClone() {
       .single();
 
     if (srcErr || !source) {
-      toast.error("Source neuron not found");
+      toast.error(t("source_not_found"));
       return null;
     }
 
