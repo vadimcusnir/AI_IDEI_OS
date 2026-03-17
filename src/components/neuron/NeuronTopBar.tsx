@@ -62,6 +62,7 @@ export function NeuronTopBar({
   onTitleChange, onStatusChange, onVisibilityChange, onTagsChange, onRunAll,
   onClone, onFork, onSaveAsTemplate, onConvert, blocks,
 }: NeuronTopBarProps) {
+  const { t } = useTranslation("common");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTag, setNewTag] = useState("");
   const [cloning, setCloning] = useState(false);
