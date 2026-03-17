@@ -244,7 +244,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Bio</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("common:profile.bio")}</label>
                   <textarea
                     value={profile.bio}
                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
