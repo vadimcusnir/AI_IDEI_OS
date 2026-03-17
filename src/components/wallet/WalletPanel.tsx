@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const TIER_COLORS: Record<string, string> = {
   free: "bg-muted text-muted-foreground",
