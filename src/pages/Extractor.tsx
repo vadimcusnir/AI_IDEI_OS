@@ -180,9 +180,9 @@ export default function Extractor() {
     }
     const { error } = await supabase.from("episodes").delete().eq("id", id);
     if (error) {
-      toast.error("Failed to delete episode");
+      toast.error(t("common:failed_to_delete"));
     } else {
-      toast.success("Episode deleted");
+      toast.success(t("common:deleted"));
       setEpisodes(prev => prev.filter(e => e.id !== id));
       if (expandedId === id) setExpandedId(null);
     }
