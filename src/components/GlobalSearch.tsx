@@ -22,10 +22,10 @@ interface SearchResult {
 }
 
 const TYPE_CONFIG = {
-  neuron: { icon: Brain, label: "Neuron", color: "text-primary" },
-  artifact: { icon: FileText, label: "Artefact", color: "text-accent-foreground" },
-  guest: { icon: Users, label: "Guest", color: "text-muted-foreground" },
-  entity: { icon: Sparkles, label: "Insight", color: "text-primary" },
+  neuron: { icon: Brain, labelKey: "search.type_neuron", color: "text-primary" },
+  artifact: { icon: FileText, labelKey: "search.type_artifact", color: "text-accent-foreground" },
+  guest: { icon: Users, labelKey: "search.type_guest", color: "text-muted-foreground" },
+  entity: { icon: Sparkles, labelKey: "search.type_insight", color: "text-primary" },
 };
 
 export function GlobalSearch() {

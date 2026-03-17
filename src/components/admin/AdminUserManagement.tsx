@@ -270,15 +270,15 @@ export function AdminUserManagement() {
                     <div className="grid grid-cols-3 gap-2 text-center">
                       <div className="p-2 rounded-lg bg-primary/5">
                         <p className="text-sm font-bold text-primary">{selectedUser.balance}</p>
-                        <p className="text-[9px] text-muted-foreground">Balance</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.balance")}</p>
                       </div>
                       <div className="p-2 rounded-lg bg-muted/50">
                         <p className="text-sm font-bold">{selectedUser.total_spent}</p>
-                        <p className="text-[9px] text-muted-foreground">Spent</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.spent")}</p>
                       </div>
                       <div className="p-2 rounded-lg bg-muted/50">
                         <p className="text-sm font-bold">{selectedUser.total_earned}</p>
-                        <p className="text-[9px] text-muted-foreground">Earned</p>
+                        <p className="text-[9px] text-muted-foreground">{t("admin.earned")}</p>
                       </div>
                     </div>
 

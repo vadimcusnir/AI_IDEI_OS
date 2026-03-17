@@ -104,7 +104,7 @@ export function WalletPanel() {
         {status && (
           <div className={cn("flex items-center gap-1", status.color)}>
             <StatusIcon className="h-3 w-3" />
-            <span className="font-medium">{status.label}</span>
+            <span className="font-medium">{t(`wallet.status_${access?.windowStatus}`)}</span>
           </div>
         )}
       </div>

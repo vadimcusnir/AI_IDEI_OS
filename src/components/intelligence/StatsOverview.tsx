@@ -111,22 +111,22 @@ export function StatsOverview({ stats }: { stats: Stats }) {
       {/* Credits */}
       <div>
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5" /> Credit Economy
+          <Sparkles className="h-3.5 w-3.5" /> {t("stats.credit_economy")}
         </h2>
         <div className="bg-card border border-border rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div>
               <span className="text-2xl font-bold font-mono">{stats.creditsBalance}</span>
-              <span className="text-xs text-muted-foreground ml-1.5">NEURONS</span>
+              <span className="text-xs text-muted-foreground ml-1.5">{t("neurons_currency")}</span>
             </div>
-            <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate("/credits")}>View Ledger</Button>
+            <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate("/credits")}>{t("stats.view_ledger")}</Button>
           </div>
           <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
             <div className="h-full bg-primary rounded-full" style={{ width: `${stats.creditsEarned > 0 ? (stats.creditsBalance / stats.creditsEarned) * 100 : 100}%` }} />
           </div>
           <div className="flex justify-between mt-2">
-            <span className="text-[10px] text-muted-foreground">{stats.creditsSpent} spent</span>
-            <span className="text-[10px] text-muted-foreground">{stats.creditsEarned} earned</span>
+            <span className="text-[10px] text-muted-foreground">{stats.creditsSpent} {t("admin.spent").toLowerCase()}</span>
+            <span className="text-[10px] text-muted-foreground">{stats.creditsEarned} {t("admin.earned").toLowerCase()}</span>
           </div>
         </div>
       </div>
