@@ -187,7 +187,7 @@ export function useCreateThread() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["forum-threads"] });
       qc.invalidateQueries({ queryKey: ["forum-categories"] });
-      toast.success("Thread creat cu succes!");
+      toast.success(i18next.t("common:thread_created"));
     },
     onError: (e: any) => toast.error(e.message),
   });
