@@ -101,10 +101,10 @@ export function AdminUserManagement() {
   const toggleUserRole = async (userId: string, hasAdmin: boolean) => {
     if (hasAdmin) {
       await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "admin");
-      toast.success("Admin role revoked");
+      toast.success(t("admin_role_revoked"));
     } else {
       await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
-      toast.success("Admin role granted");
+      toast.success(t("admin_role_granted"));
     }
     loadUsers();
   };
