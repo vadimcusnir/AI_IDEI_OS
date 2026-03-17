@@ -284,7 +284,7 @@ export function AdminUserManagement() {
 
                     {/* Credit adjustment */}
                     <div className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Adjust Credits</p>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t("adjust_credits")}</p>
                       <div className="flex gap-2">
                         <Input
                           type="number" placeholder="±amount"
