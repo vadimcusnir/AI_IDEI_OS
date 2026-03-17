@@ -79,7 +79,7 @@ export function useCreateWebhookEndpoint() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["webhook-endpoints"] });
-      toast.success("Webhook endpoint created");
+      toast.success(i18next.t("common:webhook_created"));
     },
     onError: (e: any) => toast.error(e.message),
   });
