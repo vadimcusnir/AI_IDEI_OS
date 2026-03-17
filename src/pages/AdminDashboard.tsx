@@ -316,7 +316,7 @@ export default function AdminDashboard() {
   const deleteNeuron = async (neuronId: number) => {
     const { error } = await supabase.from("neurons").delete().eq("id", neuronId);
     if (error) { toast.error(error.message); return; }
-    toast.success("Neuron deleted");
+    toast.success(t("common:neuron_deleted"));
     loadNeurons();
     loadStats();
   };
