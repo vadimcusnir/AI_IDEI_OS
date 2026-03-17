@@ -25,7 +25,7 @@ export function AccessSimulator() {
 
   const runSimulation = async () => {
     if (!userId.trim() || !serviceKey.trim()) {
-      toast.error("User ID și Service Key sunt obligatorii");
+      toast.error(t("user_id_service_key_required"));
       return;
     }
     setLoading(true);
