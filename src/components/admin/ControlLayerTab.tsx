@@ -576,7 +576,7 @@ function NewPromptDialog({ open, onClose, onCreate }: {
   const [corePrompt, setCorePrompt] = useState("");
 
   const handleCreate = () => {
-    if (!id.trim() || !corePrompt.trim()) { toast.error("ID and prompt are required"); return; }
+    if (!id.trim() || !corePrompt.trim()) { toast.error(t("id_prompt_required")); return; }
     onCreate({ id: id.trim(), purpose, category, core_prompt: corePrompt });
     setId(""); setPurpose(""); setCorePrompt("");
   };

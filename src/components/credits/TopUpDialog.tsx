@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
@@ -22,23 +23,22 @@ interface TopUpDialogProps {
 
 export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
   const { user } = useAuth();
+  const { t } = useTranslation(["common", "errors"]);
   const [open, setOpen] = useState(false);
   const [processing, setProcessing] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Handle return from Stripe checkout
   useEffect(() => {
     const topup = searchParams.get("topup");
     const sessionId = searchParams.get("session_id");
     if (topup === "success" && sessionId) {
       verifyPayment(sessionId);
-      // Clean URL params
       searchParams.delete("topup");
       searchParams.delete("neurons");
       searchParams.delete("session_id");
       setSearchParams(searchParams, { replace: true });
     } else if (topup === "cancelled") {
-      toast.info("Payment was cancelled.");
+      toast.info(t("errors:payment_cancelled"));
       searchParams.delete("topup");
       setSearchParams(searchParams, { replace: true });
     }
@@ -51,13 +51,13 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       });
       if (error) throw new Error(error.message);
       if (data?.already_processed) {
-        toast.info("Payment was already processed.");
+        toast.info(t("errors:payment_already_processed"));
       } else {
-        toast.success(`+${data?.neurons_added ?? ""} NEURONS added successfully!`);
+        toast.success(t("common:topup_success", { neurons: data?.neurons_added ?? "" }));
       }
       onSuccess();
     } catch (err: any) {
-      toast.error("Payment verification error: " + (err.message || "Try again"));
+      toast.error(t("errors:payment_error", { message: err.message || "" }));
     }
   };
 
@@ -70,15 +70,14 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
         body: { package_key: packageKey },
       });
 
-      if (error) throw new Error(error.message || "Error creating checkout session");
-      if (!data?.url) throw new Error("Checkout URL not received");
+      if (error) throw new Error(error.message || t("errors:checkout_error"));
+      if (!data?.url) throw new Error(t("errors:checkout_url_missing"));
 
-      // Open Stripe checkout in new tab
       window.open(data.url, "_blank");
       setOpen(false);
-      toast.info("Complete payment in the opened window.");
+      toast.info(t("common:complete_payment_hint"));
     } catch (err: any) {
-      toast.error("Error: " + (err.message || "Try again"));
+      toast.error(t("errors:complete_payment_error", { message: err.message || "" }));
     } finally {
       setProcessing(null);
     }
@@ -89,15 +88,15 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
       <DialogTrigger asChild>
         <Button size="sm" className="gap-1.5 text-xs">
           <Plus className="h-3.5 w-3.5" />
-          Top-up
+          {t("common:top_up")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base font-semibold">Top Up NEURONS</DialogTitle>
+          <DialogTitle className="text-base font-semibold">{t("common:topup_neurons_title")}</DialogTitle>
         </DialogHeader>
         <p className="text-xs text-muted-foreground mb-4">
-          Choose a package. Payment is processed securely via Stripe.
+          {t("common:topup_stripe_desc")}
         </p>
         <div className="space-y-2">
           {PACKAGES.map(pkg => {
@@ -131,7 +130,7 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
                     <span className="text-sm font-semibold">{pkg.label}</span>
                     {pkg.popular && (
                       <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/15 text-primary">
-                        Popular
+                        {t("common:popular")}
                       </span>
                     )}
                   </div>
@@ -152,7 +151,7 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
         <div className="flex items-center justify-center gap-1.5 mt-3">
           <ExternalLink className="h-3 w-3 text-muted-foreground/40" />
           <p className="text-[10px] text-muted-foreground/60 text-center">
-            Secure payment via Stripe. Credits are added instantly after confirmation.
+            {t("common:topup_stripe_footer")}
           </p>
         </div>
       </DialogContent>
