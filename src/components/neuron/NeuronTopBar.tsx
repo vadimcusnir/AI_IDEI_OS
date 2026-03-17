@@ -127,9 +127,9 @@ export function NeuronTopBar({
 
     if (issues.length === 0) {
       onStatusChange("validated");
-      toast.success("Neuron validated ✓ — status updated");
+      toast.success(t("neuron_validated"));
     } else {
-      toast.warning(`Validation issues: ${issues.join(", ")}`);
+      toast.warning(t("validation_issues", { issues: issues.join(", ") }));
     }
     setValidating(false);
   }, [blocks, title, tags, onStatusChange]);
