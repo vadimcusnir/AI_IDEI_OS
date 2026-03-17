@@ -65,7 +65,7 @@ export function useNeuronClone() {
       clone_type: "full",
     } as any);
 
-    toast.success(`Cloned "${source.title}" → #${cloned.number}`);
+    toast.success(t("cloned_neuron", { title: source.title, number: cloned.number }));
     trackInternalEvent({ event: AnalyticsEvents.NEURON_CLONED, params: { source_id: source.id, clone_id: cloned.id } });
     return cloned;
   }, [user]);
