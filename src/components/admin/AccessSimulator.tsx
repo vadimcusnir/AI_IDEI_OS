@@ -39,7 +39,7 @@ export function AccessSimulator() {
       setResult(res);
       setHistory(prev => [{ userId: userId.trim(), serviceKey: serviceKey.trim(), result: res, ts: new Date() }, ...prev.slice(0, 19)]);
     } catch (e: any) {
-      toast.error(e.message || "Simulation failed");
+      toast.error(e.message || t("simulation_failed"));
     } finally {
       setLoading(false);
     }
