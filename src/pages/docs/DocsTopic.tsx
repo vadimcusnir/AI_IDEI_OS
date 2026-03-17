@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { DOCS_SECTIONS, TOPIC_CONTENT } from "./docsContent";
 import { DocsMarkdownRenderer } from "./DocsMarkdownRenderer";
+import { SEOHead } from "@/components/SEOHead";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 interface Props {
   section: string;
