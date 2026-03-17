@@ -263,7 +263,8 @@
     "retry_failed": "Повтор не удался",
     "job_rescheduled": "Задание перепланировано",
     "retry": "Повторить",
-    "view_neuron": "Посмотреть Нейрон"
+    "view_neuron": "Посмотреть Нейрон",
+    "failed_to_load": "Ошибка загрузки задач"
   },
   "services": {
     "title": "AI Сервисы",

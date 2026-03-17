@@ -263,7 +263,8 @@
     "retry_failed": "Reîncercarea a eșuat",
     "job_rescheduled": "Job reprogramat",
     "retry": "Reîncearcă",
-    "view_neuron": "Vezi Neuronul"
+    "view_neuron": "Vezi Neuronul",
+    "failed_to_load": "Eroare la incarcarea job-urilor"
   },
   "services": {
     "title": "Servicii AI",
