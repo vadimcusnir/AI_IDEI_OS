@@ -137,7 +137,7 @@ export function AdminUserManagement() {
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
-            placeholder="Search by user ID or email..."
+            placeholder={t("admin.search_users")}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(0); }}
             className="pl-8 h-8 text-xs"
