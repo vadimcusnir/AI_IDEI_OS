@@ -570,6 +570,7 @@ function NewPromptDialog({ open, onClose, onCreate }: {
   onClose: () => void;
   onCreate: (data: { id: string; purpose: string; category: string; core_prompt: string }) => void;
 }) {
+  const { t } = useTranslation("common");
   const [id, setId] = useState("");
   const [purpose, setPurpose] = useState("");
   const [category, setCategory] = useState("extraction");
