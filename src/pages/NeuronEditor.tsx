@@ -24,7 +24,7 @@ export default function NeuronEditor() {
   const { number } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { t } = useTranslation("pages");
+  const { t } = useTranslation(["pages", "common", "errors"]);
   const neuronNumber = number ? parseInt(number, 10) : undefined;
 
   const {
