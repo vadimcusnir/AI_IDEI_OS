@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Brain, Coins, FileAudio, TrendingUp, Layers, Sparkles, Activity,
 } from "lucide-react";
