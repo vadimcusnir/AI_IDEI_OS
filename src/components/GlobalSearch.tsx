@@ -238,7 +238,7 @@ export function GlobalSearch() {
                         <p className="text-sm font-medium truncate">{result.title}</p>
                         <p className="text-[10px] text-muted-foreground truncate">{result.subtitle}</p>
                       </div>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground/50 shrink-0">{cfg.label}</span>
+                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground/50 shrink-0">{t(cfg.labelKey)}</span>
                       {idx === selectedIndex && <ArrowRight className="h-3 w-3 text-primary shrink-0" />}
                     </button>
                   );
