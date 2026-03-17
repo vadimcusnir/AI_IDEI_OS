@@ -157,7 +157,7 @@ export function NeuronMainEditor({
           <input
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
-            placeholder="Untitled Neuron"
+            placeholder={t("common:neuron_editor.untitled")}
             className="w-full text-3xl font-serif font-normal bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/30"
           />
         </div>
