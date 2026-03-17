@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ChevronRight, ChevronDown, Network, Link2, AtSign,
   GitBranch, Zap, FolderTree, Search, Plus, X, Loader2
