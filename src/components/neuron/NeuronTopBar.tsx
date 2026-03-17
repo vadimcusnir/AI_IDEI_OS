@@ -110,7 +110,7 @@ export function NeuronTopBar({
     a.download = `neuron-${neuronNumber}-${title.toLowerCase().replace(/\s+/g, "-").slice(0, 30)}.md`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Downloaded as Markdown");
+    toast.success(t("downloaded_markdown"));
   }, [blocks, title, neuronNumber]);
 
   const handleValidate = useCallback(async () => {
