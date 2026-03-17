@@ -241,13 +241,13 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       {showHistory && (
         <div className="border-b border-border bg-muted/30 px-4 py-3 max-h-48 overflow-y-auto space-y-1">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Conversații anterioare</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("previous_conversations")}</p>
             <button onClick={() => setShowHistory(false)} className="text-muted-foreground hover:text-foreground">
               <ChevronLeft className="h-3 w-3" />
             </button>
           </div>
           {sessions.length === 0 && (
-            <p className="text-[10px] text-muted-foreground">Nicio conversație salvată</p>
+            <p className="text-[10px] text-muted-foreground">{t("no_saved_conversations")}</p>
           )}
           {sessions.map(s => (
             <button
