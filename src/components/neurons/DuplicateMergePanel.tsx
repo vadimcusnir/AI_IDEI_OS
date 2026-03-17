@@ -47,7 +47,7 @@ export function DuplicateMergePanel() {
       .limit(20);
 
     if (error) {
-      toast.error("Failed to load duplicates");
+      toast.error(t("common:duplicates_load_failed"));
       setLoading(false);
       return;
     }
