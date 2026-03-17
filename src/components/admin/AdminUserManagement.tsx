@@ -322,7 +322,7 @@ export function AdminUserManagement() {
 
                     {/* Recent transactions */}
                     <div>
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Transactions</p>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">{t("recent_transactions")}</p>
                       <div className="space-y-1 max-h-40 overflow-y-auto">
                         {userActivity.recent_transactions.map((tx) => (
                           <div key={tx.id} className="flex items-center gap-2 p-2 rounded bg-muted/30 text-[10px]">
