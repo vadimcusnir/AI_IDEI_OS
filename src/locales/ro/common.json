@@ -487,5 +487,50 @@
     "no_matching_segments": "Nu s-au gasit segmente care sa corespunda."
   },
   "link_title_placeholder": "Titlu link",
-  "link_url_placeholder": "https://..."
+  "link_url_placeholder": "https://...",
+  "incident": {
+    "management": "Gestionare incidente",
+    "new": "Incident nou",
+    "create": "Creeaza incident",
+    "title_placeholder": "Titlu incident",
+    "description_placeholder": "Descriere...",
+    "low": "Scazut",
+    "medium": "Mediu",
+    "high": "Ridicat",
+    "critical": "Critic"
+  },
+  "neuron_editor": {
+    "untitled": "Neuron fara titlu",
+    "programmable_object": "Obiect de cunoastere programabil",
+    "todo_placeholder": "De facut...",
+    "search_by_number": "Cauta dupa # sau titlu...",
+    "search_graph": "Cauta in graf..."
+  },
+  "webhook": {
+    "url_placeholder": "https://serverul-tau.com/webhook",
+    "description_placeholder": "Descriere (optional)"
+  },
+  "review_note_placeholder": "Nota de revizuire (optional)...",
+  "register_new_prompt": "Inregistreaza prompt nou",
+  "profile": {
+    "avatar_url_hint": "Introdu un URL pentru imaginea de profil.",
+    "avatar_url_placeholder": "https://example.com/avatar.jpg",
+    "display_name": "Nume afisat",
+    "display_name_placeholder": "Numele tau",
+    "username": "Nume de utilizator",
+    "username_placeholder": "utilizator",
+    "view_public_profile": "Vezi profilul public la /u/{{username}}",
+    "set_username_hint": "Seteaza un nume de utilizator pentru a activa profilul public",
+    "bio": "Bio",
+    "bio_placeholder": "Descrie-te pe scurt..."
+  },
+  "feedback_form": {
+    "short_title": "Titlu scurt",
+    "testimonial_placeholder": "Impartaseste experienta ta cu AI-IDEI...",
+    "complaint_placeholder": "Descrie problema intampinata...",
+    "proposal_placeholder": "Ce functionalitate ai dori sa vezi?",
+    "default_placeholder": "Scrie feedback-ul tau...",
+    "search_placeholder": "Cauta..."
+  },
+  "paste_transcript": "Lipeste transcriptul aici..."
 }

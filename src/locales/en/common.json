@@ -487,5 +487,50 @@
     "no_matching_segments": "No matching segments found."
   },
   "link_title_placeholder": "Link title",
-  "link_url_placeholder": "https://..."
+  "link_url_placeholder": "https://...",
+  "incident": {
+    "management": "Incident Management",
+    "new": "New Incident",
+    "create": "Create Incident",
+    "title_placeholder": "Incident title",
+    "description_placeholder": "Description...",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  "neuron_editor": {
+    "untitled": "Untitled Neuron",
+    "programmable_object": "Programmable knowledge object",
+    "todo_placeholder": "To do...",
+    "search_by_number": "Search by # or title...",
+    "search_graph": "Search graph..."
+  },
+  "webhook": {
+    "url_placeholder": "https://your-server.com/webhook",
+    "description_placeholder": "Description (optional)"
+  },
+  "review_note_placeholder": "Review note (optional)...",
+  "register_new_prompt": "Register New Prompt",
+  "profile": {
+    "avatar_url_hint": "Enter a URL for your profile image.",
+    "avatar_url_placeholder": "https://example.com/avatar.jpg",
+    "display_name": "Display Name",
+    "display_name_placeholder": "Your name",
+    "username": "Username",
+    "username_placeholder": "username",
+    "view_public_profile": "View public profile at /u/{{username}}",
+    "set_username_hint": "Set a username to enable your public profile",
+    "bio": "Bio",
+    "bio_placeholder": "Describe yourself briefly..."
+  },
+  "feedback_form": {
+    "short_title": "Short title",
+    "testimonial_placeholder": "Share your experience with AI-IDEI...",
+    "complaint_placeholder": "Describe the issue you encountered...",
+    "proposal_placeholder": "What feature would you like to see?",
+    "default_placeholder": "Write your feedback...",
+    "search_placeholder": "Search..."
+  },
+  "paste_transcript": "Paste your transcript here..."
 }

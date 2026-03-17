@@ -487,5 +487,50 @@
     "no_matching_segments": "Совпадающие сегменты не найдены."
   },
   "link_title_placeholder": "Название ссылки",
-  "link_url_placeholder": "https://..."
+  "link_url_placeholder": "https://...",
+  "incident": {
+    "management": "Управление инцидентами",
+    "new": "Новый инцидент",
+    "create": "Создать инцидент",
+    "title_placeholder": "Название инцидента",
+    "description_placeholder": "Описание...",
+    "low": "Низкий",
+    "medium": "Средний",
+    "high": "Высокий",
+    "critical": "Критический"
+  },
+  "neuron_editor": {
+    "untitled": "Нейрон без названия",
+    "programmable_object": "Программируемый объект знаний",
+    "todo_placeholder": "Сделать...",
+    "search_by_number": "Поиск по # или названию...",
+    "search_graph": "Поиск по графу..."
+  },
+  "webhook": {
+    "url_placeholder": "https://ваш-сервер.com/webhook",
+    "description_placeholder": "Описание (необязательно)"
+  },
+  "review_note_placeholder": "Заметка к ревью (необязательно)...",
+  "register_new_prompt": "Зарегистрировать новый промпт",
+  "profile": {
+    "avatar_url_hint": "Введите URL изображения профиля.",
+    "avatar_url_placeholder": "https://example.com/avatar.jpg",
+    "display_name": "Отображаемое имя",
+    "display_name_placeholder": "Ваше имя",
+    "username": "Имя пользователя",
+    "username_placeholder": "пользователь",
+    "view_public_profile": "Посмотреть публичный профиль на /u/{{username}}",
+    "set_username_hint": "Установите имя пользователя для публичного профиля",
+    "bio": "Биография",
+    "bio_placeholder": "Опишите себя кратко..."
+  },
+  "feedback_form": {
+    "short_title": "Краткий заголовок",
+    "testimonial_placeholder": "Поделитесь опытом использования AI-IDEI...",
+    "complaint_placeholder": "Опишите возникшую проблему...",
+    "proposal_placeholder": "Какую функцию вы хотели бы видеть?",
+    "default_placeholder": "Напишите отзыв...",
+    "search_placeholder": "Поиск..."
+  },
+  "paste_transcript": "Вставьте транскрипт сюда..."
 }
