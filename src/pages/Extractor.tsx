@@ -191,16 +191,16 @@ export default function Extractor() {
 
   // === Save transcript ===
   const handleSaveTranscript = async (episodeId: string) => {
-    if (!editTranscriptText.trim()) { toast.error("Transcript cannot be empty"); return; }
+    if (!editTranscriptText.trim()) { toast.error(t("common:transcript_empty")); return; }
     setSavingTranscript(true);
     const { error } = await supabase.from("episodes").update({
       transcript: editTranscriptText.trim(),
       status: "transcribed",
     } as any).eq("id", episodeId);
     if (error) {
-      toast.error("Failed to save transcript");
+      toast.error(t("errors:save_failed", { message: error.message }));
     } else {
-      toast.success("Transcript saved — you can now extract neurons!");
+      toast.success(t("common:transcript_saved"));
       setEditingTranscriptId(null);
       setEditTranscriptText("");
       fetchEpisodes();
