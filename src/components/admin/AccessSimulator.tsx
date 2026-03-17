@@ -73,7 +73,7 @@ export function AccessSimulator() {
         />
         <Button size="sm" className="h-8" onClick={runSimulation} disabled={loading}>
           <Play className="h-3 w-3 mr-1" />
-          Simulează
+          {t("simulate")}
         </Button>
       </div>
 
