@@ -256,7 +256,7 @@ export default function AdminDashboard() {
     const { error } = await supabase.from("service_catalog")
       .update({ is_active: !currentActive }).eq("id", serviceId);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Service ${!currentActive ? "activated" : "deactivated"}`);
+    toast.success(t("common:service_toggled", { state: !currentActive ? t("common:active").toLowerCase() : t("common:inactive").toLowerCase() }));
     loadServices();
     loadStats();
   };
