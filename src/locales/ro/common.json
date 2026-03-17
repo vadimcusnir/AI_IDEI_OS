@@ -435,7 +435,11 @@
     "earned": "Castigat",
     "spent": "Cheltuit",
     "last_update": "Ultima actualizare",
-    "recent_transactions": "Tranzactii recente"
+    "recent_transactions": "Tranzactii recente",
+    "search_users": "Cauta dupa ID sau email...",
+    "users_label": "utilizatori",
+    "roles": "Roluri",
+    "amount_placeholder": "±suma"
   },
   "folders": {
     "folders": "Foldere",
