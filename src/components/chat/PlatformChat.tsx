@@ -202,7 +202,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
   const clearChat = () => {
     newSession();
     setMessages([
-      { id: "welcome-reset", role: "assistant", content: "Conversație resetată. Cu ce te pot ajuta?", timestamp: new Date() },
+      { id: "welcome-reset", role: "assistant", content: t("chat_reset"), timestamp: new Date() },
     ]);
   };
 
