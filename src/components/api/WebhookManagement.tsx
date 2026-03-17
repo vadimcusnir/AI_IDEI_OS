@@ -111,13 +111,13 @@ export function WebhookManagement() {
       {showCreate && (
         <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 mb-4 space-y-3">
           <Input
-            placeholder="https://your-server.com/webhook"
+            placeholder={t("webhook.url_placeholder")}
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             className="h-8 text-xs"
           />
           <Input
-            placeholder="Description (optional)"
+            placeholder={t("webhook.description_placeholder")}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="h-8 text-xs"

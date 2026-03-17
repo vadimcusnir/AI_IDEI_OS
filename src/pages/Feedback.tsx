@@ -206,7 +206,7 @@ export default function Feedback() {
             )}
 
             <Input
-              placeholder="Short title"
+              placeholder={t("common:feedback_form.short_title")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={200}
@@ -214,10 +214,10 @@ export default function Feedback() {
             />
             <Textarea
               placeholder={
-                type === "testimonial" ? "Share your experience with AI-IDEI..." :
-                type === "complaint" ? "Describe the issue you encountered..." :
-                type === "proposal" ? "What feature would you like to see?" :
-                "Write your feedback..."
+                type === "testimonial" ? t("common:feedback_form.testimonial_placeholder") :
+                type === "complaint" ? t("common:feedback_form.complaint_placeholder") :
+                type === "proposal" ? t("common:feedback_form.proposal_placeholder") :
+                t("common:feedback_form.default_placeholder")
               }
               value={message}
               onChange={(e) => setMessage(e.target.value)}

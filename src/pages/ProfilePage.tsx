@@ -193,7 +193,7 @@ export default function ProfilePage() {
                       type="url"
                       value={profile.avatar_url}
                       onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                      placeholder="https://example.com/avatar.jpg"
+                      placeholder={t("common:profile.avatar_url_placeholder")}
                       className="w-full h-9 px-3 rounded-lg border border-input bg-background text-xs outline-none focus-ring transition-colors"
                     />
                   </div>
@@ -205,25 +205,25 @@ export default function ProfilePage() {
             <StaggerItem>
               <div className="bg-card border border-border rounded-xl p-6 space-y-5">
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Display Name</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("common:profile.display_name")}</label>
                   <input
                     type="text"
                     value={profile.display_name}
                     onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-                    placeholder="Your name"
+                    placeholder={t("common:profile.display_name_placeholder")}
                     className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm outline-none focus-ring transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Username</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("common:profile.username")}</label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">@</span>
                     <input
                       type="text"
                       value={profile.username || ""}
                       onChange={(e) => setProfile({ ...profile, username: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, "") })}
-                      placeholder="username"
+                      placeholder={t("common:profile.username_placeholder")}
                       className="w-full h-10 pl-7 pr-3 rounded-lg border border-input bg-background text-sm outline-none focus-ring transition-colors"
                     />
                   </div>
@@ -238,17 +238,17 @@ export default function ProfilePage() {
                   )}
                   {!profile.username && (
                     <p className="text-[10px] text-muted-foreground mt-1">
-                      Set a username to enable your public profile
+                      {t("common:profile.set_username_hint")}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Bio</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("common:profile.bio")}</label>
                   <textarea
                     value={profile.bio}
                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                    placeholder="Describe yourself briefly..."
+                    placeholder={t("common:profile.bio_placeholder")}
                     rows={4}
                     maxLength={500}
                     className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm outline-none focus-ring transition-colors resize-none"

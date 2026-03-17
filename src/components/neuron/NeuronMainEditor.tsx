@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Plus, GripVertical, Trash2, Zap, Settings2, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,7 @@ export function NeuronMainEditor({
   title, blocks, onTitleChange, onBlockChange, onBlockToggle,
   onAddBlock, onDeleteBlock, onBlockExecute, onBlockLanguageChange, onReorderBlock,
 }: NeuronMainEditorProps) {
+  const { t } = useTranslation("common");
   const [hoveredBlock, setHoveredBlock] = useState<string | null>(null);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
@@ -157,7 +159,7 @@ export function NeuronMainEditor({
           <input
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
-            placeholder="Untitled Neuron"
+            placeholder={t("common:neuron_editor.untitled")}
             className="w-full text-3xl font-serif font-normal bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/30"
           />
         </div>
@@ -166,7 +168,7 @@ export function NeuronMainEditor({
         <div className="mb-8 flex items-center gap-3 text-xs text-muted-foreground/40">
           <div className="flex items-center gap-1.5">
             <Zap className="h-3.5 w-3.5 text-primary/40" />
-            <span>Programmable knowledge object</span>
+            <span>{t("common:neuron_editor.programmable_object")}</span>
           </div>
           <span className="text-border">|</span>
           <span className="font-mono">Type / for commands</span>

@@ -72,30 +72,30 @@ export function IncidentManagementTab() {
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-          <AlertCircle className="h-3 w-3" /> Incident Management
+          <AlertCircle className="h-3 w-3" /> {t("incident.management")}
         </h3>
         <div className="flex gap-1.5">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
-                <Plus className="h-3 w-3" /> New Incident
+                <Plus className="h-3 w-3" /> {t("incident.new")}
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>Create Incident</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{t("incident.create")}</DialogTitle></DialogHeader>
               <div className="space-y-3">
-                <Input placeholder="Incident title" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
-                <Textarea placeholder="Description..." value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={3} />
+                <Input placeholder={t("incident.title_placeholder")} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
+                <Textarea placeholder={t("incident.description_placeholder")} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={3} />
                 <Select value={form.severity} onValueChange={v => setForm(f => ({ ...f, severity: v }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="critical">Critical</SelectItem>
+                    <SelectItem value="low">{t("incident.low")}</SelectItem>
+                    <SelectItem value="medium">{t("incident.medium")}</SelectItem>
+                    <SelectItem value="high">{t("incident.high")}</SelectItem>
+                    <SelectItem value="critical">{t("incident.critical")}</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button onClick={create} className="w-full">Create</Button>
+                <Button onClick={create} className="w-full">{t("create")}</Button>
               </div>
             </DialogContent>
           </Dialog>

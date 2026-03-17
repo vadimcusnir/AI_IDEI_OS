@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ChevronRight, ChevronDown, Network, Link2, AtSign,
   GitBranch, Zap, FolderTree, Search, Plus, X, Loader2
@@ -139,6 +140,7 @@ function LinkSection({
 }
 
 function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (targetId: number, relationType: string) => void }) {
+  const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
   const [targetNumber, setTargetNumber] = useState("");
   const [relationType, setRelationType] = useState("supports");
@@ -189,7 +191,7 @@ function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (
       <input
         value={targetNumber}
         onChange={e => { setTargetNumber(e.target.value); searchNeurons(e.target.value); }}
-        placeholder="Search by # or title..."
+        placeholder={t("common:neuron_editor.search_by_number")}
         className="w-full text-xs bg-muted/50 rounded-md px-2 py-1.5 outline-none border border-border focus:border-primary transition-colors"
       />
       {suggestions.length > 0 && (
@@ -233,6 +235,7 @@ export function NeuronLeftPanel({
   onAddLink,
   onRemoveLink,
 }: NeuronLeftPanelProps) {
+  const { t } = useTranslation("common");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredLinks = searchQuery
