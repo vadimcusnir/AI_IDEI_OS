@@ -34,7 +34,7 @@ export function useAIExtraction() {
     
     // Allow extraction even with empty blocks if we have additional context
     if (contentBlocks.length === 0 && !additionalContext?.trim()) {
-      toast.error("No content to analyze. Add some text or select a source transcript.");
+      toast.error(t("common:no_content_to_analyze"));
       return null;
     }
 
