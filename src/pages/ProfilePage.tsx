@@ -223,7 +223,7 @@ export default function ProfilePage() {
                       type="text"
                       value={profile.username || ""}
                       onChange={(e) => setProfile({ ...profile, username: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, "") })}
-                      placeholder="username"
+                      placeholder={t("common:profile.username_placeholder")}
                       className="w-full h-10 pl-7 pr-3 rounded-lg border border-input bg-background text-sm outline-none focus-ring transition-colors"
                     />
                   </div>
