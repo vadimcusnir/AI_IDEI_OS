@@ -341,8 +341,8 @@ export function NeuronLeftPanel({
         {!loadingLinks && links.length === 0 && (
           <div className="px-3 py-6 text-center">
             <Network className="h-8 w-8 text-muted-foreground/20 mx-auto mb-2" />
-            <p className="text-[11px] text-muted-foreground/50">No connections yet.</p>
-            <p className="text-[10px] text-muted-foreground/30 mt-1">Links will appear here as you connect neurons.</p>
+            <p className="text-[11px] text-muted-foreground/50">{t("neuron_editor.no_connections")}</p>
+            <p className="text-[10px] text-muted-foreground/30 mt-1">{t("neuron_editor.no_connections_hint")}</p>
           </div>
         )}
       </div>
