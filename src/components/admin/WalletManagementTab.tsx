@@ -4,6 +4,7 @@ import { Wallet, RefreshCw, TrendingUp, TrendingDown, DollarSign } from "lucide-
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface WalletRow {
   user_id: string;
@@ -23,6 +24,7 @@ interface RecentTx {
 }
 
 export function WalletManagementTab() {
+  const { t } = useTranslation("common");
   const [wallets, setWallets] = useState<WalletRow[]>([]);
   const [recentTx, setRecentTx] = useState<RecentTx[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,33 +53,31 @@ export function WalletManagementTab() {
 
   return (
     <div className="space-y-4">
-      {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <SummaryCard icon={Wallet} label="Circulating" value={totals.circulating} color="text-primary" />
-        <SummaryCard icon={TrendingUp} label="Total Earned" value={totals.earned} />
-        <SummaryCard icon={TrendingDown} label="Total Spent" value={totals.spent} color="text-destructive" />
-        <SummaryCard icon={DollarSign} label="Est. Revenue" value={`$${(totals.spent * 0.01).toFixed(2)}`} color="text-primary" />
+        <SummaryCard icon={Wallet} label={t("admin.circulating")} value={totals.circulating} color="text-primary" />
+        <SummaryCard icon={TrendingUp} label={t("admin.total_earned")} value={totals.earned} />
+        <SummaryCard icon={TrendingDown} label={t("admin.total_spent")} value={totals.spent} color="text-destructive" />
+        <SummaryCard icon={DollarSign} label={t("admin.est_revenue")} value={`$${(totals.spent * 0.01).toFixed(2)}`} color="text-primary" />
       </div>
 
-      {/* Wallets Table */}
       <div className="bg-card border border-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-            <Wallet className="h-3 w-3" /> User Wallets — Top by Balance
+            <Wallet className="h-3 w-3" /> {t("admin.user_wallets")}
           </h3>
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
-            <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> Refresh
+            <RefreshCw className={cn("h-3 w-3 mr-1", loading && "animate-spin")} /> {t("admin.refresh")}
           </Button>
         </div>
         <div className="overflow-auto max-h-[350px]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">User ID</TableHead>
-                <TableHead className="text-[10px] text-right">Balance</TableHead>
-                <TableHead className="text-[10px] text-right">Earned</TableHead>
-                <TableHead className="text-[10px] text-right">Spent</TableHead>
-                <TableHead className="text-[10px]">Last Update</TableHead>
+                <TableHead className="text-[10px]">{t("admin.user_id")}</TableHead>
+                <TableHead className="text-[10px] text-right">{t("admin.balance")}</TableHead>
+                <TableHead className="text-[10px] text-right">{t("admin.earned")}</TableHead>
+                <TableHead className="text-[10px] text-right">{t("admin.spent")}</TableHead>
+                <TableHead className="text-[10px]">{t("admin.last_update")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -97,10 +97,9 @@ export function WalletManagementTab() {
         </div>
       </div>
 
-      {/* Recent Transactions */}
       <div className="bg-card border border-border rounded-xl p-4">
         <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-          Recent Transactions
+          {t("admin.recent_transactions")}
         </h3>
         <div className="space-y-0.5 max-h-[300px] overflow-y-auto font-mono text-[11px]">
           {recentTx.map(tx => (

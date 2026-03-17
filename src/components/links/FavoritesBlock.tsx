@@ -120,7 +120,7 @@ export function FavoritesBlock() {
             <div className="px-4 py-3 rounded-xl border border-primary/20 bg-card space-y-2">
               <input
                 type="text"
-                placeholder="Titlu link"
+                placeholder={t("common:link_title_placeholder")}
                 value={newTitle}
                 onChange={e => setNewTitle(e.target.value)}
                 className="w-full text-sm bg-transparent border-b border-border px-0 py-1 outline-none focus:border-primary placeholder:text-muted-foreground/40"
@@ -134,7 +134,7 @@ export function FavoritesBlock() {
               />
               <div className="flex gap-2 pt-1">
                 <Button size="sm" className="h-7 text-xs" onClick={handleAdd}>
-                  Salvează
+                  {t("common:save")}
                 </Button>
                 <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setAdding(false)}>
                   <X className="h-3 w-3" />

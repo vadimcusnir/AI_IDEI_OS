@@ -4,6 +4,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import type { ViewMode, SortField, GroupBy } from "@/hooks/useNeuronList";
 
 const STATUS_DOTS: Record<string, string> = {
@@ -38,9 +39,25 @@ export function NeuronToolbar({
   filterStatus, onSetFilterStatus,
   statuses,
 }: Props) {
+  const { t } = useTranslation("common");
+
+  const sortOptions: { field: SortField; label: string }[] = [
+    { field: "updated_at", label: t("neurons_toolbar.last_modified") },
+    { field: "created_at", label: t("neurons_toolbar.created_date") },
+    { field: "title", label: t("neurons_toolbar.title") },
+    { field: "number", label: t("neurons_toolbar.number") },
+    { field: "score", label: t("neurons_toolbar.score") },
+  ];
+
+  const groupOptions: { value: GroupBy; label: string }[] = [
+    { value: "none", label: t("neurons_toolbar.no_grouping") },
+    { value: "status", label: t("neurons_toolbar.by_status") },
+    { value: "category", label: t("neurons_toolbar.by_category") },
+    { value: "date", label: t("neurons_toolbar.by_date") },
+  ];
+
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
-      {/* Search */}
       <div className="flex-1 flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-2 focus-within:border-primary/50 transition-colors">
         {searching ? (
           <Loader2 className="h-3.5 w-3.5 text-muted-foreground animate-spin shrink-0" />
@@ -50,7 +67,7 @@ export function NeuronToolbar({
         <input
           value={searchQuery}
           onChange={e => onSearch(e.target.value)}
-          placeholder="Caută neuroni..."
+          placeholder={t("neurons_toolbar.search_neurons")}
           className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/40"
         />
         {searchQuery && (
@@ -60,7 +77,6 @@ export function NeuronToolbar({
         )}
       </div>
 
-      {/* View mode */}
       <div className="flex items-center gap-0.5 bg-card border border-border rounded-lg p-0.5">
         {([
           { mode: "list" as ViewMode, icon: List },
@@ -80,21 +96,14 @@ export function NeuronToolbar({
         ))}
       </div>
 
-      {/* Sort */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-            <ArrowUpDown className="h-3 w-3" /> Sort
+            <ArrowUpDown className="h-3 w-3" /> {t("neurons_toolbar.sort")}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-44">
-          {([
-            { field: "updated_at" as SortField, label: "Ultima modificare" },
-            { field: "created_at" as SortField, label: "Data creării" },
-            { field: "title" as SortField, label: "Titlu" },
-            { field: "number" as SortField, label: "Număr" },
-            { field: "score" as SortField, label: "Scor" },
-          ]).map(({ field, label }) => (
+          {sortOptions.map(({ field, label }) => (
             <DropdownMenuItem
               key={field}
               onClick={() => onToggleSort(field)}
@@ -109,20 +118,14 @@ export function NeuronToolbar({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Group */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-            <Filter className="h-3 w-3" /> Grup
+            <Filter className="h-3 w-3" /> {t("neurons_toolbar.group")}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-36">
-          {([
-            { value: "none" as GroupBy, label: "Fără grupare" },
-            { value: "status" as GroupBy, label: "După status" },
-            { value: "category" as GroupBy, label: "După categorie" },
-            { value: "date" as GroupBy, label: "După dată" },
-          ]).map(({ value, label }) => (
+          {groupOptions.map(({ value, label }) => (
             <DropdownMenuItem
               key={value}
               onClick={() => onSetGroupBy(value)}
@@ -134,16 +137,15 @@ export function NeuronToolbar({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Status filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant={filterStatus ? "default" : "outline"} size="sm" className="h-8 gap-1.5 text-xs">
-            <Tag className="h-3 w-3" /> {filterStatus || "Status"}
+            <Tag className="h-3 w-3" /> {filterStatus || t("status")}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-36">
           <DropdownMenuItem onClick={() => onSetFilterStatus(null)} className={cn(!filterStatus && "text-primary")}>
-            Toate
+            {t("neurons_toolbar.all_statuses")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {statuses.map(s => (

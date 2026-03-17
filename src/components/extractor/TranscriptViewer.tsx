@@ -3,6 +3,7 @@ import { User, Clock, ChevronDown, ChevronUp, Search, MessageSquare } from "luci
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 interface TranscriptSegment {
   speaker: string;
@@ -54,6 +55,7 @@ function parseTranscript(raw: string): TranscriptSegment[] {
 }
 
 export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
+  const { t } = useTranslation("common");
   const [search, setSearch] = useState("");
   const [collapsed, setCollapsed] = useState(false);
   const [activeSpeaker, setActiveSpeaker] = useState<string | null>(null);
@@ -88,9 +90,9 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-muted/30">
         <div className="flex items-center gap-2">
           <MessageSquare className="h-4 w-4 text-primary" />
-          <span className="text-xs font-semibold text-foreground">Transcript</span>
-          <Badge variant="secondary" className="text-[9px]">{segments.length} segments</Badge>
-          {hasSpeakers && <Badge variant="outline" className="text-[9px]">{speakers.length} speakers</Badge>}
+          <span className="text-xs font-semibold text-foreground">{t("transcript.transcript")}</span>
+          <Badge variant="secondary" className="text-[9px]">{t("transcript.segments", { count: segments.length })}</Badge>
+          {hasSpeakers && <Badge variant="outline" className="text-[9px]">{t("transcript.speakers", { count: speakers.length })}</Badge>}
         </div>
         <button onClick={() => setCollapsed(!collapsed)} className="h-6 w-6 flex items-center justify-center rounded hover:bg-muted transition-colors">
           {collapsed ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
@@ -102,13 +104,13 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
           <div className="px-4 py-2 border-b border-border flex items-center gap-2 flex-wrap">
             <div className="relative flex-1 min-w-[180px]">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search transcript..." className="h-7 text-xs pl-8" />
+              <Input value={search} onChange={e => setSearch(e.target.value)} placeholder={t("transcript.search_transcript")} className="h-7 text-xs pl-8" />
             </div>
             {hasSpeakers && (
               <div className="flex items-center gap-1 flex-wrap">
                 <button onClick={() => setActiveSpeaker(null)}
                   className={cn("text-[10px] px-2.5 py-1 rounded-full border transition-colors",
-                    !activeSpeaker ? "bg-primary/10 text-primary border-primary/20" : "border-border hover:bg-muted")}>All</button>
+                    !activeSpeaker ? "bg-primary/10 text-primary border-primary/20" : "border-border hover:bg-muted")}>{t("all")}</button>
                 {speakers.map(s => (
                   <button key={s} onClick={() => setActiveSpeaker(activeSpeaker === s ? null : s)}
                     className={cn("text-[10px] px-2.5 py-1 rounded-full border transition-colors",
@@ -146,7 +148,7 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
                   </div>
                 </div>
               ))}
-              {filtered.length === 0 && <div className="text-center py-8 text-sm text-muted-foreground">No matching segments found.</div>}
+              {filtered.length === 0 && <div className="text-center py-8 text-sm text-muted-foreground">{t("transcript.no_matching_segments")}</div>}
             </div>
           </div>
         </>

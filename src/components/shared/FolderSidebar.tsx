@@ -4,6 +4,7 @@ import {
   Plus, MoreHorizontal, Trash2, Pencil, FolderPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -69,7 +70,10 @@ export function useFolderSidebar(storageKey: string) {
   return { folders, assignments, addFolder, renameFolder, deleteFolder, assignItem };
 }
 
-export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFolder, allLabel = "All", headerLabel = "Folders" }: FolderSidebarProps) {
+export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFolder, allLabel, headerLabel }: FolderSidebarProps) {
+  const { t } = useTranslation("common");
+  const resolvedAllLabel = allLabel || t("all");
+  const resolvedHeaderLabel = headerLabel || t("folders.folders");
   const { folders, assignments, addFolder, renameFolder, deleteFolder, assignItem } = useFolderSidebar(storageKey);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -125,9 +129,9 @@ export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFol
               <button className="h-5 w-5 flex items-center justify-center rounded opacity-0 group-hover:opacity-100 hover:bg-muted transition-all"><MoreHorizontal className="h-3 w-3" /></button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-36">
-              <DropdownMenuItem onClick={e => { e.stopPropagation(); setAddingTo(folder.id); setNewName(""); }}><FolderPlus className="h-3 w-3 mr-2" />Add subfolder</DropdownMenuItem>
-              <DropdownMenuItem onClick={e => { e.stopPropagation(); setEditingId(folder.id); setEditName(folder.name); }}><Pencil className="h-3 w-3 mr-2" />Rename</DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive" onClick={e => { e.stopPropagation(); deleteFolder(folder.id); }}><Trash2 className="h-3 w-3 mr-2" />Delete</DropdownMenuItem>
+              <DropdownMenuItem onClick={e => { e.stopPropagation(); setAddingTo(folder.id); setNewName(""); }}><FolderPlus className="h-3 w-3 mr-2" />{t("folders.add_subfolder")}</DropdownMenuItem>
+              <DropdownMenuItem onClick={e => { e.stopPropagation(); setEditingId(folder.id); setEditName(folder.name); }}><Pencil className="h-3 w-3 mr-2" />{t("folders.rename")}</DropdownMenuItem>
+              <DropdownMenuItem className="text-destructive" onClick={e => { e.stopPropagation(); deleteFolder(folder.id); }}><Trash2 className="h-3 w-3 mr-2" />{t("delete")}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -135,7 +139,7 @@ export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFol
           <form className="flex items-center gap-1 py-1 ml-3" style={{ paddingLeft: `${(depth + 1) * 12 + 4}px` }}
             onSubmit={e => { e.preventDefault(); handleAdd(folder.id); }}>
             <FolderPlus className="h-3 w-3 text-primary/60 shrink-0" />
-            <input autoFocus value={newName} onChange={e => setNewName(e.target.value)} placeholder="Subfolder name..."
+            <input autoFocus value={newName} onChange={e => setNewName(e.target.value)} placeholder={t("folders.subfolder_name")}
               className="flex-1 bg-transparent text-xs outline-none border-b border-primary/30 px-0.5" onBlur={() => handleAdd(folder.id)} />
           </form>
         )}
@@ -147,23 +151,23 @@ export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFol
   return (
     <div className="w-56 shrink-0 border-r border-border bg-card/50 flex flex-col h-full overflow-hidden">
       <div className="px-3 py-2.5 border-b border-border flex items-center justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{headerLabel}</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{resolvedHeaderLabel}</span>
         <button onClick={() => { setAddingTo("root"); setNewName(""); }}
-          className="h-6 w-6 flex items-center justify-center rounded hover:bg-accent text-muted-foreground/60 hover:text-foreground transition-colors" title="New folder">
+          className="h-6 w-6 flex items-center justify-center rounded hover:bg-accent text-muted-foreground/60 hover:text-foreground transition-colors" title={t("folders.new_folder")}>
           <Plus className="h-3 w-3" />
         </button>
       </div>
       <div className="flex-1 overflow-y-auto px-1.5 py-1.5 space-y-0.5">
         <div className={cn("flex items-center gap-1.5 py-1 px-2 rounded cursor-pointer transition-colors text-sm",
           !selectedFolderId ? "bg-primary/10 text-primary" : "hover:bg-accent/50")} onClick={() => onSelectFolder(null)}>
-          <Folder className="h-3.5 w-3.5" /><span className="flex-1 text-xs">{allLabel}</span>
+          <Folder className="h-3.5 w-3.5" /><span className="flex-1 text-xs">{resolvedAllLabel}</span>
           <span className="text-[9px] text-muted-foreground/50">{items.length}</span>
         </div>
         {unassignedCount > 0 && unassignedCount < items.length && (
           <div className={cn("flex items-center gap-1.5 py-1 px-2 rounded cursor-pointer transition-colors text-sm",
             selectedFolderId === "__unassigned" ? "bg-primary/10 text-primary" : "hover:bg-accent/50")}
             onClick={() => onSelectFolder(selectedFolderId === "__unassigned" ? null : "__unassigned")}>
-            <Folder className="h-3.5 w-3.5 text-muted-foreground/40" /><span className="flex-1 text-xs text-muted-foreground">Uncategorized</span>
+            <Folder className="h-3.5 w-3.5 text-muted-foreground/40" /><span className="flex-1 text-xs text-muted-foreground">{t("folders.uncategorized")}</span>
             <span className="text-[9px] text-muted-foreground/50">{unassignedCount}</span>
           </div>
         )}
@@ -172,7 +176,7 @@ export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFol
         {addingTo === "root" && (
           <form className="flex items-center gap-1.5 py-1 px-2" onSubmit={e => { e.preventDefault(); handleAdd(null); }}>
             <FolderPlus className="h-3.5 w-3.5 text-primary/60 shrink-0" />
-            <input autoFocus value={newName} onChange={e => setNewName(e.target.value)} placeholder="Folder name..."
+            <input autoFocus value={newName} onChange={e => setNewName(e.target.value)} placeholder={t("folders.folder_name")}
               className="flex-1 bg-transparent text-xs outline-none border-b border-primary/30" onBlur={() => handleAdd(null)} />
           </form>
         )}
