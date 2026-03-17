@@ -265,7 +265,7 @@ export function DatasetBlock({ block, onContentChange, onExecute }: FormatBlockP
           value={block.content}
           onChange={(e) => onContentChange(e.target.value)}
           className="w-full font-mono text-[10px] bg-transparent border-none outline-none resize-none min-h-[30px] text-muted-foreground"
-          placeholder="header1,header2,header3&#10;val1,val2,val3"
+          placeholder={t("common:neuron_editor.csv_placeholder")}
           rows={2}
           spellCheck={false}
         />
