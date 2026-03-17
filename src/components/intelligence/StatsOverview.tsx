@@ -92,7 +92,7 @@ export function StatsOverview({ stats }: { stats: Stats }) {
       {/* 7-Day Activity */}
       <div>
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-          <Activity className="h-3.5 w-3.5" /> 7-Day Activity
+          <Activity className="h-3.5 w-3.5" /> {t("stats.seven_day_activity")}
         </h2>
         <div className="bg-card border border-border rounded-xl p-4">
           <div className="flex items-end gap-1.5 h-20">
