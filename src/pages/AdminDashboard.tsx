@@ -283,10 +283,10 @@ export default function AdminDashboard() {
     try {
       const { data: current } = await supabase.from("user_credits")
         .select("balance, total_earned").eq("user_id", userId).single();
-      if (!current) { toast.error("User credits not found"); return; }
+      if (!current) { toast.error(t("common:user_credits_not_found")); return; }
 
       const newBalance = current.balance + amount;
-      if (newBalance < 0) { toast.error(`Insufficient balance. Current: ${current.balance}`); return; }
+      if (newBalance < 0) { toast.error(t("errors:insufficient_balance", { balance: current.balance })); return; }
 
       const updateData: any = { balance: newBalance, updated_at: new Date().toISOString() };
       if (amount > 0) updateData.total_earned = current.total_earned + amount;
