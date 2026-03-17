@@ -75,7 +75,7 @@ export function useNeuronClone() {
 
     const { data: source } = await supabase
       .from("neurons").select("*").eq("id", sourceNeuronId).single();
-    if (!source) { toast.error("Source not found"); return null; }
+    if (!source) { toast.error(t("source_not_found")); return null; }
 
     const { data: forked } = await supabase
       .from("neurons")
