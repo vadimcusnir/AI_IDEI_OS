@@ -10,6 +10,7 @@ import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import {
   Youtube, Loader2, CheckCircle2, Download, FileText, Subtitles,
   FileType, Copy, Sparkles, Coins, ArrowRight, Gift, Lock,
+  FileDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
