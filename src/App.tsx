@@ -74,6 +74,7 @@ const DatabaseRelations = lazy(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazy(() => import("./pages/WalletPage"));
 const GamificationPage = lazy(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
+const Transcribe = lazy(() => import("./pages/Transcribe"));
 
 function PageLoader() {
   return (
