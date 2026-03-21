@@ -8,7 +8,7 @@ import {
   Sparkles, Briefcase, BarChart3, Network, Lightbulb,
   Store, Users, Bot, Layers, Rocket, Shield,
   Coins, Bell, MessageCircle, FileText, ScrollText,
-  User, LogOut,
+  User, LogOut, Youtube,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -36,6 +36,7 @@ const MENU_SECTIONS: MenuSection[] = [
     labelKey: "pipeline_section",
     items: [
       { path: "/home", icon: Home, labelKey: "cockpit" },
+      { path: "/transcribe", icon: FileText, labelKey: "transcribe" },
       { path: "/extractor", icon: Upload, labelKey: "extractor" },
       { path: "/neurons", icon: Brain, labelKey: "neurons" },
       { path: "/services", icon: Sparkles, labelKey: "services" },
