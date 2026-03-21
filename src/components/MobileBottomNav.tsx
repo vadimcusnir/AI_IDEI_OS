@@ -8,7 +8,7 @@ import {
   Sparkles, Briefcase, BarChart3, Network, Lightbulb,
   Store, Users, Bot, Layers, Rocket, Shield,
   Coins, Bell, MessageCircle, FileText, ScrollText,
-  User, LogOut,
+  User, LogOut, Youtube,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
