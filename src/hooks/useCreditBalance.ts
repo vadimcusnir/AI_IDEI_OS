@@ -50,5 +50,15 @@ export function useCreditBalance() {
     };
   }, [user]);
 
-  return { balance, loading };
+  const refetch = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("user_credits")
+      .select("balance")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    setBalance(data?.balance ?? 0);
+  };
+
+  return { balance, loading, refetch };
 }

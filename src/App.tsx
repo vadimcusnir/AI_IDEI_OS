@@ -74,6 +74,7 @@ const DatabaseRelations = lazy(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazy(() => import("./pages/WalletPage"));
 const GamificationPage = lazy(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
+const Transcribe = lazy(() => import("./pages/Transcribe"));
 
 function PageLoader() {
   return (
@@ -138,6 +139,7 @@ const App = () => (
                 <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
+                <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
                 <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
