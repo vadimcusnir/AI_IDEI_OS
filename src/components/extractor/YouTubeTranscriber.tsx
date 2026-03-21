@@ -249,6 +249,37 @@ export function YouTubeTranscriber() {
     toast.success("Copiat în clipboard!");
   };
 
+  const exportPDF = () => {
+    if (!transcript) return;
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${transcript.title}</title>
+<style>
+  @page { margin: 2cm; }
+  body { font-family: Georgia, 'Times New Roman', serif; font-size: 12pt; line-height: 1.8; color: #1a1a1a; max-width: 100%; }
+  h1 { font-size: 20pt; margin-bottom: 4pt; color: #111; }
+  .meta { font-size: 9pt; color: #666; margin-bottom: 24pt; border-bottom: 1px solid #ddd; padding-bottom: 12pt; }
+  .meta span { margin-right: 16pt; }
+  p { text-align: justify; margin-bottom: 12pt; }
+  .footer { margin-top: 32pt; padding-top: 12pt; border-top: 1px solid #ddd; font-size: 8pt; color: #999; text-align: center; }
+</style></head><body>
+<h1>${transcript.title}</h1>
+<div class="meta">
+  <span>${transcript.word_count.toLocaleString()} cuvinte</span>
+  <span>Limbă: ${transcript.language.toUpperCase()}</span>
+  ${transcript.duration_seconds ? `<span>Durată: ${Math.floor(transcript.duration_seconds / 60)} min</span>` : ""}
+  <span>Generat de AI-IDEI</span>
+</div>
+${transcript.text.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("")}
+<div class="footer">Transcript generat de AI-IDEI · ai-idei.com · ${new Date().toLocaleDateString("ro-RO")}</div>
+</body></html>`;
+    const w = window.open("", "_blank");
+    if (w) {
+      w.document.write(html);
+      w.document.close();
+      setTimeout(() => { w.print(); }, 400);
+    }
+    toast.success("Se deschide PDF-ul pentru descărcare");
+  };
+
   const isRunning = ["detecting", "fetching", "processing"].includes(stage);
 
   return (
