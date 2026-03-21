@@ -343,11 +343,12 @@ ${transcript.text.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).
               <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">
                 Descarcă transcript
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {[
                   { label: "TXT", icon: FileText, onClick: exportTXT, desc: "Text simplu" },
                   { label: "SRT", icon: Subtitles, onClick: exportSRT, desc: "Subtitrări" },
                   { label: "VTT", icon: FileType, onClick: exportVTT, desc: "Web Video" },
+                  { label: "PDF", icon: FileDown, onClick: exportPDF, desc: "Profesional" },
                   { label: "Copiază", icon: Copy, onClick: copyToClipboard, desc: "Clipboard" },
                 ].map((fmt) => (
                   <motion.button
