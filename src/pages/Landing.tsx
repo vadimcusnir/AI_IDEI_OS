@@ -259,7 +259,7 @@ export default function Landing() {
       </header>
 
       {/* ═══ SECTIONS ═══ */}
-      <LandingHero heroRef={heroRef} heroOpacity={heroOpacity} ctaAction={ctaAction} />
+      <LandingHero heroRef={heroRef} ctaAction={ctaAction} />
       <LandingProofBand />
       <LandingProblem />
       <div className="gold-divider" />
