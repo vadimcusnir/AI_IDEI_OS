@@ -5,11 +5,12 @@ import { OrganizationJsonLd, WebApplicationJsonLd, FAQJsonLd } from "@/component
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.gif";
 import {
-  Brain, Sparkles, Network, ArrowRight, Upload,
-  Layers, Zap, BarChart3, ChevronRight, Play,
-  Shield, Globe, CheckCircle2, Users, Lightbulb,
-  FileText, Bot, TrendingUp, Mic, BookOpen,
-  Target, Cpu, Gem, Flame, Eye, Lock,
+  ArrowRight, CheckCircle2, ChevronRight,
+  Layers, Zap, Globe, Users, Lightbulb,
+  FileText, Bot, TrendingUp, BookOpen,
+  Target, Gem, Lock, PenTool, LayoutTemplate,
+  MessageSquare, Sparkles, Eye, Rocket,
+  CircleDot, Star, Crown, HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -17,10 +18,15 @@ import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { lazy, Suspense, useRef } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
-// Lazy-load below-fold components
-const PublicTestimonials = lazy(() => import("@/components/landing/PublicTestimonials").then(m => ({ default: m.PublicTestimonials })));
 const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +40,6 @@ const LANG_OPTIONS = [
   { code: "ru", label: "Русский", flag: "🇷🇺" },
 ];
 
-/* ─── Animation Variants ─── */
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
   visible: (i: number) => ({
@@ -43,15 +48,15 @@ const fadeUp = {
   }),
 };
 
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.85 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] } },
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
 };
 
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t, i18n } = useTranslation("landing");
+  const { i18n } = useTranslation();
   const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -59,67 +64,68 @@ export default function Landing() {
   const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   const ctaAction = () => navigate(user ? "/home" : "/auth");
-  const ctaLabel = user ? t("hero.cta_dashboard") : t("hero.cta_start");
 
-  const PIPELINE = [
-    { icon: Upload, label: t("pipeline.upload"), sub: t("pipeline.upload_sub"), color: "text-blue-500" },
-    { icon: Brain, label: t("pipeline.extract"), sub: t("pipeline.extract_sub"), color: "text-primary" },
-    { icon: Network, label: t("pipeline.connect"), sub: t("pipeline.connect_sub"), color: "text-violet-500" },
-    { icon: Sparkles, label: t("pipeline.generate"), sub: t("pipeline.generate_sub"), color: "text-amber-500" },
-    { icon: BarChart3, label: t("pipeline.monetize"), sub: t("pipeline.monetize_sub"), color: "text-emerald-500" },
+  const TRANSFORMATIONS = [
+    { from: "A rough thought", to: "becomes a social post that actually communicates value" },
+    { from: "A messy service", to: "becomes a clearer offer with stronger positioning" },
+    { from: "A long transcript", to: "becomes a newsletter, article, thread, and email sequence" },
+    { from: "A weak landing page", to: "becomes sharper copy with more persuasive structure" },
+    { from: "Scattered notes", to: "become a content plan, product outline, or conversion asset" },
+    { from: "A vague marketing angle", to: "becomes a usable campaign direction" },
   ];
 
-  const CAPABILITIES = [
-    { icon: Brain, title: t("capabilities.extraction_title"), description: t("capabilities.extraction_desc"), accent: "from-primary/20 to-primary/5" },
-    { icon: Zap, title: t("capabilities.services_title"), description: t("capabilities.services_desc"), accent: "from-amber-500/20 to-amber-500/5" },
-    { icon: Network, title: t("capabilities.graph_title"), description: t("capabilities.graph_desc"), accent: "from-violet-500/20 to-violet-500/5" },
-    { icon: Shield, title: t("capabilities.economy_title"), description: t("capabilities.economy_desc"), accent: "from-emerald-500/20 to-emerald-500/5" },
+  const STEPS = [
+    { num: "01", title: "Choose the problem", text: "Start with what you need right now: copy, content, positioning, offer clarity, campaign structure, planning, or execution support." },
+    { num: "02", title: "Use the right resource", text: "Pick a framework, prompt, assistant, or example designed for that exact type of work." },
+    { num: "03", title: "Turn it into an asset", text: "Produce something usable: a post, an email, a landing page, an offer, a script, a content plan, or a campaign asset." },
+    { num: "04", title: "Repeat with speed", text: "Once the system clicks, you stop improvising and start producing with more clarity, consistency, and momentum." },
   ];
 
-  const CONTENT_TYPES = [
-    { icon: Mic, label: t("problem.podcasts") },
-    { icon: Users, label: t("problem.interviews") },
-    { icon: BookOpen, label: t("problem.courses") },
-    { icon: FileText, label: t("problem.articles") },
-    { icon: Globe, label: t("problem.webinars") },
-    { icon: Bot, label: t("problem.ai_conversations") },
+  const BENEFITS = [
+    { title: "You stop wasting time on blank starts", text: "You get structure, direction, and ready-to-use resources that make starting dramatically easier." },
+    { title: "You write faster without lowering quality", text: "Instead of improvising every time, you use reusable systems that improve speed and consistency." },
+    { title: "Your offers become easier to explain and sell", text: "Better wording creates better positioning. Better positioning creates stronger conversion." },
+    { title: "You turn AI into a real working advantage", text: "Not random prompting. Not chaotic experimentation. A more intentional, more useful, more profitable way to work." },
   ];
 
-  const DELIVERABLES = [
-    t("pipeline.d_marketing"), t("pipeline.d_sales"), t("pipeline.d_social"), t("pipeline.d_course"),
-    t("pipeline.d_copy"), t("pipeline.d_psych"), t("pipeline.d_jtbd"), t("pipeline.d_persuasion"),
-    t("pipeline.d_narrative"), t("pipeline.d_guest"), t("pipeline.d_knowledge"), t("pipeline.d_decision"),
+  const CATEGORIES = [
+    "copywriting", "marketing angles", "offer design", "content creation",
+    "messaging", "AI workflows", "planning", "strategic thinking",
+    "execution support", "assistant systems", "prompts", "frameworks",
   ];
 
-  const PROVEN_RESULTS = [
-    { value: "11+", label: t("social_proof.categories"), icon: Layers },
-    { value: "44+", label: t("social_proof.templates"), icon: FileText },
-    { value: "50+", label: t("social_proof.deliverables"), icon: Sparkles },
-    { value: "500", label: t("social_proof.free_credits"), icon: Gem },
+  const FAQS = [
+    { q: "What is AI-IDEI?", a: "AI-IDEI is a practical AI system that helps you turn ideas into copy, content, offers, workflows, and marketing assets." },
+    { q: "Is this for beginners or advanced users?", a: "Both. The language is clear enough for non-experts, but the resources are useful for serious operators." },
+    { q: "Do I need to be good at prompting?", a: "No. The goal is not to make you memorize complicated prompts. The goal is to help you get better outputs with less friction." },
+    { q: "Is this just another prompt library?", a: "No. It is built as an execution system, not a random prompt collection." },
+    { q: "What can I use it for?", a: "Copywriting, content creation, offer development, positioning, messaging, planning, campaign thinking, and structured AI-assisted work." },
+    { q: "Can I start for free?", a: "Yes. You can enter, explore, and decide whether it fits your workflow." },
+    { q: "Who is this best for?", a: "Creators, marketers, consultants, freelancers, founders, and anyone who wants faster, clearer, more commercially useful output." },
   ];
 
-  const WHO_IS_THIS_FOR = [
-    { icon: Mic, title: t("use_cases.podcasters_title"), description: t("use_cases.podcasters_desc") },
-    { icon: Target, title: t("use_cases.marketers_title"), description: t("use_cases.marketers_desc") },
-    { icon: BookOpen, title: t("use_cases.coaches_title"), description: t("use_cases.coaches_desc") },
-    { icon: TrendingUp, title: t("use_cases.founders_title"), description: t("use_cases.founders_desc") },
-  ];
-
-  const NAV_LINKS = [
-    { label: t("nav.how_it_works"), to: "#pipeline" },
-    { label: t("nav.capabilities"), to: "#capabilities" },
-    { label: t("nav.use_cases"), to: "#use-cases" },
-    { label: t("nav.docs"), to: "/docs" },
+  const PLANS = [
+    { name: "Free", icon: CircleDot, promise: "Test the system", text: "Get inside, explore the experience, and see how AI-IDEI works before making a commitment.", cta: "Start Free", featured: false },
+    { name: "Core", icon: Star, promise: "Build clarity and consistency", text: "For people who want practical access to the essential tools for better copy, content, and AI-assisted execution.", cta: "Choose Core", featured: false },
+    { name: "Pro", icon: Gem, promise: "Produce more with stronger systems", text: "For people who want deeper access, more advanced resources, and stronger leverage across copywriting, marketing, and workflow execution.", cta: "Choose Pro", featured: true },
+    { name: "Elite", icon: Crown, promise: "Use the system at full power", text: "For serious operators who want the most complete version of AI-IDEI and access to high-value execution resources.", cta: "Choose Elite", featured: false },
   ];
 
   return (
     <PageTransition>
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={t("seo.title")}
-        description={t("seo.description")}
+        title="AI-IDEI — AI Copywriting & Marketing Execution System"
+        description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants."
         canonical="https://ai-idei-os.lovable.app"
       />
+
+      {/* ═══ TOP BAR ═══ */}
+      <div className="bg-primary/5 border-b border-primary/10">
+        <p className="text-center text-[11px] sm:text-xs text-muted-foreground py-2 px-4">
+          Turn rough ideas into copy, content, offers, and campaigns — faster.
+        </p>
+      </div>
 
       {/* ═══ NAV ═══ */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -127,15 +133,17 @@ export default function Landing() {
           <button onClick={() => navigate("/")} className="flex items-center gap-2 group shrink-0">
             <img src={logo} alt="AI-IDEI" className="h-7 w-7 sm:h-8 sm:w-8 rounded-full group-hover:shadow-lg group-hover:shadow-primary/20 transition-shadow" />
             <span className="text-sm sm:text-base font-serif font-bold">AI-IDEI</span>
-            <span className="text-[9px] uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold hidden lg:inline">
-              {t("nav.knowledge_os")}
-            </span>
           </button>
           <nav className="hidden lg:flex items-center gap-6">
-            {NAV_LINKS.map(link => (
+            {[
+              { label: "How It Works", to: "#how-it-works" },
+              { label: "What You Get", to: "#what-you-get" },
+              { label: "Pricing", to: "#pricing" },
+              { label: "FAQ", to: "#faq" },
+            ].map(link => (
               <button
                 key={link.label}
-                onClick={() => link.to.startsWith("#") ? document.querySelector(link.to)?.scrollIntoView({ behavior: "smooth" }) : navigate(link.to)}
+                onClick={() => document.querySelector(link.to)?.scrollIntoView({ behavior: "smooth" })}
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.label}
@@ -165,16 +173,15 @@ export default function Landing() {
             <ThemeToggle />
             {user ? (
               <Button size="sm" onClick={() => navigate("/home")} className="gap-1.5 text-xs h-8">
-                <Brain className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{t("nav.dashboard")}</span>
+                Dashboard
               </Button>
             ) : (
               <div className="flex items-center gap-1.5">
                 <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex">
-                  {t("nav.login")}
+                  Log in
                 </Button>
                 <Button size="sm" onClick={() => navigate("/auth")} className="gap-1 text-xs h-8">
-                  {t("nav.start_free")}
+                  Start Free
                   <ArrowRight className="h-3 w-3" />
                 </Button>
               </div>
@@ -183,28 +190,20 @@ export default function Landing() {
         </div>
       </header>
 
-      <section ref={heroRef} className="relative overflow-hidden gradient-bg-animated noise-overlay">
+      {/* ═══ HERO ═══ */}
+      <section ref={heroRef} className="relative overflow-hidden">
         <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-primary/[0.06] rounded-full blur-[150px] animate-float" />
         <div className="absolute top-40 right-1/4 w-[400px] h-[400px] bg-violet-500/[0.04] rounded-full blur-[120px] animate-float" style={{ animationDelay: "3s" }} />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-primary/[0.03] rounded-full blur-[100px]" />
 
-        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-12 sm:pt-24 pb-12 sm:pb-20 text-center">
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="mx-auto mb-6 sm:mb-8">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/50 to-violet-500/30 blur-2xl animate-glow-pulse" />
-              <img src={logo} alt="AI-IDEI" className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-full border-2 border-primary/20 shadow-2xl shadow-primary/30" />
-            </div>
-          </motion.div>
-
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-primary mb-4 sm:mb-6">
-            {t("hero.tagline")}
+        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-28 pb-14 sm:pb-24 text-center">
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-primary mb-5 sm:mb-6">
+            AI Copywriting & Marketing Execution System
           </motion.p>
 
-          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-2xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
-            {t("hero.title_line1")}
-            <br />
+          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-2xl sm:text-5xl lg:text-[3.5rem] font-serif font-bold mb-5 sm:mb-6 leading-[1.1] tracking-tight">
+            The closest thing to a{" "}
             <span className="relative inline-block">
-              {t("hero.title_line2")}
+              magic button
               <svg className="absolute -bottom-1 sm:-bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none">
                 <motion.path
                   d="M2 8C50 2 250 2 298 8"
@@ -218,395 +217,413 @@ export default function Landing() {
                 />
               </svg>
             </span>
-            <br />
-            <span className="text-gradient-primary">{t("hero.title_line3")}</span>
+            {" "}for copywriting and marketing
           </motion.h1>
 
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }} className="text-sm sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10">
-            {t("hero.subtitle")}
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }} className="text-sm sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-3">
+            Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants built for real work.
           </motion.p>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8 sm:mb-12">
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.4 }} className="text-[11px] sm:text-xs text-muted-foreground/70 mb-8 sm:mb-10">
+            Built for creators, marketers, consultants, freelancers, and founders who want speed, clarity, and better output.
+          </motion.p>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
             <Button size="lg" onClick={ctaAction} className="btn-glow gap-2 text-sm px-10 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
-              {ctaLabel}
+              Start Free
               <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="lg" onClick={() => navigate("/architecture")} className="gap-2 text-sm h-12">
-              <Play className="h-4 w-4" />
-              {t("hero.cta_how")}
+            <Button variant="outline" size="lg" onClick={() => document.querySelector("#what-you-get")?.scrollIntoView({ behavior: "smooth" })} className="gap-2 text-sm h-12">
+              <Eye className="h-4 w-4" />
+              See What's Inside
             </Button>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }} className="flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
-            {[
-              { icon: CheckCircle2, text: t("hero.trust_no_card") },
-              { icon: Zap, text: t("hero.trust_credits") },
-              { icon: Lock, text: t("hero.trust_gdpr") },
-            ].map(item => (
-              <span key={item.text} className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-muted-foreground">
-                <item.icon className="h-3.5 w-3.5 text-status-validated" />
-                {item.text}
-              </span>
-            ))}
-          </motion.div>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }} className="text-[11px] sm:text-xs font-medium text-muted-foreground/60 tracking-wide">
+            Practical · Clear · Fast · Built for execution
+          </motion.p>
         </motion.div>
       </section>
 
-      {/* ═══ TRANSCRIBE CTA ═══ */}
-      <section className="relative bg-gradient-to-r from-primary/[0.04] via-background to-primary/[0.04]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={scaleIn}
-            className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-card p-5 sm:p-6 shadow-lg shadow-primary/5"
-          >
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-destructive/10 flex items-center justify-center shrink-0">
-                <Play className="h-6 w-6 text-destructive" />
+      {/* ═══ SECTION 2 — THE PROBLEM ═══ */}
+      <section className="border-y border-border bg-card">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
+            <div className="inline-flex items-center gap-2 mb-4">
+              <div className="h-1 w-6 rounded-full bg-destructive" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-destructive">The Problem</span>
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-6 leading-tight">
+              Most people do not struggle with ideas. They struggle with turning ideas into assets.
+            </h2>
+            <div className="text-sm sm:text-base text-muted-foreground leading-relaxed space-y-4">
+              <p>You have thoughts. Notes. Drafts. Angles. Offers. Half-built campaigns. Fragments of good copy.</p>
+              <p className="font-medium text-foreground">But the real bottleneck is not creativity. It is execution.</p>
+              <div className="pl-4 border-l-2 border-muted-foreground/20 space-y-1 text-sm text-muted-foreground/80">
+                <p>You open ChatGPT.</p>
+                <p>You test random prompts.</p>
+                <p>You save interesting things.</p>
+                <p>You try to write.</p>
+                <p>You restart.</p>
+                <p>You overthink.</p>
+                <p>You lose momentum.</p>
               </div>
-              <div>
-                <h3 className="text-sm sm:text-base font-semibold">{t("transcribe_cta.title")}</h3>
-                <p className="text-xs text-muted-foreground">{t("transcribe_cta.desc")}</p>
+              <p className="font-medium text-foreground text-sm">So the result looks like this:</p>
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                {["too many ideas", "weak positioning", "slow writing", "unclear offers", "inconsistent content", "scattered marketing execution"].map(item => (
+                  <li key={item} className="flex items-center gap-2 text-muted-foreground">
+                    <div className="h-1.5 w-1.5 rounded-full bg-destructive/50 shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <div className="pt-4 border-t border-border">
+                <p className="text-foreground font-semibold">AI-IDEI closes that gap.</p>
+                <p className="mt-1">It helps you turn raw thinking into usable copy, structured content, stronger messaging, and faster marketing output.</p>
               </div>
             </div>
-            <Button onClick={() => navigate("/transcribe")} className="gap-2 shrink-0 shadow-md shadow-primary/10">
-              {t("transcribe_cta.button")}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
           </motion.div>
         </div>
       </section>
 
-      {/* ═══ THE PROBLEM ═══ */}
-      <section className="relative border-y border-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
-              <div className="inline-flex items-center gap-2 mb-4">
-                <div className="h-1 w-6 rounded-full bg-destructive" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-destructive">{t("problem.label")}</span>
-              </div>
-              <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
-                {t("problem.title")}
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6">{t("problem.desc")}</p>
-              <div className="flex flex-wrap gap-2">
-                {CONTENT_TYPES.map(ct => (
-                  <span key={ct.label} className="flex items-center gap-1.5 text-[11px] bg-destructive/5 border border-destructive/10 px-3 py-1.5 rounded-full text-muted-foreground">
-                    <ct.icon className="h-3 w-3 text-destructive/60" />
-                    {ct.label}
-                  </span>
-                ))}
-              </div>
-              <p className="mt-6 text-sm text-destructive/80 font-medium italic">
-                {t("problem.footnote")}
-              </p>
-            </motion.div>
+      {/* ═══ SECTION 3 — THE CORE PROMISE ═══ */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
+          <div className="inline-flex items-center gap-2 mb-4">
+            <div className="h-1 w-6 rounded-full bg-primary" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">The Core Promise</span>
+          </div>
+          <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-6 leading-tight">
+            From rough thought to persuasive output
+          </h2>
+          <div className="text-sm sm:text-base text-muted-foreground leading-relaxed space-y-4">
+            <p>AI-IDEI is designed to make copywriting and marketing feel radically easier.</p>
+            <p>Instead of guessing what to write, how to structure it, how to phrase it, or how to package it, you use a system that helps you move faster and think better.</p>
+            <div className="space-y-2 mt-6">
+              {["write faster", "sharpen your message", "build stronger offers", "create more content from one idea", "reduce blank-page friction", "turn scattered thinking into commercial assets"].map(item => (
+                <div key={item} className="flex items-center gap-2.5">
+                  <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                  <span className="text-foreground text-sm font-medium">{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="pt-4 text-foreground font-semibold italic">This is not inspiration. This is usable leverage.</p>
+          </div>
+        </motion.div>
+      </section>
 
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp}>
-              <div className="inline-flex items-center gap-2 mb-4">
-                <div className="h-1 w-6 rounded-full bg-status-validated" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-status-validated">{t("solution.label")}</span>
-              </div>
-              <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
-                {t("solution.title_line1")}<br />{t("solution.title_line2")}
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6">{t("solution.desc")}</p>
-              <div className="space-y-2">
-                {[t("solution.bullet1"), t("solution.bullet2"), t("solution.bullet3"), t("solution.bullet4")].map(line => (
-                  <div key={line} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-status-validated shrink-0" />
-                    <span className="text-sm text-foreground">{line}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+      {/* ═══ SECTION 4 — WHAT YOU GET ═══ */}
+      <section id="what-you-get" className="border-y border-border bg-card">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-12">
+            <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3">
+              Everything you need to write, position, and market better with AI
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
+              Inside AI-IDEI, you get practical resources built to improve execution, not impress you with complexity.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {[
+              { icon: LayoutTemplate, title: "Frameworks", text: "Use proven structures for copywriting, offers, positioning, funnels, content strategy, planning, and execution. Stop building from zero every time." },
+              { icon: MessageSquare, title: "Prompts", text: "Get prompts built for real outcomes — not random collections. Clear, adaptable, practical, and designed to help you produce stronger outputs faster." },
+              { icon: Bot, title: "AI Assistants", text: "Use specialized assistants for writing, ideation, offer creation, research, messaging, strategy, and marketing execution." },
+              { icon: Lightbulb, title: "Real Examples", text: "See how one raw idea can become a post, email, landing page, offer, campaign, script, or structured content asset." },
+            ].map((block, i) => (
+              <motion.div key={block.title} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="p-6 rounded-2xl border border-border bg-background hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
+                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                  <block.icon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-base font-semibold mb-2">{block.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{block.text}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      <div className="section-divider" />
+      {/* ═══ SECTION 5 — WHAT IT HELPS YOU CREATE ═══ */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-12">
+          <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3">
+            One idea can become much more than one output
+          </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
+            With the right system, a single idea stops being a thought and starts becoming leverage.
+          </p>
+        </motion.div>
 
-      {/* ═══ PIPELINE ═══ */}
-      <section id="pipeline" className="bg-card noise-overlay relative">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-3">
+          {TRANSFORMATIONS.map((t, i) => (
+            <motion.div key={i} variants={fadeUp} custom={i} className="flex items-start gap-3 sm:gap-4 p-4 rounded-xl border border-border bg-card hover:border-primary/20 transition-all">
+              <div className="shrink-0 mt-0.5">
+                <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center">
+                  <span className="text-xs font-mono font-bold text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground">{t.from}</p>
+                <p className="text-sm text-muted-foreground mt-0.5">→ {t.to}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={6} variants={fadeUp} className="text-center mt-8 text-sm font-medium text-primary">
+          AI-IDEI helps you create faster, clearer, and with more commercial intent.
+        </motion.p>
+      </section>
+
+      {/* ═══ SECTION 6 — HOW IT WORKS ═══ */}
+      <section id="how-it-works" className="border-y border-border bg-card">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <div className="h-1 w-6 rounded-full bg-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("pipeline.label")}</span>
-              <div className="h-1 w-6 rounded-full bg-primary" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("pipeline.title")}</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">{t("pipeline.subtitle")}</p>
+            <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3">Simple process. Stronger output.</h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 sm:gap-2">
-            {PIPELINE.map((step, i) => (
-              <motion.div key={step.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="relative flex flex-col items-center text-center group">
-                <div className="h-16 w-16 rounded-2xl bg-background border border-border flex items-center justify-center mb-3 group-hover:border-primary/30 group-hover:shadow-lg group-hover:shadow-primary/10 transition-all duration-300">
-                  <step.icon className={cn("h-7 w-7", step.color)} />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">{t("pipeline.step", { number: i + 1 })}</span>
-                <span className="text-sm font-semibold">{step.label}</span>
-                <span className="text-[11px] text-muted-foreground mt-0.5">{step.sub}</span>
-                {i < PIPELINE.length - 1 && (
-                  <ChevronRight className="hidden sm:block absolute -right-3 top-6 h-5 w-5 text-border" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {STEPS.map((step, i) => (
+              <motion.div key={step.num} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="relative p-5 rounded-2xl border border-border bg-background group hover:border-primary/20 transition-all">
+                <span className="text-3xl font-mono font-bold text-primary/15 group-hover:text-primary/25 transition-colors">{step.num}</span>
+                <h3 className="text-sm font-semibold mt-2 mb-2">{step.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{step.text}</p>
+                {i < STEPS.length - 1 && (
+                  <ChevronRight className="hidden lg:block absolute -right-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-border" />
                 )}
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={5} variants={fadeUp} className="mt-14">
-            <p className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">{t("pipeline.ticker_label")}</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {DELIVERABLES.map(d => (
-                <span key={d} className="text-[11px] px-3 py-1.5 rounded-full border border-border bg-background text-muted-foreground hover:border-primary/20 hover:text-foreground transition-all cursor-default">
-                  {d}
-                </span>
-              ))}
+      {/* ═══ SECTION 7 — WHO THIS IS FOR ═══ */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
+          <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-6 leading-tight">
+            Built for people who want output, not noise
+          </h2>
+          <p className="text-muted-foreground mb-6 text-sm sm:text-base">
+            AI-IDEI is for people who want practical advantage in copywriting and marketing.
+          </p>
+          <div className="space-y-2.5 mb-6">
+            {[
+              { icon: PenTool, text: "creators who want to publish faster and better" },
+              { icon: Zap, text: "freelancers who want stronger messaging and more speed" },
+              { icon: Target, text: "consultants who need clearer offers and sharper communication" },
+              { icon: TrendingUp, text: "marketers who want better systems and better output" },
+              { icon: Rocket, text: "founders who want to turn ideas into assets and campaigns" },
+              { icon: Sparkles, text: "operators who want practical AI, not vague hype" },
+            ].map(item => (
+              <div key={item.text} className="flex items-center gap-3">
+                <item.icon className="h-4 w-4 text-primary shrink-0" />
+                <span className="text-sm text-foreground">{item.text}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground/70 italic border-t border-border pt-4">
+            This is not for people who want theory without execution, tools without application, or endless prompting without results.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ═══ SECTION 8 — WHY IT IS DIFFERENT ═══ */}
+      <section className="border-y border-border bg-card">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
+            <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-6 leading-tight">
+              Not another prompt pack. Not another content library.
+            </h2>
+            <div className="text-sm sm:text-base text-muted-foreground leading-relaxed space-y-4">
+              <p>Most AI resources give you fragments.</p>
+              <div className="pl-4 border-l-2 border-muted-foreground/20 space-y-1 text-sm text-muted-foreground/80">
+                <p>A few prompts.</p>
+                <p>A few ideas.</p>
+                <p>A few templates.</p>
+                <p>A little inspiration.</p>
+              </div>
+              <p>Then you are back in the same place: still thinking, still guessing, still rebuilding from scratch.</p>
+              <p className="text-foreground font-semibold text-base sm:text-lg">AI-IDEI is different because it is built around one goal: help you turn thought into execution.</p>
+              <div className="space-y-2 mt-4">
+                {["clearer direction", "better structure", "faster production", "stronger commercial communication", "more usable output from less mental friction"].map(item => (
+                  <div key={item} className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                    <span className="text-foreground text-sm">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="pt-4 text-foreground font-medium italic">It is not built to look smart. It is built to help you produce.</p>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ═══ CAPABILITIES ═══ */}
-      <section id="capabilities" className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <div className="h-1 w-6 rounded-full bg-primary" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("capabilities.label")}</span>
-            <div className="h-1 w-6 rounded-full bg-primary" />
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-3">
-            {t("capabilities.title_line1")}<br />{t("capabilities.title_line2")}
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {CAPABILITIES.map((f, i) => (
-            <motion.div key={f.title} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="relative p-6 rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
-              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500", f.accent)} />
-              <div className="relative">
-                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-                  <f.icon className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-base font-semibold mb-2">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══ SOCIAL PROOF ═══ */}
-      <section className="bg-card border-y border-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {PROVEN_RESULTS.map((p, i) => (
-              <motion.div key={p.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="text-center group">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/15 transition-colors">
-                  <p.icon className="h-5 w-5 text-primary" />
-                </div>
-                <span className="text-2xl sm:text-4xl font-bold font-mono text-primary block">{p.value}</span>
-                <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest">{p.label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ USE CASES ═══ */}
-      <section id="use-cases" className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <div className="h-1 w-6 rounded-full bg-primary" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("use_cases.label")}</span>
-            <div className="h-1 w-6 rounded-full bg-primary" />
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("use_cases.title")}</h2>
-          <p className="text-muted-foreground max-w-lg mx-auto">{t("use_cases.subtitle")}</p>
+      {/* ═══ SECTION 9 — BENEFITS ═══ */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-12">
+          <h2 className="text-2xl sm:text-4xl font-serif font-bold">What changes when you use AI-IDEI</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {WHO_IS_THIS_FOR.map((item, i) => (
-            <motion.div key={item.title} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="flex gap-4 p-5 rounded-2xl border border-border bg-card hover:border-primary/20 hover:shadow-md transition-all">
-              <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                <item.icon className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold mb-1">{item.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
-              </div>
+          {BENEFITS.map((b, i) => (
+            <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="p-6 rounded-2xl border border-border bg-card">
+              <h3 className="text-sm font-semibold mb-2">{b.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{b.text}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ═══ ECONOMICS STRIP ═══ */}
-      <section className="border-y border-border bg-gradient-to-r from-primary/[0.03] via-transparent to-violet-500/[0.03]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+      {/* ═══ SECTION 10 — SOCIAL PROOF ═══ */}
+      <section className="border-y border-border bg-card">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <div className="h-1 w-6 rounded-full bg-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("economics.label")}</span>
-              <div className="h-1 w-6 rounded-full bg-primary" />
-            </div>
-            <h2 className="text-3xl font-serif font-bold mb-3">{t("economics.title")}</h2>
-            <p className="text-muted-foreground max-w-lg mx-auto text-sm">{t("economics.subtitle")}</p>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold">
+              Built for people who want sharper thinking and stronger execution
+            </h2>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
-              { label: t("economics.cost_label"), value: t("economics.cost_value"), sub: t("economics.cost_sub") },
-              { label: t("economics.deliverables_label"), value: t("economics.deliverables_value"), sub: t("economics.deliverables_sub") },
-              { label: t("economics.per_label"), value: t("economics.per_value"), sub: t("economics.per_sub") },
-            ].map((item, i) => (
-              <motion.div key={item.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="text-center p-6 rounded-2xl border border-border bg-card">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">{item.label}</p>
-                <p className="text-3xl font-mono font-bold text-primary">{item.value}</p>
-                <p className="text-[11px] text-muted-foreground mt-1">{item.sub}</p>
+              { quote: "AI-IDEI helped me turn scattered thoughts into clearer copy and a much stronger offer.", name: "Coming soon", role: "Early user" },
+              { quote: "This feels less like a resource library and more like an execution system for marketing.", name: "Coming soon", role: "Early user" },
+              { quote: "I used it to move faster, write better, and structure my ideas in a way that actually led to usable output.", name: "Coming soon", role: "Early user" },
+            ].map((t, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="p-5 rounded-2xl border border-border bg-background">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4 italic">"{t.quote}"</p>
+                <div>
+                  <p className="text-xs font-semibold">{t.name}</p>
+                  <p className="text-[10px] text-muted-foreground">{t.role}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ TESTIMONIALS ═══ */}
-      <Suspense fallback={null}><PublicTestimonials /></Suspense>
+      {/* ═══ SECTION 11 — INSIDE THE SYSTEM ═══ */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-10">
+          <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3">Inside AI-IDEI</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
+            Explore a growing system of practical resources for copywriting, marketing, and business execution.
+          </p>
+        </motion.div>
 
-      {/* ═══ EXPLORE KNOWLEDGE ═══ */}
-      <section className="bg-card border-y border-border">
+        <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="flex flex-wrap justify-center gap-2">
+          {CATEGORIES.map((cat, i) => (
+            <motion.span key={cat} variants={fadeUp} custom={i} className="text-xs px-4 py-2 rounded-full border border-border bg-card text-muted-foreground hover:border-primary/20 hover:text-foreground transition-all cursor-default capitalize">
+              {cat}
+            </motion.span>
+          ))}
+        </motion.div>
+
+        <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-8 text-sm text-muted-foreground">
+          Everything is built to help you move from idea to action with less friction and stronger results.
+        </motion.p>
+      </section>
+
+      {/* ═══ SECTION 12 — PRICING ═══ */}
+      <section id="pricing" className="border-y border-border bg-card">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <div className="h-1 w-6 rounded-full bg-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{t("explore.label")}</span>
-              <div className="h-1 w-6 rounded-full bg-primary" />
-            </div>
-            <h2 className="text-3xl font-serif font-bold mb-3">{t("explore.title")}</h2>
-            <p className="text-muted-foreground max-w-lg mx-auto text-sm">{t("explore.subtitle")}</p>
+            <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3">Choose the level that matches your ambition</h2>
+            <p className="text-muted-foreground max-w-lg mx-auto text-sm sm:text-base">
+              Start simple. Upgrade when you want more depth, speed, and leverage.
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {[
-              { icon: Lightbulb, label: t("explore.insights"), sub: t("explore.insights_sub"), to: "/insights" },
-              { icon: Eye, label: t("explore.patterns"), sub: t("explore.patterns_sub"), to: "/patterns" },
-              { icon: Cpu, label: t("explore.formulas"), sub: t("explore.formulas_sub"), to: "/formulas" },
-              { icon: Flame, label: t("explore.contradictions"), sub: t("explore.contradictions_sub"), to: "/contradictions" },
-              { icon: Target, label: t("explore.applications"), sub: t("explore.applications_sub"), to: "/applications" },
-              { icon: Users, label: t("explore.profiles"), sub: t("explore.profiles_sub"), to: "/profiles" },
-            ].map((item, i) => (
-              <motion.button key={item.label} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} onClick={() => navigate(item.to)} className="flex flex-col items-center text-center p-4 rounded-xl border border-border bg-background hover:border-primary/20 hover:shadow-md transition-all group">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mb-2 group-hover:bg-primary/15 transition-colors">
-                  <item.icon className="h-5 w-5 text-primary" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {PLANS.map((plan, i) => (
+              <motion.div key={plan.name} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className={cn(
+                "relative p-6 rounded-2xl border bg-background flex flex-col",
+                plan.featured ? "border-primary/40 ring-1 ring-primary/20 shadow-lg shadow-primary/5" : "border-border"
+              )}>
+                {plan.featured && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-widest bg-primary text-primary-foreground px-3 py-1 rounded-full">Popular</span>
+                )}
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <plan.icon className="h-5 w-5 text-primary" />
                 </div>
-                <span className="text-xs font-semibold">{item.label}</span>
-                <span className="text-[10px] text-muted-foreground">{item.sub}</span>
-              </motion.button>
+                <h3 className="text-lg font-bold">{plan.name}</h3>
+                <p className="text-xs text-primary font-medium mt-1 mb-3">{plan.promise}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed flex-1">{plan.text}</p>
+                <Button
+                  onClick={ctaAction}
+                  variant={plan.featured ? "default" : "outline"}
+                  className="w-full mt-5 gap-1.5 text-xs"
+                  size="sm"
+                >
+                  {plan.cta}
+                  <ArrowRight className="h-3 w-3" />
+                </Button>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ ROI CALCULATOR STRIP ═══ */}
-      <section className="border-y border-border bg-card">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <div className="h-1 w-6 rounded-full bg-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">ROI Calculator</span>
-              <div className="h-1 w-6 rounded-full bg-primary" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-2">{t("economics.title")}</h2>
-            <p className="text-muted-foreground text-sm max-w-md mx-auto">Compară costul tradițional vs. AI-IDEI pentru aceleași deliverables</p>
-          </motion.div>
+      {/* ═══ SECTION 13 — FAQ ═══ */}
+      <section id="faq" className="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mb-10">
+          <h2 className="text-2xl sm:text-4xl font-serif font-bold">Frequently Asked Questions</h2>
+        </motion.div>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-            {/* Traditional */}
-            <div className="p-5 rounded-xl border border-destructive/20 bg-destructive/[0.03]">
-              <p className="text-[10px] uppercase tracking-widest text-destructive/70 font-bold mb-3">Mod tradițional</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-muted-foreground">1 podcast → 1 articol</span><span className="font-mono font-semibold text-destructive">~$200</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Timp freelancer</span><span className="font-mono font-semibold text-destructive">3-5 zile</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">50 deliverables</span><span className="font-mono font-semibold text-destructive">~$10,000</span></div>
-              </div>
-            </div>
-            {/* AI-IDEI */}
-            <div className="p-5 rounded-xl border border-primary/30 bg-primary/[0.03] ring-1 ring-primary/10">
-              <p className="text-[10px] uppercase tracking-widest text-primary font-bold mb-3">Cu AI-IDEI</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-muted-foreground">1 podcast → 50+ outputs</span><span className="font-mono font-semibold text-primary">~$35</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Timp procesare</span><span className="font-mono font-semibold text-primary">3 min</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Cost per deliverable</span><span className="font-mono font-semibold text-primary">$0.007</span></div>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2} variants={fadeUp} className="text-center mt-6">
-            <p className="text-xs text-muted-foreground">
-              <span className="text-primary font-bold">285x</span> mai eficient decât abordarea tradițională
-            </p>
-          </motion.div>
-        </div>
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp}>
+          <Accordion type="single" collapsible className="space-y-2">
+            {FAQS.map((faq, i) => (
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-xl px-5 data-[state=open]:border-primary/20 transition-colors">
+                <AccordionTrigger className="text-sm font-medium py-4 hover:no-underline">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
       </section>
 
-      {/* ═══ FINAL CTA ═══ */}
+      {/* ═══ SECTION 14 — FINAL CTA ═══ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.06] via-transparent to-transparent" />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/[0.08] rounded-full blur-[150px]" />
 
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
-            <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5">
-              <Gem className="h-3.5 w-3.5 text-primary" />
-              <span className="text-[11px] font-semibold text-primary">500 NEURONS gratuit • Fără card de credit</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
-              {t("final_cta.title_line1")}
+            <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
+              Stop collecting ideas.
               <br />
-              <span className="text-primary">{t("final_cta.title_line2")}</span>
+              <span className="text-primary">Start turning them into assets.</span>
             </h2>
-            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">{t("final_cta.subtitle")}</p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <p className="text-muted-foreground mb-8 max-w-lg mx-auto text-sm sm:text-base">
+              Use AI-IDEI to write faster, market better, and turn rough thinking into persuasive output.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
               <Button size="lg" onClick={ctaAction} className="btn-glow gap-2 px-10 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
-                {ctaLabel}
+                Start Free
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg" onClick={() => navigate("/docs")} className="gap-2 h-12">
-                <BookOpen className="h-4 w-4" />
-                {t("final_cta.read_docs")}
+              <Button variant="outline" size="lg" onClick={() => document.querySelector("#what-you-get")?.scrollIntoView({ behavior: "smooth" })} className="gap-2 h-12">
+                <Eye className="h-4 w-4" />
+                See What's Inside
               </Button>
             </div>
-            <div className="mt-6 flex items-center justify-center gap-4 flex-wrap">
-              {[
-                { icon: CheckCircle2, text: t("hero.trust_no_card") },
-                { icon: Zap, text: t("hero.trust_credits") },
-                { icon: Lock, text: t("hero.trust_gdpr") },
-              ].map(item => (
-                <span key={item.text} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                  <item.icon className="h-3.5 w-3.5 text-status-validated" />
-                  {item.text}
-                </span>
-              ))}
-            </div>
+            <p className="text-xs font-medium text-muted-foreground/60">
+              Less friction · Better copy · Stronger execution
+            </p>
           </motion.div>
         </div>
       </section>
 
+      {/* ═══ FOOTER ═══ */}
       <Suspense fallback={null}><Footer /></Suspense>
 
       {/* Structured Data */}
       <OrganizationJsonLd />
       <WebApplicationJsonLd />
-      <FAQJsonLd items={[
-        { question: "What is AI-IDEI?", answer: "AI-IDEI is an AI-driven expertise capitalization platform that transforms raw knowledge (podcasts, interviews, texts) into structured intellectual assets called Neurons." },
-        { question: "How does the extraction pipeline work?", answer: "Upload content → Automatic transcription → AI-powered deep knowledge extraction → Neuron generation → Multiple deliverables. One podcast can generate 50+ professional outputs." },
-        { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power service execution. 1000 credits = $11 USD. New users receive 500 free NEURONS as a welcome bonus." },
-        { question: "What types of content can I upload?", answer: "You can upload YouTube videos, MP3/MP4 files, Zoom recordings, podcast transcripts, and written text. The platform supports multiple input formats." },
-        { question: "What deliverables can AI-IDEI generate?", answer: "Articles, marketing frameworks, courses, copywriting formulas, scripts, social media posts, psychological profiles, marketing funnels, and many more structured knowledge outputs." },
-      ]} />
+      <FAQJsonLd items={FAQS.map(f => ({ question: f.q, answer: f.a }))} />
     </div>
     </PageTransition>
   );
