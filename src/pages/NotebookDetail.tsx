@@ -50,7 +50,7 @@ export default function NotebookDetail() {
           ))}
         </div>
         <div className="flex-1 min-h-0">
-          {mobileTab === "sources" && <NotebookSourcesPanel {...detail} />}
+          {mobileTab === "sources" && <NotebookSourcesPanel {...detail} notebook={detail.notebook} />}
           {mobileTab === "chat" && <NotebookChatPanel {...detail} />}
           {mobileTab === "studio" && <NotebookStudioPanel artifacts={detail.artifacts} sources={detail.sources} notebookId={id} />}
         </div>
@@ -63,7 +63,7 @@ export default function NotebookDetail() {
       <SEOHead title={`${title} — AI-IDEI`} description="Knowledge notebook" />
       <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
         <ResizablePanel defaultSize={22} minSize={15} maxSize={35}>
-          <NotebookSourcesPanel {...detail} />
+          <NotebookSourcesPanel {...detail} notebook={detail.notebook} />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
