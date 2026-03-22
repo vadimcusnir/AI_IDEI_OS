@@ -476,7 +476,7 @@ export function AgentConsole() {
             ref={fileInputRef}
             type="file"
             multiple
-            accept=".txt,.md,.csv,.json,text/*"
+            accept=".txt,.md,.csv,.json,.pdf,.docx,.mp3,.mp4,.wav,.m4a,.webm,.ogg,.srt,text/*,audio/*,video/*,application/pdf"
             className="hidden"
             onChange={handleFileSelect}
           />
