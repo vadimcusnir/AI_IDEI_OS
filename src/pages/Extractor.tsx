@@ -495,10 +495,12 @@ export default function Extractor() {
               const wordCount = hasTranscript ? ep.transcript!.split(/\s+/).length : 0;
               const needsTranscript = !hasTranscript && !isTranscribing;
               const isEditingTranscript = editingTranscriptId === ep.id;
+              const isTargeted = ep.id === episodeParam;
 
               return (
                 <div key={ep.id} className={cn(
-                  "rounded-xl border bg-card transition-colors",
+                  "rounded-xl border bg-card transition-all duration-300",
+                  isTargeted && "ring-2 ring-primary/40 shadow-lg shadow-primary/5",
                   isExpanded ? "border-primary/30" : "border-border hover:border-primary/20"
                 )}>
                   {/* Row header */}
