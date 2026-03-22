@@ -1,22 +1,21 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Loader2, Brain, Coins, FileAudio, TrendingUp, Layers,
-  Sparkles, Activity, Network, BarChart3,
+  Loader2, Network, BarChart3, Search, AlertTriangle,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { KnowledgeGraph } from "@/components/intelligence/KnowledgeGraph";
 import { StatsOverview } from "@/components/intelligence/StatsOverview";
 import { DuplicateMergePanel } from "@/components/neurons/DuplicateMergePanel";
 import { PremiumGate } from "@/components/premium/PremiumGate";
+import { GraphAnalysisPanel } from "@/components/intelligence/GraphAnalysisPanel";
+import { AdvancedSearch } from "@/components/intelligence/AdvancedSearch";
 import { GitMerge } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -107,7 +106,7 @@ export default function Intelligence() {
   return (
     <PageTransition>
     <div className="flex-1 overflow-auto">
-      <SEOHead title="Intelligence — AI-IDEI" description="Knowledge graph, stats overview and neuron analytics." />
+      <SEOHead title="Intelligence — AI-IDEI" description="Knowledge graph, stats overview, semantic search, and graph intelligence." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -122,9 +121,15 @@ export default function Intelligence() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="h-9 w-full sm:w-auto">
+          <TabsList className="h-9 w-full sm:w-auto flex-wrap">
             <TabsTrigger value="graph" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
               <Network className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{t("intelligence.tab_graph")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="search" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
+              <Search className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">Search</span>
+            </TabsTrigger>
+            <TabsTrigger value="analysis" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">Analysis</span>
             </TabsTrigger>
             <TabsTrigger value="stats" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
               <BarChart3 className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{t("intelligence.tab_analytics")}</span>
@@ -138,6 +143,20 @@ export default function Intelligence() {
             <ControlledSection elementId="intelligence.graph">
               <PremiumGate requiredTier="pro" featureName="Knowledge Graph">
                 <KnowledgeGraph />
+              </PremiumGate>
+            </ControlledSection>
+          </TabsContent>
+
+          <TabsContent value="search" className="mt-0">
+            <ControlledSection elementId="intelligence.search">
+              <AdvancedSearch />
+            </ControlledSection>
+          </TabsContent>
+
+          <TabsContent value="analysis" className="mt-0">
+            <ControlledSection elementId="intelligence.analysis">
+              <PremiumGate requiredTier="pro" featureName="Graph Analysis">
+                <GraphAnalysisPanel />
               </PremiumGate>
             </ControlledSection>
           </TabsContent>
