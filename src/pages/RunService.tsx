@@ -107,7 +107,8 @@ export default function RunService() {
       setCredits({ balance: 500, total_spent: 0 });
     }
 
-    const { data: accessData } = await supabase.rpc("check_access", {
+    // Use logged access check for audit trail + abuse detection
+    const { data: accessData } = await supabase.rpc("check_access_logged", {
       _user_id: user!.id,
       _service_key: serviceKey!,
     });
