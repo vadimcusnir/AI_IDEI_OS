@@ -78,6 +78,7 @@ const Transcribe = lazy(() => import("./pages/Transcribe"));
 const Integrations = lazy(() => import("./pages/Integrations"));
 const CognitiveUnits = lazy(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazy(() => import("./pages/CollectionRuns"));
+const Pricing = lazy(() => import("./pages/Pricing"));
 const KnowledgeSurfacePage = lazy(() => import("./pages/KnowledgeSurfacePage"));
 const ProductSurfacePage = lazy(() => import("./pages/ProductSurfacePage"));
 function PageLoader() {
@@ -147,6 +148,7 @@ const App = () => (
                 <Route path="/knowledge/*" element={<AppLayout><KnowledgeSurfacePage /></AppLayout>} />
                 <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
+                <Route path="/pricing" element={<AppLayout><Pricing /></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
                 <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
                 <Route path="/community/:category" element={<AppLayout><Community /></AppLayout>} />
