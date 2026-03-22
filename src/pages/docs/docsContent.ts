@@ -104,16 +104,20 @@ export const DOCS_SECTIONS: DocSection[] = [
 // Import content from separate files
 import { gettingStartedContent } from "./content/getting-started";
 import { foundationContent } from "./content/foundation";
+import { tutorialsContent } from "./content/tutorials";
 import { pipelineContent } from "./content/pipeline";
 import { architectureContent } from "./content/architecture";
+import { developerContent } from "./content/developer";
 import { derivativesContent } from "./content/derivatives";
 import { referenceContent } from "./content/reference";
 
 export const TOPIC_CONTENT: Record<string, Record<string, DocTopic>> = {
   "getting-started": gettingStartedContent,
   foundation: foundationContent,
+  tutorials: tutorialsContent,
   pipeline: pipelineContent,
   architecture: architectureContent,
+  developer: developerContent,
   derivatives: derivativesContent,
   reference: referenceContent,
 };
