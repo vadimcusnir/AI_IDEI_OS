@@ -156,6 +156,7 @@
     --ivory-dim: 40 15% 72%;
     --gold-oxide: 38 55% 48%;
     --gold-dim: 38 30% 32%;
+    --gold-subtle: 38 40% 58%;
     --petrol: 180 35% 28%;
     --petrol-dim: 180 20% 18%;
     --signal-red: 0 72% 50%;
@@ -188,16 +189,16 @@
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 16% 16%;
-    --input: 220 16% 16%;
+    --border: 220 14% 20%;
+    --input: 220 14% 20%;
     --ring: 25 95% 55%;
 
     --panel-bg: 222 20% 10%;
-    --panel-border: 220 16% 16%;
+    --panel-border: 220 14% 20%;
     --panel-header: 222 22% 9%;
 
     --toolbar-bg: 222 20% 11%;
-    --toolbar-border: 220 16% 16%;
+    --toolbar-border: 220 14% 20%;
     --toolbar-active: 25 95% 55%;
 
     --success: 152 60% 48%;
@@ -232,7 +233,7 @@
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 16% 13%;
     --sidebar-accent-foreground: 220 14% 88%;
-    --sidebar-border: 220 16% 16%;
+    --sidebar-border: 220 14% 20%;
     --sidebar-ring: 25 95% 55%;
   }
 }
