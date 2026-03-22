@@ -1,42 +1,21 @@
 import { useState, useCallback } from "react";
 import { PremiumGate } from "@/components/premium/PremiumGate";
 import { SEOHead } from "@/components/SEOHead";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Wand2, ArrowLeft, Loader2, Copy, Sparkles, FileText,
-  User, ShoppingBag, Mail, PenTool, LayoutList
-} from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import { cn } from "@/lib/utils";
-import logo from "@/assets/logo.gif";
-import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { Loader2, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
-const GOALS = [
-  { key: "prompt_forge.goal_experience", value: "Extragere experiență", icon: User, color: "text-primary" },
-  { key: "prompt_forge.goal_profile", value: "Descriere profil", icon: FileText, color: "text-ai-accent" },
-  { key: "prompt_forge.product_recommendation", value: "Product Recommendation", icon: ShoppingBag, color: "text-status-validated" },
-  { key: "prompt_forge.content_structuring", value: "Content Structuring", icon: LayoutList, color: "text-primary" },
-  { key: "prompt_forge.sales_copy", value: "Sales Copy", icon: PenTool, color: "text-destructive" },
-  { key: "prompt_forge.email_sequence", value: "Email Sequence", icon: Mail, color: "text-ai-accent" },
-];
+import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { GoalSelector } from "@/components/prompt-forge/GoalSelector";
+import { PromptOutput } from "@/components/prompt-forge/PromptOutput";
+import { TemplateLibrary } from "@/components/prompt-forge/TemplateLibrary";
+import { PromptHistory } from "@/components/prompt-forge/PromptHistory";
 
 export default function PromptForge() {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { balance } = useCreditBalance();
   const { t } = useTranslation("pages");
@@ -45,8 +24,38 @@ export default function PromptForge() {
   const [details, setDetails] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [historyRefresh, setHistoryRefresh] = useState(0);
 
-  const estimatedCost = 200; // Prompt Forge typical cost
+  const estimatedCost = 200;
+
+  const handleTemplateSelect = useCallback((template: any) => {
+    setGoal(template.goal);
+    if (template.context_template) setContext(template.context_template);
+    if (template.details_template) setDetails(template.details_template);
+    toast.success(`Template „${template.title}" aplicat`);
+  }, []);
+
+  const handleHistoryReuse = useCallback((item: any) => {
+    setGoal(item.goal);
+    setContext(item.context);
+    setDetails(item.details || "");
+    setResult(item.result);
+    toast.success("Prompt din istoric încărcat");
+  }, []);
+
+  const saveToHistory = useCallback(async () => {
+    if (!user || !result) return;
+    await supabase.from("prompt_history").insert({
+      user_id: user.id,
+      goal,
+      context,
+      details,
+      result,
+      credits_spent: estimatedCost,
+    });
+    setHistoryRefresh(prev => prev + 1);
+    toast.success("Salvat în istoric!");
+  }, [user, goal, context, details, result, estimatedCost]);
 
   const handleGenerate = useCallback(async () => {
     if (!user) { toast.error(t("prompt_forge.error_auth")); return; }
@@ -60,7 +69,6 @@ export default function PromptForge() {
     setResult("");
 
     try {
-      // Create a temporary neuron + job for the service
       const { data: neuron, error: nErr } = await supabase
         .from("neurons")
         .insert({ title: `Prompt Forge: ${goal}`, author_id: user.id, status: "draft" })
@@ -106,7 +114,6 @@ export default function PromptForge() {
         throw new Error(err.error || `Error ${resp.status}`);
       }
 
-      // Stream response
       const reader = resp.body?.getReader();
       if (!reader) throw new Error("No stream");
 
@@ -138,6 +145,17 @@ export default function PromptForge() {
         }
       }
 
+      // Auto-save to history
+      await supabase.from("prompt_history").insert({
+        user_id: user.id,
+        goal,
+        context,
+        details,
+        result: fullText,
+        credits_spent: estimatedCost,
+      });
+      setHistoryRefresh(prev => prev + 1);
+
       toast.success(t("prompt_forge.success"));
     } catch (e: any) {
       toast.error(e.message || "Generation failed");
@@ -145,132 +163,92 @@ export default function PromptForge() {
     setLoading(false);
   }, [user, context, goal, details, t, balance, estimatedCost]);
 
-  const copyToClipboard = useCallback(() => {
-    navigator.clipboard.writeText(result);
-    toast.success(t("prompt_forge.copied"));
-  }, [result, t]);
-
   return (
     <PremiumGate requiredTier="pro" featureName="Prompt Forge" fallback="overlay">
-    <div className="flex-1">
-      <SEOHead title="Prompt Forge — AI-IDEI" description="Generate AI prompts for marketing, copywriting and content creation." />
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-        {/* Hero */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-serif font-bold mb-2">{t("prompt_forge.title")}</h1>
-          <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
-            {t("prompt_forge.subtitle")}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Input panel */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("prompt_forge.goal_label")}</label>
-              <div className="grid grid-cols-2 gap-2">
-                {GOALS.map(g => (
-                  <button
-                    key={g.value}
-                    onClick={() => setGoal(g.value)}
-                    className={cn(
-                      "flex items-center gap-2 px-3 py-2.5 rounded-lg border text-left text-xs font-medium transition-all",
-                      goal === g.value
-                        ? "border-primary bg-primary/5 text-primary"
-                        : "border-border bg-card text-muted-foreground hover:border-primary/30"
-                    )}
-                  >
-                    <g.icon className={cn("h-3.5 w-3.5", goal === g.value ? "text-primary" : g.color)} />
-                    {t(g.key)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                {t("prompt_forge.context_label")}
-              </label>
-              <Textarea
-                value={context}
-                onChange={e => setContext(e.target.value)}
-                placeholder={t("prompt_forge.context_placeholder")}
-                rows={4}
-                className="text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                {t("prompt_forge.details_label")}
-              </label>
-              <Textarea
-                value={details}
-                onChange={e => setDetails(e.target.value)}
-                placeholder={t("prompt_forge.details_placeholder")}
-                rows={3}
-                className="text-sm"
-              />
-            </div>
-
-            <Button
-              onClick={handleGenerate}
-              disabled={loading || !context.trim() || !goal || balance < estimatedCost}
-              className="w-full gap-2"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  {t("prompt_forge.generating")}
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4 w-4" />
-                  {t("prompt_forge.generate_button", { cost: estimatedCost })}
-                </>
-              )}
-            </Button>
-
-            {balance < estimatedCost && !loading && (
-              <div className="mt-3">
-                <InlineTopUp needed={estimatedCost} balance={balance} compact />
-              </div>
-            )}
-
-            <p className="text-[10px] text-muted-foreground/50 text-center">
-              {t("prompt_forge.balance_label", { balance })}
+      <div className="flex-1">
+        <SEOHead title="Prompt Forge — AI-IDEI" description="Generate AI prompts for marketing, copywriting and content creation." />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+          {/* Hero */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-serif font-bold mb-2">{t("prompt_forge.title")}</h1>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
+              {t("prompt_forge.subtitle")}
             </p>
           </div>
 
-          {/* Output panel */}
-          <div className="min-h-[400px] rounded-xl border border-border bg-card p-5 overflow-y-auto max-h-[70vh]">
-            {result ? (
+          {/* Template Library */}
+          <TemplateLibrary onSelect={handleTemplateSelect} />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Input panel */}
+            <div className="space-y-4">
+              <GoalSelector goal={goal} onSelect={setGoal} />
+
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                    {t("prompt_forge.result_label")}
-                  </span>
-                  <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={copyToClipboard}>
-                    <Copy className="h-3 w-3" />
-                    {t("prompt_forge.copy")}
-                  </Button>
-                </div>
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <ReactMarkdown>{result}</ReactMarkdown>
-                </div>
+                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                  {t("prompt_forge.context_label")}
+                </label>
+                <Textarea
+                  value={context}
+                  onChange={e => setContext(e.target.value)}
+                  placeholder={t("prompt_forge.context_placeholder")}
+                  rows={4}
+                  className="text-sm"
+                />
               </div>
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center">
-                <Wand2 className="h-10 w-10 text-muted-foreground/20 mb-3" />
-                <p className="text-sm text-muted-foreground/50">
-                  {t("prompt_forge.empty_hint")}
-                </p>
+
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                  {t("prompt_forge.details_label")}
+                </label>
+                <Textarea
+                  value={details}
+                  onChange={e => setDetails(e.target.value)}
+                  placeholder={t("prompt_forge.details_placeholder")}
+                  rows={3}
+                  className="text-sm"
+                />
               </div>
-            )}
+
+              <Button
+                onClick={handleGenerate}
+                disabled={loading || !context.trim() || !goal || balance < estimatedCost}
+                className="w-full gap-2"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {t("prompt_forge.generating")}
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4" />
+                    {t("prompt_forge.generate_button", { cost: estimatedCost })}
+                  </>
+                )}
+              </Button>
+
+              {balance < estimatedCost && !loading && (
+                <div className="mt-3">
+                  <InlineTopUp needed={estimatedCost} balance={balance} compact />
+                </div>
+              )}
+
+              <p className="text-[10px] text-muted-foreground/50 text-center">
+                {t("prompt_forge.balance_label", { balance })}
+              </p>
+
+              {/* History */}
+              <PromptHistory onReuse={handleHistoryReuse} refreshKey={historyRefresh} />
+            </div>
+
+            {/* Output panel */}
+            <div className="min-h-[400px] rounded-xl border border-border bg-card p-5 overflow-y-auto max-h-[70vh]">
+              <PromptOutput result={result} onSaveToHistory={result ? saveToHistory : undefined} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </PremiumGate>
   );
 }
