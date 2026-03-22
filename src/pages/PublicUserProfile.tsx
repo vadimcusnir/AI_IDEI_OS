@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import {
   Loader2, User, Brain, FileText, Sparkles, Calendar,
   ArrowRight, Globe,
