@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { YouTubeTranscriber } from "@/components/extractor/YouTubeTranscriber";
+import { TranscriptHistory } from "@/components/extractor/TranscriptHistory";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, Sparkles, Zap } from "lucide-react";
 import { motion } from "framer-motion";
