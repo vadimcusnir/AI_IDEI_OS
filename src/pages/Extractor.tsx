@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
+import { NEPExtractorPanel } from "@/components/extractor/NEPExtractorPanel";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall } from "@/components/premium/PremiumPaywall";
