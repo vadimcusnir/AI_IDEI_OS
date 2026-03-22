@@ -358,9 +358,9 @@ function CostRevenueOverview() {
           {data.map(d => (
             <div key={d.service} className="space-y-1">
               <div className="flex items-center justify-between text-[10px]">
-                <span className="font-medium truncate max-w-[120px]">{d.service}</span>
+                <span className="font-medium truncate max-w-[140px]">{d.service}</span>
                 <span className="text-muted-foreground">
-                  Cost: {d.cost} · Rev: {d.revenue}
+                  Cost: ${d.cost.toFixed(2)} · Rev: ${d.revenue.toFixed(2)} · {d.jobs} jobs · {d.margin.toFixed(0)}% margin
                 </span>
               </div>
               <div className="flex gap-1 h-2">
@@ -370,8 +370,8 @@ function CostRevenueOverview() {
             </div>
           ))}
           <div className="flex items-center gap-4 text-[9px] text-muted-foreground pt-2">
-            <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-destructive/40" /> Cost</span>
-            <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-primary/60" /> Revenue</span>
+            <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-destructive/40" /> Compute Cost</span>
+            <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-primary/60" /> Revenue (10× markup)</span>
           </div>
         </div>
       )}
