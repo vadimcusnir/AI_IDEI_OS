@@ -281,6 +281,9 @@ export default function Landing() {
       {/* ═══ 3. MECHANISM ═══ */}
       <LandingMechanism />
 
+      {/* ═══ 3.5 TRANSFORMATION DIAGRAM ═══ */}
+      <TransformationDiagram />
+
       {/* ═══ 4. WHAT YOU GET ═══ */}
       <Section>
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
