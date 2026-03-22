@@ -61,9 +61,9 @@ export function TransformationDiagram() {
               {INPUTS.map((input) => (
                 <div
                   key={input.label}
-                  className="flex items-center gap-3 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.2)] p-3 cursor-default landing-card transition-colors duration-200 hover:border-[hsl(var(--gold-oxide)/0.12)]"
-                  onPointerEnter={() => setActiveStep(0)}
-                  onPointerLeave={() => setActiveStep(null)}
+                  className="flex items-center gap-3 p-3 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.2)] hover:border-[hsl(var(--gold-oxide)/0.12)] transition-all cursor-default landing-card"
+                  onMouseEnter={() => setActiveStep(0)}
+                  onMouseLeave={() => setActiveStep(null)}
                 >
                   <span className="text-sm">{input.icon}</span>
                   <span className="text-sm text-foreground">{input.label}</span>
@@ -75,7 +75,7 @@ export function TransformationDiagram() {
           {/* Arrow 1 */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp} className="hidden lg:flex items-center justify-center px-4 pt-8">
             <div className="flex flex-col items-center gap-1">
-              <div className={`h-px w-12 transition-colors duration-200 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)]' : 'bg-[hsl(var(--ivory-dim)/0.12)]'}`} />
+              <div className={`w-12 h-px transition-colors duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)]' : 'bg-[hsl(var(--ivory-dim)/0.12)]'}`} />
               <span className="text-xs font-mono text-[hsl(var(--gold-oxide))]">→</span>
             </div>
           </motion.div>
@@ -87,9 +87,9 @@ export function TransformationDiagram() {
               {PROCESSES.map((proc) => (
                 <div
                   key={proc.label}
-                  className="rounded-lg border border-[hsl(var(--gold-oxide)/0.08)] bg-[hsl(var(--obsidian-light)/0.3)] p-3 cursor-default landing-card transition-colors duration-200 hover:border-[hsl(var(--gold-oxide)/0.2)]"
-                  onPointerEnter={() => setActiveStep(1)}
-                  onPointerLeave={() => setActiveStep(null)}
+                  className="p-3 rounded-lg border border-[hsl(var(--gold-oxide)/0.08)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.2)] transition-all cursor-default group landing-card"
+                  onMouseEnter={() => setActiveStep(1)}
+                  onMouseLeave={() => setActiveStep(null)}
                 >
                   <p className="text-sm font-semibold text-foreground mb-0.5">{proc.label}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">{proc.desc}</p>
@@ -101,7 +101,7 @@ export function TransformationDiagram() {
           {/* Arrow 2 */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={3} variants={fadeUp} className="hidden lg:flex items-center justify-center px-4 pt-8">
             <div className="flex flex-col items-center gap-1">
-              <div className={`h-px w-12 transition-colors duration-200 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)]' : 'bg-[hsl(var(--ivory-dim)/0.12)]'}`} />
+              <div className={`w-12 h-px transition-colors duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)]' : 'bg-[hsl(var(--ivory-dim)/0.12)]'}`} />
               <span className="text-xs font-mono text-[hsl(var(--gold-oxide))]">→</span>
             </div>
           </motion.div>
@@ -113,9 +113,9 @@ export function TransformationDiagram() {
               {OUTPUTS.map((output) => (
                 <div
                   key={output.label}
-                  className="rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.2)] p-2.5 cursor-default landing-card transition-colors duration-200 hover:border-[hsl(var(--gold-oxide)/0.15)]"
-                  onPointerEnter={() => setActiveStep(2)}
-                  onPointerLeave={() => setActiveStep(null)}
+                  className="p-2.5 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.2)] hover:border-[hsl(var(--gold-oxide)/0.15)] transition-all cursor-default landing-card"
+                  onMouseEnter={() => setActiveStep(2)}
+                  onMouseLeave={() => setActiveStep(null)}
                 >
                   <p className="text-xs sm:text-sm font-medium text-foreground">{output.label}</p>
                   <p className="text-xs font-mono text-[hsl(var(--gold-oxide))] mt-0.5">{output.family}</p>
