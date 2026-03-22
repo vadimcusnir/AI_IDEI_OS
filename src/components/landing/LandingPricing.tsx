@@ -48,7 +48,7 @@ export function LandingPricing({ ctaAction }: Props) {
                 <span className="text-2xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{plan.price}</span>
                 <span className="text-sm font-mono text-muted-foreground">{plan.period}</span>
               </div>
-              <p className="text-xs font-mono tracking-[0.1em] text-[hsl(var(--gold-dim))] mb-4">{plan.promise.toUpperCase()}</p>
+              <p className="text-xs sm:text-sm font-mono tracking-[0.1em] text-[hsl(var(--gold-dim))] mb-4">{plan.promise.toUpperCase()}</p>
               <p className="text-sm text-muted-foreground leading-relaxed flex-1">{plan.text}</p>
               <Button
                 onClick={ctaAction}

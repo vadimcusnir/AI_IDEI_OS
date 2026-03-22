@@ -42,7 +42,7 @@ export function LandingSocialProof() {
                 <div className="h-8 w-8 rounded-full bg-[hsl(var(--gold-oxide)/0.12)] flex items-center justify-center shrink-0">
                   <span className="text-xs font-mono font-bold text-[hsl(var(--gold-oxide))]">{t.name}</span>
                 </div>
-                <p className="text-xs font-mono text-muted-foreground">{t.role}</p>
+                <p className="text-sm font-mono text-muted-foreground">{t.role}</p>
               </div>
             </FadeInView>
           ))}

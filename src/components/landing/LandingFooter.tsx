@@ -71,7 +71,7 @@ export function LandingFooter() {
 
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:flex-row">
-          <span className="text-xs font-mono text-muted-foreground">
+          <span className="text-xs sm:text-sm font-mono text-muted-foreground">
             © {new Date().getFullYear()} AI-IDEI · From rough idea to persuasive asset.
           </span>
           <div className="flex items-center gap-6">

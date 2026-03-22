@@ -16,7 +16,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-5 sm:px-6 pt-16 sm:pt-28 md:pt-36 pb-6 sm:pb-12 text-center">
-        <p className="text-[11px] sm:text-xs font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide))] mb-6 sm:mb-8">
+        <p className="text-xs sm:text-sm font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide))] mb-6 sm:mb-8">
           KNOWLEDGE EXTRACTION ENGINE
         </p>
 
