@@ -136,7 +136,7 @@ export default function Landing() {
 
       {/* ═══ TOP BAR ═══ */}
       <div className="border-b border-border">
-        <p className="text-center text-xs font-mono tracking-[0.12em] text-muted-foreground py-2.5 px-4">
+        <p className="text-center text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground py-2.5 px-4">
           Turn rough ideas into copy, content, offers, and campaigns — faster.
         </p>
       </div>
