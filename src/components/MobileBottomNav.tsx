@@ -8,14 +8,15 @@ import {
   Sparkles, Briefcase, BarChart3, Network, Lightbulb,
   Store, Users, Bot, Layers, Rocket, Shield,
   Coins, Bell, MessageCircle, FileText, ScrollText,
-  User, LogOut, Youtube,
+  User, LogOut, Eye, Settings, Plug, Key,
+  GraduationCap, Terminal, Wallet, Trophy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
 
-/* Bottom bar: 5 pipeline-essential tabs */
+/* Bottom bar: 4 core actions + hamburger (= 5 touch targets) */
 const BAR_ITEMS = [
   { path: "/home", icon: Home, labelKey: "home" },
   { path: "/extractor", icon: Upload, labelKey: "extractor" },
@@ -23,63 +24,87 @@ const BAR_ITEMS = [
   { path: "/library", icon: BookOpen, labelKey: "library" },
 ];
 
-/* Full menu sections — matches sidebar architecture */
+/* Full menu — mirrors sidebar 6-section architecture */
 interface MenuSection {
   label: string;
   labelKey: string;
+  icon: React.ElementType;
   items: { path: string; icon: React.ElementType; labelKey: string; adminOnly?: boolean }[];
 }
 
 const MENU_SECTIONS: MenuSection[] = [
   {
-    label: "Pipeline",
-    labelKey: "pipeline_section",
+    label: "Dashboard",
+    labelKey: "dashboard_section",
+    icon: Home,
     items: [
       { path: "/home", icon: Home, labelKey: "cockpit" },
+      { path: "/dashboard", icon: BarChart3, labelKey: "dashboard" },
+      { path: "/onboarding", icon: Rocket, labelKey: "onboarding" },
+    ],
+  },
+  {
+    label: "Create",
+    labelKey: "create_section",
+    icon: Upload,
+    items: [
       { path: "/transcribe", icon: FileText, labelKey: "transcribe" },
       { path: "/extractor", icon: Upload, labelKey: "extractor" },
       { path: "/neurons", icon: Brain, labelKey: "neurons" },
       { path: "/services", icon: Sparkles, labelKey: "services" },
-      { path: "/jobs", icon: Briefcase, labelKey: "jobs" },
-      { path: "/library", icon: BookOpen, labelKey: "library" },
+      { path: "/prompt-forge", icon: Bot, labelKey: "prompt_forge" },
+      { path: "/profile-extractor", icon: Users, labelKey: "profile_extractor" },
     ],
   },
   {
     label: "Explore",
     labelKey: "explore_section",
+    icon: Eye,
     items: [
-      { path: "/dashboard", icon: BarChart3, labelKey: "dashboard" },
-      { path: "/intelligence", icon: Network, labelKey: "intelligence" },
       { path: "/topics", icon: Lightbulb, labelKey: "topics" },
       { path: "/marketplace", icon: Store, labelKey: "marketplace" },
+      { path: "/intelligence", icon: Network, labelKey: "intelligence" },
       { path: "/community", icon: Users, labelKey: "community" },
-      { path: "/chat", icon: Bot, labelKey: "chat" },
+      { path: "/chat", icon: Terminal, labelKey: "chat" },
     ],
   },
   {
-    label: "Manage",
+    label: "Operate",
     labelKey: "operate_section",
+    icon: Settings,
     items: [
-      { path: "/credits", icon: Coins, labelKey: "credits" },
-      { path: "/guests", icon: Users, labelKey: "guest_pages" },
+      { path: "/jobs", icon: Briefcase, labelKey: "jobs" },
+      { path: "/library", icon: BookOpen, labelKey: "library" },
       { path: "/pipeline", icon: Layers, labelKey: "pipeline" },
-      { path: "/onboarding", icon: Rocket, labelKey: "onboarding" },
+      { path: "/integrations", icon: Plug, labelKey: "integrations" },
+      { path: "/api", icon: Key, labelKey: "api" },
     ],
   },
   {
-    label: "Support",
+    label: "Account",
     labelKey: "account_section",
+    icon: User,
     items: [
+      { path: "/profile", icon: User, labelKey: "profile" },
+      { path: "/credits", icon: Coins, labelKey: "credits" },
       { path: "/notifications", icon: Bell, labelKey: "notifications" },
-      { path: "/feedback", icon: MessageCircle, labelKey: "feedback" },
+      { path: "/guests", icon: Users, labelKey: "guest_pages" },
+    ],
+  },
+  {
+    label: "Learn",
+    labelKey: "learn_section",
+    icon: GraduationCap,
+    items: [
       { path: "/docs", icon: FileText, labelKey: "docs" },
       { path: "/changelog", icon: ScrollText, labelKey: "changelog" },
-      { path: "/profile", icon: User, labelKey: "profile" },
+      { path: "/feedback", icon: MessageCircle, labelKey: "feedback" },
     ],
   },
   {
     label: "Admin",
     labelKey: "admin_section",
+    icon: Shield,
     items: [
       { path: "/admin", icon: Shield, labelKey: "admin", adminOnly: true },
     ],
@@ -123,7 +148,9 @@ export function MobileBottomNav() {
                 )}
               >
                 <Icon className={cn("h-5 w-5 transition-all", active && "stroke-[2.5]")} />
-                <span className={cn("text-[9px] leading-none transition-all", active ? "font-bold" : "font-medium")}>{t(`navigation:${labelKey}`)}</span>
+                <span className={cn("text-[9px] leading-none transition-all", active ? "font-bold" : "font-medium")}>
+                  {t(`navigation:${labelKey}`)}
+                </span>
                 {active && (
                   <span className="absolute bottom-1 h-0.5 w-4 rounded-full bg-primary" />
                 )}
@@ -143,7 +170,7 @@ export function MobileBottomNav() {
         </div>
       </nav>
 
-      {/* Slide-out full menu */}
+      {/* Slide-out full menu — 6 sections */}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="w-[280px] p-0 overflow-y-auto">
           <SheetHeader className="p-4 pb-2">
@@ -155,11 +182,15 @@ export function MobileBottomNav() {
                 (item) => !item.adminOnly || isAdmin
               );
               if (visibleItems.length === 0) return null;
+              const SectionIcon = section.icon;
               return (
                 <div key={section.labelKey}>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground px-4 pt-3 pb-1">
-                    {t(`navigation:${section.labelKey}`)}
-                  </p>
+                  <div className="flex items-center gap-1.5 px-4 pt-3 pb-1">
+                    <SectionIcon className="h-3 w-3 text-muted-foreground/70" />
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                      {t(`navigation:${section.labelKey}`)}
+                    </p>
+                  </div>
                   {visibleItems.map((item) => {
                     const active = isActive(item.path);
                     return (

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,7 +10,8 @@ import {
   LogOut, Home, User, MessageCircle, ScrollText,
   BarChart3, Bell, BookOpen, Users, Network, Rocket,
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
-  Lock,
+  Lock, ChevronRight, Plug, GraduationCap, Terminal,
+  Wallet, Trophy, Settings, Key, Eye,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
@@ -23,79 +25,106 @@ import {
 } from "@/components/ui/sidebar";
 import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
 import { ControlledNavItem } from "@/components/ControlledNavItem";
+import {
+  Collapsible, CollapsibleContent, CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface NavItem {
   labelKey: string;
   to: string;
   icon: React.ElementType;
   adminOnly?: boolean;
-  /** UI control registry ID for dynamic visibility */
   controlId?: string;
-  /** Marks this nav item as requiring Pro tier */
   proOnly?: boolean;
 }
 
 interface NavSection {
   labelKey: string;
+  icon: React.ElementType;
   items: NavItem[];
+  defaultOpen?: boolean;
 }
 
 /*
- * Navigation Architecture — max 5 sections, max 6 items each.
- * Narrative: Pipeline flow → Explore → Manage → Support → Admin
+ * Navigation Architecture v2 — 6 clear sections
+ * Dashboard → Create → Explore → Operate → Account → Learn
+ * + Admin (role-gated)
  */
 const NAV_SECTIONS: NavSection[] = [
   {
-    labelKey: "pipeline_section",
+    labelKey: "dashboard_section",
+    icon: Home,
+    defaultOpen: true,
     items: [
       { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home" },
+      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3, controlId: "nav.dashboard" },
+      { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },
+    ],
+  },
+  {
+    labelKey: "create_section",
+    icon: Upload,
+    defaultOpen: true,
+    items: [
       { labelKey: "transcribe", to: "/transcribe", icon: FileText, controlId: "nav.transcribe" },
       { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
       { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
       { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-      { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
-      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge" },
       { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
     ],
   },
   {
     labelKey: "explore_section",
+    icon: Eye,
     items: [
-      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3, controlId: "nav.dashboard" },
-      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true },
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true },
       { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
-      { labelKey: "chat", to: "/chat", icon: MessagesSquare, controlId: "nav.chat" },
+      { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
     ],
   },
   {
     labelKey: "operate_section",
+    icon: Settings,
     items: [
-      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-      { labelKey: "integrations", to: "/integrations", icon: Layers, controlId: "nav.integrations" },
-      { labelKey: "guest_pages", to: "/guests", icon: Users, controlId: "nav.guests" },
+      { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
-      { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },
+      { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
+      { labelKey: "api", to: "/api", icon: Key, controlId: "nav.api" },
     ],
   },
   {
     labelKey: "account_section",
+    icon: User,
     items: [
+      { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
+      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { labelKey: "wallet", to: "/wallet", icon: Wallet, controlId: "nav.wallet" },
       { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
-      { labelKey: "feedback", to: "/feedback", icon: MessageCircle, controlId: "nav.feedback" },
-      { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
-      { labelKey: "changelog", to: "/changelog", icon: ScrollText, controlId: "nav.changelog" },
+      { labelKey: "guest_pages", to: "/guests", icon: Users, controlId: "nav.guests" },
     ],
   },
   {
-    labelKey: "admin_section",
+    labelKey: "learn_section",
+    icon: GraduationCap,
     items: [
-      { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
+      { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
+      { labelKey: "changelog", to: "/changelog", icon: ScrollText, controlId: "nav.changelog" },
+      { labelKey: "feedback", to: "/feedback", icon: MessageCircle, controlId: "nav.feedback" },
     ],
   },
 ];
+
+const ADMIN_SECTION: NavSection = {
+  labelKey: "admin_section",
+  icon: Shield,
+  items: [
+    { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
+  ],
+};
 
 export function AppSidebar() {
   const { t } = useTranslation(["navigation", "common"]);
@@ -110,6 +139,13 @@ export function AppSidebar() {
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
 
+  const sectionHasActive = (section: NavSection) =>
+    section.items.some((item) => isActive(item.to));
+
+  const allSections = isAdmin
+    ? [...NAV_SECTIONS, ADMIN_SECTION]
+    : NAV_SECTIONS;
+
   return (
     <Sidebar collapsible="icon">
       {/* Brand */}
@@ -122,7 +158,7 @@ export function AppSidebar() {
 
       <SidebarSeparator />
 
-      {/* Workspace & Credits */}
+      {/* Workspace & Credits — compact */}
       {user && !collapsed && (
         <div className="px-3 py-2 space-y-2">
           <WorkspaceSwitcher collapsed={false} />
@@ -140,7 +176,6 @@ export function AppSidebar() {
               </span>
             </div>
           </button>
-          {/* Streak + XP compact */}
           <div className="flex items-center gap-2 px-1">
             <StreakWidget />
             <div className="flex-1 min-w-0">
@@ -162,76 +197,112 @@ export function AppSidebar() {
         </div>
       )}
 
-      {/* Navigation sections — all visible, no collapsible "More" */}
+      {/* Navigation — 6 collapsible sections */}
       <SidebarContent>
-        {NAV_SECTIONS.map((section, idx) => {
+        {allSections.map((section, idx) => {
           const visibleItems = section.items.filter(
             (item) => !item.adminOnly || isAdmin
           );
           if (visibleItems.length === 0) return null;
 
-          return (
-            <SidebarGroup key={section.labelKey}>
-              {!collapsed && (
-                <SidebarGroupLabel className="text-[9px]">
-                  {t(`navigation:${section.labelKey}`)}
-                </SidebarGroupLabel>
-              )}
-              {idx > 0 && collapsed && <SidebarSeparator className="my-1" />}
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {visibleItems.map((item) => {
-                    const menuItem = (
-                      <SidebarMenuItem key={item.to}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={isActive(item.to)}
-                          tooltip={t(`navigation:${item.labelKey}`)}
-                        >
-                          <button onClick={() => navigate(item.to)} className="w-full">
-                            <item.icon className="h-4 w-4" />
-                            <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
-                            {item.proOnly && !collapsed && (
-                              <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
-                            )}
-                          </button>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
+          const hasActive = sectionHasActive(section);
+          const SectionIcon = section.icon;
 
-                    if (item.controlId) {
-                      return (
-                        <ControlledNavItem key={item.to} elementId={item.controlId}>
-                          {menuItem}
-                        </ControlledNavItem>
+          // In collapsed mode, just show items flat
+          if (collapsed) {
+            return (
+              <SidebarGroup key={section.labelKey}>
+                {idx > 0 && <SidebarSeparator className="my-1" />}
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {visibleItems.map((item) => {
+                      const menuItem = (
+                        <SidebarMenuItem key={item.to}>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={isActive(item.to)}
+                            tooltip={t(`navigation:${item.labelKey}`)}
+                          >
+                            <button onClick={() => navigate(item.to)} className="w-full">
+                              <item.icon className="h-4 w-4" />
+                            </button>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
                       );
-                    }
+                      if (item.controlId) {
+                        return (
+                          <ControlledNavItem key={item.to} elementId={item.controlId}>
+                            {menuItem}
+                          </ControlledNavItem>
+                        );
+                      }
+                      return menuItem;
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            );
+          }
 
-                    return menuItem;
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+          // Expanded mode: collapsible sections with progressive disclosure
+          return (
+            <Collapsible
+              key={section.labelKey}
+              defaultOpen={section.defaultOpen || hasActive}
+              className="group/collapsible"
+            >
+              <SidebarGroup>
+                <CollapsibleTrigger asChild>
+                  <SidebarGroupLabel className="text-[10px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5">
+                    <SectionIcon className="h-3 w-3 text-muted-foreground/70" />
+                    <span className="flex-1">{t(`navigation:${section.labelKey}`)}</span>
+                    <ChevronRight className="h-3 w-3 text-muted-foreground/50 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                  </SidebarGroupLabel>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {visibleItems.map((item) => {
+                        const menuItem = (
+                          <SidebarMenuItem key={item.to}>
+                            <SidebarMenuButton
+                              asChild
+                              isActive={isActive(item.to)}
+                              tooltip={t(`navigation:${item.labelKey}`)}
+                            >
+                              <button onClick={() => navigate(item.to)} className="w-full">
+                                <item.icon className="h-4 w-4" />
+                                <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
+                                {item.proOnly && (
+                                  <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
+                                )}
+                              </button>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        );
+
+                        if (item.controlId) {
+                          return (
+                            <ControlledNavItem key={item.to} elementId={item.controlId}>
+                              {menuItem}
+                            </ControlledNavItem>
+                          );
+                        }
+                        return menuItem;
+                      })}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </CollapsibleContent>
+              </SidebarGroup>
+            </Collapsible>
           );
         })}
       </SidebarContent>
 
-      {/* Footer: Profile + Sign out */}
+      {/* Footer */}
       <SidebarFooter>
         <SidebarSeparator />
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              isActive={isActive("/profile")}
-              tooltip={t("navigation:profile")}
-            >
-              <button onClick={() => navigate("/profile")} className="w-full">
-                <User className="h-4 w-4" />
-                <span>{t("navigation:profile")}</span>
-              </button>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <div className="flex items-center justify-between px-2 py-1">
               {!collapsed && <ThemeToggle />}
