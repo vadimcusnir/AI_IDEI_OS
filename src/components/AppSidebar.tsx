@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { useUserTier, type UserTier } from "@/hooks/useUserTier";
 import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
@@ -36,6 +37,8 @@ interface NavItem {
   adminOnly?: boolean;
   controlId?: string;
   proOnly?: boolean;
+  /** Minimum tier required to see this item */
+  minTier?: UserTier;
 }
 
 interface NavSection {
@@ -80,7 +83,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true },
+      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true, minTier: "pro" as UserTier },
       { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
       { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
     ],
@@ -91,8 +94,8 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
       { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units" },
-      { labelKey: "collection_runs", to: "/collection-runs", icon: FolderSearch, controlId: "nav.collection-runs" },
+      { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units", minTier: "pro" as UserTier },
+      { labelKey: "collection_runs", to: "/collection-runs", icon: FolderSearch, controlId: "nav.collection-runs", minTier: "pro" as UserTier },
       { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
       { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
       { labelKey: "api", to: "/api", icon: Key, controlId: "nav.api" },
@@ -137,12 +140,21 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { balance, loading: balanceLoading } = useCreditBalance();
+  const { tier } = useUserTier();
+
+  const TIER_ORDER: Record<UserTier, number> = { free: 0, authenticated: 1, pro: 2, vip: 3 };
 
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
 
   const sectionHasActive = (section: NavSection) =>
     section.items.some((item) => isActive(item.to));
+
+  const isItemVisible = (item: NavItem) => {
+    if (item.adminOnly && !isAdmin) return false;
+    if (item.minTier && TIER_ORDER[tier] < TIER_ORDER[item.minTier]) return false;
+    return true;
+  };
 
   const allSections = isAdmin
     ? [...NAV_SECTIONS, ADMIN_SECTION]
@@ -202,9 +214,7 @@ export function AppSidebar() {
       {/* Navigation — 6 collapsible sections */}
       <SidebarContent>
         {allSections.map((section, idx) => {
-          const visibleItems = section.items.filter(
-            (item) => !item.adminOnly || isAdmin
-          );
+          const visibleItems = section.items.filter(isItemVisible);
           if (visibleItems.length === 0) return null;
 
           const hasActive = sectionHasActive(section);

@@ -3344,6 +3344,63 @@ export type Database = {
           },
         ]
       }
+      knowledge_surface_pages: {
+        Row: {
+          content_md: string | null
+          created_at: string
+          entity_ids: string[] | null
+          id: string
+          llm_citation_count: number | null
+          meta_description: string | null
+          neuron_ids: number[] | null
+          page_type: string
+          published_at: string | null
+          quality_score: number | null
+          schema_json: Json | null
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+          view_count: number | null
+        }
+        Insert: {
+          content_md?: string | null
+          created_at?: string
+          entity_ids?: string[] | null
+          id?: string
+          llm_citation_count?: number | null
+          meta_description?: string | null
+          neuron_ids?: number[] | null
+          page_type?: string
+          published_at?: string | null
+          quality_score?: number | null
+          schema_json?: Json | null
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Update: {
+          content_md?: string | null
+          created_at?: string
+          entity_ids?: string[] | null
+          id?: string
+          llm_citation_count?: number | null
+          meta_description?: string | null
+          neuron_ids?: number[] | null
+          page_type?: string
+          published_at?: string | null
+          quality_score?: number | null
+          schema_json?: Json | null
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Relationships: []
+      }
       learning_path_progress: {
         Row: {
           completed_at: string | null
@@ -3420,6 +3477,83 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      llm_crawl_queue: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          page_path: string
+          priority: number | null
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          page_path: string
+          priority?: number | null
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          page_path?: string
+          priority?: number | null
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      llm_entities: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          description: string | null
+          entity_name: string
+          entity_type: string
+          id: string
+          page_id: string
+          schema_org_type: string | null
+          source_context: string | null
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          description?: string | null
+          entity_name: string
+          entity_type?: string
+          id?: string
+          page_id: string
+          schema_org_type?: string | null
+          source_context?: string | null
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          description?: string | null
+          entity_name?: string
+          entity_type?: string
+          id?: string
+          page_id?: string
+          schema_org_type?: string | null
+          source_context?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "llm_entities_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "llm_page_index"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       llm_fix_suggestions: {
         Row: {
@@ -3563,6 +3697,63 @@ export type Database = {
           user_agent?: string | null
         }
         Relationships: []
+      }
+      llm_visibility_scores: {
+        Row: {
+          citation_count: number | null
+          content_depth_score: number | null
+          created_at: string
+          entity_coverage_score: number | null
+          id: string
+          page_id: string | null
+          referral_count: number | null
+          schema_score: number | null
+          score_date: string
+          surface_page_id: string | null
+          visibility_score: number | null
+        }
+        Insert: {
+          citation_count?: number | null
+          content_depth_score?: number | null
+          created_at?: string
+          entity_coverage_score?: number | null
+          id?: string
+          page_id?: string | null
+          referral_count?: number | null
+          schema_score?: number | null
+          score_date?: string
+          surface_page_id?: string | null
+          visibility_score?: number | null
+        }
+        Update: {
+          citation_count?: number | null
+          content_depth_score?: number | null
+          created_at?: string
+          entity_coverage_score?: number | null
+          id?: string
+          page_id?: string | null
+          referral_count?: number | null
+          schema_score?: number | null
+          score_date?: string
+          surface_page_id?: string | null
+          visibility_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "llm_visibility_scores_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "llm_page_index"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "llm_visibility_scores_surface_page_id_fkey"
+            columns: ["surface_page_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_surface_pages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       neuron_address_aliases: {
         Row: {
@@ -4287,6 +4478,60 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      product_surface_pages: {
+        Row: {
+          created_at: string
+          description_md: string | null
+          features: Json | null
+          id: string
+          og_image_url: string | null
+          product_key: string
+          published_at: string | null
+          schema_json: Json | null
+          slug: string
+          status: string
+          tagline: string | null
+          title: string
+          updated_at: string
+          use_cases: Json | null
+          view_count: number | null
+        }
+        Insert: {
+          created_at?: string
+          description_md?: string | null
+          features?: Json | null
+          id?: string
+          og_image_url?: string | null
+          product_key: string
+          published_at?: string | null
+          schema_json?: Json | null
+          slug: string
+          status?: string
+          tagline?: string | null
+          title: string
+          updated_at?: string
+          use_cases?: Json | null
+          view_count?: number | null
+        }
+        Update: {
+          created_at?: string
+          description_md?: string | null
+          features?: Json | null
+          id?: string
+          og_image_url?: string | null
+          product_key?: string
+          published_at?: string | null
+          schema_json?: Json | null
+          slug?: string
+          status?: string
+          tagline?: string | null
+          title?: string
+          updated_at?: string
+          use_cases?: Json | null
+          view_count?: number | null
         }
         Relationships: []
       }

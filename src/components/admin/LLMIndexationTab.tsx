@@ -1,6 +1,7 @@
 /**
  * LLM Indexation Monitor — Admin tab for tracking LLM visibility and indexation quality.
- * Shows: page scores, schema coverage, referrer tracking, fix suggestions.
+ * Shows: page scores, schema coverage, referrer tracking, fix suggestions,
+ * entities, knowledge surface pages, crawl queue.
  */
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Search, RefreshCw, Loader2, CheckCircle, AlertTriangle, XCircle,
-  Globe, FileText, Sparkles, TrendingUp, Bot, Zap,
+  Globe, FileText, Sparkles, TrendingUp, Bot, Zap, Layers, Database,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -49,10 +50,46 @@ interface ReferrerStat {
   count: number;
 }
 
+interface LLMEntity {
+  id: string;
+  entity_name: string;
+  entity_type: string;
+  description: string;
+  confidence: number;
+  schema_org_type: string | null;
+  created_at: string;
+}
+
+interface KnowledgeSurface {
+  id: string;
+  slug: string;
+  page_type: string;
+  title: string;
+  status: string;
+  view_count: number;
+  llm_citation_count: number;
+  quality_score: number;
+  created_at: string;
+}
+
+interface CrawlQueueItem {
+  id: string;
+  page_path: string;
+  priority: number;
+  status: string;
+  started_at: string | null;
+  completed_at: string | null;
+  error_message: string | null;
+  created_at: string;
+}
+
 export function LLMIndexationTab() {
   const [pages, setPages] = useState<PageIndex[]>([]);
   const [fixes, setFixes] = useState<FixSuggestion[]>([]);
   const [referrers, setReferrers] = useState<ReferrerStat[]>([]);
+  const [entities, setEntities] = useState<LLMEntity[]>([]);
+  const [surfacePages, setSurfacePages] = useState<KnowledgeSurface[]>([]);
+  const [crawlQueue, setCrawlQueue] = useState<CrawlQueueItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [scanning, setScanning] = useState(false);
   const [fixing, setFixing] = useState(false);
@@ -61,7 +98,7 @@ export function LLMIndexationTab() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [pagesRes, fixesRes, referrersRes] = await Promise.all([
+      const [pagesRes, fixesRes, entitiesRes, surfaceRes, queueRes] = await Promise.all([
         supabase
           .from("llm_page_index")
           .select("*")
@@ -72,28 +109,41 @@ export function LLMIndexationTab() {
           .select("*")
           .order("created_at", { ascending: false })
           .limit(100),
-        Promise.resolve({ data: null as any }),
+        supabase
+          .from("llm_entities")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(200),
+        supabase
+          .from("knowledge_surface_pages")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(100),
+        supabase
+          .from("llm_crawl_queue")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(50),
       ]);
 
       setPages((pagesRes.data as any[]) || []);
       setFixes((fixesRes.data as any[]) || []);
+      setEntities((entitiesRes.data as any[]) || []);
+      setSurfacePages((surfaceRes.data as any[]) || []);
+      setCrawlQueue((queueRes.data as any[]) || []);
+
+      // Referrer stats
+      const { data: rawReferrers } = await supabase
+        .from("llm_referrer_log")
+        .select("referrer_source")
+        .order("created_at", { ascending: false })
+        .limit(500);
       
-      // Fallback for referrer stats if RPC doesn't exist
-      if (referrersRes.data) {
-        setReferrers(referrersRes.data as ReferrerStat[]);
-      } else {
-        const { data: rawReferrers } = await supabase
-          .from("llm_referrer_log")
-          .select("referrer_source")
-          .order("created_at", { ascending: false })
-          .limit(500);
-        
-        const counts: Record<string, number> = {};
-        (rawReferrers || []).forEach((r: any) => {
-          counts[r.referrer_source] = (counts[r.referrer_source] || 0) + 1;
-        });
-        setReferrers(Object.entries(counts).map(([source, count]) => ({ referrer_source: source, count })));
-      }
+      const counts: Record<string, number> = {};
+      (rawReferrers || []).forEach((r: any) => {
+        counts[r.referrer_source] = (counts[r.referrer_source] || 0) + 1;
+      });
+      setReferrers(Object.entries(counts).map(([source, count]) => ({ referrer_source: source, count })));
     } catch (e) {
       console.error("Failed to load LLM indexation data:", e);
     } finally {
@@ -138,7 +188,7 @@ export function LLMIndexationTab() {
   const approveFix = async (fixId: string) => {
     const { error } = await supabase
       .from("llm_fix_suggestions")
-      .update({ status: "approved", approved_at: new Date().toISOString() })
+      .update({ status: "approved", approved_at: new Date().toISOString() } as any)
       .eq("id", fixId);
     if (error) { toast.error(error.message); return; }
     toast.success("Fix approved");
@@ -148,7 +198,7 @@ export function LLMIndexationTab() {
   const rejectFix = async (fixId: string) => {
     const { error } = await supabase
       .from("llm_fix_suggestions")
-      .update({ status: "rejected" })
+      .update({ status: "rejected" } as any)
       .eq("id", fixId);
     if (error) { toast.error(error.message); return; }
     loadData();
@@ -162,6 +212,9 @@ export function LLMIndexationTab() {
   const issuePages = pages.filter(p => (p.issues as any[])?.length > 0).length;
   const pendingFixes = fixes.filter(f => f.status === "pending").length;
   const totalReferrals = referrers.reduce((s, r) => s + r.count, 0);
+  const totalEntities = entities.length;
+  const publishedSurface = surfacePages.filter(p => p.status === "published").length;
+  const pendingCrawls = crawlQueue.filter(q => q.status === "pending").length;
 
   if (loading) {
     return (
@@ -177,7 +230,7 @@ export function LLMIndexationTab() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Bot className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold">LLM Indexation Monitor</h3>
+          <h3 className="text-sm font-semibold">LLM Indexation Engine</h3>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={runScan} disabled={scanning} className="gap-1.5 text-xs">
@@ -195,21 +248,27 @@ export function LLMIndexationTab() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9 gap-3">
         <KPICard label="Pages Indexed" value={totalPages} icon={Globe} />
         <KPICard label="Avg Score" value={avgScore.toFixed(1)} icon={TrendingUp} color={avgScore >= 7 ? "text-primary" : avgScore >= 5 ? "text-yellow-500" : "text-destructive"} />
-        <KPICard label="Schema Coverage" value={`${schemaCoverage.toFixed(0)}%`} icon={FileText} />
-        <KPICard label="Pages w/ Issues" value={issuePages} icon={AlertTriangle} color="text-yellow-500" />
-        <KPICard label="Pending Fixes" value={pendingFixes} icon={Zap} color="text-primary" />
-        <KPICard label="LLM Referrals" value={totalReferrals} icon={Bot} />
+        <KPICard label="Schema %" value={`${schemaCoverage.toFixed(0)}%`} icon={FileText} />
+        <KPICard label="Issues" value={issuePages} icon={AlertTriangle} color="text-yellow-500" />
+        <KPICard label="Fixes" value={pendingFixes} icon={Zap} color="text-primary" />
+        <KPICard label="Referrals" value={totalReferrals} icon={Bot} />
+        <KPICard label="Entities" value={totalEntities} icon={Database} />
+        <KPICard label="Surface" value={publishedSurface} icon={Layers} />
+        <KPICard label="Crawl Q" value={pendingCrawls} icon={Globe} />
       </div>
 
       {/* Sub-tabs */}
       <Tabs value={activeSubTab} onValueChange={setActiveSubTab}>
         <TabsList className="h-8">
           <TabsTrigger value="overview" className="text-xs">Pages</TabsTrigger>
+          <TabsTrigger value="entities" className="text-xs">Entities ({totalEntities})</TabsTrigger>
+          <TabsTrigger value="surface" className="text-xs">Knowledge Surface ({surfacePages.length})</TabsTrigger>
           <TabsTrigger value="fixes" className="text-xs">Fixes ({pendingFixes})</TabsTrigger>
           <TabsTrigger value="referrers" className="text-xs">LLM Traffic</TabsTrigger>
+          <TabsTrigger value="queue" className="text-xs">Crawl Queue ({pendingCrawls})</TabsTrigger>
         </TabsList>
 
         {/* Pages overview */}
@@ -264,6 +323,106 @@ export function LLMIndexationTab() {
             {pages.length === 0 && (
               <p className="text-xs text-muted-foreground text-center py-8">
                 No pages scanned yet. Click "Scan Pages" to start.
+              </p>
+            )}
+          </div>
+        </TabsContent>
+
+        {/* Entities */}
+        <TabsContent value="entities">
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[10px]">Entity</TableHead>
+                  <TableHead className="text-[10px]">Type</TableHead>
+                  <TableHead className="text-[10px]">Schema.org</TableHead>
+                  <TableHead className="text-[10px] text-right">Confidence</TableHead>
+                  <TableHead className="text-[10px]">Extracted</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {entities.slice(0, 50).map(entity => (
+                  <TableRow key={entity.id}>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-medium">{entity.entity_name}</span>
+                        {entity.description && (
+                          <span className="text-[10px] text-muted-foreground truncate max-w-[250px]">{entity.description}</span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="text-[9px]">{entity.entity_type}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      {entity.schema_org_type ? (
+                        <Badge variant="secondary" className="text-[9px]">{entity.schema_org_type}</Badge>
+                      ) : (
+                        <span className="text-[9px] text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <ScoreBadge score={Number(entity.confidence) * 10} />
+                    </TableCell>
+                    <TableCell className="text-[10px] text-muted-foreground">
+                      {new Date(entity.created_at).toLocaleDateString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {entities.length === 0 && (
+              <p className="text-xs text-muted-foreground text-center py-8">
+                No entities extracted yet. Run a page scan first.
+              </p>
+            )}
+          </div>
+        </TabsContent>
+
+        {/* Knowledge Surface */}
+        <TabsContent value="surface">
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[10px]">Title</TableHead>
+                  <TableHead className="text-[10px]">Type</TableHead>
+                  <TableHead className="text-[10px]">Status</TableHead>
+                  <TableHead className="text-[10px] text-right">Views</TableHead>
+                  <TableHead className="text-[10px] text-right">Citations</TableHead>
+                  <TableHead className="text-[10px] text-right">Quality</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {surfacePages.map(sp => (
+                  <TableRow key={sp.id}>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-medium">{sp.title}</span>
+                        <span className="text-[10px] text-muted-foreground font-mono">/{sp.slug}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="text-[9px]">{sp.page_type}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={sp.status === "published" ? "default" : "secondary"} className="text-[9px]">
+                        {sp.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right text-xs font-mono">{sp.view_count}</TableCell>
+                    <TableCell className="text-right text-xs font-mono">{sp.llm_citation_count}</TableCell>
+                    <TableCell className="text-right">
+                      <ScoreBadge score={Number(sp.quality_score)} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {surfacePages.length === 0 && (
+              <p className="text-xs text-muted-foreground text-center py-8">
+                No knowledge surface pages yet. Use the Knowledge Page Generator to create them.
               </p>
             )}
           </div>
@@ -339,6 +498,54 @@ export function LLMIndexationTab() {
                   </div>
                 ))}
               </div>
+            )}
+          </div>
+        </TabsContent>
+
+        {/* Crawl Queue */}
+        <TabsContent value="queue">
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[10px]">Page Path</TableHead>
+                  <TableHead className="text-[10px]">Priority</TableHead>
+                  <TableHead className="text-[10px]">Status</TableHead>
+                  <TableHead className="text-[10px]">Error</TableHead>
+                  <TableHead className="text-[10px]">Created</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {crawlQueue.map(item => (
+                  <TableRow key={item.id}>
+                    <TableCell className="text-xs font-mono">{item.page_path}</TableCell>
+                    <TableCell>
+                      <Badge variant={item.priority >= 8 ? "destructive" : "outline"} className="text-[9px]">
+                        P{item.priority}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={
+                        item.status === "completed" ? "default" :
+                        item.status === "failed" ? "destructive" : "secondary"
+                      } className="text-[9px]">
+                        {item.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-[10px] text-destructive truncate max-w-[150px]">
+                      {item.error_message || "—"}
+                    </TableCell>
+                    <TableCell className="text-[10px] text-muted-foreground">
+                      {new Date(item.created_at).toLocaleDateString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {crawlQueue.length === 0 && (
+              <p className="text-xs text-muted-foreground text-center py-8">
+                Crawl queue is empty. Pages will be queued automatically during scans.
+              </p>
             )}
           </div>
         </TabsContent>
