@@ -197,7 +197,7 @@ export default function Notifications() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
+    <div className="max-w-2xl mx-auto py-4 sm:py-8 px-3 sm:px-4">
       <SEOHead title={`${t("notifications.title")} — AI-IDEI`} description={t("notifications.description")} />
 
       {/* Header */}
