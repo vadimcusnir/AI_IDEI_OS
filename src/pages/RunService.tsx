@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { ROICalculator } from "@/components/credits/ROICalculator";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 
@@ -449,6 +450,17 @@ export default function RunService() {
                   </div>
                 )}
               </div>
+
+              {/* ROI Calculator */}
+              {deliverables.length > 0 && (
+                <div className="mb-6">
+                  <ROICalculator
+                    creditsCost={service.credits_cost}
+                    deliverablesCount={deliverables.length}
+                    serviceName={service.name}
+                  />
+                </div>
+              )}
 
               {/* Tier gate */}
               {!hasTierAccess && (

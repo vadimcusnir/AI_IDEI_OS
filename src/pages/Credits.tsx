@@ -17,6 +17,7 @@ import { ControlledSection } from "@/components/ControlledSection";
 import { WalletPanel } from "@/components/wallet/WalletPanel";
 import { TopUpDialog } from "@/components/credits/TopUpDialog";
 const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChart").then(m => ({ default: m.ConsumptionChart })));
+import { EconomicProjections } from "@/components/credits/EconomicProjections";
 import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
 
@@ -276,6 +277,12 @@ export default function Credits() {
         <Suspense fallback={<div className="h-40 bg-card border border-border rounded-xl animate-pulse" />}>
           <ConsumptionChart transactions={transactions} />
         </Suspense>
+
+        {/* Economic Projections */}
+        <EconomicProjections
+          transactions={transactions}
+          currentBalance={credits?.balance ?? 0}
+        />
 
         {/* Service consumption breakdown */}
         {Object.keys(serviceStats).length > 0 && (
