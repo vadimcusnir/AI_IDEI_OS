@@ -107,6 +107,7 @@ const TABS = [
   { value: "manifests", label: "Manifests", icon: Settings },
   { value: "advanced", label: "Advanced", icon: TrendingUp },
   { value: "root2", label: "Root2", icon: DollarSign },
+  { value: "llm-index", label: "LLM Index", icon: Bot },
 ];
 
 export default function AdminDashboard() {
