@@ -467,7 +467,11 @@ export default function Landing() {
                   <span className="absolute top-3 right-3 text-[7px] font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] border border-[hsl(var(--gold-oxide)/0.3)] px-2 py-0.5 rounded">POPULAR</span>
                 )}
                 <h3 className="text-lg font-bold text-[hsl(var(--ivory)/0.9)]">{plan.name}</h3>
-                <p className="text-[10px] font-mono tracking-[0.1em] text-[hsl(var(--gold-oxide)/0.7)] mt-1 mb-4">{plan.promise.toUpperCase()}</p>
+                <div className="flex items-baseline gap-1 mt-2 mb-1">
+                  <span className="text-2xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{plan.price}</span>
+                  <span className="text-[10px] font-mono text-[hsl(var(--ivory-dim)/0.35)]">{plan.period}</span>
+                </div>
+                <p className="text-[10px] font-mono tracking-[0.1em] text-[hsl(var(--gold-oxide)/0.5)] mb-4">{plan.promise.toUpperCase()}</p>
                 <p className="text-xs text-[hsl(var(--ivory-dim)/0.45)] leading-relaxed flex-1">{plan.text}</p>
                 <Button
                   onClick={ctaAction}
