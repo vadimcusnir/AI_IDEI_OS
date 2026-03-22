@@ -588,6 +588,21 @@ export function AgentConsole() {
           )}
         </div>
       </div>
+      </div>
+
+      {/* Execution Timeline panel */}
+      <AnimatePresence>
+        {showTimeline && planMeta && (
+          <motion.div
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: 280, opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
+            className="border-l border-border bg-card overflow-hidden shrink-0"
+          >
+            <ExecutionTimeline planMeta={planMeta} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
