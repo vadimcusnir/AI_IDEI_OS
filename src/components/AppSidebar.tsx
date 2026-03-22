@@ -91,6 +91,8 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
       { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units" },
+      { labelKey: "collection_runs", to: "/collection-runs", icon: FolderSearch, controlId: "nav.collection-runs" },
       { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
       { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
       { labelKey: "api", to: "/api", icon: Key, controlId: "nav.api" },
