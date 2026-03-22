@@ -835,6 +835,15 @@ const SERVICE_ARTIFACT_TYPE: Record<string, string> = {
   "partnership-playbook": "strategy",
   "financial-model": "report",
   "launch-retrospective": "report",
+  // Phase 3: Tone of Voice
+  "tone-of-voice-analyzer": "report",
+  "linguistic-deep-analysis": "report",
+  "writing-style-instructions": "document",
+  "custom-gpt-prompts": "prompt",
+  // Phase 3: Market Research
+  "market-psychology-engine": "report",
+  "launch-plan-generator": "strategy",
+  "implementation-guide": "document",
 };
 
 // Valid service keys for input validation
