@@ -214,9 +214,7 @@ export function AppSidebar() {
       {/* Navigation — 6 collapsible sections */}
       <SidebarContent>
         {allSections.map((section, idx) => {
-          const visibleItems = section.items.filter(
-            (item) => !item.adminOnly || isAdmin
-          );
+          const visibleItems = section.items.filter(isItemVisible);
           if (visibleItems.length === 0) return null;
 
           const hasActive = sectionHasActive(section);
