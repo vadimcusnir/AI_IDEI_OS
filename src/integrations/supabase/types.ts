@@ -6343,6 +6343,25 @@ export type Database = {
         Args: { _contribution_id: string }
         Returns: number
       }
+      search_neurons_hybrid: {
+        Args: {
+          _match_count?: number
+          _query: string
+          _query_embedding?: string
+          _user_id?: string
+        }
+        Returns: {
+          content_category: string
+          keyword_rank: number
+          neuron_id: number
+          number: number
+          rrf_score: number
+          score: number
+          semantic_rank: number
+          status: string
+          title: string
+        }[]
+      }
       search_neurons_semantic: {
         Args: {
           _user_id?: string

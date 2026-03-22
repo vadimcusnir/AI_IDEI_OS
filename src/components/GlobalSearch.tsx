@@ -83,7 +83,7 @@ export function GlobalSearch() {
     setLoading(true);
     const pattern = `%${q.trim()}%`;
 
-    // Keyword search (parallel)
+    // Keyword search (parallel) + hybrid search attempt
     const [neuronsRes, artifactsRes, guestsRes, entitiesRes] = await Promise.all([
       supabase
         .from("neurons")
@@ -146,35 +146,37 @@ export function GlobalSearch() {
       })),
     ];
 
-    // Semantic search — if keyword results are sparse, try vector search
-    if (mapped.length < 3 && q.trim().length >= 4) {
+    // Hybrid search (keyword + vector with RRF fusion) — if keyword results are sparse
+    if (mapped.filter(m => m.type === "neuron").length < 3 && q.trim().length >= 4) {
       try {
+        // Generate embedding for semantic component
         const embedding = await generateEmbedding(q.trim());
-        if (embedding) {
-          const { data: semanticResults } = await supabase.rpc("search_neurons_semantic", {
-            query_embedding: `[${embedding.join(",")}]`,
-            match_threshold: 0.3,
-            match_count: 5,
-            _user_id: user.id,
-          });
-          if (semanticResults) {
-            const existingIds = new Set(mapped.filter(m => m.type === "neuron").map(m => m.id));
-            for (const sr of semanticResults) {
-              const key = `n-${sr.neuron_id}`;
-              if (!existingIds.has(key)) {
-                mapped.push({
-                  id: key,
-                  title: sr.title,
-                  subtitle: `Semantic · ${(sr.similarity * 100).toFixed(0)}% match`,
-                  type: "neuron",
-                  path: `/n/${sr.neuron_id}`,
-                  semantic: true,
-                });
-              }
+        const { data: hybridResults } = await supabase.rpc("search_neurons_hybrid" as any, {
+          _query: q.trim(),
+          _query_embedding: embedding ? `[${embedding.join(",")}]` : null,
+          _user_id: user.id,
+          _match_count: 8,
+        });
+        if (hybridResults) {
+          const existingIds = new Set(mapped.filter(m => m.type === "neuron").map(m => m.id));
+          for (const sr of hybridResults as any[]) {
+            const key = `n-${sr.neuron_id}`;
+            if (!existingIds.has(key)) {
+              const hasSemanticRank = sr.semantic_rank != null;
+              const hasKeywordRank = sr.keyword_rank != null;
+              const matchType = hasSemanticRank && hasKeywordRank ? "Hybrid" : hasSemanticRank ? "Semantic" : "Keyword";
+              mapped.push({
+                id: key,
+                title: sr.title,
+                subtitle: `${matchType} · RRF ${(sr.rrf_score * 100).toFixed(0)}%`,
+                type: "neuron",
+                path: `/n/${sr.number}`,
+                semantic: hasSemanticRank,
+              });
             }
           }
         }
-      } catch { /* semantic search is best-effort */ }
+      } catch { /* hybrid search is best-effort */ }
     }
 
     setResults(mapped);
