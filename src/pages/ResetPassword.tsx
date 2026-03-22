@@ -3,7 +3,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Lock, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
