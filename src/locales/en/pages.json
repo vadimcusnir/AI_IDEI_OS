@@ -23,6 +23,8 @@
     "tour_neurons_desc": "Extracted atomic knowledge units appear here. Each neuron is reusable forever.",
     "tour_services_desc": "Run services to transform neurons into professional deliverables.",
     "quick_actions": {
+      "transcribe": "YouTube Transcript",
+      "transcribe_desc": "Download transcript instantly",
       "upload": "Upload Content",
       "upload_desc": "Transcripts, podcasts, texts",
       "new_neuron": "New Neuron",

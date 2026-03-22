@@ -146,5 +146,10 @@
   "seo": {
     "title": "AI-IDEI — Knowledge Extraction Operating System",
     "description": "Transform expertise into digital assets. Upload content once, generate dozens of professional outputs automatically. The magic marketing button."
+  },
+  "transcribe_cta": {
+    "title": "YouTube → Transcript in 2 seconds",
+    "desc": "Paste a YouTube link, download the full transcript. First one free.",
+    "button": "Try Transcribe"
   }
 }

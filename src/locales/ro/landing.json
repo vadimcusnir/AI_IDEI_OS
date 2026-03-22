@@ -146,5 +146,10 @@
   "seo": {
     "title": "AI-IDEI — Sistem Operațional de Extracție a Cunoștințelor",
     "description": "Transformă expertiza în active digitale. Încarcă conținut o dată, generează zeci de rezultate profesionale automat. Butonul magic de marketing."
+  },
+  "transcribe_cta": {
+    "title": "YouTube → Transcriere în 2 secunde",
+    "desc": "Lipește un link YouTube, descarcă transcrierea completă. Prima transcriere gratuită.",
+    "button": "Încearcă Transcrierea"
   }
 }

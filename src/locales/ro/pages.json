@@ -23,6 +23,8 @@
     "tour_neurons_desc": "Unitățile atomice de cunoaștere extrase apar aici. Fiecare neuron este reutilizabil infinit.",
     "tour_services_desc": "Rulează servicii pentru a transforma neuronii în livrabile profesionale.",
     "quick_actions": {
+      "transcribe": "Transcriere YouTube",
+      "transcribe_desc": "Descarcă transcrierea instant",
       "upload": "Încarcă Conținut",
       "upload_desc": "Transcrieri, podcast-uri, texte",
       "new_neuron": "Neuron Nou",
