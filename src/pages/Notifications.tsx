@@ -265,20 +265,20 @@ export default function Notifications() {
           )}
 
           {/* Actions */}
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               {unreadCount > 0 ? `${unreadCount} ${t("notifications_extra.unread")}` : `${t("notifications_extra.all_caught_up")} ✓`}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {unreadCount > 0 && (
-                <Button variant="outline" size="sm" onClick={markAllRead} className="text-xs gap-1.5">
-                  <CheckCheck className="h-3.5 w-3.5" />
+                <Button variant="outline" size="sm" onClick={markAllRead} className="text-[11px] sm:text-xs gap-1 sm:gap-1.5 h-7 sm:h-8 px-2 sm:px-3">
+                  <CheckCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   {t("notifications_extra.mark_all_read")}
                 </Button>
               )}
               {notifications.length > 0 && (
-                <Button variant="ghost" size="sm" onClick={clearAll} className="text-xs gap-1.5 text-muted-foreground">
-                  <Trash2 className="h-3.5 w-3.5" />
+                <Button variant="ghost" size="sm" onClick={clearAll} className="text-[11px] sm:text-xs gap-1 sm:gap-1.5 text-muted-foreground h-7 sm:h-8 px-2 sm:px-3">
+                  <Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   {t("notifications_extra.clear")}
                 </Button>
               )}
