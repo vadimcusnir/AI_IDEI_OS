@@ -51,41 +51,41 @@ Acest plan adresează cele 5 direcții strategice noi identificate în specifica
 
 ## III. PLAN DETALIAT PE FAZE
 
-### FAZA 1: Agent OS — Knowledge Agent (Săptămânile 1-3) 🎯
+### FAZA 1: Agent OS — Knowledge Agent (Săptămânile 1-3) 🎯 ✅
 
 **Obiectiv:** Transformarea chatului din tool conversațional în orchestrator al platformei.
 
-#### 1.1 Intent Engine Avansat ❌
-- [ ] Tabel `agent_intents` cu ~15 intents predefinite (analyze_video, extract_knowledge, build_course, etc.)
-- [ ] Intent classifier bazat pe LLM cu confidence scoring
-- [ ] Entity extraction din mesaj (URL, file type, topic)
-- [ ] Fallback la conversație liberă sub threshold confidence
+#### 1.1 Intent Engine Avansat ✅
+- [x] Tabel `agent_intents` cu ~13 intents predefinite
+- [x] Hybrid intent classifier (keyword + LLM) cu confidence scoring
+- [x] Entity extraction din mesaj (URL, file type, topic)
+- [x] Fallback la conversație liberă sub threshold confidence
 
-#### 1.2 Planner Engine ❌
-- [ ] Tabel `agent_plan_templates` cu planuri predefinite per intent
-- [ ] Dynamic step generator (adaptare plan la input)
-- [ ] Cost estimator pre-execuție (calcul total credite înainte de lansare)
-- [ ] Confirmare user înainte de execuție planuri costisitoare
+#### 1.2 Planner Engine ✅
+- [x] Tabel `agent_plan_templates` cu planuri predefinite per intent
+- [x] Dynamic step generator (adaptare plan la input)
+- [x] Cost estimator pre-execuție (calcul total credite înainte de lansare)
+- [x] Confirmare user înainte de execuție planuri costisitoare
 
-#### 1.3 Execution Timeline UI ❌
-- [ ] Split layout Chat + Execution Timeline
-- [ ] Fiecare step = link către rezultat (transcript, neurons, graph, artifacts)
-- [ ] Progress streaming (SSE) per step
-- [ ] Tabel `agent_actions` + `agent_steps` pentru tracking
+#### 1.3 Execution Timeline UI ✅
+- [x] Split layout Chat + Execution Timeline (panel dreapta)
+- [x] Fiecare step = status + progres + cost
+- [x] Progress streaming (Supabase Realtime) per step
+- [x] Tabel `agent_actions` + `agent_steps` pentru tracking
 
-#### 1.4 Memory System Avansat 🔧
+#### 1.4 Memory System Avansat ✅
 - [x] Session memory (ultimele 20 mesaje) — ✅ implementat
 - [x] User memory (statistici categorii/servicii) — ✅ implementat
 - [x] Knowledge memory (summary neuroni) — ✅ implementat
-- [ ] Task memory (`agent_action_history` — istoric acțiuni cu success rate)
-- [ ] Plan learning (planuri optime devin default bazat pe success_rate)
+- [x] Task memory (`agent_action_history` — istoric acțiuni cu success rate)
+- [x] Plan learning (planuri optime bazat pe success_rate via trigger)
 
-#### 1.5 Tool Registry ❌
-- [ ] Tabel `agent_tools` cu input/output schema per serviciu
-- [ ] Cost estimate și latență medie per tool
-- [ ] Agent poate interoga tool registry pentru a construi planuri
+#### 1.5 Tool Registry ✅
+- [x] Tabel `agent_tools` cu input/output schema per serviciu (19 tools)
+- [x] Cost estimate și latență medie per tool
+- [x] Agent poate interoga tool registry pentru a construi planuri
 
-**Efort estimat:** 8-10 sesiuni
+**Efort estimat:** 8-10 sesiuni — **IMPLEMENTAT**
 
 ---
 
