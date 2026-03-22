@@ -289,7 +289,7 @@ export default function Landing() {
               <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-4 leading-tight">
                 {t("problem.title")}
               </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: t("problem.desc") }} />
+              <p className="text-muted-foreground leading-relaxed mb-6">{t("problem.desc")}</p>
               <div className="flex flex-wrap gap-2">
                 {CONTENT_TYPES.map(ct => (
                   <span key={ct.label} className="flex items-center gap-1.5 text-[11px] bg-destructive/5 border border-destructive/10 px-3 py-1.5 rounded-full text-muted-foreground">
