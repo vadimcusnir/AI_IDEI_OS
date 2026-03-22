@@ -109,6 +109,8 @@ export default function Transcribe() {
                 <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
               </div>
             ))}
+          </motion.div>
+
           {/* Stats bar */}
           <motion.div
             initial={{ opacity: 0 }}
