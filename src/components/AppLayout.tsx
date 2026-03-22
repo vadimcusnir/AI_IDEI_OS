@@ -106,8 +106,8 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           </header>
 
           {user && (
-            <div className="border-b border-border px-3 py-1.5 bg-card/50">
-              <Suspense fallback={null}><PipelineIndicatorCompact /></Suspense>
+            <div className="border-b border-border px-3 py-1">
+              <Suspense fallback={null}><CompactPipeline /></Suspense>
             </div>
           )}
 
