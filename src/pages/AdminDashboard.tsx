@@ -105,6 +105,7 @@ const TABS = [
   { value: "control-layer", label: "Control", icon: Layers },
   { value: "manifests", label: "Manifests", icon: Settings },
   { value: "advanced", label: "Advanced", icon: TrendingUp },
+  { value: "root2", label: "Root2", icon: DollarSign },
 ];
 
 export default function AdminDashboard() {
