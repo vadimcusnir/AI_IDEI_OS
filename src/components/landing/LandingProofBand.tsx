@@ -11,7 +11,7 @@ const STATS = [
 
 export function LandingProofBand() {
   return (
-    <section className="border-y border-border py-6 sm:py-10">
+    <section className="border-y border-border py-6 sm:py-10" aria-label="Key statistics">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
           {STATS.map((stat) => (

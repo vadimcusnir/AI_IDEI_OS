@@ -48,7 +48,7 @@ const CATEGORIES = [
 
 export function EcosystemMap() {
   return (
-    <section className="py-16 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)]">
+    <section className="py-16 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)]" aria-label="Ecosystem overview">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-12 sm:mb-16">
           <span className="text-xs font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide))] mb-4 block">ECOSYSTEM</span>
