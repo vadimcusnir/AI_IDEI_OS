@@ -75,6 +75,7 @@ const WalletPage = lazy(() => import("./pages/WalletPage"));
 const GamificationPage = lazy(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
 const Transcribe = lazy(() => import("./pages/Transcribe"));
+const Integrations = lazy(() => import("./pages/Integrations"));
 
 function PageLoader() {
   return (
