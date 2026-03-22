@@ -658,5 +658,8 @@
     "threads": "fire",
     "posts": "postari",
     "solutions": "solutii"
-  }
+  },
+  "contribute": "Contribuie",
+  "submit_contribution": "Trimite contributia",
+  "title": "Titlu"
 }

@@ -658,5 +658,8 @@
     "threads": "тем",
     "posts": "постов",
     "solutions": "решений"
-  }
+  },
+  "contribute": "Внести вклад",
+  "submit_contribution": "Отправить вклад",
+  "title": "Название"
 }
