@@ -6,7 +6,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Loader2, Network, BarChart3, Search, AlertTriangle,
+  Loader2, Network, BarChart3, Search, AlertTriangle, Brain,
 } from "lucide-react";
 import { ControlledSection } from "@/components/ControlledSection";
 import { PageTransition } from "@/components/motion/PageTransition";
@@ -16,6 +16,7 @@ import { DuplicateMergePanel } from "@/components/neurons/DuplicateMergePanel";
 import { PremiumGate } from "@/components/premium/PremiumGate";
 import { GraphAnalysisPanel } from "@/components/intelligence/GraphAnalysisPanel";
 import { AdvancedSearch } from "@/components/intelligence/AdvancedSearch";
+import { IntelligenceProfiles } from "@/components/intelligence/IntelligenceProfiles";
 import { GitMerge } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
