@@ -144,8 +144,9 @@ Deno.serve(async (req) => {
     let stepsCompleted = 0;
 
     for (const group of stepGroups) {
-      const executeStep = async (stepEntry: { step: any; index: number }) => {
+      const executeStep = async (stepEntry: { step: any; index: number }): Promise<any> => {
         const { step, index: stepIdx } = stepEntry;
+        const maxRetries = step.max_retries ?? 2;
         const svc = serviceMap.get(step.service_key);
         if (!svc) {
           return { service_key: step.service_key, status: "skipped", reason: "service not found" };
@@ -161,122 +162,144 @@ Deno.serve(async (req) => {
           return { service_key: step.service_key, status: "dry_run", reason: "Simulation mode" };
         }
 
-        try {
-          const { data: neuron } = await supabase
-            .from("neurons")
-            .insert({
-              author_id: user.id,
-              title: `${svc.name} — Pipeline ${pipeline.name}`,
-              status: "draft",
-              lifecycle: "ingested",
-            })
-            .select("id")
-            .single();
-
-          if (!neuron) {
-            return { service_key: step.service_key, status: "failed", reason: "neuron creation failed" };
+        // Retry loop with exponential backoff
+        let lastError = "";
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+          if (attempt > 0) {
+            // Exponential backoff: 2s, 4s, 8s...
+            const delay = Math.min(2000 * Math.pow(2, attempt - 1), 30000);
+            await new Promise(r => setTimeout(r, delay));
           }
 
-          // Build inputs
-          const stepInputs: Record<string, string> = {};
-          if (step.input_mapping && typeof step.input_mapping === "object") {
-            for (const [key, source] of Object.entries(step.input_mapping)) {
-              if (typeof source === "string" && source.startsWith("trigger.")) {
-                stepInputs[key] = trigger_data?.[source.replace("trigger.", "")] || "";
-              } else if (typeof source === "string" && source.startsWith("prev.")) {
-                const prevIdx = parseInt(source.replace("prev.", ""), 10);
-                stepInputs[key] = results[prevIdx]?.content?.slice(0, 10000) || "";
-              } else {
-                stepInputs[key] = String(source);
+          try {
+            const { data: neuron } = await supabase
+              .from("neurons")
+              .insert({
+                author_id: user.id,
+                title: `${svc.name} — Pipeline ${pipeline.name}`,
+                status: "draft",
+                lifecycle: "ingested",
+              })
+              .select("id")
+              .single();
+
+            if (!neuron) {
+              lastError = "neuron creation failed";
+              continue;
+            }
+
+            // Build inputs
+            const stepInputs: Record<string, string> = {};
+            if (step.input_mapping && typeof step.input_mapping === "object") {
+              for (const [key, source] of Object.entries(step.input_mapping)) {
+                if (typeof source === "string" && source.startsWith("trigger.")) {
+                  stepInputs[key] = trigger_data?.[source.replace("trigger.", "")] || "";
+                } else if (typeof source === "string" && source.startsWith("prev.")) {
+                  const prevIdx = parseInt(source.replace("prev.", ""), 10);
+                  stepInputs[key] = results[prevIdx]?.content?.slice(0, 10000) || "";
+                } else {
+                  stepInputs[key] = String(source);
+                }
+              }
+            } else {
+              stepInputs.context = JSON.stringify(trigger_data || {});
+            }
+
+            const { data: job } = await supabase
+              .from("neuron_jobs")
+              .insert({
+                neuron_id: neuron.id,
+                author_id: user.id,
+                worker_type: step.service_key,
+                status: "pending",
+                input: stepInputs,
+                priority: steps.length - stepIdx,
+              })
+              .select("id")
+              .single();
+
+            if (!job) {
+              lastError = "job creation failed";
+              continue;
+            }
+
+            const resp = await fetch(`${supabaseUrl}/functions/v1/run-service`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                job_id: job.id,
+                service_key: step.service_key,
+                neuron_id: neuron.id,
+                inputs: stepInputs,
+              }),
+            });
+
+            if (!resp.ok) {
+              const errBody = await resp.json().catch(() => ({ error: "Unknown" }));
+              lastError = errBody.error || `HTTP ${resp.status}`;
+              // Don't retry on 4xx client errors (except 429)
+              if (resp.status >= 400 && resp.status < 500 && resp.status !== 429) {
+                return { service_key: step.service_key, status: "failed", reason: lastError, job_id: job.id, attempts: attempt + 1 };
+              }
+              continue;
+            }
+
+            // Read stream
+            let content = "";
+            if (resp.body) {
+              const reader = resp.body.getReader();
+              const decoder = new TextDecoder();
+              let buffer = "";
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+                let nlIdx: number;
+                while ((nlIdx = buffer.indexOf("\n")) !== -1) {
+                  let line = buffer.slice(0, nlIdx);
+                  buffer = buffer.slice(nlIdx + 1);
+                  if (line.endsWith("\r")) line = line.slice(0, -1);
+                  if (!line.startsWith("data: ")) continue;
+                  const d = line.slice(6).trim();
+                  if (d === "[DONE]") continue;
+                  try {
+                    const parsed = JSON.parse(d);
+                    const c = parsed.choices?.[0]?.delta?.content;
+                    if (c) content += c;
+                  } catch { /* partial */ }
+                }
               }
             }
-          } else {
-            stepInputs.context = JSON.stringify(trigger_data || {});
-          }
 
-          const { data: job } = await supabase
-            .from("neuron_jobs")
-            .insert({
-              neuron_id: neuron.id,
-              author_id: user.id,
-              worker_type: step.service_key,
-              status: "pending",
-              input: stepInputs,
-              priority: steps.length - stepIdx,
-            })
-            .select("id")
-            .single();
-
-          if (!job) {
-            return { service_key: step.service_key, status: "failed", reason: "job creation failed" };
-          }
-
-          const resp = await fetch(`${supabaseUrl}/functions/v1/run-service`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              job_id: job.id,
+            return {
               service_key: step.service_key,
+              status: "completed",
+              job_id: job.id,
               neuron_id: neuron.id,
-              inputs: stepInputs,
-            }),
-          });
-
-          if (!resp.ok) {
-            const errBody = await resp.json().catch(() => ({ error: "Unknown" }));
-            return { service_key: step.service_key, status: "failed", reason: errBody.error, job_id: job.id };
+              content_length: content.length,
+              content: content.slice(0, 500),
+              attempts: attempt + 1,
+            };
+          } catch (stepErr) {
+            lastError = stepErr instanceof Error ? stepErr.message : "Unknown";
+            // Continue to next retry attempt
           }
-
-          // Read stream
-          let content = "";
-          if (resp.body) {
-            const reader = resp.body.getReader();
-            const decoder = new TextDecoder();
-            let buffer = "";
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              buffer += decoder.decode(value, { stream: true });
-              let nlIdx: number;
-              while ((nlIdx = buffer.indexOf("\n")) !== -1) {
-                let line = buffer.slice(0, nlIdx);
-                buffer = buffer.slice(nlIdx + 1);
-                if (line.endsWith("\r")) line = line.slice(0, -1);
-                if (!line.startsWith("data: ")) continue;
-                const d = line.slice(6).trim();
-                if (d === "[DONE]") continue;
-                try {
-                  const parsed = JSON.parse(d);
-                  const c = parsed.choices?.[0]?.delta?.content;
-                  if (c) content += c;
-                } catch { /* partial */ }
-              }
-            }
-          }
-
-          return {
-            service_key: step.service_key,
-            status: "completed",
-            job_id: job.id,
-            neuron_id: neuron.id,
-            content_length: content.length,
-            content: content.slice(0, 500),
-          };
-        } catch (stepErr) {
-          return {
-            service_key: step.service_key,
-            status: "error",
-            reason: stepErr instanceof Error ? stepErr.message : "Unknown",
-          };
         }
+
+        // All retries exhausted
+        return {
+          service_key: step.service_key,
+          status: "failed",
+          reason: `Exhausted ${maxRetries + 1} attempts: ${lastError}`,
+          attempts: maxRetries + 1,
+        };
       };
 
       // Execute group: parallel if >1 step, sequential if 1
       if (group.steps.length > 1 && group.groupId) {
-        // Parallel execution within group
         const groupResults = await Promise.allSettled(
           group.steps.map(s => executeStep(s))
         );
@@ -286,11 +309,15 @@ Deno.serve(async (req) => {
           if (results[stepIdx]?.status === "completed") stepsCompleted++;
         });
       } else {
-        // Sequential (single step or no group)
         for (const stepEntry of group.steps) {
           const result = await executeStep(stepEntry);
           results[stepEntry.index] = result;
           if (result.status === "completed") stepsCompleted++;
+
+          // If step failed and has stop_on_failure flag, abort remaining steps in group
+          if (result.status === "failed" && stepEntry.step.stop_on_failure) {
+            break;
+          }
         }
       }
 

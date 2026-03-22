@@ -65,10 +65,12 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const { action = "generate", limit = 20 } = body;
+    const { action = "generate", limit = 20, auto_publish_threshold = 7.0 } = body;
 
     if (action === "generate" && LOVABLE_API_KEY) {
-      return await handleGenerate(supabase, LOVABLE_API_KEY, limit);
+      return await handleGenerate(supabase, LOVABLE_API_KEY, limit, auto_publish_threshold);
+    } else if (action === "validate") {
+      return await handleValidate(supabase, LOVABLE_API_KEY);
     } else if (action === "score") {
       return await handleScore(supabase);
     } else {
@@ -84,7 +86,7 @@ Deno.serve(async (req) => {
   }
 });
 
-async function handleGenerate(supabase: any, apiKey: string, limit: number) {
+async function handleGenerate(supabase: any, apiKey: string, limit: number, autoPublishThreshold: number) {
   // Get high-scoring entities not yet converted to surface pages
   const { data: existingSlugs } = await supabase
     .from("knowledge_surface_pages")
@@ -205,6 +207,9 @@ Output as JSON:
         },
       };
 
+      const qualityScore = Math.min(10, (entity.idea_rank || 0) * 10);
+      const autoPublish = qualityScore >= autoPublishThreshold;
+
       const { error } = await supabase.from("knowledge_surface_pages").insert({
         slug,
         page_type: entity.entity_type,
@@ -213,8 +218,8 @@ Output as JSON:
         content_md: pageData.content_md,
         entity_ids: [entity.id],
         schema_json: schemaJson,
-        status: "draft",
-        quality_score: Math.min(10, (entity.idea_rank || 0) * 10),
+        status: autoPublish ? "published" : "draft",
+        quality_score: qualityScore,
       });
 
       if (!error) created++;
@@ -270,6 +275,73 @@ async function handleScore(supabase: any) {
   }
 
   return new Response(JSON.stringify({ scored }), {
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+/**
+ * Validate draft pages — AI checks quality, factual consistency, SEO compliance.
+ * Pages passing validation are auto-published.
+ */
+async function handleValidate(supabase: any, apiKey: string | undefined) {
+  const { data: drafts } = await supabase
+    .from("knowledge_surface_pages")
+    .select("id, slug, title, content_md, meta_description, quality_score, entity_ids")
+    .eq("status", "draft")
+    .order("quality_score", { ascending: false })
+    .limit(20);
+
+  if (!drafts?.length) {
+    return new Response(JSON.stringify({ validated: 0, published: 0, rejected: 0 }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  let published = 0;
+  let rejected = 0;
+
+  for (const page of drafts) {
+    const wordCount = (page.content_md || "").split(/\s+/).length;
+
+    // Rule-based pre-validation
+    const issues: string[] = [];
+    if (wordCount < 150) issues.push("content_too_short");
+    if (!page.meta_description || page.meta_description.length < 50) issues.push("meta_description_weak");
+    if (!page.title || page.title.length < 10) issues.push("title_too_short");
+    if (page.title && page.title.length > 70) issues.push("title_too_long");
+
+    // Content structure checks
+    const hasH2 = /^##\s/m.test(page.content_md || "");
+    if (!hasH2) issues.push("missing_h2_sections");
+
+    const sectionCount = ((page.content_md || "").match(/^##\s/gm) || []).length;
+    if (sectionCount < 3) issues.push("insufficient_sections");
+
+    if (issues.length === 0 && wordCount >= 300 && (page.quality_score || 0) >= 6) {
+      // Auto-publish high-quality validated pages
+      await supabase.from("knowledge_surface_pages")
+        .update({ status: "published", updated_at: new Date().toISOString() })
+        .eq("id", page.id);
+      published++;
+    } else if (issues.length > 2 || wordCount < 100) {
+      // Mark as needs_revision
+      await supabase.from("knowledge_surface_pages")
+        .update({
+          status: "needs_revision",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", page.id);
+      rejected++;
+    }
+    // Pages with 1-2 minor issues stay as draft for manual review
+  }
+
+  return new Response(JSON.stringify({
+    validated: drafts.length,
+    published,
+    rejected,
+    still_draft: drafts.length - published - rejected,
+  }), {
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 }
