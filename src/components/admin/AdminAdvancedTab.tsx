@@ -292,33 +292,48 @@ function AnomalyAlerts() {
 
 // ── Cost vs Revenue Chart (simplified) ──
 function CostRevenueOverview() {
-  const [data, setData] = useState<{ service: string; cost: number; revenue: number }[]>([]);
+  const [data, setData] = useState<{ service: string; cost: number; revenue: number; jobs: number; margin: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
-      const { data: txData } = await supabase
-        .from("credit_transactions")
-        .select("description, amount, type")
-        .in("type", ["spend", "settlement", "admin_grant"])
+      // Get real job data with costs
+      const { data: jobs } = await supabase
+        .from("neuron_jobs" as any)
+        .select("worker_type, status, credits_cost")
+        .in("status", ["completed", "failed"])
         .order("created_at", { ascending: false })
-        .limit(500);
+        .limit(1000);
 
-      const serviceMap: Record<string, { cost: number; revenue: number }> = {};
-      (txData || []).forEach((tx: any) => {
-        const svc = tx.description?.replace("ADMIN: ", "").split(" ")[0] || "other";
-        if (!serviceMap[svc]) serviceMap[svc] = { cost: 0, revenue: 0 };
-        if (tx.type === "spend") {
-          serviceMap[svc].cost += Math.abs(tx.amount);
-          serviceMap[svc].revenue += Math.abs(tx.amount) * 1.5; // rough estimate
-        }
+      // Get service catalog for pricing
+      const { data: catalog } = await supabase
+        .from("service_catalog" as any)
+        .select("service_key, credits_cost, name");
+
+      const catalogMap = new Map((catalog || []).map((c: any) => [c.service_key, c]));
+
+      const serviceMap: Record<string, { cost: number; revenue: number; jobs: number }> = {};
+      (jobs || []).forEach((job: any) => {
+        const svc = job.worker_type || "other";
+        if (!serviceMap[svc]) serviceMap[svc] = { cost: 0, revenue: 0, jobs: 0 };
+        serviceMap[svc].jobs++;
+        const creditsCost = job.credits_cost || (catalogMap.get(svc) as any)?.credits_cost || 0;
+        // Real compute cost ≈ credits × $0.01 (1 credit = $0.01)
+        const computeCost = creditsCost * 0.01;
+        // Revenue = credits charged to user
+        serviceMap[svc].cost += computeCost;
+        serviceMap[svc].revenue += creditsCost * 0.01 * 10; // 10x markup target
       });
 
       setData(
         Object.entries(serviceMap)
-          .map(([service, vals]) => ({ service, ...vals }))
+          .map(([service, vals]) => ({
+            service: (catalogMap.get(service) as any)?.name || service.replace(/-/g, " "),
+            ...vals,
+            margin: vals.revenue > 0 ? ((vals.revenue - vals.cost) / vals.revenue * 100) : 0,
+          }))
           .sort((a, b) => b.revenue - a.revenue)
-          .slice(0, 8)
+          .slice(0, 10)
       );
       setLoading(false);
     };

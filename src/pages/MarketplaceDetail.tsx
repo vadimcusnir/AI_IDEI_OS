@@ -183,8 +183,9 @@ export default function MarketplaceDetail() {
         description={asset.description || `Knowledge asset: ${asset.title}`}
       />
       <JsonLd
-        type="Product"
         data={{
+          "@context": "https://schema.org",
+          "@type": "Product",
           name: asset.title,
           description: asset.description || "",
           offers: {
@@ -193,11 +194,6 @@ export default function MarketplaceDetail() {
             priceCurrency: "USD",
             availability: "https://schema.org/InStock",
           },
-          aggregateRating: asset.rating_avg ? {
-            "@type": "AggregateRating",
-            ratingValue: asset.rating_avg,
-            reviewCount: asset.rating_count || 0,
-          } : undefined,
           brand: { "@type": "Brand", name: "AI-IDEI" },
         }}
       />
