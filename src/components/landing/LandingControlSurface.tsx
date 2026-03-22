@@ -15,7 +15,7 @@ const CONTROLS = [
 
 export function LandingControlSurface() {
   return (
-    <section id="control" className="py-20 sm:py-28">
+    <section id="control" className="py-20 sm:py-28" aria-labelledby="control-heading">
       <div className="max-w-4xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">CONTROL LAYER</span>
