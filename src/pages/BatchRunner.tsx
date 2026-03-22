@@ -367,6 +367,14 @@ export default function BatchRunner() {
             )}
           </>
         )}
+
+        {/* History */}
+        <div className="mt-8 border-t border-border pt-6">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <History className="h-3 w-3" /> Istoric batch-uri
+          </h2>
+          <ServiceRunHistory limit={15} />
+        </div>
       </div>
     </div>
     </PremiumGate>
