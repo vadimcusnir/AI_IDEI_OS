@@ -22,6 +22,8 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { OutputGalaxy } from "@/components/landing/OutputGalaxy";
+import { TransformationDiagram } from "@/components/landing/TransformationDiagram";
+import { EcosystemMap } from "@/components/landing/EcosystemMap";
 import { IconControl, IconFramework, IconAssistant, IconPodcast, IconOutput } from "@/components/landing/ProprietaryIcons";
 
 /* ── Section components ── */
