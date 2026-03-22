@@ -1,7 +1,6 @@
 /**
  * Landing Page — AI-IDEI Knowledge Extraction Engine
- * Visual language: obsidian matte, ivory mineral, oxidized gold, petrol green, signal red.
- * Proprietary icon system. Extraction engine as central hero.
+ * Assembled from modular section components.
  */
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -22,12 +21,15 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ExtractionEngine } from "@/components/landing/ExtractionEngine";
 import { OutputGalaxy } from "@/components/landing/OutputGalaxy";
-import {
-  IconUpload, IconPodcast, IconAssistant, IconFramework,
-  IconOutput, IconExtract, IconNeuron, IconMultiply, IconControl,
-} from "@/components/landing/ProprietaryIcons";
+import { IconControl, IconFramework, IconAssistant, IconPodcast, IconOutput } from "@/components/landing/ProprietaryIcons";
+
+/* ── Extracted section components ── */
+import { LandingHero } from "@/components/landing/LandingHero";
+import { LandingProblem } from "@/components/landing/LandingProblem";
+import { LandingMechanism } from "@/components/landing/LandingMechanism";
+import { LandingBenefits } from "@/components/landing/LandingBenefits";
+import { LandingSocialProof } from "@/components/landing/LandingSocialProof";
 
 const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
 
@@ -55,7 +57,7 @@ const FAQS = [
   { q: "Who is this best for?", a: "Creators, marketers, consultants, freelancers, founders, and anyone who wants faster, clearer, more commercially useful output." },
 ];
 
-/* ── Extraction Spine — the recurring vertical signature element ── */
+/* ── Extraction Spine ── */
 function ExtractionSpine({ labels }: { labels: string[] }) {
   return (
     <div className="hidden lg:flex flex-col items-center gap-0 fixed left-6 top-1/2 -translate-y-1/2 z-40">
@@ -94,7 +96,6 @@ export default function Landing() {
         canonical="https://ai-idei-os.lovable.app"
       />
 
-      {/* Extraction Spine */}
       <ExtractionSpine labels={["CAPTURE", "DISTILL", "STRUCTURE", "MULTIPLY", "DEPLOY"]} />
 
       {/* ═══ TOP BAR ═══ */}
@@ -167,74 +168,8 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* ═══ HERO — Extraction Engine central ═══ */}
-      <section ref={heroRef} className="relative overflow-hidden">
-        {/* Background: mineral dark + field distortion */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[hsl(var(--gold-oxide)/0.03)] blur-[200px]" />
-        </div>
-
-        <motion.div style={{ opacity: heroOpacity }} className="relative max-w-5xl mx-auto px-5 sm:px-6 pt-20 sm:pt-28 md:pt-36 pb-8 sm:pb-12 text-center">
-          {/* Eyebrow */}
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="text-[10px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.7)] mb-8"
-          >
-            KNOWLEDGE EXTRACTION ENGINE
-          </motion.p>
-
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="heading-1 mb-6 px-2 text-[hsl(var(--ivory))]"
-          >
-            The closest thing to a{" "}
-            <span className="text-[hsl(var(--gold-oxide))]">magic button</span>
-            {" "}for copywriting and marketing
-          </motion.h1>
-
-          {/* Subheadline */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.5 }}
-            className="text-sm sm:text-base text-[hsl(var(--ivory-dim)/0.7)] leading-relaxed max-w-2xl mx-auto mb-12"
-          >
-            Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants built for real work.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-16"
-          >
-            <Button size="lg" onClick={ctaAction} className="gap-2 text-sm px-10 h-12 sm:h-14 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] font-semibold shadow-lg shadow-[hsl(var(--gold-oxide)/0.15)] w-full sm:w-auto">
-              Start Free
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="lg" onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })} className="gap-2 text-sm h-12 sm:h-14 w-full sm:w-auto border-[hsl(var(--ivory-dim)/0.15)] text-[hsl(var(--ivory-dim)/0.7)] hover:bg-[hsl(var(--ivory-dim)/0.05)]">
-              <Eye className="h-4 w-4" />
-              See the Mechanism
-            </Button>
-          </motion.div>
-        </motion.div>
-
-        {/* The Engine — the hero visual */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="relative max-w-4xl mx-auto px-4 pb-16 sm:pb-24"
-        >
-          <ExtractionEngine />
-        </motion.div>
-      </section>
+      {/* ═══ 1. HERO ═══ */}
+      <LandingHero heroRef={heroRef} heroOpacity={heroOpacity} ctaAction={ctaAction} />
 
       {/* ═══ PROOF BAND ═══ */}
       <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-6 sm:py-8">
@@ -255,127 +190,13 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ SECTION 2 — THE PROBLEM (asymmetric before/after) ═══ */}
-      <section className="py-20 sm:py-28 md:py-32">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-              {/* BEFORE */}
-              <div>
-                <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--signal-red)/0.6)] mb-4 block">BEFORE</span>
-                <h2 className="heading-2 text-[hsl(var(--ivory))] mb-6">
-                  Most people do not struggle with ideas. They struggle with turning ideas into assets.
-                </h2>
-                <div className="space-y-4 text-sm text-[hsl(var(--ivory-dim)/0.6)] leading-relaxed">
-                  <p>You have thoughts. Notes. Drafts. Angles. Offers. Half-built campaigns. Fragments of good copy.</p>
-                  <p className="font-semibold text-[hsl(var(--ivory)/0.9)]">But the real bottleneck is not creativity. It is execution.</p>
-                  <div className="pl-4 border-l border-[hsl(var(--signal-red)/0.2)] space-y-1 text-xs text-[hsl(var(--ivory-dim)/0.4)]">
-                    <p>You open ChatGPT. You test random prompts.</p>
-                    <p>You save interesting things. You try to write.</p>
-                    <p>You restart. You overthink. You lose momentum.</p>
-                  </div>
-                </div>
-                <div className="mt-8 grid grid-cols-2 gap-3">
-                  {["too many ideas", "weak positioning", "slow writing", "unclear offers", "inconsistent content", "scattered execution"].map(item => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-[hsl(var(--ivory-dim)/0.45)]">
-                      <div className="h-1 w-1 rounded-full bg-[hsl(var(--signal-red)/0.5)] shrink-0" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
+      {/* ═══ 2. PROBLEM — Before/After ═══ */}
+      <LandingProblem />
 
-              {/* AFTER */}
-              <div className="relative">
-                <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">AFTER</span>
-                <h2 className="heading-2 text-[hsl(var(--ivory))] mb-6">
-                  AI-IDEI closes that gap.
-                </h2>
-                <div className="space-y-4 text-sm text-[hsl(var(--ivory-dim)/0.6)] leading-relaxed">
-                  <p>It helps you turn raw thinking into usable copy, structured content, stronger messaging, and faster marketing output.</p>
-                  <p>Instead of guessing what to write, how to structure it, how to phrase it, or how to package it — you use a system that helps you move faster and think better.</p>
-                </div>
-                <div className="mt-8 space-y-3">
-                  {["write faster", "sharpen your message", "build stronger offers", "create more content from one idea", "turn scattered thinking into commercial assets"].map(item => (
-                    <div key={item} className="flex items-center gap-3 text-sm text-[hsl(var(--ivory)/0.85)]">
-                      <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.7)] shrink-0" />
-                      <span className="font-medium">{item}</span>
-                    </div>
-                  ))}
-                </div>
-                {/* Accent glow */}
-                <div className="absolute -top-8 -right-8 w-40 h-40 bg-[hsl(var(--gold-oxide)/0.04)] rounded-full blur-[80px]" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/* ═══ 3. MECHANISM — How It Works ═══ */}
+      <LandingMechanism />
 
-      {/* ═══ SECTION 3 — TRANSFORMATION DIAGRAM ═══ */}
-      <section id="mechanism" className="py-20 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)]">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-16">
-            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">THE MECHANISM</span>
-            <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">One idea becomes many assets</h2>
-            <p className="text-sm text-[hsl(var(--ivory-dim)/0.5)] max-w-lg mx-auto">
-              With the right system, a single idea stops being a thought and starts becoming leverage.
-            </p>
-          </motion.div>
-
-          {/* 4-step process — horizontal on desktop */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.06)] rounded-xl overflow-hidden mb-16">
-            {[
-              { num: "01", title: "Choose the problem", text: "Start with what you need: copy, content, positioning, offer clarity, or execution support.", icon: IconExtract },
-              { num: "02", title: "Use the right resource", text: "Pick a framework, prompt, assistant, or example designed for that exact type of work.", icon: IconFramework },
-              { num: "03", title: "Turn it into an asset", text: "Produce something usable: a post, email, landing page, offer, script, or campaign asset.", icon: IconOutput },
-              { num: "04", title: "Repeat with speed", text: "Stop improvising. Start producing with clarity, consistency, and momentum.", icon: IconMultiply },
-            ].map((step, i) => (
-              <motion.div
-                key={step.num}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-40px" }}
-                custom={i}
-                variants={fadeUp}
-                className="bg-[hsl(var(--obsidian-light)/0.5)] p-6 sm:p-8 group hover:bg-[hsl(var(--obsidian-light)/0.8)] transition-colors"
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-2xl font-mono font-bold text-[hsl(var(--gold-oxide)/0.12)] group-hover:text-[hsl(var(--gold-oxide)/0.25)] transition-colors">{step.num}</span>
-                  <step.icon className="text-[hsl(var(--gold-oxide)/0.5)]" size={20} />
-                </div>
-                <h3 className="text-sm font-semibold text-[hsl(var(--ivory)/0.9)] mb-2">{step.title}</h3>
-                <p className="text-xs text-[hsl(var(--ivory-dim)/0.45)] leading-relaxed">{step.text}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Transformation examples */}
-          <div className="space-y-2">
-            {[
-              { from: "A rough thought", to: "a social post that communicates value" },
-              { from: "A messy service", to: "a clearer offer with stronger positioning" },
-              { from: "A long transcript", to: "a newsletter, article, thread, and email sequence" },
-              { from: "Scattered notes", to: "a content plan, product outline, or conversion asset" },
-            ].map((t, i) => (
-              <motion.div
-                key={i}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                className="flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-[hsl(var(--ivory-dim)/0.03)] transition-colors"
-              >
-                <span className="text-xs font-mono text-[hsl(var(--ivory-dim)/0.4)] min-w-[140px] sm:min-w-[180px]">{t.from}</span>
-                <span className="text-[hsl(var(--gold-oxide)/0.6)] font-mono text-xs">→</span>
-                <span className="text-xs text-[hsl(var(--ivory)/0.7)]">{t.to}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 4 — WHAT YOU GET (2×2 asymmetric) ═══ */}
+      {/* ═══ 4. WHAT YOU GET ═══ */}
       <section className="py-20 sm:py-28">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="mb-16">
@@ -412,7 +233,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ SECTION 5 — OUTPUT GALAXY ═══ */}
+      {/* ═══ 5. OUTPUT GALAXY ═══ */}
       <section id="outputs" className="py-20 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)] relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--gold-oxide)/0.02)] to-transparent" />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-6">
@@ -423,16 +244,14 @@ export default function Landing() {
               Content, education, sales, knowledge, assistants — organized into asset families.
             </p>
           </motion.div>
-
           <OutputGalaxy />
-
           <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-8 text-xs font-mono tracking-[0.1em] text-[hsl(var(--gold-oxide)/0.5)]">
             AI-IDEI helps you create faster, clearer, and with more commercial intent.
           </motion.p>
         </div>
       </section>
 
-      {/* ═══ SECTION 6 — CONTROL SURFACE ═══ */}
+      {/* ═══ 6. CONTROL SURFACE ═══ */}
       <section id="control" className="py-20 sm:py-28">
         <div className="max-w-4xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-16">
@@ -442,7 +261,6 @@ export default function Landing() {
               Set tone, language, format, objective, depth, and audience for every execution.
             </p>
           </motion.div>
-
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {[
               { label: "Tone", desc: "Professional, casual, authoritative" },
@@ -470,7 +288,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ SECTION 7 — WHO THIS IS FOR ═══ */}
+      {/* ═══ 7. WHO THIS IS FOR ═══ */}
       <section className="py-20 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)]">
         <div className="max-w-3xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
@@ -499,7 +317,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ SECTION 8 — WHY DIFFERENT ═══ */}
+      {/* ═══ 8. WHY DIFFERENT ═══ */}
       <section className="py-20 sm:py-28">
         <div className="max-w-3xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
@@ -528,20 +346,20 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ SECTION 9 — LIBRARY PREVIEW ═══ */}
+      {/* ═══ 9. BENEFITS ═══ */}
+      <LandingBenefits />
+
+      {/* ═══ 10. SOCIAL PROOF ═══ */}
+      <LandingSocialProof />
+
+      {/* ═══ 11. LIBRARY PREVIEW ═══ */}
       <section className="py-16 sm:py-20 border-y border-[hsl(var(--ivory-dim)/0.06)]">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-10">
             <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">ASSET LIBRARY</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">Inside AI-IDEI</h2>
           </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-2"
-          >
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="flex flex-wrap justify-center gap-2">
             {[
               "copywriting", "marketing angles", "offer design", "content creation",
               "messaging", "AI workflows", "planning", "strategic thinking",
@@ -560,7 +378,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ SECTION 10 — PRICING ═══ */}
+      {/* ═══ 12. PRICING ═══ */}
       <section id="access" className="py-20 sm:py-28">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-16">
@@ -569,7 +387,6 @@ export default function Landing() {
               Start simple. Upgrade when you want more depth, speed, and leverage.
             </p>
           </motion.div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.06)] rounded-xl overflow-hidden">
             {[
               { name: "Free", promise: "Test the system", text: "Get inside, explore, and see how AI-IDEI works before making a commitment.", cta: "Start Free", featured: false },
@@ -616,13 +433,12 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ SECTION 11 — FAQ ═══ */}
+      {/* ═══ 13. FAQ ═══ */}
       <section id="faq" className="py-20 sm:py-28 border-t border-[hsl(var(--ivory-dim)/0.06)]">
         <div className="max-w-2xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-12">
             <h2 className="heading-2 text-[hsl(var(--ivory))]">Frequently Asked Questions</h2>
           </motion.div>
-
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} custom={1} variants={fadeUp}>
             <Accordion type="single" collapsible className="space-y-2">
               {FAQS.map((faq, i) => (
@@ -640,12 +456,11 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ SECTION 12 — FINAL CTA ═══ */}
+      {/* ═══ 14. FINAL CTA ═══ */}
       <section className="relative overflow-hidden py-24 sm:py-32">
         <div className="absolute inset-0">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[hsl(var(--gold-oxide)/0.05)] rounded-full blur-[180px]" />
         </div>
-
         <div className="relative max-w-3xl mx-auto px-5 sm:px-6 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-5">
@@ -676,7 +491,6 @@ export default function Landing() {
       {/* ═══ FOOTER ═══ */}
       <Suspense fallback={null}><Footer /></Suspense>
 
-      {/* Structured Data */}
       <OrganizationJsonLd />
       <WebApplicationJsonLd />
       <FAQJsonLd items={FAQS.map(f => ({ question: f.q, answer: f.a }))} />
