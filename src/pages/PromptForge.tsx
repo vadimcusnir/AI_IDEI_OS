@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { PremiumGate } from "@/components/premium/PremiumGate";
 import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sparkles, Layers, Link2 } from "lucide-react";
+import { Loader2, Sparkles, Layers, Link2, Store, BarChart3 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { GoalSelector } from "@/components/prompt-forge/GoalSelector";
@@ -17,6 +17,9 @@ import { TemplateLibrary } from "@/components/prompt-forge/TemplateLibrary";
 import { PromptHistory } from "@/components/prompt-forge/PromptHistory";
 import { VariantComparison, Variant } from "@/components/prompt-forge/VariantComparison";
 import { PromptChainBuilder, ChainStep } from "@/components/prompt-forge/PromptChainBuilder";
+import { FeedbackLoop } from "@/components/prompt-forge/FeedbackLoop";
+import { TemplateMarketplace } from "@/components/prompt-forge/TemplateMarketplace";
+import { PromptAnalytics } from "@/components/prompt-forge/PromptAnalytics";
 
 const SINGLE_COST = 200;
 const VARIANT_COST = 500;
@@ -88,14 +91,14 @@ export default function PromptForge() {
   const { balance } = useCreditBalance();
   const { t } = useTranslation("pages");
 
-  // Input state
   const [context, setContext] = useState("");
   const [goal, setGoal] = useState("");
   const [details, setDetails] = useState("");
   const [historyRefresh, setHistoryRefresh] = useState(0);
+  const [lastHistoryId, setLastHistoryId] = useState<string | undefined>();
 
-  // Mode: single | variants | chain
   const [mode, setMode] = useState<"single" | "variants" | "chain">("single");
+  const [activeTab, setActiveTab] = useState<"create" | "marketplace" | "analytics">("create");
 
   // Single mode
   const [result, setResult] = useState("");
@@ -122,6 +125,7 @@ export default function PromptForge() {
     setGoal(template.goal);
     if (template.context_template) setContext(template.context_template);
     if (template.details_template) setDetails(template.details_template);
+    setActiveTab("create");
     toast.success(`Template „${template.title}" aplicat`);
   }, []);
 
@@ -167,15 +171,40 @@ export default function PromptForge() {
 
     setLoading(true);
     setResult("");
+    setLastHistoryId(undefined);
     try {
       const { neuronId, jobId } = await createNeuronAndJob();
       const { data: { session } } = await supabase.auth.getSession();
 
-      const fullText = await streamGenerate(session, { context, goal, details }, neuronId, jobId, setResult);
+      // Load user's past feedback for AI loop
+      const { data: feedback } = await supabase
+        .from("prompt_history")
+        .select("rating, feedback, goal")
+        .eq("user_id", user.id)
+        .eq("goal", goal)
+        .not("feedback", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(3);
 
-      await supabase.from("prompt_history").insert({
-        user_id: user.id, goal, context, details, result: fullText, credits_spent: estimatedCost,
-      } as any);
+      const feedbackContext = feedback?.length
+        ? `\n\n[Feedback anterior: ${feedback.map(f => `Rating ${f.rating}/5: "${f.feedback}"`).join("; ")}]`
+        : "";
+
+      const fullText = await streamGenerate(
+        session,
+        { context, goal, details: details + feedbackContext },
+        neuronId, jobId, setResult
+      );
+
+      const { data: historyRow } = await supabase
+        .from("prompt_history")
+        .insert({
+          user_id: user.id, goal, context, details, result: fullText, credits_spent: estimatedCost,
+        })
+        .select("id")
+        .single();
+
+      if (historyRow) setLastHistoryId(historyRow.id);
       setHistoryRefresh(p => p + 1);
       toast.success(t("prompt_forge.success"));
     } catch (e: any) {
@@ -184,7 +213,7 @@ export default function PromptForge() {
     setLoading(false);
   }, [user, context, goal, details, t, balance, estimatedCost, createNeuronAndJob]);
 
-  // Variants generation (3 parallel)
+  // Variants generation
   const handleGenerateVariants = useCallback(async () => {
     if (!user) { toast.error(t("prompt_forge.error_auth")); return; }
     if (!context.trim() || !goal) { toast.error(t("prompt_forge.error_fields")); return; }
@@ -206,8 +235,7 @@ export default function PromptForge() {
         const fullText = await streamGenerate(
           session,
           { context, goal, details: detailsWithVariant },
-          neuronId,
-          jobId,
+          neuronId, jobId,
           (text) => setVariants(prev => prev.map(v => v.index === i ? { ...v, result: text } : v))
         );
 
@@ -216,7 +244,7 @@ export default function PromptForge() {
         await supabase.from("prompt_history").insert({
           user_id: user.id, goal, context, details, result: fullText,
           credits_spent: Math.round(VARIANT_COST / 3), variant_index: i,
-        } as any);
+        });
       } catch (e: any) {
         setVariants(prev => prev.map(v => v.index === i ? { ...v, result: `Eroare: ${e.message}`, loading: false } : v));
       }
@@ -250,8 +278,7 @@ export default function PromptForge() {
         const fullText = await streamGenerate(
           session,
           { context: stepContext, goal, details: stepDetails },
-          neuronId,
-          jobId,
+          neuronId, jobId,
           (text) => {
             setChainSteps(prev => prev.map((s, idx) => idx === i ? { ...s, result: text } : s));
             if (i === chainSteps.length - 1) setResult(text);
@@ -266,7 +293,7 @@ export default function PromptForge() {
           await supabase.from("prompt_history").insert({
             user_id: user.id, goal, context, details: chainSteps.map(s => s.instruction).join(" → "),
             result: fullText, credits_spent: SINGLE_COST * chainSteps.length, chain_step: chainSteps.length,
-          } as any);
+          });
           setHistoryRefresh(p => p + 1);
         }
       } catch (e: any) {
@@ -301,131 +328,165 @@ export default function PromptForge() {
             </p>
           </div>
 
-          {/* Template Library */}
-          <TemplateLibrary onSelect={handleTemplateSelect} />
-
-          {/* Mode Tabs */}
-          <Tabs value={mode} onValueChange={(v) => setMode(v as any)} className="mb-6">
+          {/* Main Tabs: Create / Marketplace / Analytics */}
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="mb-6">
             <TabsList className="h-8">
-              <TabsTrigger value="single" className="text-xs gap-1.5">
+              <TabsTrigger value="create" className="text-xs gap-1.5">
                 <Sparkles className="h-3 w-3" />
-                Simplu
+                Creează
               </TabsTrigger>
-              <TabsTrigger value="variants" className="text-xs gap-1.5">
-                <Layers className="h-3 w-3" />
-                3 Variante
+              <TabsTrigger value="marketplace" className="text-xs gap-1.5">
+                <Store className="h-3 w-3" />
+                Marketplace
               </TabsTrigger>
-              <TabsTrigger value="chain" className="text-xs gap-1.5">
-                <Link2 className="h-3 w-3" />
-                Chain
+              <TabsTrigger value="analytics" className="text-xs gap-1.5">
+                <BarChart3 className="h-3 w-3" />
+                Statistici
               </TabsTrigger>
             </TabsList>
-          </Tabs>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Input panel */}
-            <div className="space-y-4">
-              <GoalSelector goal={goal} onSelect={setGoal} />
+            <TabsContent value="marketplace" className="mt-4">
+              <TemplateMarketplace onSelect={handleTemplateSelect} />
+            </TabsContent>
 
-              <div>
-                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                  {t("prompt_forge.context_label")}
-                </label>
-                <Textarea
-                  value={context}
-                  onChange={e => setContext(e.target.value)}
-                  placeholder={t("prompt_forge.context_placeholder")}
-                  rows={4}
-                  className="text-sm"
-                />
-              </div>
+            <TabsContent value="analytics" className="mt-4">
+              <PromptAnalytics />
+            </TabsContent>
 
-              <div>
-                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                  {t("prompt_forge.details_label")}
-                </label>
-                <Textarea
-                  value={details}
-                  onChange={e => setDetails(e.target.value)}
-                  placeholder={t("prompt_forge.details_placeholder")}
-                  rows={3}
-                  className="text-sm"
-                />
-              </div>
+            <TabsContent value="create" className="mt-4">
+              {/* Template Library */}
+              <TemplateLibrary onSelect={handleTemplateSelect} />
 
-              {/* Chain builder */}
-              {mode === "chain" && (
-                <PromptChainBuilder
-                  steps={chainSteps}
-                  onUpdateStep={(id, instr) =>
-                    setChainSteps(prev => prev.map(s => s.id === id ? { ...s, instruction: instr } : s))
-                  }
-                  onAddStep={() =>
-                    setChainSteps(prev => [...prev, { id: crypto.randomUUID(), instruction: "" }])
-                  }
-                  onRemoveStep={(id) =>
-                    setChainSteps(prev => prev.filter(s => s.id !== id))
-                  }
-                  activeStepIndex={activeChainStep}
-                />
-              )}
+              {/* Mode Tabs */}
+              <Tabs value={mode} onValueChange={(v) => setMode(v as any)} className="mb-6">
+                <TabsList className="h-8">
+                  <TabsTrigger value="single" className="text-xs gap-1.5">
+                    <Sparkles className="h-3 w-3" />
+                    Simplu
+                  </TabsTrigger>
+                  <TabsTrigger value="variants" className="text-xs gap-1.5">
+                    <Layers className="h-3 w-3" />
+                    3 Variante
+                  </TabsTrigger>
+                  <TabsTrigger value="chain" className="text-xs gap-1.5">
+                    <Link2 className="h-3 w-3" />
+                    Chain
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
 
-              <Button
-                onClick={
-                  mode === "variants" ? handleGenerateVariants
-                  : mode === "chain" ? handleRunChain
-                  : handleGenerate
-                }
-                disabled={isGenerating || !context.trim() || !goal || balance < estimatedCost}
-                className="w-full gap-2"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    {t("prompt_forge.generating")}
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4" />
-                    {mode === "variants"
-                      ? t("prompt_forge.generate_variants", { defaultValue: `Generează 3 Variante (${VARIANT_COST} N)` })
-                      : mode === "chain"
-                      ? `Run Chain (${SINGLE_COST * chainSteps.length} N)`
-                      : t("prompt_forge.generate_button", { cost: estimatedCost })
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Input panel */}
+                <div className="space-y-4">
+                  <GoalSelector goal={goal} onSelect={setGoal} />
+
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                      {t("prompt_forge.context_label")}
+                    </label>
+                    <Textarea
+                      value={context}
+                      onChange={e => setContext(e.target.value)}
+                      placeholder={t("prompt_forge.context_placeholder")}
+                      rows={4}
+                      className="text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                      {t("prompt_forge.details_label")}
+                    </label>
+                    <Textarea
+                      value={details}
+                      onChange={e => setDetails(e.target.value)}
+                      placeholder={t("prompt_forge.details_placeholder")}
+                      rows={3}
+                      className="text-sm"
+                    />
+                  </div>
+
+                  {mode === "chain" && (
+                    <PromptChainBuilder
+                      steps={chainSteps}
+                      onUpdateStep={(id, instr) =>
+                        setChainSteps(prev => prev.map(s => s.id === id ? { ...s, instruction: instr } : s))
+                      }
+                      onAddStep={() =>
+                        setChainSteps(prev => [...prev, { id: crypto.randomUUID(), instruction: "" }])
+                      }
+                      onRemoveStep={(id) =>
+                        setChainSteps(prev => prev.filter(s => s.id !== id))
+                      }
+                      activeStepIndex={activeChainStep}
+                    />
+                  )}
+
+                  <Button
+                    onClick={
+                      mode === "variants" ? handleGenerateVariants
+                      : mode === "chain" ? handleRunChain
+                      : handleGenerate
                     }
-                  </>
-                )}
-              </Button>
+                    disabled={isGenerating || !context.trim() || !goal || balance < estimatedCost}
+                    className="w-full gap-2"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        {t("prompt_forge.generating")}
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4" />
+                        {mode === "variants"
+                          ? t("prompt_forge.generate_variants", { defaultValue: `Generează 3 Variante (${VARIANT_COST} N)` })
+                          : mode === "chain"
+                          ? `Run Chain (${SINGLE_COST * chainSteps.length} N)`
+                          : t("prompt_forge.generate_button", { cost: estimatedCost })
+                        }
+                      </>
+                    )}
+                  </Button>
 
-              {balance < estimatedCost && !isGenerating && (
-                <div className="mt-3">
-                  <InlineTopUp needed={estimatedCost} balance={balance} compact />
+                  {balance < estimatedCost && !isGenerating && (
+                    <div className="mt-3">
+                      <InlineTopUp needed={estimatedCost} balance={balance} compact />
+                    </div>
+                  )}
+
+                  <p className="text-[10px] text-muted-foreground/50 text-center">
+                    {t("prompt_forge.balance_label", { balance })}
+                  </p>
+
+                  <PromptHistory onReuse={handleHistoryReuse} refreshKey={historyRefresh} />
                 </div>
-              )}
 
-              <p className="text-[10px] text-muted-foreground/50 text-center">
-                {t("prompt_forge.balance_label", { balance })}
-              </p>
-
-              <PromptHistory onReuse={handleHistoryReuse} refreshKey={historyRefresh} />
-            </div>
-
-            {/* Output panel */}
-            <div className="space-y-4">
-              {mode === "variants" ? (
-                <VariantComparison
-                  variants={variants}
-                  onRate={handleRateVariant}
-                  onSelect={setSelectedVariant}
-                  selectedIndex={selectedVariant}
-                />
-              ) : (
-                <div className="min-h-[400px] rounded-xl border border-border bg-card p-5 overflow-y-auto max-h-[70vh]">
-                  <PromptOutput result={activeResult} goal={goal} />
+                {/* Output panel */}
+                <div className="space-y-4">
+                  {mode === "variants" ? (
+                    <VariantComparison
+                      variants={variants}
+                      onRate={handleRateVariant}
+                      onSelect={setSelectedVariant}
+                      selectedIndex={selectedVariant}
+                    />
+                  ) : (
+                    <div className="min-h-[400px] rounded-xl border border-border bg-card p-5 overflow-y-auto max-h-[70vh]">
+                      <PromptOutput result={activeResult} goal={goal} />
+                      {activeResult && mode === "single" && (
+                        <FeedbackLoop
+                          historyId={lastHistoryId}
+                          result={activeResult}
+                          goal={goal}
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </PremiumGate>
