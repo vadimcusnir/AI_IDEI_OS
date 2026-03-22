@@ -26,15 +26,15 @@
     --lh-body: 1.65;
     --tracking-eyebrow: 0.2em;
 
-    /* ── Landing proprietary palette ── */
-    --obsidian: 220 12% 8%;
-    --obsidian-light: 220 10% 14%;
-    --ivory: 40 30% 95%;
-    --ivory-dim: 40 15% 72%;
-    --gold-oxide: 38 55% 48%;
-    --gold-dim: 38 30% 32%;
-    --petrol: 180 35% 28%;
-    --petrol-dim: 180 20% 18%;
+    /* ── Landing proprietary palette (LIGHT mode) ── */
+    --obsidian: 220 16% 96%;
+    --obsidian-light: 220 14% 90%;
+    --ivory: 220 20% 10%;
+    --ivory-dim: 220 10% 36%;
+    --gold-oxide: 38 55% 42%;
+    --gold-dim: 38 30% 28%;
+    --petrol: 180 35% 35%;
+    --petrol-dim: 180 20% 25%;
     --signal-red: 0 72% 50%;
 
     /* Spacing scale (canonical): 4 8 12 16 24 32 40 48 64 */
