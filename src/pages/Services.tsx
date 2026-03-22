@@ -22,6 +22,10 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 import { useTranslation } from "react-i18next";
 import { IMFPipelineLauncher } from "@/components/pipeline/IMFPipelineLauncher";
+import { Avatar33Panel } from "@/components/services/Avatar33Panel";
+import { WebinarGeneratorPanel } from "@/components/services/WebinarGeneratorPanel";
+import { ContentGeneratorPanel } from "@/components/services/ContentGeneratorPanel";
+import { ExtractionPipelinePanel } from "@/components/services/ExtractionPipelinePanel";
 
 interface Service {
   id: string;
