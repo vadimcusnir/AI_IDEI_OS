@@ -658,5 +658,8 @@
     "threads": "threads",
     "posts": "posts",
     "solutions": "solutions"
-  }
+  },
+  "contribute": "Contribute",
+  "submit_contribution": "Submit Contribution",
+  "title": "Title"
 }
