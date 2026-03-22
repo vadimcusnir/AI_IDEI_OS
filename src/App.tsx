@@ -84,6 +84,9 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const KnowledgeSurfacePage = lazy(() => import("./pages/KnowledgeSurfacePage"));
 const ServiceResults = lazy(() => import("./pages/ServiceResults"));
 const ProductSurfacePage = lazy(() => import("./pages/ProductSurfacePage"));
+const NotebookWorkspace = lazy(() => import("./pages/NotebookWorkspace"));
+const NotebookDetail = lazy(() => import("./pages/NotebookDetail"));
+const CapitalizationEngine = lazy(() => import("./pages/CapitalizationEngine"));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
