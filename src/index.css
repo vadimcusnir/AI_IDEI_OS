@@ -486,6 +486,27 @@
     color: hsl(var(--text-secondary));
   }
 
+  /* Landing: calm-premium micro-interactions */
+  .landing-card {
+    transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+  }
+  .landing-card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Landing: section gold divider */
+  .gold-divider {
+    @apply w-full h-px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--gold-oxide) / 0.08) 20%,
+      hsl(var(--gold-oxide) / 0.2) 50%,
+      hsl(var(--gold-oxide) / 0.08) 80%,
+      transparent 100%
+    );
+  }
+
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .heading-1,
@@ -494,6 +515,9 @@
     .heading-4 {
       animation: none !important;
       transition: none !important;
+    }
+    .landing-card:hover {
+      transform: none;
     }
   }
 }
