@@ -43,7 +43,7 @@ export default function ResetPassword() {
       <div className="w-full max-w-sm">
         <button onClick={() => navigate("/")} className="flex items-center justify-center gap-2 mb-8 mx-auto">
           <img src={logo} alt="AI-IDEI" className="h-10 w-10 rounded-full" />
-          <span className="text-2xl font-serif font-normal">AI-IDEI</span>
+          <span className="text-2xl font-normal">AI-IDEI</span>
         </button>
         <div className="bg-card rounded-xl border border-border p-6">
           {success ? (

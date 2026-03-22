@@ -78,7 +78,7 @@ export default function PipelineOverview() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-10"
         >
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
             {t("pipeline_overview.title")}
           </h1>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">

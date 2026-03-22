@@ -64,7 +64,7 @@ export default function CollectionRuns() {
         <SEOHead title="Collection Runs — AI-IDEI" description="View your knowledge collection pipeline runs." />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
           <div>
-            <h1 className="text-2xl font-serif font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
               <Database className="h-6 w-6 text-primary" />
               Collection Runs
             </h1>

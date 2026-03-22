@@ -68,7 +68,7 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
           <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
             <Crown className="h-7 w-7 text-primary" />
           </div>
-          <DialogTitle className="text-lg font-serif">
+          <DialogTitle className="text-lg">
             {requiredTier === "vip" ? "VIP Access Required" : "Pro Plan Required"}
           </DialogTitle>
           <DialogDescription className="text-sm">

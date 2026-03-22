@@ -38,7 +38,7 @@ export default function PublicProfile() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <img src={logo} alt="AI-IDEI" className="h-16 w-16 rounded-full mb-4 opacity-30" />
-        <h1 className="text-xl font-serif font-bold mb-2">{t("public_profile.not_found_title", { username })}</h1>
+        <h1 className="text-xl font-bold mb-2">{t("public_profile.not_found_title", { username })}</h1>
         <p className="text-sm text-muted-foreground mb-6 text-center max-w-sm">
           {t("public_profile.not_found_desc")}
         </p>
@@ -61,7 +61,7 @@ export default function PublicProfile() {
           <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary/30 to-ai-accent/20 mx-auto mb-4 flex items-center justify-center">
             <Brain className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-serif font-bold">{profile?.display_name}</h1>
+          <h1 className="text-2xl font-bold">{profile?.display_name}</h1>
           <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto">{profile?.bio}</p>
           <div className="flex items-center justify-center gap-2 mt-3">
             <span className="text-[10px] bg-muted/50 text-muted-foreground px-2.5 py-1 rounded-full flex items-center gap-1">

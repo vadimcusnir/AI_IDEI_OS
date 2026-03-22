@@ -97,7 +97,7 @@ export default function KnowledgeDashboard() {
                 {selectedArticle.subcategory && (
                   <Badge variant="outline" className="text-[10px] ml-1">{selectedArticle.subcategory}</Badge>
                 )}
-                <h1 className="text-xl font-serif font-bold mt-1">{selectedArticle.title}</h1>
+                <h1 className="text-xl font-bold mt-1">{selectedArticle.title}</h1>
                 <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
                   <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {t("knowledge_dashboard.min_read", { count: selectedArticle.reading_time })}</span>
                   <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {t("knowledge_dashboard.views", { count: selectedArticle.view_count })}</span>
@@ -150,7 +150,7 @@ export default function KnowledgeDashboard() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-xl font-serif font-bold">{t("knowledge_dashboard.title")}</h1>
+            <h1 className="text-xl font-bold">{t("knowledge_dashboard.title")}</h1>
             <p className="text-xs text-muted-foreground mt-1">{t("knowledge_dashboard.subtitle")}</p>
           </div>
 

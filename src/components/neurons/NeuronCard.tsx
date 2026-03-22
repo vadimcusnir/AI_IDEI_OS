@@ -214,7 +214,7 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <span className="text-[10px] font-mono text-primary/60">#{n.number}</span>
         <span className="text-[9px] text-muted-foreground/50 ml-auto">{formatDate(n.updated_at)}</span>
       </div>
-      <h3 className="text-base font-serif font-medium line-clamp-2 mb-1">{n.title}</h3>
+      <h3 className="text-base font-medium line-clamp-2 mb-1">{n.title}</h3>
       {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
         const cat = CATEGORY_CONFIG[n.content_category!];
         const CatIcon = cat.icon;

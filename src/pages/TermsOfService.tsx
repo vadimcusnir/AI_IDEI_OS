@@ -12,7 +12,7 @@ export default function TermsOfService() {
         canonical="https://ai-idei-os.lovable.app/terms"
       />
 
-      <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-6">{t("terms.title")}</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6">{t("terms.title")}</h1>
       <p className="text-xs text-muted-foreground mb-8">{t("terms.last_updated")}</p>
 
       <article className="prose-custom space-y-6 text-sm leading-relaxed text-foreground/90">

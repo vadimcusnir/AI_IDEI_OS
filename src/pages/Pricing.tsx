@@ -114,7 +114,7 @@ export default function Pricing() {
             <Badge variant="secondary" className="mb-4 text-xs">
               <Sparkles className="h-3 w-3 mr-1" /> Root2 Pricing
             </Badge>
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-3">
               Transform Knowledge Into Assets
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground max-w-[50ch] mx-auto">
@@ -177,7 +177,7 @@ export default function Pricing() {
         {/* Credits explainer */}
         <section className="border-t border-border bg-card">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-            <h2 className="text-xl font-serif font-bold mb-6 text-center">How NEURONS Credits Work</h2>
+            <h2 className="text-xl font-bold mb-6 text-center">How NEURONS Credits Work</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
               <div>
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
@@ -206,7 +206,7 @@ export default function Pricing() {
 
         {/* FAQ */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <h2 className="text-xl font-serif font-bold mb-6 text-center">Frequently Asked Questions</h2>
+          <h2 className="text-xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
           <div className="space-y-4">
             {FAQ_ITEMS.map((faq, i) => (
               <div key={i} className="border border-border rounded-lg p-4">

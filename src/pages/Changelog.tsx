@@ -84,7 +84,7 @@ export default function Changelog() {
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <SEOHead title="Changelog — AI-IDEI" description="Latest updates, features and improvements to the AI-IDEI platform." />
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-2">{t("changelog.title")}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t("changelog.title")}</h1>
         <p className="text-sm text-muted-foreground max-w-[65ch]">
           {t("changelog.subtitle")}
         </p>

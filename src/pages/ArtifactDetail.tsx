@@ -214,7 +214,7 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
               {format(new Date(artifact.created_at), "dd MMM yyyy, HH:mm")}
             </span>
           </div>
-          <h1 className="text-xl font-serif font-bold">{artifact.title}</h1>
+          <h1 className="text-xl font-bold">{artifact.title}</h1>
           {artifact.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {artifact.tags.map(tag => (

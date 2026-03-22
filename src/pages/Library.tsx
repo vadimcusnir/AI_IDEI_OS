@@ -163,7 +163,7 @@ export default function Library() {
               <FolderTree className="h-3.5 w-3.5" />
             </Button>
             <div>
-              <h1 className="text-xl font-serif font-bold flex items-center gap-2">
+              <h1 className="text-xl font-bold flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-primary" /> {t("library.title")}
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5">{t("library.artifact_count", { filtered: filtered.length, total: artifacts.length })}</p>
@@ -278,7 +278,7 @@ export default function Library() {
         {artifacts.length === 0 ? (
           <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
             <FileText className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-            <h2 className="text-base font-serif font-bold mb-1">{t("library.no_artifacts")}</h2>
+            <h2 className="text-base font-bold mb-1">{t("library.no_artifacts")}</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
               {t("library.no_artifacts_hint")}
             </p>
@@ -392,7 +392,7 @@ export default function Library() {
           {previewArtifact && (
             <>
               <DialogHeader>
-                <DialogTitle className="font-serif">{previewArtifact.title}</DialogTitle>
+                <DialogTitle className="">{previewArtifact.title}</DialogTitle>
               </DialogHeader>
               <div className="flex items-center gap-2 mb-4">
                 <span className={cn(

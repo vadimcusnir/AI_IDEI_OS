@@ -110,7 +110,7 @@ export function PublishToMarketplaceDialog({ open, onOpenChange, artifact }: Pub
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 font-serif">
+          <DialogTitle className="flex items-center gap-2">
             <Store className="h-4 w-4 text-primary" /> {t("common:publish_marketplace")}
           </DialogTitle>
           <DialogDescription>

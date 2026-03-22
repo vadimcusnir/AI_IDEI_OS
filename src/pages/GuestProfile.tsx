@@ -79,7 +79,7 @@ function StatCard({ icon: Icon, value, label, accent }: {
       )}>
         <Icon className={cn("h-5 w-5", accent ? "text-primary" : "text-muted-foreground")} />
       </div>
-      <p className="text-2xl font-bold font-serif text-foreground">{value}</p>
+      <p className="text-2xl font-bold text-foreground">{value}</p>
       <p className="text-[11px] text-muted-foreground mt-0.5">{label}</p>
     </div>
   );
@@ -145,7 +145,7 @@ function QuotesSection({ quotes, authorName, showAllLabel, sectionLabel }: { quo
       <div className="space-y-4">
         {visible.map((q, i) => (
           <blockquote key={i} className="relative rounded-2xl border border-border bg-card p-5 pl-6 hover:border-primary/20 transition-colors">
-            <div className="absolute top-4 left-5 text-primary/10 text-4xl font-serif leading-none select-none">"</div>
+            <div className="absolute top-4 left-5 text-primary/10 text-4xl leading-none select-none">"</div>
             <p className="relative text-sm italic text-foreground/80 leading-relaxed pl-4">{q}</p>
             <div className="flex items-center gap-2 mt-3 pl-4">
               <div className="h-px flex-1 bg-border" />
@@ -214,7 +214,7 @@ export default function GuestProfile() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <Users className="h-12 w-12 text-muted-foreground/20 mb-4" />
-        <h1 className="text-xl font-serif font-bold mb-2">{t("guest_profile.not_found_title")}</h1>
+        <h1 className="text-xl font-bold mb-2">{t("guest_profile.not_found_title")}</h1>
         <p className="text-sm text-muted-foreground text-center max-w-sm">
           {t("guest_profile.not_found_desc")}
         </p>
@@ -250,14 +250,14 @@ export default function GuestProfile() {
           <div className="text-center">
             <div className="relative inline-block mb-6">
               <div className="h-28 w-28 rounded-full bg-gradient-to-br from-primary/40 via-primary/15 to-accent/20 flex items-center justify-center ring-[3px] ring-primary/20 ring-offset-4 ring-offset-background shadow-xl">
-                <span className="text-4xl font-bold font-serif text-primary">{initials}</span>
+                <span className="text-4xl font-bold text-primary">{initials}</span>
               </div>
               <div className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full bg-status-validated flex items-center justify-center ring-2 ring-background">
                 <Award className="h-3.5 w-3.5 text-primary-foreground" />
               </div>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-foreground">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
               {guest.full_name}
             </h1>
             <div className="mt-2 flex items-center justify-center gap-2">

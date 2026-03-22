@@ -171,7 +171,7 @@ export default function EntityDetail() {
       <div className="min-h-screen bg-background">
         <div className="max-w-3xl mx-auto px-4 py-20 text-center">
           <Brain className="h-12 w-12 text-muted-foreground/20 mx-auto mb-4" />
-          <h1 className="text-2xl font-serif font-bold mb-2">{t("entity_detail.not_found_title")}</h1>
+          <h1 className="text-2xl font-bold mb-2">{t("entity_detail.not_found_title")}</h1>
           <p className="text-sm text-muted-foreground">
             {t("entity_detail.not_found_desc", { type: singularType })}
           </p>
@@ -270,7 +270,7 @@ export default function EntityDetail() {
             )}
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-3 leading-tight">{entity.title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-3 leading-tight">{entity.title}</h1>
           {entity.summary && (
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-[60ch]">{entity.summary}</p>
           )}
@@ -282,7 +282,7 @@ export default function EntityDetail() {
           <div className="space-y-10">
             {entity.description && (
               <section>
-                <h2 className="text-lg font-serif font-semibold mb-3">{t("entity_detail.mechanism")}</h2>
+                <h2 className="text-lg font-semibold mb-3">{t("entity_detail.mechanism")}</h2>
                 <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap bg-card border border-border rounded-lg p-4">
                   {entity.description}
                 </div>
@@ -291,7 +291,7 @@ export default function EntityDetail() {
 
             {citations.length > 0 && (
               <section>
-                <h2 className="text-lg font-serif font-semibold mb-3">{t("entity_detail.evidence")}</h2>
+                <h2 className="text-lg font-semibold mb-3">{t("entity_detail.evidence")}</h2>
                 <div className="space-y-2">
                   {citations.map((c: any, i: number) => (
                     <div key={i} className="flex items-start gap-3 p-3 bg-card border border-border rounded-lg">
@@ -310,7 +310,7 @@ export default function EntityDetail() {
 
             {topics.length > 0 && (
               <section>
-                <h2 className="text-lg font-serif font-semibold mb-3">{t("entity_detail.topics")}</h2>
+                <h2 className="text-lg font-semibold mb-3">{t("entity_detail.topics")}</h2>
                 <div className="flex flex-wrap gap-2">
                   {topics.map((tp) => (
                     <Link key={tp.id} to={`/topics/${tp.slug}`}
@@ -324,7 +324,7 @@ export default function EntityDetail() {
 
             {Object.entries(relatedByType).map(([type, entities]) => (
               <section key={type}>
-                <h2 className="text-lg font-serif font-semibold mb-3">
+                <h2 className="text-lg font-semibold mb-3">
                   {t("entity_detail.related", { type: TYPE_LABEL[type] || type })}
                 </h2>
                 <div className="space-y-2">
@@ -352,7 +352,7 @@ export default function EntityDetail() {
 
             {entity.neuron_id && (
               <section>
-                <h2 className="text-lg font-serif font-semibold mb-3">{t("entity_detail.source")}</h2>
+                <h2 className="text-lg font-semibold mb-3">{t("entity_detail.source")}</h2>
                 <Link to={`/n/${entity.neuron_id}`} className="inline-flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" /> {t("entity_detail.view_source", { id: entity.neuron_id })}
                 </Link>

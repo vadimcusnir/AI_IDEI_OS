@@ -152,7 +152,7 @@ export default function Onboarding() {
             <Zap className="h-3 w-3" />
             4 Steps to Knowledge Assets
           </div>
-          <h1 className="text-xl sm:text-2xl font-serif font-bold mb-2">
+          <h1 className="text-xl sm:text-2xl font-bold mb-2">
             {t("onboarding.title")}
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
@@ -278,7 +278,7 @@ export default function Onboarding() {
                       <Icon className={cn("h-6 w-6", isCompleted ? "text-primary" : "text-foreground")} />
                     </div>
                     <div>
-                      <h2 className="text-base sm:text-lg font-serif font-bold">{step.title}</h2>
+                      <h2 className="text-base sm:text-lg font-bold">{step.title}</h2>
                       <p className="text-[10px] text-muted-foreground font-medium">{step.subtitle}</p>
                     </div>
                   </div>
@@ -350,7 +350,7 @@ export default function Onboarding() {
             <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
               <Crown className="h-7 w-7 text-primary" />
             </div>
-            <h2 className="text-lg font-serif font-bold mb-1.5">{t("onboarding.pipeline_active_title")}</h2>
+            <h2 className="text-lg font-bold mb-1.5">{t("onboarding.pipeline_active_title")}</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
               {t("onboarding.pipeline_active_desc")}
             </p>

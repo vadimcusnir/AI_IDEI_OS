@@ -78,7 +78,7 @@ export default function VIPDashboard() {
               <Crown className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">{t("vip.title")}</h1>
+              <h1 className="text-lg font-bold tracking-tight">{t("vip.title")}</h1>
               <p className="text-[10px] text-muted-foreground">{t("vip.subtitle")}</p>
             </div>
             {isVIP && (

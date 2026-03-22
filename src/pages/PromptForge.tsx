@@ -322,7 +322,7 @@ export default function PromptForge() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
           {/* Hero */}
           <div className="mb-6">
-            <h1 className="text-2xl font-serif font-bold mb-2">{t("prompt_forge.title")}</h1>
+            <h1 className="text-2xl font-bold mb-2">{t("prompt_forge.title")}</h1>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
               {t("prompt_forge.subtitle")}
             </p>

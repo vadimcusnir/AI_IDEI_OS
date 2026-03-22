@@ -25,7 +25,7 @@ interface NeuronMainEditorProps {
 
 const contentBlockStyles: Record<string, string> = {
   text: "text-[15px] leading-relaxed",
-  heading: "text-xl font-semibold font-serif",
+  heading: "text-xl font-semibold",
   subheading: "text-base font-semibold",
   markdown: "text-[15px] leading-relaxed font-mono",
   todo: "text-[15px] leading-relaxed",
@@ -160,7 +160,7 @@ export function NeuronMainEditor({
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
             placeholder={t("common:neuron_editor.untitled")}
-            className="w-full text-3xl font-serif font-normal bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/30"
+            className="w-full text-3xl font-normal bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/30"
           />
         </div>
 

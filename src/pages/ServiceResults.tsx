@@ -162,7 +162,7 @@ export default function ServiceResults() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-xl font-serif font-medium">Rezultate servicii</h1>
+            <h1 className="text-xl font-medium">Rezultate servicii</h1>
             <p className="text-xs text-muted-foreground">
               Istoric complet al execuțiilor AI
               {batchFilter && <span className="ml-1">· Batch <span className="font-mono">{batchFilter.slice(0, 8)}</span></span>}

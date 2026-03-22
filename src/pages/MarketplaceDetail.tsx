@@ -222,7 +222,7 @@ export default function MarketplaceDetail() {
               </Badge>
             )}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold">{asset.title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{asset.title}</h1>
           {asset.description && (
             <p className="text-sm text-muted-foreground max-w-[65ch] leading-relaxed">{asset.description}</p>
           )}

@@ -34,7 +34,7 @@ export default function Transcribe() {
             transition={{ duration: 0.5 }}
             className="text-center mb-8"
           >
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
               YouTube → Transcript
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto">
