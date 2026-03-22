@@ -76,6 +76,8 @@ const GamificationPage = lazy(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
 const Transcribe = lazy(() => import("./pages/Transcribe"));
 const Integrations = lazy(() => import("./pages/Integrations"));
+const CognitiveUnits = lazy(() => import("./pages/CognitiveUnits"));
+const CollectionRuns = lazy(() => import("./pages/CollectionRuns"));
 
 function PageLoader() {
   return (
