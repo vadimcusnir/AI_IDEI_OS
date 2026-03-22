@@ -21,7 +21,7 @@ export function LandingFooter() {
           <div className="space-y-4 col-span-2 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5">
               <img src={logo} alt="AI-IDEI" className="h-7 w-7 rounded-full" />
-              <span className="text-sm font-serif font-bold tracking-tight text-foreground">AI-IDEI</span>
+              <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
             </div>
             <p className="max-w-[200px] text-sm text-muted-foreground leading-relaxed">
               Practical AI for copywriting, marketing, and execution.
