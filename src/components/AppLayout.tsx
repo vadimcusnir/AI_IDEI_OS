@@ -100,8 +100,8 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               </DropdownMenuContent>
             </DropdownMenu>
             <ThemeToggle />
-            {user && <NotificationBell />}
-            {user && <UserMenu />}
+            {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
+            {user && <Suspense fallback={null}><UserMenu /></Suspense>}
           </header>
 
           <LowBalanceBanner />
