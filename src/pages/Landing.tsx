@@ -146,7 +146,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group shrink-0">
             <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full" />
-            <span className="text-sm font-serif font-bold tracking-tight text-[hsl(var(--ivory))]">AI-IDEI</span>
+            <span className="text-sm font-serif font-bold tracking-tight text-foreground">AI-IDEI</span>
           </button>
 
           {/* Desktop nav */}
