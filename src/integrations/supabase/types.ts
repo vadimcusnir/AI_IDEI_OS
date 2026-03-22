@@ -4976,6 +4976,38 @@ export type Database = {
           },
         ]
       }
+      notebook_chat_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          notebook_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notebook_id: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notebook_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notebook_chat_sessions_notebook_id_fkey"
+            columns: ["notebook_id"]
+            isOneToOne: false
+            referencedRelation: "notebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notebook_messages: {
         Row: {
           content: string
@@ -4984,6 +5016,7 @@ export type Database = {
           metadata: Json | null
           notebook_id: string
           role: string
+          session_id: string | null
         }
         Insert: {
           content?: string
@@ -4992,6 +5025,7 @@ export type Database = {
           metadata?: Json | null
           notebook_id: string
           role?: string
+          session_id?: string | null
         }
         Update: {
           content?: string
@@ -5000,6 +5034,7 @@ export type Database = {
           metadata?: Json | null
           notebook_id?: string
           role?: string
+          session_id?: string | null
         }
         Relationships: [
           {
@@ -5007,6 +5042,13 @@ export type Database = {
             columns: ["notebook_id"]
             isOneToOne: false
             referencedRelation: "notebooks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notebook_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "notebook_chat_sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -5021,6 +5063,7 @@ export type Database = {
           metadata: Json | null
           notebook_id: string
           source_type: string
+          summary: string | null
           title: string
         }
         Insert: {
@@ -5032,6 +5075,7 @@ export type Database = {
           metadata?: Json | null
           notebook_id: string
           source_type?: string
+          summary?: string | null
           title?: string
         }
         Update: {
@@ -5043,6 +5087,7 @@ export type Database = {
           metadata?: Json | null
           notebook_id?: string
           source_type?: string
+          summary?: string | null
           title?: string
         }
         Relationships: [

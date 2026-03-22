@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, RotateCcw, Trash2, Download } from "lucide-react";
+import { Send, Sparkles, RotateCcw, Trash2, Download, Plus, MessageSquare, Pencil, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Notebook, NotebookSource } from "@/hooks/useNotebook";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { useNotebookChat } from "@/hooks/useNotebookChat";
+import { useNotebookSessions } from "@/hooks/useNotebookSessions";
 import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Props {
   notebook: Notebook | undefined;
@@ -27,20 +29,40 @@ const SUGGESTED_PROMPTS = [
 
 export function NotebookChatPanel({ notebook, sources, messages: dbMessages, updateTitle }: Props) {
   const [input, setInput] = useState("");
+  const [showSessions, setShowSessions] = useState(false);
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const {
+    sessions, activeSessionId, setActiveSessionId,
+    ensureSession, createSession, renameSession, deleteSession,
+  } = useNotebookSessions(notebook?.id);
+
   const { messages, isStreaming, sendMessage: send, clearMessages, setMessages } = useNotebookChat({
     notebookId: notebook?.id,
+    sessionId: activeSessionId,
     sources,
   });
 
-  // Load DB messages on mount
+  // Auto-create session on mount
   useEffect(() => {
-    if (dbMessages.length > 0 && messages.length === 0) {
-      setMessages(dbMessages.map((m) => ({ role: m.role as "user" | "assistant", content: m.content })));
+    ensureSession();
+  }, [ensureSession]);
+
+  // Load DB messages for active session
+  useEffect(() => {
+    if (!activeSessionId) return;
+    const sessionMessages = dbMessages.filter((m: any) =>
+      m.session_id === activeSessionId || (!m.session_id && !activeSessionId)
+    );
+    if (sessionMessages.length > 0) {
+      setMessages(sessionMessages.map((m: any) => ({ role: m.role as "user" | "assistant", content: m.content })));
+    } else {
+      clearMessages();
     }
-  }, [dbMessages]);
+  }, [activeSessionId, dbMessages]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -48,17 +70,18 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
     }
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const text = input.trim();
     if (!text || isStreaming) return;
+    await ensureSession();
     send(text);
     setInput("");
   };
 
   const handleClearChat = async () => {
     clearMessages();
-    if (notebook?.id) {
-      await supabase.from("notebook_messages").delete().eq("notebook_id", notebook.id);
+    if (notebook?.id && activeSessionId) {
+      await supabase.from("notebook_messages").delete().eq("session_id", activeSessionId);
       toast.success("Chat cleared");
     }
   };
@@ -76,38 +99,116 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
     toast.success("Chat exported");
   };
 
+  const handleNewSession = () => {
+    createSession.mutate(undefined);
+    clearMessages();
+  };
+
+  const handleSwitchSession = (sessionId: string) => {
+    setActiveSessionId(sessionId);
+    setShowSessions(false);
+  };
+
   const selectedCount = sources.filter((s) => s.is_selected).length;
+  const activeSession = sessions.find((s) => s.id === activeSessionId);
 
   return (
     <div className="flex flex-col h-full bg-background">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-border shrink-0">
+      <div className="px-6 py-3 border-b border-border shrink-0">
         <input
           value={notebook?.title || ""}
           onChange={(e) => updateTitle.mutate(e.target.value)}
-          className="text-xl font-semibold bg-transparent border-none outline-none text-foreground w-full placeholder:text-muted-foreground/30"
+          className="text-lg font-semibold bg-transparent border-none outline-none text-foreground w-full placeholder:text-muted-foreground/30"
           placeholder="Untitled Notebook"
         />
-        <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
-          <span>{selectedCount} / {sources.length} sources selected</span>
+        <div className="flex items-center gap-2 mt-1.5">
+          {/* Session selector */}
+          <button
+            onClick={() => setShowSessions(!showSessions)}
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors bg-muted/30 rounded-md px-2 py-1"
+          >
+            <MessageSquare className="h-3 w-3" />
+            <span className="truncate max-w-[120px]">{activeSession?.title || "Chat"}</span>
+          </button>
+          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={handleNewSession}>
+            <Plus className="h-3 w-3" />
+          </Button>
+          <span className="text-[10px] text-muted-foreground">{selectedCount}/{sources.length} sources</span>
           {messages.length > 0 && (
-            <>
-              <button
-                onClick={handleExportChat}
-                className="flex items-center gap-1 hover:text-foreground transition-colors"
-              >
-                <Download className="h-3 w-3" /> Export
+            <div className="flex items-center gap-1 ml-auto">
+              <button onClick={handleExportChat} className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5">
+                <Download className="h-2.5 w-2.5" /> Export
               </button>
-              <button
-                onClick={handleClearChat}
-                className="flex items-center gap-1 hover:text-destructive transition-colors"
-              >
-                <Trash2 className="h-3 w-3" /> Clear
+              <button onClick={handleClearChat} className="text-[10px] text-muted-foreground hover:text-destructive flex items-center gap-0.5">
+                <Trash2 className="h-2.5 w-2.5" /> Clear
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
+
+      {/* Sessions dropdown */}
+      <AnimatePresence>
+        {showSessions && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden border-b border-border bg-card"
+          >
+            <div className="px-4 py-2 space-y-0.5 max-h-48 overflow-y-auto">
+              {sessions.map((s) => (
+                <div
+                  key={s.id}
+                  className={cn(
+                    "flex items-center gap-2 px-2 py-1.5 rounded-md text-xs cursor-pointer transition-colors group",
+                    s.id === activeSessionId ? "bg-primary/10 text-foreground" : "hover:bg-accent/5 text-muted-foreground"
+                  )}
+                >
+                  {editingSessionId === s.id ? (
+                    <input
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      onBlur={() => {
+                        if (editTitle.trim()) renameSession.mutate({ id: s.id, title: editTitle.trim() });
+                        setEditingSessionId(null);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          if (editTitle.trim()) renameSession.mutate({ id: s.id, title: editTitle.trim() });
+                          setEditingSessionId(null);
+                        }
+                      }}
+                      className="flex-1 bg-transparent border-b border-primary outline-none text-xs"
+                      autoFocus
+                    />
+                  ) : (
+                    <>
+                      <MessageSquare className="h-3 w-3 shrink-0" />
+                      <span className="flex-1 truncate" onClick={() => handleSwitchSession(s.id)}>{s.title}</span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setEditingSessionId(s.id); setEditTitle(s.title); }}
+                        className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground p-0.5"
+                      >
+                        <Pencil className="h-2.5 w-2.5" />
+                      </button>
+                      {sessions.length > 1 && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); deleteSession.mutate(s.id); }}
+                          className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive p-0.5"
+                        >
+                          <X className="h-2.5 w-2.5" />
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-4">
