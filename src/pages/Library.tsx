@@ -204,8 +204,8 @@ export default function Library() {
         </div>
 
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          <div className="relative flex-1 min-w-[180px] max-w-xs">
+        <div className="space-y-2 mb-4">
+          <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input
               placeholder={t("library.search_placeholder")}
@@ -214,62 +214,64 @@ export default function Library() {
               className="pl-8 h-8 text-xs"
             />
           </div>
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-[130px] h-8 text-xs">
-              <Filter className="h-3 w-3 mr-1" />
-              <SelectValue placeholder={t("library.all_types")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("library.all_types")}</SelectItem>
-              {types.map(tp => (
-                <SelectItem key={tp} value={tp}>
-                  {TYPE_CONFIG[tp] ? t(TYPE_CONFIG[tp].labelKey) : tp}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[120px] h-8 text-xs">
-              <SelectValue placeholder={t("library.all_statuses")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("library.all_statuses")}</SelectItem>
-              <SelectItem value="draft">{t("library.status_draft")}</SelectItem>
-              <SelectItem value="final">{t("library.status_final")}</SelectItem>
-              <SelectItem value="published">{t("library.status_published")}</SelectItem>
-            </SelectContent>
-          </Select>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-                <ArrowUpDown className="h-3 w-3" /> {t("library.sort_label")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-44">
-              {([
-                { field: "updated_at" as const, label: t("library.sort_updated") },
-                { field: "created_at" as const, label: t("library.sort_created") },
-                { field: "title" as const, label: t("library.sort_title") },
-              ]).map(({ field, label }) => (
-                <DropdownMenuItem
-                  key={field}
-                  onClick={() => {
-                    if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
-                    else { setSortField(field); setSortDir("desc"); }
-                  }}
-                  className={cn(sortField === field && "text-primary")}
-                >
-                  {label}
-                  {sortField === field && (
-                    sortDir === "desc" ? <SortDesc className="h-3 w-3 ml-auto" /> : <SortAsc className="h-3 w-3 ml-auto" />
-                  )}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <span className="text-[10px] text-muted-foreground ml-auto">
-            {t("library.results_count", { count: filtered.length })}
-          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-auto min-w-[100px] h-8 text-xs">
+                <Filter className="h-3 w-3 mr-1" />
+                <SelectValue placeholder={t("library.all_types")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("library.all_types")}</SelectItem>
+                {types.map(tp => (
+                  <SelectItem key={tp} value={tp}>
+                    {TYPE_CONFIG[tp] ? t(TYPE_CONFIG[tp].labelKey) : tp}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-auto min-w-[90px] h-8 text-xs">
+                <SelectValue placeholder={t("library.all_statuses")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("library.all_statuses")}</SelectItem>
+                <SelectItem value="draft">{t("library.status_draft")}</SelectItem>
+                <SelectItem value="final">{t("library.status_final")}</SelectItem>
+                <SelectItem value="published">{t("library.status_published")}</SelectItem>
+              </SelectContent>
+            </Select>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                  <ArrowUpDown className="h-3 w-3" /> {t("library.sort_label")}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                {([
+                  { field: "updated_at" as const, label: t("library.sort_updated") },
+                  { field: "created_at" as const, label: t("library.sort_created") },
+                  { field: "title" as const, label: t("library.sort_title") },
+                ]).map(({ field, label }) => (
+                  <DropdownMenuItem
+                    key={field}
+                    onClick={() => {
+                      if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
+                      else { setSortField(field); setSortDir("desc"); }
+                    }}
+                    className={cn(sortField === field && "text-primary")}
+                  >
+                    {label}
+                    {sortField === field && (
+                      sortDir === "desc" ? <SortDesc className="h-3 w-3 ml-auto" /> : <SortAsc className="h-3 w-3 ml-auto" />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <span className="text-[10px] text-muted-foreground ml-auto">
+              {t("library.results_count", { count: filtered.length })}
+            </span>
+          </div>
         </div>
 
         {/* Empty state */}
