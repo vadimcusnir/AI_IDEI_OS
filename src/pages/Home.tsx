@@ -60,6 +60,13 @@ export default function Home() {
 
   const QUICK_ACTIONS = [
     {
+      label: t("home.quick_actions.transcribe"),
+      desc: t("home.quick_actions.transcribe_desc"),
+      icon: Youtube,
+      path: "/transcribe",
+      gradient: "from-destructive/15 to-destructive/5",
+    },
+    {
       label: t("home.quick_actions.upload"),
       desc: t("home.quick_actions.upload_desc"),
       icon: Upload,

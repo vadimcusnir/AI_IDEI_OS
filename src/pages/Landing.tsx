@@ -250,6 +250,33 @@ export default function Landing() {
         </motion.div>
       </section>
 
+      {/* ═══ TRANSCRIBE CTA ═══ */}
+      <section className="relative bg-gradient-to-r from-primary/[0.04] via-background to-primary/[0.04]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scaleIn}
+            className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-card p-5 sm:p-6 shadow-lg shadow-primary/5"
+          >
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-destructive/10 flex items-center justify-center shrink-0">
+                <Play className="h-6 w-6 text-destructive" />
+              </div>
+              <div>
+                <h3 className="text-sm sm:text-base font-semibold">{t("transcribe_cta.title")}</h3>
+                <p className="text-xs text-muted-foreground">{t("transcribe_cta.desc")}</p>
+              </div>
+            </div>
+            <Button onClick={() => navigate("/transcribe")} className="gap-2 shrink-0 shadow-md shadow-primary/10">
+              {t("transcribe_cta.button")}
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ═══ THE PROBLEM ═══ */}
       <section className="relative border-y border-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
