@@ -86,7 +86,7 @@ export default function TopicDiscovery() {
             <Sparkles className="h-3.5 w-3.5" />
             <span>{t("topic_discovery.breadcrumb")}</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("topic_discovery.title")}</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{t("topic_discovery.title")}</h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">
             {t("topic_discovery.desc")}
           </p>
@@ -102,7 +102,7 @@ export default function TopicDiscovery() {
           <>
             {emerging.length > 0 && (
               <section>
-                <h2 className="text-lg font-serif font-bold mb-4 flex items-center gap-2">
+                <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-primary" />
                   {t("topic_discovery.emerging_ideas")}
                 </h2>
@@ -135,7 +135,7 @@ export default function TopicDiscovery() {
 
             <section>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-serif font-bold flex items-center gap-2">
+                <h2 className="text-lg font-bold flex items-center gap-2">
                   <Layers className="h-4 w-4 text-primary" />
                   {t("topic_discovery.topic_clusters")}
                 </h2>

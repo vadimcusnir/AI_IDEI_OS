@@ -50,7 +50,7 @@ export default function RuntimeDashboard() {
                 )} />
               </div>
               <div>
-                <h1 className="text-lg font-serif font-bold tracking-tight">{t("runtime_dashboard.title")}</h1>
+                <h1 className="text-lg font-bold tracking-tight">{t("runtime_dashboard.title")}</h1>
                 <p className="text-[10px] text-muted-foreground">{t("runtime_dashboard.subtitle")}</p>
               </div>
             </div>

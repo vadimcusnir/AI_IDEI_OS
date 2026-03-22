@@ -475,7 +475,7 @@ export default function Extractor() {
             <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <FileText className="h-7 w-7 text-primary/40" />
             </div>
-            <h3 className="text-base font-serif font-semibold mb-1.5">{t("extractor.no_episodes")}</h3>
+            <h3 className="text-base font-semibold mb-1.5">{t("extractor.no_episodes")}</h3>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto mb-1">
               {t("extractor.no_episodes_hint")}
             </p>

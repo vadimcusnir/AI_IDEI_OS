@@ -82,7 +82,7 @@ export default function TopicDetail() {
     return (
       <div className="min-h-screen bg-background text-center py-20">
         <Tag className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-        <h1 className="text-2xl font-serif font-bold">{t("topic_detail.not_found_title")}</h1>
+        <h1 className="text-2xl font-bold">{t("topic_detail.not_found_title")}</h1>
         <Link to="/topics" className="text-sm text-primary hover:underline mt-4 inline-block">← {t("topic_detail.back_to_topics")}</Link>
       </div>
     );
@@ -109,7 +109,7 @@ export default function TopicDetail() {
             <ChevronRight className="h-3 w-3" />
             <span className="text-foreground">{topic.title}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-3">{topic.title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-3">{topic.title}</h1>
           {topic.description && (
             <p className="text-sm text-muted-foreground leading-relaxed max-w-[60ch]">{topic.description}</p>
           )}
@@ -120,7 +120,7 @@ export default function TopicDetail() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-8">
         {Object.entries(byType).map(([type, ents]) => (
           <section key={type}>
-            <h2 className="text-lg font-serif font-semibold mb-3 capitalize">{type}s</h2>
+            <h2 className="text-lg font-semibold mb-3 capitalize">{type}s</h2>
             <div className="space-y-2">
               {ents.map((e) => (
                 <Link

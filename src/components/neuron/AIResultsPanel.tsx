@@ -71,7 +71,7 @@ export function AIResultsPanel({ result, isExtracting, activeAction, onClose, on
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-3 py-3">
         <div className="prose prose-sm max-w-none text-xs leading-relaxed
-          prose-headings:text-foreground prose-headings:font-serif prose-headings:mt-3 prose-headings:mb-1.5
+          prose-headings:text-foreground prose-headings:prose-headings:mt-3 prose-headings:mb-1.5
           prose-h2:text-sm prose-h3:text-xs
           prose-p:text-muted-foreground prose-p:my-1
           prose-strong:text-foreground

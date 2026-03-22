@@ -147,7 +147,7 @@ export default function AnalyticsDashboard() {
               <BarChart3 className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">{t("analytics.title")}</h1>
+              <h1 className="text-lg font-bold tracking-tight">{t("analytics.title")}</h1>
               <p className="text-[10px] text-muted-foreground">{t("analytics.subtitle")}</p>
             </div>
             <div className="ml-auto flex gap-1">

@@ -81,7 +81,7 @@ export function TemplatePicker({ isOpen, onClose }: TemplatePickerProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
           <div>
-            <h2 className="text-base font-serif">Create Neuron</h2>
+            <h2 className="text-base">Create Neuron</h2>
             <p className="text-xs text-muted-foreground mt-0.5">
               Start from scratch or use a template
               {templates.length > 0 && <span className="text-muted-foreground/40"> · {templates.length} templates</span>}

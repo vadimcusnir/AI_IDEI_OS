@@ -127,7 +127,7 @@ export default function Auth() {
             <div className="absolute inset-0 rounded-full bg-primary/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <img src={logo} alt="AI-IDEI" className="relative h-10 w-10 rounded-full shadow-lg shadow-primary/10" />
           </div>
-          <span className="text-2xl font-serif font-normal">AI-IDEI</span>
+          <span className="text-2xl font-normal">AI-IDEI</span>
         </button>
 
         <div className="bg-card/80 backdrop-blur-md rounded-2xl border border-border shadow-xl shadow-primary/[0.03] p-6 sm:p-8">
@@ -139,7 +139,7 @@ export default function Auth() {
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.25 }}
             >
-              <h2 className="text-lg font-serif font-semibold mb-1">{titles[mode].heading}</h2>
+              <h2 className="text-lg font-semibold mb-1">{titles[mode].heading}</h2>
               <p className="text-sm text-muted-foreground mb-6">{titles[mode].sub}</p>
             </motion.div>
           </AnimatePresence>

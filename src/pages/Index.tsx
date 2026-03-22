@@ -223,7 +223,7 @@ export default function Index() {
               ) : (
                 <>
                   <img src={logo} className="h-12 w-12 opacity-30 mx-auto mb-4" alt="" />
-                  <h3 className="text-lg font-serif font-medium mb-2">{t("neurons_index.empty_title")}</h3>
+                  <h3 className="text-lg font-medium mb-2">{t("neurons_index.empty_title")}</h3>
                   <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
                     {t("neurons_index.empty_desc")}
                   </p>

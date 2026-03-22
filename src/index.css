@@ -84,7 +84,7 @@
 
     --radius: 0.5rem;
 
-    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-serif: 'Inter', system-ui, sans-serif;
     --font-sans: 'Inter', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 

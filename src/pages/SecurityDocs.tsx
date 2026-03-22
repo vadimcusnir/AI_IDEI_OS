@@ -75,7 +75,7 @@ export default function SecurityDocs() {
               <Shield className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">{t("security_docs.title")}</h1>
+              <h1 className="text-lg font-bold tracking-tight">{t("security_docs.title")}</h1>
               <p className="text-[10px] text-muted-foreground">{t("security_docs.subtitle")}</p>
             </div>
             <Badge className="ml-auto text-[10px] bg-status-validated/10 text-status-validated border-0">

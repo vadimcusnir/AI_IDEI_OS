@@ -202,7 +202,7 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
             >
               {msg.role === "assistant" ? (
                 <div className="prose prose-sm max-w-none text-[11px] leading-relaxed
-                  prose-headings:text-foreground prose-headings:font-serif prose-headings:text-xs prose-headings:mt-2 prose-headings:mb-1
+                  prose-headings:text-foreground prose-headings:prose-headings:text-xs prose-headings:mt-2 prose-headings:mb-1
                   prose-p:text-foreground prose-p:my-0.5
                   prose-strong:text-foreground
                   prose-code:text-[10px] prose-code:bg-muted prose-code:px-1 prose-code:rounded

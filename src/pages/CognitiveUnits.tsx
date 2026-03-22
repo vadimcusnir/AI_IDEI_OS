@@ -94,7 +94,7 @@ export default function CognitiveUnits() {
         <SEOHead title="Cognitive Units — AI-IDEI" description="Browse and manage extracted cognitive units from your knowledge base." />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
           <div>
-            <h1 className="text-2xl font-serif font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
               <Brain className="h-6 w-6 text-primary" />
               Cognitive Units
             </h1>

@@ -206,7 +206,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
       <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-border sticky top-0 bg-card z-10">
           <div>
-            <h2 className="text-base font-serif">{t("export_import_title")}</h2>
+            <h2 className="text-base">{t("export_import_title")}</h2>
             <p className="text-xs text-muted-foreground mt-0.5">{t("export_import_desc")}</p>
           </div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">

@@ -117,7 +117,7 @@ export default function EntityListing() {
             <ChevronRight className="h-3 w-3" />
             <span className="text-foreground">{meta.title}</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{meta.title}</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{meta.title}</h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">{meta.description}</p>
         </div>
       </div>

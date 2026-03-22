@@ -322,7 +322,7 @@ export default function RunService() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
-                <h1 className="text-xl sm:text-2xl font-serif font-medium">{service.name}</h1>
+                <h1 className="text-xl sm:text-2xl font-medium">{service.name}</h1>
                 <Badge variant="secondary" className="text-[9px] font-mono uppercase">
                   {service.category}
                 </Badge>

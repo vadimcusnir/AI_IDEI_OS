@@ -63,7 +63,7 @@ export function WelcomeModal() {
               <Rocket className="h-4 w-4 text-primary" />
               <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">{t("welcome")}</span>
             </div>
-            <DialogTitle className="text-lg font-serif">
+            <DialogTitle className="text-lg">
               {t("welcome_title")}
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground leading-relaxed mt-1">

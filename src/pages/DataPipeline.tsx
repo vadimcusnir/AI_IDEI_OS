@@ -61,7 +61,7 @@ export default function DataPipeline() {
               <Database className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">{t("data_pipeline.title")}</h1>
+              <h1 className="text-lg font-bold tracking-tight">{t("data_pipeline.title")}</h1>
               <p className="text-[10px] text-muted-foreground">{t("data_pipeline.subtitle")}</p>
             </div>
           </div>

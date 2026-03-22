@@ -22,7 +22,7 @@ export default function DocsIndex() {
             <BookOpen className="h-3.5 w-3.5" />
             <span>Documentation</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3 max-w-[50ch]">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3 max-w-[50ch]">
             AI-IDEI Documentation
           </h1>
           <p className="text-base text-muted-foreground max-w-[65ch] leading-relaxed">

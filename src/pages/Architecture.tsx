@@ -14,7 +14,7 @@ const Section = ({ icon: Icon, title, children }: { icon: any; title: string; ch
       <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
         <Icon className="h-4 w-4 text-primary" />
       </div>
-      <h2 className="text-xl font-serif">{title}</h2>
+      <h2 className="text-xl">{title}</h2>
     </div>
     <div className="text-sm text-muted-foreground leading-relaxed space-y-4">{children}</div>
   </section>
@@ -50,7 +50,7 @@ export default function Architecture() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Hero */}
         <div className="mb-16">
-          <h1 className="text-3xl font-serif mb-3">{t("hero.title")}</h1>
+          <h1 className="text-3xl mb-3">{t("hero.title")}</h1>
           <p className="text-sm text-muted-foreground max-w-2xl mb-6">
             {t("hero.description")}
           </p>
@@ -87,12 +87,12 @@ export default function Architecture() {
             ))}
           </ul>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s1.pipeline_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s1.pipeline_title")}</h3>
           <CodeBlock title="Knowledge Pipeline">{t("s1.pipeline_code")}</CodeBlock>
 
           <p dangerouslySetInnerHTML={{ __html: t("s1.philosophy") }} />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s1.positioning_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s1.positioning_title")}</h3>
           <p dangerouslySetInnerHTML={{ __html: t("s1.positioning") }} />
         </Section>
 
@@ -166,7 +166,7 @@ export default function Architecture() {
             rows={t("s4.categories_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s4.service_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s4.service_title")}</h3>
           <Table
             headers={[t("s4.class"), t("s4.type"), t("s4.cost"), t("s4.examples")]}
             rows={t("s4.service_rows", { returnObjects: true }) as string[][]}
@@ -229,7 +229,7 @@ neuron_address_aliases
             rows={t("s7.modes_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s7.implemented_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s7.implemented_title")}</h3>
           <Table
             headers={["Service Key", t("s7.name"), t("s7.class"), t("s7.credits")]}
             rows={[
@@ -284,10 +284,10 @@ credit_transactions
 ├── description: text
 ├── created_at: timestamptz`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s8.flow_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s8.flow_title")}</h3>
           <CodeBlock title="Job Runner Pipeline">{t("s8.flow_code")}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s8.economy_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s8.economy_title")}</h3>
           <Table
             headers={[t("s8.metric"), t("s8.value")]}
             rows={t("s8.economy_rows", { returnObjects: true }) as string[][]}
@@ -340,13 +340,13 @@ For each extracted neuron:
 ├── read: boolean (default false)
 ├── created_at: timestamptz`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s10.triggers_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s10.triggers_title")}</h3>
           <Table
             headers={[t("s10.trigger"), t("s10.table"), t("s10.condition"), t("s10.notification")]}
             rows={t("s10.triggers_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s10.prefs_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s10.prefs_title")}</h3>
           <CodeBlock title="Notification Preferences">{`notification_preferences
 ├── user_id: uuid (unique)
 ├── push_enabled: boolean — Desktop Notifications API permission
@@ -360,7 +360,7 @@ For each extracted neuron:
 
 Auto-created via handle_new_user() trigger on auth.users INSERT.`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s10.channels_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s10.channels_title")}</h3>
           <Table
             headers={[t("s10.channel"), t("s10.implementation"), t("s10.status")]}
             rows={t("s10.channels_rows", { returnObjects: true }) as string[][]}
@@ -387,13 +387,13 @@ Auto-created via handle_new_user() trigger on auth.users INSERT.`}</CodeBlock>
 ├── admin_responded_at: timestamptz
 ├── created_at / updated_at: timestamptz`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s11.collection_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s11.collection_title")}</h3>
           <Table
             headers={[t("s11.point"), t("s11.component"), t("s11.behavior")]}
             rows={t("s11.collection_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s11.admin_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s11.admin_title")}</h3>
           <CodeBlock title="Admin Feedback Flow">{t("s11.admin_code")}</CodeBlock>
         </Section>
 
@@ -452,7 +452,7 @@ has_role(_user_id uuid, _role app_role) → boolean
             rows={t("s14.principles_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s14.security_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s14.security_title")}</h3>
           <Table
             headers={[t("s14.layer"), t("s14.implementation")]}
             rows={t("s14.security_rows", { returnObjects: true }) as string[][]}
@@ -488,19 +488,19 @@ neuron_clones
 
         {/* ─── 16. PAGES & UI ─── */}
         <Section icon={BookOpen} title={t("s16.title")}>
-          <h3 className="text-base font-serif mt-2 text-foreground">{t("s16.public_routes")}</h3>
+          <h3 className="text-base mt-2 text-foreground">{t("s16.public_routes")}</h3>
           <Table
             headers={[t("s16.route"), t("s16.page"), t("s16.function")]}
             rows={t("s16.public_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s16.protected_routes")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s16.protected_routes")}</h3>
           <Table
             headers={[t("s16.route"), t("s16.page"), t("s16.function")]}
             rows={t("s16.protected_rows", { returnObjects: true }) as string[][]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s16.admin_routes")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s16.admin_routes")}</h3>
           <Table
             headers={[t("s16.route"), t("s16.page"), t("s16.function")]}
             rows={[
@@ -508,7 +508,7 @@ neuron_clones
             ]}
           />
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s16.nav_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s16.nav_title")}</h3>
           <p>{t("s16.nav_desc")}</p>
           <CodeBlock title="Navigation Flow">{`Home (Cockpit) → Extractor (Ingestion) → Neurons (Management)
 → Services (Execution) → Jobs (Monitoring) → Credits (Balance)
@@ -519,7 +519,7 @@ Header includes:
   - Feedback link
   - ThemeToggle (light/dark)`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s16.editor_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s16.editor_title")}</h3>
           <CodeBlock title="3-Panel Layout">{`┌─────────────────────────────────────────────────┐
 │  TopBar: title, status, #number, save indicator │
 ├──────┬──────────────────────┬───────────────────┤
@@ -566,7 +566,7 @@ Models: google/gemini-3-flash-preview (default)
 Mode: Streaming (SSE) or non-streaming
 Rate limits: per-workspace, 429 on exceed, 402 on credits exhausted`}</CodeBlock>
 
-          <h3 className="text-base font-serif mt-6 text-foreground">{t("s18.secrets_title")}</h3>
+          <h3 className="text-base mt-6 text-foreground">{t("s18.secrets_title")}</h3>
           <Table
             headers={["Secret", t("s18.purpose")]}
             rows={[

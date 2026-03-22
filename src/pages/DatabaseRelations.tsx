@@ -110,7 +110,7 @@ export default function DatabaseRelations() {
               <Database className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">{t("database_relations.title")}</h1>
+              <h1 className="text-lg font-bold tracking-tight">{t("database_relations.title")}</h1>
               <p className="text-[10px] text-muted-foreground">{t("database_relations.subtitle")}</p>
             </div>
           </div>

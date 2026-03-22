@@ -120,7 +120,7 @@ export default function Marketplace() {
             <Store className="h-3.5 w-3.5" />
             <span>{t("marketplace.breadcrumb")}</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{t("marketplace.title")}</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{t("marketplace.title")}</h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">
             {t("marketplace.description")}
           </p>

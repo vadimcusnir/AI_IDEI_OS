@@ -50,7 +50,7 @@ export function SaveAsTemplateDialog({ isOpen, onClose, onSave, blocks, defaultN
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <div className="flex items-center gap-2">
             <Save className="h-4 w-4 text-primary" />
-            <h2 className="text-sm font-serif font-medium">{t("template.save_as_template")}</h2>
+            <h2 className="text-sm font-medium">{t("template.save_as_template")}</h2>
           </div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-4 w-4" />

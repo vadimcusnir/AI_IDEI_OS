@@ -43,7 +43,7 @@ export default function GamificationPage() {
               <Trophy className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-serif font-bold tracking-tight">{t("gamification.title")}</h1>
+              <h1 className="text-lg font-bold tracking-tight">{t("gamification.title")}</h1>
               <p className="text-[10px] text-muted-foreground">{t("gamification.subtitle")}</p>
             </div>
             <div className="ml-auto flex items-center gap-2">

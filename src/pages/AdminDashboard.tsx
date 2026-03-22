@@ -354,7 +354,7 @@ export default function AdminDashboard() {
                 <Shield className="h-5 w-5 text-destructive" />
               </div>
               <div>
-                <h1 className="text-xl font-serif font-bold">Admin Control Panel</h1>
+                <h1 className="text-xl font-bold">Admin Control Panel</h1>
                 <p className="text-xs text-muted-foreground">{t("admin.subtitle")}</p>
               </div>
             </div>

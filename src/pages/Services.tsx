@@ -187,7 +187,7 @@ export default function Services() {
         {/* Hero header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-2xl font-serif font-medium tracking-tight">{t("services.title")}</h1>
+            <h1 className="text-2xl font-medium tracking-tight">{t("services.title")}</h1>
             <Badge variant="secondary" className="text-[10px] font-mono">
               {t("services.available", { count: services.length })}
             </Badge>

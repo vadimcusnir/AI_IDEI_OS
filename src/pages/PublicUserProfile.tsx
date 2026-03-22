@@ -77,7 +77,7 @@ export default function PublicUserProfile() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <User className="h-12 w-12 text-muted-foreground/20 mb-4" />
-        <h1 className="text-xl font-serif font-bold mb-2">{t("public_user_profile.not_found_title")}</h1>
+        <h1 className="text-xl font-bold mb-2">{t("public_user_profile.not_found_title")}</h1>
         <p className="text-sm text-muted-foreground text-center max-w-sm">
           {t("public_user_profile.not_found_desc", { username })}
         </p>
@@ -128,12 +128,12 @@ export default function PublicUserProfile() {
                 />
               ) : (
                 <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center ring-[3px] ring-primary/20 ring-offset-4 ring-offset-background shadow-lg">
-                  <span className="text-3xl font-bold font-serif text-primary">{initials}</span>
+                  <span className="text-3xl font-bold text-primary">{initials}</span>
                 </div>
               )}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
               {profile.display_name || username}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">@{profile.username}</p>

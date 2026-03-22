@@ -107,7 +107,7 @@ export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimo
           </span>
           <div className="h-1 w-6 rounded-full bg-primary" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-serif font-bold">Experiențe reale cu AI-IDEI</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold">Experiențe reale cu AI-IDEI</h2>
         <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
           Profesioniști care și-au transformat expertiza în active digitale
         </p>

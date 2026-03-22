@@ -161,7 +161,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight mb-1.5">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1.5">
             {isNewUser ? t("home.welcome") : t("home.cockpit")}
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg">
@@ -236,7 +236,7 @@ export default function Home() {
           transition={{ delay: 0.25, duration: 0.45 }}
         >
           <div className="mb-4">
-            <h2 className="text-base sm:text-lg font-serif font-semibold flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
               <Zap className="h-4 w-4 text-primary" />
               {isNewUser ? t("home.instant_action_new", "Start here — paste a link and let AI do the rest") : t("home.instant_action", "Quick Analyze")}
             </h2>
@@ -258,7 +258,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/0.08),transparent_70%)]" />
             <div className="relative">
               <Sparkles className="h-10 w-10 text-primary mx-auto mb-4" />
-              <h2 className="text-lg sm:text-xl font-serif font-bold mb-2">{t("home.first_service_title", "Run your first AI service")}</h2>
+              <h2 className="text-lg sm:text-xl font-bold mb-2">{t("home.first_service_title", "Run your first AI service")}</h2>
               <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto leading-relaxed">
                 {t("home.first_service_desc", "You have {{count}} neuron(s). Use them to generate articles, strategies, and more.", { count: totalNeurons })}
               </p>
