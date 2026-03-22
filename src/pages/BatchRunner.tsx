@@ -268,6 +268,18 @@ export default function BatchRunner() {
         {/* Service Selection / Job Status */}
         {!running && jobs.length === 0 ? (
           <>
+            {/* Presets */}
+            <div className="mb-6 border border-border rounded-xl p-4 bg-card">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                ⚡ Preseturi
+              </h2>
+              <ServicePresets
+                allServiceKeys={services.map(s => s.service_key)}
+                selectedKeys={selected}
+                onApplyPreset={(keys) => setSelected(new Set(keys))}
+              />
+            </div>
+
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("batch_runner.select_services")}</h2>
               <button onClick={selectAll} className="text-[10px] text-primary hover:underline">
