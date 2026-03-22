@@ -394,37 +394,8 @@ export default function Landing() {
       {/* ═══ 10. SOCIAL PROOF ═══ */}
       <LandingSocialProof />
 
-      {/* ═══ 11. LIBRARY PREVIEW ═══ */}
-      <Section border className="py-16 sm:py-20">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-10">
-            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">ASSET LIBRARY</span>
-            <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">Inside AI-IDEI</h2>
-            <p className="text-sm text-[hsl(var(--ivory-dim)/0.5)] max-w-lg mx-auto">
-              Explore a growing system of practical resources for copywriting, marketing, and business execution.
-            </p>
-          </motion.div>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="flex flex-wrap justify-center gap-2">
-            {[
-              "copywriting", "marketing angles", "offer design", "content creation",
-              "messaging", "AI workflows", "planning", "strategic thinking",
-              "execution support", "assistant systems", "prompts", "frameworks",
-            ].map((cat, i) => (
-              <motion.span
-                key={cat}
-                custom={i}
-                variants={fadeUp}
-                className="text-[10px] font-mono tracking-[0.08em] px-4 py-2 rounded border border-[hsl(var(--ivory-dim)/0.08)] text-[hsl(var(--ivory-dim)/0.5)] hover:border-[hsl(var(--gold-oxide)/0.2)] hover:text-[hsl(var(--gold-oxide)/0.7)] transition-all cursor-default uppercase"
-              >
-                {cat}
-              </motion.span>
-            ))}
-          </motion.div>
-          <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-8 text-[11px] text-[hsl(var(--ivory-dim)/0.35)]">
-            Everything is built to help you move from idea to action with less friction and stronger results.
-          </motion.p>
-        </div>
-      </Section>
+      {/* ═══ 11. ECOSYSTEM MAP ═══ */}
+      <EcosystemMap />
 
       {/* ═══ 11.5 TRANSCRIBE CTA ═══ */}
       <Section className="py-12 sm:py-16">
