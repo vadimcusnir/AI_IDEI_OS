@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "./AgentSlashMenu";
 import { ExecutionTimeline } from "./ExecutionTimeline";
 import { COMMAND_PACKS, type CommandPack } from "./CommandPacks";
+import { useAgentDecisionEngine, type Suggestion } from "@/hooks/useAgentDecisionEngine";
 
 interface Message {
   id: string;
