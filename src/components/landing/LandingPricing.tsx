@@ -41,7 +41,7 @@ export function LandingPricing({ ctaAction }: Props) {
               )}
             >
               {plan.featured && (
-                <span className="absolute top-3 right-3 text-[10px] font-mono tracking-[0.15em] text-[hsl(var(--gold-oxide))] border border-[hsl(var(--gold-oxide)/0.4)] px-2 py-0.5 rounded">POPULAR</span>
+                <span className="absolute top-3 right-3 text-xs font-mono tracking-[0.15em] text-[hsl(var(--gold-oxide))] border border-[hsl(var(--gold-oxide)/0.4)] px-2 py-0.5 rounded">POPULAR</span>
               )}
               <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
               <div className="flex items-baseline gap-1 mt-2 mb-1">
