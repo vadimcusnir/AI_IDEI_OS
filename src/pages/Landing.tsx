@@ -31,6 +31,8 @@ import { LandingMechanism } from "@/components/landing/LandingMechanism";
 import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingSocialProof } from "@/components/landing/LandingSocialProof";
 import { LandingFooter } from "@/components/landing/LandingFooter";
+import { LandingWhoFor } from "@/components/landing/LandingWhoFor";
+import { LandingWhyDifferent } from "@/components/landing/LandingWhyDifferent";
 
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
@@ -373,64 +375,13 @@ export default function Landing() {
       </Section>
 
       {/* ═══ 7. WHO THIS IS FOR ═══ */}
-      <Section border>
-        <div className="max-w-3xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
-            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHO THIS IS FOR</span>
-            <h2 className="heading-2 text-[hsl(var(--ivory))] mb-8">
-              Built for people who want output, not noise
-            </h2>
-            <div className="space-y-4 mb-8">
-              {[
-                "creators who want to publish faster and better",
-                "freelancers who want stronger messaging and more speed",
-                "consultants who need clearer offers and sharper communication",
-                "marketers who want better systems and better output",
-                "founders who want to turn ideas into assets and campaigns",
-                "operators who want practical AI, not vague hype",
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.5)] shrink-0" />
-                  <span className="text-sm text-[hsl(var(--ivory)/0.75)]">{item}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-[10px] text-[hsl(var(--ivory-dim)/0.3)] italic border-t border-[hsl(var(--ivory-dim)/0.06)] pt-6 font-mono">
-              This is not for people who want theory without execution, tools without application, or endless prompting without results.
-            </p>
-          </motion.div>
-        </div>
-      </Section>
+      <LandingWhoFor />
+
+      {/* ── Divider ── */}
+      <div className="gold-divider" />
 
       {/* ═══ 8. WHY DIFFERENT ═══ */}
-      <Section>
-        <div className="max-w-3xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
-            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHY DIFFERENT</span>
-            <h2 className="heading-2 text-[hsl(var(--ivory))] mb-8">
-              Not another prompt pack. Not another content library.
-            </h2>
-            <div className="space-y-5 text-sm text-[hsl(var(--ivory-dim)/0.6)] leading-relaxed">
-              <p>Most AI resources give you fragments. A few prompts. A few ideas. A few templates. A little inspiration.</p>
-              <p>Then you are back in the same place: still thinking, still guessing, still rebuilding from scratch.</p>
-              <blockquote className="py-6 border-y border-[hsl(var(--gold-oxide)/0.15)] my-6">
-                <p className="text-[hsl(var(--ivory)/0.9)] font-serif font-bold text-base sm:text-lg leading-snug">
-                  AI-IDEI is different because it is built around one goal: help you turn thought into execution.
-                </p>
-              </blockquote>
-              <div className="space-y-3">
-                {["clearer direction", "better structure", "faster production", "stronger commercial communication", "more usable output from less mental friction"].map(item => (
-                  <div key={item} className="flex items-center gap-3">
-                    <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.5)] shrink-0" />
-                    <span className="text-[hsl(var(--ivory)/0.8)] text-sm font-medium">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="pt-4 text-[hsl(var(--ivory)/0.7)] font-semibold italic">It is not built to look smart. It is built to help you produce.</p>
-            </div>
-          </motion.div>
-        </div>
-      </Section>
+      <LandingWhyDifferent />
 
       {/* ═══ 9. BENEFITS ═══ */}
       <LandingBenefits />
