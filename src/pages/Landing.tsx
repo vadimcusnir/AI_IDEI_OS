@@ -271,6 +271,9 @@ export default function Landing() {
       {/* ═══ 2. PROBLEM ═══ */}
       <LandingProblem />
 
+      {/* ── Divider ── */}
+      <div className="gold-divider" />
+
       {/* ═══ 3. MECHANISM ═══ */}
       <LandingMechanism />
 
