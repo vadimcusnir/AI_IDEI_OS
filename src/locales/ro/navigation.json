@@ -45,5 +45,7 @@
   "transcribe": "Transcrie",
   "integrations": "Integrări",
   "api": "Acces API",
-  "wallet": "Portofel"
+  "wallet": "Portofel",
+  "cognitive_units": "Unități Cognitive",
+  "collection_runs": "Execuții Colectare"
 }

@@ -45,5 +45,7 @@
   "transcribe": "Транскрипция",
   "integrations": "Интеграции",
   "api": "Доступ к API",
-  "wallet": "Кошелёк"
+  "wallet": "Кошелёк",
+  "cognitive_units": "Когнитивные Единицы",
+  "collection_runs": "Запуски Сбора"
 }
