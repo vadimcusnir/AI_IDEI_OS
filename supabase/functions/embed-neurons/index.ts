@@ -251,10 +251,21 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Debit embedding credits (1 credit per neuron embedded)
+    if (embeddedCount > 0 && userId) {
+      const creditCost = embeddedCount; // 1 credit per embedding
+      await supabase.rpc("spend_credits", {
+        _user_id: userId,
+        _amount: creditCost,
+        _description: `Embedding generation: ${embeddedCount} neuron(s)`,
+      });
+    }
+
     return new Response(JSON.stringify({
       embedded: embeddedCount,
       total: neurons.length,
       skipped: skippedCount,
+      credits_charged: embeddedCount > 0 ? embeddedCount : 0,
       errors: errors.length > 0 ? errors : undefined,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
