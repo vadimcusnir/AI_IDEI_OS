@@ -31,3 +31,4 @@ Disallow: /data-privacy
 Disallow: /workspace
 
 Sitemap: https://ai-idei.com/sitemap-static.xml
+Sitemap: https://ai-idei.com/api/sitemap
