@@ -65,10 +65,12 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const { action = "generate", limit = 20 } = body;
+    const { action = "generate", limit = 20, auto_publish_threshold = 7.0 } = body;
 
     if (action === "generate" && LOVABLE_API_KEY) {
-      return await handleGenerate(supabase, LOVABLE_API_KEY, limit);
+      return await handleGenerate(supabase, LOVABLE_API_KEY, limit, auto_publish_threshold);
+    } else if (action === "validate") {
+      return await handleValidate(supabase, LOVABLE_API_KEY);
     } else if (action === "score") {
       return await handleScore(supabase);
     } else {
