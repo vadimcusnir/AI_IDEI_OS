@@ -266,6 +266,7 @@ export default function Landing() {
       </header>
 
       {/* ═══ SECTIONS ═══ */}
+      <main id="main-content" role="main">
       <LandingHero heroRef={heroRef} ctaAction={ctaAction} />
       <LandingProofBand />
       <LandingProblem />
