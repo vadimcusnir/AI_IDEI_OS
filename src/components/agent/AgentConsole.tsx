@@ -465,29 +465,76 @@ export function AgentConsole() {
           <AgentBubble key={msg.id} msg={msg} onNavigate={navigate} isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"} />
         ))}
 
-        {/* Command hints — only in empty state */}
+        {/* Command Pack selector + hints — only in empty state */}
         {isEmptyState && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4"
+            className="space-y-4 mt-4"
           >
-            {COMMAND_HINTS.map((hint) => (
-              <button
-                key={hint.label}
-                onClick={() => handleHintClick(hint.example)}
-                className="group flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-left"
-              >
-                <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
-                  <hint.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                </div>
-                <div>
-                  <p className="text-xs font-medium">{hint.label}</p>
-                  <p className="text-[10px] text-muted-foreground truncate max-w-[180px]">{hint.example}</p>
-                </div>
-              </button>
-            ))}
+            {/* Command Pack Selector */}
+            <div className="space-y-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-1">
+                Choose your role
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {COMMAND_PACKS.map((pack) => (
+                  <button
+                    key={pack.id}
+                    onClick={() => setActivePack(activePack?.id === pack.id ? null : pack)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs transition-all",
+                      activePack?.id === pack.id
+                        ? "border-primary bg-primary/10 text-primary font-medium"
+                        : "border-border bg-card hover:border-primary/30 text-muted-foreground"
+                    )}
+                  >
+                    <span>{pack.emoji}</span>
+                    <span>{pack.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Active pack quick prompts */}
+            {activePack ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {activePack.quickPrompts.map((qp) => (
+                  <button
+                    key={qp.label}
+                    onClick={() => handleHintClick(qp.prompt)}
+                    className="group flex items-start gap-3 p-3 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-left"
+                  >
+                    <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                      <span className="text-sm">{activePack.emoji}</span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium">{qp.label}</p>
+                      <p className="text-[10px] text-muted-foreground line-clamp-2">{qp.prompt}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {COMMAND_HINTS.map((hint) => (
+                  <button
+                    key={hint.label}
+                    onClick={() => handleHintClick(hint.example)}
+                    className="group flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-left"
+                  >
+                    <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                      <hint.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium">{hint.label}</p>
+                      <p className="text-[10px] text-muted-foreground truncate max-w-[180px]">{hint.example}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
 
