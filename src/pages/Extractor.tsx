@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { TranscriptViewer } from "@/components/extractor/TranscriptViewer";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
+import { NEPExtractorPanel } from "@/components/extractor/NEPExtractorPanel";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall } from "@/components/premium/PremiumPaywall";
@@ -887,6 +888,12 @@ export default function Extractor() {
                               : "Chunking and AI analysis…"
                             }
                           </p>
+                        </div>
+                      )}
+
+                      {hasTranscript && !isExtracting && (
+                        <div className="border border-border rounded-lg p-4">
+                          <NEPExtractorPanel episodeId={ep.id} onComplete={() => fetchEpisodes()} />
                         </div>
                       )}
 
