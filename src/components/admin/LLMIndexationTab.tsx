@@ -72,7 +72,7 @@ export function LLMIndexationTab() {
           .select("*")
           .order("created_at", { ascending: false })
           .limit(100),
-        supabase.rpc("get_llm_referrer_stats").catch(() => ({ data: null })),
+        Promise.resolve({ data: null as any }),
       ]);
 
       setPages((pagesRes.data as any[]) || []);
