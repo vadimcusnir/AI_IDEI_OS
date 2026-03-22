@@ -1,6 +1,7 @@
 /**
  * Output Galaxy — orbital cluster visualization.
  * Shows output families orbiting a central knowledge core.
+ * Responsive: scales cleanly on mobile via SVG viewBox.
  */
 import { motion } from "framer-motion";
 
@@ -14,15 +15,13 @@ const ORBITS = [
 
 export function OutputGalaxy() {
   return (
-    <div className="relative w-full max-w-lg mx-auto" style={{ aspectRatio: "1" }}>
-      <svg viewBox="-150 -150 300 300" className="w-full h-full" fill="none">
+    <div className="relative w-full max-w-md sm:max-w-lg mx-auto">
+      <svg viewBox="-150 -150 300 300" className="w-full h-auto" fill="none" role="img" aria-label="Output Galaxy showing content, education, sales, knowledge, and assistant asset families">
         {/* Orbital rings */}
         {[60, 95, 130].map((r, i) => (
           <circle
             key={r}
-            cx={0}
-            cy={0}
-            r={r}
+            cx={0} cy={0} r={r}
             stroke="hsl(var(--ivory-dim))"
             strokeWidth="0.4"
             opacity={0.12 + i * 0.03}
@@ -41,8 +40,7 @@ export function OutputGalaxy() {
           <circle cx={0} cy={0} r={12} fill="hsl(var(--gold-oxide))" opacity={0.3} />
           <circle cx={0} cy={0} r={5} fill="hsl(var(--gold-oxide))" opacity={0.8} />
           <text
-            x={0}
-            y={32}
+            x={0} y={32}
             textAnchor="middle"
             fontSize="5"
             fill="hsl(var(--gold-oxide))"
@@ -67,36 +65,23 @@ export function OutputGalaxy() {
               viewport={{ once: true }}
               transition={{ delay: 0.4 + i * 0.12, duration: 0.5 }}
             >
-              {/* Connection line */}
               <line
-                x1={0}
-                y1={0}
-                x2={cx}
-                y2={cy}
+                x1={0} y1={0} x2={cx} y2={cy}
                 stroke="hsl(var(--gold-oxide))"
                 strokeWidth="0.5"
                 opacity={0.2}
               />
-              {/* Node */}
               <circle
-                cx={cx}
-                cy={cy}
+                cx={cx} cy={cy}
                 r={orb.size / 2}
                 stroke="hsl(var(--ivory-dim))"
                 strokeWidth="0.8"
                 fill="hsl(var(--obsidian-light))"
                 opacity={0.8}
               />
-              <circle
-                cx={cx}
-                cy={cy}
-                r={2}
-                fill="hsl(var(--gold-oxide))"
-                opacity={0.6}
-              />
+              <circle cx={cx} cy={cy} r={2} fill="hsl(var(--gold-oxide))" opacity={0.6} />
               <text
-                x={cx}
-                y={cy + orb.size / 2 + 10}
+                x={cx} y={cy + orb.size / 2 + 10}
                 textAnchor="middle"
                 fontSize="5.5"
                 fill="hsl(var(--ivory-dim))"

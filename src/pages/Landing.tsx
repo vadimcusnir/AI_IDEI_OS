@@ -194,9 +194,9 @@ export default function Landing() {
       <LandingHero heroRef={heroRef} heroOpacity={heroOpacity} ctaAction={ctaAction} />
 
       {/* ═══ PROOF BAND ═══ */}
-      <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-6 sm:py-8">
+      <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-5 sm:py-8">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
             {[
               { value: "50+", label: "Deliverables per upload" },
               { value: "12", label: "Output families" },
@@ -204,8 +204,8 @@ export default function Landing() {
               { value: "<2min", label: "Idea to asset" },
             ].map(stat => (
               <div key={stat.label} className="text-center">
-                <p className="text-lg sm:text-xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{stat.value}</p>
-                <p className="text-[9px] font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.4)] mt-1">{stat.label.toUpperCase()}</p>
+                <p className="text-xl sm:text-2xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{stat.value}</p>
+                <p className="text-[9px] font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.4)] mt-1.5">{stat.label.toUpperCase()}</p>
               </div>
             ))}
           </div>
@@ -419,7 +419,7 @@ export default function Landing() {
               Start simple. Upgrade when you want more depth, speed, and leverage.
             </p>
           </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.06)] rounded-xl overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.06)] rounded-xl overflow-hidden max-w-4xl mx-auto">
             {[
               { name: "Free", promise: "Test the system", text: "Get inside, explore, and see how AI-IDEI works before making a commitment.", cta: "Start Free", featured: false },
               { name: "Core", promise: "Build clarity", text: "For people who want practical access to essentials for better copy, content, and execution.", cta: "Choose Core", featured: false },

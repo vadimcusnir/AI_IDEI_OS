@@ -2,6 +2,7 @@
  * Extraction Engine — the central hero visual.
  * Shows the transformation: Input Chaos → Core Extractor → Asset Multiplication
  * Built with SVG + framer-motion. No decoration — shows the mechanism.
+ * Mobile-first: scales cleanly on 430px+ viewports.
  */
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -22,6 +23,14 @@ const INPUT_FRAGMENTS = [
   { text: "drafts", x: -10, y: 50, opacity: 0.3 },
 ];
 
+/* Stable particle positions (no Math.random in render) */
+const PARTICLES = Array.from({ length: 8 }, (_, i) => ({
+  cx: -140 + ((i * 37 + 13) % 40),
+  cy: -50 + ((i * 29 + 7) % 100),
+  r: 1 + ((i * 17) % 3) * 0.5,
+  op: 0.15 + ((i * 13) % 5) * 0.04,
+}));
+
 export function ExtractionEngine() {
   const [active, setActive] = useState(false);
 
@@ -31,16 +40,17 @@ export function ExtractionEngine() {
   }, []);
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto" style={{ aspectRatio: "3/1.1" }}>
+    <div className="relative w-full max-w-3xl mx-auto px-2">
       <svg
-        viewBox="-200 -80 400 160"
-        className="w-full h-full"
+        viewBox="-200 -85 400 175"
+        className="w-full h-auto"
         fill="none"
-        style={{ overflow: "visible" }}
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label="Knowledge Extraction Engine diagram: raw input transforms through the core extractor into organized asset outputs"
       >
         {/* ── INPUT ZONE (left) — chaos ── */}
         <g>
-          {/* Audio waveform — jagged */}
           <motion.path
             d="M-180 -30 l5 -8 l5 15 l5 -20 l5 25 l5 -12 l5 8 l5 -18 l5 22 l5 -10 l5 5"
             stroke="hsl(var(--ivory-dim))"
@@ -50,7 +60,6 @@ export function ExtractionEngine() {
             animate={{ pathLength: active ? 1 : 0 }}
             transition={{ duration: 1.5, delay: 0.2 }}
           />
-          {/* Second wave */}
           <motion.path
             d="M-175 10 l4 12 l6 -20 l4 16 l5 -8 l6 18 l4 -14 l5 10 l6 -6"
             stroke="hsl(var(--ivory-dim))"
@@ -61,7 +70,6 @@ export function ExtractionEngine() {
             transition={{ duration: 1.8, delay: 0.4 }}
           />
 
-          {/* Fragment labels */}
           {INPUT_FRAGMENTS.map((f, i) => (
             <motion.text
               key={i}
@@ -79,16 +87,15 @@ export function ExtractionEngine() {
             </motion.text>
           ))}
 
-          {/* Scattered particles */}
-          {[...Array(8)].map((_, i) => (
+          {PARTICLES.map((p, i) => (
             <motion.circle
               key={`p-${i}`}
-              cx={-140 + Math.random() * 40}
-              cy={-50 + Math.random() * 100}
-              r={1 + Math.random() * 1.5}
+              cx={p.cx}
+              cy={p.cy}
+              r={p.r}
               fill="hsl(var(--ivory-dim))"
               initial={{ opacity: 0 }}
-              animate={active ? { opacity: 0.15 + Math.random() * 0.2 } : {}}
+              animate={active ? { opacity: p.op } : {}}
               transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
             />
           ))}
@@ -123,9 +130,8 @@ export function ExtractionEngine() {
           transition={{ delay: 1, duration: 0.6 }}
         />
 
-        {/* ── CORE EXTRACTOR (center) — geometric, semi-industrial ── */}
+        {/* ── CORE EXTRACTOR (center) ── */}
         <g>
-          {/* Outer octagon */}
           <motion.path
             d="M-28 -15 L-15 -28 L15 -28 L28 -15 L28 15 L15 28 L-15 28 L-28 15 Z"
             stroke="hsl(var(--gold-oxide))"
@@ -135,51 +141,36 @@ export function ExtractionEngine() {
             animate={active ? { scale: 1, opacity: 1 } : {}}
             transition={{ delay: 0.6, duration: 0.7, ease: "easeOut" }}
           />
-          {/* Inner ring */}
           <motion.circle
-            cx={0}
-            cy={0}
-            r={14}
+            cx={0} cy={0} r={14}
             stroke="hsl(var(--gold-oxide))"
             strokeWidth="0.7"
-            opacity={0}
             fill="none"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={active ? { opacity: 0.5, scale: 1 } : {}}
             transition={{ delay: 0.8, duration: 0.6 }}
           />
-          {/* Core nucleus */}
           <motion.circle
-            cx={0}
-            cy={0}
-            r={6}
+            cx={0} cy={0} r={6}
             fill="hsl(var(--gold-oxide))"
-            opacity={0}
             initial={{ opacity: 0, scale: 0 }}
             animate={active ? { opacity: 0.8, scale: 1 } : {}}
             transition={{ delay: 1, duration: 0.5 }}
           />
-          {/* Rotation marks */}
           {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
             <motion.line
               key={deg}
-              x1={0}
-              y1={-19}
-              x2={0}
-              y2={-23}
+              x1={0} y1={-19} x2={0} y2={-23}
               stroke="hsl(var(--gold-oxide))"
               strokeWidth="0.8"
-              opacity={0}
               transform={`rotate(${deg})`}
               initial={{ opacity: 0 }}
               animate={active ? { opacity: 0.4 } : {}}
               transition={{ delay: 1.1 + deg * 0.002, duration: 0.3 }}
             />
           ))}
-          {/* Label */}
           <motion.text
-            x={0}
-            y={42}
+            x={0} y={42}
             textAnchor="middle"
             fontSize="5.5"
             fill="hsl(var(--gold-oxide))"
@@ -197,10 +188,7 @@ export function ExtractionEngine() {
         {OUTPUTS.map((o, i) => (
           <motion.line
             key={`fl-${i}`}
-            x1={30}
-            y1={0}
-            x2={100}
-            y2={o.y}
+            x1={30} y1={0} x2={100} y2={o.y}
             stroke="hsl(var(--gold-oxide))"
             strokeWidth="0.7"
             initial={{ opacity: 0, pathLength: 0 }}
@@ -209,7 +197,7 @@ export function ExtractionEngine() {
           />
         ))}
 
-        {/* ── OUTPUT ZONE (right) — organized modules ── */}
+        {/* ── OUTPUT ZONE (right) ── */}
         {OUTPUTS.map((o, i) => (
           <motion.g
             key={`out-${i}`}
@@ -218,19 +206,15 @@ export function ExtractionEngine() {
             transition={{ delay: 1.4 + i * 0.12, duration: 0.5 }}
           >
             <rect
-              x={0}
-              y={o.y - 8}
-              width={60}
-              height={16}
-              rx={2}
+              x={0} y={o.y - 8}
+              width={60} height={16} rx={2}
               stroke="hsl(var(--ivory-dim))"
               strokeWidth="0.8"
               fill="hsl(var(--obsidian-light))"
               opacity={0.7}
             />
             <text
-              x={30}
-              y={o.y + 1}
+              x={30} y={o.y + 1}
               textAnchor="middle"
               fontSize="5.5"
               fill="hsl(var(--ivory))"
@@ -240,26 +224,17 @@ export function ExtractionEngine() {
             >
               {o.label}
             </text>
-            {/* Status dot */}
-            <circle
-              cx={6}
-              cy={o.y}
-              r={1.5}
-              fill="hsl(var(--gold-oxide))"
-              opacity={0.6}
-            />
+            <circle cx={6} cy={o.y} r={1.5} fill="hsl(var(--gold-oxide))" opacity={0.6} />
           </motion.g>
         ))}
 
         {/* ── Zone labels ── */}
         <motion.text
-          x={-155}
-          y={-65}
+          x={-155} y={-70}
           fontSize="4.5"
           fill="hsl(var(--ivory-dim))"
           fontFamily="var(--font-mono)"
           letterSpacing="0.2em"
-          opacity={0}
           initial={{ opacity: 0 }}
           animate={active ? { opacity: 0.4 } : {}}
           transition={{ delay: 0.5, duration: 0.5 }}
@@ -267,14 +242,12 @@ export function ExtractionEngine() {
           RAW INPUT
         </motion.text>
         <motion.text
-          x={130}
-          y={-65}
+          x={130} y={-70}
           fontSize="4.5"
           fill="hsl(var(--ivory-dim))"
           fontFamily="var(--font-mono)"
           letterSpacing="0.2em"
           textAnchor="middle"
-          opacity={0}
           initial={{ opacity: 0 }}
           animate={active ? { opacity: 0.4 } : {}}
           transition={{ delay: 1.6, duration: 0.5 }}
