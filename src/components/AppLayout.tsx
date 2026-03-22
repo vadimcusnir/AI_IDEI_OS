@@ -104,7 +104,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             {user && <Suspense fallback={null}><UserMenu /></Suspense>}
           </header>
 
-          <LowBalanceBanner />
+          <Suspense fallback={null}><LowBalanceBanner /></Suspense>
 
           {fullHeight ? (
             <main className="flex-1 flex flex-col min-h-0">
