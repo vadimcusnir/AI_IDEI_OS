@@ -122,15 +122,15 @@ export default function Intelligence() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="h-9">
-            <TabsTrigger value="graph" className="text-xs gap-1.5">
-              <Network className="h-3.5 w-3.5" /> {t("intelligence.tab_graph")}
+          <TabsList className="h-9 w-full sm:w-auto">
+            <TabsTrigger value="graph" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
+              <Network className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{t("intelligence.tab_graph")}</span>
             </TabsTrigger>
-            <TabsTrigger value="stats" className="text-xs gap-1.5">
-              <BarChart3 className="h-3.5 w-3.5" /> {t("intelligence.tab_analytics")}
+            <TabsTrigger value="stats" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
+              <BarChart3 className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{t("intelligence.tab_analytics")}</span>
             </TabsTrigger>
-            <TabsTrigger value="dedup" className="text-xs gap-1.5">
-              <GitMerge className="h-3.5 w-3.5" /> {t("intelligence.tab_dedup")}
+            <TabsTrigger value="dedup" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
+              <GitMerge className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{t("intelligence.tab_dedup")}</span>
             </TabsTrigger>
           </TabsList>
 
