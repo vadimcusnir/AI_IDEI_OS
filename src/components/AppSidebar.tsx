@@ -83,7 +83,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true },
+      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true, minTier: "pro" as UserTier },
       { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
       { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
     ],
