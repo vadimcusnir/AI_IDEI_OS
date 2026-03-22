@@ -474,7 +474,7 @@ export default function Landing() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <PublicTestimonials />
+      <Suspense fallback={null}><PublicTestimonials /></Suspense>
 
       {/* ═══ EXPLORE KNOWLEDGE ═══ */}
       <section className="bg-card border-y border-border">
