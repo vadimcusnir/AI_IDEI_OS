@@ -310,7 +310,7 @@ export default function Jobs() {
                   <div key={job.id} className="border border-border rounded-xl bg-card overflow-hidden">
                     <button
                       onClick={() => setExpandedJob(isExpanded ? null : job.id)}
-                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/30 transition-colors text-left"
+                      className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-3 hover:bg-muted/30 transition-colors text-left"
                     >
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -326,15 +326,15 @@ export default function Jobs() {
                         <TooltipContent side="right" className="text-[10px] max-w-[200px]">{statusDesc}</TooltipContent>
                       </Tooltip>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">{job.worker_type.replace(/_/g, " ")}</span>
-                          <span className={cn("text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full", si.color, "bg-current/10")}>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-medium truncate">{job.worker_type.replace(/_/g, " ")}</span>
+                          <span className={cn("text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full shrink-0", si.color, "bg-current/10")}>
                             {statusLabel}
                           </span>
                         </div>
-                        <div className="flex items-center gap-3 mt-0.5">
+                        <div className="flex items-center gap-2 sm:gap-3 mt-0.5 flex-wrap">
                           <span className="text-[10px] text-muted-foreground">
-                            {new Date(job.created_at).toLocaleString()}
+                            {new Date(job.created_at).toLocaleDateString()}
                           </span>
                           {duration !== null && (
                             <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
