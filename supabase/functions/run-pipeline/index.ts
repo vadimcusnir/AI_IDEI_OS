@@ -119,158 +119,186 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Execute steps sequentially — each step creates a job
-    const results: any[] = [];
+    // Group steps by parallel_group — steps with same group run concurrently
+    // Steps without a group run sequentially
+    interface StepGroup {
+      groupId: string | null;
+      steps: Array<{ step: any; index: number }>;
+    }
+
+    const stepGroups: StepGroup[] = [];
+    let currentGroup: StepGroup | null = null;
+
+    steps.forEach((step: any, idx: number) => {
+      const groupId = step.parallel_group || null;
+      if (groupId && currentGroup?.groupId === groupId) {
+        currentGroup.steps.push({ step, index: idx });
+      } else {
+        currentGroup = { groupId, steps: [{ step, index: idx }] };
+        stepGroups.push(currentGroup);
+      }
+    });
+
+    // Execute step groups — sequential between groups, parallel within groups
+    const results: any[] = new Array(steps.length).fill(null);
     let stepsCompleted = 0;
 
-    for (const step of steps) {
-      const svc = serviceMap.get(step.service_key);
-      if (!svc) {
-        results.push({ service_key: step.service_key, status: "skipped", reason: "service not found" });
-        continue;
-      }
-
-      // ── Regime enforcement per step ──
-      const regime = await getRegimeConfig(step.service_key);
-      const blockReason = checkRegimeBlock(regime, svc.credits_cost || 0);
-      if (blockReason) {
-        results.push({ service_key: step.service_key, status: "blocked", reason: blockReason });
-        continue;
-      }
-
-      if (regime.dryRun) {
-        results.push({ service_key: step.service_key, status: "dry_run", reason: "Simulation mode — no real execution" });
-        continue;
-      }
-
-      try {
-        // Create neuron for this step's output
-        const { data: neuron } = await supabase
-          .from("neurons")
-          .insert({
-            author_id: user.id,
-            title: `${svc.name} — Pipeline ${pipeline.name}`,
-            status: "draft",
-            lifecycle: "ingested",
-          })
-          .select("id")
-          .single();
-
-        if (!neuron) {
-          results.push({ service_key: step.service_key, status: "failed", reason: "neuron creation failed" });
-          continue;
+    for (const group of stepGroups) {
+      const executeStep = async (stepEntry: { step: any; index: number }) => {
+        const { step, index: stepIdx } = stepEntry;
+        const svc = serviceMap.get(step.service_key);
+        if (!svc) {
+          return { service_key: step.service_key, status: "skipped", reason: "service not found" };
         }
 
-        // Build inputs from trigger_data + step input_mapping
-        const stepInputs: Record<string, string> = {};
-        if (step.input_mapping && typeof step.input_mapping === "object") {
-          for (const [key, source] of Object.entries(step.input_mapping)) {
-            if (typeof source === "string" && source.startsWith("trigger.")) {
-              const triggerKey = source.replace("trigger.", "");
-              stepInputs[key] = trigger_data?.[triggerKey] || "";
-            } else if (typeof source === "string" && source.startsWith("prev.")) {
-              // Use previous step's result
-              const prevIdx = parseInt(source.replace("prev.", ""), 10);
-              stepInputs[key] = results[prevIdx]?.content?.slice(0, 10000) || "";
-            } else {
-              stepInputs[key] = String(source);
+        // Regime enforcement
+        const regime = await getRegimeConfig(step.service_key);
+        const blockReason = checkRegimeBlock(regime, svc.credits_cost || 0);
+        if (blockReason) {
+          return { service_key: step.service_key, status: "blocked", reason: blockReason };
+        }
+        if (regime.dryRun) {
+          return { service_key: step.service_key, status: "dry_run", reason: "Simulation mode" };
+        }
+
+        try {
+          const { data: neuron } = await supabase
+            .from("neurons")
+            .insert({
+              author_id: user.id,
+              title: `${svc.name} — Pipeline ${pipeline.name}`,
+              status: "draft",
+              lifecycle: "ingested",
+            })
+            .select("id")
+            .single();
+
+          if (!neuron) {
+            return { service_key: step.service_key, status: "failed", reason: "neuron creation failed" };
+          }
+
+          // Build inputs
+          const stepInputs: Record<string, string> = {};
+          if (step.input_mapping && typeof step.input_mapping === "object") {
+            for (const [key, source] of Object.entries(step.input_mapping)) {
+              if (typeof source === "string" && source.startsWith("trigger.")) {
+                stepInputs[key] = trigger_data?.[source.replace("trigger.", "")] || "";
+              } else if (typeof source === "string" && source.startsWith("prev.")) {
+                const prevIdx = parseInt(source.replace("prev.", ""), 10);
+                stepInputs[key] = results[prevIdx]?.content?.slice(0, 10000) || "";
+              } else {
+                stepInputs[key] = String(source);
+              }
+            }
+          } else {
+            stepInputs.context = JSON.stringify(trigger_data || {});
+          }
+
+          const { data: job } = await supabase
+            .from("neuron_jobs")
+            .insert({
+              neuron_id: neuron.id,
+              author_id: user.id,
+              worker_type: step.service_key,
+              status: "pending",
+              input: stepInputs,
+              priority: steps.length - stepIdx,
+            })
+            .select("id")
+            .single();
+
+          if (!job) {
+            return { service_key: step.service_key, status: "failed", reason: "job creation failed" };
+          }
+
+          const resp = await fetch(`${supabaseUrl}/functions/v1/run-service`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              job_id: job.id,
+              service_key: step.service_key,
+              neuron_id: neuron.id,
+              inputs: stepInputs,
+            }),
+          });
+
+          if (!resp.ok) {
+            const errBody = await resp.json().catch(() => ({ error: "Unknown" }));
+            return { service_key: step.service_key, status: "failed", reason: errBody.error, job_id: job.id };
+          }
+
+          // Read stream
+          let content = "";
+          if (resp.body) {
+            const reader = resp.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = "";
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              buffer += decoder.decode(value, { stream: true });
+              let nlIdx: number;
+              while ((nlIdx = buffer.indexOf("\n")) !== -1) {
+                let line = buffer.slice(0, nlIdx);
+                buffer = buffer.slice(nlIdx + 1);
+                if (line.endsWith("\r")) line = line.slice(0, -1);
+                if (!line.startsWith("data: ")) continue;
+                const d = line.slice(6).trim();
+                if (d === "[DONE]") continue;
+                try {
+                  const parsed = JSON.parse(d);
+                  const c = parsed.choices?.[0]?.delta?.content;
+                  if (c) content += c;
+                } catch { /* partial */ }
+              }
             }
           }
-        } else {
-          // Default: pass all trigger_data as context
-          stepInputs.context = JSON.stringify(trigger_data || {});
-        }
 
-        // Create job
-        const { data: job } = await supabase
-          .from("neuron_jobs")
-          .insert({
-            neuron_id: neuron.id,
-            author_id: user.id,
-            worker_type: step.service_key,
-            status: "pending",
-            input: stepInputs,
-            priority: steps.length - stepsCompleted, // Higher priority for earlier steps
-          })
-          .select("id")
-          .single();
-
-        if (!job) {
-          results.push({ service_key: step.service_key, status: "failed", reason: "job creation failed" });
-          continue;
-        }
-
-        // Execute via run-service internally
-        const resp = await fetch(`${supabaseUrl}/functions/v1/run-service`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            job_id: job.id,
+          return {
             service_key: step.service_key,
+            status: "completed",
+            job_id: job.id,
             neuron_id: neuron.id,
-            inputs: stepInputs,
-          }),
-        });
-
-        if (!resp.ok) {
-          const errBody = await resp.json().catch(() => ({ error: "Unknown" }));
-          results.push({ service_key: step.service_key, status: "failed", reason: errBody.error, job_id: job.id });
-          continue;
+            content_length: content.length,
+            content: content.slice(0, 500),
+          };
+        } catch (stepErr) {
+          return {
+            service_key: step.service_key,
+            status: "error",
+            reason: stepErr instanceof Error ? stepErr.message : "Unknown",
+          };
         }
+      };
 
-        // Read the stream to collect result
-        let content = "";
-        if (resp.body) {
-          const reader = resp.body.getReader();
-          const decoder = new TextDecoder();
-          let buffer = "";
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            buffer += decoder.decode(value, { stream: true });
-            let nlIdx: number;
-            while ((nlIdx = buffer.indexOf("\n")) !== -1) {
-              let line = buffer.slice(0, nlIdx);
-              buffer = buffer.slice(nlIdx + 1);
-              if (line.endsWith("\r")) line = line.slice(0, -1);
-              if (!line.startsWith("data: ")) continue;
-              const d = line.slice(6).trim();
-              if (d === "[DONE]") continue;
-              try {
-                const parsed = JSON.parse(d);
-                const c = parsed.choices?.[0]?.delta?.content;
-                if (c) content += c;
-              } catch { /* partial */ }
-            }
-          }
+      // Execute group: parallel if >1 step, sequential if 1
+      if (group.steps.length > 1 && group.groupId) {
+        // Parallel execution within group
+        const groupResults = await Promise.allSettled(
+          group.steps.map(s => executeStep(s))
+        );
+        groupResults.forEach((r, i) => {
+          const stepIdx = group.steps[i].index;
+          results[stepIdx] = r.status === "fulfilled" ? r.value : { status: "error", reason: "Promise rejected" };
+          if (results[stepIdx]?.status === "completed") stepsCompleted++;
+        });
+      } else {
+        // Sequential (single step or no group)
+        for (const stepEntry of group.steps) {
+          const result = await executeStep(stepEntry);
+          results[stepEntry.index] = result;
+          if (result.status === "completed") stepsCompleted++;
         }
-
-        stepsCompleted++;
-        results.push({
-          service_key: step.service_key,
-          status: "completed",
-          job_id: job.id,
-          neuron_id: neuron.id,
-          content_length: content.length,
-          content: content.slice(0, 500), // Preview only for pipeline result
-        });
-
-        // Update pipeline run progress
-        await supabase
-          .from("imf_pipeline_runs")
-          .update({ steps_completed: stepsCompleted })
-          .eq("id", run.id);
-
-      } catch (stepErr) {
-        results.push({
-          service_key: step.service_key,
-          status: "error",
-          reason: stepErr instanceof Error ? stepErr.message : "Unknown",
-        });
       }
+
+      // Update progress after each group
+      await supabase
+        .from("imf_pipeline_runs")
+        .update({ steps_completed: stepsCompleted })
+        .eq("id", run.id);
     }
 
     // Finalize pipeline run
