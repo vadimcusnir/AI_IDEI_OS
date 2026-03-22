@@ -37,6 +37,8 @@ interface NavItem {
   adminOnly?: boolean;
   controlId?: string;
   proOnly?: boolean;
+  /** Minimum tier required to see this item */
+  minTier?: UserTier;
 }
 
 interface NavSection {
