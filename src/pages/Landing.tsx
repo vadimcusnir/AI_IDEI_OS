@@ -60,7 +60,7 @@ function ExtractionSpine({ labels }: { labels: string[] }) {
       {labels.map((l, i) => (
         <div key={l} className="flex flex-col items-center">
           <div className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] my-1" />
-          <span className="text-[7px] font-mono tracking-[0.2em] text-[hsl(var(--ivory-dim)/0.4)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
+          <span className="text-[9px] lg:text-[10px] font-mono tracking-[0.2em] text-[hsl(var(--ivory-dim)/0.4)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
             {l}
           </span>
           {i < labels.length - 1 && <div className="w-px h-12 bg-[hsl(var(--gold-oxide)/0.1)]" />}
@@ -136,7 +136,7 @@ export default function Landing() {
 
       {/* ═══ TOP BAR ═══ */}
       <div className="border-b border-border">
-        <p className="text-center text-xs font-mono tracking-[0.12em] text-muted-foreground py-2.5 px-4">
+        <p className="text-center text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground py-2.5 px-4">
           Turn rough ideas into copy, content, offers, and campaigns — faster.
         </p>
       </div>

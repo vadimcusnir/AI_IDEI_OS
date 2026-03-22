@@ -61,7 +61,7 @@ export function LandingWhyDifferent() {
           <p className="text-foreground font-bold text-lg sm:text-xl leading-snug mb-4">
             AI-IDEI is built around one goal: help you turn thought into execution.
           </p>
-          <p className="text-sm text-muted-foreground font-mono tracking-[0.1em]">
+          <p className="text-xs sm:text-sm text-muted-foreground font-mono tracking-[0.1em]">
             LESS FRICTION · STRONGER COPY · FASTER RESULTS
           </p>
         </FadeInView>

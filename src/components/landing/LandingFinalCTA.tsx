@@ -33,7 +33,7 @@ export function LandingFinalCTA({ ctaAction }: Props) {
             See What's Inside
           </Button>
         </div>
-        <p className="text-xs font-mono tracking-[0.12em] text-muted-foreground">
+        <p className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground">
           LESS FRICTION · BETTER COPY · STRONGER EXECUTION
         </p>
       </div>

@@ -17,7 +17,7 @@ export function LandingProofBand() {
           {STATS.map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="text-2xl sm:text-3xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{stat.value}</p>
-              <p className="text-[11px] sm:text-xs font-mono tracking-[0.12em] text-muted-foreground mt-2">{stat.label.toUpperCase()}</p>
+              <p className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground mt-2">{stat.label.toUpperCase()}</p>
             </div>
           ))}
         </div>

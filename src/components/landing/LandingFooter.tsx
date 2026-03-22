@@ -30,7 +30,7 @@ export function LandingFooter() {
 
           {/* Platform */}
           <div className="space-y-3">
-            <h3 className="text-xs font-mono tracking-[0.12em] text-muted-foreground uppercase">Platform</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Platform</h3>
             <ul className="space-y-2.5">
               <li><FooterLink to="/services">Services</FooterLink></li>
               <li><FooterLink to="/marketplace">Marketplace</FooterLink></li>
@@ -40,7 +40,7 @@ export function LandingFooter() {
 
           {/* Resources */}
           <div className="space-y-3">
-            <h3 className="text-xs font-mono tracking-[0.12em] text-muted-foreground uppercase">Resources</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Resources</h3>
             <ul className="space-y-2.5">
               <li><FooterLink to="/docs">Documentation</FooterLink></li>
               <li><FooterLink to="/knowledge">Knowledge Base</FooterLink></li>
@@ -50,7 +50,7 @@ export function LandingFooter() {
 
           {/* Community */}
           <div className="space-y-3">
-            <h3 className="text-xs font-mono tracking-[0.12em] text-muted-foreground uppercase">Community</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Community</h3>
             <ul className="space-y-2.5">
               <li><FooterLink to="/community">Forum</FooterLink></li>
               <li><FooterLink to="/topics">Topics</FooterLink></li>
@@ -60,7 +60,7 @@ export function LandingFooter() {
 
           {/* Legal */}
           <div className="space-y-3">
-            <h3 className="text-xs font-mono tracking-[0.12em] text-muted-foreground uppercase">Legal</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Legal</h3>
             <ul className="space-y-2.5">
               <li><FooterLink to="/terms">Terms</FooterLink></li>
               <li><FooterLink to="/privacy">Privacy</FooterLink></li>
@@ -71,7 +71,7 @@ export function LandingFooter() {
 
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:flex-row">
-          <span className="text-xs font-mono text-muted-foreground">
+          <span className="text-xs sm:text-sm font-mono text-muted-foreground">
             © {new Date().getFullYear()} AI-IDEI · From rough idea to persuasive asset.
           </span>
           <div className="flex items-center gap-6">
