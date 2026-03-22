@@ -109,6 +109,61 @@ export default function Transcribe() {
                 <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
               </div>
             ))}
+          {/* Stats bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex items-center justify-center gap-6 mt-8 py-4 border-y border-border"
+          >
+            {[
+              { icon: Clock, label: "< 2s", desc: "Timp mediu" },
+              { icon: Globe, label: "99+", desc: "Limbi suportate" },
+              { icon: Shield, label: "100%", desc: "Privat & sigur" },
+            ].map((s) => (
+              <div key={s.label} className="flex items-center gap-2 text-center">
+                <s.icon className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm font-bold">{s.label}</p>
+                  <p className="text-[9px] text-muted-foreground">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* FAQ */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-10"
+          >
+            <h2 className="text-lg font-semibold mb-4">Întrebări frecvente</h2>
+            <Accordion type="single" collapsible className="w-full">
+              {[
+                {
+                  q: "Ce formate de export sunt disponibile?",
+                  a: "Poți descărca transcrierea în TXT (text simplu), SRT (subtitrări), VTT (web video text tracks) sau PDF (format profesional cu branding). De asemenea, poți copia direct în clipboard.",
+                },
+                {
+                  q: "Prima transcriere este cu adevărat gratuită?",
+                  a: "Da! Prima transcriere este complet gratuită, fără card de credit. Transcripțiile ulterioare costă 50 NEURONS fiecare (~0.50 USD).",
+                },
+                {
+                  q: "Cum funcționează fast-path-ul?",
+                  a: "Sistemul verifică mai întâi dacă videoul YouTube are subtitrări disponibile. Dacă da, le descarcă direct în < 2 secunde. Dacă nu, folosește AI speech-to-text ca fallback.",
+                },
+                {
+                  q: "Ce pot face cu transcrierea?",
+                  a: "Pe lângă descărcare, poți extrage automat neuroni de cunoștințe, framework-uri, pattern-uri și insight-uri folosind motorul AI-IDEI de extracție. Un click → 50+ deliverables.",
+                },
+              ].map((faq, i) => (
+                <AccordionItem key={i} value={`faq-${i}`}>
+                  <AccordionTrigger className="text-sm text-left">{faq.q}</AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground">{faq.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </motion.div>
         </div>
       </div>
