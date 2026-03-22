@@ -138,6 +138,9 @@ export default function Intelligence() {
             <TabsTrigger value="dedup" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
               <GitMerge className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{t("intelligence.tab_dedup")}</span>
             </TabsTrigger>
+            <TabsTrigger value="profiles" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
+              <Brain className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">Profiles</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="graph" className="mt-0">
