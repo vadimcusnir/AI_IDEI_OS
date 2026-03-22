@@ -295,12 +295,16 @@ export default function GuestProfile() {
           </section>
         )}
 
-        {psychProfile && (
-          <section>
-            <SectionHeader icon={Brain} label={t("guest_profile.deep_psych")} />
-            <PsychologicalProfileSection profile={psychProfile} />
-          </section>
-        )}
+        {/* Advanced Psychological Profile (owner sees full controls, visitors see results) */}
+        <section>
+          <SectionHeader icon={Brain} label={t("guest_profile.deep_psych")} />
+          <GuestProfileAdvanced
+            guestId={guest.id}
+            guestName={guest.full_name}
+            episodeIds={guest.episode_ids || []}
+            isOwner={user?.id === guest.author_id}
+          />
+        </section>
 
         {!psychProfile && guest.psychological_traits.length >= 3 && (
           <section>
