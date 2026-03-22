@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import {
   Loader2, User, Brain, FileText, Sparkles, Calendar,
   ArrowRight, Globe,
@@ -243,7 +243,7 @@ export default function PublicUserProfile() {
         {/* Footer */}
         <div className="text-center pt-6 border-t border-border">
           <Link to="/" className="inline-flex items-center gap-2 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
-            <img src={logo} className="h-5 w-5 rounded-full" alt="AI-IDEI" />
+            <Logo size="h-5 w-5" />
             <span className="font-medium">AI-IDEI</span>
             <span className="text-muted-foreground/30">Knowledge OS</span>
           </Link>

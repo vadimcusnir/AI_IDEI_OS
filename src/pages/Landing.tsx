@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd, WebApplicationJsonLd, FAQJsonLd } from "@/components/seo/JsonLd";
 import { useAuth } from "@/contexts/AuthContext";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -145,7 +145,7 @@ export default function Landing() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/92 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group shrink-0">
-            <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full" />
+            <Logo size="h-8 w-8" loading="eager" />
             <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
           </button>
 

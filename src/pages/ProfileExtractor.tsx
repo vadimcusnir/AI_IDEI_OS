@@ -10,7 +10,7 @@ import {
   UserCheck, ArrowLeft, Loader2, Copy, Sparkles, Brain
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { useTranslation } from "react-i18next";
 
 export default function ProfileExtractor() {

@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier, type UserTier } from "@/hooks/useUserTier";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
@@ -197,7 +197,7 @@ export function AppSidebar() {
       {/* Brand */}
       <SidebarHeader>
         <button onClick={() => navigate(user ? "/home" : "/")} className="flex items-center gap-2.5 px-1 py-1">
-          <img src={logo} alt="AI-IDEI" className="h-7 w-7 rounded-full shrink-0" />
+          <Logo size="h-7 w-7" className="shrink-0" loading="eager" />
           {!collapsed && <span className="text-sm font-bold tracking-tight">AI-IDEI</span>}
         </button>
       </SidebarHeader>

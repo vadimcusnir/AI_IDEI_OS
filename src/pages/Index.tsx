@@ -11,7 +11,7 @@ import { NeuronPreviewPane } from "@/components/neurons/NeuronPreviewPane";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
 import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { useTranslation } from "react-i18next";
 
@@ -222,7 +222,7 @@ export default function Index() {
                 </>
               ) : (
                 <>
-                  <img src={logo} className="h-12 w-12 opacity-30 mx-auto mb-4" alt="" />
+                  <Logo size="h-12 w-12" className="opacity-30 mx-auto mb-4" alt="" />
                   <h3 className="text-lg font-medium mb-2">{t("neurons_index.empty_title")}</h3>
                   <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
                     {t("neurons_index.empty_desc")}

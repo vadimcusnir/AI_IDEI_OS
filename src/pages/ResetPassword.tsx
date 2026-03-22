@@ -3,7 +3,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Lock, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -42,7 +42,7 @@ export default function ResetPassword() {
       <SEOHead title="Reset Password — AI-IDEI" description="Set a new password for your AI-IDEI account." />
       <div className="w-full max-w-sm">
         <button onClick={() => navigate("/")} className="flex items-center justify-center gap-2 mb-8 mx-auto">
-          <img src={logo} alt="AI-IDEI" className="h-10 w-10 rounded-full" />
+          <Logo size="h-10 w-10" loading="eager" />
           <span className="text-2xl font-normal">AI-IDEI</span>
         </button>
         <div className="bg-card rounded-xl border border-border p-6">

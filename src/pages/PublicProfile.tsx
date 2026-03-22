@@ -3,7 +3,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, ExternalLink, Brain, Sparkles, Mail } from "lucide-react";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { useTranslation } from "react-i18next";
 
 interface ProfileData {
@@ -37,7 +37,7 @@ export default function PublicProfile() {
   if (notFound) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-        <img src={logo} alt="AI-IDEI" className="h-16 w-16 rounded-full mb-4 opacity-30" />
+        <Logo size="h-16 w-16" className="mb-4 opacity-30" />
         <h1 className="text-xl font-bold mb-2">{t("public_profile.not_found_title", { username })}</h1>
         <p className="text-sm text-muted-foreground mb-6 text-center max-w-sm">
           {t("public_profile.not_found_desc")}
@@ -118,7 +118,7 @@ export default function PublicProfile() {
         {/* Footer */}
         <div className="text-center mt-12">
           <a href="/links" className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
-            <img src={logo} className="h-4 w-4 rounded-full" alt="" />
+            <Logo size="h-4 w-4" alt="" />
             AI-IDEI Knowledge OS
           </a>
         </div>

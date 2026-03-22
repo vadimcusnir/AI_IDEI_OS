@@ -2,7 +2,7 @@
  * Landing Footer — matches obsidian/ivory/gold visual language.
  */
 import { Link } from "react-router-dom";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
@@ -20,7 +20,7 @@ export function LandingFooter() {
           {/* Brand */}
           <div className="space-y-4 col-span-2 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5">
-              <img src={logo} alt="AI-IDEI" className="h-7 w-7 rounded-full" />
+              <Logo size="h-7 w-7" />
               <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
             </div>
             <p className="max-w-[200px] text-sm text-muted-foreground leading-relaxed">

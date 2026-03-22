@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Loader2, Brain, Coins, FileAudio, TrendingUp,
