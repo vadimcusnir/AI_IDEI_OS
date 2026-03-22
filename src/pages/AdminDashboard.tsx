@@ -101,6 +101,7 @@ const TABS = [
   { value: "flags", label: "Flags", icon: Activity },
   { value: "moderation", label: "Moderation", icon: MessageCircle },
   { value: "control-layer", label: "Control", icon: Layers },
+  { value: "manifests", label: "Manifests", icon: Settings },
 ];
 
 export default function AdminDashboard() {
