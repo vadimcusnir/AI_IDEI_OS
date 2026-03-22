@@ -229,7 +229,7 @@ export default function Landing() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25 }}
-              className="lg:hidden border-t border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian)/0.98)] overflow-hidden"
+              className="lg:hidden border-t border-border bg-background/98 overflow-hidden"
             >
               <div className="px-5 py-4 space-y-1">
                 {NAV_LINKS.map(link => (
