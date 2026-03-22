@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 const ROUTE_LABELS: Record<string, string> = {
   home: "Cockpit",
