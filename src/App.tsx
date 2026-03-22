@@ -70,6 +70,7 @@ const KnowledgeDashboard = lazy(() => import("./pages/KnowledgeDashboard"));
 const VIPDashboard = lazy(() => import("./pages/VIPDashboard"));
 const DataPipeline = lazy(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazy(() => import("./pages/RuntimeDashboard"));
+const CusnirOSOperator = lazy(() => import("./pages/CusnirOSOperator"));
 const SecurityDocs = lazy(() => import("./pages/SecurityDocs"));
 const DatabaseRelations = lazy(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazy(() => import("./pages/WalletPage"));
