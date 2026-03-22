@@ -358,9 +358,11 @@ export default function Landing() {
                 variants={fadeUp}
                 className="p-4 sm:p-5 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.15)] transition-colors group flex items-start gap-4 sm:block"
               >
-                <IconControl className="text-[hsl(var(--gold-oxide)/0.4)] mb-3 group-hover:text-[hsl(var(--gold-oxide)/0.7)] transition-colors" size={18} />
-                <p className="text-xs font-semibold text-[hsl(var(--ivory)/0.85)] mb-1">{ctrl.label}</p>
-                <p className="text-[10px] text-[hsl(var(--ivory-dim)/0.4)]">{ctrl.desc}</p>
+                <IconControl className="text-[hsl(var(--gold-oxide)/0.4)] mb-0 sm:mb-3 mt-0.5 sm:mt-0 shrink-0 group-hover:text-[hsl(var(--gold-oxide)/0.7)] transition-colors" size={18} />
+                <div>
+                  <p className="text-xs font-semibold text-[hsl(var(--ivory)/0.85)] mb-0.5 sm:mb-1">{ctrl.label}</p>
+                  <p className="text-[10px] text-[hsl(var(--ivory-dim)/0.4)]">{ctrl.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
