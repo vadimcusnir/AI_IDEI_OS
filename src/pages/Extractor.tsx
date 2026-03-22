@@ -679,9 +679,9 @@ export default function Extractor() {
 
                   {/* Expanded detail panel */}
                   {isExpanded && (
-                    <div className="border-t border-border px-4 py-4 space-y-3">
+                    <div className="border-t border-border px-3 sm:px-4 py-3 sm:py-4 space-y-3">
                       {/* Metadata */}
-                      <div className="flex items-center gap-4 text-[10px] text-muted-foreground flex-wrap">
+                      <div className="flex items-center gap-2 sm:gap-4 text-[10px] text-muted-foreground flex-wrap">
                         <span>Type: <strong className="text-foreground">{ep.source_type}</strong></span>
                         {ep.source_url && (
                           <a href={ep.source_url} target="_blank" rel="noopener noreferrer"
