@@ -81,6 +81,7 @@ export function AgentConsole() {
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [activePack, setActivePack] = useState<CommandPack | null>(null);
+  const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
