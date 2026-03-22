@@ -124,7 +124,7 @@ export default function Landing() {
 
   return (
     <PageTransition>
-    <div className="min-h-screen bg-[hsl(var(--obsidian))] text-[hsl(var(--ivory))] noise-overlay relative">
+    <div className="min-h-screen bg-background text-foreground noise-overlay relative">
       <SEOHead
         title="AI-IDEI — AI Copywriting & Marketing Execution System"
         description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants."
