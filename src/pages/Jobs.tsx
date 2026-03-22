@@ -164,7 +164,7 @@ export default function Jobs() {
       .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false })
       .limit(50);
-    if (data) setJobs(data as Job[]);
+    if (data) setJobs(data as unknown as Job[]);
     if (error) toast.error(t("jobs.failed_to_load"));
     setLoading(false);
   };
