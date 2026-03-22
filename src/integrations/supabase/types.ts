@@ -4779,6 +4779,53 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_history: {
+        Row: {
+          context: string
+          created_at: string
+          credits_spent: number
+          details: string | null
+          goal: string
+          id: string
+          is_favorite: boolean
+          result: string
+          template_id: string | null
+          user_id: string
+        }
+        Insert: {
+          context: string
+          created_at?: string
+          credits_spent?: number
+          details?: string | null
+          goal: string
+          id?: string
+          is_favorite?: boolean
+          result?: string
+          template_id?: string | null
+          user_id: string
+        }
+        Update: {
+          context?: string
+          created_at?: string
+          credits_spent?: number
+          details?: string | null
+          goal?: string
+          id?: string
+          is_favorite?: boolean
+          result?: string
+          template_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_history_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prompt_registry: {
         Row: {
           category: string
@@ -4842,6 +4889,60 @@ export type Database = {
           scope?: Database["public"]["Enums"]["control_scope"]
           updated_at?: string
           version?: number
+        }
+        Relationships: []
+      }
+      prompt_templates: {
+        Row: {
+          author_id: string | null
+          avg_rating: number | null
+          category: string
+          context_template: string
+          created_at: string
+          description: string
+          details_template: string
+          goal: string
+          icon: string
+          id: string
+          is_public: boolean
+          is_system: boolean
+          title: string
+          updated_at: string
+          use_count: number
+        }
+        Insert: {
+          author_id?: string | null
+          avg_rating?: number | null
+          category?: string
+          context_template?: string
+          created_at?: string
+          description?: string
+          details_template?: string
+          goal: string
+          icon?: string
+          id?: string
+          is_public?: boolean
+          is_system?: boolean
+          title: string
+          updated_at?: string
+          use_count?: number
+        }
+        Update: {
+          author_id?: string | null
+          avg_rating?: number | null
+          category?: string
+          context_template?: string
+          created_at?: string
+          description?: string
+          details_template?: string
+          goal?: string
+          icon?: string
+          id?: string
+          is_public?: boolean
+          is_system?: boolean
+          title?: string
+          updated_at?: string
+          use_count?: number
         }
         Relationships: []
       }
