@@ -34,14 +34,14 @@ const BENEFITS = [
 
 export function LandingBenefits() {
   return (
-    <section className="py-20 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)]">
+    <section className="py-16 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)]">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="mb-16">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="mb-10 sm:mb-16">
           <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHAT CHANGES</span>
           <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">What changes when you use AI-IDEI</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {BENEFITS.map((b, i) => (
             <motion.div
               key={b.title}
@@ -50,9 +50,9 @@ export function LandingBenefits() {
               viewport={{ once: true, margin: "-40px" }}
               custom={i}
               variants={fadeUp}
-              className="relative p-8 rounded-xl border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.12)] transition-colors group"
+              className="relative p-6 sm:p-8 rounded-xl border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.12)] landing-card group"
             >
-              <div className="flex items-start gap-5">
+              <div className="flex items-start gap-4 sm:gap-5">
                 <div className="shrink-0 w-10 h-10 rounded-lg bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center group-hover:bg-[hsl(var(--gold-oxide)/0.15)] transition-colors">
                   <b.icon className="h-5 w-5 text-[hsl(var(--gold-oxide)/0.6)] group-hover:text-[hsl(var(--gold-oxide))] transition-colors" />
                 </div>
