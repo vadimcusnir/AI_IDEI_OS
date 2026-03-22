@@ -54,5 +54,6 @@
   "gamification": "Достижения",
   "runtime": "Среда выполнения",
   "analytics": "Аналитика",
-  "security": "Безопасность"
+  "security": "Безопасность",
+  "headline_generator": "Генератор Заголовков"
 }
