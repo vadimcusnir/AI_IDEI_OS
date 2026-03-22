@@ -47,5 +47,10 @@
   "api": "API Access",
   "wallet": "Wallet",
   "cognitive_units": "Cognitive Units",
-  "collection_runs": "Collection Runs"
+  "collection_runs": "Collection Runs",
+  "vip": "VIP Program",
+  "gamification": "Achievements",
+  "runtime": "Runtime",
+  "analytics": "Analytics",
+  "security": "Security"
 }
