@@ -79,7 +79,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             <SidebarTrigger />
             <AppBreadcrumbs />
             <div className="flex-1" />
-            <GlobalSearch />
+            <Suspense fallback={null}><GlobalSearch /></Suspense>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
