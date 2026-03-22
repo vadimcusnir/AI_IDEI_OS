@@ -150,12 +150,32 @@ export function AgentConsole() {
         }
       }
 
+      // Build conversation with memory layers
+      // Layer 1: Session memory (last 20 messages from current session)
       const apiMessages = messages
         .filter(m => m.role !== "system" && !m.id.startsWith("welcome"))
         .slice(-20)
         .map(m => ({ role: m.role, content: m.content }));
 
       apiMessages.push({ role: "user", content: userContent + fileContent });
+
+      // Layer 2: User memory (aggregate stats from DB)
+      const [neuronsAgg, episodesAgg, jobsAgg] = await Promise.all([
+        supabase.from("neurons").select("content_category", { count: "exact" }).eq("author_id", user.id),
+        supabase.from("episodes").select("id", { count: "exact" }).eq("author_id", user.id),
+        supabase.from("neuron_jobs").select("worker_type, status").eq("author_id", user.id).eq("status", "completed").limit(100),
+      ]);
+      
+      const topCategories = (neuronsAgg.data || []).reduce((acc: Record<string, number>, n: any) => {
+        const cat = n.content_category || "general";
+        acc[cat] = (acc[cat] || 0) + 1;
+        return acc;
+      }, {});
+
+      const workerTypes = (jobsAgg.data || []).reduce((acc: Record<string, number>, j: any) => {
+        acc[j.worker_type] = (acc[j.worker_type] || 0) + 1;
+        return acc;
+      }, {});
 
       const { data: { session } } = await supabase.auth.getSession();
       const resp = await fetch(AGENT_URL, {
