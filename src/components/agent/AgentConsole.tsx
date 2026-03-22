@@ -373,7 +373,9 @@ export function AgentConsole() {
   const isEmptyState = messages.length <= 1 && !loading;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full">
+      {/* Main chat column */}
+      <div className={cn("flex flex-col h-full transition-all", showTimeline ? "flex-1 min-w-0" : "w-full")}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
         <div className="flex items-center gap-2.5">
