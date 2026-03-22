@@ -65,6 +65,13 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
+        {/* Skip-to-content — WCAG 2.4.1 */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-ring"
+        >
+          Skip to content
+        </a>
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           {/* Mobile-first scroll-aware header */}
@@ -114,12 +121,12 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           <Suspense fallback={null}><LowBalanceBanner /></Suspense>
 
           {fullHeight ? (
-            <main className="flex-1 flex flex-col min-h-0">
+            <main id="main-content" className="flex-1 flex flex-col min-h-0">
               <ErrorBoundary>{children}</ErrorBoundary>
             </main>
           ) : (
             <>
-              <main className="flex-1 flex flex-col pb-16 md:pb-0">
+              <main id="main-content" className="flex-1 flex flex-col pb-16 md:pb-0">
                 <ErrorBoundary>{children}</ErrorBoundary>
               </main>
               <Suspense fallback={null}><Footer /></Suspense>

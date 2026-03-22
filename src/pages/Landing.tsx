@@ -125,6 +125,13 @@ export default function Landing() {
   return (
     <PageTransition>
     <div className="min-h-screen bg-background text-foreground noise-overlay relative">
+      {/* Skip-to-content — WCAG 2.4.1 */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[hsl(var(--gold-oxide))] focus:text-[hsl(var(--obsidian))] focus:rounded-md focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-[hsl(var(--gold-oxide))]"
+      >
+        Skip to content
+      </a>
       <SEOHead
         title="AI-IDEI — AI Copywriting & Marketing Execution System"
         description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants."
@@ -142,21 +149,21 @@ export default function Landing() {
       </div>
 
       {/* ═══ NAV ═══ */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/92 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/92 backdrop-blur-xl" role="banner">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group shrink-0">
+          <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group shrink-0 focus-ring rounded-md" aria-label="AI-IDEI home">
             <Logo size="h-8 w-8" loading="eager" />
             <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
           </button>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
             {NAV_LINKS.map(link => (
               <button
                 key={link.label}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
-                  "text-xs font-mono tracking-[0.1em] transition-colors relative py-1",
+                  "text-xs font-mono tracking-[0.1em] transition-colors relative py-1 focus-ring rounded-sm",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
                     : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"
@@ -259,6 +266,7 @@ export default function Landing() {
       </header>
 
       {/* ═══ SECTIONS ═══ */}
+      <main id="main-content" role="main">
       <LandingHero heroRef={heroRef} ctaAction={ctaAction} />
       <LandingProofBand />
       <LandingProblem />
@@ -278,6 +286,7 @@ export default function Landing() {
       <LandingPricing ctaAction={ctaAction} />
       <LandingFAQ />
       <LandingFinalCTA ctaAction={ctaAction} />
+      </main>
       <LandingFooter />
 
       <OrganizationJsonLd />
