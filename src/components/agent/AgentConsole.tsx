@@ -254,6 +254,11 @@ export function AgentConsole() {
             if (d === "[DONE]") continue;
             try {
               const parsed = JSON.parse(d);
+              // Detect agent metadata (plan info)
+              if (parsed.agent_meta) {
+                setPlanMeta(parsed.agent_meta);
+                setShowTimeline(true);
+              }
               const c = parsed.choices?.[0]?.delta?.content;
               if (c) {
                 fullContent += c;
