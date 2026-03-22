@@ -78,6 +78,7 @@ const Transcribe = lazy(() => import("./pages/Transcribe"));
 const Integrations = lazy(() => import("./pages/Integrations"));
 const CognitiveUnits = lazy(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazy(() => import("./pages/CollectionRuns"));
+const Pricing = lazy(() => import("./pages/Pricing"));
 const KnowledgeSurfacePage = lazy(() => import("./pages/KnowledgeSurfacePage"));
 const ProductSurfacePage = lazy(() => import("./pages/ProductSurfacePage"));
 function PageLoader() {
