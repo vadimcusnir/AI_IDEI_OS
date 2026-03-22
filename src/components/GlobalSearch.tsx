@@ -63,6 +63,16 @@ export function GlobalSearch() {
     }
   }, [open]);
 
+  const generateEmbedding = useCallback(async (text: string): Promise<number[] | null> => {
+    try {
+      const { data, error } = await supabase.functions.invoke("embed-neurons", {
+        body: { text_only: true, content: text },
+      });
+      if (error || !data?.embedding) return null;
+      return data.embedding;
+    } catch { return null; }
+  }, []);
+
   const search = useCallback(async (q: string) => {
     if (!user || q.trim().length < 2) {
       setResults([]);
@@ -73,6 +83,7 @@ export function GlobalSearch() {
     setLoading(true);
     const pattern = `%${q.trim()}%`;
 
+    // Keyword search (parallel)
     const [neuronsRes, artifactsRes, guestsRes, entitiesRes] = await Promise.all([
       supabase
         .from("neurons")
@@ -135,11 +146,42 @@ export function GlobalSearch() {
       })),
     ];
 
+    // Semantic search — if keyword results are sparse, try vector search
+    if (mapped.length < 3 && q.trim().length >= 4) {
+      try {
+        const embedding = await generateEmbedding(q.trim());
+        if (embedding) {
+          const { data: semanticResults } = await supabase.rpc("search_neurons_semantic", {
+            query_embedding: `[${embedding.join(",")}]`,
+            match_threshold: 0.3,
+            match_count: 5,
+            _user_id: user.id,
+          });
+          if (semanticResults) {
+            const existingIds = new Set(mapped.filter(m => m.type === "neuron").map(m => m.id));
+            for (const sr of semanticResults) {
+              const key = `n-${sr.neuron_id}`;
+              if (!existingIds.has(key)) {
+                mapped.push({
+                  id: key,
+                  title: sr.title,
+                  subtitle: `Semantic · ${(sr.similarity * 100).toFixed(0)}% match`,
+                  type: "neuron",
+                  path: `/n/${sr.neuron_id}`,
+                  semantic: true,
+                });
+              }
+            }
+          }
+        }
+      } catch { /* semantic search is best-effort */ }
+    }
+
     setResults(mapped);
     trackInternalEvent({ event: AnalyticsEvents.SEARCH_PERFORMED, params: { query: q, results_count: mapped.length } });
     setSelectedIndex(0);
     setLoading(false);
-  }, [user]);
+  }, [user, generateEmbedding]);
 
   const handleInputChange = (value: string) => {
     setQuery(value);
