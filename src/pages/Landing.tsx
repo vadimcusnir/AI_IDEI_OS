@@ -304,7 +304,7 @@ export default function Landing() {
                 viewport={{ once: true, margin: "-40px" }}
                 custom={i}
                 variants={fadeUp}
-                className="bg-[hsl(var(--obsidian-light)/0.3)] p-8 sm:p-10 group hover:bg-[hsl(var(--obsidian-light)/0.6)] transition-all"
+                className="bg-[hsl(var(--obsidian-light)/0.3)] p-6 sm:p-10 group hover:bg-[hsl(var(--obsidian-light)/0.6)] transition-all"
               >
                 <block.icon className="text-[hsl(var(--gold-oxide)/0.6)] mb-6 group-hover:text-[hsl(var(--gold-oxide))] transition-colors" size={28} />
                 <h3 className="text-base font-semibold text-[hsl(var(--ivory)/0.9)] mb-3">{block.title}</h3>
