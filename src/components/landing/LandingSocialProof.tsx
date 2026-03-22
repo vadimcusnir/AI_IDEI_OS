@@ -23,7 +23,7 @@ export function LandingSocialProof() {
     <section className="py-16 sm:py-28">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-12 sm:mb-16">
-          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">PROOF</span>
+          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">PROOF</span>
           <h2 className="heading-2 mb-4">Built for people who want sharper thinking and stronger execution</h2>
         </FadeInView>
 
@@ -34,13 +34,13 @@ export function LandingSocialProof() {
               delay={i * 0.08}
               className="relative p-6 sm:p-8 rounded-xl border border-border bg-card landing-card"
             >
-              <span className="absolute top-3 left-5 text-3xl text-[hsl(var(--gold-oxide)/0.2)] leading-none select-none">"</span>
-              <blockquote className="text-sm text-foreground/80 leading-relaxed mb-5 sm:mb-6 pt-4 italic">
+              <span className="absolute top-3 left-5 text-3xl text-[hsl(var(--gold-oxide)/0.25)] leading-none select-none">"</span>
+              <blockquote className="text-sm text-foreground leading-relaxed mb-5 sm:mb-6 pt-4 italic">
                 {t.text}
               </blockquote>
               <div className="border-t border-border pt-4 flex items-center gap-3">
                 <div className="h-8 w-8 rounded-full bg-[hsl(var(--gold-oxide)/0.12)] flex items-center justify-center shrink-0">
-                  <span className="text-xs font-mono font-bold text-[hsl(var(--gold-oxide)/0.7)]">{t.name}</span>
+                  <span className="text-xs font-mono font-bold text-[hsl(var(--gold-oxide))]">{t.name}</span>
                 </div>
                 <p className="text-xs font-mono text-muted-foreground">{t.role}</p>
               </div>

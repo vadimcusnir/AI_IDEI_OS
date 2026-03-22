@@ -16,7 +16,7 @@ export function LandingWhatYouGet() {
     <section className="py-20 sm:py-28">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="mb-10 sm:mb-16">
-          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">WHAT YOU GET</span>
+          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">WHAT YOU GET</span>
           <h2 className="heading-2 mb-4">
             Everything you need to write, position, and market better with AI
           </h2>
@@ -32,7 +32,7 @@ export function LandingWhatYouGet() {
               delay={i * 0.08}
               className="bg-card p-6 sm:p-10 group hover:bg-accent/5 transition-all"
             >
-              <block.icon className="text-[hsl(var(--gold-oxide)/0.7)] mb-6 group-hover:text-[hsl(var(--gold-oxide))] transition-colors" size={28} />
+              <block.icon className="text-[hsl(var(--gold-oxide))] mb-6 transition-colors" size={28} />
               <h3 className="text-lg font-semibold text-foreground mb-3">{block.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{block.text}</p>
             </FadeInView>

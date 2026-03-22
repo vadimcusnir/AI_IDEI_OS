@@ -24,7 +24,7 @@ export function LandingFinalCTA({ ctaAction }: Props) {
           Use AI-IDEI to write faster, market better, and turn rough thinking into persuasive output.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8">
-          <Button size="lg" onClick={ctaAction} className="gap-2 px-10 h-12 sm:h-14 min-h-[44px] bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] font-semibold shadow-lg shadow-[hsl(var(--gold-oxide)/0.15)] w-full sm:w-auto">
+          <Button size="lg" onClick={ctaAction} className="gap-2 px-10 h-12 sm:h-14 min-h-[44px] bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-dim))] text-[hsl(var(--obsidian))] font-semibold shadow-lg shadow-[hsl(var(--gold-oxide)/0.15)] w-full sm:w-auto">
             Start Free
             <ArrowRight className="h-4 w-4" />
           </Button>
@@ -33,7 +33,7 @@ export function LandingFinalCTA({ ctaAction }: Props) {
             See What's Inside
           </Button>
         </div>
-        <p className="text-xs font-mono tracking-[0.12em] text-muted-foreground/70">
+        <p className="text-xs font-mono tracking-[0.12em] text-muted-foreground">
           LESS FRICTION · BETTER COPY · STRONGER EXECUTION
         </p>
       </div>

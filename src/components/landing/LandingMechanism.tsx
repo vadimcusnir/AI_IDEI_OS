@@ -20,7 +20,7 @@ export function LandingMechanism() {
     <section id="mechanism" className="py-20 sm:py-28 border-y border-border">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-16">
-          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">THE MECHANISM</span>
+          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">THE MECHANISM</span>
           <h2 className="heading-2 mb-4">One idea becomes many assets</h2>
           <p className="text-base text-muted-foreground max-w-lg mx-auto text-flow">
             With the right system, a single idea stops being a thought and starts becoming leverage.
@@ -32,7 +32,7 @@ export function LandingMechanism() {
             <FadeInView key={step.num} delay={i * 0.08} className="bg-card p-6 sm:p-8 group hover:bg-accent/5 transition-colors">
               <div className="flex items-center justify-between mb-6">
                 <span className="text-2xl font-mono font-bold text-[hsl(var(--gold-oxide)/0.15)] group-hover:text-[hsl(var(--gold-oxide)/0.3)] transition-colors">{step.num}</span>
-                <step.icon className="text-[hsl(var(--gold-oxide)/0.6)]" size={20} />
+                <step.icon className="text-[hsl(var(--gold-oxide))]" size={20} />
               </div>
               <h3 className="text-base font-semibold text-foreground mb-2">{step.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{step.text}</p>
@@ -44,8 +44,8 @@ export function LandingMechanism() {
           {TRANSFORMS.map((t, i) => (
             <FadeInView key={i} delay={i * 0.06} className="flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-accent/5 transition-colors">
               <span className="text-sm font-mono text-muted-foreground min-w-[140px] sm:min-w-[180px]">{t.from}</span>
-              <span className="text-[hsl(var(--gold-oxide)/0.7)] font-mono text-sm">→</span>
-              <span className="text-sm text-foreground/85">{t.to}</span>
+              <span className="text-[hsl(var(--gold-oxide))] font-mono text-sm">→</span>
+              <span className="text-sm text-foreground">{t.to}</span>
             </FadeInView>
           ))}
         </div>

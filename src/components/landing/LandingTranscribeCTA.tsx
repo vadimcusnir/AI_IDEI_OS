@@ -15,7 +15,7 @@ export function LandingTranscribeCTA() {
         <div className="relative rounded-xl border border-border bg-card p-6 sm:p-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-[hsl(var(--signal-red)/0.04)] rounded-full blur-[80px]" />
           <div className="relative shrink-0 w-14 h-14 rounded-xl bg-[hsl(var(--signal-red)/0.1)] flex items-center justify-center">
-            <Youtube className="h-7 w-7 text-[hsl(var(--signal-red)/0.8)]" />
+            <Youtube className="h-7 w-7 text-[hsl(var(--signal-red))]" />
           </div>
           <div className="relative flex-1 text-center sm:text-left">
             <h3 className="text-lg font-bold text-foreground mb-2">
@@ -28,7 +28,7 @@ export function LandingTranscribeCTA() {
           <Button
             onClick={() => navigate("/transcribe")}
             size="sm"
-            className="relative gap-2 text-sm h-11 min-h-[44px] px-6 bg-[hsl(var(--signal-red)/0.15)] hover:bg-[hsl(var(--signal-red)/0.25)] text-foreground border border-[hsl(var(--signal-red)/0.25)] shrink-0"
+            className="relative gap-2 text-sm h-11 min-h-[44px] px-6 bg-[hsl(var(--signal-red)/0.15)] hover:bg-[hsl(var(--signal-red)/0.25)] text-foreground border border-[hsl(var(--signal-red)/0.3)] shrink-0"
           >
             Try Transcribe
             <ArrowRight className="h-3.5 w-3.5" />
