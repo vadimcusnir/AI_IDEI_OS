@@ -201,7 +201,7 @@ export default function Landing() {
               </Button>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-[hsl(var(--ivory-dim)/0.6)]">
+                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-muted-foreground">
                   Log in
                 </Button>
                 <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex">
