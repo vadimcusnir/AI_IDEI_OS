@@ -398,4 +398,103 @@ The deeper you go in the chain, the more reusable and valuable the asset becomes
 - [The Neuron Model](/docs/foundation/neuron-model) — the atomic knowledge unit
 - [Knowledge Graph](/docs/architecture/knowledge-graph) — how assets interconnect`,
   },
+  "knowledge-graph-overview": {
+    title: "Knowledge Graph",
+    content: `The Knowledge Graph is the semantic backbone of AI-IDEI. It connects every neuron, entity, and insight into a navigable network of relationships.
+
+## What Is It?
+
+Think of the Knowledge Graph as a map of everything you know. Each node represents a piece of knowledge (an insight, pattern, formula, or profile). Each edge represents a relationship between pieces of knowledge (supports, contradicts, extends, derives from).
+
+## How It Works
+
+When you extract neurons from content, the system automatically:
+1. **Projects** neurons into the graph as entities
+2. **Identifies** semantic relationships between entities
+3. **Scores** entity importance using IdeaRank (PageRank-derived)
+4. **Clusters** related entities into topics
+
+## Relationship Types
+
+| Type | Weight | Meaning |
+|------|--------|---------|
+| derived_from | 1.0 | Direct derivation from another idea |
+| supports | 0.8 | Provides evidence for another idea |
+| extends | 0.7 | Builds on or expands another idea |
+| applies_to | 0.6 | Practical application of a concept |
+| references | 0.5 | Cites or mentions another idea |
+| contradicts | 0.3 | Opposes or conflicts with another idea |
+
+## IdeaRank
+
+Every entity receives an importance score calculated from five components:
+
+\`\`\`
+PVS = 0.30·Activation + 0.20·Growth + 0.20·Centrality + 0.15·Authority + 0.15·Economic
+\`\`\`
+
+The top 5% of entities by emergence score are flagged as **Emerging Ideas** — concepts gaining rapid importance in your knowledge base.
+
+## Visualization
+
+The graph is visualized interactively on the **Insights** page. You can:
+- View nodes colored by category or cluster
+- Zoom into subgraphs by clicking a node
+- Filter by time period
+- Export as image
+
+## Further Reading
+
+- [Knowledge Graph (Architecture)](/docs/architecture/knowledge-graph) — technical implementation
+- [IdeaRank](/docs/reference/glossary) — scoring algorithm details`,
+  },
+  "services-and-credits": {
+    title: "Services & Credits",
+    content: `AI-IDEI uses a credit-based system called NEURONS to power all AI operations. This page explains how services work and how credits are consumed.
+
+## What Are Services?
+
+Services are AI workflows that transform neurons into deliverables. Each service has:
+- **Input requirements** — which neurons or content it needs
+- **Processing pipeline** — the AI prompts and logic
+- **Output format** — what it produces (article, script, analysis, etc.)
+- **Credit cost** — fixed cost in NEURONS
+
+## How Credits Work
+
+**NEURONS** are compute credits. They represent processing power.
+
+- **Base rate:** 1000 credits = 11 USD
+- **Welcome bonus:** 500 free credits on signup
+- **Top-up:** Buy packages via Stripe
+- **Subscriptions:** Monthly plans include credit allocations
+
+## Credit Flow
+
+1. You choose a service and select input neurons
+2. The system calculates the credit cost
+3. Credits are **reserved** (held, not spent)
+4. The service executes
+5. On success: credits are settled (spent)
+6. On failure: credits are **refunded** automatically
+
+## Service Categories
+
+| Category | Example Services | Typical Cost |
+|----------|-----------------|--------------|
+| Content | Blog post, article, newsletter | 30-100 credits |
+| Marketing | Ad copy, landing page, email sequence | 50-150 credits |
+| Strategy | SWOT analysis, competitive framework | 80-200 credits |
+| Education | Course module, quiz, lesson plan | 100-300 credits |
+| Extraction | Neuron extraction, deep analysis | 50-200 credits |
+
+## Daily Spend Cap
+
+To prevent accidental overspending, each account has a daily spend cap. You can adjust this in your credit settings.
+
+## Further Reading
+
+- [Credits & Pricing](/docs/getting-started/credits-system) — detailed pricing
+- [Service Manifests](/docs/architecture/service-manifests) — technical service architecture`,
+  },
 };

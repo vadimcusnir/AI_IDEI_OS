@@ -24,12 +24,25 @@ export const DOCS_SECTIONS: DocSection[] = [
   },
   {
     key: "foundation",
-    label: "Foundation",
+    label: "Core Concepts",
     icon: "BookOpen",
     topics: [
       { slug: "what-is-ai-idei", title: "Knowledge as Infrastructure" },
       { slug: "neuron-model", title: "The Neuron Model" },
       { slug: "intelligence-assets", title: "Intelligence Assets" },
+      { slug: "knowledge-graph-overview", title: "Knowledge Graph" },
+      { slug: "services-and-credits", title: "Services & Credits" },
+    ],
+  },
+  {
+    key: "tutorials",
+    label: "Tutorials",
+    icon: "GraduationCap",
+    topics: [
+      { slug: "first-extraction", title: "Your First Extraction" },
+      { slug: "creating-outputs", title: "Creating AI Outputs" },
+      { slug: "building-collections", title: "Building Collections" },
+      { slug: "automating-workflows", title: "Automating Workflows" },
     ],
   },
   {
@@ -52,6 +65,16 @@ export const DOCS_SECTIONS: DocSection[] = [
       { slug: "neuron-library", title: "Neuron Library" },
       { slug: "service-manifests", title: "Service Manifests" },
       { slug: "job-engine", title: "Job Engine" },
+    ],
+  },
+  {
+    key: "developer",
+    label: "Developer Guide",
+    icon: "Code",
+    topics: [
+      { slug: "api-overview", title: "API Overview" },
+      { slug: "webhooks", title: "Webhooks" },
+      { slug: "authentication", title: "Authentication" },
     ],
   },
   {
@@ -81,16 +104,20 @@ export const DOCS_SECTIONS: DocSection[] = [
 // Import content from separate files
 import { gettingStartedContent } from "./content/getting-started";
 import { foundationContent } from "./content/foundation";
+import { tutorialsContent } from "./content/tutorials";
 import { pipelineContent } from "./content/pipeline";
 import { architectureContent } from "./content/architecture";
+import { developerContent } from "./content/developer";
 import { derivativesContent } from "./content/derivatives";
 import { referenceContent } from "./content/reference";
 
 export const TOPIC_CONTENT: Record<string, Record<string, DocTopic>> = {
   "getting-started": gettingStartedContent,
   foundation: foundationContent,
+  tutorials: tutorialsContent,
   pipeline: pipelineContent,
   architecture: architectureContent,
+  developer: developerContent,
   derivatives: derivativesContent,
   reference: referenceContent,
 };

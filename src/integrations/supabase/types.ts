@@ -1439,6 +1439,67 @@ export type Database = {
         }
         Relationships: []
       }
+      contradiction_pairs: {
+        Row: {
+          ai_analysis: string | null
+          created_at: string | null
+          description: string
+          entity_a_id: string | null
+          entity_b_id: string | null
+          id: string
+          resolved_at: string | null
+          severity: string
+          status: string
+          workspace_id: string | null
+        }
+        Insert: {
+          ai_analysis?: string | null
+          created_at?: string | null
+          description?: string
+          entity_a_id?: string | null
+          entity_b_id?: string | null
+          id?: string
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          ai_analysis?: string | null
+          created_at?: string | null
+          description?: string
+          entity_a_id?: string | null
+          entity_b_id?: string | null
+          id?: string
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contradiction_pairs_entity_a_id_fkey"
+            columns: ["entity_a_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contradiction_pairs_entity_b_id_fkey"
+            columns: ["entity_b_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contradiction_pairs_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       control_change_log: {
         Row: {
           change_reason: string | null
@@ -1906,27 +1967,36 @@ export type Database = {
       }
       entity_relations: {
         Row: {
+          confidence: number | null
           created_at: string | null
           id: string
+          metadata: Json | null
           relation_type: string
           source_entity_id: string
           target_entity_id: string
+          temporal_order: string | null
           weight: number | null
         }
         Insert: {
+          confidence?: number | null
           created_at?: string | null
           id?: string
+          metadata?: Json | null
           relation_type: string
           source_entity_id: string
           target_entity_id: string
+          temporal_order?: string | null
           weight?: number | null
         }
         Update: {
+          confidence?: number | null
           created_at?: string | null
           id?: string
+          metadata?: Json | null
           relation_type?: string
           source_entity_id?: string
           target_entity_id?: string
+          temporal_order?: string | null
           weight?: number | null
         }
         Relationships: [
@@ -3122,6 +3192,56 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      knowledge_gaps: {
+        Row: {
+          confidence: number | null
+          created_at: string | null
+          description: string
+          gap_type: string
+          id: string
+          resolved_at: string | null
+          status: string
+          suggested_sources: string[] | null
+          topic: string
+          updated_at: string | null
+          workspace_id: string | null
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string | null
+          description?: string
+          gap_type?: string
+          id?: string
+          resolved_at?: string | null
+          status?: string
+          suggested_sources?: string[] | null
+          topic: string
+          updated_at?: string | null
+          workspace_id?: string | null
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string | null
+          description?: string
+          gap_type?: string
+          id?: string
+          resolved_at?: string | null
+          status?: string
+          suggested_sources?: string[] | null
+          topic?: string
+          updated_at?: string | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_gaps_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       knowledge_graph_cache: {
         Row: {
@@ -6130,6 +6250,30 @@ export type Database = {
           _workspace_id: string
         }
         Returns: boolean
+      }
+      hybrid_search_neurons: {
+        Args: {
+          _date_from?: string
+          _date_to?: string
+          _entity_type?: string
+          _match_count?: number
+          _min_confidence?: number
+          _query: string
+          _query_embedding: string
+          _rrf_k?: number
+          _user_id: string
+        }
+        Returns: {
+          content_category: string
+          created_at: string
+          keyword_rank: number
+          lifecycle: string
+          neuron_id: number
+          rrf_score: number
+          score: number
+          title: string
+          vector_rank: number
+        }[]
       }
       is_feature_enabled: {
         Args: { _key: string; _user_id?: string }
