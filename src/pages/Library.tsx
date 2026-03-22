@@ -342,7 +342,7 @@ export default function Library() {
                       <Clock className="h-2.5 w-2.5" />
                       {format(new Date(artifact.updated_at), "dd MMM yyyy")}
                     </span>
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                       <Button
                         variant="ghost"
                         size="icon"
