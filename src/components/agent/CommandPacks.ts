@@ -1,6 +1,6 @@
 /**
  * Agent Command Packs — Role-specific command sets for the Agent Console.
- * Each pack surfaces the most relevant commands for a specific profession/use case.
+ * 30 commands organized across 10 profession-specific packs.
  */
 
 export interface CommandPack {
@@ -8,9 +8,7 @@ export interface CommandPack {
   label: string;
   emoji: string;
   description: string;
-  /** Slash command prefixes this pack highlights */
   highlightedCommands: string[];
-  /** Quick prompts specific to this role */
   quickPrompts: Array<{
     label: string;
     prompt: string;
@@ -18,6 +16,7 @@ export interface CommandPack {
 }
 
 export const COMMAND_PACKS: CommandPack[] = [
+  // ─── Pack 1: Podcaster ───
   {
     id: "podcaster",
     label: "Podcaster",
@@ -32,6 +31,7 @@ export const COMMAND_PACKS: CommandPack[] = [
       { label: "Create social clips", prompt: "Generate 10 social media posts from the best quotes in this episode" },
     ],
   },
+  // ─── Pack 2: Content Creator ───
   {
     id: "creator",
     label: "Content Creator",
@@ -46,6 +46,7 @@ export const COMMAND_PACKS: CommandPack[] = [
       { label: "Newsletter draft", prompt: "Draft a newsletter combining my top 5 recent neurons" },
     ],
   },
+  // ─── Pack 3: Consultant ───
   {
     id: "consultant",
     label: "Consultant",
@@ -60,6 +61,7 @@ export const COMMAND_PACKS: CommandPack[] = [
       { label: "Client workshop", prompt: "Create a workshop outline using my frameworks on" },
     ],
   },
+  // ─── Pack 4: Marketer ───
   {
     id: "marketer",
     label: "Marketer",
@@ -74,6 +76,7 @@ export const COMMAND_PACKS: CommandPack[] = [
       { label: "Lead magnet", prompt: "Create a lead magnet (checklist + framework) from my insights about" },
     ],
   },
+  // ─── Pack 5: Researcher ───
   {
     id: "researcher",
     label: "Researcher",
@@ -88,6 +91,7 @@ export const COMMAND_PACKS: CommandPack[] = [
       { label: "Citation network", prompt: "Show how concepts reference each other in my knowledge base" },
     ],
   },
+  // ─── Pack 6: Educator ───
   {
     id: "educator",
     label: "Educator",
@@ -102,6 +106,66 @@ export const COMMAND_PACKS: CommandPack[] = [
       { label: "Assessment rubric", prompt: "Build an assessment framework from the key concepts in" },
     ],
   },
+  // ─── Pack 7: Sales Professional ───
+  {
+    id: "sales",
+    label: "Sales Pro",
+    emoji: "🤝",
+    description: "For sales teams — pitch decks, objection handling, case studies",
+    highlightedCommands: ["/pitch", "/objections", "/case-study", "/compare", "/profile"],
+    quickPrompts: [
+      { label: "Build pitch deck", prompt: "Create a pitch deck from my extracted frameworks and case studies about" },
+      { label: "Objection handlers", prompt: "Generate 15 objection-handling scripts from my persuasion neurons" },
+      { label: "Case study generator", prompt: "Transform this client story into a structured case study with metrics" },
+      { label: "Competitor battle card", prompt: "Build a competitive battle card using my differentiation neurons" },
+      { label: "Sales email sequence", prompt: "Write a 7-email nurture sequence using my best persuasion frameworks" },
+    ],
+  },
+  // ─── Pack 8: Author / Writer ───
+  {
+    id: "author",
+    label: "Author",
+    emoji: "📖",
+    description: "For authors — book structuring, chapter outlines, manuscript building",
+    highlightedCommands: ["/outline", "/chapter", "/extract", "/summarize", "/generate"],
+    quickPrompts: [
+      { label: "Book outline", prompt: "Create a 12-chapter book outline from all my extracted knowledge on" },
+      { label: "Chapter draft", prompt: "Write a complete chapter using my neurons and frameworks about" },
+      { label: "Extract narrative arcs", prompt: "Identify narrative structures and storytelling patterns in my content" },
+      { label: "Argument builder", prompt: "Build a persuasive argument chain from my evidence neurons about" },
+      { label: "Transform to manuscript", prompt: "Transform my extracted insights into a polished manuscript section on" },
+    ],
+  },
+  // ─── Pack 9: Coach / Trainer ───
+  {
+    id: "coach",
+    label: "Coach",
+    emoji: "🏋️",
+    description: "For coaches — client assessments, program design, transformation tracking",
+    highlightedCommands: ["/assess", "/program", "/profile", "/track", "/generate"],
+    quickPrompts: [
+      { label: "Client assessment", prompt: "Generate a client assessment questionnaire from my coaching frameworks" },
+      { label: "Program design", prompt: "Build a 12-week coaching program using my extracted methodologies on" },
+      { label: "Transformation map", prompt: "Create a client transformation roadmap from my behavioral patterns about" },
+      { label: "Workshop facilitation", prompt: "Design a 2-hour workshop with exercises from my content on" },
+      { label: "Progress tracker", prompt: "Build a progress tracking template using my measurement frameworks" },
+    ],
+  },
+  // ─── Pack 10: Agency Owner ───
+  {
+    id: "agency",
+    label: "Agency Owner",
+    emoji: "🏢",
+    description: "For agencies — SOPs, client deliverables, white-label content",
+    highlightedCommands: ["/sop", "/deliverable", "/white-label", "/report", "/funnel"],
+    quickPrompts: [
+      { label: "Generate SOP", prompt: "Create a detailed SOP document from my process neurons about" },
+      { label: "Client report template", prompt: "Build a professional client report template using my analytics frameworks" },
+      { label: "White-label content pack", prompt: "Generate a white-label content pack (10 articles + 30 social posts) on" },
+      { label: "Service productization", prompt: "Transform my methodology into a productized service offering for" },
+      { label: "Onboarding sequence", prompt: "Create a client onboarding sequence using my best practices about" },
+    ],
+  },
 ];
 
 export function getCommandPack(packId: string): CommandPack | undefined {
@@ -110,4 +174,12 @@ export function getCommandPack(packId: string): CommandPack | undefined {
 
 export function getDefaultPack(): CommandPack {
   return COMMAND_PACKS[0];
+}
+
+/** Get packs relevant to a user's role/tier */
+export function getPacksForTier(tier: "free" | "authenticated" | "pro" | "vip"): CommandPack[] {
+  // Free: first 3, authenticated: first 6, pro/vip: all
+  if (tier === "free") return COMMAND_PACKS.slice(0, 3);
+  if (tier === "authenticated") return COMMAND_PACKS.slice(0, 6);
+  return COMMAND_PACKS;
 }

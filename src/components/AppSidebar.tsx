@@ -14,7 +14,7 @@ import {
   Lock, ChevronRight, Plug, GraduationCap, Terminal,
   Wallet, Trophy, Settings, Key, Eye, Database, FolderSearch,
   Search, LayoutTemplate, FolderOpen, CreditCard, ShieldCheck,
-  BookMarked, Activity, Library,
+  BookMarked, Activity, Library, Globe, Crown,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
@@ -47,46 +47,72 @@ interface NavSection {
   icon: React.ElementType;
   items: NavItem[];
   defaultOpen?: boolean;
+  /** Minimum tier to see this entire section */
+  minTier?: UserTier;
+  /** Only show when user is authenticated */
+  authOnly?: boolean;
 }
 
 /*
- * Navigation Architecture v3 — Redesigned per spec audit
- * 6 clear sections: Dashboard → Create → Explore → Operate → Account → Learn
- * + Admin (role-gated)
- *
- * Principles: progressive disclosure, action-first grouping,
- * role-based adaptation, conceptual clustering, minimal nesting.
+ * Navigation Architecture v4 — Role-based adaptation
+ * Sections adapt based on user tier: free → authenticated → pro → vip → admin
+ * Progressive disclosure: visitors see Explore+Learn, auth users see Create+Operate
  */
-const NAV_SECTIONS: NavSection[] = [
-  // ─── Section 1: Dashboard (Home) ───
+
+/** Sections visible to everyone (including visitors) */
+const PUBLIC_SECTIONS: NavSection[] = [
+  {
+    labelKey: "explore_section",
+    icon: Eye,
+    defaultOpen: true,
+    items: [
+      { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
+      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+      { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+    ],
+  },
+  {
+    labelKey: "learn_section",
+    icon: GraduationCap,
+    items: [
+      { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
+      { labelKey: "changelog", to: "/changelog", icon: ScrollText, controlId: "nav.changelog" },
+    ],
+  },
+];
+
+/** Sections for authenticated users */
+const AUTH_SECTIONS: NavSection[] = [
   {
     labelKey: "dashboard_section",
     icon: Home,
     defaultOpen: true,
+    authOnly: true,
     items: [
       { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home" },
       { labelKey: "dashboard", to: "/dashboard", icon: BarChart3, controlId: "nav.dashboard" },
       { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },
     ],
   },
-  // ─── Section 2: Create (Studio) ───
   {
     labelKey: "create_section",
     icon: Upload,
     defaultOpen: true,
+    authOnly: true,
     items: [
       { labelKey: "transcribe", to: "/transcribe", icon: FileText, controlId: "nav.transcribe" },
       { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
       { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
       { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-      { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge" },
+      { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
       { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
     ],
   },
-  // ─── Section 3: Explore (Library) ───
   {
     labelKey: "explore_section",
     icon: Eye,
+    authOnly: true,
     items: [
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
       { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true, minTier: "pro" as UserTier },
@@ -96,10 +122,10 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
     ],
   },
-  // ─── Section 4: Operate (Services & Orchestration) ───
   {
     labelKey: "operate_section",
     icon: Settings,
+    authOnly: true,
     items: [
       { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
       { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
@@ -109,22 +135,24 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "api", to: "/api", icon: Key, controlId: "nav.api" },
     ],
   },
-  // ─── Section 5: Account (Settings) ───
   {
     labelKey: "account_section",
     icon: User,
+    authOnly: true,
     items: [
       { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
       { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
       { labelKey: "wallet", to: "/wallet", icon: Wallet, controlId: "nav.wallet" },
+      { labelKey: "vip", to: "/vip", icon: Crown, controlId: "nav.vip" },
       { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
       { labelKey: "guest_pages", to: "/guests", icon: Users, controlId: "nav.guests" },
+      { labelKey: "gamification", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
     ],
   },
-  // ─── Section 6: Learn (Documentation) ───
   {
     labelKey: "learn_section",
     icon: GraduationCap,
+    authOnly: true,
     items: [
       { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
       { labelKey: "changelog", to: "/changelog", icon: ScrollText, controlId: "nav.changelog" },
@@ -138,6 +166,9 @@ const ADMIN_SECTION: NavSection = {
   icon: Shield,
   items: [
     { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
+    { labelKey: "runtime", to: "/runtime", icon: Activity, adminOnly: true },
+    { labelKey: "analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
+    { labelKey: "security", to: "/security", icon: ShieldCheck, adminOnly: true },
   ],
 };
 
@@ -166,15 +197,23 @@ export function AppSidebar() {
     return true;
   };
 
-  const allSections = isAdmin
-    ? [...NAV_SECTIONS, ADMIN_SECTION]
-    : NAV_SECTIONS;
+  // ─── Role-based section resolution ───
+  const resolvedSections = (() => {
+    if (!user) {
+      // Visitor: only public sections
+      return PUBLIC_SECTIONS;
+    }
+    // Authenticated user: full sections
+    const sections = [...AUTH_SECTIONS];
+    if (isAdmin) sections.push(ADMIN_SECTION);
+    return sections;
+  })();
 
   return (
     <Sidebar collapsible="icon">
       {/* Brand */}
       <SidebarHeader>
-        <button onClick={() => navigate("/home")} className="flex items-center gap-2.5 px-1 py-1">
+        <button onClick={() => navigate(user ? "/home" : "/")} className="flex items-center gap-2.5 px-1 py-1">
           <img src={logo} alt="AI-IDEI" className="h-7 w-7 rounded-full shrink-0" />
           {!collapsed && <span className="text-sm font-bold tracking-tight">AI-IDEI</span>}
         </button>
@@ -221,9 +260,9 @@ export function AppSidebar() {
         </div>
       )}
 
-      {/* Navigation — 6 collapsible sections */}
+      {/* Navigation — role-adaptive sections */}
       <SidebarContent>
-        {allSections.map((section, idx) => {
+        {resolvedSections.map((section, idx) => {
           const visibleItems = section.items.filter(isItemVisible);
           if (visibleItems.length === 0) return null;
 
@@ -328,14 +367,25 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <div className="flex items-center justify-between px-2 py-1">
               {!collapsed && <ThemeToggle />}
-              <SidebarMenuButton
-                tooltip={t("common:sign_out")}
-                className={cn(collapsed ? "w-full" : "w-auto flex-shrink-0")}
-                onClick={() => signOut()}
-              >
-                <LogOut className="h-4 w-4" />
-                {!collapsed && <span>{t("common:sign_out")}</span>}
-              </SidebarMenuButton>
+              {user ? (
+                <SidebarMenuButton
+                  tooltip={t("common:sign_out")}
+                  className={cn(collapsed ? "w-full" : "w-auto flex-shrink-0")}
+                  onClick={() => signOut()}
+                >
+                  <LogOut className="h-4 w-4" />
+                  {!collapsed && <span>{t("common:sign_out")}</span>}
+                </SidebarMenuButton>
+              ) : (
+                <SidebarMenuButton
+                  tooltip="Sign In"
+                  className={cn(collapsed ? "w-full" : "w-auto flex-shrink-0")}
+                  onClick={() => navigate("/auth")}
+                >
+                  <User className="h-4 w-4" />
+                  {!collapsed && <span>Sign In</span>}
+                </SidebarMenuButton>
+              )}
             </div>
           </SidebarMenuItem>
         </SidebarMenu>
