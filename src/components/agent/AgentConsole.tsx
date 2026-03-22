@@ -400,6 +400,11 @@ export function AgentConsole() {
           <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={clearChat}>
             <RotateCcw className="h-3 w-3" />
           </Button>
+          {planMeta && (
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setShowTimeline(!showTimeline)}>
+              {showTimeline ? <PanelRightClose className="h-3 w-3" /> : <PanelRightOpen className="h-3 w-3" />}
+            </Button>
+          )}
         </div>
       </div>
 
