@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Sparkles, Zap, Crown, ArrowRight, Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { isRoot2 } from "@/lib/root2";
 
 const PLANS = [
   {

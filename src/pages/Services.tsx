@@ -50,11 +50,11 @@ const CATEGORY_CONFIG: Record<string, { label: string; icon: React.ElementType; 
   document: { label: "Document", icon: FileText, color: "text-sky-500" },
 };
 
-const CLASS_BADGE: Record<string, { label: string; className: string }> = {
-  A: { label: "Fast", className: "bg-status-validated/15 text-status-validated" },
-  B: { label: "Deep", className: "bg-ai-accent/15 text-ai-accent" },
-  C: { label: "Full", className: "bg-primary/15 text-primary" },
-  S: { label: "Sync", className: "bg-status-validated/15 text-status-validated" },
+const CLASS_BADGE: Record<string, { label: string; description: string; className: string }> = {
+  A: { label: "Fast", description: "Quick single-pass AI extraction. ~30s execution.", className: "bg-status-validated/15 text-status-validated" },
+  B: { label: "Deep", description: "Multi-pass deep analysis with cross-referencing. ~2min.", className: "bg-ai-accent/15 text-ai-accent" },
+  C: { label: "Full", description: "Complete pipeline with all extraction levels. ~5min.", className: "bg-primary/15 text-primary" },
+  S: { label: "Sync", description: "Real-time synchronized processing across services.", className: "bg-status-validated/15 text-status-validated" },
 };
 
 const COST_RANGES = [
