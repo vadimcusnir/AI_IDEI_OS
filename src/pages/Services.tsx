@@ -514,6 +514,14 @@ export default function Services() {
         </div>
       </div>
 
+      {/* Advanced Engines */}
+      <div className="mt-6 space-y-4">
+        <ExtractionPipelinePanel />
+        <Avatar33Panel />
+        <WebinarGeneratorPanel />
+        <ContentGeneratorPanel />
+      </div>
+
       <PremiumPaywall
         open={paywallOpen}
         onOpenChange={setPaywallOpen}

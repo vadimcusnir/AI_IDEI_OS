@@ -648,6 +648,7 @@ export default function AdminDashboard() {
             <TabsContent value="control-layer"><Suspense fallback={<TabLoader />}><ControlLayerTab /></Suspense></TabsContent>
             <TabsContent value="manifests"><Suspense fallback={<TabLoader />}><ServiceManifestTab /></Suspense></TabsContent>
             <TabsContent value="advanced"><Suspense fallback={<TabLoader />}><AdminAdvancedTab /></Suspense></TabsContent>
+            <TabsContent value="root2"><Suspense fallback={<TabLoader />}><Root2PricingTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
