@@ -8,13 +8,13 @@ import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd, WebApplicationJsonLd, FAQJsonLd } from "@/components/seo/JsonLd";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.gif";
-import { ArrowRight, Eye } from "lucide-react";
+import { ArrowRight, Eye, Menu, X, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
-import { useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
@@ -106,8 +106,21 @@ export default function Landing() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const ctaAction = () => navigate(user ? "/home" : "/auth");
+
+  const scrollTo = useCallback((selector: string) => {
+    setMobileMenuOpen(false);
+    document.querySelector(selector)?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  const NAV_LINKS = [
+    { label: "Mechanism", to: "#mechanism" },
+    { label: "Outputs", to: "#outputs" },
+    { label: "Control", to: "#control" },
+    { label: "Access", to: "#access" },
+  ];
 
   return (
     <PageTransition>
@@ -134,22 +147,20 @@ export default function Landing() {
             <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full" />
             <span className="text-sm font-serif font-bold tracking-tight text-[hsl(var(--ivory))]">AI-IDEI</span>
           </button>
+
+          {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-8">
-            {[
-              { label: "Mechanism", to: "#mechanism" },
-              { label: "Outputs", to: "#outputs" },
-              { label: "Control", to: "#control" },
-              { label: "Access", to: "#access" },
-            ].map(link => (
+            {NAV_LINKS.map(link => (
               <button
                 key={link.label}
-                onClick={() => document.querySelector(link.to)?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => scrollTo(link.to)}
                 className="text-[10px] font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.5)] hover:text-[hsl(var(--gold-oxide))] transition-colors"
               >
                 {link.label.toUpperCase()}
               </button>
             ))}
           </nav>
+
           <div className="flex items-center gap-2 sm:gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -180,18 +191,63 @@ export default function Landing() {
                 <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-[hsl(var(--ivory-dim)/0.6)]">
                   Log in
                 </Button>
-                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex">
                   Start Free
                   <ArrowRight className="h-3 w-3" />
                 </Button>
               </div>
             )}
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden h-8 w-8 flex items-center justify-center text-[hsl(var(--ivory-dim)/0.6)]"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu overlay */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="lg:hidden border-t border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian)/0.98)] overflow-hidden"
+            >
+              <div className="px-5 py-4 space-y-1">
+                {NAV_LINKS.map(link => (
+                  <button
+                    key={link.label}
+                    onClick={() => scrollTo(link.to)}
+                    className="block w-full text-left text-xs font-mono tracking-[0.1em] text-[hsl(var(--ivory-dim)/0.6)] hover:text-[hsl(var(--gold-oxide))] transition-colors py-2.5 border-b border-[hsl(var(--ivory-dim)/0.04)]"
+                  >
+                    {link.label.toUpperCase()}
+                  </button>
+                ))}
+                {!user && (
+                  <div className="flex gap-3 pt-3">
+                    <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-xs h-9 flex-1 text-[hsl(var(--ivory-dim)/0.6)]">
+                      Log in
+                    </Button>
+                    <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-xs h-9 flex-1 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+                      Start Free
+                      <ArrowRight className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* ═══ 1. HERO ═══ */}
       <LandingHero heroRef={heroRef} heroOpacity={heroOpacity} ctaAction={ctaAction} />
+
 
       {/* ═══ PROOF BAND ═══ */}
       <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-5 sm:py-8">
@@ -284,7 +340,7 @@ export default function Landing() {
               Set tone, language, format, objective, depth, and audience for every execution.
             </p>
           </motion.div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {[
               { label: "Tone", desc: "Professional, casual, authoritative" },
               { label: "Language", desc: "EN, RO, RU, and expanding" },
@@ -300,11 +356,13 @@ export default function Landing() {
                 viewport={{ once: true }}
                 custom={i}
                 variants={fadeUp}
-                className="p-5 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.15)] transition-colors group"
+                className="p-4 sm:p-5 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.15)] transition-colors group flex items-start gap-4 sm:block"
               >
-                <IconControl className="text-[hsl(var(--gold-oxide)/0.4)] mb-3 group-hover:text-[hsl(var(--gold-oxide)/0.7)] transition-colors" size={18} />
-                <p className="text-xs font-semibold text-[hsl(var(--ivory)/0.85)] mb-1">{ctrl.label}</p>
-                <p className="text-[10px] text-[hsl(var(--ivory-dim)/0.4)]">{ctrl.desc}</p>
+                <IconControl className="text-[hsl(var(--gold-oxide)/0.4)] mb-0 sm:mb-3 mt-0.5 sm:mt-0 shrink-0 group-hover:text-[hsl(var(--gold-oxide)/0.7)] transition-colors" size={18} />
+                <div>
+                  <p className="text-xs font-semibold text-[hsl(var(--ivory)/0.85)] mb-0.5 sm:mb-1">{ctrl.label}</p>
+                  <p className="text-[10px] text-[hsl(var(--ivory-dim)/0.4)]">{ctrl.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -407,6 +465,34 @@ export default function Landing() {
             Everything is built to help you move from idea to action with less friction and stronger results.
           </motion.p>
         </div>
+      </Section>
+
+      {/* ═══ 11.5 TRANSCRIBE CTA ═══ */}
+      <Section className="py-12 sm:py-16">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} custom={0} variants={fadeUp} className="max-w-3xl mx-auto px-5 sm:px-6">
+          <div className="relative rounded-xl border border-[hsl(var(--ivory-dim)/0.08)] bg-[hsl(var(--obsidian-light)/0.4)] p-6 sm:p-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[hsl(var(--signal-red)/0.04)] rounded-full blur-[80px]" />
+            <div className="relative shrink-0 w-14 h-14 rounded-xl bg-[hsl(var(--signal-red)/0.08)] flex items-center justify-center">
+              <Youtube className="h-7 w-7 text-[hsl(var(--signal-red)/0.7)]" />
+            </div>
+            <div className="relative flex-1 text-center sm:text-left">
+              <h3 className="text-base sm:text-lg font-bold text-[hsl(var(--ivory)/0.9)] mb-2">
+                YouTube → Transcript in 2 seconds
+              </h3>
+              <p className="text-xs text-[hsl(var(--ivory-dim)/0.5)] leading-relaxed mb-4 sm:mb-0">
+                Paste a YouTube link, download the full transcript. First one free.
+              </p>
+            </div>
+            <Button
+              onClick={() => navigate("/transcribe")}
+              size="sm"
+              className="relative gap-2 text-xs h-10 px-6 bg-[hsl(var(--signal-red)/0.15)] hover:bg-[hsl(var(--signal-red)/0.25)] text-[hsl(var(--ivory)/0.9)] border border-[hsl(var(--signal-red)/0.2)] shrink-0"
+            >
+              Try Transcribe
+              <ArrowRight className="h-3 w-3" />
+            </Button>
+          </div>
+        </motion.div>
       </Section>
 
       {/* ═══ 12. PRICING ═══ */}
