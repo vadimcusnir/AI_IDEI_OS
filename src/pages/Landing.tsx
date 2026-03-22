@@ -159,7 +159,7 @@ export default function Landing() {
                   "text-xs font-mono tracking-[0.1em] transition-colors relative py-1",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
-                    : "text-[hsl(var(--ivory-dim)/0.6)] hover:text-[hsl(var(--gold-oxide))]"
+                    : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"
                 )}
               >
                 {link.label.toUpperCase()}
