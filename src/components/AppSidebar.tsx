@@ -9,12 +9,11 @@ import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
-  BarChart3, Bell, BookOpen, Users, Network, Rocket,
+  BarChart3, Bell, BookOpen, Users, Network,
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
-  Lock, ChevronRight, Plug, GraduationCap, Terminal,
-  Wallet, Trophy, Settings, Key, Eye, Database, FolderSearch,
-  Search, LayoutTemplate, FolderOpen, CreditCard, ShieldCheck,
-  BookMarked, Activity, Library, Globe, Crown,
+  ChevronRight, GraduationCap, Terminal,
+  Wallet, Trophy, Eye, ShieldCheck,
+  Activity,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
