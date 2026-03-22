@@ -36,6 +36,9 @@ interface Job {
   completed_at: string | null;
   retry_count: number;
   max_retries: number;
+  progress: number;
+  current_step: string | null;
+  depth: string;
 }
 
 const STATUS_ICONS: Record<string, { icon: React.ElementType; color: string }> = {
@@ -157,11 +160,11 @@ export default function Jobs() {
   const fetchJobs = async () => {
     const { data, error } = await supabase
       .from("neuron_jobs")
-      .select("id, neuron_id, worker_type, status, input, result, error_message, created_at, completed_at, retry_count, max_retries")
+      .select("id, neuron_id, worker_type, status, input, result, error_message, created_at, completed_at, retry_count, max_retries, progress, current_step, depth")
       .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false })
       .limit(50);
-    if (data) setJobs(data as Job[]);
+    if (data) setJobs(data as unknown as Job[]);
     if (error) toast.error(t("jobs.failed_to_load"));
     setLoading(false);
   };
@@ -350,7 +353,24 @@ export default function Jobs() {
                               retry {job.retry_count}/{job.max_retries}
                             </span>
                           )}
+                          {job.current_step && job.status === "running" && (
+                            <span className="text-[9px] text-primary/70 font-medium">
+                              {job.current_step}
+                            </span>
+                          )}
                         </div>
+                        {/* Progress bar for running jobs */}
+                        {job.status === "running" && job.progress > 0 && (
+                          <div className="w-full mt-1.5">
+                            <div className="h-1 bg-muted rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-primary rounded-full transition-all duration-500"
+                                style={{ width: `${Math.min(100, job.progress)}%` }}
+                              />
+                            </div>
+                            <span className="text-[8px] text-muted-foreground">{job.progress}%</span>
+                          </div>
+                        )}
                       </div>
                       <ChevronRight className={cn(
                         "h-4 w-4 text-muted-foreground transition-transform",
