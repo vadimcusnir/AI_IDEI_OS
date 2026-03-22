@@ -142,7 +142,7 @@ export default function Landing() {
       </div>
 
       {/* ═══ NAV ═══ */}
-      <header className="sticky top-0 z-50 border-b border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian)/0.92)] backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/92 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group shrink-0">
             <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full" />
