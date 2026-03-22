@@ -182,46 +182,53 @@ Acest plan adresează cele 5 direcții strategice noi identificate în specifica
 
 ---
 
-### FAZA 4: Navigație Redesign (Săptămânile 8-9)
+### FAZA 4: Navigație Redesign (Săptămânile 8-9) ✅
 
 **Obiectiv:** Reducere de la ~27 items sidebar la 6 secțiuni clare.
 
-#### 4.1 Sidebar Restructurare 🔧
-**Structura propusă (din audit navigație):**
+#### 4.1 Sidebar Restructurare ✅
+**Structura implementată:**
 
-| Secțiune | Items | Mapping actual |
-|----------|-------|----------------|
-| **Dashboard** | Home, Recent Activity, Getting Started | /home, /onboarding |
-| **Create** | Upload, Extract, Neurons, Generate, Templates | /extractor, /neurons, /services |
-| **Explore** | Browse, Search, Topics, Marketplace, Collections | /insights, /topics, /marketplace |
-| **Operate** | Services, Jobs, Orchestration, API Access | /services, /jobs, /pipeline, /api |
-| **Account** | Profile, Credits, Billing, Notifications, Security | /profile, /credits, /notifications |
-| **Learn** | Guide, Tutorials, Reference, Glossary | /docs |
+| Secțiune | Items | Routes |
+|----------|-------|--------|
+| **Dashboard** | Home, Analytics, Getting Started | /home, /dashboard, /onboarding |
+| **Create** | Transcribe, Extract, Knowledge, Generate, Prompt Forge, Profile Extractor | /transcribe, /extractor, /neurons, /services, /prompt-forge, /profile-extractor |
+| **Explore** | Topics, Marketplace, Insights, Community, Command Center | /topics, /marketplace, /intelligence, /community, /chat |
+| **Operate** | Jobs, Library, Pipeline, Integrations, API Access | /jobs, /library, /pipeline, /integrations, /api |
+| **Account** | Profile, Credits, Wallet, Notifications, Guest Pages | /profile, /credits, /wallet, /notifications, /guests |
+| **Learn** | Guide, Changelog, Feedback | /docs, /changelog, /feedback |
 
-- [ ] Implementare sidebar cu 6 secțiuni colapsabile
-- [ ] Progressive disclosure (sub-items vizibile doar on hover/expand)
-- [ ] Role-based adaptation (admin vede secțiuni suplimentare)
-- [ ] Collapsed mode (72px) cu iconuri
+- [x] Implementare sidebar cu 6 secțiuni colapsabile (Collapsible components)
+- [x] Progressive disclosure (secțiuni colapsabile, auto-expand pentru ruta activă)
+- [x] Role-based adaptation (admin vede secțiunea Admin suplimentară)
+- [x] Collapsed mode cu iconuri + tooltips + separators vizuali
+- [x] Secțiune icon per grup în section labels
 
-#### 4.2 Label Redesign ❌
-| Actual | Propus | Motiv |
-|--------|--------|-------|
-| Extractor | Extract | Acțiune, nu tool |
-| Neurons | Knowledge | Concept clar |
-| Intelligence | Insights | Output, nu proces |
-| AI Chat | Assist / Command Center | Poziționare agent |
+#### 4.2 Label Redesign ✅
+| Actual | Implementat | Motiv |
+|--------|------------|-------|
+| Extractor | Extract / Extrage | Acțiune, nu tool |
+| Neurons | Knowledge / Cunoștințe | Concept clar |
+| Intelligence | Insights / Insight-uri | Output, nu proces |
+| AI Chat | Command Center / Centru Comandă | Poziționare agent |
+| Docs | Guide / Ghid | Mai accesibil |
+| Manage | Operate / Operează | Mai tehnic, mai clar |
+| Support | Account / Cont | Referință personală |
 
-#### 4.3 Top Navigation Simplificare ❌
-- [ ] Breadcrumb contextual (stânga)
-- [ ] Global Search centrat (Ctrl+K) — ✅ deja implementat
-- [ ] User controls (dreapta): notifications, credits, profile
+- [x] Labels actualizate în EN, RO, RU
 
-#### 4.4 Mobile Navigation 🔧
-- [x] Bottom nav bar — ✅ implementat
-- [ ] Gesture-based navigation (swipe între secțiuni)
-- [ ] Adaptive: afișare doar top 4 items pe mobile
+#### 4.3 Top Navigation Simplificare 🔧
+- [x] Breadcrumb contextual (stânga) — ✅ deja implementat (AppBreadcrumbs)
+- [x] Global Search centrat (Ctrl+K) — ✅ deja implementat
+- [x] User controls (dreapta): notifications, credits, profile — ✅ deja implementat
 
-**Efort estimat:** 4-5 sesiuni
+#### 4.4 Mobile Navigation ✅
+- [x] Bottom nav bar cu 4 core items + hamburger
+- [x] Full menu slide-out cu 6 secțiuni + section icons
+- [x] Adaptive: afișare doar top 4 items pe mobile bottom bar
+- [ ] Gesture-based navigation (swipe între secțiuni) — deprioritizat
+
+**Efort estimat:** 4-5 sesiuni — ✅ Completat în 1 sesiune
 
 ---
 
