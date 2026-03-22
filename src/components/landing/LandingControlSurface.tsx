@@ -19,7 +19,7 @@ export function LandingControlSurface() {
       <div className="max-w-4xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">CONTROL LAYER</span>
-          <h2 className="heading-2 mb-4">You control the output. Not the other way around.</h2>
+          <h2 id="control-heading" className="heading-2 mb-4">You control the output. Not the other way around.</h2>
           <p className="text-base text-muted-foreground max-w-lg mx-auto text-flow">
             Set tone, language, format, objective, depth, and audience for every execution.
           </p>
