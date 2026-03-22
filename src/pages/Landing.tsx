@@ -22,6 +22,8 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { OutputGalaxy } from "@/components/landing/OutputGalaxy";
+import { TransformationDiagram } from "@/components/landing/TransformationDiagram";
+import { EcosystemMap } from "@/components/landing/EcosystemMap";
 import { IconControl, IconFramework, IconAssistant, IconPodcast, IconOutput } from "@/components/landing/ProprietaryIcons";
 
 /* ── Section components ── */
@@ -252,7 +254,7 @@ export default function Landing() {
 
 
       {/* ═══ PROOF BAND ═══ */}
-      <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-5 sm:py-8">
+      <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-6 sm:py-10">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
             {[
@@ -260,11 +262,18 @@ export default function Landing() {
               { value: "12", label: "Output families" },
               { value: "∞", label: "Knowledge reuse" },
               { value: "<2min", label: "Idea to asset" },
-            ].map(stat => (
-              <div key={stat.label} className="text-center">
-                <p className="text-xl sm:text-2xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{stat.value}</p>
-                <p className="text-[9px] font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.4)] mt-1.5">{stat.label.toUpperCase()}</p>
-              </div>
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}
+                className="text-center"
+              >
+                <p className="text-2xl sm:text-3xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{stat.value}</p>
+                <p className="text-[8px] sm:text-[9px] font-mono tracking-[0.15em] text-[hsl(var(--ivory-dim)/0.4)] mt-2">{stat.label.toUpperCase()}</p>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -278,6 +287,9 @@ export default function Landing() {
 
       {/* ═══ 3. MECHANISM ═══ */}
       <LandingMechanism />
+
+      {/* ═══ 3.5 TRANSFORMATION DIAGRAM ═══ */}
+      <TransformationDiagram />
 
       {/* ═══ 4. WHAT YOU GET ═══ */}
       <Section>
@@ -389,37 +401,8 @@ export default function Landing() {
       {/* ═══ 10. SOCIAL PROOF ═══ */}
       <LandingSocialProof />
 
-      {/* ═══ 11. LIBRARY PREVIEW ═══ */}
-      <Section border className="py-16 sm:py-20">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-10">
-            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">ASSET LIBRARY</span>
-            <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">Inside AI-IDEI</h2>
-            <p className="text-sm text-[hsl(var(--ivory-dim)/0.5)] max-w-lg mx-auto">
-              Explore a growing system of practical resources for copywriting, marketing, and business execution.
-            </p>
-          </motion.div>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="flex flex-wrap justify-center gap-2">
-            {[
-              "copywriting", "marketing angles", "offer design", "content creation",
-              "messaging", "AI workflows", "planning", "strategic thinking",
-              "execution support", "assistant systems", "prompts", "frameworks",
-            ].map((cat, i) => (
-              <motion.span
-                key={cat}
-                custom={i}
-                variants={fadeUp}
-                className="text-[10px] font-mono tracking-[0.08em] px-4 py-2 rounded border border-[hsl(var(--ivory-dim)/0.08)] text-[hsl(var(--ivory-dim)/0.5)] hover:border-[hsl(var(--gold-oxide)/0.2)] hover:text-[hsl(var(--gold-oxide)/0.7)] transition-all cursor-default uppercase"
-              >
-                {cat}
-              </motion.span>
-            ))}
-          </motion.div>
-          <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-8 text-[11px] text-[hsl(var(--ivory-dim)/0.35)]">
-            Everything is built to help you move from idea to action with less friction and stronger results.
-          </motion.p>
-        </div>
-      </Section>
+      {/* ═══ 11. ECOSYSTEM MAP ═══ */}
+      <EcosystemMap />
 
       {/* ═══ 11.5 TRANSCRIBE CTA ═══ */}
       <Section className="py-12 sm:py-16">
@@ -461,10 +444,10 @@ export default function Landing() {
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.06)] rounded-xl overflow-hidden max-w-4xl mx-auto">
             {[
-              { name: "Free", promise: "Test the system", text: "Get inside, explore, and see how AI-IDEI works before making a commitment.", cta: "Start Free", featured: false },
-              { name: "Core", promise: "Build clarity", text: "For people who want practical access to essentials for better copy, content, and execution.", cta: "Choose Core", featured: false },
-              { name: "Pro", promise: "Produce more", text: "Deeper access, advanced resources, and stronger leverage across copywriting and marketing.", cta: "Choose Pro", featured: true },
-              { name: "Elite", promise: "Full power", text: "For serious operators who want the most complete version and premium execution resources.", cta: "Choose Elite", featured: false },
+              { name: "Free", price: "$0", period: "forever", promise: "Test the system", text: "Get inside, explore, and see how AI-IDEI works before making a commitment.", cta: "Start Free", featured: false },
+              { name: "Core", price: "$11", period: "/mo", promise: "Build clarity", text: "For people who want practical access to essentials for better copy, content, and execution.", cta: "Choose Core", featured: false },
+              { name: "Pro", price: "$47", period: "/mo", promise: "Produce more", text: "Deeper access, advanced resources, and stronger leverage across copywriting and marketing.", cta: "Choose Pro", featured: true },
+              { name: "Elite", price: "$137", period: "/mo", promise: "Full power", text: "For serious operators who want the most complete version and premium execution resources.", cta: "Choose Elite", featured: false },
             ].map((plan, i) => (
               <motion.div
                 key={plan.name}
@@ -484,7 +467,11 @@ export default function Landing() {
                   <span className="absolute top-3 right-3 text-[7px] font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] border border-[hsl(var(--gold-oxide)/0.3)] px-2 py-0.5 rounded">POPULAR</span>
                 )}
                 <h3 className="text-lg font-bold text-[hsl(var(--ivory)/0.9)]">{plan.name}</h3>
-                <p className="text-[10px] font-mono tracking-[0.1em] text-[hsl(var(--gold-oxide)/0.7)] mt-1 mb-4">{plan.promise.toUpperCase()}</p>
+                <div className="flex items-baseline gap-1 mt-2 mb-1">
+                  <span className="text-2xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{plan.price}</span>
+                  <span className="text-[10px] font-mono text-[hsl(var(--ivory-dim)/0.35)]">{plan.period}</span>
+                </div>
+                <p className="text-[10px] font-mono tracking-[0.1em] text-[hsl(var(--gold-oxide)/0.5)] mb-4">{plan.promise.toUpperCase()}</p>
                 <p className="text-xs text-[hsl(var(--ivory-dim)/0.45)] leading-relaxed flex-1">{plan.text}</p>
                 <Button
                   onClick={ctaAction}
