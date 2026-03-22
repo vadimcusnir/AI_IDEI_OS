@@ -15,7 +15,7 @@ const RANK_ICONS: Record<string, React.ElementType> = {
 };
 
 export function XPProgressBar({ compact = false }: { compact?: boolean }) {
-  const { xp, streak, loading, xpForNextLevel, levelProgress } = useGamification();
+  const { xp, streak, loading, xpForNextLevel, levelProgress, tierMultiplier } = useGamification();
 
   if (loading) return null;
 
