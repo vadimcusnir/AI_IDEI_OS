@@ -30,7 +30,7 @@ export function LandingFooter() {
 
           {/* Platform */}
           <div className="space-y-3">
-            <h3 className="text-xs font-mono tracking-[0.12em] text-muted-foreground uppercase">Platform</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Platform</h3>
             <ul className="space-y-2.5">
               <li><FooterLink to="/services">Services</FooterLink></li>
               <li><FooterLink to="/marketplace">Marketplace</FooterLink></li>
