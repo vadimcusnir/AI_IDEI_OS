@@ -32,9 +32,9 @@ export function TrendingIdeasWidget() {
       // Fetch top entities by importance_score (which is PVS * 100)
       const { data: entities } = await supabase
         .from("entities")
-        .select("id, slug, title, entity_type, importance_score")
+        .select("id, slug, title, entity_type, importance_score, idea_rank")
         .eq("is_published", true)
-        .order("importance_score", { ascending: false })
+        .order("idea_rank", { ascending: false })
         .limit(10);
 
       if (!entities || entities.length === 0) {
@@ -130,7 +130,7 @@ export function TrendingIdeasWidget() {
               "text-[9px] font-mono px-1.5 py-0.5 rounded shrink-0",
               "bg-muted text-muted-foreground"
             )}>
-              {item.importance_score.toFixed(0)}
+              {(item as any).idea_rank ? `IR ${((item as any).idea_rank as number).toFixed(1)}` : item.importance_score.toFixed(0)}
             </span>
           </Link>
         ))}

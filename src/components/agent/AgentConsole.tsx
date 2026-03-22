@@ -131,17 +131,51 @@ export function AgentConsole() {
     try {
       let fileContent = "";
       for (const file of files) {
-        if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md")) {
+        if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".csv") || file.name.endsWith(".json")) {
           fileContent += `\n--- ${file.name} ---\n` + await file.text();
+        } else if (file.type.startsWith("audio/") || file.type.startsWith("video/") || file.name.match(/\.(mp3|mp4|wav|m4a|webm|ogg)$/i)) {
+          // Upload binary files to storage for processing
+          const filePath = `chat-uploads/${user.id}/${Date.now()}_${file.name}`;
+          const { error: uploadErr } = await supabase.storage.from("user-uploads").upload(filePath, file);
+          if (uploadErr) {
+            fileContent += `\n[Upload failed: ${file.name} — ${uploadErr.message}]`;
+          } else {
+            const { data: urlData } = supabase.storage.from("user-uploads").getPublicUrl(filePath);
+            fileContent += `\n[Uploaded: ${file.name} → ${urlData.publicUrl}]`;
+          }
+        } else if (file.name.match(/\.(pdf|docx|doc)$/i)) {
+          fileContent += `\n[Document attached: ${file.name} (${(file.size / 1024).toFixed(0)} KB) — will be processed by pipeline]`;
+        } else {
+          fileContent += `\n[File attached: ${file.name} (${file.type || 'unknown'}, ${(file.size / 1024).toFixed(0)} KB)]`;
         }
       }
 
+      // Build conversation with memory layers
+      // Layer 1: Session memory (last 20 messages from current session)
       const apiMessages = messages
         .filter(m => m.role !== "system" && !m.id.startsWith("welcome"))
         .slice(-20)
         .map(m => ({ role: m.role, content: m.content }));
 
       apiMessages.push({ role: "user", content: userContent + fileContent });
+
+      // Layer 2: User memory (aggregate stats from DB)
+      const [neuronsAgg, episodesAgg, jobsAgg] = await Promise.all([
+        supabase.from("neurons").select("content_category", { count: "exact" }).eq("author_id", user.id),
+        supabase.from("episodes").select("id", { count: "exact" }).eq("author_id", user.id),
+        supabase.from("neuron_jobs").select("worker_type, status").eq("author_id", user.id).eq("status", "completed").limit(100),
+      ]);
+      
+      const topCategories = (neuronsAgg.data || []).reduce((acc: Record<string, number>, n: any) => {
+        const cat = n.content_category || "general";
+        acc[cat] = (acc[cat] || 0) + 1;
+        return acc;
+      }, {});
+
+      const workerTypes = (jobsAgg.data || []).reduce((acc: Record<string, number>, j: any) => {
+        acc[j.worker_type] = (acc[j.worker_type] || 0) + 1;
+        return acc;
+      }, {});
 
       const { data: { session } } = await supabase.auth.getSession();
       const resp = await fetch(AGENT_URL, {
@@ -156,6 +190,12 @@ export function AgentConsole() {
             neuron_count: totalNeurons,
             episode_count: totalEpisodes,
             credit_balance: balance,
+            // Layer 2: User memory
+            top_categories: topCategories,
+            recent_services: workerTypes,
+            total_completed_jobs: jobsAgg.count || 0,
+            // Layer 3: Knowledge memory (entity counts)
+            knowledge_summary: `User has ${neuronsAgg.count || 0} neurons across categories: ${Object.entries(topCategories).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}. Most used services: ${Object.entries(workerTypes).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}.`,
           },
         }),
         signal: controller.signal,
@@ -462,7 +502,7 @@ export function AgentConsole() {
             ref={fileInputRef}
             type="file"
             multiple
-            accept=".txt,.md,.csv,.json,text/*"
+            accept=".txt,.md,.csv,.json,.pdf,.docx,.mp3,.mp4,.wav,.m4a,.webm,.ogg,.srt,text/*,audio/*,video/*,application/pdf"
             className="hidden"
             onChange={handleFileSelect}
           />

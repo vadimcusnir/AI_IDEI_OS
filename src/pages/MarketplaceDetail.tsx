@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { SEOHead } from "@/components/SEOHead";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -14,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import {
   ArrowLeft, Star, Coins, DollarSign, Tag, ShoppingCart, Crown,
   TrendingUp, MessageSquare, Loader2, CheckCircle2, Store, Clock,
+  Share2, ArrowRightLeft, ExternalLink,
 } from "lucide-react";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 
@@ -57,6 +59,9 @@ export default function MarketplaceDetail() {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(5);
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [authorName, setAuthorName] = useState<string>("");
+  const [hasLicense, setHasLicense] = useState(false);
+  const [transferring, setTransferring] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -70,6 +75,16 @@ export default function MarketplaceDetail() {
         .maybeSingle();
       setAsset(data as KnowledgeAsset | null);
 
+      // Load author name
+      if (data?.author_id) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name, username")
+          .eq("user_id", data.author_id)
+          .maybeSingle();
+        if (profile) setAuthorName(profile.display_name || profile.username || "Creator");
+      }
+
       const { data: revData } = await supabase
         .from("asset_reviews")
         .select("*")
@@ -78,10 +93,23 @@ export default function MarketplaceDetail() {
         .order("created_at", { ascending: false })
         .limit(50);
       setReviews((revData as AssetReview[]) || []);
+
+      // Check if user has license
+      if (data && user) {
+        const { data: license } = await supabase
+          .from("asset_licenses" as any)
+          .select("id, is_transferable")
+          .eq("asset_id", id)
+          .eq("buyer_id", user.id)
+          .maybeSingle();
+        setHasLicense(!!license);
+        setPurchased(!!license);
+      }
+
       setLoading(false);
     };
     load();
-  }, [id]);
+  }, [id, user]);
 
   const isOwn = user?.id === asset?.author_id;
   const price = asset?.price_neurons || 0;
@@ -154,12 +182,31 @@ export default function MarketplaceDetail() {
         title={`${asset.title} — AI-IDEI Marketplace`}
         description={asset.description || `Knowledge asset: ${asset.title}`}
       />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: asset.title,
+          description: asset.description || "",
+          offers: {
+            "@type": "Offer",
+            price: asset.price_usd || 0,
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+          },
+          brand: { "@type": "Brand", name: "AI-IDEI" },
+        }}
+      />
 
       {/* Back nav */}
       <div className="border-b border-border bg-card">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Button variant="ghost" size="sm" onClick={() => navigate("/marketplace")} className="text-xs text-muted-foreground -ml-2">
             <ArrowLeft className="h-3.5 w-3.5 mr-1" /> Marketplace
+          </Button>
+          <Button variant="ghost" size="sm" className="text-xs gap-1.5"
+            onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success("Link copied!"); }}>
+            <Share2 className="h-3 w-3" /> Share
           </Button>
         </div>
       </div>

@@ -2125,6 +2125,81 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_profile_edits: {
+        Row: {
+          created_at: string | null
+          editor_id: string
+          field_name: string
+          guest_profile_id: string
+          id: string
+          new_value: string
+          old_value: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          editor_id: string
+          field_name: string
+          guest_profile_id: string
+          id?: string
+          new_value: string
+          old_value?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          editor_id?: string
+          field_name?: string
+          guest_profile_id?: string
+          id?: string
+          new_value?: string
+          old_value?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      guest_profile_suggestions: {
+        Row: {
+          created_at: string | null
+          id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          similarity_score: number | null
+          source_profile_id: string
+          status: string | null
+          suggested_by: string | null
+          target_profile_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          similarity_score?: number | null
+          source_profile_id: string
+          status?: string | null
+          suggested_by?: string | null
+          target_profile_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          similarity_score?: number | null
+          source_profile_id?: string
+          status?: string | null
+          suggested_by?: string | null
+          target_profile_id?: string
+        }
+        Relationships: []
+      }
       guest_profiles: {
         Row: {
           author_id: string
