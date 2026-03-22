@@ -95,7 +95,8 @@ Deno.serve(async (req) => {
           status: "pending",
           retry_count: job.retry_count + 1,
           error_message: "Job timed out — auto-retrying",
-          scheduled_at: new Date(Date.now() + job.retry_count * 30000).toISOString(),
+          // Exponential backoff: 30s, 60s, 120s, 240s...
+          scheduled_at: new Date(Date.now() + Math.min(30000 * Math.pow(2, job.retry_count), 300000)).toISOString(),
         }).eq("id", job.id);
         recoveredCount++;
       } else {
