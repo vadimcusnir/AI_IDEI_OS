@@ -31,6 +31,7 @@ interface TranscriptData {
 const TRANSCRIPT_COST = 50; // NEURONS per transcription after first free
 
 export function YouTubeTranscriber() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance, loading: balanceLoading, refetch: refetchBalance } = useCreditBalance();
