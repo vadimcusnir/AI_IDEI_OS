@@ -40,6 +40,7 @@ export function YouTubeTranscriber() {
   const [progress, setProgress] = useState(0);
   const [transcript, setTranscript] = useState<TranscriptData | null>(null);
   const [error, setError] = useState("");
+  const [lastEpisodeId, setLastEpisodeId] = useState<string | null>(null);
   const [episodeCount, setEpisodeCount] = useState<number | null>(null);
   const [showTopUp, setShowTopUp] = useState(false);
 
