@@ -120,7 +120,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           )}
         </div>
       </div>
-      <MobileBottomNav />
+      <Suspense fallback={null}><MobileBottomNav /></Suspense>
       
       <Suspense fallback={null}>
         <ContextualFeedbackPrompt />
