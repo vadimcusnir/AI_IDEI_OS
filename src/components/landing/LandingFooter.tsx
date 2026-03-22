@@ -2,7 +2,7 @@
  * Landing Footer — matches obsidian/ivory/gold visual language.
  */
 import { Link } from "react-router-dom";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
