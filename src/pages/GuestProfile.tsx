@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 
 interface GuestData {
+  id: string;
   full_name: string;
   role: string;
   bio: string;
@@ -21,6 +22,8 @@ interface GuestData {
   frameworks_mentioned: string[];
   psychological_traits: string[];
   key_quotes: string[];
+  episode_ids: string[];
+  author_id: string;
 }
 
 /* ── Expertise bars with animated fill ── */
