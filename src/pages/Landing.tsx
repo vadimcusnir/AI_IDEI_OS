@@ -31,6 +31,8 @@ import { LandingMechanism } from "@/components/landing/LandingMechanism";
 import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingSocialProof } from "@/components/landing/LandingSocialProof";
 import { LandingFooter } from "@/components/landing/LandingFooter";
+import { LandingWhoFor } from "@/components/landing/LandingWhoFor";
+import { LandingWhyDifferent } from "@/components/landing/LandingWhyDifferent";
 
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
