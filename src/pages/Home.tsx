@@ -368,6 +368,17 @@ export default function Home() {
             {/* Daily Challenges */}
             <DailyChallenges />
 
+            {/* IMF Pipeline Launcher */}
+            {totalNeurons > 0 && (
+              <div className="bg-card border border-border rounded-xl p-5">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-4">
+                  <Layers className="h-3.5 w-3.5" /> {t("home.imf_pipeline", "Knowledge Multiplication")}
+                </h3>
+                <p className="text-xs text-muted-foreground mb-3">{t("home.imf_pipeline_desc", "Run the full extraction pipeline on a neuron to generate 50+ deliverables automatically.")}</p>
+                <IMFPipelineLauncher />
+              </div>
+            )}
+
             {/* Pipeline Progress */}
             <div className="bg-card border border-border rounded-xl p-5">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-4">
