@@ -177,7 +177,7 @@ export default function Landing() {
           <div className="flex items-center gap-2 sm:gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-[hsl(var(--ivory-dim)/0.5)]" title="Language">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="Language">
                   <span className="text-sm leading-none">{currentLang.flag}</span>
                 </Button>
               </DropdownMenuTrigger>
