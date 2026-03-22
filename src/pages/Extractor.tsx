@@ -891,11 +891,10 @@ export default function Extractor() {
                         </div>
                       )}
 
-                      {/* NEP-120 Deep Extraction Panel */}
                       {hasTranscript && !isExtracting && (
-                        <ControlledSection id="nep-extractor-panel" title="🧬 NEP-120 Deep Extraction" defaultOpen={false}>
+                        <div className="border border-border rounded-lg p-4">
                           <NEPExtractorPanel episodeId={ep.id} onComplete={() => fetchEpisodes()} />
-                        </ControlledSection>
+                        </div>
                       )}
 
                       {/* Actions row */}
