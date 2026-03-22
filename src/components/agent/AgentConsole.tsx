@@ -131,8 +131,22 @@ export function AgentConsole() {
     try {
       let fileContent = "";
       for (const file of files) {
-        if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md")) {
+        if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".csv") || file.name.endsWith(".json")) {
           fileContent += `\n--- ${file.name} ---\n` + await file.text();
+        } else if (file.type.startsWith("audio/") || file.type.startsWith("video/") || file.name.match(/\.(mp3|mp4|wav|m4a|webm|ogg)$/i)) {
+          // Upload binary files to storage for processing
+          const filePath = `chat-uploads/${user.id}/${Date.now()}_${file.name}`;
+          const { error: uploadErr } = await supabase.storage.from("user-uploads").upload(filePath, file);
+          if (uploadErr) {
+            fileContent += `\n[Upload failed: ${file.name} — ${uploadErr.message}]`;
+          } else {
+            const { data: urlData } = supabase.storage.from("user-uploads").getPublicUrl(filePath);
+            fileContent += `\n[Uploaded: ${file.name} → ${urlData.publicUrl}]`;
+          }
+        } else if (file.name.match(/\.(pdf|docx|doc)$/i)) {
+          fileContent += `\n[Document attached: ${file.name} (${(file.size / 1024).toFixed(0)} KB) — will be processed by pipeline]`;
+        } else {
+          fileContent += `\n[File attached: ${file.name} (${file.type || 'unknown'}, ${(file.size / 1024).toFixed(0)} KB)]`;
         }
       }
 
