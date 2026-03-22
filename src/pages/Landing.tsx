@@ -444,10 +444,10 @@ export default function Landing() {
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.06)] rounded-xl overflow-hidden max-w-4xl mx-auto">
             {[
-              { name: "Free", promise: "Test the system", text: "Get inside, explore, and see how AI-IDEI works before making a commitment.", cta: "Start Free", featured: false },
-              { name: "Core", promise: "Build clarity", text: "For people who want practical access to essentials for better copy, content, and execution.", cta: "Choose Core", featured: false },
-              { name: "Pro", promise: "Produce more", text: "Deeper access, advanced resources, and stronger leverage across copywriting and marketing.", cta: "Choose Pro", featured: true },
-              { name: "Elite", promise: "Full power", text: "For serious operators who want the most complete version and premium execution resources.", cta: "Choose Elite", featured: false },
+              { name: "Free", price: "$0", period: "forever", promise: "Test the system", text: "Get inside, explore, and see how AI-IDEI works before making a commitment.", cta: "Start Free", featured: false },
+              { name: "Core", price: "$11", period: "/mo", promise: "Build clarity", text: "For people who want practical access to essentials for better copy, content, and execution.", cta: "Choose Core", featured: false },
+              { name: "Pro", price: "$47", period: "/mo", promise: "Produce more", text: "Deeper access, advanced resources, and stronger leverage across copywriting and marketing.", cta: "Choose Pro", featured: true },
+              { name: "Elite", price: "$137", period: "/mo", promise: "Full power", text: "For serious operators who want the most complete version and premium execution resources.", cta: "Choose Elite", featured: false },
             ].map((plan, i) => (
               <motion.div
                 key={plan.name}
