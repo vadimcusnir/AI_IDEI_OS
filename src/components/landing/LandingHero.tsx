@@ -16,7 +16,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-5 sm:px-6 pt-16 sm:pt-28 md:pt-36 pb-6 sm:pb-12 text-center">
-        <p className="text-[11px] sm:text-xs font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.8)] mb-6 sm:mb-8">
+        <p className="text-[11px] sm:text-xs font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide))] mb-6 sm:mb-8">
           KNOWLEDGE EXTRACTION ENGINE
         </p>
 
@@ -31,7 +31,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16 px-4 sm:px-0">
-          <Button size="lg" onClick={ctaAction} className="gap-2 text-sm px-10 h-12 sm:h-14 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] font-semibold shadow-lg shadow-[hsl(var(--gold-oxide)/0.15)] w-full sm:w-auto min-h-[44px]">
+          <Button size="lg" onClick={ctaAction} className="gap-2 text-sm px-10 h-12 sm:h-14 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-dim))] text-[hsl(var(--obsidian))] font-semibold shadow-lg shadow-[hsl(var(--gold-oxide)/0.15)] w-full sm:w-auto min-h-[44px]">
             Start Free
             <ArrowRight className="h-4 w-4" />
           </Button>

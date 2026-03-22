@@ -31,11 +31,12 @@
     --obsidian-light: 220 14% 90%;
     --ivory: 220 20% 10%;
     --ivory-dim: 220 10% 36%;
-    --gold-oxide: 38 55% 42%;
-    --gold-dim: 38 30% 28%;
+    --gold-oxide: 38 60% 35%;
+    --gold-dim: 38 40% 26%;
+    --gold-subtle: 38 45% 52%;
     --petrol: 180 35% 35%;
     --petrol-dim: 180 20% 25%;
-    --signal-red: 0 72% 50%;
+    --signal-red: 0 72% 43%;
 
     /* Spacing scale (canonical): 4 8 12 16 24 32 40 48 64 */
 
@@ -51,8 +52,8 @@
 
     /* Semantic text colors */
     --text-primary: 220 20% 10%;
-    --text-secondary: 220 10% 46%;
-    --text-muted: 220 10% 58%;
+    --text-secondary: 220 10% 38%;
+    --text-muted: 220 10% 46%;
 
     --background: 220 16% 96%;
     --foreground: 220 20% 10%;
@@ -70,7 +71,7 @@
     --secondary-foreground: 220 20% 25%;
 
     --muted: 220 14% 94%;
-    --muted-foreground: 220 10% 46%;
+    --muted-foreground: 220 10% 38%;
 
     --accent: 25 95% 53%;
     --accent-foreground: 0 0% 100%;

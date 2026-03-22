@@ -29,7 +29,7 @@ export function LandingBenefits() {
     <section className="py-16 sm:py-28 border-y border-border">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="mb-10 sm:mb-16">
-          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">WHAT CHANGES</span>
+          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">WHAT CHANGES</span>
           <h2 className="heading-2 mb-4">What changes when you use AI-IDEI</h2>
         </FadeInView>
 
@@ -38,11 +38,11 @@ export function LandingBenefits() {
             <FadeInView
               key={b.title}
               delay={i * 0.08}
-              className="relative p-6 sm:p-8 rounded-xl border border-border bg-card hover:border-[hsl(var(--gold-oxide)/0.15)] landing-card group"
+              className="relative p-6 sm:p-8 rounded-xl border border-border bg-card hover:border-[hsl(var(--gold-oxide)/0.2)] landing-card group"
             >
               <div className="flex items-start gap-4 sm:gap-5">
                 <div className="shrink-0 w-10 h-10 rounded-lg bg-[hsl(var(--gold-oxide)/0.1)] flex items-center justify-center group-hover:bg-[hsl(var(--gold-oxide)/0.18)] transition-colors">
-                  <b.icon className="h-5 w-5 text-[hsl(var(--gold-oxide)/0.7)] group-hover:text-[hsl(var(--gold-oxide))] transition-colors" />
+                  <b.icon className="h-5 w-5 text-[hsl(var(--gold-oxide))] transition-colors" />
                 </div>
                 <div>
                   <h3 className="text-base font-semibold text-foreground mb-2">{b.title}</h3>

@@ -6,7 +6,7 @@ import logo from "@/assets/logo.gif";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
-    <Link to={to} className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide)/0.9)] transition-colors rounded">
+    <Link to={to} className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors rounded">
       {children}
     </Link>
   );
@@ -71,7 +71,7 @@ export function LandingFooter() {
 
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:flex-row">
-          <span className="text-xs font-mono text-muted-foreground/70">
+          <span className="text-xs font-mono text-muted-foreground">
             © {new Date().getFullYear()} AI-IDEI · From rough idea to persuasive asset.
           </span>
           <div className="flex items-center gap-6">

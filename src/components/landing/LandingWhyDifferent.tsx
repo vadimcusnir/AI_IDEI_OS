@@ -24,7 +24,7 @@ export function LandingWhyDifferent() {
     <section className="py-16 sm:py-28">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="mb-10 sm:mb-16">
-          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">WHY DIFFERENT</span>
+          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">WHY DIFFERENT</span>
           <h2 className="heading-2 mb-4">
             Not another prompt pack. Not another content library.
           </h2>
@@ -45,19 +45,19 @@ export function LandingWhyDifferent() {
 
           <FadeInView delay={0.1} className="bg-card relative p-6 sm:p-10">
             <div className="absolute top-0 right-0 w-32 h-32 bg-[hsl(var(--gold-oxide)/0.04)] rounded-full blur-[60px]" />
-            <span className="text-xs font-mono tracking-[0.15em] text-[hsl(var(--gold-oxide)/0.7)] mb-6 block relative">WITH AI-IDEI</span>
+            <span className="text-xs font-mono tracking-[0.15em] text-[hsl(var(--gold-oxide))] mb-6 block relative">WITH AI-IDEI</span>
             <div className="space-y-3 relative">
               {AFTER.map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.6)] shrink-0" />
-                  <span className="text-sm text-foreground/85 font-medium">{item}</span>
+                  <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold-oxide))] shrink-0" />
+                  <span className="text-sm text-foreground font-medium">{item}</span>
                 </div>
               ))}
             </div>
           </FadeInView>
         </div>
 
-        <FadeInView className="max-w-3xl mx-auto text-center py-8 sm:py-12 border-y border-[hsl(var(--gold-oxide)/0.12)]">
+        <FadeInView className="max-w-3xl mx-auto text-center py-8 sm:py-12 border-y border-[hsl(var(--gold-oxide)/0.15)]">
           <p className="text-foreground font-bold text-lg sm:text-xl leading-snug mb-4">
             AI-IDEI is built around one goal: help you turn thought into execution.
           </p>

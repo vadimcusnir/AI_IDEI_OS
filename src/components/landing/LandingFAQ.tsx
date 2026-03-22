@@ -21,14 +21,14 @@ export function LandingFAQ() {
     <section id="faq" className="py-20 sm:py-28 border-t border-border">
       <div className="max-w-2xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-12">
-          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">FAQ</span>
+          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">FAQ</span>
           <h2 className="heading-2">Frequently Asked Questions</h2>
         </FadeInView>
         <FadeInView delay={0.1}>
           <Accordion type="single" collapsible className="space-y-2">
             {FAQS.map((faq, i) => (
-              <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-lg px-5 data-[state=open]:border-[hsl(var(--gold-oxide)/0.2)] data-[state=open]:bg-card transition-all">
-                <AccordionTrigger className="text-base font-medium py-4 hover:no-underline text-foreground/85 text-left min-h-[44px]">
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-lg px-5 data-[state=open]:border-[hsl(var(--gold-oxide)/0.25)] data-[state=open]:bg-card transition-all">
+                <AccordionTrigger className="text-base font-medium py-4 hover:no-underline text-foreground text-left min-h-[44px]">
                   {faq.q}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed">
