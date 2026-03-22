@@ -34,7 +34,7 @@ export function LandingWhatYouGet() {
             >
               <block.icon className="text-[hsl(var(--gold-oxide))] mb-6 transition-colors" size={28} />
               <h3 className="text-lg font-semibold text-foreground mb-3">{block.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{block.text}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed text-flow">{block.text}</p>
             </FadeInView>
           ))}
         </div>

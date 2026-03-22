@@ -46,7 +46,7 @@ export function LandingBenefits() {
                 </div>
                 <div>
                   <h3 className="text-base font-semibold text-foreground mb-2">{b.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{b.text}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed text-flow">{b.text}</p>
                 </div>
               </div>
             </FadeInView>

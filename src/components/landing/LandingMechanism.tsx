@@ -35,7 +35,7 @@ export function LandingMechanism() {
                 <step.icon className="text-[hsl(var(--gold-oxide))]" size={20} />
               </div>
               <h3 className="text-base font-semibold text-foreground mb-2">{step.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{step.text}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed text-flow">{step.text}</p>
             </FadeInView>
           ))}
         </div>

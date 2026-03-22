@@ -35,7 +35,7 @@ export function LandingSocialProof() {
               className="relative p-6 sm:p-8 rounded-xl border border-border bg-card landing-card"
             >
               <span className="absolute top-3 left-5 text-3xl text-[hsl(var(--gold-oxide)/0.25)] leading-none select-none">"</span>
-              <blockquote className="text-sm text-foreground leading-relaxed mb-5 sm:mb-6 pt-4 italic">
+              <blockquote className="text-sm text-foreground leading-relaxed mb-5 sm:mb-6 pt-4 italic text-flow">
                 {t.text}
               </blockquote>
               <div className="border-t border-border pt-4 flex items-center gap-3">
