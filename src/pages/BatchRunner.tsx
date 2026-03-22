@@ -8,12 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
   Loader2, Sparkles, Play, CheckCircle2, XCircle,
-  Clock, Coins, Brain, ArrowLeft, Zap,
+  Clock, Coins, Brain, ArrowLeft, Zap, History,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { PremiumGate } from "@/components/premium/PremiumGate";
 import { useTranslation } from "react-i18next";
+import { ServicePresets } from "@/components/services/ServicePresets";
+import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
+import { logServiceRun } from "@/hooks/useServiceHistory";
 
 interface Service {
   id: string;
@@ -95,6 +98,7 @@ export default function BatchRunner() {
   const runBatch = async () => {
     if (!user || selected.size === 0 || !canAfford) return;
     setRunning(true);
+    const batchId = crypto.randomUUID();
 
     const batchJobs: BatchJob[] = services
       .filter(s => selected.has(s.service_key))
@@ -109,6 +113,7 @@ export default function BatchRunner() {
     for (let i = 0; i < batchJobs.length; i++) {
       setCurrentIndex(i);
       setJobs(prev => prev.map((j, idx) => idx === i ? { ...j, status: "running" } : j));
+      const startTime = Date.now();
 
       try {
         const { data: job } = await supabase
@@ -147,10 +152,10 @@ export default function BatchRunner() {
           throw new Error(err.error || `Error ${resp.status}`);
         }
 
+        let fullText = "";
         const reader = resp.body?.getReader();
         if (reader) {
           const decoder = new TextDecoder();
-          let fullText = "";
           while (true) {
             const { done, value } = await reader.read();
             if (done) break;
@@ -159,8 +164,35 @@ export default function BatchRunner() {
         }
 
         setJobs(prev => prev.map((j, idx) => idx === i ? { ...j, status: "completed" } : j));
+
+        // Log to history
+        logServiceRun({
+          userId: user.id,
+          serviceKey: batchJobs[i].serviceKey,
+          serviceName: batchJobs[i].serviceName,
+          neuronId: Number(neuronId),
+          jobId: job.id,
+          creditsCost: batchJobs[i].cost,
+          status: "completed",
+          resultPreview: fullText,
+          durationMs: Date.now() - startTime,
+          inputs: { content: neuronContent.slice(0, 200), title: neuronTitle },
+          batchId,
+        });
       } catch (e: any) {
         setJobs(prev => prev.map((j, idx) => idx === i ? { ...j, status: "failed", result: e.message } : j));
+
+        logServiceRun({
+          userId: user.id,
+          serviceKey: batchJobs[i].serviceKey,
+          serviceName: batchJobs[i].serviceName,
+          neuronId: Number(neuronId),
+          creditsCost: batchJobs[i].cost,
+          status: "failed",
+          resultPreview: e.message,
+          durationMs: Date.now() - startTime,
+          batchId,
+        });
       }
     }
 
@@ -236,6 +268,18 @@ export default function BatchRunner() {
         {/* Service Selection / Job Status */}
         {!running && jobs.length === 0 ? (
           <>
+            {/* Presets */}
+            <div className="mb-6 border border-border rounded-xl p-4 bg-card">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                ⚡ Preseturi
+              </h2>
+              <ServicePresets
+                allServiceKeys={services.map(s => s.service_key)}
+                selectedKeys={selected}
+                onApplyPreset={(keys) => setSelected(new Set(keys))}
+              />
+            </div>
+
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("batch_runner.select_services")}</h2>
               <button onClick={selectAll} className="text-[10px] text-primary hover:underline">
@@ -323,6 +367,14 @@ export default function BatchRunner() {
             )}
           </>
         )}
+
+        {/* History */}
+        <div className="mt-8 border-t border-border pt-6">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <History className="h-3 w-3" /> Istoric batch-uri
+          </h2>
+          <ServiceRunHistory limit={15} />
+        </div>
       </div>
     </div>
     </PremiumGate>

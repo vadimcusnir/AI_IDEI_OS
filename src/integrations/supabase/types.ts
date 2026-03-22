@@ -5378,6 +5378,93 @@ export type Database = {
           },
         ]
       }
+      service_presets: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_public: boolean | null
+          name: string
+          service_keys: string[]
+          updated_at: string | null
+          usage_count: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          name: string
+          service_keys?: string[]
+          updated_at?: string | null
+          usage_count?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          name?: string
+          service_keys?: string[]
+          updated_at?: string | null
+          usage_count?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      service_run_history: {
+        Row: {
+          batch_id: string | null
+          completed_at: string | null
+          created_at: string | null
+          credits_cost: number | null
+          duration_ms: number | null
+          id: string
+          inputs: Json | null
+          job_id: string | null
+          neuron_id: number | null
+          result_preview: string | null
+          service_key: string
+          service_name: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          batch_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          credits_cost?: number | null
+          duration_ms?: number | null
+          id?: string
+          inputs?: Json | null
+          job_id?: string | null
+          neuron_id?: number | null
+          result_preview?: string | null
+          service_key: string
+          service_name: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          batch_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          credits_cost?: number | null
+          duration_ms?: number | null
+          id?: string
+          inputs?: Json | null
+          job_id?: string | null
+          neuron_id?: number | null
+          result_preview?: string | null
+          service_key?: string
+          service_name?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       site_pages: {
         Row: {
           canonical_url: string | null
