@@ -59,6 +59,9 @@ export default function MarketplaceDetail() {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(5);
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [authorName, setAuthorName] = useState<string>("");
+  const [hasLicense, setHasLicense] = useState(false);
+  const [transferring, setTransferring] = useState(false);
 
   useEffect(() => {
     if (!id) return;
