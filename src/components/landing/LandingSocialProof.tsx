@@ -24,7 +24,7 @@ export function LandingSocialProof() {
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-12 sm:mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">PROOF</span>
-          <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">Built for people who want sharper thinking and stronger execution</h2>
+          <h2 className="heading-2 mb-4">Built for people who want sharper thinking and stronger execution</h2>
         </FadeInView>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
@@ -32,17 +32,17 @@ export function LandingSocialProof() {
             <FadeInView
               key={i}
               delay={i * 0.08}
-              className="relative p-6 sm:p-8 rounded-xl border border-[hsl(var(--ivory-dim)/0.08)] bg-[hsl(var(--obsidian-light)/0.2)] landing-card"
+              className="relative p-6 sm:p-8 rounded-xl border border-border bg-card landing-card"
             >
               <span className="absolute top-3 left-5 text-3xl font-serif text-[hsl(var(--gold-oxide)/0.2)] leading-none select-none">"</span>
-              <blockquote className="text-sm text-[hsl(var(--ivory)/0.8)] leading-relaxed mb-5 sm:mb-6 pt-4 italic">
+              <blockquote className="text-sm text-foreground/80 leading-relaxed mb-5 sm:mb-6 pt-4 italic">
                 {t.text}
               </blockquote>
-              <div className="border-t border-[hsl(var(--ivory-dim)/0.08)] pt-4 flex items-center gap-3">
+              <div className="border-t border-border pt-4 flex items-center gap-3">
                 <div className="h-8 w-8 rounded-full bg-[hsl(var(--gold-oxide)/0.12)] flex items-center justify-center shrink-0">
                   <span className="text-xs font-mono font-bold text-[hsl(var(--gold-oxide)/0.7)]">{t.name}</span>
                 </div>
-                <p className="text-xs font-mono text-[hsl(var(--ivory-dim)/0.5)]">{t.role}</p>
+                <p className="text-xs font-mono text-muted-foreground">{t.role}</p>
               </div>
             </FadeInView>
           ))}

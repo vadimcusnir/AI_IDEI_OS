@@ -14,13 +14,13 @@ const fadeUp = {
 
 export function LandingOutputGalaxy() {
   return (
-    <section id="outputs" className="py-20 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)] relative">
+    <section id="outputs" className="py-20 sm:py-28 border-y border-border relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--gold-oxide)/0.02)] to-transparent" />
       <div className="relative max-w-5xl mx-auto px-5 sm:px-6">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-8">
           <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">OUTPUT UNIVERSE</span>
-          <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">One idea can become much more than one output</h2>
-          <p className="text-sm text-[hsl(var(--ivory-dim)/0.5)] max-w-lg mx-auto">
+          <h2 className="heading-2 mb-4">One idea can become much more than one output</h2>
+          <p className="text-sm text-muted-foreground max-w-lg mx-auto text-flow">
             Content, education, sales, knowledge, assistants — organized into asset families.
           </p>
         </motion.div>

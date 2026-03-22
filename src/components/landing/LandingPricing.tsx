@@ -23,12 +23,12 @@ export function LandingPricing({ ctaAction }: Props) {
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">ACCESS</span>
-          <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">Choose the level that matches your ambition</h2>
-          <p className="text-base text-[hsl(var(--ivory-dim)/0.65)] max-w-lg mx-auto">
+          <h2 className="heading-2 mb-4">Choose the level that matches your ambition</h2>
+          <p className="text-base text-muted-foreground max-w-lg mx-auto text-flow">
             Start simple. Upgrade when you want more depth, speed, and leverage.
           </p>
         </FadeInView>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.08)] rounded-xl overflow-hidden max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden max-w-4xl mx-auto">
           {PLANS.map((plan, i) => (
             <FadeInView
               key={plan.name}
@@ -36,27 +36,27 @@ export function LandingPricing({ ctaAction }: Props) {
               className={cn(
                 "p-6 sm:p-8 flex flex-col relative",
                 plan.featured
-                  ? "bg-[hsl(var(--obsidian-light))] ring-1 ring-[hsl(var(--gold-oxide)/0.35)]"
-                  : "bg-[hsl(var(--obsidian-light)/0.3)]"
+                  ? "bg-card ring-1 ring-[hsl(var(--gold-oxide)/0.35)]"
+                  : "bg-card"
               )}
             >
               {plan.featured && (
                 <span className="absolute top-3 right-3 text-[10px] font-mono tracking-[0.15em] text-[hsl(var(--gold-oxide))] border border-[hsl(var(--gold-oxide)/0.35)] px-2 py-0.5 rounded">POPULAR</span>
               )}
-              <h3 className="text-lg font-bold text-[hsl(var(--ivory))]">{plan.name}</h3>
+              <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
               <div className="flex items-baseline gap-1 mt-2 mb-1">
                 <span className="text-2xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{plan.price}</span>
-                <span className="text-xs font-mono text-[hsl(var(--ivory-dim)/0.5)]">{plan.period}</span>
+                <span className="text-xs font-mono text-muted-foreground">{plan.period}</span>
               </div>
               <p className="text-xs font-mono tracking-[0.1em] text-[hsl(var(--gold-oxide)/0.6)] mb-4">{plan.promise.toUpperCase()}</p>
-              <p className="text-sm text-[hsl(var(--ivory-dim)/0.6)] leading-relaxed flex-1">{plan.text}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed flex-1">{plan.text}</p>
               <Button
                 onClick={ctaAction}
                 className={cn(
                   "w-full mt-6 gap-2 text-sm h-11 min-h-[44px]",
                   plan.featured
                     ? "bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]"
-                    : "bg-transparent border border-[hsl(var(--ivory-dim)/0.15)] text-[hsl(var(--ivory-dim)/0.7)] hover:border-[hsl(var(--gold-oxide)/0.35)] hover:text-[hsl(var(--gold-oxide))]"
+                    : "bg-transparent border border-border text-muted-foreground hover:border-[hsl(var(--gold-oxide)/0.35)] hover:text-[hsl(var(--gold-oxide))]"
                 )}
                 size="sm"
               >

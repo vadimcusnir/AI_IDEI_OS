@@ -124,7 +124,7 @@ export default function Landing() {
 
   return (
     <PageTransition>
-    <div className="min-h-screen bg-[hsl(var(--obsidian))] text-[hsl(var(--ivory))] noise-overlay relative">
+    <div className="min-h-screen bg-background text-foreground noise-overlay relative">
       <SEOHead
         title="AI-IDEI — AI Copywriting & Marketing Execution System"
         description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants."
@@ -135,18 +135,18 @@ export default function Landing() {
       <ExtractionSpine labels={["CAPTURE", "DISTILL", "STRUCTURE", "MULTIPLY", "DEPLOY"]} />
 
       {/* ═══ TOP BAR ═══ */}
-      <div className="border-b border-[hsl(var(--ivory-dim)/0.08)]">
-        <p className="text-center text-xs font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.6)] py-2.5 px-4">
+      <div className="border-b border-border">
+        <p className="text-center text-xs font-mono tracking-[0.12em] text-muted-foreground py-2.5 px-4">
           Turn rough ideas into copy, content, offers, and campaigns — faster.
         </p>
       </div>
 
       {/* ═══ NAV ═══ */}
-      <header className="sticky top-0 z-50 border-b border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian)/0.92)] backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/92 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group shrink-0">
             <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full" />
-            <span className="text-sm font-serif font-bold tracking-tight text-[hsl(var(--ivory))]">AI-IDEI</span>
+            <span className="text-sm font-serif font-bold tracking-tight text-foreground">AI-IDEI</span>
           </button>
 
           {/* Desktop nav */}
@@ -159,7 +159,7 @@ export default function Landing() {
                   "text-xs font-mono tracking-[0.1em] transition-colors relative py-1",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
-                    : "text-[hsl(var(--ivory-dim)/0.6)] hover:text-[hsl(var(--gold-oxide))]"
+                    : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"
                 )}
               >
                 {link.label.toUpperCase()}
@@ -177,7 +177,7 @@ export default function Landing() {
           <div className="flex items-center gap-2 sm:gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-[hsl(var(--ivory-dim)/0.5)]" title="Language">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="Language">
                   <span className="text-sm leading-none">{currentLang.flag}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -201,7 +201,7 @@ export default function Landing() {
               </Button>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-[hsl(var(--ivory-dim)/0.6)]">
+                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-muted-foreground">
                   Log in
                 </Button>
                 <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex">
@@ -213,7 +213,7 @@ export default function Landing() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden h-8 w-8 flex items-center justify-center text-[hsl(var(--ivory-dim)/0.6)]"
+              className="lg:hidden h-8 w-8 flex items-center justify-center text-muted-foreground"
               aria-label="Menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -229,21 +229,21 @@ export default function Landing() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25 }}
-              className="lg:hidden border-t border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian)/0.98)] overflow-hidden"
+              className="lg:hidden border-t border-border bg-background/98 overflow-hidden"
             >
               <div className="px-5 py-4 space-y-1">
                 {NAV_LINKS.map(link => (
                   <button
                     key={link.label}
                     onClick={() => scrollTo(link.to)}
-                    className="block w-full text-left text-sm font-mono tracking-[0.08em] text-[hsl(var(--ivory-dim)/0.7)] hover:text-[hsl(var(--gold-oxide))] transition-colors py-3 border-b border-[hsl(var(--ivory-dim)/0.06)]"
+                    className="block w-full text-left text-sm font-mono tracking-[0.08em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3 border-b border-border"
                   >
                     {link.label.toUpperCase()}
                   </button>
                 ))}
                 {!user && (
                   <div className="flex gap-3 pt-3">
-                    <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-xs h-9 flex-1 text-[hsl(var(--ivory-dim)/0.6)]">
+                    <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-xs h-9 flex-1 text-muted-foreground">
                       Log in
                     </Button>
                     <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-xs h-9 flex-1 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">

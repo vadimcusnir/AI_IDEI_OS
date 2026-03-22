@@ -246,6 +246,13 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
+  /* ── Global focus states — P1 accessibility ── */
+  :focus-visible {
+    outline: 2px solid hsl(var(--gold-oxide));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;

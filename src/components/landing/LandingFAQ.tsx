@@ -18,20 +18,20 @@ const FAQS = [
 
 export function LandingFAQ() {
   return (
-    <section id="faq" className="py-20 sm:py-28 border-t border-[hsl(var(--ivory-dim)/0.08)]">
+    <section id="faq" className="py-20 sm:py-28 border-t border-border">
       <div className="max-w-2xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-12">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">FAQ</span>
-          <h2 className="heading-2 text-[hsl(var(--ivory))]">Frequently Asked Questions</h2>
+          <h2 className="heading-2">Frequently Asked Questions</h2>
         </FadeInView>
         <FadeInView delay={0.1}>
           <Accordion type="single" collapsible className="space-y-2">
             {FAQS.map((faq, i) => (
-              <AccordionItem key={i} value={`faq-${i}`} className="border border-[hsl(var(--ivory-dim)/0.08)] rounded-lg px-5 data-[state=open]:border-[hsl(var(--gold-oxide)/0.2)] data-[state=open]:bg-[hsl(var(--obsidian-light)/0.3)] transition-all">
-                <AccordionTrigger className="text-base font-medium py-4 hover:no-underline text-[hsl(var(--ivory)/0.85)] text-left">
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-lg px-5 data-[state=open]:border-[hsl(var(--gold-oxide)/0.2)] data-[state=open]:bg-card transition-all">
+                <AccordionTrigger className="text-base font-medium py-4 hover:no-underline text-foreground/85 text-left min-h-[44px]">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-[hsl(var(--ivory-dim)/0.6)] pb-4 leading-relaxed">
+                <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>
