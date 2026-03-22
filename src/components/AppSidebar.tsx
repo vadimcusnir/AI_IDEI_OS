@@ -11,7 +11,7 @@ import {
   LogOut, Home, User, MessageCircle, ScrollText,
   BarChart3, Bell, BookOpen, Users, Network,
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
-  ChevronRight, GraduationCap, Terminal,
+  Lock, ChevronRight, GraduationCap, Terminal,
   Wallet, Trophy, Eye, ShieldCheck,
   Activity,
 } from "lucide-react";
