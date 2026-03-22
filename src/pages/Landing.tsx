@@ -340,7 +340,7 @@ export default function Landing() {
               Set tone, language, format, objective, depth, and audience for every execution.
             </p>
           </motion.div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {[
               { label: "Tone", desc: "Professional, casual, authoritative" },
               { label: "Language", desc: "EN, RO, RU, and expanding" },
@@ -356,7 +356,7 @@ export default function Landing() {
                 viewport={{ once: true }}
                 custom={i}
                 variants={fadeUp}
-                className="p-5 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.15)] transition-colors group"
+                className="p-4 sm:p-5 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.15)] transition-colors group flex items-start gap-4 sm:block"
               >
                 <IconControl className="text-[hsl(var(--gold-oxide)/0.4)] mb-3 group-hover:text-[hsl(var(--gold-oxide)/0.7)] transition-colors" size={18} />
                 <p className="text-xs font-semibold text-[hsl(var(--ivory)/0.85)] mb-1">{ctrl.label}</p>
