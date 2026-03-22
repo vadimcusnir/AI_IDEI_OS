@@ -106,7 +106,7 @@ export function GuestProfileAdvanced({ guestId, guestName, episodeIds, isOwner }
       .eq("guest_profile_id", guestId)
       .order("created_at", { ascending: false })
       .limit(20);
-    setPendingEdits((edits as ProfileEdit[]) || []);
+    setPendingEdits((edits as unknown as ProfileEdit[]) || []);
 
     setLoading(false);
   }, [guestId]);
