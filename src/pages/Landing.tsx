@@ -194,9 +194,9 @@ export default function Landing() {
       <LandingHero heroRef={heroRef} heroOpacity={heroOpacity} ctaAction={ctaAction} />
 
       {/* ═══ PROOF BAND ═══ */}
-      <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-6 sm:py-8">
+      <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-5 sm:py-8">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
             {[
               { value: "50+", label: "Deliverables per upload" },
               { value: "12", label: "Output families" },
@@ -204,8 +204,8 @@ export default function Landing() {
               { value: "<2min", label: "Idea to asset" },
             ].map(stat => (
               <div key={stat.label} className="text-center">
-                <p className="text-lg sm:text-xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{stat.value}</p>
-                <p className="text-[9px] font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.4)] mt-1">{stat.label.toUpperCase()}</p>
+                <p className="text-xl sm:text-2xl font-mono font-bold text-[hsl(var(--gold-oxide))]">{stat.value}</p>
+                <p className="text-[9px] font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.4)] mt-1.5">{stat.label.toUpperCase()}</p>
               </div>
             ))}
           </div>
