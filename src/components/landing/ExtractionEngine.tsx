@@ -29,13 +29,13 @@ interface EngineNode {
 }
 
 const NODES: EngineNode[] = [
-  { label: "Patterns", x: -300, y: -140, depth: 0.35, semantic: "Detect recurring structures in raw content" },
-  { label: "Frameworks", x: 300, y: -110, depth: 0.55, semantic: "Extract reusable reasoning architectures" },
-  { label: "Signals", x: -320, y: 130, depth: 0.65, semantic: "Identify psychological and behavioral cues" },
-  { label: "Formulas", x: 280, y: 150, depth: 0.45, semantic: "Isolate proven copywriting structures" },
-  { label: "Assets", x: 0, y: -210, depth: 0.25, semantic: "Convert insights into sellable outputs" },
-  { label: "Profiles", x: -100, y: 200, depth: 0.4, semantic: "Map expertise into structured identity" },
-  { label: "Campaigns", x: 200, y: -200, depth: 0.3, semantic: "Generate multi-channel execution plans" },
+  { label: "Patterns", x: -420, y: -190, depth: 0.35, semantic: "Detect recurring structures in raw content" },
+  { label: "Frameworks", x: 420, y: -150, depth: 0.55, semantic: "Extract reusable reasoning architectures" },
+  { label: "Signals", x: -440, y: 180, depth: 0.65, semantic: "Identify psychological and behavioral cues" },
+  { label: "Formulas", x: 400, y: 200, depth: 0.45, semantic: "Isolate proven copywriting structures" },
+  { label: "Assets", x: 0, y: -280, depth: 0.25, semantic: "Convert insights into sellable outputs" },
+  { label: "Profiles", x: -150, y: 270, depth: 0.4, semantic: "Map expertise into structured identity" },
+  { label: "Campaigns", x: 280, y: -270, depth: 0.3, semantic: "Generate multi-channel execution plans" },
 ];
 
 /* Spring config for the tilt — calm, premium feel */
