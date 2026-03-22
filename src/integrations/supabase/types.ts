@@ -4794,6 +4794,60 @@ export type Database = {
         }
         Relationships: []
       }
+      os_modules: {
+        Row: {
+          avg_latency_ms: number | null
+          created_at: string
+          description: string | null
+          error_rate: number | null
+          health_status: string
+          id: string
+          last_health_check: string | null
+          module_key: string
+          module_name: string
+          module_type: string
+          owner: string
+          risk_level: string
+          status: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          avg_latency_ms?: number | null
+          created_at?: string
+          description?: string | null
+          error_rate?: number | null
+          health_status?: string
+          id?: string
+          last_health_check?: string | null
+          module_key: string
+          module_name: string
+          module_type?: string
+          owner?: string
+          risk_level?: string
+          status?: string
+          updated_at?: string
+          version?: string
+        }
+        Update: {
+          avg_latency_ms?: number | null
+          created_at?: string
+          description?: string | null
+          error_rate?: number | null
+          health_status?: string
+          id?: string
+          last_health_check?: string | null
+          module_key?: string
+          module_name?: string
+          module_type?: string
+          owner?: string
+          risk_level?: string
+          status?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
       parsed_content: {
         Row: {
           content: string
@@ -7625,6 +7679,7 @@ export type Database = {
         }
         Returns: number
       }
+      os_system_stats: { Args: never; Returns: Json }
       purchase_marketplace_asset: {
         Args: { _asset_id: string; _buyer_id: string }
         Returns: Json
