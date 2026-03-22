@@ -155,6 +155,57 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_approval_requests: {
+        Row: {
+          action_type: string
+          approval_level: number
+          approved_by: string | null
+          created_at: string
+          id: string
+          payload: Json | null
+          requested_by: string
+          required_level: number
+          resolution_note: string | null
+          resolved_at: string | null
+          status: string
+          target_id: string | null
+          target_resource: string | null
+          timelock_until: string | null
+        }
+        Insert: {
+          action_type: string
+          approval_level?: number
+          approved_by?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json | null
+          requested_by: string
+          required_level?: number
+          resolution_note?: string | null
+          resolved_at?: string | null
+          status?: string
+          target_id?: string | null
+          target_resource?: string | null
+          timelock_until?: string | null
+        }
+        Update: {
+          action_type?: string
+          approval_level?: number
+          approved_by?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json | null
+          requested_by?: string
+          required_level?: number
+          resolution_note?: string | null
+          resolved_at?: string | null
+          status?: string
+          target_id?: string | null
+          target_resource?: string | null
+          timelock_until?: string | null
+        }
+        Relationships: []
+      }
       admin_permissions: {
         Row: {
           expires_at: string | null
@@ -247,6 +298,51 @@ export type Database = {
           id?: string
           page_path?: string | null
           session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      anomaly_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_type: string
+          created_at: string
+          current_value: number
+          deviation_pct: number | null
+          id: string
+          metadata: Json | null
+          metric_name: string
+          severity: string
+          threshold_value: number
+          user_id: string | null
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type: string
+          created_at?: string
+          current_value: number
+          deviation_pct?: number | null
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          severity?: string
+          threshold_value: number
+          user_id?: string | null
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          current_value?: number
+          deviation_pct?: number | null
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          severity?: string
+          threshold_value?: number
           user_id?: string | null
         }
         Relationships: []
@@ -404,6 +500,78 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_licenses: {
+        Row: {
+          asset_id: string
+          buyer_id: string
+          creator_revenue: number
+          expires_at: string | null
+          id: string
+          is_transferable: boolean
+          issued_at: string
+          license_type: string
+          metadata: Json | null
+          platform_fee_pct: number
+          platform_revenue: number
+          price_neurons: number
+          price_usd: number | null
+          revoked_at: string | null
+          seller_id: string
+          transferred_from: string | null
+        }
+        Insert: {
+          asset_id: string
+          buyer_id: string
+          creator_revenue?: number
+          expires_at?: string | null
+          id?: string
+          is_transferable?: boolean
+          issued_at?: string
+          license_type?: string
+          metadata?: Json | null
+          platform_fee_pct?: number
+          platform_revenue?: number
+          price_neurons?: number
+          price_usd?: number | null
+          revoked_at?: string | null
+          seller_id: string
+          transferred_from?: string | null
+        }
+        Update: {
+          asset_id?: string
+          buyer_id?: string
+          creator_revenue?: number
+          expires_at?: string | null
+          id?: string
+          is_transferable?: boolean
+          issued_at?: string
+          license_type?: string
+          metadata?: Json | null
+          platform_fee_pct?: number
+          platform_revenue?: number
+          price_neurons?: number
+          price_usd?: number | null
+          revoked_at?: string | null
+          seller_id?: string
+          transferred_from?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_licenses_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_licenses_transferred_from_fkey"
+            columns: ["transferred_from"]
+            isOneToOne: false
+            referencedRelation: "asset_licenses"
             referencedColumns: ["id"]
           },
         ]

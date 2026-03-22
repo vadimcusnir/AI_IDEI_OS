@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
 import { RadarChart } from "@/components/intelligence/RadarChart";
 import { PsychologicalProfileSection, type PsychologicalProfileData } from "@/components/profile/PsychologicalProfileSection";
+import { GuestProfileAdvanced } from "@/components/profile/GuestProfileAdvanced";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Loader2, Brain, Quote, Sparkles, Users, MessageCircle,
   Target, Award, Lightbulb, TrendingUp, ArrowRight, Lock,
@@ -14,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 
 interface GuestData {
+  id: string;
   full_name: string;
   role: string;
   bio: string;
@@ -21,6 +24,8 @@ interface GuestData {
   frameworks_mentioned: string[];
   psychological_traits: string[];
   key_quotes: string[];
+  episode_ids: string[];
+  author_id: string;
 }
 
 /* ── Expertise bars with animated fill ── */
@@ -163,6 +168,7 @@ function QuotesSection({ quotes, authorName, showAllLabel, sectionLabel }: { quo
 export default function GuestProfile() {
   const { slug } = useParams<{ slug: string }>();
   const { t } = useTranslation("pages");
+  const { user } = useAuth();
   const [guest, setGuest] = useState<GuestData | null>(null);
   const [psychProfile, setPsychProfile] = useState<PsychologicalProfileData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -289,12 +295,16 @@ export default function GuestProfile() {
           </section>
         )}
 
-        {psychProfile && (
-          <section>
-            <SectionHeader icon={Brain} label={t("guest_profile.deep_psych")} />
-            <PsychologicalProfileSection profile={psychProfile} />
-          </section>
-        )}
+        {/* Advanced Psychological Profile (owner sees full controls, visitors see results) */}
+        <section>
+          <SectionHeader icon={Brain} label={t("guest_profile.deep_psych")} />
+          <GuestProfileAdvanced
+            guestId={guest.id}
+            guestName={guest.full_name}
+            episodeIds={guest.episode_ids || []}
+            isOwner={user?.id === guest.author_id}
+          />
+        </section>
 
         {!psychProfile && guest.psychological_traits.length >= 3 && (
           <section>

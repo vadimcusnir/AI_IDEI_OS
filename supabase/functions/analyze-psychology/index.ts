@@ -14,6 +14,110 @@ const logStep = (step: string, details?: unknown) => {
   console.log(`[ANALYZE-PSYCHOLOGY] ${step}${details ? ` — ${JSON.stringify(details)}` : ""}`);
 };
 
+// ── 10-Module Pipeline Definition ──
+const PSYCHOLOGY_MODULES = [
+  {
+    id: "big_five",
+    name: "Big Five Personality",
+    prompts: [
+      "Analyze openness to experience: intellectual curiosity, imagination, preference for novelty. Score 0-100 with confidence interval.",
+      "Analyze conscientiousness: organization, self-discipline, goal orientation, planning behavior. Score 0-100 with confidence interval.",
+      "Analyze extraversion: social energy, assertiveness, positive emotions, talkativeness. Score 0-100 with confidence interval.",
+      "Analyze agreeableness: cooperation, trust, empathy, social harmony. Score 0-100 with confidence interval.",
+      "Analyze neuroticism: emotional instability, anxiety, moodiness, stress reactivity. Score 0-100 with confidence interval.",
+    ],
+  },
+  {
+    id: "liwc_metrics",
+    name: "LIWC Linguistic Analysis (Pennebaker)",
+    prompts: [
+      "Measure analytical thinking: logical reasoning markers, causal words, insight words, certainty. Score 0-100.",
+      "Measure emotional tone: positive vs negative emotion words, affective intensity. Score 0-100 (50=neutral, 100=very positive).",
+      "Measure authenticity: self-referential honesty, first-person pronouns, hedging absence. Score 0-100.",
+      "Measure clout/authority: confidence markers, we-pronouns, social hierarchy. Score 0-100.",
+    ],
+  },
+  {
+    id: "cognitive_style",
+    name: "Cognitive Style Analysis",
+    prompts: [
+      "Analyze cognitive complexity: sentence structure diversity, vocabulary breadth, abstract vs concrete language, multi-perspective thinking. Score 0-100.",
+      "Analyze information processing style: sequential vs holistic, detail-oriented vs big-picture, data-driven vs intuitive. Classify and score.",
+      "Analyze reasoning patterns: deductive vs inductive, analogical thinking, causal chains, hypothetical reasoning frequency.",
+      "Analyze learning style markers: visual references, auditory cues, kinesthetic language, theoretical vs practical orientation.",
+    ],
+  },
+  {
+    id: "emotional_drivers",
+    name: "Emotional Intelligence & Drivers",
+    prompts: [
+      "Analyze emotional intelligence: self-awareness markers, empathy expressions, emotion regulation language. Score 0-100 with sub-dimensions.",
+      "Identify primary emotional drivers: achievement, affiliation, power, autonomy, security. Rank and score each 0-100.",
+      "Analyze emotional vocabulary: diversity, specificity, intensity patterns. Compute emotional granularity score.",
+      "Measure emotional contagion potential: storytelling emotional arcs, empathy triggers, emotional metaphors.",
+    ],
+  },
+  {
+    id: "narrative_patterns",
+    name: "Narrative & Storytelling Patterns",
+    prompts: [
+      "Identify narrative archetypes used: hero's journey, rags-to-riches, overcoming monster, quest, rebirth, comedy, tragedy. Frequency and effectiveness.",
+      "Analyze story structure: beginning-middle-end patterns, tension building, resolution patterns, anecdote frequency per 1000 words.",
+      "Measure narrative coherence: temporal markers, causal connectors, character consistency, theme development.",
+      "Identify metaphor patterns: conceptual metaphors used, metaphor density, originality vs conventional metaphors.",
+      "Analyze rhetorical devices: repetition, tricolon, antithesis, rhetorical questions, contrast patterns.",
+    ],
+  },
+  {
+    id: "communication_profile",
+    name: "Communication Profile",
+    prompts: [
+      "Classify communication style: Directive, Collaborative, Analytical, Expressive, or Supportive. Provide percentage mix.",
+      "Analyze persuasion approach: Logical (data/evidence), Emotional (stories/values), Authority (credentials/expertise), Social Proof (examples/testimonials), Storytelling (narratives). Primary and secondary.",
+      "Measure dominance patterns: interruption markers, topic control, directive language, hedging frequency. Score 0-100.",
+      "Analyze listening indicators: acknowledgment language, paraphrasing, question asking patterns, building on others' ideas.",
+    ],
+  },
+  {
+    id: "leadership_profile",
+    name: "Leadership & Decision Style",
+    prompts: [
+      "Classify leadership style: Visionary, Democratic, Coaching, Commanding, Affiliative, Pacesetting. Primary and mix percentages.",
+      "Analyze decision-making style: Analytical (data-heavy), Intuitive (gut-feeling), Directive (quick/decisive), Conceptual (creative/broad). Score each 0-100.",
+      "Measure risk tolerance: risk-seeking language, uncertainty comfort, hedging patterns, bold vs cautious proposals. Classify: Risk-Averse, Moderate, Risk-Seeking.",
+      "Analyze influence strategy: pull vs push, collaborative vs directive, evidence-based vs vision-based.",
+    ],
+  },
+  {
+    id: "lexical_analysis",
+    name: "Lexical & Structural Analysis",
+    prompts: [
+      "Compute lexical metrics: average sentence length, vocabulary diversity (type-token ratio), Flesch-Kincaid readability, jargon density.",
+      "Analyze pronoun usage: I/me ratio (self-focus), we/us ratio (collective), you ratio (audience engagement), they ratio (distancing).",
+      "Measure word category ratios: emotion words, cognitive words, certainty words, tentative words, action words per 100 words.",
+      "Analyze question patterns: open vs closed, rhetorical vs genuine, Socratic method usage, inquiry depth.",
+    ],
+  },
+  {
+    id: "value_system",
+    name: "Values & Belief System",
+    prompts: [
+      "Identify core values from language: achievement, benevolence, conformity, hedonism, power, security, self-direction, stimulation, tradition, universalism. Rank top 5.",
+      "Analyze moral foundations: care/harm, fairness/cheating, loyalty/betrayal, authority/subversion, sanctity/degradation. Score each 0-100.",
+      "Identify worldview markers: growth vs fixed mindset, internal vs external locus of control, optimistic vs pessimistic orientation.",
+    ],
+  },
+  {
+    id: "expertise_mapping",
+    name: "Expertise & Knowledge Mapping",
+    prompts: [
+      "Map expertise domains mentioned: identify each domain, assess depth (surface/intermediate/expert), frequency of domain-specific jargon.",
+      "Analyze teaching/explaining patterns: simplification ability, analogy quality, scaffolding techniques, example diversity.",
+      "Measure authority markers: credential references, experience claims, certainty language in domain-specific contexts, hedging in unfamiliar domains.",
+    ],
+  },
+];
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -26,7 +130,6 @@ serve(async (req) => {
   );
 
   try {
-    // Auth
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) throw new Error("No authorization header");
     const token = authHeader.replace("Bearer ", "");
@@ -37,6 +140,7 @@ serve(async (req) => {
 
     const PsychSchema = z.object({
       guest_profile_id: z.string().uuid("Invalid guest_profile_id format"),
+      tier: z.enum(["free", "premium"]).default("free"),
     });
     const parsed = PsychSchema.safeParse(await req.json());
     if (!parsed.success) {
@@ -44,9 +148,9 @@ serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { guest_profile_id } = parsed.data;
+    const { guest_profile_id, tier } = parsed.data;
 
-    // ── Regime enforcement ──
+    // Regime enforcement
     const regime = await getRegimeConfig("analyze-psychology");
     const blockReason = checkRegimeBlock(regime, 0);
     if (blockReason) {
@@ -55,6 +159,7 @@ serve(async (req) => {
       });
     }
     const isDryRun = regime.dryRun || regime.regime === "simulation";
+
     const { data: guest, error: guestError } = await supabase
       .from("guest_profiles")
       .select("*")
@@ -65,7 +170,7 @@ serve(async (req) => {
     if (guestError || !guest) throw new Error("Guest profile not found or access denied");
     logStep("Guest loaded", { name: guest.full_name });
 
-    // Gather transcript text from linked episodes
+    // Gather transcript text
     let transcriptText = "";
     if (guest.episode_ids && guest.episode_ids.length > 0) {
       const { data: episodes } = await supabase
@@ -73,13 +178,11 @@ serve(async (req) => {
         .select("transcript")
         .in("id", guest.episode_ids)
         .not("transcript", "is", null);
-
       if (episodes) {
         transcriptText = episodes.map((e: { transcript: string }) => e.transcript).join("\n\n");
       }
     }
 
-    // Also gather key_quotes and bio for analysis
     const analysisText = [
       transcriptText,
       guest.bio || "",
@@ -92,34 +195,9 @@ serve(async (req) => {
 
     logStep("Text gathered", { length: analysisText.length });
 
-    // ── Load prompt from registry ──
-    const hardcodedFallback = `You are an expert psycholinguistic analyst. Analyze the following text and produce a psychological profile.
-
-Return a JSON object with EXACTLY these fields (all scores 0-100):
-
-{
-  "big_five": { "openness": <0-100>, "conscientiousness": <0-100>, "extraversion": <0-100>, "agreeableness": <0-100>, "neuroticism": <0-100> },
-  "liwc_metrics": { "analytical_thinking": <0-100>, "emotional_tone": <0-100>, "authenticity": <0-100>, "clout": <0-100> },
-  "communication": { "dominance": <0-100>, "empathy": <0-100>, "cognitive_complexity": <0-100>, "confidence_level": <0-100> },
-  "insights": {
-    "communication_style": "<one of: Directive, Collaborative, Analytical, Expressive, Supportive>",
-    "leadership_style": "<one of: Visionary, Democratic, Coaching, Commanding, Affiliative>",
-    "decision_style": "<one of: Analytical, Intuitive, Directive, Conceptual>",
-    "persuasion_approach": "<one of: Logical, Emotional, Authority, Social Proof, Storytelling>",
-    "risk_tolerance": "<one of: Risk-Averse, Moderate, Risk-Seeking>"
-  },
-  "lexical_features": { "avg_sentence_length": <number>, "vocabulary_diversity": <0-1>, "pronoun_ratio_i": <0-1>, "pronoun_ratio_we": <0-1>, "emotion_word_ratio": <0-1>, "cognitive_word_ratio": <0-1>, "certainty_word_ratio": <0-1>, "question_ratio": <0-1> }
-}
-
-Analyze based on word choice, pronoun usage, sentence complexity, emotional vs analytical language, certainty markers, question frequency, metaphor usage, authority markers.`;
-
-    const { prompt: systemPrompt } = await loadPrompt("analyze_psychology", hardcodedFallback);
-    const analysisPrompt = systemPrompt + `\n\nTEXT TO ANALYZE:\n${analysisText.slice(0, 15000)}`;
-
-    // ── Dry-run check ──
     if (isDryRun) {
       logStep("DRY RUN — skipping AI call");
-      return new Response(JSON.stringify({ success: false, dry_run: true, regime: regime.regime, message: "Simulation mode — no AI call made" }), {
+      return new Response(JSON.stringify({ success: false, dry_run: true, regime: regime.regime }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -127,72 +205,149 @@ Analyze based on word choice, pronoun usage, sentence complexity, emotional vs a
     const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
     if (!lovableApiKey) throw new Error("LOVABLE_API_KEY not configured");
 
-    const aiResponse = await fetch("https://ai-gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${lovableApiKey}`,
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [{ role: "user", content: analysisPrompt }],
-        temperature: 0.3,
-        response_format: { type: "json_object" },
-      }),
-    });
+    // ── Select modules based on tier ──
+    const modulesToRun = tier === "premium" ? PSYCHOLOGY_MODULES : PSYCHOLOGY_MODULES.slice(0, 4);
+    const totalPrompts = modulesToRun.reduce((sum, m) => sum + m.prompts.length, 0);
+    logStep("Pipeline config", { tier, modules: modulesToRun.length, prompts: totalPrompts });
 
-    if (!aiResponse.ok) {
-      const errText = await aiResponse.text();
-      throw new Error(`AI analysis failed: ${errText}`);
+    // ── Run pipeline: batch modules, each module's prompts run as a single mega-prompt ──
+    const textSlice = analysisText.slice(0, tier === "premium" ? 25000 : 15000);
+    const moduleResults: Record<string, any> = {};
+
+    const BATCH_SIZE = 3;
+    for (let i = 0; i < modulesToRun.length; i += BATCH_SIZE) {
+      const batch = modulesToRun.slice(i, i + BATCH_SIZE);
+      const batchResults = await Promise.all(batch.map(async (mod) => {
+        const combinedPrompt = `You are an expert psycholinguistic analyst performing the "${mod.name}" module.
+
+Analyze the following text and answer ALL of these analysis prompts. Return a single JSON object with your findings.
+
+ANALYSIS PROMPTS:
+${mod.prompts.map((p, idx) => `${idx + 1}. ${p}`).join("\n")}
+
+TEXT TO ANALYZE:
+${textSlice}
+
+Return a comprehensive JSON object with scores (0-100), classifications, and confidence intervals where requested. Include a "confidence" field (0-1) for the overall module.`;
+
+        try {
+          const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${lovableApiKey}`,
+            },
+            body: JSON.stringify({
+              model: "google/gemini-2.5-flash",
+              messages: [{ role: "user", content: combinedPrompt }],
+              temperature: 0.3,
+              response_format: { type: "json_object" },
+            }),
+          });
+
+          if (!aiResponse.ok) {
+            const errText = await aiResponse.text();
+            logStep(`Module ${mod.id} failed`, { error: errText });
+            return { id: mod.id, result: null, error: errText };
+          }
+
+          const aiResult = await aiResponse.json();
+          const content = aiResult.choices?.[0]?.message?.content;
+          if (!content) return { id: mod.id, result: null, error: "Empty response" };
+          
+          return { id: mod.id, result: JSON.parse(content), error: null };
+        } catch (err) {
+          logStep(`Module ${mod.id} error`, { error: String(err) });
+          return { id: mod.id, result: null, error: String(err) };
+        }
+      }));
+
+      for (const br of batchResults) {
+        if (br.result) moduleResults[br.id] = br.result;
+      }
     }
 
-    const aiResult = await aiResponse.json();
-    const content = aiResult.choices?.[0]?.message?.content;
-    if (!content) throw new Error("Empty AI response");
+    logStep("Pipeline complete", { modulesCompleted: Object.keys(moduleResults).length });
 
-    logStep("AI analysis complete");
-    const profile = JSON.parse(content);
+    // ── Synthesize final profile ──
+    const bigFive = moduleResults.big_five || {};
+    const liwc = moduleResults.liwc_metrics || {};
+    const cognitive = moduleResults.cognitive_style || {};
+    const emotional = moduleResults.emotional_drivers || {};
+    const narrative = moduleResults.narrative_patterns || {};
+    const comm = moduleResults.communication_profile || {};
+    const leadership = moduleResults.leadership_profile || {};
+    const lexical = moduleResults.lexical_analysis || {};
+    const values = moduleResults.value_system || {};
+    const expertise = moduleResults.expertise_mapping || {};
 
-    // Upsert psychological profile
+    // Extract scores with fallbacks
+    const extractScore = (obj: any, ...paths: string[]): number => {
+      for (const path of paths) {
+        const parts = path.split(".");
+        let val: any = obj;
+        for (const p of parts) {
+          val = val?.[p];
+        }
+        if (typeof val === "number") return Math.min(100, Math.max(0, val));
+      }
+      return 50;
+    };
+
+    const profileData = {
+      guest_profile_id,
+      author_id: userId,
+      openness: extractScore(bigFive, "openness", "openness_to_experience.score", "scores.openness"),
+      conscientiousness: extractScore(bigFive, "conscientiousness", "conscientiousness.score", "scores.conscientiousness"),
+      extraversion: extractScore(bigFive, "extraversion", "extraversion.score", "scores.extraversion"),
+      agreeableness: extractScore(bigFive, "agreeableness", "agreeableness.score", "scores.agreeableness"),
+      neuroticism: extractScore(bigFive, "neuroticism", "neuroticism.score", "scores.neuroticism"),
+      analytical_thinking: extractScore(liwc, "analytical_thinking", "analytical.score", "scores.analytical_thinking"),
+      emotional_tone: extractScore(liwc, "emotional_tone", "emotional.score", "scores.emotional_tone"),
+      authenticity: extractScore(liwc, "authenticity", "authenticity.score", "scores.authenticity"),
+      clout: extractScore(liwc, "clout", "clout.score", "scores.clout"),
+      dominance: extractScore(comm, "dominance", "dominance.score", "scores.dominance"),
+      empathy: extractScore(emotional, "empathy", "emotional_intelligence.empathy", "scores.empathy"),
+      cognitive_complexity: extractScore(cognitive, "cognitive_complexity", "complexity.score", "scores.cognitive_complexity"),
+      confidence_level: extractScore(comm, "confidence_level", "confidence.score", "scores.confidence"),
+      communication_style: comm.communication_style || comm.style || comm.primary_style || null,
+      leadership_style: leadership.leadership_style || leadership.primary || leadership.style || null,
+      decision_style: leadership.decision_style || leadership.decision_making || null,
+      persuasion_approach: comm.persuasion_approach || comm.persuasion || null,
+      risk_tolerance: leadership.risk_tolerance || leadership.risk || null,
+      lexical_features: lexical || {},
+      analysis_metadata: {
+        text_length: analysisText.length,
+        analyzed_at: new Date().toISOString(),
+        episodes_count: guest.episode_ids?.length || 0,
+        tier,
+        modules_completed: Object.keys(moduleResults).length,
+        total_modules: modulesToRun.length,
+        total_prompts: totalPrompts,
+        pipeline_version: "v2-multi-module",
+        raw_modules: tier === "premium" ? moduleResults : undefined,
+        cognitive_style: cognitive,
+        emotional_drivers: emotional,
+        narrative_patterns: narrative,
+        value_system: values,
+        expertise_mapping: expertise,
+      },
+      model_version: `v2-${tier}-gemini-flash`,
+    };
+
     const { error: upsertError } = await supabase
       .from("psychological_profiles")
-      .upsert(
-        {
-          guest_profile_id,
-          author_id: userId,
-          openness: profile.big_five.openness,
-          conscientiousness: profile.big_five.conscientiousness,
-          extraversion: profile.big_five.extraversion,
-          agreeableness: profile.big_five.agreeableness,
-          neuroticism: profile.big_five.neuroticism,
-          analytical_thinking: profile.liwc_metrics.analytical_thinking,
-          emotional_tone: profile.liwc_metrics.emotional_tone,
-          authenticity: profile.liwc_metrics.authenticity,
-          clout: profile.liwc_metrics.clout,
-          dominance: profile.communication.dominance,
-          empathy: profile.communication.empathy,
-          cognitive_complexity: profile.communication.cognitive_complexity,
-          confidence_level: profile.communication.confidence_level,
-          communication_style: profile.insights.communication_style,
-          leadership_style: profile.insights.leadership_style,
-          decision_style: profile.insights.decision_style,
-          persuasion_approach: profile.insights.persuasion_approach,
-          risk_tolerance: profile.insights.risk_tolerance,
-          lexical_features: profile.lexical_features || {},
-          analysis_metadata: {
-            text_length: analysisText.length,
-            analyzed_at: new Date().toISOString(),
-            episodes_count: guest.episode_ids?.length || 0,
-          },
-          model_version: "v1-gemini-flash",
-        },
-        { onConflict: "guest_profile_id" }
-      );
+      .upsert(profileData as any, { onConflict: "guest_profile_id" });
 
     if (upsertError) throw new Error(`Save failed: ${upsertError.message}`);
     logStep("Profile saved");
 
-    return new Response(JSON.stringify({ success: true, profile }), {
+    return new Response(JSON.stringify({
+      success: true,
+      tier,
+      modules_completed: Object.keys(moduleResults).length,
+      profile: profileData,
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {

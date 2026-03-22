@@ -35,6 +35,7 @@ const FeatureFlagsTab = lazy(() => import("@/components/admin/FeatureFlagsTab").
 const ForumModerationTab = lazy(() => import("@/components/admin/ForumModerationTab").then(m => ({ default: m.ForumModerationTab })));
 const ControlLayerTab = lazy(() => import("@/components/admin/ControlLayerTab").then(m => ({ default: m.ControlLayerTab })));
 const ServiceManifestTab = lazy(() => import("@/components/admin/ServiceManifestTab").then(m => ({ default: m.ServiceManifestTab })));
+const AdminAdvancedTab = lazy(() => import("@/components/admin/AdminAdvancedTab").then(m => ({ default: m.AdminAdvancedTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -102,6 +103,7 @@ const TABS = [
   { value: "moderation", label: "Moderation", icon: MessageCircle },
   { value: "control-layer", label: "Control", icon: Layers },
   { value: "manifests", label: "Manifests", icon: Settings },
+  { value: "advanced", label: "Advanced", icon: TrendingUp },
 ];
 
 export default function AdminDashboard() {
@@ -643,6 +645,7 @@ export default function AdminDashboard() {
             <TabsContent value="moderation"><Suspense fallback={<TabLoader />}><ForumModerationTab /></Suspense></TabsContent>
             <TabsContent value="control-layer"><Suspense fallback={<TabLoader />}><ControlLayerTab /></Suspense></TabsContent>
             <TabsContent value="manifests"><Suspense fallback={<TabLoader />}><ServiceManifestTab /></Suspense></TabsContent>
+            <TabsContent value="advanced"><Suspense fallback={<TabLoader />}><AdminAdvancedTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
