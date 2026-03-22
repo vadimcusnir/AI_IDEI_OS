@@ -61,7 +61,9 @@ export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps
     const path = window.location.pathname;
     const resolvedImage = resolveOgImage(path, ogImage);
     setMeta("og:image", resolvedImage, true);
+    setMeta("og:image:alt", title, true);
     setMeta("twitter:image", resolvedImage);
+    setMeta("twitter:image:alt", title);
     setMeta("og:image:width", "1200", true);
     setMeta("og:image:height", "630", true);
 
