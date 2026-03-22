@@ -97,6 +97,10 @@ export default function TopicDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${topic.title} — Topics`}
+        description={topic.description || `Intelligence entities related to ${topic.title}`}
+      />
       <div className="border-b border-border bg-card">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">

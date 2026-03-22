@@ -77,33 +77,41 @@ export function AppBreadcrumbs() {
     return { path, label: displayLabel, isLast };
   });
 
+  const breadcrumbItems = [
+    { name: "Cockpit", url: "https://ai-idei.com/home" },
+    ...crumbs.map(c => ({ name: c.label, url: `https://ai-idei.com${c.path}` })),
+  ];
+
   return (
-    <Breadcrumb className="hidden sm:block">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/home" className="text-[11px]">Cockpit</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {crumbs.map((crumb) => (
-          <span key={crumb.path} className="contents">
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              {crumb.isLast ? (
-                <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
-                  {crumb.label}
-                </BreadcrumbPage>
-              ) : (
-                <BreadcrumbLink asChild>
-                  <Link to={crumb.path} className="text-[11px]">
+    <>
+      <BreadcrumbJsonLd items={breadcrumbItems} />
+      <Breadcrumb className="hidden sm:block">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/home" className="text-[11px]">Cockpit</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          {crumbs.map((crumb) => (
+            <span key={crumb.path} className="contents">
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                {crumb.isLast ? (
+                  <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
                     {crumb.label}
-                  </Link>
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
-          </span>
-        ))}
-      </BreadcrumbList>
-    </Breadcrumb>
+                  </BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link to={crumb.path} className="text-[11px]">
+                      {crumb.label}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </span>
+          ))}
+        </BreadcrumbList>
+      </Breadcrumb>
+    </>
   );
 }
