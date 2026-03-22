@@ -140,12 +140,21 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { balance, loading: balanceLoading } = useCreditBalance();
+  const { tier } = useUserTier();
+
+  const TIER_ORDER: Record<UserTier, number> = { free: 0, authenticated: 1, pro: 2, vip: 3 };
 
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
 
   const sectionHasActive = (section: NavSection) =>
     section.items.some((item) => isActive(item.to));
+
+  const isItemVisible = (item: NavItem) => {
+    if (item.adminOnly && !isAdmin) return false;
+    if (item.minTier && TIER_ORDER[tier] < TIER_ORDER[item.minTier]) return false;
+    return true;
+  };
 
   const allSections = isAdmin
     ? [...NAV_SECTIONS, ADMIN_SECTION]
