@@ -9,12 +9,11 @@ import logo from "@/assets/logo.gif";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
-  BarChart3, Bell, BookOpen, Users, Network, Rocket,
+  BarChart3, Bell, BookOpen, Users, Network,
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
-  Lock, ChevronRight, Plug, GraduationCap, Terminal,
-  Wallet, Trophy, Settings, Key, Eye, Database, FolderSearch,
-  Search, LayoutTemplate, FolderOpen, CreditCard, ShieldCheck,
-  BookMarked, Activity, Library, Globe, Crown,
+  Lock, ChevronRight, GraduationCap, Terminal,
+  Wallet, Trophy, Eye, ShieldCheck,
+  Activity,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
@@ -85,28 +84,30 @@ const PUBLIC_SECTIONS: NavSection[] = [
 /** Sections for authenticated users */
 const AUTH_SECTIONS: NavSection[] = [
   {
-    labelKey: "dashboard_section",
+    labelKey: "core_section",
     icon: Home,
     defaultOpen: true,
     authOnly: true,
     items: [
       { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home" },
-      { labelKey: "dashboard", to: "/dashboard", icon: BarChart3, controlId: "nav.dashboard" },
-      { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },
-    ],
-  },
-  {
-    labelKey: "create_section",
-    icon: Upload,
-    defaultOpen: true,
-    authOnly: true,
-    items: [
-      { labelKey: "transcribe", to: "/transcribe", icon: FileText, controlId: "nav.transcribe" },
       { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
       { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
       { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+      { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+    ],
+  },
+  {
+    labelKey: "tools_section",
+    icon: Sparkles,
+    authOnly: true,
+    items: [
+      { labelKey: "transcribe", to: "/transcribe", icon: FileText, controlId: "nav.transcribe" },
       { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
       { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
+      { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
+      { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
     ],
   },
   {
@@ -115,24 +116,9 @@ const AUTH_SECTIONS: NavSection[] = [
     authOnly: true,
     items: [
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
-      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true, minTier: "pro" as UserTier },
+      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", minTier: "pro" as UserTier },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
-      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
-    ],
-  },
-  {
-    labelKey: "operate_section",
-    icon: Settings,
-    authOnly: true,
-    items: [
-      { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
-      { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
-      { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units", minTier: "pro" as UserTier },
-      { labelKey: "collection_runs", to: "/collection-runs", icon: FolderSearch, controlId: "nav.collection-runs", minTier: "pro" as UserTier },
-      { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
-      { labelKey: "api", to: "/api", icon: Key, controlId: "nav.api" },
     ],
   },
   {
@@ -141,11 +127,8 @@ const AUTH_SECTIONS: NavSection[] = [
     authOnly: true,
     items: [
       { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
-      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
       { labelKey: "wallet", to: "/wallet", icon: Wallet, controlId: "nav.wallet" },
-      { labelKey: "vip", to: "/vip", icon: Crown, controlId: "nav.vip" },
       { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
-      { labelKey: "guest_pages", to: "/guests", icon: Users, controlId: "nav.guests" },
       { labelKey: "gamification", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
     ],
   },

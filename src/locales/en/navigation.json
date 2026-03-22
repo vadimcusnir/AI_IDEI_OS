@@ -34,6 +34,8 @@
   "knowledge": "Knowledge",
   "pipeline_status": "Pipeline Status",
   "chat": "Command Center",
+  "core_section": "Main",
+  "tools_section": "Tools",
   "dashboard_section": "Dashboard",
   "create_section": "Create",
   "pipeline_section": "Pipeline",
