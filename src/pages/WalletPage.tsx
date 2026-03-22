@@ -5,6 +5,7 @@ import { useWalletState } from "@/hooks/useWalletState";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { WalletPanel } from "@/components/wallet/WalletPanel";
+import { TokenPanel } from "@/components/wallet/TokenPanel";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
