@@ -110,6 +110,7 @@ export function YouTubeTranscriber() {
       } as any).select("*").single();
 
       if (epErr || !ep) throw new Error("Failed to create episode");
+      setLastEpisodeId(ep.id);
 
       setProgress(50);
       setStage("processing");
