@@ -156,11 +156,32 @@ export function LLMIndexationTab() {
   const runScan = async () => {
     setScanning(true);
     try {
-      const { data, error } = await supabase.functions.invoke("llm-audit", {
-        body: { action: "scan" },
+      // Step 1: Crawl pages
+      const { data: crawlData, error: crawlErr } = await supabase.functions.invoke("llm-crawler", {
+        body: { action: "crawl", limit: 100 },
       });
-      if (error) throw error;
-      toast.success(`Scan complete: ${data.pages_scanned} pages, ${data.total_issues} issues`);
+      if (crawlErr) throw crawlErr;
+      toast.success(`Crawled: ${crawlData.discovered} new, ${crawlData.updated} updated`);
+
+      // Step 2: Analyze entities
+      const { data: analyzeData, error: analyzeErr } = await supabase.functions.invoke("llm-crawler", {
+        body: { action: "analyze", limit: 30 },
+      });
+      if (analyzeErr) throw analyzeErr;
+      toast.success(`Analyzed ${analyzeData.analyzed} pages`);
+
+      // Step 3: Compute scores
+      await supabase.functions.invoke("llm-crawler", { body: { action: "score" } });
+
+      // Step 4: Detect issues
+      const { data: issueData } = await supabase.functions.invoke("llm-crawler", {
+        body: { action: "detect-issues" },
+      });
+      toast.success(`Found ${issueData?.issues_found || 0} issues`);
+
+      // Also run legacy llm-audit for page index
+      await supabase.functions.invoke("llm-audit", { body: { action: "scan" } }).catch(() => {});
+      
       loadData();
     } catch (e: any) {
       toast.error("Scan failed: " + (e.message || "Unknown error"));
@@ -177,6 +198,12 @@ export function LLMIndexationTab() {
       });
       if (error) throw error;
       toast.success(`Generated ${data.fixes_generated} fix suggestions`);
+
+      // Also generate knowledge pages
+      await supabase.functions.invoke("generate-knowledge-pages", {
+        body: { action: "generate", limit: 10 },
+      }).catch(() => {});
+
       loadData();
     } catch (e: any) {
       toast.error("Fix generation failed: " + (e.message || "Unknown error"));

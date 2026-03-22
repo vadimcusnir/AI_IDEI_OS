@@ -1927,6 +1927,44 @@ export type Database = {
           },
         ]
       }
+      entity_graph: {
+        Row: {
+          created_at: string | null
+          id: string
+          page_id: string | null
+          relation_type: string | null
+          source_entity: string
+          strength: number | null
+          target_entity: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          page_id?: string | null
+          relation_type?: string | null
+          source_entity: string
+          strength?: number | null
+          target_entity: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          page_id?: string | null
+          relation_type?: string | null
+          source_entity?: string
+          strength?: number | null
+          target_entity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_graph_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "site_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       entity_labels: {
         Row: {
           created_at: string | null
@@ -3478,6 +3516,47 @@ export type Database = {
         }
         Relationships: []
       }
+      llm_citations: {
+        Row: {
+          citation_text: string | null
+          citation_url: string | null
+          confidence: number | null
+          detected_at: string | null
+          id: string
+          query_context: string | null
+          referenced_page_id: string | null
+          source_platform: string
+        }
+        Insert: {
+          citation_text?: string | null
+          citation_url?: string | null
+          confidence?: number | null
+          detected_at?: string | null
+          id?: string
+          query_context?: string | null
+          referenced_page_id?: string | null
+          source_platform: string
+        }
+        Update: {
+          citation_text?: string | null
+          citation_url?: string | null
+          confidence?: number | null
+          detected_at?: string | null
+          id?: string
+          query_context?: string | null
+          referenced_page_id?: string | null
+          source_platform?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "llm_citations_referenced_page_id_fkey"
+            columns: ["referenced_page_id"]
+            isOneToOne: false
+            referencedRelation: "site_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       llm_crawl_queue: {
         Row: {
           completed_at: string | null
@@ -3605,6 +3684,53 @@ export type Database = {
           },
         ]
       }
+      llm_issues: {
+        Row: {
+          auto_fix_available: boolean | null
+          description: string | null
+          detected_at: string | null
+          fix_applied: boolean | null
+          id: string
+          issue_type: string
+          page_id: string | null
+          resolved_at: string | null
+          severity: string | null
+          suggested_fix: string | null
+        }
+        Insert: {
+          auto_fix_available?: boolean | null
+          description?: string | null
+          detected_at?: string | null
+          fix_applied?: boolean | null
+          id?: string
+          issue_type: string
+          page_id?: string | null
+          resolved_at?: string | null
+          severity?: string | null
+          suggested_fix?: string | null
+        }
+        Update: {
+          auto_fix_available?: boolean | null
+          description?: string | null
+          detected_at?: string | null
+          fix_applied?: boolean | null
+          id?: string
+          issue_type?: string
+          page_id?: string | null
+          resolved_at?: string | null
+          severity?: string | null
+          suggested_fix?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "llm_issues_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "site_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       llm_page_index: {
         Row: {
           created_at: string | null
@@ -3697,6 +3823,50 @@ export type Database = {
           user_agent?: string | null
         }
         Relationships: []
+      }
+      llm_scores: {
+        Row: {
+          citation_probability: number | null
+          computed_at: string | null
+          embedding_quality: number | null
+          entity_density: number | null
+          id: string
+          internal_link_score: number | null
+          llm_visibility_score: number | null
+          page_id: string | null
+          schema_coverage: number | null
+        }
+        Insert: {
+          citation_probability?: number | null
+          computed_at?: string | null
+          embedding_quality?: number | null
+          entity_density?: number | null
+          id?: string
+          internal_link_score?: number | null
+          llm_visibility_score?: number | null
+          page_id?: string | null
+          schema_coverage?: number | null
+        }
+        Update: {
+          citation_probability?: number | null
+          computed_at?: string | null
+          embedding_quality?: number | null
+          entity_density?: number | null
+          id?: string
+          internal_link_score?: number | null
+          llm_visibility_score?: number | null
+          page_id?: string | null
+          schema_coverage?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "llm_scores_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: true
+            referencedRelation: "site_pages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       llm_visibility_scores: {
         Row: {
@@ -4481,6 +4651,47 @@ export type Database = {
         }
         Relationships: []
       }
+      parsed_content: {
+        Row: {
+          content: string
+          created_at: string | null
+          heading: string | null
+          id: string
+          page_id: string
+          position: number | null
+          section_type: string | null
+          word_count: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          heading?: string | null
+          id?: string
+          page_id: string
+          position?: number | null
+          section_type?: string | null
+          word_count?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          heading?: string | null
+          id?: string
+          page_id?: string
+          position?: number | null
+          section_type?: string | null
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parsed_content_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "site_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_surface_pages: {
         Row: {
           created_at: string
@@ -5002,6 +5213,84 @@ export type Database = {
             referencedColumns: ["service_key"]
           },
         ]
+      }
+      site_pages: {
+        Row: {
+          canonical_url: string | null
+          content_hash: string | null
+          created_at: string | null
+          embedding_score: number | null
+          entity_count: number | null
+          external_link_count: number | null
+          first_discovered: string | null
+          heading_count: number | null
+          id: string
+          internal_link_count: number | null
+          language: string | null
+          last_scan: string | null
+          last_schema_update: string | null
+          llm_visibility_score: number | null
+          meta_description: string | null
+          page_type: string | null
+          schema_present: boolean | null
+          schema_types: string[] | null
+          status_code: number | null
+          title: string | null
+          updated_at: string | null
+          url: string
+          word_count: number | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          content_hash?: string | null
+          created_at?: string | null
+          embedding_score?: number | null
+          entity_count?: number | null
+          external_link_count?: number | null
+          first_discovered?: string | null
+          heading_count?: number | null
+          id?: string
+          internal_link_count?: number | null
+          language?: string | null
+          last_scan?: string | null
+          last_schema_update?: string | null
+          llm_visibility_score?: number | null
+          meta_description?: string | null
+          page_type?: string | null
+          schema_present?: boolean | null
+          schema_types?: string[] | null
+          status_code?: number | null
+          title?: string | null
+          updated_at?: string | null
+          url: string
+          word_count?: number | null
+        }
+        Update: {
+          canonical_url?: string | null
+          content_hash?: string | null
+          created_at?: string | null
+          embedding_score?: number | null
+          entity_count?: number | null
+          external_link_count?: number | null
+          first_discovered?: string | null
+          heading_count?: number | null
+          id?: string
+          internal_link_count?: number | null
+          language?: string | null
+          last_scan?: string | null
+          last_schema_update?: string | null
+          llm_visibility_score?: number | null
+          meta_description?: string | null
+          page_type?: string | null
+          schema_present?: boolean | null
+          schema_types?: string[] | null
+          status_code?: number | null
+          title?: string | null
+          updated_at?: string | null
+          url?: string
+          word_count?: number | null
+        }
+        Relationships: []
       }
       source_documents: {
         Row: {

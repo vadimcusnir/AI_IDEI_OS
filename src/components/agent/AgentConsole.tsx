@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "./AgentSlashMenu";
 import { ExecutionTimeline } from "./ExecutionTimeline";
 import { COMMAND_PACKS, type CommandPack } from "./CommandPacks";
+import { useAgentDecisionEngine, type Suggestion } from "@/hooks/useAgentDecisionEngine";
 
 interface Message {
   id: string;
@@ -80,6 +81,7 @@ export function AgentConsole() {
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [activePack, setActivePack] = useState<CommandPack | null>(null);
+  const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -464,6 +466,37 @@ export function AgentConsole() {
         {messages.map((msg) => (
           <AgentBubble key={msg.id} msg={msg} onNavigate={navigate} isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"} />
         ))}
+
+        {/* Proactive Suggestions from Decision Engine */}
+        {isEmptyState && decisionSuggestions.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="space-y-2 mt-2"
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-1">
+              Suggested next actions
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {decisionSuggestions.slice(0, 4).map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => handleHintClick(s.prompt)}
+                  className="group flex items-start gap-3 p-3 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 hover:border-primary/40 transition-all text-left"
+                >
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <span className="text-sm">{s.icon}</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium">{s.label}</p>
+                    <p className="text-[10px] text-muted-foreground line-clamp-2">{s.description}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Command Pack selector + hints — only in empty state */}
         {isEmptyState && (
