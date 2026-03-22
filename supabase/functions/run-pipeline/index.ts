@@ -302,7 +302,7 @@ Deno.serve(async (req) => {
     }
 
     // Finalize pipeline run
-    const allCompleted = results.every((r) => r.status === "completed");
+    const allCompleted = results.filter(Boolean).every((r: any) => r.status === "completed");
     await supabase
       .from("imf_pipeline_runs")
       .update({
