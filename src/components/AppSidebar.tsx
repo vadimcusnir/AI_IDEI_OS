@@ -74,6 +74,7 @@ const NAV_SECTIONS: NavSection[] = [
     labelKey: "operate_section",
     items: [
       { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { labelKey: "integrations", to: "/integrations", icon: Layers, controlId: "nav.integrations" },
       { labelKey: "guest_pages", to: "/guests", icon: Users, controlId: "nav.guests" },
       { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
       { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },

@@ -2873,6 +2873,56 @@ export type Database = {
         }
         Relationships: []
       }
+      incoming_webhooks: {
+        Row: {
+          accepted_content_types: string[]
+          auto_extract: boolean
+          calls_count: number
+          created_at: string
+          id: string
+          is_active: boolean
+          last_called_at: string | null
+          name: string
+          target_workspace_id: string | null
+          user_id: string
+          webhook_key: string
+        }
+        Insert: {
+          accepted_content_types?: string[]
+          auto_extract?: boolean
+          calls_count?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_called_at?: string | null
+          name?: string
+          target_workspace_id?: string | null
+          user_id: string
+          webhook_key?: string
+        }
+        Update: {
+          accepted_content_types?: string[]
+          auto_extract?: boolean
+          calls_count?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_called_at?: string | null
+          name?: string
+          target_workspace_id?: string | null
+          user_id?: string
+          webhook_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incoming_webhooks_target_workspace_id_fkey"
+            columns: ["target_workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       insight_scores: {
         Row: {
           composite_score: number
@@ -2929,6 +2979,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      integration_connectors: {
+        Row: {
+          auth_type: string
+          config_schema: Json | null
+          created_at: string
+          description: string
+          display_name: string
+          icon: string
+          id: string
+          is_active: boolean
+          provider: string
+          rate_limit_per_hour: number
+          sync_mode: string
+        }
+        Insert: {
+          auth_type?: string
+          config_schema?: Json | null
+          created_at?: string
+          description?: string
+          display_name: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          provider: string
+          rate_limit_per_hour?: number
+          sync_mode?: string
+        }
+        Update: {
+          auth_type?: string
+          config_schema?: Json | null
+          created_at?: string
+          description?: string
+          display_name?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          provider?: string
+          rate_limit_per_hour?: number
+          sync_mode?: string
+        }
+        Relationships: []
       }
       kb_analytics: {
         Row: {
@@ -4546,6 +4638,78 @@ export type Database = {
           },
         ]
       }
+      source_documents: {
+        Row: {
+          content_hash: string | null
+          content_type: string
+          created_at: string
+          episode_id: string | null
+          error_message: string | null
+          external_id: string | null
+          external_url: string | null
+          id: string
+          integration_id: string | null
+          metadata: Json | null
+          neurons_extracted: number
+          raw_content: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content_hash?: string | null
+          content_type?: string
+          created_at?: string
+          episode_id?: string | null
+          error_message?: string | null
+          external_id?: string | null
+          external_url?: string | null
+          id?: string
+          integration_id?: string | null
+          metadata?: Json | null
+          neurons_extracted?: number
+          raw_content?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content_hash?: string | null
+          content_type?: string
+          created_at?: string
+          episode_id?: string | null
+          error_message?: string | null
+          external_id?: string | null
+          external_url?: string | null
+          id?: string
+          integration_id?: string | null
+          metadata?: Json | null
+          neurons_extracted?: number
+          raw_content?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_documents_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: false
+            referencedRelation: "episodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "source_documents_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "user_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscription_plans: {
         Row: {
           created_at: string
@@ -4611,6 +4775,62 @@ export type Database = {
           reason?: string
         }
         Relationships: []
+      }
+      sync_history: {
+        Row: {
+          completed_at: string | null
+          documents_found: number
+          documents_new: number
+          documents_skipped: number
+          documents_updated: number
+          duration_ms: number | null
+          error_log: Json | null
+          id: string
+          integration_id: string
+          neurons_generated: number
+          started_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          documents_found?: number
+          documents_new?: number
+          documents_skipped?: number
+          documents_updated?: number
+          duration_ms?: number | null
+          error_log?: Json | null
+          id?: string
+          integration_id: string
+          neurons_generated?: number
+          started_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          documents_found?: number
+          documents_new?: number
+          documents_skipped?: number
+          documents_updated?: number
+          duration_ms?: number | null
+          error_log?: Json | null
+          id?: string
+          integration_id?: string
+          neurons_generated?: number
+          started_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_history_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "user_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       system_config: {
         Row: {
@@ -5097,6 +5317,65 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_integrations: {
+        Row: {
+          auth_tokens: Json | null
+          connector_id: string
+          created_at: string
+          documents_imported: number
+          error_message: string | null
+          id: string
+          last_sync_at: string | null
+          neurons_generated: number
+          next_sync_at: string | null
+          settings: Json | null
+          status: string
+          sync_interval_hours: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auth_tokens?: Json | null
+          connector_id: string
+          created_at?: string
+          documents_imported?: number
+          error_message?: string | null
+          id?: string
+          last_sync_at?: string | null
+          neurons_generated?: number
+          next_sync_at?: string | null
+          settings?: Json | null
+          status?: string
+          sync_interval_hours?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auth_tokens?: Json | null
+          connector_id?: string
+          created_at?: string
+          documents_imported?: number
+          error_message?: string | null
+          id?: string
+          last_sync_at?: string | null
+          neurons_generated?: number
+          next_sync_at?: string | null
+          settings?: Json | null
+          status?: string
+          sync_interval_hours?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_integrations_connector_id_fkey"
+            columns: ["connector_id"]
+            isOneToOne: false
+            referencedRelation: "integration_connectors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_karma: {
         Row: {
@@ -5810,6 +6089,7 @@ export type Database = {
         Returns: Json
       }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
+      compute_content_hash: { Args: { _content: string }; Returns: string }
       compute_idearank: { Args: never; Returns: undefined }
       data_pipeline_stats: { Args: never; Returns: Json }
       deactivate_emergency: { Args: { _control_id: string }; Returns: boolean }

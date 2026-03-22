@@ -75,6 +75,7 @@ const WalletPage = lazy(() => import("./pages/WalletPage"));
 const GamificationPage = lazy(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
 const Transcribe = lazy(() => import("./pages/Transcribe"));
+const Integrations = lazy(() => import("./pages/Integrations"));
 
 function PageLoader() {
   return (
@@ -178,6 +179,7 @@ const App = () => (
                 <Route path="/wallet" element={<ProtectedRoute><AppLayout><WalletPage /></AppLayout></ProtectedRoute>} />
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><GamificationPage /></AppLayout></ProtectedRoute>} />
                 <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><DataPipeline /></AppLayout></ProtectedRoute>} />
+                <Route path="/integrations" element={<ProtectedRoute><AppLayout><Integrations /></AppLayout></ProtectedRoute>} />
 
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />

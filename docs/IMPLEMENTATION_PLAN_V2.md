@@ -137,43 +137,48 @@ Acest plan adresează cele 5 direcții strategice noi identificate în specifica
 
 **Obiectiv:** AI-IDEI devine hub central de cunoștințe, nu doar tool de analiză.
 
-#### 3.1 Connector Architecture ❌
-- [ ] Tabel `integration_connectors` (provider, auth_type, sync_mode, rate_limit)
-- [ ] Tabel `user_integrations` (user_id, connector_id, tokens, last_sync)
-- [ ] Tabel `source_documents` (external_id, content_hash, status)
-- [ ] Ingestion protocol unificat (IngestionPayload standard)
+#### 3.1 Connector Architecture ✅
+- [x] Tabel `integration_connectors` (provider, auth_type, sync_mode, rate_limit)
+- [x] Tabel `user_integrations` (user_id, connector_id, tokens, last_sync)
+- [x] Tabel `source_documents` (external_id, content_hash, status)
+- [x] Tabel `sync_history` (sync runs tracking)
+- [x] Tabel `incoming_webhooks` (webhook key, auto-extract)
+- [x] Ingestion protocol unificat (IngestionPayload standard)
+- [x] 8 connectors seeded (YouTube, Notion, Zoom, Google Docs, Zapier, Webhook, RSS, Upload)
 
-#### 3.2 Native Integrations (Faza 1) ❌
-- [ ] **YouTube** — URL parsing + auto-transcribe (deja funcțional prin upload)
-- [ ] **Notion** — OAuth connect + page import + sync
-- [ ] **Zoom** — OAuth + recording import + auto-transcribe
+#### 3.2 Native Integrations (Faza 1) 🔧
+- [x] **YouTube** — URL parsing + auto-transcribe (funcțional prin upload + sync)
+- [ ] **Notion** — OAuth connect + page import + sync (necesită OAuth setup extern)
+- [ ] **Zoom** — OAuth + recording import + auto-transcribe (necesită OAuth setup extern)
 
-#### 3.3 Automation Integrations ❌
-- [ ] **Zapier** — triggers (new neuron, extraction finished) + actions (create neuron, run extraction)
-- [ ] **Webhook incoming** — `POST /webhooks/incoming` → pipeline
-- [ ] **Webhook outgoing** — events (neuron_created, job_completed)
+#### 3.3 Automation Integrations ✅
+- [x] **Zapier** — triggers (new_neuron, extraction_finished, new_artifact) + actions (create_neuron, run_extraction, ingest_document)
+- [x] **Webhook incoming** — `POST /webhook-ingest?key=KEY` → pipeline cu auto-extract
+- [x] **Webhook outgoing** — events (neuron_created, job_completed) — via deliver-webhooks existent
 
-#### 3.4 Deduplication Engine 🔧
-- [x] Cosine similarity pe embeddings (threshold 0.40) — ✅ implementat
-- [ ] Content hash (SHA-256 pe normalized content)
-- [ ] Cross-source dedup (Notion + Upload = same insight)
+#### 3.4 Deduplication Engine ✅
+- [x] Cosine similarity pe embeddings (threshold 0.40)
+- [x] Content hash (SHA-256 pe normalized content) — `compute_content_hash()` + trigger automat
+- [x] Cross-source dedup (trigger `auto_content_hash` detectează duplicatele automat)
 
-#### 3.5 Auto-Sync Engine ❌
-- [ ] Sync engine cu interval configurabil (6h default)
-- [ ] Detect new/updated content
-- [ ] Incremental sync (doar conținut nou)
+#### 3.5 Auto-Sync Engine ✅
+- [x] Sync engine cu interval configurabil (6h default) — `integration-sync` edge function
+- [x] Detect new/updated content (YouTube URL tracking, RSS feed parsing)
+- [x] Incremental sync (doar conținut nou, skip existing by URL/hash)
 
-#### 3.6 Integration Dashboard UI ❌
-- [ ] Pagina `/dashboard/integrations`
-- [ ] Connect/disconnect providers
-- [ ] Stats: documents imported, neurons generated, last sync
-- [ ] Sync history + error log
+#### 3.6 Integration Dashboard UI ✅
+- [x] Pagina `/integrations` cu tabs (Connectors, Webhooks, Sync History)
+- [x] Connect/disconnect providers
+- [x] Stats: documents imported, neurons generated, last sync
+- [x] Sync history + error log
+- [x] Incoming webhook management (create, copy URL, delete)
+- [x] Payload documentation inline
 
 #### 3.7 Browser Extension ❌ (Faza avansată)
 - [ ] Chrome extension: select text → extract to AI-IDEI
 - [ ] Suport: web pages, Twitter, LinkedIn, YouTube
 
-**Efort estimat:** 10-12 sesiuni (fără browser extension)
+**Efort estimat:** 10-12 sesiuni (fără browser extension) — ✅ Completat în 1 sesiune
 
 ---
 
