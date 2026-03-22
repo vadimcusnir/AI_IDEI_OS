@@ -118,7 +118,7 @@ export default function PublicProfile() {
         {/* Footer */}
         <div className="text-center mt-12">
           <a href="/links" className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
-            <img src={logo} className="h-4 w-4 rounded-full" alt="" />
+            <Logo size="h-4 w-4" alt="" />
             AI-IDEI Knowledge OS
           </a>
         </div>

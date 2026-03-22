@@ -421,7 +421,7 @@ export default function GuestProfile() {
 
         <div className="text-center pt-6 border-t border-border">
           <a href="/" className="inline-flex items-center gap-2 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
-            <img src={logo} className="h-5 w-5 rounded-full" alt="AI-IDEI" />
+            <Logo size="h-5 w-5" />
             <span className="font-medium">AI-IDEI</span>
             <span className="text-muted-foreground/30">Knowledge OS</span>
           </a>

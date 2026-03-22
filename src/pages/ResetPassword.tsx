@@ -42,7 +42,7 @@ export default function ResetPassword() {
       <SEOHead title="Reset Password — AI-IDEI" description="Set a new password for your AI-IDEI account." />
       <div className="w-full max-w-sm">
         <button onClick={() => navigate("/")} className="flex items-center justify-center gap-2 mb-8 mx-auto">
-          <img src={logo} alt="AI-IDEI" className="h-10 w-10 rounded-full" />
+          <Logo size="h-10 w-10" loading="eager" />
           <span className="text-2xl font-normal">AI-IDEI</span>
         </button>
         <div className="bg-card rounded-xl border border-border p-6">

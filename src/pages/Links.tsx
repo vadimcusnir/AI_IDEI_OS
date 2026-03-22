@@ -66,7 +66,7 @@ function HeroBlock({ t }: { t: (k: string) => string }) {
       <div className="relative max-w-lg mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-6 text-center">
         <div className="relative mx-auto mb-5 h-20 w-20">
           <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-ai-accent/20 blur-xl" />
-          <img src={logo} alt="AI-IDEI" className="relative h-20 w-20 rounded-full border-2 border-primary/20 shadow-lg shadow-primary/20 object-cover" />
+          <Logo animated size="h-20 w-20" className="relative border-2 border-primary/20 shadow-lg shadow-primary/20 object-cover" loading="eager" />
         </div>
         <h1 className="text-2xl font-bold mb-2">AI-IDEI.com</h1>
         <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">

@@ -17,7 +17,7 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-3 col-span-2 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2">
-              <img src={logo} alt="AI-IDEI" className="h-6 w-6 rounded-full" />
+              <Logo size="h-6 w-6" />
               <span className="text-lg font-bold tracking-tight">
                 AI-<span className="text-primary">IDEI</span>
               </span>

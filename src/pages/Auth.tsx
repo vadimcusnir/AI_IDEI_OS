@@ -125,7 +125,7 @@ export default function Auth() {
         <button onClick={() => navigate("/")} className="flex items-center justify-center gap-2.5 mb-8 mx-auto group">
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-primary/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <img src={logo} alt="AI-IDEI" className="relative h-10 w-10 rounded-full shadow-lg shadow-primary/10" />
+            <Logo size="h-10 w-10" className="relative shadow-lg shadow-primary/10" loading="eager" />
           </div>
           <span className="text-2xl font-normal">AI-IDEI</span>
         </button>
