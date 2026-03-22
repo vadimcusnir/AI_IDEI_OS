@@ -6889,7 +6889,9 @@ export type Database = {
         Args: { _target_id: string; _target_type: string; _vote_value: number }
         Returns: Json
       }
+      generate_daily_challenges: { Args: never; Returns: undefined }
       get_public_profile: { Args: { _username: string }; Returns: Json }
+      get_tier_xp_multiplier: { Args: { _user_id: string }; Returns: number }
       has_admin_permission: {
         Args: { _permission: string; _user_id: string }
         Returns: boolean
