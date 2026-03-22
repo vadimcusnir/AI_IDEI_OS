@@ -37,7 +37,7 @@ export default function PublicProfile() {
   if (notFound) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-        <img src={logo} alt="AI-IDEI" className="h-16 w-16 rounded-full mb-4 opacity-30" />
+        <Logo size="h-16 w-16" className="mb-4 opacity-30" />
         <h1 className="text-xl font-bold mb-2">{t("public_profile.not_found_title", { username })}</h1>
         <p className="text-sm text-muted-foreground mb-6 text-center max-w-sm">
           {t("public_profile.not_found_desc")}
