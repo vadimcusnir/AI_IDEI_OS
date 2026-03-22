@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   Upload, Brain, Sparkles, Briefcase, Coins, ArrowRight,
-  Clock, Plus, Zap, TrendingUp, FileText, Youtube,
+  Clock, Plus, Zap, TrendingUp, FileText, Youtube, Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
