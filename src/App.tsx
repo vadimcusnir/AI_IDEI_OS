@@ -197,7 +197,9 @@ const App = () => (
                 <Route path="/integrations" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Integrations failed to load"><Integrations /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/cognitive-units" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Cognitive units failed to load"><CognitiveUnits /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/collection-runs" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Collection runs failed to load"><CollectionRuns /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-
+                <Route path="/notebooks" element={<ProtectedRoute><AppLayout><NotebookWorkspace /></AppLayout></ProtectedRoute>} />
+                <Route path="/notebook/:id" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Notebook failed to load"><NotebookDetail /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/capitalization" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Engine failed to load"><CapitalizationEngine /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
                 <Route path="/cusnir-os" element={<AdminRoute><AppLayout><CusnirOSOperator /></AppLayout></AdminRoute>} />
