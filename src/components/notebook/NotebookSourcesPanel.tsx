@@ -1,30 +1,48 @@
-import { useState } from "react";
-import { Plus, FileText, Globe, Search, Trash2, Check, X } from "lucide-react";
+import { useState, useRef } from "react";
+import { Plus, FileText, Globe, Search, Trash2, Check, X, Upload, Brain, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { NotebookSource } from "@/hooks/useNotebook";
 import type { UseMutationResult } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Props {
   sources: NotebookSource[];
   addSource: UseMutationResult<void, Error, { title: string; content: string; source_type: string }>;
   toggleSource: UseMutationResult<void, Error, { id: string; selected: boolean }>;
   deleteSource: UseMutationResult<void, Error, string>;
+  notebook?: { id: string } | undefined;
 }
 
 const SOURCE_ICONS: Record<string, typeof FileText> = {
   text: FileText,
   url: Globe,
   pdf: FileText,
+  neuron: Brain,
 };
 
-export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteSource }: Props) {
-  const [showAdd, setShowAdd] = useState(false);
+type AddMode = "text" | "file" | "neuron" | null;
+
+interface NeuronResult {
+  id: number;
+  title: string;
+  number: number;
+}
+
+export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteSource, notebook }: Props) {
+  const [addMode, setAddMode] = useState<AddMode>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [filter, setFilter] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [neuronSearch, setNeuronSearch] = useState("");
+  const [neuronResults, setNeuronResults] = useState<NeuronResult[]>([]);
+  const [searchingNeurons, setSearchingNeurons] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredSources = sources.filter((s) =>
     s.title.toLowerCase().includes(filter.toLowerCase())
@@ -34,24 +52,155 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
     if (!newTitle.trim()) return;
     addSource.mutate(
       { title: newTitle.trim(), content: newContent, source_type: "text" },
-      { onSuccess: () => { setShowAdd(false); setNewTitle(""); setNewContent(""); } }
+      { onSuccess: () => { setAddMode(null); setNewTitle(""); setNewContent(""); } }
     );
   };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !notebook) return;
+
+    setUploading(true);
+    try {
+      // Read file content for text files
+      let content = "";
+      if (file.type === "text/plain" || file.type === "text/markdown" || file.type === "text/csv") {
+        content = await file.text();
+      } else if (file.type === "application/json") {
+        content = await file.text();
+      } else if (file.type === "application/pdf") {
+        content = "[PDF file — content will be used via file reference]";
+      }
+
+      // Upload to storage
+      const filePath = `${notebook.id}/${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("notebook-files")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("notebook-files")
+        .getPublicUrl(filePath);
+
+      // For text-based files, use content directly
+      addSource.mutate(
+        {
+          title: file.name,
+          content: content || `File: ${file.name}`,
+          source_type: file.type === "application/pdf" ? "pdf" : "text",
+        },
+        {
+          onSuccess: () => {
+            toast.success(`${file.name} added`);
+            setAddMode(null);
+          },
+        }
+      );
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Upload failed: " + (err.message || "Unknown error"));
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const searchNeurons = async (query: string) => {
+    setNeuronSearch(query);
+    if (query.trim().length < 2) {
+      setNeuronResults([]);
+      return;
+    }
+    setSearchingNeurons(true);
+    try {
+      const { data, error } = await supabase
+        .from("neurons")
+        .select("id, title, number")
+        .ilike("title", `%${query.trim()}%`)
+        .limit(10);
+      if (error) throw error;
+      setNeuronResults((data as NeuronResult[]) || []);
+    } catch {
+      setNeuronResults([]);
+    } finally {
+      setSearchingNeurons(false);
+    }
+  };
+
+  const importNeuron = async (neuron: NeuronResult) => {
+    // Fetch neuron blocks for content
+    try {
+      const { data: blocks, error } = await supabase
+        .from("neuron_blocks")
+        .select("content, type")
+        .eq("neuron_id", neuron.id)
+        .order("position", { ascending: true });
+
+      if (error) throw error;
+
+      const content = (blocks || []).map((b) => b.content).join("\n\n");
+
+      addSource.mutate(
+        {
+          title: `Neuron #${neuron.number}: ${neuron.title}`,
+          content: content || neuron.title,
+          source_type: "neuron",
+        },
+        {
+          onSuccess: () => {
+            toast.success(`Neuron #${neuron.number} imported`);
+            setNeuronSearch("");
+            setNeuronResults([]);
+            setAddMode(null);
+          },
+        }
+      );
+    } catch (err: any) {
+      toast.error("Import failed");
+    }
+  };
+
+  const selectAll = () => {
+    sources.forEach((s) => {
+      if (!s.is_selected) toggleSource.mutate({ id: s.id, selected: true });
+    });
+  };
+
+  const deselectAll = () => {
+    sources.forEach((s) => {
+      if (s.is_selected) toggleSource.mutate({ id: s.id, selected: false });
+    });
+  };
+
+  const selectedCount = sources.filter((s) => s.is_selected).length;
 
   return (
     <div className="flex flex-col h-full bg-card border-r border-border">
       {/* Header */}
       <div className="px-4 py-3 border-b border-border shrink-0">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-semibold text-foreground">Sources</h3>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-7 text-xs"
-            onClick={() => setShowAdd(!showAdd)}
-          >
-            <Plus className="h-3 w-3 mr-1" /> Add
-          </Button>
+          <h3 className="text-sm font-semibold text-foreground">
+            Sources
+            {sources.length > 0 && (
+              <span className="ml-1.5 text-[10px] font-normal text-muted-foreground">
+                {selectedCount}/{sources.length}
+              </span>
+            )}
+          </h3>
+          <div className="flex items-center gap-1">
+            {sources.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 text-[10px] px-2"
+                onClick={selectedCount === sources.length ? deselectAll : selectAll}
+              >
+                {selectedCount === sources.length ? "Deselect" : "Select all"}
+              </Button>
+            )}
+          </div>
         </div>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -64,45 +213,173 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
         </div>
       </div>
 
-      {/* Add form */}
-      {showAdd && (
-        <div className="px-4 py-3 border-b border-border space-y-2 shrink-0">
-          <Input
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            placeholder="Source title"
-            className="h-8 text-xs"
-          />
-          <textarea
-            value={newContent}
-            onChange={(e) => setNewContent(e.target.value)}
-            placeholder="Paste content here..."
-            className="w-full h-20 text-xs bg-background border border-border rounded-md px-3 py-2 resize-none outline-none"
-          />
-          <div className="flex gap-1.5">
-            <Button size="sm" className="h-7 text-xs flex-1" onClick={handleAdd} disabled={addSource.isPending}>
-              <Check className="h-3 w-3 mr-1" /> Add
-            </Button>
-            <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setShowAdd(false)}>
-              <X className="h-3 w-3" />
-            </Button>
-          </div>
+      {/* Add buttons */}
+      <div className="px-3 py-2 border-b border-border shrink-0">
+        <div className="flex gap-1.5">
+          <Button
+            variant={addMode === "text" ? "default" : "outline"}
+            size="sm"
+            className="h-7 text-[10px] flex-1 gap-1"
+            onClick={() => setAddMode(addMode === "text" ? null : "text")}
+          >
+            <Plus className="h-3 w-3" /> Text
+          </Button>
+          <Button
+            variant={addMode === "file" ? "default" : "outline"}
+            size="sm"
+            className="h-7 text-[10px] flex-1 gap-1"
+            onClick={() => setAddMode(addMode === "file" ? null : "file")}
+          >
+            <Upload className="h-3 w-3" /> File
+          </Button>
+          <Button
+            variant={addMode === "neuron" ? "default" : "outline"}
+            size="sm"
+            className="h-7 text-[10px] flex-1 gap-1"
+            onClick={() => setAddMode(addMode === "neuron" ? null : "neuron")}
+          >
+            <Brain className="h-3 w-3" /> Neuron
+          </Button>
         </div>
-      )}
+      </div>
+
+      {/* Add forms */}
+      <AnimatePresence>
+        {addMode === "text" && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden border-b border-border"
+          >
+            <div className="px-4 py-3 space-y-2">
+              <Input
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Source title"
+                className="h-8 text-xs"
+              />
+              <textarea
+                value={newContent}
+                onChange={(e) => setNewContent(e.target.value)}
+                placeholder="Paste content here..."
+                className="w-full h-20 text-xs bg-background border border-border rounded-md px-3 py-2 resize-none outline-none focus:ring-1 focus:ring-ring"
+              />
+              <div className="flex gap-1.5">
+                <Button size="sm" className="h-7 text-xs flex-1" onClick={handleAdd} disabled={addSource.isPending}>
+                  <Check className="h-3 w-3 mr-1" /> Add
+                </Button>
+                <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setAddMode(null)}>
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {addMode === "file" && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden border-b border-border"
+          >
+            <div className="px-4 py-3">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.txt,.md,.csv,.json"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="w-full flex flex-col items-center gap-2 py-6 rounded-lg border-2 border-dashed border-border hover:border-primary/30 transition-colors text-muted-foreground hover:text-foreground"
+              >
+                {uploading ? (
+                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                ) : (
+                  <Upload className="h-6 w-6" />
+                )}
+                <span className="text-xs">
+                  {uploading ? "Uploading..." : "Click to upload PDF, TXT, MD, CSV, JSON"}
+                </span>
+                <span className="text-[10px] text-muted-foreground">Max 20MB</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {addMode === "neuron" && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden border-b border-border"
+          >
+            <div className="px-4 py-3 space-y-2">
+              <div className="relative">
+                <Brain className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  value={neuronSearch}
+                  onChange={(e) => searchNeurons(e.target.value)}
+                  placeholder="Search neurons by title..."
+                  className="h-8 pl-8 text-xs"
+                />
+              </div>
+              {searchingNeurons && (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground px-1">
+                  <Loader2 className="h-3 w-3 animate-spin" /> Searching...
+                </div>
+              )}
+              {neuronResults.length > 0 && (
+                <div className="space-y-0.5 max-h-40 overflow-y-auto">
+                  {neuronResults.map((n) => (
+                    <button
+                      key={n.id}
+                      onClick={() => importNeuron(n)}
+                      className="w-full flex items-center gap-2 px-2 py-2 rounded-md hover:bg-accent/10 text-left transition-colors"
+                    >
+                      <Brain className="h-3.5 w-3.5 text-primary shrink-0" />
+                      <span className="text-xs text-foreground truncate flex-1">{n.title}</span>
+                      <span className="text-[9px] text-muted-foreground font-mono">#{n.number}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {neuronSearch.trim().length >= 2 && !searchingNeurons && neuronResults.length === 0 && (
+                <p className="text-[10px] text-muted-foreground text-center py-2">No neurons found</p>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Source list */}
       <ScrollArea className="flex-1">
         <div className="px-2 py-2 space-y-0.5">
           {filteredSources.length === 0 ? (
-            <div className="text-center py-8 text-xs text-muted-foreground">
-              No sources added yet
-            </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-12 px-4"
+            >
+              <FileText className="h-8 w-8 mx-auto mb-3 text-muted-foreground/20" />
+              <p className="text-xs text-muted-foreground mb-1">No sources yet</p>
+              <p className="text-[10px] text-muted-foreground/60">
+                Add text, upload files, or import neurons
+              </p>
+            </motion.div>
           ) : (
-            filteredSources.map((src) => {
+            filteredSources.map((src, idx) => {
               const Icon = SOURCE_ICONS[src.source_type] || FileText;
               return (
-                <div
+                <motion.div
                   key={src.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.03 }}
                   className="group flex items-start gap-2 px-2 py-2 rounded-md hover:bg-accent/5 transition-colors"
                 >
                   <input
@@ -124,7 +401,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
                   >
                     <Trash2 className="h-3 w-3" />
                   </button>
-                </div>
+                </motion.div>
               );
             })
           )}
