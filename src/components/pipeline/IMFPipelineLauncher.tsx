@@ -99,7 +99,10 @@ export function IMFPipelineLauncher({ neuronId, episodeId, onComplete }: Props) 
       const allServiceKeys = new Set<string>();
       for (const p of data) {
         const steps = Array.isArray(p.steps) ? p.steps : [];
-        for (const s of steps) if (s.service_key) allServiceKeys.add(s.service_key);
+        for (const s of steps) {
+          const step = s as Record<string, unknown>;
+          if (step.service_key) allServiceKeys.add(step.service_key as string);
+        }
       }
       if (allServiceKeys.size > 0) {
         const { data: services } = await supabase
