@@ -419,7 +419,7 @@ export default function Landing() {
               Start simple. Upgrade when you want more depth, speed, and leverage.
             </p>
           </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.06)] rounded-xl overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[hsl(var(--ivory-dim)/0.06)] rounded-xl overflow-hidden max-w-4xl mx-auto">
             {[
               { name: "Free", promise: "Test the system", text: "Get inside, explore, and see how AI-IDEI works before making a commitment.", cta: "Start Free", featured: false },
               { name: "Core", promise: "Build clarity", text: "For people who want practical access to essentials for better copy, content, and execution.", cta: "Choose Core", featured: false },
