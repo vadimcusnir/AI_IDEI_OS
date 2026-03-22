@@ -8,13 +8,13 @@ import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd, WebApplicationJsonLd, FAQJsonLd } from "@/components/seo/JsonLd";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.gif";
-import { ArrowRight, Eye } from "lucide-react";
+import { ArrowRight, Eye, Menu, X, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
-import { useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
