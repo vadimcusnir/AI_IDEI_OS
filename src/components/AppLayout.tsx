@@ -121,7 +121,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           <Suspense fallback={null}><LowBalanceBanner /></Suspense>
 
           {fullHeight ? (
-            <main className="flex-1 flex flex-col min-h-0">
+            <main id="main-content" className="flex-1 flex flex-col min-h-0">
               <ErrorBoundary>{children}</ErrorBoundary>
             </main>
           ) : (
