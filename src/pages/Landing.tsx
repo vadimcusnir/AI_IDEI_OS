@@ -595,7 +595,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <Footer />
+      <Suspense fallback={null}><Footer /></Suspense>
 
       {/* Structured Data */}
       <OrganizationJsonLd />
