@@ -126,7 +126,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             </main>
           ) : (
             <>
-              <main className="flex-1 flex flex-col pb-16 md:pb-0">
+              <main id="main-content" className="flex-1 flex flex-col pb-16 md:pb-0">
                 <ErrorBoundary>{children}</ErrorBoundary>
               </main>
               <Suspense fallback={null}><Footer /></Suspense>
