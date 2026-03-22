@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { SEOHead } from "@/components/SEOHead";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -14,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import {
   ArrowLeft, Star, Coins, DollarSign, Tag, ShoppingCart, Crown,
   TrendingUp, MessageSquare, Loader2, CheckCircle2, Store, Clock,
+  Share2, ArrowRightLeft, ExternalLink,
 } from "lucide-react";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 
