@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
+import { PersonJsonLd } from "@/components/seo/JsonLd";
 import { RadarChart } from "@/components/intelligence/RadarChart";
 import { PsychologicalProfileSection, type PsychologicalProfileData } from "@/components/profile/PsychologicalProfileSection";
 import { GuestProfileAdvanced } from "@/components/profile/GuestProfileAdvanced";
