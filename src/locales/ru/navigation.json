@@ -34,6 +34,8 @@
   "knowledge": "Знания",
   "pipeline_status": "Статус конвейера",
   "chat": "Центр управления",
+  "core_section": "Главное",
+  "tools_section": "Инструменты",
   "dashboard_section": "Панель",
   "create_section": "Создать",
   "pipeline_section": "Конвейер",
