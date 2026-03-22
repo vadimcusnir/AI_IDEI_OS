@@ -34,6 +34,7 @@ const ComplianceLogTab = lazy(() => import("@/components/admin/ComplianceLogTab"
 const FeatureFlagsTab = lazy(() => import("@/components/admin/FeatureFlagsTab").then(m => ({ default: m.FeatureFlagsTab })));
 const ForumModerationTab = lazy(() => import("@/components/admin/ForumModerationTab").then(m => ({ default: m.ForumModerationTab })));
 const ControlLayerTab = lazy(() => import("@/components/admin/ControlLayerTab").then(m => ({ default: m.ControlLayerTab })));
+const ServiceManifestTab = lazy(() => import("@/components/admin/ServiceManifestTab").then(m => ({ default: m.ServiceManifestTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
