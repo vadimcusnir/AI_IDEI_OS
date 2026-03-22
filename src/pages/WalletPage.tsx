@@ -5,6 +5,7 @@ import { useWalletState } from "@/hooks/useWalletState";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { WalletPanel } from "@/components/wallet/WalletPanel";
+import { TokenPanel } from "@/components/wallet/TokenPanel";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
@@ -62,6 +63,11 @@ export default function WalletPage() {
 
           <div className="mb-6">
             <WalletPanel />
+          </div>
+
+          {/* NOTA2 Token */}
+          <div className="mb-6">
+            <TokenPanel />
           </div>
 
           {/* Transaction History */}
