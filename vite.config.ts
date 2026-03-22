@@ -41,6 +41,7 @@ export default defineConfig(({ mode }) => ({
           "vendor-sentry": ["@sentry/react"],
           "vendor-graph": ["react-force-graph-2d"],
           "vendor-pdf": ["pdfjs-dist"],
+          "vendor-markdown": ["react-markdown"],
         },
       },
     },
