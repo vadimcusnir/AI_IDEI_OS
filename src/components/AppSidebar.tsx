@@ -13,6 +13,8 @@ import {
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
   Lock, ChevronRight, Plug, GraduationCap, Terminal,
   Wallet, Trophy, Settings, Key, Eye, Database, FolderSearch,
+  Search, LayoutTemplate, FolderOpen, CreditCard, ShieldCheck,
+  BookMarked, Activity, Library,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
@@ -37,7 +39,6 @@ interface NavItem {
   adminOnly?: boolean;
   controlId?: string;
   proOnly?: boolean;
-  /** Minimum tier required to see this item */
   minTier?: UserTier;
 }
 
@@ -49,11 +50,15 @@ interface NavSection {
 }
 
 /*
- * Navigation Architecture v2 — 6 clear sections
- * Dashboard → Create → Explore → Operate → Account → Learn
+ * Navigation Architecture v3 — Redesigned per spec audit
+ * 6 clear sections: Dashboard → Create → Explore → Operate → Account → Learn
  * + Admin (role-gated)
+ *
+ * Principles: progressive disclosure, action-first grouping,
+ * role-based adaptation, conceptual clustering, minimal nesting.
  */
 const NAV_SECTIONS: NavSection[] = [
+  // ─── Section 1: Dashboard (Home) ───
   {
     labelKey: "dashboard_section",
     icon: Home,
@@ -64,6 +69,7 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },
     ],
   },
+  // ─── Section 2: Create (Studio) ───
   {
     labelKey: "create_section",
     icon: Upload,
@@ -77,30 +83,33 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
     ],
   },
+  // ─── Section 3: Explore (Library) ───
   {
     labelKey: "explore_section",
     icon: Eye,
     items: [
       { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
-      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", proOnly: true, minTier: "pro" as UserTier },
+      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
     ],
   },
+  // ─── Section 4: Operate (Services & Orchestration) ───
   {
     labelKey: "operate_section",
     icon: Settings,
     items: [
       { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
-      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
       { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units", minTier: "pro" as UserTier },
       { labelKey: "collection_runs", to: "/collection-runs", icon: FolderSearch, controlId: "nav.collection-runs", minTier: "pro" as UserTier },
-      { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
       { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
       { labelKey: "api", to: "/api", icon: Key, controlId: "nav.api" },
     ],
   },
+  // ─── Section 5: Account (Settings) ───
   {
     labelKey: "account_section",
     icon: User,
@@ -112,6 +121,7 @@ const NAV_SECTIONS: NavSection[] = [
       { labelKey: "guest_pages", to: "/guests", icon: Users, controlId: "nav.guests" },
     ],
   },
+  // ─── Section 6: Learn (Documentation) ───
   {
     labelKey: "learn_section",
     icon: GraduationCap,

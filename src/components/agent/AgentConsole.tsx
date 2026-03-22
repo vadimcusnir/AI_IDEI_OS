@@ -627,8 +627,7 @@ export function AgentConsole() {
               value={input}
               onChange={(e) => {
                 setInput(e.target.value);
-                if (e.target.value === "/") setShowSlashMenu(true);
-                else setShowSlashMenu(false);
+                setShowSlashMenu(e.target.value.startsWith("/") && !e.target.value.includes(" "));
               }}
               onKeyDown={handleKeyDown}
               placeholder={t("common:type_message")}
