@@ -1,7 +1,7 @@
 /**
  * LLM Indexation Monitor — Admin tab for tracking LLM visibility and indexation quality.
- * Shows: page scores, schema coverage, referrer tracking, fix suggestions,
- * entities, knowledge surface pages, crawl queue.
+ * Connected to: site_pages, llm_entities, llm_scores, llm_issues, llm_citations,
+ * knowledge_surface_pages, llm_crawl_queue, llm_referrer_log, llm_page_index, llm_fix_suggestions.
  */
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,50 +13,62 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Search, RefreshCw, Loader2, CheckCircle, AlertTriangle, XCircle,
   Globe, FileText, Sparkles, TrendingUp, Bot, Zap, Layers, Database,
+  Eye, Link2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-interface PageIndex {
+/* ── Types ── */
+
+interface SitePage {
   id: string;
-  page_path: string;
-  page_title: string;
+  url: string;
+  title: string | null;
   page_type: string;
-  schema_types: string[];
-  entity_count: number;
-  word_count: number;
-  overall_score: number;
-  topic_clarity_score: number;
-  entity_density_score: number;
-  semantic_links_score: number;
-  issues: any[];
-  last_crawled_at: string;
+  status_code: number;
+  word_count: number | null;
+  entity_count: number | null;
+  schema_present: boolean | null;
+  schema_types: string[] | null;
+  internal_link_count: number | null;
+  llm_visibility_score: number | null;
+  meta_description: string | null;
+  content_hash: string | null;
+  last_scan: string | null;
 }
 
-interface FixSuggestion {
+interface LLMScore {
+  id: string;
+  page_id: string;
+  entity_density: number;
+  schema_coverage: number;
+  embedding_quality: number;
+  internal_link_score: number;
+  citation_probability: number;
+  llm_visibility_score: number;
+  computed_at: string;
+}
+
+interface LLMIssue {
   id: string;
   page_id: string;
   issue_type: string;
   severity: string;
-  current_value: string;
-  suggested_value: string;
-  ai_reasoning: string;
-  status: string;
+  description: string;
+  suggested_fix: string;
+  auto_fix_available: boolean;
+  resolved_at: string | null;
   created_at: string;
-}
-
-interface ReferrerStat {
-  referrer_source: string;
-  count: number;
 }
 
 interface LLMEntity {
   id: string;
   entity_name: string;
   entity_type: string;
-  description: string;
+  description: string | null;
   confidence: number;
-  schema_org_type: string | null;
+  source: string | null;
+  page_id: string | null;
   created_at: string;
 }
 
@@ -72,75 +84,58 @@ interface KnowledgeSurface {
   created_at: string;
 }
 
-interface CrawlQueueItem {
+interface LLMCitation {
   id: string;
-  page_path: string;
-  priority: number;
-  status: string;
-  started_at: string | null;
-  completed_at: string | null;
-  error_message: string | null;
-  created_at: string;
+  llm_source: string;
+  query_text: string | null;
+  cited_url: string | null;
+  detected_at: string;
+}
+
+interface ReferrerStat {
+  referrer_source: string;
+  count: number;
 }
 
 export function LLMIndexationTab() {
-  const [pages, setPages] = useState<PageIndex[]>([]);
-  const [fixes, setFixes] = useState<FixSuggestion[]>([]);
-  const [referrers, setReferrers] = useState<ReferrerStat[]>([]);
+  const [sitePages, setSitePages] = useState<SitePage[]>([]);
+  const [scores, setScores] = useState<LLMScore[]>([]);
+  const [issues, setIssues] = useState<LLMIssue[]>([]);
   const [entities, setEntities] = useState<LLMEntity[]>([]);
   const [surfacePages, setSurfacePages] = useState<KnowledgeSurface[]>([]);
-  const [crawlQueue, setCrawlQueue] = useState<CrawlQueueItem[]>([]);
+  const [citations, setCitations] = useState<LLMCitation[]>([]);
+  const [referrers, setReferrers] = useState<ReferrerStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [scanning, setScanning] = useState(false);
   const [fixing, setFixing] = useState(false);
-  const [activeSubTab, setActiveSubTab] = useState("overview");
+  const [activeSubTab, setActiveSubTab] = useState("pages");
 
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [pagesRes, fixesRes, entitiesRes, surfaceRes, queueRes] = await Promise.all([
-        supabase
-          .from("llm_page_index")
-          .select("*")
-          .order("overall_score", { ascending: true })
-          .limit(200),
-        supabase
-          .from("llm_fix_suggestions")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(100),
-        supabase
-          .from("llm_entities")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(200),
-        supabase
-          .from("knowledge_surface_pages")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(100),
-        supabase
-          .from("llm_crawl_queue")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(50),
+      const [
+        sitePagesRes, scoresRes, issuesRes, entitiesRes,
+        surfaceRes, citationsRes, referrersRes,
+      ] = await Promise.all([
+        supabase.from("site_pages").select("*").order("llm_visibility_score", { ascending: true, nullsFirst: true }).limit(200),
+        supabase.from("llm_scores").select("*").order("computed_at", { ascending: false }).limit(200),
+        supabase.from("llm_issues").select("*").is("resolved_at", null).order("created_at", { ascending: false }).limit(100),
+        supabase.from("llm_entities").select("*").order("created_at", { ascending: false }).limit(200),
+        supabase.from("knowledge_surface_pages").select("*").order("created_at", { ascending: false }).limit(100),
+        supabase.from("llm_citations").select("*").order("detected_at", { ascending: false }).limit(100),
+        supabase.from("llm_referrer_log").select("referrer_source").order("created_at", { ascending: false }).limit(500),
       ]);
 
-      setPages((pagesRes.data as any[]) || []);
-      setFixes((fixesRes.data as any[]) || []);
+      setSitePages((sitePagesRes.data as any[]) || []);
+      setScores((scoresRes.data as any[]) || []);
+      setIssues((issuesRes.data as any[]) || []);
       setEntities((entitiesRes.data as any[]) || []);
       setSurfacePages((surfaceRes.data as any[]) || []);
-      setCrawlQueue((queueRes.data as any[]) || []);
+      setCitations((citationsRes.data as any[]) || []);
 
-      // Referrer stats
-      const { data: rawReferrers } = await supabase
-        .from("llm_referrer_log")
-        .select("referrer_source")
-        .order("created_at", { ascending: false })
-        .limit(500);
-      
+      // Aggregate referrer counts
       const counts: Record<string, number> = {};
-      (rawReferrers || []).forEach((r: any) => {
+      ((referrersRes.data as any[]) || []).forEach((r: any) => {
         counts[r.referrer_source] = (counts[r.referrer_source] || 0) + 1;
       });
       setReferrers(Object.entries(counts).map(([source, count]) => ({ referrer_source: source, count })));
@@ -153,35 +148,30 @@ export function LLMIndexationTab() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  const runScan = async () => {
+  /* ── Actions ── */
+
+  const runFullScan = async () => {
     setScanning(true);
     try {
-      // Step 1: Crawl pages
       const { data: crawlData, error: crawlErr } = await supabase.functions.invoke("llm-crawler", {
         body: { action: "crawl", limit: 100 },
       });
       if (crawlErr) throw crawlErr;
       toast.success(`Crawled: ${crawlData.discovered} new, ${crawlData.updated} updated`);
 
-      // Step 2: Analyze entities
       const { data: analyzeData, error: analyzeErr } = await supabase.functions.invoke("llm-crawler", {
         body: { action: "analyze", limit: 30 },
       });
       if (analyzeErr) throw analyzeErr;
       toast.success(`Analyzed ${analyzeData.analyzed} pages`);
 
-      // Step 3: Compute scores
       await supabase.functions.invoke("llm-crawler", { body: { action: "score" } });
 
-      // Step 4: Detect issues
       const { data: issueData } = await supabase.functions.invoke("llm-crawler", {
         body: { action: "detect-issues" },
       });
-      toast.success(`Found ${issueData?.issues_found || 0} issues`);
+      toast.success(`Found ${issueData?.issues_found || 0} new issues`);
 
-      // Also run legacy llm-audit for page index
-      await supabase.functions.invoke("llm-audit", { body: { action: "scan" } }).catch(() => {});
-      
       loadData();
     } catch (e: any) {
       toast.error("Scan failed: " + (e.message || "Unknown error"));
@@ -190,58 +180,38 @@ export function LLMIndexationTab() {
     }
   };
 
-  const generateFixes = async () => {
+  const generateKnowledgePages = async () => {
     setFixing(true);
     try {
-      const { data, error } = await supabase.functions.invoke("llm-audit", {
-        body: { action: "fix" },
+      const { data, error } = await supabase.functions.invoke("generate-knowledge-pages", {
+        body: { action: "generate", limit: 10 },
       });
       if (error) throw error;
-      toast.success(`Generated ${data.fixes_generated} fix suggestions`);
-
-      // Also generate knowledge pages
-      await supabase.functions.invoke("generate-knowledge-pages", {
-        body: { action: "generate", limit: 10 },
-      }).catch(() => {});
-
+      toast.success(`Generated ${data?.generated || 0} knowledge pages`);
       loadData();
     } catch (e: any) {
-      toast.error("Fix generation failed: " + (e.message || "Unknown error"));
+      toast.error("Generation failed: " + (e.message || "Unknown error"));
     } finally {
       setFixing(false);
     }
   };
 
-  const approveFix = async (fixId: string) => {
-    const { error } = await supabase
-      .from("llm_fix_suggestions")
-      .update({ status: "approved", approved_at: new Date().toISOString() } as any)
-      .eq("id", fixId);
-    if (error) { toast.error(error.message); return; }
-    toast.success("Fix approved");
+  const resolveIssue = async (issueId: string) => {
+    await supabase.from("llm_issues").update({ resolved_at: new Date().toISOString() } as any).eq("id", issueId);
+    toast.success("Issue resolved");
     loadData();
   };
 
-  const rejectFix = async (fixId: string) => {
-    const { error } = await supabase
-      .from("llm_fix_suggestions")
-      .update({ status: "rejected" } as any)
-      .eq("id", fixId);
-    if (error) { toast.error(error.message); return; }
-    loadData();
-  };
-
-  // Computed metrics
-  const totalPages = pages.length;
-  const avgScore = totalPages > 0 ? pages.reduce((s, p) => s + Number(p.overall_score), 0) / totalPages : 0;
-  const schemaCount = pages.filter(p => p.schema_types?.length > 0).length;
+  /* ── Computed metrics ── */
+  const totalPages = sitePages.length;
+  const avgVisibility = totalPages > 0 ? sitePages.reduce((s, p) => s + (Number(p.llm_visibility_score) || 0), 0) / totalPages : 0;
+  const schemaCount = sitePages.filter(p => p.schema_present).length;
   const schemaCoverage = totalPages > 0 ? (schemaCount / totalPages) * 100 : 0;
-  const issuePages = pages.filter(p => (p.issues as any[])?.length > 0).length;
-  const pendingFixes = fixes.filter(f => f.status === "pending").length;
-  const totalReferrals = referrers.reduce((s, r) => s + r.count, 0);
+  const openIssues = issues.length;
+  const totalCitations = citations.length;
   const totalEntities = entities.length;
   const publishedSurface = surfacePages.filter(p => p.status === "published").length;
-  const pendingCrawls = crawlQueue.filter(q => q.status === "pending").length;
+  const totalReferrals = referrers.reduce((s, r) => s + r.count, 0);
 
   if (loading) {
     return (
@@ -253,20 +223,20 @@ export function LLMIndexationTab() {
 
   return (
     <div className="space-y-4">
-      {/* Header + Actions */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Bot className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold">LLM Indexation Engine</h3>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={runScan} disabled={scanning} className="gap-1.5 text-xs">
+          <Button variant="outline" size="sm" onClick={runFullScan} disabled={scanning} className="gap-1.5 text-xs">
             {scanning ? <Loader2 className="h-3 w-3 animate-spin" /> : <Search className="h-3 w-3" />}
-            Scan Pages
+            Full Scan
           </Button>
-          <Button variant="outline" size="sm" onClick={generateFixes} disabled={fixing} className="gap-1.5 text-xs">
+          <Button variant="outline" size="sm" onClick={generateKnowledgePages} disabled={fixing} className="gap-1.5 text-xs">
             {fixing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
-            Generate Fixes
+            Generate Pages
           </Button>
           <Button variant="ghost" size="sm" onClick={loadData} className="gap-1.5 text-xs">
             <RefreshCw className="h-3 w-3" />
@@ -275,87 +245,85 @@ export function LLMIndexationTab() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9 gap-3">
-        <KPICard label="Pages Indexed" value={totalPages} icon={Globe} />
-        <KPICard label="Avg Score" value={avgScore.toFixed(1)} icon={TrendingUp} color={avgScore >= 7 ? "text-primary" : avgScore >= 5 ? "text-yellow-500" : "text-destructive"} />
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <KPICard label="Pages" value={totalPages} icon={Globe} />
+        <KPICard label="Visibility" value={avgVisibility.toFixed(1)} icon={TrendingUp} color={avgVisibility >= 7 ? "text-primary" : avgVisibility >= 4 ? "text-yellow-500" : "text-destructive"} />
         <KPICard label="Schema %" value={`${schemaCoverage.toFixed(0)}%`} icon={FileText} />
-        <KPICard label="Issues" value={issuePages} icon={AlertTriangle} color="text-yellow-500" />
-        <KPICard label="Fixes" value={pendingFixes} icon={Zap} color="text-primary" />
-        <KPICard label="Referrals" value={totalReferrals} icon={Bot} />
+        <KPICard label="Issues" value={openIssues} icon={AlertTriangle} color={openIssues > 10 ? "text-destructive" : "text-yellow-500"} />
         <KPICard label="Entities" value={totalEntities} icon={Database} />
+        <KPICard label="Citations" value={totalCitations} icon={Link2} />
         <KPICard label="Surface" value={publishedSurface} icon={Layers} />
-        <KPICard label="Crawl Q" value={pendingCrawls} icon={Globe} />
+        <KPICard label="LLM Traffic" value={totalReferrals} icon={Bot} />
       </div>
 
-      {/* Sub-tabs */}
+      {/* Tabs */}
       <Tabs value={activeSubTab} onValueChange={setActiveSubTab}>
         <TabsList className="h-8">
-          <TabsTrigger value="overview" className="text-xs">Pages</TabsTrigger>
+          <TabsTrigger value="pages" className="text-xs">Pages ({totalPages})</TabsTrigger>
           <TabsTrigger value="entities" className="text-xs">Entities ({totalEntities})</TabsTrigger>
-          <TabsTrigger value="surface" className="text-xs">Knowledge Surface ({surfacePages.length})</TabsTrigger>
-          <TabsTrigger value="fixes" className="text-xs">Fixes ({pendingFixes})</TabsTrigger>
-          <TabsTrigger value="referrers" className="text-xs">LLM Traffic</TabsTrigger>
-          <TabsTrigger value="queue" className="text-xs">Crawl Queue ({pendingCrawls})</TabsTrigger>
+          <TabsTrigger value="issues" className="text-xs">Issues ({openIssues})</TabsTrigger>
+          <TabsTrigger value="surface" className="text-xs">Knowledge Surface</TabsTrigger>
+          <TabsTrigger value="citations" className="text-xs">Citations</TabsTrigger>
+          <TabsTrigger value="traffic" className="text-xs">LLM Traffic</TabsTrigger>
         </TabsList>
 
-        {/* Pages overview */}
-        <TabsContent value="overview">
+        {/* ── Pages (site_pages + llm_scores) ── */}
+        <TabsContent value="pages">
           <div className="bg-card border border-border rounded-xl overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">Page</TableHead>
+                  <TableHead className="text-[10px]">URL / Title</TableHead>
                   <TableHead className="text-[10px]">Type</TableHead>
-                  <TableHead className="text-[10px]">Schemas</TableHead>
-                  <TableHead className="text-[10px] text-right">Score</TableHead>
-                  <TableHead className="text-[10px] text-right">Issues</TableHead>
+                  <TableHead className="text-[10px]">Schema</TableHead>
+                  <TableHead className="text-[10px] text-right">Words</TableHead>
+                  <TableHead className="text-[10px] text-right">Entities</TableHead>
+                  <TableHead className="text-[10px] text-right">Visibility</TableHead>
                   <TableHead className="text-[10px]">Last Scan</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pages.slice(0, 50).map(page => (
+                {sitePages.slice(0, 60).map(page => (
                   <TableRow key={page.id}>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="text-xs font-medium truncate max-w-[200px]">{page.page_title || page.page_path}</span>
-                        <span className="text-[10px] text-muted-foreground font-mono">{page.page_path}</span>
+                        <span className="text-xs font-medium truncate max-w-[220px]">{page.title || "Untitled"}</span>
+                        <span className="text-[10px] text-muted-foreground font-mono truncate max-w-[220px]">{page.url}</span>
                       </div>
                     </TableCell>
+                    <TableCell><Badge variant="outline" className="text-[9px]">{page.page_type}</Badge></TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-[9px]">{page.page_type}</Badge>
+                      {page.schema_present ? (
+                        <div className="flex gap-0.5 flex-wrap">
+                          {(page.schema_types || []).slice(0, 3).map((s, i) => (
+                            <Badge key={i} variant="secondary" className="text-[8px] px-1">{s}</Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-[9px] text-destructive">None</span>
+                      )}
                     </TableCell>
-                    <TableCell>
-                      <div className="flex gap-0.5 flex-wrap">
-                        {(page.schema_types || []).map((s, i) => (
-                          <Badge key={i} variant="secondary" className="text-[8px] px-1">{s}</Badge>
-                        ))}
-                        {(!page.schema_types || page.schema_types.length === 0) && (
-                          <span className="text-[9px] text-destructive">None</span>
-                        )}
-                      </div>
-                    </TableCell>
+                    <TableCell className="text-right text-xs font-mono">{page.word_count ?? "—"}</TableCell>
+                    <TableCell className="text-right text-xs font-mono">{page.entity_count ?? "—"}</TableCell>
                     <TableCell className="text-right">
-                      <ScoreBadge score={Number(page.overall_score)} />
-                    </TableCell>
-                    <TableCell className="text-right text-xs">
-                      {(page.issues as any[])?.length || 0}
+                      <ScoreBadge score={Number(page.llm_visibility_score) || 0} />
                     </TableCell>
                     <TableCell className="text-[10px] text-muted-foreground">
-                      {page.last_crawled_at ? new Date(page.last_crawled_at).toLocaleDateString() : "Never"}
+                      {page.last_scan ? new Date(page.last_scan).toLocaleDateString() : "Never"}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-            {pages.length === 0 && (
+            {sitePages.length === 0 && (
               <p className="text-xs text-muted-foreground text-center py-8">
-                No pages scanned yet. Click "Scan Pages" to start.
+                No pages crawled yet. Click "Full Scan" to discover and analyze pages.
               </p>
             )}
           </div>
         </TabsContent>
 
-        {/* Entities */}
+        {/* ── Entities (llm_entities) ── */}
         <TabsContent value="entities">
           <div className="bg-card border border-border rounded-xl overflow-hidden">
             <Table>
@@ -363,13 +331,13 @@ export function LLMIndexationTab() {
                 <TableRow>
                   <TableHead className="text-[10px]">Entity</TableHead>
                   <TableHead className="text-[10px]">Type</TableHead>
-                  <TableHead className="text-[10px]">Schema.org</TableHead>
                   <TableHead className="text-[10px] text-right">Confidence</TableHead>
+                  <TableHead className="text-[10px]">Source</TableHead>
                   <TableHead className="text-[10px]">Extracted</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {entities.slice(0, 50).map(entity => (
+                {entities.slice(0, 60).map(entity => (
                   <TableRow key={entity.id}>
                     <TableCell>
                       <div className="flex flex-col">
@@ -379,18 +347,12 @@ export function LLMIndexationTab() {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="text-[9px]">{entity.entity_type}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      {entity.schema_org_type ? (
-                        <Badge variant="secondary" className="text-[9px]">{entity.schema_org_type}</Badge>
-                      ) : (
-                        <span className="text-[9px] text-muted-foreground">—</span>
-                      )}
-                    </TableCell>
+                    <TableCell><Badge variant="outline" className="text-[9px]">{entity.entity_type}</Badge></TableCell>
                     <TableCell className="text-right">
                       <ScoreBadge score={Number(entity.confidence) * 10} />
+                    </TableCell>
+                    <TableCell className="text-[10px] text-muted-foreground font-mono truncate max-w-[150px]">
+                      {entity.source || "—"}
                     </TableCell>
                     <TableCell className="text-[10px] text-muted-foreground">
                       {new Date(entity.created_at).toLocaleDateString()}
@@ -401,13 +363,47 @@ export function LLMIndexationTab() {
             </Table>
             {entities.length === 0 && (
               <p className="text-xs text-muted-foreground text-center py-8">
-                No entities extracted yet. Run a page scan first.
+                No entities extracted yet. Run a Full Scan first.
               </p>
             )}
           </div>
         </TabsContent>
 
-        {/* Knowledge Surface */}
+        {/* ── Issues (llm_issues) ── */}
+        <TabsContent value="issues">
+          <div className="space-y-2">
+            {issues.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center py-8">
+                No open issues. Run a Full Scan to detect indexation problems.
+              </p>
+            ) : issues.map(issue => (
+              <div key={issue.id} className="bg-card border border-border rounded-lg p-3 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Badge variant={issue.severity === "high" ? "destructive" : "outline"} className="text-[9px]">
+                        {issue.severity}
+                      </Badge>
+                      <span className="text-xs font-medium">{issue.issue_type.replace(/_/g, " ")}</span>
+                      {issue.auto_fix_available && (
+                        <Badge variant="secondary" className="text-[8px]">Auto-fixable</Badge>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">{issue.description}</p>
+                    <p className="text-xs text-primary">
+                      <span className="font-medium">Fix:</span> {issue.suggested_fix}
+                    </p>
+                  </div>
+                  <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" onClick={() => resolveIssue(issue.id)}>
+                    <CheckCircle className="h-3.5 w-3.5 text-primary" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* ── Knowledge Surface ── */}
         <TabsContent value="surface">
           <div className="bg-card border border-border rounded-xl overflow-hidden">
             <Table>
@@ -430,83 +426,58 @@ export function LLMIndexationTab() {
                         <span className="text-[10px] text-muted-foreground font-mono">/{sp.slug}</span>
                       </div>
                     </TableCell>
+                    <TableCell><Badge variant="outline" className="text-[9px]">{sp.page_type}</Badge></TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-[9px]">{sp.page_type}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={sp.status === "published" ? "default" : "secondary"} className="text-[9px]">
-                        {sp.status}
-                      </Badge>
+                      <Badge variant={sp.status === "published" ? "default" : "secondary"} className="text-[9px]">{sp.status}</Badge>
                     </TableCell>
                     <TableCell className="text-right text-xs font-mono">{sp.view_count}</TableCell>
                     <TableCell className="text-right text-xs font-mono">{sp.llm_citation_count}</TableCell>
-                    <TableCell className="text-right">
-                      <ScoreBadge score={Number(sp.quality_score)} />
-                    </TableCell>
+                    <TableCell className="text-right"><ScoreBadge score={Number(sp.quality_score)} /></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
             {surfacePages.length === 0 && (
               <p className="text-xs text-muted-foreground text-center py-8">
-                No knowledge surface pages yet. Use the Knowledge Page Generator to create them.
+                No knowledge surface pages. Click "Generate Pages" to auto-create from your knowledge graph.
               </p>
             )}
           </div>
         </TabsContent>
 
-        {/* Fix suggestions */}
-        <TabsContent value="fixes">
-          <div className="space-y-2">
-            {fixes.length === 0 ? (
+        {/* ── Citations (llm_citations) ── */}
+        <TabsContent value="citations">
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[10px]">LLM Source</TableHead>
+                  <TableHead className="text-[10px]">Query</TableHead>
+                  <TableHead className="text-[10px]">Cited URL</TableHead>
+                  <TableHead className="text-[10px]">Detected</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {citations.map(c => (
+                  <TableRow key={c.id}>
+                    <TableCell><Badge variant="outline" className="text-[9px]">{c.llm_source}</Badge></TableCell>
+                    <TableCell className="text-xs truncate max-w-[200px]">{c.query_text || "—"}</TableCell>
+                    <TableCell className="text-[10px] text-muted-foreground font-mono truncate max-w-[200px]">{c.cited_url || "—"}</TableCell>
+                    <TableCell className="text-[10px] text-muted-foreground">{new Date(c.detected_at).toLocaleDateString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {citations.length === 0 && (
               <p className="text-xs text-muted-foreground text-center py-8">
-                No fix suggestions yet. Click "Generate Fixes" to analyze low-scoring pages.
+                No LLM citations detected yet. Citations from ChatGPT, Perplexity, and Gemini will appear here.
               </p>
-            ) : fixes.map(fix => (
-              <div key={fix.id} className={cn(
-                "bg-card border border-border rounded-lg p-3 space-y-2",
-                fix.status === "approved" && "border-primary/30 bg-primary/5",
-                fix.status === "rejected" && "opacity-50",
-              )}>
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <Badge variant={fix.severity === "high" ? "destructive" : "outline"} className="text-[9px]">
-                        {fix.severity}
-                      </Badge>
-                      <span className="text-xs font-medium">{fix.issue_type}</span>
-                      <Badge variant="secondary" className="text-[9px]">{fix.status}</Badge>
-                    </div>
-                    {fix.current_value && (
-                      <p className="text-[10px] text-muted-foreground">
-                        <span className="font-medium">Current:</span> {fix.current_value}
-                      </p>
-                    )}
-                    <p className="text-xs text-primary">
-                      <span className="font-medium">Suggested:</span> {fix.suggested_value}
-                    </p>
-                    {fix.ai_reasoning && (
-                      <p className="text-[10px] text-muted-foreground italic">{fix.ai_reasoning}</p>
-                    )}
-                  </div>
-                  {fix.status === "pending" && (
-                    <div className="flex gap-1 shrink-0">
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => approveFix(fix.id)}>
-                        <CheckCircle className="h-3.5 w-3.5 text-primary" />
-                      </Button>
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => rejectFix(fix.id)}>
-                        <XCircle className="h-3.5 w-3.5 text-destructive" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+            )}
           </div>
         </TabsContent>
 
-        {/* LLM Traffic */}
-        <TabsContent value="referrers">
+        {/* ── LLM Traffic ── */}
+        <TabsContent value="traffic">
           <div className="bg-card border border-border rounded-xl p-4 space-y-3">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <Bot className="h-3 w-3" /> LLM Referrer Sources
@@ -528,58 +499,12 @@ export function LLMIndexationTab() {
             )}
           </div>
         </TabsContent>
-
-        {/* Crawl Queue */}
-        <TabsContent value="queue">
-          <div className="bg-card border border-border rounded-xl overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-[10px]">Page Path</TableHead>
-                  <TableHead className="text-[10px]">Priority</TableHead>
-                  <TableHead className="text-[10px]">Status</TableHead>
-                  <TableHead className="text-[10px]">Error</TableHead>
-                  <TableHead className="text-[10px]">Created</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {crawlQueue.map(item => (
-                  <TableRow key={item.id}>
-                    <TableCell className="text-xs font-mono">{item.page_path}</TableCell>
-                    <TableCell>
-                      <Badge variant={item.priority >= 8 ? "destructive" : "outline"} className="text-[9px]">
-                        P{item.priority}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={
-                        item.status === "completed" ? "default" :
-                        item.status === "failed" ? "destructive" : "secondary"
-                      } className="text-[9px]">
-                        {item.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-[10px] text-destructive truncate max-w-[150px]">
-                      {item.error_message || "—"}
-                    </TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground">
-                      {new Date(item.created_at).toLocaleDateString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {crawlQueue.length === 0 && (
-              <p className="text-xs text-muted-foreground text-center py-8">
-                Crawl queue is empty. Pages will be queued automatically during scans.
-              </p>
-            )}
-          </div>
-        </TabsContent>
       </Tabs>
     </div>
   );
 }
+
+/* ── Helpers ── */
 
 function KPICard({ label, value, icon: Icon, color }: { label: string; value: string | number; icon: any; color?: string }) {
   return (
@@ -594,7 +519,7 @@ function KPICard({ label, value, icon: Icon, color }: { label: string; value: st
 }
 
 function ScoreBadge({ score }: { score: number }) {
-  const color = score >= 7 ? "bg-primary/10 text-primary" : score >= 5 ? "bg-yellow-500/10 text-yellow-600" : "bg-destructive/10 text-destructive";
+  const color = score >= 7 ? "bg-primary/10 text-primary" : score >= 4 ? "bg-yellow-500/10 text-yellow-600" : "bg-destructive/10 text-destructive";
   return (
     <span className={cn("text-[10px] font-mono font-bold px-1.5 py-0.5 rounded", color)}>
       {score.toFixed(1)}
