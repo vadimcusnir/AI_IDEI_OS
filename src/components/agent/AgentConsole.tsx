@@ -14,10 +14,12 @@ import {
   X, Paperclip, RotateCcw, History, ChevronLeft,
   Globe, Brain, Sparkles, FileText, Network, Zap,
   ArrowRight, FileUp, FileAudio, Film, Type, Trash2,
+  PanelRightOpen, PanelRightClose,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "./AgentSlashMenu";
+import { ExecutionTimeline } from "./ExecutionTimeline";
 
 interface Message {
   id: string;
@@ -25,6 +27,15 @@ interface Message {
   content: string;
   timestamp: Date;
   metadata?: Record<string, any>;
+}
+
+interface PlanMeta {
+  action_id: string | null;
+  intent: string;
+  confidence: number;
+  plan_name: string;
+  total_credits: number;
+  steps: Array<{ tool: string; label: string; credits: number }>;
 }
 
 const AGENT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agent-console`;
