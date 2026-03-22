@@ -49,5 +49,10 @@
   "api": "Доступ к API",
   "wallet": "Кошелёк",
   "cognitive_units": "Когнитивные Единицы",
-  "collection_runs": "Запуски Сбора"
+  "collection_runs": "Запуски Сбора",
+  "vip": "VIP Программа",
+  "gamification": "Достижения",
+  "runtime": "Среда выполнения",
+  "analytics": "Аналитика",
+  "security": "Безопасность"
 }

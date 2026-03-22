@@ -49,5 +49,10 @@
   "api": "Acces API",
   "wallet": "Portofel",
   "cognitive_units": "Unități Cognitive",
-  "collection_runs": "Execuții Colectare"
+  "collection_runs": "Execuții Colectare",
+  "vip": "Program VIP",
+  "gamification": "Realizări",
+  "runtime": "Runtime",
+  "analytics": "Analize",
+  "security": "Securitate"
 }
