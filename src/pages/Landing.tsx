@@ -135,8 +135,8 @@ export default function Landing() {
       <ExtractionSpine labels={["CAPTURE", "DISTILL", "STRUCTURE", "MULTIPLY", "DEPLOY"]} />
 
       {/* ═══ TOP BAR ═══ */}
-      <div className="border-b border-[hsl(var(--ivory-dim)/0.08)]">
-        <p className="text-center text-xs font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.6)] py-2.5 px-4">
+      <div className="border-b border-border">
+        <p className="text-center text-xs font-mono tracking-[0.12em] text-muted-foreground py-2.5 px-4">
           Turn rough ideas into copy, content, offers, and campaigns — faster.
         </p>
       </div>
