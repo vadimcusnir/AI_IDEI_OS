@@ -67,6 +67,9 @@ export default function Transcribe() {
             </motion.div>
           )}
 
+          {/* History */}
+          {user && <TranscriptHistory />}
+
           {/* Features grid */}
           <motion.div
             initial={{ opacity: 0 }}
