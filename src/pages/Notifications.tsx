@@ -204,9 +204,9 @@ export default function Notifications() {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between mb-6"
+        className="flex items-center justify-between mb-4 sm:mb-6"
       >
-        <h1 className="text-xl font-bold flex items-center gap-2">
+        <h1 className="text-lg sm:text-xl font-bold flex items-center gap-2">
           <Bell className="h-5 w-5 text-primary" />
           {t("notifications.title")}
         </h1>
