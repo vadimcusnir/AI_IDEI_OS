@@ -262,7 +262,7 @@ export default function Services() {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs gap-1.5"
+              className="text-xs gap-1.5 flex-1 sm:flex-none"
               onClick={() => setShowFilters(!showFilters)}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
@@ -276,14 +276,14 @@ export default function Services() {
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value as SortBy)}
-              className="h-8 rounded-md border border-border bg-card px-2 text-xs outline-none"
+              className="h-8 rounded-md border border-border bg-card px-2 text-xs outline-none flex-1 sm:flex-none min-w-0"
             >
               <option value="name">{t("services.sort_az")}</option>
               <option value="cost-asc">{t("services.sort_cost_asc")}</option>
               <option value="cost-desc">{t("services.sort_cost_desc")}</option>
               <option value="category">{t("services.sort_category")}</option>
             </select>
-            <div className="flex border border-border rounded-md overflow-hidden">
+            <div className="flex border border-border rounded-md overflow-hidden shrink-0">
               <button
                 onClick={() => setViewMode("grid")}
                 className={cn("p-1.5", viewMode === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}

@@ -507,16 +507,16 @@ export default function Extractor() {
                   <div
                     role="button"
                     tabIndex={0}
-                    className="w-full flex items-center gap-4 px-4 py-3 text-left cursor-pointer"
+                    className="w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-3 text-left cursor-pointer"
                     onClick={() => setExpandedId(isExpanded ? null : ep.id)}
                     onKeyDown={e => { if (e.key === "Enter" || e.key === " ") setExpandedId(isExpanded ? null : ep.id); }}
                   >
-                    <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                    <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
                       <Icon className="h-4 w-4 text-muted-foreground" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{ep.title}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <span className="text-[10px] text-muted-foreground">
                           {new Date(ep.created_at).toLocaleDateString("en-US")}
                         </span>
@@ -530,7 +530,7 @@ export default function Extractor() {
                           <span className="text-[10px] text-muted-foreground/60 uppercase">{ep.language}</span>
                         )}
                         {hasTranscript && (
-                          <span className="text-[10px] text-muted-foreground/40">
+                          <span className="hidden sm:inline text-[10px] text-muted-foreground/40">
                             {wordCount.toLocaleString()} words
                           </span>
                         )}
@@ -551,12 +551,12 @@ export default function Extractor() {
                     {isTranscribing && (
                       <div className="flex items-center gap-1.5 shrink-0">
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-                        <span className="text-[10px] text-primary font-medium">Transcribing…</span>
+                        <span className="hidden sm:inline text-[10px] text-primary font-medium">Transcribing…</span>
                       </div>
                     )}
-                    {/* Quick action buttons in header */}
+                    {/* Quick action buttons — hidden on mobile, shown on desktop */}
                     {hasTranscript && !isExtracting && !isTranscribing && (
-                      <div className="flex items-center gap-0.5 shrink-0" onClick={e => e.stopPropagation()}>
+                      <div className="hidden sm:flex items-center gap-0.5 shrink-0" onClick={e => e.stopPropagation()}>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button variant="ghost" size="sm" className="h-7 w-7 p-0"
@@ -587,7 +587,7 @@ export default function Extractor() {
                       </div>
                     )}
                     {canExtract && !isExtracting && !isTranscribing && !deepExtractingId && (
-                      <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+                      <div className="hidden sm:flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button variant="outline" size="sm" className="h-7 text-xs gap-1"
@@ -615,7 +615,7 @@ export default function Extractor() {
                     )}
                     {needsTranscript && !isExtracting && !isTranscribing && (
                       <Button variant="outline" size="sm"
-                        className="h-7 text-xs gap-1 shrink-0 border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
+                        className="hidden sm:inline-flex h-7 text-xs gap-1 shrink-0 border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
                         onClick={e => { e.stopPropagation(); setExpandedId(ep.id); startEditTranscript(ep); }}>
                         <Pencil className="h-3 w-3" /> Add Transcript
                       </Button>
@@ -623,23 +623,59 @@ export default function Extractor() {
                     {isExtracting && (
                       <div className="flex items-center gap-1.5 shrink-0">
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" />
-                        <span className="text-[10px] text-ai-accent font-medium">Extracting…</span>
+                        <span className="hidden sm:inline text-[10px] text-ai-accent font-medium">Extracting…</span>
                       </div>
                     )}
                     {deepExtractingId === ep.id && (
                       <div className="flex items-center gap-1.5 shrink-0">
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-                        <span className="text-[10px] text-primary font-medium">Deep Extract (8 levels)…</span>
+                        <span className="hidden sm:inline text-[10px] text-primary font-medium">Deep Extract…</span>
                       </div>
                     )}
                     {isAnalyzed && (
-                      <span className="text-[10px] text-status-validated font-medium shrink-0">✓ Extracted</span>
+                      <span className="text-[10px] text-status-validated font-medium shrink-0">✓</span>
                     )}
                     <ChevronDown className={cn(
                       "h-3.5 w-3.5 text-muted-foreground/40 shrink-0 transition-transform",
                       isExpanded && "rotate-180"
                     )} />
                   </div>
+
+                  {/* Mobile action bar — visible only on small screens when not expanded */}
+                  {!isExpanded && (
+                    <div className="sm:hidden flex items-center gap-1.5 px-3 pb-2 -mt-1" onClick={e => e.stopPropagation()}>
+                      {hasTranscript && !isExtracting && !isTranscribing && (
+                        <>
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => startEditTranscript(ep)}>
+                            <Pencil className="h-3 w-3" />
+                          </Button>
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => copyTranscript(ep.transcript!)}>
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                        </>
+                      )}
+                      {canExtract && !isExtracting && !isTranscribing && !deepExtractingId && (
+                        <>
+                          <Button variant="outline" size="sm" className="h-7 text-[11px] gap-1 flex-1"
+                            onClick={() => handleExtractNeurons(ep)}>
+                            <Brain className="h-3 w-3" /> Extract
+                          </Button>
+                          <Button variant="default" size="sm" className="h-7 text-[11px] gap-1 flex-1"
+                            onClick={() => isPro ? handleDeepExtract(ep) : setPaywallOpen(true)}>
+                            {!isPro && <Crown className="h-3 w-3" />}
+                            <Layers className="h-3 w-3" /> Deep
+                          </Button>
+                        </>
+                      )}
+                      {needsTranscript && !isExtracting && !isTranscribing && (
+                        <Button variant="outline" size="sm"
+                          className="h-7 text-[11px] gap-1 flex-1 border-amber-500/30 text-amber-600"
+                          onClick={() => { setExpandedId(ep.id); startEditTranscript(ep); }}>
+                          <Pencil className="h-3 w-3" /> Add Transcript
+                        </Button>
+                      )}
+                    </div>
+                  )}
 
                   {/* Expanded detail panel */}
                   {isExpanded && (
