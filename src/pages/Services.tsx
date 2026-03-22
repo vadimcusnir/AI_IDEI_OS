@@ -433,10 +433,12 @@ export default function Services() {
                         {catCfg?.label || service.category}
                       </span>
                     </div>
-                    <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md", clsBadge.className)}>
-                      {clsBadge.label}
-                    </span>
-                    <TierBadge tier={service.access_tier} />
+                    <div className="flex items-center gap-1.5">
+                      <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md", clsBadge.className)}>
+                        {clsBadge.label}
+                      </span>
+                      <TierBadge tier={service.access_tier} />
+                    </div>
                   </div>
 
                   <h3 className="text-sm font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
