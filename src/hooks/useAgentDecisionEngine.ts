@@ -147,6 +147,34 @@ export function useAgentDecisionEngine() {
       });
     }
 
+    // ─── IMF Pipeline suggestion ───
+    if (context.neuronCount > 15 && context.episodeCount > 1) {
+      s.push({
+        id: "imf-pipeline",
+        intent: "imf_multiplication",
+        label: "Launch the IMF Pipeline",
+        description: `Multiply ${context.neuronCount} neurons into 50+ deliverables automatically`,
+        priority: 88,
+        prompt: "Launch the Information Multiplication Factory pipeline on my best neurons",
+        icon: "🏭",
+        category: "pipeline",
+      });
+    }
+
+    // ─── Monetization suggestion ───
+    if (context.artifactCount > 5 && context.neuronCount > 20) {
+      s.push({
+        id: "publish-marketplace",
+        intent: "marketplace_publish",
+        label: "Publish to Marketplace",
+        description: "Your best frameworks and templates can earn NEURONS from other users",
+        priority: 65,
+        prompt: "Help me publish my top 3 frameworks to the marketplace",
+        icon: "🏪",
+        category: "growth",
+      });
+    }
+
     // ─── Re-engagement ───
     if (context.daysSinceLastActivity > 7 && context.neuronCount > 0) {
       s.push({
