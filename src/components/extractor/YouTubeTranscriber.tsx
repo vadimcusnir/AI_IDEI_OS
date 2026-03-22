@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,6 +31,7 @@ interface TranscriptData {
 const TRANSCRIPT_COST = 50; // NEURONS per transcription after first free
 
 export function YouTubeTranscriber() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance, loading: balanceLoading, refetch: refetchBalance } = useCreditBalance();
@@ -38,6 +40,7 @@ export function YouTubeTranscriber() {
   const [progress, setProgress] = useState(0);
   const [transcript, setTranscript] = useState<TranscriptData | null>(null);
   const [error, setError] = useState("");
+  const [lastEpisodeId, setLastEpisodeId] = useState<string | null>(null);
   const [episodeCount, setEpisodeCount] = useState<number | null>(null);
   const [showTopUp, setShowTopUp] = useState(false);
 
@@ -107,6 +110,7 @@ export function YouTubeTranscriber() {
       } as any).select("*").single();
 
       if (epErr || !ep) throw new Error("Failed to create episode");
+      setLastEpisodeId(ep.id);
 
       setProgress(50);
       setStage("processing");
@@ -387,7 +391,7 @@ ${transcript.text.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).
                   <Button
                     size="sm"
                     className="shrink-0 gap-1.5"
-                    onClick={() => { window.location.href = "/extractor"; }}
+                    onClick={() => navigate(`/extractor${lastEpisodeId ? `?episode=${lastEpisodeId}` : ""}`)}
                   >
                     Extrage <ArrowRight className="h-3 w-3" />
                   </Button>
