@@ -3770,6 +3770,59 @@ export type Database = {
         }
         Relationships: []
       }
+      service_manifests: {
+        Row: {
+          access_requirements: Json | null
+          created_at: string | null
+          dependencies: string[] | null
+          estimated_duration_seconds: number | null
+          id: string
+          input_schema: Json | null
+          is_validated: boolean | null
+          output_schema: Json | null
+          pipeline_class: string
+          pipeline_steps: Json | null
+          service_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          access_requirements?: Json | null
+          created_at?: string | null
+          dependencies?: string[] | null
+          estimated_duration_seconds?: number | null
+          id?: string
+          input_schema?: Json | null
+          is_validated?: boolean | null
+          output_schema?: Json | null
+          pipeline_class?: string
+          pipeline_steps?: Json | null
+          service_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          access_requirements?: Json | null
+          created_at?: string | null
+          dependencies?: string[] | null
+          estimated_duration_seconds?: number | null
+          id?: string
+          input_schema?: Json | null
+          is_validated?: boolean | null
+          output_schema?: Json | null
+          pipeline_class?: string
+          pipeline_steps?: Json | null
+          service_key?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_manifests_service_key_fkey"
+            columns: ["service_key"]
+            isOneToOne: true
+            referencedRelation: "service_catalog"
+            referencedColumns: ["service_key"]
+          },
+        ]
+      }
       subscription_plans: {
         Row: {
           created_at: string
