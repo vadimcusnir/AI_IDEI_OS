@@ -182,12 +182,35 @@ export default function MarketplaceDetail() {
         title={`${asset.title} — AI-IDEI Marketplace`}
         description={asset.description || `Knowledge asset: ${asset.title}`}
       />
+      <JsonLd
+        type="Product"
+        data={{
+          name: asset.title,
+          description: asset.description || "",
+          offers: {
+            "@type": "Offer",
+            price: asset.price_usd || 0,
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+          },
+          aggregateRating: asset.rating_avg ? {
+            "@type": "AggregateRating",
+            ratingValue: asset.rating_avg,
+            reviewCount: asset.rating_count || 0,
+          } : undefined,
+          brand: { "@type": "Brand", name: "AI-IDEI" },
+        }}
+      />
 
       {/* Back nav */}
       <div className="border-b border-border bg-card">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Button variant="ghost" size="sm" onClick={() => navigate("/marketplace")} className="text-xs text-muted-foreground -ml-2">
             <ArrowLeft className="h-3.5 w-3.5 mr-1" /> Marketplace
+          </Button>
+          <Button variant="ghost" size="sm" className="text-xs gap-1.5"
+            onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success("Link copied!"); }}>
+            <Share2 className="h-3 w-3" /> Share
           </Button>
         </div>
       </div>
