@@ -273,21 +273,23 @@ export default function Landing() {
       <LandingProofBand />
       <LandingProblem />
       <div className="gold-divider" />
-      <LandingMechanism />
-      <TransformationDiagram />
-      <LandingWhatYouGet />
-      <LandingOutputGalaxy />
-      <LandingControlSurface />
-      <LandingWhoFor />
-      <div className="gold-divider" />
-      <LandingWhyDifferent />
-      <LandingBenefits />
-      <LandingSocialProof />
-      <EcosystemMap />
-      <LandingTranscribeCTA />
-      <LandingPricing ctaAction={ctaAction} />
-      <LandingFAQ />
-      <LandingFinalCTA ctaAction={ctaAction} />
+      <Suspense fallback={null}>
+        <LandingMechanism />
+        <TransformationDiagram />
+        <LandingWhatYouGet />
+        <LandingOutputGalaxy />
+        <LandingControlSurface />
+        <LandingWhoFor />
+        <div className="gold-divider" />
+        <LandingWhyDifferent />
+        <LandingBenefits />
+        <LandingSocialProof />
+        <EcosystemMap />
+        <LandingTranscribeCTA />
+        <LandingPricing ctaAction={ctaAction} />
+        <LandingFAQ />
+        <LandingFinalCTA ctaAction={ctaAction} />
+      </Suspense>
       </main>
       <LandingFooter />
 
