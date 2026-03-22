@@ -28,7 +28,6 @@ export default function NotebookDetail() {
     return (
       <div className="flex flex-col h-full">
         <SEOHead title={`${title} — AI-IDEI`} description="Knowledge notebook" />
-        {/* Mobile tab bar */}
         <div className="flex border-b border-border bg-card shrink-0">
           {([
             { key: "sources" as MobileTab, icon: FileText, label: "Sources" },
@@ -53,7 +52,7 @@ export default function NotebookDetail() {
         <div className="flex-1 min-h-0">
           {mobileTab === "sources" && <NotebookSourcesPanel {...detail} />}
           {mobileTab === "chat" && <NotebookChatPanel {...detail} />}
-          {mobileTab === "studio" && <NotebookStudioPanel {...detail} />}
+          {mobileTab === "studio" && <NotebookStudioPanel artifacts={detail.artifacts} sources={detail.sources} notebookId={id} />}
         </div>
       </div>
     );
@@ -63,23 +62,20 @@ export default function NotebookDetail() {
     <div className="flex flex-col h-full">
       <SEOHead title={`${title} — AI-IDEI`} description="Knowledge notebook" />
       <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
-        {/* Sources Panel (left) */}
         <ResizablePanel defaultSize={22} minSize={15} maxSize={35}>
           <NotebookSourcesPanel {...detail} />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
 
-        {/* Chat Panel (center) */}
         <ResizablePanel defaultSize={50} minSize={30}>
           <NotebookChatPanel {...detail} />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
 
-        {/* Studio Panel (right) */}
         <ResizablePanel defaultSize={28} minSize={18} maxSize={40}>
-          <NotebookStudioPanel {...detail} />
+          <NotebookStudioPanel artifacts={detail.artifacts} sources={detail.sources} notebookId={id} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
