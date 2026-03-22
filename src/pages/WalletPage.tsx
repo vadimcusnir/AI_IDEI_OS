@@ -65,6 +65,11 @@ export default function WalletPage() {
             <WalletPanel />
           </div>
 
+          {/* NOTA2 Token */}
+          <div className="mb-6">
+            <TokenPanel />
+          </div>
+
           {/* Transaction History */}
           <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Clock className="h-3 w-3" /> {t("wallet.transaction_history")}
