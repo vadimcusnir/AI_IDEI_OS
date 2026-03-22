@@ -166,6 +166,16 @@ export function ServiceRunHistory({ limit = 20, serviceKeyFilter }: Props) {
           </div>
         );
       })}
+      {showViewAll && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full text-xs text-muted-foreground mt-2"
+          onClick={() => navigate("/service-results")}
+        >
+          Vezi toate rezultatele →
+        </Button>
+      )}
     </div>
   );
 }
