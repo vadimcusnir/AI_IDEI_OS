@@ -125,6 +125,13 @@ export default function Landing() {
   return (
     <PageTransition>
     <div className="min-h-screen bg-background text-foreground noise-overlay relative">
+      {/* Skip-to-content — WCAG 2.4.1 */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[hsl(var(--gold-oxide))] focus:text-[hsl(var(--obsidian))] focus:rounded-md focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-[hsl(var(--gold-oxide))]"
+      >
+        Skip to content
+      </a>
       <SEOHead
         title="AI-IDEI — AI Copywriting & Marketing Execution System"
         description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants."
