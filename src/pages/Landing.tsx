@@ -156,10 +156,10 @@ export default function Landing() {
                 key={link.label}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
-                  "text-[10px] font-mono tracking-[0.12em] transition-colors relative",
+                  "text-xs font-mono tracking-[0.1em] transition-colors relative py-1",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
-                    : "text-[hsl(var(--ivory-dim)/0.5)] hover:text-[hsl(var(--gold-oxide))]"
+                    : "text-[hsl(var(--ivory-dim)/0.6)] hover:text-[hsl(var(--gold-oxide))]"
                 )}
               >
                 {link.label.toUpperCase()}
