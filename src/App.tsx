@@ -212,6 +212,7 @@ const App = () => (
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
+  </MotionConfig>
 );
 
 export default App;
