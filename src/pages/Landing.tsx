@@ -14,7 +14,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
-import { lazy, Suspense, useRef } from "react";
+import { useRef } from "react";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
@@ -24,14 +24,13 @@ import {
 import { OutputGalaxy } from "@/components/landing/OutputGalaxy";
 import { IconControl, IconFramework, IconAssistant, IconPodcast, IconOutput } from "@/components/landing/ProprietaryIcons";
 
-/* ── Extracted section components ── */
+/* ── Section components ── */
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingProblem } from "@/components/landing/LandingProblem";
 import { LandingMechanism } from "@/components/landing/LandingMechanism";
 import { LandingBenefits } from "@/components/landing/LandingBenefits";
 import { LandingSocialProof } from "@/components/landing/LandingSocialProof";
-
-const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
+import { LandingFooter } from "@/components/landing/LandingFooter";
 
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
@@ -57,10 +56,10 @@ const FAQS = [
   { q: "Who is this best for?", a: "Creators, marketers, consultants, freelancers, founders, and anyone who wants faster, clearer, more commercially useful output." },
 ];
 
-/* ── Extraction Spine ── */
+/* ── Extraction Spine — recurring vertical signature ── */
 function ExtractionSpine({ labels }: { labels: string[] }) {
   return (
-    <div className="hidden lg:flex flex-col items-center gap-0 fixed left-6 top-1/2 -translate-y-1/2 z-40">
+    <div className="hidden lg:flex flex-col items-center gap-0 fixed left-6 top-1/2 -translate-y-1/2 z-40" aria-hidden="true">
       <div className="w-px h-8 bg-[hsl(var(--gold-oxide)/0.2)]" />
       {labels.map((l, i) => (
         <div key={l} className="flex flex-col items-center">
@@ -73,6 +72,29 @@ function ExtractionSpine({ labels }: { labels: string[] }) {
       ))}
       <div className="w-px h-8 bg-[hsl(var(--gold-oxide)/0.2)]" />
     </div>
+  );
+}
+
+/* ── Section Shell — consistent padding + optional alt bg ── */
+function Section({ children, className, id, alt, border }: {
+  children: React.ReactNode;
+  className?: string;
+  id?: string;
+  alt?: boolean;
+  border?: boolean;
+}) {
+  return (
+    <section
+      id={id}
+      className={cn(
+        "py-20 sm:py-28",
+        alt && "bg-[hsl(var(--obsidian-light)/0.15)]",
+        border && "border-y border-[hsl(var(--ivory-dim)/0.06)]",
+        className
+      )}
+    >
+      {children}
+    </section>
   );
 }
 
@@ -89,9 +111,9 @@ export default function Landing() {
 
   return (
     <PageTransition>
-    <div className="min-h-screen bg-[hsl(var(--obsidian))] text-[hsl(var(--ivory))]">
+    <div className="min-h-screen bg-[hsl(var(--obsidian))] text-[hsl(var(--ivory))] noise-overlay relative">
       <SEOHead
-        title="AI-IDEI — Knowledge Extraction Engine"
+        title="AI-IDEI — AI Copywriting & Marketing Execution System"
         description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants."
         canonical="https://ai-idei-os.lovable.app"
       />
@@ -190,16 +212,17 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ 2. PROBLEM — Before/After ═══ */}
+      {/* ═══ 2. PROBLEM ═══ */}
       <LandingProblem />
 
-      {/* ═══ 3. MECHANISM — How It Works ═══ */}
+      {/* ═══ 3. MECHANISM ═══ */}
       <LandingMechanism />
 
       {/* ═══ 4. WHAT YOU GET ═══ */}
-      <section className="py-20 sm:py-28">
+      <Section>
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="mb-16">
+            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHAT YOU GET</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">
               Everything you need to write, position, and market better with AI
             </h2>
@@ -231,10 +254,10 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ═══ 5. OUTPUT GALAXY ═══ */}
-      <section id="outputs" className="py-20 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)] relative">
+      <Section id="outputs" border className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--gold-oxide)/0.02)] to-transparent" />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-8">
@@ -249,10 +272,10 @@ export default function Landing() {
             AI-IDEI helps you create faster, clearer, and with more commercial intent.
           </motion.p>
         </div>
-      </section>
+      </Section>
 
       {/* ═══ 6. CONTROL SURFACE ═══ */}
-      <section id="control" className="py-20 sm:py-28">
+      <Section id="control">
         <div className="max-w-4xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-16">
             <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">CONTROL LAYER</span>
@@ -286,12 +309,13 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ═══ 7. WHO THIS IS FOR ═══ */}
-      <section className="py-20 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)]">
+      <Section border>
         <div className="max-w-3xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
+            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHO THIS IS FOR</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-8">
               Built for people who want output, not noise
             </h2>
@@ -315,12 +339,13 @@ export default function Landing() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       {/* ═══ 8. WHY DIFFERENT ═══ */}
-      <section className="py-20 sm:py-28">
+      <Section>
         <div className="max-w-3xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
+            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHY DIFFERENT</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-8">
               Not another prompt pack. Not another content library.
             </h2>
@@ -344,7 +369,7 @@ export default function Landing() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       {/* ═══ 9. BENEFITS ═══ */}
       <LandingBenefits />
@@ -353,11 +378,14 @@ export default function Landing() {
       <LandingSocialProof />
 
       {/* ═══ 11. LIBRARY PREVIEW ═══ */}
-      <section className="py-16 sm:py-20 border-y border-[hsl(var(--ivory-dim)/0.06)]">
+      <Section border className="py-16 sm:py-20">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-10">
             <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">ASSET LIBRARY</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">Inside AI-IDEI</h2>
+            <p className="text-sm text-[hsl(var(--ivory-dim)/0.5)] max-w-lg mx-auto">
+              Explore a growing system of practical resources for copywriting, marketing, and business execution.
+            </p>
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="flex flex-wrap justify-center gap-2">
             {[
@@ -375,13 +403,17 @@ export default function Landing() {
               </motion.span>
             ))}
           </motion.div>
+          <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-8 text-[11px] text-[hsl(var(--ivory-dim)/0.35)]">
+            Everything is built to help you move from idea to action with less friction and stronger results.
+          </motion.p>
         </div>
-      </section>
+      </Section>
 
       {/* ═══ 12. PRICING ═══ */}
-      <section id="access" className="py-20 sm:py-28">
+      <Section id="access">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-16">
+            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">ACCESS</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">Choose the level that matches your ambition</h2>
             <p className="text-sm text-[hsl(var(--ivory-dim)/0.5)] max-w-lg mx-auto">
               Start simple. Upgrade when you want more depth, speed, and leverage.
@@ -431,12 +463,13 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ═══ 13. FAQ ═══ */}
-      <section id="faq" className="py-20 sm:py-28 border-t border-[hsl(var(--ivory-dim)/0.06)]">
+      <Section id="faq" border className="border-b-0">
         <div className="max-w-2xl mx-auto px-5 sm:px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-12">
+            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">FAQ</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))]">Frequently Asked Questions</h2>
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} custom={1} variants={fadeUp}>
@@ -454,7 +487,7 @@ export default function Landing() {
             </Accordion>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
       {/* ═══ 14. FINAL CTA ═══ */}
       <section className="relative overflow-hidden py-24 sm:py-32">
@@ -478,7 +511,7 @@ export default function Landing() {
               </Button>
               <Button variant="outline" size="lg" onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })} className="gap-2 h-12 sm:h-14 w-full sm:w-auto border-[hsl(var(--ivory-dim)/0.15)] text-[hsl(var(--ivory-dim)/0.7)] hover:bg-[hsl(var(--ivory-dim)/0.05)]">
                 <Eye className="h-4 w-4" />
-                See the Mechanism
+                See What's Inside
               </Button>
             </div>
             <p className="text-[10px] font-mono tracking-[0.15em] text-[hsl(var(--ivory-dim)/0.3)]">
@@ -488,8 +521,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ FOOTER ═══ */}
-      <Suspense fallback={null}><Footer /></Suspense>
+      {/* ═══ 15. FOOTER ═══ */}
+      <LandingFooter />
 
       <OrganizationJsonLd />
       <WebApplicationJsonLd />
