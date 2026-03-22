@@ -278,6 +278,12 @@ export default function Credits() {
           <ConsumptionChart transactions={transactions} />
         </Suspense>
 
+        {/* Economic Projections */}
+        <EconomicProjections
+          transactions={transactions}
+          currentBalance={credits?.balance ?? 0}
+        />
+
         {/* Service consumption breakdown */}
         {Object.keys(serviceStats).length > 0 && (
           <div className="mb-6">
