@@ -1,260 +1,330 @@
 /**
- * Extraction Engine — the central hero visual.
- * Shows the transformation: Input Chaos → Core Extractor → Asset Multiplication
- * Built with SVG + framer-motion. No decoration — shows the mechanism.
- * Mobile-first: scales cleanly on 430px+ viewports.
+ * Interactive Extraction Engine — the central hero visual.
+ * DOM + SVG + Motion architecture:
+ * - Pointer tilt via useMotionValue + useSpring
+ * - SVG connections that glow on hover
+ * - Parallax depth per orbital node
+ * - Semantic response text on hover
+ * - Idle breathing animation
+ * - Pointer glow follower
+ * - Reduced motion fallback
  */
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useRef, useState, useCallback } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useInView,
+  AnimatePresence,
+} from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const OUTPUTS = [
-  { label: "Articles", y: -52 },
-  { label: "Scripts", y: -26 },
-  { label: "Emails", y: 0 },
-  { label: "Courses", y: 26 },
-  { label: "Frameworks", y: 52 },
+interface EngineNode {
+  label: string;
+  x: number;
+  y: number;
+  depth: number;
+  semantic: string;
+}
+
+const NODES: EngineNode[] = [
+  { label: "Patterns", x: -200, y: -100, depth: 0.35, semantic: "Detect recurring structures in raw content" },
+  { label: "Frameworks", x: 200, y: -80, depth: 0.55, semantic: "Extract reusable reasoning architectures" },
+  { label: "Signals", x: -220, y: 100, depth: 0.65, semantic: "Identify psychological and behavioral cues" },
+  { label: "Formulas", x: 190, y: 120, depth: 0.45, semantic: "Isolate proven copywriting structures" },
+  { label: "Assets", x: 0, y: -160, depth: 0.25, semantic: "Convert insights into sellable outputs" },
+  { label: "Profiles", x: -60, y: 150, depth: 0.4, semantic: "Map expertise into structured identity" },
+  { label: "Campaigns", x: 140, y: -150, depth: 0.3, semantic: "Generate multi-channel execution plans" },
 ];
 
-const INPUT_FRAGMENTS = [
-  { text: "raw audio", x: -20, y: -45, opacity: 0.6 },
-  { text: "notes", x: -40, y: -20, opacity: 0.4 },
-  { text: "transcript", x: -15, y: 5, opacity: 0.7 },
-  { text: "ideas", x: -35, y: 30, opacity: 0.5 },
-  { text: "drafts", x: -10, y: 50, opacity: 0.3 },
-];
-
-/* Stable particle positions (no Math.random in render) */
-const PARTICLES = Array.from({ length: 8 }, (_, i) => ({
-  cx: -140 + ((i * 37 + 13) % 40),
-  cy: -50 + ((i * 29 + 7) % 100),
-  r: 1 + ((i * 17) % 3) * 0.5,
-  op: 0.15 + ((i * 13) % 5) * 0.04,
-}));
+/* Spring config for the tilt — calm, premium feel */
+const SPRING = { stiffness: 120, damping: 20, mass: 0.5 };
+const GLOW_SPRING = { stiffness: 80, damping: 25, mass: 0.6 };
 
 export function ExtractionEngine() {
-  const [active, setActive] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.3 });
+  const reduced = useReducedMotion();
+  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
 
-  useEffect(() => {
-    const t = setTimeout(() => setActive(true), 600);
-    return () => clearTimeout(t);
-  }, []);
+  /* ── Pointer tracking ── */
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const springX = useSpring(pointerX, SPRING);
+  const springY = useSpring(pointerY, SPRING);
+
+  /* Glow position (slower spring for dreamy lag) */
+  const glowX = useSpring(pointerX, GLOW_SPRING);
+  const glowY = useSpring(pointerY, GLOW_SPRING);
+
+  /* Tilt: ±6° max */
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-6, 6]);
+  const rotateX = useTransform(springY, [-0.5, 0.5], [6, -6]);
+
+  /* Background parallax */
+  const bgX = useTransform(springX, [-0.5, 0.5], [-20, 20]);
+  const bgY = useTransform(springY, [-0.5, 0.5], [-20, 20]);
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (reduced) return;
+      const el = containerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      pointerX.set((e.clientX - rect.left) / rect.width - 0.5);
+      pointerY.set((e.clientY - rect.top) / rect.height - 0.5);
+    },
+    [reduced, pointerX, pointerY]
+  );
+
+  const handlePointerLeave = useCallback(() => {
+    pointerX.set(0);
+    pointerY.set(0);
+  }, [pointerX, pointerY]);
+
+  /* ── Node position transforms (parallax depth) ── */
+  const getNodeTransforms = (node: EngineNode) => {
+    const nx = useTransform(springX, [-0.5, 0.5], [
+      node.x * node.depth - 18,
+      node.x * node.depth + 18,
+    ]);
+    const ny = useTransform(springY, [-0.5, 0.5], [
+      node.y * node.depth - 18,
+      node.y * node.depth + 18,
+    ]);
+    return { nx, ny };
+  };
+
+  /* ── Glow position as CSS ── */
+  const glowLeft = useTransform(glowX, [-0.5, 0.5], ["20%", "80%"]);
+  const glowTop = useTransform(glowY, [-0.5, 0.5], ["20%", "80%"]);
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto px-2">
-      <svg
-        viewBox="-200 -85 400 175"
-        className="w-full h-auto"
-        fill="none"
-        preserveAspectRatio="xMidYMid meet"
-        role="img"
-        aria-label="Knowledge Extraction Engine diagram: raw input transforms through the core extractor into organized asset outputs"
+    <div className="relative w-full max-w-4xl mx-auto px-2 sm:px-4">
+      <motion.div
+        ref={containerRef}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+        style={
+          reduced
+            ? {}
+            : { rotateX, rotateY, transformPerspective: 1200 }
+        }
+        className="relative w-full aspect-[16/10] sm:aspect-[16/9] overflow-hidden rounded-2xl sm:rounded-3xl border border-border bg-card"
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={isInView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        {/* ── INPUT ZONE (left) — chaos ── */}
-        <g>
-          <motion.path
-            d="M-180 -30 l5 -8 l5 15 l5 -20 l5 25 l5 -12 l5 8 l5 -18 l5 22 l5 -10 l5 5"
-            stroke="hsl(var(--ivory-dim))"
-            strokeWidth="1.2"
-            opacity={0.4}
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: active ? 1 : 0 }}
-            transition={{ duration: 1.5, delay: 0.2 }}
+        {/* ── Strat 1: Pointer Glow ── */}
+        {!reduced && (
+          <motion.div
+            className="absolute w-[300px] h-[300px] sm:w-[420px] sm:h-[420px] rounded-full pointer-events-none"
+            style={{
+              left: glowLeft,
+              top: glowTop,
+              x: "-50%",
+              y: "-50%",
+              background:
+                "radial-gradient(circle, hsl(var(--gold-oxide) / 0.08) 0%, transparent 70%)",
+            }}
           />
-          <motion.path
-            d="M-175 10 l4 12 l6 -20 l4 16 l5 -8 l6 18 l4 -14 l5 10 l6 -6"
-            stroke="hsl(var(--ivory-dim))"
-            strokeWidth="0.8"
-            opacity={0.25}
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: active ? 1 : 0 }}
-            transition={{ duration: 1.8, delay: 0.4 }}
-          />
+        )}
 
-          {INPUT_FRAGMENTS.map((f, i) => (
-            <motion.text
-              key={i}
-              x={-160 + f.x}
-              y={f.y}
-              fontSize="6"
-              fill="hsl(var(--ivory-dim))"
-              opacity={0}
-              fontFamily="var(--font-mono)"
-              initial={{ opacity: 0, x: -170 + f.x }}
-              animate={active ? { opacity: f.opacity, x: -160 + f.x } : {}}
-              transition={{ delay: 0.3 + i * 0.15, duration: 0.6 }}
-            >
-              {f.text}
-            </motion.text>
-          ))}
+        {/* ── Strat 2: Background ambient layer ── */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={reduced ? {} : { x: bgX, y: bgY }}
+        >
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] rounded-full bg-[hsl(var(--gold-oxide)/0.04)] blur-[100px]" />
+        </motion.div>
 
-          {PARTICLES.map((p, i) => (
-            <motion.circle
-              key={`p-${i}`}
-              cx={p.cx}
-              cy={p.cy}
-              r={p.r}
-              fill="hsl(var(--ivory-dim))"
-              initial={{ opacity: 0 }}
-              animate={active ? { opacity: p.op } : {}}
-              transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
+        {/* ── SVG Connection Lines ── */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          viewBox="-250 -200 500 400"
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+        >
+          {NODES.map((node, i) => (
+            <motion.line
+              key={`line-${i}`}
+              x1={0}
+              y1={0}
+              x2={node.x * node.depth}
+              y2={node.y * node.depth}
+              stroke={`hsl(var(--gold-oxide) / ${hoveredNode === i ? 0.5 : 0.12})`}
+              strokeWidth={hoveredNode === i ? 1.5 : 0.8}
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={
+                isInView
+                  ? { pathLength: 1, opacity: 1 }
+                  : {}
+              }
+              transition={{
+                pathLength: { delay: 0.6 + i * 0.08, duration: 0.6 },
+                opacity: { delay: 0.6 + i * 0.08, duration: 0.3 },
+                stroke: { duration: 0.3 },
+                strokeWidth: { duration: 0.3 },
+              }}
             />
           ))}
-        </g>
 
-        {/* ── FLOW LINES: input → core ── */}
-        <motion.path
-          d="M-100 -20 C-60 -20 -50 0 -40 0"
-          stroke="hsl(var(--gold-oxide))"
-          strokeWidth="0.8"
-          opacity={0}
-          initial={{ opacity: 0, pathLength: 0 }}
-          animate={active ? { opacity: 0.35, pathLength: 1 } : {}}
-          transition={{ delay: 0.8, duration: 0.8 }}
-        />
-        <motion.path
-          d="M-110 20 C-70 20 -50 0 -40 0"
-          stroke="hsl(var(--gold-oxide))"
-          strokeWidth="0.8"
-          opacity={0}
-          initial={{ opacity: 0, pathLength: 0 }}
-          animate={active ? { opacity: 0.25, pathLength: 1 } : {}}
-          transition={{ delay: 0.9, duration: 0.8 }}
-        />
-        <motion.path
-          d="M-95 0 L-40 0"
-          stroke="hsl(var(--gold-oxide))"
-          strokeWidth="1"
-          opacity={0}
-          initial={{ opacity: 0, pathLength: 0 }}
-          animate={active ? { opacity: 0.5, pathLength: 1 } : {}}
-          transition={{ delay: 1, duration: 0.6 }}
-        />
-
-        {/* ── CORE EXTRACTOR (center) ── */}
-        <g>
+          {/* Core octagon */}
           <motion.path
-            d="M-28 -15 L-15 -28 L15 -28 L28 -15 L28 15 L15 28 L-15 28 L-28 15 Z"
+            d="M-22 -12 L-12 -22 L12 -22 L22 -12 L22 12 L12 22 L-12 22 L-22 12 Z"
             stroke="hsl(var(--gold-oxide))"
-            strokeWidth="1.5"
+            strokeWidth="1.2"
             fill="none"
-            initial={{ scale: 0.6, opacity: 0 }}
-            animate={active ? { scale: 1, opacity: 1 } : {}}
-            transition={{ delay: 0.6, duration: 0.7, ease: "easeOut" }}
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 0.6 } : {}}
+            transition={{ delay: 0.4, duration: 0.7 }}
           />
           <motion.circle
-            cx={0} cy={0} r={14}
+            cx={0}
+            cy={0}
+            r={10}
             stroke="hsl(var(--gold-oxide))"
-            strokeWidth="0.7"
+            strokeWidth="0.6"
             fill="none"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={active ? { opacity: 0.5, scale: 1 } : {}}
-            transition={{ delay: 0.8, duration: 0.6 }}
+            initial={{ opacity: 0, scale: 0.3 }}
+            animate={isInView ? { opacity: 0.4, scale: 1 } : {}}
+            transition={{ delay: 0.5, duration: 0.6 }}
           />
           <motion.circle
-            cx={0} cy={0} r={6}
+            cx={0}
+            cy={0}
+            r={4}
             fill="hsl(var(--gold-oxide))"
             initial={{ opacity: 0, scale: 0 }}
-            animate={active ? { opacity: 0.8, scale: 1 } : {}}
-            transition={{ delay: 1, duration: 0.5 }}
+            animate={
+              isInView
+                ? {
+                    opacity: [0.6, 0.9, 0.6],
+                    scale: [1, 1.1, 1],
+                  }
+                : {}
+            }
+            transition={{
+              delay: 0.6,
+              duration: 3,
+              repeat: reduced ? 0 : Infinity,
+              ease: "easeInOut",
+            }}
           />
+
+          {/* Tick marks */}
           {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
             <motion.line
-              key={deg}
-              x1={0} y1={-19} x2={0} y2={-23}
+              key={`tick-${deg}`}
+              x1={0}
+              y1={-16}
+              x2={0}
+              y2={-20}
               stroke="hsl(var(--gold-oxide))"
-              strokeWidth="0.8"
+              strokeWidth="0.6"
               transform={`rotate(${deg})`}
               initial={{ opacity: 0 }}
-              animate={active ? { opacity: 0.4 } : {}}
-              transition={{ delay: 1.1 + deg * 0.002, duration: 0.3 }}
+              animate={isInView ? { opacity: 0.35 } : {}}
+              transition={{ delay: 0.8 + deg * 0.001, duration: 0.3 }}
             />
           ))}
-          <motion.text
-            x={0} y={42}
-            textAnchor="middle"
-            fontSize="5.5"
-            fill="hsl(var(--gold-oxide))"
-            fontFamily="var(--font-mono)"
-            letterSpacing="0.15em"
-            initial={{ opacity: 0 }}
-            animate={active ? { opacity: 0.7 } : {}}
-            transition={{ delay: 1.3, duration: 0.5 }}
-          >
+        </svg>
+
+        {/* ── Core label ── */}
+        <motion.div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-10"
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
+          <div className="text-[9px] sm:text-[10px] font-mono tracking-[0.3em] text-muted-foreground">
+            CORE
+          </div>
+          <div className="text-[11px] sm:text-sm font-semibold text-foreground mt-1 tracking-wide">
             EXTRACTION ENGINE
-          </motion.text>
-        </g>
+          </div>
+        </motion.div>
 
-        {/* ── FLOW LINES: core → outputs ── */}
-        {OUTPUTS.map((o, i) => (
-          <motion.line
-            key={`fl-${i}`}
-            x1={30} y1={0} x2={100} y2={o.y}
-            stroke="hsl(var(--gold-oxide))"
-            strokeWidth="0.7"
-            initial={{ opacity: 0, pathLength: 0 }}
-            animate={active ? { opacity: 0.3, pathLength: 1 } : {}}
-            transition={{ delay: 1.2 + i * 0.1, duration: 0.5 }}
-          />
-        ))}
+        {/* ── Orbital Nodes ── */}
+        {NODES.map((node, i) => {
+          const { nx, ny } = getNodeTransforms(node);
+          const isHovered = hoveredNode === i;
 
-        {/* ── OUTPUT ZONE (right) ── */}
-        {OUTPUTS.map((o, i) => (
-          <motion.g
-            key={`out-${i}`}
-            initial={{ opacity: 0, x: 90 }}
-            animate={active ? { opacity: 1, x: 105 } : {}}
-            transition={{ delay: 1.4 + i * 0.12, duration: 0.5 }}
-          >
-            <rect
-              x={0} y={o.y - 8}
-              width={60} height={16} rx={2}
-              stroke="hsl(var(--ivory-dim))"
-              strokeWidth="0.8"
-              fill="hsl(var(--obsidian-light))"
-              opacity={0.7}
-            />
-            <text
-              x={30} y={o.y + 1}
-              textAnchor="middle"
-              fontSize="5.5"
-              fill="hsl(var(--ivory))"
-              fontFamily="var(--font-mono)"
-              letterSpacing="0.08em"
-              opacity={0.8}
+          return (
+            <motion.button
+              key={node.label}
+              onPointerEnter={() => setHoveredNode(i)}
+              onPointerLeave={() => setHoveredNode(null)}
+              className="absolute left-1/2 top-1/2 z-20 rounded-full border px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-xs font-mono tracking-wide backdrop-blur-sm cursor-default transition-colors duration-200 focus-ring"
+              style={
+                reduced
+                  ? {
+                      transform: `translate(calc(-50% + ${node.x * node.depth}px), calc(-50% + ${node.y * node.depth}px))`,
+                    }
+                  : { x: nx, y: ny, translateX: "-50%", translateY: "-50%" }
+              }
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={
+                isInView
+                  ? {
+                      opacity: 1,
+                      scale: isHovered ? 1.08 : 1,
+                      borderColor: isHovered
+                        ? "hsl(var(--gold-oxide) / 0.5)"
+                        : "hsl(var(--border))",
+                      backgroundColor: isHovered
+                        ? "hsl(var(--gold-oxide) / 0.08)"
+                        : "hsl(var(--card) / 0.7)",
+                      color: isHovered
+                        ? "hsl(var(--gold-oxide))"
+                        : "hsl(var(--foreground))",
+                    }
+                  : {}
+              }
+              transition={{
+                opacity: { delay: 1 + i * 0.1, duration: 0.5 },
+                scale: { duration: 0.25, type: "spring", stiffness: 300, damping: 20 },
+                borderColor: { duration: 0.2 },
+                backgroundColor: { duration: 0.2 },
+                color: { duration: 0.2 },
+              }}
+              aria-label={`${node.label}: ${node.semantic}`}
             >
-              {o.label}
-            </text>
-            <circle cx={6} cy={o.y} r={1.5} fill="hsl(var(--gold-oxide))" opacity={0.6} />
-          </motion.g>
-        ))}
+              {node.label}
+            </motion.button>
+          );
+        })}
 
-        {/* ── Zone labels ── */}
-        <motion.text
-          x={-155} y={-70}
-          fontSize="4.5"
-          fill="hsl(var(--ivory-dim))"
-          fontFamily="var(--font-mono)"
-          letterSpacing="0.2em"
-          initial={{ opacity: 0 }}
-          animate={active ? { opacity: 0.4 } : {}}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          RAW INPUT
-        </motion.text>
-        <motion.text
-          x={130} y={-70}
-          fontSize="4.5"
-          fill="hsl(var(--ivory-dim))"
-          fontFamily="var(--font-mono)"
-          letterSpacing="0.2em"
-          textAnchor="middle"
-          initial={{ opacity: 0 }}
-          animate={active ? { opacity: 0.4 } : {}}
-          transition={{ delay: 1.6, duration: 0.5 }}
-        >
-          ASSET OUTPUT
-        </motion.text>
-      </svg>
+        {/* ── Strat 3: Semantic Response ── */}
+        <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 flex justify-center pointer-events-none z-20">
+          <AnimatePresence mode="wait">
+            {hoveredNode !== null ? (
+              <motion.p
+                key={hoveredNode}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2 }}
+                className="text-[10px] sm:text-xs font-mono tracking-[0.08em] text-[hsl(var(--gold-oxide))] px-4 text-center"
+              >
+                {NODES[hoveredNode].semantic}
+              </motion.p>
+            ) : (
+              <motion.p
+                key="idle"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-[10px] sm:text-xs font-mono tracking-[0.12em] text-muted-foreground/50 px-4 text-center"
+              >
+                hover a node to explore
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
     </div>
   );
 }
