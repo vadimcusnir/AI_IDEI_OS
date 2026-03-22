@@ -80,6 +80,7 @@ const CognitiveUnits = lazy(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazy(() => import("./pages/CollectionRuns"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const KnowledgeSurfacePage = lazy(() => import("./pages/KnowledgeSurfacePage"));
+const ServiceResults = lazy(() => import("./pages/ServiceResults"));
 const ProductSurfacePage = lazy(() => import("./pages/ProductSurfacePage"));
 function PageLoader() {
   return (
