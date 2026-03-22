@@ -5,6 +5,9 @@ import { LeaderboardWidget } from "@/components/gamification/LeaderboardWidget";
 import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { AchievementGallery } from "@/components/gamification/AchievementGallery";
 import { TeamChallenges } from "@/components/gamification/TeamChallenges";
+import { XPActivityFeed } from "@/components/gamification/XPActivityFeed";
+import { RankTimeline } from "@/components/gamification/RankTimeline";
+import { StreakCalendar } from "@/components/gamification/StreakCalendar";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useGamification } from "@/hooks/useGamification";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,7 +20,7 @@ import {
 
 export default function GamificationPage() {
   const { user } = useAuth();
-  const { xp, streak, loading } = useGamification();
+  const { xp, streak, loading, tierMultiplier } = useGamification();
   const { t } = useTranslation("pages");
 
   if (loading) {
@@ -32,7 +35,7 @@ export default function GamificationPage() {
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
         <SEOHead title="Gamification — AI-IDEI" description="Track your XP, level, streaks, achievements, and daily challenges." />
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-5">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
@@ -43,29 +46,39 @@ export default function GamificationPage() {
               <h1 className="text-lg font-serif font-bold tracking-tight">{t("gamification.title")}</h1>
               <p className="text-[10px] text-muted-foreground">{t("gamification.subtitle")}</p>
             </div>
-            <Badge className="ml-auto text-[10px] bg-primary/10 text-primary border-0">
-              Level {xp.level} — {xp.rank_name}
-            </Badge>
+            <div className="ml-auto flex items-center gap-2">
+              {tierMultiplier > 1 && (
+                <Badge variant="outline" className="text-[9px] border-primary/30 text-primary">
+                  {tierMultiplier}x XP Boost
+                </Badge>
+              )}
+              <Badge className="text-[10px] bg-primary/10 text-primary border-0">
+                Level {xp.level} — {xp.rank_name}
+              </Badge>
+            </div>
           </div>
 
-          {/* XP Progress */}
-          <div className="mb-6">
+          {/* XP Progress + Streak Calendar row */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
             <XPProgressBar />
+            <StreakCalendar />
           </div>
 
-          {/* Daily Challenges */}
-          <ControlledSection elementId="gamification.daily_challenges">
-            <div className="mb-6">
+          {/* Daily Challenges + Team Challenges */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+            <ControlledSection elementId="gamification.daily_challenges">
               <DailyChallenges />
-            </div>
-          </ControlledSection>
-
-          {/* Team Challenges */}
-          <ControlledSection elementId="gamification.team_challenges">
-            <div className="mb-6">
+            </ControlledSection>
+            <ControlledSection elementId="gamification.team_challenges">
               <TeamChallenges />
-            </div>
-          </ControlledSection>
+            </ControlledSection>
+          </div>
+
+          {/* XP Activity + Rank Timeline */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+            <XPActivityFeed />
+            <RankTimeline />
+          </div>
 
           {/* Achievement Gallery */}
           <ControlledSection elementId="gamification.achievements">
