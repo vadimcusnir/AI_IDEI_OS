@@ -57,6 +57,7 @@ const ROUTE_LABELS: Record<string, string> = {
   knowledge: "Knowledge Base",
   kb: "Knowledge Base",
   batch: "Batch Runner",
+  pricing: "Pricing",
 };
 
 export function AppBreadcrumbs() {

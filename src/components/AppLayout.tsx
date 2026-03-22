@@ -21,6 +21,7 @@ import {
 
 // Lazy-load non-critical components
 const LowBalanceBanner = lazy(() => import("@/components/credits/LowBalanceBanner").then(m => ({ default: m.LowBalanceBanner })));
+const PipelineIndicatorCompact = lazy(() => import("@/components/PipelineIndicator").then(m => ({ default: m.PipelineIndicator })));
 const GlobalSearch = lazy(() => import("@/components/GlobalSearch").then(m => ({ default: m.GlobalSearch })));
 const NotificationBell = lazy(() => import("@/components/NotificationBell").then(m => ({ default: m.NotificationBell })));
 const UserMenu = lazy(() => import("@/components/UserMenu").then(m => ({ default: m.UserMenu })));
