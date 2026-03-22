@@ -280,7 +280,7 @@ export default function Landing() {
       {/* ═══ 4. WHAT YOU GET ═══ */}
       <Section>
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="mb-16">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="mb-10 sm:mb-16">
             <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHAT YOU GET</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">
               Everything you need to write, position, and market better with AI
