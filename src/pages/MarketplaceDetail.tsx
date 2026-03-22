@@ -75,6 +75,16 @@ export default function MarketplaceDetail() {
         .maybeSingle();
       setAsset(data as KnowledgeAsset | null);
 
+      // Load author name
+      if (data?.author_id) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name, username")
+          .eq("user_id", data.author_id)
+          .maybeSingle();
+        if (profile) setAuthorName(profile.display_name || profile.username || "Creator");
+      }
+
       const { data: revData } = await supabase
         .from("asset_reviews")
         .select("*")
@@ -83,10 +93,23 @@ export default function MarketplaceDetail() {
         .order("created_at", { ascending: false })
         .limit(50);
       setReviews((revData as AssetReview[]) || []);
+
+      // Check if user has license
+      if (data && user) {
+        const { data: license } = await supabase
+          .from("asset_licenses" as any)
+          .select("id, is_transferable")
+          .eq("asset_id", id)
+          .eq("buyer_id", user.id)
+          .maybeSingle();
+        setHasLicense(!!license);
+        setPurchased(!!license);
+      }
+
       setLoading(false);
     };
     load();
-  }, [id]);
+  }, [id, user]);
 
   const isOwn = user?.id === asset?.author_id;
   const price = asset?.price_neurons || 0;
