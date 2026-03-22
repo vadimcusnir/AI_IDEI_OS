@@ -389,3 +389,99 @@
     to { opacity: 1; transform: translateY(0); }
   }
 }
+
+/* ── RULE.VISUAL.TEXT v2.0 — Canonical Utilities ── */
+@layer components {
+  /* Readability grid: 70ch max for long-form text */
+  .text-flow {
+    max-width: var(--text-max);
+    margin-inline: auto;
+  }
+
+  /* Paragraph flow: default body rhythm */
+  .p-flow {
+    line-height: var(--lh-body);
+    color: hsl(var(--text-secondary));
+    overflow-wrap: anywhere;
+  }
+
+  /* Paragraph spacing */
+  .paragraph {
+    margin-bottom: var(--sp-4);
+  }
+  .paragraph:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Vertical stacking (canonical spacing) */
+  .stack-3  { display: flex; flex-direction: column; gap: var(--sp-3); }
+  .stack-4  { display: flex; flex-direction: column; gap: var(--sp-4); }
+  .stack-6  { display: flex; flex-direction: column; gap: var(--sp-6); }
+  .stack-8  { display: flex; flex-direction: column; gap: var(--sp-8); }
+
+  /* Canonical headings */
+  .heading-1 {
+    font-size: var(--h1-size);
+    line-height: var(--lh-h1);
+    font-family: var(--font-serif);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: hsl(var(--foreground));
+  }
+
+  .heading-2 {
+    font-size: var(--h2-size);
+    line-height: var(--lh-h2);
+    font-family: var(--font-serif);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: hsl(var(--foreground));
+  }
+
+  .heading-3 {
+    font-size: var(--h3-size);
+    line-height: 1.3;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+  }
+
+  .heading-4 {
+    font-size: var(--h4-size);
+    line-height: 1.4;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+  }
+
+  /* Eyebrow label */
+  .eyebrow {
+    font-size: var(--eyebrow-size);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: hsl(var(--primary));
+  }
+
+  /* Caption / microcopy */
+  .caption {
+    font-size: var(--caption-size);
+    color: hsl(var(--text-muted));
+  }
+
+  /* Body text */
+  .body-text {
+    font-size: var(--body-size);
+    line-height: var(--lh-body);
+    color: hsl(var(--text-secondary));
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .heading-1,
+    .heading-2,
+    .heading-3,
+    .heading-4 {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
