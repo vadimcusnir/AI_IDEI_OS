@@ -128,3 +128,54 @@ export function FAQJsonLd({ items }: {
     }} />
   );
 }
+
+export function DatasetJsonLd({ name, description, entityCount }: {
+  name: string;
+  description: string;
+  entityCount?: number;
+}) {
+  return (
+    <JsonLd data={{
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name,
+      description,
+      url: "https://ai-idei.com/intelligence",
+      creator: {
+        "@type": "Organization",
+        name: "AI-IDEI",
+        url: "https://ai-idei.com",
+      },
+      license: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      keywords: "knowledge graph, AI, marketing, expertise, patterns, insights",
+      ...(entityCount && {
+        measurementTechnique: "AI-powered extraction and classification",
+        variableMeasured: {
+          "@type": "PropertyValue",
+          name: "entities",
+          value: entityCount,
+        },
+      }),
+    }} />
+  );
+}
+
+export function PersonJsonLd({ name, jobTitle, bio, expertise, url }: {
+  name: string;
+  jobTitle?: string;
+  bio?: string;
+  expertise?: string[];
+  url?: string;
+}) {
+  const data: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    url: url || `https://ai-idei.com`,
+  };
+  if (jobTitle) data.jobTitle = jobTitle;
+  if (bio) data.description = bio;
+  if (expertise?.length) data.knowsAbout = expertise;
+
+  return <JsonLd data={data} />;
+}

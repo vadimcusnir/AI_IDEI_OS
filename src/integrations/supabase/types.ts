@@ -3031,6 +3031,33 @@ export type Database = {
         }
         Relationships: []
       }
+      knowledge_graph_cache: {
+        Row: {
+          cache_key: string
+          entity_count: number | null
+          expires_at: string | null
+          generated_at: string | null
+          graph_data: Json
+          id: string
+        }
+        Insert: {
+          cache_key?: string
+          entity_count?: number | null
+          expires_at?: string | null
+          generated_at?: string | null
+          graph_data?: Json
+          id?: string
+        }
+        Update: {
+          cache_key?: string
+          entity_count?: number | null
+          expires_at?: string | null
+          generated_at?: string | null
+          graph_data?: Json
+          id?: string
+        }
+        Relationships: []
+      }
       knowledge_items: {
         Row: {
           approved_at: string | null
@@ -3179,6 +3206,149 @@ export type Database = {
           slug?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      llm_fix_suggestions: {
+        Row: {
+          ai_reasoning: string | null
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string | null
+          current_value: string | null
+          id: string
+          issue_type: string
+          page_id: string | null
+          severity: string | null
+          status: string | null
+          suggested_value: string | null
+        }
+        Insert: {
+          ai_reasoning?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          current_value?: string | null
+          id?: string
+          issue_type: string
+          page_id?: string | null
+          severity?: string | null
+          status?: string | null
+          suggested_value?: string | null
+        }
+        Update: {
+          ai_reasoning?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          current_value?: string | null
+          id?: string
+          issue_type?: string
+          page_id?: string | null
+          severity?: string | null
+          status?: string | null
+          suggested_value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "llm_fix_suggestions_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "llm_page_index"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      llm_page_index: {
+        Row: {
+          created_at: string | null
+          entity_count: number | null
+          entity_density_score: number | null
+          external_links_count: number | null
+          id: string
+          internal_links_count: number | null
+          issues: Json | null
+          last_crawled_at: string | null
+          last_fixed_at: string | null
+          overall_score: number | null
+          page_path: string
+          page_title: string | null
+          page_type: string | null
+          schema_types: string[] | null
+          semantic_links_score: number | null
+          topic_clarity_score: number | null
+          updated_at: string | null
+          word_count: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          entity_count?: number | null
+          entity_density_score?: number | null
+          external_links_count?: number | null
+          id?: string
+          internal_links_count?: number | null
+          issues?: Json | null
+          last_crawled_at?: string | null
+          last_fixed_at?: string | null
+          overall_score?: number | null
+          page_path: string
+          page_title?: string | null
+          page_type?: string | null
+          schema_types?: string[] | null
+          semantic_links_score?: number | null
+          topic_clarity_score?: number | null
+          updated_at?: string | null
+          word_count?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          entity_count?: number | null
+          entity_density_score?: number | null
+          external_links_count?: number | null
+          id?: string
+          internal_links_count?: number | null
+          issues?: Json | null
+          last_crawled_at?: string | null
+          last_fixed_at?: string | null
+          overall_score?: number | null
+          page_path?: string
+          page_title?: string | null
+          page_type?: string | null
+          schema_types?: string[] | null
+          semantic_links_score?: number | null
+          topic_clarity_score?: number | null
+          updated_at?: string | null
+          word_count?: number | null
+        }
+        Relationships: []
+      }
+      llm_referrer_log: {
+        Row: {
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          page_path: string
+          referrer_source: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          page_path: string
+          referrer_source: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          page_path?: string
+          referrer_source?: string
+          user_agent?: string | null
         }
         Relationships: []
       }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
+import { PersonJsonLd } from "@/components/seo/JsonLd";
 import { RadarChart } from "@/components/intelligence/RadarChart";
 import { PsychologicalProfileSection, type PsychologicalProfileData } from "@/components/profile/PsychologicalProfileSection";
 import { GuestProfileAdvanced } from "@/components/profile/GuestProfileAdvanced";
@@ -230,6 +231,13 @@ export default function GuestProfile() {
       <SEOHead
         title={`${guest.full_name} — Expert Profile | AI-IDEI`}
         description={guest.bio?.slice(0, 155) || `Expert profile of ${guest.full_name}`}
+      />
+      <PersonJsonLd
+        name={guest.full_name}
+        jobTitle={guest.role}
+        bio={guest.bio}
+        expertise={guest.expertise_areas}
+        url={`https://ai-idei.com/guests/${slug}`}
       />
 
       {/* ═══════ HERO ═══════ */}

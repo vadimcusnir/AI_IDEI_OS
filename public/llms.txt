@@ -1,0 +1,47 @@
+# AI-IDEI LLM Context File
+# See https://llmstxt.org/ for specification
+
+> AI-IDEI is an AI-driven expertise capitalization platform that transforms raw knowledge (podcasts, interviews, texts) into structured intellectual assets.
+
+## Core Concepts
+
+- **Neurons**: Atomic knowledge units extracted from content — frameworks, patterns, formulas, rhetorical structures
+- **Services**: AI workflows that combine neurons to generate deliverables (articles, courses, marketing funnels)
+- **Knowledge Graph**: Interconnected network of insights, patterns, and entities with semantic relationships
+- **IdeaRank**: PageRank-inspired scoring algorithm for knowledge entities
+
+## Key Pages
+
+- [Home](https://ai-idei.com/) — Platform overview
+- [Extractor](https://ai-idei.com/extractor) — Upload and extract knowledge from content
+- [Intelligence](https://ai-idei.com/intelligence) — Knowledge graph visualization
+- [Services](https://ai-idei.com/services) — AI service catalog (120+ extractors)
+- [Marketplace](https://ai-idei.com/marketplace) — Knowledge asset marketplace
+- [Library](https://ai-idei.com/library) — Personal neuron library
+- [Community](https://ai-idei.com/community) — Forum and discussions
+- [API](https://ai-idei.com/api) — Public REST API documentation
+- [Documentation](https://ai-idei.com/docs) — Platform docs
+
+## Entity Types
+
+- **Insights** — Key takeaways and learnings
+- **Patterns** — Recurring structures and templates
+- **Formulas** — Copywriting and communication formulas
+- **Applications** — Practical use cases
+- **Contradictions** — Paradoxes and counter-intuitive findings
+- **Profiles** — Psychological and expertise profiles
+
+## API
+
+Public REST API available at `/api/neuron-api` with JWT or API Key authentication.
+Endpoints: neurons, entities, jobs, search, templates.
+
+## Knowledge Graph
+
+Structured knowledge graph export available as JSON-LD at `/api/knowledge-graph-export`.
+Contains schema.org typed entities: Person, CreativeWork, DefinedTerm, Dataset, Organization.
+
+## Contact
+
+- Website: https://ai-idei.com
+- Twitter: @ai_idei

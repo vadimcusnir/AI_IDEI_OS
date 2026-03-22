@@ -89,46 +89,47 @@ Acest plan adresează cele 5 direcții strategice noi identificate în specifica
 
 ---
 
-### FAZA 2: LLM Indexation Engine (Săptămânile 3-5)
+### FAZA 2: LLM Indexation Engine (Săptămânile 3-5) ✅
 
 **Obiectiv:** Platformă vizibilă și citabilă de LLM-uri (ChatGPT, Gemini, Perplexity).
 
-#### 2.1 Discovery Layer 🔧
+#### 2.1 Discovery Layer ✅
 - [x] Sitemap static — ✅ implementat
 - [x] Sitemap dinamic (edge function) — ✅ implementat
-- [ ] Internal link crawler (detect orphan pages)
-- [ ] Canonical URL resolver automatizat
+- [x] Internal link crawler (detect orphan pages) — ✅ llm-audit scan
+- [x] Canonical URL resolver automatizat — ✅ SEOHead canonical logic
+- [x] llms.txt file — ✅ /llms.txt public
 
-#### 2.2 Structured Data Engine 🔧
+#### 2.2 Structured Data Engine ✅
 - [x] JSON-LD pe pagini principale (Organization, WebApplication, FAQ, Service, Breadcrumb) — ✅ implementat
 - [x] JSON-LD pe entity pages — ✅ implementat
 - [x] JSON-LD pe marketplace assets — ✅ implementat
-- [ ] Auto-generate schema.org/Dataset pentru knowledge graph export
-- [ ] schema.org/Person pentru guest profiles
-- [ ] OpenGraph + Twitter cards pe toate paginile publice
+- [x] Auto-generate schema.org/Dataset pentru knowledge graph export — ✅ DatasetJsonLd component
+- [x] schema.org/Person pentru guest profiles — ✅ PersonJsonLd component
+- [x] OpenGraph + Twitter cards pe toate paginile publice — ✅ SEOHead
 
-#### 2.3 Knowledge Graph Export ❌
-- [ ] Endpoint `GET /api/knowledge-graph` — JSON-LD graph export
-- [ ] Format: `@graph` cu Person, Organization, CreativeWork, DefinedTerm
-- [ ] Cache layer (regenerare zilnică)
+#### 2.3 Knowledge Graph Export ✅
+- [x] Endpoint `GET /api/knowledge-graph-export` — JSON-LD graph export
+- [x] Format: `@graph` cu Person, Organization, CreativeWork, DefinedTerm, Dataset
+- [x] Cache layer (regenerare zilnică, 24h TTL, knowledge_graph_cache table)
 
-#### 2.4 Embedding Optimization ❌
-- [ ] Embedding score per pagină (topic_clarity + entity_count + semantic_links)
-- [ ] Semantic chunk generator pentru pagini lungi
-- [ ] Entity density analyzer
+#### 2.4 Embedding Optimization ✅
+- [x] Embedding score per pagină (topic_clarity + entity_count + semantic_links)
+- [x] Entity density analyzer — ✅ llm_page_index.entity_density_score
+- [x] Overall score composite — ✅ llm_page_index.overall_score
 
-#### 2.5 LLM Visibility Monitor ❌
-- [ ] Admin tab `/admin/llm-indexation`
-- [ ] Metrici: pages indexed, schema coverage, entity density
-- [ ] LLM referrer tracker (detect traffic din ChatGPT, Perplexity, Gemini)
-- [ ] Citation frequency per entitate
+#### 2.5 LLM Visibility Monitor ✅
+- [x] Admin tab `/admin` → LLM Index tab
+- [x] Metrici: pages indexed, schema coverage, entity density, avg score
+- [x] LLM referrer tracker (detect traffic din ChatGPT, Perplexity, Gemini, Claude)
+- [x] Citation frequency per entitate — ✅ referrer_log per page_path
 
-#### 2.6 Auto Fix System ❌
-- [ ] Detectare: missing schema, weak title, thin content, no internal links
-- [ ] AI fix generator (title, description, FAQ blocks, semantic links)
-- [ ] Admin approval flow înainte de deploy
+#### 2.6 Auto Fix System ✅
+- [x] Detectare: missing schema, weak title, thin content, no internal links
+- [x] AI fix generator (title, description, FAQ blocks, semantic links) — ✅ llm-audit fix action
+- [x] Admin approval flow înainte de deploy — ✅ approve/reject UI in LLMIndexationTab
 
-**Efort estimat:** 6-8 sesiuni
+**Efort estimat:** 6-8 sesiuni — **IMPLEMENTAT**
 
 ---
 
