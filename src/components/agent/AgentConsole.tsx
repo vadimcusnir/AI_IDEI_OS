@@ -14,10 +14,12 @@ import {
   X, Paperclip, RotateCcw, History, ChevronLeft,
   Globe, Brain, Sparkles, FileText, Network, Zap,
   ArrowRight, FileUp, FileAudio, Film, Type, Trash2,
+  PanelRightOpen, PanelRightClose,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "./AgentSlashMenu";
+import { ExecutionTimeline } from "./ExecutionTimeline";
 
 interface Message {
   id: string;
@@ -25,6 +27,15 @@ interface Message {
   content: string;
   timestamp: Date;
   metadata?: Record<string, any>;
+}
+
+interface PlanMeta {
+  action_id: string | null;
+  intent: string;
+  confidence: number;
+  plan_name: string;
+  total_credits: number;
+  steps: Array<{ tool: string; label: string; credits: number }>;
 }
 
 const AGENT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agent-console`;
@@ -62,6 +73,8 @@ export function AgentConsole() {
   const [files, setFiles] = useState<File[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
+  const [showTimeline, setShowTimeline] = useState(false);
+  const [planMeta, setPlanMeta] = useState<PlanMeta | null>(null);
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
@@ -241,6 +254,11 @@ export function AgentConsole() {
             if (d === "[DONE]") continue;
             try {
               const parsed = JSON.parse(d);
+              // Detect agent metadata (plan info)
+              if (parsed.agent_meta) {
+                setPlanMeta(parsed.agent_meta);
+                setShowTimeline(true);
+              }
               const c = parsed.choices?.[0]?.delta?.content;
               if (c) {
                 fullContent += c;
@@ -355,7 +373,9 @@ export function AgentConsole() {
   const isEmptyState = messages.length <= 1 && !loading;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full">
+      {/* Main chat column */}
+      <div className={cn("flex flex-col h-full transition-all", showTimeline ? "flex-1 min-w-0" : "w-full")}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
         <div className="flex items-center gap-2.5">
@@ -380,6 +400,11 @@ export function AgentConsole() {
           <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={clearChat}>
             <RotateCcw className="h-3 w-3" />
           </Button>
+          {planMeta && (
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setShowTimeline(!showTimeline)}>
+              {showTimeline ? <PanelRightClose className="h-3 w-3" /> : <PanelRightOpen className="h-3 w-3" />}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -563,6 +588,21 @@ export function AgentConsole() {
           )}
         </div>
       </div>
+      </div>
+
+      {/* Execution Timeline panel */}
+      <AnimatePresence>
+        {showTimeline && planMeta && (
+          <motion.div
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: 280, opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
+            className="border-l border-border bg-card overflow-hidden shrink-0"
+          >
+            <ExecutionTimeline planMeta={planMeta} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -272,6 +272,316 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_action_history: {
+        Row: {
+          completed_steps: number
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          intent_key: string
+          plan_template_id: string | null
+          success: boolean
+          total_credits: number
+          total_steps: number
+          user_id: string
+        }
+        Insert: {
+          completed_steps?: number
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          intent_key: string
+          plan_template_id?: string | null
+          success?: boolean
+          total_credits?: number
+          total_steps?: number
+          user_id: string
+        }
+        Update: {
+          completed_steps?: number
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          intent_key?: string
+          plan_template_id?: string | null
+          success?: boolean
+          total_credits?: number
+          total_steps?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_action_history_plan_template_id_fkey"
+            columns: ["plan_template_id"]
+            isOneToOne: false
+            referencedRelation: "agent_plan_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_actions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          input_summary: string | null
+          intent_confidence: number
+          intent_key: string
+          metadata: Json | null
+          plan_template_id: string | null
+          result_summary: string | null
+          session_id: string
+          status: string
+          total_credits_estimated: number
+          total_credits_spent: number
+          user_id: string
+          workspace_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          input_summary?: string | null
+          intent_confidence?: number
+          intent_key?: string
+          metadata?: Json | null
+          plan_template_id?: string | null
+          result_summary?: string | null
+          session_id?: string
+          status?: string
+          total_credits_estimated?: number
+          total_credits_spent?: number
+          user_id: string
+          workspace_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          input_summary?: string | null
+          intent_confidence?: number
+          intent_key?: string
+          metadata?: Json | null
+          plan_template_id?: string | null
+          result_summary?: string | null
+          session_id?: string
+          status?: string
+          total_credits_estimated?: number
+          total_credits_spent?: number
+          user_id?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_actions_plan_template_id_fkey"
+            columns: ["plan_template_id"]
+            isOneToOne: false
+            referencedRelation: "agent_plan_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_actions_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_intents: {
+        Row: {
+          confidence_threshold: number
+          created_at: string
+          default_plan_id: string | null
+          description: string
+          id: string
+          intent_key: string
+          is_active: boolean
+          keywords: string[]
+          label: string
+        }
+        Insert: {
+          confidence_threshold?: number
+          created_at?: string
+          default_plan_id?: string | null
+          description?: string
+          id?: string
+          intent_key: string
+          is_active?: boolean
+          keywords?: string[]
+          label: string
+        }
+        Update: {
+          confidence_threshold?: number
+          created_at?: string
+          default_plan_id?: string | null
+          description?: string
+          id?: string
+          intent_key?: string
+          is_active?: boolean
+          keywords?: string[]
+          label?: string
+        }
+        Relationships: []
+      }
+      agent_plan_templates: {
+        Row: {
+          created_at: string
+          description: string
+          estimated_credits: number
+          estimated_duration_seconds: number
+          failure_count: number
+          id: string
+          intent_key: string
+          is_default: boolean
+          name: string
+          steps: Json
+          success_count: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          estimated_credits?: number
+          estimated_duration_seconds?: number
+          failure_count?: number
+          id?: string
+          intent_key: string
+          is_default?: boolean
+          name: string
+          steps?: Json
+          success_count?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          estimated_credits?: number
+          estimated_duration_seconds?: number
+          failure_count?: number
+          id?: string
+          intent_key?: string
+          is_default?: boolean
+          name?: string
+          steps?: Json
+          success_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      agent_steps: {
+        Row: {
+          action_id: string
+          artifact_id: string | null
+          completed_at: string | null
+          created_at: string
+          credits_cost: number
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          input_params: Json | null
+          job_id: string | null
+          label: string
+          output_data: Json | null
+          started_at: string | null
+          status: string
+          step_order: number
+          tool_name: string
+        }
+        Insert: {
+          action_id: string
+          artifact_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          credits_cost?: number
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_params?: Json | null
+          job_id?: string | null
+          label?: string
+          output_data?: Json | null
+          started_at?: string | null
+          status?: string
+          step_order?: number
+          tool_name: string
+        }
+        Update: {
+          action_id?: string
+          artifact_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          credits_cost?: number
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_params?: Json | null
+          job_id?: string | null
+          label?: string
+          output_data?: Json | null
+          started_at?: string | null
+          status?: string
+          step_order?: number
+          tool_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_steps_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "agent_actions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_tools: {
+        Row: {
+          avg_credits_cost: number | null
+          avg_latency_ms: number | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          input_schema: Json
+          is_active: boolean
+          name: string
+          output_schema: Json | null
+          requires_confirmation: boolean
+          service_key: string | null
+          tool_key: string
+        }
+        Insert: {
+          avg_credits_cost?: number | null
+          avg_latency_ms?: number | null
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          input_schema?: Json
+          is_active?: boolean
+          name: string
+          output_schema?: Json | null
+          requires_confirmation?: boolean
+          service_key?: string | null
+          tool_key: string
+        }
+        Update: {
+          avg_credits_cost?: number | null
+          avg_latency_ms?: number | null
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          input_schema?: Json
+          is_active?: boolean
+          name?: string
+          output_schema?: Json | null
+          requires_confirmation?: boolean
+          service_key?: string | null
+          tool_key?: string
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
