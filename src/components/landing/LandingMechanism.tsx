@@ -17,11 +17,11 @@ const TRANSFORMS = [
 
 export function LandingMechanism() {
   return (
-    <section id="mechanism" className="py-20 sm:py-28 border-y border-border">
+    <section id="mechanism" className="py-20 sm:py-28 border-y border-border" aria-labelledby="mechanism-heading">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">THE MECHANISM</span>
-          <h2 className="heading-2 mb-4">One idea becomes many assets</h2>
+          <h2 id="mechanism-heading" className="heading-2 mb-4">One idea becomes many assets</h2>
           <p className="text-base text-muted-foreground max-w-lg mx-auto text-flow">
             With the right system, a single idea stops being a thought and starts becoming leverage.
           </p>

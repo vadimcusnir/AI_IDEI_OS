@@ -14,7 +14,7 @@ function FooterLink({ to, children }: { to: string; children: React.ReactNode })
 
 export function LandingFooter() {
   return (
-    <footer className="border-t border-border bg-background">
+    <footer className="border-t border-border bg-background" role="contentinfo">
       <div className="mx-auto max-w-5xl px-5 sm:px-6 py-12 sm:py-16">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}

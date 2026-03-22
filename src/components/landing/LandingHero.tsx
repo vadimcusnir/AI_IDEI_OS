@@ -10,7 +10,7 @@ interface Props {
 
 export function LandingHero({ heroRef, ctaAction }: Props) {
   return (
-    <section ref={heroRef} className="relative overflow-hidden">
+    <section ref={heroRef} className="relative overflow-hidden" aria-label="Hero">
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[hsl(var(--gold-oxide)/0.03)] blur-[200px]" />
       </div>

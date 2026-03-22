@@ -18,11 +18,11 @@ const FAQS = [
 
 export function LandingFAQ() {
   return (
-    <section id="faq" className="py-20 sm:py-28 border-t border-border">
+    <section id="faq" className="py-20 sm:py-28 border-t border-border" aria-labelledby="faq-heading">
       <div className="max-w-2xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-12">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">FAQ</span>
-          <h2 className="heading-2">Frequently Asked Questions</h2>
+          <h2 id="faq-heading" className="heading-2">Frequently Asked Questions</h2>
         </FadeInView>
         <FadeInView delay={0.1}>
           <Accordion type="single" collapsible className="space-y-2">

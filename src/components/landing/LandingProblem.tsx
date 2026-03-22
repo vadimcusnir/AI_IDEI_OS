@@ -2,7 +2,7 @@ import { FadeInView } from "@/components/motion/PageTransition";
 
 export function LandingProblem() {
   return (
-    <section className="py-16 sm:py-28 md:py-32">
+    <section className="py-16 sm:py-28 md:py-32" aria-label="Problem and solution">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
