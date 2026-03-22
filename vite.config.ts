@@ -39,6 +39,8 @@ export default defineConfig(({ mode }) => ({
           "vendor-i18n": ["i18next", "react-i18next", "i18next-browser-languagedetector"],
           "vendor-icons": ["lucide-react"],
           "vendor-sentry": ["@sentry/react"],
+          "vendor-graph": ["react-force-graph-2d"],
+          "vendor-pdf": ["pdfjs-dist"],
         },
       },
     },
