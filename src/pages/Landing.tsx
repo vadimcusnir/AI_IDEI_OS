@@ -286,6 +286,7 @@ export default function Landing() {
       <LandingPricing ctaAction={ctaAction} />
       <LandingFAQ />
       <LandingFinalCTA ctaAction={ctaAction} />
+      </main>
       <LandingFooter />
 
       <OrganizationJsonLd />
