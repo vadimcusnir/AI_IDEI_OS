@@ -65,6 +65,26 @@ Deno.serve(async (req) => {
     log("Event received", { type: event.type, id: event.id });
 
     // ═══════════════════════════════════════════
+    // EVENT-LEVEL IDEMPOTENCY CHECK
+    // ═══════════════════════════════════════════
+    const { data: existingEvent } = await supabaseAdmin
+      .from("stripe_processed_events")
+      .select("event_id")
+      .eq("event_id", event.id)
+      .maybeSingle();
+
+    if (existingEvent) {
+      log("Event already processed, skipping", { eventId: event.id });
+      return ok({ already_processed: true, event_id: event.id });
+    }
+
+    // Record this event as being processed
+    await supabaseAdmin.from("stripe_processed_events").insert({
+      event_id: event.id,
+      event_type: event.type,
+    });
+
+    // ═══════════════════════════════════════════
     // 1. CHECKOUT SESSION COMPLETED (Top-ups)
     // ═══════════════════════════════════════════
     if (event.type === "checkout.session.completed") {

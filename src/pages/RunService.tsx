@@ -107,7 +107,8 @@ export default function RunService() {
       setCredits({ balance: 500, total_spent: 0 });
     }
 
-    const { data: accessData } = await supabase.rpc("check_access", {
+    // Use logged access check for audit trail + abuse detection
+    const { data: accessData } = await supabase.rpc("check_access_logged", {
       _user_id: user!.id,
       _service_key: serviceKey!,
     });
@@ -118,6 +119,23 @@ export default function RunService() {
 
   const handleRun = async () => {
     if (!service || !user || !credits) return;
+
+    // P1: Pre-flight credit & access verification before execution
+    const { data: preCheck } = await supabase.rpc("check_access_logged", {
+      _user_id: user.id,
+      _service_key: service.service_key,
+    });
+    const verdict = preCheck as unknown as AccessVerdict;
+    if (verdict?.verdict === "PAYWALL") {
+      setAccessVerdict(verdict);
+      toast.error(t("run_service.insufficient_error", { need: service.credits_cost, have: verdict.balance || 0 }));
+      return;
+    }
+    if (verdict?.verdict === "DENY") {
+      toast.error("Access denied: " + (verdict.reason || "Service unavailable"));
+      return;
+    }
+
     if (credits.balance < service.credits_cost) {
       toast.error(t("run_service.insufficient_error", { need: service.credits_cost, have: credits.balance }));
       return;

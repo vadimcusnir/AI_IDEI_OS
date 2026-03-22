@@ -5364,6 +5364,24 @@ export type Database = {
           },
         ]
       }
+      stripe_processed_events: {
+        Row: {
+          event_id: string
+          event_type: string
+          processed_at: string
+        }
+        Insert: {
+          event_id: string
+          event_type: string
+          processed_at?: string
+        }
+        Update: {
+          event_id?: string
+          event_type?: string
+          processed_at?: string
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           created_at: string
@@ -6734,12 +6752,17 @@ export type Database = {
         Args: { _ip_hint?: string; _service_key: string; _user_id: string }
         Returns: Json
       }
+      check_cusnir_os_eligibility: { Args: { _user_id: string }; Returns: Json }
       check_vip_access: {
         Args: { _unlock_key: string; _user_id: string }
         Returns: boolean
       }
       check_wallet_freshness: {
         Args: { _max_age_seconds?: number; _user_id: string }
+        Returns: Json
+      }
+      claim_vip_reward: {
+        Args: { _milestone_id: string; _user_id: string }
         Returns: Json
       }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
@@ -6931,6 +6954,7 @@ export type Database = {
         }
         Returns: Json
       }
+      vip_advance_month: { Args: { _user_id: string }; Returns: Json }
       wallet_add: {
         Args: { _amount: number; _description?: string; _user_id: string }
         Returns: Json
