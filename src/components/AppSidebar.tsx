@@ -11,7 +11,7 @@ import {
   BarChart3, Bell, BookOpen, Users, Network, Rocket,
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
   Lock, ChevronRight, Plug, GraduationCap, Terminal,
-  Wallet, Trophy, Settings, Key, Eye,
+  Wallet, Trophy, Settings, Key, Eye, Database, FolderSearch,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
