@@ -78,7 +78,8 @@ const Transcribe = lazy(() => import("./pages/Transcribe"));
 const Integrations = lazy(() => import("./pages/Integrations"));
 const CognitiveUnits = lazy(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazy(() => import("./pages/CollectionRuns"));
-
+const KnowledgeSurfacePage = lazy(() => import("./pages/KnowledgeSurfacePage"));
+const ProductSurfacePage = lazy(() => import("./pages/ProductSurfacePage"));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
