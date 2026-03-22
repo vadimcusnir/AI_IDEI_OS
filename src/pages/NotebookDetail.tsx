@@ -4,11 +4,6 @@ import { useNotebookDetail } from "@/hooks/useNotebook";
 import { NotebookSourcesPanel } from "@/components/notebook/NotebookSourcesPanel";
 import { NotebookChatPanel } from "@/components/notebook/NotebookChatPanel";
 import { NotebookStudioPanel } from "@/components/notebook/NotebookStudioPanel";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -61,23 +56,22 @@ export default function NotebookDetail() {
   return (
     <div className="flex flex-col h-full">
       <SEOHead title={`${title} — AI-IDEI`} description="Knowledge notebook" />
-      <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
-        <ResizablePanel defaultSize={22} minSize={15} maxSize={35}>
+      <div className="flex flex-1 min-h-0">
+        {/* Sources Panel */}
+        <div className="w-[250px] shrink-0 border-r border-border overflow-hidden">
           <NotebookSourcesPanel {...detail} notebook={detail.notebook} />
-        </ResizablePanel>
+        </div>
 
-        <ResizableHandle withHandle />
-
-        <ResizablePanel defaultSize={50} minSize={30}>
+        {/* Chat Panel */}
+        <div className="flex-1 min-w-0 overflow-hidden">
           <NotebookChatPanel {...detail} />
-        </ResizablePanel>
+        </div>
 
-        <ResizableHandle withHandle />
-
-        <ResizablePanel defaultSize={28} minSize={18} maxSize={40}>
+        {/* Studio Panel */}
+        <div className="w-[300px] shrink-0 border-l border-border overflow-hidden">
           <NotebookStudioPanel artifacts={detail.artifacts} sources={detail.sources} notebookId={id} />
-        </ResizablePanel>
-      </ResizablePanelGroup>
+        </div>
+      </div>
     </div>
   );
 }
