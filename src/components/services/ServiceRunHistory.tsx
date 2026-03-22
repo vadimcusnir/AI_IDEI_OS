@@ -80,6 +80,11 @@ export function ServiceRunHistory({ limit = 20, serviceKeyFilter }: Props) {
     );
   }
 
+  const showViewAll = runs.length >= limit;
+      </div>
+    );
+  }
+
   const statusIcon = (status: string) => {
     switch (status) {
       case "completed": return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />;
