@@ -4781,42 +4781,64 @@ export type Database = {
       }
       prompt_history: {
         Row: {
+          chain_parent_id: string | null
+          chain_step: number | null
           context: string
           created_at: string
           credits_spent: number
           details: string | null
+          feedback: string | null
           goal: string
           id: string
           is_favorite: boolean
+          rating: number | null
           result: string
           template_id: string | null
           user_id: string
+          variant_index: number | null
         }
         Insert: {
+          chain_parent_id?: string | null
+          chain_step?: number | null
           context: string
           created_at?: string
           credits_spent?: number
           details?: string | null
+          feedback?: string | null
           goal: string
           id?: string
           is_favorite?: boolean
+          rating?: number | null
           result?: string
           template_id?: string | null
           user_id: string
+          variant_index?: number | null
         }
         Update: {
+          chain_parent_id?: string | null
+          chain_step?: number | null
           context?: string
           created_at?: string
           credits_spent?: number
           details?: string | null
+          feedback?: string | null
           goal?: string
           id?: string
           is_favorite?: boolean
+          rating?: number | null
           result?: string
           template_id?: string | null
           user_id?: string
+          variant_index?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "prompt_history_chain_parent_id_fkey"
+            columns: ["chain_parent_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_history"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "prompt_history_template_id_fkey"
             columns: ["template_id"]
