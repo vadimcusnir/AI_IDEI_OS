@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  FileText, Video, Presentation, BarChart3, Table2, Map, Mic, TestTube2, Wand2, RotateCcw, Copy, Check, Save,
+  FileText, Video, Presentation, BarChart3, Table2, Map, Mic, TestTube2, Wand2, RotateCcw, Copy, Check, Save, RefreshCw, Eye,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -34,6 +34,7 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
   const [savedKeys, setSavedKeys] = useState<Set<string>>(new Set());
+  const [viewingArtifactId, setViewingArtifactId] = useState<string | null>(null);
   const qc = useQueryClient();
 
   const selectedSources = sources.filter((s) => s.is_selected);
@@ -47,6 +48,8 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
 
     setGenerating(key);
     setExpandedKey(key);
+    // Reset saved state for regeneration
+    setSavedKeys((prev) => { const n = new Set(prev); n.delete(key); return n; });
     let content = "";
 
     try {
@@ -68,7 +71,6 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
         const errData = await resp.json().catch(() => ({}));
         throw new Error(errData.error || `Error ${resp.status}`);
       }
-
       if (!resp.body) throw new Error("No response body");
 
       const reader = resp.body.getReader();
@@ -124,22 +126,20 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
       setSavedKeys((prev) => new Set(prev).add(key));
       qc.invalidateQueries({ queryKey: ["notebook-artifacts", notebookId] });
       toast.success(`${label} saved`);
-    } catch (err: any) {
+    } catch {
       toast.error("Save failed");
     }
   };
 
-  const copyContent = (key: string) => {
-    const content = generatedContent[key];
-    if (!content) return;
+  const copyContent = (content: string, key?: string) => {
     navigator.clipboard.writeText(content);
-    setCopiedKey(key);
-    toast.success("Copied to clipboard");
+    if (key) setCopiedKey(key);
+    toast.success("Copied");
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
   return (
-    <div className="flex flex-col h-full bg-card border-l border-border">
+    <div className="flex flex-col h-full bg-card">
       {/* Header */}
       <div className="px-4 py-3 border-b border-border shrink-0">
         <div className="flex items-center gap-2">
@@ -147,7 +147,7 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
           <h3 className="text-sm font-semibold text-foreground">Studio</h3>
         </div>
         <p className="text-[10px] text-muted-foreground mt-1">
-          {selectedSources.length} source{selectedSources.length !== 1 ? "s" : ""} selected • Generate outputs
+          {selectedSources.length} source{selectedSources.length !== 1 ? "s" : ""} selected
         </p>
       </div>
 
@@ -189,25 +189,30 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-foreground flex items-center gap-1.5">
                       {label}
-                      {hasContent && (
-                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                      )}
+                      {hasContent && <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />}
                     </div>
                     <div className="text-[10px] text-muted-foreground truncate">{desc}</div>
                   </div>
                   {hasContent && (
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-0.5">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleAction(key, prompt); }}
+                        className="text-muted-foreground hover:text-primary transition-colors p-1"
+                        title="Regenerate"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5" />
+                      </button>
                       {!isSaved && (
                         <button
                           onClick={(e) => { e.stopPropagation(); saveArtifact(key, label); }}
                           className="text-muted-foreground hover:text-primary transition-colors p-1"
-                          title="Save to library"
+                          title="Save"
                         >
                           <Save className="h-3.5 w-3.5" />
                         </button>
                       )}
                       <button
-                        onClick={(e) => { e.stopPropagation(); copyContent(key); }}
+                        onClick={(e) => { e.stopPropagation(); copyContent(generatedContent[key], key); }}
                         className="text-muted-foreground hover:text-primary transition-colors p-1"
                         title="Copy"
                       >
@@ -217,7 +222,6 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
                   )}
                 </button>
 
-                {/* Generated content */}
                 <AnimatePresence>
                   {(isExpanded || isActive) && hasContent && (
                     <motion.div
@@ -240,30 +244,57 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
           })}
         </div>
 
-        {/* Saved DB artifacts */}
+        {/* Saved artifacts */}
         {artifacts.length > 0 && (
           <div className="px-3 pb-3">
             <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2">
               Saved ({artifacts.length})
             </div>
             <div className="space-y-1">
-              {artifacts.map((art, idx) => (
-                <motion.div
-                  key={art.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent/5 cursor-pointer transition-colors"
-                  onClick={() => {
-                    navigator.clipboard.writeText(art.content || "");
-                    toast.success("Copied to clipboard");
-                  }}
-                >
-                  <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-xs text-foreground truncate flex-1">{art.title}</span>
-                  <span className="text-[9px] text-muted-foreground/50 font-mono">{art.artifact_type}</span>
-                </motion.div>
-              ))}
+              {artifacts.map((art, idx) => {
+                const isViewing = viewingArtifactId === art.id;
+                return (
+                  <motion.div
+                    key={art.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: idx * 0.05 }}
+                  >
+                    <div
+                      className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent/5 cursor-pointer transition-colors group"
+                      onClick={() => setViewingArtifactId(isViewing ? null : art.id)}
+                    >
+                      <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                      <span className="text-xs text-foreground truncate flex-1">{art.title}</span>
+                      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); copyContent(art.content || ""); }}
+                          className="text-muted-foreground hover:text-primary p-0.5"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </button>
+                        <Eye className="h-3 w-3 text-muted-foreground" />
+                      </div>
+                    </div>
+                    <AnimatePresence>
+                      {isViewing && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mx-2 mb-1 p-2 rounded bg-muted/30 text-[10px] max-h-48 overflow-y-auto">
+                            <div className="prose prose-xs dark:prose-invert max-w-none">
+                              <ReactMarkdown>{art.content || ""}</ReactMarkdown>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         )}

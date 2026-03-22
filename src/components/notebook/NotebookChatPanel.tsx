@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, RotateCcw, Trash2 } from "lucide-react";
+import { Send, Sparkles, RotateCcw, Trash2, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,8 @@ import type { Notebook, NotebookSource } from "@/hooks/useNotebook";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { useNotebookChat } from "@/hooks/useNotebookChat";
 import ReactMarkdown from "react-markdown";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Props {
   notebook: Notebook | undefined;
@@ -53,6 +55,27 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
     setInput("");
   };
 
+  const handleClearChat = async () => {
+    clearMessages();
+    if (notebook?.id) {
+      await supabase.from("notebook_messages").delete().eq("notebook_id", notebook.id);
+      toast.success("Chat cleared");
+    }
+  };
+
+  const handleExportChat = () => {
+    if (messages.length === 0) return;
+    const text = messages.map((m) => `[${m.role.toUpperCase()}]\n${m.content}`).join("\n\n---\n\n");
+    const blob = new Blob([text], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${notebook?.title || "notebook"}-chat.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Chat exported");
+  };
+
   const selectedCount = sources.filter((s) => s.is_selected).length;
 
   return (
@@ -68,12 +91,20 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
         <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
           <span>{selectedCount} / {sources.length} sources selected</span>
           {messages.length > 0 && (
-            <button
-              onClick={clearMessages}
-              className="flex items-center gap-1 hover:text-foreground transition-colors"
-            >
-              <Trash2 className="h-3 w-3" /> Clear chat
-            </button>
+            <>
+              <button
+                onClick={handleExportChat}
+                className="flex items-center gap-1 hover:text-foreground transition-colors"
+              >
+                <Download className="h-3 w-3" /> Export
+              </button>
+              <button
+                onClick={handleClearChat}
+                className="flex items-center gap-1 hover:text-destructive transition-colors"
+              >
+                <Trash2 className="h-3 w-3" /> Clear
+              </button>
+            </>
           )}
         </div>
       </div>
