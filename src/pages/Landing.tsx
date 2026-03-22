@@ -163,7 +163,7 @@ export default function Landing() {
                 key={link.label}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
-                  "text-xs font-mono tracking-[0.1em] transition-colors relative py-1",
+                  "text-xs font-mono tracking-[0.1em] transition-colors relative py-1 focus-ring rounded-sm",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
                     : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"
