@@ -81,9 +81,6 @@ export function ServiceRunHistory({ limit = 20, serviceKeyFilter }: Props) {
   }
 
   const showViewAll = runs.length >= limit;
-      </div>
-    );
-  }
 
   const statusIcon = (status: string) => {
     switch (status) {
