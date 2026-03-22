@@ -207,6 +207,9 @@ Output as JSON:
         },
       };
 
+      const qualityScore = Math.min(10, (entity.idea_rank || 0) * 10);
+      const autoPublish = qualityScore >= autoPublishThreshold;
+
       const { error } = await supabase.from("knowledge_surface_pages").insert({
         slug,
         page_type: entity.entity_type,
@@ -215,8 +218,8 @@ Output as JSON:
         content_md: pageData.content_md,
         entity_ids: [entity.id],
         schema_json: schemaJson,
-        status: "draft",
-        quality_score: Math.min(10, (entity.idea_rank || 0) * 10),
+        status: autoPublish ? "published" : "draft",
+        quality_score: qualityScore,
       });
 
       if (!error) created++;
