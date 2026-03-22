@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "./AgentSlashMenu";
 import { ExecutionTimeline } from "./ExecutionTimeline";
+import { COMMAND_PACKS, type CommandPack } from "./CommandPacks";
 
 interface Message {
   id: string;
