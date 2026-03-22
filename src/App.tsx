@@ -70,6 +70,7 @@ const KnowledgeDashboard = lazy(() => import("./pages/KnowledgeDashboard"));
 const VIPDashboard = lazy(() => import("./pages/VIPDashboard"));
 const DataPipeline = lazy(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazy(() => import("./pages/RuntimeDashboard"));
+const CusnirOSOperator = lazy(() => import("./pages/CusnirOSOperator"));
 const SecurityDocs = lazy(() => import("./pages/SecurityDocs"));
 const DatabaseRelations = lazy(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazy(() => import("./pages/WalletPage"));
@@ -196,6 +197,7 @@ const App = () => (
 
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
+                <Route path="/cusnir-os" element={<AdminRoute><AppLayout><CusnirOSOperator /></AppLayout></AdminRoute>} />
                 <Route path="/analytics" element={<AdminRoute><AppLayout><AnalyticsDashboard /></AppLayout></AdminRoute>} />
                 <Route path="/security" element={<AdminRoute><AppLayout><SecurityDocs /></AppLayout></AdminRoute>} />
                 <Route path="/db-schema" element={<AdminRoute><AppLayout><DatabaseRelations /></AppLayout></AdminRoute>} />

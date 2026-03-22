@@ -6,7 +6,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Loader2, Network, BarChart3, Search, AlertTriangle,
+  Loader2, Network, BarChart3, Search, AlertTriangle, Brain,
 } from "lucide-react";
 import { ControlledSection } from "@/components/ControlledSection";
 import { PageTransition } from "@/components/motion/PageTransition";
@@ -16,6 +16,7 @@ import { DuplicateMergePanel } from "@/components/neurons/DuplicateMergePanel";
 import { PremiumGate } from "@/components/premium/PremiumGate";
 import { GraphAnalysisPanel } from "@/components/intelligence/GraphAnalysisPanel";
 import { AdvancedSearch } from "@/components/intelligence/AdvancedSearch";
+import { IntelligenceProfiles } from "@/components/intelligence/IntelligenceProfiles";
 import { GitMerge } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -137,6 +138,9 @@ export default function Intelligence() {
             <TabsTrigger value="dedup" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
               <GitMerge className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{t("intelligence.tab_dedup")}</span>
             </TabsTrigger>
+            <TabsTrigger value="profiles" className="text-xs gap-1 sm:gap-1.5 flex-1 sm:flex-none px-2 sm:px-3">
+              <Brain className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">Profiles</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="graph" className="mt-0">
@@ -172,6 +176,12 @@ export default function Intelligence() {
               <PremiumGate requiredTier="pro" featureName="Deduplication">
                 <DuplicateMergePanel />
               </PremiumGate>
+            </ControlledSection>
+          </TabsContent>
+
+          <TabsContent value="profiles" className="mt-0">
+            <ControlledSection elementId="intelligence.profiles">
+              <IntelligenceProfiles />
             </ControlledSection>
           </TabsContent>
         </Tabs>

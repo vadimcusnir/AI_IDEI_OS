@@ -3130,6 +3130,149 @@ export type Database = {
         }
         Relationships: []
       }
+      intel_persons: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          entity_type: string
+          external_ref: string | null
+          id: string
+          metadata: Json | null
+          name: string
+          normalized_name: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          entity_type?: string
+          external_ref?: string | null
+          id?: string
+          metadata?: Json | null
+          name: string
+          normalized_name?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          entity_type?: string
+          external_ref?: string | null
+          id?: string
+          metadata?: Json | null
+          name?: string
+          normalized_name?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      intel_statements: {
+        Row: {
+          confidence_score: number | null
+          content: string
+          created_at: string
+          id: string
+          intensity_score: number | null
+          job_id: string | null
+          person_id: string | null
+          position_end: number | null
+          position_start: number | null
+          source_weight: number | null
+          transcript_id: string | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          content: string
+          created_at?: string
+          id?: string
+          intensity_score?: number | null
+          job_id?: string | null
+          person_id?: string | null
+          position_end?: number | null
+          position_start?: number | null
+          source_weight?: number | null
+          transcript_id?: string | null
+        }
+        Update: {
+          confidence_score?: number | null
+          content?: string
+          created_at?: string
+          id?: string
+          intensity_score?: number | null
+          job_id?: string | null
+          person_id?: string | null
+          position_end?: number | null
+          position_start?: number | null
+          source_weight?: number | null
+          transcript_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intel_statements_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "intel_persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intel_statements_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "intel_transcripts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      intel_transcripts: {
+        Row: {
+          content: string
+          created_at: string
+          episode_id: string | null
+          id: string
+          job_id: string | null
+          language: string | null
+          person_id: string | null
+          source_type: string
+          word_count: number
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          episode_id?: string | null
+          id?: string
+          job_id?: string | null
+          language?: string | null
+          person_id?: string | null
+          source_type?: string
+          word_count?: number
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          episode_id?: string | null
+          id?: string
+          job_id?: string | null
+          language?: string | null
+          person_id?: string | null
+          source_type?: string
+          word_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intel_transcripts_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "intel_persons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kb_analytics: {
         Row: {
           article_id: string
@@ -4651,6 +4794,60 @@ export type Database = {
         }
         Relationships: []
       }
+      os_modules: {
+        Row: {
+          avg_latency_ms: number | null
+          created_at: string
+          description: string | null
+          error_rate: number | null
+          health_status: string
+          id: string
+          last_health_check: string | null
+          module_key: string
+          module_name: string
+          module_type: string
+          owner: string
+          risk_level: string
+          status: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          avg_latency_ms?: number | null
+          created_at?: string
+          description?: string | null
+          error_rate?: number | null
+          health_status?: string
+          id?: string
+          last_health_check?: string | null
+          module_key: string
+          module_name: string
+          module_type?: string
+          owner?: string
+          risk_level?: string
+          status?: string
+          updated_at?: string
+          version?: string
+        }
+        Update: {
+          avg_latency_ms?: number | null
+          created_at?: string
+          description?: string | null
+          error_rate?: number | null
+          health_status?: string
+          id?: string
+          last_health_check?: string | null
+          module_key?: string
+          module_name?: string
+          module_type?: string
+          owner?: string
+          risk_level?: string
+          status?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
       parsed_content: {
         Row: {
           content: string
@@ -4691,6 +4888,193 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      person_dimension_scores: {
+        Row: {
+          dimension_id: string
+          last_updated: string
+          person_id: string
+          score: number
+        }
+        Insert: {
+          dimension_id: string
+          last_updated?: string
+          person_id: string
+          score?: number
+        }
+        Update: {
+          dimension_id?: string
+          last_updated?: string
+          person_id?: string
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "person_dimension_scores_dimension_id_fkey"
+            columns: ["dimension_id"]
+            isOneToOne: false
+            referencedRelation: "personality_dimensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "person_dimension_scores_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "intel_persons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      person_profiles: {
+        Row: {
+          communication_style: Json | null
+          confidence_score: number | null
+          created_at: string
+          id: string
+          job_id: string | null
+          person_id: string | null
+          profile_version: string
+          risks: Json | null
+          strategic_profile: Json | null
+          strengths: Json | null
+          summary: string | null
+        }
+        Insert: {
+          communication_style?: Json | null
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          job_id?: string | null
+          person_id?: string | null
+          profile_version?: string
+          risks?: Json | null
+          strategic_profile?: Json | null
+          strengths?: Json | null
+          summary?: string | null
+        }
+        Update: {
+          communication_style?: Json | null
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          job_id?: string | null
+          person_id?: string | null
+          profile_version?: string
+          risks?: Json | null
+          strategic_profile?: Json | null
+          strengths?: Json | null
+          summary?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "person_profiles_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "intel_persons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      person_snapshots: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          dimension_distribution: Json | null
+          id: string
+          person_id: string | null
+          snapshot_date: string
+          trait_distribution: Json | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          dimension_distribution?: Json | null
+          id?: string
+          person_id?: string | null
+          snapshot_date?: string
+          trait_distribution?: Json | null
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          dimension_distribution?: Json | null
+          id?: string
+          person_id?: string | null
+          snapshot_date?: string
+          trait_distribution?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "person_snapshots_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "intel_persons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      person_traits: {
+        Row: {
+          last_updated: string
+          person_id: string
+          score: number
+          signal_count: number
+          trait_id: string
+        }
+        Insert: {
+          last_updated?: string
+          person_id: string
+          score?: number
+          signal_count?: number
+          trait_id: string
+        }
+        Update: {
+          last_updated?: string
+          person_id?: string
+          score?: number
+          signal_count?: number
+          trait_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "person_traits_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "intel_persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "person_traits_trait_id_fkey"
+            columns: ["trait_id"]
+            isOneToOne: false
+            referencedRelation: "trait_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personality_dimensions: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
       }
       product_surface_pages: {
         Row: {
@@ -5198,6 +5582,48 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      risk_signals: {
+        Row: {
+          created_at: string
+          id: string
+          person_id: string | null
+          risk_type: string
+          severity: number
+          statement_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          person_id?: string | null
+          risk_type: string
+          severity?: number
+          statement_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          person_id?: string | null
+          risk_type?: string
+          severity?: number
+          statement_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_signals_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "intel_persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_signals_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "intel_statements"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       runtime_health: {
         Row: {
@@ -6105,6 +6531,124 @@ export type Database = {
             columns: ["dataset_id"]
             isOneToOne: false
             referencedRelation: "training_datasets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trait_definitions: {
+        Row: {
+          category: string
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          polarity: string
+        }
+        Insert: {
+          category: string
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          polarity?: string
+        }
+        Update: {
+          category?: string
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          polarity?: string
+        }
+        Relationships: []
+      }
+      trait_dimension_map: {
+        Row: {
+          dimension_id: string
+          trait_id: string
+          weight: number
+        }
+        Insert: {
+          dimension_id: string
+          trait_id: string
+          weight?: number
+        }
+        Update: {
+          dimension_id?: string
+          trait_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trait_dimension_map_dimension_id_fkey"
+            columns: ["dimension_id"]
+            isOneToOne: false
+            referencedRelation: "personality_dimensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trait_dimension_map_trait_id_fkey"
+            columns: ["trait_id"]
+            isOneToOne: false
+            referencedRelation: "trait_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trait_signals: {
+        Row: {
+          created_at: string
+          detection_method: string
+          id: string
+          job_id: string | null
+          person_id: string | null
+          signal_strength: number
+          statement_id: string | null
+          trait_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          detection_method?: string
+          id?: string
+          job_id?: string | null
+          person_id?: string | null
+          signal_strength?: number
+          statement_id?: string | null
+          trait_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          detection_method?: string
+          id?: string
+          job_id?: string | null
+          person_id?: string | null
+          signal_strength?: number
+          statement_id?: string | null
+          trait_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trait_signals_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "intel_persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trait_signals_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "intel_statements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trait_signals_trait_id_fkey"
+            columns: ["trait_id"]
+            isOneToOne: false
+            referencedRelation: "trait_definitions"
             referencedColumns: ["id"]
           },
         ]
@@ -7019,6 +7563,18 @@ export type Database = {
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
       compute_content_hash: { Args: { _content: string }; Returns: string }
       compute_idearank: { Args: never; Returns: undefined }
+      compute_person_confidence: {
+        Args: { _person_id: string }
+        Returns: number
+      }
+      compute_person_dimensions: {
+        Args: { _person_id: string }
+        Returns: undefined
+      }
+      compute_person_traits: {
+        Args: { _person_id: string }
+        Returns: undefined
+      }
       data_pipeline_stats: { Args: never; Returns: Json }
       deactivate_emergency: { Args: { _control_id: string }; Returns: boolean }
       delete_email: {
@@ -7123,6 +7679,7 @@ export type Database = {
         }
         Returns: number
       }
+      os_system_stats: { Args: never; Returns: Json }
       purchase_marketplace_asset: {
         Args: { _asset_id: string; _buyer_id: string }
         Returns: Json
@@ -7148,6 +7705,7 @@ export type Database = {
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
       root2_nearest: { Args: { _price: number }; Returns: number }
       root2_validate: { Args: { _price: number }; Returns: boolean }
+      run_intelligence_pipeline: { Args: { _person_id: string }; Returns: Json }
       runtime_system_stats: { Args: never; Returns: Json }
       score_contribution: {
         Args: { _contribution_id: string }
