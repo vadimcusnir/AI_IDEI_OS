@@ -2,7 +2,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import {
   Brain, Plus, Shield, Upload, Sparkles, Network,
   ExternalLink, ArrowRight, Globe,
