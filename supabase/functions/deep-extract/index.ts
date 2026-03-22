@@ -1,11 +1,10 @@
 /**
- * deep-extract — Multi-Level Extraction Engine (Phase 2)
- * Runs specialized extraction prompts across 10 levels (L2-L11)
- * on a transcript, creating scored neurons per level.
+ * deep-extract — Dynamic NEP-120 Extraction Engine
+ * Loads extraction prompts from prompt_registry (NEP families)
+ * and runs them against transcript content to create scored neurons.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { loadPrompts } from "../_shared/prompt-loader.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 const corsHeaders = {
@@ -14,187 +13,23 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// ── Extraction Level Definitions ──
-interface ExtractionLevel {
-  key: string;
-  label: string;
-  category: string;
-  systemPrompt: string;
-  costMultiplier: number;
-}
-
-const EXTRACTION_LEVELS: ExtractionLevel[] = [
-  {
-    key: "L2_atomic",
-    label: "Atomic Extraction",
-    category: "insight",
-    costMultiplier: 1,
-    systemPrompt: `You are an atomic knowledge extraction engine. Extract distinct atomic units from this content:
-- Statements of fact or opinion
-- Definitions and principles
-- Key questions raised
-- Actionable takeaways
-
-For each unit, return a JSON object with:
-- "title": concise title (max 10 words)
-- "content_category": "insight"
-- "extraction_level": "L2_atomic"
-- "blocks": [{"type":"heading","content":"title"}, {"type":"text","content":"explanation"}, {"type":"idea","content":"core insight"}]
-- "scores": {"novelty": 0-1, "information_density": 0-1, "utility": 0-1, "demand": 0-1}
-
-Extract 3-8 units. Return ONLY a valid JSON array.`,
-  },
-  {
-    key: "L3_entity",
-    label: "Entity Extraction",
-    category: "pattern",
-    costMultiplier: 1,
-    systemPrompt: `You are an entity extraction engine for a knowledge graph. Identify named entities:
-- Persons (with roles, expertise)
-- Companies/Organizations
-- Concepts and Technical Terms
-- Frameworks and Methodologies
-- Products/Tools mentioned
-
-For each entity, return a JSON object with:
-- "title": entity name
-- "content_category": "pattern"
-- "extraction_level": "L3_entity"
-- "entity_type": "person"|"company"|"concept"|"framework"|"tool"
-- "blocks": [{"type":"heading","content":"name"}, {"type":"text","content":"description and context"}, {"type":"reference","content":"source context"}]
-- "scores": {"novelty": 0-1, "information_density": 0-1, "utility": 0-1, "demand": 0-1}
-
-Extract 3-10 entities. Return ONLY a valid JSON array.`,
-  },
-  {
-    key: "L4_structural",
-    label: "Structural Extraction",
-    category: "framework",
-    costMultiplier: 1.5,
-    systemPrompt: `You are a structural pattern extraction engine. Identify:
-- Mental models and frameworks
-- Decision-making processes
-- Step-by-step methodologies
-- Classification systems
-- Causal chains and feedback loops
-
-For each structure, return a JSON object with:
-- "title": framework/model name (max 10 words)
-- "content_category": "framework"
-- "extraction_level": "L4_structural"
-- "blocks": [{"type":"heading","content":"name"}, {"type":"text","content":"core structure description"}, {"type":"list","content":"key components"}, {"type":"idea","content":"when to apply"}]
-- "scores": {"novelty": 0-1, "information_density": 0-1, "utility": 0-1, "demand": 0-1}
-
-Extract 2-5 structures. Return ONLY a valid JSON array.`,
-  },
-  {
-    key: "L5_psychological",
-    label: "Psychological Extraction",
-    category: "psychological",
-    costMultiplier: 1.5,
-    systemPrompt: `You are a psychological analysis engine. Extract:
-- Cognitive patterns and biases demonstrated
-- Emotional drivers and motivations
-- Communication style markers
-- Decision-making heuristics
-- Personality trait indicators (Big Five signals)
-
-For each psychological insight, return a JSON object with:
-- "title": pattern name (max 10 words)
-- "content_category": "psychological"
-- "extraction_level": "L5_psychological"
-- "blocks": [{"type":"heading","content":"pattern name"}, {"type":"text","content":"behavioral evidence"}, {"type":"idea","content":"psychological significance"}, {"type":"quote","content":"illustrative quote if available"}]
-- "scores": {"novelty": 0-1, "information_density": 0-1, "utility": 0-1, "demand": 0-1}
-
-Extract 2-6 patterns. Return ONLY a valid JSON array.`,
-  },
-  {
-    key: "L6_narrative",
-    label: "Narrative Extraction",
-    category: "narrative",
-    costMultiplier: 1,
-    systemPrompt: `You are a narrative structure extraction engine. Identify:
-- Anchor stories and anecdotes
-- Metaphors and analogies used
-- Pivot phrases that shift arguments
-- Rhetorical techniques (ethos, pathos, logos)
-- Story arcs and narrative patterns
-
-For each narrative element, return a JSON object with:
-- "title": element name (max 10 words)
-- "content_category": "narrative"
-- "extraction_level": "L6_narrative"
-- "blocks": [{"type":"heading","content":"name"}, {"type":"text","content":"narrative analysis"}, {"type":"quote","content":"key passage"}, {"type":"idea","content":"persuasion mechanism"}]
-- "scores": {"novelty": 0-1, "information_density": 0-1, "utility": 0-1, "demand": 0-1}
-
-Extract 2-5 elements. Return ONLY a valid JSON array.`,
-  },
-  {
-    key: "L7_commercial",
-    label: "Commercial Extraction",
-    category: "commercial",
-    costMultiplier: 1.5,
-    systemPrompt: `You are a commercial intelligence extraction engine. Identify:
-- Jobs-to-be-done (JTBD) patterns
-- Purchase triggers and objection patterns
-- Value propositions (explicit and implicit)
-- Market opportunities and gaps
-- Pricing signals and willingness-to-pay indicators
-
-For each commercial insight, return a JSON object with:
-- "title": insight name (max 10 words)
-- "content_category": "commercial"
-- "extraction_level": "L7_commercial"
-- "blocks": [{"type":"heading","content":"name"}, {"type":"text","content":"commercial analysis"}, {"type":"idea","content":"monetization potential"}, {"type":"list","content":"action items"}]
-- "scores": {"novelty": 0-1, "information_density": 0-1, "utility": 0-1, "demand": 0-1}
-
-Extract 2-5 insights. Return ONLY a valid JSON array.`,
-  },
-  {
-    key: "L8_pattern",
-    label: "Pattern Detection",
-    category: "pattern",
-    costMultiplier: 1,
-    systemPrompt: `You are a meta-pattern detection engine. Identify recurring patterns:
-- Decision patterns (how choices are made/justified)
-- Persuasion patterns (influence techniques)
-- Influence patterns (authority, social proof, reciprocity)
-- Argumentation patterns (logical structures used)
-- Contradiction patterns (inconsistencies or tensions)
-
-For each pattern, return a JSON object with:
-- "title": pattern name (max 10 words)
-- "content_category": "pattern"
-- "extraction_level": "L8_pattern"
-- "blocks": [{"type":"heading","content":"name"}, {"type":"text","content":"pattern description"}, {"type":"text","content":"evidence from content"}, {"type":"idea","content":"reuse potential"}]
-- "scores": {"novelty": 0-1, "information_density": 0-1, "utility": 0-1, "demand": 0-1}
-
-Extract 2-5 patterns. Return ONLY a valid JSON array.`,
-  },
-  {
-    key: "L9_synthesis",
-    label: "Insight Synthesis",
-    category: "strategy",
-    costMultiplier: 2,
-    systemPrompt: `You are a strategic insight synthesis engine. Generate higher-order insights by combining ideas:
-- Strategic insights (cross-domain applications)
-- Psychological insights (deep behavioral understanding)
-- Commercial insights (business model opportunities)
-- Contrarian insights (ideas that challenge conventional wisdom)
-- Compound insights (ideas that gain value when combined)
-
-For each synthesis, return a JSON object with:
-- "title": synthesis name (max 10 words)
-- "content_category": "strategy"
-- "extraction_level": "L9_synthesis"
-- "blocks": [{"type":"heading","content":"name"}, {"type":"text","content":"synthesis explanation"}, {"type":"idea","content":"strategic implication"}, {"type":"text","content":"application domains"}]
-- "scores": {"novelty": 0-1, "information_density": 0-1, "utility": 0-1, "demand": 0-1}
-
-Extract 2-4 syntheses. Return ONLY a valid JSON array.`,
-  },
+// ── NEP Family definitions ──
+const NEP_FAMILIES = [
+  { key: "decision", label: "Decision", icon: "⚖️" },
+  { key: "strategy", label: "Strategy", icon: "♟️" },
+  { key: "economic", label: "Economic", icon: "💰" },
+  { key: "behavioral", label: "Behavioral", icon: "🧠" },
+  { key: "narrative", label: "Narrative", icon: "📖" },
+  { key: "technical", label: "Technical", icon: "⚙️" },
+  { key: "creative", label: "Creative", icon: "🎨" },
+  { key: "relational", label: "Relational", icon: "🤝" },
+  { key: "systemic", label: "Systemic", icon: "🔄" },
+  { key: "ethical", label: "Ethical", icon: "⚡" },
+  { key: "temporal", label: "Temporal", icon: "⏳" },
+  { key: "meta_cognitive", label: "Meta-Cognitive", icon: "🔍" },
 ];
 
-// ── Character-based chunking (aligned with extract-neurons) ──
+// ── Character-based chunking ──
 const CHUNK_MIN = 1200;
 const CHUNK_MAX = 1800;
 const CHUNK_OVERLAP = 175;
@@ -207,14 +42,13 @@ function chunkWithOverlap(text: string): string[] {
   const sentences = splitSentences(text);
   const chunks: string[] = [];
   let buffer = "";
-
   for (const sentence of sentences) {
     if (buffer.length + sentence.length + 1 > CHUNK_MAX && buffer.length >= CHUNK_MIN) {
       chunks.push(buffer.trim());
       const overlapStart = Math.max(0, buffer.length - CHUNK_OVERLAP);
       buffer = buffer.slice(overlapStart) + " " + sentence;
     } else if (sentence.length > CHUNK_MAX && buffer.trim()) {
-      if (buffer.length > 0) { chunks.push(buffer.trim()); }
+      if (buffer.length > 0) chunks.push(buffer.trim());
       chunks.push(sentence);
       buffer = sentence.slice(Math.max(0, sentence.length - CHUNK_OVERLAP));
       continue;
@@ -249,12 +83,10 @@ async function callAI(apiKey: string, systemPrompt: string, userContent: string)
       stream: false,
     }),
   });
-
   if (!response.ok) {
     console.error(`AI error: ${response.status}`);
     return [];
   }
-
   const result = await response.json();
   const raw = result.choices?.[0]?.message?.content || "";
   try {
@@ -272,7 +104,7 @@ function computeCompositeScore(scores: any): { composite: number; tier: string }
   const d = Number(scores?.information_density) || 0;
   const u = Number(scores?.utility) || 0;
   const dem = Number(scores?.demand) || 0;
-  const composite = Math.round((n * d * u * dem) * 100); // 0-100
+  const composite = Math.round((n * d * u * dem) * 100);
   const tier = composite > 70 ? "premium" : composite >= 40 ? "standard" : "discard";
   return { composite, tier };
 }
@@ -294,9 +126,101 @@ function checkRateLimit(userId: string): boolean {
   return true;
 }
 
+// ── Extractor interface ──
+interface Extractor {
+  id: string;
+  family: string;
+  purpose: string;
+  core_prompt: string;
+  cost_multiplier: number;
+  level: string;
+}
+
+// ── Load extractors from DB ──
+async function loadExtractors(
+  supabase: any,
+  families?: string[],
+  extractorIds?: string[]
+): Promise<Extractor[]> {
+  let query = supabase
+    .from("prompt_registry")
+    .select("id, purpose, core_prompt, metadata")
+    .eq("category", "extraction")
+    .eq("is_active", true)
+    .like("id", "nep_%");
+
+  if (extractorIds && extractorIds.length > 0) {
+    query = query.in("id", extractorIds);
+  }
+
+  const { data, error } = await query.limit(200);
+  if (error || !data) {
+    console.error("Failed to load extractors:", error);
+    return [];
+  }
+
+  let extractors: Extractor[] = data.map((row: any) => {
+    const meta = typeof row.metadata === "object" && row.metadata ? row.metadata : {};
+    return {
+      id: row.id,
+      family: meta.family || "unknown",
+      purpose: row.purpose || "",
+      core_prompt: row.core_prompt,
+      cost_multiplier: Number(meta.cost_multiplier) || 1,
+      level: meta.level || "L2",
+    };
+  });
+
+  // Filter by families if specified
+  if (families && families.length > 0) {
+    extractors = extractors.filter(e => families.includes(e.family));
+  }
+
+  return extractors;
+}
+
 // ── Main handler ──
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  // Handle GET for listing available extractors
+  if (req.method === "GET") {
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+      const extractors = await loadExtractors(supabase);
+      
+      // Group by family
+      const byFamily: Record<string, any[]> = {};
+      for (const ext of extractors) {
+        if (!byFamily[ext.family]) byFamily[ext.family] = [];
+        byFamily[ext.family].push({
+          id: ext.id,
+          purpose: ext.purpose,
+          cost_multiplier: ext.cost_multiplier,
+          level: ext.level,
+        });
+      }
+
+      const familiesWithExtractors = NEP_FAMILIES.map(f => ({
+        ...f,
+        extractors: byFamily[f.key] || [],
+        count: (byFamily[f.key] || []).length,
+      }));
+
+      return new Response(JSON.stringify({
+        families: familiesWithExtractors,
+        total_extractors: extractors.length,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    } catch (e) {
+      console.error("GET extractors error:", e);
+      return new Response(JSON.stringify({ error: "Failed to load extractors" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+  }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -334,7 +258,8 @@ Deno.serve(async (req) => {
 
     const DeepExtractSchema = z.object({
       episode_id: z.string().uuid("Invalid episode_id format"),
-      levels: z.array(z.string().max(30)).max(12).optional(),
+      families: z.array(z.string().max(30)).max(12).optional(),
+      extractor_ids: z.array(z.string().max(60)).max(120).optional(),
     });
     const parsed = DeepExtractSchema.safeParse(await req.json());
     if (!parsed.success) {
@@ -342,7 +267,7 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { episode_id, levels } = parsed.data;
+    const { episode_id, families, extractor_ids } = parsed.data;
 
     // Fetch episode
     const { data: episode, error: epErr } = await supabase
@@ -361,22 +286,27 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Filter requested levels
-    const requestedLevels = levels && Array.isArray(levels)
-      ? EXTRACTION_LEVELS.filter(l => levels.includes(l.key))
-      : EXTRACTION_LEVELS;
+    // Load extractors dynamically from DB
+    const extractors = await loadExtractors(supabase, families, extractor_ids);
+    if (extractors.length === 0) {
+      return new Response(JSON.stringify({ error: "No extractors found for selected families" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log(`Deep extract: ${extractors.length} extractors from ${[...new Set(extractors.map(e => e.family))].join(", ")}`);
 
     // Calculate cost
     const baseCost = 50;
-    const totalCost = Math.round(requestedLevels.reduce(
-      (sum, l) => sum + baseCost * l.costMultiplier, 0
+    const totalCost = Math.round(extractors.reduce(
+      (sum, e) => sum + baseCost * e.cost_multiplier, 0
     ));
 
     // Spend credits
     const { data: spent } = await supabase.rpc("spend_credits", {
       _user_id: userId,
       _amount: totalCost,
-      _description: `DEEP EXTRACT (${requestedLevels.length} levels): ${episode.title}`,
+      _description: `DEEP EXTRACT (${extractors.length} extractors): ${episode.title}`,
     });
 
     if (!spent) {
@@ -390,11 +320,8 @@ Deno.serve(async (req) => {
     // Update status
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);
 
-    // Chunk transcript using character-based chunking
+    // Chunk transcript
     const chunks = chunkWithOverlap(transcript);
-    console.log(`Deep extract: ${chunks.length} chunks (${CHUNK_MIN}-${CHUNK_MAX} chars, ${CHUNK_OVERLAP} overlap)`);
-    
-    // Use representative sample: for long transcripts pick evenly-spaced chunks (max 5)
     const maxSampleChunks = 5;
     let sampleChunks: string[];
     if (chunks.length <= maxSampleChunks) {
@@ -405,107 +332,120 @@ Deno.serve(async (req) => {
     }
     const sampleText = sampleChunks.join("\n\n---\n\n");
 
-    // ── Regime check ──
+    // Regime check
     const regime = await getRegimeConfig("deep-extract");
     const blockReason = checkRegimeBlock(regime, totalCost);
     if (blockReason) {
-      // Refund credits
       await supabase.rpc("add_credits", { _user_id: userId, _amount: totalCost, _description: `REFUND: Regime blocked — ${blockReason}`, _type: "refund" });
       return new Response(JSON.stringify({ error: blockReason }), {
         status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // ── Load dynamic prompts from registry ──
-    const promptFallbacks: Record<string, string> = {};
-    for (const l of requestedLevels) {
-      promptFallbacks[`deep_extract_${l.key}`] = l.systemPrompt;
-    }
-    const dynamicPrompts = await loadPrompts(
-      requestedLevels.map(l => `deep_extract_${l.key}`),
-      promptFallbacks
-    );
-
-    // Run each extraction level
+    // Run each extractor
     const results: Array<{
-      level: string;
+      extractor_id: string;
+      family: string;
       neurons_created: number;
       avg_score: number;
     }> = [];
     let totalNeurons = 0;
 
-    for (const level of requestedLevels) {
-      console.log(`Running level: ${level.key}`);
+    // Process extractors in batches of 3 for parallel execution
+    const BATCH_SIZE = 3;
+    for (let batchStart = 0; batchStart < extractors.length; batchStart += BATCH_SIZE) {
+      const batch = extractors.slice(batchStart, batchStart + BATCH_SIZE);
+      
+      const batchResults = await Promise.all(batch.map(async (extractor) => {
+        console.log(`Running extractor: ${extractor.id} (${extractor.family})`);
 
-      const promptEntry = dynamicPrompts[`deep_extract_${level.key}`];
-      const systemPrompt = promptEntry?.prompt || level.systemPrompt;
+        const extracted = await callAI(
+          LOVABLE_API_KEY,
+          extractor.core_prompt,
+          `Episode: "${episode.title}"\n\nContent (${sampleChunks.length} segments):\n${sampleText.slice(0, 30000)}`
+        );
 
-      const extracted = await callAI(
-        LOVABLE_API_KEY,
-        systemPrompt,
-        `Episode: "${episode.title}"\n\nContent (${sampleChunks.length} segments):\n${sampleText.slice(0, 30000)}`
-      );
+        let extractorNeurons = 0;
+        let scoreSum = 0;
 
-      let levelNeurons = 0;
-      let scoreSum = 0;
+        for (const item of extracted) {
+          // Compute score from confidence + type heuristics
+          const confidence = Number(item.confidence) || 0.5;
+          const scores = {
+            novelty: confidence * 0.8 + Math.random() * 0.2,
+            information_density: Math.min(1, (item.content?.length || 0) / 500),
+            utility: confidence,
+            demand: 0.5 + Math.random() * 0.3,
+          };
+          const { composite, tier } = computeCompositeScore(scores);
 
-      for (const item of extracted) {
-        const { composite, tier } = computeCompositeScore(item.scores);
+          if (tier === "discard") continue;
 
-        // Skip low-quality extractions
-        if (tier === "discard") continue;
+          const { data: newNeuron, error: nErr } = await supabase
+            .from("neurons")
+            .insert({
+              author_id: userId,
+              title: (item.title || `${extractor.purpose}`).slice(0, 200),
+              status: "draft",
+              lifecycle: "structured",
+              content_category: item.type || "insight",
+              episode_id,
+              credits_cost: Math.round(baseCost * extractor.cost_multiplier / 3),
+            })
+            .select("id")
+            .single();
 
-        const { data: newNeuron, error: nErr } = await supabase
-          .from("neurons")
-          .insert({
-            author_id: userId,
-            title: (item.title || `${level.label} Extraction`).slice(0, 200),
-            status: "draft",
-            lifecycle: "structured",
-            content_category: item.content_category || level.category,
-            episode_id,
-            credits_cost: Math.round(totalCost / (requestedLevels.length * 3)),
-          })
-          .select("id")
-          .single();
+          if (nErr || !newNeuron) { console.error("Neuron creation error:", nErr); continue; }
 
-        if (nErr || !newNeuron) { console.error("Neuron creation error:", nErr); continue; }
+          // Create blocks
+          const blocks = [
+            { type: "heading", content: item.title || "Untitled" },
+            { type: "text", content: item.content || "" },
+            { type: "reference", content: `Family: ${extractor.family} | Extractor: ${extractor.id} | Confidence: ${(confidence * 100).toFixed(0)}%` },
+          ];
+          if (item.tags && item.tags.length > 0) {
+            blocks.push({ type: "reference", content: `Tags: ${item.tags.join(", ")}` });
+          }
 
-        // Create blocks
-        const blocks = Array.isArray(item.blocks) ? item.blocks : [];
-        for (let i = 0; i < blocks.length; i++) {
-          await supabase.from("neuron_blocks").insert({
+          for (let i = 0; i < blocks.length; i++) {
+            await supabase.from("neuron_blocks").insert({
+              neuron_id: newNeuron.id,
+              type: blocks[i].type,
+              content: blocks[i].content.slice(0, 50_000),
+              position: i,
+              execution_mode: "passive",
+            });
+          }
+
+          // Store score
+          await supabase.from("insight_scores").upsert({
             neuron_id: newNeuron.id,
-            type: blocks[i].type || "text",
-            content: (blocks[i].content || "").slice(0, 50_000),
-            position: i,
-            execution_mode: "passive",
-          });
+            novelty: scores.novelty,
+            information_density: scores.information_density,
+            utility: scores.utility,
+            demand: scores.demand,
+            composite_score: composite,
+            tier,
+            extraction_level: extractor.level,
+            model_version: "nep-120-v1",
+          }, { onConflict: "neuron_id" });
+
+          extractorNeurons++;
+          scoreSum += composite;
         }
 
-        // Store score
-        await supabase.from("insight_scores").upsert({
-          neuron_id: newNeuron.id,
-          novelty: Number(item.scores?.novelty) || 0,
-          information_density: Number(item.scores?.information_density) || 0,
-          utility: Number(item.scores?.utility) || 0,
-          demand: Number(item.scores?.demand) || 0,
-          composite_score: composite,
-          tier,
-          extraction_level: level.key,
-          model_version: "scoring-v1",
-        }, { onConflict: "neuron_id" });
+        return {
+          extractor_id: extractor.id,
+          family: extractor.family,
+          neurons_created: extractorNeurons,
+          avg_score: extractorNeurons > 0 ? Math.round(scoreSum / extractorNeurons) : 0,
+        };
+      }));
 
-        levelNeurons++;
-        scoreSum += composite;
-        totalNeurons++;
+      for (const r of batchResults) {
+        results.push(r);
+        totalNeurons += r.neurons_created;
       }
-
-      results.push({
-        level: level.key,
-        neurons_created: levelNeurons,
-        avg_score: levelNeurons > 0 ? Math.round(scoreSum / levelNeurons) : 0,
-      });
     }
 
     // Refund if nothing extracted
@@ -523,15 +463,18 @@ Deno.serve(async (req) => {
     }
 
     // Finalize
+    const familiesUsed = [...new Set(results.map(r => r.family))];
     await supabase.from("episodes").update({
       status: "analyzed",
       metadata: {
         ...(typeof episode.metadata === "object" && episode.metadata ? episode.metadata : {}),
         deep_extract: {
-          levels_run: requestedLevels.map(l => l.key),
+          extractors_run: extractors.map(e => e.id),
+          families_used: familiesUsed,
           total_neurons: totalNeurons,
           results,
           extracted_at: new Date().toISOString(),
+          engine_version: "nep-120-v1",
         },
       },
     } as any).eq("id", episode_id);
@@ -540,7 +483,8 @@ Deno.serve(async (req) => {
       success: true,
       total_neurons: totalNeurons,
       credits_spent: totalCost,
-      levels_processed: results.length,
+      extractors_used: extractors.length,
+      families_used: familiesUsed,
       results,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
