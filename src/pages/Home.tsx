@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   Upload, Brain, Sparkles, Briefcase, Coins, ArrowRight,
-  Clock, Plus, Zap, TrendingUp, FileText,
+  Clock, Plus, Zap, TrendingUp, FileText, Youtube,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PipelineIndicator } from "@/components/PipelineIndicator";
@@ -59,6 +59,13 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   const QUICK_ACTIONS = [
+    {
+      label: t("home.quick_actions.transcribe"),
+      desc: t("home.quick_actions.transcribe_desc"),
+      icon: Youtube,
+      path: "/transcribe",
+      gradient: "from-destructive/15 to-destructive/5",
+    },
     {
       label: t("home.quick_actions.upload"),
       desc: t("home.quick_actions.upload_desc"),
