@@ -391,7 +391,7 @@ ${transcript.text.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).
                   <Button
                     size="sm"
                     className="shrink-0 gap-1.5"
-                    onClick={() => { window.location.href = "/extractor"; }}
+                    onClick={() => navigate(`/extractor${lastEpisodeId ? `?episode=${lastEpisodeId}` : ""}`)}
                   >
                     Extrage <ArrowRight className="h-3 w-3" />
                   </Button>
