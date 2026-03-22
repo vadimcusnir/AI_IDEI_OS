@@ -14,7 +14,7 @@ const fadeUp = {
 
 export function LandingOutputGalaxy() {
   return (
-    <section id="outputs" className="py-20 sm:py-28 border-y border-border relative">
+    <section id="outputs" className="py-20 sm:py-28 border-y border-border relative" aria-labelledby="outputs-heading">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--gold-oxide)/0.02)] to-transparent" />
       <div className="relative max-w-5xl mx-auto px-5 sm:px-6">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-8">
