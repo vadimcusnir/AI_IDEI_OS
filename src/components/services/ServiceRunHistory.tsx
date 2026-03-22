@@ -80,6 +80,8 @@ export function ServiceRunHistory({ limit = 20, serviceKeyFilter }: Props) {
     );
   }
 
+  const showViewAll = runs.length >= limit;
+
   const statusIcon = (status: string) => {
     switch (status) {
       case "completed": return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />;
@@ -164,6 +166,16 @@ export function ServiceRunHistory({ limit = 20, serviceKeyFilter }: Props) {
           </div>
         );
       })}
+      {showViewAll && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full text-xs text-muted-foreground mt-2"
+          onClick={() => navigate("/service-results")}
+        >
+          Vezi toate rezultatele →
+        </Button>
+      )}
     </div>
   );
 }
