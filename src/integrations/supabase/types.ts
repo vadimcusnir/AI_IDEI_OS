@@ -1010,6 +1010,51 @@ export type Database = {
         }
         Relationships: []
       }
+      capacity_state: {
+        Row: {
+          avg_job_latency_ms: number
+          consumed_neurons: number
+          current_multiplier: number
+          id: number
+          llm_cost_per_credit: number
+          margin_target: number
+          monthly_capacity: number
+          premium_only_mode: boolean
+          queue_depth: number
+          reset_at: string
+          updated_at: string
+          utilization: number | null
+        }
+        Insert: {
+          avg_job_latency_ms?: number
+          consumed_neurons?: number
+          current_multiplier?: number
+          id?: number
+          llm_cost_per_credit?: number
+          margin_target?: number
+          monthly_capacity?: number
+          premium_only_mode?: boolean
+          queue_depth?: number
+          reset_at?: string
+          updated_at?: string
+          utilization?: number | null
+        }
+        Update: {
+          avg_job_latency_ms?: number
+          consumed_neurons?: number
+          current_multiplier?: number
+          id?: number
+          llm_cost_per_credit?: number
+          margin_target?: number
+          monthly_capacity?: number
+          premium_only_mode?: boolean
+          queue_depth?: number
+          reset_at?: string
+          updated_at?: string
+          utilization?: number | null
+        }
+        Relationships: []
+      }
       challenge_progress: {
         Row: {
           challenge_id: string
@@ -1664,6 +1709,140 @@ export type Database = {
           reason?: string | null
           target_resource?: string | null
           verdict?: string | null
+        }
+        Relationships: []
+      }
+      dedup_cluster_members: {
+        Row: {
+          cluster_id: string
+          created_at: string
+          entity_id: string | null
+          id: string
+          neuron_id: number | null
+          similarity_score: number
+        }
+        Insert: {
+          cluster_id: string
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          neuron_id?: number | null
+          similarity_score?: number
+        }
+        Update: {
+          cluster_id?: string
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          neuron_id?: number | null
+          similarity_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dedup_cluster_members_cluster_id_fkey"
+            columns: ["cluster_id"]
+            isOneToOne: false
+            referencedRelation: "dedup_clusters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dedup_cluster_members_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dedup_cluster_members_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "dedup_cluster_members_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dedup_clusters: {
+        Row: {
+          avg_similarity: number
+          canonical_content: string | null
+          canonical_title: string
+          cluster_type: string
+          created_at: string
+          frequency_score: number
+          id: string
+          member_count: number
+          refinement_level: number
+          updated_at: string
+        }
+        Insert: {
+          avg_similarity?: number
+          canonical_content?: string | null
+          canonical_title?: string
+          cluster_type?: string
+          created_at?: string
+          frequency_score?: number
+          id?: string
+          member_count?: number
+          refinement_level?: number
+          updated_at?: string
+        }
+        Update: {
+          avg_similarity?: number
+          canonical_content?: string | null
+          canonical_title?: string
+          cluster_type?: string
+          created_at?: string
+          frequency_score?: number
+          id?: string
+          member_count?: number
+          refinement_level?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      dynamic_pricing_log: {
+        Row: {
+          base_price: number
+          created_at: string
+          final_price: number
+          id: string
+          job_id: string | null
+          multiplier: number
+          queue_depth_at_time: number
+          tier_discount: number
+          user_id: string | null
+          utilization_at_time: number
+        }
+        Insert: {
+          base_price?: number
+          created_at?: string
+          final_price?: number
+          id?: string
+          job_id?: string | null
+          multiplier?: number
+          queue_depth_at_time?: number
+          tier_discount?: number
+          user_id?: string | null
+          utilization_at_time?: number
+        }
+        Update: {
+          base_price?: number
+          created_at?: string
+          final_price?: number
+          id?: string
+          job_id?: string | null
+          multiplier?: number
+          queue_depth_at_time?: number
+          tier_discount?: number
+          user_id?: string | null
+          utilization_at_time?: number
         }
         Relationships: []
       }
@@ -4068,6 +4247,67 @@ export type Database = {
           },
         ]
       }
+      mpi_scores: {
+        Row: {
+          applicability_score: number
+          clarity_score: number
+          computed_at: string
+          differentiation_score: number
+          entity_id: string | null
+          id: string
+          mpi_score: number
+          neuron_id: number | null
+          rarity_score: number
+          recurrence_score: number
+        }
+        Insert: {
+          applicability_score?: number
+          clarity_score?: number
+          computed_at?: string
+          differentiation_score?: number
+          entity_id?: string | null
+          id?: string
+          mpi_score?: number
+          neuron_id?: number | null
+          rarity_score?: number
+          recurrence_score?: number
+        }
+        Update: {
+          applicability_score?: number
+          clarity_score?: number
+          computed_at?: string
+          differentiation_score?: number
+          entity_id?: string | null
+          id?: string
+          mpi_score?: number
+          neuron_id?: number | null
+          rarity_score?: number
+          recurrence_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mpi_scores_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mpi_scores_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "mpi_scores_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       neuron_address_aliases: {
         Row: {
           alias: string
@@ -4691,6 +4931,167 @@ export type Database = {
           },
           {
             foreignKeyName: "neurons_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notebook_artifacts: {
+        Row: {
+          artifact_type: string
+          content: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          notebook_id: string
+          title: string
+        }
+        Insert: {
+          artifact_type?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notebook_id: string
+          title?: string
+        }
+        Update: {
+          artifact_type?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notebook_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notebook_artifacts_notebook_id_fkey"
+            columns: ["notebook_id"]
+            isOneToOne: false
+            referencedRelation: "notebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notebook_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          notebook_id: string
+          role: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notebook_id: string
+          role?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notebook_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notebook_messages_notebook_id_fkey"
+            columns: ["notebook_id"]
+            isOneToOne: false
+            referencedRelation: "notebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notebook_sources: {
+        Row: {
+          content: string | null
+          created_at: string
+          file_url: string | null
+          id: string
+          is_selected: boolean
+          metadata: Json | null
+          notebook_id: string
+          source_type: string
+          title: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          is_selected?: boolean
+          metadata?: Json | null
+          notebook_id: string
+          source_type?: string
+          title?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          is_selected?: boolean
+          metadata?: Json | null
+          notebook_id?: string
+          source_type?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notebook_sources_notebook_id_fkey"
+            columns: ["notebook_id"]
+            isOneToOne: false
+            referencedRelation: "notebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notebooks: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          owner_id: string
+          source_count: number
+          title: string
+          updated_at: string
+          visibility: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          owner_id: string
+          source_count?: number
+          title?: string
+          updated_at?: string
+          visibility?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          owner_id?: string
+          source_count?: number
+          title?: string
+          updated_at?: string
+          visibility?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notebooks_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
@@ -7535,6 +7936,7 @@ export type Database = {
             }
             Returns: Json
           }
+      capacity_dashboard_stats: { Args: never; Returns: Json }
       check_access: {
         Args: { _service_key: string; _user_id: string }
         Returns: Json
@@ -7562,6 +7964,10 @@ export type Database = {
       }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
       compute_content_hash: { Args: { _content: string }; Returns: string }
+      compute_dynamic_price: {
+        Args: { _base_price: number; _user_id: string }
+        Returns: Json
+      }
       compute_idearank: { Args: never; Returns: undefined }
       compute_person_confidence: {
         Args: { _person_id: string }
