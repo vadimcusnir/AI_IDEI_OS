@@ -178,6 +178,12 @@ export default function Intelligence() {
               </PremiumGate>
             </ControlledSection>
           </TabsContent>
+
+          <TabsContent value="profiles" className="mt-0">
+            <ControlledSection elementId="intelligence.profiles">
+              <IntelligenceProfiles />
+            </ControlledSection>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
