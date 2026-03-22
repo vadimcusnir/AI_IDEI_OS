@@ -1,6 +1,6 @@
 /**
  * Landing Page — AI-IDEI Knowledge Extraction Engine
- * Clean modular architecture. Every section is a dedicated component.
+ * Clean modular architecture. Below-the-fold sections are lazy-loaded.
  */
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -14,29 +14,31 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, lazy, Suspense } from "react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-/* ── Section components ── */
+/* ── Above-the-fold (eager) ── */
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingProofBand } from "@/components/landing/LandingProofBand";
 import { LandingProblem } from "@/components/landing/LandingProblem";
-import { LandingMechanism } from "@/components/landing/LandingMechanism";
-import { TransformationDiagram } from "@/components/landing/TransformationDiagram";
-import { LandingWhatYouGet } from "@/components/landing/LandingWhatYouGet";
-import { LandingOutputGalaxy } from "@/components/landing/LandingOutputGalaxy";
-import { LandingControlSurface } from "@/components/landing/LandingControlSurface";
-import { LandingWhoFor } from "@/components/landing/LandingWhoFor";
-import { LandingWhyDifferent } from "@/components/landing/LandingWhyDifferent";
-import { LandingBenefits } from "@/components/landing/LandingBenefits";
-import { LandingSocialProof } from "@/components/landing/LandingSocialProof";
-import { EcosystemMap } from "@/components/landing/EcosystemMap";
-import { LandingTranscribeCTA } from "@/components/landing/LandingTranscribeCTA";
-import { LandingPricing } from "@/components/landing/LandingPricing";
+
+/* ── Below-the-fold (lazy-loaded for smaller initial bundle) ── */
+const LandingMechanism = lazy(() => import("@/components/landing/LandingMechanism").then(m => ({ default: m.LandingMechanism })));
+const TransformationDiagram = lazy(() => import("@/components/landing/TransformationDiagram").then(m => ({ default: m.TransformationDiagram })));
+const LandingWhatYouGet = lazy(() => import("@/components/landing/LandingWhatYouGet").then(m => ({ default: m.LandingWhatYouGet })));
+const LandingOutputGalaxy = lazy(() => import("@/components/landing/LandingOutputGalaxy").then(m => ({ default: m.LandingOutputGalaxy })));
+const LandingControlSurface = lazy(() => import("@/components/landing/LandingControlSurface").then(m => ({ default: m.LandingControlSurface })));
+const LandingWhoFor = lazy(() => import("@/components/landing/LandingWhoFor").then(m => ({ default: m.LandingWhoFor })));
+const LandingWhyDifferent = lazy(() => import("@/components/landing/LandingWhyDifferent").then(m => ({ default: m.LandingWhyDifferent })));
+const LandingBenefits = lazy(() => import("@/components/landing/LandingBenefits").then(m => ({ default: m.LandingBenefits })));
+const LandingSocialProof = lazy(() => import("@/components/landing/LandingSocialProof").then(m => ({ default: m.LandingSocialProof })));
+const EcosystemMap = lazy(() => import("@/components/landing/EcosystemMap").then(m => ({ default: m.EcosystemMap })));
+const LandingTranscribeCTA = lazy(() => import("@/components/landing/LandingTranscribeCTA").then(m => ({ default: m.LandingTranscribeCTA })));
+const LandingPricing = lazy(() => import("@/components/landing/LandingPricing").then(m => ({ default: m.LandingPricing })));
+const LandingFinalCTA = lazy(() => import("@/components/landing/LandingFinalCTA").then(m => ({ default: m.LandingFinalCTA })));
 import { LandingFAQ, FAQ_ITEMS } from "@/components/landing/LandingFAQ";
-import { LandingFinalCTA } from "@/components/landing/LandingFinalCTA";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 
 const LANG_OPTIONS = [
