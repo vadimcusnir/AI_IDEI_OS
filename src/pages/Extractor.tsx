@@ -92,6 +92,7 @@ export default function Extractor() {
   const { t } = useTranslation(["pages", "common", "errors"]);
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
+  const [searchParams] = useSearchParams();
   const { tier } = useUserTier();
   const isPro = tier === "pro" || tier === "vip";
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -111,6 +112,9 @@ export default function Extractor() {
   const [detectingGuests, setDetectingGuests] = useState<string | null>(null);
   const transcriptFileRef = useRef<HTMLInputElement>(null);
 
+  // Auto-expand episode from query param (coming from /transcribe)
+  const episodeParam = searchParams.get("episode");
+
   useEffect(() => {
     if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) {
@@ -119,6 +123,14 @@ export default function Extractor() {
     }
     fetchEpisodes();
   }, [user, authLoading, wsLoading, currentWorkspace]);
+
+  // Auto-expand when episodes load and ?episode= is present
+  useEffect(() => {
+    if (episodeParam && episodes.length > 0 && !expandedId) {
+      const found = episodes.find(e => e.id === episodeParam);
+      if (found) setExpandedId(found.id);
+    }
+  }, [episodeParam, episodes]);
 
   const fetchEpisodes = async () => {
     const { data, error } = await supabase
