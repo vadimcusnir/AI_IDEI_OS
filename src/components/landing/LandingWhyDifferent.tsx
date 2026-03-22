@@ -21,7 +21,7 @@ const AFTER = [
 
 export function LandingWhyDifferent() {
   return (
-    <section className="py-16 sm:py-28">
+    <section className="py-16 sm:py-28" aria-label="Why AI-IDEI is different">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="mb-10 sm:mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">WHY DIFFERENT</span>

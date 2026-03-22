@@ -10,7 +10,7 @@ export function LandingTranscribeCTA() {
   const navigate = useNavigate();
 
   return (
-    <section className="py-12 sm:py-16">
+    <section className="py-12 sm:py-16" aria-label="YouTube transcription">
       <FadeInView className="max-w-3xl mx-auto px-5 sm:px-6">
         <div className="relative rounded-xl border border-border bg-card p-6 sm:p-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-[hsl(var(--signal-red)/0.04)] rounded-full blur-[80px]" />

@@ -15,7 +15,7 @@ const ROLES = [
 
 export function LandingWhoFor() {
   return (
-    <section className="py-16 sm:py-28 border-y border-border">
+    <section className="py-16 sm:py-28 border-y border-border" aria-label="Who this is for">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView>
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">WHO THIS IS FOR</span>

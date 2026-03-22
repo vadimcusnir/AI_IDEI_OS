@@ -26,7 +26,7 @@ const BENEFITS = [
 
 export function LandingBenefits() {
   return (
-    <section className="py-16 sm:py-28 border-y border-border">
+    <section className="py-16 sm:py-28 border-y border-border" aria-label="Benefits">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="mb-10 sm:mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">WHAT CHANGES</span>

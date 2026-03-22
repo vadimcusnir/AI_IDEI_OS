@@ -13,7 +13,7 @@ const BLOCKS = [
 
 export function LandingWhatYouGet() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-20 sm:py-28" aria-label="What you get">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView className="mb-10 sm:mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">WHAT YOU GET</span>
