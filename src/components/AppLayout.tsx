@@ -21,7 +21,7 @@ import {
 
 // Lazy-load non-critical components
 const LowBalanceBanner = lazy(() => import("@/components/credits/LowBalanceBanner").then(m => ({ default: m.LowBalanceBanner })));
-const PipelineIndicatorCompact = lazy(() => import("@/components/PipelineIndicator").then(m => ({ default: m.PipelineIndicator })));
+const CompactPipeline = lazy(() => import("@/components/PipelineIndicator").then(m => ({ default: m.CompactPipelineIndicator })));
 const GlobalSearch = lazy(() => import("@/components/GlobalSearch").then(m => ({ default: m.GlobalSearch })));
 const NotificationBell = lazy(() => import("@/components/NotificationBell").then(m => ({ default: m.NotificationBell })));
 const UserMenu = lazy(() => import("@/components/UserMenu").then(m => ({ default: m.UserMenu })));
@@ -106,8 +106,8 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           </header>
 
           {user && (
-            <div className="border-b border-border px-3 py-1.5 bg-card/50">
-              <Suspense fallback={null}><PipelineIndicatorCompact /></Suspense>
+            <div className="border-b border-border px-3 py-1">
+              <Suspense fallback={null}><CompactPipeline /></Suspense>
             </div>
           )}
 

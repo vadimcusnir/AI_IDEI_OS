@@ -726,8 +726,62 @@ export default function Extractor() {
                         </div>
                       )}
 
-                      {/* Upload audio for transcription (for episodes without transcript) */}
-                      {needsTranscript && !isEditingTranscript && (
+                      {/* Error state — show clear message and recovery */}
+                      {ep.status === "error" && (
+                        <div className="bg-destructive/5 border border-destructive/20 rounded-lg px-4 py-3 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <div className="h-6 w-6 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
+                              <X className="h-3.5 w-3.5 text-destructive" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium text-destructive">Processing failed</p>
+                              <p className="text-[10px] text-muted-foreground">
+                                {ep.metadata?.error || "An error occurred during transcription or processing. You can retry or add a transcript manually."}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 pt-1">
+                            {ep.source_url && (
+                              <Button variant="outline" size="sm" className="h-7 text-xs gap-1"
+                                onClick={async () => {
+                                  setTranscribingId(ep.id);
+                                  try {
+                                    const session = await supabase.auth.getSession();
+                                    const resp = await fetch(
+                                      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-source`,
+                                      {
+                                        method: "POST",
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                          Authorization: `Bearer ${session.data.session?.access_token}`,
+                                        },
+                                        body: JSON.stringify({ episode_id: ep.id, url: ep.source_url }),
+                                      }
+                                    );
+                                    const data = await resp.json();
+                                    if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
+                                    toast.success(t("common:transcription_complete", { count: data.word_count || 0 }));
+                                    fetchEpisodes();
+                                  } catch (err: any) {
+                                    toast.error(err.message || t("errors:generic"));
+                                  }
+                                  setTranscribingId(null);
+                                }}
+                                disabled={isTranscribing}>
+                                {isTranscribing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Globe className="h-3 w-3" />}
+                                Retry Transcription
+                              </Button>
+                            )}
+                            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
+                              onClick={() => startEditTranscript(ep)}>
+                              <Pencil className="h-3 w-3" /> Paste Transcript Manually
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Upload audio for transcription (for episodes without transcript, non-error) */}
+                      {needsTranscript && ep.status !== "error" && !isEditingTranscript && (
                         <div className="bg-muted/30 border border-border rounded-lg px-4 py-3 space-y-2">
                           <p className="text-xs font-medium">Transcribe from audio file</p>
                           <p className="text-[10px] text-muted-foreground">Upload an audio or video file and it will be transcribed automatically.</p>

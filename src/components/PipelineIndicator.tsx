@@ -108,3 +108,63 @@ export function PipelineIndicator() {
     </div>
   );
 }
+
+/** Compact horizontal pipeline indicator for global header */
+export function CompactPipelineIndicator() {
+  const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
+  const navigate = useNavigate();
+  const [stats, setStats] = useState<PipelineStats>({ episodes: 0, neurons: 0, jobs: 0, credits: 0 });
+
+  useEffect(() => {
+    if (!user || !currentWorkspace) return;
+    const wsId = currentWorkspace.id;
+    Promise.all([
+      supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
+      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("workspace_id", wsId).eq("status", "completed"),
+      supabase.from("credit_transactions").select("amount").eq("user_id", user.id),
+    ]).then(([ep, ne, jo, cr]) => {
+      const totalCredits = (cr.data as any[])?.reduce((sum: number, t: any) => sum + (t.amount || 0), 0) ?? 0;
+      setStats({ episodes: ep.count ?? 0, neurons: ne.count ?? 0, jobs: jo.count ?? 0, credits: totalCredits });
+    });
+  }, [user, currentWorkspace]);
+
+  const completedCount = STAGES.filter(s => s.check(stats)).length;
+
+  return (
+    <div className="flex items-center gap-1.5">
+      {STAGES.map((stage, i) => {
+        const done = stage.check(stats);
+        return (
+          <Tooltip key={stage.key}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => navigate(stage.to)}
+                className="flex items-center gap-1 group"
+              >
+                <div className={cn(
+                  "h-4 w-4 rounded-full flex items-center justify-center transition-colors",
+                  done ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+                )}>
+                  {done ? <Check className="h-2.5 w-2.5" /> : <stage.icon className="h-2.5 w-2.5" />}
+                </div>
+                <span className={cn(
+                  "text-[9px] hidden md:inline transition-colors",
+                  done ? "text-primary font-medium" : "text-muted-foreground group-hover:text-foreground"
+                )}>{stage.label}</span>
+                {i < STAGES.length - 1 && (
+                  <div className={cn("w-3 h-px mx-0.5", done ? "bg-primary/40" : "bg-border")} />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent className="text-[10px]">
+              {done ? `✓ ${stage.description}` : stage.description}
+            </TooltipContent>
+          </Tooltip>
+        );
+      })}
+      <span className="text-[9px] font-mono text-muted-foreground ml-1">{completedCount}/{STAGES.length}</span>
+    </div>
+  );
+}
