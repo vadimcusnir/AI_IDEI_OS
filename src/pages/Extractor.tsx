@@ -675,7 +675,7 @@ export default function Extractor() {
                         </Button>
                       )}
                     </div>
-                  )
+                  )}
 
                   {/* Expanded detail panel */}
                   {isExpanded && (
