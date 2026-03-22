@@ -24,6 +24,7 @@ interface GamificationState {
   xpForCurrentLevel: number;
   xpForNextLevel: number;
   levelProgress: number;
+  tierMultiplier: number;
 }
 
 const DEFAULT_XP: XPState = { total_xp: 0, level: 1, rank_name: "Novice", daily_xp_earned: 0 };
@@ -38,18 +39,21 @@ export function useGamification(): GamificationState {
   const [xp, setXP] = useState<XPState>(DEFAULT_XP);
   const [streak, setStreak] = useState<StreakState>(DEFAULT_STREAK);
   const [loading, setLoading] = useState(true);
+  const [tierMultiplier, setTierMultiplier] = useState(1.0);
 
   useEffect(() => {
     if (!user) { setLoading(false); return; }
 
     const load = async () => {
-      const [xpRes, streakRes] = await Promise.all([
+      const [xpRes, streakRes, multiplierRes] = await Promise.all([
         supabase.from("user_xp").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("user_streaks").select("*").eq("user_id", user.id).maybeSingle(),
+        supabase.rpc("get_tier_xp_multiplier", { _user_id: user.id }),
       ]);
 
       if (xpRes.data) setXP(xpRes.data as unknown as XPState);
       if (streakRes.data) setStreak(streakRes.data as unknown as StreakState);
+      if (multiplierRes.data) setTierMultiplier(Number(multiplierRes.data) || 1.0);
       setLoading(false);
     };
 
@@ -63,5 +67,5 @@ export function useGamification(): GamificationState {
     ? Math.min(100, Math.round(((xp.total_xp - xpForCurrentLevel) / progressRange) * 100))
     : 0;
 
-  return { xp, streak, loading, xpForCurrentLevel, xpForNextLevel, levelProgress };
+  return { xp, streak, loading, xpForCurrentLevel, xpForNextLevel, levelProgress, tierMultiplier };
 }

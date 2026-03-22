@@ -15,7 +15,7 @@ const RANK_ICONS: Record<string, React.ElementType> = {
 };
 
 export function XPProgressBar({ compact = false }: { compact?: boolean }) {
-  const { xp, streak, loading, xpForNextLevel, levelProgress } = useGamification();
+  const { xp, streak, loading, xpForNextLevel, levelProgress, tierMultiplier } = useGamification();
 
   if (loading) return null;
 
@@ -74,7 +74,7 @@ export function XPProgressBar({ compact = false }: { compact?: boolean }) {
         </p>
       </div>
 
-      {/* Streak + Daily */}
+      {/* Streak + Daily + Tier Boost */}
       <div className="flex items-center justify-between pt-2 border-t border-border">
         <div className="flex items-center gap-1.5">
           <Flame className={cn("h-3.5 w-3.5", streak.current_streak > 0 ? "text-orange-500" : "text-muted-foreground")} />
@@ -85,7 +85,12 @@ export function XPProgressBar({ compact = false }: { compact?: boolean }) {
             <span className="text-[9px] text-muted-foreground">(best: {streak.longest_streak})</span>
           )}
         </div>
-        <div className="text-right">
+        <div className="text-right flex items-center gap-2">
+          {tierMultiplier > 1 && (
+            <span className="text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+              {tierMultiplier}x XP
+            </span>
+          )}
           <span className="text-[9px] text-muted-foreground">Today: {xp.daily_xp_earned}/200 XP</span>
         </div>
       </div>
