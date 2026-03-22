@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSearchParams } from "react-router-dom";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -91,6 +92,7 @@ export default function Extractor() {
   const { t } = useTranslation(["pages", "common", "errors"]);
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
+  const [searchParams] = useSearchParams();
   const { tier } = useUserTier();
   const isPro = tier === "pro" || tier === "vip";
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -110,6 +112,9 @@ export default function Extractor() {
   const [detectingGuests, setDetectingGuests] = useState<string | null>(null);
   const transcriptFileRef = useRef<HTMLInputElement>(null);
 
+  // Auto-expand episode from query param (coming from /transcribe)
+  const episodeParam = searchParams.get("episode");
+
   useEffect(() => {
     if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) {
@@ -118,6 +123,14 @@ export default function Extractor() {
     }
     fetchEpisodes();
   }, [user, authLoading, wsLoading, currentWorkspace]);
+
+  // Auto-expand when episodes load and ?episode= is present
+  useEffect(() => {
+    if (episodeParam && episodes.length > 0 && !expandedId) {
+      const found = episodes.find(e => e.id === episodeParam);
+      if (found) setExpandedId(found.id);
+    }
+  }, [episodeParam, episodes]);
 
   const fetchEpisodes = async () => {
     const { data, error } = await supabase
@@ -482,10 +495,12 @@ export default function Extractor() {
               const wordCount = hasTranscript ? ep.transcript!.split(/\s+/).length : 0;
               const needsTranscript = !hasTranscript && !isTranscribing;
               const isEditingTranscript = editingTranscriptId === ep.id;
+              const isTargeted = ep.id === episodeParam;
 
               return (
                 <div key={ep.id} className={cn(
-                  "rounded-xl border bg-card transition-colors",
+                  "rounded-xl border bg-card transition-all duration-300",
+                  isTargeted && "ring-2 ring-primary/40 shadow-lg shadow-primary/5",
                   isExpanded ? "border-primary/30" : "border-border hover:border-primary/20"
                 )}>
                   {/* Row header */}
