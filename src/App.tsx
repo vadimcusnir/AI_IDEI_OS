@@ -182,6 +182,8 @@ const App = () => (
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><GamificationPage /></AppLayout></ProtectedRoute>} />
                 <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><DataPipeline /></AppLayout></ProtectedRoute>} />
                 <Route path="/integrations" element={<ProtectedRoute><AppLayout><Integrations /></AppLayout></ProtectedRoute>} />
+                <Route path="/cognitive-units" element={<ProtectedRoute><AppLayout><CognitiveUnits /></AppLayout></ProtectedRoute>} />
+                <Route path="/collection-runs" element={<ProtectedRoute><AppLayout><CollectionRuns /></AppLayout></ProtectedRoute>} />
 
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
