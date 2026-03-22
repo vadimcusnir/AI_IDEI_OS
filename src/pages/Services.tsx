@@ -435,9 +435,17 @@ export default function Services() {
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md", clsBadge.className)}>
-                        {clsBadge.label}
-                      </span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md cursor-help", clsBadge.className)}>
+                            {clsBadge.label}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="text-xs max-w-[200px]">
+                          <p className="font-semibold mb-0.5">Class {service.service_class}: {clsBadge.label}</p>
+                          <p className="text-muted-foreground">{clsBadge.description}</p>
+                        </TooltipContent>
+                      </Tooltip>
                       <TierBadge tier={service.access_tier} />
                     </div>
                   </div>
