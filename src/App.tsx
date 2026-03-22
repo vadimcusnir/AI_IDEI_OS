@@ -78,7 +78,8 @@ const Transcribe = lazy(() => import("./pages/Transcribe"));
 const Integrations = lazy(() => import("./pages/Integrations"));
 const CognitiveUnits = lazy(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazy(() => import("./pages/CollectionRuns"));
-
+const KnowledgeSurfacePage = lazy(() => import("./pages/KnowledgeSurfacePage"));
+const ProductSurfacePage = lazy(() => import("./pages/ProductSurfacePage"));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -143,6 +144,8 @@ const App = () => (
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
+                <Route path="/knowledge/*" element={<AppLayout><KnowledgeSurfacePage /></AppLayout>} />
+                <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
                 <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
