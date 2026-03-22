@@ -319,8 +319,8 @@ Deno.serve(async (req) => {
       steps_completed: stepsCompleted,
       total_steps: steps.length,
       total_credits_spent: results
-        .filter((r) => r.status === "completed")
-        .reduce((sum, r) => {
+        .filter((r: any) => r?.status === "completed")
+        .reduce((sum: number, r: any) => {
           const svc = serviceMap.get(r.service_key);
           return sum + (svc ? svc.credits_cost : 0);
         }, 0),
