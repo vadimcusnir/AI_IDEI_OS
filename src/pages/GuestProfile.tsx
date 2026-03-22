@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
 import { RadarChart } from "@/components/intelligence/RadarChart";
 import { PsychologicalProfileSection, type PsychologicalProfileData } from "@/components/profile/PsychologicalProfileSection";
+import { GuestProfileAdvanced } from "@/components/profile/GuestProfileAdvanced";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Loader2, Brain, Quote, Sparkles, Users, MessageCircle,
   Target, Award, Lightbulb, TrendingUp, ArrowRight, Lock,
