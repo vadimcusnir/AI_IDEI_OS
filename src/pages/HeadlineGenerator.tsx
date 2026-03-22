@@ -51,8 +51,8 @@ export default function HeadlineGenerator() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <SEOHead
-        title="Generator Titluri Direct Response — AI-IDEI"
-        description="Generează titluri profesionale Direct Response în română cu formula canonică în 7 straturi. Motor lingvistic AI."
+        title="Direct Response Headlines — AI-IDEI"
+        description="Generate professional Direct Response headlines with the canonical 7-layer formula. AI linguistic engine."
       />
 
       {/* Header */}
