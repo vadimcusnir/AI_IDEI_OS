@@ -40,7 +40,7 @@ export function LandingFooter() {
 
           {/* Resources */}
           <div className="space-y-3">
-            <h3 className="text-xs font-mono tracking-[0.12em] text-muted-foreground uppercase">Resources</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Resources</h3>
             <ul className="space-y-2.5">
               <li><FooterLink to="/docs">Documentation</FooterLink></li>
               <li><FooterLink to="/knowledge">Knowledge Base</FooterLink></li>
