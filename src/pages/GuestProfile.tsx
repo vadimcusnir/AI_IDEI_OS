@@ -232,6 +232,13 @@ export default function GuestProfile() {
         title={`${guest.full_name} — Expert Profile | AI-IDEI`}
         description={guest.bio?.slice(0, 155) || `Expert profile of ${guest.full_name}`}
       />
+      <PersonJsonLd
+        name={guest.full_name}
+        jobTitle={guest.role}
+        bio={guest.bio}
+        expertise={guest.expertise_areas}
+        url={`https://ai-idei.com/guests/${slug}`}
+      />
 
       {/* ═══════ HERO ═══════ */}
       <div className="relative overflow-hidden">
