@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { SEOHead } from "@/components/SEOHead";
 import { Tag, ChevronRight, ArrowRight, Brain, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
