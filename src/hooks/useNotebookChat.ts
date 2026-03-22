@@ -10,11 +10,12 @@ interface ChatMessage {
 
 interface UseNotebookChatOptions {
   notebookId: string | undefined;
+  sessionId: string | null;
   sources: NotebookSource[];
   mode?: "chat" | "studio";
 }
 
-export function useNotebookChat({ notebookId, sources, mode = "chat" }: UseNotebookChatOptions) {
+export function useNotebookChat({ notebookId, sessionId, sources, mode = "chat" }: UseNotebookChatOptions) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
 
@@ -119,17 +120,17 @@ export function useNotebookChat({ notebookId, sources, mode = "chat" }: UseNoteb
           }
         }
 
-        // Save messages to DB
+        // Save messages to DB with session_id
         if (notebookId && assistantContent) {
-          await supabase.from("notebook_messages").insert([
-            { notebook_id: notebookId, role: "user", content },
-            { notebook_id: notebookId, role: "assistant", content: assistantContent },
-          ]);
+          const insertData: any[] = [
+            { notebook_id: notebookId, role: "user", content, session_id: sessionId },
+            { notebook_id: notebookId, role: "assistant", content: assistantContent, session_id: sessionId },
+          ];
+          await supabase.from("notebook_messages").insert(insertData);
         }
       } catch (err: any) {
         console.error("Chat error:", err);
         toast.error(err.message || "Chat failed");
-        // Remove the hanging assistant message if empty
         setMessages((prev) => {
           const last = prev[prev.length - 1];
           if (last?.role === "assistant" && !last.content) {
@@ -141,7 +142,7 @@ export function useNotebookChat({ notebookId, sources, mode = "chat" }: UseNoteb
         setIsStreaming(false);
       }
     },
-    [messages, isStreaming, selectedSources, notebookId, mode]
+    [messages, isStreaming, selectedSources, notebookId, sessionId, mode]
   );
 
   const clearMessages = useCallback(() => setMessages([]), []);
