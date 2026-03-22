@@ -4914,6 +4914,38 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_template_purchases: {
+        Row: {
+          buyer_id: string
+          created_at: string | null
+          id: string
+          price_neurons: number | null
+          template_id: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string | null
+          id?: string
+          price_neurons?: number | null
+          template_id: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string | null
+          id?: string
+          price_neurons?: number | null
+          template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_template_purchases_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prompt_templates: {
         Row: {
           author_id: string | null
@@ -4926,8 +4958,11 @@ export type Database = {
           goal: string
           icon: string
           id: string
+          is_marketplace: boolean | null
           is_public: boolean
           is_system: boolean
+          price_neurons: number | null
+          sales_count: number | null
           title: string
           updated_at: string
           use_count: number
@@ -4943,8 +4978,11 @@ export type Database = {
           goal: string
           icon?: string
           id?: string
+          is_marketplace?: boolean | null
           is_public?: boolean
           is_system?: boolean
+          price_neurons?: number | null
+          sales_count?: number | null
           title: string
           updated_at?: string
           use_count?: number
@@ -4960,8 +4998,11 @@ export type Database = {
           goal?: string
           icon?: string
           id?: string
+          is_marketplace?: boolean | null
           is_public?: boolean
           is_system?: boolean
+          price_neurons?: number | null
+          sales_count?: number | null
           title?: string
           updated_at?: string
           use_count?: number
