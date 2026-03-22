@@ -166,6 +166,15 @@ export function YouTubeTranscriber() {
 
       // Refund if charged
       if (!isFree) {
+        try {
+          await supabase.rpc("add_credits", {
+            _user_id: user.id,
+            _amount: TRANSCRIPT_COST,
+            _description: "Refund — transcript download failed",
+            _type: "refund",
+          });
+          toast.info("Creditele au fost returnate automat.");
+        } catch { /* silent */ }
         refetchBalance();
       }
     }
