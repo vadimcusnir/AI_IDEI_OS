@@ -310,7 +310,7 @@ export default function Jobs() {
                   <div key={job.id} className="border border-border rounded-xl bg-card overflow-hidden">
                     <button
                       onClick={() => setExpandedJob(isExpanded ? null : job.id)}
-                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/30 transition-colors text-left"
+                      className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-3 hover:bg-muted/30 transition-colors text-left"
                     >
                       <Tooltip>
                         <TooltipTrigger asChild>
