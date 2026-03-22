@@ -11,7 +11,7 @@ import {
   Loader2, Brain, Quote, Sparkles, Users, MessageCircle,
   Target, Award, Lightbulb, TrendingUp, ArrowRight, Lock,
 } from "lucide-react";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
