@@ -175,8 +175,16 @@ export default function RunService() {
       setJobStatus("running");
 
       const { data: { session } } = await supabase.auth.getSession();
+
+      // Route orchestrated pipelines to dedicated edge functions
+      const PIPELINE_ROUTES: Record<string, string> = {
+        "market-research-full": "market-research-engine",
+        "extraction-pipeline": "extraction-pipeline",
+      };
+      const edgeFunction = PIPELINE_ROUTES[service.service_key] || "run-service";
+
       const resp = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/run-service`,
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${edgeFunction}`,
         {
           method: "POST",
           headers: {
@@ -188,6 +196,13 @@ export default function RunService() {
             service_key: service.service_key,
             neuron_id: neuron.id,
             inputs,
+            // Pass pipeline-specific params
+            ...(service.service_key === "market-research-full" ? {
+              industry: inputs.industry || "",
+              country: inputs.country || "",
+              market_phase: inputs.market_phase || "Growth",
+              context: inputs.context || "",
+            } : {}),
           }),
         }
       );
