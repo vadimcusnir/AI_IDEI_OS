@@ -11,7 +11,7 @@ import { NeuronPreviewPane } from "@/components/neurons/NeuronPreviewPane";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
 import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { useTranslation } from "react-i18next";
 
