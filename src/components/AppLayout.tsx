@@ -1,21 +1,13 @@
-import { ReactNode, useEffect, useRef, lazy, Suspense } from "react";
+import { ReactNode, useEffect, useRef, lazy, Suspense, memo } from "react";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useTranslation } from "react-i18next";
-import { Globe } from "lucide-react";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { prefetchUIControls } from "@/hooks/useUIControl";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-
-import { LowBalanceBanner } from "@/components/credits/LowBalanceBanner";
-import { GlobalSearch } from "@/components/GlobalSearch";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { NotificationBell } from "@/components/NotificationBell";
-import { Footer } from "@/components/global/Footer";
-import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
-import { UserMenu } from "@/components/UserMenu";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -27,7 +19,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Lazy-load non-critical overlay components
+// Lazy-load non-critical components
+const LowBalanceBanner = lazy(() => import("@/components/credits/LowBalanceBanner").then(m => ({ default: m.LowBalanceBanner })));
+const GlobalSearch = lazy(() => import("@/components/GlobalSearch").then(m => ({ default: m.GlobalSearch })));
+const NotificationBell = lazy(() => import("@/components/NotificationBell").then(m => ({ default: m.NotificationBell })));
+const UserMenu = lazy(() => import("@/components/UserMenu").then(m => ({ default: m.UserMenu })));
+const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
+const MobileBottomNav = lazy(() => import("@/components/MobileBottomNav").then(m => ({ default: m.MobileBottomNav })));
 const ContextualFeedbackPrompt = lazy(() => import("@/components/feedback/ContextualFeedbackPrompt").then(m => ({ default: m.ContextualFeedbackPrompt })));
 const GamificationToasts = lazy(() => import("@/components/gamification/GamificationToasts").then(m => ({ default: m.GamificationToasts })));
 
@@ -81,7 +79,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             <SidebarTrigger />
             <AppBreadcrumbs />
             <div className="flex-1" />
-            <GlobalSearch />
+            <Suspense fallback={null}><GlobalSearch /></Suspense>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
@@ -102,11 +100,11 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               </DropdownMenuContent>
             </DropdownMenu>
             <ThemeToggle />
-            {user && <NotificationBell />}
-            {user && <UserMenu />}
+            {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
+            {user && <Suspense fallback={null}><UserMenu /></Suspense>}
           </header>
 
-          <LowBalanceBanner />
+          <Suspense fallback={null}><LowBalanceBanner /></Suspense>
 
           {fullHeight ? (
             <main className="flex-1 flex flex-col min-h-0">
@@ -117,12 +115,12 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               <main className="flex-1 flex flex-col pb-16 md:pb-0">
                 <ErrorBoundary>{children}</ErrorBoundary>
               </main>
-              <Footer />
+              <Suspense fallback={null}><Footer /></Suspense>
             </>
           )}
         </div>
       </div>
-      <MobileBottomNav />
+      <Suspense fallback={null}><MobileBottomNav /></Suspense>
       
       <Suspense fallback={null}>
         <ContextualFeedbackPrompt />

@@ -16,9 +16,11 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
-import { PublicTestimonials } from "@/components/landing/PublicTestimonials";
-import { Footer } from "@/components/global/Footer";
-import { useRef } from "react";
+import { lazy, Suspense, useRef } from "react";
+
+// Lazy-load below-fold components
+const PublicTestimonials = lazy(() => import("@/components/landing/PublicTestimonials").then(m => ({ default: m.PublicTestimonials })));
+const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -472,7 +474,7 @@ export default function Landing() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <PublicTestimonials />
+      <Suspense fallback={null}><PublicTestimonials /></Suspense>
 
       {/* ═══ EXPLORE KNOWLEDGE ═══ */}
       <section className="bg-card border-y border-border">
@@ -593,7 +595,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <Footer />
+      <Suspense fallback={null}><Footer /></Suspense>
 
       {/* Structured Data */}
       <OrganizationJsonLd />
