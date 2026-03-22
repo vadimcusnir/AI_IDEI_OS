@@ -5,8 +5,14 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import { YouTubeTranscriber } from "@/components/extractor/YouTubeTranscriber";
 import { TranscriptHistory } from "@/components/extractor/TranscriptHistory";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Brain, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, Brain, Sparkles, Zap, Shield, Globe, Clock } from "lucide-react";
 import { motion } from "framer-motion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function Transcribe() {
   const { user } = useAuth();
