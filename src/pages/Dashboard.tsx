@@ -151,7 +151,7 @@ export default function Dashboard() {
           <motion.div variants={fadeUp}><KPI icon={Zap} label={t("dashboard.jobs_run")} value={data.jobs.total} sub={t("dashboard.jobs_completed", { count: data.jobs.completed })} /></motion.div>
           <motion.div variants={fadeUp}><KPI icon={Coins} label={t("dashboard.balance")} value={data.credits.balance} sub="NEURONS" color="text-status-validated" /></motion.div>
           <motion.div variants={fadeUp}><KPI icon={TrendingUp} label={t("dashboard.spent")} value={data.credits.spent} sub={t("dashboard.of_earned", { earned: data.credits.earned })} color="text-destructive" /></motion.div>
-          <motion.div variants={fadeUp}><KPI icon={Layers} label={t("dashboard.artifacts")} value={data.artifacts.total} sub={t("dashboard.this_week", { count: data.artifacts.thisWeek })} /></motion.div>
+          <motion.div variants={fadeUp} className="col-span-2 sm:col-span-1"><KPI icon={Layers} label={t("dashboard.artifacts")} value={data.artifacts.total} sub={t("dashboard.this_week", { count: data.artifacts.thisWeek })} /></motion.div>
         </motion.div>
 
         {/* Pipeline Progress */}
