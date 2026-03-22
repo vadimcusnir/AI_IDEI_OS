@@ -130,7 +130,7 @@ export function TrendingIdeasWidget() {
               "text-[9px] font-mono px-1.5 py-0.5 rounded shrink-0",
               "bg-muted text-muted-foreground"
             )}>
-              {item.importance_score.toFixed(0)}
+              {(item as any).idea_rank ? `IR ${((item as any).idea_rank as number).toFixed(1)}` : item.importance_score.toFixed(0)}
             </span>
           </Link>
         ))}

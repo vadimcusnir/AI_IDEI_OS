@@ -190,6 +190,12 @@ export function AgentConsole() {
             neuron_count: totalNeurons,
             episode_count: totalEpisodes,
             credit_balance: balance,
+            // Layer 2: User memory
+            top_categories: topCategories,
+            recent_services: workerTypes,
+            total_completed_jobs: jobsAgg.count || 0,
+            // Layer 3: Knowledge memory (entity counts)
+            knowledge_summary: `User has ${neuronsAgg.count || 0} neurons across categories: ${Object.entries(topCategories).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}. Most used services: ${Object.entries(workerTypes).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}.`,
           },
         }),
         signal: controller.signal,
