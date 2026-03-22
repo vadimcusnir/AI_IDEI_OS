@@ -33,3 +33,11 @@ project_id = "swghuuxkcilayybesadm"
     verify_jwt = false
   [functions.verify-topup]
     verify_jwt = false
+  [functions.avatar33-pipeline]
+    verify_jwt = false
+  [functions.webinar-generate]
+    verify_jwt = false
+  [functions.extraction-pipeline]
+    verify_jwt = false
+  [functions.content-generate]
+    verify_jwt = false
