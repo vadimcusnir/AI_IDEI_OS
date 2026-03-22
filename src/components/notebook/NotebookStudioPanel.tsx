@@ -1,11 +1,15 @@
 import { useState } from "react";
 import {
-  FileText, Video, Presentation, BarChart3, Table2, Map, Mic, TestTube2, Wand2, RotateCcw, Copy, Check,
+  FileText, Video, Presentation, BarChart3, Table2, Map, Mic, TestTube2, Wand2, RotateCcw, Copy, Check, Save,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { NotebookArtifact, NotebookSource } from "@/hooks/useNotebook";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   artifacts: NotebookArtifact[];
@@ -28,6 +32,9 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
   const [generating, setGenerating] = useState<string | null>(null);
   const [generatedContent, setGeneratedContent] = useState<Record<string, string>>({});
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [expandedKey, setExpandedKey] = useState<string | null>(null);
+  const [savedKeys, setSavedKeys] = useState<Set<string>>(new Set());
+  const qc = useQueryClient();
 
   const selectedSources = sources.filter((s) => s.is_selected);
 
@@ -39,6 +46,7 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
     if (generating) return;
 
     setGenerating(key);
+    setExpandedKey(key);
     let content = "";
 
     try {
@@ -103,6 +111,24 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
     }
   };
 
+  const saveArtifact = async (key: string, label: string) => {
+    if (!notebookId || !generatedContent[key]) return;
+    try {
+      const { error } = await supabase.from("notebook_artifacts").insert({
+        notebook_id: notebookId,
+        artifact_type: key,
+        title: label,
+        content: generatedContent[key],
+      });
+      if (error) throw error;
+      setSavedKeys((prev) => new Set(prev).add(key));
+      qc.invalidateQueries({ queryKey: ["notebook-artifacts", notebookId] });
+      toast.success(`${label} saved`);
+    } catch (err: any) {
+      toast.error("Save failed");
+    }
+  };
+
   const copyContent = (key: string) => {
     const content = generatedContent[key];
     if (!content) return;
@@ -121,28 +147,39 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
           <h3 className="text-sm font-semibold text-foreground">Studio</h3>
         </div>
         <p className="text-[10px] text-muted-foreground mt-1">
-          {selectedSources.length} sources selected • Generate outputs
+          {selectedSources.length} source{selectedSources.length !== 1 ? "s" : ""} selected • Generate outputs
         </p>
       </div>
 
       <ScrollArea className="flex-1">
         <div className="px-3 py-3 space-y-1.5">
-          {STUDIO_ACTIONS.map(({ key, icon: Icon, label, desc, prompt }) => {
+          {STUDIO_ACTIONS.map(({ key, icon: Icon, label, desc, prompt }, idx) => {
             const isActive = generating === key;
             const hasContent = !!generatedContent[key];
+            const isSaved = savedKeys.has(key);
+            const isExpanded = expandedKey === key;
 
             return (
-              <div key={key}>
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.04 }}
+              >
                 <button
-                  onClick={() => handleAction(key, prompt)}
-                  disabled={!!generating}
+                  onClick={() => hasContent ? setExpandedKey(isExpanded ? null : key) : handleAction(key, prompt)}
+                  disabled={!!generating && !isActive}
                   className={cn(
-                    "w-full flex items-center gap-3 px-3 py-3 rounded-lg border border-border bg-background hover:bg-accent/5 hover:border-primary/20 transition-colors text-left group",
+                    "w-full flex items-center gap-3 px-3 py-3 rounded-lg border border-border bg-background hover:bg-accent/5 hover:border-primary/20 transition-all text-left group",
                     isActive && "border-primary/40 bg-primary/5",
+                    hasContent && "border-primary/20",
                     !!generating && !isActive && "opacity-50"
                   )}
                 >
-                  <div className="h-9 w-9 rounded-lg bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                  <div className={cn(
+                    "h-9 w-9 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+                    hasContent ? "bg-primary/10" : "bg-primary/5 group-hover:bg-primary/10"
+                  )}>
                     {isActive ? (
                       <RotateCcw className="h-4 w-4 text-primary animate-spin" />
                     ) : (
@@ -150,46 +187,82 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-foreground">{label}</div>
+                    <div className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                      {label}
+                      {hasContent && (
+                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
+                      )}
+                    </div>
                     <div className="text-[10px] text-muted-foreground truncate">{desc}</div>
                   </div>
                   {hasContent && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); copyContent(key); }}
-                      className="text-muted-foreground hover:text-primary transition-colors p-1"
-                    >
-                      {copiedKey === key ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                    </button>
+                    <div className="flex items-center gap-1">
+                      {!isSaved && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); saveArtifact(key, label); }}
+                          className="text-muted-foreground hover:text-primary transition-colors p-1"
+                          title="Save to library"
+                        >
+                          <Save className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); copyContent(key); }}
+                        className="text-muted-foreground hover:text-primary transition-colors p-1"
+                        title="Copy"
+                      >
+                        {copiedKey === key ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
+                      </button>
+                    </div>
                   )}
                 </button>
 
-                {/* Generated content preview */}
-                {hasContent && (
-                  <div className="mt-1 mx-1 p-3 rounded-md bg-background border border-border text-xs text-foreground max-h-40 overflow-y-auto whitespace-pre-wrap">
-                    {generatedContent[key]}
-                  </div>
-                )}
-              </div>
+                {/* Generated content */}
+                <AnimatePresence>
+                  {(isExpanded || isActive) && hasContent && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-1 mx-1 p-3 rounded-md bg-background border border-border text-xs max-h-60 overflow-y-auto">
+                        <div className="prose prose-xs dark:prose-invert max-w-none">
+                          <ReactMarkdown>{generatedContent[key]}</ReactMarkdown>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             );
           })}
         </div>
 
-        {/* DB artifacts */}
+        {/* Saved DB artifacts */}
         {artifacts.length > 0 && (
           <div className="px-3 pb-3">
             <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2">
               Saved ({artifacts.length})
             </div>
             <div className="space-y-1">
-              {artifacts.map((art) => (
-                <div
+              {artifacts.map((art, idx) => (
+                <motion.div
                   key={art.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: idx * 0.05 }}
                   className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent/5 cursor-pointer transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText(art.content || "");
+                    toast.success("Copied to clipboard");
+                  }}
                 >
                   <FileText className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-xs text-foreground truncate flex-1">{art.title}</span>
                   <span className="text-[9px] text-muted-foreground/50 font-mono">{art.artifact_type}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
