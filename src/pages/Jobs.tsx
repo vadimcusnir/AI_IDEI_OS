@@ -36,6 +36,9 @@ interface Job {
   completed_at: string | null;
   retry_count: number;
   max_retries: number;
+  progress: number;
+  current_step: string | null;
+  depth: string;
 }
 
 const STATUS_ICONS: Record<string, { icon: React.ElementType; color: string }> = {
