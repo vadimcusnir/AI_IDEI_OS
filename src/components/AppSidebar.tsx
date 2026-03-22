@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier, type UserTier } from "@/hooks/useUserTier";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import {
   Brain, Shield, Upload, Sparkles, Briefcase, Coins,
   LogOut, Home, User, MessageCircle, ScrollText,
