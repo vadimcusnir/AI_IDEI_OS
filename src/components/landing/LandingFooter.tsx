@@ -50,7 +50,7 @@ export function LandingFooter() {
 
           {/* Community */}
           <div className="space-y-3">
-            <h3 className="text-xs font-mono tracking-[0.12em] text-muted-foreground uppercase">Community</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Community</h3>
             <ul className="space-y-2.5">
               <li><FooterLink to="/community">Forum</FooterLink></li>
               <li><FooterLink to="/topics">Topics</FooterLink></li>
