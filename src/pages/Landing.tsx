@@ -106,8 +106,21 @@ export default function Landing() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const ctaAction = () => navigate(user ? "/home" : "/auth");
+
+  const scrollTo = useCallback((selector: string) => {
+    setMobileMenuOpen(false);
+    document.querySelector(selector)?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  const NAV_LINKS = [
+    { label: "Mechanism", to: "#mechanism" },
+    { label: "Outputs", to: "#outputs" },
+    { label: "Control", to: "#control" },
+    { label: "Access", to: "#access" },
+  ];
 
   return (
     <PageTransition>
@@ -134,22 +147,20 @@ export default function Landing() {
             <img src={logo} alt="AI-IDEI" className="h-8 w-8 rounded-full" />
             <span className="text-sm font-serif font-bold tracking-tight text-[hsl(var(--ivory))]">AI-IDEI</span>
           </button>
+
+          {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-8">
-            {[
-              { label: "Mechanism", to: "#mechanism" },
-              { label: "Outputs", to: "#outputs" },
-              { label: "Control", to: "#control" },
-              { label: "Access", to: "#access" },
-            ].map(link => (
+            {NAV_LINKS.map(link => (
               <button
                 key={link.label}
-                onClick={() => document.querySelector(link.to)?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => scrollTo(link.to)}
                 className="text-[10px] font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.5)] hover:text-[hsl(var(--gold-oxide))] transition-colors"
               >
                 {link.label.toUpperCase()}
               </button>
             ))}
           </nav>
+
           <div className="flex items-center gap-2 sm:gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -180,18 +191,63 @@ export default function Landing() {
                 <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-[hsl(var(--ivory-dim)/0.6)]">
                   Log in
                 </Button>
-                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex">
                   Start Free
                   <ArrowRight className="h-3 w-3" />
                 </Button>
               </div>
             )}
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden h-8 w-8 flex items-center justify-center text-[hsl(var(--ivory-dim)/0.6)]"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu overlay */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="lg:hidden border-t border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian)/0.98)] overflow-hidden"
+            >
+              <div className="px-5 py-4 space-y-1">
+                {NAV_LINKS.map(link => (
+                  <button
+                    key={link.label}
+                    onClick={() => scrollTo(link.to)}
+                    className="block w-full text-left text-xs font-mono tracking-[0.1em] text-[hsl(var(--ivory-dim)/0.6)] hover:text-[hsl(var(--gold-oxide))] transition-colors py-2.5 border-b border-[hsl(var(--ivory-dim)/0.04)]"
+                  >
+                    {link.label.toUpperCase()}
+                  </button>
+                ))}
+                {!user && (
+                  <div className="flex gap-3 pt-3">
+                    <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-xs h-9 flex-1 text-[hsl(var(--ivory-dim)/0.6)]">
+                      Log in
+                    </Button>
+                    <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-xs h-9 flex-1 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+                      Start Free
+                      <ArrowRight className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* ═══ 1. HERO ═══ */}
       <LandingHero heroRef={heroRef} heroOpacity={heroOpacity} ctaAction={ctaAction} />
+
 
       {/* ═══ PROOF BAND ═══ */}
       <section className="border-y border-[hsl(var(--ivory-dim)/0.06)] py-5 sm:py-8">
