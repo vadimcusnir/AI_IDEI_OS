@@ -136,6 +136,10 @@
   }
 
   .dark {
+    --text-primary: 220 14% 92%;
+    --text-secondary: 220 10% 58%;
+    --text-muted: 220 10% 46%;
+
     --background: 222 22% 7%;
     --foreground: 220 14% 92%;
 
