@@ -19,8 +19,8 @@ export function LandingControlSurface() {
       <div className="max-w-4xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-16">
           <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">CONTROL LAYER</span>
-          <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">You control the output. Not the other way around.</h2>
-          <p className="text-base text-[hsl(var(--ivory-dim)/0.65)] max-w-lg mx-auto">
+          <h2 className="heading-2 mb-4">You control the output. Not the other way around.</h2>
+          <p className="text-base text-muted-foreground max-w-lg mx-auto text-flow">
             Set tone, language, format, objective, depth, and audience for every execution.
           </p>
         </FadeInView>
@@ -29,12 +29,12 @@ export function LandingControlSurface() {
             <FadeInView
               key={ctrl.label}
               delay={i * 0.06}
-              className="p-4 sm:p-5 rounded-lg border border-[hsl(var(--ivory-dim)/0.08)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.2)] transition-colors group flex items-start gap-4 sm:block landing-card"
+              className="p-4 sm:p-5 rounded-lg border border-border bg-card hover:border-[hsl(var(--gold-oxide)/0.2)] transition-colors group flex items-start gap-4 sm:block landing-card"
             >
               <IconControl className="text-[hsl(var(--gold-oxide)/0.5)] mb-0 sm:mb-3 mt-0.5 sm:mt-0 shrink-0 group-hover:text-[hsl(var(--gold-oxide)/0.8)] transition-colors" size={18} />
               <div>
-                <p className="text-sm font-semibold text-[hsl(var(--ivory))] mb-1">{ctrl.label}</p>
-                <p className="text-sm text-[hsl(var(--ivory-dim)/0.55)]">{ctrl.desc}</p>
+                <p className="text-sm font-semibold text-foreground mb-1">{ctrl.label}</p>
+                <p className="text-sm text-muted-foreground">{ctrl.desc}</p>
               </div>
             </FadeInView>
           ))}

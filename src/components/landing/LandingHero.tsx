@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { ArrowRight, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ExtractionEngine } from "./ExtractionEngine";
@@ -21,13 +20,13 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
           KNOWLEDGE EXTRACTION ENGINE
         </p>
 
-        <h1 className="heading-1 mb-5 sm:mb-6 px-1 text-[hsl(var(--ivory))]">
+        <h1 className="heading-1 mb-5 sm:mb-6 px-1">
           The closest thing to a{" "}
           <span className="text-[hsl(var(--gold-oxide))]">magic button</span>
           {" "}for copywriting and marketing
         </h1>
 
-        <p className="text-base sm:text-lg text-[hsl(var(--ivory-dim)/0.75)] leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-12 px-2">
+        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-12 px-2 text-flow">
           Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants built for real work.
         </p>
 
@@ -36,7 +35,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
             Start Free
             <ArrowRight className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="lg" onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })} className="gap-2 text-sm h-12 sm:h-14 w-full sm:w-auto border-[hsl(var(--ivory-dim)/0.2)] text-[hsl(var(--ivory-dim)/0.8)] hover:bg-[hsl(var(--ivory-dim)/0.05)] min-h-[44px]">
+          <Button variant="outline" size="lg" onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })} className="gap-2 text-sm h-12 sm:h-14 w-full sm:w-auto border-border text-muted-foreground hover:bg-accent/10 min-h-[44px]">
             <Eye className="h-4 w-4" />
             See the Mechanism
           </Button>

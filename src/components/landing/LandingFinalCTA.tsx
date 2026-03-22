@@ -1,5 +1,5 @@
 /**
- * Final CTA — compact, tensioned, clear. No fade on headline/CTA.
+ * Final CTA — compact, tensioned, clear.
  */
 import { ArrowRight, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,12 +15,12 @@ export function LandingFinalCTA({ ctaAction }: Props) {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[hsl(var(--gold-oxide)/0.05)] rounded-full blur-[180px]" />
       </div>
       <div className="relative max-w-3xl mx-auto px-5 sm:px-6 text-center">
-        <h2 className="heading-2 text-[hsl(var(--ivory))] mb-5">
+        <h2 className="heading-2 mb-5">
           Stop collecting ideas.
           <br />
           <span className="text-[hsl(var(--gold-oxide))]">Start turning them into assets.</span>
         </h2>
-        <p className="text-base text-[hsl(var(--ivory-dim)/0.65)] mb-12 max-w-lg mx-auto leading-relaxed">
+        <p className="text-base text-muted-foreground mb-12 max-w-lg mx-auto leading-relaxed text-flow">
           Use AI-IDEI to write faster, market better, and turn rough thinking into persuasive output.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8">
@@ -28,12 +28,12 @@ export function LandingFinalCTA({ ctaAction }: Props) {
             Start Free
             <ArrowRight className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="lg" onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })} className="gap-2 h-12 sm:h-14 min-h-[44px] w-full sm:w-auto border-[hsl(var(--ivory-dim)/0.2)] text-[hsl(var(--ivory-dim)/0.8)] hover:bg-[hsl(var(--ivory-dim)/0.05)]">
+          <Button variant="outline" size="lg" onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })} className="gap-2 h-12 sm:h-14 min-h-[44px] w-full sm:w-auto border-border text-muted-foreground hover:bg-accent/10">
             <Eye className="h-4 w-4" />
             See What's Inside
           </Button>
         </div>
-        <p className="text-xs font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.45)]">
+        <p className="text-xs font-mono tracking-[0.12em] text-muted-foreground/70">
           LESS FRICTION · BETTER COPY · STRONGER EXECUTION
         </p>
       </div>
