@@ -271,13 +271,16 @@ export default function Landing() {
       {/* ═══ 2. PROBLEM ═══ */}
       <LandingProblem />
 
+      {/* ── Divider ── */}
+      <div className="gold-divider" />
+
       {/* ═══ 3. MECHANISM ═══ */}
       <LandingMechanism />
 
       {/* ═══ 4. WHAT YOU GET ═══ */}
       <Section>
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="mb-16">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="mb-10 sm:mb-16">
             <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHAT YOU GET</span>
             <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">
               Everything you need to write, position, and market better with AI
@@ -301,7 +304,7 @@ export default function Landing() {
                 viewport={{ once: true, margin: "-40px" }}
                 custom={i}
                 variants={fadeUp}
-                className="bg-[hsl(var(--obsidian-light)/0.3)] p-8 sm:p-10 group hover:bg-[hsl(var(--obsidian-light)/0.6)] transition-all"
+                className="bg-[hsl(var(--obsidian-light)/0.3)] p-6 sm:p-10 group hover:bg-[hsl(var(--obsidian-light)/0.6)] transition-all"
               >
                 <block.icon className="text-[hsl(var(--gold-oxide)/0.6)] mb-6 group-hover:text-[hsl(var(--gold-oxide))] transition-colors" size={28} />
                 <h3 className="text-base font-semibold text-[hsl(var(--ivory)/0.9)] mb-3">{block.title}</h3>

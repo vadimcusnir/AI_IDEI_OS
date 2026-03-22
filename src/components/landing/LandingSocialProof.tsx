@@ -28,14 +28,14 @@ const TESTIMONIALS = [
 
 export function LandingSocialProof() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-16 sm:py-28">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-16">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-12 sm:mb-16">
           <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">PROOF</span>
           <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">Built for people who want sharper thinking and stronger execution</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {TESTIMONIALS.map((t, i) => (
             <motion.div
               key={i}
@@ -44,20 +44,17 @@ export function LandingSocialProof() {
               viewport={{ once: true, margin: "-40px" }}
               custom={i}
               variants={fadeUp}
-              className="relative p-8 rounded-xl border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.2)]"
+              className="relative p-6 sm:p-8 rounded-xl border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.2)] landing-card"
             >
-              {/* Quote mark */}
-              <span className="absolute top-4 left-6 text-3xl font-serif text-[hsl(var(--gold-oxide)/0.15)] leading-none select-none">"</span>
-              <blockquote className="text-sm text-[hsl(var(--ivory)/0.75)] leading-relaxed mb-6 pt-4 italic">
+              <span className="absolute top-3 left-5 text-3xl font-serif text-[hsl(var(--gold-oxide)/0.15)] leading-none select-none">"</span>
+              <blockquote className="text-sm text-[hsl(var(--ivory)/0.75)] leading-relaxed mb-5 sm:mb-6 pt-4 italic">
                 {t.text}
               </blockquote>
               <div className="border-t border-[hsl(var(--ivory-dim)/0.06)] pt-4 flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-[hsl(var(--gold-oxide)/0.1)] flex items-center justify-center">
-                  <span className="text-xs font-mono font-bold text-[hsl(var(--gold-oxide)/0.6)]">{t.name}</span>
+                <div className="h-8 w-8 rounded-full bg-[hsl(var(--gold-oxide)/0.1)] flex items-center justify-center shrink-0">
+                  <span className="text-[10px] font-mono font-bold text-[hsl(var(--gold-oxide)/0.6)]">{t.name}</span>
                 </div>
-                <div>
-                  <p className="text-[10px] font-mono text-[hsl(var(--ivory-dim)/0.4)]">{t.role}</p>
-                </div>
+                <p className="text-[10px] font-mono text-[hsl(var(--ivory-dim)/0.4)]">{t.role}</p>
               </div>
             </motion.div>
           ))}
