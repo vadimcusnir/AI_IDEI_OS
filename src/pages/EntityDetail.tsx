@@ -186,23 +186,43 @@ export default function EntityDetail() {
   const citations = Array.isArray(entity.citation_sources) ? entity.citation_sources : [];
   const graphDensity = related.length;
 
+  const entityUrl = `https://ai-idei.com/${entityType}/${entity.slug}`;
   const dbJsonLd = (entity as any).json_ld;
+  
+  // Build Article JSON-LD for non-profile entities, Person for profiles
   const jsonLd: any = dbJsonLd ? {
     "@context": "https://schema.org", ...dbJsonLd,
-    url: `https://ai-idei.com/${entityType}/${entity.slug}`,
-  } : {
+    url: entityUrl,
+  } : singularType === "profile" ? {
     "@context": "https://schema.org",
-    "@type": singularType === "profile" ? "Person" : "DefinedTerm",
+    "@type": "Person",
     name: entity.title,
     description: entity.summary || entity.meta_description || "",
-    url: `https://ai-idei.com/${entityType}/${entity.slug}`,
+    url: entityUrl,
+  } : {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: entity.title,
+    description: entity.summary || entity.meta_description || "",
+    url: entityUrl,
     identifier: entity.id,
+    datePublished: entity.created_at,
+    dateModified: entity.created_at,
+    author: { "@type": "Organization", name: "AI-IDEI", url: "https://ai-idei.com" },
+    publisher: { "@type": "Organization", name: "AI-IDEI", url: "https://ai-idei.com", logo: { "@type": "ImageObject", url: "https://ai-idei.com/favicon.gif" } },
+    mainEntityOfPage: { "@type": "WebPage", "@id": entityUrl },
+    articleSection: entity.insight_family ? FAMILY_LABEL[entity.insight_family] || entity.insight_family : entityType,
+    keywords: topics.map(t => t.title).join(", ") || undefined,
   };
 
-  if (singularType !== "profile") {
-    jsonLd.inDefinedTermSet = {
-      "@type": "DefinedTermSet",
-      name: entity.insight_family ? FAMILY_LABEL[entity.insight_family] || entity.insight_family : `AI-IDEI ${entityType}`,
+  if (singularType !== "profile" && !dbJsonLd) {
+    jsonLd.about = {
+      "@type": "DefinedTerm",
+      name: entity.title,
+      inDefinedTermSet: {
+        "@type": "DefinedTermSet",
+        name: entity.insight_family ? FAMILY_LABEL[entity.insight_family] || entity.insight_family : `AI-IDEI ${entityType}`,
+      },
     };
   }
 
@@ -216,12 +236,10 @@ export default function EntityDetail() {
 
   if (related.length > 0) {
     jsonLd.relatedLink = related.slice(0, 10).map((r) => ({
-      "@type": "DefinedTerm", name: r.title,
-      url: `${window.location.origin}/${TYPE_PATH[r.entity_type] || "insights"}/${r.slug}`,
+      "@type": "Article", name: r.title,
+      url: `https://ai-idei.com/${TYPE_PATH[r.entity_type] || "insights"}/${r.slug}`,
     }));
   }
-
-  jsonLd.publisher = { "@type": "Organization", name: "AI-IDEI" };
 
   return (
     <div className="min-h-screen bg-background">

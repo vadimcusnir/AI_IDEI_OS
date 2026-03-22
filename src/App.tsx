@@ -76,6 +76,8 @@ const GamificationPage = lazy(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
 const Transcribe = lazy(() => import("./pages/Transcribe"));
 const Integrations = lazy(() => import("./pages/Integrations"));
+const CognitiveUnits = lazy(() => import("./pages/CognitiveUnits"));
+const CollectionRuns = lazy(() => import("./pages/CollectionRuns"));
 
 function PageLoader() {
   return (
@@ -180,6 +182,8 @@ const App = () => (
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><GamificationPage /></AppLayout></ProtectedRoute>} />
                 <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><DataPipeline /></AppLayout></ProtectedRoute>} />
                 <Route path="/integrations" element={<ProtectedRoute><AppLayout><Integrations /></AppLayout></ProtectedRoute>} />
+                <Route path="/cognitive-units" element={<ProtectedRoute><AppLayout><CognitiveUnits /></AppLayout></ProtectedRoute>} />
+                <Route path="/collection-runs" element={<ProtectedRoute><AppLayout><CollectionRuns /></AppLayout></ProtectedRoute>} />
 
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />

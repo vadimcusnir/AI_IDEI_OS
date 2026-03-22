@@ -45,5 +45,7 @@
   "transcribe": "Transcribe",
   "integrations": "Integrations",
   "api": "API Access",
-  "wallet": "Wallet"
+  "wallet": "Wallet",
+  "cognitive_units": "Cognitive Units",
+  "collection_runs": "Collection Runs"
 }
