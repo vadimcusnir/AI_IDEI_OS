@@ -103,6 +103,7 @@ const queryClient = new QueryClient({
 });
 
 const App = () => (
+  <MotionConfig reducedMotion="user">
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <AuthProvider>
