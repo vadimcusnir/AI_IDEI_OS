@@ -891,6 +891,13 @@ export default function Extractor() {
                         </div>
                       )}
 
+                      {/* NEP-120 Deep Extraction Panel */}
+                      {hasTranscript && !isExtracting && (
+                        <ControlledSection id="nep-extractor-panel" title="🧬 NEP-120 Deep Extraction" defaultOpen={false}>
+                          <NEPExtractorPanel episodeId={ep.id} onComplete={() => fetchEpisodes()} />
+                        </ControlledSection>
+                      )}
+
                       {/* Actions row */}
                       <div className="flex items-center justify-between pt-1">
                         <Button variant="ghost" size="sm"
