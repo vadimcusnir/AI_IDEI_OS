@@ -74,7 +74,50 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const { episode_id, neuron_ids, batch_size = 50 } = body;
+    const { episode_id, neuron_ids, batch_size = 50, text_only, content: textContent } = body;
+
+    // ── Text-only mode: generate embedding for a search query ──
+    if (text_only && textContent) {
+      const embResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash-lite",
+          messages: [
+            {
+              role: "system",
+              content: `You are a semantic embedding generator. Given content, output EXACTLY 768 comma-separated floating point numbers between -1 and 1 that represent the semantic meaning of the content. Output ONLY the numbers, no other text.`,
+            },
+            { role: "user", content: textContent.slice(0, 2000) },
+          ],
+          temperature: 0,
+          max_tokens: 8000,
+        }),
+      });
+      if (!embResponse.ok) {
+        return new Response(JSON.stringify({ error: "Embedding generation failed" }), {
+          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const embData = await embResponse.json();
+      const embText = embData.choices?.[0]?.message?.content?.trim();
+      if (!embText) {
+        return new Response(JSON.stringify({ error: "Empty embedding response" }), {
+          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const numbers = embText.split(",").map((n: string) => parseFloat(n.trim())).filter((n: number) => !isNaN(n));
+      while (numbers.length < 768) numbers.push(0);
+      if (numbers.length > 768) numbers.length = 768;
+      const magnitude = Math.sqrt(numbers.reduce((s: number, n: number) => s + n * n, 0));
+      const normalized = magnitude > 0 ? numbers.map((n: number) => n / magnitude) : numbers;
+      return new Response(JSON.stringify({ embedding: normalized }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Determine which neurons to embed
     let query = supabase

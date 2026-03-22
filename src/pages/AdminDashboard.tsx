@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers } from "lucide-react";
+import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, Trash2, Eye, EyeOff, UserPlus, UserMinus, ScrollText, PlusCircle, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,7 @@ const ComplianceLogTab = lazy(() => import("@/components/admin/ComplianceLogTab"
 const FeatureFlagsTab = lazy(() => import("@/components/admin/FeatureFlagsTab").then(m => ({ default: m.FeatureFlagsTab })));
 const ForumModerationTab = lazy(() => import("@/components/admin/ForumModerationTab").then(m => ({ default: m.ForumModerationTab })));
 const ControlLayerTab = lazy(() => import("@/components/admin/ControlLayerTab").then(m => ({ default: m.ControlLayerTab })));
+const ServiceManifestTab = lazy(() => import("@/components/admin/ServiceManifestTab").then(m => ({ default: m.ServiceManifestTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -100,6 +101,7 @@ const TABS = [
   { value: "flags", label: "Flags", icon: Activity },
   { value: "moderation", label: "Moderation", icon: MessageCircle },
   { value: "control-layer", label: "Control", icon: Layers },
+  { value: "manifests", label: "Manifests", icon: Settings },
 ];
 
 export default function AdminDashboard() {
@@ -640,6 +642,7 @@ export default function AdminDashboard() {
             <TabsContent value="flags"><Suspense fallback={<TabLoader />}><FeatureFlagsTab /></Suspense></TabsContent>
             <TabsContent value="moderation"><Suspense fallback={<TabLoader />}><ForumModerationTab /></Suspense></TabsContent>
             <TabsContent value="control-layer"><Suspense fallback={<TabLoader />}><ControlLayerTab /></Suspense></TabsContent>
+            <TabsContent value="manifests"><Suspense fallback={<TabLoader />}><ServiceManifestTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
