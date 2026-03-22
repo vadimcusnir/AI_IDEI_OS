@@ -157,7 +157,7 @@ export default function Landing() {
           </button>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
             {NAV_LINKS.map(link => (
               <button
                 key={link.label}
