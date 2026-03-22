@@ -13,7 +13,7 @@ import {
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
   Lock, ChevronRight, GraduationCap, Terminal,
   Wallet, Trophy, Eye, ShieldCheck,
-  Activity,
+  Activity, Zap,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
@@ -104,6 +104,7 @@ const AUTH_SECTIONS: NavSection[] = [
     authOnly: true,
     items: [
       { labelKey: "transcribe", to: "/transcribe", icon: FileText, controlId: "nav.transcribe" },
+      { labelKey: "headline_generator", to: "/headline-generator", icon: Zap, controlId: "nav.headline-generator" },
       { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
       { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
       { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },

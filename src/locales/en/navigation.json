@@ -54,5 +54,6 @@
   "gamification": "Achievements",
   "runtime": "Runtime",
   "analytics": "Analytics",
-  "security": "Security"
+  "security": "Security",
+  "headline_generator": "Headline Generator"
 }

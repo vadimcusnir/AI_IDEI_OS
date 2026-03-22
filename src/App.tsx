@@ -87,6 +87,7 @@ const ProductSurfacePage = lazy(() => import("./pages/ProductSurfacePage"));
 const NotebookWorkspace = lazy(() => import("./pages/NotebookWorkspace"));
 const NotebookDetail = lazy(() => import("./pages/NotebookDetail"));
 const CapitalizationEngine = lazy(() => import("./pages/CapitalizationEngine"));
+const HeadlineGenerator = lazy(() => import("./pages/HeadlineGenerator"));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -200,6 +201,7 @@ const App = () => (
                 <Route path="/notebooks" element={<ProtectedRoute><AppLayout><NotebookWorkspace /></AppLayout></ProtectedRoute>} />
                 <Route path="/notebook/:id" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Notebook failed to load"><NotebookDetail /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/capitalization" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Engine failed to load"><CapitalizationEngine /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/headline-generator" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Generator failed to load"><HeadlineGenerator /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
                 <Route path="/cusnir-os" element={<AdminRoute><AppLayout><CusnirOSOperator /></AppLayout></AdminRoute>} />
