@@ -8,12 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
   Loader2, Sparkles, Play, CheckCircle2, XCircle,
-  Clock, Coins, Brain, ArrowLeft, Zap,
+  Clock, Coins, Brain, ArrowLeft, Zap, History,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { PremiumGate } from "@/components/premium/PremiumGate";
 import { useTranslation } from "react-i18next";
+import { ServicePresets } from "@/components/services/ServicePresets";
+import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
+import { logServiceRun } from "@/hooks/useServiceHistory";
 
 interface Service {
   id: string;

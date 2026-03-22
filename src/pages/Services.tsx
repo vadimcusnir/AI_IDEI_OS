@@ -512,8 +512,18 @@ export default function Services() {
           </div>
         )}
 
-        {/* IMF Pipeline Section */}
+        {/* Run History */}
         <div className="mt-8">
+          <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
+            <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" /> Istoric execuții
+            </h2>
+            <ServiceRunHistory limit={10} />
+          </div>
+        </div>
+
+        {/* IMF Pipeline Section */}
+        <div className="mt-6">
           <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
             <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
               <Zap className="h-4 w-4 text-primary" /> {t("services.imf_title", { defaultValue: "IMF Pipeline — Automatic Multiplication" })}
