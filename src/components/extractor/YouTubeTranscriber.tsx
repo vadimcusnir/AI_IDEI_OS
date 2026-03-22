@@ -418,7 +418,7 @@ ${transcript.text.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).
                   : "border-border bg-card hover:border-primary/20"
             )}
           >
-            <div className="p-5 sm:p-6">
+            <div className="p-4 sm:p-6">
               {/* Title */}
               <div className="flex items-center gap-3 mb-5">
                 <div className="h-10 w-10 rounded-xl bg-destructive/10 flex items-center justify-center">
