@@ -144,6 +144,8 @@ const App = () => (
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
+                <Route path="/knowledge/*" element={<AppLayout><KnowledgeSurfacePage /></AppLayout>} />
+                <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
                 <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
