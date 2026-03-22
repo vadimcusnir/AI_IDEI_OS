@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
   }
 });
 
-async function handleGenerate(supabase: any, apiKey: string, limit: number) {
+async function handleGenerate(supabase: any, apiKey: string, limit: number, autoPublishThreshold: number) {
   // Get high-scoring entities not yet converted to surface pages
   const { data: existingSlugs } = await supabase
     .from("knowledge_surface_pages")
