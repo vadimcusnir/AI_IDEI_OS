@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd, WebApplicationJsonLd, FAQJsonLd } from "@/components/seo/JsonLd";
 import { useAuth } from "@/contexts/AuthContext";
-import logo from "@/assets/logo.gif";
+import { Logo } from "@/components/shared/Logo";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
