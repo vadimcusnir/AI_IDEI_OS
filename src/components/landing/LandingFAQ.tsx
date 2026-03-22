@@ -1,18 +1,10 @@
 /**
  * FAQ Section — accordion with gold accents.
  */
-import { motion } from "framer-motion";
+import { FadeInView } from "@/components/motion/PageTransition";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
-  }),
-};
 
 const FAQS = [
   { q: "What is AI-IDEI?", a: "AI-IDEI is a practical AI system that helps you turn ideas into copy, content, offers, workflows, and marketing assets." },
@@ -26,26 +18,26 @@ const FAQS = [
 
 export function LandingFAQ() {
   return (
-    <section id="faq" className="py-20 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)] border-b-0">
+    <section id="faq" className="py-20 sm:py-28 border-t border-[hsl(var(--ivory-dim)/0.08)]">
       <div className="max-w-2xl mx-auto px-5 sm:px-6">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-12">
-          <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">FAQ</span>
+        <FadeInView className="text-center mb-12">
+          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide)/0.7)] mb-4 block">FAQ</span>
           <h2 className="heading-2 text-[hsl(var(--ivory))]">Frequently Asked Questions</h2>
-        </motion.div>
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} custom={1} variants={fadeUp}>
+        </FadeInView>
+        <FadeInView delay={0.1}>
           <Accordion type="single" collapsible className="space-y-2">
             {FAQS.map((faq, i) => (
-              <AccordionItem key={i} value={`faq-${i}`} className="border border-[hsl(var(--ivory-dim)/0.06)] rounded-lg px-5 data-[state=open]:border-[hsl(var(--gold-oxide)/0.15)] data-[state=open]:bg-[hsl(var(--obsidian-light)/0.3)] transition-all">
-                <AccordionTrigger className="text-sm font-medium py-4 hover:no-underline text-[hsl(var(--ivory)/0.8)] text-left">
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-[hsl(var(--ivory-dim)/0.08)] rounded-lg px-5 data-[state=open]:border-[hsl(var(--gold-oxide)/0.2)] data-[state=open]:bg-[hsl(var(--obsidian-light)/0.3)] transition-all">
+                <AccordionTrigger className="text-base font-medium py-4 hover:no-underline text-[hsl(var(--ivory)/0.85)] text-left">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-[hsl(var(--ivory-dim)/0.5)] pb-4 leading-relaxed">
+                <AccordionContent className="text-sm text-[hsl(var(--ivory-dim)/0.6)] pb-4 leading-relaxed">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
-        </motion.div>
+        </FadeInView>
       </div>
     </section>
   );

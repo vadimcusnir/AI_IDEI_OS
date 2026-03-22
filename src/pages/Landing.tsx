@@ -90,8 +90,7 @@ export default function Landing() {
   const { i18n } = useTranslation();
   const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
   const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  // Hero opacity fade removed — headlines and CTAs must remain stable
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
@@ -137,7 +136,7 @@ export default function Landing() {
 
       {/* ═══ TOP BAR ═══ */}
       <div className="border-b border-[hsl(var(--ivory-dim)/0.08)]">
-        <p className="text-center text-[10px] font-mono tracking-[0.15em] text-[hsl(var(--ivory-dim)/0.5)] py-2.5 px-4">
+        <p className="text-center text-xs font-mono tracking-[0.12em] text-[hsl(var(--ivory-dim)/0.6)] py-2.5 px-4">
           Turn rough ideas into copy, content, offers, and campaigns — faster.
         </p>
       </div>
@@ -157,10 +156,10 @@ export default function Landing() {
                 key={link.label}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
-                  "text-[10px] font-mono tracking-[0.12em] transition-colors relative",
+                  "text-xs font-mono tracking-[0.1em] transition-colors relative py-1",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
-                    : "text-[hsl(var(--ivory-dim)/0.5)] hover:text-[hsl(var(--gold-oxide))]"
+                    : "text-[hsl(var(--ivory-dim)/0.6)] hover:text-[hsl(var(--gold-oxide))]"
                 )}
               >
                 {link.label.toUpperCase()}
@@ -237,7 +236,7 @@ export default function Landing() {
                   <button
                     key={link.label}
                     onClick={() => scrollTo(link.to)}
-                    className="block w-full text-left text-xs font-mono tracking-[0.1em] text-[hsl(var(--ivory-dim)/0.6)] hover:text-[hsl(var(--gold-oxide))] transition-colors py-2.5 border-b border-[hsl(var(--ivory-dim)/0.04)]"
+                    className="block w-full text-left text-sm font-mono tracking-[0.08em] text-[hsl(var(--ivory-dim)/0.7)] hover:text-[hsl(var(--gold-oxide))] transition-colors py-3 border-b border-[hsl(var(--ivory-dim)/0.06)]"
                   >
                     {link.label.toUpperCase()}
                   </button>
@@ -260,7 +259,7 @@ export default function Landing() {
       </header>
 
       {/* ═══ SECTIONS ═══ */}
-      <LandingHero heroRef={heroRef} heroOpacity={heroOpacity} ctaAction={ctaAction} />
+      <LandingHero heroRef={heroRef} ctaAction={ctaAction} />
       <LandingProofBand />
       <LandingProblem />
       <div className="gold-divider" />
