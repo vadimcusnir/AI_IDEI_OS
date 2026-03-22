@@ -375,34 +375,7 @@ export default function Landing() {
       </Section>
 
       {/* ═══ 7. WHO THIS IS FOR ═══ */}
-      <Section border>
-        <div className="max-w-3xl mx-auto px-5 sm:px-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp}>
-            <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)] mb-4 block">WHO THIS IS FOR</span>
-            <h2 className="heading-2 text-[hsl(var(--ivory))] mb-8">
-              Built for people who want output, not noise
-            </h2>
-            <div className="space-y-4 mb-8">
-              {[
-                "creators who want to publish faster and better",
-                "freelancers who want stronger messaging and more speed",
-                "consultants who need clearer offers and sharper communication",
-                "marketers who want better systems and better output",
-                "founders who want to turn ideas into assets and campaigns",
-                "operators who want practical AI, not vague hype",
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.5)] shrink-0" />
-                  <span className="text-sm text-[hsl(var(--ivory)/0.75)]">{item}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-[10px] text-[hsl(var(--ivory-dim)/0.3)] italic border-t border-[hsl(var(--ivory-dim)/0.06)] pt-6 font-mono">
-              This is not for people who want theory without execution, tools without application, or endless prompting without results.
-            </p>
-          </motion.div>
-        </div>
-      </Section>
+      <LandingWhoFor />
 
       {/* ═══ 8. WHY DIFFERENT ═══ */}
       <Section>
