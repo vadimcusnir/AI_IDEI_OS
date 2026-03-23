@@ -22,6 +22,7 @@ import { PostExecutionPanel } from "./PostExecutionPanel";
 import { ContextActions } from "./ContextActions";
 import { ExecutionStatusBar } from "./ExecutionStatusBar";
 import { CommandHeader } from "./CommandHeader";
+import { PipelineComposer, type PipelineStep } from "./PipelineComposer";
 import { CommandInputZone, type CommandInputZoneRef } from "./CommandInputZone";
 import { MessageStream } from "./MessageStream";
 import { SidePanels } from "./SidePanels";
