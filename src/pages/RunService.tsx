@@ -648,10 +648,17 @@ export default function RunService() {
 
                   {/* Post-execution recommendations — eliminates dead-ends */}
                   {service && (
-                    <PostExecutionRecommendations
-                      serviceKey={service.service_key}
-                      serviceCategory={service.category}
-                    />
+                    <>
+                      <PostExecutionRecommendations
+                        serviceKey={service.service_key}
+                        serviceCategory={service.category}
+                      />
+                      <NeuronBundleUpsell
+                        neuronsSpent={service.credits_cost}
+                        currentBalance={credits?.balance ?? 0}
+                      />
+                    </>
+                  )}
                   )}
                 </>
               )}
