@@ -33,6 +33,7 @@ import { PermissionGate } from "./PermissionGate";
 import { PostExecutionPanel } from "./PostExecutionPanel";
 import { ContextActions } from "./ContextActions";
 import { ExecutionStatusBar } from "./ExecutionStatusBar";
+import { ExecutionSummary } from "./ExecutionSummary";
 import { useUserTier } from "@/hooks/useUserTier";
 import { routeCommand, type RouteResult } from "./CommandRouter";
 import {
@@ -579,7 +580,7 @@ export function CommandCenter() {
   const showRightPanel = showTaskTree && cmdState.state.phase !== "idle";
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full overflow-hidden">
       {/* ═══ MAIN COLUMN ═══ */}
       <div className="flex flex-col h-full transition-all flex-1 min-w-0">
         {/* Header */}
@@ -594,7 +595,7 @@ export function CommandCenter() {
                 <KernelBadge />
               </div>
               <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
-                <span>{totalNeurons} neurons</span>
+                <span className="hidden sm:inline">{totalNeurons} neurons</span>
                 <span>·</span>
                 <span>{totalEpisodes} episodes</span>
                 <span>·</span>
@@ -754,6 +755,32 @@ export function CommandCenter() {
               </div>
             </div>
           )}
+          {/* ═══ Execution Summary — in-flow completion card ═══ */}
+          {(cmdState.state.phase === "completed" || cmdState.state.phase === "failed") && !isEmptyState && (
+            <ExecutionSummary
+              phase={cmdState.state.phase}
+              intent={cmdState.state.intent}
+              planName={cmdState.state.planName}
+              totalCredits={cmdState.state.totalCredits}
+              stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
+              totalSteps={cmdState.state.steps.length}
+              outputCount={outputs.length}
+              durationSeconds={
+                cmdState.state.startedAt && cmdState.state.completedAt
+                  ? Math.round((new Date(cmdState.state.completedAt).getTime() - new Date(cmdState.state.startedAt).getTime()) / 1000)
+                  : 0
+              }
+              errorMessage={cmdState.state.errorMessage}
+              onSaveTemplate={handleSaveTemplate}
+              onSaveAllOutputs={handleSaveAllOutputs}
+              onRerun={() => {
+                const lastUser = messages.filter(m => m.role === "user").pop();
+                if (lastUser) { setInput(lastUser.content); inputRef.current?.focus(); }
+              }}
+              onViewOutputs={() => setShowOutputs(true)}
+            />
+          )}
+
           <div ref={messagesEndRef} />
         </div>
 
@@ -891,14 +918,14 @@ export function CommandCenter() {
         </div>
       </div>
 
-      {/* ═══ RIGHT: Task Tree Panel ═══ */}
+      {/* ═══ RIGHT: Task Tree Panel — hidden on mobile, side panel on desktop ═══ */}
       <AnimatePresence>
         {showRightPanel && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 280, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
-            className="border-l border-border bg-card overflow-hidden shrink-0"
+            className="hidden md:block border-l border-border bg-card overflow-hidden shrink-0"
           >
             <TaskTree
               execution={cmdState.state}
@@ -908,18 +935,79 @@ export function CommandCenter() {
         )}
       </AnimatePresence>
 
-      {/* ═══ RIGHT: Memory Panel ═══ */}
+      {/* Task Tree — mobile overlay */}
+      <AnimatePresence>
+        {showRightPanel && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="md:hidden fixed inset-y-0 right-0 w-[280px] z-50 border-l border-border bg-card shadow-xl"
+          >
+            <div className="flex items-center justify-between px-3 py-2 border-b border-border">
+              <span className="text-xs font-bold">Task Tree</span>
+              <button onClick={() => setShowTaskTree(false)} className="p-1 text-muted-foreground hover:text-foreground">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <TaskTree
+              execution={cmdState.state}
+              onSaveTemplate={handleSaveTemplate}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ RIGHT: Memory Panel — responsive ═══ */}
       <AnimatePresence>
         {showMemory && (
-          <MemoryPanel
-            visible={showMemory}
-            onClose={() => setShowMemory(false)}
-            onReplay={handleReplay}
-            onExecuteTemplate={handleExecuteTemplate}
-            sessions={sessions}
-            onLoadSession={handleLoadSession}
-            onDeleteSession={handleDeleteSession}
-            currentSessionId={sessionId}
+          <>
+            {/* Desktop: side panel */}
+            <div className="hidden md:block">
+              <MemoryPanel
+                visible={showMemory}
+                onClose={() => setShowMemory(false)}
+                onReplay={handleReplay}
+                onExecuteTemplate={handleExecuteTemplate}
+                sessions={sessions}
+                onLoadSession={handleLoadSession}
+                onDeleteSession={handleDeleteSession}
+                currentSessionId={sessionId}
+              />
+            </div>
+            {/* Mobile: overlay */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="md:hidden fixed inset-y-0 right-0 w-[300px] z-50 shadow-xl"
+            >
+              <MemoryPanel
+                visible={showMemory}
+                onClose={() => setShowMemory(false)}
+                onReplay={handleReplay}
+                onExecuteTemplate={handleExecuteTemplate}
+                sessions={sessions}
+                onLoadSession={handleLoadSession}
+                onDeleteSession={handleDeleteSession}
+                currentSessionId={sessionId}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile backdrop for overlays */}
+      <AnimatePresence>
+        {(showRightPanel || showMemory) && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
+            onClick={() => { setShowTaskTree(false); setShowMemory(false); }}
           />
         )}
       </AnimatePresence>
