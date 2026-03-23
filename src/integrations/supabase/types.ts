@@ -7186,6 +7186,51 @@ export type Database = {
           },
         ]
       }
+      translations: {
+        Row: {
+          content: string
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          is_auto_translated: boolean
+          language: string
+          semantic_hash: string | null
+          source_language: string | null
+          title: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          entity_id: string
+          entity_type?: string
+          id?: string
+          is_auto_translated?: boolean
+          language: string
+          semantic_hash?: string | null
+          source_language?: string | null
+          title?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          is_auto_translated?: boolean
+          language?: string
+          semantic_hash?: string | null
+          source_language?: string | null
+          title?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
       ui_control_registry: {
         Row: {
           action: string | null
@@ -8266,6 +8311,7 @@ export type Database = {
           vector_rank: number
         }[]
       }
+      i18n_coverage_report: { Args: never; Returns: Json }
       is_feature_enabled: {
         Args: { _key: string; _user_id?: string }
         Returns: boolean
