@@ -8,13 +8,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
-  Loader2, Sparkles, BarChart3, Search, X, Coins,
-  ArrowRight, Zap, FileText, Brain, Target, Layers,
-  LayoutGrid, List, AlertTriangle, Workflow, Clock,
+  Loader2, Sparkles, Search, X, Coins,
+  ArrowRight, Zap, AlertTriangle, Workflow, Clock,
+  ShoppingCart, GraduationCap, Megaphone, TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
@@ -24,6 +23,8 @@ import { useTranslation } from "react-i18next";
 import { PipelinesHub } from "@/components/services/PipelinesHub";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { ServiceCard } from "@/components/services/ServiceCard";
+import { ServiceDrawer } from "@/components/services/ServiceDrawer";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 interface Service {
   id: string;
@@ -38,14 +39,36 @@ interface Service {
   access_tier: string;
 }
 
+/* ── Intent-based categories ── */
+const INTENT_CONFIG: Record<string, { label: string; icon: React.ElementType; description: string }> = {
+  sell: { label: "SELL", icon: ShoppingCart, description: "Copywriting, landing pages, sales funnels" },
+  educate: { label: "EDUCATE", icon: GraduationCap, description: "Courses, frameworks, knowledge assets" },
+  attract: { label: "ATTRACT", icon: Megaphone, description: "Social media, SEO, content marketing" },
+  convert: { label: "CONVERT", icon: TrendingUp, description: "Analytics, strategy, optimization" },
+};
+
+/* Map service categories to business intents */
+function mapCategoryToIntent(category: string, serviceKey: string): string {
+  const key = (category + " " + serviceKey).toLowerCase();
+  if (/content|social|seo|attract|blog|newsletter|post/.test(key)) return "attract";
+  if (/copy|sales|landing|funnel|sell|persuasion|offer/.test(key)) return "sell";
+  if (/course|framework|education|teach|train|knowledge|extract/.test(key)) return "educate";
+  if (/strategy|analysis|research|optim|analytics|convert|market-research/.test(key)) return "convert";
+  // Fallback by category
+  if (category === "content" || category === "production") return "attract";
+  if (category === "extraction") return "educate";
+  if (category === "analysis" || category === "strategy") return "convert";
+  return "sell";
+}
+
 const CATEGORY_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  extraction: { label: "Extraction", icon: Brain, color: "text-purple-500" },
-  analysis: { label: "Analysis", icon: BarChart3, color: "text-blue-500" },
-  content: { label: "Content", icon: FileText, color: "text-emerald-500" },
-  strategy: { label: "Strategy", icon: Target, color: "text-amber-500" },
-  production: { label: "Production", icon: Layers, color: "text-rose-500" },
+  extraction: { label: "Extraction", icon: Sparkles, color: "text-purple-500" },
+  analysis: { label: "Analysis", icon: TrendingUp, color: "text-blue-500" },
+  content: { label: "Content", icon: Megaphone, color: "text-status-validated" },
+  strategy: { label: "Strategy", icon: TrendingUp, color: "text-amber-500" },
+  production: { label: "Production", icon: Sparkles, color: "text-rose-500" },
   orchestration: { label: "Orchestration", icon: Zap, color: "text-primary" },
-  document: { label: "Document", icon: FileText, color: "text-sky-500" },
+  document: { label: "Document", icon: Sparkles, color: "text-sky-500" },
 };
 
 const CLASS_BADGE: Record<string, { label: string; description: string; className: string }> = {
@@ -55,8 +78,6 @@ const CLASS_BADGE: Record<string, { label: string; description: string; classNam
   S: { label: "Sync", description: "Real-time synchronized processing across services.", className: "bg-status-validated/15 text-status-validated" },
 };
 
-type ViewMode = "grid" | "list";
-type SortBy = "name" | "cost-asc" | "cost-desc" | "category";
 type SectionKey = "pipelines" | "services" | "history";
 
 export default function Services() {
@@ -70,12 +91,14 @@ export default function Services() {
   const [loading, setLoading] = useState(true);
   const intentParam = searchParams.get("intent") || "";
   const [search, setSearch] = useState(intentParam);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [sortBy, setSortBy] = useState<SortBy>("name");
+  const [activeIntent, setActiveIntent] = useState<string | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
   const [activeSection, setActiveSection] = useState<SectionKey>(intentParam ? "services" : "pipelines");
+
+  // Drawer state
+  const [drawerService, setDrawerService] = useState<Service | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleServiceClick = (service: Service) => {
     if (!user) { navigate("/auth"); return; }
@@ -85,7 +108,8 @@ export default function Services() {
       setPaywallOpen(true);
       return;
     }
-    navigate(`/run/${service.service_key}`);
+    setDrawerService(service);
+    setDrawerOpen(true);
   };
 
   useEffect(() => {
@@ -102,15 +126,9 @@ export default function Services() {
     })();
   }, [user, authLoading]);
 
-  const categories = useMemo(() => {
-    const cats = new Map<string, number>();
-    services.forEach(s => cats.set(s.category, (cats.get(s.category) || 0) + 1));
-    return Array.from(cats.entries()).sort((a, b) => b[1] - a[1]);
-  }, [services]);
-
-  const filtered = useMemo(() => {
+  // Group services by intent
+  const intentGroups = useMemo(() => {
     let list = [...services];
-    if (activeCategory) list = list.filter(s => s.category === activeCategory);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(s =>
@@ -119,14 +137,24 @@ export default function Services() {
         s.service_key.toLowerCase().includes(q)
       );
     }
-    switch (sortBy) {
-      case "cost-asc": list.sort((a, b) => a.credits_cost - b.credits_cost); break;
-      case "cost-desc": list.sort((a, b) => b.credits_cost - a.credits_cost); break;
-      case "category": list.sort((a, b) => a.category.localeCompare(b.category)); break;
-      default: list.sort((a, b) => a.name.localeCompare(b.name));
+
+    const groups: Record<string, Service[]> = { sell: [], educate: [], attract: [], convert: [] };
+    list.forEach(s => {
+      const intent = mapCategoryToIntent(s.category, s.service_key);
+      if (groups[intent]) groups[intent].push(s);
+      else groups.sell.push(s);
+    });
+
+    if (activeIntent) {
+      return { [activeIntent]: groups[activeIntent] || [] };
     }
-    return list;
-  }, [services, activeCategory, search, sortBy]);
+    return groups;
+  }, [services, search, activeIntent]);
+
+  const totalFiltered = useMemo(
+    () => Object.values(intentGroups).reduce((sum, arr) => sum + arr.length, 0),
+    [intentGroups]
+  );
 
   if (authLoading || loading) {
     return (
@@ -139,6 +167,7 @@ export default function Services() {
   const isVisitor = !user;
 
   return (
+    <TooltipProvider delayDuration={300}>
     <PageTransition>
     <div className="flex-1 overflow-y-auto">
       <SEOHead
@@ -224,6 +253,7 @@ export default function Services() {
           </motion.div>
         )}
 
+        {/* ── Section tabs ── */}
         <div className="flex items-center gap-1 border-b border-border">
           {([
             { key: "pipelines" as const, label: "Pipelines", icon: Workflow, count: 5 },
@@ -272,119 +302,123 @@ export default function Services() {
           </motion.div>
         )}
 
-        {/* ═══ ALL SERVICES ═══ */}
+        {/* ═══ ALL SERVICES — Intent-grouped ═══ */}
         {activeSection === "services" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-4">
-            {/* Search + controls */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                <Input
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  placeholder={t("services.search_placeholder")}
-                  className="pl-9 pr-8 h-9 text-sm bg-card"
-                />
-                {search && (
-                  <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <select
-                  value={sortBy}
-                  onChange={e => setSortBy(e.target.value as SortBy)}
-                  className="h-9 rounded-md border border-border bg-card px-2 text-xs outline-none"
-                >
-                  <option value="name">{t("services.sort_az")}</option>
-                  <option value="cost-asc">{t("services.sort_cost_asc")}</option>
-                  <option value="cost-desc">{t("services.sort_cost_desc")}</option>
-                  <option value="category">{t("services.sort_category")}</option>
-                </select>
-                <div className="flex border border-border rounded-md overflow-hidden shrink-0">
-                  <button
-                    onClick={() => setViewMode("grid")}
-                    className={cn("p-1.5", viewMode === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
-                  >
-                    <LayoutGrid className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    onClick={() => setViewMode("list")}
-                    className={cn("p-1.5", viewMode === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
-                  >
-                    <List className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-5">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
+              <Input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder={t("services.search_placeholder")}
+                className="pl-9 pr-8 h-9 text-sm bg-card"
+              />
+              {search && (
+                <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
 
-            {/* Category chips — inline */}
+            {/* Intent filter chips */}
             <div className="flex flex-wrap gap-1.5">
               <button
-                onClick={() => setActiveCategory(null)}
+                onClick={() => setActiveIntent(null)}
                 className={cn(
-                  "px-3 py-1 rounded-full text-[11px] font-medium transition-colors",
-                  !activeCategory ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
+                  !activeIntent ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
                 )}
               >
-                All ({services.length})
+                Toate ({services.length})
               </button>
-              {categories.map(([cat, count]) => {
-                const cfg = CATEGORY_CONFIG[cat];
+              {Object.entries(INTENT_CONFIG).map(([key, cfg]) => {
+                const Icon = cfg.icon;
+                const count = services.filter(s => mapCategoryToIntent(s.category, s.service_key) === key).length;
+                if (count === 0) return null;
                 return (
                   <button
-                    key={cat}
-                    onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+                    key={key}
+                    onClick={() => setActiveIntent(activeIntent === key ? null : key)}
                     className={cn(
-                      "px-3 py-1 rounded-full text-[11px] font-medium transition-colors flex items-center gap-1",
-                      activeCategory === cat ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors flex items-center gap-1.5",
+                      activeIntent === key ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
                     )}
                   >
-                    {cfg && <cfg.icon className="h-3 w-3" />}
-                    {cfg?.label || cat} ({count})
+                    <Icon className="h-3 w-3" />
+                    {cfg.label} ({count})
                   </button>
                 );
               })}
             </div>
 
             {/* Results info */}
-            {(search || activeCategory) && (
+            {(search || activeIntent) && (
               <p className="text-xs text-muted-foreground">
-                {filtered.length} of {services.length} services
+                {totalFiltered} of {services.length} services
                 {search && <> matching "<span className="font-medium text-foreground">{search}</span>"</>}
               </p>
             )}
 
-            {/* Grid / List */}
-            {filtered.length === 0 ? (
+            {/* No results */}
+            {totalFiltered === 0 && (
               <div className="text-center py-16">
                 <Search className="h-8 w-8 mx-auto mb-3 text-muted-foreground/20" />
                 <p className="text-sm text-muted-foreground mb-1">{t("services.no_match")}</p>
-                <Button variant="outline" size="sm" className="text-xs mt-2" onClick={() => { setSearch(""); setActiveCategory(null); }}>
+                <Button variant="outline" size="sm" className="text-xs mt-2" onClick={() => { setSearch(""); setActiveIntent(null); }}>
                   {t("services.clear_filters")}
                 </Button>
               </div>
-            ) : (
-              <div className={cn(
-                viewMode === "grid"
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
-                  : "space-y-1.5"
-              )}>
-                {filtered.map((service, i) => (
-                  <ServiceCard
-                    key={service.id}
-                    service={service}
-                    viewMode={viewMode}
-                    index={i}
-                    userTier={userTier}
-                    categoryConfig={CATEGORY_CONFIG}
-                    classBadge={CLASS_BADGE}
-                    onClick={() => handleServiceClick(service)}
-                  />
-                ))}
-              </div>
             )}
+
+            {/* Intent groups */}
+            {Object.entries(intentGroups).map(([intentKey, intentServices]) => {
+              if (intentServices.length === 0) return null;
+              const cfg = INTENT_CONFIG[intentKey];
+              if (!cfg) return null;
+              const IntentIcon = cfg.icon;
+
+              return (
+                <motion.div
+                  key={intentKey}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-3"
+                >
+                  {/* Intent header */}
+                  <div className="flex items-center gap-2.5 pt-2">
+                    <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <IntentIcon className="h-3.5 w-3.5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+                        {cfg.label}
+                      </h3>
+                      <p className="text-[10px] text-muted-foreground">{cfg.description}</p>
+                    </div>
+                    <span className="text-[9px] font-mono text-muted-foreground/60 ml-auto">
+                      {intentServices.length}
+                    </span>
+                  </div>
+
+                  {/* Service grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {intentServices.map((service, i) => (
+                      <ServiceCard
+                        key={service.id}
+                        service={service}
+                        viewMode="grid"
+                        index={i}
+                        userTier={userTier}
+                        categoryConfig={CATEGORY_CONFIG}
+                        classBadge={CLASS_BADGE}
+                        onClick={() => handleServiceClick(service)}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         )}
 
@@ -396,6 +430,13 @@ export default function Services() {
         )}
       </div>
 
+      {/* Drawer */}
+      <ServiceDrawer
+        service={drawerService}
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+      />
+
       <PremiumPaywall
         open={paywallOpen}
         onOpenChange={setPaywallOpen}
@@ -404,5 +445,6 @@ export default function Services() {
       />
     </div>
     </PageTransition>
+    </TooltipProvider>
   );
 }
