@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 interface Props {
   sources: NotebookSource[];
-  addSource: UseMutationResult<void, Error, { title: string; content: string; source_type: string }>;
+  addSource: UseMutationResult<void, Error, { title: string; content: string; source_type: string; file_url?: string }>;
   toggleSource: UseMutationResult<void, Error, { id: string; selected: boolean }>;
   deleteSource: UseMutationResult<void, Error, string>;
   notebook?: { id: string } | undefined;
