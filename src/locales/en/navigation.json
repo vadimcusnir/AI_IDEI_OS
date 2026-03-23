@@ -55,5 +55,9 @@
   "runtime": "Runtime",
   "analytics": "Analytics",
   "security": "Security",
-  "headline_generator": "Direct Response Headlines"
+  "headline_generator": "Direct Response Headlines",
+  "notebooks": "Notebooks",
+  "capitalization": "Capitalization",
+  "data_pipeline": "Data Pipeline",
+  "db_schema": "DB Schema"
 }
