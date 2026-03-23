@@ -35,7 +35,7 @@ export default function Index() {
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [aiSuggesting, setAiSuggesting] = useState(false);
   const [previewNeuron, setPreviewNeuron] = useState<NeuronListItem | null>(null);
-
+  const [showInsights, setShowInsights] = useState(false);
   const {
     neurons, loading, authLoading,
     viewMode, setViewMode,
