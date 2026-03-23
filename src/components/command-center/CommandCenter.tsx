@@ -28,7 +28,13 @@ import { OutputPanel, type OutputItem } from "./OutputPanel";
 import { MemoryPanel } from "./MemoryPanel";
 import { TaskTree } from "./TaskTree";
 import { EconomicGate, KernelBadge } from "./EconomicGate";
+import { PermissionGate } from "./PermissionGate";
 import { useUserTier } from "@/hooks/useUserTier";
+import { routeCommand, type RouteResult } from "./CommandRouter";
+import {
+  logCommandSubmitted, logPlanConfirmed, logExecutionCompleted,
+  logPermissionDenied, logEconomicGate,
+} from "./AuditLogger";
 
 interface Message {
   id: string;
