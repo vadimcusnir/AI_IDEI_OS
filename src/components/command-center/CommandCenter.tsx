@@ -595,7 +595,7 @@ export function CommandCenter() {
                 <KernelBadge />
               </div>
               <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
-                <span>{totalNeurons} neurons</span>
+                <span className="hidden sm:inline">{totalNeurons} neurons</span>
                 <span>·</span>
                 <span>{totalEpisodes} episodes</span>
                 <span>·</span>
