@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { useTranslation } from "react-i18next";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 interface LearningPath {
   id: string;
