@@ -49,6 +49,7 @@
   "creating_workspace": "Creating...",
   "workspace_created": "Workspace \"{{name}}\" created",
   "workspace_create_error": "Error creating workspace",
+  "workspace_switched": "Switched to \"{{name}}\"",
   "welcome": "Welcome",
   "welcome_title": "Transform expertise into digital assets",
   "welcome_desc": "Upload a podcast, interview, or text. AI-IDEI automatically extracts knowledge, patterns, and frameworks — and transforms them into dozens of professional deliverables.",

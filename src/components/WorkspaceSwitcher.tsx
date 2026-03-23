@@ -61,7 +61,12 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
           {workspaces.map((ws) => (
             <DropdownMenuItem
               key={ws.id}
-              onClick={() => switchWorkspace(ws.id)}
+              onClick={() => {
+                if (ws.id !== currentWorkspace?.id) {
+                  switchWorkspace(ws.id);
+                  toast.success(t("workspace_switched", { name: ws.name }));
+                }
+              }}
               className="gap-2"
             >
               {ws.id === currentWorkspace?.id && <Check className="h-3 w-3" />}
@@ -95,7 +100,12 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
           {workspaces.map((ws) => (
             <DropdownMenuItem
               key={ws.id}
-              onClick={() => switchWorkspace(ws.id)}
+              onClick={() => {
+                if (ws.id !== currentWorkspace?.id) {
+                  switchWorkspace(ws.id);
+                  toast.success(t("workspace_switched", { name: ws.name }));
+                }
+              }}
               className="gap-2 text-xs"
             >
               {ws.id === currentWorkspace?.id ? (

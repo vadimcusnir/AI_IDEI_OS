@@ -49,6 +49,7 @@
   "creating_workspace": "Se creeaza...",
   "workspace_created": "Workspace \"{{name}}\" creat",
   "workspace_create_error": "Eroare la crearea workspace-ului",
+  "workspace_switched": "Schimbat pe \"{{name}}\"",
   "welcome": "Bine ai venit",
   "welcome_title": "Transforma expertiza in active digitale",
   "welcome_desc": "Incarca un podcast, un interviu sau un text. AI-IDEI extrage automat cunostinte, pattern-uri si framework-uri -- si le transforma in zeci de deliverable-uri profesionale.",
