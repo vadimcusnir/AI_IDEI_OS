@@ -288,6 +288,14 @@ export default function JobDetail() {
             </pre>
           </div>
         )}
+
+        {/* Post-execution recommendations */}
+        {job.status === "completed" && (
+          <PostExecutionRecommendations
+            serviceKey={(job.input as any)?.service_key || job.worker_type}
+            serviceCategory={(job.input as any)?.service_category}
+          />
+        )}
       </div>
     </PageTransition>
   );
