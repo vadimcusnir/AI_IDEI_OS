@@ -29,6 +29,7 @@ const STAGES = [
 export function WebinarGeneratorPanel() {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { balance } = useCreditBalance();
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
   const [duration, setDuration] = useState("60");
@@ -42,8 +43,26 @@ export function WebinarGeneratorPanel() {
   const costPerPrompt = 40;
   const totalCost = totalPrompts * costPerPrompt;
 
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setProgress(p => Math.min(p + 1.5, 92));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [loading]);
+
   const handleRun = async () => {
     if (!user || !content.trim()) return;
+    if (balance < totalCost) {
+      toast.error(`Credite insuficiente: ai ${balance} NEURONS, necesari ${totalCost}`);
+      return;
+    }
+
+    const truncated = truncateForService(content);
+    if (truncated.wasTruncated) {
+      toast.info(formatTruncationMessage(truncated), { duration: 6000 });
+    }
+
     setLoading(true);
     setProgress(0);
     setResults(null);
