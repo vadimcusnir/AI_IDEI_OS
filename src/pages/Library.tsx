@@ -159,6 +159,20 @@ export default function Library() {
     }
   };
 
+  const filteredNeurons = useMemo(() => {
+    let list = neurons;
+    if (search) list = list.filter(n => n.title.toLowerCase().includes(search.toLowerCase()));
+    if (statusFilter !== "all") list = list.filter(n => n.status === statusFilter);
+    list.sort((a, b) => {
+      let cmp = 0;
+      if (sortField === "title") cmp = a.title.localeCompare(b.title);
+      else if (sortField === "created_at") cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      else cmp = new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
+      return sortDir === "desc" ? -cmp : cmp;
+    });
+    return list;
+  }, [neurons, search, statusFilter, sortField, sortDir]);
+
   const filtered = useMemo(() => {
     let list = artifacts.filter(a => {
       if (typeFilter !== "all" && a.artifact_type !== typeFilter) return false;
