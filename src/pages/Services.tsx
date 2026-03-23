@@ -9,19 +9,18 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Loader2, Sparkles, BarChart3, Search, X, Coins, Clock,
   ArrowRight, Zap, FileText, Brain, Target, Layers,
-  TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle, Lock,
+  TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier } from "@/hooks/useUserTier";
-import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
+import { PremiumPaywall, tierSatisfied } from "@/components/premium/PremiumPaywall";
 import { useTranslation } from "react-i18next";
 import { IMFPipelineLauncher } from "@/components/pipeline/IMFPipelineLauncher";
 import { Avatar33Panel } from "@/components/services/Avatar33Panel";
@@ -29,6 +28,9 @@ import { WebinarGeneratorPanel } from "@/components/services/WebinarGeneratorPan
 import { ContentGeneratorPanel } from "@/components/services/ContentGeneratorPanel";
 import { ExtractionPipelinePanel } from "@/components/services/ExtractionPipelinePanel";
 import { FlowTip } from "@/components/onboarding/FlowTip";
+import { ServiceCard } from "@/components/services/ServiceCard";
+import { ServiceFilters } from "@/components/services/ServiceFilters";
+import { ServiceCompareDrawer } from "@/components/services/ServiceCompareDrawer";
 
 interface Service {
   id: string;
@@ -86,13 +88,10 @@ export default function Services() {
   const [showFilters, setShowFilters] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
+  const [compareIds, setCompareIds] = useState<Set<string>>(new Set());
 
   const handleServiceClick = (service: Service) => {
-    // Visitor gate — must sign up to run services
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
+    if (!user) { navigate("/auth"); return; }
     const requiredTier = service.access_tier || "free";
     if (!tierSatisfied(userTier, requiredTier)) {
       setPaywallService({ name: service.name, tier: requiredTier });
@@ -100,6 +99,16 @@ export default function Services() {
       return;
     }
     navigate(`/run/${service.service_key}`);
+  };
+
+  const toggleCompare = (id: string) => {
+    setCompareIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) { next.delete(id); }
+      else if (next.size < 3) { next.add(id); }
+      else { toast.info(t("services.compare_max", "Maximum 3 services for comparison")); }
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -149,6 +158,7 @@ export default function Services() {
   }, [services, activeCategory, costRange, search, sortBy]);
 
   const avgCost = services.length ? Math.round(services.reduce((s, x) => s + x.credits_cost, 0) / services.length) : 0;
+  const compareServices = services.filter(s => compareIds.has(s.id));
 
   if (authLoading || loading) {
     return (
@@ -217,11 +227,7 @@ export default function Services() {
                 {t("services.visitor_cta_desc", { defaultValue: "Sign up to run any AI service. Your first 500 credits are on us." })}
               </p>
             </div>
-            <Button
-              size="sm"
-              className="shrink-0 text-xs gap-1.5"
-              onClick={() => navigate("/auth")}
-            >
+            <Button size="sm" className="shrink-0 text-xs gap-1.5" onClick={() => navigate("/auth")}>
               {t("services.visitor_cta_button", { defaultValue: "Get Started Free" })}
               <ArrowRight className="h-3 w-3" />
             </Button>
@@ -240,17 +246,10 @@ export default function Services() {
               <p className="text-xs font-medium">
                 {t("services.low_balance")}: <span className="font-mono font-bold">{balance}</span> NEURONS
               </p>
-              <p className="text-[10px] text-muted-foreground">
-                {t("services.low_balance_hint")}
-              </p>
+              <p className="text-[10px] text-muted-foreground">{t("services.low_balance_hint")}</p>
             </div>
-            <Button
-              size="sm"
-              className="shrink-0 text-xs gap-1"
-              onClick={() => navigate("/credits")}
-            >
-              <Coins className="h-3 w-3" />
-              {t("services.topup")}
+            <Button size="sm" className="shrink-0 text-xs gap-1" onClick={() => navigate("/credits")}>
+              <Coins className="h-3 w-3" /> {t("services.topup")}
             </Button>
           </motion.div>
         )}
@@ -275,30 +274,30 @@ export default function Services() {
 
         {/* KPI strip */}
         <ControlledSection elementId="services.kpi_strip">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {[
-            { label: t("services.kpi_services"), value: services.length, icon: Sparkles },
-            { label: t("services.kpi_categories"), value: categories.length, icon: Layers },
-            { label: t("services.kpi_avg_cost"), value: `${avgCost}`, suffix: "N", icon: Coins },
-            { label: t("services.kpi_new_month"), value: "25", icon: TrendingUp },
-          ].map((kpi, i) => (
-            <div key={i} className="bg-card border border-border rounded-xl p-3.5 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                <kpi.icon className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</p>
-                <div className="flex items-baseline gap-0.5">
-                  <span className="text-xl font-bold font-mono">{kpi.value}</span>
-                  {kpi.suffix && <span className="text-[10px] text-muted-foreground">{kpi.suffix}</span>}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            {[
+              { label: t("services.kpi_services"), value: services.length, icon: Sparkles },
+              { label: t("services.kpi_categories"), value: categories.length, icon: Layers },
+              { label: t("services.kpi_avg_cost"), value: `${avgCost}`, suffix: "N", icon: Coins },
+              { label: t("services.kpi_new_month"), value: "25", icon: TrendingUp },
+            ].map((kpi, i) => (
+              <div key={i} className="bg-card border border-border rounded-xl p-3.5 flex items-center gap-3">
+                <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                  <kpi.icon className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</p>
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="text-xl font-bold font-mono">{kpi.value}</span>
+                    {kpi.suffix && <span className="text-[10px] text-muted-foreground">{kpi.suffix}</span>}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </ControlledSection>
 
-        {/* Search + Controls bar */}
+        {/* Search + Controls */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-5">
           <div className="relative flex-1 sm:max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
@@ -356,88 +355,18 @@ export default function Services() {
           </div>
         </div>
 
-        {/* Expandable filters */}
-        <AnimatePresence>
-          {showFilters && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden mb-5"
-            >
-              <div className="bg-card border border-border rounded-xl p-4 space-y-4">
-                {/* Category filter */}
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("services.filter_category")}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    <button
-                      onClick={() => setActiveCategory(null)}
-                      className={cn(
-                        "px-3 py-1.5 rounded-full text-xs font-medium transition-all",
-                        !activeCategory
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      )}
-                    >
-                      All ({services.length})
-                    </button>
-                    {categories.map(([cat, count]) => {
-                      const cfg = CATEGORY_CONFIG[cat];
-                      return (
-                        <button
-                          key={cat}
-                          onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                          className={cn(
-                            "px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5",
-                            activeCategory === cat
-                              ? "bg-primary text-primary-foreground shadow-sm"
-                              : "bg-muted text-muted-foreground hover:bg-muted/80"
-                          )}
-                        >
-                          {cfg && <cfg.icon className="h-3 w-3" />}
-                          {cfg?.label || cat} ({count})
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Cost filter */}
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("services.filter_cost")}</p>
-                  <div className="flex gap-1.5">
-                    {COST_RANGES.map((range, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setCostRange(costRange === i ? 0 : i)}
-                        className={cn(
-                          "px-3 py-1.5 rounded-full text-xs font-medium font-mono transition-all",
-                          costRange === i
-                            ? "bg-primary text-primary-foreground shadow-sm"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        )}
-                      >
-                        {range.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Clear filters */}
-                {(activeCategory || costRange > 0) && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-xs text-muted-foreground"
-                    onClick={() => { setActiveCategory(null); setCostRange(0); }}
-                  >
-                    <X className="h-3 w-3 mr-1" /> {t("services.clear_filters")}
-                  </Button>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Filters */}
+        <ServiceFilters
+          show={showFilters}
+          activeCategory={activeCategory}
+          onSetCategory={setActiveCategory}
+          costRange={costRange}
+          onSetCostRange={setCostRange}
+          categories={categories}
+          totalCount={services.length}
+          categoryConfig={CATEGORY_CONFIG}
+          costRanges={COST_RANGES}
+        />
 
         {/* Results count */}
         <div className="flex items-center justify-between mb-4">
@@ -446,6 +375,11 @@ export default function Services() {
               ? t("services.showing_all", { count: filtered.length })
               : t("services.showing_filtered", { filtered: filtered.length, total: services.length })}
           </p>
+          {compareIds.size > 0 && (
+            <p className="text-xs text-primary font-medium">
+              {compareIds.size} selected for comparison
+            </p>
+          )}
         </div>
 
         {/* Services grid/list */}
@@ -458,113 +392,32 @@ export default function Services() {
               {t("services.clear_filters")}
             </Button>
           </div>
-        ) : viewMode === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filtered.map((service, i) => {
-              const catCfg = CATEGORY_CONFIG[service.category];
-              const clsBadge = CLASS_BADGE[service.service_class] || CLASS_BADGE.A;
-              return (
-                <motion.div
-                  key={service.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                  onClick={() => handleServiceClick(service)}
-                  className={cn(
-                    "group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer",
-                    !tierSatisfied(userTier, service.access_tier) && "opacity-75"
-                  )}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      {catCfg && <catCfg.icon className={cn("h-4 w-4", catCfg.color)} />}
-                      <span className={cn("text-[9px] font-semibold uppercase tracking-wider", catCfg?.color || "text-muted-foreground")}>
-                        {catCfg?.label || service.category}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md cursor-help", clsBadge.className)}>
-                            {clsBadge.label}
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="text-xs max-w-[200px]">
-                          <p className="font-semibold mb-0.5">Class {service.service_class}: {clsBadge.label}</p>
-                          <p className="text-muted-foreground">{clsBadge.description}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      <TierBadge tier={service.access_tier} />
-                    </div>
-                  </div>
-
-                  <h3 className="text-sm font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
-                    {service.name}
-                  </h3>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2 mb-4 min-h-[2.5rem]">
-                    {service.description}
-                  </p>
-
-                  <div className="flex items-center justify-between pt-3 border-t border-border">
-                    <div className="flex items-center gap-1.5">
-                      <Coins className="h-3 w-3 text-ai-accent" />
-                      <span className="text-xs font-bold font-mono">{service.credits_cost}</span>
-                      <span className="text-[9px] text-muted-foreground">NEURONS</span>
-                    </div>
-                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
         ) : (
-          <div className="space-y-1.5">
-            {filtered.map((service, i) => {
-              const catCfg = CATEGORY_CONFIG[service.category];
-              return (
-                <motion.div
-                  key={service.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: Math.min(i * 0.01, 0.2) }}
-                  onClick={() => handleServiceClick(service)}
-                  className={cn(
-                    "group flex items-center gap-4 p-3 rounded-lg border border-border bg-card hover:border-primary/30 transition-all cursor-pointer",
-                    !tierSatisfied(userTier, service.access_tier) && "opacity-75"
-                  )}
-                >
-                  <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                    {catCfg && <catCfg.icon className={cn("h-3.5 w-3.5", catCfg.color)} />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-medium group-hover:text-primary transition-colors">{service.name}</span>
-                    <p className="text-[10px] text-muted-foreground line-clamp-1">{service.description}</p>
-                  </div>
-                  <span className="text-[9px] uppercase text-muted-foreground/60 hidden sm:block w-20 text-right">
-                    {catCfg?.label || service.category}
-                  </span>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <Coins className="h-3 w-3 text-ai-accent" />
-                    <span className="text-xs font-bold font-mono w-8 text-right">{service.credits_cost}</span>
-                  </div>
-                  <TierBadge tier={service.access_tier} />
-                  {!tierSatisfied(userTier, service.access_tier) ? (
-                    <Lock className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />
-                  ) : (
-                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary shrink-0" />
-                  )}
-                </motion.div>
-              );
-            })}
+          <div className={cn(
+            viewMode === "grid"
+              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+              : "space-y-1.5"
+          )}>
+            {filtered.map((service, i) => (
+              <ServiceCard
+                key={service.id}
+                service={service}
+                viewMode={viewMode}
+                index={i}
+                userTier={userTier}
+                categoryConfig={CATEGORY_CONFIG}
+                classBadge={CLASS_BADGE}
+                onClick={() => handleServiceClick(service)}
+                onCompareToggle={() => toggleCompare(service.id)}
+                isComparing={compareIds.has(service.id)}
+              />
+            ))}
           </div>
         )}
 
         {/* Authenticated-only sections */}
         {user && (
           <>
-            {/* Run History */}
             <div className="mt-8">
               <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
                 <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
@@ -574,7 +427,6 @@ export default function Services() {
               </div>
             </div>
 
-            {/* IMF Pipeline Section */}
             <div className="mt-6">
               <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
                 <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
@@ -587,7 +439,6 @@ export default function Services() {
               </div>
             </div>
 
-            {/* Advanced Engines */}
             <div className="mt-6 space-y-4">
               <ExtractionPipelinePanel />
               <Avatar33Panel />
@@ -597,6 +448,15 @@ export default function Services() {
           </>
         )}
       </div>
+
+      {/* Compare drawer */}
+      <ServiceCompareDrawer
+        services={compareServices}
+        onRemove={(id) => toggleCompare(id)}
+        onClear={() => setCompareIds(new Set())}
+        categoryConfig={CATEGORY_CONFIG}
+        classBadge={CLASS_BADGE}
+      />
 
       <PremiumPaywall
         open={paywallOpen}
