@@ -561,36 +561,41 @@ export default function Services() {
           </div>
         )}
 
-        {/* Run History */}
-        <div className="mt-8">
-          <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
-            <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
-              <Clock className="h-4 w-4 text-muted-foreground" /> Istoric execuții
-            </h2>
-            <ServiceRunHistory limit={10} />
-          </div>
-        </div>
+        {/* Authenticated-only sections */}
+        {user && (
+          <>
+            {/* Run History */}
+            <div className="mt-8">
+              <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
+                <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" /> Istoric execuții
+                </h2>
+                <ServiceRunHistory limit={10} />
+              </div>
+            </div>
 
-        {/* IMF Pipeline Section */}
-        <div className="mt-6">
-          <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
-            <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
-              <Zap className="h-4 w-4 text-primary" /> {t("services.imf_title", { defaultValue: "IMF Pipeline — Automatic Multiplication" })}
-            </h2>
-            <p className="text-xs text-muted-foreground mb-4">
-              {t("services.imf_desc", { defaultValue: "Launch a full pipeline: 1 extraction → 50+ deliverables generated automatically." })}
-            </p>
-            <IMFPipelineLauncher />
-          </div>
-        </div>
+            {/* IMF Pipeline Section */}
+            <div className="mt-6">
+              <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
+                <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" /> {t("services.imf_title", { defaultValue: "IMF Pipeline — Automatic Multiplication" })}
+                </h2>
+                <p className="text-xs text-muted-foreground mb-4">
+                  {t("services.imf_desc", { defaultValue: "Launch a full pipeline: 1 extraction → 50+ deliverables generated automatically." })}
+                </p>
+                <IMFPipelineLauncher />
+              </div>
+            </div>
 
-        {/* Advanced Engines */}
-        <div className="mt-6 space-y-4">
-          <ExtractionPipelinePanel />
-          <Avatar33Panel />
-          <WebinarGeneratorPanel />
-          <ContentGeneratorPanel />
-        </div>
+            {/* Advanced Engines */}
+            <div className="mt-6 space-y-4">
+              <ExtractionPipelinePanel />
+              <Avatar33Panel />
+              <WebinarGeneratorPanel />
+              <ContentGeneratorPanel />
+            </div>
+          </>
+        )}
       </div>
 
       <PremiumPaywall
