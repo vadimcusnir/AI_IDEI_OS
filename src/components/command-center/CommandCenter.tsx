@@ -755,6 +755,32 @@ export function CommandCenter() {
               </div>
             </div>
           )}
+          {/* ═══ Execution Summary — in-flow completion card ═══ */}
+          {(cmdState.state.phase === "completed" || cmdState.state.phase === "failed") && !isEmptyState && (
+            <ExecutionSummary
+              phase={cmdState.state.phase}
+              intent={cmdState.state.intent}
+              planName={cmdState.state.planName}
+              totalCredits={cmdState.state.totalCredits}
+              stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
+              totalSteps={cmdState.state.steps.length}
+              outputCount={outputs.length}
+              durationSeconds={
+                cmdState.state.startedAt && cmdState.state.completedAt
+                  ? Math.round((new Date(cmdState.state.completedAt).getTime() - new Date(cmdState.state.startedAt).getTime()) / 1000)
+                  : 0
+              }
+              errorMessage={cmdState.state.errorMessage}
+              onSaveTemplate={handleSaveTemplate}
+              onSaveAllOutputs={handleSaveAllOutputs}
+              onRerun={() => {
+                const lastUser = messages.filter(m => m.role === "user").pop();
+                if (lastUser) { setInput(lastUser.content); inputRef.current?.focus(); }
+              }}
+              onViewOutputs={() => setShowOutputs(true)}
+            />
+          )}
+
           <div ref={messagesEndRef} />
         </div>
 
