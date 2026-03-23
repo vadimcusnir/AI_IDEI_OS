@@ -8,12 +8,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Upload, Brain, Sparkles, TrendingUp,
-  Check, ArrowRight, Loader2, Play, Zap, Gift, Crown,
+  Check, ArrowRight, Loader2, Play, Zap, Gift, Crown, BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { fireFinalConfetti } from "@/components/onboarding/useConfetti";
+import { OnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
 
 interface StepStatus {
   episodes: number;
@@ -85,6 +86,7 @@ export default function Onboarding() {
   const [status, setStatus] = useState<StepStatus>({ episodes: 0, neurons: 0, jobs: 0, artifacts: 0 });
   const [loading, setLoading] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
+  const [tutorialOpen, setTutorialOpen] = useState(false);
   const prevAllDoneRef = useRef(false);
 
   useEffect(() => {
@@ -138,6 +140,7 @@ export default function Onboarding() {
 
   return (
     <PageTransition>
+    <OnboardingTutorial open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
     <div className="flex-1 overflow-y-auto">
       <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 4 steps." />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
@@ -155,9 +158,13 @@ export default function Onboarding() {
           <h1 className="text-xl sm:text-2xl font-bold mb-2">
             {t("onboarding.title")}
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-3">
             {t("onboarding.subtitle")}
           </p>
+          <Button variant="outline" size="sm" onClick={() => setTutorialOpen(true)} className="gap-1.5 text-xs">
+            <BookOpen className="h-3.5 w-3.5" />
+            Interactive Tutorial (+50 NEURONS)
+          </Button>
         </motion.div>
 
         {/* Visual Progress Pipeline */}

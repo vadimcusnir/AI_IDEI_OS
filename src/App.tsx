@@ -86,6 +86,7 @@ const CusnirOSOperator = lazyRetry(() => import("./pages/CusnirOSOperator"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
 const DatabaseRelations = lazyRetry(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
+const SecuritySettings = lazyRetry(() => import("./pages/SecuritySettings"));
 const GamificationPage = lazyRetry(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazyRetry(() => import("./pages/AnalyticsDashboard"));
 const Transcribe = lazyRetry(() => import("./pages/Transcribe"));
@@ -199,6 +200,7 @@ const App = () => (
                 <Route path="/chat" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Chat failed to load"><ChatPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/onboarding" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Onboarding failed to load"><Onboarding /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
+                <Route path="/security-settings" element={<ProtectedRoute><AppLayout><SecuritySettings /></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="API docs failed to load"><ApiDocs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
                 <Route path="/knowledge" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Knowledge failed to load"><KnowledgeDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />

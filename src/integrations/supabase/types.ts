@@ -5240,6 +5240,51 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_progress: {
+        Row: {
+          completed_at: string | null
+          completion_bonus_received: boolean
+          created_at: string
+          email_verified: boolean
+          first_service_executed: boolean
+          profile_completed: boolean
+          tos_accepted_at: string | null
+          tutorial_completed: boolean
+          tutorial_modules_completed: Json
+          tutorial_started: boolean
+          user_id: string
+          welcome_bonus_received: boolean
+        }
+        Insert: {
+          completed_at?: string | null
+          completion_bonus_received?: boolean
+          created_at?: string
+          email_verified?: boolean
+          first_service_executed?: boolean
+          profile_completed?: boolean
+          tos_accepted_at?: string | null
+          tutorial_completed?: boolean
+          tutorial_modules_completed?: Json
+          tutorial_started?: boolean
+          user_id: string
+          welcome_bonus_received?: boolean
+        }
+        Update: {
+          completed_at?: string | null
+          completion_bonus_received?: boolean
+          created_at?: string
+          email_verified?: boolean
+          first_service_executed?: boolean
+          profile_completed?: boolean
+          tos_accepted_at?: string | null
+          tutorial_completed?: boolean
+          tutorial_modules_completed?: Json
+          tutorial_started?: boolean
+          user_id?: string
+          welcome_bonus_received?: boolean
+        }
+        Relationships: []
+      }
       os_modules: {
         Row: {
           avg_latency_ms: number | null
@@ -8132,6 +8177,10 @@ export type Database = {
         Returns: Json
       }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
+      complete_onboarding_tutorial: {
+        Args: { _user_id: string }
+        Returns: Json
+      }
       compute_content_hash: { Args: { _content: string }; Returns: string }
       compute_dynamic_price: {
         Args: { _base_price: number; _user_id: string }

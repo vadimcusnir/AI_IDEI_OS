@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Mail, Lock, ArrowRight, Loader2, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
+import { isDisposableEmail } from "@/lib/disposableEmails";
 import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [tosAccepted, setTosAccepted] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
@@ -63,6 +65,16 @@ export default function Auth() {
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       toast.error(t("auth.invalid_email"));
+      return;
+    }
+    // Block disposable emails on signup
+    if (mode === "signup" && isDisposableEmail(trimmedEmail)) {
+      toast.error(t("common:auth.disposable_email"));
+      return;
+    }
+    // Require ToS acceptance on signup
+    if (mode === "signup" && !tosAccepted) {
+      toast.error(t("common:auth.tos_required"));
       return;
     }
     if (mode !== "forgot") {
@@ -224,7 +236,25 @@ export default function Auth() {
               </div>
             )}
 
-            <Button type="submit" disabled={loading} className="btn-glow w-full h-11 gap-2 rounded-xl text-sm font-medium">
+            {/* Terms of Service checkbox — signup only */}
+            {mode === "signup" && (
+              <label className="flex items-start gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={tosAccepted}
+                  onChange={(e) => setTosAccepted(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-input text-primary focus:ring-primary/20"
+                />
+                <span className="text-[10px] text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">
+                  {t("common:auth.accept_tos")}{" "}
+                  <a href="/terms" target="_blank" className="text-primary hover:underline">ToS</a>
+                  {" & "}
+                  <a href="/privacy" target="_blank" className="text-primary hover:underline">Privacy</a>
+                </span>
+              </label>
+            )}
+
+            <Button type="submit" disabled={loading || (mode === "signup" && !tosAccepted)} className="btn-glow w-full h-11 gap-2 rounded-xl text-sm font-medium">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
                 <>
                   {mode === "login" && t("auth.sign_in")}
