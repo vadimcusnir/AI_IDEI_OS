@@ -100,20 +100,10 @@ export default function RunService() {
   }, [user, authLoading, serviceKey]);
 
   const loadData = async () => {
-    const [serviceRes, creditsRes] = await Promise.all([
-      supabase.from("service_catalog").select("*").eq("service_key", serviceKey!).single(),
-      supabase.from("user_credits").select("balance, total_spent").eq("user_id", user!.id).maybeSingle(),
-    ]);
+    const serviceRes = await supabase.from("service_catalog").select("*").eq("service_key", serviceKey!).single();
 
     if (serviceRes.data) setService(serviceRes.data as Service);
     else { toast.error(t("run_service.service_not_found")); navigate("/services"); return; }
-
-    if (creditsRes.data) {
-      setCredits(creditsRes.data as UserCredits);
-    } else {
-      await supabase.from("user_credits").insert({ user_id: user!.id, balance: 500, total_earned: 500, total_spent: 0 } as any);
-      setCredits({ balance: 500, total_spent: 0 });
-    }
 
     // Use logged access check for audit trail + abuse detection
     const { data: accessData } = await supabase.rpc("check_access_logged", {
