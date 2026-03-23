@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -177,7 +178,7 @@ export function YouTubeTranscriber() {
             _description: "Refund — transcript download failed",
             _type: "refund",
           });
-          toast.info("Creditele au fost returnate automat.");
+          toast.info(t("toast_credits_returned"));
         } catch { /* silent */ }
         refetchBalance();
       }
@@ -209,7 +210,7 @@ export function YouTubeTranscriber() {
   const exportTXT = () => {
     if (!transcript) return;
     downloadFile(`${slug}.txt`, transcript.text, "text/plain;charset=utf-8");
-    toast.success("Descărcat ca TXT");
+    toast.success(t("toast_downloaded_txt"));
   };
 
   const exportSRT = () => {
@@ -225,7 +226,7 @@ export function YouTubeTranscriber() {
           time += dur;
         });
         downloadFile(`${slug}.srt`, srt, "text/plain;charset=utf-8");
-        toast.success("Descărcat ca SRT");
+        toast.success(t("toast_downloaded_srt"));
       }
       return;
     }
@@ -233,7 +234,7 @@ export function YouTubeTranscriber() {
       .map((s, i) => `${i + 1}\n${fmtSrt(s.start)} --> ${fmtSrt(s.end)}\n${s.text}\n`)
       .join("\n");
     downloadFile(`${slug}.srt`, srt, "text/plain;charset=utf-8");
-    toast.success("Descărcat ca SRT");
+    toast.success(t("toast_downloaded_srt"));
   };
 
   const exportVTT = () => {
@@ -253,13 +254,13 @@ export function YouTubeTranscriber() {
       });
     }
     downloadFile(`${slug}.vtt`, vtt, "text/vtt;charset=utf-8");
-    toast.success("Descărcat ca VTT");
+    toast.success(t("toast_downloaded_vtt"));
   };
 
   const copyToClipboard = async () => {
     if (!transcript) return;
     await navigator.clipboard.writeText(transcript.text);
-    toast.success("Copiat în clipboard!");
+    toast.success(t("toast_copied"));
   };
 
   const exportPDF = () => {
@@ -290,7 +291,7 @@ ${transcript.text.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).
       w.document.close();
       setTimeout(() => { w.print(); }, 400);
     }
-    toast.success("Se deschide PDF-ul pentru descărcare");
+    toast.success(t("toast_pdf_opening"));
   };
 
   const isRunning = ["detecting", "fetching", "processing"].includes(stage);

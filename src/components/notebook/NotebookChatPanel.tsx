@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect } from "react";
 import { Send, Sparkles, RotateCcw, Trash2, Download, Plus, MessageSquare, Pencil, X, Copy, Check, User, Bot } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -76,7 +77,7 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
     clearMessages();
     if (notebook?.id && activeSessionId) {
       await supabase.from("notebook_messages").delete().eq("session_id", activeSessionId);
-      toast.success("Chat cleared");
+      toast.success(t("toast_chat_cleared"));
     }
   };
 
@@ -90,7 +91,7 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
     a.download = `${notebook?.title || "notebook"}-chat.md`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Chat exported");
+    toast.success(t("toast_chat_exported"));
   };
 
   const handleNewSession = () => {

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -62,7 +63,7 @@ export function Root2PricingTab() {
 
   const handleTest = () => {
     const n = Number(testPrice);
-    if (!n || n <= 0) { toast.error("Introdu un preț valid"); return; }
+    if (!n || n <= 0) { toast.error(t("toast_invalid_price")); return; }
     const root = digitRoot(n);
     const valid = root === 2;
     const suggestions = valid ? [] : nearestRoot2(n).slice(0, 8);
@@ -75,7 +76,7 @@ export function Root2PricingTab() {
     const { error } = await supabase
       .from("feature_flags")
       .upsert({ key: "root2_pricing", enabled, description: "Root2 pricing validation", rollout_percentage: 100 }, { onConflict: "key" });
-    if (error) toast.error("Eroare la salvare");
+    if (error) toast.error(t("toast_save_error"));
     else toast.success(enabled ? "Root2 activat" : "Root2 dezactivat");
   };
 

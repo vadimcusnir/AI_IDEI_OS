@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -58,7 +59,7 @@ export function ServiceManifestTab() {
   const createManifest = async () => {
     if (!newServiceKey) return;
     const existing = manifests.find(m => m.service_key === newServiceKey);
-    if (existing) { toast.error("Manifest deja existent pentru acest serviciu"); return; }
+    if (existing) { toast.error(t("toast_manifest_exists")); return; }
 
     const { error } = await supabase.from("service_manifests").insert({
       service_key: newServiceKey,
@@ -68,7 +69,7 @@ export function ServiceManifestTab() {
       estimated_duration_seconds: 30,
     });
     if (error) { toast.error(error.message); return; }
-    toast.success("Manifest creat");
+    toast.success(t("toast_manifest_created"));
     setNewServiceKey("");
     load();
   };
@@ -86,14 +87,14 @@ export function ServiceManifestTab() {
       access_requirements: manifest.access_requirements,
     }).eq("id", manifest.id);
     if (error) toast.error(error.message);
-    else toast.success("Manifest salvat");
+    else toast.success(t("toast_manifest_saved"));
     setSaving(null);
   };
 
   const deleteManifest = async (id: string) => {
     const { error } = await supabase.from("service_manifests").delete().eq("id", id);
     if (error) toast.error(error.message);
-    else { toast.success("Manifest șters"); load(); }
+    else { toast.success(t("toast_manifest_deleted")); load(); }
   };
 
   const updateField = (id: string, field: keyof ServiceManifest, value: any) => {

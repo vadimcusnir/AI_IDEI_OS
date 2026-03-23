@@ -205,7 +205,7 @@ export default function MarketplaceDetail() {
             <ArrowLeft className="h-3.5 w-3.5 mr-1" /> Marketplace
           </Button>
           <Button variant="ghost" size="sm" className="text-xs gap-1.5"
-            onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success("Link copied!"); }}>
+            onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success(t("toast_link_copied")); }}>
             <Share2 className="h-3 w-3" /> Share
           </Button>
         </div>

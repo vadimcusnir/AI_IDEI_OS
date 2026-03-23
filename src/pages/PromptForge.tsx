@@ -135,7 +135,7 @@ export default function PromptForge() {
     setDetails(item.details || "");
     setResult(item.result);
     setMode("single");
-    toast.success("Prompt din istoric încărcat");
+    toast.success(t("toast_prompt_loaded"));
   }, []);
 
   const createNeuronAndJob = useCallback(async (suffix = "") => {

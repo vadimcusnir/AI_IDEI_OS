@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * LLM Indexation Monitor — Admin tab for tracking LLM visibility and indexation quality.
  * Connected to: site_pages, llm_entities, llm_scores, llm_issues, llm_citations,
@@ -198,7 +199,7 @@ export function LLMIndexationTab() {
 
   const resolveIssue = async (issueId: string) => {
     await supabase.from("llm_issues").update({ resolved_at: new Date().toISOString() } as any).eq("id", issueId);
-    toast.success("Issue resolved");
+    toast.success(t("toast_issue_resolved"));
     loadData();
   };
 

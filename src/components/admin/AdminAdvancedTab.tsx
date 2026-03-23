@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -42,7 +43,7 @@ function ExportSection() {
 
       if (error) throw error;
       if (!data || data.length === 0) {
-        toast.info("No data to export");
+        toast.info(t("toast_no_data"));
         return;
       }
 
@@ -141,7 +142,7 @@ function ApprovalRequests() {
       } as any)
       .eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success("Approved");
+    toast.success(t("toast_approved"));
     load();
   };
 
@@ -156,7 +157,7 @@ function ApprovalRequests() {
       } as any)
       .eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success("Rejected");
+    toast.success(t("toast_rejected"));
     load();
   };
 
@@ -236,7 +237,7 @@ function AnomalyAlerts() {
         acknowledged_at: new Date().toISOString(),
       } as any)
       .eq("id", id);
-    toast.success("Alert acknowledged");
+    toast.success(t("toast_alert_ack"));
     load();
   };
 
