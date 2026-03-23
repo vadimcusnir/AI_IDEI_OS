@@ -194,7 +194,7 @@ const App = () => (
                 <Route path="/library/:id" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Artifact failed to load"><ArtifactDetail /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/intelligence" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Intelligence failed to load"><Intelligence /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/prompt-forge" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Prompt Forge failed to load"><PromptForge /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/profile-extractor" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Profile Extractor failed to load"><ProfileExtractor /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/profile-extractor" element={<Navigate to="/extractor" replace />} />
                 <Route path="/profile" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Profile failed to load"><ProfilePage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/notifications" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Notifications failed to load"><Notifications /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/feedback" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Feedback failed to load"><Feedback /></ErrorBoundary></AppLayout></ProtectedRoute>} />
