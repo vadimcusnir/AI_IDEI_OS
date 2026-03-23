@@ -123,10 +123,13 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: systemPrompt },
-          ...messages.slice(-20),
+          { role: "system", content: systemPrompt.slice(0, 80_000) },
+          ...messages.slice(-20).map(m => ({
+            ...m,
+            content: m.content.length > 100_000 ? m.content.slice(0, 100_000) + "\n\n[...truncated]" : m.content,
+          })),
         ],
         stream: true,
       }),
