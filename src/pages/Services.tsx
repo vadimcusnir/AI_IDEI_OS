@@ -182,7 +182,6 @@ export default function Services() {
       all: services.length,
       quick: services.filter(s => quickCats.includes(s.category) && s.credits_cost <= QUICK_COST_MAX).length,
       research: services.filter(s => researchCats.includes(s.category)).length,
-      avatar: null,
       pipelines: null,
       history: null,
     };
