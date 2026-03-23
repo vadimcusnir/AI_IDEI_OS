@@ -13,7 +13,8 @@ import {
   FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
   Lock, ChevronRight, GraduationCap, Terminal,
   Wallet, Trophy, Eye, ShieldCheck,
-  Activity, Zap,
+  Activity, Zap, Plug, Database, Notebook, Crown,
+  Rocket, Code, UserPlus, FolderOpen,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
