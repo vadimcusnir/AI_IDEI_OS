@@ -26,6 +26,7 @@ import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/P
 import { PostExecutionRecommendations } from "@/components/services/PostExecutionRecommendations";
 import { NeuronBundleUpsell } from "@/components/credits/NeuronBundleUpsell";
 import { ShareableOutput } from "@/components/distribution/ShareableOutput";
+import { DistributionPanel } from "@/components/distribution/DistributionPanel";
 import { PostExecutionPsychology } from "@/components/behavior/BehaviorOverlay";
 
 interface Service {
@@ -651,9 +652,9 @@ export default function RunService() {
                   {/* Post-execution loop — recommendations + distribution + psychology */}
                   {service && (
                     <>
-                      {/* Viral distribution — share with embedded CTA */}
+                      {/* Full distribution panel — variants, platform sharing, tracking */}
                       {jobResult && (
-                        <ShareableOutput
+                        <DistributionPanel
                           content={jobResult}
                           serviceKey={service.service_key}
                           serviceName={service.name}

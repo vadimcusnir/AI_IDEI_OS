@@ -30,6 +30,7 @@ import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ControlledSection } from "@/components/ControlledSection";
+import { MemoryIntelligenceCard } from "@/components/memory/MemoryIntelligenceCard";
 
 interface RecentNeuron {
   id: number;
@@ -387,6 +388,9 @@ export default function Home() {
               </h3>
               <PipelineIndicator />
             </div>
+
+            {/* Memory Intelligence */}
+            <MemoryIntelligenceCard />
 
             {/* Leaderboard */}
             <LeaderboardWidget />

@@ -6337,6 +6337,45 @@ export type Database = {
         }
         Relationships: []
       }
+      share_events: {
+        Row: {
+          clicked_back: boolean
+          content_category: string
+          content_type: string
+          created_at: string
+          has_cta: boolean
+          id: string
+          platform: string
+          service_key: string | null
+          share_text_preview: string | null
+          user_id: string
+        }
+        Insert: {
+          clicked_back?: boolean
+          content_category?: string
+          content_type?: string
+          created_at?: string
+          has_cta?: boolean
+          id?: string
+          platform: string
+          service_key?: string | null
+          share_text_preview?: string | null
+          user_id: string
+        }
+        Update: {
+          clicked_back?: boolean
+          content_category?: string
+          content_type?: string
+          created_at?: string
+          has_cta?: boolean
+          id?: string
+          platform?: string
+          service_key?: string | null
+          share_text_preview?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       site_pages: {
         Row: {
           canonical_url: string | null
@@ -7290,6 +7329,60 @@ export type Database = {
           },
         ]
       }
+      user_intelligence_profiles: {
+        Row: {
+          behavior_tags: string[] | null
+          compounding_level: number
+          content_style: string | null
+          created_at: string
+          interests: string[] | null
+          last_computed_at: string | null
+          lockin_score: number
+          preferred_services: string[] | null
+          spending_pattern: string | null
+          top_topics: string[] | null
+          total_neurons: number
+          total_outputs: number
+          total_shares: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          behavior_tags?: string[] | null
+          compounding_level?: number
+          content_style?: string | null
+          created_at?: string
+          interests?: string[] | null
+          last_computed_at?: string | null
+          lockin_score?: number
+          preferred_services?: string[] | null
+          spending_pattern?: string | null
+          top_topics?: string[] | null
+          total_neurons?: number
+          total_outputs?: number
+          total_shares?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          behavior_tags?: string[] | null
+          compounding_level?: number
+          content_style?: string | null
+          created_at?: string
+          interests?: string[] | null
+          last_computed_at?: string | null
+          lockin_score?: number
+          preferred_services?: string[] | null
+          spending_pattern?: string | null
+          top_topics?: string[] | null
+          total_neurons?: number
+          total_outputs?: number
+          total_shares?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_karma: {
         Row: {
           downvotes_received: number
@@ -7351,6 +7444,51 @@ export type Database = {
           icon?: string | null
           id?: string
           position?: number | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_memory: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          last_reused_at: string | null
+          memory_type: string
+          metadata: Json | null
+          reuse_count: number
+          source_id: string | null
+          source_type: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          last_reused_at?: string | null
+          memory_type?: string
+          metadata?: Json | null
+          reuse_count?: number
+          source_id?: string | null
+          source_type?: string | null
+          title?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          last_reused_at?: string | null
+          memory_type?: string
+          metadata?: Json | null
+          reuse_count?: number
+          source_id?: string | null
+          source_type?: string | null
           title?: string
           user_id?: string
         }
@@ -8009,6 +8147,7 @@ export type Database = {
         Args: { _person_id: string }
         Returns: undefined
       }
+      compute_user_intelligence: { Args: { _user_id: string }; Returns: Json }
       data_pipeline_stats: { Args: never; Returns: Json }
       deactivate_emergency: { Args: { _control_id: string }; Returns: boolean }
       delete_email: {
