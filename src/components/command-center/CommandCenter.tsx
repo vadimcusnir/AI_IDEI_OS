@@ -809,6 +809,18 @@ export function CommandCenter() {
           </div>
         )}
 
+        {/* ═══ Context-Aware Quick Actions ═══ */}
+        <ContextActions
+          neuronCount={totalNeurons}
+          episodeCount={totalEpisodes}
+          lastIntent={cmdState.state.intent || undefined}
+          phase={cmdState.state.phase}
+          onAction={(prompt) => {
+            setInput(prompt);
+            inputRef.current?.focus();
+          }}
+        />
+
         {/* ═══ ZONE 1: Command Input ═══ */}
         <div className="border-t border-border p-3 bg-card">
           <div className="flex items-end gap-2">
