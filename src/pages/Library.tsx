@@ -1,69 +1,35 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  FileText, Search, Filter, Loader2, Plus, Download,
-  Eye, Trash2, Tag, Clock, ArrowRight, BookOpen, Brain,
-  ArrowUpDown, SortAsc, SortDesc, Lock, Globe, FolderTree, Store,
+  FileText, Search, Filter, BookOpen, Brain,
+  ArrowUpDown, SortAsc, SortDesc, FolderTree,
 } from "lucide-react";
-import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { PublishToMarketplaceDialog } from "@/components/library/PublishToMarketplaceDialog";
-import { ContributeDialog, ContributionsList } from "@/components/library/ContributeDialog";
+import { ContributeDialog } from "@/components/library/ContributeDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+  Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
-import { ControlledSection } from "@/components/ControlledSection";
 import { useTranslation } from "react-i18next";
 import { FlowTip } from "@/components/onboarding/FlowTip";
-
-interface Artifact {
-  id: string;
-  title: string;
-  artifact_type: string;
-  format: string;
-  content: string;
-  status: string;
-  tags: string[];
-  service_key: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-interface NeuronItem {
-  id: number;
-  title: string;
-  status: string;
-  lifecycle: string;
-  content_category: string | null;
-  created_at: string;
-  updated_at: string;
-  number: number;
-  blockPreview?: string;
-}
+import { NeuronGrid, type NeuronItem } from "@/components/library/NeuronGrid";
+import { ArtifactGrid, type Artifact } from "@/components/library/ArtifactGrid";
 
 const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
   document: { labelKey: "artifacts.type_document", color: "bg-primary/10 text-primary" },
@@ -73,12 +39,6 @@ const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
   course: { labelKey: "artifacts.type_course", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
   social_post: { labelKey: "artifacts.type_social", color: "bg-pink-500/10 text-pink-600 dark:text-pink-400" },
   copy: { labelKey: "artifacts.type_copy", color: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400" },
-};
-
-const STATUS_KEYS: Record<string, { labelKey: string; dot: string }> = {
-  draft: { labelKey: "library.status_draft", dot: "bg-muted-foreground/40" },
-  final: { labelKey: "library.status_final", dot: "bg-primary" },
-  published: { labelKey: "library.status_published", dot: "bg-status-validated" },
 };
 
 export default function Library() {
@@ -133,15 +93,9 @@ export default function Library() {
         .join(" ")
         .slice(0, 200);
       return {
-        id: n.id,
-        title: n.title,
-        status: n.status,
-        lifecycle: n.lifecycle,
-        content_category: n.content_category,
-        created_at: n.created_at,
-        updated_at: n.updated_at,
-        number: n.number,
-        blockPreview: preview,
+        id: n.id, title: n.title, status: n.status, lifecycle: n.lifecycle,
+        content_category: n.content_category, created_at: n.created_at,
+        updated_at: n.updated_at, number: n.number, blockPreview: preview,
       };
     });
     setNeurons(neuronItems);
@@ -234,23 +188,12 @@ export default function Library() {
           <ContributeDialog />
         </div>
 
-        {/* Flow guidance */}
-        <FlowTip
-          tipId="library-intro"
-          variant="info"
-          title="Your knowledge library"
+        <FlowTip tipId="library-intro" variant="info" title="Your knowledge library"
           description="Everything you generate is saved here — neurons (knowledge units) and artifacts (deliverables like articles, strategies, posts). You can search, filter, organize into folders, and publish to the Marketplace."
-          show={neurons.length === 0 && artifacts.length === 0}
-          className="mb-4"
-        />
-        <FlowTip
-          tipId="library-has-content"
-          variant="tip"
-          title="Publish to the Marketplace"
+          show={neurons.length === 0 && artifacts.length === 0} className="mb-4" />
+        <FlowTip tipId="library-has-content" variant="tip" title="Publish to the Marketplace"
           description="Your best artifacts can be published to the Marketplace for others to discover. Click the ⋯ menu on any artifact to publish it."
-          show={artifacts.length >= 3}
-          className="mb-4"
-        />
+          show={artifacts.length >= 3} className="mb-4" />
 
         {/* Tabs */}
         <div className="flex items-center gap-1 mb-4 border-b border-border">
@@ -259,16 +202,11 @@ export default function Library() {
             { key: "neurons" as const, label: `Neuroni (${neurons.length})`, icon: Brain },
             { key: "artifacts" as const, label: `Artefacte (${artifacts.length})`, icon: FileText },
           ]).map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={cn(
                 "flex items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors border-b-2 -mb-px",
-                activeTab === tab.key
-                  ? "text-primary border-primary"
-                  : "text-muted-foreground border-transparent hover:text-foreground"
-              )}
-            >
+                activeTab === tab.key ? "text-primary border-primary" : "text-muted-foreground border-transparent hover:text-foreground"
+              )}>
               <tab.icon className="h-3.5 w-3.5" />
               {tab.label}
             </button>
@@ -279,12 +217,8 @@ export default function Library() {
         <div className="space-y-2 mb-4">
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-            <Input
-              placeholder={t("library.search_placeholder")}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 h-8 text-xs"
-            />
+            <Input placeholder={t("library.search_placeholder")} value={search}
+              onChange={(e) => setSearch(e.target.value)} className="pl-8 h-8 text-xs" />
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -324,14 +258,12 @@ export default function Library() {
                   { field: "created_at" as const, label: t("library.sort_created") },
                   { field: "title" as const, label: t("library.sort_title") },
                 ]).map(({ field, label }) => (
-                  <DropdownMenuItem
-                    key={field}
+                  <DropdownMenuItem key={field}
                     onClick={() => {
                       if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
                       else { setSortField(field); setSortDir("desc"); }
                     }}
-                    className={cn(sortField === field && "text-primary")}
-                  >
+                    className={cn(sortField === field && "text-primary")}>
                     {label}
                     {sortField === field && (
                       sortDir === "desc" ? <SortDesc className="h-3 w-3 ml-auto" /> : <SortAsc className="h-3 w-3 ml-auto" />
@@ -347,168 +279,28 @@ export default function Library() {
         </div>
 
         {/* Neurons grid */}
-        {(activeTab === "all" || activeTab === "neurons") && filteredNeurons.length > 0 && (
-          <>
-            {activeTab === "all" && (
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
-                <Brain className="h-3 w-3" /> Neuroni extrași ({filteredNeurons.length})
-              </h3>
-            )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-              {filteredNeurons.map(neuron => (
-                <div
-                  key={neuron.id}
-                  className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
-                  onClick={() => navigate(`/n/${neuron.number}`)}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-primary/10 text-primary">
-                        {neuron.content_category || "neuron"}
-                      </span>
-                      <Badge variant="outline" className="text-[8px]">#{neuron.number}</Badge>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className={cn("h-1.5 w-1.5 rounded-full", neuron.status === "published" ? "bg-status-validated" : "bg-muted-foreground/40")} />
-                      <span className="text-[9px] text-muted-foreground">{neuron.status}</span>
-                    </div>
-                  </div>
-                  <h3 className="text-sm font-medium mb-1.5 line-clamp-2">{neuron.title}</h3>
-                  {neuron.blockPreview && (
-                    <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
-                      {neuron.blockPreview}
-                    </p>
-                  )}
-                  <div className="flex items-center justify-between pt-2 border-t border-border">
-                    <span className="text-[9px] text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-2.5 w-2.5" />
-                      {format(new Date(neuron.updated_at), "dd MMM yyyy")}
-                    </span>
-                    <span className="text-[9px] text-muted-foreground/60">{neuron.lifecycle}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+        {(activeTab === "all" || activeTab === "neurons") && (
+          <NeuronGrid neurons={filteredNeurons} showHeader={activeTab === "all"} />
         )}
 
         {/* Artifacts grid */}
         {(activeTab === "all" || activeTab === "artifacts") && (
           <>
-            {activeTab === "all" && artifacts.length > 0 && (
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
-                <FileText className="h-3 w-3" /> Artefacte generate ({filtered.length})
-              </h3>
-            )}
             {(activeTab === "artifacts" ? filtered.length === 0 : artifacts.length === 0) && neurons.length === 0 ? (
-          <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
-            <FileText className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-            <h2 className="text-base font-bold mb-1">{t("library.no_artifacts")}</h2>
-            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              {t("library.no_artifacts_hint")}
-            </p>
-            <Button size="sm" onClick={() => navigate("/services")} className="gap-2">
-              {t("library.view_services")} <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
-          </div>
-        ) : filtered.length === 0 && activeTab !== "all" ? (
-          <div className="text-center py-12">
-            <p className="text-sm text-muted-foreground">{t("library.no_filter_match")}</p>
-          </div>
-        ) : filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filtered.map(artifact => {
-              const typeConf = TYPE_CONFIG[artifact.artifact_type];
-              const typeLabel = typeConf ? t(typeConf.labelKey) : artifact.artifact_type;
-              const typeColor = typeConf?.color || "bg-muted text-muted-foreground";
-              const statusConf = STATUS_KEYS[artifact.status];
-              const statusLabel = statusConf ? t(statusConf.labelKey) : artifact.status;
-              const statusDot = statusConf?.dot || "bg-muted-foreground/40";
-
-              return (
-                <div
-                  key={artifact.id}
-                  className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
-                  onClick={() => navigate(`/library/${artifact.id}`)}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5">
-                      <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeColor)}>
-                        {typeLabel}
-                      </span>
-                      <VisibilityIcon visibility={artifact.status === "published" ? "public" : "private"} size="xs" />
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className={cn("h-1.5 w-1.5 rounded-full", statusDot)} />
-                      <span className="text-[9px] text-muted-foreground">{statusLabel}</span>
-                    </div>
-                  </div>
-
-                  <h3 className="text-sm font-medium mb-1.5 line-clamp-2">{artifact.title}</h3>
-                  <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
-                    {artifact.content.slice(0, 150)}
-                  </p>
-
-                  {artifact.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {artifact.tags.slice(0, 3).map(tag => (
-                        <Badge key={tag} variant="secondary" className="text-[8px] px-1.5 py-0">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {artifact.tags.length > 3 && (
-                        <span className="text-[8px] text-muted-foreground">+{artifact.tags.length - 3}</span>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between pt-2 border-t border-border">
-                    <span className="text-[9px] text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-2.5 w-2.5" />
-                      {format(new Date(artifact.updated_at), "dd MMM yyyy")}
-                    </span>
-                    <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        title={t("library.publish_marketplace")}
-                        onClick={(e) => { e.stopPropagation(); setPublishArtifact(artifact); }}
-                      >
-                        <Store className="h-3 w-3 text-primary" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        title={artifact.status === "published" ? t("library.make_private") : t("library.publish")}
-                        onClick={(e) => { e.stopPropagation(); handleToggleStatus(artifact.id, artifact.status); }}
-                      >
-                        {artifact.status === "published" ? <Globe className="h-3 w-3 text-status-validated" /> : <Lock className="h-3 w-3" />}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={(e) => { e.stopPropagation(); navigate(`/library/${artifact.id}`); }}
-                      >
-                        <Eye className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-destructive"
-                        onClick={(e) => { e.stopPropagation(); handleDelete(artifact.id); }}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : null}
+              <ArtifactGrid artifacts={[]} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onPublish={setPublishArtifact} />
+            ) : filtered.length === 0 && activeTab !== "all" ? (
+              <div className="text-center py-12">
+                <p className="text-sm text-muted-foreground">{t("library.no_filter_match")}</p>
+              </div>
+            ) : filtered.length > 0 ? (
+              <ArtifactGrid
+                artifacts={filtered}
+                showHeader={activeTab === "all"}
+                onDelete={handleDelete}
+                onToggleStatus={handleToggleStatus}
+                onPublish={setPublishArtifact}
+              />
+            ) : null}
           </>
         )}
       </div>
@@ -519,7 +311,7 @@ export default function Library() {
           {previewArtifact && (
             <>
               <DialogHeader>
-                <DialogTitle className="">{previewArtifact.title}</DialogTitle>
+                <DialogTitle>{previewArtifact.title}</DialogTitle>
               </DialogHeader>
               <div className="flex items-center gap-2 mb-4">
                 <span className={cn(
