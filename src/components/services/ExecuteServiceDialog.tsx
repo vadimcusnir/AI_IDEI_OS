@@ -27,6 +27,8 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
   const [state, setState] = useState<ExecState>("configure");
   const [output, setOutput] = useState("");
   const [costCharged, setCostCharged] = useState(0);
+  const { reserve, settle, release } = useWalletAtomicity();
+  const reservedRef = useRef<{ amount: number; jobId?: string } | null>(null);
 
   useEffect(() => {
     if (service) {
