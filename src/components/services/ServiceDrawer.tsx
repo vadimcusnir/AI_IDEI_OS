@@ -14,7 +14,7 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier } from "@/hooks/useUserTier";
 import { tierSatisfied } from "@/components/premium/PremiumPaywall";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
-import { ContentSourcePicker } from "@/components/services/ContentSourcePicker";
+import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
