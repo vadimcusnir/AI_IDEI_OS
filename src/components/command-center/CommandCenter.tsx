@@ -497,6 +497,21 @@ export function CommandCenter() {
     setShowMemory(false);
   };
 
+  const handleSaveAllOutputs = async () => {
+    if (outputs.length === 0) return;
+    setSavingAllOutputs(true);
+    const count = await persistOutputsBatch(
+      outputs.map(o => ({ title: o.title, content: o.content, type: o.type })),
+      [cmdState.state.intent]
+    );
+    setSavingAllOutputs(false);
+    if (count > 0) {
+      toast.success(`Saved ${count} outputs as assets`);
+    } else {
+      toast.error("Failed to save outputs");
+    }
+  };
+
   const handleSaveTemplate = async () => {
     if (!user || cmdState.state.phase !== "completed") return;
     try {
