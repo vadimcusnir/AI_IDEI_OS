@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { MFAEnrollment } from "@/components/security/MFAEnrollment";
 
 export default function SecuritySettings() {
   const { t } = useTranslation("pages");
