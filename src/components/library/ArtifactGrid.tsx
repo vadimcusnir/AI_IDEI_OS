@@ -1,14 +1,19 @@
 /**
- * ArtifactGrid — Grid of artifact cards for the Library page.
+ * ArtifactGrid — Grid of artifact cards with action buttons.
  */
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import {
   FileText, Clock, Eye, Trash2, Lock, Globe, Store, ArrowRight,
+  Download, Pencil, Zap,
 } from "lucide-react";
 import { VisibilityIcon } from "@/components/shared/AccessIcons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip, TooltipContent, TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
@@ -49,6 +54,18 @@ interface ArtifactGridProps {
   onPublish: (artifact: Artifact) => void;
 }
 
+function downloadArtifact(artifact: Artifact, fmt: "md" | "txt") {
+  const ext = fmt === "md" ? "md" : "txt";
+  const blob = new Blob([artifact.content], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${artifact.title.replace(/[^a-zA-Z0-9-_ ]/g, "").trim()}.${ext}`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast.success(`Descărcat ca .${ext}`);
+}
+
 export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, onPublish }: ArtifactGridProps) {
   const { t } = useTranslation("pages");
   const navigate = useNavigate();
@@ -57,7 +74,7 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
     <>
       {showHeader && artifacts.length > 0 && (
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
-          <FileText className="h-3 w-3" /> Artefacte generate ({artifacts.length})
+          <FileText className="h-3 w-3" /> Livrabile ({artifacts.length})
         </h3>
       )}
       {artifacts.length === 0 ? (
@@ -84,7 +101,7 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
             return (
               <div
                 key={artifact.id}
-                className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
+                className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer flex flex-col"
                 onClick={() => navigate(`/library/${artifact.id}`)}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -101,7 +118,7 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
                 </div>
 
                 <h3 className="text-sm font-medium mb-1.5 line-clamp-2">{artifact.title}</h3>
-                <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
+                <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed flex-1">
                   {artifact.content.slice(0, 150)}
                 </p>
 
@@ -118,30 +135,74 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
                   </div>
                 )}
 
-                <div className="flex items-center justify-between pt-2 border-t border-border">
+                {/* Action buttons */}
+                <div className="flex items-center gap-1 pt-2.5 border-t border-border mt-auto">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-7 w-7"
+                        onClick={(e) => { e.stopPropagation(); downloadArtifact(artifact, "md"); }}>
+                        <Download className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-[10px]">Descarcă (.md)</TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-7 w-7"
+                        onClick={(e) => { e.stopPropagation(); navigate(`/library/${artifact.id}`); }}>
+                        <Pencil className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-[10px]">Editează</TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-7 w-7"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/services?intent=${encodeURIComponent(artifact.title)}`);
+                        }}>
+                        <Zap className="h-3 w-3 text-primary" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-[10px]">Folosește ca input</TooltipContent>
+                  </Tooltip>
+
+                  <div className="flex-1" />
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-7 w-7"
+                        onClick={(e) => { e.stopPropagation(); onPublish(artifact); }}>
+                        <Store className="h-3 w-3 text-primary" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-[10px]">Publică în Marketplace</TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive/60 hover:text-destructive"
+                        onClick={(e) => { e.stopPropagation(); onDelete(artifact.id); }}>
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-[10px]">Șterge</TooltipContent>
+                  </Tooltip>
+                </div>
+
+                <div className="flex items-center justify-between mt-1.5">
                   <span className="text-[9px] text-muted-foreground flex items-center gap-1">
                     <Clock className="h-2.5 w-2.5" />
                     {format(new Date(artifact.updated_at), "dd MMM yyyy")}
                   </span>
-                  <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                    <Button variant="ghost" size="icon" className="h-6 w-6" title={t("library.publish_marketplace")}
-                      onClick={(e) => { e.stopPropagation(); onPublish(artifact); }}>
-                      <Store className="h-3 w-3 text-primary" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-6 w-6"
-                      title={artifact.status === "published" ? t("library.make_private") : t("library.publish")}
-                      onClick={(e) => { e.stopPropagation(); onToggleStatus(artifact.id, artifact.status); }}>
-                      {artifact.status === "published" ? <Globe className="h-3 w-3 text-status-validated" /> : <Lock className="h-3 w-3" />}
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-6 w-6"
-                      onClick={(e) => { e.stopPropagation(); navigate(`/library/${artifact.id}`); }}>
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive"
-                      onClick={(e) => { e.stopPropagation(); onDelete(artifact.id); }}>
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
+                  {artifact.service_key && (
+                    <span className="text-[8px] font-mono text-muted-foreground/50">
+                      {artifact.service_key}
+                    </span>
+                  )}
                 </div>
               </div>
             );

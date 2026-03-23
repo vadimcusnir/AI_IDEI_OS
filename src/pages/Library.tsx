@@ -6,7 +6,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import {
   FileText, Search, Filter, BookOpen, Brain,
-  ArrowUpDown, SortAsc, SortDesc, FolderTree,
+  ArrowUpDown, SortAsc, SortDesc, FolderTree, Package,
 } from "lucide-react";
 import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { PublishToMarketplaceDialog } from "@/components/library/PublishToMarketplaceDialog";
@@ -30,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { NeuronGrid, type NeuronItem } from "@/components/library/NeuronGrid";
 import { ArtifactGrid, type Artifact } from "@/components/library/ArtifactGrid";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
   document: { labelKey: "artifacts.type_document", color: "bg-primary/10 text-primary" },
@@ -41,6 +42,8 @@ const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
   copy: { labelKey: "artifacts.type_copy", color: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400" },
 };
 
+type LibraryTab = "deliverables" | "context" | "bundles";
+
 export default function Library() {
   const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
@@ -49,7 +52,7 @@ export default function Library() {
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [neurons, setNeurons] = useState<NeuronItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"all" | "neurons" | "artifacts">("all");
+  const [activeTab, setActiveTab] = useState<LibraryTab>("deliverables");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -83,7 +86,7 @@ export default function Library() {
         .limit(500),
     ]);
     setArtifacts((artifactsRes.data as Artifact[]) || []);
-    
+
     const neuronItems: NeuronItem[] = (neuronsRes.data || []).map((n: any) => {
       const blocks = Array.isArray(n.neuron_blocks) ? n.neuron_blocks : [];
       const preview = blocks
@@ -157,11 +160,39 @@ export default function Library() {
     return Array.from(set);
   }, [artifacts]);
 
+  // Bundle grouping: group artifacts by service_key + date
+  const bundles = useMemo(() => {
+    const grouped = new Map<string, Artifact[]>();
+    artifacts.forEach(a => {
+      if (!a.service_key) return;
+      const dateKey = format(new Date(a.created_at), "yyyy-MM-dd");
+      const key = `${a.service_key}__${dateKey}`;
+      const arr = grouped.get(key) || [];
+      arr.push(a);
+      grouped.set(key, arr);
+    });
+    // Only show bundles with 2+ artifacts
+    return Array.from(grouped.entries())
+      .filter(([, arr]) => arr.length >= 2)
+      .sort((a, b) => {
+        const dateA = new Date(a[1][0].created_at).getTime();
+        const dateB = new Date(b[1][0].created_at).getTime();
+        return dateB - dateA;
+      });
+  }, [artifacts]);
+
   if (authLoading || wsLoading || loading) {
     return <ListPageSkeleton columns={3} />;
   }
 
+  const TABS: { key: LibraryTab; label: string; icon: React.ElementType; count: number }[] = [
+    { key: "deliverables", label: "Livrabile", icon: FileText, count: artifacts.length },
+    { key: "context", label: "Date Context", icon: Brain, count: neurons.length },
+    { key: "bundles", label: "Pachete", icon: Package, count: bundles.length },
+  ];
+
   return (
+    <TooltipProvider delayDuration={300}>
     <PageTransition>
     <div className="flex-1 flex overflow-hidden">
       {showFolders && (
@@ -169,8 +200,9 @@ export default function Library() {
           selectedFolderId={selectedFolderId} onSelectFolder={setSelectedFolderId} allLabel={t("library.all_artifacts")} headerLabel={t("library.folders_header")} />
       )}
       <div className="flex-1 overflow-auto">
-      <SEOHead title="Library — AI-IDEI" description="Browse and manage your generated artifacts, documents and deliverables." />
+      <SEOHead title="Librărie — AI-IDEI" description="Livrabilele, datele de context și pachetele tale generate de AI." />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Button variant={showFolders ? "default" : "ghost"} size="sm" className="h-7 w-7 p-0" onClick={() => setShowFolders(!showFolders)}>
@@ -178,63 +210,64 @@ export default function Library() {
             </Button>
             <div>
               <h1 className="text-xl font-bold flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-primary" /> {t("library.title")}
+                <BookOpen className="h-5 w-5 text-primary" /> Librărie
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {neurons.length} neuroni · {artifacts.length} artefacte
+                {artifacts.length} livrabile · {neurons.length} date context · {bundles.length} pachete
               </p>
             </div>
           </div>
           <ContributeDialog />
         </div>
 
-        <FlowTip tipId="library-intro" variant="info" title="Your knowledge library"
-          description="Everything you generate is saved here — neurons (knowledge units) and artifacts (deliverables like articles, strategies, posts). You can search, filter, organize into folders, and publish to the Marketplace."
+        <FlowTip tipId="library-intro" variant="info" title="Librăria ta de cunoștințe"
+          description="Tot ce generezi se salvează aici — livrabile (articole, strategii, posturi) și date de context (neuroni, insights). Poți descărca, edita, refolosi ca input sau publica în Marketplace."
           show={neurons.length === 0 && artifacts.length === 0} className="mb-4" />
-        <FlowTip tipId="library-has-content" variant="tip" title="Publish to the Marketplace"
-          description="Your best artifacts can be published to the Marketplace for others to discover. Click the ⋯ menu on any artifact to publish it."
-          show={artifacts.length >= 3} className="mb-4" />
 
         {/* Tabs */}
         <div className="flex items-center gap-1 mb-4 border-b border-border">
-          {([
-            { key: "all" as const, label: `Toate (${neurons.length + artifacts.length})`, icon: BookOpen },
-            { key: "neurons" as const, label: `Neuroni (${neurons.length})`, icon: Brain },
-            { key: "artifacts" as const, label: `Artefacte (${artifacts.length})`, icon: FileText },
-          ]).map(tab => (
+          {TABS.map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors border-b-2 -mb-px",
+                "flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium transition-colors border-b-2 -mb-px",
                 activeTab === tab.key ? "text-primary border-primary" : "text-muted-foreground border-transparent hover:text-foreground"
               )}>
               <tab.icon className="h-3.5 w-3.5" />
               {tab.label}
+              <span className={cn(
+                "text-[9px] font-mono px-1.5 py-0.5 rounded-full",
+                activeTab === tab.key ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+              )}>
+                {tab.count}
+              </span>
             </button>
           ))}
         </div>
 
-        {/* Toolbar */}
+        {/* Toolbar — shared across tabs */}
         <div className="space-y-2 mb-4">
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-            <Input placeholder={t("library.search_placeholder")} value={search}
+            <Input placeholder="Caută în librărie..." value={search}
               onChange={(e) => setSearch(e.target.value)} className="pl-8 h-8 text-xs" />
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-auto min-w-[100px] h-8 text-xs">
-                <Filter className="h-3 w-3 mr-1" />
-                <SelectValue placeholder={t("library.all_types")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("library.all_types")}</SelectItem>
-                {types.map(tp => (
-                  <SelectItem key={tp} value={tp}>
-                    {TYPE_CONFIG[tp] ? t(TYPE_CONFIG[tp].labelKey) : tp}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {activeTab === "deliverables" && (
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="w-auto min-w-[100px] h-8 text-xs">
+                  <Filter className="h-3 w-3 mr-1" />
+                  <SelectValue placeholder={t("library.all_types")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t("library.all_types")}</SelectItem>
+                  {types.map(tp => (
+                    <SelectItem key={tp} value={tp}>
+                      {TYPE_CONFIG[tp] ? t(TYPE_CONFIG[tp].labelKey) : tp}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-auto min-w-[90px] h-8 text-xs">
                 <SelectValue placeholder={t("library.all_statuses")} />
@@ -273,34 +306,95 @@ export default function Library() {
               </DropdownMenuContent>
             </DropdownMenu>
             <span className="text-[10px] text-muted-foreground ml-auto">
-              {t("library.results_count", { count: filtered.length })}
+              {activeTab === "deliverables" && `${filtered.length} livrabile`}
+              {activeTab === "context" && `${filteredNeurons.length} date context`}
+              {activeTab === "bundles" && `${bundles.length} pachete`}
             </span>
           </div>
         </div>
 
-        {/* Neurons grid */}
-        {(activeTab === "all" || activeTab === "neurons") && (
-          <NeuronGrid neurons={filteredNeurons} showHeader={activeTab === "all"} />
+        {/* ═══ TAB: Livrabile (Artifacts) ═══ */}
+        {activeTab === "deliverables" && (
+          <ArtifactGrid
+            artifacts={filtered}
+            onDelete={handleDelete}
+            onToggleStatus={handleToggleStatus}
+            onPublish={setPublishArtifact}
+          />
         )}
 
-        {/* Artifacts grid */}
-        {(activeTab === "all" || activeTab === "artifacts") && (
+        {/* ═══ TAB: Date Context (Neurons) ═══ */}
+        {activeTab === "context" && (
           <>
-            {(activeTab === "artifacts" ? filtered.length === 0 : artifacts.length === 0) && neurons.length === 0 ? (
-              <ArtifactGrid artifacts={[]} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onPublish={setPublishArtifact} />
-            ) : filtered.length === 0 && activeTab !== "all" ? (
-              <div className="text-center py-12">
-                <p className="text-sm text-muted-foreground">{t("library.no_filter_match")}</p>
+            <div className="mb-3">
+              <p className="text-xs text-muted-foreground">
+                Datele de context sunt unitățile de cunoaștere extrase din materialele tale — framework-uri, pattern-uri, insights. Sunt folosite automat de serviciile AI.
+              </p>
+            </div>
+            <NeuronGrid neurons={filteredNeurons} />
+          </>
+        )}
+
+        {/* ═══ TAB: Pachete (Bundles) ═══ */}
+        {activeTab === "bundles" && (
+          <>
+            {bundles.length === 0 ? (
+              <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
+                <Package className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+                <h2 className="text-base font-bold mb-1">Niciun pachet</h2>
+                <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
+                  Pachetele se creează automat când un serviciu generează mai multe livrabile simultan.
+                </p>
+                <Button size="sm" onClick={() => navigate("/services")} className="gap-2">
+                  Rulează un serviciu <FileText className="h-3.5 w-3.5" />
+                </Button>
               </div>
-            ) : filtered.length > 0 ? (
-              <ArtifactGrid
-                artifacts={filtered}
-                showHeader={activeTab === "all"}
-                onDelete={handleDelete}
-                onToggleStatus={handleToggleStatus}
-                onPublish={setPublishArtifact}
-              />
-            ) : null}
+            ) : (
+              <div className="space-y-4">
+                {bundles.map(([key, items]) => {
+                  const [serviceKey, dateStr] = key.split("__");
+                  return (
+                    <div key={key} className="rounded-xl border border-border bg-card p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <Package className="h-4 w-4 text-primary" />
+                          <div>
+                            <h3 className="text-sm font-semibold">
+                              {serviceKey.replace(/[-_]/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
+                            </h3>
+                            <p className="text-[10px] text-muted-foreground">
+                              {format(new Date(dateStr), "dd MMM yyyy")} · {items.length} livrabile
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {items.map(item => {
+                          const typeConf = TYPE_CONFIG[item.artifact_type];
+                          const typeLabel = typeConf ? t(typeConf.labelKey) : item.artifact_type;
+                          const typeColor = typeConf?.color || "bg-muted text-muted-foreground";
+                          return (
+                            <div
+                              key={item.id}
+                              onClick={() => navigate(`/library/${item.id}`)}
+                              className="flex items-center gap-2 p-2.5 rounded-lg border border-border hover:border-primary/30 transition-colors cursor-pointer"
+                            >
+                              <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium truncate">{item.title}</p>
+                                <span className={cn("text-[8px] font-mono uppercase px-1 py-0.5 rounded", typeColor)}>
+                                  {typeLabel}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -341,5 +435,6 @@ export default function Library() {
       </div>
     </div>
     </PageTransition>
+    </TooltipProvider>
   );
 }
