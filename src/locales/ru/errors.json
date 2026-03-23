@@ -39,5 +39,7 @@
   "transcript_upload_failed": "Загрузка транскрипта не удалась.",
   "extraction_timeout": "Время извлечения истекло.",
   "select_report_reason": "Пожалуйста, выберите причину.",
-  "complete_payment_error": "Ошибка: {{message}}"
+  "complete_payment_error": "Ошибка: {{message}}",
+  "not_authenticated": "Вы не авторизованы.",
+  "load_failed": "Не удалось загрузить данные."
 }
