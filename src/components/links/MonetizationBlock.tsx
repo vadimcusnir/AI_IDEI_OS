@@ -18,10 +18,10 @@ interface MonetizationItem {
 }
 
 const MONETIZATION_ITEMS: MonetizationItem[] = [
-  { title: "Curs: Codul Cușnir Masterclass", description: "Toate formulele de copywriting într-un singur curs", icon: GraduationCap, priceUsd: "$92", priceNeurons: "500 NEURONS", color: "text-ai-accent", badge: "Curs", accessLevel: "public", link: "/marketplace" },
-  { title: "Consultanță AI-Powered", description: "Sesiune 1:1 de knowledge extraction cu AI", icon: Briefcase, priceUsd: "$146", priceNeurons: "750 NEURONS", color: "text-primary", badge: "Service", accessLevel: "auth", link: "/services" },
-  { title: "Pachet Neuroni Premium", description: "100 neuroni structurați din conținutul tău", icon: Flame, priceUsd: "$47", priceNeurons: "250 NEURONS", color: "text-status-validated", badge: "Pachet", accessLevel: "auth", link: "/credits" },
-  { title: "Knowledge Audit", description: "Analiză completă a cunoștințelor tale cu raport detaliat", icon: BarChart3, priceUsd: "$200", priceNeurons: "1000 NEURONS", color: "text-destructive", badge: "Service", accessLevel: "paid", link: "/services" },
+  { title: "Curs: Codul Cușnir Masterclass", description: "Toate formulele de copywriting într-un singur curs", icon: GraduationCap, priceUsd: "$92", priceNeurons: "46,000 NEURONS", color: "text-ai-accent", badge: "Curs", accessLevel: "public", link: "/marketplace" },
+  { title: "Consultanță AI-Powered", description: "Sesiune 1:1 de knowledge extraction cu AI", icon: Briefcase, priceUsd: "$146", priceNeurons: "73,000 NEURONS", color: "text-primary", badge: "Service", accessLevel: "auth", link: "/services" },
+  { title: "Pachet Neuroni Premium", description: "5,500 neuroni structurați din conținutul tău", icon: Flame, priceUsd: "$11", priceNeurons: "5,500 NEURONS", color: "text-status-validated", badge: "Pachet", accessLevel: "auth", link: "/credits" },
+  { title: "Knowledge Audit", description: "Analiză completă a cunoștințelor tale cu raport detaliat", icon: BarChart3, priceUsd: "$200", priceNeurons: "100,000 NEURONS", color: "text-destructive", badge: "Service", accessLevel: "paid", link: "/services" },
 ];
 
 export function MonetizationBlock() {
