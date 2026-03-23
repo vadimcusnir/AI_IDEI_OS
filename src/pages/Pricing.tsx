@@ -122,12 +122,6 @@ export default function Pricing() {
       return;
     }
 
-    // Enterprise — contact
-    if (plan.key === "enterprise") {
-      navigate("/credits");
-      return;
-    }
-
     // Subscription plan with priceId
     if (plan.mode === "subscription" && plan.priceId) {
       setProcessing(plan.key);
@@ -141,30 +135,15 @@ export default function Pricing() {
       return;
     }
 
-    // Top-up package
-    if (plan.mode === "topup" && (plan as any).topupPackage) {
-      setProcessing(plan.key);
-      try {
-        const { data, error } = await supabase.functions.invoke("create-topup-checkout", {
-          body: { package_key: (plan as any).topupPackage },
-        });
-        if (error) throw new Error(error.message);
-        if (data?.url) window.open(data.url, "_blank");
-      } catch (e: any) {
-        toast.error(e.message || "Checkout failed");
-      } finally {
-        setProcessing(null);
-      }
-      return;
-    }
-
-    // Fallback
+    // Fallback — go to credits for contact/topup
     navigate("/credits");
   };
 
   const isCurrentPlan = (planKey: string) => {
     if (planKey === "free" && !subscribed) return true;
-    if (planKey === "creator" && tier === "pro_monthly") return true;
+    if (planKey === "core" && tier === "core_monthly") return true;
+    if (planKey === "pro" && tier === "pro_monthly") return true;
+    if (planKey === "elite" && tier === "elite_monthly") return true;
     return false;
   };
 
