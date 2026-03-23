@@ -86,6 +86,7 @@ const CusnirOSOperator = lazyRetry(() => import("./pages/CusnirOSOperator"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
 const DatabaseRelations = lazyRetry(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
+const SecuritySettings = lazyRetry(() => import("./pages/SecuritySettings"));
 const GamificationPage = lazyRetry(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazyRetry(() => import("./pages/AnalyticsDashboard"));
 const Transcribe = lazyRetry(() => import("./pages/Transcribe"));
