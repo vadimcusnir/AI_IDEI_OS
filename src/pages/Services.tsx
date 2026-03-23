@@ -88,6 +88,11 @@ export default function Services() {
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
 
   const handleServiceClick = (service: Service) => {
+    // Visitor gate — must sign up to run services
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
     const requiredTier = service.access_tier || "free";
     if (!tierSatisfied(userTier, requiredTier)) {
       setPaywallService({ name: service.name, tier: requiredTier });
@@ -98,7 +103,7 @@ export default function Services() {
   };
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading) return;
     (async () => {
       const { data, error } = await supabase
         .from("service_catalog")
@@ -106,7 +111,7 @@ export default function Services() {
         .eq("is_active", true)
         .order("name");
       if (data) setServices(data as Service[]);
-      if (error) toast.error(t("services.failed_load"));
+      if (error && user) toast.error(t("services.failed_load"));
       setLoading(false);
     })();
   }, [user, authLoading]);
@@ -153,6 +158,8 @@ export default function Services() {
     );
   }
 
+  const isVisitor = !user;
+
   return (
     <PageTransition>
     <div className="flex-1 overflow-y-auto">
@@ -195,6 +202,31 @@ export default function Services() {
             {t("services.description")}
           </p>
         </div>
+
+        {/* Visitor signup CTA */}
+        {isVisitor && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 flex items-center gap-3 px-4 py-4 rounded-xl border border-primary/30 bg-primary/5"
+          >
+            <Sparkles className="h-5 w-5 text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold">{t("services.visitor_cta_title", { defaultValue: "Start free with 500 NEURONS" })}</p>
+              <p className="text-xs text-muted-foreground">
+                {t("services.visitor_cta_desc", { defaultValue: "Sign up to run any AI service. Your first 500 credits are on us." })}
+              </p>
+            </div>
+            <Button
+              size="sm"
+              className="shrink-0 text-xs gap-1.5"
+              onClick={() => navigate("/auth")}
+            >
+              {t("services.visitor_cta_button", { defaultValue: "Get Started Free" })}
+              <ArrowRight className="h-3 w-3" />
+            </Button>
+          </motion.div>
+        )}
 
         {/* Low balance upsell */}
         {!balanceLoading && balance < 100 && user && (
@@ -529,36 +561,41 @@ export default function Services() {
           </div>
         )}
 
-        {/* Run History */}
-        <div className="mt-8">
-          <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
-            <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
-              <Clock className="h-4 w-4 text-muted-foreground" /> Istoric execuții
-            </h2>
-            <ServiceRunHistory limit={10} />
-          </div>
-        </div>
+        {/* Authenticated-only sections */}
+        {user && (
+          <>
+            {/* Run History */}
+            <div className="mt-8">
+              <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
+                <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" /> Istoric execuții
+                </h2>
+                <ServiceRunHistory limit={10} />
+              </div>
+            </div>
 
-        {/* IMF Pipeline Section */}
-        <div className="mt-6">
-          <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
-            <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
-              <Zap className="h-4 w-4 text-primary" /> {t("services.imf_title", { defaultValue: "IMF Pipeline — Automatic Multiplication" })}
-            </h2>
-            <p className="text-xs text-muted-foreground mb-4">
-              {t("services.imf_desc", { defaultValue: "Launch a full pipeline: 1 extraction → 50+ deliverables generated automatically." })}
-            </p>
-            <IMFPipelineLauncher />
-          </div>
-        </div>
+            {/* IMF Pipeline Section */}
+            <div className="mt-6">
+              <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
+                <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" /> {t("services.imf_title", { defaultValue: "IMF Pipeline — Automatic Multiplication" })}
+                </h2>
+                <p className="text-xs text-muted-foreground mb-4">
+                  {t("services.imf_desc", { defaultValue: "Launch a full pipeline: 1 extraction → 50+ deliverables generated automatically." })}
+                </p>
+                <IMFPipelineLauncher />
+              </div>
+            </div>
 
-        {/* Advanced Engines */}
-        <div className="mt-6 space-y-4">
-          <ExtractionPipelinePanel />
-          <Avatar33Panel />
-          <WebinarGeneratorPanel />
-          <ContentGeneratorPanel />
-        </div>
+            {/* Advanced Engines */}
+            <div className="mt-6 space-y-4">
+              <ExtractionPipelinePanel />
+              <Avatar33Panel />
+              <WebinarGeneratorPanel />
+              <ContentGeneratorPanel />
+            </div>
+          </>
+        )}
       </div>
 
       <PremiumPaywall
