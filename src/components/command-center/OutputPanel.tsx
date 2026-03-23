@@ -104,6 +104,12 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
           <Badge variant="secondary" className="text-[9px] h-4">{outputs.length}</Badge>
         </div>
         <div className="flex items-center gap-1">
+          {outputs.length > 1 && onSaveAll && (
+            <Button variant="default" size="sm" className="h-6 text-[9px] gap-1" onClick={onSaveAll} disabled={savingAll}>
+              {savingAll ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+              Save All ({outputs.length})
+            </Button>
+          )}
           {onRerun && (
             <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={onRerun}>
               <RotateCcw className="h-3 w-3" />
