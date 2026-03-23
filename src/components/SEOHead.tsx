@@ -31,7 +31,7 @@ interface SEOHeadProps {
   jsonLd?: Record<string, unknown>;
 }
 
-export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps) {
+export function SEOHead({ title, description, canonical, ogImage, jsonLd }: SEOHeadProps) {
   useEffect(() => {
     const fullTitle = title.includes("AI-IDEI") ? title : `${title} — AI-IDEI`;
     document.title = fullTitle;
