@@ -275,6 +275,13 @@ export function CommandCenter() {
           recent_services: workerTypes,
           total_completed_jobs: jobsAgg.count || 0,
           knowledge_summary: `User has ${neuronsAgg.count || 0} neurons across categories: ${Object.entries(topCategories).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}. Most used services: ${Object.entries(workerTypes).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}.`,
+          // ═══ Router intent enrichment ═══
+          detected_intent: pendingRoute?.intent.category || "conversation",
+          intent_confidence: pendingRoute?.intent.confidence || 0,
+          suggested_services: pendingRoute?.intent.suggestedServices || [],
+          input_type: pendingRoute?.input.type || "text",
+          detected_urls: pendingRoute?.input.urls || [],
+          user_tier: tier,
         },
       }),
       signal: controller.signal,
