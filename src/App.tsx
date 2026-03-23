@@ -97,7 +97,7 @@ const Integrations = lazyRetry(() => import("./pages/Integrations"));
 const CognitiveUnits = lazyRetry(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazyRetry(() => import("./pages/CollectionRuns"));
 const Pricing = lazyRetry(() => import("./pages/Pricing"));
-const KnowledgeSurfacePage = lazyRetry(() => import("./pages/KnowledgeSurfacePage"));
+
 const ServiceResults = lazyRetry(() => import("./pages/ServiceResults"));
 const ProductSurfacePage = lazyRetry(() => import("./pages/ProductSurfacePage"));
 const NotebookWorkspace = lazyRetry(() => import("./pages/NotebookWorkspace"));
