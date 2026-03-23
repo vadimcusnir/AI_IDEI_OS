@@ -195,8 +195,8 @@ export default function Landing() {
                 {LANG_OPTIONS.map(lang => (
                   <DropdownMenuItem
                     key={lang.code}
-                    onClick={() => i18n.changeLanguage(lang.code)}
-                    className={cn("gap-2 text-xs", i18n.language === lang.code && "bg-accent")}
+                    onClick={() => changeLanguage(lang.code as any)}
+                    className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
                   >
                     <span>{lang.flag}</span>
                     {lang.label}
