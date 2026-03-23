@@ -28,7 +28,13 @@ import { OutputPanel, type OutputItem } from "./OutputPanel";
 import { MemoryPanel } from "./MemoryPanel";
 import { TaskTree } from "./TaskTree";
 import { EconomicGate, KernelBadge } from "./EconomicGate";
+import { PermissionGate } from "./PermissionGate";
 import { useUserTier } from "@/hooks/useUserTier";
+import { routeCommand, type RouteResult } from "./CommandRouter";
+import {
+  logCommandSubmitted, logPlanConfirmed, logExecutionCompleted,
+  logPermissionDenied, logEconomicGate,
+} from "./AuditLogger";
 
 interface Message {
   id: string;
@@ -55,6 +61,7 @@ export function CommandCenter() {
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
   const [showEconomicGate, setShowEconomicGate] = useState(false);
+  const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
 
   const WELCOME_MSG: Message = {
     id: "welcome",
@@ -144,10 +151,24 @@ export function CommandCenter() {
     return items;
   }, []);
 
-  // ═══ PHASE 1: Submit command → get plan ═══
+  // ═══ PHASE 1: Submit command → route → validate → plan ═══
   const handleSubmit = async () => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
+
+    // ═══ Route command through intent parser ═══
+    const fileNames = files.map(f => f.name);
+    const route = routeCommand(input.trim(), tier, balance, fileNames);
+
+    // ═══ Permission gate — block tier-restricted intents ═══
+    if (!route.permitted) {
+      setPermissionBlock(route);
+      logPermissionDenied(user.id, route.intent.category, route.intent.requiredTier, tier);
+      return;
+    }
+
+    // ═══ Audit: log command submission ═══
+    logCommandSubmitted(user.id, route.intent.category, route.input.type, route.intent.estimatedCredits);
 
     if (balance < 20) {
       toast.error(t("errors:insufficient_credits_agent"), {
@@ -172,6 +193,7 @@ export function CommandCenter() {
     setInput("");
     setFiles([]);
     setShowOutputs(false);
+    setPermissionBlock(null);
     saveMessage(userMessage);
 
     // Transition to planning
@@ -402,6 +424,19 @@ export function CommandCenter() {
 
     cmdState.completeExecution();
     saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
+
+    // ═══ Audit: log execution completion ═══
+    if (user) {
+      const startTime = cmdState.state.startedAt ? new Date(cmdState.state.startedAt).getTime() : Date.now();
+      logExecutionCompleted(
+        user.id,
+        cmdState.state.actionId,
+        cmdState.state.intent,
+        cmdState.state.totalCredits,
+        parsedOutputs.length,
+        Date.now() - startTime,
+      );
+    }
   };
 
   const handleStop = () => {
@@ -543,6 +578,18 @@ export function CommandCenter() {
           </div>
         </div>
 
+        {/* ═══ Permission Gate — tier restriction ═══ */}
+        <AnimatePresence>
+          {permissionBlock && (
+            <PermissionGate
+              intent={permissionBlock.intent.category}
+              requiredTier={permissionBlock.intent.requiredTier}
+              currentTier={tier}
+              onDismiss={() => setPermissionBlock(null)}
+            />
+          )}
+        </AnimatePresence>
+
         {/* ═══ ZONE 2: Plan Preview + Economic Gate ═══ */}
         {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && !showEconomicGate && (
           <div className="px-4 py-2">
@@ -562,6 +609,7 @@ export function CommandCenter() {
                 if (cmdState.state.totalCredits > 50) {
                   setShowEconomicGate(true);
                 } else {
+                  if (user) logPlanConfirmed(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, cmdState.state.steps.length);
                   cmdState.confirmExecution();
                 }
               }}
@@ -585,10 +633,15 @@ export function CommandCenter() {
               tier={tier}
               onProceed={() => {
                 setShowEconomicGate(false);
+                if (user) {
+                  logEconomicGate(user.id, true, balance, cmdState.state.totalCredits, tierDiscount);
+                  logPlanConfirmed(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, cmdState.state.steps.length);
+                }
                 cmdState.confirmExecution();
               }}
               onCancel={() => {
                 setShowEconomicGate(false);
+                if (user) logEconomicGate(user.id, false, balance, cmdState.state.totalCredits, tierDiscount);
                 cmdState.reset();
               }}
             />
