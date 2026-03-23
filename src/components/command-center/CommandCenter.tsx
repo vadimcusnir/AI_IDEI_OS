@@ -27,6 +27,8 @@ import { PlanPreview, type ExecutionPlan } from "./PlanPreview";
 import { OutputPanel, type OutputItem } from "./OutputPanel";
 import { MemoryPanel } from "./MemoryPanel";
 import { TaskTree } from "./TaskTree";
+import { EconomicGate, KernelBadge } from "./EconomicGate";
+import { useUserTier } from "@/hooks/useUserTier";
 
 interface Message {
   id: string;
@@ -50,6 +52,9 @@ export function CommandCenter() {
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
   const cmdState = useCommandState();
+  const { tier } = useUserTier();
+  const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
+  const [showEconomicGate, setShowEconomicGate] = useState(false);
 
   const WELCOME_MSG: Message = {
     id: "welcome",
@@ -469,6 +474,13 @@ export function CommandCenter() {
     }
   };
 
+  const handleExecuteTemplate = (template: any) => {
+    const prompt = `/${template.intent_key} (using template: ${template.name})`;
+    setInput(prompt);
+    setShowMemory(false);
+    inputRef.current?.focus();
+  };
+
   const isEmptyState = messages.length <= 1 && !loading;
   const showRightPanel = showTaskTree && cmdState.state.phase !== "idle";
 
@@ -483,7 +495,10 @@ export function CommandCenter() {
               <Command className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-xs font-bold tracking-tight">Command Center</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-xs font-bold tracking-tight">Command Center</p>
+                <KernelBadge />
+              </div>
               <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
                 <span>{totalNeurons} neurons</span>
                 <span>·</span>
@@ -528,8 +543,8 @@ export function CommandCenter() {
           </div>
         </div>
 
-        {/* ═══ ZONE 2: Plan Preview (confirmation gate) ═══ */}
-        {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && (
+        {/* ═══ ZONE 2: Plan Preview + Economic Gate ═══ */}
+        {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && !showEconomicGate && (
           <div className="px-4 py-2">
             <PlanPreview
               plan={{
@@ -543,13 +558,39 @@ export function CommandCenter() {
                 output_preview: cmdState.state.outputPreview,
               }}
               balance={balance}
-              onExecute={() => cmdState.confirmExecution()}
+              onExecute={() => {
+                if (cmdState.state.totalCredits > 50) {
+                  setShowEconomicGate(true);
+                } else {
+                  cmdState.confirmExecution();
+                }
+              }}
               onEdit={() => {
                 setInput(`Refine plan: ${cmdState.state.intent}`);
                 inputRef.current?.focus();
               }}
               onDismiss={() => cmdState.reset()}
               executing={loading}
+            />
+          </div>
+        )}
+
+        {/* Economic Gate — for costly executions */}
+        {showEconomicGate && cmdState.state.phase === "confirming" && (
+          <div className="px-4 py-2">
+            <EconomicGate
+              balance={balance}
+              estimatedCost={cmdState.state.totalCredits}
+              tierDiscount={tierDiscount}
+              tier={tier}
+              onProceed={() => {
+                setShowEconomicGate(false);
+                cmdState.confirmExecution();
+              }}
+              onCancel={() => {
+                setShowEconomicGate(false);
+                cmdState.reset();
+              }}
             />
           </div>
         )}
@@ -811,6 +852,7 @@ export function CommandCenter() {
             visible={showMemory}
             onClose={() => setShowMemory(false)}
             onReplay={handleReplay}
+            onExecuteTemplate={handleExecuteTemplate}
             sessions={sessions}
             onLoadSession={handleLoadSession}
             onDeleteSession={handleDeleteSession}
