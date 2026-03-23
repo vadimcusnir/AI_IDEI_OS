@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { useNotebookDetail } from "@/hooks/useNotebook";
 import { NotebookSourcesPanel } from "@/components/notebook/NotebookSourcesPanel";
@@ -7,24 +7,41 @@ import { NotebookStudioPanel } from "@/components/notebook/NotebookStudioPanel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FileText, MessageSquare, Wand2 } from "lucide-react";
+import { FileText, MessageSquare, Wand2, ChevronLeft, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { formatDistanceToNow } from "date-fns";
 
 type MobileTab = "sources" | "chat" | "studio";
 
 export default function NotebookDetail() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const detail = useNotebookDetail(id);
   const isMobile = useIsMobile();
   const [mobileTab, setMobileTab] = useState<MobileTab>("chat");
   const [sourcesCollapsed, setSourcesCollapsed] = useState(false);
 
   const title = detail.notebook?.title || "Notebook";
+  const updatedAt = detail.notebook?.updated_at
+    ? formatDistanceToNow(new Date(detail.notebook.updated_at), { addSuffix: true })
+    : null;
 
   if (isMobile) {
     return (
       <div className="flex flex-col h-full">
         <SEOHead title={`${title} — AI-IDEI`} description="Knowledge notebook" />
+
+        {/* Mobile top bar */}
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-card/80 backdrop-blur-sm shrink-0">
+          <button onClick={() => navigate("/notebooks")} className="text-muted-foreground hover:text-foreground p-1">
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold truncate">{title}</p>
+            {updatedAt && <p className="text-[9px] text-muted-foreground">Updated {updatedAt}</p>}
+          </div>
+        </div>
+
         <div className="flex border-b border-border bg-card shrink-0">
           {([
             { key: "sources" as MobileTab, icon: FileText, label: "Sources", count: detail.sources.length },
@@ -35,13 +52,11 @@ export default function NotebookDetail() {
               key={key}
               onClick={() => setMobileTab(key)}
               className={cn(
-                "flex-1 flex items-center justify-center gap-1.5 py-3 text-xs font-medium transition-all relative",
-                mobileTab === key
-                  ? "text-primary"
-                  : "text-muted-foreground"
+                "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-all relative",
+                mobileTab === key ? "text-primary" : "text-muted-foreground"
               )}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className="h-3.5 w-3.5" />
               {label}
               {count !== undefined && count > 0 && (
                 <span className="text-[9px] bg-primary/10 text-primary px-1 rounded-full">{count}</span>
@@ -62,7 +77,7 @@ export default function NotebookDetail() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
               className="h-full"
             >
               {mobileTab === "sources" && <NotebookSourcesPanel {...detail} notebook={detail.notebook} />}
@@ -81,17 +96,18 @@ export default function NotebookDetail() {
       <div className="flex flex-1 min-h-0">
         {/* Sources Panel - collapsible */}
         <motion.div
-          animate={{ width: sourcesCollapsed ? 48 : 260 }}
+          animate={{ width: sourcesCollapsed ? 40 : 280 }}
           transition={{ duration: 0.2 }}
-          className="shrink-0 border-r border-border overflow-hidden relative"
+          className="shrink-0 border-r border-border overflow-hidden relative bg-card"
         >
           {sourcesCollapsed ? (
             <button
               onClick={() => setSourcesCollapsed(false)}
-              className="w-full h-full flex flex-col items-center pt-4 gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="w-full h-full flex flex-col items-center pt-3 gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              title="Expand sources"
             >
-              <FileText className="h-4 w-4" />
-              <span className="text-[9px] font-medium writing-mode-vertical" style={{ writingMode: "vertical-lr" }}>
+              <PanelLeftOpen className="h-4 w-4" />
+              <span className="text-[9px] font-medium" style={{ writingMode: "vertical-lr" }}>
                 Sources ({detail.sources.length})
               </span>
             </button>
@@ -100,10 +116,10 @@ export default function NotebookDetail() {
               <NotebookSourcesPanel {...detail} notebook={detail.notebook} />
               <button
                 onClick={() => setSourcesCollapsed(true)}
-                className="absolute top-3 right-2 text-muted-foreground hover:text-foreground transition-colors p-0.5 z-10"
+                className="absolute top-3 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-muted z-10"
                 title="Collapse"
               >
-                <span className="text-xs">‹</span>
+                <PanelLeftClose className="h-3.5 w-3.5" />
               </button>
             </>
           )}
@@ -115,7 +131,7 @@ export default function NotebookDetail() {
         </div>
 
         {/* Studio Panel */}
-        <div className="w-[300px] shrink-0 border-l border-border overflow-hidden">
+        <div className="w-[320px] shrink-0 border-l border-border overflow-hidden">
           <NotebookStudioPanel artifacts={detail.artifacts} sources={detail.sources} notebookId={id} />
         </div>
       </div>

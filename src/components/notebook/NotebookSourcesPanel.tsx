@@ -254,10 +254,10 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
       {/* Header */}
       <div className="px-4 py-3 border-b border-border shrink-0">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-semibold text-foreground">
+          <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
             Sources
             {sources.length > 0 && (
-              <span className="ml-1.5 text-[10px] font-normal text-muted-foreground">
+              <span className="text-[10px] font-normal text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">
                 {selectedCount}/{sources.length}
               </span>
             )}
@@ -437,10 +437,12 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
       <ScrollArea className="flex-1">
         <div className="px-2 py-2 space-y-0.5">
           {filteredSources.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12 px-4">
-              <FileText className="h-8 w-8 mx-auto mb-3 text-muted-foreground/20" />
-              <p className="text-xs text-muted-foreground mb-1">No sources yet</p>
-              <p className="text-[10px] text-muted-foreground/60">Add text, URLs, files, or import neurons</p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 px-6">
+              <div className="h-12 w-12 mx-auto mb-3 rounded-xl bg-muted/50 flex items-center justify-center">
+                <FileText className="h-6 w-6 text-muted-foreground/30" />
+              </div>
+              <p className="text-xs font-medium text-muted-foreground mb-1">No sources yet</p>
+              <p className="text-[10px] text-muted-foreground/60 leading-relaxed">Add text, URLs, files, or<br />import neurons to get started</p>
             </motion.div>
           ) : (
             filteredSources.map((src, idx) => {

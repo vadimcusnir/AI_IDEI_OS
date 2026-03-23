@@ -143,11 +143,16 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
       {/* Header */}
       <div className="px-4 py-3 border-b border-border shrink-0">
         <div className="flex items-center gap-2">
-          <Wand2 className="h-4 w-4 text-primary" />
+          <div className="h-6 w-6 rounded-md bg-primary/10 flex items-center justify-center">
+            <Wand2 className="h-3.5 w-3.5 text-primary" />
+          </div>
           <h3 className="text-sm font-semibold text-foreground">Studio</h3>
         </div>
-        <p className="text-[10px] text-muted-foreground mt-1">
-          {selectedSources.length} source{selectedSources.length !== 1 ? "s" : ""} selected
+        <p className="text-[10px] text-muted-foreground mt-1.5">
+          {selectedSources.length === 0
+            ? "Select sources to start generating"
+            : `${selectedSources.length} source${selectedSources.length !== 1 ? "s" : ""} selected — ready to generate`
+          }
         </p>
       </div>
 
