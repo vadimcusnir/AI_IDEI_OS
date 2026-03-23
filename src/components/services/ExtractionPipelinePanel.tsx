@@ -50,7 +50,7 @@ export function ExtractionPipelinePanel() {
     try {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
-      if (!token) { toast.error("Nu ești autentificat"); return; }
+      if (!token) { toast.error(t("errors:not_authenticated")); return; }
 
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extraction-pipeline`,
