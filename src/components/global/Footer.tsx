@@ -56,8 +56,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li><FooterLink to="/community">Forum</FooterLink></li>
               <li><FooterLink to="/topics">Topics</FooterLink></li>
-              <li><FooterLink to="/insights">Insights</FooterLink></li>
-              <li><FooterLink to="/patterns">Patterns</FooterLink></li>
+              <li><FooterLink to="/library">Library</FooterLink></li>
               <li><FooterLink to="/feedback">Feedback</FooterLink></li>
             </ul>
           </div>
