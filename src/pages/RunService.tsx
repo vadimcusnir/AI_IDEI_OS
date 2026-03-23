@@ -75,8 +75,8 @@ export default function RunService() {
   const navigate = useNavigate();
   const { tier: userTier } = useUserTier();
   const { t } = useTranslation("pages");
+  const { balance: creditBalance, loading: creditsLoading } = useCreditBalance();
   const [service, setService] = useState<Service | null>(null);
-  const [credits, setCredits] = useState<UserCredits | null>(null);
   const [loading, setLoading] = useState(true);
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [jobStatus, setJobStatus] = useState<JobStatus>("idle");
