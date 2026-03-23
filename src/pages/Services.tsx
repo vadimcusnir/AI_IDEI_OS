@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -63,17 +63,19 @@ export default function Services() {
   const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { balance, loading: balanceLoading } = useCreditBalance();
   const { tier: userTier } = useUserTier();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const intentParam = searchParams.get("intent") || "";
+  const [search, setSearch] = useState(intentParam);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortBy>("name");
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-  const [activeSection, setActiveSection] = useState<SectionKey>("pipelines");
+  const [activeSection, setActiveSection] = useState<SectionKey>(intentParam ? "services" : "pipelines");
 
   const handleServiceClick = (service: Service) => {
     if (!user) { navigate("/auth"); return; }
@@ -196,7 +198,32 @@ export default function Services() {
           </div>
         )}
 
-        {/* ── Section Switcher ── */}
+        {/* ── Intent banner ── */}
+        {intentParam && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-primary/20 bg-primary/5"
+          >
+            <Zap className="h-4 w-4 text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground">Obiectivul tău:</p>
+              <p className="text-sm font-medium truncate">{intentParam}</p>
+            </div>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="shrink-0 text-xs h-7"
+              onClick={() => {
+                setSearch("");
+                setSearchParams({});
+              }}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </motion.div>
+        )}
+
         <div className="flex items-center gap-1 border-b border-border">
           {([
             { key: "pipelines" as const, label: "Pipelines", icon: Workflow, count: 5 },
