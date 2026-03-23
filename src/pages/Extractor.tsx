@@ -138,7 +138,8 @@ export default function Extractor() {
       .from("episodes")
       .select("*")
       .eq("workspace_id", currentWorkspace!.id)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(500);
     if (data) setEpisodes(data as Episode[]);
     if (error) toast.error(t("errors:generic"));
     setLoading(false);
@@ -824,11 +825,11 @@ export default function Extractor() {
                               type="file"
                               accept={ACCEPTED_TRANSCRIPT_FILES}
                               className="hidden"
-                              ref={transcriptFileRef}
+                              id={`import-transcript-${ep.id}`}
                               onChange={e => handleTranscriptFileImport(e, ep.id)}
                             />
                             <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                              onClick={() => transcriptFileRef.current?.click()}>
+                              onClick={() => document.getElementById(`import-transcript-${ep.id}`)?.click()}>
                               <FileUp className="h-3 w-3" /> Import File
                             </Button>
                           </div>

@@ -163,7 +163,7 @@ export default function Jobs() {
       .select("id, neuron_id, worker_type, status, input, result, error_message, created_at, completed_at, retry_count, max_retries, progress, current_step, depth")
       .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false })
-      .limit(50);
+      .limit(200);
     if (data) setJobs(data as unknown as Job[]);
     if (error) toast.error(t("jobs.failed_to_load"));
     setLoading(false);

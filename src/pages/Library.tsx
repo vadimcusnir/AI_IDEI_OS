@@ -112,13 +112,14 @@ export default function Library() {
         .from("artifacts")
         .select("id, title, artifact_type, format, content, status, tags, service_key, created_at, updated_at")
         .eq("workspace_id", currentWorkspace!.id)
-        .order("updated_at", { ascending: false }),
+        .order("updated_at", { ascending: false })
+        .limit(500),
       supabase
         .from("neurons")
         .select("id, title, status, lifecycle, content_category, created_at, updated_at, number, neuron_blocks(content, position)")
         .eq("workspace_id", currentWorkspace!.id)
         .order("updated_at", { ascending: false })
-        .limit(200),
+        .limit(500),
     ]);
     setArtifacts((artifactsRes.data as Artifact[]) || []);
     
