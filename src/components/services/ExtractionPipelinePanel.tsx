@@ -135,12 +135,11 @@ export function ExtractionPipelinePanel() {
                 />
               </div>
 
-              <Textarea
+              <PipelineSourcePicker
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Lipește conținutul pentru extracție multi-nivel..."
-                rows={5}
-                className="resize-none"
+                onChange={setContent}
+                placeholder="Conținut pentru extracție multi-nivel..."
+                minRows={4}
               />
 
               <div className="flex items-center justify-between">

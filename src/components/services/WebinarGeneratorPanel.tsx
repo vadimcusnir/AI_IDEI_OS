@@ -114,12 +114,11 @@ export function WebinarGeneratorPanel() {
                 <Input placeholder="Audiență țintă" value={audience} onChange={(e) => setAudience(e.target.value)} />
               </div>
 
-              <Textarea
+              <PipelineSourcePicker
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Lipește conținutul sursă pentru webinar (transcript, note, idei cheie)..."
-                rows={6}
-                className="resize-none"
+                onChange={setContent}
+                placeholder="Conținut sursă pentru webinar..."
+                minRows={5}
               />
 
               <div className="flex items-center justify-between">

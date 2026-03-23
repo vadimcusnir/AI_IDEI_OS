@@ -117,12 +117,11 @@ export function ContentGeneratorPanel() {
                 ))}
               </div>
 
-              <Textarea
+              <PipelineSourcePicker
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Lipește conținutul sursă (transcript, neuroni, note, idei)..."
-                rows={5}
-                className="resize-none"
+                onChange={setContent}
+                placeholder="Conținut sursă pentru generare..."
+                minRows={4}
               />
 
               <div className="flex items-center justify-between">
