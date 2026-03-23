@@ -391,6 +391,10 @@ export function useNeuron(neuronNumber?: number) {
 
   const handleRunAll = useCallback(() => {
     const executableBlocks = blocks.filter(b => BLOCK_TYPE_CONFIG[b.type].executable);
+    if (executableBlocks.length === 0) {
+      toast.info("No executable blocks found. Add an AI-action or prompt block to run.");
+      return;
+    }
     executableBlocks.forEach((b, i) => {
       setTimeout(() => handleBlockExecute(b.id), i * 800);
     });
