@@ -211,7 +211,7 @@ const App = () => (
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
+                <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
               </Routes>
             </Suspense>
             <CookieConsent />
