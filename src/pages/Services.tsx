@@ -74,7 +74,7 @@ export default function Services() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { balance, loading: balanceLoading } = useCreditBalance();
-  const { subscribed, tier: subTier } = useSubscription();
+  const { tier: userTier } = useUserTier();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -85,8 +85,6 @@ export default function Services() {
   const [showFilters, setShowFilters] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-
-  const userTier = subscribed ? (subTier || "pro") : "free";
 
   const handleServiceClick = (service: Service) => {
     const requiredTier = service.access_tier || "free";
