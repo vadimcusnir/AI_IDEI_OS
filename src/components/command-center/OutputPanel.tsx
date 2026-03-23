@@ -53,7 +53,7 @@ export function OutputPanel({ outputs, onRerun, onClose, visible }: OutputPanelP
     if (!user) return;
     setSavingId(output.id);
     try {
-      const { error } = await supabase.from("artifacts").insert({
+      const { error } = await supabase.from("artifacts").insert([{
         author_id: user.id,
         title: output.title,
         content: output.content,
@@ -62,7 +62,7 @@ export function OutputPanel({ outputs, onRerun, onClose, visible }: OutputPanelP
         status: "draft",
         tags: [output.type, "command-center"],
         metadata: output.metadata || {},
-      });
+      }]);
       if (error) throw error;
       setSavedIds(prev => new Set(prev).add(output.id));
       toast.success(`Saved "${output.title}" as artifact`);
