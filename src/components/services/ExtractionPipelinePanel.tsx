@@ -36,6 +36,7 @@ const LEVELS = [
 export function ExtractionPipelinePanel() {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { balance } = useCreditBalance();
   const [content, setContent] = useState("");
   const [range, setRange] = useState([0, 12]);
   const [loading, setLoading] = useState(false);
@@ -43,10 +44,28 @@ export function ExtractionPipelinePanel() {
   const [results, setResults] = useState<Record<string, { level: number; name: string; output: string }> | null>(null);
 
   const levelsCount = range[1] - range[0] + 1;
-  const estimatedCost = Math.round(levelsCount * 55); // avg cost
+  const estimatedCost = Math.round(levelsCount * 55);
+
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setCurrentLevel(prev => Math.min(prev + 1, range[1]));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [loading, range]);
 
   const handleRun = async () => {
     if (!user || !content.trim()) return;
+    if (balance < estimatedCost) {
+      toast.error(`Credite insuficiente: ai ${balance} NEURONS, necesari ~${estimatedCost}`);
+      return;
+    }
+
+    const truncated = truncateForService(content);
+    if (truncated.wasTruncated) {
+      toast.info(formatTruncationMessage(truncated), { duration: 6000 });
+    }
+
     setLoading(true);
     setCurrentLevel(range[0]);
     setResults(null);
