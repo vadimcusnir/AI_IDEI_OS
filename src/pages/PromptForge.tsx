@@ -11,6 +11,7 @@ import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Sparkles, Layers, Link2, Store, BarChart3 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { GoalSelector } from "@/components/prompt-forge/GoalSelector";
 import { PromptOutput } from "@/components/prompt-forge/PromptOutput";
