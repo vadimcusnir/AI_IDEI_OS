@@ -96,6 +96,7 @@ export const DOCS_SECTIONS: DocSection[] = [
     topics: [
       { slug: "faq", title: "FAQ" },
       { slug: "glossary", title: "Glossary" },
+      { slug: "limits-quotas", title: "Limits & Quotas" },
       { slug: "security", title: "Security & Privacy" },
     ],
   },
