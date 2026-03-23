@@ -1,0 +1,141 @@
+/**
+ * ContextActions — Smart quick-action chips that adapt to user context.
+ * Shows relevant actions based on current state (neurons count, recent runs, etc.)
+ */
+
+import { useMemo } from "react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Brain, Globe, Sparkles, Network, Zap,
+  FileText, Target, TrendingUp, BookOpen, Layers,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+
+interface ContextAction {
+  id: string;
+  icon: typeof Brain;
+  label: string;
+  prompt: string;
+  color: string;
+  condition?: boolean;
+}
+
+interface ContextActionsProps {
+  neuronCount: number;
+  episodeCount: number;
+  lastIntent?: string;
+  phase: string;
+  onAction: (prompt: string) => void;
+}
+
+export function ContextActions({
+  neuronCount, episodeCount, lastIntent, phase, onAction,
+}: ContextActionsProps) {
+  const actions = useMemo<ContextAction[]>(() => {
+    const all: ContextAction[] = [];
+
+    // Always available
+    all.push({
+      id: "analyze",
+      icon: Globe,
+      label: "Analyze",
+      prompt: "/analyze ",
+      color: "text-blue-500 border-blue-500/20 hover:bg-blue-500/5",
+    });
+
+    // If user has episodes but few neurons → suggest extraction
+    if (episodeCount > 0 && neuronCount < episodeCount * 10) {
+      all.push({
+        id: "extract",
+        icon: Brain,
+        label: "Extract Neurons",
+        prompt: "/extract neurons from my latest episode",
+        color: "text-purple-500 border-purple-500/20 hover:bg-purple-500/5",
+      });
+    }
+
+    // If user has neurons → suggest generation
+    if (neuronCount > 5) {
+      all.push({
+        id: "generate",
+        icon: Sparkles,
+        label: "Generate",
+        prompt: "/generate ",
+        color: "text-pink-500 border-pink-500/20 hover:bg-pink-500/5",
+      });
+    }
+
+    // If user has neurons → suggest search
+    if (neuronCount > 0) {
+      all.push({
+        id: "search",
+        icon: Network,
+        label: "Search",
+        prompt: "/search ",
+        color: "text-green-500 border-green-500/20 hover:bg-green-500/5",
+      });
+    }
+
+    // Post-analysis → suggest extraction
+    if (lastIntent === "analyze") {
+      all.push({
+        id: "post-extract",
+        icon: Brain,
+        label: "Extract from analysis",
+        prompt: "/extract neurons from the analysis above",
+        color: "text-purple-500 border-purple-500/20 hover:bg-purple-500/5",
+      });
+    }
+
+    // Post-extraction → suggest generation
+    if (lastIntent === "extract") {
+      all.push({
+        id: "post-generate",
+        icon: FileText,
+        label: "Generate from neurons",
+        prompt: "/generate content pack from extracted neurons",
+        color: "text-pink-500 border-pink-500/20 hover:bg-pink-500/5",
+      });
+    }
+
+    // If many neurons → suggest comparison
+    if (neuronCount > 20) {
+      all.push({
+        id: "compare",
+        icon: Layers,
+        label: "Compare",
+        prompt: "/compare ",
+        color: "text-orange-500 border-orange-500/20 hover:bg-orange-500/5",
+      });
+    }
+
+    // Limit to 5 most relevant
+    return all.slice(0, 5);
+  }, [neuronCount, episodeCount, lastIntent]);
+
+  if (phase !== "idle" && phase !== "completed") return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex items-center gap-1.5 px-3 pb-1 overflow-x-auto scrollbar-none"
+    >
+      <span className="text-[8px] text-muted-foreground/60 shrink-0 uppercase tracking-wider font-medium">Quick:</span>
+      {actions.map((action) => (
+        <button
+          key={action.id}
+          onClick={() => onAction(action.prompt)}
+          className={cn(
+            "flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-medium transition-all shrink-0",
+            action.color,
+          )}
+        >
+          <action.icon className="h-2.5 w-2.5" />
+          {action.label}
+        </button>
+      ))}
+    </motion.div>
+  );
+}
