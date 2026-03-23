@@ -153,7 +153,7 @@ export default function CommunityThread() {
                   <MessageCircle className="h-2.5 w-2.5" />
                   <span>{t("community_thread.replies_label", { count: thread.reply_count })}</span>
                 </div>
-                <div className="text-sm whitespace-pre-wrap">{thread.content}</div>
+                <div className="prose-compact whitespace-pre-wrap">{thread.content}</div>
               </div>
             </div>
           </CardContent>

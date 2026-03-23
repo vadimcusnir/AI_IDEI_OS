@@ -15,7 +15,7 @@ export default function PrivacyPolicy() {
       <h1 className="text-2xl sm:text-3xl font-bold mb-6">{t("privacy.title")}</h1>
       <p className="text-xs text-muted-foreground mb-8">{t("privacy.last_updated")}</p>
 
-      <article className="prose-custom space-y-6 text-sm leading-relaxed text-foreground/90">
+      <article className="prose-content space-y-6">
         <section>
           <h2 className="text-lg font-semibold mb-2">{t("privacy.s1_title")}</h2>
           <p>{t("privacy.s1_intro")}</p>

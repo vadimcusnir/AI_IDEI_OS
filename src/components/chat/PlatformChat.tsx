@@ -345,7 +345,7 @@ function ChatBubble({ msg }: { msg: Message }) {
           ? "bg-primary text-primary-foreground rounded-br-md"
           : "bg-muted text-foreground rounded-bl-md"
       )}>
-        <p className="whitespace-pre-wrap text-xs">{msg.content}</p>
+        <p className="whitespace-pre-wrap text-xs leading-relaxed">{msg.content}</p>
         <p className={cn(
           "text-[8px] mt-1",
           msg.role === "user" ? "text-primary-foreground/50 text-right" : "text-muted-foreground/50"

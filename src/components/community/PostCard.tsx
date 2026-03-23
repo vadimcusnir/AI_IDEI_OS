@@ -95,7 +95,7 @@ export function PostCard({ post, threadAuthorId, threadId, replies = [], depth =
             )}
           </div>
 
-          <div className="text-sm whitespace-pre-wrap">{renderContent(post.content)}</div>
+          <div className="prose-compact whitespace-pre-wrap">{renderContent(post.content)}</div>
 
           <div className="flex items-center gap-2 mt-2">
             {canMarkSolution && (

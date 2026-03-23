@@ -249,8 +249,8 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
         )}
 
         {/* Content */}
-        <div className="bg-card border border-border rounded-xl p-6">
-          <div className="prose prose-sm dark:prose-invert max-w-none">
+        <div className="bg-card border border-border rounded-xl p-6 sm:p-8">
+          <div className="prose-content">
             <ReactMarkdown>{artifact.content}</ReactMarkdown>
           </div>
         </div>

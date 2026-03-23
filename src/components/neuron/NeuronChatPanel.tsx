@@ -207,16 +207,7 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
               )}
             >
               {msg.role === "assistant" ? (
-                <div className="prose prose-sm max-w-none text-[11px] leading-relaxed
-                  prose-headings:text-foreground prose-headings:prose-headings:text-xs prose-headings:mt-2 prose-headings:mb-1
-                  prose-p:text-foreground prose-p:my-0.5
-                  prose-strong:text-foreground
-                  prose-code:text-[10px] prose-code:bg-muted prose-code:px-1 prose-code:rounded
-                  prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded prose-pre:text-[10px] prose-pre:my-1
-                  prose-li:text-foreground prose-li:my-0
-                  prose-ul:my-0.5 prose-ol:my-0.5
-                  prose-blockquote:border-ai-accent prose-blockquote:text-muted-foreground prose-blockquote:my-1
-                ">
+                <div className="prose-compact">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                   {isStreaming && i === messages.length - 1 && (
                     <span className="inline-block w-1.5 h-3.5 bg-ai-accent animate-pulse ml-0.5 -mb-0.5" />
