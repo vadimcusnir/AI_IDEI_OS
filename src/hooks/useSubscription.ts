@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export const NEURONS_EXCHANGE_RATE = 0.002; // 1 NEURON = $0.002 USD → $1 = 500 NEURONS
 
@@ -12,7 +13,7 @@ export const SUBSCRIPTION_TIERS = {
     price: 11,
     interval: "month" as const,
     neurons_quota: 2000,
-    execution_discount: 0.10, // -10% on service costs
+    execution_discount: 0.10,
     features: ["2,000 NEURONS / lună", "Toate serviciile AI", "Extracție nelimitată", "Knowledge Graph", "-10% cost execuție"],
   },
   pro_monthly: {
@@ -22,7 +23,7 @@ export const SUBSCRIPTION_TIERS = {
     price: 47,
     interval: "month" as const,
     neurons_quota: 12000,
-    execution_discount: 0.25, // -25% on service costs
+    execution_discount: 0.25,
     features: ["12,000 NEURONS / lună", "Tot din Core", "Procesare prioritară", "Batch processing", "Analytics avansat", "-25% cost execuție"],
   },
   elite_monthly: {
@@ -32,7 +33,7 @@ export const SUBSCRIPTION_TIERS = {
     price: 137,
     interval: "month" as const,
     neurons_quota: 40000,
-    execution_discount: 0.40, // -40% on service costs
+    execution_discount: 0.40,
     features: ["40,000 NEURONS / lună", "Tot din Pro", "Locuri nelimitate", "SLA & suport dedicat", "NOTA2 benefits", "-40% cost execuție"],
   },
 } as const;
@@ -94,29 +95,68 @@ export function useSubscription() {
     return () => clearInterval(interval);
   }, [checkSubscription]);
 
-  const subscribe = async (priceId: string) => {
-    if (!session?.access_token) return;
-    const { data, error } = await supabase.functions.invoke("create-subscription", {
-      body: { priceId },
-      headers: { Authorization: `Bearer ${session.access_token}` },
-    });
-    if (error) throw error;
-    if (data?.url) window.open(data.url, "_blank");
+  /**
+   * Unified checkout — creates a Stripe Checkout session and redirects.
+   * @param priceId — Stripe price ID
+   * @param mode — 'subscription' for recurring, 'payment' for one-time top-ups
+   */
+  const createCheckoutSession = async (
+    priceId: string,
+    mode: "subscription" | "payment" = "subscription"
+  ) => {
+    if (!session?.access_token) {
+      toast.error("Trebuie să fii autentificat pentru a continua.");
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke("create-subscription", {
+        body: { price_id: priceId, mode },
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+
+      if (error) {
+        throw new Error(error.message || "Eroare la crearea sesiunii de plată.");
+      }
+
+      if (!data?.url) {
+        throw new Error("Nu s-a primit URL-ul de checkout de la Stripe.");
+      }
+
+      // Redirect to Stripe Checkout
+      window.location.href = data.url;
+    } catch (e: any) {
+      const message = e?.message || "A apărut o eroare. Încearcă din nou.";
+      toast.error(message);
+      throw e;
+    }
   };
+
+  /** Shortcut: subscribe to a recurring plan */
+  const subscribe = (priceId: string) => createCheckoutSession(priceId, "subscription");
+
+  /** Shortcut: one-time NEURONS purchase */
+  const buyNeurons = (priceId: string) => createCheckoutSession(priceId, "payment");
 
   const manageSubscription = async () => {
     if (!session?.access_token) return;
-    const { data, error } = await supabase.functions.invoke("customer-portal", {
-      headers: { Authorization: `Bearer ${session.access_token}` },
-    });
-    if (error) throw error;
-    if (data?.url) window.open(data.url, "_blank");
+    try {
+      const { data, error } = await supabase.functions.invoke("customer-portal", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (error) throw error;
+      if (data?.url) window.open(data.url, "_blank");
+    } catch (e: any) {
+      toast.error(e?.message || "Eroare la deschiderea portalului.");
+    }
   };
 
   return {
     ...state,
     checkSubscription,
+    createCheckoutSession,
     subscribe,
+    buyNeurons,
     manageSubscription,
   };
 }
