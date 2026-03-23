@@ -137,7 +137,7 @@ export function ContextActions({
       {actions.map((action) => (
         <button
           key={action.id}
-          onClick={() => onAction(action.prompt)}
+          onClick={() => action.prompt === "__PIPELINE__" ? onOpenPipeline?.() : onAction(action.prompt)}
           className={cn(
             "flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-medium transition-all shrink-0",
             action.color,
