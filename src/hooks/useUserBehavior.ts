@@ -127,26 +127,26 @@ export function useUserBehavior(): BehaviorState {
     if (!user) return;
     const today = new Date().toISOString().slice(0, 10);
 
-    Promise.all([
-      supabase
-        .from("credit_transactions")
-        .select("amount", { count: "exact" })
-        .eq("user_id", user.id)
-        .eq("type", "spend")
-        .gte("created_at", `${today}T00:00:00Z`),
-      supabase
-        .from("neuron_jobs")
-        .select("id", { count: "exact" })
-        .eq("user_id", user.id),
-      supabase
-        .from("analytics_events")
-        .select("created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(1),
-    ]).then(([txRes, jobsRes, lastRes]) => {
+    const txPromise = supabase
+      .from("credit_transactions")
+      .select("amount")
+      .eq("user_id", user.id)
+      .eq("type", "spend")
+      .gte("created_at", `${today}T00:00:00Z`) as any;
+    const jobsPromise = supabase
+      .from("neuron_jobs")
+      .select("id", { count: "exact" })
+      .eq("user_id", user.id) as any;
+    const lastPromise = supabase
+      .from("analytics_events")
+      .select("created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1) as any;
+
+    Promise.all([txPromise, jobsPromise, lastPromise]).then(([txRes, jobsRes, lastRes]: any[]) => {
       if (txRes.data) {
-        setUsageToday(txRes.data.reduce((sum, t) => sum + Math.abs(Number((t as any).amount) || 0), 0));
+        setUsageToday(txRes.data.reduce((sum: number, t: any) => sum + Math.abs(Number(t.amount) || 0), 0));
       }
       setTotalServices(jobsRes.count ?? 0);
       if (lastRes.data?.[0]) {
