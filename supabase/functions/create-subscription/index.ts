@@ -53,8 +53,8 @@ serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: [{ price: priceId, quantity: 1 }],
       mode,
-      success_url: `${origin}/credits?${successParam}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/credits?${cancelParam}`,
+      success_url: `${origin}/payment/result?status=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/payment/result?status=cancel`,
       metadata: {
         user_id: user.id,
         mode,

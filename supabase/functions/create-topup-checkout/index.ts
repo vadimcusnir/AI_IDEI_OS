@@ -55,8 +55,8 @@ Deno.serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: [{ price: pkg.priceId, quantity: 1 }],
       mode: "payment",
-      success_url: `${origin}/credits?topup=success&neurons=${pkg.neurons}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/credits?topup=cancelled`,
+      success_url: `${origin}/payment/result?status=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/payment/result?status=cancel`,
       metadata: {
         user_id: user.id,
         neurons: String(pkg.neurons),
