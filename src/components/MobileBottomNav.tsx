@@ -85,7 +85,9 @@ const MENU_SECTIONS: MenuSection[] = [
     items: [
       { path: "/profile", icon: User, labelKey: "profile" },
       { path: "/credits", icon: Coins, labelKey: "credits" },
+      { path: "/wallet", icon: Wallet, labelKey: "wallet" },
       { path: "/notifications", icon: Bell, labelKey: "notifications" },
+      { path: "/gamification", icon: Trophy, labelKey: "gamification" },
       { path: "/guests", icon: Users, labelKey: "guest_pages" },
     ],
   },
