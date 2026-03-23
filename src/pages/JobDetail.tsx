@@ -232,7 +232,7 @@ export default function JobDetail() {
                           <Lock className="h-2.5 w-2.5" /> Preview 20%
                         </Badge>
                       )}
-                      <Button
+                       <Button
                         variant="ghost"
                         size="sm"
                         className="h-6 text-[10px]"
@@ -243,6 +243,14 @@ export default function JobDetail() {
                       >
                         <Copy className="h-3 w-3" />
                       </Button>
+                      {isUnlocked && (
+                        <CapitalizeActions
+                          artifactId={art.id}
+                          title={art.title}
+                          content={art.content}
+                          artifactType={art.artifact_type}
+                        />
+                      )}
                     </div>
                   </div>
 
