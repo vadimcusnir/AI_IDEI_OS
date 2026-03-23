@@ -15,9 +15,9 @@ export function LowBalanceBanner() {
   if (!user || loading) return null;
 
   const severity =
-    balance <= 20 ? "critical" :
-    balance <= 50 ? "warning" :
-    balance <= 100 ? "info" : null;
+    balance <= 50 ? "critical" :
+    balance <= 100 ? "warning" :
+    balance <= 200 ? "info" : null;
 
   if (!severity || dismissed === severity.length) return null;
 

@@ -619,30 +619,40 @@ export default function RunService() {
               </div>
 
               {jobStatus === "completed" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="flex flex-wrap items-center gap-2 mt-4"
-                >
-                  <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/jobs")}>
-                    {t("run_service.view_all_jobs")}
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/credits")}>
-                    <Coins className="h-3 w-3" /> {t("run_service.view_credits")}
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/library")}>
-                    <FileText className="h-3 w-3" /> {t("run_service.view_in_library")}
-                  </Button>
-                  <Button variant="default" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => {
-                    setJobStatus("idle");
-                    setJobResult("");
-                    setJobId(null);
-                    loadData();
-                  }}>
-                    <Play className="h-3 w-3" /> {t("run_service.run_again")}
-                  </Button>
-                </motion.div>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="flex flex-wrap items-center gap-2 mt-4"
+                  >
+                    <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/jobs")}>
+                      {t("run_service.view_all_jobs")}
+                    </Button>
+                    <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/credits")}>
+                      <Coins className="h-3 w-3" /> {t("run_service.view_credits")}
+                    </Button>
+                    <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => navigate("/library")}>
+                      <FileText className="h-3 w-3" /> {t("run_service.view_in_library")}
+                    </Button>
+                    <Button variant="default" size="sm" className="text-xs gap-1.5 rounded-lg" onClick={() => {
+                      setJobStatus("idle");
+                      setJobResult("");
+                      setJobId(null);
+                      loadData();
+                    }}>
+                      <Play className="h-3 w-3" /> {t("run_service.run_again")}
+                    </Button>
+                  </motion.div>
+
+                  {/* Post-execution recommendations — eliminates dead-ends */}
+                  {service && (
+                    <PostExecutionRecommendations
+                      serviceKey={service.service_key}
+                      serviceCategory={service.category}
+                    />
+                  )}
+                </>
               )}
             </motion.div>
           )}
