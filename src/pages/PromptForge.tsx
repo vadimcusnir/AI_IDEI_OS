@@ -7,9 +7,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Sparkles, Layers, Link2, Store, BarChart3 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { GoalSelector } from "@/components/prompt-forge/GoalSelector";
 import { PromptOutput } from "@/components/prompt-forge/PromptOutput";
@@ -190,9 +192,15 @@ export default function PromptForge() {
         ? `\n\n[Feedback anterior: ${feedback.map(f => `Rating ${f.rating}/5: "${f.feedback}"`).join("; ")}]`
         : "";
 
+      // Truncate context if too long
+      const contextResult = truncateForService(context);
+      if (contextResult.wasTruncated) {
+        toast.info(formatTruncationMessage(contextResult), { duration: 6000 });
+      }
+
       const fullText = await streamGenerate(
         session,
-        { context, goal, details: details + feedbackContext },
+        { context: contextResult.content, goal, details: details + feedbackContext },
         neuronId, jobId, setResult
       );
 
@@ -384,12 +392,11 @@ export default function PromptForge() {
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                       {t("prompt_forge.context_label")}
                     </label>
-                    <Textarea
+                    <PipelineSourcePicker
                       value={context}
-                      onChange={e => setContext(e.target.value)}
+                      onChange={setContext}
                       placeholder={t("prompt_forge.context_placeholder")}
-                      rows={4}
-                      className="text-sm"
+                      minRows={4}
                     />
                   </div>
 
