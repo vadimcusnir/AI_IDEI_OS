@@ -6,7 +6,7 @@
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
-  Brain, Globe, Sparkles, Network, Zap,
+  Brain, Globe, Sparkles, Network, Zap, Workflow,
   FileText, Target, TrendingUp, BookOpen, Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
