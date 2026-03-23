@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription, SUBSCRIPTION_TIERS } from "@/hooks/useSubscription";
-import { supabase } from "@/integrations/supabase/client";
+
 import { SEOHead } from "@/components/SEOHead";
 import { FAQJsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ const PLANS = [
     priceId: null,
     mode: null as "subscription" | "topup" | null,
     features: [
-      "500 NEURONS credits",
+      "500 NEURONS welcome bonus",
       "3 transcriptions / month",
       "Basic extraction pipeline",
       "Knowledge library access",
@@ -34,75 +34,72 @@ const PLANS = [
     cta: "Get Started Free",
   },
   {
-    key: "creator",
-    name: "Creator",
-    price: "29",
+    key: "core",
+    name: "Core",
+    price: "11",
     period: "/mo",
-    neurons: "5,000",
-    badge: "Popular",
-    highlight: true,
-    priceId: Object.values(SUBSCRIPTION_TIERS).find(t => t.interval === "month")?.price_id || null,
+    neurons: "2,000",
+    badge: null,
+    highlight: false,
+    priceId: Object.values(SUBSCRIPTION_TIERS).find(t => t.name === "Core")?.price_id || null,
     mode: "subscription" as const,
     features: [
-      "5,000 NEURONS / month",
+      "2,000 NEURONS / month",
       "Unlimited transcriptions",
       "Full extraction pipeline",
       "All AI services",
-      "Priority processing",
-      "Knowledge graph",
-      "Export & API access",
+      "Knowledge graph access",
     ],
-    cta: "Start Creating",
+    cta: "Start with Core",
   },
   {
-    key: "professional",
-    name: "Professional",
-    price: "74",
+    key: "pro",
+    name: "Pro",
+    price: "47",
     period: "/mo",
-    neurons: "20,000",
-    badge: null,
-    highlight: false,
-    priceId: null,
-    mode: "topup" as const,
-    topupPackage: "pro",
+    neurons: "10,000",
+    badge: "Popular",
+    highlight: true,
+    priceId: Object.values(SUBSCRIPTION_TIERS).find(t => t.name === "Pro")?.price_id || null,
+    mode: "subscription" as const,
     features: [
-      "20,000 NEURONS / month",
-      "Everything in Creator",
+      "10,000 NEURONS / month",
+      "Everything in Core",
+      "Priority processing",
       "Batch processing",
       "Advanced analytics",
       "Custom prompts",
-      "Team workspace (3 seats)",
-      "Priority support",
+      "Export & API access",
     ],
-    cta: "Go Professional",
+    cta: "Go Pro",
   },
   {
-    key: "enterprise",
-    name: "Enterprise",
-    price: "299",
+    key: "elite",
+    name: "Elite",
+    price: "137",
     period: "/mo",
-    neurons: "100,000",
+    neurons: "50,000",
     badge: "Max Power",
     highlight: false,
-    priceId: null,
-    mode: null,
+    priceId: Object.values(SUBSCRIPTION_TIERS).find(t => t.name === "Elite")?.price_id || null,
+    mode: "subscription" as const,
     features: [
-      "100,000 NEURONS / month",
-      "Everything in Professional",
+      "50,000 NEURONS / month",
+      "Everything in Pro",
       "Unlimited team seats",
       "Custom integrations",
       "SLA & dedicated support",
       "White-label options",
       "NOTA2 token benefits",
     ],
-    cta: "Contact Sales",
+    cta: "Go Elite",
   },
 ];
-
 const FAQ_ITEMS = [
-  { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount of credits based on complexity. 1000 NEURONS = $10 USD." },
-  { question: "Can I buy credits without a subscription?", answer: "Yes! You can top up credits anytime via one-time purchases. Subscriptions simply give you a monthly allowance at a better rate." },
-  { question: "What is Root2 pricing?", answer: "All AI-IDEI prices follow the Root2 principle — the digital root of every price equals 2. This is our unique pricing philosophy." },
+  { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount based on complexity. Base rate: 1000 NEURONS = $10 USD. Subscriptions offer 45–73% discount." },
+  { question: "Can I buy credits without a subscription?", answer: "Yes! Top up credits anytime at the base rate ($10/1000N). Subscriptions give you a monthly allocation at a significantly better effective rate." },
+  { question: "What is Root2 pricing?", answer: "All AI-IDEI prices follow the Root2 principle — the digital root of every price equals 2 (e.g. $11, $47, $137). This unique pricing philosophy ensures mathematical harmony across our economy." },
+  { question: "How much does a typical service cost?", answer: "An article generation costs ~150 NEURONS ($1.50). A complete capitalization pipeline with 50+ deliverables costs ~3500 NEURONS ($35). That's $0.70 per deliverable vs $25+ from freelancers." },
   { question: "What happens when I run out of credits?", answer: "Your existing neurons and outputs remain accessible. You simply cannot run new AI services until you top up or your subscription renews." },
 ];
 
@@ -125,12 +122,6 @@ export default function Pricing() {
       return;
     }
 
-    // Enterprise — contact
-    if (plan.key === "enterprise") {
-      navigate("/credits");
-      return;
-    }
-
     // Subscription plan with priceId
     if (plan.mode === "subscription" && plan.priceId) {
       setProcessing(plan.key);
@@ -144,30 +135,15 @@ export default function Pricing() {
       return;
     }
 
-    // Top-up package
-    if (plan.mode === "topup" && (plan as any).topupPackage) {
-      setProcessing(plan.key);
-      try {
-        const { data, error } = await supabase.functions.invoke("create-topup-checkout", {
-          body: { package_key: (plan as any).topupPackage },
-        });
-        if (error) throw new Error(error.message);
-        if (data?.url) window.open(data.url, "_blank");
-      } catch (e: any) {
-        toast.error(e.message || "Checkout failed");
-      } finally {
-        setProcessing(null);
-      }
-      return;
-    }
-
-    // Fallback
+    // Fallback — go to credits for contact/topup
     navigate("/credits");
   };
 
   const isCurrentPlan = (planKey: string) => {
     if (planKey === "free" && !subscribed) return true;
-    if (planKey === "creator" && tier === "pro_monthly") return true;
+    if (planKey === "core" && tier === "core_monthly") return true;
+    if (planKey === "pro" && tier === "pro_monthly") return true;
+    if (planKey === "elite" && tier === "elite_monthly") return true;
     return false;
   };
 

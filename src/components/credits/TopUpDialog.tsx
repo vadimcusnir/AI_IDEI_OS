@@ -12,9 +12,11 @@ import { cn } from "@/lib/utils";
 import { useSearchParams } from "react-router-dom";
 
 const PACKAGES = [
-  { key: "starter", neurons: 500, price: 11, icon: Zap, label: "Starter", popular: false },
-  { key: "standard", neurons: 1000, price: 20, icon: Sparkles, label: "Standard", popular: true },
-  { key: "pro", neurons: 5000, price: 92, icon: Crown, label: "Pro", popular: false },
+  { key: "micro", neurons: 200, price: 2, icon: Coins, label: "Micro", popular: false },
+  { key: "starter", neurons: 1100, price: 11, icon: Zap, label: "Starter", popular: false },
+  { key: "standard", neurons: 2000, price: 20, icon: Sparkles, label: "Standard", popular: true },
+  { key: "growth", neurons: 4700, price: 47, icon: Crown, label: "Growth", popular: false },
+  { key: "scale", neurons: 9200, price: 92, icon: Crown, label: "Scale", popular: false },
 ];
 
 interface TopUpDialogProps {

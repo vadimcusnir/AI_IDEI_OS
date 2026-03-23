@@ -3,23 +3,32 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export const SUBSCRIPTION_TIERS = {
-  pro_monthly: {
+  core_monthly: {
     price_id: "price_1T8qQtIK7fwtty4o6GFGNU28",
     product_id: "prod_U74a8adWSDNymI",
-    name: "Pro Monthly",
-    price: 20,
+    name: "Core",
+    price: 11,
     interval: "month" as const,
-    neurons_quota: 5000,
-    features: ["Toate serviciile AI", "Extracție nelimitată", "Knowledge Graph", "Suport prioritar"],
+    neurons_quota: 2000,
+    features: ["Toate serviciile AI", "Extracție nelimitată", "Knowledge Graph"],
   },
-  pro_yearly: {
+  pro_monthly: {
     price_id: "price_1T8qRgIK7fwtty4ox2y0cEZJ",
     product_id: "prod_U74aOlNMMVn7lY",
-    name: "Pro Yearly",
-    price: 155,
-    interval: "year" as const,
-    neurons_quota: 60000,
-    features: ["Tot din Pro Monthly", "35% reducere", "60.000 NEURONS/an", "Acces prioritar features noi"],
+    name: "Pro",
+    price: 47,
+    interval: "month" as const,
+    neurons_quota: 10000,
+    features: ["Tot din Core", "Procesare prioritară", "Batch processing", "Analytics avansat"],
+  },
+  elite_monthly: {
+    price_id: "price_elite_placeholder",
+    product_id: "prod_elite_placeholder",
+    name: "Elite",
+    price: 137,
+    interval: "month" as const,
+    neurons_quota: 50000,
+    features: ["Tot din Pro", "Locuri nelimitate", "SLA & suport dedicat", "NOTA2 benefits"],
   },
 } as const;
 

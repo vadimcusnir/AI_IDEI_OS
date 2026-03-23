@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 
 const TOP_UP_PACKAGES = [
-  { key: "starter", neurons: 500, price: 11, icon: Zap },
-  { key: "standard", neurons: 1000, price: 20, icon: Sparkles, popular: true },
-  { key: "pro", neurons: 5000, price: 92, icon: Crown },
+  { key: "starter", neurons: 1100, price: 11, icon: Zap },
+  { key: "standard", neurons: 2000, price: 20, icon: Sparkles, popular: true },
+  { key: "growth", neurons: 4700, price: 47, icon: Crown },
 ];
 
 export function HomePricingSection() {
@@ -98,14 +98,14 @@ export function HomePricingSection() {
               <Crown className="h-4 w-4 text-primary" />
               <h3 className="text-sm font-semibold">Pro Plan</h3>
               <Badge variant="outline" className="text-[9px] border-primary/30 text-primary">
-                Salvează 35%
+                Salvează 53%
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
-              5.000 NEURONS/lună, toate serviciile AI, Knowledge Graph, suport prioritar.
+              10.000 NEURONS/lună, toate serviciile AI, procesare prioritară, batch processing.
             </p>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
-              {["Extracție nelimitată", "Suport prioritar", "Knowledge Graph"].map(f => (
+              {["Extracție nelimitată", "Procesare prioritară", "Analytics avansat"].map(f => (
                 <span key={f} className="flex items-center gap-1 text-[10px] text-muted-foreground">
                   <Check className="h-2.5 w-2.5 text-primary shrink-0" /> {f}
                 </span>
@@ -114,7 +114,7 @@ export function HomePricingSection() {
           </div>
           <div className="flex flex-col items-end gap-1.5 shrink-0">
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold font-mono">$20</span>
+              <span className="text-2xl font-bold font-mono">$47</span>
               <span className="text-[10px] text-muted-foreground">/lună</span>
             </div>
             <Button size="sm" className="gap-1.5 text-xs" onClick={() => navigate("/credits")}>
