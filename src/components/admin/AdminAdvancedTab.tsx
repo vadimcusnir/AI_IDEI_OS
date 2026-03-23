@@ -116,6 +116,7 @@ function ExportSection() {
 
 // ── Approval Requests ──
 function ApprovalRequests() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
