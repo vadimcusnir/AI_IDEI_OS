@@ -70,7 +70,9 @@ export function AppBreadcrumbs() {
   if (segments.length === 0) return null;
 
   const crumbs = segments.map((seg, i) => {
-    const path = "/" + segments.slice(0, i + 1).join("/");
+    let path = "/" + segments.slice(0, i + 1).join("/");
+    // /n is not a valid route — redirect breadcrumb to /neurons
+    if (path === "/n") path = "/neurons";
     const label = ROUTE_LABELS[seg] || decodeURIComponent(seg).replace(/-/g, " ");
     const isLast = i === segments.length - 1;
     // Capitalize first letter for dynamic segments
