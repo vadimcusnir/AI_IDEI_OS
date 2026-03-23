@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { useTranslation } from "react-i18next";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 interface LearningPath {
   id: string;
@@ -153,6 +154,15 @@ export default function KnowledgeDashboard() {
             <h1 className="text-xl font-bold">{t("knowledge_dashboard.title")}</h1>
             <p className="text-xs text-muted-foreground mt-1">{t("knowledge_dashboard.subtitle")}</p>
           </div>
+
+          {/* Flow guidance */}
+          <FlowTip
+            tipId="knowledge-intro"
+            variant="info"
+            title="Your knowledge base"
+            description="Browse principles, methods, frameworks and blueprints extracted from your content. Use learning paths to master topics step by step."
+            className="mb-4"
+          />
 
           {/* Search */}
           <div className="relative mb-4">

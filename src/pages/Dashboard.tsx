@@ -17,6 +17,7 @@ import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useTranslation } from "react-i18next";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
@@ -145,6 +146,26 @@ export default function Dashboard() {
     <div className="flex-1">
       <SEOHead title="Dashboard — AI-IDEI" description="Full analytics dashboard: neurons, jobs, credits, pipeline status." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        {/* Flow guidance */}
+        <FlowTip
+          tipId="dashboard-welcome"
+          variant="info"
+          title="Your command center"
+          description="This dashboard shows your neurons, credits, jobs and pipeline progress at a glance. Upload content to see your stats grow."
+          action={{ label: "Upload content", route: "/transcribe" }}
+          show={data.neurons.total === 0}
+          className="mb-4"
+        />
+        <FlowTip
+          tipId="dashboard-pipeline-hint"
+          variant="next-step"
+          title="Your pipeline is active!"
+          description="You have content uploaded. Head to the Extractor to generate neurons from your transcripts."
+          action={{ label: "Go to Extractor", route: "/extractor" }}
+          show={data.neurons.total > 0 && data.pipeline.analyzed === 0}
+          className="mb-4"
+        />
+
         {/* KPI Row */}
         <motion.div variants={stagger} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 mb-6">
           <motion.div variants={fadeUp}><KPI icon={Brain} label={t("dashboard.neurons")} value={data.neurons.total} sub={t("dashboard.this_week", { count: data.neurons.thisWeek })} /></motion.div>

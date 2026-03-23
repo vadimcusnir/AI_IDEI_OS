@@ -20,6 +20,7 @@ const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChar
 import { EconomicProjections } from "@/components/credits/EconomicProjections";
 import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 interface UserCredits {
   balance: number;
@@ -193,6 +194,24 @@ export default function Credits() {
           </div>
           <TopUpDialog onSuccess={loadData} />
         </div>
+
+        {/* Flow guidance */}
+        <FlowTip
+          tipId="credits-intro"
+          variant="info"
+          title="How NEURONS credits work"
+          description="NEURONS are the compute currency that powers AI services. Each service consumes credits based on complexity. Top up anytime or earn bonus credits."
+          className="mb-4"
+        />
+        <FlowTip
+          tipId="credits-low-balance"
+          variant="tip"
+          title="Your balance is running low"
+          description="Top up your NEURONS to keep running AI services without interruption."
+          action={{ label: "View plans", route: "/credits?tab=plans" }}
+          show={balanceHealth === "critical" || balanceHealth === "warning"}
+          className="mb-4"
+        />
 
         {/* Wallet State */}
         <div className="mb-6">
