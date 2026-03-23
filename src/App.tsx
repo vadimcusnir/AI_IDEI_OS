@@ -88,7 +88,7 @@ const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
 const SecuritySettings = lazyRetry(() => import("./pages/SecuritySettings"));
 const GamificationPage = lazyRetry(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazyRetry(() => import("./pages/AnalyticsDashboard"));
-const Transcribe = lazyRetry(() => import("./pages/Transcribe"));
+
 const Integrations = lazyRetry(() => import("./pages/Integrations"));
 const CognitiveUnits = lazyRetry(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazyRetry(() => import("./pages/CollectionRuns"));
