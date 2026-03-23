@@ -254,10 +254,10 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
       {/* Header */}
       <div className="px-4 py-3 border-b border-border shrink-0">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-semibold text-foreground">
+          <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
             Sources
             {sources.length > 0 && (
-              <span className="ml-1.5 text-[10px] font-normal text-muted-foreground">
+              <span className="text-[10px] font-normal text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">
                 {selectedCount}/{sources.length}
               </span>
             )}
