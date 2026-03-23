@@ -106,7 +106,7 @@ export function ExtractionPipelinePanel() {
                     )}
                   >
                     <div className={cn(
-                      "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white",
+                      "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-primary-foreground",
                       completed ? "bg-emerald-500" : isCurrent ? "bg-primary animate-pulse" : l.color
                     )}>
                       {completed ? "✓" : l.level}
