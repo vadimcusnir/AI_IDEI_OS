@@ -533,8 +533,8 @@ export function CommandCenter() {
           </div>
         </div>
 
-        {/* ═══ ZONE 2: Plan Preview (confirmation gate) ═══ */}
-        {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && (
+        {/* ═══ ZONE 2: Plan Preview + Economic Gate ═══ */}
+        {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && !showEconomicGate && (
           <div className="px-4 py-2">
             <PlanPreview
               plan={{
@@ -548,13 +548,39 @@ export function CommandCenter() {
                 output_preview: cmdState.state.outputPreview,
               }}
               balance={balance}
-              onExecute={() => cmdState.confirmExecution()}
+              onExecute={() => {
+                if (cmdState.state.totalCredits > 50) {
+                  setShowEconomicGate(true);
+                } else {
+                  cmdState.confirmExecution();
+                }
+              }}
               onEdit={() => {
                 setInput(`Refine plan: ${cmdState.state.intent}`);
                 inputRef.current?.focus();
               }}
               onDismiss={() => cmdState.reset()}
               executing={loading}
+            />
+          </div>
+        )}
+
+        {/* Economic Gate — for costly executions */}
+        {showEconomicGate && cmdState.state.phase === "confirming" && (
+          <div className="px-4 py-2">
+            <EconomicGate
+              balance={balance}
+              estimatedCost={cmdState.state.totalCredits}
+              tierDiscount={tierDiscount}
+              tier={tier}
+              onProceed={() => {
+                setShowEconomicGate(false);
+                cmdState.confirmExecution();
+              }}
+              onCancel={() => {
+                setShowEconomicGate(false);
+                cmdState.reset();
+              }}
             />
           </div>
         )}
