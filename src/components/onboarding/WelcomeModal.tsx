@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Rocket, Play, ArrowRight } from "lucide-react";
+import { Rocket, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
@@ -16,12 +16,23 @@ export function WelcomeModal() {
   const { t } = useTranslation("common");
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (!user) return;
     const seen = localStorage.getItem(`welcome_seen_${user.id}`);
     if (!seen) setOpen(true);
   }, [user]);
+
+  useEffect(() => {
+    if (open && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+    if (!open && videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  }, [open]);
 
   const handleClose = () => {
     if (user) localStorage.setItem(`welcome_seen_${user.id}`, "true");
@@ -37,22 +48,21 @@ export function WelcomeModal() {
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) handleClose(); }}>
       <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-primary/20">
-        {/* Video area */}
-        <div className="relative bg-gradient-to-br from-primary/10 to-accent/5 p-6 pb-4">
+        <div className="relative bg-gradient-to-br from-primary/10 to-accent/5 p-4 pb-2">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-            className="flex items-center justify-center"
           >
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-background/80 border border-border shadow-lg flex items-center justify-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
-              <div className="flex flex-col items-center gap-2 z-10">
-                <div className="h-14 w-14 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
-                  <Play className="h-6 w-6 text-primary ml-0.5" />
-                </div>
-                <span className="text-[10px] text-muted-foreground font-medium">{t("tutorial_duration")}</span>
-              </div>
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-background/80 border border-border shadow-lg">
+              <video
+                ref={videoRef}
+                src="/videos/ai-idei-explanation-01.mp4"
+                className="w-full h-full object-cover"
+                controls
+                playsInline
+                preload="metadata"
+              />
             </div>
           </motion.div>
         </div>
