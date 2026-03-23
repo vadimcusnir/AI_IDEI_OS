@@ -78,8 +78,7 @@ const SERVICE_LAYERS = [
   { key: "all", labelKey: "services.tab_all", icon: Sparkles, description: "Browse all available AI services" },
   { key: "quick", labelKey: "services.tab_quick", icon: Zap, description: "Fast, low-cost single tasks" },
   { key: "research", labelKey: "services.tab_research", icon: BarChart3, description: "Market research & deep analysis" },
-  { key: "avatar", labelKey: "services.tab_avatar", icon: Users, description: "Avatar & audience profiling" },
-  { key: "pipelines", labelKey: "services.tab_pipelines", icon: Workflow, description: "Full automated pipelines" },
+  { key: "pipelines", labelKey: "services.tab_pipelines", icon: Workflow, description: "Full automated pipelines & engines" },
   { key: "history", labelKey: "services.tab_history", icon: Clock, description: "Execution history" },
 ] as const;
 
