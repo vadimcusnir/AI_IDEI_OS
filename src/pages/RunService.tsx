@@ -44,10 +44,6 @@ interface Service {
   access_tier: string;
 }
 
-interface UserCredits {
-  balance: number;
-  total_spent: number;
-}
 
 type JobStatus = "idle" | "creating" | "running" | "completed" | "failed";
 
