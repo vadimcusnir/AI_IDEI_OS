@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { UnlockArtifactButton } from "@/components/artifacts/UnlockArtifactButton";
 
 interface JobDetail {
   id: string;
