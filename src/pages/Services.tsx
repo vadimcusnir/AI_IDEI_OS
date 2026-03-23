@@ -158,6 +158,8 @@ export default function Services() {
     );
   }
 
+  const isVisitor = !user;
+
   return (
     <PageTransition>
     <div className="flex-1 overflow-y-auto">
