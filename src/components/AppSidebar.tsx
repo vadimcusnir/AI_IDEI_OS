@@ -97,6 +97,7 @@ const AUTH_SECTIONS: NavSection[] = [
       { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
       { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { labelKey: "guest_pages", to: "/guests", icon: UserPlus, controlId: "nav.guests" },
     ],
   },
   {
@@ -106,10 +107,15 @@ const AUTH_SECTIONS: NavSection[] = [
     items: [
       { labelKey: "transcribe", to: "/transcribe", icon: FileText, controlId: "nav.transcribe" },
       { labelKey: "headline_generator", to: "/headline-generator", icon: Zap, controlId: "nav.headline-generator" },
+      { labelKey: "notebooks", to: "/notebooks", icon: Notebook, controlId: "nav.notebooks" },
       { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
       { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
+      { labelKey: "capitalization", to: "/capitalization", icon: Crown, controlId: "nav.capitalization" },
       { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
       { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
+      { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
+      { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units", minTier: "pro" as UserTier },
+      { labelKey: "collection_runs", to: "/collection-runs", icon: FolderOpen, controlId: "nav.collection-runs", minTier: "pro" as UserTier },
     ],
   },
   {
@@ -130,8 +136,10 @@ const AUTH_SECTIONS: NavSection[] = [
     items: [
       { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
       { labelKey: "wallet", to: "/wallet", icon: Wallet, controlId: "nav.wallet" },
+      { labelKey: "vip", to: "/vip", icon: Crown, controlId: "nav.vip" },
       { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
       { labelKey: "gamification", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
+      { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },
     ],
   },
   {
@@ -140,6 +148,7 @@ const AUTH_SECTIONS: NavSection[] = [
     authOnly: true,
     items: [
       { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
+      { labelKey: "api", to: "/api", icon: Code, controlId: "nav.api" },
       { labelKey: "changelog", to: "/changelog", icon: ScrollText, controlId: "nav.changelog" },
       { labelKey: "feedback", to: "/feedback", icon: MessageCircle, controlId: "nav.feedback" },
     ],
@@ -152,8 +161,10 @@ const ADMIN_SECTION: NavSection = {
   items: [
     { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
     { labelKey: "runtime", to: "/runtime", icon: Activity, adminOnly: true },
+    { labelKey: "data_pipeline", to: "/data-pipeline", icon: Database, adminOnly: true },
     { labelKey: "analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
     { labelKey: "security", to: "/security", icon: ShieldCheck, adminOnly: true },
+    { labelKey: "db_schema", to: "/db-schema", icon: Network, adminOnly: true },
   ],
 };
 
