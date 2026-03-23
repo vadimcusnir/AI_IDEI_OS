@@ -462,7 +462,7 @@ export default function RunService() {
                     <div>
                       <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.after_run")}</p>
                       <p className={cn("text-2xl font-bold font-mono", hasEnoughCredits ? "text-status-validated" : "text-destructive")}>
-                        {(credits?.balance ?? 0) - service.credits_cost}
+                        {creditBalance - service.credits_cost}
                       </p>
                       <p className="text-[9px] text-muted-foreground">NEURONS</p>
                     </div>
