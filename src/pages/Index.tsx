@@ -1,13 +1,15 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
-import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen, Trash2, CheckSquare, XSquare } from "lucide-react";
+import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen, Trash2, CheckSquare, XSquare, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
 import { NeuronToolbar } from "@/components/neurons/NeuronToolbar";
 import { NeuronCard } from "@/components/neurons/NeuronCard";
 import { NeuronPreviewPane } from "@/components/neurons/NeuronPreviewPane";
+import { NeuronInsights } from "@/components/neurons/NeuronInsights";
+import { BulkAIActions } from "@/components/neurons/BulkAIActions";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
 import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
@@ -15,6 +17,7 @@ import { Logo } from "@/components/shared/Logo";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { useTranslation } from "react-i18next";
 import { FlowTip } from "@/components/onboarding/FlowTip";
+import { AnimatePresence } from "framer-motion";
 
 const STATUS_DOTS: Record<string, string> = {
   draft: "bg-muted-foreground/40",
