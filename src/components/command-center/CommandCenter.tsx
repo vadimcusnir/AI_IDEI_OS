@@ -4,36 +4,27 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
-import { useCommandState, type TaskStep } from "@/hooks/useCommandState";
+import { useCommandState } from "@/hooks/useCommandState";
 import { useExecutionHistory } from "@/hooks/useExecutionHistory";
 import { useRealtimeSteps } from "@/hooks/useRealtimeSteps";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import ReactMarkdown from "react-markdown";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Loader2, X, Paperclip, RotateCcw, History,
-  Zap, Coins, Command, Send,
-  PanelRightOpen, PanelRightClose,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
-import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
+import { AnimatePresence } from "framer-motion";
 import { useAgentDecisionEngine } from "@/hooks/useAgentDecisionEngine";
-import { CommandBubble, type Message } from "./CommandBubble";
-import { WelcomeScreen } from "./WelcomeScreen";
-import { PlanPreview, type ExecutionPlan } from "./PlanPreview";
-import { OutputPanel, type OutputItem } from "./OutputPanel";
-import { MemoryPanel } from "./MemoryPanel";
-import { TaskTree } from "./TaskTree";
-import { EconomicGate, KernelBadge } from "./EconomicGate";
+import { type Message } from "./CommandBubble";
+import { type OutputItem } from "./OutputPanel";
+import { OutputPanel } from "./OutputPanel";
+import { PlanPreview } from "./PlanPreview";
+import { EconomicGate } from "./EconomicGate";
 import { PermissionGate } from "./PermissionGate";
 import { PostExecutionPanel } from "./PostExecutionPanel";
 import { ContextActions } from "./ContextActions";
 import { ExecutionStatusBar } from "./ExecutionStatusBar";
-import { ExecutionSummary } from "./ExecutionSummary";
+import { CommandHeader } from "./CommandHeader";
+import { CommandInputZone, type CommandInputZoneRef } from "./CommandInputZone";
+import { MessageStream } from "./MessageStream";
+import { SidePanels } from "./SidePanels";
 import { useUserTier } from "@/hooks/useUserTier";
 import { routeCommand, type RouteResult } from "./CommandRouter";
 import {
@@ -86,9 +77,7 @@ export function CommandCenter() {
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [pendingInput, setPendingInput] = useState("");
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   // ═══ Realtime step tracking ═══
@@ -97,9 +86,7 @@ export function CommandCenter() {
     enabled: cmdState.state.phase === "executing" || cmdState.state.phase === "delivering",
     onStepUpdate: cmdState.updateStep,
     onAllCompleted: () => {
-      if (cmdState.state.phase === "executing") {
-        cmdState.transition("delivering");
-      }
+      if (cmdState.state.phase === "executing") cmdState.transition("delivering");
     },
   });
 
@@ -108,30 +95,19 @@ export function CommandCenter() {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        inputRef.current?.focus();
+        inputZoneRef.current?.focus();
       }
       if (e.key === "Escape") {
-        if (loading) {
-          abortRef.current?.abort();
-          setLoading(false);
-          setIsStreaming(false);
-        } else if (showMemory) {
-          setShowMemory(false);
-        } else if (showOutputs) {
-          setShowOutputs(false);
-        }
+        if (loading) { abortRef.current?.abort(); setLoading(false); setIsStreaming(false); }
+        else if (showMemory) setShowMemory(false);
+        else if (showOutputs) setShowOutputs(false);
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [loading, showMemory, showOutputs]);
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
-  useEffect(scrollToBottom, [messages, scrollToBottom]);
-
+  // ═══ Load session on mount ═══
   useEffect(() => {
     if (!user || sessionLoaded) return;
     setSessionLoaded(true);
@@ -140,6 +116,7 @@ export function CommandCenter() {
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
+  // ═══ Fetch workspace stats ═══
   useEffect(() => {
     if (!user || !currentWorkspace) return;
     const wsId = currentWorkspace.id;
@@ -152,6 +129,7 @@ export function CommandCenter() {
     });
   }, [user, currentWorkspace]);
 
+  // ═══ Parse outputs from AI response ═══
   const parseOutputs = useCallback((content: string): OutputItem[] => {
     const items: OutputItem[] = [];
     const sections = content.split(/^## /m).filter(Boolean);
@@ -179,23 +157,20 @@ export function CommandCenter() {
     return items;
   }, []);
 
-  // ═══ PHASE 1: Submit command → route → validate → plan ═══
+  // ═══ SUBMIT → ROUTE → VALIDATE → EXECUTE ═══
   const handleSubmit = async () => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
 
-    // ═══ Route command through intent parser ═══
     const fileNames = files.map(f => f.name);
     const route = routeCommand(input.trim(), tier, balance, fileNames);
 
-    // ═══ Permission gate — block tier-restricted intents ═══
     if (!route.permitted) {
       setPermissionBlock(route);
       logPermissionDenied(user.id, route.intent.category, route.intent.requiredTier, tier);
       return;
     }
 
-    // ═══ Audit: log command submission ═══
     logCommandSubmitted(user.id, route.intent.category, route.input.type, route.intent.estimatedCredits);
 
     if (balance < 20) {
@@ -209,12 +184,7 @@ export function CommandCenter() {
       ? `\n\n[${t("common:files_attached", { count: files.length, names: files.map(f => f.name).join(", ") })}]`
       : "");
 
-    const userMessage: Message = {
-      id: crypto.randomUUID(),
-      role: "user",
-      content: userContent,
-      timestamp: new Date(),
-    };
+    const userMessage: Message = { id: crypto.randomUUID(), role: "user", content: userContent, timestamp: new Date() };
 
     setMessages(prev => [...prev, userMessage]);
     setPendingInput(userContent);
@@ -225,8 +195,6 @@ export function CommandCenter() {
     setPermissionBlock(null);
     setPendingRoute(route);
     saveMessage(userMessage);
-
-    // Transition to planning
     cmdState.transition("planning");
     setLoading(true);
 
@@ -251,7 +219,6 @@ export function CommandCenter() {
   // ═══ Core execution pipeline ═══
   const executeCommand = async (userContent: string, _userMessage: Message) => {
     if (!user) return;
-
     const controller = new AbortController();
     abortRef.current = controller;
 
@@ -314,7 +281,6 @@ export function CommandCenter() {
           recent_services: workerTypes,
           total_completed_jobs: jobsAgg.count || 0,
           knowledge_summary: `User has ${neuronsAgg.count || 0} neurons across categories: ${Object.entries(topCategories).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}. Most used services: ${Object.entries(workerTypes).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}.`,
-          // ═══ Router intent enrichment ═══
           detected_intent: pendingRoute?.intent.category || "conversation",
           intent_confidence: pendingRoute?.intent.confidence || 0,
           suggested_services: pendingRoute?.intent.suggestedServices || [],
@@ -328,14 +294,9 @@ export function CommandCenter() {
 
     if (!resp.ok) {
       const errBody = await resp.json().catch(() => ({}));
-      if (resp.status === 429) {
-        toast.error(t("errors:rate_limit_agent"));
-        throw new Error("Rate limit exceeded");
-      }
+      if (resp.status === 429) { toast.error(t("errors:rate_limit_agent")); throw new Error("Rate limit exceeded"); }
       if (resp.status === 402) {
-        toast.error(t("errors:credits_exhausted"), {
-          action: { label: t("common:top_up"), onClick: () => navigate("/credits") },
-        });
+        toast.error(t("errors:credits_exhausted"), { action: { label: t("common:top_up"), onClick: () => navigate("/credits") } });
         throw new Error("AI credits exhausted");
       }
       throw new Error(errBody.error || `Error ${resp.status}`);
@@ -366,62 +327,34 @@ export function CommandCenter() {
           if (d === "[DONE]") continue;
           try {
             const parsed = JSON.parse(d);
-
-            // ═══ Capture plan metadata → transition to confirming ═══
             if (parsed.agent_meta) {
               const meta = parsed.agent_meta;
               cmdState.setPlan({
-                actionId: meta.action_id,
-                intent: meta.intent,
-                confidence: meta.confidence,
-                planName: meta.plan_name,
-                totalCredits: meta.total_credits,
-                steps: meta.steps || [],
-                objective: meta.objective,
-                outputPreview: meta.output_preview,
+                actionId: meta.action_id, intent: meta.intent, confidence: meta.confidence,
+                planName: meta.plan_name, totalCredits: meta.total_credits,
+                steps: meta.steps || [], objective: meta.objective, outputPreview: meta.output_preview,
               });
               setShowTaskTree(true);
-
-              // Auto-confirm for low-cost plans (< 100N) or conversations
               if (meta.total_credits === 0 || meta.intent === "general" || meta.intent === "help" || meta.intent === "check_status") {
                 cmdState.confirmExecution();
               }
             }
-
             const c = parsed.choices?.[0]?.delta?.content;
             if (c) {
-              // If we have content streaming, we're in executing phase
-              if (cmdState.state.phase === "confirming") {
-                cmdState.confirmExecution();
-              }
-
+              if (cmdState.state.phase === "confirming") cmdState.confirmExecution();
               fullContent += c;
               setMessages(prev => {
                 const existing = prev.find(m => m.id === assistantId);
-                if (existing) {
-                  return prev.map(m =>
-                    m.id === assistantId ? { ...m, content: fullContent } : m
-                  );
-                }
-                return [
-                  ...prev,
-                  { id: assistantId, role: "assistant" as const, content: fullContent, timestamp: new Date() },
-                ];
+                if (existing) return prev.map(m => m.id === assistantId ? { ...m, content: fullContent } : m);
+                return [...prev, { id: assistantId, role: "assistant" as const, content: fullContent, timestamp: new Date() }];
               });
-
-              // Update step statuses based on content patterns
-              if (fullContent.includes("Searching") || fullContent.includes("searching")) {
-                cmdState.updateStep("search_neurons", { status: "running" });
-              }
-              if (fullContent.includes("Found") || fullContent.includes("results")) {
-                cmdState.updateStep("search_neurons", { status: "completed" });
-              }
+              if (fullContent.includes("Searching") || fullContent.includes("searching")) cmdState.updateStep("search_neurons", { status: "running" });
+              if (fullContent.includes("Found") || fullContent.includes("results")) cmdState.updateStep("search_neurons", { status: "completed" });
             }
           } catch { /* partial JSON */ }
         }
       }
 
-      // Flush remaining buffer
       if (buffer.trim()) {
         for (let raw of buffer.split("\n")) {
           if (!raw) continue;
@@ -434,9 +367,7 @@ export function CommandCenter() {
             const c = parsed.choices?.[0]?.delta?.content;
             if (c) {
               fullContent += c;
-              setMessages(prev => prev.map(m =>
-                m.id === assistantId ? { ...m, content: fullContent } : m
-              ));
+              setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: fullContent } : m));
             }
           } catch { /* ignore */ }
         }
@@ -445,13 +376,9 @@ export function CommandCenter() {
 
     if (!fullContent) {
       fullContent = t("common:no_response");
-      setMessages(prev => [
-        ...prev,
-        { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() },
-      ]);
+      setMessages(prev => [...prev, { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() }]);
     }
 
-    // ═══ Transition to delivering → completed ═══
     const parsedOutputs = parseOutputs(fullContent);
     if (parsedOutputs.length > 0) {
       cmdState.transition("delivering");
@@ -463,193 +390,73 @@ export function CommandCenter() {
     setShowPostExecution(true);
     saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
 
-    // ═══ Persist execution to history + audit ═══
     if (user) {
       const startTime = cmdState.state.startedAt ? new Date(cmdState.state.startedAt).getTime() : Date.now();
-      logExecutionCompleted(
-        user.id,
-        cmdState.state.actionId,
-        cmdState.state.intent,
-        cmdState.state.totalCredits,
-        parsedOutputs.length,
-        Date.now() - startTime,
-      );
-
-      // Persist run to agent_action_history for Memory Panel
-      persistRun({
-        execution: { ...cmdState.state, phase: "completed", completedAt: new Date().toISOString() },
-        outputCount: parsedOutputs.length,
-      });
+      logExecutionCompleted(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, parsedOutputs.length, Date.now() - startTime);
+      persistRun({ execution: { ...cmdState.state, phase: "completed", completedAt: new Date().toISOString() }, outputCount: parsedOutputs.length });
     }
   };
 
-  const handleStop = () => {
-    abortRef.current?.abort();
-    setLoading(false);
-    setIsStreaming(false);
-    cmdState.failExecution("Cancelled by user");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]);
-  };
-
-  const removeFile = (idx: number) => setFiles(prev => prev.filter((_, i) => i !== idx));
+  // ═══ Handlers ═══
+  const handleStop = () => { abortRef.current?.abort(); setLoading(false); setIsStreaming(false); cmdState.failExecution("Cancelled by user"); };
 
   const clearChat = () => {
-    newSession();
-    cmdState.reset();
+    newSession(); cmdState.reset();
     setMessages([{ id: "welcome-reset", role: "assistant", content: "Session reset. Ready for new commands.", timestamp: new Date() }]);
-    setOutputs([]);
-    setShowOutputs(false);
-    setShowTaskTree(false);
-    setShowPostExecution(false);
-  };
-
-  const handleLoadSession = async (sid: string) => {
-    const loaded = await loadSession(sid);
-    if (loaded.length > 0) setMessages(loaded);
-    setShowMemory(false);
-  };
-
-  const handleDeleteSession = async (sid: string) => {
-    await deleteSession(sid);
-    toast.success(t("common:session_deleted"));
-  };
-
-  const handleHintClick = (example: string) => {
-    setInput(example);
-    inputRef.current?.focus();
-  };
-
-  const handleReplay = (intent: string) => {
-    setInput(`/${intent} `);
-    inputRef.current?.focus();
-    setShowMemory(false);
+    setOutputs([]); setShowOutputs(false); setShowTaskTree(false); setShowPostExecution(false);
   };
 
   const handleSaveAllOutputs = async () => {
     if (outputs.length === 0) return;
     setSavingAllOutputs(true);
-    const count = await persistOutputsBatch(
-      outputs.map(o => ({ title: o.title, content: o.content, type: o.type })),
-      [cmdState.state.intent]
-    );
+    const count = await persistOutputsBatch(outputs.map(o => ({ title: o.title, content: o.content, type: o.type })), [cmdState.state.intent]);
     setSavingAllOutputs(false);
-    if (count > 0) {
-      toast.success(`Saved ${count} outputs as assets`);
-    } else {
-      toast.error("Failed to save outputs");
-    }
+    toast[count > 0 ? "success" : "error"](count > 0 ? `Saved ${count} outputs as assets` : "Failed to save outputs");
   };
 
   const handleSaveTemplate = async () => {
     if (!user || cmdState.state.phase !== "completed") return;
     try {
       const { error } = await supabase.from("agent_plan_templates").insert({
-        intent_key: cmdState.state.intent,
-        name: `${cmdState.state.planName} (saved)`,
+        intent_key: cmdState.state.intent, name: `${cmdState.state.planName} (saved)`,
         description: cmdState.state.objective,
         steps: cmdState.state.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })) as any,
-        estimated_credits: cmdState.state.totalCredits,
-        estimated_duration_seconds: cmdState.state.steps.length * 5,
-        is_default: false,
+        estimated_credits: cmdState.state.totalCredits, estimated_duration_seconds: cmdState.state.steps.length * 5, is_default: false,
       });
       if (error) throw error;
       toast.success("Workflow saved as template");
-    } catch {
-      toast.error("Failed to save template");
-    }
+    } catch { toast.error("Failed to save template"); }
   };
 
-  const handleExecuteTemplate = (template: any) => {
-    const prompt = `/${template.intent_key} (using template: ${template.name})`;
-    setInput(prompt);
-    setShowMemory(false);
-    inputRef.current?.focus();
+  const handleRerun = () => {
+    const lastUser = messages.filter(m => m.role === "user").pop();
+    if (lastUser) { setInput(lastUser.content); inputZoneRef.current?.focus(); }
   };
 
   const isEmptyState = messages.length <= 1 && !loading;
-  const showRightPanel = showTaskTree && cmdState.state.phase !== "idle";
 
   return (
     <div className="flex h-full overflow-hidden">
-      {/* ═══ MAIN COLUMN ═══ */}
       <div className="flex flex-col h-full transition-all flex-1 min-w-0">
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-card">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Command className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <p className="text-xs font-bold tracking-tight">Command Center</p>
-                <KernelBadge />
-              </div>
-              <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
-                <span className="hidden sm:inline">{totalNeurons} neurons</span>
-                <span>·</span>
-                <span>{totalEpisodes} episodes</span>
-                <span>·</span>
-                <span className="flex items-center gap-0.5 text-primary font-medium">
-                  <Coins className="h-2.5 w-2.5" />
-                  {balance.toLocaleString()} N
-                </span>
-                {cmdState.state.phase !== "idle" && (
-                  <>
-                    <span>·</span>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "text-[8px] h-4",
-                        cmdState.state.phase === "executing" && "border-primary text-primary",
-                        cmdState.state.phase === "completed" && "border-green-500 text-green-500",
-                        cmdState.state.phase === "failed" && "border-destructive text-destructive",
-                      )}
-                    >
-                      {cmdState.state.phase === "executing" && <Loader2 className="h-2 w-2 mr-0.5 animate-spin" />}
-                      {cmdState.state.phase.toUpperCase()}
-                    </Badge>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setShowMemory(!showMemory)} title="Memory & History">
-              <History className="h-3 w-3" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={clearChat} title="New session">
-              <RotateCcw className="h-3 w-3" />
-            </Button>
-            {cmdState.state.phase !== "idle" && (
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setShowTaskTree(!showTaskTree)} title="Task Tree">
-                {showTaskTree ? <PanelRightClose className="h-3 w-3" /> : <PanelRightOpen className="h-3 w-3" />}
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {/* ═══ Execution Status Bar ═══ */}
-        <ExecutionStatusBar
+        <CommandHeader
+          totalNeurons={totalNeurons}
+          totalEpisodes={totalEpisodes}
+          balance={balance}
           phase={cmdState.state.phase}
-          intent={cmdState.state.intent}
+          showTaskTree={showTaskTree}
+          onToggleMemory={() => setShowMemory(!showMemory)}
+          onClearChat={clearChat}
+          onToggleTaskTree={() => setShowTaskTree(!showTaskTree)}
+        />
+
+        <ExecutionStatusBar
+          phase={cmdState.state.phase} intent={cmdState.state.intent}
           totalCredits={cmdState.state.totalCredits}
           stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
           totalSteps={cmdState.state.steps.length}
-          startedAt={cmdState.state.startedAt}
-          errorMessage={cmdState.state.errorMessage}
+          startedAt={cmdState.state.startedAt} errorMessage={cmdState.state.errorMessage}
         />
 
-        {/* ═══ Permission Gate — tier restriction ═══ */}
         <AnimatePresence>
           {permissionBlock && (
             <PermissionGate
@@ -661,47 +468,36 @@ export function CommandCenter() {
           )}
         </AnimatePresence>
 
-        {/* ═══ ZONE 2: Plan Preview + Economic Gate ═══ */}
         {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && !showEconomicGate && (
           <div className="px-4 py-2">
             <PlanPreview
               plan={{
-                action_id: cmdState.state.actionId,
-                intent: cmdState.state.intent,
-                confidence: cmdState.state.confidence,
-                plan_name: cmdState.state.planName,
+                action_id: cmdState.state.actionId, intent: cmdState.state.intent,
+                confidence: cmdState.state.confidence, plan_name: cmdState.state.planName,
                 total_credits: cmdState.state.totalCredits,
                 steps: cmdState.state.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })),
-                objective: cmdState.state.objective,
-                output_preview: cmdState.state.outputPreview,
+                objective: cmdState.state.objective, output_preview: cmdState.state.outputPreview,
               }}
               balance={balance}
               onExecute={() => {
-                if (cmdState.state.totalCredits > 50) {
-                  setShowEconomicGate(true);
-                } else {
+                if (cmdState.state.totalCredits > 50) { setShowEconomicGate(true); }
+                else {
                   if (user) logPlanConfirmed(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, cmdState.state.steps.length);
                   cmdState.confirmExecution();
                 }
               }}
-              onEdit={() => {
-                setInput(`Refine plan: ${cmdState.state.intent}`);
-                inputRef.current?.focus();
-              }}
+              onEdit={() => { setInput(`Refine plan: ${cmdState.state.intent}`); inputZoneRef.current?.focus(); }}
               onDismiss={() => cmdState.reset()}
               executing={loading}
             />
           </div>
         )}
 
-        {/* Economic Gate — for costly executions */}
         {showEconomicGate && cmdState.state.phase === "confirming" && (
           <div className="px-4 py-2">
             <EconomicGate
-              balance={balance}
-              estimatedCost={cmdState.state.totalCredits}
-              tierDiscount={tierDiscount}
-              tier={tier}
+              balance={balance} estimatedCost={cmdState.state.totalCredits}
+              tierDiscount={tierDiscount} tier={tier}
               onProceed={() => {
                 setShowEconomicGate(false);
                 if (user) {
@@ -710,307 +506,69 @@ export function CommandCenter() {
                 }
                 cmdState.confirmExecution();
               }}
-              onCancel={() => {
-                setShowEconomicGate(false);
-                if (user) logEconomicGate(user.id, false, balance, cmdState.state.totalCredits, tierDiscount);
-                cmdState.reset();
-              }}
+              onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, cmdState.state.totalCredits, tierDiscount); cmdState.reset(); }}
             />
           </div>
         )}
 
-        {/* ═══ ZONE 3: Messages / Execution area ═══ */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-          {messages.map((msg) => (
-            <CommandBubble
-              key={msg.id}
-              msg={msg}
-              isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"}
-            />
-          ))}
+        <MessageStream
+          messages={messages} isStreaming={isStreaming} loading={loading}
+          isEmptyState={isEmptyState} phase={cmdState.state.phase}
+          execution={cmdState.state} outputs={outputs}
+          suggestions={decisionSuggestions}
+          totalNeurons={totalNeurons} totalEpisodes={totalEpisodes} balance={balance}
+          onCommand={(ex) => { setInput(ex); inputZoneRef.current?.focus(); }}
+          onSaveTemplate={handleSaveTemplate} onSaveAllOutputs={handleSaveAllOutputs}
+          onRerun={handleRerun} onViewOutputs={() => setShowOutputs(true)}
+        />
 
-          {/* Welcome / Empty State */}
-          {isEmptyState && (
-            <WelcomeScreen
-              onCommand={handleHintClick}
-              suggestions={decisionSuggestions}
-              neuronCount={totalNeurons}
-              episodeCount={totalEpisodes}
-              balance={balance}
-            />
-          )}
-
-          {loading && !isStreaming && (
-            <div className="flex gap-2.5">
-              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <Command className="h-3 w-3 text-primary" />
-              </div>
-              <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-3 w-3 animate-spin text-primary" />
-                  <span className="text-[10px] text-muted-foreground">
-                    {cmdState.state.phase === "planning" ? "Generating execution plan..." : "Processing..."}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-          {/* ═══ Execution Summary — in-flow completion card ═══ */}
-          {(cmdState.state.phase === "completed" || cmdState.state.phase === "failed") && !isEmptyState && (
-            <ExecutionSummary
-              phase={cmdState.state.phase}
-              intent={cmdState.state.intent}
-              planName={cmdState.state.planName}
-              totalCredits={cmdState.state.totalCredits}
-              stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
-              totalSteps={cmdState.state.steps.length}
-              outputCount={outputs.length}
-              durationSeconds={
-                cmdState.state.startedAt && cmdState.state.completedAt
-                  ? Math.round((new Date(cmdState.state.completedAt).getTime() - new Date(cmdState.state.startedAt).getTime()) / 1000)
-                  : 0
-              }
-              errorMessage={cmdState.state.errorMessage}
-              onSaveTemplate={handleSaveTemplate}
-              onSaveAllOutputs={handleSaveAllOutputs}
-              onRerun={() => {
-                const lastUser = messages.filter(m => m.role === "user").pop();
-                if (lastUser) { setInput(lastUser.content); inputRef.current?.focus(); }
-              }}
-              onViewOutputs={() => setShowOutputs(true)}
-            />
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* ═══ ZONE 4: Output Panel ═══ */}
         <AnimatePresence>
           {showOutputs && outputs.length > 0 && (
             <div className="px-4 pb-2">
-              <OutputPanel
-                outputs={outputs}
-                visible={showOutputs}
-                onRerun={() => {
-                  const lastUser = messages.filter(m => m.role === "user").pop();
-                  if (lastUser) { setInput(lastUser.content); inputRef.current?.focus(); }
-                }}
-                onClose={() => setShowOutputs(false)}
-                onSaveAll={handleSaveAllOutputs}
-                savingAll={savingAllOutputs}
-              />
+              <OutputPanel outputs={outputs} visible={showOutputs} onRerun={handleRerun}
+                onClose={() => setShowOutputs(false)} onSaveAll={handleSaveAllOutputs} savingAll={savingAllOutputs} />
             </div>
           )}
         </AnimatePresence>
 
-        {/* ═══ Post-Execution Recommendations ═══ */}
         {cmdState.state.phase === "completed" && showPostExecution && (
           <div className="px-4 pb-2">
             <PostExecutionPanel
-              intent={cmdState.state.intent as any}
-              creditsSpent={cmdState.state.totalCredits}
+              intent={cmdState.state.intent as any} creditsSpent={cmdState.state.totalCredits}
               outputCount={outputs.length}
-              onAction={(prompt) => {
-                setInput(prompt);
-                setShowPostExecution(false);
-                inputRef.current?.focus();
-              }}
-              onSaveTemplate={handleSaveTemplate}
-              onDismiss={() => setShowPostExecution(false)}
-              userTier={tier}
+              onAction={(prompt) => { setInput(prompt); setShowPostExecution(false); inputZoneRef.current?.focus(); }}
+              onSaveTemplate={handleSaveTemplate} onDismiss={() => setShowPostExecution(false)} userTier={tier}
             />
           </div>
         )}
 
-        {files.length > 0 && (
-          <div className="px-4 py-2 flex gap-2 flex-wrap border-t border-border">
-            {files.map((f, i) => (
-              <div key={i} className="flex items-center gap-1.5 bg-muted rounded-lg px-2.5 py-1.5 text-[10px]">
-                <Paperclip className="h-3 w-3 text-muted-foreground" />
-                <span className="truncate max-w-[120px]">{f.name}</span>
-                <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground">
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* ═══ Context-Aware Quick Actions ═══ */}
         <ContextActions
-          neuronCount={totalNeurons}
-          episodeCount={totalEpisodes}
-          lastIntent={cmdState.state.intent || undefined}
-          phase={cmdState.state.phase}
-          onAction={(prompt) => {
-            setInput(prompt);
-            inputRef.current?.focus();
-          }}
+          neuronCount={totalNeurons} episodeCount={totalEpisodes}
+          lastIntent={cmdState.state.intent || undefined} phase={cmdState.state.phase}
+          onAction={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }}
         />
 
-        {/* ═══ ZONE 1: Command Input ═══ */}
-        <div className="border-t border-border p-3 bg-card">
-          <div className="flex items-end gap-2">
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              accept=".txt,.md,.csv,.json,.pdf,.docx,.mp3,.mp4,.wav,.m4a,.webm,.ogg,.srt,text/*,audio/*,video/*,application/pdf"
-              className="hidden"
-              onChange={handleFileSelect}
-            />
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 shrink-0"
-              onClick={() => fileInputRef.current?.click()}
-              title="Attach file"
-            >
-              <Paperclip className="h-3.5 w-3.5" />
-            </Button>
-            <div className="flex-1 relative">
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  setShowSlashMenu(e.target.value.startsWith("/") && !e.target.value.includes(" "));
-                }}
-                onKeyDown={handleKeyDown}
-                placeholder="Type a command, paste a URL, or describe what you need..."
-                className="w-full resize-none rounded-xl border border-border bg-background px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary/30 min-h-[36px] max-h-[120px]"
-                rows={1}
-                style={{ height: "auto" }}
-                onInput={(e) => {
-                  const target = e.target as HTMLTextAreaElement;
-                  target.style.height = "auto";
-                  target.style.height = Math.min(target.scrollHeight, 120) + "px";
-                }}
-              />
-              {showSlashMenu && (
-                <AgentSlashMenu
-                  input={input}
-                  visible={showSlashMenu}
-                  onSelect={(cmd) => {
-                    setInput(cmd + " ");
-                    setShowSlashMenu(false);
-                    inputRef.current?.focus();
-                  }}
-                  onClose={() => setShowSlashMenu(false)}
-                />
-              )}
-            </div>
-            {loading ? (
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 shrink-0" onClick={handleStop}>
-                <X className="h-3.5 w-3.5" />
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                className="h-8 w-8 p-0 shrink-0"
-                onClick={handleSubmit}
-                disabled={!input.trim() && files.length === 0}
-              >
-                <Send className="h-3.5 w-3.5" />
-              </Button>
-            )}
-          </div>
-        </div>
+        <CommandInputZone
+          ref={inputZoneRef} input={input} onInputChange={setInput}
+          onSubmit={handleSubmit} onStop={handleStop} loading={loading}
+          files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
+          onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
+          showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
+          onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+        />
       </div>
 
-      {/* ═══ RIGHT: Task Tree Panel — hidden on mobile, side panel on desktop ═══ */}
-      <AnimatePresence>
-        {showRightPanel && (
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 280, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            className="hidden md:block border-l border-border bg-card overflow-hidden shrink-0"
-          >
-            <TaskTree
-              execution={cmdState.state}
-              onSaveTemplate={handleSaveTemplate}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Task Tree — mobile overlay */}
-      <AnimatePresence>
-        {showRightPanel && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="md:hidden fixed inset-y-0 right-0 w-[280px] z-50 border-l border-border bg-card shadow-xl"
-          >
-            <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-              <span className="text-xs font-bold">Task Tree</span>
-              <button onClick={() => setShowTaskTree(false)} className="p-1 text-muted-foreground hover:text-foreground">
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <TaskTree
-              execution={cmdState.state}
-              onSaveTemplate={handleSaveTemplate}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ═══ RIGHT: Memory Panel — responsive ═══ */}
-      <AnimatePresence>
-        {showMemory && (
-          <>
-            {/* Desktop: side panel */}
-            <div className="hidden md:block">
-              <MemoryPanel
-                visible={showMemory}
-                onClose={() => setShowMemory(false)}
-                onReplay={handleReplay}
-                onExecuteTemplate={handleExecuteTemplate}
-                sessions={sessions}
-                onLoadSession={handleLoadSession}
-                onDeleteSession={handleDeleteSession}
-                currentSessionId={sessionId}
-              />
-            </div>
-            {/* Mobile: overlay */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="md:hidden fixed inset-y-0 right-0 w-[300px] z-50 shadow-xl"
-            >
-              <MemoryPanel
-                visible={showMemory}
-                onClose={() => setShowMemory(false)}
-                onReplay={handleReplay}
-                onExecuteTemplate={handleExecuteTemplate}
-                sessions={sessions}
-                onLoadSession={handleLoadSession}
-                onDeleteSession={handleDeleteSession}
-                currentSessionId={sessionId}
-              />
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Mobile backdrop for overlays */}
-      <AnimatePresence>
-        {(showRightPanel || showMemory) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
-            onClick={() => { setShowTaskTree(false); setShowMemory(false); }}
-          />
-        )}
-      </AnimatePresence>
+      <SidePanels
+        showTaskTree={showTaskTree} showMemory={showMemory}
+        execution={cmdState.state}
+        onCloseTaskTree={() => setShowTaskTree(false)} onCloseMemory={() => setShowMemory(false)}
+        onSaveTemplate={handleSaveTemplate}
+        onReplay={(intent) => { setInput(`/${intent} `); inputZoneRef.current?.focus(); setShowMemory(false); }}
+        onExecuteTemplate={(template) => { setInput(`/${template.intent_key} (using template: ${template.name})`); setShowMemory(false); inputZoneRef.current?.focus(); }}
+        sessions={sessions} onLoadSession={async (sid) => { const loaded = await loadSession(sid); if (loaded.length > 0) setMessages(loaded); setShowMemory(false); }}
+        onDeleteSession={async (sid) => { await deleteSession(sid); toast.success(t("common:session_deleted")); }}
+        currentSessionId={sessionId}
+      />
     </div>
   );
 }
