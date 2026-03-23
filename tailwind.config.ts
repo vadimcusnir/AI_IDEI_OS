@@ -13,7 +13,7 @@ export default {
       },
     },
     fontFamily: {
-      serif: ['var(--font-serif)'],
+      display: ['var(--font-display)'],
       sans: ['var(--font-sans)'],
       mono: ['var(--font-mono)'],
     },
@@ -69,9 +69,6 @@ export default {
           DEFAULT: "hsl(var(--info))",
           foreground: "hsl(var(--info-foreground))",
         },
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

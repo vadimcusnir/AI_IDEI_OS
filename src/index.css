@@ -85,7 +85,7 @@
 
     --radius: 0.5rem;
 
-    --font-serif: 'Inter', system-ui, sans-serif;
+    --font-display: 'Inter', system-ui, sans-serif;
     --font-sans: 'Inter', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
@@ -245,7 +245,14 @@
 
   body {
     @apply bg-background text-foreground font-sans;
+    font-size: 1rem; /* 16px mobile — WCAG minimum */
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: var(--body-size); /* 0.875rem / 14px on desktop — denser UI */
+    }
   }
 
   /* ── Global focus states — P1 accessibility ── */
