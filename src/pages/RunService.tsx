@@ -23,6 +23,7 @@ import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { ROICalculator } from "@/components/credits/ROICalculator";
 import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
+import { PostExecutionRecommendations } from "@/components/services/PostExecutionRecommendations";
 
 interface Service {
   id: string;
