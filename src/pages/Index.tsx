@@ -312,11 +312,15 @@ export default function Index() {
 
       {/* Preview pane */}
       {previewNeuron && (
-        <NeuronPreviewPane
-          neuron={previewNeuron}
-          onClose={() => setPreviewNeuron(null)}
-        />
+        <NeuronPreviewPane neuron={previewNeuron} onClose={() => setPreviewNeuron(null)} />
       )}
+
+      {/* Insights panel */}
+      <AnimatePresence>
+        {showInsights && !previewNeuron && (
+          <NeuronInsights neurons={neurons} onClose={() => setShowInsights(false)} />
+        )}
+      </AnimatePresence>
 
       {/* Modals */}
       <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />
