@@ -41,7 +41,7 @@ interface OutputPanelProps {
   visible: boolean;
 }
 
-export function OutputPanel({ outputs, onRerun, onClose, visible }: OutputPanelProps) {
+export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, visible }: OutputPanelProps) {
   const { user } = useAuth();
   const [savingId, setSavingId] = useState<string | null>(null);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
