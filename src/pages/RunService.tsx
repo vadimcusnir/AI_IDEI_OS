@@ -116,7 +116,7 @@ export default function RunService() {
   };
 
   const handleRun = async () => {
-    if (!service || !user || !credits) return;
+    if (!service || !user) return;
 
     // P1: Pre-flight credit & access verification before execution
     const { data: preCheck } = await supabase.rpc("check_access_logged", {
@@ -134,8 +134,8 @@ export default function RunService() {
       return;
     }
 
-    if (credits.balance < service.credits_cost) {
-      toast.error(t("run_service.insufficient_error", { need: service.credits_cost, have: credits.balance }));
+    if (creditBalance < service.credits_cost) {
+      toast.error(t("run_service.insufficient_error", { need: service.credits_cost, have: creditBalance }));
       return;
     }
 
