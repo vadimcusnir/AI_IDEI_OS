@@ -54,9 +54,8 @@ export function ContentSourcePicker({ onSelect, selectedId }: Props) {
         .limit(50),
       supabase
         .from("neurons")
-        .select("id, title, content, status, content_category, created_at")
+        .select("id, title, status, content_category, created_at, neuron_blocks(content, position)")
         .eq("workspace_id", currentWorkspace.id)
-        .not("content", "is", null)
         .order("created_at", { ascending: false })
         .limit(100),
     ]);
@@ -70,28 +69,33 @@ export function ContentSourcePicker({ onSelect, selectedId }: Props) {
         items.push({
           id: ep.id,
           type: "episode",
-          title: (ep.title as string) || (ep.source_url as string) || "Episode",
+          title: ep.title || ep.source_url || "Episode",
           preview: text.slice(0, 120) + (text.length > 120 ? "..." : ""),
           fullContent: text,
-          date: ep.created_at as string,
-          status: ep.status as string,
+          date: ep.created_at,
+          status: ep.status,
         });
       }
     }
 
     if (neuronsRes.data) {
       for (const n of neuronsRes.data) {
-        if (!n.content || (n.content as string).length < 10) continue;
-        const text = n.content as string;
+        const blocks = Array.isArray(n.neuron_blocks) ? n.neuron_blocks : [];
+        const text = blocks
+          .sort((a: any, b: any) => a.position - b.position)
+          .map((b: any) => b.content)
+          .filter(Boolean)
+          .join("\n\n");
+        if (text.length < 10) continue;
         items.push({
           id: String(n.id),
           type: "neuron",
-          title: (n.title as string) || "Neuron",
+          title: n.title || "Neuron",
           preview: text.slice(0, 120) + (text.length > 120 ? "..." : ""),
           fullContent: text,
-          date: n.created_at as string,
-          status: n.status as string,
-          category: n.content_category as string,
+          date: n.created_at,
+          status: n.status,
+          category: n.content_category ?? undefined,
         });
       }
     }
@@ -228,11 +232,11 @@ export function ContentSourcePicker({ onSelect, selectedId }: Props) {
                     <div className="flex items-start gap-2.5">
                       <div className={cn(
                         "h-7 w-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5",
-                        source.type === "episode" ? "bg-blue-500/10" : "bg-purple-500/10"
+                        source.type === "episode" ? "bg-primary/10" : "bg-accent/30"
                       )}>
                         {source.type === "episode"
-                          ? <Mic className="h-3.5 w-3.5 text-blue-500" />
-                          : <Brain className="h-3.5 w-3.5 text-purple-500" />}
+                          ? <Mic className="h-3.5 w-3.5 text-primary" />
+                          : <Brain className="h-3.5 w-3.5 text-accent-foreground" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
