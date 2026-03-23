@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 const PACKAGES = [
-  { key: "starter", neurons: 1100, price: 11, icon: Zap, label: "Starter" },
-  { key: "standard", neurons: 2000, price: 20, icon: Sparkles, label: "Standard", popular: true },
-  { key: "growth", neurons: 4700, price: 47, icon: Crown, label: "Growth" },
+  { key: "starter", neurons: 5500, price: 11, icon: Zap, label: "Starter" },
+  { key: "standard", neurons: 10000, price: 20, icon: Sparkles, label: "Standard", popular: true },
+  { key: "growth", neurons: 23500, price: 47, icon: Crown, label: "Growth" },
 ];
 
 interface InlineTopUpProps {

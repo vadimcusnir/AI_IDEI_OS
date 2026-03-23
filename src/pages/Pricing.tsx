@@ -45,6 +45,7 @@ const PLANS = [
     mode: "subscription" as const,
     features: [
       "2,000 NEURONS / month",
+      "-10% execution cost",
       "Unlimited transcriptions",
       "Full extraction pipeline",
       "All AI services",
@@ -57,13 +58,14 @@ const PLANS = [
     name: "Pro",
     price: "47",
     period: "/mo",
-    neurons: "10,000",
+    neurons: "12,000",
     badge: "Popular",
     highlight: true,
     priceId: Object.values(SUBSCRIPTION_TIERS).find(t => t.name === "Pro")?.price_id || null,
     mode: "subscription" as const,
     features: [
-      "10,000 NEURONS / month",
+      "12,000 NEURONS / month",
+      "-25% execution cost",
       "Everything in Core",
       "Priority processing",
       "Batch processing",
@@ -78,13 +80,14 @@ const PLANS = [
     name: "Elite",
     price: "137",
     period: "/mo",
-    neurons: "50,000",
+    neurons: "40,000",
     badge: "Max Power",
     highlight: false,
     priceId: Object.values(SUBSCRIPTION_TIERS).find(t => t.name === "Elite")?.price_id || null,
     mode: "subscription" as const,
     features: [
-      "50,000 NEURONS / month",
+      "40,000 NEURONS / month",
+      "-40% execution cost",
       "Everything in Pro",
       "Unlimited team seats",
       "Custom integrations",
@@ -96,10 +99,11 @@ const PLANS = [
   },
 ];
 const FAQ_ITEMS = [
-  { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount based on complexity. Base rate: 1000 NEURONS = $10 USD. Subscriptions offer 45–73% discount." },
-  { question: "Can I buy credits without a subscription?", answer: "Yes! Top up credits anytime at the base rate ($10/1000N). Subscriptions give you a monthly allocation at a significantly better effective rate." },
+  { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount based on complexity. Base rate: $1 = 500 NEURONS. Subscriptions include monthly neurons + execution discounts up to 40%." },
+  { question: "Can I buy credits without a subscription?", answer: "Yes! Top up credits anytime at the base rate ($1 = 500N). Subscriptions give you a monthly allocation plus discounted execution costs." },
   { question: "What is Root2 pricing?", answer: "All AI-IDEI prices follow the Root2 principle — the digital root of every price equals 2 (e.g. $11, $47, $137). This unique pricing philosophy ensures mathematical harmony across our economy." },
-  { question: "How much does a typical service cost?", answer: "An article generation costs ~150 NEURONS ($1.50). A complete capitalization pipeline with 50+ deliverables costs ~3500 NEURONS ($35). That's $0.70 per deliverable vs $25+ from freelancers." },
+  { question: "How much does a typical service cost?", answer: "A simple extraction costs 20-47 NEURONS ($0.04-$0.09). An article generation costs ~74 NEURONS ($0.15). A complete capitalization pipeline costs ~290 NEURONS ($0.58). That's under $0.01 per deliverable vs $25+ from freelancers." },
+  { question: "What does 'execution discount' mean?", answer: "Subscribers pay fewer NEURONS per service. Core saves 10%, Pro saves 25%, Elite saves 40%. This means your included neurons go further — Pro's 12,000N effectively buys 16,000N worth of services." },
   { question: "What happens when I run out of credits?", answer: "Your existing neurons and outputs remain accessible. You simply cannot run new AI services until you top up or your subscription renews." },
 ];
 

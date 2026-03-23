@@ -196,16 +196,16 @@ This is why AI-IDEI is not a content tool — it's a **knowledge infrastructure*
 
 ## Credit Economics
 
-Every AI operation consumes credits (NEURONS). Typical costs:
+Every AI operation consumes credits (NEURONS). Exchange rate: **$1 = 500 NEURONS** (1N = $0.002).
 
-| Operation | Credit Cost |
-|---|---|
-| Transcription (1 hour audio) | 100-500 |
-| Full neuron extraction | 500-2000 |
-| Article generation | 300-800 |
-| Complete pipeline (upload → artifacts) | 2000-5000 |
+| Operation | Credit Cost | USD Cost |
+|---|---|---|
+| Simple extraction (quotes, insights) | 20-47N | $0.04-$0.09 |
+| Article generation | 74N | $0.15 |
+| Full analysis (competitor, JTBD) | 83-110N | $0.17-$0.22 |
+| Complex pipeline (avatar, campaign) | 200-380N | $0.40-$0.76 |
 
-At 1000 credits = $11 USD, a full pipeline run costs approximately $22-55 and produces 15-30 neurons plus multiple artifacts. That's less than $2 per deliverable.
+Subscribers get execution discounts: Core -10%, Pro -25%, Elite -40%. A Pro user running a 290N campaign pays only 218N.
 
 Read more about credits in [Credits & Pricing](/docs/getting-started/credits-system).
 

@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 
 const TOP_UP_PACKAGES = [
-  { key: "starter", neurons: 1100, price: 11, icon: Zap },
-  { key: "standard", neurons: 2000, price: 20, icon: Sparkles, popular: true },
-  { key: "growth", neurons: 4700, price: 47, icon: Crown },
+  { key: "starter", neurons: 5500, price: 11, icon: Zap },
+  { key: "standard", neurons: 10000, price: 20, icon: Sparkles, popular: true },
+  { key: "growth", neurons: 23500, price: 47, icon: Crown },
 ];
 
 export function HomePricingSection() {
@@ -98,11 +98,11 @@ export function HomePricingSection() {
               <Crown className="h-4 w-4 text-primary" />
               <h3 className="text-sm font-semibold">Pro Plan</h3>
               <Badge variant="outline" className="text-[9px] border-primary/30 text-primary">
-                Salvează 53%
+                -25% cost execuție
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
-              10.000 NEURONS/lună, toate serviciile AI, procesare prioritară, batch processing.
+              12.000 NEURONS/lună, toate serviciile AI, procesare prioritară, batch processing.
             </p>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
               {["Extracție nelimitată", "Procesare prioritară", "Analytics avansat"].map(f => (

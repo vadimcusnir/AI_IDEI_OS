@@ -7,11 +7,13 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// Root2 pricing: digit sum = 2
+// Root2 pricing: digit sum = 2 | 1N = $0.002 → $1 = 500N
 const PACKAGES: Record<string, { neurons: number; priceId: string }> = {
-  starter: { neurons: 500, priceId: "price_1T9TkpIK7fwtty4oS9ZysNfZ" },
-  standard: { neurons: 1000, priceId: "price_1T9TlFIK7fwtty4oo4iKY1DC" },
-  pro: { neurons: 5000, priceId: "price_1T9TlPIK7fwtty4o7VRrMObq" },
+  micro: { neurons: 1000, priceId: "price_topup_micro" },
+  starter: { neurons: 5500, priceId: "price_1T9TkpIK7fwtty4oS9ZysNfZ" },
+  standard: { neurons: 10000, priceId: "price_1T9TlFIK7fwtty4oo4iKY1DC" },
+  growth: { neurons: 23500, priceId: "price_1T9TlPIK7fwtty4o7VRrMObq" },
+  scale: { neurons: 46000, priceId: "price_topup_scale" },
 };
 
 Deno.serve(async (req) => {

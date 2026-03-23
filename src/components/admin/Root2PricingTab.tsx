@@ -43,18 +43,16 @@ function nearestRoot2(target: number): number[] {
 }
 
 const ROOT2_PACKAGES = [
-  { neurons: 200, price: 2 },
-  { neurons: 1100, price: 11 },
-  { neurons: 2000, price: 20 },
-  { neurons: 2900, price: 29 },
-  { neurons: 4700, price: 47 },
-  { neurons: 7400, price: 74 },
-  { neurons: 9200, price: 92 },
-  { neurons: 14600, price: 146 },
-  { neurons: 15500, price: 155 },
-  { neurons: 20000, price: 200 },
-  { neurons: 29000, price: 290 },
-  { neurons: 99920, price: 9992 },
+  { neurons: 1000, price: 2 },
+  { neurons: 5500, price: 11 },
+  { neurons: 10000, price: 20 },
+  { neurons: 14500, price: 29 },
+  { neurons: 23500, price: 47 },
+  { neurons: 37000, price: 74 },
+  { neurons: 46000, price: 92 },
+  { neurons: 68500, price: 137 },
+  { neurons: 100000, price: 200 },
+  { neurons: 145000, price: 290 },
 ];
 
 export function Root2PricingTab() {
