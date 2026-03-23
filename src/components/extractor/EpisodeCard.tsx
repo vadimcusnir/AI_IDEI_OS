@@ -229,11 +229,11 @@ export function EpisodeCard({
             <div className="bg-muted/30 border border-border rounded-lg p-3 space-y-2">
               <p className="text-xs font-semibold flex items-center gap-1.5"><Layers className="h-3.5 w-3.5 text-primary" /> Deep Extract Results</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {(ep.metadata.deep_extract.results as Array<{level: string; neurons_created: number; avg_score: number}>).map((r: any) => (
+                {(ep.metadata.deep_extract.results as Array<{level?: string; neurons_created?: number; avg_score?: number}>).filter((r: any) => r && r.level).map((r: any) => (
                   <div key={r.level} className="bg-background rounded-md px-2 py-1.5 border border-border">
-                    <p className="text-[9px] font-mono text-muted-foreground uppercase">{r.level.replace("L", "L").replace("_", " ")}</p>
-                    <p className="text-xs font-bold">{r.neurons_created} <span className="text-muted-foreground font-normal">neurons</span></p>
-                    {r.avg_score > 0 && <p className={cn("text-[9px] font-mono", r.avg_score > 70 ? "text-primary" : r.avg_score >= 40 ? "text-status-validated" : "text-muted-foreground")}>score: {r.avg_score}</p>}
+                    <p className="text-[9px] font-mono text-muted-foreground uppercase">{(r.level || "").replace("_", " ")}</p>
+                    <p className="text-xs font-bold">{r.neurons_created ?? 0} <span className="text-muted-foreground font-normal">neurons</span></p>
+                    {(r.avg_score ?? 0) > 0 && <p className={cn("text-[9px] font-mono", r.avg_score > 70 ? "text-primary" : r.avg_score >= 40 ? "text-status-validated" : "text-muted-foreground")}>score: {r.avg_score}</p>}
                   </div>
                 ))}
               </div>
