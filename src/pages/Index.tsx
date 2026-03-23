@@ -1,13 +1,15 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
-import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen, Trash2, CheckSquare, XSquare } from "lucide-react";
+import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen, Trash2, CheckSquare, XSquare, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
 import { NeuronToolbar } from "@/components/neurons/NeuronToolbar";
 import { NeuronCard } from "@/components/neurons/NeuronCard";
 import { NeuronPreviewPane } from "@/components/neurons/NeuronPreviewPane";
+import { NeuronInsights } from "@/components/neurons/NeuronInsights";
+import { BulkAIActions } from "@/components/neurons/BulkAIActions";
 import { NeuronFolderSidebar, useNeuronFolders } from "@/components/neuron/NeuronFolderSidebar";
 import { useNeuronList, NeuronListItem } from "@/hooks/useNeuronList";
 import { cn } from "@/lib/utils";
@@ -15,6 +17,7 @@ import { Logo } from "@/components/shared/Logo";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { useTranslation } from "react-i18next";
 import { FlowTip } from "@/components/onboarding/FlowTip";
+import { AnimatePresence } from "framer-motion";
 
 const STATUS_DOTS: Record<string, string> = {
   draft: "bg-muted-foreground/40",
@@ -32,7 +35,7 @@ export default function Index() {
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [aiSuggesting, setAiSuggesting] = useState(false);
   const [previewNeuron, setPreviewNeuron] = useState<NeuronListItem | null>(null);
-
+  const [showInsights, setShowInsights] = useState(false);
   const {
     neurons, loading, authLoading,
     viewMode, setViewMode,
@@ -159,6 +162,15 @@ export default function Index() {
               >
                 <PanelRightOpen className="h-3.5 w-3.5" />
               </Button>
+              <Button
+                variant={showInsights ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 gap-1.5 text-xs hidden md:flex"
+                onClick={() => setShowInsights(prev => !prev)}
+                title="Library Insights"
+              >
+                <BarChart3 className="h-3.5 w-3.5" />
+              </Button>
               <Button variant="ghost" size="sm" className="h-8 text-xs gap-1" onClick={() => setShowExportImport(true)}>
                 <Download className="h-3.5 w-3.5" />
               </Button>
@@ -190,6 +202,7 @@ export default function Index() {
           {selectedIds.size > 0 && (
             <div className="flex items-center gap-2 mb-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-2">
               <span className="text-xs font-medium text-primary">{t("neurons_index.selected", { count: selectedIds.size })}</span>
+              <BulkAIActions selectedCount={selectedIds.size} selectedIds={selectedIds} />
               <div className="flex-1" />
               <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={selectAll}>
                 <CheckSquare className="h-3 w-3" /> {t("neurons_index.select_all")}
@@ -299,11 +312,15 @@ export default function Index() {
 
       {/* Preview pane */}
       {previewNeuron && (
-        <NeuronPreviewPane
-          neuron={previewNeuron}
-          onClose={() => setPreviewNeuron(null)}
-        />
+        <NeuronPreviewPane neuron={previewNeuron} onClose={() => setPreviewNeuron(null)} />
       )}
+
+      {/* Insights panel */}
+      <AnimatePresence>
+        {showInsights && !previewNeuron && (
+          <NeuronInsights neurons={neurons} onClose={() => setShowInsights(false)} />
+        )}
+      </AnimatePresence>
 
       {/* Modals */}
       <TemplatePicker isOpen={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} />
