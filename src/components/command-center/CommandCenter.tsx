@@ -474,6 +474,13 @@ export function CommandCenter() {
     }
   };
 
+  const handleExecuteTemplate = (template: any) => {
+    const prompt = `/${template.intent_key} (using template: ${template.name})`;
+    setInput(prompt);
+    setShowMemory(false);
+    inputRef.current?.focus();
+  };
+
   const isEmptyState = messages.length <= 1 && !loading;
   const showRightPanel = showTaskTree && cmdState.state.phase !== "idle";
 
