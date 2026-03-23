@@ -18,15 +18,7 @@ interface ExecuteServiceDialogProps {
 
 type ExecState = "configure" | "executing" | "done" | "error";
 
-/** Generate a service_key from a service name */
-function toServiceKey(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .slice(0, 80);
-}
+/** service_registry.id IS the service_key (slug format) */
 
 export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceDialogProps) {
   const [input, setInput] = useState("");
