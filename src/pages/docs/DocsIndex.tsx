@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Layers, Network, Boxes, Rocket, HelpCircle, ChevronRight } from "lucide-react";
+import { BookOpen, Layers, Network, Boxes, Rocket, HelpCircle, ChevronRight, GraduationCap, Code } from "lucide-react";
 import { DOCS_SECTIONS } from "./docsContent";
 import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd } from "@/components/seo/JsonLd";
 
 const ICON_MAP: Record<string, React.ElementType> = {
-  Rocket, BookOpen, Layers, Network, Boxes, HelpCircle,
+  Rocket, BookOpen, Layers, Network, Boxes, HelpCircle, GraduationCap, Code,
 };
 
 export default function DocsIndex() {
