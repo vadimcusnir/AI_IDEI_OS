@@ -81,7 +81,7 @@ export function WebinarGeneratorPanel() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            content,
+            content: truncated.content,
             webinar_config: { topic, duration: Number(duration), audience },
           }),
         }
