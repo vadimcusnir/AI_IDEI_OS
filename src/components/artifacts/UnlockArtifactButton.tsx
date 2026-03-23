@@ -32,6 +32,7 @@ export function UnlockArtifactButton({ artifactId, onUnlocked }: Props) {
       const { data: spent, error: spendErr } = await supabase.rpc("spend_credits", {
         _user_id: user.id,
         _amount: UNLOCK_COST,
+        _description: `Artifact unlock: ${artifactId.slice(0, 8)}`,
       });
 
       if (spendErr || !spent) {

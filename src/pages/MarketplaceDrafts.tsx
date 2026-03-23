@@ -41,15 +41,15 @@ export default function MarketplaceDrafts() {
   const fetchDrafts = async () => {
     const { data } = await supabase
       .from("knowledge_assets")
-      .select("id, title, description, asset_type, price_neurons, created_at, is_published, preview_text")
+      .select("id, title, description, asset_type, price_neurons, created_at, is_published")
       .eq("creator_id", user!.id)
       .eq("is_published", false)
       .order("created_at", { ascending: false });
 
     if (data) {
-      setDrafts(data as DraftAsset[]);
+      setDrafts((data as any[]).map(d => ({ ...d, preview_text: null })));
       const prices: Record<string, number> = {};
-      data.forEach((d: any) => { prices[d.id] = d.price_neurons; });
+      (data as any[]).forEach((d: any) => { prices[d.id] = d.price_neurons; });
       setEditPrices(prices);
     }
     setLoading(false);
