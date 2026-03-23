@@ -61,6 +61,7 @@ export function CommandCenter() {
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
   const [showEconomicGate, setShowEconomicGate] = useState(false);
+  const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
 
   const WELCOME_MSG: Message = {
     id: "welcome",
