@@ -236,6 +236,139 @@ The forum and discussion space for platform users.
 - [How It Works](/docs/getting-started/how-it-works) — pipeline walkthrough
 - [FAQ](/docs/reference/faq) — common questions answered`,
   },
+  "limits-quotas": {
+    title: "Limits & Quotas",
+    content: `Understanding the platform's operational boundaries helps you plan workflows effectively and avoid unexpected interruptions. This page documents all rate limits, size caps, and usage quotas.
+
+## Upload Limits
+
+### File Sizes
+| Content Type | Maximum Size | Notes |
+|---|---|---|
+| Audio (MP3, WAV, M4A) | 500 MB | ~8 hours at 128kbps |
+| Video (MP4, WebM) | 1 GB | Audio track is extracted automatically |
+| PDF documents | 50 MB | Up to 500 pages |
+| Plain text | 2 MB | ~500,000 words |
+| YouTube URLs | No limit | Transcript fetched via API |
+
+### Concurrent Uploads
+- **Free tier:** 1 concurrent upload
+- **Standard tier:** 3 concurrent uploads
+- **Premium tier:** 10 concurrent uploads
+
+## Processing Limits
+
+### Transcription
+- Maximum audio duration: **8 hours** per file
+- Supported languages: 50+ (auto-detected)
+- Processing time: approximately 1 minute per 10 minutes of audio
+
+### Extraction
+- Maximum transcript length: **100,000 tokens** (~75,000 words)
+- Chunk size: 200–800 tokens (configurable)
+- Maximum neurons per extraction: **200**
+
+### Service Execution
+- Maximum concurrent jobs: **5** per user
+- Job timeout: **15 minutes** (most complete in under 5 minutes)
+- Maximum input neurons per service: **50**
+- Retry policy: 3 automatic retries with exponential backoff
+
+## API Rate Limits
+
+### Per-Key Limits
+| Endpoint Category | Rate Limit | Window |
+|---|---|---|
+| Read operations (GET) | 120 requests | per minute |
+| Write operations (POST/PUT) | 30 requests | per minute |
+| Search queries | 20 requests | per minute |
+| File uploads | 5 requests | per minute |
+| Service execution | 10 requests | per minute |
+
+### Daily Limits
+- Default API key: **5,000 requests/day**
+- Premium API key: **50,000 requests/day**
+- Custom limits available for enterprise
+
+### Rate Limit Headers
+Every API response includes rate limit information:
+\`\`\`
+X-RateLimit-Limit: 120
+X-RateLimit-Remaining: 117
+X-RateLimit-Reset: 1700000060
+\`\`\`
+
+When a rate limit is exceeded, the API returns HTTP 429 with a \`Retry-After\` header.
+
+## Storage Quotas
+
+### Per-Account Storage
+| Tier | Neuron Storage | Artifact Storage | File Storage |
+|---|---|---|---|
+| Free | 100 neurons | 50 artifacts | 1 GB |
+| Standard | 5,000 neurons | 2,000 artifacts | 25 GB |
+| Premium | Unlimited | Unlimited | 100 GB |
+
+### Retention
+- Active content: stored indefinitely while account is active
+- Deleted content: purged within 30 days
+- Account deletion: all data purged within 7 days
+
+## Credit Limits
+
+### Minimum Balance
+- Services require a minimum balance equal to the service cost
+- Credits are **reserved** (held) during execution, then settled on completion
+- Failed jobs automatically release reserved credits
+
+### Top-Up Limits
+- Minimum top-up: **200 NEURONS** (2 USD)
+- Maximum single top-up: **99,920 NEURONS** (999.20 USD)
+- All packages follow Root2 pricing (digit sum = 2)
+
+### Daily Spend
+- No hard daily spend limit — you can use credits as fast as you earn/buy them
+- Anomaly detection triggers warnings for unusual spending patterns
+
+## Knowledge Graph Limits
+
+### Entity Limits
+- Maximum entities per workspace: **50,000**
+- Maximum connections per entity: **500**
+- Maximum graph depth for traversal queries: **6 hops**
+
+### Search Limits
+- Maximum search results: **100** per query
+- Full-text search timeout: **5 seconds**
+- Semantic search (vector): **30 seconds**
+
+## Webhook Limits
+
+- Maximum webhook endpoints: **10** per account
+- Webhook payload size: **256 KB**
+- Delivery timeout: **10 seconds**
+- Retry policy: 3 retries with exponential backoff (1s, 5s, 30s)
+- Failed webhooks: disabled after 50 consecutive failures
+
+## Session Limits
+
+- Maximum concurrent sessions: **5** per account
+- Session duration: **7 days** (auto-refresh)
+- API key expiry: configurable (default: 90 days)
+
+## How to Request Higher Limits
+
+If your workflow requires higher limits, you can:
+1. **Upgrade your tier** — Premium tier includes significantly higher quotas
+2. **Contact support** — Enterprise plans offer custom limits
+3. **Use batch processing** — Spread operations over time to stay within rate limits
+
+## Further Reading
+
+- [Credits & Pricing](/docs/getting-started/credits-system) — pricing details
+- [API Overview](/docs/developer/api-overview) — API documentation
+- [Security & Privacy](/docs/reference/security) — data protection`,
+  },
   security: {
     title: "Security & Privacy",
     content: `AI-IDEI is built with security and privacy as foundational requirements, not afterthoughts. This page details how your data is protected, what controls you have, and what security measures are in place at every layer of the platform.
