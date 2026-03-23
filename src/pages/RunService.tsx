@@ -652,9 +652,9 @@ export default function RunService() {
                   {/* Post-execution loop — recommendations + distribution + psychology */}
                   {service && (
                     <>
-                      {/* Viral distribution — share with embedded CTA */}
+                      {/* Full distribution panel — variants, platform sharing, tracking */}
                       {jobResult && (
-                        <ShareableOutput
+                        <DistributionPanel
                           content={jobResult}
                           serviceKey={service.service_key}
                           serviceName={service.name}

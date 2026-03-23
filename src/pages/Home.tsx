@@ -389,6 +389,9 @@ export default function Home() {
               <PipelineIndicator />
             </div>
 
+            {/* Memory Intelligence */}
+            <MemoryIntelligenceCard />
+
             {/* Leaderboard */}
             <LeaderboardWidget />
 
