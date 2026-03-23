@@ -99,6 +99,7 @@ interface ReferrerStat {
 }
 
 export function LLMIndexationTab() {
+  const { t } = useTranslation();
   const [sitePages, setSitePages] = useState<SitePage[]>([]);
   const [scores, setScores] = useState<LLMScore[]>([]);
   const [issues, setIssues] = useState<LLMIssue[]>([]);

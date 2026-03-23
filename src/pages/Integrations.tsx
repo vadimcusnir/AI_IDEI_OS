@@ -35,6 +35,7 @@ const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; la
 };
 
 export default function Integrations() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [copiedKey, setCopiedKey] = useState<string | null>(null);

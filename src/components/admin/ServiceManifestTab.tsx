@@ -37,6 +37,7 @@ const CLASS_CONFIG: Record<string, { label: string; desc: string; color: string 
 };
 
 export function ServiceManifestTab() {
+  const { t } = useTranslation();
   const [manifests, setManifests] = useState<ServiceManifest[]>([]);
   const [services, setServices] = useState<ServiceOption[]>([]);
   const [loading, setLoading] = useState(true);

@@ -214,6 +214,7 @@ function ApprovalRequests() {
 
 // ── Anomaly Alerts ──
 function AnomalyAlerts() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

@@ -58,6 +58,7 @@ const ROOT2_PACKAGES = [
 
 export function Root2PricingTab() {
   const [testPrice, setTestPrice] = useState("");
+  const { t } = useTranslation();
   const [testResult, setTestResult] = useState<{ valid: boolean; root: number; suggestions: number[] } | null>(null);
   const [root2Enabled, setRoot2Enabled] = useState(true);
 

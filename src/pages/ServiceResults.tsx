@@ -39,6 +39,7 @@ type FilterStatus = "all" | "completed" | "failed" | "running";
 type SortBy = "date" | "cost" | "duration" | "service";
 
 export default function ServiceResults() {
+  const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
