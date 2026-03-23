@@ -149,12 +149,12 @@ const App = () => (
                 <Route path="/docs" element={<AppLayout><Docs /></AppLayout>} />
                 <Route path="/docs/:section/:topic" element={<AppLayout><Docs /></AppLayout>} />
                 <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
-                <Route path="/insights" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/insights/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
-                <Route path="/patterns" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/patterns/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
-                <Route path="/formulas" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/formulas/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
+                <Route path="/insights" element={<Navigate to="/library" replace />} />
+                <Route path="/insights/:slug" element={<Navigate to="/library" replace />} />
+                <Route path="/patterns" element={<Navigate to="/library" replace />} />
+                <Route path="/patterns/:slug" element={<Navigate to="/library" replace />} />
+                <Route path="/formulas" element={<Navigate to="/library" replace />} />
+                <Route path="/formulas/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/contradictions" element={<AppLayout><EntityListing /></AppLayout>} />
                 <Route path="/contradictions/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
                 <Route path="/applications" element={<AppLayout><EntityListing /></AppLayout>} />
