@@ -185,7 +185,7 @@ const App = () => (
                 <Route path="/feedback" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Feedback failed to load"><Feedback /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/guests" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Guest pages failed to load"><GuestPages /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/chat" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Chat failed to load"><ChatPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/onboarding" element={<ProtectedRoute><AppLayout><Onboarding /></AppLayout></ProtectedRoute>} />
+                <Route path="/onboarding" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Onboarding failed to load"><Onboarding /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="API docs failed to load"><ApiDocs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
