@@ -1,155 +1,209 @@
 {
   "nav": {
     "knowledge_os": "Knowledge OS",
-    "how_it_works": "Cum funcționează",
-    "capabilities": "Capabilități",
+    "how_it_works": "Cum functioneaza",
+    "capabilities": "Capabilitati",
     "use_cases": "Cazuri de utilizare",
-    "docs": "Documentație",
+    "docs": "Documentatie",
     "dashboard": "Panou de control",
     "login": "Autentificare",
-    "start_free": "Începe Gratuit"
-  },
-  "hero": {
-    "tagline": "Sistem Operațional de Extracție a Cunoștințelor",
-    "title_line1": "Expertiza ta dispare",
-    "title_line2": "în conversații.",
-    "title_line3": "Noi o extragem pentru totdeauna.",
-    "subtitle": "Încarcă un singur podcast. Obține 50+ rezultate profesionale — articole, framework-uri, scripturi, cursuri, profiluri psihologice, funneluri de marketing. Automat. De fiecare dată.",
-    "cta_dashboard": "Mergi la Panou",
-    "cta_start": "Începe Gratuit — 500 Credite",
-    "cta_how": "Vezi Cum Funcționează",
-    "trust_no_card": "Fără card bancar",
-    "trust_credits": "500 credite gratuite",
-    "trust_gdpr": "Conform GDPR"
-  },
-  "problem": {
-    "label": "Problema",
-    "title": "Internetul produce informație infinită.",
-    "desc": "Dar aproape nimic nu devine <strong>cunoaștere utilizabilă</strong>. Ideile dispar în episoade de podcast, apeluri cu clienți, interviuri și notițe nestructurate. Te repeți. Uiți ce ai spus. Nu poți găsi acel framework pe care l-ai explicat strălucit… acum trei luni.",
-    "footnote": "Majoritatea ideilor dispar. Pentru totdeauna.",
-    "podcasts": "Podcast-uri",
-    "interviews": "Interviuri",
-    "courses": "Cursuri",
-    "articles": "Articole",
-    "webinars": "Webinarii",
-    "ai_conversations": "Conversații AI"
-  },
-  "solution": {
-    "label": "Soluția",
-    "title_line1": "Extrage idei.",
-    "title_line2": "Construiește sisteme de decizie.",
-    "desc": "AI-IDEI nu rezumă. <strong>Structurează</strong>. Fiecare conversație devine unități atomice de cunoaștere — neuroni — conectați prin relații semantice într-un graf navigabil al expertizei tale. Apoi generează produse din acel graf. Automat.",
-    "bullet1": "Încarcă o dată → generează la infinit",
-    "bullet2": "Idei atomice, nu rezumate vagi",
-    "bullet3": "50+ livrabile per conținut",
-    "bullet4": "Cunoașterea se compune în timp"
-  },
-  "pipeline": {
-    "label": "Cum Funcționează",
-    "title": "De la Conținut Brut la Active Monetizabile",
-    "subtitle": "Cinci pași deterministi. Fără ghicit. Fără prompt engineering. Apasă butonul.",
-    "step": "Pasul {{number}}",
-    "upload": "Încarcă",
-    "upload_sub": "Audio · Video · Text · URL",
-    "extract": "Extrage",
-    "extract_sub": "Neuroni atomici",
-    "connect": "Conectează",
-    "connect_sub": "Graf de cunoștințe",
-    "generate": "Generează",
-    "generate_sub": "50+ livrabile",
-    "monetize": "Monetizează",
-    "monetize_sub": "Reutilizare infinită",
-    "ticker_label": "O singură încărcare generează",
-    "d_marketing": "Framework-uri de marketing",
-    "d_sales": "Scripturi de vânzări",
-    "d_social": "Postări social media",
-    "d_course": "Schițe de cursuri",
-    "d_copy": "Formule de copywriting",
-    "d_psych": "Profiluri psihologice",
-    "d_jtbd": "Tipare JTBD",
-    "d_persuasion": "Framework-uri de persuasiune",
-    "d_narrative": "Structuri narative",
-    "d_guest": "Profiluri de invitați",
-    "d_knowledge": "Rapoarte de cunoaștere",
-    "d_decision": "Modele de decizie"
-  },
-  "capabilities": {
-    "label": "Capabilități",
-    "title_line1": "Explorează Structura Ideilor,",
-    "title_line2": "Nu Doar Conținutul Din Jurul Lor",
-    "extraction_title": "Motor de Extracție a Cunoștințelor",
-    "extraction_desc": "Transformă conversațiile în idei atomice structurate — framework-uri, tipare, formule, semnale psihologice. Nu rezumate. Structuri.",
-    "services_title": "Servicii AI Deterministe",
-    "services_desc": "Cost fix. Livrabile clare. Fiecare serviciu are input definit, execuție auditabilă și output previzibil. Fără tokeni arși ghicind.",
-    "graph_title": "Graf de Cunoștințe Viu",
-    "graph_desc": "Neuronii se conectează prin relații tipizate: susține, contrazice, extinde, derivat_din. Expertiza ta devine arhitectură navigabilă.",
-    "economy_title": "Economie Transparentă de Credite",
-    "economy_desc": "Fiecare operațiune are un cost vizibil în NEURONS. Fără abonamente. Fără surprize. Vezi exact ce plătești — până la 0.01 USD."
-  },
-  "social_proof": {
-    "categories": "Categorii de conținut",
-    "templates": "Șabloane AI",
-    "deliverables": "Livrabile per rulare",
-    "free_credits": "Credite gratuite la înregistrare"
-  },
-  "use_cases": {
-    "label": "Pentru Cine Este",
-    "title": "Construit pentru Cei Care Creează Cunoaștere",
-    "subtitle": "Dacă vorbești, scrii, predai sau consulți — expertiza ta se scurge. Noi o captăm.",
-    "podcasters_title": "Podcasteri & Creatori",
-    "podcasters_desc": "Transformă fiecare episod într-o bibliotecă de framework-uri reutilizabile, profiluri de invitați și active de conținut.",
-    "marketers_title": "Marketeri & Consultanți",
-    "marketers_desc": "Extrage tipare de decizie din conversații cu clienți. Generează campanii din psihologia reală a cumpărătorilor.",
-    "coaches_title": "Coachi & Educatori",
-    "coaches_desc": "Transformă metodologia ta în cursuri structurate, framework-uri și produse de cunoaștere vandabile.",
-    "founders_title": "Fondatori & Cercetători",
-    "founders_desc": "Construiește o bază de cunoștințe compusă din conversații de piață, interviuri și cercetare de teren."
-  },
-  "economics": {
-    "label": "Economia",
-    "title": "Marja Reală Vine Din Reutilizare",
-    "subtitle": "Un framework extras o dată poate fi reutilizat de 10.000 de ori. Nu e un abonament — e un motor de multiplicare a cunoașterii.",
-    "cost_label": "Cost per extracție",
-    "cost_value": "~$0.35",
-    "cost_sub": "35 credite NEURONS",
-    "deliverables_label": "Livrabile generate",
-    "deliverables_value": "50+",
-    "deliverables_sub": "Per conținut",
-    "per_label": "Cost per livrabil",
-    "per_value": "$0.007",
-    "per_sub": "Șapte miimi"
-  },
-  "explore": {
-    "label": "Explorează Cunoașterea",
-    "title": "Navighează Structura Ideilor",
-    "subtitle": "Infrastructură publică de cunoaștere — explorează idei, tipare și framework-uri extrase de platformă.",
-    "insights": "Idei",
-    "insights_sub": "Idei structurate",
-    "patterns": "Tipare",
-    "patterns_sub": "Modele comportamentale",
-    "formulas": "Formule",
-    "formulas_sub": "Instrumente de conversie",
-    "contradictions": "Contradicții",
-    "contradictions_sub": "Hărți de tensiune",
-    "applications": "Aplicații",
-    "applications_sub": "Cazuri de utilizare",
-    "profiles": "Profiluri",
-    "profiles_sub": "Hărți de experți"
-  },
-  "final_cta": {
-    "title_line1": "Nu Mai Pierde Cele Mai Bune Idei.",
-    "title_line2": "Începe Să Le Extragi.",
-    "subtitle": "Creează-ți contul gratuit. Primește 500 credite NEURONS. Încarcă primul conținut și vezi magia — în mai puțin de 2 minute.",
-    "read_docs": "Citește Documentația",
-    "footer": "Fără card bancar • Fără angajament • Conform GDPR"
+    "start_free": "Incepe Gratuit"
   },
   "seo": {
-    "title": "AI-IDEI — Sistem Operațional de Extracție a Cunoștințelor",
-    "description": "Transformă expertiza în active digitale. Încarcă conținut o dată, generează zeci de rezultate profesionale automat. Butonul magic de marketing."
+    "title": "AI-IDEI — Sistem Operational de Extractie a Cunostintelor",
+    "description": "Transforma expertiza in active digitale. Incarca continut o data, genereaza zeci de rezultate profesionale automat. Butonul magic de marketing."
+  },
+  "hero": {
+    "tagline": "MOTOR DE EXTRACTIE A CUNOSTINTELOR",
+    "title_prefix": "Cel mai aproape lucru de un",
+    "title_highlight": "buton magic",
+    "title_suffix": "pentru copywriting si marketing",
+    "subtitle": "Transforma o idee bruta in copy persuasiv, oferte mai puternice, active de continut si executie reala de marketing cu framework-uri AI practice, prompturi si asistenti construiti pentru munca reala.",
+    "cta_start": "Incepe Gratuit",
+    "cta_mechanism": "Vezi Mecanismul"
+  },
+  "problem": {
+    "before_label": "INAINTE",
+    "before_title": "Majoritatea oamenilor nu se lupta cu ideile. Se lupta cu transformarea ideilor in active.",
+    "before_p1": "Ai ganduri. Notite. Ciorne. Unghiuri. Oferte. Campanii pe jumatate construite. Fragmente de copy bun.",
+    "before_p2": "Dar adevaratul blocaj nu e creativitatea. E executia.",
+    "before_q1": "Deschizi ChatGPT. Testezi prompturi aleatorii.",
+    "before_q2": "Salvezi lucruri interesante. Incerci sa scrii.",
+    "before_q3": "O iei de la capat. Gandesti prea mult. Pierzi impulsul.",
+    "before_items": ["prea multe idei", "pozitionare slaba", "scriere lenta", "oferte neclare", "continut inconsistent", "executie risipita"],
+    "after_label": "DUPA",
+    "after_title": "AI-IDEI inchide acel gol.",
+    "after_p1": "Te ajuta sa transformi gandirea bruta in copy utilizabil, continut structurat, mesaje mai puternice si output de marketing mai rapid.",
+    "after_p2": "In loc sa ghicesti ce sa scrii, cum sa structurezi, cum sa formulezi sau cum sa impachetezi — folosesti un sistem care te ajuta sa te misti mai repede si sa gandesti mai bine.",
+    "after_items": ["scrie mai repede", "ascute mesajul", "construieste oferte mai puternice", "creeaza mai mult continut dintr-o singura idee", "transforma gandirea risipita in active comerciale"]
+  },
+  "benefits": {
+    "label": "CE SE SCHIMBA",
+    "title": "Ce se schimba cand folosesti AI-IDEI",
+    "items": [
+      {
+        "title": "Nu mai pierzi timp pe inceputuri goale",
+        "text": "Primesti structura, directie si resurse gata de utilizat care fac inceputul dramatic mai usor."
+      },
+      {
+        "title": "Scrii mai repede fara sa scazi calitatea",
+        "text": "In loc sa improvizezi de fiecare data, folosesti sisteme reutilizabile care imbunatatesc viteza si consistenta."
+      },
+      {
+        "title": "Ofertele tale devin mai usor de explicat si vandut",
+        "text": "Formularea mai buna creeaza pozitionare mai buna. Pozitionarea mai buna creeaza conversie mai puternica."
+      },
+      {
+        "title": "Transformi AI-ul intr-un avantaj real de lucru",
+        "text": "Nu promptare aleatorie. Nu experimentare haotica. Un mod mai intentionat, mai util, mai profitabil de a lucra."
+      }
+    ]
+  },
+  "mechanism": {
+    "label": "MECANISMUL",
+    "title": "O idee devine multe active",
+    "subtitle": "Cu sistemul potrivit, o singura idee nu mai e doar un gand si devine parghie.",
+    "steps": [
+      { "num": "01", "title": "Alege problema", "text": "Incepe cu ce ai nevoie: copy, continut, pozitionare, claritate in oferta sau suport de executie." },
+      { "num": "02", "title": "Foloseste resursa potrivita", "text": "Alege un framework, prompt, asistent sau exemplu proiectat pentru exact acel tip de munca." },
+      { "num": "03", "title": "Transforma-l intr-un activ", "text": "Produce ceva utilizabil: un post, email, landing page, oferta, script sau activ de campanie." },
+      { "num": "04", "title": "Repeta cu viteza", "text": "Nu mai improviza. Incepe sa produci cu claritate, consistenta si impuls." }
+    ],
+    "transforms": [
+      { "from": "Un gand brut", "to": "un post social care comunica valoare" },
+      { "from": "Un serviciu incurcat", "to": "o oferta mai clara cu pozitionare mai puternica" },
+      { "from": "O transcriere lunga", "to": "un newsletter, articol, thread si secventa de email-uri" },
+      { "from": "Notite risipite", "to": "un plan de continut, schita de produs sau activ de conversie" }
+    ]
+  },
+  "what_you_get": {
+    "label": "CE PRIMESTI",
+    "title": "Tot ce ai nevoie ca sa scrii, sa te pozitionezi si sa faci marketing mai bine cu AI",
+    "subtitle": "In AI-IDEI, primesti resurse practice construite sa imbunatateasca executia, nu sa te impresioneze cu complexitate.",
+    "blocks": [
+      { "title": "Framework-uri", "text": "Foloseste structuri dovedite pentru copywriting, oferte, pozitionare, funnel-uri, strategie de continut, planificare si executie. Nu mai construi de la zero de fiecare data." },
+      { "title": "Asistenti AI", "text": "Foloseste asistenti specializati pentru scriere, ideatie, creare de oferte, cercetare, mesaje, strategie si executie de marketing." },
+      { "title": "Prompturi", "text": "Primesti prompturi construite pentru rezultate reale — nu colectii aleatorii. Clare, adaptabile, practice, proiectate sa produca output-uri mai puternice mai repede." },
+      { "title": "Exemple Reale", "text": "Vezi cum o singura idee bruta poate deveni un post, email, landing page, oferta, campanie, script sau activ de continut structurat." }
+    ]
+  },
+  "who_for": {
+    "label": "PENTRU CINE E",
+    "title": "Construit pentru oameni care vor output, nu zgomot",
+    "subtitle": "Daca scrii, vinzi, predai sau construiesti — acest sistem e proiectat in jurul realitatii tale zilnice.",
+    "roles": [
+      { "label": "Creatori", "text": "Publica mai repede cu structura, nu cu presiune" },
+      { "label": "Freelanceri", "text": "Mesaje mai puternice, mai multa viteza, mai putina ghicire" },
+      { "label": "Consultanti", "text": "Oferte mai clare, pozitionare mai ascutita" },
+      { "label": "Marketeri", "text": "Sisteme mai bune, campanii mai bune, output mai bun" },
+      { "label": "Fondatori", "text": "Transforma ideile risipite in active" },
+      { "label": "Operatori", "text": "AI practic pentru executie, nu hype" }
+    ],
+    "footnote": "Nu pentru oameni care vor teorie fara executie, unelte fara aplicare sau promptare infinita fara rezultate."
+  },
+  "why_different": {
+    "label": "DE CE E DIFERIT",
+    "title": "Nu e inca un pachet de prompturi. Nu e inca o biblioteca de continut.",
+    "without_label": "FARA UN SISTEM",
+    "with_label": "CU AI-IDEI",
+    "before": ["Pagina goala de fiecare data", "Prompturi aleatorii, niciun sistem", "Idei risipite, nicio structura", "Ghicind ce sa scrii", "Output-ul pare generic"],
+    "after": ["Incepe cu framework-uri dovedite", "Resurse organizate dupa obiectiv", "Flux clar de la idee la activ", "Directie inainte de executie", "Output-ul suna ca tine, dar mai ascutit"],
+    "quote": "AI-IDEI e construit in jurul unui singur obiectiv: sa te ajute sa transformi gandul in executie.",
+    "tagline": "MAI PUTINA FRICTIUNE · COPY MAI PUTERNIC · REZULTATE MAI RAPIDE"
+  },
+  "social_proof": {
+    "label": "DOVADA",
+    "title": "Construit pentru oameni care vor gandire mai ascutita si executie mai puternica",
+    "testimonials": [
+      { "text": "AI-IDEI m-a ajutat sa transform ganduri risipite intr-un copy mai clar si o oferta mult mai puternica.", "name": "M.R.", "role": "Consultant Marketing" },
+      { "text": "Se simte mai putin ca o biblioteca de resurse si mai mult ca un sistem de executie pentru marketing.", "name": "A.P.", "role": "Creator de Continut" },
+      { "text": "L-am folosit sa ma misc mai repede, sa scriu mai bine si sa-mi structurez ideile intr-un mod care a dus la output utilizabil.", "name": "D.C.", "role": "Strateg Freelance" }
+    ]
+  },
+  "control": {
+    "label": "STRAT DE CONTROL",
+    "title": "Tu controlezi output-ul. Nu invers.",
+    "subtitle": "Seteaza tonul, limba, formatul, obiectivul, adancimea si audienta pentru fiecare executie.",
+    "items": [
+      { "label": "Ton", "desc": "Profesional, casual, autoritar" },
+      { "label": "Limba", "desc": "EN, RO, RU si in expansiune" },
+      { "label": "Format", "desc": "Post, email, pagina, script, thread" },
+      { "label": "Obiectiv", "desc": "Vinde, educa, atrage, converteste" },
+      { "label": "Adancime", "desc": "Ciorna rapida pana la analiza profunda" },
+      { "label": "Audienta", "desc": "B2B, B2C, nisa, larg" }
+    ]
+  },
+  "proof_band": {
+    "stats": [
+      { "value": "50+", "label": "Livrabile per incarcare" },
+      { "value": "12", "label": "Familii de output" },
+      { "value": "\u221e", "label": "Reutilizare cunostinte" },
+      { "value": "<2min", "label": "De la idee la activ" }
+    ]
+  },
+  "output_galaxy": {
+    "label": "UNIVERSUL OUTPUT-URILOR",
+    "title": "O idee poate deveni mult mai mult decat un singur output",
+    "subtitle": "Continut, educatie, vanzari, cunostinte, asistenti — organizati in familii de active.",
+    "footer": "AI-IDEI te ajuta sa creezi mai repede, mai clar si cu mai multa intentie comerciala."
+  },
+  "pricing": {
+    "label": "ACCES",
+    "title": "Alege nivelul care se potriveste ambitiei tale",
+    "subtitle": "Incepe simplu. Upgradeaza cand vrei mai multa profunzime, viteza si parghie.",
+    "popular": "POPULAR",
+    "plans": [
+      { "name": "Free", "price": "$0", "period": "pentru totdeauna", "promise": "Testeaza sistemul", "text": "Intra, exploreaza si vezi cum functioneaza AI-IDEI inainte sa te angajezi.", "cta": "Incepe Gratuit" },
+      { "name": "Core", "price": "$11", "period": "/luna", "promise": "Construieste claritate", "text": "Pentru cei care vor acces practic la esentiale pentru copy, continut si executie mai buna.", "cta": "Alege Core" },
+      { "name": "Pro", "price": "$47", "period": "/luna", "promise": "Produce mai mult", "text": "Acces mai profund, resurse avansate si parghie mai puternica in copywriting si marketing.", "cta": "Alege Pro" },
+      { "name": "Elite", "price": "$137", "period": "/luna", "promise": "Putere totala", "text": "Pentru operatori seriosi care vor versiunea cea mai completa si resurse premium de executie.", "cta": "Alege Elite" }
+    ]
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "Intrebari Frecvente",
+    "items": [
+      { "q": "Ce este AI-IDEI?", "a": "AI-IDEI este un sistem AI practic care te ajuta sa transformi ideile in copy, continut, oferte, workflow-uri si active de marketing." },
+      { "q": "E pentru incepatori sau utilizatori avansati?", "a": "Ambele. Limbajul e suficient de clar pentru non-experti, dar resursele sunt utile pentru operatori seriosi." },
+      { "q": "Trebuie sa fiu bun la promptare?", "a": "Nu. Scopul nu e sa memorezi prompturi complicate. Scopul e sa obtii output-uri mai bune cu mai putina frictiune." },
+      { "q": "E doar inca o biblioteca de prompturi?", "a": "Nu. E construit ca un sistem de executie, nu o colectie aleatorie de prompturi." },
+      { "q": "Pentru ce pot sa-l folosesc?", "a": "Copywriting, creare de continut, dezvoltare de oferte, pozitionare, mesaje, planificare, gandire de campanie si munca structurata asistata de AI." },
+      { "q": "Pot incepe gratuit?", "a": "Da. Poti intra, explora si decide daca se potriveste workflow-ului tau." },
+      { "q": "Pentru cine e cel mai bun?", "a": "Creatori, marketeri, consultanti, freelanceri, fondatori si oricine vrea output mai rapid, mai clar, mai util comercial." }
+    ]
+  },
+  "final_cta": {
+    "title_line1": "Nu mai colecta idei.",
+    "title_line2": "Incepe sa le transformi in active.",
+    "subtitle": "Foloseste AI-IDEI sa scrii mai repede, sa faci marketing mai bine si sa transformi gandirea bruta in output persuasiv.",
+    "cta_start": "Incepe Gratuit",
+    "cta_inside": "Vezi Ce Contine",
+    "tagline": "MAI PUTINA FRICTIUNE · COPY MAI BUN · EXECUTIE MAI PUTERNICA"
   },
   "transcribe_cta": {
-    "title": "YouTube → Transcriere în 2 secunde",
-    "desc": "Lipește un link YouTube, descarcă transcrierea completă. Prima transcriere gratuită.",
-    "button": "Încearcă Transcrierea"
+    "title": "YouTube → Transcriere in 2 secunde",
+    "desc": "Lipeste un link YouTube, descarca transcrierea completa. Prima transcriere gratuita.",
+    "button": "Incearca Transcrierea"
+  },
+  "footer": {
+    "brand_desc": "AI practic pentru copywriting, marketing si executie.",
+    "platform": "Platforma",
+    "resources": "Resurse",
+    "community": "Comunitate",
+    "legal": "Legal",
+    "services": "Servicii",
+    "marketplace": "Piata",
+    "pipeline": "Pipeline",
+    "documentation": "Documentatie",
+    "knowledge_base": "Baza de cunostinte",
+    "changelog": "Changelog",
+    "forum": "Forum",
+    "topics": "Subiecte",
+    "feedback": "Feedback",
+    "terms": "Termeni",
+    "privacy": "Confidentialitate",
+    "data_privacy": "Protectia datelor",
+    "copyright": "De la idee bruta la activ persuasiv.",
+    "docs": "Documentatie"
   }
 }
