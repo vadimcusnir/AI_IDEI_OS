@@ -8,12 +8,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Upload, Brain, Sparkles, TrendingUp,
-  Check, ArrowRight, Loader2, Play, Zap, Gift, Crown,
+  Check, ArrowRight, Loader2, Play, Zap, Gift, Crown, BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { fireFinalConfetti } from "@/components/onboarding/useConfetti";
+import { OnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
 
 interface StepStatus {
   episodes: number;
