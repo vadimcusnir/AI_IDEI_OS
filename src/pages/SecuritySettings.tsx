@@ -211,6 +211,9 @@ export default function SecuritySettings() {
             </div>
           </motion.div>
 
+          {/* MFA / 2FA */}
+          <MFAEnrollment />
+
           {/* Data & Privacy Link */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}

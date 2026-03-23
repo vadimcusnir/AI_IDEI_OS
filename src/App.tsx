@@ -169,6 +169,7 @@ const App = () => (
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
                 <Route path="/media/profiles/:slug" element={<MediaProfilePublic />} />
                 <Route path="/admin/media-profiles" element={<AppLayout><AdminMediaProfiles /></AppLayout>} />
+                <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
                 <Route path="/knowledge/*" element={<AppLayout><KnowledgeSurfacePage /></AppLayout>} />

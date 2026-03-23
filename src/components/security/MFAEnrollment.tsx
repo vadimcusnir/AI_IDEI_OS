@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Shield, Loader2, CheckCircle2, XCircle, Smartphone, Copy, AlertTriangle } from "lucide-react";
+import { Shield, Loader2, CheckCircle2, Smartphone, Copy, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 type MFAStatus = "idle" | "enrolling" | "verifying" | "enrolled" | "unenrolling";
+
+function StatusBadge({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded-full font-medium", className)}>{children}</span>;
+}
 
 export function MFAEnrollment() {
   const [status, setStatus] = useState<MFAStatus>("idle");
@@ -27,7 +31,7 @@ export function MFAEnrollment() {
     }
   };
 
-  useState(() => { loadFactors(); });
+  useEffect(() => { loadFactors(); }, []);
 
   const startEnroll = async () => {
     setLoading(true);
@@ -96,14 +100,14 @@ export function MFAEnrollment() {
           </p>
         </div>
         {status === "enrolled" && (
-          <Badge className="ml-auto bg-green-500/10 text-green-600 text-[8px]">Enabled</Badge>
+          <StatusBadge className="ml-auto bg-primary/10 text-primary text-[8px]">Enabled</StatusBadge>
         )}
       </div>
 
       {status === "idle" && (
         <div className="space-y-3">
           <div className="bg-muted/30 rounded-lg p-3 flex items-start gap-2">
-            <AlertTriangle className="h-3.5 w-3.5 text-yellow-600 mt-0.5 shrink-0" />
+            <AlertTriangle className="h-3.5 w-3.5 text-accent-foreground mt-0.5 shrink-0" />
             <p className="text-[10px] text-muted-foreground">
               MFA protects your account even if your password is compromised. 
               You'll need an authenticator app like Google Authenticator or Authy.
@@ -151,7 +155,7 @@ export function MFAEnrollment() {
           {factors.filter(f => f.status === "verified").map(f => (
             <div key={f.id} className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
                 <span className="text-xs">{f.friendly_name}</span>
               </div>
               <Button variant="ghost" size="sm" onClick={() => unenroll(f.id)} disabled={loading}
@@ -164,8 +168,4 @@ export function MFAEnrollment() {
       )}
     </motion.div>
   );
-}
-
-function Badge({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded-full font-medium", className)}>{children}</span>;
 }

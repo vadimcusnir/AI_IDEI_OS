@@ -114,7 +114,7 @@ export default function MediaProfilePublic() {
       <SEOHead
         title={metaTitle}
         description={metaDesc}
-        canonicalPath={`/media/profiles/${profile.public_slug}`}
+        canonical={`/media/profiles/${profile.public_slug}`}
       />
 
       {/* Section 1: Header factual */}
