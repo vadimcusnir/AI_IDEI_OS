@@ -32,6 +32,7 @@ interface Avatar33PanelProps {
 export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33PanelProps) {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { balance } = useCreditBalance();
   const [content, setContent] = useState(initialContent || "");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -43,8 +44,27 @@ export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33P
   const costPerModule = 50;
   const totalCost = totalModules * costPerModule;
 
+  // Progress simulation during execution
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setProgress(p => Math.min(p + 2, 92));
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [loading]);
+
   const handleRun = async () => {
     if (!user || !content.trim()) return;
+    if (balance < totalCost) {
+      toast.error(`Credite insuficiente: ai ${balance} NEURONS, necesari ${totalCost}`);
+      return;
+    }
+
+    const truncated = truncateForService(content);
+    if (truncated.wasTruncated) {
+      toast.info(formatTruncationMessage(truncated), { duration: 6000 });
+    }
+
     setLoading(true);
     setProgress(0);
     setResults(null);
