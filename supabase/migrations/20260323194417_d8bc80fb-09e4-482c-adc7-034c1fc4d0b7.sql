@@ -1,0 +1,17 @@
+INSERT INTO public.service_registry (id,name,service_level,category,intent,neurons_cost_min,neurons_cost_max,score_tier,complexity,output_type,domain,is_active,position) VALUES
+('youre-not-identity-youre-reframe-headline-formula','"You''re Not [Identity], You''re [Reframe]" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,26),
+('if-youre-state-read-this-headline-formula','"If You''re [State], Read This" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,27),
+('this-changes-everything-about-x-headline-formula','"This Changes Everything About [X]" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,28),
+('nobody-talks-about-x-headline-formula','"Nobody Talks About [X]" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,29),
+('do-this-before-you-x-headline-formula','"Do This Before You [X]" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,30),
+('the-real-reason-x-doesnt-work-headline-formula','"The Real Reason [X] Doesn''t Work" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,31),
+('number-mistakes-that-kill-outcome-headline-formula','"[Number] Mistakes That Kill [Outcome]" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,32),
+('what-happens-when-you-x-headline-formula','"What Happens When You [X]" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,33),
+('you-dont-need-x-you-need-this-headline-formula','"You Don''t Need [X], You Need This" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,34),
+('x-is-dead-heres-what-replaces-it-headline-formula','"[X] Is Dead. Here''s What Replaces It" Headline Formula','OTOS','HEADLINE FORMULAS (CONVERSION ENTRY)','generate',50,200,'B','L1','text','headlines',true,35),
+('single-step-command-cta-formula','Single-Step Command CTA Formula','OTOS','CTA FORMULAS (ACTION TRIGGER)','generate',50,200,'B','L1','text','cta',true,36),
+('urgency-compression-cta-formula','Urgency Compression CTA Formula','OTOS','CTA FORMULAS (ACTION TRIGGER)','generate',50,200,'B','L1','text','cta',true,37),
+('risk-reversal-cta-formula','Risk Reversal CTA Formula','OTOS','CTA FORMULAS (ACTION TRIGGER)','generate',50,200,'B','L1','text','cta',true,38),
+('outcome-lock-cta-formula','Outcome Lock CTA Formula','OTOS','CTA FORMULAS (ACTION TRIGGER)','generate',50,200,'B','L1','text','cta',true,39),
+('identity-upgrade-cta-formula','Identity Upgrade CTA Formula','OTOS','CTA FORMULAS (ACTION TRIGGER)','generate',50,200,'B','L1','text','cta',true,40)
+ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name,service_level=EXCLUDED.service_level,category=EXCLUDED.category,intent=EXCLUDED.intent,neurons_cost_min=EXCLUDED.neurons_cost_min,neurons_cost_max=EXCLUDED.neurons_cost_max,score_tier=EXCLUDED.score_tier,complexity=EXCLUDED.complexity,output_type=EXCLUDED.output_type,domain=EXCLUDED.domain,is_active=EXCLUDED.is_active,position=EXCLUDED.position;
