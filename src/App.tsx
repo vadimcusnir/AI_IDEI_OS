@@ -102,6 +102,7 @@ const NotebookDetail = lazyRetry(() => import("./pages/NotebookDetail"));
 const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngine"));
 const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
+const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
 
 const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
 const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
