@@ -52,6 +52,18 @@ interface Artifact {
   updated_at: string;
 }
 
+interface NeuronItem {
+  id: number;
+  title: string;
+  status: string;
+  lifecycle: string;
+  content_category: string | null;
+  created_at: string;
+  updated_at: string;
+  number: number;
+  blockPreview?: string;
+}
+
 const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
   document: { labelKey: "artifacts.type_document", color: "bg-primary/10 text-primary" },
   article: { labelKey: "artifacts.type_article", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
