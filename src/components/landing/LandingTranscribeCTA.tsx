@@ -21,7 +21,7 @@ export function LandingTranscribeCTA() {
             <p className="text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-0">{t("transcribe_cta.desc")}</p>
           </div>
           <Button
-            onClick={() => navigate("/transcribe")}
+            onClick={() => navigate("/extractor")}
             size="sm"
             className="relative gap-2 text-sm h-11 min-h-[44px] px-6 bg-[hsl(var(--signal-red)/0.15)] hover:bg-[hsl(var(--signal-red)/0.25)] text-foreground border border-[hsl(var(--signal-red)/0.3)] shrink-0"
           >

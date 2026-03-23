@@ -47,7 +47,7 @@ const Intelligence = lazyRetry(() => import("./pages/Intelligence"));
 const Dashboard = lazyRetry(() => import("./pages/Dashboard"));
 const PublicProfile = lazyRetry(() => import("./pages/PublicProfile"));
 const PromptForge = lazyRetry(() => import("./pages/PromptForge"));
-const ProfileExtractor = lazyRetry(() => import("./pages/ProfileExtractor"));
+
 const Notifications = lazyRetry(() => import("./pages/Notifications"));
 const Feedback = lazyRetry(() => import("./pages/Feedback"));
 const Index = lazyRetry(() => import("./pages/Index"));
@@ -88,7 +88,7 @@ const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
 const SecuritySettings = lazyRetry(() => import("./pages/SecuritySettings"));
 const GamificationPage = lazyRetry(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazyRetry(() => import("./pages/AnalyticsDashboard"));
-const Transcribe = lazyRetry(() => import("./pages/Transcribe"));
+
 const Integrations = lazyRetry(() => import("./pages/Integrations"));
 const CognitiveUnits = lazyRetry(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazyRetry(() => import("./pages/CollectionRuns"));
@@ -167,7 +167,7 @@ const App = () => (
                 <Route path="/admin/media-profiles" element={<AppLayout><AdminMediaProfiles /></AppLayout>} />
                 <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
-                <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
+                <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
                 <Route path="/knowledge/*" element={<Navigate to="/library" replace />} />
                 <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
@@ -194,7 +194,7 @@ const App = () => (
                 <Route path="/library/:id" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Artifact failed to load"><ArtifactDetail /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/intelligence" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Intelligence failed to load"><Intelligence /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/prompt-forge" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Prompt Forge failed to load"><PromptForge /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/profile-extractor" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Profile Extractor failed to load"><ProfileExtractor /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/profile-extractor" element={<Navigate to="/extractor" replace />} />
                 <Route path="/profile" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Profile failed to load"><ProfilePage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/notifications" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Notifications failed to load"><Notifications /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/feedback" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Feedback failed to load"><Feedback /></ErrorBoundary></AppLayout></ProtectedRoute>} />

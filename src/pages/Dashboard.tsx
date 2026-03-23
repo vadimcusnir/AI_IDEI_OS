@@ -152,7 +152,7 @@ export default function Dashboard() {
           variant="info"
           title="Your command center"
           description="This dashboard shows your neurons, credits, jobs and pipeline progress at a glance. Upload content to see your stats grow."
-          action={{ label: "Upload content", route: "/transcribe" }}
+          action={{ label: "Upload content", route: "/extractor" }}
           show={data.neurons.total === 0}
           className="mb-4"
         />
