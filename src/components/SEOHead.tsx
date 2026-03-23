@@ -87,12 +87,15 @@ export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps
     // Remove old hreflang links
     document.querySelectorAll('link[hreflang]').forEach(el => el.remove());
     
+    const createdLinks: HTMLLinkElement[] = [];
+    
     for (const lang of langs) {
       const hreflang = document.createElement("link");
       hreflang.setAttribute("rel", "alternate");
       hreflang.setAttribute("hreflang", lang);
       hreflang.setAttribute("href", `${BASE_URL}${path}?lang=${lang}`);
       document.head.appendChild(hreflang);
+      createdLinks.push(hreflang);
     }
     // x-default
     const xDefault = document.createElement("link");
@@ -100,7 +103,12 @@ export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps
     xDefault.setAttribute("hreflang", "x-default");
     xDefault.setAttribute("href", `${BASE_URL}${path}`);
     document.head.appendChild(xDefault);
+    createdLinks.push(xDefault);
 
+    // Cleanup on unmount — prevents memory leak
+    return () => {
+      createdLinks.forEach(el => el.remove());
+    };
   }, [title, description, canonical, ogImage]);
 
   return null;

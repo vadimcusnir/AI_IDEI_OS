@@ -1,6 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import i18n from "@/i18n/i18n";
 
 interface Props {
   children: ReactNode;
@@ -37,24 +38,29 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      const t = (key: string, fallback: string) => {
+        const val = i18n.t(`errors:${key}`);
+        return val === `errors:${key}` ? fallback : val;
+      };
+
       return (
-        <div className="flex flex-col items-center justify-center min-h-[40vh] p-8 text-center">
+        <div role="alert" className="flex flex-col items-center justify-center min-h-[40vh] p-8 text-center">
           <div className="h-14 w-14 rounded-2xl bg-destructive/10 flex items-center justify-center mb-4">
             <AlertTriangle className="h-7 w-7 text-destructive" />
           </div>
           <h2 className="text-lg font-semibold mb-1">
-            {this.props.fallbackTitle || "Something went wrong"}
+            {this.props.fallbackTitle || t("boundary_title", "Something went wrong")}
           </h2>
           <p className="text-sm text-muted-foreground max-w-md mb-6">
-            {this.state.error?.message || "An unexpected error occurred."}
+            {this.state.error?.message || t("boundary_description", "An unexpected error occurred.")}
           </p>
           <div className="flex gap-3">
             <Button variant="outline" size="sm" onClick={this.handleRetry}>
-              Try Again
+              {t("boundary_retry", "Try Again")}
             </Button>
             <Button size="sm" onClick={this.handleReload}>
               <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
-              Reload Page
+              {t("boundary_reload", "Reload Page")}
             </Button>
           </div>
         </div>
