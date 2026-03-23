@@ -180,6 +180,7 @@ const App = () => (
                 <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
                 <Route path="/pricing" element={<AppLayout><Pricing /></AppLayout>} />
+                <Route path="/payment/result" element={<AppLayout><PaymentResult /></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
                 <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
                 <Route path="/community/:category" element={<AppLayout><Community /></AppLayout>} />
