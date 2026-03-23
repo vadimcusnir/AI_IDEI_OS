@@ -1,0 +1,220 @@
+import { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Save, Download, RotateCcw, Copy, FileText, Brain,
+  Lightbulb, Target, BookOpen, Sparkles, Check,
+  ChevronRight, ExternalLink, X,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
+export interface OutputItem {
+  id: string;
+  type: "transcript" | "summary" | "insights" | "frameworks" | "action_plan" | "content" | "raw";
+  title: string;
+  content: string;
+  metadata?: Record<string, unknown>;
+}
+
+const TYPE_CONFIG: Record<string, { icon: typeof FileText; label: string; color: string }> = {
+  transcript: { icon: FileText, label: "Transcript", color: "text-blue-500" },
+  summary: { icon: BookOpen, label: "Summary", color: "text-green-500" },
+  insights: { icon: Lightbulb, label: "Insights", color: "text-yellow-500" },
+  frameworks: { icon: Brain, label: "Frameworks", color: "text-purple-500" },
+  action_plan: { icon: Target, label: "Action Plan", color: "text-orange-500" },
+  content: { icon: Sparkles, label: "Content", color: "text-pink-500" },
+  raw: { icon: FileText, label: "Output", color: "text-muted-foreground" },
+};
+
+interface OutputPanelProps {
+  outputs: OutputItem[];
+  onRerun?: () => void;
+  onClose: () => void;
+  visible: boolean;
+}
+
+export function OutputPanel({ outputs, onRerun, onClose, visible }: OutputPanelProps) {
+  const { user } = useAuth();
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+
+  const handleCopy = useCallback((content: string) => {
+    navigator.clipboard.writeText(content);
+    toast.success("Copied to clipboard");
+  }, []);
+
+  const handleSaveAsArtifact = useCallback(async (output: OutputItem) => {
+    if (!user) return;
+    setSavingId(output.id);
+    try {
+      const { error } = await supabase.from("artifacts").insert([{
+        author_id: user.id,
+        title: output.title,
+        content: output.content,
+        artifact_type: output.type === "raw" ? "document" : output.type,
+        format: "markdown",
+        status: "draft",
+        tags: [output.type, "command-center"],
+        metadata: (output.metadata || {}) as any,
+      }]);
+      if (error) throw error;
+      setSavedIds(prev => new Set(prev).add(output.id));
+      toast.success(`Saved "${output.title}" as artifact`);
+    } catch (e) {
+      toast.error("Failed to save artifact");
+    } finally {
+      setSavingId(null);
+    }
+  }, [user]);
+
+  const handleExport = useCallback((output: OutputItem) => {
+    const blob = new Blob([output.content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${output.title.replace(/\s+/g, "_").toLowerCase()}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
+  if (!visible || outputs.length === 0) return null;
+
+  const activeTab = outputs[0]?.type || "raw";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      className="border border-border rounded-xl bg-card overflow-hidden"
+    >
+      {/* Header */}
+      <div className="px-4 py-2.5 border-b border-border flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <span className="text-xs font-bold">Execution Outputs</span>
+          <Badge variant="secondary" className="text-[9px] h-4">{outputs.length}</Badge>
+        </div>
+        <div className="flex items-center gap-1">
+          {onRerun && (
+            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={onRerun}>
+              <RotateCcw className="h-3 w-3" />
+              Re-run
+            </Button>
+          )}
+          <button onClick={onClose} className="p-1 text-muted-foreground hover:text-foreground">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      {outputs.length > 1 ? (
+        <Tabs defaultValue={activeTab} className="w-full">
+          <TabsList className="w-full justify-start rounded-none border-b border-border bg-transparent h-8 px-2">
+            {outputs.map(o => {
+              const cfg = TYPE_CONFIG[o.type] || TYPE_CONFIG.raw;
+              const Icon = cfg.icon;
+              return (
+                <TabsTrigger key={o.id} value={o.type} className="text-[10px] h-6 gap-1 data-[state=active]:shadow-none">
+                  <Icon className={cn("h-3 w-3", cfg.color)} />
+                  {cfg.label}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+          {outputs.map(o => (
+            <TabsContent key={o.id} value={o.type} className="m-0">
+              <OutputCard
+                output={o}
+                onCopy={handleCopy}
+                onSave={handleSaveAsArtifact}
+                onExport={handleExport}
+                saving={savingId === o.id}
+                saved={savedIds.has(o.id)}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      ) : (
+        <OutputCard
+          output={outputs[0]}
+          onCopy={handleCopy}
+          onSave={handleSaveAsArtifact}
+          onExport={handleExport}
+          saving={savingId === outputs[0].id}
+          saved={savedIds.has(outputs[0].id)}
+        />
+      )}
+    </motion.div>
+  );
+}
+
+function OutputCard({
+  output,
+  onCopy,
+  onSave,
+  onExport,
+  saving,
+  saved,
+}: {
+  output: OutputItem;
+  onCopy: (content: string) => void;
+  onSave: (output: OutputItem) => void;
+  onExport: (output: OutputItem) => void;
+  saving: boolean;
+  saved: boolean;
+}) {
+  const cfg = TYPE_CONFIG[output.type] || TYPE_CONFIG.raw;
+
+  return (
+    <div className="max-h-[400px] overflow-y-auto">
+      {/* Actions bar */}
+      <div className="sticky top-0 px-4 py-2 bg-card/95 backdrop-blur-sm border-b border-border flex items-center justify-between z-10">
+        <p className="text-[11px] font-medium">{output.title}</p>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="sm" className="h-6 text-[9px] gap-1" onClick={() => onCopy(output.content)}>
+            <Copy className="h-3 w-3" />
+            Copy
+          </Button>
+          <Button variant="ghost" size="sm" className="h-6 text-[9px] gap-1" onClick={() => onExport(output)}>
+            <Download className="h-3 w-3" />
+            Export
+          </Button>
+          <Button
+            variant={saved ? "ghost" : "default"}
+            size="sm"
+            className="h-6 text-[9px] gap-1"
+            onClick={() => onSave(output)}
+            disabled={saving || saved}
+          >
+            {saved ? (
+              <>
+                <Check className="h-3 w-3 text-green-500" />
+                Saved
+              </>
+            ) : (
+              <>
+                <Save className="h-3 w-3" />
+                Save as Asset
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="px-4 py-3">
+        <div className="prose prose-xs dark:prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_h2]:text-xs [&_h3]:text-xs [&_li]:text-xs [&_code]:text-[10px]">
+          <ReactMarkdown>{output.content}</ReactMarkdown>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,5 +1,5 @@
 import { SEOHead } from "@/components/SEOHead";
-import { AgentConsole } from "@/components/agent/AgentConsole";
+import { CommandCenter } from "@/components/command-center/CommandCenter";
 import { useTranslation } from "react-i18next";
 
 export default function ChatPage() {
@@ -7,10 +7,10 @@ export default function ChatPage() {
   return (
     <div className="flex-1 flex flex-col h-[calc(100vh-4rem)]">
       <SEOHead
-        title={`${t("chat_page.title")} — AI-IDEI`}
+        title={`Command Center — AI-IDEI`}
         description={t("chat_page.desc")}
       />
-      <AgentConsole />
+      <CommandCenter />
     </div>
   );
 }
