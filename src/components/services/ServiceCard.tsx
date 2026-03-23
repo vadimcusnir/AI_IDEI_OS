@@ -38,6 +38,7 @@ export function ServiceCard({
   const catCfg = categoryConfig[service.category];
   const clsBadge = classBadge[service.service_class] || classBadge.A;
   const locked = !tierSatisfied(userTier, service.access_tier);
+  const showTierBadge = service.access_tier && service.access_tier !== "free" && service.access_tier !== "authenticated";
 
   if (viewMode === "list") {
     return (
@@ -67,23 +68,8 @@ export function ServiceCard({
           <Coins className="h-3 w-3 text-ai-accent" />
           <span className="text-xs font-bold font-mono w-8 text-right">{service.credits_cost}</span>
         </div>
-        <TierBadge tier={service.access_tier} />
-        {locked ? (
-          <Lock className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />
-        ) : (
-          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary shrink-0" />
-        )}
-        {onCompareToggle && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onCompareToggle(); }}
-            className={cn(
-              "shrink-0 text-[9px] font-medium px-2 py-1 rounded-md transition-colors",
-              isComparing ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
-            )}
-          >
-            {isComparing ? "✓" : "⊕"}
-          </button>
-        )}
+        {locked && <Lock className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />}
+        {!locked && <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary shrink-0" />}
       </motion.div>
     );
   }
@@ -103,41 +89,28 @@ export function ServiceCard({
         isComparing && "ring-2 ring-primary/40"
       )}
     >
-      {onCompareToggle && (
-        <button
-          onClick={(e) => { e.stopPropagation(); onCompareToggle(); }}
-          className={cn(
-            "absolute top-2 right-2 text-[9px] font-medium px-2 py-1 rounded-md transition-colors z-10",
-            isComparing ? "bg-primary text-primary-foreground" : "bg-muted/80 text-muted-foreground hover:bg-muted"
-          )}
-        >
-          {isComparing ? "✓ Compare" : "Compare"}
-        </button>
-      )}
-
-      <div className="flex items-start justify-between mb-3">
+      {/* Top row: category + class */}
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           {catCfg && <catCfg.icon className={cn("h-4 w-4", catCfg.color)} />}
           <span className={cn("text-[9px] font-semibold uppercase tracking-wider", catCfg?.color || "text-muted-foreground")}>
             {catCfg?.label || service.category}
           </span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md cursor-help", clsBadge.className)}>
-                {clsBadge.label}
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="text-xs max-w-[200px]">
-              <p className="font-semibold mb-0.5">Class {service.service_class}: {clsBadge.label}</p>
-              <p className="text-muted-foreground">{clsBadge.description}</p>
-            </TooltipContent>
-          </Tooltip>
-          <TierBadge tier={service.access_tier} />
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md cursor-help", clsBadge.className)}>
+              {clsBadge.label}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="text-xs max-w-[200px]">
+            <p className="font-semibold mb-0.5">Class {service.service_class}: {clsBadge.label}</p>
+            <p className="text-muted-foreground">{clsBadge.description}</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
+      {/* Title */}
       <h3 className="text-sm font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
         {service.name}
       </h3>
@@ -145,13 +118,21 @@ export function ServiceCard({
         {service.description}
       </p>
 
+      {/* Footer: cost + lock/arrow */}
       <div className="flex items-center justify-between pt-3 border-t border-border">
         <div className="flex items-center gap-1.5">
           <Coins className="h-3 w-3 text-ai-accent" />
           <span className="text-xs font-bold font-mono">{service.credits_cost}</span>
           <span className="text-[9px] text-muted-foreground">NEURONS</span>
         </div>
-        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+        <div className="flex items-center gap-1.5">
+          {showTierBadge && <TierBadge tier={service.access_tier} />}
+          {locked ? (
+            <Lock className="h-3.5 w-3.5 text-muted-foreground/40" />
+          ) : (
+            <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+          )}
+        </div>
       </div>
     </motion.div>
   );

@@ -31,7 +31,7 @@ import { ExtractionPipelinePanel } from "@/components/services/ExtractionPipelin
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceFilters } from "@/components/services/ServiceFilters";
-import { ServiceCompareDrawer } from "@/components/services/ServiceCompareDrawer";
+
 
 interface Service {
   id: string;
@@ -109,7 +109,6 @@ export default function Services() {
   const [showFilters, setShowFilters] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-  const [compareIds, setCompareIds] = useState<Set<string>>(new Set());
   const [activeLayer, setActiveLayer] = useState<LayerKey>("all");
 
   const handleServiceClick = (service: Service) => {
@@ -123,15 +122,7 @@ export default function Services() {
     navigate(`/run/${service.service_key}`);
   };
 
-  const toggleCompare = (id: string) => {
-    setCompareIds(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) { next.delete(id); }
-      else if (next.size < 3) { next.add(id); }
-      else { toast.info(t("services.compare_max", "Maximum 3 services for comparison")); }
-      return next;
-    });
-  };
+
 
   useEffect(() => {
     if (authLoading) return;
@@ -203,7 +194,6 @@ export default function Services() {
   }, [services]);
 
   const avgCost = services.length ? Math.round(services.reduce((s, x) => s + x.credits_cost, 0) / services.length) : 0;
-  const compareServices = services.filter(s => compareIds.has(s.id));
   const showServiceCatalog = activeLayer === "all" || activeLayer === "quick" || activeLayer === "research";
 
   if (authLoading || loading) {
@@ -462,11 +452,8 @@ export default function Services() {
                   ? t("services.showing_all", { count: filtered.length })
                   : t("services.showing_filtered", { filtered: filtered.length, total: layerServices.length })}
               </p>
-              {compareIds.size > 0 && (
-                <p className="text-xs text-primary font-medium">
-                  {compareIds.size} selected for comparison
-                </p>
-              )}
+
+
             </div>
 
             {/* Services grid/list */}
@@ -495,8 +482,7 @@ export default function Services() {
                     categoryConfig={CATEGORY_CONFIG}
                     classBadge={CLASS_BADGE}
                     onClick={() => handleServiceClick(service)}
-                    onCompareToggle={() => toggleCompare(service.id)}
-                    isComparing={compareIds.has(service.id)}
+
                   />
                 ))}
               </div>
@@ -582,14 +568,8 @@ export default function Services() {
         )}
       </div>
 
-      {/* Compare drawer */}
-      <ServiceCompareDrawer
-        services={compareServices}
-        onRemove={(id) => toggleCompare(id)}
-        onClear={() => setCompareIds(new Set())}
-        categoryConfig={CATEGORY_CONFIG}
-        classBadge={CLASS_BADGE}
-      />
+
+
 
       <PremiumPaywall
         open={paywallOpen}
