@@ -194,7 +194,6 @@ export default function Services() {
   }, [services]);
 
   const avgCost = services.length ? Math.round(services.reduce((s, x) => s + x.credits_cost, 0) / services.length) : 0;
-  const compareServices = services.filter(s => compareIds.has(s.id));
   const showServiceCatalog = activeLayer === "all" || activeLayer === "quick" || activeLayer === "research";
 
   if (authLoading || loading) {
