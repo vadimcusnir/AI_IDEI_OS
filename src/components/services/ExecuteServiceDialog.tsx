@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Coins, Play, Loader2, CheckCircle, Copy, RotateCcw, Zap, AlertTriangle } from "lucide-react";
+import { Coins, Play, Loader2, CheckCircle, Copy, RotateCcw, Zap, AlertTriangle, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { type RegistryServiceItem, LEVEL_META, TIER_COLORS } from "./RegistryCard";
+import { useWalletAtomicity } from "@/hooks/useWalletAtomicity";
 
 interface ExecuteServiceDialogProps {
   service: RegistryServiceItem | null;
@@ -26,6 +27,8 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
   const [state, setState] = useState<ExecState>("configure");
   const [output, setOutput] = useState("");
   const [costCharged, setCostCharged] = useState(0);
+  const { reserve, settle, release } = useWalletAtomicity();
+  const reservedRef = useRef<{ amount: number; jobId?: string } | null>(null);
 
   useEffect(() => {
     if (service) {
@@ -58,10 +61,10 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
         return;
       }
 
-      const serviceKey = service.id; // registry.id is the service_key slug
+      const serviceKey = service.id;
       const inputText = goal ? `Goal: ${goal}\n\nContent:\n${input}` : input.trim();
 
-      // 1. Look up service in service_catalog, or use fallback
+      // 1. Look up service in service_catalog
       const { data: catalogService } = await supabase
         .from("service_catalog")
         .select("service_key, credits_cost")
@@ -69,13 +72,21 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
         .maybeSingle();
 
       const finalServiceKey = catalogService?.service_key || "insight-extractor";
+      const cost = catalogService?.credits_cost || estimatedCost;
 
-      // 2. Create a neuron_jobs entry
+      // 2. ATOMIC: Reserve neurons BEFORE creating job
+      const reservation = await reserve(cost, undefined, `Service: ${service.name}`);
+      if (!reservation.ok) {
+        setState("configure");
+        return; // toast already shown by hook
+      }
+
+      // 3. Create job
       const { data: job, error: jobError } = await supabase
         .from("neuron_jobs")
         .insert({
           author_id: session.user.id,
-          neuron_id: 1, // placeholder
+          neuron_id: 1,
           worker_type: "service",
           status: "pending",
           input: { text: inputText, service_name: service.name, service_level: service.service_level },
@@ -86,10 +97,14 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
         .single();
 
       if (jobError || !job) {
+        // RELEASE reserved credits on job creation failure
+        await release(reservation.reserved, undefined, "Job creation failed");
         toast.error("Nu s-a putut crea jobul");
         setState("configure");
         return;
       }
+
+      reservedRef.current = { amount: reservation.reserved, jobId: job.id };
 
       // 3. Call run-service edge function
       const response = await fetch(
@@ -110,6 +125,11 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
+        // RELEASE reserved credits on execution failure
+        if (reservedRef.current) {
+          await release(reservedRef.current.amount, reservedRef.current.jobId, "Execution failed");
+          reservedRef.current = null;
+        }
         if (response.status === 402) {
           toast.error(errData.error || "NEURONS insuficienți. Reîncarcă portofelul.");
         } else if (response.status === 429) {
@@ -127,7 +147,6 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
       const contentType = response.headers.get("Content-Type") || "";
 
       if (contentType.includes("text/event-stream")) {
-        // Stream SSE
         const reader = response.body?.getReader();
         if (!reader) throw new Error("No stream");
 
@@ -165,24 +184,44 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
           }
         }
 
-        setCostCharged(catalogService?.credits_cost || estimatedCost);
+        // SETTLE: confirm reserved credits as spent
+        if (reservedRef.current) {
+          await settle(reservedRef.current.amount, reservedRef.current.jobId, `Completed: ${service.name}`);
+          setCostCharged(reservedRef.current.amount);
+          reservedRef.current = null;
+        }
         setState("done");
         toast.success("Serviciu executat cu succes!");
       } else {
-        // JSON response (dry-run or error)
         const data = await response.json();
         if (data.dry_run) {
+          // RELEASE on dry-run
+          if (reservedRef.current) {
+            await release(reservedRef.current.amount, reservedRef.current.jobId, "Dry-run simulation");
+            reservedRef.current = null;
+          }
           setOutput("🔬 Simulation mode — no AI call was made. Credits have been refunded.");
           setState("done");
         } else {
+          // SETTLE on success
+          if (reservedRef.current) {
+            await settle(reservedRef.current.amount, reservedRef.current.jobId, `Completed: ${service.name}`);
+            setCostCharged(reservedRef.current.amount);
+            reservedRef.current = null;
+          }
           setOutput(JSON.stringify(data, null, 2));
           setState("done");
         }
       }
     } catch (err) {
       console.error("Execute error:", err);
+      // RELEASE reserved credits on unexpected failure
+      if (reservedRef.current) {
+        await release(reservedRef.current.amount, reservedRef.current.jobId, "Unexpected error");
+        reservedRef.current = null;
+      }
       setState("error");
-      toast.error("Execuție eșuată. Încearcă din nou.");
+      toast.error("Execuție eșuată. Creditele au fost returnate.");
     }
   }, [service, input, goal, estimatedCost]);
 
@@ -221,15 +260,26 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
 
         <div className="space-y-4 mt-2">
           {/* Cost preview */}
-          <div className="bg-muted/50 rounded-lg p-3 flex items-center justify-between">
+          <div className={cn(
+            "rounded-lg p-3 flex items-center justify-between",
+            state === "executing" ? "bg-primary/5 border border-primary/20" : "bg-muted/50"
+          )}>
             <div className="flex items-center gap-2">
-              <Coins className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Cost estimat</span>
+              {state === "executing" ? (
+                <Lock className="h-4 w-4 text-primary" />
+              ) : (
+                <Coins className="h-4 w-4 text-primary" />
+              )}
+              <span className="text-sm font-medium">
+                {state === "executing" ? "Rezervat" : state === "done" ? "Facturat" : "Cost estimat"}
+              </span>
             </div>
             <div className="text-right">
-              <span className="text-lg font-bold font-mono">{estimatedCost}</span>
+              <span className="text-lg font-bold font-mono">{costCharged || estimatedCost}</span>
               <span className="text-xs text-muted-foreground ml-1">NEURONS</span>
-              <p className="text-[9px] text-muted-foreground">≈ ${(estimatedCost * 0.002).toFixed(2)} USD</p>
+              <p className="text-[9px] text-muted-foreground">
+                {state === "executing" ? "🔒 blocat până la finalizare" : `≈ $${((costCharged || estimatedCost) * 0.002).toFixed(2)} USD`}
+              </p>
             </div>
           </div>
 
