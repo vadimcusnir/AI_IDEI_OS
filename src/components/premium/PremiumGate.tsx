@@ -28,7 +28,13 @@ export function PremiumGate({
   const { tier, loading } = useUserTier();
   const [paywallOpen, setPaywallOpen] = useState(false);
 
-  if (loading) return <>{children}</>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   const hasAccess = tierSatisfied(tier, requiredTier);
   if (hasAccess) return <>{children}</>;

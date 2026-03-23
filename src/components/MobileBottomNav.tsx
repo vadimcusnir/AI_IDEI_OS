@@ -9,7 +9,7 @@ import {
   Store, Users, Bot, Layers, Rocket, Shield,
   Coins, Bell, MessageCircle, FileText, ScrollText,
   User, LogOut, Eye, Settings, Plug, Key,
-  GraduationCap, Terminal, Wallet, Trophy,
+  GraduationCap, Terminal, Wallet, Trophy, Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -50,8 +50,10 @@ const MENU_SECTIONS: MenuSection[] = [
       { path: "/extractor", icon: Upload, labelKey: "extractor" },
       { path: "/neurons", icon: Brain, labelKey: "neurons" },
       { path: "/services", icon: Sparkles, labelKey: "services" },
+      { path: "/headline-generator", icon: Zap, labelKey: "headline_generator" },
       { path: "/prompt-forge", icon: Bot, labelKey: "prompt_forge" },
       { path: "/profile-extractor", icon: Users, labelKey: "profile_extractor" },
+      { path: "/notebooks", icon: FileText, labelKey: "notebooks" },
     ],
   },
   {
@@ -85,7 +87,9 @@ const MENU_SECTIONS: MenuSection[] = [
     items: [
       { path: "/profile", icon: User, labelKey: "profile" },
       { path: "/credits", icon: Coins, labelKey: "credits" },
+      { path: "/wallet", icon: Wallet, labelKey: "wallet" },
       { path: "/notifications", icon: Bell, labelKey: "notifications" },
+      { path: "/gamification", icon: Trophy, labelKey: "gamification" },
       { path: "/guests", icon: Users, labelKey: "guest_pages" },
     ],
   },
