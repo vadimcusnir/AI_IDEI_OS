@@ -64,6 +64,8 @@ const EntityDetail = lazyRetry(() => import("./pages/EntityDetail"));
 const TopicListing = lazyRetry(() => import("./pages/TopicListing"));
 const TopicDetail = lazyRetry(() => import("./pages/TopicDetail"));
 const MediaProfiles = lazyRetry(() => import("./pages/MediaProfiles"));
+const MediaProfilePublic = lazyRetry(() => import("./pages/MediaProfilePublic"));
+const AdminMediaProfiles = lazyRetry(() => import("./pages/AdminMediaProfiles"));
 const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 const TopicDiscovery = lazyRetry(() => import("./pages/TopicDiscovery"));
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
@@ -164,6 +166,8 @@ const App = () => (
                 <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
                 <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
+                <Route path="/media/profiles/:slug" element={<MediaProfilePublic />} />
+                <Route path="/admin/media-profiles" element={<AppLayout><AdminMediaProfiles /></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
                 <Route path="/knowledge/*" element={<AppLayout><KnowledgeSurfacePage /></AppLayout>} />

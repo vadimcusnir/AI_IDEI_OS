@@ -3452,6 +3452,216 @@ export type Database = {
           },
         ]
       }
+      intelligence_profile_consent: {
+        Row: {
+          consent_status: string
+          created_at: string
+          doc_ref: string | null
+          granted_at: string | null
+          id: string
+          profile_id: string
+          revoked_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consent_status: string
+          created_at?: string
+          doc_ref?: string | null
+          granted_at?: string | null
+          id?: string
+          profile_id: string
+          revoked_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consent_status?: string
+          created_at?: string
+          doc_ref?: string | null
+          granted_at?: string | null
+          id?: string
+          profile_id?: string
+          revoked_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_profile_consent_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      intelligence_profile_public: {
+        Row: {
+          created_at: string
+          id: string
+          json_ld: Json | null
+          meta_description: string | null
+          meta_title: string | null
+          profile_id: string
+          public_indicators: Json
+          public_patterns: Json
+          public_summary: string | null
+          published_at: string | null
+          seo_queries: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          json_ld?: Json | null
+          meta_description?: string | null
+          meta_title?: string | null
+          profile_id: string
+          public_indicators?: Json
+          public_patterns?: Json
+          public_summary?: string | null
+          published_at?: string | null
+          seo_queries?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          json_ld?: Json | null
+          meta_description?: string | null
+          meta_title?: string | null
+          profile_id?: string
+          public_indicators?: Json
+          public_patterns?: Json
+          public_summary?: string | null
+          published_at?: string | null
+          seo_queries?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_profile_public_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      intelligence_profile_state_transitions: {
+        Row: {
+          decided_at: string
+          decided_by: string | null
+          from_status:
+            | Database["public"]["Enums"]["profile_visibility_status"]
+            | null
+          guardrail_results: Json | null
+          id: string
+          profile_id: string
+          reason_code: string | null
+          to_status: Database["public"]["Enums"]["profile_visibility_status"]
+        }
+        Insert: {
+          decided_at?: string
+          decided_by?: string | null
+          from_status?:
+            | Database["public"]["Enums"]["profile_visibility_status"]
+            | null
+          guardrail_results?: Json | null
+          id?: string
+          profile_id: string
+          reason_code?: string | null
+          to_status: Database["public"]["Enums"]["profile_visibility_status"]
+        }
+        Update: {
+          decided_at?: string
+          decided_by?: string | null
+          from_status?:
+            | Database["public"]["Enums"]["profile_visibility_status"]
+            | null
+          guardrail_results?: Json | null
+          id?: string
+          profile_id?: string
+          reason_code?: string | null
+          to_status?: Database["public"]["Enums"]["profile_visibility_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_profile_state_transitions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      intelligence_profiles: {
+        Row: {
+          cognitive_patterns: Json
+          consent_required: boolean
+          created_at: string
+          created_by: string | null
+          extracted_indicators: Json
+          id: string
+          person_name: string
+          profile_type: Database["public"]["Enums"]["profile_type"]
+          public_slug: string
+          risk_flag: Database["public"]["Enums"]["profile_risk_flag"]
+          same_as_urls: string[] | null
+          source_date: string | null
+          source_duration_minutes: number | null
+          source_ref: string
+          source_type: Database["public"]["Enums"]["profile_source_type"]
+          synthesis_text: string
+          transcript_ref: string | null
+          updated_at: string
+          version: number
+          visibility_status: Database["public"]["Enums"]["profile_visibility_status"]
+        }
+        Insert: {
+          cognitive_patterns?: Json
+          consent_required?: boolean
+          created_at?: string
+          created_by?: string | null
+          extracted_indicators?: Json
+          id?: string
+          person_name?: string
+          profile_type: Database["public"]["Enums"]["profile_type"]
+          public_slug: string
+          risk_flag?: Database["public"]["Enums"]["profile_risk_flag"]
+          same_as_urls?: string[] | null
+          source_date?: string | null
+          source_duration_minutes?: number | null
+          source_ref: string
+          source_type: Database["public"]["Enums"]["profile_source_type"]
+          synthesis_text?: string
+          transcript_ref?: string | null
+          updated_at?: string
+          version?: number
+          visibility_status?: Database["public"]["Enums"]["profile_visibility_status"]
+        }
+        Update: {
+          cognitive_patterns?: Json
+          consent_required?: boolean
+          created_at?: string
+          created_by?: string | null
+          extracted_indicators?: Json
+          id?: string
+          person_name?: string
+          profile_type?: Database["public"]["Enums"]["profile_type"]
+          public_slug?: string
+          risk_flag?: Database["public"]["Enums"]["profile_risk_flag"]
+          same_as_urls?: string[] | null
+          source_date?: string | null
+          source_duration_minutes?: number | null
+          source_ref?: string
+          source_type?: Database["public"]["Enums"]["profile_source_type"]
+          synthesis_text?: string
+          transcript_ref?: string | null
+          updated_at?: string
+          version?: number
+          visibility_status?: Database["public"]["Enums"]["profile_visibility_status"]
+        }
+        Relationships: []
+      }
       kb_analytics: {
         Row: {
           article_id: string
@@ -8436,6 +8646,18 @@ export type Database = {
         }
         Returns: Json
       }
+      transition_profile_status: {
+        Args: {
+          _profile_id: string
+          _reason_code?: string
+          _to_status: Database["public"]["Enums"]["profile_visibility_status"]
+        }
+        Returns: Json
+      }
+      validate_profile_guardrails: {
+        Args: { _profile_id: string }
+        Returns: Json
+      }
       vip_advance_month: { Args: { _user_id: string }; Returns: Json }
       wallet_add: {
         Args: { _amount: number; _description?: string; _user_id: string }
@@ -8508,6 +8730,10 @@ export type Database = {
         | "active"
         | "capitalized"
         | "compounded"
+      profile_risk_flag: "low" | "medium" | "high"
+      profile_source_type: "podcast" | "interview" | "conversation"
+      profile_type: "public_figure" | "local_figure" | "anonymized_client"
+      profile_visibility_status: "draft" | "review" | "published" | "blocked"
       risk_level: "low" | "medium" | "high" | "critical"
       service_class: "A" | "B" | "C"
       workspace_role: "owner" | "admin" | "editor" | "viewer"
@@ -8668,6 +8894,10 @@ export const Constants = {
         "capitalized",
         "compounded",
       ],
+      profile_risk_flag: ["low", "medium", "high"],
+      profile_source_type: ["podcast", "interview", "conversation"],
+      profile_type: ["public_figure", "local_figure", "anonymized_client"],
+      profile_visibility_status: ["draft", "review", "published", "blocked"],
       risk_level: ["low", "medium", "high", "critical"],
       service_class: ["A", "B", "C"],
       workspace_role: ["owner", "admin", "editor", "viewer"],
