@@ -26,6 +26,7 @@ import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/P
 import { PostExecutionRecommendations } from "@/components/services/PostExecutionRecommendations";
 import { NeuronBundleUpsell } from "@/components/credits/NeuronBundleUpsell";
 import { ShareableOutput } from "@/components/distribution/ShareableOutput";
+import { DistributionPanel } from "@/components/distribution/DistributionPanel";
 import { PostExecutionPsychology } from "@/components/behavior/BehaviorOverlay";
 
 interface Service {
