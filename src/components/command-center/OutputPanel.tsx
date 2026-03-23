@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Save, Download, RotateCcw, Copy, FileText, Brain,
   Lightbulb, Target, BookOpen, Sparkles, Check,
-  ChevronRight, ExternalLink, X,
+  ChevronRight, ExternalLink, X, Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
@@ -36,10 +36,12 @@ interface OutputPanelProps {
   outputs: OutputItem[];
   onRerun?: () => void;
   onClose: () => void;
+  onSaveAll?: () => void;
+  savingAll?: boolean;
   visible: boolean;
 }
 
-export function OutputPanel({ outputs, onRerun, onClose, visible }: OutputPanelProps) {
+export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, visible }: OutputPanelProps) {
   const { user } = useAuth();
   const [savingId, setSavingId] = useState<string | null>(null);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
@@ -102,6 +104,12 @@ export function OutputPanel({ outputs, onRerun, onClose, visible }: OutputPanelP
           <Badge variant="secondary" className="text-[9px] h-4">{outputs.length}</Badge>
         </div>
         <div className="flex items-center gap-1">
+          {outputs.length > 1 && onSaveAll && (
+            <Button variant="default" size="sm" className="h-6 text-[9px] gap-1" onClick={onSaveAll} disabled={savingAll}>
+              {savingAll ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+              Save All ({outputs.length})
+            </Button>
+          )}
           {onRerun && (
             <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={onRerun}>
               <RotateCcw className="h-3 w-3" />

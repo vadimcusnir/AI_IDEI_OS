@@ -5,6 +5,7 @@ import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
 import { useCommandState, type TaskStep } from "@/hooks/useCommandState";
+import { useExecutionHistory } from "@/hooks/useExecutionHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -58,10 +59,12 @@ export function CommandCenter() {
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
   const cmdState = useCommandState();
+  const { persistRun, persistOutputsBatch } = useExecutionHistory();
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
   const [showEconomicGate, setShowEconomicGate] = useState(false);
   const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
+  const [savingAllOutputs, setSavingAllOutputs] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([WELCOME_MSG]);
   const [input, setInput] = useState("");
@@ -422,7 +425,7 @@ export function CommandCenter() {
     setShowPostExecution(true);
     saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
 
-    // ═══ Audit: log execution completion ═══
+    // ═══ Persist execution to history + audit ═══
     if (user) {
       const startTime = cmdState.state.startedAt ? new Date(cmdState.state.startedAt).getTime() : Date.now();
       logExecutionCompleted(
@@ -433,6 +436,12 @@ export function CommandCenter() {
         parsedOutputs.length,
         Date.now() - startTime,
       );
+
+      // Persist run to agent_action_history for Memory Panel
+      persistRun({
+        execution: { ...cmdState.state, phase: "completed", completedAt: new Date().toISOString() },
+        outputCount: parsedOutputs.length,
+      });
     }
   };
 
@@ -486,6 +495,21 @@ export function CommandCenter() {
     setInput(`/${intent} `);
     inputRef.current?.focus();
     setShowMemory(false);
+  };
+
+  const handleSaveAllOutputs = async () => {
+    if (outputs.length === 0) return;
+    setSavingAllOutputs(true);
+    const count = await persistOutputsBatch(
+      outputs.map(o => ({ title: o.title, content: o.content, type: o.type })),
+      [cmdState.state.intent]
+    );
+    setSavingAllOutputs(false);
+    if (count > 0) {
+      toast.success(`Saved ${count} outputs as assets`);
+    } else {
+      toast.error("Failed to save outputs");
+    }
   };
 
   const handleSaveTemplate = async () => {
@@ -708,6 +732,8 @@ export function CommandCenter() {
                   if (lastUser) { setInput(lastUser.content); inputRef.current?.focus(); }
                 }}
                 onClose={() => setShowOutputs(false)}
+                onSaveAll={handleSaveAllOutputs}
+                savingAll={savingAllOutputs}
               />
             </div>
           )}
