@@ -21,6 +21,7 @@ import {
 
 // Lazy-load non-critical components
 const LowBalanceBanner = lazy(() => import("@/components/credits/LowBalanceBanner").then(m => ({ default: m.LowBalanceBanner })));
+const BehaviorOverlay = lazy(() => import("@/components/behavior/BehaviorOverlay").then(m => ({ default: m.BehaviorOverlay })));
 const CompactPipeline = lazy(() => import("@/components/PipelineIndicator").then(m => ({ default: m.CompactPipelineIndicator })));
 const GlobalSearch = lazy(() => import("@/components/GlobalSearch").then(m => ({ default: m.GlobalSearch })));
 const NotificationBell = lazy(() => import("@/components/NotificationBell").then(m => ({ default: m.NotificationBell })));
@@ -120,6 +121,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           <div className="min-h-0">
             <Suspense fallback={null}><LowBalanceBanner /></Suspense>
+            <Suspense fallback={null}><BehaviorOverlay /></Suspense>
           </div>
 
           {fullHeight ? (
