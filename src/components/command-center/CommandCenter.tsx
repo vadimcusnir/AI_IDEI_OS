@@ -29,6 +29,8 @@ import { MemoryPanel } from "./MemoryPanel";
 import { TaskTree } from "./TaskTree";
 import { EconomicGate, KernelBadge } from "./EconomicGate";
 import { PermissionGate } from "./PermissionGate";
+import { PostExecutionPanel } from "./PostExecutionPanel";
+import { ExecutionStatusBar } from "./ExecutionStatusBar";
 import { useUserTier } from "@/hooks/useUserTier";
 import { routeCommand, type RouteResult } from "./CommandRouter";
 import {
@@ -87,6 +89,7 @@ export function CommandCenter() {
   const [showMemory, setShowMemory] = useState(false);
   const [outputs, setOutputs] = useState<OutputItem[]>([]);
   const [showOutputs, setShowOutputs] = useState(false);
+  const [showPostExecution, setShowPostExecution] = useState(false);
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
@@ -423,6 +426,7 @@ export function CommandCenter() {
     }
 
     cmdState.completeExecution();
+    setShowPostExecution(true);
     saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
 
     // ═══ Audit: log execution completion ═══
@@ -466,6 +470,7 @@ export function CommandCenter() {
     setOutputs([]);
     setShowOutputs(false);
     setShowTaskTree(false);
+    setShowPostExecution(false);
   };
 
   const handleLoadSession = async (sid: string) => {
@@ -577,6 +582,17 @@ export function CommandCenter() {
             )}
           </div>
         </div>
+
+        {/* ═══ Execution Status Bar ═══ */}
+        <ExecutionStatusBar
+          phase={cmdState.state.phase}
+          intent={cmdState.state.intent}
+          totalCredits={cmdState.state.totalCredits}
+          stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
+          totalSteps={cmdState.state.steps.length}
+          startedAt={cmdState.state.startedAt}
+          errorMessage={cmdState.state.errorMessage}
+        />
 
         {/* ═══ Permission Gate — tier restriction ═══ */}
         <AnimatePresence>
@@ -796,7 +812,25 @@ export function CommandCenter() {
           )}
         </AnimatePresence>
 
-        {/* File preview */}
+        {/* ═══ Post-Execution Recommendations ═══ */}
+        {cmdState.state.phase === "completed" && showPostExecution && (
+          <div className="px-4 pb-2">
+            <PostExecutionPanel
+              intent={cmdState.state.intent as any}
+              creditsSpent={cmdState.state.totalCredits}
+              outputCount={outputs.length}
+              onAction={(prompt) => {
+                setInput(prompt);
+                setShowPostExecution(false);
+                inputRef.current?.focus();
+              }}
+              onSaveTemplate={handleSaveTemplate}
+              onDismiss={() => setShowPostExecution(false)}
+              userTier={tier}
+            />
+          </div>
+        )}
+
         {files.length > 0 && (
           <div className="px-4 py-2 flex gap-2 flex-wrap border-t border-border">
             {files.map((f, i) => (
