@@ -79,7 +79,7 @@ export function CommandCenter() {
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
-  const [activePack, setActivePack] = useState<CommandPack | null>(null);
+  const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [pendingInput, setPendingInput] = useState("");
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const messagesEndRef = useRef<HTMLDivElement>(null);
