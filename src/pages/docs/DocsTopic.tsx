@@ -63,7 +63,7 @@ export default function DocsTopic({ section, topic }: Props) {
 
         <h1 className="text-2xl sm:text-3xl font-bold mb-6">{content.title}</h1>
 
-        <article className="prose-custom">
+        <article className="prose-content">
           <DocsMarkdownRenderer text={content.content} />
         </article>
 
