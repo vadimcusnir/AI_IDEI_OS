@@ -525,13 +525,30 @@ export default function RunService() {
                   variant={hasTierAccess ? "default" : "secondary"}
                   size="lg"
                 >
-                  {hasTierAccess ? <Play className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-                  {hasTierAccess ? t("run_service.run_button", { cost: service.credits_cost }) : t("run_service.unlock_pro")}
+                  {hasTierAccess
+                    ? (hasEnoughCredits ? <Play className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />)
+                    : <Lock className="h-4 w-4" />}
+                  {hasTierAccess
+                    ? (hasEnoughCredits
+                        ? t("run_service.run_button", { cost: service.credits_cost })
+                        : "NEURONS Insuficienți")
+                    : t("run_service.unlock_pro")}
                 </Button>
                 {hasTierAccess && !hasEnoughCredits && (
-                  <div className="flex items-center gap-1.5 text-destructive">
-                    <AlertCircle className="h-3.5 w-3.5" />
-                    <span className="text-xs">{t("run_service.insufficient_credits")}</span>
+                  <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 flex items-center gap-2 text-xs">
+                    <AlertCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
+                    <span>
+                      Ai nevoie de <span className="font-mono font-bold">{service.credits_cost}</span> NEURONS.
+                      Sold actual: <span className="font-mono font-bold">{creditBalance}</span>.
+                    </span>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="h-6 text-[10px] ml-auto shrink-0"
+                      onClick={() => navigate("/credits")}
+                    >
+                      Cumpără NEURONS
+                    </Button>
                   </div>
                 )}
               </div>
