@@ -332,8 +332,8 @@ export default function ServiceResults() {
                                   <Copy className="h-3 w-3" /> Copiază
                                 </Button>
                               </div>
-                              <div className="bg-muted/50 rounded-lg p-4 text-xs leading-relaxed whitespace-pre-wrap max-h-80 overflow-auto font-mono">
-                                {run.result_preview}
+                              <div className="bg-muted/50 rounded-lg p-4 sm:p-5 max-h-80 overflow-auto">
+                                <div className="prose-compact whitespace-pre-wrap">{run.result_preview}</div>
                               </div>
                             </div>
                           ) : (

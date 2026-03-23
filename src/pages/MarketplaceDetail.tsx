@@ -261,7 +261,7 @@ export default function MarketplaceDetail() {
         {asset.preview_content && (
           <div className="bg-muted/30 border border-border rounded-xl p-5">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("marketplace_detail.preview")}</h3>
-            <p className="text-sm leading-relaxed whitespace-pre-wrap">{asset.preview_content}</p>
+            <div className="prose-content whitespace-pre-wrap">{asset.preview_content}</div>
           </div>
         )}
 
