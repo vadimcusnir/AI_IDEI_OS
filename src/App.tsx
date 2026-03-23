@@ -100,6 +100,10 @@ const NotebookWorkspace = lazyRetry(() => import("./pages/NotebookWorkspace"));
 const NotebookDetail = lazyRetry(() => import("./pages/NotebookDetail"));
 const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngine"));
 const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
+
+const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
+const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
+const PublicProfileEntityPage = lazyRetry(() => import("./pages/PublicProfileEntityPage"));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
