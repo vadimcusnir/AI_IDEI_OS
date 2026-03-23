@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -117,12 +117,11 @@ export function ContentGeneratorPanel() {
                 ))}
               </div>
 
-              <Textarea
+              <PipelineSourcePicker
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Lipește conținutul sursă (transcript, neuroni, note, idei)..."
-                rows={5}
-                className="resize-none"
+                onChange={setContent}
+                placeholder="Conținut sursă pentru generare..."
+                minRows={4}
               />
 
               <div className="flex items-center justify-between">

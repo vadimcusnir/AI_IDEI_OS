@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
+import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -113,12 +113,11 @@ export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33P
 
           {!results && (
             <>
-              <Textarea
+              <PipelineSourcePicker
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Lipește aici conținutul din care vrei să extragi profilul clientului ideal (transcript, note, descriere produs, etc.)..."
-                rows={6}
-                className="resize-none"
+                onChange={setContent}
+                placeholder="Conținut pentru profilul clientului ideal..."
+                minRows={5}
               />
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
