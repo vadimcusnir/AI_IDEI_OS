@@ -8,6 +8,7 @@ import { trackEvent } from "@/lib/analytics";
 import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
