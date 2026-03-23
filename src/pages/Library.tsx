@@ -86,7 +86,9 @@ export default function Library() {
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
+  const [neurons, setNeurons] = useState<NeuronItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"all" | "neurons" | "artifacts">("all");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -101,16 +103,46 @@ export default function Library() {
   useEffect(() => {
     if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
-    loadArtifacts();
+    loadData();
   }, [user, authLoading, wsLoading, currentWorkspace]);
 
-  const loadArtifacts = async () => {
-    const { data } = await supabase
-      .from("artifacts")
-      .select("id, title, artifact_type, format, content, status, tags, service_key, created_at, updated_at")
-      .eq("workspace_id", currentWorkspace!.id)
-      .order("updated_at", { ascending: false });
-    setArtifacts((data as Artifact[]) || []);
+  const loadData = async () => {
+    const [artifactsRes, neuronsRes] = await Promise.all([
+      supabase
+        .from("artifacts")
+        .select("id, title, artifact_type, format, content, status, tags, service_key, created_at, updated_at")
+        .eq("workspace_id", currentWorkspace!.id)
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("neurons")
+        .select("id, title, status, lifecycle, content_category, created_at, updated_at, number, neuron_blocks(content, position)")
+        .eq("workspace_id", currentWorkspace!.id)
+        .order("updated_at", { ascending: false })
+        .limit(200),
+    ]);
+    setArtifacts((artifactsRes.data as Artifact[]) || []);
+    
+    const neuronItems: NeuronItem[] = (neuronsRes.data || []).map((n: any) => {
+      const blocks = Array.isArray(n.neuron_blocks) ? n.neuron_blocks : [];
+      const preview = blocks
+        .sort((a: any, b: any) => a.position - b.position)
+        .map((b: any) => b.content)
+        .filter(Boolean)
+        .join(" ")
+        .slice(0, 200);
+      return {
+        id: n.id,
+        title: n.title,
+        status: n.status,
+        lifecycle: n.lifecycle,
+        content_category: n.content_category,
+        created_at: n.created_at,
+        updated_at: n.updated_at,
+        number: n.number,
+        blockPreview: preview,
+      };
+    });
+    setNeurons(neuronItems);
     setLoading(false);
   };
 
