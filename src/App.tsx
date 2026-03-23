@@ -209,8 +209,7 @@ const App = () => (
                 <Route path="/security-settings" element={<ProtectedRoute><AppLayout><SecuritySettings /></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="API docs failed to load"><ApiDocs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
-                <Route path="/knowledge" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Knowledge failed to load"><KnowledgeDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/kb/:category" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Knowledge failed to load"><KnowledgeDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/kb/:category" element={<Navigate to="/library" replace />} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="VIP failed to load"><VIPDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/wallet" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Wallet failed to load"><WalletPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Gamification failed to load"><GamificationPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
