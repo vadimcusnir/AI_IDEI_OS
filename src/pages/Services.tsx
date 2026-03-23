@@ -489,60 +489,10 @@ export default function Services() {
           </>
         )}
 
-        {/* ═══════ AVATAR LAYER ═══════ */}
-        {activeLayer === "avatar" && user && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Users className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Avatar & Audience Profiling</h2>
-                  <p className="text-xs text-muted-foreground">
-                    Build complete audience profiles: psychology, desires, objections, purchasing triggers
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Avatar33Panel />
-          </motion.div>
-        )}
-
         {/* ═══════ PIPELINES LAYER ═══════ */}
         {activeLayer === "pipelines" && user && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Rocket className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Automated Pipelines</h2>
-                  <p className="text-xs text-muted-foreground">
-                    1 input → 50+ deliverables. Chain multiple services into a single automated flow.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {/* IMF Pipeline - hero placement */}
-              <div className="bg-card border border-primary/20 rounded-xl p-4 sm:p-5">
-                <h3 className="text-base font-semibold mb-2 flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-primary" />
-                  {t("services.imf_title", { defaultValue: "IMF Pipeline — Automatic Multiplication" })}
-                </h3>
-                <p className="text-xs text-muted-foreground mb-4">
-                  {t("services.imf_desc", { defaultValue: "Launch a full pipeline: 1 extraction → 50+ deliverables generated automatically." })}
-                </p>
-                <IMFPipelineLauncher />
-              </div>
-
-              <ExtractionPipelinePanel />
-              <WebinarGeneratorPanel />
-              <ContentGeneratorPanel />
-            </div>
+            <PipelinesHub />
           </motion.div>
         )}
 
