@@ -533,6 +533,41 @@ export function CommandCenter() {
           )}
         </AnimatePresence>
 
+        {/* Pipeline Composer */}
+        <AnimatePresence>
+          {showPipeline && (
+            <div className="px-4 pb-2">
+              <PipelineComposer
+                balance={balance}
+                onExecute={(steps) => {
+                  const pipelinePrompt = `/pipeline ${steps.map(s => s.label).join(" → ")}`;
+                  setInput(pipelinePrompt);
+                  setShowPipeline(false);
+                  inputZoneRef.current?.focus();
+                }}
+                onSave={async (steps, name) => {
+                  if (!user) return;
+                  try {
+                    const { error } = await supabase.from("agent_plan_templates").insert({
+                      intent_key: "pipeline",
+                      name,
+                      description: `Pipeline: ${steps.map(s => s.label).join(" → ")}`,
+                      steps: steps.map(s => ({ tool: s.intent, label: s.label, credits: s.credits, config: s.config })) as any,
+                      estimated_credits: steps.reduce((sum, s) => sum + s.credits, 0),
+                      estimated_duration_seconds: steps.length * 10,
+                      is_default: false,
+                    });
+                    if (error) throw error;
+                    toast.success(`Pipeline "${name}" saved`);
+                    setShowPipeline(false);
+                  } catch { toast.error("Failed to save pipeline"); }
+                }}
+                onClose={() => setShowPipeline(false)}
+              />
+            </div>
+          )}
+        </AnimatePresence>
+
         {cmdState.state.phase === "completed" && showPostExecution && (
           <div className="px-4 pb-2">
             <PostExecutionPanel
@@ -548,6 +583,7 @@ export function CommandCenter() {
           neuronCount={totalNeurons} episodeCount={totalEpisodes}
           lastIntent={cmdState.state.intent || undefined} phase={cmdState.state.phase}
           onAction={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }}
+          onOpenPipeline={() => setShowPipeline(true)}
         />
 
         <CommandInputZone
