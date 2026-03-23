@@ -55,7 +55,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-foreground">Community</h3>
             <ul className="space-y-2">
               <li><FooterLink to="/community">Forum</FooterLink></li>
-              <li><FooterLink to="/topics">Topics</FooterLink></li>
+              
               <li><FooterLink to="/library">Library</FooterLink></li>
               <li><FooterLink to="/feedback">Feedback</FooterLink></li>
             </ul>
