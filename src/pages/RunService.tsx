@@ -257,12 +257,7 @@ export default function RunService() {
         }
       }
 
-      const { data: updatedCredits } = await supabase
-        .from("user_credits")
-        .select("balance, total_spent")
-        .eq("user_id", user.id)
-        .single();
-      if (updatedCredits) setCredits(updatedCredits as UserCredits);
+      // Balance updates reactively via useCreditBalance realtime subscription
 
       setJobStatus("completed");
       toast.success(t("run_service.job_completed"));
