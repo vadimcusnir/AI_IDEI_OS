@@ -1,0 +1,271 @@
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  FileText, Brain, ChevronDown, ChevronUp, Check, Loader2,
+  Mic, Clock, Sparkles, ArrowRight,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface ContentSource {
+  id: string;
+  type: "episode" | "neuron";
+  title: string;
+  preview: string;
+  fullContent: string;
+  date: string;
+  status?: string;
+  category?: string;
+}
+
+interface Props {
+  onSelect: (content: string, source: ContentSource) => void;
+  selectedId?: string;
+}
+
+export function ContentSourcePicker({ onSelect, selectedId }: Props) {
+  const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [sources, setSources] = useState<ContentSource[]>([]);
+  const [activeTab, setActiveTab] = useState<"episode" | "neuron">("episode");
+
+  useEffect(() => {
+    if (open && sources.length === 0) loadSources();
+  }, [open]);
+
+  const loadSources = async () => {
+    if (!user || !currentWorkspace) return;
+    setLoading(true);
+
+    const [episodesRes, neuronsRes] = await Promise.all([
+      supabase
+        .from("episodes")
+        .select("id, title, transcript, status, created_at, source_url")
+        .eq("workspace_id", currentWorkspace.id)
+        .not("transcript", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(50),
+      supabase
+        .from("neurons")
+        .select("id, title, content, status, content_category, created_at")
+        .eq("workspace_id", currentWorkspace.id)
+        .not("content", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(100),
+    ]);
+
+    const items: ContentSource[] = [];
+
+    if (episodesRes.data) {
+      for (const ep of episodesRes.data) {
+        if (!ep.transcript || (ep.transcript as string).length < 20) continue;
+        const text = ep.transcript as string;
+        items.push({
+          id: ep.id,
+          type: "episode",
+          title: (ep.title as string) || (ep.source_url as string) || "Episode",
+          preview: text.slice(0, 120) + (text.length > 120 ? "..." : ""),
+          fullContent: text,
+          date: ep.created_at as string,
+          status: ep.status as string,
+        });
+      }
+    }
+
+    if (neuronsRes.data) {
+      for (const n of neuronsRes.data) {
+        if (!n.content || (n.content as string).length < 10) continue;
+        const text = n.content as string;
+        items.push({
+          id: String(n.id),
+          type: "neuron",
+          title: (n.title as string) || "Neuron",
+          preview: text.slice(0, 120) + (text.length > 120 ? "..." : ""),
+          fullContent: text,
+          date: n.created_at as string,
+          status: n.status as string,
+          category: n.content_category as string,
+        });
+      }
+    }
+
+    setSources(items);
+    setLoading(false);
+  };
+
+  const episodes = sources.filter(s => s.type === "episode");
+  const neurons = sources.filter(s => s.type === "neuron");
+  const activeList = activeTab === "episode" ? episodes : neurons;
+  const hasContent = episodes.length > 0 || neurons.length > 0;
+
+  if (!open) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: -4 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-xl border border-primary/20 bg-primary/5 p-4"
+      >
+        <div className="flex items-start gap-3">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <Sparkles className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium mb-0.5">Selectează sursa de conținut</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Alege un episod transcris sau un neuron extras pentru a completa automat câmpurile serviciului. 
+              Nu mai trebuie să copiezi manual — sistemul preia tot conținutul.
+            </p>
+          </div>
+          <Button
+            size="sm"
+            onClick={() => setOpen(true)}
+            className="gap-1.5 text-xs shrink-0"
+          >
+            <FileText className="h-3.5 w-3.5" />
+            Alege sursa
+            <ChevronDown className="h-3 w-3" />
+          </Button>
+        </div>
+
+        {selectedId && (
+          <div className="mt-3 flex items-center gap-2 text-xs text-primary">
+            <Check className="h-3.5 w-3.5" />
+            <span className="font-medium">Sursă selectată — conținutul a fost completat automat</span>
+          </div>
+        )}
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-xl border border-border bg-card overflow-hidden"
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between p-3 border-b border-border">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <span className="text-sm font-medium">Selectează sursa</span>
+        </div>
+        <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground p-1">
+          <ChevronUp className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex border-b border-border">
+        <button
+          onClick={() => setActiveTab("episode")}
+          className={cn(
+            "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-colors",
+            activeTab === "episode"
+              ? "text-primary border-b-2 border-primary bg-primary/5"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <Mic className="h-3.5 w-3.5" />
+          Episoade ({episodes.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("neuron")}
+          className={cn(
+            "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-colors",
+            activeTab === "neuron"
+              ? "text-primary border-b-2 border-primary bg-primary/5"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <Brain className="h-3.5 w-3.5" />
+          Neuroni ({neurons.length})
+        </button>
+      </div>
+
+      {/* Content */}
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        </div>
+      ) : !hasContent ? (
+        <div className="p-6 text-center">
+          <p className="text-sm text-muted-foreground mb-1">Niciun conținut disponibil</p>
+          <p className="text-xs text-muted-foreground/70">
+            Încarcă un episod în Extractor sau creează neuroni mai întâi.
+          </p>
+        </div>
+      ) : (
+        <ScrollArea className="max-h-[300px]">
+          <div className="p-2 space-y-1">
+            <AnimatePresence mode="popLayout">
+              {activeList.map((source) => {
+                const isSelected = selectedId === source.id;
+                return (
+                  <motion.button
+                    key={source.id}
+                    layout
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => {
+                      onSelect(source.fullContent, source);
+                      setOpen(false);
+                    }}
+                    className={cn(
+                      "w-full text-left rounded-lg p-3 transition-colors group",
+                      isSelected
+                        ? "bg-primary/10 border border-primary/20"
+                        : "hover:bg-muted/50 border border-transparent"
+                    )}
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <div className={cn(
+                        "h-7 w-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5",
+                        source.type === "episode" ? "bg-blue-500/10" : "bg-purple-500/10"
+                      )}>
+                        {source.type === "episode"
+                          ? <Mic className="h-3.5 w-3.5 text-blue-500" />
+                          : <Brain className="h-3.5 w-3.5 text-purple-500" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="text-xs font-medium truncate">{source.title}</span>
+                          {source.category && (
+                            <Badge variant="outline" className="text-[9px] shrink-0">{source.category}</Badge>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                          {source.preview}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <span className="text-[10px] text-muted-foreground/60 flex items-center gap-1">
+                            <Clock className="h-2.5 w-2.5" />
+                            {new Date(source.date).toLocaleDateString("ro-RO")}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground/60">
+                            {(source.fullContent.length / 1000).toFixed(1)}k caractere
+                          </span>
+                        </div>
+                      </div>
+                      <ArrowRight className={cn(
+                        "h-3.5 w-3.5 mt-1 shrink-0 transition-all",
+                        isSelected ? "text-primary" : "text-muted-foreground/30 group-hover:text-muted-foreground"
+                      )} />
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        </ScrollArea>
+      )}
+    </motion.div>
+  );
+}
