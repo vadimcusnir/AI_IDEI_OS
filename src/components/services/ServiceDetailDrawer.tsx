@@ -10,9 +10,10 @@ interface ServiceDetailDrawerProps {
   service: RegistryServiceItem | null;
   open: boolean;
   onClose: () => void;
+  onExecute?: (service: RegistryServiceItem) => void;
 }
 
-export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDrawerProps) {
+export function ServiceDetailDrawer({ service, open, onClose, onExecute }: ServiceDetailDrawerProps) {
   if (!service) return null;
   const meta = LEVEL_META[service.service_level as keyof typeof LEVEL_META];
   const Icon = meta?.icon || Zap;
@@ -40,7 +41,6 @@ export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDra
         </SheetHeader>
 
         <div className="space-y-5 pt-2">
-          {/* Cost */}
           <div className="bg-muted/50 rounded-xl p-4 space-y-2">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Cost</p>
             <div className="flex items-center gap-2">
@@ -53,7 +53,6 @@ export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDra
             </p>
           </div>
 
-          {/* Details */}
           <div className="grid grid-cols-2 gap-3">
             {[
               { label: "Domain", value: service.domain },
@@ -75,7 +74,11 @@ export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDra
             </div>
           )}
 
-          <Button className="w-full gap-2" size="lg">
+          <Button
+            className="w-full gap-2"
+            size="lg"
+            onClick={() => onExecute?.(service)}
+          >
             <Play className="h-4 w-4" />
             Execute Service
           </Button>
