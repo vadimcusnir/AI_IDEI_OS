@@ -852,6 +852,7 @@ export function CommandCenter() {
             visible={showMemory}
             onClose={() => setShowMemory(false)}
             onReplay={handleReplay}
+            onExecuteTemplate={handleExecuteTemplate}
             sessions={sessions}
             onLoadSession={handleLoadSession}
             onDeleteSession={handleDeleteSession}
