@@ -17,6 +17,7 @@ import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useTranslation } from "react-i18next";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 interface DashboardData {
   neurons: { total: number; draft: number; published: number; thisWeek: number };
