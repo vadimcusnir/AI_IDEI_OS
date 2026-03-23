@@ -15,7 +15,7 @@ import {
   Loader2, Sparkles, BarChart3, Search, X, Coins, Clock,
   ArrowRight, Zap, FileText, Brain, Target, Layers,
   TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle,
-  Users, Workflow, Rocket,
+  Workflow,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
