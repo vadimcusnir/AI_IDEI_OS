@@ -66,26 +66,35 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
     if (!file || !notebook) return;
     setUploading(true);
     try {
+      // Read text content for text-based files
       let content = "";
-      if (file.type === "text/plain" || file.type === "text/markdown" || file.type === "text/csv") {
+      const textTypes = ["text/plain", "text/markdown", "text/csv", "application/json", ""];
+      const isTextFile = textTypes.includes(file.type) || /\.(txt|md|csv|json)$/i.test(file.name);
+      
+      if (isTextFile) {
         content = await file.text();
-      } else if (file.type === "application/json") {
-        content = await file.text();
-      } else if (file.type === "application/pdf") {
-        content = "[PDF file — content will be used via file reference]";
       }
 
+      // Upload file to storage
       const filePath = `${notebook.id}/${Date.now()}_${file.name}`;
       const { error: uploadError } = await supabase.storage
         .from("notebook-files")
         .upload(filePath, file);
       if (uploadError) throw uploadError;
 
+      // Get the public/signed URL
+      const { data: urlData } = supabase.storage
+        .from("notebook-files")
+        .getPublicUrl(filePath);
+
+      const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+
       addSource.mutate(
         {
           title: file.name,
-          content: content || `File: ${file.name}`,
-          source_type: file.type === "application/pdf" ? "pdf" : "text",
+          content: content || (isPdf ? `[PDF file: ${file.name}]` : `[File: ${file.name}]`),
+          source_type: isPdf ? "pdf" : "text",
+          file_url: urlData?.publicUrl || filePath,
         },
         {
           onSuccess: () => {
@@ -95,8 +104,8 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
         }
       );
     } catch (err: any) {
-      console.error(err);
-      toast.error("Upload failed: " + (err.message || "Unknown error"));
+      console.error("File upload error:", err);
+      toast.error(t("common:upload_failed", "Upload failed") + ": " + (err.message || err.statusCode || "Unknown error"));
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
