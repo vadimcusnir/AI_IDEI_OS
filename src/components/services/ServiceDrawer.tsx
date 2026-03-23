@@ -408,11 +408,10 @@ export function ServiceDrawer({ service, open, onOpenChange }: ServiceDrawerProp
               disabled={!hasEnoughCredits || isRunning}
               className="w-full gap-2 h-11 text-sm font-semibold"
             >
-              <Play className="h-4 w-4" />
-              Start Production
-              <span className="text-xs opacity-70 ml-1">
-                ({serviceFull?.credits_cost || service?.credits_cost} N)
-              </span>
+              {hasEnoughCredits ? <Play className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+              {hasEnoughCredits
+                ? <>Start Production <span className="text-xs opacity-70 ml-1">({serviceFull?.credits_cost || service?.credits_cost} N)</span></>
+                : "NEURONS Insuficienți"}
             </Button>
           </div>
         )}

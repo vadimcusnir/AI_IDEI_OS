@@ -8,6 +8,7 @@ import { trackEvent } from "@/lib/analytics";
 import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -43,10 +44,6 @@ interface Service {
   access_tier: string;
 }
 
-interface UserCredits {
-  balance: number;
-  total_spent: number;
-}
 
 type JobStatus = "idle" | "creating" | "running" | "completed" | "failed";
 
@@ -74,8 +71,8 @@ export default function RunService() {
   const navigate = useNavigate();
   const { tier: userTier } = useUserTier();
   const { t } = useTranslation("pages");
+  const { balance: creditBalance, loading: creditsLoading } = useCreditBalance();
   const [service, setService] = useState<Service | null>(null);
-  const [credits, setCredits] = useState<UserCredits | null>(null);
   const [loading, setLoading] = useState(true);
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [jobStatus, setJobStatus] = useState<JobStatus>("idle");
@@ -99,20 +96,10 @@ export default function RunService() {
   }, [user, authLoading, serviceKey]);
 
   const loadData = async () => {
-    const [serviceRes, creditsRes] = await Promise.all([
-      supabase.from("service_catalog").select("*").eq("service_key", serviceKey!).single(),
-      supabase.from("user_credits").select("balance, total_spent").eq("user_id", user!.id).maybeSingle(),
-    ]);
+    const serviceRes = await supabase.from("service_catalog").select("*").eq("service_key", serviceKey!).single();
 
     if (serviceRes.data) setService(serviceRes.data as Service);
     else { toast.error(t("run_service.service_not_found")); navigate("/services"); return; }
-
-    if (creditsRes.data) {
-      setCredits(creditsRes.data as UserCredits);
-    } else {
-      await supabase.from("user_credits").insert({ user_id: user!.id, balance: 500, total_earned: 500, total_spent: 0 } as any);
-      setCredits({ balance: 500, total_spent: 0 });
-    }
 
     // Use logged access check for audit trail + abuse detection
     const { data: accessData } = await supabase.rpc("check_access_logged", {
@@ -125,7 +112,7 @@ export default function RunService() {
   };
 
   const handleRun = async () => {
-    if (!service || !user || !credits) return;
+    if (!service || !user) return;
 
     // P1: Pre-flight credit & access verification before execution
     const { data: preCheck } = await supabase.rpc("check_access_logged", {
@@ -143,8 +130,8 @@ export default function RunService() {
       return;
     }
 
-    if (credits.balance < service.credits_cost) {
-      toast.error(t("run_service.insufficient_error", { need: service.credits_cost, have: credits.balance }));
+    if (creditBalance < service.credits_cost) {
+      toast.error(t("run_service.insufficient_error", { need: service.credits_cost, have: creditBalance }));
       return;
     }
 
@@ -266,12 +253,7 @@ export default function RunService() {
         }
       }
 
-      const { data: updatedCredits } = await supabase
-        .from("user_credits")
-        .select("balance, total_spent")
-        .eq("user_id", user.id)
-        .single();
-      if (updatedCredits) setCredits(updatedCredits as UserCredits);
+      // Balance updates reactively via useCreditBalance realtime subscription
 
       setJobStatus("completed");
       toast.success(t("run_service.job_completed"));
@@ -282,12 +264,7 @@ export default function RunService() {
       toast.error(msg);
       setJobStatus("failed");
 
-      const { data: updatedCredits } = await supabase
-        .from("user_credits")
-        .select("balance, total_spent")
-        .eq("user_id", user.id)
-        .single();
-      if (updatedCredits) setCredits(updatedCredits as UserCredits);
+      // Balance updates reactively via useCreditBalance realtime subscription
     }
   };
 
@@ -304,7 +281,7 @@ export default function RunService() {
   const inputFields = Array.isArray(service.input_schema) ? service.input_schema : [];
   const deliverables = Array.isArray(service.deliverables_schema) ? service.deliverables_schema : [];
   const canRun = jobStatus === "idle" || jobStatus === "failed";
-  const hasEnoughCredits = credits && credits.balance >= service.credits_cost;
+  const hasEnoughCredits = creditBalance >= service.credits_cost;
   const hasTierAccess = tierSatisfied(userTier, service.access_tier || "free");
   const CatIcon = CATEGORY_ICON[service.category] || Sparkles;
 
@@ -475,13 +452,13 @@ export default function RunService() {
                     </div>
                     <div>
                       <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.your_balance")}</p>
-                      <p className="text-2xl font-bold font-mono">{credits?.balance ?? 0}</p>
+                      <p className="text-2xl font-bold font-mono">{creditBalance}</p>
                       <p className="text-[9px] text-muted-foreground">NEURONS</p>
                     </div>
                     <div>
                       <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.after_run")}</p>
                       <p className={cn("text-2xl font-bold font-mono", hasEnoughCredits ? "text-status-validated" : "text-destructive")}>
-                        {(credits?.balance ?? 0) - service.credits_cost}
+                        {creditBalance - service.credits_cost}
                       </p>
                       <p className="text-[9px] text-muted-foreground">NEURONS</p>
                     </div>
@@ -492,7 +469,7 @@ export default function RunService() {
                   <div className="p-4 bg-destructive/5 border-t border-destructive/10">
                     <InlineTopUp
                       needed={service.credits_cost}
-                      balance={credits?.balance ?? 0}
+                      balance={creditBalance}
                       compact
                     />
                   </div>
@@ -544,13 +521,30 @@ export default function RunService() {
                   variant={hasTierAccess ? "default" : "secondary"}
                   size="lg"
                 >
-                  {hasTierAccess ? <Play className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-                  {hasTierAccess ? t("run_service.run_button", { cost: service.credits_cost }) : t("run_service.unlock_pro")}
+                  {hasTierAccess
+                    ? (hasEnoughCredits ? <Play className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />)
+                    : <Lock className="h-4 w-4" />}
+                  {hasTierAccess
+                    ? (hasEnoughCredits
+                        ? t("run_service.run_button", { cost: service.credits_cost })
+                        : "NEURONS Insuficienți")
+                    : t("run_service.unlock_pro")}
                 </Button>
                 {hasTierAccess && !hasEnoughCredits && (
-                  <div className="flex items-center gap-1.5 text-destructive">
-                    <AlertCircle className="h-3.5 w-3.5" />
-                    <span className="text-xs">{t("run_service.insufficient_credits")}</span>
+                  <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 flex items-center gap-2 text-xs">
+                    <AlertCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
+                    <span>
+                      Ai nevoie de <span className="font-mono font-bold">{service.credits_cost}</span> NEURONS.
+                      Sold actual: <span className="font-mono font-bold">{creditBalance}</span>.
+                    </span>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="h-6 text-[10px] ml-auto shrink-0"
+                      onClick={() => navigate("/credits")}
+                    >
+                      Cumpără NEURONS
+                    </Button>
                   </div>
                 )}
               </div>
@@ -691,7 +685,7 @@ export default function RunService() {
                       {/* Upsell — monetization loop */}
                       <NeuronBundleUpsell
                         neuronsSpent={service.credits_cost}
-                        currentBalance={credits?.balance ?? 0}
+                        currentBalance={creditBalance}
                       />
                     </>
                   )}
