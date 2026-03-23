@@ -202,3 +202,83 @@ export default function WorkspaceSettings() {
     </>
   );
 }
+
+/** FlowTips & Onboarding preferences */
+function FlowTipsSettings({ userId }: { userId?: string }) {
+  const { t } = useTranslation("pages");
+  const [flowTipsEnabled, setFlowTipsEnabled] = useState(true);
+
+  useEffect(() => {
+    if (!userId) return;
+    const disabled = localStorage.getItem(`flow_tips_global_disabled_${userId}`);
+    if (disabled === "true") setFlowTipsEnabled(false);
+  }, [userId]);
+
+  const toggleFlowTips = (enabled: boolean) => {
+    if (!userId) return;
+    setFlowTipsEnabled(enabled);
+    if (enabled) {
+      localStorage.removeItem(`flow_tips_global_disabled_${userId}`);
+    } else {
+      localStorage.setItem(`flow_tips_global_disabled_${userId}`, "true");
+    }
+    toast.success(enabled ? "Contextual tips enabled" : "Contextual tips disabled");
+  };
+
+  const resetAllTips = () => {
+    if (!userId) return;
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.startsWith(`flow_tip_`) || key.startsWith(`tour_`) || key.startsWith(`onboarding_dismissed_`) || key.startsWith(`welcome_seen_`)) && key.endsWith(userId)) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+    localStorage.removeItem(`flow_tips_global_disabled_${userId}`);
+    setFlowTipsEnabled(true);
+    toast.success(`${keysToRemove.length} tips & guides reset — they will appear again on next visit`);
+  };
+
+  if (!userId) return null;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base flex items-center gap-2">
+          <Lightbulb className="h-4 w-4 text-primary" />
+          {t("workspace.preferences", "Preferences")}
+        </CardTitle>
+        <CardDescription>{t("workspace.preferences_desc", "Control contextual guidance and onboarding features.")}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* FlowTip toggle */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <p className="text-sm font-medium">Contextual Tips (FlowTips)</p>
+            <p className="text-xs text-muted-foreground">
+              Show inline guidance tips on pages to help you navigate the platform faster.
+            </p>
+          </div>
+          <Switch checked={flowTipsEnabled} onCheckedChange={toggleFlowTips} />
+        </div>
+
+        <Separator />
+
+        {/* Reset all tips */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <p className="text-sm font-medium">Reset All Tips & Guides</p>
+            <p className="text-xs text-muted-foreground">
+              Re-enable all dismissed tips, tours, onboarding checklist, and welcome modal.
+            </p>
+          </div>
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={resetAllTips}>
+            <RotateCcw className="h-3 w-3" />
+            Reset
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
