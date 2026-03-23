@@ -151,10 +151,24 @@ export function CommandCenter() {
     return items;
   }, []);
 
-  // ═══ PHASE 1: Submit command → get plan ═══
+  // ═══ PHASE 1: Submit command → route → validate → plan ═══
   const handleSubmit = async () => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
+
+    // ═══ Route command through intent parser ═══
+    const fileNames = files.map(f => f.name);
+    const route = routeCommand(input.trim(), tier, balance, fileNames);
+
+    // ═══ Permission gate — block tier-restricted intents ═══
+    if (!route.permitted) {
+      setPermissionBlock(route);
+      logPermissionDenied(user.id, route.intent.category, route.intent.requiredTier, tier);
+      return;
+    }
+
+    // ═══ Audit: log command submission ═══
+    logCommandSubmitted(user.id, route.intent.category, route.input.type, route.intent.estimatedCredits);
 
     if (balance < 20) {
       toast.error(t("errors:insufficient_credits_agent"), {
@@ -179,6 +193,7 @@ export function CommandCenter() {
     setInput("");
     setFiles([]);
     setShowOutputs(false);
+    setPermissionBlock(null);
     saveMessage(userMessage);
 
     // Transition to planning
