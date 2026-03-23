@@ -179,6 +179,14 @@ export function JobCard({ job, isExpanded, onToggle, onRefresh }: JobCardProps) 
               variant="ghost"
               size="sm"
               className="h-7 text-xs gap-1"
+              onClick={() => navigate(`/jobs/${job.id}`)}
+            >
+              <ChevronRight className="h-3 w-3" /> Detalii
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs gap-1"
               onClick={() => navigate(`/n/${job.neuron_id}`)}
             >
               <Brain className="h-3 w-3" /> {t("jobs.view_neuron")}
