@@ -1,0 +1,1 @@
+TRUNCATE public.service_registry;
