@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
-import { useSubscription } from "@/hooks/useSubscription";
+import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 import { useTranslation } from "react-i18next";
 import { IMFPipelineLauncher } from "@/components/pipeline/IMFPipelineLauncher";
