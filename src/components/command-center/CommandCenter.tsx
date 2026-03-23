@@ -470,6 +470,7 @@ export function CommandCenter() {
     setOutputs([]);
     setShowOutputs(false);
     setShowTaskTree(false);
+    setShowPostExecution(false);
   };
 
   const handleLoadSession = async (sid: string) => {
