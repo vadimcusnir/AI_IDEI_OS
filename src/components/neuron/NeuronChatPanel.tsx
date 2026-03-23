@@ -208,7 +208,6 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
             >
               {msg.role === "assistant" ? (
                 <div className="prose-compact">
-                ">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                   {isStreaming && i === messages.length - 1 && (
                     <span className="inline-block w-1.5 h-3.5 bg-ai-accent animate-pulse ml-0.5 -mb-0.5" />
