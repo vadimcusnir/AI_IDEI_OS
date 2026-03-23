@@ -13,7 +13,7 @@ import {
 const TOP_UP_PACKAGES = [
   { key: "starter", neurons: 5500, price: 11, icon: Zap },
   { key: "standard", neurons: 10000, price: 20, icon: Sparkles, popular: true },
-  { key: "growth", neurons: 23500, price: 47, icon: Crown },
+  { key: "scale", neurons: 46000, price: 92, icon: Crown },
 ];
 
 export function HomePricingSection() {

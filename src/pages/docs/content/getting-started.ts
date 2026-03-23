@@ -383,20 +383,20 @@ Credits are consumed only when an operation completes successfully. If a service
 
 The fundamental pricing unit:
 
-**1000 NEURONS credits = 11 USD**
+**$1 USD = 500 NEURONS** (1 NEURON = $0.002)
 
-This means 1 credit costs $0.011. All credit packages follow the Root2 pricing system, where every price's digit sum reduces to 2.
+All credit packages follow the Root2 pricing system, where every price's digit sum reduces to 2.
 
 ## Typical Operation Costs
 
 | Operation | Credit Cost | USD Equivalent |
 |---|---|---|
-| Audio transcription (1 hour) | 100-500 | $1.10-$5.50 |
-| Neuron extraction (full transcript) | 500-2000 | $5.50-$22.00 |
-| Single article generation | 300-800 | $3.30-$8.80 |
-| Guest profile analysis | 200-500 | $2.20-$5.50 |
-| Knowledge graph projection | 100-300 | $1.10-$3.30 |
-| Full pipeline (upload → artifacts) | 2000-5000 | $22.00-$55.00 |
+| Audio transcription (1 hour) | 100-500 | $0.20-$1.00 |
+| Neuron extraction (full transcript) | 500-2000 | $1.00-$4.00 |
+| Single article generation | 300-800 | $0.60-$1.60 |
+| Guest profile analysis | 200-500 | $0.40-$1.00 |
+| Knowledge graph projection | 100-300 | $0.20-$0.60 |
+| Full pipeline (upload → artifacts) | 2000-5000 | $4.00-$10.00 |
 
 ## Real-World Cost Example
 

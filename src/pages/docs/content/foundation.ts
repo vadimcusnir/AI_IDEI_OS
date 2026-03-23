@@ -464,7 +464,7 @@ Services are AI workflows that transform neurons into deliverables. Each service
 
 **NEURONS** are compute credits. They represent processing power.
 
-- **Base rate:** 1000 credits = 11 USD
+- **Base rate:** $1 = 500 NEURONS (1 NEURON = $0.002)
 - **Welcome bonus:** 500 free credits on signup
 - **Top-up:** Buy packages via Stripe
 - **Subscriptions:** Monthly plans include credit allocations
