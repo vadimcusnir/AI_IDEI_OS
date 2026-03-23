@@ -65,16 +65,19 @@ export function FlowTip({
   const { user } = useAuth();
   const navigate = useNavigate();
   const [dismissed, setDismissed] = useState(true);
+  const [globallyDisabled, setGloballyDisabled] = useState(false);
 
   const storageKey = user ? `flow_tip_${tipId}_${user.id}` : null;
 
   useEffect(() => {
-    if (!storageKey) return;
+    if (!storageKey || !user) return;
     const wasDismissed = localStorage.getItem(storageKey);
+    const globalOff = localStorage.getItem(`flow_tips_global_disabled_${user.id}`);
     setDismissed(wasDismissed === "true");
-  }, [storageKey]);
+    setGloballyDisabled(globalOff === "true");
+  }, [storageKey, user]);
 
-  if (!show || dismissed || !user) return null;
+  if (!show || dismissed || globallyDisabled || !user) return null;
 
   const config = VARIANT_CONFIG[variant];
   const Icon = config.icon;
