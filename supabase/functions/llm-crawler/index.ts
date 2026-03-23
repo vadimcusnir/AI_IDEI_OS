@@ -17,8 +17,8 @@ const SITE_BASE = "https://ai-idei-os.lovable.app";
 // Known static routes from ROUTE_TREE
 const STATIC_ROUTES = [
   "/", "/auth", "/links", "/architecture", "/docs", "/changelog",
-  "/insights", "/patterns", "/formulas", "/contradictions", "/applications",
-  "/profiles", "/topics", "/media/profiles",
+  "/contradictions", "/applications",
+  "/profiles", "/topics", "/media/profiles", "/library",
   "/home", "/neurons", "/dashboard", "/extractor", "/services", "/jobs",
   "/credits", "/library", "/intelligence", "/prompt-forge", "/profile-extractor",
   "/profile", "/notifications", "/feedback", "/guests", "/onboarding",
