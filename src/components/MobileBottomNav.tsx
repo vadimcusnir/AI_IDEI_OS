@@ -9,7 +9,7 @@ import {
   Store, Users, Bot, Layers, Rocket, Shield,
   Coins, Bell, MessageCircle, FileText, ScrollText,
   User, LogOut, Eye, Settings, Plug, Key,
-  GraduationCap, Terminal, Wallet, Trophy,
+  GraduationCap, Terminal, Wallet, Trophy, Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
