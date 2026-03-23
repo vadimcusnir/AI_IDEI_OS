@@ -103,7 +103,7 @@ export default function Services() {
   };
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading) return;
     (async () => {
       const { data, error } = await supabase
         .from("service_catalog")
@@ -111,7 +111,7 @@ export default function Services() {
         .eq("is_active", true)
         .order("name");
       if (data) setServices(data as Service[]);
-      if (error) toast.error(t("services.failed_load"));
+      if (error && user) toast.error(t("services.failed_load"));
       setLoading(false);
     })();
   }, [user, authLoading]);
