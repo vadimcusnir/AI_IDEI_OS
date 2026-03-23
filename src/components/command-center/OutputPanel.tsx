@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Save, Download, RotateCcw, Copy, FileText, Brain,
   Lightbulb, Target, BookOpen, Sparkles, Check,
-  ChevronRight, ExternalLink, X,
+  ChevronRight, ExternalLink, X, Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
