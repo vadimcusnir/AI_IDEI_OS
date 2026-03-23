@@ -28,6 +28,7 @@ interface SEOHeadProps {
   description?: string;
   canonical?: string;
   ogImage?: string;
+  jsonLd?: Record<string, unknown>;
 }
 
 export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps) {
