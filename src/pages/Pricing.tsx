@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription, SUBSCRIPTION_TIERS } from "@/hooks/useSubscription";
-import { supabase } from "@/integrations/supabase/client";
+
 import { SEOHead } from "@/components/SEOHead";
 import { FAQJsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
