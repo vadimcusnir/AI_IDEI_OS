@@ -195,6 +195,24 @@ export default function Credits() {
           <TopUpDialog onSuccess={loadData} />
         </div>
 
+        {/* Flow guidance */}
+        <FlowTip
+          tipId="credits-intro"
+          variant="info"
+          title="How NEURONS credits work"
+          description="NEURONS are the compute currency that powers AI services. Each service consumes credits based on complexity. Top up anytime or earn bonus credits."
+          className="mb-4"
+        />
+        <FlowTip
+          tipId="credits-low-balance"
+          variant="tip"
+          title="Your balance is running low"
+          description="Top up your NEURONS to keep running AI services without interruption."
+          action={{ label: "View plans", route: "/credits?tab=plans" }}
+          show={balanceHealth === "critical" || balanceHealth === "warning"}
+          className="mb-4"
+        />
+
         {/* Wallet State */}
         <div className="mb-6">
           <WalletPanel />

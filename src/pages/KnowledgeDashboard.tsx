@@ -155,6 +155,15 @@ export default function KnowledgeDashboard() {
             <p className="text-xs text-muted-foreground mt-1">{t("knowledge_dashboard.subtitle")}</p>
           </div>
 
+          {/* Flow guidance */}
+          <FlowTip
+            tipId="knowledge-intro"
+            variant="info"
+            title="Your knowledge base"
+            description="Browse principles, methods, frameworks and blueprints extracted from your content. Use learning paths to master topics step by step."
+            className="mb-4"
+          />
+
           {/* Search */}
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

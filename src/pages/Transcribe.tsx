@@ -45,6 +45,17 @@ export default function Transcribe() {
             </p>
           </motion.div>
 
+          {/* Flow guidance */}
+          {user && (
+            <FlowTip
+              tipId="transcribe-how-it-works"
+              variant="info"
+              title="How transcription works"
+              description="Paste a YouTube link below. We'll extract the full transcript in seconds. Then head to the Extractor to turn it into neurons and insights."
+              className="mb-4"
+            />
+          )}
+
           {/* Main transcriber */}
           {user ? (
             <motion.div
