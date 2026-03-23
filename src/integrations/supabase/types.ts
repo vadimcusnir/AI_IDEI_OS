@@ -6544,6 +6544,78 @@ export type Database = {
         }
         Relationships: []
       }
+      service_registry: {
+        Row: {
+          category: string | null
+          complexity: string | null
+          composition: Json | null
+          created_at: string | null
+          description: string | null
+          domain: string | null
+          id: string
+          intent: string | null
+          is_active: boolean | null
+          metadata: Json | null
+          monetization: Json | null
+          name: string
+          neurons_cost_max: number | null
+          neurons_cost_min: number | null
+          output_type: string | null
+          outputs: Json | null
+          position: number | null
+          score_tier: string | null
+          scoring: Json | null
+          service_level: string
+          transformation: Json | null
+        }
+        Insert: {
+          category?: string | null
+          complexity?: string | null
+          composition?: Json | null
+          created_at?: string | null
+          description?: string | null
+          domain?: string | null
+          id: string
+          intent?: string | null
+          is_active?: boolean | null
+          metadata?: Json | null
+          monetization?: Json | null
+          name: string
+          neurons_cost_max?: number | null
+          neurons_cost_min?: number | null
+          output_type?: string | null
+          outputs?: Json | null
+          position?: number | null
+          score_tier?: string | null
+          scoring?: Json | null
+          service_level?: string
+          transformation?: Json | null
+        }
+        Update: {
+          category?: string | null
+          complexity?: string | null
+          composition?: Json | null
+          created_at?: string | null
+          description?: string | null
+          domain?: string | null
+          id?: string
+          intent?: string | null
+          is_active?: boolean | null
+          metadata?: Json | null
+          monetization?: Json | null
+          name?: string
+          neurons_cost_max?: number | null
+          neurons_cost_min?: number | null
+          output_type?: string | null
+          outputs?: Json | null
+          position?: number | null
+          score_tier?: string | null
+          scoring?: Json | null
+          service_level?: string
+          transformation?: Json | null
+        }
+        Relationships: []
+      }
       service_run_history: {
         Row: {
           batch_id: string | null
