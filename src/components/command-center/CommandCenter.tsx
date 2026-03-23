@@ -425,7 +425,7 @@ export function CommandCenter() {
     setShowPostExecution(true);
     saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
 
-    // ═══ Audit: log execution completion ═══
+    // ═══ Persist execution to history + audit ═══
     if (user) {
       const startTime = cmdState.state.startedAt ? new Date(cmdState.state.startedAt).getTime() : Date.now();
       logExecutionCompleted(
@@ -436,6 +436,12 @@ export function CommandCenter() {
         parsedOutputs.length,
         Date.now() - startTime,
       );
+
+      // Persist run to agent_action_history for Memory Panel
+      persistRun({
+        execution: { ...cmdState.state, phase: "completed", completedAt: new Date().toISOString() },
+        outputCount: parsedOutputs.length,
+      });
     }
   };
 
