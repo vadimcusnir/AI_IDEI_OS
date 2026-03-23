@@ -452,11 +452,8 @@ export default function Services() {
                   ? t("services.showing_all", { count: filtered.length })
                   : t("services.showing_filtered", { filtered: filtered.length, total: layerServices.length })}
               </p>
-              {compareIds.size > 0 && (
-                <p className="text-xs text-primary font-medium">
-                  {compareIds.size} selected for comparison
-                </p>
-              )}
+
+
             </div>
 
             {/* Services grid/list */}
