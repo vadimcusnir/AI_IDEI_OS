@@ -18,6 +18,7 @@ import {
   Target, Layers, Zap, Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ContentSourcePicker } from "@/components/services/ContentSourcePicker";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { ROICalculator } from "@/components/credits/ROICalculator";
 import { useSubscription } from "@/hooks/useSubscription";
