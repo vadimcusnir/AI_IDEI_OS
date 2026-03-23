@@ -8,8 +8,6 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Mic, Brain, Search, Check, Loader2, ChevronDown, ChevronUp, Clock, Sparkles,
 } from "lucide-react";
