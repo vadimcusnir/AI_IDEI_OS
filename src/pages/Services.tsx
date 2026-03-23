@@ -15,7 +15,7 @@ import {
   Loader2, Sparkles, BarChart3, Search, X, Coins, Clock,
   ArrowRight, Zap, FileText, Brain, Target, Layers,
   TrendingUp, LayoutGrid, List, SlidersHorizontal, AlertTriangle,
-  Users, Workflow, Rocket,
+  Workflow,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
@@ -23,11 +23,7 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall, tierSatisfied } from "@/components/premium/PremiumPaywall";
 import { useTranslation } from "react-i18next";
-import { IMFPipelineLauncher } from "@/components/pipeline/IMFPipelineLauncher";
-import { Avatar33Panel } from "@/components/services/Avatar33Panel";
-import { WebinarGeneratorPanel } from "@/components/services/WebinarGeneratorPanel";
-import { ContentGeneratorPanel } from "@/components/services/ContentGeneratorPanel";
-import { ExtractionPipelinePanel } from "@/components/services/ExtractionPipelinePanel";
+import { PipelinesHub } from "@/components/services/PipelinesHub";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceFilters } from "@/components/services/ServiceFilters";
@@ -78,8 +74,7 @@ const SERVICE_LAYERS = [
   { key: "all", labelKey: "services.tab_all", icon: Sparkles, description: "Browse all available AI services" },
   { key: "quick", labelKey: "services.tab_quick", icon: Zap, description: "Fast, low-cost single tasks" },
   { key: "research", labelKey: "services.tab_research", icon: BarChart3, description: "Market research & deep analysis" },
-  { key: "avatar", labelKey: "services.tab_avatar", icon: Users, description: "Avatar & audience profiling" },
-  { key: "pipelines", labelKey: "services.tab_pipelines", icon: Workflow, description: "Full automated pipelines" },
+  { key: "pipelines", labelKey: "services.tab_pipelines", icon: Workflow, description: "Full automated pipelines & engines" },
   { key: "history", labelKey: "services.tab_history", icon: Clock, description: "Execution history" },
 ] as const;
 
@@ -146,7 +141,7 @@ export default function Services() {
 
   /* ── Layer-aware filtering ── */
   const layerServices = useMemo(() => {
-    if (activeLayer === "all" || activeLayer === "history" || activeLayer === "avatar" || activeLayer === "pipelines") return services;
+    if (activeLayer === "all" || activeLayer === "history" || activeLayer === "pipelines") return services;
     const cats = LAYER_CATEGORIES[activeLayer];
     if (!cats) return services;
     let list = services.filter(s => cats.includes(s.category));
@@ -187,7 +182,6 @@ export default function Services() {
       all: services.length,
       quick: services.filter(s => quickCats.includes(s.category) && s.credits_cost <= QUICK_COST_MAX).length,
       research: services.filter(s => researchCats.includes(s.category)).length,
-      avatar: null,
       pipelines: null,
       history: null,
     };
@@ -298,7 +292,7 @@ export default function Services() {
               const count = layerCounts[layer.key];
               const isActive = activeLayer === layer.key;
               // Hide auth-only tabs for visitors
-              if (!user && (layer.key === "avatar" || layer.key === "pipelines" || layer.key === "history")) return null;
+              if (!user && (layer.key === "pipelines" || layer.key === "history")) return null;
               return (
                 <button
                   key={layer.key}
@@ -490,60 +484,10 @@ export default function Services() {
           </>
         )}
 
-        {/* ═══════ AVATAR LAYER ═══════ */}
-        {activeLayer === "avatar" && user && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Users className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Avatar & Audience Profiling</h2>
-                  <p className="text-xs text-muted-foreground">
-                    Build complete audience profiles: psychology, desires, objections, purchasing triggers
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Avatar33Panel />
-          </motion.div>
-        )}
-
         {/* ═══════ PIPELINES LAYER ═══════ */}
         {activeLayer === "pipelines" && user && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Rocket className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Automated Pipelines</h2>
-                  <p className="text-xs text-muted-foreground">
-                    1 input → 50+ deliverables. Chain multiple services into a single automated flow.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {/* IMF Pipeline - hero placement */}
-              <div className="bg-card border border-primary/20 rounded-xl p-4 sm:p-5">
-                <h3 className="text-base font-semibold mb-2 flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-primary" />
-                  {t("services.imf_title", { defaultValue: "IMF Pipeline — Automatic Multiplication" })}
-                </h3>
-                <p className="text-xs text-muted-foreground mb-4">
-                  {t("services.imf_desc", { defaultValue: "Launch a full pipeline: 1 extraction → 50+ deliverables generated automatically." })}
-                </p>
-                <IMFPipelineLauncher />
-              </div>
-
-              <ExtractionPipelinePanel />
-              <WebinarGeneratorPanel />
-              <ContentGeneratorPanel />
-            </div>
+            <PipelinesHub />
           </motion.div>
         )}
 
