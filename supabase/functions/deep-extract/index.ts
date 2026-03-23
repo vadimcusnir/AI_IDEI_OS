@@ -344,6 +344,21 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Create tracking job
+    const { data: trackingJob } = await supabase
+      .from("neuron_jobs")
+      .insert({
+        author_id: userId,
+        worker_type: "deep-extract",
+        status: "running",
+        depth: "deep",
+        workspace_id: workspaceId,
+        input: { episode_id, families: families || [], extractor_count: extractors.length },
+      })
+      .select("id")
+      .single();
+    const jobId = trackingJob?.id;
+
     // Run each extractor
     const results: Array<{
       extractor_id: string;
