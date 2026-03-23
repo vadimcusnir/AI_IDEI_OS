@@ -150,7 +150,7 @@ export function useNotebookDetail(notebookId: string | undefined) {
   });
 
   const addSource = useMutation({
-    mutationFn: async (source: { title: string; content: string; source_type: string }) => {
+    mutationFn: async (source: { title: string; content: string; source_type: string; file_url?: string }) => {
       const { error } = await supabase
         .from("notebook_sources")
         .insert({ notebook_id: notebookId!, ...source });
