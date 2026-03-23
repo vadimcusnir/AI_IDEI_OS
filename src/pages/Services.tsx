@@ -63,17 +63,19 @@ export default function Services() {
   const { t } = useTranslation("pages");
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { balance, loading: balanceLoading } = useCreditBalance();
   const { tier: userTier } = useUserTier();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const intentParam = searchParams.get("intent") || "";
+  const [search, setSearch] = useState(intentParam);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortBy>("name");
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-  const [activeSection, setActiveSection] = useState<SectionKey>("pipelines");
+  const [activeSection, setActiveSection] = useState<SectionKey>(intentParam ? "services" : "pipelines");
 
   const handleServiceClick = (service: Service) => {
     if (!user) { navigate("/auth"); return; }
