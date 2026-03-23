@@ -424,6 +424,19 @@ export function CommandCenter() {
 
     cmdState.completeExecution();
     saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
+
+    // ═══ Audit: log execution completion ═══
+    if (user) {
+      const startTime = cmdState.state.startedAt ? new Date(cmdState.state.startedAt).getTime() : Date.now();
+      logExecutionCompleted(
+        user.id,
+        cmdState.state.actionId,
+        cmdState.state.intent,
+        cmdState.state.totalCredits,
+        parsedOutputs.length,
+        Date.now() - startTime,
+      );
+    }
   };
 
   const handleStop = () => {
