@@ -279,6 +279,8 @@ Deno.serve(async (req) => {
       });
     }
 
+    const workspaceId = episode.workspace_id;
+
     const transcript = episode.transcript || "";
     if (!transcript.trim()) {
       return new Response(JSON.stringify({ error: "No transcript content" }), {
