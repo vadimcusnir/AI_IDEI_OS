@@ -182,7 +182,9 @@ export function CommandCenter() {
     setInput("");
     setFiles([]);
     setShowOutputs(false);
+    setShowPostExecution(false);
     setPermissionBlock(null);
+    setPendingRoute(route);
     saveMessage(userMessage);
 
     // Transition to planning
