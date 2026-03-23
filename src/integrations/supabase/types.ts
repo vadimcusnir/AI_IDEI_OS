@@ -7954,15 +7954,6 @@ export type Database = {
         | {
             Args: {
               _amount: number
-              _source?: string
-              _source_id?: string
-              _user_id: string
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              _amount: number
               _bypass_cap?: boolean
               _description?: string
               _source: string
