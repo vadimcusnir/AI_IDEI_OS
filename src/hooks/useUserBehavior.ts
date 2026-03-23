@@ -133,10 +133,10 @@ export function useUserBehavior(): BehaviorState {
       .eq("user_id", user.id)
       .eq("type", "spend")
       .gte("created_at", `${today}T00:00:00Z`) as any;
-    const jobsPromise = supabase
+    const jobsPromise: Promise<any> = supabase
       .from("neuron_jobs")
-      .select("id", { count: "exact" })
-      .eq("user_id", user.id) as any;
+      .select("id", { count: "exact" } as any)
+      .eq("user_id", user.id);
     const lastPromise = supabase
       .from("analytics_events")
       .select("created_at")
