@@ -732,6 +732,8 @@ export function CommandCenter() {
                   if (lastUser) { setInput(lastUser.content); inputRef.current?.focus(); }
                 }}
                 onClose={() => setShowOutputs(false)}
+                onSaveAll={handleSaveAllOutputs}
+                savingAll={savingAllOutputs}
               />
             </div>
           )}
