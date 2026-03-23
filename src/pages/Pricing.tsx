@@ -145,7 +145,7 @@ export default function Pricing() {
     if (planKey === "free" && !subscribed) return true;
     if (planKey === "core" && tier === "core_monthly") return true;
     if (planKey === "pro" && tier === "pro_monthly") return true;
-    if (planKey === "elite" && tier === "elite_monthly") return true;
+    if (planKey === "vip" && tier === "elite_monthly") return true;
     return false;
   };
 
