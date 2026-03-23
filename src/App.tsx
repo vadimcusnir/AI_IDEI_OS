@@ -81,7 +81,7 @@ const ApiDocs = lazyRetry(() => import("./pages/ApiDocs"));
 const WorkspaceSettings = lazyRetry(() => import("./pages/WorkspaceSettings"));
 const Community = lazyRetry(() => import("./pages/Community"));
 const CommunityThread = lazyRetry(() => import("./pages/CommunityThread"));
-const KnowledgeDashboard = lazyRetry(() => import("./pages/KnowledgeDashboard"));
+
 const VIPDashboard = lazyRetry(() => import("./pages/VIPDashboard"));
 const DataPipeline = lazyRetry(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazyRetry(() => import("./pages/RuntimeDashboard"));
