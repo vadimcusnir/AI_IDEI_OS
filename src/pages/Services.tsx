@@ -122,15 +122,7 @@ export default function Services() {
     navigate(`/run/${service.service_key}`);
   };
 
-  const toggleCompare = (id: string) => {
-    setCompareIds(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) { next.delete(id); }
-      else if (next.size < 3) { next.add(id); }
-      else { toast.info(t("services.compare_max", "Maximum 3 services for comparison")); }
-      return next;
-    });
-  };
+
 
   useEffect(() => {
     if (authLoading) return;
