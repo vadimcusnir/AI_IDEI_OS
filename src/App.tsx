@@ -151,15 +151,15 @@ const App = () => (
                 <Route path="/patterns/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/formulas" element={<Navigate to="/library" replace />} />
                 <Route path="/formulas/:slug" element={<Navigate to="/library" replace />} />
-                <Route path="/contradictions" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/contradictions/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
-                <Route path="/applications" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/applications/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
-                <Route path="/profiles" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/profiles/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
-                <Route path="/topics" element={<AppLayout><TopicListing /></AppLayout>} />
+                <Route path="/contradictions" element={<Navigate to="/library" replace />} />
+                <Route path="/contradictions/:slug" element={<Navigate to="/library" replace />} />
+                <Route path="/applications" element={<Navigate to="/library" replace />} />
+                <Route path="/applications/:slug" element={<Navigate to="/library" replace />} />
+                <Route path="/profiles" element={<Navigate to="/library" replace />} />
+                <Route path="/profiles/:slug" element={<Navigate to="/library" replace />} />
+                <Route path="/topics" element={<Navigate to="/library" replace />} />
                 <Route path="/topics/discovery" element={<Navigate to="/library" replace />} />
-                <Route path="/topics/:slug" element={<AppLayout><TopicDetail /></AppLayout>} />
+                <Route path="/topics/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
                 <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
