@@ -50,8 +50,10 @@ const MENU_SECTIONS: MenuSection[] = [
       { path: "/extractor", icon: Upload, labelKey: "extractor" },
       { path: "/neurons", icon: Brain, labelKey: "neurons" },
       { path: "/services", icon: Sparkles, labelKey: "services" },
+      { path: "/headline-generator", icon: Zap, labelKey: "headline_generator" },
       { path: "/prompt-forge", icon: Bot, labelKey: "prompt_forge" },
       { path: "/profile-extractor", icon: Users, labelKey: "profile_extractor" },
+      { path: "/notebooks", icon: FileText, labelKey: "notebooks" },
     ],
   },
   {
