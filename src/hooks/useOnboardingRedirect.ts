@@ -33,16 +33,23 @@ export function useOnboardingRedirect() {
       return;
     }
 
-    // Check neuron count
-    supabase
-      .from("neurons")
-      .select("id", { count: "exact", head: true })
-      .eq("workspace_id", currentWorkspace.id)
-      .then(({ count }) => {
-        if ((count ?? 0) === 0) {
-          navigate("/onboarding", { replace: true });
-        }
-        setChecked(true);
-      });
+    // Check neuron + episode count — skip onboarding if user has content
+    Promise.all([
+      supabase
+        .from("neurons")
+        .select("id", { count: "exact", head: true })
+        .eq("workspace_id", currentWorkspace.id),
+      supabase
+        .from("episodes")
+        .select("id", { count: "exact", head: true })
+        .eq("workspace_id", currentWorkspace.id),
+    ]).then(([neuronsRes, episodesRes]) => {
+      const neuronCount = neuronsRes.count ?? 0;
+      const episodeCount = episodesRes.count ?? 0;
+      if (neuronCount === 0 && episodeCount === 0) {
+        navigate("/onboarding", { replace: true });
+      }
+      setChecked(true);
+    });
   }, [user, authLoading, wsLoading, currentWorkspace, checked, location.pathname]);
 }
