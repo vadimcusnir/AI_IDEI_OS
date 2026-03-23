@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useRef, useCallback } from "react";
 import { Plus, FileText, Globe, Search, Trash2, Check, X, Upload, Brain, Loader2, Link, Eye, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -132,7 +133,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
       const SCRAPE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/scrape-url`;
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
-      if (!token) { toast.error("Not authenticated"); setScraping(false); return; }
+      if (!token) { toast.error(t("toast_not_authenticated")); setScraping(false); return; }
 
       const resp = await fetch(SCRAPE_URL, {
         method: "POST",
@@ -153,7 +154,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
         },
         {
           onSuccess: () => {
-            toast.success("URL imported");
+            toast.success(t("toast_url_imported"));
             setUrlInput("");
             setAddMode(null);
           },

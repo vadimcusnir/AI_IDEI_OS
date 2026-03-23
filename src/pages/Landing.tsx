@@ -4,6 +4,7 @@
  */
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useLocale } from "@/hooks/useLocale";
 import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd, WebApplicationJsonLd, FAQJsonLd } from "@/components/seo/JsonLd";
 import { useAuth } from "@/contexts/AuthContext";
@@ -89,8 +90,8 @@ function ScrollProgress() {
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { i18n } = useTranslation();
-  const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
+  const { currentLanguage, changeLanguage } = useLocale();
+  const currentLang = LANG_OPTIONS.find(l => l.code === currentLanguage) || LANG_OPTIONS[0];
   const heroRef = useRef<HTMLDivElement>(null);
   // Hero opacity fade removed — headlines and CTAs must remain stable
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -194,8 +195,8 @@ export default function Landing() {
                 {LANG_OPTIONS.map(lang => (
                   <DropdownMenuItem
                     key={lang.code}
-                    onClick={() => i18n.changeLanguage(lang.code)}
-                    className={cn("gap-2 text-xs", i18n.language === lang.code && "bg-accent")}
+                    onClick={() => changeLanguage(lang.code as any)}
+                    className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
                   >
                     <span>{lang.flag}</span>
                     {lang.label}

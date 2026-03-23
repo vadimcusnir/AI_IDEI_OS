@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useRef, lazy, Suspense, memo } from "react";
 import { usePageTracking } from "@/hooks/usePageTracking";
-import { useTranslation } from "react-i18next";
+import { useLocale } from "@/hooks/useLocale";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { prefetchUIControls } from "@/hooks/useUIControl";
@@ -47,7 +47,7 @@ interface AppLayoutProps {
 
 export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   const { direction, isAtTop } = useScrollDirection();
-  const { i18n } = useTranslation();
+  const { currentLanguage, changeLanguage } = useLocale();
   const { user } = useAuth();
   usePageTracking();
   useDailyActivity();
@@ -61,7 +61,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
     }
   }, []);
 
-  const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
+  const currentLang = LANG_OPTIONS.find(l => l.code === currentLanguage) || LANG_OPTIONS[0];
 
   return (
     <SidebarProvider>
@@ -99,8 +99,8 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
                 {LANG_OPTIONS.map(lang => (
                   <DropdownMenuItem
                     key={lang.code}
-                    onClick={() => i18n.changeLanguage(lang.code)}
-                    className={cn("gap-2 text-xs", i18n.language === lang.code && "bg-accent")}
+                    onClick={() => changeLanguage(lang.code as any)}
+                    className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
                   >
                     <span>{lang.flag}</span>
                     {lang.label}

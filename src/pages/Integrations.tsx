@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -131,11 +132,11 @@ export default function Integrations() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-integrations"] });
-      toast.success("Integration connected!");
+      toast.success(t("toast_connected"));
     },
     onError: (err: any) => {
       if (err.message?.includes("duplicate")) {
-        toast.error("Already connected");
+        toast.error(t("toast_already_connected"));
       } else {
         toast.error(err.message);
       }
@@ -153,7 +154,7 @@ export default function Integrations() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-integrations"] });
-      toast.success("Integration disconnected");
+      toast.success(t("toast_disconnected"));
     },
   });
 
@@ -168,7 +169,7 @@ export default function Integrations() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-integrations"] });
       queryClient.invalidateQueries({ queryKey: ["sync-history"] });
-      toast.success("Sync triggered!");
+      toast.success(t("toast_sync_triggered"));
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -187,7 +188,7 @@ export default function Integrations() {
       queryClient.invalidateQueries({ queryKey: ["incoming-webhooks"] });
       setShowNewWebhook(false);
       setNewWebhookName("");
-      toast.success("Webhook created!");
+      toast.success(t("toast_webhook_created"));
     },
   });
 
@@ -199,7 +200,7 @@ export default function Integrations() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["incoming-webhooks"] });
-      toast.success("Webhook deleted");
+      toast.success(t("toast_webhook_deleted"));
     },
   });
 

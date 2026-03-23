@@ -46,7 +46,7 @@ export default function HeadlineGenerator() {
   const copyToClipboard = (text: string, idx: number) => {
     navigator.clipboard.writeText(text);
     setCopiedIdx(idx);
-    toast.success("Copiat în clipboard");
+    toast.success(t("toast_copied"));
     setTimeout(() => setCopiedIdx(null), 2000);
   };
 

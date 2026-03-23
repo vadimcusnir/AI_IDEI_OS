@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useEffect, useMemo } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
@@ -69,7 +70,7 @@ export default function ServiceResults() {
     if (serviceFilter) query = query.eq("service_key", serviceFilter);
 
     const { data, error } = await query;
-    if (error) toast.error("Eroare la încărcare");
+    if (error) toast.error(t("toast_load_error"));
     setRuns((data as RunRecord[]) || []);
     setLoading(false);
   };
@@ -109,7 +110,7 @@ export default function ServiceResults() {
 
   const copyResult = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success("Copiat în clipboard");
+    toast.success(t("toast_copied"));
   };
 
   const exportCSV = () => {
@@ -130,7 +131,7 @@ export default function ServiceResults() {
     a.download = `service-results-${format(new Date(), "yyyy-MM-dd")}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("CSV exportat");
+    toast.success(t("toast_csv_exported"));
   };
 
   const statusIcon = (status: string) => {

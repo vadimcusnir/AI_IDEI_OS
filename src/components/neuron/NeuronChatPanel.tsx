@@ -55,7 +55,7 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
     try {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
-      if (!token) { toast.error("Not authenticated"); setIsStreaming(false); return; }
+      if (!token) { toast.error(t("toast_not_authenticated")); setIsStreaming(false); return; }
 
       const resp = await fetch(CHAT_URL, {
         method: "POST",
