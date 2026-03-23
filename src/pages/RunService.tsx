@@ -185,7 +185,7 @@ export default function RunService() {
           author_id: user.id,
           worker_type: service.service_key,
           status: "pending",
-          input: inputs,
+          input: truncatedInputs,
         } as any)
         .select("id")
         .single();
