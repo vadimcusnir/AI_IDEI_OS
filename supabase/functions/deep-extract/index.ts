@@ -279,6 +279,8 @@ Deno.serve(async (req) => {
       });
     }
 
+    const workspaceId = episode.workspace_id;
+
     const transcript = episode.transcript || "";
     if (!transcript.trim()) {
       return new Response(JSON.stringify({ error: "No transcript content" }), {
@@ -342,6 +344,21 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Create tracking job
+    const { data: trackingJob } = await supabase
+      .from("neuron_jobs")
+      .insert({
+        author_id: userId,
+        worker_type: "deep-extract",
+        status: "running",
+        depth: "deep",
+        workspace_id: workspaceId,
+        input: { episode_id, families: families || [], extractor_count: extractors.length },
+      })
+      .select("id")
+      .single();
+    const jobId = trackingJob?.id;
+
     // Run each extractor
     const results: Array<{
       extractor_id: string;
@@ -390,6 +407,7 @@ Deno.serve(async (req) => {
               lifecycle: "structured",
               content_category: item.type || "insight",
               episode_id,
+              workspace_id: workspaceId,
               credits_cost: Math.round(baseCost * extractor.cost_multiplier / 3),
             })
             .select("id")
@@ -457,6 +475,13 @@ Deno.serve(async (req) => {
         _type: "refund",
       });
       await supabase.from("episodes").update({ status: "transcribed" }).eq("id", episode_id);
+      if (jobId) {
+        await supabase.from("neuron_jobs").update({
+          status: "failed", completed_at: new Date().toISOString(),
+          error_message: "No neurons extracted",
+          result: { error: "No neurons extracted" },
+        }).eq("id", jobId);
+      }
       return new Response(JSON.stringify({ error: "No neurons extracted" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -479,6 +504,21 @@ Deno.serve(async (req) => {
       },
     } as any).eq("id", episode_id);
 
+    // Mark tracking job completed
+    if (jobId) {
+      await supabase.from("neuron_jobs").update({
+        status: "completed",
+        completed_at: new Date().toISOString(),
+        progress: 100,
+        result: {
+          total_neurons: totalNeurons,
+          credits_spent: totalCost,
+          extractors_used: extractors.length,
+          families_used: familiesUsed,
+        },
+      }).eq("id", jobId);
+    }
+
     return new Response(JSON.stringify({
       success: true,
       total_neurons: totalNeurons,
@@ -486,6 +526,7 @@ Deno.serve(async (req) => {
       extractors_used: extractors.length,
       families_used: familiesUsed,
       results,
+      job_id: jobId,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
   } catch (e) {
