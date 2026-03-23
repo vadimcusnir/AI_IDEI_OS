@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
 
     const MessageSchema = z.object({
       role: z.enum(["user", "assistant", "system"]),
-      content: z.string().max(30_000, "Message too long"),
+      content: z.string().max(150_000, "Message too long (max 150k chars)"),
     });
     const InputSchema = z.object({
       messages: z.array(MessageSchema).min(1, "Messages array required").max(50, "Too many messages"),
