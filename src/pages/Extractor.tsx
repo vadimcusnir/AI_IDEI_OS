@@ -825,11 +825,11 @@ export default function Extractor() {
                               type="file"
                               accept={ACCEPTED_TRANSCRIPT_FILES}
                               className="hidden"
-                              ref={transcriptFileRef}
+                              id={`import-transcript-${ep.id}`}
                               onChange={e => handleTranscriptFileImport(e, ep.id)}
                             />
                             <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                              onClick={() => transcriptFileRef.current?.click()}>
+                              onClick={() => document.getElementById(`import-transcript-${ep.id}`)?.click()}>
                               <FileUp className="h-3 w-3" /> Import File
                             </Button>
                           </div>
