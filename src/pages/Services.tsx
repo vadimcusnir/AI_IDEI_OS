@@ -31,7 +31,7 @@ import { ExtractionPipelinePanel } from "@/components/services/ExtractionPipelin
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceFilters } from "@/components/services/ServiceFilters";
-import { ServiceCompareDrawer } from "@/components/services/ServiceCompareDrawer";
+
 
 interface Service {
   id: string;
