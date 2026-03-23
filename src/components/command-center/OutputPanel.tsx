@@ -36,6 +36,8 @@ interface OutputPanelProps {
   outputs: OutputItem[];
   onRerun?: () => void;
   onClose: () => void;
+  onSaveAll?: () => void;
+  savingAll?: boolean;
   visible: boolean;
 }
 
