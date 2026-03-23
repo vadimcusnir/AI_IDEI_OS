@@ -41,5 +41,9 @@
   "select_report_reason": "Te rugam sa selectezi un motiv.",
   "complete_payment_error": "Eroare: {{message}}",
   "not_authenticated": "Nu esti autentificat.",
-  "load_failed": "Nu s-au putut incarca datele."
+  "load_failed": "Nu s-au putut incarca datele.",
+  "boundary_title": "Ceva nu a mers bine",
+  "boundary_description": "A apărut o eroare neașteptată.",
+  "boundary_retry": "Încearcă din nou",
+  "boundary_reload": "Reîncarcă pagina"
 }

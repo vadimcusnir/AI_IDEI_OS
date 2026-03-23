@@ -41,5 +41,9 @@
   "select_report_reason": "Пожалуйста, выберите причину.",
   "complete_payment_error": "Ошибка: {{message}}",
   "not_authenticated": "Вы не авторизованы.",
-  "load_failed": "Не удалось загрузить данные."
+  "load_failed": "Не удалось загрузить данные.",
+  "boundary_title": "Что-то пошло не так",
+  "boundary_description": "Произошла непредвиденная ошибка.",
+  "boundary_retry": "Попробовать снова",
+  "boundary_reload": "Перезагрузить страницу"
 }
