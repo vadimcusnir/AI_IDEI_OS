@@ -72,16 +72,24 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       let ws = (data || []) as Workspace[];
 
       // Auto-create workspace if none exist (trigger may have failed)
+      // Uses upsert-like approach: unique index on owner_id prevents duplicates
       if (ws.length === 0 && user) {
         const name = user.user_metadata?.full_name || user.email?.split("@")[0] || "My";
         const slug = `${user.id.slice(0, 8)}-${Date.now().toString(36)}`;
-        const { data: created } = await supabase
+        const { data: created, error: createErr } = await supabase
           .from("workspaces")
           .insert({ name: `${name}'s Workspace`, slug, owner_id: user.id })
           .select()
           .single();
 
-        if (created) {
+        if (createErr) {
+          // Race condition: another tab/trigger already created it — re-fetch
+          const { data: refetch } = await supabase
+            .from("workspaces")
+            .select("*")
+            .order("created_at");
+          ws = (refetch || []) as Workspace[];
+        } else if (created) {
           const newWs = created as Workspace;
           await supabase
             .from("workspace_members")
