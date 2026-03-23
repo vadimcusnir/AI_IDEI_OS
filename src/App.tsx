@@ -149,21 +149,24 @@ const App = () => (
                 <Route path="/docs" element={<AppLayout><Docs /></AppLayout>} />
                 <Route path="/docs/:section/:topic" element={<AppLayout><Docs /></AppLayout>} />
                 <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
+                {/* ═══ Public SEO-indexable entity pages (lightweight, no Auth providers) ═══ */}
+                <Route path="/knowledge/:slug" element={<PublicEntityPage />} />
+                <Route path="/insights/:slug" element={<PublicInsightPage />} />
+                <Route path="/profiles/:slug" element={<PublicProfileEntityPage />} />
+                <Route path="/patterns/:slug" element={<PublicEntityPage />} />
+                <Route path="/formulas/:slug" element={<PublicEntityPage />} />
+                <Route path="/contradictions/:slug" element={<PublicEntityPage />} />
+                <Route path="/applications/:slug" element={<PublicEntityPage />} />
+                <Route path="/topics/:slug" element={<PublicEntityPage />} />
+                {/* Index pages → library for authenticated users */}
                 <Route path="/insights" element={<Navigate to="/library" replace />} />
-                <Route path="/insights/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/patterns" element={<Navigate to="/library" replace />} />
-                <Route path="/patterns/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/formulas" element={<Navigate to="/library" replace />} />
-                <Route path="/formulas/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/contradictions" element={<Navigate to="/library" replace />} />
-                <Route path="/contradictions/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/applications" element={<Navigate to="/library" replace />} />
-                <Route path="/applications/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/profiles" element={<Navigate to="/library" replace />} />
-                <Route path="/profiles/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/topics" element={<Navigate to="/library" replace />} />
                 <Route path="/topics/discovery" element={<Navigate to="/library" replace />} />
-                <Route path="/topics/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
                 <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
