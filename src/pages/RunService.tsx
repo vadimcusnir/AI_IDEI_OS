@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 import { ContentSourcePicker } from "@/components/services/ContentSourcePicker";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { ROICalculator } from "@/components/credits/ROICalculator";
-import { useSubscription } from "@/hooks/useSubscription";
+import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 
 interface Service {
@@ -66,7 +66,7 @@ export default function RunService() {
   const { serviceKey } = useParams<{ serviceKey: string }>();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { subscribed, tier: subTier } = useSubscription();
+  const { tier: userTier } = useUserTier();
   const { t } = useTranslation("pages");
   const [service, setService] = useState<Service | null>(null);
   const [credits, setCredits] = useState<UserCredits | null>(null);
@@ -78,8 +78,6 @@ export default function RunService() {
   const [accessVerdict, setAccessVerdict] = useState<AccessVerdict | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [selectedSourceId, setSelectedSourceId] = useState<string | undefined>();
-
-  const userTier = subscribed ? (subTier || "pro") : "free";
 
   const PIPELINE_STEPS = [
     { label: t("run_service.step_creating"), key: "creating" },
