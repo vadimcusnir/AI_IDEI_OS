@@ -4,6 +4,8 @@ import ReactMarkdown from "react-markdown";
 import { Block } from "./types";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface ChatMessage {
   role: "user" | "assistant";
