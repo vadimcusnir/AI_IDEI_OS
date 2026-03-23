@@ -31,7 +31,7 @@ interface ContextActionsProps {
 }
 
 export function ContextActions({
-  neuronCount, episodeCount, lastIntent, phase, onAction,
+  neuronCount, episodeCount, lastIntent, phase, onAction, onOpenPipeline,
 }: ContextActionsProps) {
   const actions = useMemo<ContextAction[]>(() => {
     const all: ContextAction[] = [];
