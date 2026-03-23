@@ -116,20 +116,25 @@ export function NeuronTopBar({
   const handleValidate = useCallback(async () => {
     setValidating(true);
     // Check basic quality criteria
-    const issues: string[] = [];
+    const errors: string[] = [];
+    const warnings: string[] = [];
     const totalContent = blocks?.reduce((sum, b) => sum + (b.content?.length || 0), 0) || 0;
 
-    if (totalContent < 50) issues.push("Content too short (minimum 50 chars)");
-    if (!title || title === "Untitled Neuron") issues.push("Title not set");
-    if (tags.length === 0) issues.push("No tags added");
+    if (totalContent < 50) errors.push("Content too short (minimum 50 chars)");
+    if (!title || title === "Untitled Neuron") errors.push("Title not set");
+    if (tags.length === 0) warnings.push("No tags added (recommended)");
 
     await new Promise(r => setTimeout(r, 500)); // simulate validation delay
 
-    if (issues.length === 0) {
+    if (errors.length === 0) {
       onStatusChange("validated");
-      toast.success(t("neuron_validated"));
+      if (warnings.length > 0) {
+        toast.success(t("neuron_validated") + " ⚠️ " + warnings.join(", "));
+      } else {
+        toast.success(t("neuron_validated"));
+      }
     } else {
-      toast.warning(t("validation_issues", { issues: issues.join(", ") }));
+      toast.warning(t("validation_issues", { issues: errors.join(", ") }));
     }
     setValidating(false);
   }, [blocks, title, tags, onStatusChange]);
