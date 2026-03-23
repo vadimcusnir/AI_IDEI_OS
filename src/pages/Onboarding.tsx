@@ -140,6 +140,7 @@ export default function Onboarding() {
 
   return (
     <PageTransition>
+    <OnboardingTutorial open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
     <div className="flex-1 overflow-y-auto">
       <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 4 steps." />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
