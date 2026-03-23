@@ -810,7 +810,25 @@ export function CommandCenter() {
           )}
         </AnimatePresence>
 
-        {/* File preview */}
+        {/* ═══ Post-Execution Recommendations ═══ */}
+        {cmdState.state.phase === "completed" && showPostExecution && (
+          <div className="px-4 pb-2">
+            <PostExecutionPanel
+              intent={cmdState.state.intent as any}
+              creditsSpent={cmdState.state.totalCredits}
+              outputCount={outputs.length}
+              onAction={(prompt) => {
+                setInput(prompt);
+                setShowPostExecution(false);
+                inputRef.current?.focus();
+              }}
+              onSaveTemplate={handleSaveTemplate}
+              onDismiss={() => setShowPostExecution(false)}
+              userTier={tier}
+            />
+          </div>
+        )}
+
         {files.length > 0 && (
           <div className="px-4 py-2 flex gap-2 flex-wrap border-t border-border">
             {files.map((f, i) => (
