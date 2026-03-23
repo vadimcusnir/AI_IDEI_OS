@@ -77,6 +77,7 @@ export function CommandCenter() {
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [pendingInput, setPendingInput] = useState("");
+  const [showPipeline, setShowPipeline] = useState(false);
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
