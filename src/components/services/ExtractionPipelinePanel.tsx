@@ -33,6 +33,7 @@ const LEVELS = [
 
 export function ExtractionPipelinePanel() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [range, setRange] = useState([0, 12]);
   const [loading, setLoading] = useState(false);

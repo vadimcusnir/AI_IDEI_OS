@@ -29,6 +29,7 @@ interface Avatar33PanelProps {
 
 export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33PanelProps) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [content, setContent] = useState(initialContent || "");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);

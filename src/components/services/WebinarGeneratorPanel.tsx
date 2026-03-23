@@ -26,6 +26,7 @@ const STAGES = [
 
 export function WebinarGeneratorPanel() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
   const [duration, setDuration] = useState("60");

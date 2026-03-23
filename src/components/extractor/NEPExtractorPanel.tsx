@@ -57,6 +57,7 @@ interface Props {
 
 export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [families, setFamilies] = useState<NEPFamily[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedFamilies, setSelectedFamilies] = useState<Set<string>>(new Set());

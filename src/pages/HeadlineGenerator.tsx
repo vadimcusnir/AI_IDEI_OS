@@ -14,6 +14,7 @@ interface GeneratedHeadline {
 
 export default function HeadlineGenerator() {
   const [topic, setTopic] = useState("");
+  const { t } = useTranslation();
   const [audience, setAudience] = useState("");
   const [pain, setPain] = useState("");
   const [headlines, setHeadlines] = useState<GeneratedHeadline[]>([]);
