@@ -18,6 +18,7 @@ import {
   Target, Layers, Zap, Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ContentSourcePicker } from "@/components/services/ContentSourcePicker";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
 import { ROICalculator } from "@/components/credits/ROICalculator";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -76,6 +77,7 @@ export default function RunService() {
   const [jobId, setJobId] = useState<string | null>(null);
   const [accessVerdict, setAccessVerdict] = useState<AccessVerdict | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [selectedSourceId, setSelectedSourceId] = useState<string | undefined>();
 
   const userTier = subscribed ? (subTier || "pro") : "free";
 
@@ -362,6 +364,25 @@ export default function RunService() {
               exit={{ opacity: 0, y: -12 }}
               transition={{ delay: 0.1 }}
             >
+              {/* Content Source Picker */}
+              <div className="mb-6">
+                <ContentSourcePicker
+                  selectedId={selectedSourceId}
+                  onSelect={(content, source) => {
+                    setSelectedSourceId(source.id);
+                    // Auto-fill the first textarea/context field
+                    if (inputFields.length > 0) {
+                      const firstTextarea = inputFields.find((f: any) => f.type === "textarea");
+                      const targetField = firstTextarea || inputFields[0];
+                      const key = targetField.name || "field_0";
+                      setInputs(prev => ({ ...prev, [key]: content }));
+                    } else {
+                      setInputs({ context: content });
+                    }
+                  }}
+                />
+              </div>
+
               {/* Input fields */}
               <div className="mb-6">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
