@@ -482,8 +482,7 @@ export default function Services() {
                     categoryConfig={CATEGORY_CONFIG}
                     classBadge={CLASS_BADGE}
                     onClick={() => handleServiceClick(service)}
-                    onCompareToggle={() => toggleCompare(service.id)}
-                    isComparing={compareIds.has(service.id)}
+
                   />
                 ))}
               </div>
