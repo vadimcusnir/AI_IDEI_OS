@@ -27,6 +27,8 @@ import { PlanPreview, type ExecutionPlan } from "./PlanPreview";
 import { OutputPanel, type OutputItem } from "./OutputPanel";
 import { MemoryPanel } from "./MemoryPanel";
 import { TaskTree } from "./TaskTree";
+import { EconomicGate, KernelBadge } from "./EconomicGate";
+import { useUserTier } from "@/hooks/useUserTier";
 
 interface Message {
   id: string;
