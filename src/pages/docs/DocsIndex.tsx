@@ -5,7 +5,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd } from "@/components/seo/JsonLd";
 
 const ICON_MAP: Record<string, React.ElementType> = {
-  Rocket, BookOpen, Layers, Network, Boxes, HelpCircle,
+  Rocket, BookOpen, Layers, Network, Boxes, HelpCircle, GraduationCap, Code,
 };
 
 export default function DocsIndex() {
