@@ -456,7 +456,7 @@ export default function RunService() {
                     </div>
                     <div>
                       <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.your_balance")}</p>
-                      <p className="text-2xl font-bold font-mono">{credits?.balance ?? 0}</p>
+                      <p className="text-2xl font-bold font-mono">{creditBalance}</p>
                       <p className="text-[9px] text-muted-foreground">NEURONS</p>
                     </div>
                     <div>
