@@ -167,7 +167,7 @@ const App = () => (
                 <Route path="/admin/media-profiles" element={<AppLayout><AdminMediaProfiles /></AppLayout>} />
                 <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
-                <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
+                <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
                 <Route path="/knowledge/*" element={<Navigate to="/library" replace />} />
                 <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
