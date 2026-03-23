@@ -6,6 +6,7 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
 import { useCommandState, type TaskStep } from "@/hooks/useCommandState";
 import { useExecutionHistory } from "@/hooks/useExecutionHistory";
+import { useRealtimeSteps } from "@/hooks/useRealtimeSteps";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -30,6 +31,7 @@ import { TaskTree } from "./TaskTree";
 import { EconomicGate, KernelBadge } from "./EconomicGate";
 import { PermissionGate } from "./PermissionGate";
 import { PostExecutionPanel } from "./PostExecutionPanel";
+import { ContextActions } from "./ContextActions";
 import { ExecutionStatusBar } from "./ExecutionStatusBar";
 import { useUserTier } from "@/hooks/useUserTier";
 import { routeCommand, type RouteResult } from "./CommandRouter";
@@ -87,6 +89,41 @@ export function CommandCenter() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // ═══ Realtime step tracking ═══
+  useRealtimeSteps({
+    actionId: cmdState.state.actionId,
+    enabled: cmdState.state.phase === "executing" || cmdState.state.phase === "delivering",
+    onStepUpdate: cmdState.updateStep,
+    onAllCompleted: () => {
+      if (cmdState.state.phase === "executing") {
+        cmdState.transition("delivering");
+      }
+    },
+  });
+
+  // ═══ Global keyboard shortcuts ═══
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+      if (e.key === "Escape") {
+        if (loading) {
+          abortRef.current?.abort();
+          setLoading(false);
+          setIsStreaming(false);
+        } else if (showMemory) {
+          setShowMemory(false);
+        } else if (showOutputs) {
+          setShowOutputs(false);
+        }
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [loading, showMemory, showOutputs]);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -771,6 +808,18 @@ export function CommandCenter() {
             ))}
           </div>
         )}
+
+        {/* ═══ Context-Aware Quick Actions ═══ */}
+        <ContextActions
+          neuronCount={totalNeurons}
+          episodeCount={totalEpisodes}
+          lastIntent={cmdState.state.intent || undefined}
+          phase={cmdState.state.phase}
+          onAction={(prompt) => {
+            setInput(prompt);
+            inputRef.current?.focus();
+          }}
+        />
 
         {/* ═══ ZONE 1: Command Input ═══ */}
         <div className="border-t border-border p-3 bg-card">
