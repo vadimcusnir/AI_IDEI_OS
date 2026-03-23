@@ -346,7 +346,7 @@ export function ServiceDrawer({ service, open, onOpenChange }: ServiceDrawerProp
                   >
                     <div className="flex items-center gap-2 mb-3">
                       {jobStatus === "completed" ? (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                        <CheckCircle2 className="h-4 w-4 text-status-validated" />
                       ) : jobStatus === "failed" ? (
                         <AlertCircle className="h-4 w-4 text-destructive" />
                       ) : (
