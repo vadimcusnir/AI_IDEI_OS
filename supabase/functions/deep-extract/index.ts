@@ -504,6 +504,21 @@ Deno.serve(async (req) => {
       },
     } as any).eq("id", episode_id);
 
+    // Mark tracking job completed
+    if (jobId) {
+      await supabase.from("neuron_jobs").update({
+        status: "completed",
+        completed_at: new Date().toISOString(),
+        progress: 100,
+        result: {
+          total_neurons: totalNeurons,
+          credits_spent: totalCost,
+          extractors_used: extractors.length,
+          families_used: familiesUsed,
+        },
+      }).eq("id", jobId);
+    }
+
     return new Response(JSON.stringify({
       success: true,
       total_neurons: totalNeurons,
@@ -511,6 +526,7 @@ Deno.serve(async (req) => {
       extractors_used: extractors.length,
       families_used: familiesUsed,
       results,
+      job_id: jobId,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
   } catch (e) {
