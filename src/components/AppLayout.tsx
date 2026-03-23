@@ -47,7 +47,7 @@ interface AppLayoutProps {
 
 export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   const { direction, isAtTop } = useScrollDirection();
-  const { i18n } = useTranslation();
+  const { currentLanguage, changeLanguage } = useLocale();
   const { user } = useAuth();
   usePageTracking();
   useDailyActivity();
