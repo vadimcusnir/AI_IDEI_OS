@@ -18,32 +18,47 @@ serve(async (req) => {
   );
 
   try {
-    const authHeader = req.headers.get("Authorization")!;
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) throw new Error("No authorization header");
     const token = authHeader.replace("Bearer ", "");
     const { data } = await supabaseClient.auth.getUser(token);
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated");
 
-    const { priceId } = await req.json();
-    if (!priceId) throw new Error("priceId is required");
+    const body = await req.json();
+    const priceId = body.priceId || body.price_id;
+    const mode: "subscription" | "payment" = body.mode || "subscription";
+
+    if (!priceId) throw new Error("price_id is required");
+    if (mode !== "subscription" && mode !== "payment") {
+      throw new Error("mode must be 'subscription' or 'payment'");
+    }
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
 
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId;
+    let customerId: string | undefined;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
     }
+
+    const origin = req.headers.get("origin") || "https://ai-idei-os.lovable.app";
+    const successParam = mode === "subscription" ? "subscription=success" : "topup=success";
+    const cancelParam = mode === "subscription" ? "subscription=cancel" : "topup=cancelled";
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [{ price: priceId, quantity: 1 }],
-      mode: "subscription",
-      success_url: `${req.headers.get("origin")}/credits?subscription=success`,
-      cancel_url: `${req.headers.get("origin")}/credits?subscription=cancel`,
+      mode,
+      success_url: `${origin}/credits?${successParam}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/credits?${cancelParam}`,
+      metadata: {
+        user_id: user.id,
+        mode,
+      },
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
@@ -51,7 +66,9 @@ serve(async (req) => {
       status: 200,
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("[create-subscription]", msg);
+    return new Response(JSON.stringify({ error: msg }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });
