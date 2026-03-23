@@ -287,7 +287,7 @@ export function ServiceDrawer({ service, open, onOpenChange }: ServiceDrawerProp
                               {field.required && <span className="text-destructive ml-0.5">*</span>}
                             </label>
                             {field.type === "source" ? (
-                              <ContentSourcePicker
+                              <PipelineSourcePicker
                                 value={inputs[field.key] || ""}
                                 onChange={(val) => setInputs(prev => ({ ...prev, [field.key]: val }))}
                                 placeholder={field.placeholder || `Enter ${field.label || field.key}...`}
