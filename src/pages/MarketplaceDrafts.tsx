@@ -39,9 +39,9 @@ export default function MarketplaceDrafts() {
   }, [user]);
 
   const fetchDrafts = async () => {
-    const { data } = await supabase
+    const { data } = await (supabase
       .from("knowledge_assets")
-      .select("id, title, description, asset_type, price_neurons, created_at, is_published")
+      .select("id, title, description, asset_type, price_neurons, created_at, is_published") as any)
       .eq("creator_id", user!.id)
       .eq("is_published", false)
       .order("created_at", { ascending: false });
