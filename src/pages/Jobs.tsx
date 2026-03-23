@@ -8,13 +8,14 @@ import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Search, X, Sparkles } from "lucide-react";
+import { Search, X, Sparkles, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
-import { JobsGuide } from "@/components/jobs/JobsGuide";
 import { JobCard, type Job } from "@/components/jobs/JobCard";
 import { JobStats } from "@/components/jobs/JobStats";
+import { ProductionMonitorCard } from "@/components/jobs/ProductionMonitorCard";
+import { motion } from "framer-motion";
 
 type StatusFilter = "all" | "pending" | "running" | "completed" | "failed";
 
@@ -52,19 +53,37 @@ export default function Jobs() {
     setLoading(false);
   };
 
-  const filtered = useMemo(() => {
-    let list = jobs;
+  const activeJobs = useMemo(() =>
+    jobs.filter(j => j.status === "running" || j.status === "pending"),
+    [jobs]
+  );
+
+  const recentCompleted = useMemo(() =>
+    jobs.filter(j => {
+      if (j.status !== "completed") return false;
+      const completedAt = j.completed_at ? new Date(j.completed_at).getTime() : 0;
+      return Date.now() - completedAt < 30 * 60 * 1000; // last 30 min
+    }),
+    [jobs]
+  );
+
+  const historyJobs = useMemo(() => {
+    let list = jobs.filter(j => {
+      if (activeJobs.some(a => a.id === j.id)) return false;
+      if (recentCompleted.some(r => r.id === j.id)) return false;
+      return true;
+    });
     if (statusFilter !== "all") list = list.filter(j => j.status === statusFilter);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(j => j.worker_type.toLowerCase().includes(q));
     }
     return list;
-  }, [jobs, statusFilter, search]);
+  }, [jobs, activeJobs, recentCompleted, statusFilter, search]);
 
   const completedCount = jobs.filter(j => j.status === "completed").length;
   const failedCount = jobs.filter(j => j.status === "failed").length;
-  const runningCount = jobs.filter(j => j.status === "running" || j.status === "pending").length;
+  const runningCount = activeJobs.length;
   const avgDuration = useMemo(() => {
     const durations = jobs
       .filter(j => j.completed_at)
@@ -80,20 +99,31 @@ export default function Jobs() {
     <TooltipProvider>
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
-        <SEOHead title="Jobs — AI-IDEI" description="Track AI service execution history, status and results." />
+        <SEOHead title="Production Monitor — AI-IDEI" description="Monitor your AI production jobs in real-time." />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
-              <h1 className="text-lg font-semibold tracking-tight">{t("jobs.title")}</h1>
-              <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-                {t("jobs.count", { count: jobs.length })}
-              </span>
+              <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Activity className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold tracking-tight">Production Monitor</h1>
+                <p className="text-[10px] text-muted-foreground">
+                  Monitorizează producția AI în timp real
+                </p>
+              </div>
             </div>
+            {runningCount > 0 && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
+                <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                <span className="text-[10px] font-semibold text-primary">
+                  {runningCount} active
+                </span>
+              </div>
+            )}
           </div>
-
-          <JobsGuide />
 
           <JobStats
             completedCount={completedCount}
@@ -102,79 +132,116 @@ export default function Jobs() {
             avgDuration={avgDuration}
           />
 
-          {/* Filters + Search */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
-            <div className="flex items-center gap-0.5 flex-wrap">
-              {([
-                { value: "all" as StatusFilter, label: t("jobs.filter_all") },
-                { value: "completed" as StatusFilter, label: t("jobs.filter_completed") },
-                { value: "running" as StatusFilter, label: t("jobs.filter_active") },
-                { value: "failed" as StatusFilter, label: t("jobs.filter_failed") },
-              ]).map(f => (
-                <button
-                  key={f.value}
-                  onClick={() => setStatusFilter(f.value)}
-                  className={cn(
-                    "px-2 py-1 rounded text-[10px] font-medium transition-colors",
-                    statusFilter === f.value ? "bg-primary/10 text-primary" : "text-muted-foreground/60 hover:text-foreground"
-                  )}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-            <div className="flex-1" />
-            <div className="flex items-center gap-1.5 bg-card border border-border rounded-lg px-2.5 py-1.5 flex-1 sm:max-w-[200px]">
-              <Search className="h-3 w-3 text-muted-foreground/50 shrink-0" />
-              <input
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder={t("jobs.search_placeholder")}
-                className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
-              />
-              {search && (
-                <button onClick={() => setSearch("")} className="text-muted-foreground hover:text-foreground">
-                  <X className="h-3 w-3" />
-                </button>
+          {/* ═══ ACTIVE PRODUCTIONS ═══ */}
+          {(activeJobs.length > 0 || recentCompleted.length > 0) && (
+            <div className="mb-6 space-y-3">
+              {activeJobs.length > 0 && (
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                  <span className="text-xs font-semibold uppercase tracking-wider text-foreground">
+                    Producții Active
+                  </span>
+                </div>
               )}
-            </div>
-          </div>
+              {activeJobs.map(job => (
+                <ProductionMonitorCard key={job.id} job={job} />
+              ))}
 
-          {/* Job list */}
-          {filtered.length === 0 ? (
-            <div className="text-center py-16">
-              <Sparkles className="h-8 w-8 opacity-20 mx-auto mb-3" />
-              {jobs.length === 0 ? (
+              {recentCompleted.length > 0 && (
                 <>
-                  <p className="text-sm text-muted-foreground mb-1">{t("jobs.no_jobs")}</p>
-                  <p className="text-[10px] text-muted-foreground/60 mb-6">{t("jobs.no_jobs_hint")}</p>
-                  <Button onClick={() => navigate("/services")} className="gap-1.5">
-                    <Sparkles className="h-4 w-4" />
-                    {t("jobs.ai_services")}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <p className="text-sm text-muted-foreground mb-2">{t("jobs.no_filter_results")}</p>
-                  <Button variant="outline" size="sm" className="text-xs" onClick={() => { setStatusFilter("all"); setSearch(""); }}>
-                    {t("jobs.clear_filters")}
-                  </Button>
+                  <div className="flex items-center gap-2 mt-4 mb-2">
+                    <span className="h-2 w-2 rounded-full bg-status-validated" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-foreground">
+                      Finalizate Recent
+                    </span>
+                  </div>
+                  {recentCompleted.map(job => (
+                    <ProductionMonitorCard key={job.id} job={job} />
+                  ))}
                 </>
               )}
-            </div>
-          ) : (
-            <div className="space-y-1.5">
-              {filtered.map(job => (
-                <JobCard
-                  key={job.id}
-                  job={job}
-                  isExpanded={expandedJob === job.id}
-                  onToggle={() => setExpandedJob(expandedJob === job.id ? null : job.id)}
-                  onRefresh={fetchJobs}
-                />
-              ))}
             </div>
           )}
+
+          {/* ═══ HISTORY ═══ */}
+          <div className="border-t border-border pt-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-semibold text-foreground">Istoric Producții</h2>
+              <span className="text-[10px] text-muted-foreground font-mono">
+                {historyJobs.length} jobs
+              </span>
+            </div>
+
+            {/* Filters + Search */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
+              <div className="flex items-center gap-0.5 flex-wrap">
+                {([
+                  { value: "all" as StatusFilter, label: t("jobs.filter_all") },
+                  { value: "completed" as StatusFilter, label: t("jobs.filter_completed") },
+                  { value: "running" as StatusFilter, label: t("jobs.filter_active") },
+                  { value: "failed" as StatusFilter, label: t("jobs.filter_failed") },
+                ]).map(f => (
+                  <button
+                    key={f.value}
+                    onClick={() => setStatusFilter(f.value)}
+                    className={cn(
+                      "px-2 py-1 rounded text-[10px] font-medium transition-colors",
+                      statusFilter === f.value ? "bg-primary/10 text-primary" : "text-muted-foreground/60 hover:text-foreground"
+                    )}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex-1" />
+              <div className="flex items-center gap-1.5 bg-card border border-border rounded-lg px-2.5 py-1.5 flex-1 sm:max-w-[200px]">
+                <Search className="h-3 w-3 text-muted-foreground/50 shrink-0" />
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder={t("jobs.search_placeholder")}
+                  className="flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground/40"
+                />
+                {search && (
+                  <button onClick={() => setSearch("")} className="text-muted-foreground hover:text-foreground">
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Job list */}
+            {historyJobs.length === 0 && jobs.length === 0 ? (
+              <div className="text-center py-16">
+                <Sparkles className="h-8 w-8 opacity-20 mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground mb-1">{t("jobs.no_jobs")}</p>
+                <p className="text-[10px] text-muted-foreground/60 mb-6">{t("jobs.no_jobs_hint")}</p>
+                <Button onClick={() => navigate("/services")} className="gap-1.5">
+                  <Sparkles className="h-4 w-4" />
+                  {t("jobs.ai_services")}
+                </Button>
+              </div>
+            ) : historyJobs.length === 0 ? (
+              <div className="text-center py-10">
+                <p className="text-sm text-muted-foreground mb-2">{t("jobs.no_filter_results")}</p>
+                <Button variant="outline" size="sm" className="text-xs" onClick={() => { setStatusFilter("all"); setSearch(""); }}>
+                  {t("jobs.clear_filters")}
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {historyJobs.map(job => (
+                  <JobCard
+                    key={job.id}
+                    job={job}
+                    isExpanded={expandedJob === job.id}
+                    onToggle={() => setExpandedJob(expandedJob === job.id ? null : job.id)}
+                    onRefresh={fetchJobs}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </PageTransition>
