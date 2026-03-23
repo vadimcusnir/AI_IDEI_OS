@@ -198,7 +198,32 @@ export default function Services() {
           </div>
         )}
 
-        {/* ── Section Switcher ── */}
+        {/* ── Intent banner ── */}
+        {intentParam && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-primary/20 bg-primary/5"
+          >
+            <Zap className="h-4 w-4 text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground">Obiectivul tău:</p>
+              <p className="text-sm font-medium truncate">{intentParam}</p>
+            </div>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="shrink-0 text-xs h-7"
+              onClick={() => {
+                setSearch("");
+                setSearchParams({});
+              }}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </motion.div>
+        )}
+
         <div className="flex items-center gap-1 border-b border-border">
           {([
             { key: "pipelines" as const, label: "Pipelines", icon: Workflow, count: 5 },
