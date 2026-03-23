@@ -426,6 +426,7 @@ export function CommandCenter() {
     }
 
     cmdState.completeExecution();
+    setShowPostExecution(true);
     saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
 
     // ═══ Audit: log execution completion ═══
