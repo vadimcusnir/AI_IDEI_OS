@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Lock, Crown, Zap, CheckCircle2, ArrowRight } from "lucide-react";
+import { Lock, Crown, Zap, CheckCircle2, ArrowRight, Coins } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PremiumPaywallProps {
@@ -17,7 +17,7 @@ interface PremiumPaywallProps {
 
 const TIER_HIERARCHY: Record<string, number> = {
   free: 0,
-  authenticated: 1,
+  core: 1,
   pro: 2,
   vip: 3,
 };
@@ -32,7 +32,7 @@ export function tierSatisfied(userTier: string | null, requiredTier: string): bo
 export function getTierLabel(tier: string): string {
   switch (tier) {
     case "free": return "Free";
-    case "authenticated": return "Free";
+    case "core": return "Core";
     case "pro": return "Pro";
     case "vip": return "VIP";
     default: return tier;
@@ -41,21 +41,44 @@ export function getTierLabel(tier: string): string {
 
 export function getTierColor(tier: string): string {
   switch (tier) {
+    case "core": return "bg-blue-500/15 text-blue-600 border-blue-500/20";
     case "pro": return "bg-primary/15 text-primary border-primary/20";
     case "vip": return "bg-amber-500/15 text-amber-600 border-amber-500/20";
     default: return "bg-muted text-muted-foreground border-border";
   }
 }
 
+const PRO_BENEFITS = [
+  "12,000 NEURONS / lună",
+  "Acces la toate serviciile AI",
+  "Procesare prioritară",
+  "Batch processing",
+  "-25% cost execuție",
+];
+
+const TOPUP_BENEFITS = [
+  "2,000 NEURONS instant",
+  "Fără abonament recurent",
+  "Acces la serviciile de bază",
+];
+
 export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", serviceName }: PremiumPaywallProps) {
   const navigate = useNavigate();
   const { subscribe } = useSubscription();
 
-  const handleSubscribe = async (priceId: string) => {
+  const handleSubscribePro = async () => {
     try {
-      await subscribe(priceId);
+      await subscribe(SUBSCRIPTION_TIERS.pro_monthly.price_id);
     } catch {
-      // Fallback to credits page
+      navigate("/credits");
+    }
+    onOpenChange(false);
+  };
+
+  const handleBuyNeurons = async () => {
+    try {
+      await subscribe(SUBSCRIPTION_TIERS.core_monthly.price_id);
+    } catch {
       navigate("/credits");
     }
     onOpenChange(false);
@@ -63,66 +86,80 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="text-center items-center">
-          <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-b from-primary/10 to-transparent px-6 pt-6 pb-4 text-center">
+          <div className="h-14 w-14 rounded-2xl bg-primary/15 flex items-center justify-center mx-auto mb-3">
             <Crown className="h-7 w-7 text-primary" />
           </div>
-          <DialogTitle className="text-lg">
-            {requiredTier === "vip" ? "VIP Access Required" : "Pro Plan Required"}
-          </DialogTitle>
-          <DialogDescription className="text-sm">
-            {serviceName
-              ? `"${serviceName}" requires a ${getTierLabel(requiredTier)} subscription.`
-              : `This feature requires a ${getTierLabel(requiredTier)} subscription.`}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-3 mt-4">
-          {Object.entries(SUBSCRIPTION_TIERS).map(([key, tier]) => (
-            <div
-              key={key}
-              className={cn(
-                "rounded-xl border p-4 transition-all hover:border-primary/40",
-                key === "pro_monthly" ? "border-primary/20 bg-primary/5" : "border-border"
-              )}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <p className="text-sm font-semibold">{tier.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {tier.neurons_quota.toLocaleString()} NEURONS/{tier.interval === "month" ? "lună" : "an"}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-lg font-bold font-mono">${tier.price}</p>
-                  <p className="text-[10px] text-muted-foreground">/{tier.interval === "month" ? "mo" : "yr"}</p>
-                </div>
-              </div>
-              <ul className="space-y-1 mb-3">
-                {tier.features.slice(0, 3).map((f, i) => (
-                  <li key={i} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                    <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Button
-                size="sm"
-                className="w-full gap-1.5 text-xs"
-                variant={key === "pro_monthly" ? "default" : "outline"}
-                onClick={() => handleSubscribe(tier.price_id)}
-              >
-                <Zap className="h-3 w-3" />
-                Subscribe
-                <ArrowRight className="h-3 w-3" />
-              </Button>
-            </div>
-          ))}
+          <DialogHeader className="items-center">
+            <DialogTitle className="text-lg">
+              {serviceName
+                ? `Deblochează "${serviceName}"`
+                : "Deblochează funcționalitatea completă"}
+            </DialogTitle>
+            <DialogDescription className="text-sm max-w-xs mx-auto">
+              Alege cum vrei să continui — abonament lunar sau credite la cerere.
+            </DialogDescription>
+          </DialogHeader>
         </div>
 
-        <p className="text-[10px] text-muted-foreground text-center mt-2">
-          Cancel anytime. Manage subscription from your profile.
+        {/* Two-column options */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-5 pb-5">
+          {/* Option A: Pro subscription */}
+          <div className="relative rounded-xl border-2 border-primary/30 bg-primary/5 p-4 flex flex-col">
+            <Badge className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[9px] px-2 py-0.5">
+              Recomandat
+            </Badge>
+            <div className="flex items-center gap-2 mb-2">
+              <Zap className="h-4 w-4 text-primary" />
+              <h3 className="text-sm font-bold">Abonează-te la Pro</h3>
+            </div>
+            <div className="flex items-baseline gap-1 mb-3">
+              <span className="text-2xl font-bold font-mono text-foreground">$47</span>
+              <span className="text-xs text-muted-foreground">/lună</span>
+            </div>
+            <ul className="space-y-1.5 mb-4 flex-1">
+              {PRO_BENEFITS.map((b, i) => (
+                <li key={i} className="flex items-start gap-1.5 text-[11px] text-muted-foreground">
+                  <CheckCircle2 className="h-3 w-3 text-primary shrink-0 mt-0.5" />
+                  {b}
+                </li>
+              ))}
+            </ul>
+            <Button size="sm" className="w-full gap-1.5 text-xs" onClick={handleSubscribePro}>
+              Upgrade to Pro
+              <ArrowRight className="h-3 w-3" />
+            </Button>
+          </div>
+
+          {/* Option B: One-time NEURONS purchase */}
+          <div className="rounded-xl border border-border p-4 flex flex-col">
+            <div className="flex items-center gap-2 mb-2">
+              <Coins className="h-4 w-4 text-muted-foreground" />
+              <h3 className="text-sm font-bold">Cumpără NEURONS</h3>
+            </div>
+            <div className="flex items-baseline gap-1 mb-3">
+              <span className="text-2xl font-bold font-mono text-foreground">$11</span>
+              <span className="text-xs text-muted-foreground">o singură dată</span>
+            </div>
+            <ul className="space-y-1.5 mb-4 flex-1">
+              {TOPUP_BENEFITS.map((b, i) => (
+                <li key={i} className="flex items-start gap-1.5 text-[11px] text-muted-foreground">
+                  <CheckCircle2 className="h-3 w-3 text-muted-foreground shrink-0 mt-0.5" />
+                  {b}
+                </li>
+              ))}
+            </ul>
+            <Button size="sm" variant="outline" className="w-full gap-1.5 text-xs" onClick={handleBuyNeurons}>
+              Buy 2,000 NEURONS
+              <Coins className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+
+        <p className="text-[10px] text-muted-foreground text-center pb-4 px-5">
+          Poți anula oricând. Gestionezi abonamentul din profilul tău.
         </p>
       </DialogContent>
     </Dialog>
