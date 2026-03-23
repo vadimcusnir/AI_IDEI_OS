@@ -273,7 +273,7 @@ export default function Landing() {
       <LandingProofBand />
       <LandingProblem />
       <div className="gold-divider" />
-      <Suspense fallback={null}>
+      <Suspense fallback={<div className="min-h-[2400px]" />}>
         <LandingMechanism />
         <TransformationDiagram />
         <LandingWhatYouGet />
