@@ -385,12 +385,11 @@ export default function PromptForge() {
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                       {t("prompt_forge.context_label")}
                     </label>
-                    <Textarea
+                    <PipelineSourcePicker
                       value={context}
-                      onChange={e => setContext(e.target.value)}
+                      onChange={setContext}
                       placeholder={t("prompt_forge.context_placeholder")}
-                      rows={4}
-                      className="text-sm"
+                      minRows={4}
                     />
                   </div>
 
