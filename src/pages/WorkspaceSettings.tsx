@@ -172,6 +172,9 @@ export default function WorkspaceSettings() {
           </CardContent>
         </Card>
 
+        {/* Preferences — FlowTips & Onboarding */}
+        <FlowTipsSettings userId={user?.id} />
+
         {/* Danger Zone */}
         {currentRole === "owner" && (
           <Card className="border-destructive/30">
