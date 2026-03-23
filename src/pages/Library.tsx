@@ -52,6 +52,18 @@ interface Artifact {
   updated_at: string;
 }
 
+interface NeuronItem {
+  id: number;
+  title: string;
+  status: string;
+  lifecycle: string;
+  content_category: string | null;
+  created_at: string;
+  updated_at: string;
+  number: number;
+  blockPreview?: string;
+}
+
 const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
   document: { labelKey: "artifacts.type_document", color: "bg-primary/10 text-primary" },
   article: { labelKey: "artifacts.type_article", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
@@ -74,7 +86,9 @@ export default function Library() {
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
+  const [neurons, setNeurons] = useState<NeuronItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"all" | "neurons" | "artifacts">("all");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -89,16 +103,46 @@ export default function Library() {
   useEffect(() => {
     if (authLoading || wsLoading) return;
     if (!user || !currentWorkspace) { setLoading(false); return; }
-    loadArtifacts();
+    loadData();
   }, [user, authLoading, wsLoading, currentWorkspace]);
 
-  const loadArtifacts = async () => {
-    const { data } = await supabase
-      .from("artifacts")
-      .select("id, title, artifact_type, format, content, status, tags, service_key, created_at, updated_at")
-      .eq("workspace_id", currentWorkspace!.id)
-      .order("updated_at", { ascending: false });
-    setArtifacts((data as Artifact[]) || []);
+  const loadData = async () => {
+    const [artifactsRes, neuronsRes] = await Promise.all([
+      supabase
+        .from("artifacts")
+        .select("id, title, artifact_type, format, content, status, tags, service_key, created_at, updated_at")
+        .eq("workspace_id", currentWorkspace!.id)
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("neurons")
+        .select("id, title, status, lifecycle, content_category, created_at, updated_at, number, neuron_blocks(content, position)")
+        .eq("workspace_id", currentWorkspace!.id)
+        .order("updated_at", { ascending: false })
+        .limit(200),
+    ]);
+    setArtifacts((artifactsRes.data as Artifact[]) || []);
+    
+    const neuronItems: NeuronItem[] = (neuronsRes.data || []).map((n: any) => {
+      const blocks = Array.isArray(n.neuron_blocks) ? n.neuron_blocks : [];
+      const preview = blocks
+        .sort((a: any, b: any) => a.position - b.position)
+        .map((b: any) => b.content)
+        .filter(Boolean)
+        .join(" ")
+        .slice(0, 200);
+      return {
+        id: n.id,
+        title: n.title,
+        status: n.status,
+        lifecycle: n.lifecycle,
+        content_category: n.content_category,
+        created_at: n.created_at,
+        updated_at: n.updated_at,
+        number: n.number,
+        blockPreview: preview,
+      };
+    });
+    setNeurons(neuronItems);
     setLoading(false);
   };
 
@@ -114,6 +158,20 @@ export default function Library() {
       setArtifacts(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
     }
   };
+
+  const filteredNeurons = useMemo(() => {
+    let list = neurons;
+    if (search) list = list.filter(n => n.title.toLowerCase().includes(search.toLowerCase()));
+    if (statusFilter !== "all") list = list.filter(n => n.status === statusFilter);
+    list.sort((a, b) => {
+      let cmp = 0;
+      if (sortField === "title") cmp = a.title.localeCompare(b.title);
+      else if (sortField === "created_at") cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      else cmp = new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
+      return sortDir === "desc" ? -cmp : cmp;
+    });
+    return list;
+  }, [neurons, search, statusFilter, sortField, sortDir]);
 
   const filtered = useMemo(() => {
     let list = artifacts.filter(a => {
@@ -166,41 +224,35 @@ export default function Library() {
               <h1 className="text-xl font-bold flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-primary" /> {t("library.title")}
               </h1>
-              <p className="text-xs text-muted-foreground mt-0.5">{t("library.artifact_count", { filtered: filtered.length, total: artifacts.length })}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {neurons.length} neuroni · {artifacts.length} artefacte
+              </p>
             </div>
           </div>
           <ContributeDialog />
         </div>
 
-        {/* My contributions */}
-        <ControlledSection elementId="library.contributions">
-          <ContributionsList />
-        </ControlledSection>
-
-        {/* Library vs Neurons explainer */}
-        <div className="rounded-xl border border-border bg-card p-4 mb-5">
-          <div className="flex items-start gap-3">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-              <BookOpen className="h-4 w-4 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-xs font-semibold mb-1">{t("library.explainer_title")}</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-muted-foreground leading-relaxed">
-                <div className="bg-muted/30 rounded-lg p-2.5">
-                  <p className="font-semibold text-foreground mb-0.5 flex items-center gap-1">
-                    <Brain className="h-3 w-3 text-primary" /> {t("library.explainer_neurons_title")}
-                  </p>
-                  <p>{t("library.explainer_neurons_desc")}</p>
-                </div>
-                <div className="bg-primary/5 rounded-lg p-2.5">
-                  <p className="font-semibold text-foreground mb-0.5 flex items-center gap-1">
-                    <BookOpen className="h-3 w-3 text-primary" /> {t("library.explainer_artifacts_title")}
-                  </p>
-                  <p>{t("library.explainer_artifacts_desc")}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Tabs */}
+        <div className="flex items-center gap-1 mb-4 border-b border-border">
+          {([
+            { key: "all" as const, label: `Toate (${neurons.length + artifacts.length})`, icon: BookOpen },
+            { key: "neurons" as const, label: `Neuroni (${neurons.length})`, icon: Brain },
+            { key: "artifacts" as const, label: `Artefacte (${artifacts.length})`, icon: FileText },
+          ]).map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors border-b-2 -mb-px",
+                activeTab === tab.key
+                  ? "text-primary border-primary"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              )}
+            >
+              <tab.icon className="h-3.5 w-3.5" />
+              {tab.label}
+            </button>
+          ))}
         </div>
 
         {/* Toolbar */}
@@ -274,8 +326,61 @@ export default function Library() {
           </div>
         </div>
 
-        {/* Empty state */}
-        {artifacts.length === 0 ? (
+        {/* Neurons grid */}
+        {(activeTab === "all" || activeTab === "neurons") && filteredNeurons.length > 0 && (
+          <>
+            {activeTab === "all" && (
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
+                <Brain className="h-3 w-3" /> Neuroni extrași ({filteredNeurons.length})
+              </h3>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+              {filteredNeurons.map(neuron => (
+                <div
+                  key={neuron.id}
+                  className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
+                  onClick={() => navigate(`/n/${neuron.number}`)}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+                        {neuron.content_category || "neuron"}
+                      </span>
+                      <Badge variant="outline" className="text-[8px]">#{neuron.number}</Badge>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className={cn("h-1.5 w-1.5 rounded-full", neuron.status === "published" ? "bg-status-validated" : "bg-muted-foreground/40")} />
+                      <span className="text-[9px] text-muted-foreground">{neuron.status}</span>
+                    </div>
+                  </div>
+                  <h3 className="text-sm font-medium mb-1.5 line-clamp-2">{neuron.title}</h3>
+                  {neuron.blockPreview && (
+                    <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
+                      {neuron.blockPreview}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                    <span className="text-[9px] text-muted-foreground flex items-center gap-1">
+                      <Clock className="h-2.5 w-2.5" />
+                      {format(new Date(neuron.updated_at), "dd MMM yyyy")}
+                    </span>
+                    <span className="text-[9px] text-muted-foreground/60">{neuron.lifecycle}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Artifacts grid */}
+        {(activeTab === "all" || activeTab === "artifacts") && (
+          <>
+            {activeTab === "all" && artifacts.length > 0 && (
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
+                <FileText className="h-3 w-3" /> Artefacte generate ({filtered.length})
+              </h3>
+            )}
+            {(activeTab === "artifacts" ? filtered.length === 0 : artifacts.length === 0) && neurons.length === 0 ? (
           <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
             <FileText className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
             <h2 className="text-base font-bold mb-1">{t("library.no_artifacts")}</h2>
@@ -286,11 +391,11 @@ export default function Library() {
               {t("library.view_services")} <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
-        ) : filtered.length === 0 ? (
+        ) : filtered.length === 0 && activeTab !== "all" ? (
           <div className="text-center py-12">
             <p className="text-sm text-muted-foreground">{t("library.no_filter_match")}</p>
           </div>
-        ) : (
+        ) : filtered.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {filtered.map(artifact => {
               const typeConf = TYPE_CONFIG[artifact.artifact_type];
@@ -383,6 +488,8 @@ export default function Library() {
               );
             })}
           </div>
+        ) : null}
+          </>
         )}
       </div>
 
