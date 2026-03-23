@@ -90,7 +90,7 @@ export function CapitalizeActions({ artifactId, title, content, artifactType }: 
         onClick={handlePublishToMarketplace}
         disabled={publishing || published}
       >
-        {publishing ? <Loader2 className="h-3 w-3 animate-spin" /> : published ? <Check className="h-3 w-3 text-green-500" /> : <Store className="h-3 w-3" />}
+        {publishing ? <Loader2 className="h-3 w-3 animate-spin" /> : published ? <Check className="h-3 w-3 text-status-validated" /> : <Store className="h-3 w-3" />}
         {published ? "Publicat" : "Marketplace"}
       </Button>
     </div>
