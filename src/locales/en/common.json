@@ -11,7 +11,12 @@
   "close": "Close",
   "back": "Back",
   "next": "Next",
-  "search": "Search...",
+  "search": {
+    "type_neuron": "Neuron",
+    "type_artifact": "Artefact",
+    "type_guest": "Guest",
+    "type_insight": "Insight"
+  },
   "no_results": "No results",
   "confirm": "Confirm",
   "apply": "Apply",
@@ -360,7 +365,6 @@
   "job_completed_context": "Job completed: {{service}}",
   "status_updated": "Status updated: {{status}}",
   "response_sent": "Response sent",
-  "csv_exported": "CSV exported",
   "hidden_from_public": "Hidden from public page",
   "no_feedback": "No feedback.",
   "complaints": "Complaints",
@@ -597,7 +601,6 @@
     "description_placeholder": "Description (optional)"
   },
   "review_note_placeholder": "Review note (optional)...",
-  "register_new_prompt": "Register New Prompt",
   "profile": {
     "avatar_url_hint": "Enter a URL for your profile image.",
     "avatar_url_placeholder": "https://example.com/avatar.jpg",
@@ -643,12 +646,6 @@
     "status_locked": "Locked",
     "status_suspended": "Suspended"
   },
-  "search": {
-    "type_neuron": "Neuron",
-    "type_artifact": "Artefact",
-    "type_guest": "Guest",
-    "type_insight": "Insight"
-  },
   "community": {
     "tier_legend": "Legend",
     "tier_expert": "Expert",
@@ -660,7 +657,40 @@
     "posts": "posts",
     "solutions": "solutions"
   },
-  "contribute": "Contribute",
-  "submit_contribution": "Submit Contribution",
-  "title": "Title"
+  "toast_copied": "Copied to clipboard",
+  "toast_downloaded_txt": "Downloaded as TXT",
+  "toast_downloaded_srt": "Downloaded as SRT",
+  "toast_downloaded_vtt": "Downloaded as VTT",
+  "toast_credits_returned": "Credits were automatically returned.",
+  "toast_pdf_opening": "Opening PDF for download",
+  "toast_prompt_loaded": "Prompt loaded from history",
+  "toast_export_error": "Export failed",
+  "toast_no_data": "No data to export",
+  "toast_approved": "Approved",
+  "toast_rejected": "Rejected",
+  "toast_alert_ack": "Alert acknowledged",
+  "toast_scan_failed": "Scan failed",
+  "toast_gen_failed": "Generation failed",
+  "toast_issue_resolved": "Issue resolved",
+  "toast_invalid_price": "Enter a valid price",
+  "toast_save_error": "Error saving",
+  "toast_manifest_exists": "Manifest already exists for this service",
+  "toast_manifest_created": "Manifest created",
+  "toast_manifest_saved": "Manifest saved",
+  "toast_manifest_deleted": "Manifest deleted",
+  "toast_connected": "Integration connected!",
+  "toast_already_connected": "Already connected",
+  "toast_disconnected": "Integration disconnected",
+  "toast_sync_triggered": "Sync triggered!",
+  "toast_webhook_created": "Webhook created!",
+  "toast_webhook_deleted": "Webhook deleted",
+  "toast_link_copied": "Link copied!",
+  "toast_load_error": "Loading error",
+  "toast_csv_exported": "CSV exported",
+  "toast_not_authenticated": "Not authenticated",
+  "toast_chat_cleared": "Chat cleared",
+  "toast_chat_exported": "Chat exported",
+  "toast_upload_failed": "Upload failed",
+  "toast_url_imported": "URL imported",
+  "toast_access_denied": "Access denied"
 }
