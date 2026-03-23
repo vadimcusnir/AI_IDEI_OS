@@ -245,7 +245,7 @@ export function ServiceManifestTab() {
                         )}
                       >
                         <span className={cn(
-                          "absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform",
+                          "absolute top-0.5 h-4 w-4 rounded-full bg-background transition-transform",
                           manifest.is_validated ? "translate-x-4" : "translate-x-0.5"
                         )} />
                       </button>

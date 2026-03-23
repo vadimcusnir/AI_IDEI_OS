@@ -31,11 +31,11 @@ export default function HeadlineGenerator() {
       if (data?.headlines?.length > 0) {
         setHeadlines(data.headlines);
       } else {
-        toast.error("Nu s-au putut genera titluri. Încearcă din nou.");
+        toast.error(t("errors:generation_failed"));
       }
     } catch (err: any) {
       console.error(err);
-      toast.error("Eroare la generare. Încearcă din nou.");
+      toast.error(t("errors:generation_failed"));
     } finally {
       setLoading(false);
     }

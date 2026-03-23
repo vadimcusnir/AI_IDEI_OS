@@ -78,7 +78,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
         setFamilies(data.families || []);
       } catch (e) {
         console.error("Load extractors error:", e);
-        toast.error("Nu s-au putut încărca extractorii");
+        toast.error(t("errors:load_failed"));
       } finally {
         setLoading(false);
       }

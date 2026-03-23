@@ -172,7 +172,7 @@ export default function Extractor() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session.data.session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${session.data.session?.access_token}`,
           },
           body: JSON.stringify({ episode_id: episodeId, file_path: filePath }),
         }

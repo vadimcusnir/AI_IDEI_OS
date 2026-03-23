@@ -179,7 +179,7 @@ export function ExtractionPipelinePanel() {
                   <Card key={id} className="border-border/50">
                     <CardHeader className="pb-2 pt-3 px-4">
                       <div className="flex items-center gap-2">
-                        <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white", LEVELS[r.level]?.color || "bg-primary")}>
+                        <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-primary-foreground", LEVELS[r.level]?.color || "bg-primary")}>
                           {r.level}
                         </div>
                         <span className="font-medium text-sm">{r.name}</span>
