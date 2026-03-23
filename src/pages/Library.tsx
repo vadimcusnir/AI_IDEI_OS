@@ -224,41 +224,35 @@ export default function Library() {
               <h1 className="text-xl font-bold flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-primary" /> {t("library.title")}
               </h1>
-              <p className="text-xs text-muted-foreground mt-0.5">{t("library.artifact_count", { filtered: filtered.length, total: artifacts.length })}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {neurons.length} neuroni · {artifacts.length} artefacte
+              </p>
             </div>
           </div>
           <ContributeDialog />
         </div>
 
-        {/* My contributions */}
-        <ControlledSection elementId="library.contributions">
-          <ContributionsList />
-        </ControlledSection>
-
-        {/* Library vs Neurons explainer */}
-        <div className="rounded-xl border border-border bg-card p-4 mb-5">
-          <div className="flex items-start gap-3">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-              <BookOpen className="h-4 w-4 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-xs font-semibold mb-1">{t("library.explainer_title")}</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-muted-foreground leading-relaxed">
-                <div className="bg-muted/30 rounded-lg p-2.5">
-                  <p className="font-semibold text-foreground mb-0.5 flex items-center gap-1">
-                    <Brain className="h-3 w-3 text-primary" /> {t("library.explainer_neurons_title")}
-                  </p>
-                  <p>{t("library.explainer_neurons_desc")}</p>
-                </div>
-                <div className="bg-primary/5 rounded-lg p-2.5">
-                  <p className="font-semibold text-foreground mb-0.5 flex items-center gap-1">
-                    <BookOpen className="h-3 w-3 text-primary" /> {t("library.explainer_artifacts_title")}
-                  </p>
-                  <p>{t("library.explainer_artifacts_desc")}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Tabs */}
+        <div className="flex items-center gap-1 mb-4 border-b border-border">
+          {([
+            { key: "all" as const, label: `Toate (${neurons.length + artifacts.length})`, icon: BookOpen },
+            { key: "neurons" as const, label: `Neuroni (${neurons.length})`, icon: Brain },
+            { key: "artifacts" as const, label: `Artefacte (${artifacts.length})`, icon: FileText },
+          ]).map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors border-b-2 -mb-px",
+                activeTab === tab.key
+                  ? "text-primary border-primary"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              )}
+            >
+              <tab.icon className="h-3.5 w-3.5" />
+              {tab.label}
+            </button>
+          ))}
         </div>
 
         {/* Toolbar */}
