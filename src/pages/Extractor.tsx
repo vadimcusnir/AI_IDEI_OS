@@ -474,7 +474,7 @@ export default function Extractor() {
           title="Ready to extract knowledge?"
           description="You have transcribed episodes. Click 'Extract' on any episode to generate neurons — atomic knowledge units you can reuse in AI services."
           show={episodes.length > 0 && episodes.some(e => e.status === "transcribed")}
-          action={{ label: "What are neurons?", route: "/docs/concepts/neurons" }}
+          action={{ label: "What are neurons?", route: "/docs/foundation/neuron-model" }}
           className="mb-4"
         />
 
