@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { UnlockArtifactButton } from "@/components/artifacts/UnlockArtifactButton";
+import { CapitalizeActions } from "@/components/artifacts/CapitalizeActions";
 
 interface JobDetail {
   id: string;
