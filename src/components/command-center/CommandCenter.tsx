@@ -918,14 +918,14 @@ export function CommandCenter() {
         </div>
       </div>
 
-      {/* ═══ RIGHT: Task Tree Panel ═══ */}
+      {/* ═══ RIGHT: Task Tree Panel — hidden on mobile, side panel on desktop ═══ */}
       <AnimatePresence>
         {showRightPanel && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 280, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
-            className="border-l border-border bg-card overflow-hidden shrink-0"
+            className="hidden md:block border-l border-border bg-card overflow-hidden shrink-0"
           >
             <TaskTree
               execution={cmdState.state}
@@ -935,18 +935,79 @@ export function CommandCenter() {
         )}
       </AnimatePresence>
 
-      {/* ═══ RIGHT: Memory Panel ═══ */}
+      {/* Task Tree — mobile overlay */}
+      <AnimatePresence>
+        {showRightPanel && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="md:hidden fixed inset-y-0 right-0 w-[280px] z-50 border-l border-border bg-card shadow-xl"
+          >
+            <div className="flex items-center justify-between px-3 py-2 border-b border-border">
+              <span className="text-xs font-bold">Task Tree</span>
+              <button onClick={() => setShowTaskTree(false)} className="p-1 text-muted-foreground hover:text-foreground">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <TaskTree
+              execution={cmdState.state}
+              onSaveTemplate={handleSaveTemplate}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ RIGHT: Memory Panel — responsive ═══ */}
       <AnimatePresence>
         {showMemory && (
-          <MemoryPanel
-            visible={showMemory}
-            onClose={() => setShowMemory(false)}
-            onReplay={handleReplay}
-            onExecuteTemplate={handleExecuteTemplate}
-            sessions={sessions}
-            onLoadSession={handleLoadSession}
-            onDeleteSession={handleDeleteSession}
-            currentSessionId={sessionId}
+          <>
+            {/* Desktop: side panel */}
+            <div className="hidden md:block">
+              <MemoryPanel
+                visible={showMemory}
+                onClose={() => setShowMemory(false)}
+                onReplay={handleReplay}
+                onExecuteTemplate={handleExecuteTemplate}
+                sessions={sessions}
+                onLoadSession={handleLoadSession}
+                onDeleteSession={handleDeleteSession}
+                currentSessionId={sessionId}
+              />
+            </div>
+            {/* Mobile: overlay */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="md:hidden fixed inset-y-0 right-0 w-[300px] z-50 shadow-xl"
+            >
+              <MemoryPanel
+                visible={showMemory}
+                onClose={() => setShowMemory(false)}
+                onReplay={handleReplay}
+                onExecuteTemplate={handleExecuteTemplate}
+                sessions={sessions}
+                onLoadSession={handleLoadSession}
+                onDeleteSession={handleDeleteSession}
+                currentSessionId={sessionId}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile backdrop for overlays */}
+      <AnimatePresence>
+        {(showRightPanel || showMemory) && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
+            onClick={() => { setShowTaskTree(false); setShowMemory(false); }}
           />
         )}
       </AnimatePresence>
