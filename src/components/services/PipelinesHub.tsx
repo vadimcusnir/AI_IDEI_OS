@@ -1,215 +1,168 @@
 /**
- * PipelinesHub — Tabbed hub for all pipeline services.
- * Each pipeline gets its own dedicated section with enhanced settings.
+ * PipelinesHub — Clean pipeline cards that expand inline to show their launcher.
+ * Mobile-first, action-oriented design.
  */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslation } from "react-i18next";
 import {
   Zap, Layers, Users, Presentation, FileText,
-  Sparkles, Settings2, Info, ChevronRight,
+  ChevronDown, Play, Coins,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { IMFPipelineLauncher } from "@/components/pipeline/IMFPipelineLauncher";
 import { Avatar33Panel } from "@/components/services/Avatar33Panel";
 import { WebinarGeneratorPanel } from "@/components/services/WebinarGeneratorPanel";
 import { ContentGeneratorPanel } from "@/components/services/ContentGeneratorPanel";
 import { ExtractionPipelinePanel } from "@/components/services/ExtractionPipelinePanel";
 
-const PIPELINE_TABS = [
+const PIPELINES = [
   {
     key: "imf",
     name: "IMF Pipeline",
-    subtitle: "Automatic Multiplication",
-    description: "1 extraction → 50+ deliverables generated automatically. Chain multiple services into a single automated flow with real-time progress tracking.",
+    tagline: "1 input → 50+ outputs",
+    description: "Upload once, get articles, frameworks, social posts, scripts — all generated automatically in one flow.",
     icon: Zap,
-    color: "text-primary",
-    bgColor: "bg-primary/10",
-    borderColor: "border-primary/20",
-    stats: [
-      { label: "Avg. outputs", value: "50+" },
-      { label: "Avg. time", value: "~8 min" },
-      { label: "Cost range", value: "500–2000 N" },
-    ],
-    features: ["Real-time progress", "Auto-chaining", "Cost estimation", "Failure recovery"],
+    cost: "500–2000",
+    time: "~8 min",
+    outputs: "50+",
+    accent: "primary",
   },
   {
     key: "extraction",
-    name: "Extraction Pipeline",
-    subtitle: "12-Level Deep Analysis",
-    description: "Multi-level extraction from raw input to structured knowledge: segmentation, entity extraction, psychological analysis, narrative patterns, commercial insights, and content production.",
+    name: "Deep Extraction",
+    tagline: "13-level analysis",
+    description: "Extracts entities, patterns, psychological signals, narrative structures, and commercial insights from any content.",
     icon: Layers,
-    color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
-    borderColor: "border-purple-500/20",
-    stats: [
-      { label: "Levels", value: "13" },
-      { label: "Avg. cost", value: "~715 N" },
-      { label: "Output types", value: "12" },
-    ],
-    features: ["Adjustable depth range", "Level-by-level results", "Custom start/end", "Pattern detection"],
+    cost: "~715",
+    time: "~4 min",
+    outputs: "12 types",
+    accent: "purple-500",
   },
   {
     key: "avatar",
     name: "Avatar33",
-    subtitle: "Client Profile Engine",
-    description: "33 commercial prompts executed in strict order to build a complete ideal client profile: discovery, commercial analysis, content strategy, and synthesis.",
+    tagline: "33-module client profile",
+    description: "Build a complete ideal client avatar: demographics, psychology, buying triggers, JTBD, and content strategy.",
     icon: Users,
-    color: "text-amber-500",
-    bgColor: "bg-amber-500/10",
-    borderColor: "border-amber-500/20",
-    stats: [
-      { label: "Modules", value: "33" },
-      { label: "Phases", value: "4" },
-      { label: "Total cost", value: "1650 N" },
-    ],
-    features: ["4-phase execution", "Psychological profiling", "JTBD extraction", "Buying triggers"],
+    cost: "1650",
+    time: "~12 min",
+    outputs: "33 modules",
+    accent: "amber-500",
   },
   {
     key: "webinar",
     name: "Webinar Generator",
-    subtitle: "Full Webinar Production",
-    description: "12 modules × 4 prompts = 48 prompts. Complete webinar production: structure, slides, script, email sequences, and quality control.",
+    tagline: "Full webinar kit",
+    description: "Structure, slides, script, email sequences, and follow-up — complete webinar production in 48 AI prompts.",
     icon: Presentation,
-    color: "text-rose-500",
-    bgColor: "bg-rose-500/10",
-    borderColor: "border-rose-500/20",
-    stats: [
-      { label: "Prompts", value: "48" },
-      { label: "Modules", value: "12" },
-      { label: "Total cost", value: "1920 N" },
-    ],
-    features: ["Duration config", "Audience targeting", "Slide optimization", "Email sequences"],
+    cost: "1920",
+    time: "~15 min",
+    outputs: "48 assets",
+    accent: "rose-500",
   },
   {
     key: "content",
     name: "Content Engine",
-    subtitle: "Multi-Format Generation",
-    description: "Generate publish-ready content across 8 formats simultaneously: tweets, LinkedIn posts, blog articles, YouTube scripts, newsletters, viral hooks, calendars, and carousels.",
+    tagline: "8 formats at once",
+    description: "Generate tweets, LinkedIn posts, blog articles, YouTube scripts, newsletters, and carousels simultaneously.",
     icon: FileText,
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
-    borderColor: "border-emerald-500/20",
-    stats: [
-      { label: "Formats", value: "8" },
-      { label: "Min. cost", value: "25 N" },
-      { label: "Max cost", value: "350 N" },
-    ],
-    features: ["Selective formats", "Copy to clipboard", "Regenerate individual", "Cost control"],
+    cost: "25–350",
+    time: "~2 min",
+    outputs: "8 formats",
+    accent: "emerald-500",
   },
 ] as const;
 
-type PipelineKey = typeof PIPELINE_TABS[number]["key"];
+type PipelineKey = typeof PIPELINES[number]["key"];
+
+function getAccentClasses(accent: string) {
+  if (accent === "primary") return { text: "text-primary", bg: "bg-primary/10", border: "border-primary/25" };
+  return {
+    text: `text-${accent}`,
+    bg: `bg-${accent}/10`,
+    border: `border-${accent}/25`,
+  };
+}
 
 export function PipelinesHub() {
-  const [activeTab, setActiveTab] = useState<PipelineKey>("imf");
-  const activePipeline = PIPELINE_TABS.find(p => p.key === activeTab)!;
+  const [expanded, setExpanded] = useState<PipelineKey | null>(null);
 
   return (
-    <div className="space-y-6">
-      {/* Pipeline selector — card grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-        {PIPELINE_TABS.map(tab => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.key;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                "relative flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all text-center",
-                isActive
-                  ? `${tab.borderColor} ${tab.bgColor} shadow-sm`
-                  : "border-border bg-card hover:border-primary/20 hover:bg-muted/30"
-              )}
-            >
-              <div className={cn(
-                "h-9 w-9 rounded-lg flex items-center justify-center",
-                isActive ? tab.bgColor : "bg-muted"
-              )}>
-                <Icon className={cn("h-4 w-4", isActive ? tab.color : "text-muted-foreground")} />
-              </div>
-              <span className={cn(
-                "text-[11px] font-semibold leading-tight",
-                isActive ? "text-foreground" : "text-muted-foreground"
-              )}>
-                {tab.name}
-              </span>
-              <span className="text-[9px] text-muted-foreground leading-tight hidden sm:block">
-                {tab.subtitle}
-              </span>
-              {isActive && (
-                <motion.div
-                  layoutId="pipeline-indicator"
-                  className={cn("absolute -bottom-px left-1/4 right-1/4 h-0.5 rounded-full", tab.color.replace("text-", "bg-"))}
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
+    <div className="space-y-3">
+      {PIPELINES.map(pipe => {
+        const Icon = pipe.icon;
+        const isOpen = expanded === pipe.key;
+        const colors = getAccentClasses(pipe.accent);
 
-      {/* Active pipeline detail */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.25 }}
-        >
-          {/* Pipeline header with stats */}
-          <div className={cn("rounded-xl border p-4 sm:p-5 mb-4", activePipeline.borderColor, activePipeline.bgColor + "/30")}>
-            <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-              <div className={cn("h-12 w-12 rounded-xl flex items-center justify-center shrink-0", activePipeline.bgColor)}>
-                <activePipeline.icon className={cn("h-6 w-6", activePipeline.color)} />
+        return (
+          <div key={pipe.key} className="rounded-xl border border-border bg-card overflow-hidden transition-shadow hover:shadow-sm">
+            {/* Card header — always visible */}
+            <button
+              onClick={() => setExpanded(isOpen ? null : pipe.key)}
+              className="w-full text-left p-4 sm:p-5 flex items-start gap-4 group"
+            >
+              <div className={cn("h-11 w-11 rounded-xl flex items-center justify-center shrink-0", colors.bg)}>
+                <Icon className={cn("h-5 w-5", colors.text)} />
               </div>
+
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <h2 className="text-lg font-semibold">{activePipeline.name}</h2>
-                  <Badge variant="outline" className="text-[9px]">{activePipeline.subtitle}</Badge>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">{pipe.name}</h3>
+                  <span className={cn("text-[9px] font-medium px-2 py-0.5 rounded-full", colors.bg, colors.text)}>
+                    {pipe.tagline}
+                  </span>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed mb-3">
-                  {activePipeline.description}
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                  {pipe.description}
                 </p>
 
-                {/* Stats row */}
-                <div className="flex flex-wrap gap-3">
-                  {activePipeline.stats.map(stat => (
-                    <div key={stat.label} className="flex items-center gap-1.5">
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground">{stat.label}:</span>
-                      <span className="text-xs font-bold font-mono">{stat.value}</span>
-                    </div>
-                  ))}
+                {/* Quick stats — inline */}
+                <div className="flex items-center gap-4 mt-2">
+                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <Coins className="h-3 w-3" /> {pipe.cost} N
+                  </span>
+                  <span className="text-[10px] text-muted-foreground">{pipe.time}</span>
+                  <span className="text-[10px] text-muted-foreground">{pipe.outputs}</span>
                 </div>
               </div>
-            </div>
 
-            {/* Features chips */}
-            <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-border/30">
-              <Settings2 className="h-3 w-3 text-muted-foreground/50 mt-0.5 shrink-0" />
-              {activePipeline.features.map(feat => (
-                <span
-                  key={feat}
-                  className="text-[9px] font-medium px-2 py-0.5 rounded-full bg-background/60 text-muted-foreground border border-border/50"
+              <div className="flex items-center gap-2 shrink-0 mt-1">
+                {!isOpen && (
+                  <span className="text-[10px] font-medium text-primary hidden sm:block">Launch</span>
+                )}
+                <ChevronDown className={cn(
+                  "h-4 w-4 text-muted-foreground transition-transform duration-200",
+                  isOpen && "rotate-180"
+                )} />
+              </div>
+            </button>
+
+            {/* Expandable panel */}
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="overflow-hidden"
                 >
-                  {feat}
-                </span>
-              ))}
-            </div>
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0">
+                    <div className="border-t border-border pt-4">
+                      {pipe.key === "imf" && <IMFPipelineLauncher />}
+                      {pipe.key === "extraction" && <ExtractionPipelinePanel />}
+                      {pipe.key === "avatar" && <Avatar33Panel />}
+                      {pipe.key === "webinar" && <WebinarGeneratorPanel />}
+                      {pipe.key === "content" && <ContentGeneratorPanel />}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-
-          {/* Pipeline execution panel */}
-          <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
-            {activeTab === "imf" && <IMFPipelineLauncher />}
-            {activeTab === "extraction" && <ExtractionPipelinePanel />}
-            {activeTab === "avatar" && <Avatar33Panel />}
-            {activeTab === "webinar" && <WebinarGeneratorPanel />}
-            {activeTab === "content" && <ContentGeneratorPanel />}
-          </div>
-        </motion.div>
-      </AnimatePresence>
+        );
+      })}
     </div>
   );
 }
