@@ -162,8 +162,15 @@ export default function Index() {
               >
                 <PanelRightOpen className="h-3.5 w-3.5" />
               </Button>
-              <Button variant="ghost" size="sm" className="h-8 text-xs gap-1" onClick={() => setShowExportImport(true)}>
-                <Download className="h-3.5 w-3.5" />
+              <Button
+                variant={showInsights ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 gap-1.5 text-xs hidden md:flex"
+                onClick={() => setShowInsights(prev => !prev)}
+                title="Library Insights"
+              >
+                <BarChart3 className="h-3.5 w-3.5" />
+              </Button>
               </Button>
               <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
                 <Plus className="h-3.5 w-3.5" /> {t("neurons_index.new_neuron")}
