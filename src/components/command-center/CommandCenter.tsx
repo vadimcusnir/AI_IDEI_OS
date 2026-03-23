@@ -580,7 +580,7 @@ export function CommandCenter() {
   const showRightPanel = showTaskTree && cmdState.state.phase !== "idle";
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full overflow-hidden">
       {/* ═══ MAIN COLUMN ═══ */}
       <div className="flex flex-col h-full transition-all flex-1 min-w-0">
         {/* Header */}
