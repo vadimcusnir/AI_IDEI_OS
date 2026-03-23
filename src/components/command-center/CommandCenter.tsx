@@ -4,28 +4,29 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
+import { useCommandState, type TaskStep } from "@/hooks/useCommandState";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
-  Send, Loader2, Bot, User, Terminal, Upload,
-  X, Paperclip, RotateCcw, History, ChevronLeft,
+  Send, Loader2, User, Upload,
+  X, Paperclip, RotateCcw, History,
   Globe, Brain, Sparkles, FileText, Network, Zap,
-  ArrowRight, FileUp, FileAudio, Film, Type, Trash2,
-  PanelRightOpen, PanelRightClose, Layers, Coins,
-  Command,
+  Coins, Command, Play, Shield,
+  PanelRightOpen, PanelRightClose,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
-import { ExecutionTimeline } from "@/components/agent/ExecutionTimeline";
 import { COMMAND_PACKS, type CommandPack } from "@/components/agent/CommandPacks";
-import { useAgentDecisionEngine, type Suggestion } from "@/hooks/useAgentDecisionEngine";
+import { useAgentDecisionEngine } from "@/hooks/useAgentDecisionEngine";
 import { PlanPreview, type ExecutionPlan } from "./PlanPreview";
 import { OutputPanel, type OutputItem } from "./OutputPanel";
 import { MemoryPanel } from "./MemoryPanel";
+import { TaskTree } from "./TaskTree";
 
 interface Message {
   id: string;
@@ -33,15 +34,6 @@ interface Message {
   content: string;
   timestamp: Date;
   metadata?: Record<string, any>;
-}
-
-interface PlanMeta {
-  action_id: string | null;
-  intent: string;
-  confidence: number;
-  plan_name: string;
-  total_credits: number;
-  steps: Array<{ tool: string; label: string; credits: number }>;
 }
 
 const AGENT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agent-console`;
@@ -57,6 +49,7 @@ export function CommandCenter() {
     saveMessage, loadSession, loadCurrentSession,
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
+  const cmdState = useCommandState();
 
   const WELCOME_MSG: Message = {
     id: "welcome",
@@ -78,16 +71,15 @@ export function CommandCenter() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
-  const [showTimeline, setShowTimeline] = useState(false);
+  const [showTaskTree, setShowTaskTree] = useState(false);
   const [showMemory, setShowMemory] = useState(false);
-  const [planMeta, setPlanMeta] = useState<PlanMeta | null>(null);
-  const [executionPlan, setExecutionPlan] = useState<ExecutionPlan | null>(null);
   const [outputs, setOutputs] = useState<OutputItem[]>([]);
   const [showOutputs, setShowOutputs] = useState(false);
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [activePack, setActivePack] = useState<CommandPack | null>(null);
+  const [pendingInput, setPendingInput] = useState("");
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -120,10 +112,8 @@ export function CommandCenter() {
     });
   }, [user, currentWorkspace]);
 
-  // Parse structured outputs from assistant response
   const parseOutputs = useCallback((content: string): OutputItem[] => {
     const items: OutputItem[] = [];
-    // Detect sections with ## headings
     const sections = content.split(/^## /m).filter(Boolean);
     if (sections.length > 1) {
       sections.forEach((section, i) => {
@@ -139,7 +129,6 @@ export function CommandCenter() {
           else if (lower.includes("framework") || lower.includes("pattern")) type = "frameworks";
           else if (lower.includes("action") || lower.includes("plan") || lower.includes("next")) type = "action_plan";
           else if (lower.includes("article") || lower.includes("content") || lower.includes("post")) type = "content";
-
           items.push({ id: `output-${i}`, type, title, content: body });
         }
       });
@@ -150,7 +139,8 @@ export function CommandCenter() {
     return items;
   }, []);
 
-  const handleSend = async () => {
+  // ═══ PHASE 1: Submit command → get plan ═══
+  const handleSubmit = async () => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
 
@@ -161,7 +151,9 @@ export function CommandCenter() {
       return;
     }
 
-    const userContent = input.trim() + (files.length > 0 ? `\n\n[${t("common:files_attached", { count: files.length, names: files.map(f => f.name).join(", ") })}]` : "");
+    const userContent = input.trim() + (files.length > 0
+      ? `\n\n[${t("common:files_attached", { count: files.length, names: files.map(f => f.name).join(", ") })}]`
+      : "");
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
@@ -171,196 +163,27 @@ export function CommandCenter() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    setPendingInput(userContent);
     setInput("");
     setFiles([]);
-    setLoading(true);
-    setIsStreaming(false);
     setShowOutputs(false);
     saveMessage(userMessage);
 
-    const controller = new AbortController();
-    abortRef.current = controller;
+    // Transition to planning
+    cmdState.transition("planning");
+    setLoading(true);
 
     try {
-      let fileContent = "";
-      for (const file of files) {
-        if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".csv") || file.name.endsWith(".json")) {
-          fileContent += `\n--- ${file.name} ---\n` + await file.text();
-        } else if (file.type.startsWith("audio/") || file.type.startsWith("video/") || file.name.match(/\.(mp3|mp4|wav|m4a|webm|ogg)$/i)) {
-          const filePath = `chat-uploads/${user.id}/${Date.now()}_${file.name}`;
-          const { error: uploadErr } = await supabase.storage.from("user-uploads").upload(filePath, file);
-          if (uploadErr) {
-            fileContent += `\n[Upload failed: ${file.name} — ${uploadErr.message}]`;
-          } else {
-            const { data: urlData } = supabase.storage.from("user-uploads").getPublicUrl(filePath);
-            fileContent += `\n[Uploaded: ${file.name} → ${urlData.publicUrl}]`;
-          }
-        } else {
-          fileContent += `\n[File attached: ${file.name} (${file.type || 'unknown'}, ${(file.size / 1024).toFixed(0)} KB)]`;
-        }
-      }
-
-      const apiMessages = messages
-        .filter(m => m.role !== "system" && !m.id.startsWith("welcome"))
-        .slice(-20)
-        .map(m => ({ role: m.role, content: m.content }));
-
-      apiMessages.push({ role: "user", content: userContent + fileContent });
-
-      const [neuronsAgg, episodesAgg, jobsAgg] = await Promise.all([
-        supabase.from("neurons").select("content_category", { count: "exact" }).eq("author_id", user.id),
-        supabase.from("episodes").select("id", { count: "exact" }).eq("author_id", user.id),
-        supabase.from("neuron_jobs").select("worker_type, status").eq("author_id", user.id).eq("status", "completed").limit(100),
-      ]);
-
-      const topCategories = (neuronsAgg.data || []).reduce((acc: Record<string, number>, n: any) => {
-        const cat = n.content_category || "general";
-        acc[cat] = (acc[cat] || 0) + 1;
-        return acc;
-      }, {});
-
-      const workerTypes = (jobsAgg.data || []).reduce((acc: Record<string, number>, j: any) => {
-        acc[j.worker_type] = (acc[j.worker_type] || 0) + 1;
-        return acc;
-      }, {});
-
-      const { data: { session } } = await supabase.auth.getSession();
-      const resp = await fetch(AGENT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify({
-          messages: apiMessages,
-          context: {
-            neuron_count: totalNeurons,
-            episode_count: totalEpisodes,
-            credit_balance: balance,
-            top_categories: topCategories,
-            recent_services: workerTypes,
-            total_completed_jobs: jobsAgg.count || 0,
-            knowledge_summary: `User has ${neuronsAgg.count || 0} neurons across categories: ${Object.entries(topCategories).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}. Most used services: ${Object.entries(workerTypes).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}.`,
-          },
-        }),
-        signal: controller.signal,
-      });
-
-      if (!resp.ok) {
-        const errBody = await resp.json().catch(() => ({}));
-        if (resp.status === 429) {
-          toast.error(t("errors:rate_limit_agent"));
-          throw new Error("Rate limit exceeded");
-        }
-        if (resp.status === 402) {
-          toast.error(t("errors:credits_exhausted"), {
-            action: { label: t("common:top_up"), onClick: () => navigate("/credits") },
-          });
-          throw new Error("AI credits exhausted");
-        }
-        throw new Error(errBody.error || `Error ${resp.status}`);
-      }
-
-      let fullContent = "";
-      const assistantId = crypto.randomUUID();
-
-      if (resp.body) {
-        setIsStreaming(true);
-        const reader = resp.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = "";
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-
-          let nlIdx: number;
-          while ((nlIdx = buffer.indexOf("\n")) !== -1) {
-            let line = buffer.slice(0, nlIdx);
-            buffer = buffer.slice(nlIdx + 1);
-            if (line.endsWith("\r")) line = line.slice(0, -1);
-            if (line.startsWith(":") || line.trim() === "") continue;
-            if (!line.startsWith("data: ")) continue;
-            const d = line.slice(6).trim();
-            if (d === "[DONE]") continue;
-            try {
-              const parsed = JSON.parse(d);
-              if (parsed.agent_meta) {
-                const meta = parsed.agent_meta;
-                setPlanMeta(meta);
-                setExecutionPlan({
-                  ...meta,
-                  objective: meta.objective || `Execute ${meta.intent.replace(/_/g, " ")}`,
-                  output_preview: meta.output_preview || [],
-                });
-                setShowTimeline(true);
-              }
-              const c = parsed.choices?.[0]?.delta?.content;
-              if (c) {
-                fullContent += c;
-                setMessages(prev => {
-                  const existing = prev.find(m => m.id === assistantId);
-                  if (existing) {
-                    return prev.map(m =>
-                      m.id === assistantId ? { ...m, content: fullContent } : m
-                    );
-                  }
-                  return [
-                    ...prev,
-                    { id: assistantId, role: "assistant" as const, content: fullContent, timestamp: new Date() },
-                  ];
-                });
-              }
-            } catch { /* partial JSON */ }
-          }
-        }
-
-        // Flush remaining buffer
-        if (buffer.trim()) {
-          for (let raw of buffer.split("\n")) {
-            if (!raw) continue;
-            if (raw.endsWith("\r")) raw = raw.slice(0, -1);
-            if (!raw.startsWith("data: ")) continue;
-            const d = raw.slice(6).trim();
-            if (d === "[DONE]") continue;
-            try {
-              const parsed = JSON.parse(d);
-              const c = parsed.choices?.[0]?.delta?.content;
-              if (c) {
-                fullContent += c;
-                setMessages(prev => prev.map(m =>
-                  m.id === assistantId ? { ...m, content: fullContent } : m
-                ));
-              }
-            } catch { /* ignore */ }
-          }
-        }
-      }
-
-      if (!fullContent) {
-        fullContent = t("common:no_response");
+      await executeCommand(userContent, userMessage);
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") {
+        cmdState.failExecution(e instanceof Error ? e.message : "Unknown error");
+        toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
         setMessages(prev => [
           ...prev,
-          { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() },
+          { id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() },
         ]);
       }
-
-      // Parse outputs from response
-      const parsedOutputs = parseOutputs(fullContent);
-      if (parsedOutputs.length > 0) {
-        setOutputs(parsedOutputs);
-        setShowOutputs(true);
-      }
-
-      saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
-    } catch (e) {
-      if ((e as Error).name === "AbortError") return;
-      toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
-      setMessages(prev => [
-        ...prev,
-        { id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() },
-      ]);
     } finally {
       setLoading(false);
       setIsStreaming(false);
@@ -368,16 +191,225 @@ export function CommandCenter() {
     }
   };
 
+  // ═══ Core execution pipeline ═══
+  const executeCommand = async (userContent: string, _userMessage: Message) => {
+    if (!user) return;
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    // Process file uploads
+    let fileContent = "";
+    for (const file of files) {
+      if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".csv") || file.name.endsWith(".json")) {
+        fileContent += `\n--- ${file.name} ---\n` + await file.text();
+      } else if (file.type.startsWith("audio/") || file.type.startsWith("video/") || file.name.match(/\.(mp3|mp4|wav|m4a|webm|ogg)$/i)) {
+        const filePath = `chat-uploads/${user.id}/${Date.now()}_${file.name}`;
+        const { error: uploadErr } = await supabase.storage.from("user-uploads").upload(filePath, file);
+        if (uploadErr) {
+          fileContent += `\n[Upload failed: ${file.name} — ${uploadErr.message}]`;
+        } else {
+          const { data: urlData } = supabase.storage.from("user-uploads").getPublicUrl(filePath);
+          fileContent += `\n[Uploaded: ${file.name} → ${urlData.publicUrl}]`;
+        }
+      } else {
+        fileContent += `\n[File attached: ${file.name} (${file.type || 'unknown'}, ${(file.size / 1024).toFixed(0)} KB)]`;
+      }
+    }
+
+    const apiMessages = messages
+      .filter(m => m.role !== "system" && !m.id.startsWith("welcome"))
+      .slice(-20)
+      .map(m => ({ role: m.role, content: m.content }));
+    apiMessages.push({ role: "user", content: userContent + fileContent });
+
+    const [neuronsAgg, episodesAgg, jobsAgg] = await Promise.all([
+      supabase.from("neurons").select("content_category", { count: "exact" }).eq("author_id", user.id),
+      supabase.from("episodes").select("id", { count: "exact" }).eq("author_id", user.id),
+      supabase.from("neuron_jobs").select("worker_type, status").eq("author_id", user.id).eq("status", "completed").limit(100),
+    ]);
+
+    const topCategories = (neuronsAgg.data || []).reduce((acc: Record<string, number>, n: any) => {
+      const cat = n.content_category || "general";
+      acc[cat] = (acc[cat] || 0) + 1;
+      return acc;
+    }, {});
+
+    const workerTypes = (jobsAgg.data || []).reduce((acc: Record<string, number>, j: any) => {
+      acc[j.worker_type] = (acc[j.worker_type] || 0) + 1;
+      return acc;
+    }, {});
+
+    const { data: { session } } = await supabase.auth.getSession();
+    const resp = await fetch(AGENT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      body: JSON.stringify({
+        messages: apiMessages,
+        context: {
+          neuron_count: totalNeurons,
+          episode_count: totalEpisodes,
+          credit_balance: balance,
+          top_categories: topCategories,
+          recent_services: workerTypes,
+          total_completed_jobs: jobsAgg.count || 0,
+          knowledge_summary: `User has ${neuronsAgg.count || 0} neurons across categories: ${Object.entries(topCategories).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}. Most used services: ${Object.entries(workerTypes).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}.`,
+        },
+      }),
+      signal: controller.signal,
+    });
+
+    if (!resp.ok) {
+      const errBody = await resp.json().catch(() => ({}));
+      if (resp.status === 429) {
+        toast.error(t("errors:rate_limit_agent"));
+        throw new Error("Rate limit exceeded");
+      }
+      if (resp.status === 402) {
+        toast.error(t("errors:credits_exhausted"), {
+          action: { label: t("common:top_up"), onClick: () => navigate("/credits") },
+        });
+        throw new Error("AI credits exhausted");
+      }
+      throw new Error(errBody.error || `Error ${resp.status}`);
+    }
+
+    let fullContent = "";
+    const assistantId = crypto.randomUUID();
+
+    if (resp.body) {
+      setIsStreaming(true);
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        let nlIdx: number;
+        while ((nlIdx = buffer.indexOf("\n")) !== -1) {
+          let line = buffer.slice(0, nlIdx);
+          buffer = buffer.slice(nlIdx + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+          const d = line.slice(6).trim();
+          if (d === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(d);
+
+            // ═══ Capture plan metadata → transition to confirming ═══
+            if (parsed.agent_meta) {
+              const meta = parsed.agent_meta;
+              cmdState.setPlan({
+                actionId: meta.action_id,
+                intent: meta.intent,
+                confidence: meta.confidence,
+                planName: meta.plan_name,
+                totalCredits: meta.total_credits,
+                steps: meta.steps || [],
+                objective: meta.objective,
+                outputPreview: meta.output_preview,
+              });
+              setShowTaskTree(true);
+
+              // Auto-confirm for low-cost plans (< 100N) or conversations
+              if (meta.total_credits === 0 || meta.intent === "general" || meta.intent === "help" || meta.intent === "check_status") {
+                cmdState.confirmExecution();
+              }
+            }
+
+            const c = parsed.choices?.[0]?.delta?.content;
+            if (c) {
+              // If we have content streaming, we're in executing phase
+              if (cmdState.state.phase === "confirming") {
+                cmdState.confirmExecution();
+              }
+
+              fullContent += c;
+              setMessages(prev => {
+                const existing = prev.find(m => m.id === assistantId);
+                if (existing) {
+                  return prev.map(m =>
+                    m.id === assistantId ? { ...m, content: fullContent } : m
+                  );
+                }
+                return [
+                  ...prev,
+                  { id: assistantId, role: "assistant" as const, content: fullContent, timestamp: new Date() },
+                ];
+              });
+
+              // Update step statuses based on content patterns
+              if (fullContent.includes("Searching") || fullContent.includes("searching")) {
+                cmdState.updateStep("search_neurons", { status: "running" });
+              }
+              if (fullContent.includes("Found") || fullContent.includes("results")) {
+                cmdState.updateStep("search_neurons", { status: "completed" });
+              }
+            }
+          } catch { /* partial JSON */ }
+        }
+      }
+
+      // Flush remaining buffer
+      if (buffer.trim()) {
+        for (let raw of buffer.split("\n")) {
+          if (!raw) continue;
+          if (raw.endsWith("\r")) raw = raw.slice(0, -1);
+          if (!raw.startsWith("data: ")) continue;
+          const d = raw.slice(6).trim();
+          if (d === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(d);
+            const c = parsed.choices?.[0]?.delta?.content;
+            if (c) {
+              fullContent += c;
+              setMessages(prev => prev.map(m =>
+                m.id === assistantId ? { ...m, content: fullContent } : m
+              ));
+            }
+          } catch { /* ignore */ }
+        }
+      }
+    }
+
+    if (!fullContent) {
+      fullContent = t("common:no_response");
+      setMessages(prev => [
+        ...prev,
+        { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() },
+      ]);
+    }
+
+    // ═══ Transition to delivering → completed ═══
+    const parsedOutputs = parseOutputs(fullContent);
+    if (parsedOutputs.length > 0) {
+      cmdState.transition("delivering");
+      setOutputs(parsedOutputs);
+      setShowOutputs(true);
+    }
+
+    cmdState.completeExecution();
+    saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
+  };
+
   const handleStop = () => {
     abortRef.current?.abort();
     setLoading(false);
     setIsStreaming(false);
+    cmdState.failExecution("Cancelled by user");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      handleSubmit();
     }
   };
 
@@ -389,12 +421,11 @@ export function CommandCenter() {
 
   const clearChat = () => {
     newSession();
+    cmdState.reset();
     setMessages([{ id: "welcome-reset", role: "assistant", content: "Session reset. Ready for new commands.", timestamp: new Date() }]);
-    setPlanMeta(null);
-    setExecutionPlan(null);
     setOutputs([]);
     setShowOutputs(false);
-    setShowTimeline(false);
+    setShowTaskTree(false);
   };
 
   const handleLoadSession = async (sid: string) => {
@@ -419,13 +450,33 @@ export function CommandCenter() {
     setShowMemory(false);
   };
 
+  const handleSaveTemplate = async () => {
+    if (!user || cmdState.state.phase !== "completed") return;
+    try {
+      const { error } = await supabase.from("agent_plan_templates").insert({
+        intent_key: cmdState.state.intent,
+        name: `${cmdState.state.planName} (saved)`,
+        description: cmdState.state.objective,
+        steps: cmdState.state.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })) as any,
+        estimated_credits: cmdState.state.totalCredits,
+        estimated_duration_seconds: cmdState.state.steps.length * 5,
+        is_default: false,
+      });
+      if (error) throw error;
+      toast.success("Workflow saved as template");
+    } catch {
+      toast.error("Failed to save template");
+    }
+  };
+
   const isEmptyState = messages.length <= 1 && !loading;
+  const showRightPanel = showTaskTree && cmdState.state.phase !== "idle";
 
   return (
     <div className="flex h-full">
       {/* ═══ MAIN COLUMN ═══ */}
-      <div className={cn("flex flex-col h-full transition-all flex-1 min-w-0")}>
-        {/* Header — Command Center branding */}
+      <div className="flex flex-col h-full transition-all flex-1 min-w-0">
+        {/* Header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-card">
           <div className="flex items-center gap-2.5">
             <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -442,6 +493,23 @@ export function CommandCenter() {
                   <Coins className="h-2.5 w-2.5" />
                   {balance.toLocaleString()} N
                 </span>
+                {cmdState.state.phase !== "idle" && (
+                  <>
+                    <span>·</span>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        "text-[8px] h-4",
+                        cmdState.state.phase === "executing" && "border-primary text-primary",
+                        cmdState.state.phase === "completed" && "border-green-500 text-green-500",
+                        cmdState.state.phase === "failed" && "border-destructive text-destructive",
+                      )}
+                    >
+                      {cmdState.state.phase === "executing" && <Loader2 className="h-2 w-2 mr-0.5 animate-spin" />}
+                      {cmdState.state.phase.toUpperCase()}
+                    </Badge>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -452,32 +520,41 @@ export function CommandCenter() {
             <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={clearChat} title="New session">
               <RotateCcw className="h-3 w-3" />
             </Button>
-            {planMeta && (
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setShowTimeline(!showTimeline)} title="Execution Timeline">
-                {showTimeline ? <PanelRightClose className="h-3 w-3" /> : <PanelRightOpen className="h-3 w-3" />}
+            {cmdState.state.phase !== "idle" && (
+              <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setShowTaskTree(!showTaskTree)} title="Task Tree">
+                {showTaskTree ? <PanelRightClose className="h-3 w-3" /> : <PanelRightOpen className="h-3 w-3" />}
               </Button>
             )}
           </div>
         </div>
 
-        {/* ═══ ZONE 2: Plan Preview ═══ */}
-        {executionPlan && (
+        {/* ═══ ZONE 2: Plan Preview (confirmation gate) ═══ */}
+        {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && (
           <div className="px-4 py-2">
             <PlanPreview
-              plan={executionPlan}
+              plan={{
+                action_id: cmdState.state.actionId,
+                intent: cmdState.state.intent,
+                confidence: cmdState.state.confidence,
+                plan_name: cmdState.state.planName,
+                total_credits: cmdState.state.totalCredits,
+                steps: cmdState.state.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })),
+                objective: cmdState.state.objective,
+                output_preview: cmdState.state.outputPreview,
+              }}
               balance={balance}
-              onExecute={handleSend}
+              onExecute={() => cmdState.confirmExecution()}
               onEdit={() => {
-                setInput(`Refine plan: ${executionPlan.intent}`);
+                setInput(`Refine plan: ${cmdState.state.intent}`);
                 inputRef.current?.focus();
               }}
-              onDismiss={() => setExecutionPlan(null)}
+              onDismiss={() => cmdState.reset()}
               executing={loading}
             />
           </div>
         )}
 
-        {/* ═══ ZONE 3: Messages / Task execution area ═══ */}
+        {/* ═══ ZONE 3: Messages / Execution area ═══ */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
           {messages.map((msg) => (
             <CommandBubble
@@ -598,7 +675,9 @@ export function CommandCenter() {
               <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-3 w-3 animate-spin text-primary" />
-                  <span className="text-[10px] text-muted-foreground">Planning execution...</span>
+                  <span className="text-[10px] text-muted-foreground">
+                    {cmdState.state.phase === "planning" ? "Generating execution plan..." : "Processing..."}
+                  </span>
                 </div>
               </div>
             </div>
@@ -698,7 +777,7 @@ export function CommandCenter() {
               <Button
                 size="sm"
                 className="h-8 w-8 p-0 shrink-0"
-                onClick={handleSend}
+                onClick={handleSubmit}
                 disabled={!input.trim() && files.length === 0}
               >
                 <Send className="h-3.5 w-3.5" />
@@ -708,16 +787,19 @@ export function CommandCenter() {
         </div>
       </div>
 
-      {/* ═══ RIGHT: Execution Timeline ═══ */}
+      {/* ═══ RIGHT: Task Tree Panel ═══ */}
       <AnimatePresence>
-        {showTimeline && planMeta && (
+        {showRightPanel && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 280, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             className="border-l border-border bg-card overflow-hidden shrink-0"
           >
-            <ExecutionTimeline planMeta={planMeta} />
+            <TaskTree
+              execution={cmdState.state}
+              onSaveTemplate={handleSaveTemplate}
+            />
           </motion.div>
         )}
       </AnimatePresence>
