@@ -125,6 +125,11 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
+        // RELEASE reserved credits on execution failure
+        if (reservedRef.current) {
+          await release(reservedRef.current.amount, reservedRef.current.jobId, "Execution failed");
+          reservedRef.current = null;
+        }
         if (response.status === 402) {
           toast.error(errData.error || "NEURONS insuficienți. Reîncarcă portofelul.");
         } else if (response.status === 429) {
@@ -142,7 +147,6 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
       const contentType = response.headers.get("Content-Type") || "";
 
       if (contentType.includes("text/event-stream")) {
-        // Stream SSE
         const reader = response.body?.getReader();
         if (!reader) throw new Error("No stream");
 
@@ -180,16 +184,31 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
           }
         }
 
-        setCostCharged(catalogService?.credits_cost || estimatedCost);
+        // SETTLE: confirm reserved credits as spent
+        if (reservedRef.current) {
+          await settle(reservedRef.current.amount, reservedRef.current.jobId, `Completed: ${service.name}`);
+          setCostCharged(reservedRef.current.amount);
+          reservedRef.current = null;
+        }
         setState("done");
         toast.success("Serviciu executat cu succes!");
       } else {
-        // JSON response (dry-run or error)
         const data = await response.json();
         if (data.dry_run) {
+          // RELEASE on dry-run
+          if (reservedRef.current) {
+            await release(reservedRef.current.amount, reservedRef.current.jobId, "Dry-run simulation");
+            reservedRef.current = null;
+          }
           setOutput("🔬 Simulation mode — no AI call was made. Credits have been refunded.");
           setState("done");
         } else {
+          // SETTLE on success
+          if (reservedRef.current) {
+            await settle(reservedRef.current.amount, reservedRef.current.jobId, `Completed: ${service.name}`);
+            setCostCharged(reservedRef.current.amount);
+            reservedRef.current = null;
+          }
           setOutput(JSON.stringify(data, null, 2));
           setState("done");
         }
