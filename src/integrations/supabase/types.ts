@@ -754,10 +754,13 @@ export type Database = {
           author_id: string
           content: string
           created_at: string
+          execution_id: string | null
           format: string
           id: string
+          is_locked: boolean | null
           job_id: string | null
           metadata: Json | null
+          preview_content: string | null
           service_key: string | null
           status: string
           tags: string[] | null
@@ -770,10 +773,13 @@ export type Database = {
           author_id: string
           content?: string
           created_at?: string
+          execution_id?: string | null
           format?: string
           id?: string
+          is_locked?: boolean | null
           job_id?: string | null
           metadata?: Json | null
+          preview_content?: string | null
           service_key?: string | null
           status?: string
           tags?: string[] | null
@@ -786,10 +792,13 @@ export type Database = {
           author_id?: string
           content?: string
           created_at?: string
+          execution_id?: string | null
           format?: string
           id?: string
+          is_locked?: boolean | null
           job_id?: string | null
           metadata?: Json | null
+          preview_content?: string | null
           service_key?: string | null
           status?: string
           tags?: string[] | null
@@ -798,6 +807,13 @@ export type Database = {
           workspace_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "artifacts_execution_id_fkey"
+            columns: ["execution_id"]
+            isOneToOne: false
+            referencedRelation: "service_executions"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "artifacts_job_id_fkey"
             columns: ["job_id"]
@@ -6455,9 +6471,77 @@ export type Database = {
         }
         Relationships: []
       }
+      service_executions: {
+        Row: {
+          artifacts_count: number | null
+          completed_at: string | null
+          cost_actual: number | null
+          cost_estimated: number | null
+          created_at: string
+          current_step: number | null
+          error_message: string | null
+          id: string
+          input: Json
+          manifest_id: string | null
+          service_id: string
+          started_at: string | null
+          status: string
+          total_steps: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          artifacts_count?: number | null
+          completed_at?: string | null
+          cost_actual?: number | null
+          cost_estimated?: number | null
+          created_at?: string
+          current_step?: number | null
+          error_message?: string | null
+          id?: string
+          input?: Json
+          manifest_id?: string | null
+          service_id: string
+          started_at?: string | null
+          status?: string
+          total_steps?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          artifacts_count?: number | null
+          completed_at?: string | null
+          cost_actual?: number | null
+          cost_estimated?: number | null
+          created_at?: string
+          current_step?: number | null
+          error_message?: string | null
+          id?: string
+          input?: Json
+          manifest_id?: string | null
+          service_id?: string
+          started_at?: string | null
+          status?: string
+          total_steps?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_executions_manifest_id_fkey"
+            columns: ["manifest_id"]
+            isOneToOne: false
+            referencedRelation: "service_manifests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_manifests: {
         Row: {
           access_requirements: Json | null
+          base_neurons: number | null
+          confidence_threshold: number | null
+          cost_multiplier: number | null
           created_at: string | null
           dependencies: string[] | null
           estimated_duration_seconds: number | null
@@ -6467,11 +6551,17 @@ export type Database = {
           output_schema: Json | null
           pipeline_class: string
           pipeline_steps: Json | null
+          preview_enabled: boolean | null
+          preview_limit_pct: number | null
+          retry_attempts: number | null
           service_key: string
           updated_at: string | null
         }
         Insert: {
           access_requirements?: Json | null
+          base_neurons?: number | null
+          confidence_threshold?: number | null
+          cost_multiplier?: number | null
           created_at?: string | null
           dependencies?: string[] | null
           estimated_duration_seconds?: number | null
@@ -6481,11 +6571,17 @@ export type Database = {
           output_schema?: Json | null
           pipeline_class?: string
           pipeline_steps?: Json | null
+          preview_enabled?: boolean | null
+          preview_limit_pct?: number | null
+          retry_attempts?: number | null
           service_key: string
           updated_at?: string | null
         }
         Update: {
           access_requirements?: Json | null
+          base_neurons?: number | null
+          confidence_threshold?: number | null
+          cost_multiplier?: number | null
           created_at?: string | null
           dependencies?: string[] | null
           estimated_duration_seconds?: number | null
@@ -6495,6 +6591,9 @@ export type Database = {
           output_schema?: Json | null
           pipeline_class?: string
           pipeline_steps?: Json | null
+          preview_enabled?: boolean | null
+          preview_limit_pct?: number | null
+          retry_attempts?: number | null
           service_key?: string
           updated_at?: string | null
         }
