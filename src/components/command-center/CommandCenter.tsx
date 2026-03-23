@@ -495,7 +495,10 @@ export function CommandCenter() {
               <Command className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-xs font-bold tracking-tight">Command Center</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-xs font-bold tracking-tight">Command Center</p>
+                <KernelBadge />
+              </div>
               <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
                 <span>{totalNeurons} neurons</span>
                 <span>·</span>
