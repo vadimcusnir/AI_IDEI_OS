@@ -9,147 +9,201 @@
     "login": "Login",
     "start_free": "Start Free"
   },
-  "hero": {
-    "tagline": "Knowledge Extraction Operating System",
-    "title_line1": "Your expertise disappears",
-    "title_line2": "in conversations.",
-    "title_line3": "We extract it forever.",
-    "subtitle": "Upload one podcast. Get 50+ professional outputs — articles, frameworks, scripts, courses, psychological profiles, marketing funnels. Automatically. Every time.",
-    "cta_dashboard": "Go to Dashboard",
-    "cta_start": "Start Free — 500 Credits",
-    "cta_how": "See How It Works",
-    "trust_no_card": "No credit card required",
-    "trust_credits": "500 free credits",
-    "trust_gdpr": "GDPR compliant"
-  },
-  "problem": {
-    "label": "The Problem",
-    "title": "The internet produces infinite information.",
-    "desc": "But almost none of it becomes <strong>usable knowledge</strong>. Insights disappear in podcast episodes, client calls, interviews, and unstructured notes. You repeat yourself. You forget what you said. You can't find that one framework you explained brilliantly… three months ago.",
-    "footnote": "Most insights disappear. Forever.",
-    "podcasts": "Podcasts",
-    "interviews": "Interviews",
-    "courses": "Courses",
-    "articles": "Articles",
-    "webinars": "Webinars",
-    "ai_conversations": "AI Conversations"
-  },
-  "solution": {
-    "label": "The Solution",
-    "title_line1": "Extract ideas.",
-    "title_line2": "Build decision systems.",
-    "desc": "AI-IDEI doesn't summarize. It <strong>structures</strong>. Every conversation becomes atomic knowledge units — neurons — connected through semantic relations into a navigable graph of your expertise. Then it generates products from that graph. Automatically.",
-    "bullet1": "Upload once → generate forever",
-    "bullet2": "Atomic ideas, not vague summaries",
-    "bullet3": "50+ deliverables per content piece",
-    "bullet4": "Knowledge compounds over time"
-  },
-  "pipeline": {
-    "label": "How It Works",
-    "title": "From Raw Content to Monetizable Assets",
-    "subtitle": "Five deterministic steps. No guessing. No prompt engineering. Press the button.",
-    "step": "Step {{number}}",
-    "upload": "Upload",
-    "upload_sub": "Audio · Video · Text · URL",
-    "extract": "Extract",
-    "extract_sub": "Atomic neurons",
-    "connect": "Connect",
-    "connect_sub": "Knowledge graph",
-    "generate": "Generate",
-    "generate_sub": "50+ deliverables",
-    "monetize": "Monetize",
-    "monetize_sub": "Infinite reuse",
-    "ticker_label": "One upload generates",
-    "d_marketing": "Marketing frameworks",
-    "d_sales": "Sales scripts",
-    "d_social": "Social media posts",
-    "d_course": "Course outlines",
-    "d_copy": "Copywriting formulas",
-    "d_psych": "Psychological profiles",
-    "d_jtbd": "JTBD patterns",
-    "d_persuasion": "Persuasion frameworks",
-    "d_narrative": "Narrative structures",
-    "d_guest": "Guest profiles",
-    "d_knowledge": "Knowledge reports",
-    "d_decision": "Decision models"
-  },
-  "capabilities": {
-    "label": "Capabilities",
-    "title_line1": "Explore the Structure of Ideas,",
-    "title_line2": "Not Just the Content Around Them",
-    "extraction_title": "Knowledge Extraction Engine",
-    "extraction_desc": "Turns conversations into structured atomic ideas — frameworks, patterns, formulas, psychological signals. Not summaries. Structures.",
-    "services_title": "Deterministic AI Services",
-    "services_desc": "Fixed cost. Clear deliverables. Every service has defined input, auditable execution, and predictable output. No tokens burned guessing.",
-    "graph_title": "Living Knowledge Graph",
-    "graph_desc": "Neurons connect through typed relations: supports, contradicts, extends, derived_from. Your expertise becomes navigable architecture.",
-    "economy_title": "Transparent Credit Economy",
-    "economy_desc": "Every operation has a visible cost in NEURONS. No subscriptions. No surprises. You see exactly what you pay — down to 0.01 USD."
-  },
-  "social_proof": {
-    "categories": "Content categories",
-    "templates": "AI templates",
-    "deliverables": "Deliverables per run",
-    "free_credits": "Free credits on signup"
-  },
-  "use_cases": {
-    "label": "Who Is This For",
-    "title": "Built for People Who Create Knowledge",
-    "subtitle": "If you speak, write, teach, or consult — your expertise is leaking. We capture it.",
-    "podcasters_title": "Podcasters & Creators",
-    "podcasters_desc": "Turn every episode into a library of reusable frameworks, guest profiles, and content assets.",
-    "marketers_title": "Marketers & Consultants",
-    "marketers_desc": "Extract decision patterns from client conversations. Generate campaigns from real buyer psychology.",
-    "coaches_title": "Coaches & Educators",
-    "coaches_desc": "Transform your methodology into structured courses, frameworks, and sellable knowledge products.",
-    "founders_title": "Founders & Researchers",
-    "founders_desc": "Build a compounding knowledge base from market conversations, interviews, and field research."
-  },
-  "economics": {
-    "label": "The Economics",
-    "title": "The Real Margin Comes From Reuse",
-    "subtitle": "A framework extracted once can be reused 10,000 times. That's not a subscription — that's a knowledge multiplication engine.",
-    "cost_label": "Cost per extraction",
-    "cost_value": "~$0.35",
-    "cost_sub": "35 NEURONS credits",
-    "deliverables_label": "Deliverables generated",
-    "deliverables_value": "50+",
-    "deliverables_sub": "Per content piece",
-    "per_label": "Cost per deliverable",
-    "per_value": "$0.007",
-    "per_sub": "Seven thousandths"
-  },
-  "explore": {
-    "label": "Explore Knowledge",
-    "title": "Navigate the Structure of Ideas",
-    "subtitle": "Public knowledge infrastructure — browse insights, patterns, and frameworks extracted by the platform.",
-    "insights": "Insights",
-    "insights_sub": "Structured ideas",
-    "patterns": "Patterns",
-    "patterns_sub": "Behavior models",
-    "formulas": "Formulas",
-    "formulas_sub": "Conversion tools",
-    "contradictions": "Contradictions",
-    "contradictions_sub": "Tension maps",
-    "applications": "Applications",
-    "applications_sub": "Use cases",
-    "profiles": "Profiles",
-    "profiles_sub": "Expert maps"
-  },
-  "final_cta": {
-    "title_line1": "Stop Losing Your Best Ideas.",
-    "title_line2": "Start Extracting Them.",
-    "subtitle": "Create your free account. Get 500 NEURONS credits. Upload your first content and watch the magic happen — in under 2 minutes.",
-    "read_docs": "Read the Docs",
-    "footer": "No credit card • No commitment • GDPR compliant"
-  },
   "seo": {
     "title": "AI-IDEI — Knowledge Extraction Operating System",
     "description": "Transform expertise into digital assets. Upload content once, generate dozens of professional outputs automatically. The magic marketing button."
+  },
+  "hero": {
+    "tagline": "KNOWLEDGE EXTRACTION ENGINE",
+    "title_prefix": "The closest thing to a",
+    "title_highlight": "magic button",
+    "title_suffix": "for copywriting and marketing",
+    "subtitle": "Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants built for real work.",
+    "cta_start": "Start Free",
+    "cta_mechanism": "See the Mechanism"
+  },
+  "problem": {
+    "before_label": "BEFORE",
+    "before_title": "Most people do not struggle with ideas. They struggle with turning ideas into assets.",
+    "before_p1": "You have thoughts. Notes. Drafts. Angles. Offers. Half-built campaigns. Fragments of good copy.",
+    "before_p2": "But the real bottleneck is not creativity. It is execution.",
+    "before_q1": "You open ChatGPT. You test random prompts.",
+    "before_q2": "You save interesting things. You try to write.",
+    "before_q3": "You restart. You overthink. You lose momentum.",
+    "before_items": ["too many ideas", "weak positioning", "slow writing", "unclear offers", "inconsistent content", "scattered execution"],
+    "after_label": "AFTER",
+    "after_title": "AI-IDEI closes that gap.",
+    "after_p1": "It helps you turn raw thinking into usable copy, structured content, stronger messaging, and faster marketing output.",
+    "after_p2": "Instead of guessing what to write, how to structure it, how to phrase it, or how to package it — you use a system that helps you move faster and think better.",
+    "after_items": ["write faster", "sharpen your message", "build stronger offers", "create more content from one idea", "turn scattered thinking into commercial assets"]
+  },
+  "benefits": {
+    "label": "WHAT CHANGES",
+    "title": "What changes when you use AI-IDEI",
+    "items": [
+      {
+        "title": "You stop wasting time on blank starts",
+        "text": "You get structure, direction, and ready-to-use resources that make starting dramatically easier."
+      },
+      {
+        "title": "You write faster without lowering quality",
+        "text": "Instead of improvising every time, you use reusable systems that improve speed and consistency."
+      },
+      {
+        "title": "Your offers become easier to explain and sell",
+        "text": "Better wording creates better positioning. Better positioning creates stronger conversion."
+      },
+      {
+        "title": "You turn AI into a real working advantage",
+        "text": "Not random prompting. Not chaotic experimentation. A more intentional, more useful, more profitable way to work."
+      }
+    ]
+  },
+  "mechanism": {
+    "label": "THE MECHANISM",
+    "title": "One idea becomes many assets",
+    "subtitle": "With the right system, a single idea stops being a thought and starts becoming leverage.",
+    "steps": [
+      { "num": "01", "title": "Choose the problem", "text": "Start with what you need: copy, content, positioning, offer clarity, or execution support." },
+      { "num": "02", "title": "Use the right resource", "text": "Pick a framework, prompt, assistant, or example designed for that exact type of work." },
+      { "num": "03", "title": "Turn it into an asset", "text": "Produce something usable: a post, email, landing page, offer, script, or campaign asset." },
+      { "num": "04", "title": "Repeat with speed", "text": "Stop improvising. Start producing with clarity, consistency, and momentum." }
+    ],
+    "transforms": [
+      { "from": "A rough thought", "to": "a social post that communicates value" },
+      { "from": "A messy service", "to": "a clearer offer with stronger positioning" },
+      { "from": "A long transcript", "to": "a newsletter, article, thread, and email sequence" },
+      { "from": "Scattered notes", "to": "a content plan, product outline, or conversion asset" }
+    ]
+  },
+  "what_you_get": {
+    "label": "WHAT YOU GET",
+    "title": "Everything you need to write, position, and market better with AI",
+    "subtitle": "Inside AI-IDEI, you get practical resources built to improve execution, not impress you with complexity.",
+    "blocks": [
+      { "title": "Frameworks", "text": "Use proven structures for copywriting, offers, positioning, funnels, content strategy, planning, and execution. Stop building from zero every time." },
+      { "title": "AI Assistants", "text": "Use specialized assistants for writing, ideation, offer creation, research, messaging, strategy, and marketing execution." },
+      { "title": "Prompts", "text": "Get prompts built for real outcomes — not random collections. Clear, adaptable, practical, designed to produce stronger outputs faster." },
+      { "title": "Real Examples", "text": "See how one raw idea can become a post, email, landing page, offer, campaign, script, or structured content asset." }
+    ]
+  },
+  "who_for": {
+    "label": "WHO THIS IS FOR",
+    "title": "Built for people who want output, not noise",
+    "subtitle": "If you write, sell, teach, or build — this system is designed around your daily reality.",
+    "roles": [
+      { "label": "Creators", "text": "Publish faster with structure, not pressure" },
+      { "label": "Freelancers", "text": "Stronger messaging, more speed, less guessing" },
+      { "label": "Consultants", "text": "Clearer offers, sharper positioning" },
+      { "label": "Marketers", "text": "Better systems, better campaigns, better output" },
+      { "label": "Founders", "text": "Turn scattered ideas into assets" },
+      { "label": "Operators", "text": "Practical AI for execution, not hype" }
+    ],
+    "footnote": "Not for people who want theory without execution, tools without application, or endless prompting without results."
+  },
+  "why_different": {
+    "label": "WHY DIFFERENT",
+    "title": "Not another prompt pack. Not another content library.",
+    "without_label": "WITHOUT A SYSTEM",
+    "with_label": "WITH AI-IDEI",
+    "before": ["Blank page every time", "Random prompts, no system", "Scattered ideas, no structure", "Guessing what to write", "Output feels generic"],
+    "after": ["Start with proven frameworks", "Organized resources by goal", "Clear flow from idea to asset", "Direction before execution", "Output sounds like you, but sharper"],
+    "quote": "AI-IDEI is built around one goal: help you turn thought into execution.",
+    "tagline": "LESS FRICTION · STRONGER COPY · FASTER RESULTS"
+  },
+  "social_proof": {
+    "label": "PROOF",
+    "title": "Built for people who want sharper thinking and stronger execution",
+    "testimonials": [
+      { "text": "AI-IDEI helped me turn scattered thoughts into clearer copy and a much stronger offer.", "name": "M.R.", "role": "Marketing Consultant" },
+      { "text": "This feels less like a resource library and more like an execution system for marketing.", "name": "A.P.", "role": "Content Creator" },
+      { "text": "I used it to move faster, write better, and structure my ideas in a way that actually led to usable output.", "name": "D.C.", "role": "Freelance Strategist" }
+    ]
+  },
+  "control": {
+    "label": "CONTROL LAYER",
+    "title": "You control the output. Not the other way around.",
+    "subtitle": "Set tone, language, format, objective, depth, and audience for every execution.",
+    "items": [
+      { "label": "Tone", "desc": "Professional, casual, authoritative" },
+      { "label": "Language", "desc": "EN, RO, RU, and expanding" },
+      { "label": "Format", "desc": "Post, email, page, script, thread" },
+      { "label": "Objective", "desc": "Sell, educate, attract, convert" },
+      { "label": "Depth", "desc": "Quick draft to deep analysis" },
+      { "label": "Audience", "desc": "B2B, B2C, niche, broad" }
+    ]
+  },
+  "proof_band": {
+    "stats": [
+      { "value": "50+", "label": "Deliverables per upload" },
+      { "value": "12", "label": "Output families" },
+      { "value": "\u221e", "label": "Knowledge reuse" },
+      { "value": "<2min", "label": "Idea to asset" }
+    ]
+  },
+  "output_galaxy": {
+    "label": "OUTPUT UNIVERSE",
+    "title": "One idea can become much more than one output",
+    "subtitle": "Content, education, sales, knowledge, assistants — organized into asset families.",
+    "footer": "AI-IDEI helps you create faster, clearer, and with more commercial intent."
+  },
+  "pricing": {
+    "label": "ACCESS",
+    "title": "Choose the level that matches your ambition",
+    "subtitle": "Start simple. Upgrade when you want more depth, speed, and leverage.",
+    "popular": "POPULAR",
+    "plans": [
+      { "name": "Free", "price": "$0", "period": "forever", "promise": "Test the system", "text": "Get inside, explore, and see how AI-IDEI works before making a commitment.", "cta": "Start Free" },
+      { "name": "Core", "price": "$11", "period": "/mo", "promise": "Build clarity", "text": "For people who want practical access to essentials for better copy, content, and execution.", "cta": "Choose Core" },
+      { "name": "Pro", "price": "$47", "period": "/mo", "promise": "Produce more", "text": "Deeper access, advanced resources, and stronger leverage across copywriting and marketing.", "cta": "Choose Pro" },
+      { "name": "Elite", "price": "$137", "period": "/mo", "promise": "Full power", "text": "For serious operators who want the most complete version and premium execution resources.", "cta": "Choose Elite" }
+    ]
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "Frequently Asked Questions",
+    "items": [
+      { "q": "What is AI-IDEI?", "a": "AI-IDEI is a practical AI system that helps you turn ideas into copy, content, offers, workflows, and marketing assets." },
+      { "q": "Is this for beginners or advanced users?", "a": "Both. The language is clear enough for non-experts, but the resources are useful for serious operators." },
+      { "q": "Do I need to be good at prompting?", "a": "No. The goal is not to make you memorize complicated prompts. The goal is to help you get better outputs with less friction." },
+      { "q": "Is this just another prompt library?", "a": "No. It is built as an execution system, not a random prompt collection." },
+      { "q": "What can I use it for?", "a": "Copywriting, content creation, offer development, positioning, messaging, planning, campaign thinking, and structured AI-assisted work." },
+      { "q": "Can I start for free?", "a": "Yes. You can enter, explore, and decide whether it fits your workflow." },
+      { "q": "Who is this best for?", "a": "Creators, marketers, consultants, freelancers, founders, and anyone who wants faster, clearer, more commercially useful output." }
+    ]
+  },
+  "final_cta": {
+    "title_line1": "Stop collecting ideas.",
+    "title_line2": "Start turning them into assets.",
+    "subtitle": "Use AI-IDEI to write faster, market better, and turn rough thinking into persuasive output.",
+    "cta_start": "Start Free",
+    "cta_inside": "See What's Inside",
+    "tagline": "LESS FRICTION · BETTER COPY · STRONGER EXECUTION"
   },
   "transcribe_cta": {
     "title": "YouTube → Transcript in 2 seconds",
     "desc": "Paste a YouTube link, download the full transcript. First one free.",
     "button": "Try Transcribe"
+  },
+  "footer": {
+    "brand_desc": "Practical AI for copywriting, marketing, and execution.",
+    "platform": "Platform",
+    "resources": "Resources",
+    "community": "Community",
+    "legal": "Legal",
+    "services": "Services",
+    "marketplace": "Marketplace",
+    "pipeline": "Pipeline",
+    "documentation": "Documentation",
+    "knowledge_base": "Knowledge Base",
+    "changelog": "Changelog",
+    "forum": "Forum",
+    "topics": "Topics",
+    "feedback": "Feedback",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "data_privacy": "Data Privacy",
+    "copyright": "From rough idea to persuasive asset.",
+    "docs": "Docs"
   }
 }

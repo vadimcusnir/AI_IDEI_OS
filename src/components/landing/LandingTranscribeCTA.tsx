@@ -1,13 +1,12 @@
-/**
- * Transcribe CTA — YouTube transcript feature highlight.
- */
 import { ArrowRight, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { FadeInView } from "@/components/motion/PageTransition";
+import { useTranslation } from "react-i18next";
 
 export function LandingTranscribeCTA() {
   const navigate = useNavigate();
+  const { t } = useTranslation("landing");
 
   return (
     <section className="py-12 sm:py-16" aria-label="YouTube transcription">
@@ -18,19 +17,15 @@ export function LandingTranscribeCTA() {
             <Youtube className="h-7 w-7 text-[hsl(var(--signal-red))]" />
           </div>
           <div className="relative flex-1 text-center sm:text-left">
-            <h3 className="text-lg font-bold text-foreground mb-2">
-              YouTube → Transcript in 2 seconds
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-0">
-              Paste a YouTube link, download the full transcript. First one free.
-            </p>
+            <h3 className="text-lg font-bold text-foreground mb-2">{t("transcribe_cta.title")}</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-0">{t("transcribe_cta.desc")}</p>
           </div>
           <Button
             onClick={() => navigate("/transcribe")}
             size="sm"
             className="relative gap-2 text-sm h-11 min-h-[44px] px-6 bg-[hsl(var(--signal-red)/0.15)] hover:bg-[hsl(var(--signal-red)/0.25)] text-foreground border border-[hsl(var(--signal-red)/0.3)] shrink-0"
           >
-            Try Transcribe
+            {t("transcribe_cta.button")}
             <ArrowRight className="h-3.5 w-3.5" />
           </Button>
         </div>
