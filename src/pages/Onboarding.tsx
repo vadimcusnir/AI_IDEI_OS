@@ -158,9 +158,13 @@ export default function Onboarding() {
           <h1 className="text-xl sm:text-2xl font-bold mb-2">
             {t("onboarding.title")}
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-3">
             {t("onboarding.subtitle")}
           </p>
+          <Button variant="outline" size="sm" onClick={() => setTutorialOpen(true)} className="gap-1.5 text-xs">
+            <BookOpen className="h-3.5 w-3.5" />
+            Interactive Tutorial (+50 NEURONS)
+          </Button>
         </motion.div>
 
         {/* Visual Progress Pipeline */}
