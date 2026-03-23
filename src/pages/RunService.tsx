@@ -215,7 +215,7 @@ export default function RunService() {
             job_id: job.id,
             service_key: service.service_key,
             neuron_id: neuron.id,
-            inputs,
+            inputs: truncatedInputs,
             // Pass pipeline-specific params
             ...(service.service_key === "market-research-full" ? {
               industry: inputs.industry || "",
