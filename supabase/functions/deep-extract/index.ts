@@ -475,6 +475,13 @@ Deno.serve(async (req) => {
         _type: "refund",
       });
       await supabase.from("episodes").update({ status: "transcribed" }).eq("id", episode_id);
+      if (jobId) {
+        await supabase.from("neuron_jobs").update({
+          status: "failed", completed_at: new Date().toISOString(),
+          error_message: "No neurons extracted",
+          result: { error: "No neurons extracted" },
+        }).eq("id", jobId);
+      }
       return new Response(JSON.stringify({ error: "No neurons extracted" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
