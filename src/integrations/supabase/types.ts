@@ -7380,6 +7380,7 @@ export type Database = {
           current_streak: number
           freeze_tokens: number
           freeze_tokens_reset_at: string
+          grace_expires_at: string | null
           grace_period_used: boolean
           last_active_date: string | null
           longest_streak: number
@@ -7391,6 +7392,7 @@ export type Database = {
           current_streak?: number
           freeze_tokens?: number
           freeze_tokens_reset_at?: string
+          grace_expires_at?: string | null
           grace_period_used?: boolean
           last_active_date?: string | null
           longest_streak?: number
@@ -7402,6 +7404,7 @@ export type Database = {
           current_streak?: number
           freeze_tokens?: number
           freeze_tokens_reset_at?: string
+          grace_expires_at?: string | null
           grace_period_used?: boolean
           last_active_date?: string | null
           longest_streak?: number
