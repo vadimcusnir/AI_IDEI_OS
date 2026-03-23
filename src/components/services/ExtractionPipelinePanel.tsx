@@ -80,7 +80,7 @@ export function ExtractionPipelinePanel() {
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ content, start_level: range[0], end_level: range[1] }),
+          body: JSON.stringify({ content: truncated.content, start_level: range[0], end_level: range[1] }),
         }
       );
 
