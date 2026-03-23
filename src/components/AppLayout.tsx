@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useRef, lazy, Suspense, memo } from "react";
 import { usePageTracking } from "@/hooks/usePageTracking";
-import { useTranslation } from "react-i18next";
+import { useLocale } from "@/hooks/useLocale";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { prefetchUIControls } from "@/hooks/useUIControl";
