@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Mail, Lock, ArrowRight, Loader2, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
+import { isDisposableEmail } from "@/lib/disposableEmails";
 import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
