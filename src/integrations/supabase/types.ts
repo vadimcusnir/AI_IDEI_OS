@@ -7950,28 +7950,17 @@ export type Database = {
       advance_vip_month: { Args: { _user_id: string }; Returns: Json }
       analytics_summary: { Args: { _days?: number }; Returns: Json }
       apply_abuse_ladder: { Args: { _user_id: string }; Returns: string }
-      award_xp:
-        | {
-            Args: {
-              _amount: number
-              _bypass_cap?: boolean
-              _description?: string
-              _source: string
-              _user_id: string
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              _amount: number
-              _bypass_cap?: boolean
-              _description?: string
-              _quality_multiplier?: number
-              _source: string
-              _user_id: string
-            }
-            Returns: Json
-          }
+      award_xp: {
+        Args: {
+          _amount: number
+          _bypass_cap?: boolean
+          _description?: string
+          _quality_multiplier?: number
+          _source: string
+          _user_id: string
+        }
+        Returns: Json
+      }
       capacity_dashboard_stats: { Args: never; Returns: Json }
       check_access: {
         Args: { _service_key: string; _user_id: string }
