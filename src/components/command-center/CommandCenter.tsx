@@ -89,6 +89,7 @@ export function CommandCenter() {
   const [showMemory, setShowMemory] = useState(false);
   const [outputs, setOutputs] = useState<OutputItem[]>([]);
   const [showOutputs, setShowOutputs] = useState(false);
+  const [showPostExecution, setShowPostExecution] = useState(false);
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
