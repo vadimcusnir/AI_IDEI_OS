@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
