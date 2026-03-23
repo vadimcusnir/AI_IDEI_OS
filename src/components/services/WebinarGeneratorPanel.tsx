@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { Button } from "@/components/ui/button";
 import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Input } from "@/components/ui/input";
@@ -27,6 +29,7 @@ const STAGES = [
 export function WebinarGeneratorPanel() {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { balance } = useCreditBalance();
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
   const [duration, setDuration] = useState("60");
@@ -40,8 +43,26 @@ export function WebinarGeneratorPanel() {
   const costPerPrompt = 40;
   const totalCost = totalPrompts * costPerPrompt;
 
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setProgress(p => Math.min(p + 1.5, 92));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [loading]);
+
   const handleRun = async () => {
     if (!user || !content.trim()) return;
+    if (balance < totalCost) {
+      toast.error(`Credite insuficiente: ai ${balance} NEURONS, necesari ${totalCost}`);
+      return;
+    }
+
+    const truncated = truncateForService(content);
+    if (truncated.wasTruncated) {
+      toast.info(formatTruncationMessage(truncated), { duration: 6000 });
+    }
+
     setLoading(true);
     setProgress(0);
     setResults(null);
@@ -60,7 +81,7 @@ export function WebinarGeneratorPanel() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            content,
+            content: truncated.content,
             webinar_config: { topic, duration: Number(duration), audience },
           }),
         }

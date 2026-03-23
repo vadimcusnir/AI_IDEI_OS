@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
@@ -30,6 +32,7 @@ interface Avatar33PanelProps {
 export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33PanelProps) {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { balance } = useCreditBalance();
   const [content, setContent] = useState(initialContent || "");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -41,8 +44,27 @@ export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33P
   const costPerModule = 50;
   const totalCost = totalModules * costPerModule;
 
+  // Progress simulation during execution
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setProgress(p => Math.min(p + 2, 92));
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [loading]);
+
   const handleRun = async () => {
     if (!user || !content.trim()) return;
+    if (balance < totalCost) {
+      toast.error(`Credite insuficiente: ai ${balance} NEURONS, necesari ${totalCost}`);
+      return;
+    }
+
+    const truncated = truncateForService(content);
+    if (truncated.wasTruncated) {
+      toast.info(formatTruncationMessage(truncated), { duration: 6000 });
+    }
+
     setLoading(true);
     setProgress(0);
     setResults(null);
@@ -60,7 +82,7 @@ export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33P
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ content }),
+          body: JSON.stringify({ content: truncated.content }),
         }
       );
 

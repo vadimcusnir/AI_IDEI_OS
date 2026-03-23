@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { Button } from "@/components/ui/button";
 import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +29,7 @@ const GENERATORS = [
 
 export function ContentGeneratorPanel() {
   const { user } = useAuth();
+  const { balance } = useCreditBalance();
   const [content, setContent] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set(GENERATORS.map(g => g.key)));
   const [loading, setLoading] = useState(false);
@@ -41,8 +44,26 @@ export function ContentGeneratorPanel() {
     setSelected(next);
   };
 
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setProgress(p => Math.min(p + 5, 92));
+    }, 800);
+    return () => clearInterval(interval);
+  }, [loading]);
+
   const handleRun = async () => {
     if (!user || !content.trim() || selected.size === 0) return;
+    if (balance < totalCost) {
+      toast.error(`Credite insuficiente: ai ${balance} NEURONS, necesari ${totalCost}`);
+      return;
+    }
+
+    const truncated = truncateForService(content);
+    if (truncated.wasTruncated) {
+      toast.info(formatTruncationMessage(truncated), { duration: 6000 });
+    }
+
     setLoading(true);
     setProgress(0);
     setResults(null);
@@ -57,7 +78,7 @@ export function ContentGeneratorPanel() {
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ content, generators: [...selected] }),
+          body: JSON.stringify({ content: truncated.content, generators: [...selected] }),
         }
       );
 

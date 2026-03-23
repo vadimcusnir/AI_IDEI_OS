@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { Button } from "@/components/ui/button";
 import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +36,7 @@ const LEVELS = [
 export function ExtractionPipelinePanel() {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { balance } = useCreditBalance();
   const [content, setContent] = useState("");
   const [range, setRange] = useState([0, 12]);
   const [loading, setLoading] = useState(false);
@@ -41,10 +44,28 @@ export function ExtractionPipelinePanel() {
   const [results, setResults] = useState<Record<string, { level: number; name: string; output: string }> | null>(null);
 
   const levelsCount = range[1] - range[0] + 1;
-  const estimatedCost = Math.round(levelsCount * 55); // avg cost
+  const estimatedCost = Math.round(levelsCount * 55);
+
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setCurrentLevel(prev => Math.min(prev + 1, range[1]));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [loading, range]);
 
   const handleRun = async () => {
     if (!user || !content.trim()) return;
+    if (balance < estimatedCost) {
+      toast.error(`Credite insuficiente: ai ${balance} NEURONS, necesari ~${estimatedCost}`);
+      return;
+    }
+
+    const truncated = truncateForService(content);
+    if (truncated.wasTruncated) {
+      toast.info(formatTruncationMessage(truncated), { duration: 6000 });
+    }
+
     setLoading(true);
     setCurrentLevel(range[0]);
     setResults(null);
@@ -59,7 +80,7 @@ export function ExtractionPipelinePanel() {
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ content, start_level: range[0], end_level: range[1] }),
+          body: JSON.stringify({ content: truncated.content, start_level: range[0], end_level: range[1] }),
         }
       );
 
