@@ -9,11 +9,11 @@ const corsHeaders = {
 
 // Root2 pricing: digit sum = 2 | 1N = $0.002 → $1 = 500N
 const PACKAGES: Record<string, { neurons: number; priceId: string }> = {
-  micro: { neurons: 1000, priceId: "price_topup_micro" },
+  micro: { neurons: 1000, priceId: "price_1TEDhPIK7fwtty4oChZnMfTa" },
   starter: { neurons: 5500, priceId: "price_1T9TkpIK7fwtty4oS9ZysNfZ" },
   standard: { neurons: 10000, priceId: "price_1T9TlFIK7fwtty4oo4iKY1DC" },
   growth: { neurons: 23500, priceId: "price_1T9TlPIK7fwtty4o7VRrMObq" },
-  scale: { neurons: 46000, priceId: "price_topup_scale" },
+  scale: { neurons: 46000, priceId: "price_1TEDhQIK7fwtty4oCYUtYjqB" },
 };
 
 Deno.serve(async (req) => {
