@@ -473,7 +473,7 @@ export default function RunService() {
                   <div className="p-4 bg-destructive/5 border-t border-destructive/10">
                     <InlineTopUp
                       needed={service.credits_cost}
-                      balance={credits?.balance ?? 0}
+                      balance={creditBalance}
                       compact
                     />
                   </div>
