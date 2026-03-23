@@ -88,6 +88,11 @@ export default function Services() {
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
 
   const handleServiceClick = (service: Service) => {
+    // Visitor gate — must sign up to run services
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
     const requiredTier = service.access_tier || "free";
     if (!tierSatisfied(userTier, requiredTier)) {
       setPaywallService({ name: service.name, tier: requiredTier });
