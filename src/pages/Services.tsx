@@ -203,6 +203,31 @@ export default function Services() {
           </p>
         </div>
 
+        {/* Visitor signup CTA */}
+        {isVisitor && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 flex items-center gap-3 px-4 py-4 rounded-xl border border-primary/30 bg-primary/5"
+          >
+            <Sparkles className="h-5 w-5 text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold">{t("services.visitor_cta_title", { defaultValue: "Start free with 500 NEURONS" })}</p>
+              <p className="text-xs text-muted-foreground">
+                {t("services.visitor_cta_desc", { defaultValue: "Sign up to run any AI service. Your first 500 credits are on us." })}
+              </p>
+            </div>
+            <Button
+              size="sm"
+              className="shrink-0 text-xs gap-1.5"
+              onClick={() => navigate("/auth")}
+            >
+              {t("services.visitor_cta_button", { defaultValue: "Get Started Free" })}
+              <ArrowRight className="h-3 w-3" />
+            </Button>
+          </motion.div>
+        )}
+
         {/* Low balance upsell */}
         {!balanceLoading && balance < 100 && user && (
           <motion.div
