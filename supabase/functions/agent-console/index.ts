@@ -209,7 +209,7 @@ function checkRateLimit(userId: string): boolean {
 }
 
 const InputSchema = z.object({
-  messages: z.array(z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string().max(30_000) })).min(1).max(50),
+  messages: z.array(z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string().max(150_000) })).min(1).max(50),
   context: z.object({
     neuron_count: z.number().optional(),
     episode_count: z.number().optional(),
@@ -379,9 +379,10 @@ Deno.serve(async (req) => {
       ? `\n\n## Intent: ${intent.toUpperCase()} (confidence: ${(confidence * 100).toFixed(0)}%)\nPlan: "${planName}" with ${plan.length} steps, ~${totalCredits} NEURONS total cost.${actionId ? `\nAction ID: ${actionId}` : ""}\nSteps: ${plan.map((s, i) => `${i + 1}. ${s.label} (${s.credits} credits)`).join(", ")}`
       : "";
 
+    const truncate = (s: string, max = 100_000) => s.length > max ? s.slice(0, max) + "\n\n[...truncated]" : s;
     const apiMessages: any[] = [
-      { role: "system", content: SYSTEM_PROMPT + contextInfo + intentHint },
-      ...messages.slice(-30),
+      { role: "system", content: truncate(SYSTEM_PROMPT + contextInfo + intentHint, 80_000) },
+      ...messages.slice(-30).map(m => ({ ...m, content: truncate(m.content) })),
     ];
 
     // First call — may trigger tool use
