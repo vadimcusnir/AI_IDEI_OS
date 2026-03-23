@@ -29,7 +29,7 @@ There are no hard limits on the number of uploads. Processing is limited by your
 ### What are NEURONS credits?
 NEURONS are the compute currency of the platform. Every AI operation costs a fixed number of credits. The pricing is transparent — you always see the exact cost before running any operation.
 
-**Base rate:** 1000 credits = 11 USD (one credit = $0.011)
+**Base rate:** $1 = 500 NEURONS (1 NEURON = $0.002)
 
 ### How do I get credits?
 There are several ways to obtain credits:
