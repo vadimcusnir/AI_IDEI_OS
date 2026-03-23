@@ -43,7 +43,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-foreground">Resources</h3>
             <ul className="space-y-2">
               <li><FooterLink to="/docs">Documentation</FooterLink></li>
-              <li><FooterLink to="/knowledge">Knowledge Base</FooterLink></li>
+              <li><FooterLink to="/library">Knowledge Library</FooterLink></li>
               <li><FooterLink to="/architecture">Architecture</FooterLink></li>
               <li><FooterLink to="/changelog">Changelog</FooterLink></li>
               <li><FooterLink to="/onboarding">Getting Started</FooterLink></li>
@@ -56,8 +56,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li><FooterLink to="/community">Forum</FooterLink></li>
               <li><FooterLink to="/topics">Topics</FooterLink></li>
-              <li><FooterLink to="/insights">Insights</FooterLink></li>
-              <li><FooterLink to="/patterns">Patterns</FooterLink></li>
+              <li><FooterLink to="/library">Library</FooterLink></li>
               <li><FooterLink to="/feedback">Feedback</FooterLink></li>
             </ul>
           </div>

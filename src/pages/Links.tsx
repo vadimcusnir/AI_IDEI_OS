@@ -213,9 +213,9 @@ export default function Links() {
       id: "explore",
       title: t("links.section_explore"),
       items: [
-        { title: t("links.insights_title"), description: t("links.insights_desc"), icon: Brain, to: "/insights", color: "text-primary", accessLevel: "public" },
-        { title: t("links.patterns_title"), description: t("links.patterns_desc"), icon: Map, to: "/patterns", color: "text-status-validated", accessLevel: "public" },
-        { title: t("links.formulas_title"), description: t("links.formulas_desc"), icon: Sparkles, to: "/formulas", color: "text-ai-accent", accessLevel: "public" },
+        { title: t("links.insights_title"), description: t("links.insights_desc"), icon: Brain, to: "/library", color: "text-primary", accessLevel: "public" },
+        { title: t("links.patterns_title"), description: t("links.patterns_desc"), icon: Map, to: "/library", color: "text-status-validated", accessLevel: "public" },
+        { title: t("links.formulas_title"), description: t("links.formulas_desc"), icon: Sparkles, to: "/library", color: "text-ai-accent", accessLevel: "public" },
         { title: t("links.topics_title"), description: t("links.topics_desc"), icon: Globe, to: "/topics", color: "text-muted-foreground", accessLevel: "public" },
       ],
     },
