@@ -578,6 +578,18 @@ export function CommandCenter() {
           </div>
         </div>
 
+        {/* ═══ Permission Gate — tier restriction ═══ */}
+        <AnimatePresence>
+          {permissionBlock && (
+            <PermissionGate
+              intent={permissionBlock.intent.category}
+              requiredTier={permissionBlock.intent.requiredTier}
+              currentTier={tier}
+              onDismiss={() => setPermissionBlock(null)}
+            />
+          )}
+        </AnimatePresence>
+
         {/* ═══ ZONE 2: Plan Preview + Economic Gate ═══ */}
         {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && !showEconomicGate && (
           <div className="px-4 py-2">
@@ -597,6 +609,7 @@ export function CommandCenter() {
                 if (cmdState.state.totalCredits > 50) {
                   setShowEconomicGate(true);
                 } else {
+                  if (user) logPlanConfirmed(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, cmdState.state.steps.length);
                   cmdState.confirmExecution();
                 }
               }}
@@ -620,10 +633,15 @@ export function CommandCenter() {
               tier={tier}
               onProceed={() => {
                 setShowEconomicGate(false);
+                if (user) {
+                  logEconomicGate(user.id, true, balance, cmdState.state.totalCredits, tierDiscount);
+                  logPlanConfirmed(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, cmdState.state.steps.length);
+                }
                 cmdState.confirmExecution();
               }}
               onCancel={() => {
                 setShowEconomicGate(false);
+                if (user) logEconomicGate(user.id, false, balance, cmdState.state.totalCredits, tierDiscount);
                 cmdState.reset();
               }}
             />
