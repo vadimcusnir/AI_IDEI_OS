@@ -234,6 +234,24 @@ export default function Library() {
           <ContributeDialog />
         </div>
 
+        {/* Flow guidance */}
+        <FlowTip
+          tipId="library-intro"
+          variant="info"
+          title="Your knowledge library"
+          description="Everything you generate is saved here — neurons (knowledge units) and artifacts (deliverables like articles, strategies, posts). You can search, filter, organize into folders, and publish to the Marketplace."
+          show={neurons.length === 0 && artifacts.length === 0}
+          className="mb-4"
+        />
+        <FlowTip
+          tipId="library-has-content"
+          variant="tip"
+          title="Publish to the Marketplace"
+          description="Your best artifacts can be published to the Marketplace for others to discover. Click the ⋯ menu on any artifact to publish it."
+          show={artifacts.length >= 3}
+          className="mb-4"
+        />
+
         {/* Tabs */}
         <div className="flex items-center gap-1 mb-4 border-b border-border">
           {([

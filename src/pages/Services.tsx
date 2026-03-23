@@ -223,6 +223,24 @@ export default function Services() {
           </motion.div>
         )}
 
+        {/* Flow guidance */}
+        <FlowTip
+          tipId="services-intro"
+          variant="info"
+          title="How AI Services work"
+          description="Each service uses your neurons + AI to generate professional deliverables (articles, strategies, social posts). Pick a service, select neurons as input, and let AI do the rest. One service can produce 50+ outputs."
+          className="mb-4"
+        />
+        <FlowTip
+          tipId="services-no-neurons"
+          variant="next-step"
+          title="You need neurons first"
+          description="Services require neurons as input. Upload content in the Extractor to generate neurons, then come back to run services."
+          show={balance >= 0}
+          action={{ label: "Upload content", route: "/extractor" }}
+          className="mb-4"
+        />
+
         {/* KPI strip */}
         <ControlledSection elementId="services.kpi_strip">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">

@@ -28,6 +28,7 @@ import { InstantActionSurface } from "@/components/extractor/InstantActionSurfac
 import { NEPExtractorPanel } from "@/components/extractor/NEPExtractorPanel";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useUserTier } from "@/hooks/useUserTier";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 import { PremiumPaywall } from "@/components/premium/PremiumPaywall";
 
 async function extractTextFromPDF(file: File): Promise<string> {
