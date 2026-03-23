@@ -40,6 +40,32 @@ import {
 } from "./AuditLogger";
 
 const AGENT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agent-console`;
+
+const WELCOME_MSG: Message = {
+  id: "welcome",
+  role: "assistant",
+  content: `**Command Center** ready.\n\nIntroduce your command, upload a file, or paste a URL. The system will generate an execution plan before running.\n\n**Quick commands:** \`/analyze\`, \`/extract\`, \`/generate\`, \`/search\``,
+  timestamp: new Date(),
+};
+
+export function CommandCenter() {
+  const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
+  const { balance } = useCreditBalance();
+  const navigate = useNavigate();
+  const { t } = useTranslation(["common", "errors"]);
+  const {
+    sessionId, sessions, isLoadingSessions,
+    saveMessage, loadSession, loadCurrentSession,
+    deleteSession, newSession, refreshSessions,
+  } = useChatHistory();
+  const cmdState = useCommandState();
+  const { tier } = useUserTier();
+  const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
+  const [showEconomicGate, setShowEconomicGate] = useState(false);
+  const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
+
+  const [messages, setMessages] = useState<Message[]>([WELCOME_MSG]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
