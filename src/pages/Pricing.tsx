@@ -96,9 +96,10 @@ const PLANS = [
   },
 ];
 const FAQ_ITEMS = [
-  { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount of credits based on complexity. 1000 NEURONS = $10 USD." },
-  { question: "Can I buy credits without a subscription?", answer: "Yes! You can top up credits anytime via one-time purchases. Subscriptions simply give you a monthly allowance at a better rate." },
-  { question: "What is Root2 pricing?", answer: "All AI-IDEI prices follow the Root2 principle — the digital root of every price equals 2. This is our unique pricing philosophy." },
+  { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount based on complexity. Base rate: 1000 NEURONS = $10 USD. Subscriptions offer 45–73% discount." },
+  { question: "Can I buy credits without a subscription?", answer: "Yes! Top up credits anytime at the base rate ($10/1000N). Subscriptions give you a monthly allocation at a significantly better effective rate." },
+  { question: "What is Root2 pricing?", answer: "All AI-IDEI prices follow the Root2 principle — the digital root of every price equals 2 (e.g. $11, $47, $137). This unique pricing philosophy ensures mathematical harmony across our economy." },
+  { question: "How much does a typical service cost?", answer: "An article generation costs ~150 NEURONS ($1.50). A complete capitalization pipeline with 50+ deliverables costs ~3500 NEURONS ($35). That's $0.70 per deliverable vs $25+ from freelancers." },
   { question: "What happens when I run out of credits?", answer: "Your existing neurons and outputs remain accessible. You simply cannot run new AI services until you top up or your subscription renews." },
 ];
 
