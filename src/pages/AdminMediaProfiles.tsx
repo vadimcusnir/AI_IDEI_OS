@@ -86,7 +86,7 @@ export default function AdminMediaProfiles() {
     setGuardrails(data as any);
   }, []);
 
-  const transitionStatus = useCallback(async (profileId: string, toStatus: string, reason?: string) => {
+  const transitionStatus = useCallback(async (profileId: string, toStatus: "draft" | "review" | "published" | "blocked", reason?: string) => {
     const { data, error } = await supabase.rpc("transition_profile_status", {
       _profile_id: profileId,
       _to_status: toStatus,

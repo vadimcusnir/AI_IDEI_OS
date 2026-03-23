@@ -66,6 +66,7 @@ const TopicDetail = lazyRetry(() => import("./pages/TopicDetail"));
 const MediaProfiles = lazyRetry(() => import("./pages/MediaProfiles"));
 const MediaProfilePublic = lazyRetry(() => import("./pages/MediaProfilePublic"));
 const AdminMediaProfiles = lazyRetry(() => import("./pages/AdminMediaProfiles"));
+const AdminAuditLog = lazyRetry(() => import("./pages/AdminAuditLog"));
 const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 const TopicDiscovery = lazyRetry(() => import("./pages/TopicDiscovery"));
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
@@ -168,6 +169,7 @@ const App = () => (
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
                 <Route path="/media/profiles/:slug" element={<MediaProfilePublic />} />
                 <Route path="/admin/media-profiles" element={<AppLayout><AdminMediaProfiles /></AppLayout>} />
+                <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
                 <Route path="/knowledge/*" element={<AppLayout><KnowledgeSurfacePage /></AppLayout>} />
