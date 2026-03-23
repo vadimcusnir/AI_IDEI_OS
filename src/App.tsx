@@ -68,7 +68,7 @@ const MediaProfilePublic = lazyRetry(() => import("./pages/MediaProfilePublic"))
 const AdminMediaProfiles = lazyRetry(() => import("./pages/AdminMediaProfiles"));
 const AdminAuditLog = lazyRetry(() => import("./pages/AdminAuditLog"));
 const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
-const TopicDiscovery = lazyRetry(() => import("./pages/TopicDiscovery"));
+
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
 const MarketplaceDetail = lazyRetry(() => import("./pages/MarketplaceDetail"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
@@ -81,7 +81,7 @@ const ApiDocs = lazyRetry(() => import("./pages/ApiDocs"));
 const WorkspaceSettings = lazyRetry(() => import("./pages/WorkspaceSettings"));
 const Community = lazyRetry(() => import("./pages/Community"));
 const CommunityThread = lazyRetry(() => import("./pages/CommunityThread"));
-const KnowledgeDashboard = lazyRetry(() => import("./pages/KnowledgeDashboard"));
+
 const VIPDashboard = lazyRetry(() => import("./pages/VIPDashboard"));
 const DataPipeline = lazyRetry(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazyRetry(() => import("./pages/RuntimeDashboard"));
@@ -97,7 +97,7 @@ const Integrations = lazyRetry(() => import("./pages/Integrations"));
 const CognitiveUnits = lazyRetry(() => import("./pages/CognitiveUnits"));
 const CollectionRuns = lazyRetry(() => import("./pages/CollectionRuns"));
 const Pricing = lazyRetry(() => import("./pages/Pricing"));
-const KnowledgeSurfacePage = lazyRetry(() => import("./pages/KnowledgeSurfacePage"));
+
 const ServiceResults = lazyRetry(() => import("./pages/ServiceResults"));
 const ProductSurfacePage = lazyRetry(() => import("./pages/ProductSurfacePage"));
 const NotebookWorkspace = lazyRetry(() => import("./pages/NotebookWorkspace"));
@@ -149,12 +149,12 @@ const App = () => (
                 <Route path="/docs" element={<AppLayout><Docs /></AppLayout>} />
                 <Route path="/docs/:section/:topic" element={<AppLayout><Docs /></AppLayout>} />
                 <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
-                <Route path="/insights" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/insights/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
-                <Route path="/patterns" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/patterns/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
-                <Route path="/formulas" element={<AppLayout><EntityListing /></AppLayout>} />
-                <Route path="/formulas/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
+                <Route path="/insights" element={<Navigate to="/library" replace />} />
+                <Route path="/insights/:slug" element={<Navigate to="/library" replace />} />
+                <Route path="/patterns" element={<Navigate to="/library" replace />} />
+                <Route path="/patterns/:slug" element={<Navigate to="/library" replace />} />
+                <Route path="/formulas" element={<Navigate to="/library" replace />} />
+                <Route path="/formulas/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/contradictions" element={<AppLayout><EntityListing /></AppLayout>} />
                 <Route path="/contradictions/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
                 <Route path="/applications" element={<AppLayout><EntityListing /></AppLayout>} />
@@ -162,7 +162,7 @@ const App = () => (
                 <Route path="/profiles" element={<AppLayout><EntityListing /></AppLayout>} />
                 <Route path="/profiles/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
                 <Route path="/topics" element={<AppLayout><TopicListing /></AppLayout>} />
-                <Route path="/topics/discovery" element={<AppLayout><TopicDiscovery /></AppLayout>} />
+                <Route path="/topics/discovery" element={<Navigate to="/library" replace />} />
                 <Route path="/topics/:slug" element={<AppLayout><TopicDetail /></AppLayout>} />
                 <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
                 <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
@@ -172,7 +172,7 @@ const App = () => (
                 <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/transcribe" element={<AppLayout><Transcribe /></AppLayout>} />
-                <Route path="/knowledge/*" element={<AppLayout><KnowledgeSurfacePage /></AppLayout>} />
+                <Route path="/knowledge/*" element={<Navigate to="/library" replace />} />
                 <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
                 <Route path="/pricing" element={<AppLayout><Pricing /></AppLayout>} />
@@ -209,8 +209,7 @@ const App = () => (
                 <Route path="/security-settings" element={<ProtectedRoute><AppLayout><SecuritySettings /></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="API docs failed to load"><ApiDocs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
-                <Route path="/knowledge" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Knowledge failed to load"><KnowledgeDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/kb/:category" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Knowledge failed to load"><KnowledgeDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/kb/:category" element={<Navigate to="/library" replace />} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="VIP failed to load"><VIPDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/wallet" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Wallet failed to load"><WalletPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Gamification failed to load"><GamificationPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
