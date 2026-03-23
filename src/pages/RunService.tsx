@@ -285,7 +285,7 @@ export default function RunService() {
   const inputFields = Array.isArray(service.input_schema) ? service.input_schema : [];
   const deliverables = Array.isArray(service.deliverables_schema) ? service.deliverables_schema : [];
   const canRun = jobStatus === "idle" || jobStatus === "failed";
-  const hasEnoughCredits = credits && credits.balance >= service.credits_cost;
+  const hasEnoughCredits = creditBalance >= service.credits_cost;
   const hasTierAccess = tierSatisfied(userTier, service.access_tier || "free");
   const CatIcon = CATEGORY_ICON[service.category] || Sparkles;
 
