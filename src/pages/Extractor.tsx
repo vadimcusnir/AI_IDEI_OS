@@ -138,7 +138,8 @@ export default function Extractor() {
       .from("episodes")
       .select("*")
       .eq("workspace_id", currentWorkspace!.id)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(500);
     if (data) setEpisodes(data as Episode[]);
     if (error) toast.error(t("errors:generic"));
     setLoading(false);
