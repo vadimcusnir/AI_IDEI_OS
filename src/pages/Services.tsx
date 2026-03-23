@@ -145,7 +145,7 @@ export default function Services() {
 
   /* ── Layer-aware filtering ── */
   const layerServices = useMemo(() => {
-    if (activeLayer === "all" || activeLayer === "history" || activeLayer === "avatar" || activeLayer === "pipelines") return services;
+    if (activeLayer === "all" || activeLayer === "history" || activeLayer === "pipelines") return services;
     const cats = LAYER_CATEGORIES[activeLayer];
     if (!cats) return services;
     let list = services.filter(s => cats.includes(s.category));
