@@ -311,7 +311,7 @@ export function ServiceDrawer({ service, open, onOpenChange }: ServiceDrawerProp
                           <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                             Context / Material sursă
                           </label>
-                          <ContentSourcePicker
+                          <PipelineSourcePicker
                             value={inputs.context || ""}
                             onChange={(val) => setInputs(prev => ({ ...prev, context: val }))}
                             placeholder="Lipește text, link YouTube sau selectează un episod..."
