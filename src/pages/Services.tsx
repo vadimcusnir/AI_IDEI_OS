@@ -28,6 +28,7 @@ import { Avatar33Panel } from "@/components/services/Avatar33Panel";
 import { WebinarGeneratorPanel } from "@/components/services/WebinarGeneratorPanel";
 import { ContentGeneratorPanel } from "@/components/services/ContentGeneratorPanel";
 import { ExtractionPipelinePanel } from "@/components/services/ExtractionPipelinePanel";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 interface Service {
   id: string;
