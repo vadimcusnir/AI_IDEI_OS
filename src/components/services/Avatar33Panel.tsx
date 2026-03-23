@@ -82,7 +82,7 @@ export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33P
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ content }),
+          body: JSON.stringify({ content: truncated.content }),
         }
       );
 
