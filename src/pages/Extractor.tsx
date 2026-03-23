@@ -28,6 +28,7 @@ import { InstantActionSurface } from "@/components/extractor/InstantActionSurfac
 import { NEPExtractorPanel } from "@/components/extractor/NEPExtractorPanel";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useUserTier } from "@/hooks/useUserTier";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 import { PremiumPaywall } from "@/components/premium/PremiumPaywall";
 
 async function extractTextFromPDF(file: File): Promise<string> {
@@ -457,6 +458,25 @@ export default function Extractor() {
             {t("extractor.subtitle")}
           </p>
         </div>
+
+        {/* Flow guidance */}
+        <FlowTip
+          tipId="extractor-intro"
+          variant="info"
+          title="How the Extractor works"
+          description="Upload a podcast, video, or text → the system transcribes it automatically → then you can extract knowledge neurons from the transcript. Start by pasting a URL or dropping a file below."
+          show={episodes.length === 0}
+          className="mb-4"
+        />
+        <FlowTip
+          tipId="extractor-has-content"
+          variant="next-step"
+          title="Ready to extract knowledge?"
+          description="You have transcribed episodes. Click 'Extract' on any episode to generate neurons — atomic knowledge units you can reuse in AI services."
+          show={episodes.length > 0 && episodes.some(e => e.status === "transcribed")}
+          action={{ label: "What are neurons?", route: "/docs/concepts/neurons" }}
+          className="mb-4"
+        />
 
         {/* Instant Action Surface — single trigger pipeline */}
         <div className="mb-6">

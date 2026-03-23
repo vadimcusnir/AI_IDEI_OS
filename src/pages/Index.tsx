@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { Logo } from "@/components/shared/Logo";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { useTranslation } from "react-i18next";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 const STATUS_DOTS: Record<string, string> = {
   draft: "bg-muted-foreground/40",
@@ -98,6 +99,26 @@ export default function Index() {
       {/* Main content */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-5">
+
+          {/* Flow guidance */}
+          <FlowTip
+            tipId="neurons-empty"
+            variant="tip"
+            title="Your neurons will appear here"
+            description="Neurons are atomic knowledge units extracted from your content. Go to the Extractor to upload content and generate your first neurons automatically."
+            show={neurons.length === 0}
+            action={{ label: "Go to Extractor", route: "/extractor" }}
+            className="mb-4"
+          />
+          <FlowTip
+            tipId="neurons-has-items"
+            variant="next-step"
+            title="Use your neurons in AI services"
+            description="Great — you have knowledge neurons! Now run an AI service to transform them into articles, strategies, social posts, and more. Each neuron can be reused infinitely."
+            show={neurons.length > 0 && neurons.length <= 10}
+            action={{ label: "Browse Services", route: "/services" }}
+            className="mb-4"
+          />
 
           {/* Page title row with actions */}
           <div className="flex items-center justify-between mb-5">
