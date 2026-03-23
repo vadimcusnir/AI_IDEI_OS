@@ -66,6 +66,7 @@ const TopicDetail = lazyRetry(() => import("./pages/TopicDetail"));
 const MediaProfiles = lazyRetry(() => import("./pages/MediaProfiles"));
 const MediaProfilePublic = lazyRetry(() => import("./pages/MediaProfilePublic"));
 const AdminMediaProfiles = lazyRetry(() => import("./pages/AdminMediaProfiles"));
+const AdminAuditLog = lazyRetry(() => import("./pages/AdminAuditLog"));
 const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 const TopicDiscovery = lazyRetry(() => import("./pages/TopicDiscovery"));
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
