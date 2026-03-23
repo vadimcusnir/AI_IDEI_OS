@@ -192,9 +192,15 @@ export default function PromptForge() {
         ? `\n\n[Feedback anterior: ${feedback.map(f => `Rating ${f.rating}/5: "${f.feedback}"`).join("; ")}]`
         : "";
 
+      // Truncate context if too long
+      const contextResult = truncateForService(context);
+      if (contextResult.wasTruncated) {
+        toast.info(formatTruncationMessage(contextResult), { duration: 6000 });
+      }
+
       const fullText = await streamGenerate(
         session,
-        { context, goal, details: details + feedbackContext },
+        { context: contextResult.content, goal, details: details + feedbackContext },
         neuronId, jobId, setResult
       );
 
