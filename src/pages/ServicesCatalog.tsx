@@ -3,13 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Zap, Layers, Server, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Zap, Layers, Server, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DomainGroup } from "@/components/services/DomainGroup";
-import { RegistryCard, type RegistryServiceItem } from "@/components/services/RegistryCard";
+import { type RegistryServiceItem } from "@/components/services/RegistryCard";
 import { ServiceDetailDrawer } from "@/components/services/ServiceDetailDrawer";
-
-const PAGE_SIZE = 100;
+import { VirtualServiceList } from "@/components/services/VirtualServiceList";
+import { AdvancedFilters, EMPTY_FILTERS, type AdvancedFilterState } from "@/components/services/AdvancedFilters";
+import { ExecuteServiceDialog } from "@/components/services/ExecuteServiceDialog";
 
 export default function ServicesCatalog() {
   const [services, setServices] = useState<RegistryServiceItem[]>([]);
@@ -17,9 +18,10 @@ export default function ServicesCatalog() {
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState("ALL");
   const [selectedDomain, setSelectedDomain] = useState("");
-  const [page, setPage] = useState(0);
   const [selectedService, setSelectedService] = useState<RegistryServiceItem | null>(null);
+  const [executeService, setExecuteService] = useState<RegistryServiceItem | null>(null);
   const [viewMode, setViewMode] = useState<"grouped" | "flat">("grouped");
+  const [advFilters, setAdvFilters] = useState<AdvancedFilterState>(EMPTY_FILTERS);
 
   useEffect(() => {
     (async () => {
@@ -39,20 +41,35 @@ export default function ServicesCatalog() {
     return Object.entries(counts).sort((a, b) => b[1] - a[1]);
   }, [services]);
 
+  const { availableComplexities, availableOutputTypes } = useMemo(() => {
+    const complexities = new Set<string>();
+    const outputs = new Set<string>();
+    services.forEach(s => {
+      if (s.complexity) complexities.add(s.complexity);
+      if (s.output_type) outputs.add(s.output_type);
+    });
+    return {
+      availableComplexities: [...complexities].sort(),
+      availableOutputTypes: [...outputs].sort(),
+    };
+  }, [services]);
+
   const filtered = useMemo(() => {
     return services.filter(s => {
       if (level !== "ALL" && s.service_level !== level) return false;
       if (selectedDomain && s.domain !== selectedDomain) return false;
       if (search) {
         const q = search.toLowerCase();
-        return s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q);
+        if (!s.name.toLowerCase().includes(q) && !s.category.toLowerCase().includes(q)) return false;
       }
+      // Advanced filters
+      if (s.neurons_cost_min < advFilters.costMin || s.neurons_cost_max > advFilters.costMax) return false;
+      if (advFilters.scoreTier.length > 0 && !advFilters.scoreTier.includes(s.score_tier)) return false;
+      if (advFilters.complexity.length > 0 && !advFilters.complexity.includes(s.complexity)) return false;
+      if (advFilters.outputType.length > 0 && !advFilters.outputType.includes(s.output_type)) return false;
       return true;
     });
-  }, [services, level, selectedDomain, search]);
-
-  // Reset page on filter change
-  useEffect(() => { setPage(0); }, [level, selectedDomain, search]);
+  }, [services, level, selectedDomain, search, advFilters]);
 
   const stats = useMemo(() => ({
     total: services.length,
@@ -61,7 +78,6 @@ export default function ServicesCatalog() {
     lcss: services.filter(s => s.service_level === "LCSS").length,
   }), [services]);
 
-  // Domain-grouped view
   const groupedByDomain = useMemo(() => {
     const groups: Record<string, RegistryServiceItem[]> = {};
     filtered.forEach(s => {
@@ -72,15 +88,11 @@ export default function ServicesCatalog() {
     return Object.entries(groups).sort((a, b) => b[1].length - a[1].length);
   }, [filtered]);
 
-  // Paginated flat view
-  const paginatedFlat = useMemo(() => {
-    const start = page * PAGE_SIZE;
-    return filtered.slice(start, start + PAGE_SIZE);
-  }, [filtered, page]);
-
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-
   const handleServiceClick = useCallback((s: RegistryServiceItem) => setSelectedService(s), []);
+  const handleExecuteFromDrawer = useCallback((s: RegistryServiceItem) => {
+    setSelectedService(null);
+    setExecuteService(s);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -109,7 +121,7 @@ export default function ServicesCatalog() {
             </div>
           </div>
 
-          {/* Filters */}
+          {/* Filters row */}
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[200px] max-w-sm">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -135,6 +147,13 @@ export default function ServicesCatalog() {
                 </TabsTrigger>
               </TabsList>
             </Tabs>
+
+            <AdvancedFilters
+              filters={advFilters}
+              onChange={setAdvFilters}
+              availableComplexities={availableComplexities}
+              availableOutputTypes={availableOutputTypes}
+            />
 
             {selectedDomain && (
               <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => setSelectedDomain("")}>
@@ -182,26 +201,7 @@ export default function ServicesCatalog() {
             ))}
           </div>
         ) : (
-          <>
-            <div className="grid gap-1.5">
-              {paginatedFlat.map(s => (
-                <RegistryCard key={s.id} service={s} onClick={handleServiceClick} />
-              ))}
-            </div>
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-6">
-                <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(p => p - 1)}>
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-xs text-muted-foreground font-mono">
-                  {page + 1} / {totalPages}
-                </span>
-                <Button variant="outline" size="sm" disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)}>
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-          </>
+          <VirtualServiceList services={filtered} onServiceClick={handleServiceClick} />
         )}
       </div>
 
@@ -210,6 +210,14 @@ export default function ServicesCatalog() {
         service={selectedService}
         open={!!selectedService}
         onClose={() => setSelectedService(null)}
+        onExecute={handleExecuteFromDrawer}
+      />
+
+      {/* Execute dialog */}
+      <ExecuteServiceDialog
+        service={executeService}
+        open={!!executeService}
+        onClose={() => setExecuteService(null)}
       />
     </div>
   );
