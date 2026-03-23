@@ -517,7 +517,7 @@ export default function RunService() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Button
                   onClick={hasTierAccess ? handleRun : () => setPaywallOpen(true)}
-                  disabled={hasTierAccess && (!hasEnoughCredits || accessVerdict?.verdict !== "ALLOW")}
+                  disabled={hasTierAccess && (!hasEnoughCredits || accessVerdict?.verdict === "DENY")}
                   className={cn(
                     "gap-2 h-12 text-sm font-semibold rounded-xl shadow-lg transition-shadow",
                     hasTierAccess ? "shadow-primary/20 hover:shadow-primary/30" : "shadow-amber-500/20"
