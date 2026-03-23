@@ -68,6 +68,7 @@ const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
 const MarketplaceDetail = lazyRetry(() => import("./pages/MarketplaceDetail"));
 const MarketplaceDrafts = lazyRetry(() => import("./pages/MarketplaceDrafts"));
+const MarketplaceEarnings = lazyRetry(() => import("./pages/MarketplaceEarnings"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
 const PaymentResult = lazyRetry(() => import("./pages/PaymentResult"));
 const TermsOfService = lazyRetry(() => import("./pages/TermsOfService"));
