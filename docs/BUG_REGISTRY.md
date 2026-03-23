@@ -9,12 +9,11 @@
 - **Impact:** Unauthorized neuron extraction, credit consumption, data access
 - **Solution:** Enable JWT verification, extract user_id from token server-side
 
-### BUG-002: Anon Key Used as Auth Token
-- **Priority:** Critical
+### ~~BUG-002: Anon Key Used as Auth Token~~ ✅ RESOLVED
+- **Priority:** Critical → **RESOLVED 2026-03-23**
 - **Category:** Security
-- **Description:** Extractor page sends `VITE_SUPABASE_PUBLISHABLE_KEY` as Authorization header to `extract-neurons` and `chunk-transcript` instead of user's session token.
-- **Impact:** Functions cannot authenticate the real caller
-- **Solution:** Use `session.data.session?.access_token` consistently (pattern already exists in `triggerTranscription`)
+- **Description:** ~~5 files sent anon key instead of session token~~
+- **Resolution:** All 5 files (NeuronChatPanel, useNotebookChat, NotebookStudioPanel, NotebookSourcesPanel, Extractor.tsx) now use `session.data.session?.access_token`
 
 ## High
 

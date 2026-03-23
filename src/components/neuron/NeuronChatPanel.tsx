@@ -4,6 +4,8 @@ import ReactMarkdown from "react-markdown";
 import { Block } from "./types";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -51,11 +53,15 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
     let assistantContent = "";
 
     try {
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+      if (!token) { toast.error("Not authenticated"); setIsStreaming(false); return; }
+
       const resp = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           messages: newMessages.map(m => ({ role: m.role, content: m.content })),

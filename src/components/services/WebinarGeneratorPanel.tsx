@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -25,6 +26,7 @@ const STAGES = [
 
 export function WebinarGeneratorPanel() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
   const [duration, setDuration] = useState("60");
@@ -47,7 +49,7 @@ export function WebinarGeneratorPanel() {
     try {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
-      if (!token) { toast.error("Nu ești autentificat"); return; }
+      if (!token) { toast.error(t("errors:not_authenticated")); return; }
 
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/webinar-generate`,

@@ -39,5 +39,7 @@
   "transcript_upload_failed": "Incarcarea transcriptului a esuat.",
   "extraction_timeout": "Extractia a expirat.",
   "select_report_reason": "Te rugam sa selectezi un motiv.",
-  "complete_payment_error": "Eroare: {{message}}"
+  "complete_payment_error": "Eroare: {{message}}",
+  "not_authenticated": "Nu esti autentificat.",
+  "load_failed": "Nu s-au putut incarca datele."
 }

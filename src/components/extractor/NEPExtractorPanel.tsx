@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -56,6 +57,7 @@ interface Props {
 
 export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [families, setFamilies] = useState<NEPFamily[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedFamilies, setSelectedFamilies] = useState<Set<string>>(new Set());
@@ -78,7 +80,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
         setFamilies(data.families || []);
       } catch (e) {
         console.error("Load extractors error:", e);
-        toast.error("Nu s-au putut încărca extractorii");
+        toast.error(t("errors:load_failed"));
       } finally {
         setLoading(false);
       }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -32,6 +33,7 @@ const LEVELS = [
 
 export function ExtractionPipelinePanel() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [range, setRange] = useState([0, 12]);
   const [loading, setLoading] = useState(false);
@@ -50,7 +52,7 @@ export function ExtractionPipelinePanel() {
     try {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
-      if (!token) { toast.error("Nu ești autentificat"); return; }
+      if (!token) { toast.error(t("errors:not_authenticated")); return; }
 
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extraction-pipeline`,
@@ -106,7 +108,7 @@ export function ExtractionPipelinePanel() {
                     )}
                   >
                     <div className={cn(
-                      "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white",
+                      "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-primary-foreground",
                       completed ? "bg-emerald-500" : isCurrent ? "bg-primary animate-pulse" : l.color
                     )}>
                       {completed ? "✓" : l.level}
@@ -179,7 +181,7 @@ export function ExtractionPipelinePanel() {
                   <Card key={id} className="border-border/50">
                     <CardHeader className="pb-2 pt-3 px-4">
                       <div className="flex items-center gap-2">
-                        <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white", LEVELS[r.level]?.color || "bg-primary")}>
+                        <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-primary-foreground", LEVELS[r.level]?.color || "bg-primary")}>
                           {r.level}
                         </div>
                         <span className="font-medium text-sm">{r.name}</span>

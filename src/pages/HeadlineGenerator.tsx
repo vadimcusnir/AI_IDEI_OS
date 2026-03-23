@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Copy, Check, RotateCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ interface GeneratedHeadline {
 
 export default function HeadlineGenerator() {
   const [topic, setTopic] = useState("");
+  const { t } = useTranslation();
   const [audience, setAudience] = useState("");
   const [pain, setPain] = useState("");
   const [headlines, setHeadlines] = useState<GeneratedHeadline[]>([]);
@@ -31,11 +33,11 @@ export default function HeadlineGenerator() {
       if (data?.headlines?.length > 0) {
         setHeadlines(data.headlines);
       } else {
-        toast.error("Nu s-au putut genera titluri. Încearcă din nou.");
+        toast.error(t("errors:generation_failed"));
       }
     } catch (err: any) {
       console.error(err);
-      toast.error("Eroare la generare. Încearcă din nou.");
+      toast.error(t("errors:generation_failed"));
     } finally {
       setLoading(false);
     }

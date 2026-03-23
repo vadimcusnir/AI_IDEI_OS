@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -28,6 +29,7 @@ interface Avatar33PanelProps {
 
 export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33PanelProps) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [content, setContent] = useState(initialContent || "");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -48,7 +50,7 @@ export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33P
     try {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
-      if (!token) { toast.error("Nu ești autentificat"); return; }
+      if (!token) { toast.error(t("errors:not_authenticated")); return; }
 
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/avatar33-pipeline`,
