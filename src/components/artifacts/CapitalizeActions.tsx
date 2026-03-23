@@ -80,7 +80,7 @@ export function CapitalizeActions({ artifactId, title, content, artifactType }: 
         onClick={handleSaveToLibrary}
         disabled={saving || saved}
       >
-        {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : saved ? <Check className="h-3 w-3 text-green-500" /> : <BookmarkPlus className="h-3 w-3" />}
+        {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : saved ? <Check className="h-3 w-3 text-status-validated" /> : <BookmarkPlus className="h-3 w-3" />}
         {saved ? "Salvat" : "Bibliotecă"}
       </Button>
       <Button
