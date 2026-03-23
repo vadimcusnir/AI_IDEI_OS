@@ -180,9 +180,9 @@ const App = () => (
                 <Route path="/intelligence" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Intelligence failed to load"><Intelligence /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/prompt-forge" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Prompt Forge failed to load"><PromptForge /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/profile-extractor" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Profile Extractor failed to load"><ProfileExtractor /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><AppLayout><ProfilePage /></AppLayout></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Profile failed to load"><ProfilePage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/notifications" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Notifications failed to load"><Notifications /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/feedback" element={<ProtectedRoute><AppLayout><Feedback /></AppLayout></ProtectedRoute>} />
+                <Route path="/feedback" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Feedback failed to load"><Feedback /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/guests" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Guest pages failed to load"><GuestPages /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/chat" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Chat failed to load"><ChatPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/onboarding" element={<ProtectedRoute><AppLayout><Onboarding /></AppLayout></ProtectedRoute>} />
