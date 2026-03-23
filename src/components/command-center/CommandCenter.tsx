@@ -581,6 +581,17 @@ export function CommandCenter() {
           </div>
         </div>
 
+        {/* ═══ Execution Status Bar ═══ */}
+        <ExecutionStatusBar
+          phase={cmdState.state.phase}
+          intent={cmdState.state.intent}
+          totalCredits={cmdState.state.totalCredits}
+          stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
+          totalSteps={cmdState.state.steps.length}
+          startedAt={cmdState.state.startedAt}
+          errorMessage={cmdState.state.errorMessage}
+        />
+
         {/* ═══ Permission Gate — tier restriction ═══ */}
         <AnimatePresence>
           {permissionBlock && (
