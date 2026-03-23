@@ -260,15 +260,26 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
 
         <div className="space-y-4 mt-2">
           {/* Cost preview */}
-          <div className="bg-muted/50 rounded-lg p-3 flex items-center justify-between">
+          <div className={cn(
+            "rounded-lg p-3 flex items-center justify-between",
+            state === "executing" ? "bg-primary/5 border border-primary/20" : "bg-muted/50"
+          )}>
             <div className="flex items-center gap-2">
-              <Coins className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Cost estimat</span>
+              {state === "executing" ? (
+                <Lock className="h-4 w-4 text-primary" />
+              ) : (
+                <Coins className="h-4 w-4 text-primary" />
+              )}
+              <span className="text-sm font-medium">
+                {state === "executing" ? "Rezervat" : state === "done" ? "Facturat" : "Cost estimat"}
+              </span>
             </div>
             <div className="text-right">
-              <span className="text-lg font-bold font-mono">{estimatedCost}</span>
+              <span className="text-lg font-bold font-mono">{costCharged || estimatedCost}</span>
               <span className="text-xs text-muted-foreground ml-1">NEURONS</span>
-              <p className="text-[9px] text-muted-foreground">≈ ${(estimatedCost * 0.002).toFixed(2)} USD</p>
+              <p className="text-[9px] text-muted-foreground">
+                {state === "executing" ? "🔒 blocat până la finalizare" : `≈ $${((costCharged || estimatedCost) * 0.002).toFixed(2)} USD`}
+              </p>
             </div>
           </div>
 
