@@ -12,17 +12,16 @@ import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Send, Loader2, User, Upload,
-  X, Paperclip, RotateCcw, History,
-  Globe, Brain, Sparkles, FileText, Network, Zap,
-  Coins, Command, Play, Shield,
+  Loader2, X, Paperclip, RotateCcw, History,
+  Zap, Coins, Command, Send,
   PanelRightOpen, PanelRightClose,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
-import { COMMAND_PACKS, type CommandPack } from "@/components/agent/CommandPacks";
 import { useAgentDecisionEngine } from "@/hooks/useAgentDecisionEngine";
+import { CommandBubble, type Message } from "./CommandBubble";
+import { WelcomeScreen } from "./WelcomeScreen";
 import { PlanPreview, type ExecutionPlan } from "./PlanPreview";
 import { OutputPanel, type OutputItem } from "./OutputPanel";
 import { MemoryPanel } from "./MemoryPanel";
@@ -38,15 +37,14 @@ import {
   logPermissionDenied, logEconomicGate,
 } from "./AuditLogger";
 
-interface Message {
-  id: string;
-  role: "user" | "assistant" | "system";
-  content: string;
-  timestamp: Date;
-  metadata?: Record<string, any>;
-}
-
 const AGENT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agent-console`;
+
+const WELCOME_MSG: Message = {
+  id: "welcome",
+  role: "assistant",
+  content: `**Command Center** ready.\n\nIntroduce your command, upload a file, or paste a URL. The system will generate an execution plan before running.\n\n**Quick commands:** \`/analyze\`, \`/extract\`, \`/generate\`, \`/search\``,
+  timestamp: new Date(),
+};
 
 export function CommandCenter() {
   const { user } = useAuth();
@@ -65,20 +63,6 @@ export function CommandCenter() {
   const [showEconomicGate, setShowEconomicGate] = useState(false);
   const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
 
-  const WELCOME_MSG: Message = {
-    id: "welcome",
-    role: "assistant",
-    content: `**Command Center** ready.\n\nIntroduce your command, upload a file, or paste a URL. The system will generate an execution plan before running.\n\n**Quick commands:** \`/analyze\`, \`/extract\`, \`/generate\`, \`/search\``,
-    timestamp: new Date(),
-  };
-
-  const COMMAND_HINTS = [
-    { label: "Analyze source", icon: Globe, example: "Analyze this YouTube video: https://..." },
-    { label: "Extract neurons", icon: Brain, example: "Extract neurons from my latest episode" },
-    { label: "Generate asset", icon: Sparkles, example: "Generate an article from neurons about leadership" },
-    { label: "Search knowledge", icon: Network, example: "Show all neurons about persuasion techniques" },
-  ];
-
   const [messages, setMessages] = useState<Message[]>([WELCOME_MSG]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -93,7 +77,7 @@ export function CommandCenter() {
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
-  const [activePack, setActivePack] = useState<CommandPack | null>(null);
+  const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [pendingInput, setPendingInput] = useState("");
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -196,7 +180,9 @@ export function CommandCenter() {
     setInput("");
     setFiles([]);
     setShowOutputs(false);
+    setShowPostExecution(false);
     setPermissionBlock(null);
+    setPendingRoute(route);
     saveMessage(userMessage);
 
     // Transition to planning
@@ -287,6 +273,13 @@ export function CommandCenter() {
           recent_services: workerTypes,
           total_completed_jobs: jobsAgg.count || 0,
           knowledge_summary: `User has ${neuronsAgg.count || 0} neurons across categories: ${Object.entries(topCategories).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}. Most used services: ${Object.entries(workerTypes).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}.`,
+          // ═══ Router intent enrichment ═══
+          detected_intent: pendingRoute?.intent.category || "conversation",
+          intent_confidence: pendingRoute?.intent.confidence || 0,
+          suggested_services: pendingRoute?.intent.suggestedServices || [],
+          input_type: pendingRoute?.input.type || "text",
+          detected_urls: pendingRoute?.input.urls || [],
+          user_tier: tier,
         },
       }),
       signal: controller.signal,
@@ -670,111 +663,19 @@ export function CommandCenter() {
             <CommandBubble
               key={msg.id}
               msg={msg}
-              onNavigate={navigate}
               isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"}
             />
           ))}
 
-          {/* Proactive Suggestions */}
-          {isEmptyState && decisionSuggestions.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="space-y-2 mt-2"
-            >
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-1">
-                Suggested next actions
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {decisionSuggestions.slice(0, 4).map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={() => handleHintClick(s.prompt)}
-                    className="group flex items-start gap-3 p-3 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 hover:border-primary/40 transition-all text-left"
-                  >
-                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <span className="text-sm">{s.icon}</span>
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium">{s.label}</p>
-                      <p className="text-[10px] text-muted-foreground line-clamp-2">{s.description}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* Command Packs — only empty state */}
+          {/* Welcome / Empty State */}
           {isEmptyState && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="space-y-4 mt-4"
-            >
-              <div className="space-y-2">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-1">
-                  Command Packs
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {COMMAND_PACKS.map((pack) => (
-                    <button
-                      key={pack.id}
-                      onClick={() => setActivePack(activePack?.id === pack.id ? null : pack)}
-                      className={cn(
-                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs transition-all",
-                        activePack?.id === pack.id
-                          ? "border-primary bg-primary/10 text-primary font-medium"
-                          : "border-border bg-card hover:border-primary/30 text-muted-foreground"
-                      )}
-                    >
-                      <span>{pack.emoji}</span>
-                      <span>{pack.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {activePack ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {activePack.quickPrompts.map((qp) => (
-                    <button
-                      key={qp.label}
-                      onClick={() => handleHintClick(qp.prompt)}
-                      className="group flex items-start gap-3 p-3 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-left"
-                    >
-                      <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
-                        <span className="text-sm">{activePack.emoji}</span>
-                      </div>
-                      <div>
-                        <p className="text-xs font-medium">{qp.label}</p>
-                        <p className="text-[10px] text-muted-foreground line-clamp-2">{qp.prompt}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {COMMAND_HINTS.map((hint) => (
-                    <button
-                      key={hint.label}
-                      onClick={() => handleHintClick(hint.example)}
-                      className="group flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-left"
-                    >
-                      <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
-                        <hint.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-medium">{hint.label}</p>
-                        <p className="text-[10px] text-muted-foreground truncate max-w-[180px]">{hint.example}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </motion.div>
+            <WelcomeScreen
+              onCommand={handleHintClick}
+              suggestions={decisionSuggestions}
+              neuronCount={totalNeurons}
+              episodeCount={totalEpisodes}
+              balance={balance}
+            />
           )}
 
           {loading && !isStreaming && (
@@ -947,53 +848,6 @@ export function CommandCenter() {
           />
         )}
       </AnimatePresence>
-    </div>
-  );
-}
-
-/* ─── Bubble component ─── */
-function CommandBubble({
-  msg,
-  onNavigate,
-  isStreaming,
-}: {
-  msg: Message;
-  onNavigate: (path: string) => void;
-  isStreaming?: boolean;
-}) {
-  const isUser = msg.role === "user";
-
-  return (
-    <div className={cn("flex gap-2.5", isUser ? "justify-end" : "justify-start")}>
-      {!isUser && (
-        <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-          <Command className="h-3 w-3 text-primary" />
-        </div>
-      )}
-      <div
-        className={cn(
-          "rounded-2xl px-4 py-3 max-w-[85%] text-xs leading-relaxed",
-          isUser
-            ? "bg-primary text-primary-foreground rounded-br-md"
-            : "bg-muted rounded-bl-md"
-        )}
-      >
-        {isUser ? (
-          <p className="whitespace-pre-wrap">{msg.content}</p>
-        ) : (
-          <div className="prose prose-xs dark:prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2 [&_h1]:text-sm [&_h2]:text-xs [&_h3]:text-xs [&_li]:text-xs [&_code]:text-[10px] [&_code]:bg-background/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded">
-            <ReactMarkdown>{msg.content}</ReactMarkdown>
-          </div>
-        )}
-        {isStreaming && (
-          <span className="inline-block w-1.5 h-3 bg-primary/60 animate-pulse ml-0.5 rounded-sm" />
-        )}
-      </div>
-      {isUser && (
-        <div className="h-6 w-6 rounded-full bg-foreground/10 flex items-center justify-center shrink-0 mt-0.5">
-          <User className="h-3 w-3" />
-        </div>
-      )}
     </div>
   );
 }
