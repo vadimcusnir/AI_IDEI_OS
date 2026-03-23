@@ -68,6 +68,7 @@ const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
 const MarketplaceDetail = lazyRetry(() => import("./pages/MarketplaceDetail"));
 const MarketplaceDrafts = lazyRetry(() => import("./pages/MarketplaceDrafts"));
+const MarketplaceEarnings = lazyRetry(() => import("./pages/MarketplaceEarnings"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
 const PaymentResult = lazyRetry(() => import("./pages/PaymentResult"));
 const TermsOfService = lazyRetry(() => import("./pages/TermsOfService"));
@@ -173,6 +174,7 @@ const App = () => (
                 <Route path="/topics/discovery" element={<Navigate to="/library" replace />} />
                 <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
                 <Route path="/marketplace/drafts" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Drafts failed to load"><MarketplaceDrafts /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/marketplace/earnings" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Earnings failed to load"><MarketplaceEarnings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
                 <Route path="/media/profiles/:slug" element={<MediaProfilePublic />} />

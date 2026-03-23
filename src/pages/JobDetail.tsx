@@ -12,6 +12,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { UnlockArtifactButton } from "@/components/artifacts/UnlockArtifactButton";
 import { CapitalizeActions } from "@/components/artifacts/CapitalizeActions";
+import { PostExecutionRecommendations } from "@/components/services/PostExecutionRecommendations";
 
 interface JobDetail {
   id: string;
@@ -286,6 +287,14 @@ export default function JobDetail() {
               {typeof job.result === "string" ? job.result : JSON.stringify(job.result, null, 2)}
             </pre>
           </div>
+        )}
+
+        {/* Post-execution recommendations */}
+        {job.status === "completed" && (
+          <PostExecutionRecommendations
+            serviceKey={(job.input as any)?.service_key || job.worker_type}
+            serviceCategory={(job.input as any)?.service_category}
+          />
         )}
       </div>
     </PageTransition>
