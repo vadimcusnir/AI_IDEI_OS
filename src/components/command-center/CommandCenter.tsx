@@ -6,6 +6,7 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
 import { useCommandState, type TaskStep } from "@/hooks/useCommandState";
 import { useExecutionHistory } from "@/hooks/useExecutionHistory";
+import { useRealtimeSteps } from "@/hooks/useRealtimeSteps";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
