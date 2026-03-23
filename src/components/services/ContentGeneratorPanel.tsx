@@ -78,7 +78,7 @@ export function ContentGeneratorPanel() {
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ content, generators: [...selected] }),
+          body: JSON.stringify({ content: truncated.content, generators: [...selected] }),
         }
       );
 
