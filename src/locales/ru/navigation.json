@@ -55,5 +55,9 @@
   "runtime": "Среда выполнения",
   "analytics": "Аналитика",
   "security": "Безопасность",
-  "headline_generator": "Direct Response Headlines"
+  "headline_generator": "Direct Response Headlines",
+  "notebooks": "Записные книжки",
+  "capitalization": "Капитализация",
+  "data_pipeline": "Конвейер данных",
+  "db_schema": "Схема БД"
 }
