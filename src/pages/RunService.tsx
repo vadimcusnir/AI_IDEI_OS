@@ -148,6 +148,20 @@ export default function RunService() {
       return;
     }
 
+    // Truncate oversized content and notify user
+    const truncatedInputs = { ...inputs };
+    let wasAnyTruncated = false;
+    for (const key of Object.keys(truncatedInputs)) {
+      if (typeof truncatedInputs[key] === "string" && truncatedInputs[key].length > 500) {
+        const result = truncateForService(truncatedInputs[key]);
+        if (result.wasTruncated) {
+          truncatedInputs[key] = result.content;
+          wasAnyTruncated = true;
+          toast.info(formatTruncationMessage(result), { duration: 6000 });
+        }
+      }
+    }
+
     setJobStatus("creating");
 
     try {
