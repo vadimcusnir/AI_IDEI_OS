@@ -109,7 +109,6 @@ export default function Services() {
   const [showFilters, setShowFilters] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-  const [compareIds, setCompareIds] = useState<Set<string>>(new Set());
   const [activeLayer, setActiveLayer] = useState<LayerKey>("all");
 
   const handleServiceClick = (service: Service) => {
