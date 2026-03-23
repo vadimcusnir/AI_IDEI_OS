@@ -81,7 +81,8 @@ export default function GuestPages() {
       .from("guest_profiles")
       .select("*")
       .eq("workspace_id", currentWorkspace!.id)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(500);
     if (data) setGuests(data as unknown as GuestProfile[]);
     if (error) toast.error(t("guest_pages.error_loading"));
     setLoading(false);
