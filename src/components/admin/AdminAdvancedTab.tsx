@@ -19,6 +19,7 @@ import {
 
 // ── CSV/JSON Export ──
 function ExportSection() {
+  const { t } = useTranslation();
   const [exporting, setExporting] = useState(false);
   const [exportTable, setExportTable] = useState("credit_transactions");
   const [exportFormat, setExportFormat] = useState<"csv" | "json">("csv");
