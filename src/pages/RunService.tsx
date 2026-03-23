@@ -648,13 +648,31 @@ export default function RunService() {
                     </Button>
                   </motion.div>
 
-                  {/* Post-execution recommendations — eliminates dead-ends */}
+                  {/* Post-execution loop — recommendations + distribution + psychology */}
                   {service && (
                     <>
+                      {/* Viral distribution — share with embedded CTA */}
+                      {jobResult && (
+                        <ShareableOutput
+                          content={jobResult}
+                          serviceKey={service.service_key}
+                          serviceName={service.name}
+                        />
+                      )}
+
+                      {/* Psychological overlay — savings, social proof */}
+                      <PostExecutionPsychology
+                        neuronsSpent={service.credits_cost}
+                        serviceKey={service.service_key}
+                      />
+
+                      {/* Next actions — eliminates dead-ends */}
                       <PostExecutionRecommendations
                         serviceKey={service.service_key}
                         serviceCategory={service.category}
                       />
+
+                      {/* Upsell — monetization loop */}
                       <NeuronBundleUpsell
                         neuronsSpent={service.credits_cost}
                         currentBalance={credits?.balance ?? 0}

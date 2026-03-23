@@ -121,6 +121,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           <div className="min-h-0">
             <Suspense fallback={null}><LowBalanceBanner /></Suspense>
+            <Suspense fallback={null}><BehaviorOverlay /></Suspense>
           </div>
 
           {fullHeight ? (
