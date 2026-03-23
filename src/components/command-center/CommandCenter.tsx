@@ -33,6 +33,7 @@ import { PermissionGate } from "./PermissionGate";
 import { PostExecutionPanel } from "./PostExecutionPanel";
 import { ContextActions } from "./ContextActions";
 import { ExecutionStatusBar } from "./ExecutionStatusBar";
+import { ExecutionSummary } from "./ExecutionSummary";
 import { useUserTier } from "@/hooks/useUserTier";
 import { routeCommand, type RouteResult } from "./CommandRouter";
 import {
