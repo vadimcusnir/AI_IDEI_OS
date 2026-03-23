@@ -162,7 +162,7 @@ const App = () => (
                 <Route path="/profiles" element={<AppLayout><EntityListing /></AppLayout>} />
                 <Route path="/profiles/:slug" element={<AppLayout><EntityDetail /></AppLayout>} />
                 <Route path="/topics" element={<AppLayout><TopicListing /></AppLayout>} />
-                <Route path="/topics/discovery" element={<AppLayout><TopicDiscovery /></AppLayout>} />
+                <Route path="/topics/discovery" element={<Navigate to="/library" replace />} />
                 <Route path="/topics/:slug" element={<AppLayout><TopicDetail /></AppLayout>} />
                 <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
                 <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
