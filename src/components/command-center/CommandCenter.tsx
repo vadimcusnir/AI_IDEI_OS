@@ -656,7 +656,6 @@ export function CommandCenter() {
             <CommandBubble
               key={msg.id}
               msg={msg}
-              onNavigate={navigate}
               isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"}
             />
           ))}
