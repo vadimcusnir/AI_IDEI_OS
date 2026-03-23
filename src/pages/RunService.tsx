@@ -25,6 +25,8 @@ import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 import { PostExecutionRecommendations } from "@/components/services/PostExecutionRecommendations";
 import { NeuronBundleUpsell } from "@/components/credits/NeuronBundleUpsell";
+import { ShareableOutput } from "@/components/distribution/ShareableOutput";
+import { PostExecutionPsychology } from "@/components/behavior/BehaviorOverlay";
 
 interface Service {
   id: string;
