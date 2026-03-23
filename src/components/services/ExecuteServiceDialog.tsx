@@ -58,7 +58,7 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
         return;
       }
 
-      const serviceKey = toServiceKey(service.name);
+      const serviceKey = service.id; // registry.id is the service_key slug
       const inputText = goal ? `Goal: ${goal}\n\nContent:\n${input}` : input.trim();
 
       // 1. Look up service in service_catalog, or use fallback
