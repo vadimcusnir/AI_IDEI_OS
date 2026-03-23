@@ -111,9 +111,19 @@ export function ContextActions({
       });
     }
 
-    // Limit to 5 most relevant
-    return all.slice(0, 5);
-  }, [neuronCount, episodeCount, lastIntent]);
+    // Pipeline builder — always available as last action
+    if (onOpenPipeline) {
+      all.push({
+        id: "pipeline",
+        icon: Workflow,
+        label: "Pipeline",
+        prompt: "__PIPELINE__",
+        color: "text-primary border-primary/20 hover:bg-primary/5",
+      });
+    }
+
+    return all.slice(0, 6);
+  }, [neuronCount, episodeCount, lastIntent, onOpenPipeline]);
 
   if (phase !== "idle" && phase !== "completed") return null;
 
