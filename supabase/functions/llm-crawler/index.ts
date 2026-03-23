@@ -113,7 +113,7 @@ async function handleCrawl(supabase: any, limit: number) {
       let pageType = "page";
       if (route === "/") pageType = "landing";
       else if (route.startsWith("/docs")) pageType = "documentation";
-      else if (["/insights", "/patterns", "/formulas", "/contradictions", "/applications", "/profiles"].some(p => route.startsWith(p))) pageType = "knowledge";
+      else if (["/contradictions", "/applications", "/profiles", "/library"].some(p => route.startsWith(p))) pageType = "knowledge";
       else if (route.startsWith("/admin")) pageType = "admin";
       else if (["/home", "/dashboard", "/neurons", "/extractor", "/services"].includes(route)) pageType = "app";
 
