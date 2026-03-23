@@ -61,10 +61,10 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
         return;
       }
 
-      const serviceKey = service.id; // registry.id is the service_key slug
+      const serviceKey = service.id;
       const inputText = goal ? `Goal: ${goal}\n\nContent:\n${input}` : input.trim();
 
-      // 1. Look up service in service_catalog, or use fallback
+      // 1. Look up service in service_catalog
       const { data: catalogService } = await supabase
         .from("service_catalog")
         .select("service_key, credits_cost")
@@ -72,13 +72,21 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
         .maybeSingle();
 
       const finalServiceKey = catalogService?.service_key || "insight-extractor";
+      const cost = catalogService?.credits_cost || estimatedCost;
 
-      // 2. Create a neuron_jobs entry
+      // 2. ATOMIC: Reserve neurons BEFORE creating job
+      const reservation = await reserve(cost, undefined, `Service: ${service.name}`);
+      if (!reservation.ok) {
+        setState("configure");
+        return; // toast already shown by hook
+      }
+
+      // 3. Create job
       const { data: job, error: jobError } = await supabase
         .from("neuron_jobs")
         .insert({
           author_id: session.user.id,
-          neuron_id: 1, // placeholder
+          neuron_id: 1,
           worker_type: "service",
           status: "pending",
           input: { text: inputText, service_name: service.name, service_level: service.service_level },
@@ -89,10 +97,14 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
         .single();
 
       if (jobError || !job) {
+        // RELEASE reserved credits on job creation failure
+        await release(reservation.reserved, undefined, "Job creation failed");
         toast.error("Nu s-a putut crea jobul");
         setState("configure");
         return;
       }
+
+      reservedRef.current = { amount: reservation.reserved, jobId: job.id };
 
       // 3. Call run-service edge function
       const response = await fetch(
