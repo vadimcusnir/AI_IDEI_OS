@@ -53,4 +53,9 @@ export const AnalyticsEvents = {
   TEMPLATE_USED: "template_used",
   PIPELINE_TRIGGERED: "pipeline_triggered",
   FEEDBACK_SUBMITTED: "feedback_submitted",
+  // Behavior & Distribution Engine
+  SHARE_TRIGGERED: "share_triggered",
+  CTA_CLICKED: "cta_clicked",
+  BEHAVIOR_TRIGGER: "behavior_trigger",
+  UPGRADE_PROMPT_SHOWN: "upgrade_prompt_shown",
 } as const;
