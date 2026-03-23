@@ -59,10 +59,12 @@ export function CommandCenter() {
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
   const cmdState = useCommandState();
+  const { persistRun, persistOutputsBatch } = useExecutionHistory();
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
   const [showEconomicGate, setShowEconomicGate] = useState(false);
   const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
+  const [savingAllOutputs, setSavingAllOutputs] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([WELCOME_MSG]);
   const [input, setInput] = useState("");
