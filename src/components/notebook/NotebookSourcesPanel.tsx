@@ -35,6 +35,7 @@ interface NeuronResult {
 }
 
 export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteSource, notebook }: Props) {
+  const { t } = useTranslation();
   const [addMode, setAddMode] = useState<AddMode>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");

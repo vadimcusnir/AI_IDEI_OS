@@ -19,6 +19,7 @@ import {
 
 // ── CSV/JSON Export ──
 function ExportSection() {
+  const { t } = useTranslation();
   const [exporting, setExporting] = useState(false);
   const [exportTable, setExportTable] = useState("credit_transactions");
   const [exportFormat, setExportFormat] = useState<"csv" | "json">("csv");
@@ -115,6 +116,7 @@ function ExportSection() {
 
 // ── Approval Requests ──
 function ApprovalRequests() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -212,6 +214,7 @@ function ApprovalRequests() {
 
 // ── Anomaly Alerts ──
 function AnomalyAlerts() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

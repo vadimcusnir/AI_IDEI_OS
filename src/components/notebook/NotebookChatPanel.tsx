@@ -28,6 +28,7 @@ const SUGGESTED_PROMPTS = [
 ];
 
 export function NotebookChatPanel({ notebook, sources, messages: dbMessages, updateTitle }: Props) {
+  const { t } = useTranslation();
   const [input, setInput] = useState("");
   const [showSessions, setShowSessions] = useState(false);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
