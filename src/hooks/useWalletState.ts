@@ -40,22 +40,31 @@ export function useWalletState(): WalletData {
     setLoading(true);
     setError(null);
 
-    const [walletRes, accessRes] = await Promise.all([
+    // Read from user_credits (canonical balance source) + wallet_state (staked/locked metadata) + access_window
+    const [creditsRes, walletRes, accessRes] = await Promise.all([
+      supabase.from("user_credits").select("balance, updated_at").eq("user_id", user.id).maybeSingle(),
       supabase.from("wallet_state").select("*").eq("user_id", user.id).maybeSingle(),
       supabase.from("access_window_state").select("*").eq("user_id", user.id).maybeSingle(),
     ]);
 
-    if (walletRes.error) {
-      setError(walletRes.error.message);
-    } else if (walletRes.data) {
+    if (creditsRes.error && walletRes.error) {
+      setError(creditsRes.error.message || walletRes.error?.message || "Failed to load wallet");
+    } else {
+      const credits = creditsRes.data as any;
       const w = walletRes.data as any;
+
+      // Use user_credits.balance as the canonical "available" amount
+      // Fall back to wallet_state.available if user_credits doesn't exist
+      const available = credits?.balance ?? (w ? Number(w.available) : 0);
+      const snapshotTs = credits?.updated_at || w?.snapshot_ts || new Date().toISOString();
+
       setWallet({
-        available: Number(w.available),
-        staked: Number(w.staked),
-        locked: Number(w.locked),
-        snapshotTs: w.snapshot_ts,
-        snapshotAgeSec: (Date.now() - new Date(w.snapshot_ts).getTime()) / 1000,
-        chainMetadata: w.chain_metadata || {},
+        available,
+        staked: w ? Number(w.staked) : 0,
+        locked: w ? Number(w.locked) : 0,
+        snapshotTs,
+        snapshotAgeSec: (Date.now() - new Date(snapshotTs).getTime()) / 1000,
+        chainMetadata: w?.chain_metadata || {},
       });
     }
 
@@ -74,6 +83,20 @@ export function useWalletState(): WalletData {
   }, [user]);
 
   useEffect(() => { load(); }, [load]);
+
+  // Subscribe to realtime changes on user_credits
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel("wallet-credits-sync")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user_credits", filter: `user_id=eq.${user.id}` },
+        () => { load(); }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, load]);
 
   const isFresh = wallet ? wallet.snapshotAgeSec < 60 : false;
 
