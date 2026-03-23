@@ -52,6 +52,9 @@ export function CommandCenter() {
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
   const cmdState = useCommandState();
+  const { tier } = useUserTier();
+  const tierDiscount = tier === "vip" ? 40 : tier === "elite" ? 40 : tier === "pro" ? 25 : tier === "core" ? 10 : 0;
+  const [showEconomicGate, setShowEconomicGate] = useState(false);
 
   const WELCOME_MSG: Message = {
     id: "welcome",
