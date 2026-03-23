@@ -102,6 +102,7 @@ const NotebookDetail = lazyRetry(() => import("./pages/NotebookDetail"));
 const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngine"));
 const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
+const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
 
 const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
 const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
@@ -197,6 +198,7 @@ const App = () => (
                 <Route path="/services" element={<AppLayout><ErrorBoundary fallbackTitle="Services failed to load"><Services /></ErrorBoundary></AppLayout>} />
                 <Route path="/run/:serviceKey" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Service runner failed"><RunService /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/jobs" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Jobs failed to load"><Jobs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/jobs/:id" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Job detail failed"><JobDetail /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/batch/:neuronId" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Batch runner failed"><BatchRunner /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/service-results" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Results failed to load"><ServiceResults /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/credits" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Credits failed to load"><Credits /></ErrorBoundary></AppLayout></ProtectedRoute>} />

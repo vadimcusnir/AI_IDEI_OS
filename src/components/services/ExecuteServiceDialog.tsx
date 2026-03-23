@@ -18,15 +18,7 @@ interface ExecuteServiceDialogProps {
 
 type ExecState = "configure" | "executing" | "done" | "error";
 
-/** Generate a service_key from a service name */
-function toServiceKey(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .slice(0, 80);
-}
+/** service_registry.id IS the service_key (slug format) */
 
 export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceDialogProps) {
   const [input, setInput] = useState("");
@@ -66,7 +58,7 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
         return;
       }
 
-      const serviceKey = toServiceKey(service.name);
+      const serviceKey = service.id; // registry.id is the service_key slug
       const inputText = goal ? `Goal: ${goal}\n\nContent:\n${input}` : input.trim();
 
       // 1. Look up service in service_catalog, or use fallback
