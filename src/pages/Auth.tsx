@@ -67,6 +67,16 @@ export default function Auth() {
       toast.error(t("auth.invalid_email"));
       return;
     }
+    // Block disposable emails on signup
+    if (mode === "signup" && isDisposableEmail(trimmedEmail)) {
+      toast.error(t("common:auth.disposable_email"));
+      return;
+    }
+    // Require ToS acceptance on signup
+    if (mode === "signup" && !tosAccepted) {
+      toast.error(t("common:auth.tos_required"));
+      return;
+    }
     if (mode !== "forgot") {
       if (password.length < 6) {
         toast.error(t("auth.password_min"));
