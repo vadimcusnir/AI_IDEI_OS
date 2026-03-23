@@ -47,7 +47,7 @@ const Intelligence = lazyRetry(() => import("./pages/Intelligence"));
 const Dashboard = lazyRetry(() => import("./pages/Dashboard"));
 const PublicProfile = lazyRetry(() => import("./pages/PublicProfile"));
 const PromptForge = lazyRetry(() => import("./pages/PromptForge"));
-const ProfileExtractor = lazyRetry(() => import("./pages/ProfileExtractor"));
+
 const Notifications = lazyRetry(() => import("./pages/Notifications"));
 const Feedback = lazyRetry(() => import("./pages/Feedback"));
 const Index = lazyRetry(() => import("./pages/Index"));
