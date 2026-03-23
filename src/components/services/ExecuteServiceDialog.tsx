@@ -215,8 +215,13 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
       }
     } catch (err) {
       console.error("Execute error:", err);
+      // RELEASE reserved credits on unexpected failure
+      if (reservedRef.current) {
+        await release(reservedRef.current.amount, reservedRef.current.jobId, "Unexpected error");
+        reservedRef.current = null;
+      }
       setState("error");
-      toast.error("Execuție eșuată. Încearcă din nou.");
+      toast.error("Execuție eșuată. Creditele au fost returnate.");
     }
   }, [service, input, goal, estimatedCost]);
 
