@@ -672,7 +672,7 @@ export default function RunService() {
                       {/* Upsell — monetization loop */}
                       <NeuronBundleUpsell
                         neuronsSpent={service.credits_cost}
-                        currentBalance={credits?.balance ?? 0}
+                        currentBalance={creditBalance}
                       />
                     </>
                   )}
