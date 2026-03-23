@@ -24,6 +24,7 @@ import { ROICalculator } from "@/components/credits/ROICalculator";
 import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall, TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
 import { PostExecutionRecommendations } from "@/components/services/PostExecutionRecommendations";
+import { NeuronBundleUpsell } from "@/components/credits/NeuronBundleUpsell";
 
 interface Service {
   id: string;
