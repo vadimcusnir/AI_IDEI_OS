@@ -209,7 +209,7 @@ function checkRateLimit(userId: string): boolean {
 }
 
 const InputSchema = z.object({
-  messages: z.array(z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string().max(30_000) })).min(1).max(50),
+  messages: z.array(z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string().max(150_000) })).min(1).max(50),
   context: z.object({
     neuron_count: z.number().optional(),
     episode_count: z.number().optional(),
