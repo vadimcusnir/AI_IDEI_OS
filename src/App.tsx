@@ -68,6 +68,7 @@ const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
 const MarketplaceDetail = lazyRetry(() => import("./pages/MarketplaceDetail"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
+const PaymentResult = lazyRetry(() => import("./pages/PaymentResult"));
 const TermsOfService = lazyRetry(() => import("./pages/TermsOfService"));
 const PrivacyPolicy = lazyRetry(() => import("./pages/PrivacyPolicy"));
 const DataPrivacy = lazyRetry(() => import("./pages/DataPrivacy"));
@@ -179,6 +180,7 @@ const App = () => (
                 <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
                 <Route path="/pricing" element={<AppLayout><Pricing /></AppLayout>} />
+                <Route path="/payment/result" element={<AppLayout><PaymentResult /></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
                 <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
                 <Route path="/community/:category" element={<AppLayout><Community /></AppLayout>} />
