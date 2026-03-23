@@ -28,9 +28,10 @@ interface SEOHeadProps {
   description?: string;
   canonical?: string;
   ogImage?: string;
+  jsonLd?: Record<string, unknown>;
 }
 
-export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps) {
+export function SEOHead({ title, description, canonical, ogImage, jsonLd }: SEOHeadProps) {
   useEffect(() => {
     const fullTitle = title.includes("AI-IDEI") ? title : `${title} — AI-IDEI`;
     document.title = fullTitle;
@@ -105,11 +106,27 @@ export function SEOHead({ title, description, canonical, ogImage }: SEOHeadProps
     document.head.appendChild(xDefault);
     createdLinks.push(xDefault);
 
+    // JSON-LD structured data
+    let ldScript = document.querySelector('script[data-seo-jsonld]') as HTMLScriptElement | null;
+    if (jsonLd) {
+      if (!ldScript) {
+        ldScript = document.createElement("script");
+        ldScript.setAttribute("type", "application/ld+json");
+        ldScript.setAttribute("data-seo-jsonld", "true");
+        document.head.appendChild(ldScript);
+      }
+      ldScript.textContent = JSON.stringify(jsonLd);
+    } else if (ldScript) {
+      ldScript.remove();
+    }
+
     // Cleanup on unmount — prevents memory leak
     return () => {
       createdLinks.forEach(el => el.remove());
+      const existingLd = document.querySelector('script[data-seo-jsonld]');
+      if (existingLd) existingLd.remove();
     };
-  }, [title, description, canonical, ogImage]);
+  }, [title, description, canonical, ogImage, jsonLd]);
 
   return null;
 }

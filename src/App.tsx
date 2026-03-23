@@ -100,6 +100,10 @@ const NotebookWorkspace = lazyRetry(() => import("./pages/NotebookWorkspace"));
 const NotebookDetail = lazyRetry(() => import("./pages/NotebookDetail"));
 const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngine"));
 const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
+
+const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
+const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
+const PublicProfileEntityPage = lazyRetry(() => import("./pages/PublicProfileEntityPage"));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -145,21 +149,24 @@ const App = () => (
                 <Route path="/docs" element={<AppLayout><Docs /></AppLayout>} />
                 <Route path="/docs/:section/:topic" element={<AppLayout><Docs /></AppLayout>} />
                 <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
+                {/* ═══ Public SEO-indexable entity pages (lightweight, no Auth providers) ═══ */}
+                <Route path="/knowledge/:slug" element={<PublicEntityPage />} />
+                <Route path="/insights/:slug" element={<PublicInsightPage />} />
+                <Route path="/profiles/:slug" element={<PublicProfileEntityPage />} />
+                <Route path="/patterns/:slug" element={<PublicEntityPage />} />
+                <Route path="/formulas/:slug" element={<PublicEntityPage />} />
+                <Route path="/contradictions/:slug" element={<PublicEntityPage />} />
+                <Route path="/applications/:slug" element={<PublicEntityPage />} />
+                <Route path="/topics/:slug" element={<PublicEntityPage />} />
+                {/* Index pages → library for authenticated users */}
                 <Route path="/insights" element={<Navigate to="/library" replace />} />
-                <Route path="/insights/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/patterns" element={<Navigate to="/library" replace />} />
-                <Route path="/patterns/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/formulas" element={<Navigate to="/library" replace />} />
-                <Route path="/formulas/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/contradictions" element={<Navigate to="/library" replace />} />
-                <Route path="/contradictions/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/applications" element={<Navigate to="/library" replace />} />
-                <Route path="/applications/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/profiles" element={<Navigate to="/library" replace />} />
-                <Route path="/profiles/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/topics" element={<Navigate to="/library" replace />} />
                 <Route path="/topics/discovery" element={<Navigate to="/library" replace />} />
-                <Route path="/topics/:slug" element={<Navigate to="/library" replace />} />
                 <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
                 <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
                 <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
@@ -168,7 +175,7 @@ const App = () => (
                 <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
                 <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
-                <Route path="/knowledge/*" element={<Navigate to="/library" replace />} />
+                {/* /knowledge/:slug is handled above as public route */}
                 <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
                 <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
                 <Route path="/pricing" element={<AppLayout><Pricing /></AppLayout>} />

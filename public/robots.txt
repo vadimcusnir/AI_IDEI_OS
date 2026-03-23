@@ -21,6 +21,15 @@ Allow: /
 
 User-agent: *
 Allow: /
+Allow: /knowledge/
+Allow: /insights/
+Allow: /profiles/
+Allow: /patterns/
+Allow: /formulas/
+Allow: /marketplace/
+Allow: /media/profiles/
+Allow: /docs/
+Allow: /topics/
 Disallow: /admin
 Disallow: /runtime
 Disallow: /analytics
@@ -29,6 +38,16 @@ Disallow: /db-schema
 Disallow: /onboarding
 Disallow: /data-privacy
 Disallow: /workspace
+Disallow: /library
+Disallow: /home
+Disallow: /neurons
+Disallow: /jobs
+Disallow: /credits
+Disallow: /profile
+Disallow: /wallet
+Disallow: /chat
+Disallow: /extractor
+Disallow: /notifications
 
 Sitemap: https://ai-idei.com/sitemap-static.xml
 Sitemap: https://ai-idei.com/api/sitemap
