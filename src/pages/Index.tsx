@@ -202,6 +202,7 @@ export default function Index() {
           {selectedIds.size > 0 && (
             <div className="flex items-center gap-2 mb-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-2">
               <span className="text-xs font-medium text-primary">{t("neurons_index.selected", { count: selectedIds.size })}</span>
+              <BulkAIActions selectedCount={selectedIds.size} selectedIds={selectedIds} />
               <div className="flex-1" />
               <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={selectAll}>
                 <CheckSquare className="h-3 w-3" /> {t("neurons_index.select_all")}
