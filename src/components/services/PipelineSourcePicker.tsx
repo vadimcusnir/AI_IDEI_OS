@@ -116,7 +116,7 @@ export function PipelineSourcePicker({ value, onChange, placeholder, minRows = 4
     if (result.wasTruncated) {
       toast.info(formatTruncationMessage(result), { duration: 6000 });
     }
-  };
+    setOpen(false);
   };
 
   return (
