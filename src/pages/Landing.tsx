@@ -90,8 +90,8 @@ function ScrollProgress() {
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { i18n } = useTranslation();
-  const currentLang = LANG_OPTIONS.find(l => l.code === i18n.language) || LANG_OPTIONS[0];
+  const { currentLanguage, changeLanguage } = useLocale();
+  const currentLang = LANG_OPTIONS.find(l => l.code === currentLanguage) || LANG_OPTIONS[0];
   const heroRef = useRef<HTMLDivElement>(null);
   // Hero opacity fade removed — headlines and CTAs must remain stable
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
