@@ -1,8 +1,6 @@
-/**
- * Landing Footer — matches obsidian/ivory/gold visual language.
- */
 import { Link } from "react-router-dom";
 import { Logo } from "@/components/shared/Logo";
+import { useTranslation } from "react-i18next";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
@@ -13,6 +11,8 @@ function FooterLink({ to, children }: { to: string; children: React.ReactNode })
 }
 
 export function LandingFooter() {
+  const { t } = useTranslation("landing");
+
   return (
     <footer className="border-t border-border bg-background" role="contentinfo">
       <div className="mx-auto max-w-5xl px-5 sm:px-6 py-12 sm:py-16">
@@ -24,47 +24,47 @@ export function LandingFooter() {
               <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
             </div>
             <p className="max-w-[200px] text-sm text-muted-foreground leading-relaxed">
-              Practical AI for copywriting, marketing, and execution.
+              {t("footer.brand_desc")}
             </p>
           </div>
 
           {/* Platform */}
           <div className="space-y-3">
-            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Platform</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">{t("footer.platform")}</h3>
             <ul className="space-y-2.5">
-              <li><FooterLink to="/services">Services</FooterLink></li>
-              <li><FooterLink to="/marketplace">Marketplace</FooterLink></li>
-              <li><FooterLink to="/pipeline">Pipeline</FooterLink></li>
+              <li><FooterLink to="/services">{t("footer.services")}</FooterLink></li>
+              <li><FooterLink to="/marketplace">{t("footer.marketplace")}</FooterLink></li>
+              <li><FooterLink to="/pipeline">{t("footer.pipeline")}</FooterLink></li>
             </ul>
           </div>
 
           {/* Resources */}
           <div className="space-y-3">
-            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Resources</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">{t("footer.resources")}</h3>
             <ul className="space-y-2.5">
-              <li><FooterLink to="/docs">Documentation</FooterLink></li>
-              <li><FooterLink to="/knowledge">Knowledge Base</FooterLink></li>
-              <li><FooterLink to="/changelog">Changelog</FooterLink></li>
+              <li><FooterLink to="/docs">{t("footer.documentation")}</FooterLink></li>
+              <li><FooterLink to="/knowledge">{t("footer.knowledge_base")}</FooterLink></li>
+              <li><FooterLink to="/changelog">{t("footer.changelog")}</FooterLink></li>
             </ul>
           </div>
 
           {/* Community */}
           <div className="space-y-3">
-            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Community</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">{t("footer.community")}</h3>
             <ul className="space-y-2.5">
-              <li><FooterLink to="/community">Forum</FooterLink></li>
-              <li><FooterLink to="/topics">Topics</FooterLink></li>
-              <li><FooterLink to="/feedback">Feedback</FooterLink></li>
+              <li><FooterLink to="/community">{t("footer.forum")}</FooterLink></li>
+              <li><FooterLink to="/topics">{t("footer.topics")}</FooterLink></li>
+              <li><FooterLink to="/feedback">{t("footer.feedback")}</FooterLink></li>
             </ul>
           </div>
 
           {/* Legal */}
           <div className="space-y-3">
-            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">Legal</h3>
+            <h3 className="text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground uppercase">{t("footer.legal")}</h3>
             <ul className="space-y-2.5">
-              <li><FooterLink to="/terms">Terms</FooterLink></li>
-              <li><FooterLink to="/privacy">Privacy</FooterLink></li>
-              <li><FooterLink to="/data-privacy">Data Privacy</FooterLink></li>
+              <li><FooterLink to="/terms">{t("footer.terms")}</FooterLink></li>
+              <li><FooterLink to="/privacy">{t("footer.privacy")}</FooterLink></li>
+              <li><FooterLink to="/data-privacy">{t("footer.data_privacy")}</FooterLink></li>
             </ul>
           </div>
         </div>
@@ -72,12 +72,12 @@ export function LandingFooter() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:flex-row">
           <span className="text-xs sm:text-sm font-mono text-muted-foreground">
-            © {new Date().getFullYear()} AI-IDEI · From rough idea to persuasive asset.
+            © {new Date().getFullYear()} AI-IDEI · {t("footer.copyright")}
           </span>
           <div className="flex items-center gap-6">
-            <FooterLink to="/terms">Terms</FooterLink>
-            <FooterLink to="/privacy">Privacy</FooterLink>
-            <FooterLink to="/docs">Docs</FooterLink>
+            <FooterLink to="/terms">{t("footer.terms")}</FooterLink>
+            <FooterLink to="/privacy">{t("footer.privacy")}</FooterLink>
+            <FooterLink to="/docs">{t("footer.docs")}</FooterLink>
           </div>
         </div>
       </div>
