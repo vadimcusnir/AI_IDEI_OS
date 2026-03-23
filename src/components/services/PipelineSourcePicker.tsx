@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
+import { toast } from "sonner";
 import {
   Mic, Brain, Search, Check, Loader2, ChevronDown, ChevronUp, Clock, Sparkles,
 } from "lucide-react";
@@ -107,7 +109,11 @@ export function PipelineSourcePicker({ value, onChange, placeholder, minRows = 4
 
   const handleSelect = (src: SourceItem) => {
     setSelectedId(src.id);
-    onChange(src.fullContent);
+    const result = truncateForService(src.fullContent);
+    onChange(result.content);
+    if (result.wasTruncated) {
+      toast.info(formatTruncationMessage(result), { duration: 6000 });
+    }
     setOpen(false);
   };
 

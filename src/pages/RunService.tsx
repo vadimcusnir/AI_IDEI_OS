@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
@@ -147,6 +148,20 @@ export default function RunService() {
       return;
     }
 
+    // Truncate oversized content and notify user
+    const truncatedInputs = { ...inputs };
+    let wasAnyTruncated = false;
+    for (const key of Object.keys(truncatedInputs)) {
+      if (typeof truncatedInputs[key] === "string" && truncatedInputs[key].length > 500) {
+        const result = truncateForService(truncatedInputs[key]);
+        if (result.wasTruncated) {
+          truncatedInputs[key] = result.content;
+          wasAnyTruncated = true;
+          toast.info(formatTruncationMessage(result), { duration: 6000 });
+        }
+      }
+    }
+
     setJobStatus("creating");
 
     try {
@@ -170,7 +185,7 @@ export default function RunService() {
           author_id: user.id,
           worker_type: service.service_key,
           status: "pending",
-          input: inputs,
+          input: truncatedInputs,
         } as any)
         .select("id")
         .single();
@@ -200,7 +215,7 @@ export default function RunService() {
             job_id: job.id,
             service_key: service.service_key,
             neuron_id: neuron.id,
-            inputs,
+            inputs: truncatedInputs,
             // Pass pipeline-specific params
             ...(service.service_key === "market-research-full" ? {
               industry: inputs.industry || "",
