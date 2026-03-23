@@ -568,14 +568,8 @@ export default function Services() {
         )}
       </div>
 
-      {/* Compare drawer */}
-      <ServiceCompareDrawer
-        services={compareServices}
-        onRemove={(id) => toggleCompare(id)}
-        onClear={() => setCompareIds(new Set())}
-        categoryConfig={CATEGORY_CONFIG}
-        classBadge={CLASS_BADGE}
-      />
+
+
 
       <PremiumPaywall
         open={paywallOpen}
