@@ -98,11 +98,11 @@ export function HomePricingSection() {
               <Crown className="h-4 w-4 text-primary" />
               <h3 className="text-sm font-semibold">Pro Plan</h3>
               <Badge variant="outline" className="text-[9px] border-primary/30 text-primary">
-                Salvează 53%
+                -25% cost execuție
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
-              10.000 NEURONS/lună, toate serviciile AI, procesare prioritară, batch processing.
+              12.000 NEURONS/lună, toate serviciile AI, procesare prioritară, batch processing.
             </p>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
               {["Extracție nelimitată", "Procesare prioritară", "Analytics avansat"].map(f => (

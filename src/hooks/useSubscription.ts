@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
+export const NEURONS_EXCHANGE_RATE = 0.002; // 1 NEURON = $0.002 USD → $1 = 500 NEURONS
+
 export const SUBSCRIPTION_TIERS = {
   core_monthly: {
     price_id: "price_1T8qQtIK7fwtty4o6GFGNU28",
@@ -10,7 +12,8 @@ export const SUBSCRIPTION_TIERS = {
     price: 11,
     interval: "month" as const,
     neurons_quota: 2000,
-    features: ["Toate serviciile AI", "Extracție nelimitată", "Knowledge Graph"],
+    execution_discount: 0.10, // -10% on service costs
+    features: ["2,000 NEURONS / lună", "Toate serviciile AI", "Extracție nelimitată", "Knowledge Graph", "-10% cost execuție"],
   },
   pro_monthly: {
     price_id: "price_1T8qRgIK7fwtty4ox2y0cEZJ",
@@ -18,8 +21,9 @@ export const SUBSCRIPTION_TIERS = {
     name: "Pro",
     price: 47,
     interval: "month" as const,
-    neurons_quota: 10000,
-    features: ["Tot din Core", "Procesare prioritară", "Batch processing", "Analytics avansat"],
+    neurons_quota: 12000,
+    execution_discount: 0.25, // -25% on service costs
+    features: ["12,000 NEURONS / lună", "Tot din Core", "Procesare prioritară", "Batch processing", "Analytics avansat", "-25% cost execuție"],
   },
   elite_monthly: {
     price_id: "price_elite_placeholder",
@@ -27,8 +31,9 @@ export const SUBSCRIPTION_TIERS = {
     name: "Elite",
     price: 137,
     interval: "month" as const,
-    neurons_quota: 50000,
-    features: ["Tot din Pro", "Locuri nelimitate", "SLA & suport dedicat", "NOTA2 benefits"],
+    neurons_quota: 40000,
+    execution_discount: 0.40, // -40% on service costs
+    features: ["40,000 NEURONS / lună", "Tot din Pro", "Locuri nelimitate", "SLA & suport dedicat", "NOTA2 benefits", "-40% cost execuție"],
   },
 } as const;
 
