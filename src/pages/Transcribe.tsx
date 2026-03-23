@@ -13,6 +13,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 export default function Transcribe() {
   const { user } = useAuth();
