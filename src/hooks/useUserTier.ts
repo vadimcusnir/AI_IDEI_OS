@@ -24,7 +24,7 @@ export function useUserTier(): { tier: UserTier; loading: boolean } {
 
   const tier = useMemo<UserTier>(() => {
     if (!user) return "free";
-    if (isAdmin) return "pro";
+    if (isAdmin) return "vip"; // Admins get full unrestricted access
     if (subscribed && subTier) return "pro";
     return "authenticated";
   }, [user, isAdmin, subscribed, subTier]);
