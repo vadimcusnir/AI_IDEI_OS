@@ -8753,9 +8753,27 @@ export type Database = {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean
       }
+      release_neurons: {
+        Args: {
+          _amount: number
+          _description?: string
+          _job_id?: string
+          _user_id: string
+        }
+        Returns: Json
+      }
       reserve_credits: {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean
+      }
+      reserve_neurons: {
+        Args: {
+          _amount: number
+          _description?: string
+          _job_id?: string
+          _user_id: string
+        }
+        Returns: Json
       }
       reset_api_key_counters: { Args: never; Returns: undefined }
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
@@ -8802,6 +8820,15 @@ export type Database = {
       settle_credits: {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean
+      }
+      settle_neurons: {
+        Args: {
+          _amount: number
+          _description?: string
+          _job_id?: string
+          _user_id: string
+        }
+        Returns: Json
       }
       spend_credits: {
         Args: {
