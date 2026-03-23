@@ -127,32 +127,36 @@ export function useUserBehavior(): BehaviorState {
     if (!user) return;
     const today = new Date().toISOString().slice(0, 10);
 
-    const txPromise = supabase
-      .from("credit_transactions")
-      .select("amount")
-      .eq("user_id", user.id)
-      .eq("type", "spend")
-      .gte("created_at", `${today}T00:00:00Z`) as any;
-    const jobsPromise: Promise<any> = supabase
-      .from("neuron_jobs")
-      .select("id", { count: "exact" } as any)
-      .eq("user_id", user.id);
-    const lastPromise = supabase
-      .from("analytics_events")
-      .select("created_at")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(1) as any;
+    const loadUsageData = async () => {
+      try {
+        const txRes = await (supabase
+          .from("credit_transactions")
+          .select("amount")
+          .eq("user_id", user.id)
+          .eq("type", "spend")
+          .gte("created_at", `${today}T00:00:00Z`) as any);
+        if (txRes.data) {
+          setUsageToday(txRes.data.reduce((sum: number, t: any) => sum + Math.abs(Number(t.amount) || 0), 0));
+        }
 
-    Promise.all([txPromise, jobsPromise, lastPromise]).then(([txRes, jobsRes, lastRes]: any[]) => {
-      if (txRes.data) {
-        setUsageToday(txRes.data.reduce((sum: number, t: any) => sum + Math.abs(Number(t.amount) || 0), 0));
-      }
-      setTotalServices(jobsRes.count ?? 0);
-      if (lastRes.data?.[0]) {
-        setLastActiveDate((lastRes.data[0] as any).created_at);
-      }
-    });
+        const jobsRes = await (supabase
+          .from("neuron_jobs" as any)
+          .select("id")
+          .eq("user_id", user.id) as any);
+        setTotalServices(jobsRes.data?.length ?? 0);
+
+        const lastRes = await (supabase
+          .from("analytics_events")
+          .select("created_at")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(1) as any);
+        if (lastRes.data?.[0]) {
+          setLastActiveDate(lastRes.data[0].created_at);
+        }
+      } catch { /* silent */ }
+    };
+    loadUsageData();
   }, [user]);
 
   // ─── LAYER 1: User Classification ───
