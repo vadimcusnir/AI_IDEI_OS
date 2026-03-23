@@ -77,6 +77,7 @@ export default function RunService() {
   const [jobId, setJobId] = useState<string | null>(null);
   const [accessVerdict, setAccessVerdict] = useState<AccessVerdict | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [selectedSourceId, setSelectedSourceId] = useState<string | undefined>();
 
   const userTier = subscribed ? (subTier || "pro") : "free";
 
