@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription, SUBSCRIPTION_TIERS } from "@/hooks/useSubscription";
+import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/SEOHead";
 import { FAQJsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Sparkles, Zap, Crown, ArrowRight, Brain } from "lucide-react";
+import { Check, Sparkles, Zap, Crown, ArrowRight, Brain, Loader2, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
-import { isRoot2 } from "@/lib/root2";
+import { toast } from "sonner";
 
 const PLANS = [
   {
@@ -19,6 +22,8 @@ const PLANS = [
     neurons: "500",
     badge: null,
     highlight: false,
+    priceId: null,
+    mode: null as "subscription" | "topup" | null,
     features: [
       "500 NEURONS credits",
       "3 transcriptions / month",
@@ -36,6 +41,8 @@ const PLANS = [
     neurons: "5,000",
     badge: "Popular",
     highlight: true,
+    priceId: Object.values(SUBSCRIPTION_TIERS).find(t => t.interval === "month")?.price_id || null,
+    mode: "subscription" as const,
     features: [
       "5,000 NEURONS / month",
       "Unlimited transcriptions",
@@ -55,6 +62,9 @@ const PLANS = [
     neurons: "20,000",
     badge: null,
     highlight: false,
+    priceId: null,
+    mode: "topup" as const,
+    topupPackage: "pro",
     features: [
       "20,000 NEURONS / month",
       "Everything in Creator",
@@ -74,6 +84,8 @@ const PLANS = [
     neurons: "100,000",
     badge: "Max Power",
     highlight: false,
+    priceId: null,
+    mode: null,
     features: [
       "100,000 NEURONS / month",
       "Everything in Professional",
@@ -96,8 +108,68 @@ const FAQ_ITEMS = [
 
 export default function Pricing() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, session } = useAuth();
+  const { subscribed, tier, subscribe } = useSubscription();
   const { t } = useTranslation("pages");
+  const [processing, setProcessing] = useState<string | null>(null);
+
+  const handlePlanAction = async (plan: typeof PLANS[number]) => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
+    // Free plan — go to home
+    if (plan.key === "free") {
+      navigate("/home");
+      return;
+    }
+
+    // Enterprise — contact
+    if (plan.key === "enterprise") {
+      navigate("/credits");
+      return;
+    }
+
+    // Subscription plan with priceId
+    if (plan.mode === "subscription" && plan.priceId) {
+      setProcessing(plan.key);
+      try {
+        await subscribe(plan.priceId);
+      } catch (e: any) {
+        toast.error(e.message || "Checkout failed");
+      } finally {
+        setProcessing(null);
+      }
+      return;
+    }
+
+    // Top-up package
+    if (plan.mode === "topup" && (plan as any).topupPackage) {
+      setProcessing(plan.key);
+      try {
+        const { data, error } = await supabase.functions.invoke("create-topup-checkout", {
+          body: { package_key: (plan as any).topupPackage },
+        });
+        if (error) throw new Error(error.message);
+        if (data?.url) window.open(data.url, "_blank");
+      } catch (e: any) {
+        toast.error(e.message || "Checkout failed");
+      } finally {
+        setProcessing(null);
+      }
+      return;
+    }
+
+    // Fallback
+    navigate("/credits");
+  };
+
+  const isCurrentPlan = (planKey: string) => {
+    if (planKey === "free" && !subscribed) return true;
+    if (planKey === "creator" && tier === "pro_monthly") return true;
+    return false;
+  };
 
   return (
     <PageTransition>
@@ -126,51 +198,69 @@ export default function Pricing() {
         {/* Plans Grid */}
         <section className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {PLANS.map((plan) => (
-              <div
-                key={plan.key}
-                className={cn(
-                  "relative flex flex-col rounded-xl border p-5 transition-all",
-                  plan.highlight
-                    ? "border-primary bg-primary/[0.03] shadow-lg shadow-primary/10 scale-[1.02]"
-                    : "border-border bg-card hover:border-primary/30"
-                )}
-              >
-                {plan.badge && (
-                  <Badge className="absolute -top-2.5 right-4 text-[10px]">{plan.badge}</Badge>
-                )}
-                <h3 className="text-sm font-semibold mb-1">{plan.name}</h3>
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-3xl font-bold font-mono">${plan.price}</span>
-                  {plan.period && <span className="text-xs text-muted-foreground">{plan.period}</span>}
-                </div>
-                <p className="text-[10px] text-muted-foreground mb-4">
-                  {plan.neurons} NEURONS / month
-                </p>
+            {PLANS.map((plan) => {
+              const isCurrent = isCurrentPlan(plan.key);
+              const isProcessingThis = processing === plan.key;
 
-                <ul className="space-y-2 flex-1 mb-5">
-                  {plan.features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs">
-                      <Check className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  variant={plan.highlight ? "default" : "outline"}
-                  size="sm"
-                  className="w-full text-xs"
-                  onClick={() => {
-                    if (!user) navigate("/auth");
-                    else navigate("/credits");
-                  }}
+              return (
+                <div
+                  key={plan.key}
+                  className={cn(
+                    "relative flex flex-col rounded-xl border p-5 transition-all",
+                    isCurrent
+                      ? "border-primary bg-primary/[0.03] shadow-lg shadow-primary/10 ring-1 ring-primary/20"
+                      : plan.highlight
+                        ? "border-primary/50 bg-primary/[0.02] shadow-md shadow-primary/5"
+                        : "border-border bg-card hover:border-primary/30"
+                  )}
                 >
-                  {plan.cta}
-                  <ArrowRight className="h-3 w-3 ml-1" />
-                </Button>
-              </div>
-            ))}
+                  {plan.badge && (
+                    <Badge className="absolute -top-2.5 right-4 text-[10px]">{plan.badge}</Badge>
+                  )}
+                  {isCurrent && (
+                    <Badge className="absolute -top-2.5 left-4 text-[10px] bg-primary text-primary-foreground">
+                      Planul tău
+                    </Badge>
+                  )}
+
+                  <h3 className="text-sm font-semibold mb-1">{plan.name}</h3>
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-3xl font-bold font-mono">${plan.price}</span>
+                    {plan.period && <span className="text-xs text-muted-foreground">{plan.period}</span>}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mb-4">
+                    {plan.neurons} NEURONS / month
+                  </p>
+
+                  <ul className="space-y-2 flex-1 mb-5">
+                    {plan.features.map((f, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs">
+                        <Check className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    variant={plan.highlight || isCurrent ? "default" : "outline"}
+                    size="sm"
+                    className="w-full text-xs gap-1"
+                    onClick={() => handlePlanAction(plan)}
+                    disabled={isCurrent || !!processing}
+                  >
+                    {isProcessingThis ? (
+                      <><Loader2 className="h-3 w-3 animate-spin" /> Se procesează...</>
+                    ) : isCurrent ? (
+                      "Plan activ"
+                    ) : plan.mode === "subscription" || plan.mode === "topup" ? (
+                      <><ShoppingCart className="h-3 w-3" /> {plan.cta}</>
+                    ) : (
+                      <>{plan.cta} <ArrowRight className="h-3 w-3" /></>
+                    )}
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         </section>
 
