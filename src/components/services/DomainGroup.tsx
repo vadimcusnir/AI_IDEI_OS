@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ServiceCard, type ServiceItem } from "./ServiceCard";
+import { RegistryCard, type RegistryServiceItem } from "./RegistryCard";
 
 const DOMAIN_LABELS: Record<string, { label: string; emoji: string }> = {
   hooks: { label: "Hooks & Openers", emoji: "🎣" },
@@ -23,15 +23,14 @@ const DOMAIN_LABELS: Record<string, { label: string; emoji: string }> = {
 
 interface DomainGroupProps {
   domain: string;
-  services: ServiceItem[];
+  services: RegistryServiceItem[];
   defaultOpen?: boolean;
-  onServiceClick: (service: ServiceItem) => void;
+  onServiceClick: (service: RegistryServiceItem) => void;
 }
 
 export function DomainGroup({ domain, services, defaultOpen = false, onServiceClick }: DomainGroupProps) {
   const [open, setOpen] = useState(defaultOpen);
   const meta = DOMAIN_LABELS[domain] || { label: domain, emoji: "📦" };
-  const visibleServices = open ? services : [];
 
   return (
     <div className="border border-border rounded-xl overflow-hidden bg-card/50">
@@ -49,8 +48,8 @@ export function DomainGroup({ domain, services, defaultOpen = false, onServiceCl
 
       {open && (
         <div className="px-3 pb-3 space-y-1">
-          {visibleServices.map(s => (
-            <ServiceCard key={s.id} service={s} onClick={onServiceClick} />
+          {services.map(s => (
+            <RegistryCard key={s.id} service={s} onClick={onServiceClick} />
           ))}
         </div>
       )}

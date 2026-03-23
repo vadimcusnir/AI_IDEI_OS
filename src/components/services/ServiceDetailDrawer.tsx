@@ -1,13 +1,13 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Coins, Zap, Layers, Server, Play } from "lucide-react";
+import { Coins, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ServiceItem } from "./ServiceCard";
-import { LEVEL_META, TIER_COLORS } from "./ServiceCard";
+import { LEVEL_META, TIER_COLORS, type RegistryServiceItem } from "./RegistryCard";
+import { Zap } from "lucide-react";
 
 interface ServiceDetailDrawerProps {
-  service: ServiceItem | null;
+  service: RegistryServiceItem | null;
   open: boolean;
   onClose: () => void;
 }
@@ -28,10 +28,10 @@ export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDra
             <div className="flex-1 min-w-0">
               <SheetTitle className="text-base leading-tight">{service.name}</SheetTitle>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline" className={cn("text-[9px] h-4.5 px-1.5 border", TIER_COLORS[service.score_tier] || TIER_COLORS.C)}>
+                <Badge variant="outline" className={cn("text-[9px] px-1.5 border", TIER_COLORS[service.score_tier] || TIER_COLORS.C)}>
                   Tier {service.score_tier}
                 </Badge>
-                <Badge variant="outline" className="text-[9px] h-4.5 px-1.5">
+                <Badge variant="outline" className="text-[9px] px-1.5">
                   {service.service_level}
                 </Badge>
               </div>
@@ -40,11 +40,11 @@ export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDra
         </SheetHeader>
 
         <div className="space-y-5 pt-2">
-          {/* Cost section */}
+          {/* Cost */}
           <div className="bg-muted/50 rounded-xl p-4 space-y-2">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Cost</p>
             <div className="flex items-center gap-2">
-              <Coins className="h-4 w-4 text-amber-500" />
+              <Coins className="h-4 w-4 text-primary" />
               <span className="text-lg font-bold font-mono">{service.neurons_cost_min}–{service.neurons_cost_max}</span>
               <span className="text-xs text-muted-foreground">NEURONS</span>
             </div>
@@ -53,7 +53,7 @@ export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDra
             </p>
           </div>
 
-          {/* Details grid */}
+          {/* Details */}
           <div className="grid grid-cols-2 gap-3">
             {[
               { label: "Domain", value: service.domain },
@@ -68,7 +68,6 @@ export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDra
             ))}
           </div>
 
-          {/* Intent */}
           {service.intent && (
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">Intent / Axis</p>
@@ -76,7 +75,6 @@ export function ServiceDetailDrawer({ service, open, onClose }: ServiceDetailDra
             </div>
           )}
 
-          {/* CTA */}
           <Button className="w-full gap-2" size="lg">
             <Play className="h-4 w-4" />
             Execute Service
