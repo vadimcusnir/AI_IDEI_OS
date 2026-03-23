@@ -8457,6 +8457,10 @@ export type Database = {
       compute_user_intelligence: { Args: { _user_id: string }; Returns: Json }
       data_pipeline_stats: { Args: never; Returns: Json }
       deactivate_emergency: { Args: { _control_id: string }; Returns: boolean }
+      deduct_neurons: {
+        Args: { _amount: number; _service_id?: string; _user_id: string }
+        Returns: number
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
