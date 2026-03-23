@@ -38,6 +38,7 @@ import { format } from "date-fns";
 import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useTranslation } from "react-i18next";
+import { FlowTip } from "@/components/onboarding/FlowTip";
 
 interface Artifact {
   id: string;
