@@ -297,7 +297,7 @@ export default function Services() {
               const count = layerCounts[layer.key];
               const isActive = activeLayer === layer.key;
               // Hide auth-only tabs for visitors
-              if (!user && (layer.key === "avatar" || layer.key === "pipelines" || layer.key === "history")) return null;
+              if (!user && (layer.key === "pipelines" || layer.key === "history")) return null;
               return (
                 <button
                   key={layer.key}
