@@ -111,7 +111,7 @@ const AUTH_SECTIONS: NavSection[] = [
       { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
       { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
       { labelKey: "capitalization", to: "/capitalization", icon: Crown, controlId: "nav.capitalization" },
-      { labelKey: "chat", to: "/chat", icon: Terminal, controlId: "nav.chat" },
+      { labelKey: "command_center", to: "/chat", icon: Terminal, controlId: "nav.chat" },
       { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
       { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
       { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units", minTier: "pro" as UserTier },
