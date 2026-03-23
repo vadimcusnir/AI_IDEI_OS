@@ -31,6 +31,7 @@ import { TaskTree } from "./TaskTree";
 import { EconomicGate, KernelBadge } from "./EconomicGate";
 import { PermissionGate } from "./PermissionGate";
 import { PostExecutionPanel } from "./PostExecutionPanel";
+import { ContextActions } from "./ContextActions";
 import { ExecutionStatusBar } from "./ExecutionStatusBar";
 import { useUserTier } from "@/hooks/useUserTier";
 import { routeCommand, type RouteResult } from "./CommandRouter";
