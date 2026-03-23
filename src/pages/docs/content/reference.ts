@@ -199,7 +199,7 @@ The highest-order derivative combining insights, patterns, formulas, and contrad
 ## Economics
 
 ### NEURONS (Credits)
-The compute currency that powers all AI operations. Fixed pricing: 1000 credits = 11 USD. Credits are consumed by transcription, extraction, and generation services.
+The compute currency that powers all AI operations. Fixed pricing: $1 = 500 NEURONS ($0.002 per credit). Credits are consumed by transcription, extraction, and generation services.
 
 **Related:** [Credits & Pricing](/docs/getting-started/credits-system)
 
