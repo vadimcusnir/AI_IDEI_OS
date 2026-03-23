@@ -27,6 +27,7 @@ interface ContextActionsProps {
   lastIntent?: string;
   phase: string;
   onAction: (prompt: string) => void;
+  onOpenPipeline?: () => void;
 }
 
 export function ContextActions({
