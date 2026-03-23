@@ -326,8 +326,61 @@ export default function Library() {
           </div>
         </div>
 
-        {/* Empty state */}
-        {artifacts.length === 0 ? (
+        {/* Neurons grid */}
+        {(activeTab === "all" || activeTab === "neurons") && filteredNeurons.length > 0 && (
+          <>
+            {activeTab === "all" && (
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
+                <Brain className="h-3 w-3" /> Neuroni extrași ({filteredNeurons.length})
+              </h3>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+              {filteredNeurons.map(neuron => (
+                <div
+                  key={neuron.id}
+                  className="group bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
+                  onClick={() => navigate(`/n/${neuron.number}`)}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+                        {neuron.content_category || "neuron"}
+                      </span>
+                      <Badge variant="outline" className="text-[8px]">#{neuron.number}</Badge>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className={cn("h-1.5 w-1.5 rounded-full", neuron.status === "published" ? "bg-status-validated" : "bg-muted-foreground/40")} />
+                      <span className="text-[9px] text-muted-foreground">{neuron.status}</span>
+                    </div>
+                  </div>
+                  <h3 className="text-sm font-medium mb-1.5 line-clamp-2">{neuron.title}</h3>
+                  {neuron.blockPreview && (
+                    <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
+                      {neuron.blockPreview}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                    <span className="text-[9px] text-muted-foreground flex items-center gap-1">
+                      <Clock className="h-2.5 w-2.5" />
+                      {format(new Date(neuron.updated_at), "dd MMM yyyy")}
+                    </span>
+                    <span className="text-[9px] text-muted-foreground/60">{neuron.lifecycle}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Artifacts grid */}
+        {(activeTab === "all" || activeTab === "artifacts") && (
+          <>
+            {activeTab === "all" && artifacts.length > 0 && (
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
+                <FileText className="h-3 w-3" /> Artefacte generate ({filtered.length})
+              </h3>
+            )}
+            {(activeTab === "artifacts" ? filtered.length === 0 : artifacts.length === 0) && neurons.length === 0 ? (
           <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
             <FileText className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
             <h2 className="text-base font-bold mb-1">{t("library.no_artifacts")}</h2>
@@ -338,11 +391,11 @@ export default function Library() {
               {t("library.view_services")} <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
-        ) : filtered.length === 0 ? (
+        ) : filtered.length === 0 && activeTab !== "all" ? (
           <div className="text-center py-12">
             <p className="text-sm text-muted-foreground">{t("library.no_filter_match")}</p>
           </div>
-        ) : (
+        ) : filtered.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {filtered.map(artifact => {
               const typeConf = TYPE_CONFIG[artifact.artifact_type];
