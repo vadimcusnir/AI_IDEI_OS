@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Coins, Play, Loader2, CheckCircle, Copy, RotateCcw, Zap, AlertTriangle } from "lucide-react";
+import { Coins, Play, Loader2, CheckCircle, Copy, RotateCcw, Zap, AlertTriangle, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { type RegistryServiceItem, LEVEL_META, TIER_COLORS } from "./RegistryCard";
+import { useWalletAtomicity } from "@/hooks/useWalletAtomicity";
 
 interface ExecuteServiceDialogProps {
   service: RegistryServiceItem | null;
