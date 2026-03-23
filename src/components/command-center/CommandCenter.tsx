@@ -90,6 +90,41 @@ export function CommandCenter() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  // ═══ Realtime step tracking ═══
+  useRealtimeSteps({
+    actionId: cmdState.state.actionId,
+    enabled: cmdState.state.phase === "executing" || cmdState.state.phase === "delivering",
+    onStepUpdate: cmdState.updateStep,
+    onAllCompleted: () => {
+      if (cmdState.state.phase === "executing") {
+        cmdState.transition("delivering");
+      }
+    },
+  });
+
+  // ═══ Global keyboard shortcuts ═══
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+      if (e.key === "Escape") {
+        if (loading) {
+          abortRef.current?.abort();
+          setLoading(false);
+          setIsStreaming(false);
+        } else if (showMemory) {
+          setShowMemory(false);
+        } else if (showOutputs) {
+          setShowOutputs(false);
+        }
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [loading, showMemory, showOutputs]);
+
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
