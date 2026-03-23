@@ -24,6 +24,7 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [tosAccepted, setTosAccepted] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
