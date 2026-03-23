@@ -12,15 +12,13 @@ import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Loader2, User,
-  X, Paperclip, RotateCcw, History,
+  Loader2, X, Paperclip, RotateCcw, History,
   Zap, Coins, Command, Send,
   PanelRightOpen, PanelRightClose,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
-import { COMMAND_PACKS, type CommandPack } from "@/components/agent/CommandPacks";
 import { useAgentDecisionEngine } from "@/hooks/useAgentDecisionEngine";
 import { CommandBubble, type Message } from "./CommandBubble";
 import { WelcomeScreen } from "./WelcomeScreen";
