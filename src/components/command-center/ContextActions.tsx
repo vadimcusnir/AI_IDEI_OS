@@ -6,7 +6,7 @@
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
-  Brain, Globe, Sparkles, Network, Zap,
+  Brain, Globe, Sparkles, Network, Zap, Workflow,
   FileText, Target, TrendingUp, BookOpen, Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -27,10 +27,11 @@ interface ContextActionsProps {
   lastIntent?: string;
   phase: string;
   onAction: (prompt: string) => void;
+  onOpenPipeline?: () => void;
 }
 
 export function ContextActions({
-  neuronCount, episodeCount, lastIntent, phase, onAction,
+  neuronCount, episodeCount, lastIntent, phase, onAction, onOpenPipeline,
 }: ContextActionsProps) {
   const actions = useMemo<ContextAction[]>(() => {
     const all: ContextAction[] = [];
@@ -110,9 +111,19 @@ export function ContextActions({
       });
     }
 
-    // Limit to 5 most relevant
-    return all.slice(0, 5);
-  }, [neuronCount, episodeCount, lastIntent]);
+    // Pipeline builder — always available as last action
+    if (onOpenPipeline) {
+      all.push({
+        id: "pipeline",
+        icon: Workflow,
+        label: "Pipeline",
+        prompt: "__PIPELINE__",
+        color: "text-primary border-primary/20 hover:bg-primary/5",
+      });
+    }
+
+    return all.slice(0, 6);
+  }, [neuronCount, episodeCount, lastIntent, onOpenPipeline]);
 
   if (phase !== "idle" && phase !== "completed") return null;
 
@@ -126,7 +137,7 @@ export function ContextActions({
       {actions.map((action) => (
         <button
           key={action.id}
-          onClick={() => onAction(action.prompt)}
+          onClick={() => action.prompt === "__PIPELINE__" ? onOpenPipeline?.() : onAction(action.prompt)}
           className={cn(
             "flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-medium transition-all shrink-0",
             action.color,
