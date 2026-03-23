@@ -256,14 +256,10 @@ export default function JobDetail() {
                     {/* Lock overlay */}
                     {art.is_locked && !showFull[art.id] && (
                       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-card to-transparent flex items-end justify-center pb-4">
-                        <Button
-                          size="sm"
-                          className="gap-1.5"
-                          onClick={() => setShowFull(prev => ({ ...prev, [art.id]: true }))}
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                          Deblochează conținut complet
-                        </Button>
+                        <UnlockArtifactButton
+                          artifactId={art.id}
+                          onUnlocked={() => setShowFull(prev => ({ ...prev, [art.id]: true }))}
+                        />
                       </div>
                     )}
                   </div>
