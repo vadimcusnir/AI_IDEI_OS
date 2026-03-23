@@ -94,7 +94,7 @@ export function useUserBehavior(): BehaviorState {
   const [usageToday, setUsageToday] = useState(0);
   const [totalServices, setTotalServices] = useState(0);
   const [lastActiveDate, setLastActiveDate] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Track time on site
   useEffect(() => {
