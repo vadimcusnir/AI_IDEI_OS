@@ -1,0 +1,1 @@
+ALTER TABLE public.user_streaks ADD COLUMN IF NOT EXISTS grace_expires_at timestamptz DEFAULT NULL;
