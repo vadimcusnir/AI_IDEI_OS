@@ -111,8 +111,12 @@ export function PipelineSourcePicker({ value, onChange, placeholder, minRows = 4
 
   const handleSelect = (src: SourceItem) => {
     setSelectedId(src.id);
-    onChange(src.fullContent);
-    setOpen(false);
+    const result = truncateForService(src.fullContent);
+    onChange(result.content);
+    if (result.wasTruncated) {
+      toast.info(formatTruncationMessage(result), { duration: 6000 });
+    }
+  };
   };
 
   return (
