@@ -407,6 +407,7 @@ Deno.serve(async (req) => {
               lifecycle: "structured",
               content_category: item.type || "insight",
               episode_id,
+              workspace_id: workspaceId,
               credits_cost: Math.round(baseCost * extractor.cost_multiplier / 3),
             })
             .select("id")
