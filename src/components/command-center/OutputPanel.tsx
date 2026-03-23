@@ -61,7 +61,7 @@ export function OutputPanel({ outputs, onRerun, onClose, visible }: OutputPanelP
         format: "markdown",
         status: "draft",
         tags: [output.type, "command-center"],
-        metadata: output.metadata || {},
+        metadata: (output.metadata || {}) as any,
       }]);
       if (error) throw error;
       setSavedIds(prev => new Set(prev).add(output.id));
