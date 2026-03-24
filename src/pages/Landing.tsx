@@ -157,21 +157,21 @@ export default function Landing() {
       </div>
 
       {/* ═══ NAV ═══ */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/92 backdrop-blur-xl" role="banner">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/90 backdrop-blur-2xl" role="banner">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group shrink-0 focus-ring rounded-md" aria-label="AI-IDEI home">
-            <Logo size="h-8 w-8" loading="eager" />
+            <Logo size="h-7 w-7" loading="eager" />
             <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
           </button>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
+          <nav className="hidden lg:flex items-center gap-10" aria-label="Main navigation">
             {NAV_LINKS.map(link => (
               <button
                 key={link.label}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
-                  "text-xs font-mono tracking-[0.1em] transition-colors relative py-1 focus-ring rounded-sm",
+                  "text-[11px] font-mono tracking-[0.12em] transition-colors relative py-1.5 focus-ring rounded-sm",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
                     : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"
@@ -181,7 +181,7 @@ export default function Landing() {
                 {activeSection === link.to && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute -bottom-[18px] left-0 right-0 h-[2px] bg-[hsl(var(--gold-oxide))]"
+                    className="absolute -bottom-[17px] left-0 right-0 h-[2px] bg-[hsl(var(--gold-oxide))]"
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -189,7 +189,7 @@ export default function Landing() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2.5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="Language">
@@ -211,7 +211,7 @@ export default function Landing() {
             </DropdownMenu>
             <ThemeToggle />
             {user ? (
-              <Button size="sm" onClick={() => navigate("/home")} className="gap-2 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+              <Button size="sm" onClick={() => navigate("/home")} className="gap-2 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] transition-all duration-200">
                 Dashboard
               </Button>
             ) : (
@@ -219,7 +219,7 @@ export default function Landing() {
                 <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-muted-foreground">
                   Log in
                 </Button>
-                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex">
+                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex transition-all duration-200">
                   Start Free
                   <ArrowRight className="h-3 w-3" />
                 </Button>
@@ -243,21 +243,21 @@ export default function Landing() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
-              className="lg:hidden border-t border-border bg-background/98 overflow-hidden"
+              transition={{ duration: 0.2 }}
+              className="lg:hidden border-t border-border/50 bg-background/98 overflow-hidden"
             >
-              <div className="px-5 py-4 space-y-1">
+              <div className="px-5 py-5 space-y-1">
                 {NAV_LINKS.map(link => (
                   <button
                     key={link.label}
                     onClick={() => scrollTo(link.to)}
-                    className="block w-full text-left text-sm font-mono tracking-[0.08em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3 min-h-[44px] flex items-center border-b border-border"
+                    className="block w-full text-left text-sm font-mono tracking-[0.1em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3.5 min-h-[44px] flex items-center border-b border-border/30"
                   >
                     {link.label.toUpperCase()}
                   </button>
                 ))}
                 {!user && (
-                  <div className="flex gap-3 pt-3">
+                  <div className="flex gap-3 pt-4">
                     <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-sm h-11 min-h-[44px] flex-1 text-muted-foreground">
                       Log in
                     </Button>
