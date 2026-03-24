@@ -161,6 +161,20 @@ export default function MasterAgent() {
         return;
       }
 
+      if (data.status === "INSUFFICIENT_BALANCE") {
+        setStatus("failed");
+        setResult(data);
+        toast.error(`NEURONS insuficienți. Ai nevoie de ${data.estimated_cost}N, ai ${data.balance}N.`);
+        return;
+      }
+
+      if (data.status === "BLOCKED") {
+        setStatus("failed");
+        setResult(data);
+        toast.error(data.reason || "Execuție blocată de Safety Guard");
+        return;
+      }
+
       // Update step progress from result
       if (data.steps) {
         const lastStep = data.steps[data.steps.length - 1];
