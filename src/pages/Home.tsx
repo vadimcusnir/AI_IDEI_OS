@@ -499,7 +499,7 @@ export default function Home() {
       <WelcomeModal />
       <SEOHead title={`${t("pages:home.cockpit")} — AI-IDEI`} description={t("pages:home.cockpit_desc")} />
 
-      <div className="flex-1 flex h-full overflow-hidden relative">
+      <div className="flex-1 flex h-[calc(100vh-var(--header-height,56px))] overflow-hidden relative">
         {/* ═══ LEFT: Chat History Sidebar ═══ */}
         <ChatHistorySidebar
           sessions={sessions}
