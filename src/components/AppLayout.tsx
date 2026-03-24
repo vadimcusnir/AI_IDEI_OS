@@ -80,7 +80,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             <div className="flex items-center gap-2 shrink-0">
               <SidebarTrigger />
               <Link to="/home" className="flex items-center gap-1.5 group" title="Home">
-                <div className="h-6 w-6 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+                <div className="h-6 w-6 rounded-lg bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center group-hover:bg-[hsl(var(--gold-oxide)/0.12)] transition-colors">
                   <Brain className="h-3.5 w-3.5 text-primary" />
                 </div>
                 <span className="text-sm font-bold tracking-tight hidden sm:inline text-foreground">
