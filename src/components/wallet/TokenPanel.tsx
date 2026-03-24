@@ -149,7 +149,7 @@ export function TokenPanel() {
         </h4>
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-lg bg-muted/50 p-3">
-            <p className="text-[10px] font-semibold text-amber-500 mb-0.5">NOTA2</p>
+            <p className="text-[10px] font-semibold text-semantic-amber mb-0.5">NOTA2</p>
             <p className="text-xs text-muted-foreground">{t("token.access_desc", "Access rights, governance, tier unlock")}</p>
           </div>
           <div className="rounded-lg bg-muted/50 p-3">

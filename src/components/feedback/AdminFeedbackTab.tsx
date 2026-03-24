@@ -247,7 +247,7 @@ export function AdminFeedbackTab() {
                         {[1, 2, 3, 4, 5].map((s) => (
                           <Star
                             key={s}
-                            className={cn("h-3 w-3", s <= item.rating! ? "text-amber-400 fill-amber-400" : "text-muted-foreground/20")}
+                            className={cn("h-3 w-3", s <= item.rating! ? "text-semantic-amber fill-semantic-amber" : "text-muted-foreground/20")}
                           />
                         ))}
                       </div>
