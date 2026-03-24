@@ -191,7 +191,7 @@ Deno.serve(async (req) => {
           const data = await resp.json();
           return { id: mod.id, name: mod.name, phase: mod.phase, content: data.choices?.[0]?.message?.content || "" };
         } catch (e) {
-          return { id: mod.id, name: mod.name, phase: mod.phase, content: `Error: ${e.message}` };
+          return { id: mod.id, name: mod.name, phase: mod.phase, content: `Error: ${(e as Error).message}` };
         }
       }));
 
