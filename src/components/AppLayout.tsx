@@ -63,7 +63,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="h-svh flex w-full overflow-hidden">
+      <div className="h-svh flex w-full overflow-hidden" style={{ overflow: 'hidden' }}>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-ring"
