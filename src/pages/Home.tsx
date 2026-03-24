@@ -26,7 +26,7 @@ import { ArrowUp, Sparkles, RotateCcw, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { CommandBubble } from "@/components/command-center/CommandBubble";
-import { type OutputItem } from "@/components/command-center/OutputPanel";
+import { type OutputItem } from "@/stores/executionStore";
 import { OutputPanel } from "@/components/command-center/OutputPanel";
 import { PlanPreview } from "@/components/command-center/PlanPreview";
 import { EconomicGate } from "@/components/command-center/EconomicGate";
