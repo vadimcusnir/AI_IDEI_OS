@@ -85,6 +85,7 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const autoSubmittedRef = useRef(false);
 
   // ═══ Realtime step tracking ═══
   useRealtimeSteps({
@@ -121,6 +122,18 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
       if (loaded.length > 0) setMessages(loaded);
     });
   }, [user, sessionLoaded, loadCurrentSession]);
+
+  // ═══ Auto-submit initialInput from Home page ═══
+  useEffect(() => {
+    if (initialInput && initialInput.trim() && user && !autoSubmittedRef.current && sessionLoaded) {
+      autoSubmittedRef.current = true;
+      // Small delay to let the component fully mount
+      const timer = setTimeout(() => {
+        inputZoneRef.current?.focus();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [initialInput, user, sessionLoaded]);
 
   // ═══ Fetch workspace stats ═══
   useEffect(() => {
