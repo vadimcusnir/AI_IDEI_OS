@@ -68,12 +68,16 @@ export default function RunService() {
   const { serviceKey } = useParams<{ serviceKey: string }>();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const prefillState = (location.state as { prefillInput?: string; prefillGoal?: string } | null);
   const { tier: userTier } = useUserTier();
   const { t } = useTranslation("pages");
   const { balance: creditBalance, loading: creditsLoading } = useCreditBalance();
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
-  const [inputs, setInputs] = useState<Record<string, string>>({});
+  const [inputs, setInputs] = useState<Record<string, string>>(
+    prefillState?.prefillInput ? { content: prefillState.prefillInput } : {}
+  );
   const [jobStatus, setJobStatus] = useState<JobStatus>("idle");
   const [jobResult, setJobResult] = useState("");
   const [jobId, setJobId] = useState<string | null>(null);
