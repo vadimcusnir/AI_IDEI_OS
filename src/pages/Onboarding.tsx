@@ -293,10 +293,10 @@ export default function Onboarding() {
                   <p className="text-xs text-muted-foreground leading-relaxed mb-4">{step.desc}</p>
 
                   {/* Tip */}
-                  <div className="rounded-lg bg-muted/50 border border-border/50 p-3 mb-4">
+                  <div className="rounded-xl bg-muted/30 border border-border/30 p-3.5 mb-5">
                     <div className="flex items-center gap-1.5">
-                      <Play className="h-3 w-3 text-primary shrink-0" />
-                      <p className="text-[10px] text-muted-foreground italic">{step.tip}</p>
+                      <Play className="h-3 w-3 text-[hsl(var(--gold-oxide))] shrink-0" />
+                      <p className="text-[10px] text-muted-foreground/70 italic">{step.tip}</p>
                     </div>
                   </div>
 
