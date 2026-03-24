@@ -198,7 +198,7 @@ export default function AdminDomination() {
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">BEHAVIORAL MOAT</div>
-              <div className="text-lg font-bold text-purple-400">Active</div>
+              <div className="text-lg font-bold text-semantic-purple">Active</div>
               <div className="text-[10px] text-muted-foreground">user dependency on outputs</div>
             </div>
           </div>
