@@ -212,15 +212,54 @@ export default function Home() {
       saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
 
       if (isExecution && execState.phase === "confirming" && route.intent.confidence < 0.9 && !autoExec) {
+        // Show plan preview, wait for user confirmation
         return;
       }
 
       if (isExecution) {
+        // Real service execution path
         await executionEngine.confirmAndRun(rawInput, route);
       } else {
+        // Chat/conversation path — delegate to useExecution streaming
         executionActions.transition("planning");
         executionActions.setLoading(true);
-        await executeCommand(rawInput, { id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
+        executionActions.setStreaming(true);
+
+        // Process file uploads
+        let fileContent = "";
+        for (const file of files) {
+          if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".csv") || file.name.endsWith(".json")) {
+            fileContent += `\n--- ${file.name} ---\n` + await file.text();
+          } else if (file.type.startsWith("audio/") || file.type.startsWith("video/") || file.name.match(/\.(mp3|mp4|wav|m4a|webm|ogg)$/i)) {
+            const filePath = `chat-uploads/${user.id}/${Date.now()}_${file.name}`;
+            const { error: uploadErr } = await supabase.storage.from("user-uploads").upload(filePath, file);
+            if (uploadErr) {
+              fileContent += `\n[Upload failed: ${file.name} — ${uploadErr.message}]`;
+            } else {
+              const { data: urlData } = supabase.storage.from("user-uploads").getPublicUrl(filePath);
+              fileContent += `\n[Uploaded: ${file.name} → ${urlData.publicUrl}]`;
+            }
+          } else {
+            fileContent += `\n[File attached: ${file.name} (${file.type || 'unknown'}, ${(file.size / 1024).toFixed(0)} KB)]`;
+          }
+        }
+
+        const contentWithFiles = rawInput + fileContent;
+        await executionEngine.streamAgentResponse(contentWithFiles, route, new AbortController().signal);
+      }
+
+      // Post-execution: persist and show outputs
+      const currentOutputs = store.outputs;
+      if (currentOutputs.length > 0) {
+        setShowOutputs(true);
+      }
+      executionActions.completeExecution();
+      setShowPostExecution(true);
+
+      if (user) {
+        const startTime = execState.startedAt ? new Date(execState.startedAt).getTime() : Date.now();
+        logExecutionCompleted(user.id, execState.actionId, execState.intent, execState.totalCredits, currentOutputs.length, Date.now() - startTime);
+        persistRun({ execution: { ...execState, phase: "completed", completedAt: new Date().toISOString() }, outputCount: currentOutputs.length });
       }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
@@ -231,179 +270,6 @@ export default function Home() {
       executionActions.setLoading(false);
       executionActions.setStreaming(false);
       abortRef.current = null;
-    }
-  };
-
-  // ═══ Core execution pipeline ═══
-  const executeCommand = async (userContent: string, _userMessage: Message) => {
-    if (!user) return;
-    const controller = new AbortController();
-    abortRef.current = controller;
-
-    let fileContent = "";
-    for (const file of files) {
-      if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".csv") || file.name.endsWith(".json")) {
-        fileContent += `\n--- ${file.name} ---\n` + await file.text();
-      } else if (file.type.startsWith("audio/") || file.type.startsWith("video/") || file.name.match(/\.(mp3|mp4|wav|m4a|webm|ogg)$/i)) {
-        const filePath = `chat-uploads/${user.id}/${Date.now()}_${file.name}`;
-        const { error: uploadErr } = await supabase.storage.from("user-uploads").upload(filePath, file);
-        if (uploadErr) {
-          fileContent += `\n[Upload failed: ${file.name} — ${uploadErr.message}]`;
-        } else {
-          const { data: urlData } = supabase.storage.from("user-uploads").getPublicUrl(filePath);
-          fileContent += `\n[Uploaded: ${file.name} → ${urlData.publicUrl}]`;
-        }
-      } else {
-        fileContent += `\n[File attached: ${file.name} (${file.type || 'unknown'}, ${(file.size / 1024).toFixed(0)} KB)]`;
-      }
-    }
-
-    const apiMessages = messages
-      .filter(m => m.role !== "system")
-      .slice(-20)
-      .map(m => ({ role: m.role, content: m.content }));
-    apiMessages.push({ role: "user", content: userContent + fileContent });
-
-    const [neuronsAgg, episodesAgg, jobsAgg] = await Promise.all([
-      supabase.from("neurons").select("content_category", { count: "exact" }).eq("author_id", user.id),
-      supabase.from("episodes").select("id", { count: "exact" }).eq("author_id", user.id),
-      supabase.from("neuron_jobs").select("worker_type, status").eq("author_id", user.id).eq("status", "completed").limit(100),
-    ]);
-
-    const topCategories = (neuronsAgg.data || []).reduce((acc: Record<string, number>, n: any) => {
-      const cat = n.content_category || "general";
-      acc[cat] = (acc[cat] || 0) + 1;
-      return acc;
-    }, {});
-
-    const workerTypes = (jobsAgg.data || []).reduce((acc: Record<string, number>, j: any) => {
-      acc[j.worker_type] = (acc[j.worker_type] || 0) + 1;
-      return acc;
-    }, {});
-
-    const { data: { session } } = await supabase.auth.getSession();
-    const resp = await fetch(AGENT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.access_token}`,
-      },
-      body: JSON.stringify({
-        messages: apiMessages,
-        context: {
-          neuron_count: totalNeurons,
-          episode_count: totalEpisodes,
-          credit_balance: balance,
-          top_categories: topCategories,
-          recent_services: workerTypes,
-          total_completed_jobs: jobsAgg.count || 0,
-          knowledge_summary: `User has ${neuronsAgg.count || 0} neurons across categories: ${Object.entries(topCategories).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}. Most used services: ${Object.entries(workerTypes).slice(0, 5).map(([k, v]) => `${k}(${v})`).join(", ")}.`,
-          detected_intent: pendingRoute?.intent.category || "conversation",
-          intent_confidence: pendingRoute?.intent.confidence || 0,
-          suggested_services: pendingRoute?.intent.suggestedServices || [],
-          input_type: pendingRoute?.input.type || "text",
-          detected_urls: pendingRoute?.input.urls || [],
-          user_tier: tier,
-        },
-      }),
-      signal: controller.signal,
-    });
-
-    if (!resp.ok) {
-      const errBody = await resp.json().catch(() => ({}));
-      if (resp.status === 429) { toast.error(t("errors:rate_limit_agent")); throw new Error("Rate limit exceeded"); }
-      if (resp.status === 402) {
-        toast.error(t("errors:credits_exhausted"), { action: { label: t("common:top_up"), onClick: () => navigate("/credits") } });
-        throw new Error("AI credits exhausted");
-      }
-      throw new Error(errBody.error || `Error ${resp.status}`);
-    }
-
-    let fullContent = "";
-    const assistantId = crypto.randomUUID();
-
-    if (resp.body) {
-      executionActions.setStreaming(true);
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-
-        let nlIdx: number;
-        while ((nlIdx = buffer.indexOf("\n")) !== -1) {
-          let line = buffer.slice(0, nlIdx);
-          buffer = buffer.slice(nlIdx + 1);
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (line.startsWith(":") || line.trim() === "") continue;
-          if (!line.startsWith("data: ")) continue;
-          const d = line.slice(6).trim();
-          if (d === "[DONE]") continue;
-          try {
-            const parsed = JSON.parse(d);
-            if (parsed.agent_meta) {
-              const meta = parsed.agent_meta;
-              executionActions.setPlan({
-                actionId: meta.action_id, intent: meta.intent, confidence: meta.confidence,
-                planName: meta.plan_name, totalCredits: meta.total_credits,
-                steps: meta.steps || [], objective: meta.objective, outputPreview: meta.output_preview,
-              });
-              if (meta.total_credits === 0 || meta.intent === "general" || meta.intent === "help" || meta.intent === "check_status") {
-                executionActions.confirmExecution();
-              }
-            }
-            const c = parsed.choices?.[0]?.delta?.content;
-            if (c) {
-              if (execState.phase === "confirming") executionActions.confirmExecution();
-              fullContent += c;
-              executionActions.upsertAssistantMessage(assistantId, fullContent);
-            }
-          } catch { /* partial JSON */ }
-        }
-      }
-
-      if (buffer.trim()) {
-        for (let raw of buffer.split("\n")) {
-          if (!raw) continue;
-          if (raw.endsWith("\r")) raw = raw.slice(0, -1);
-          if (!raw.startsWith("data: ")) continue;
-          const d = raw.slice(6).trim();
-          if (d === "[DONE]") continue;
-          try {
-            const parsed = JSON.parse(d);
-            const c = parsed.choices?.[0]?.delta?.content;
-            if (c) {
-              fullContent += c;
-              executionActions.updateMessage(assistantId, fullContent);
-            }
-          } catch { /* ignore */ }
-        }
-      }
-    }
-
-    if (!fullContent) {
-      fullContent = t("common:no_response");
-      executionActions.addMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
-    }
-
-    const parsedOutputs = parseOutputs(fullContent);
-    if (parsedOutputs.length > 0) {
-      executionActions.transition("delivering");
-      executionActions.setOutputs(parsedOutputs);
-      setShowOutputs(true);
-    }
-
-    executionActions.completeExecution();
-    setShowPostExecution(true);
-    saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
-
-    if (user) {
-      const startTime = execState.startedAt ? new Date(execState.startedAt).getTime() : Date.now();
-      logExecutionCompleted(user.id, execState.actionId, execState.intent, execState.totalCredits, parsedOutputs.length, Date.now() - startTime);
-      persistRun({ execution: { ...execState, phase: "completed", completedAt: new Date().toISOString() }, outputCount: parsedOutputs.length });
     }
   };
 
