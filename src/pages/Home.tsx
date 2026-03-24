@@ -11,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
-import { useCommandState } from "@/hooks/useCommandState";
+import { useExecutionStore, executionActions, type Message } from "@/stores/executionStore";
 import { useExecutionHistory } from "@/hooks/useExecutionHistory";
 import { useRealtimeSteps } from "@/hooks/useRealtimeSteps";
 import { useAgentDecisionEngine } from "@/hooks/useAgentDecisionEngine";
@@ -28,7 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 // Command Center components
-import { CommandBubble, type Message } from "@/components/command-center/CommandBubble";
+import { CommandBubble } from "@/components/command-center/CommandBubble";
 import { type OutputItem } from "@/components/command-center/OutputPanel";
 import { OutputPanel } from "@/components/command-center/OutputPanel";
 import { PlanPreview } from "@/components/command-center/PlanPreview";
@@ -70,23 +70,20 @@ export default function Home() {
     saveMessage, loadSession, loadCurrentSession,
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
-  const cmdState = useCommandState();
+  const store = useExecutionStore();
+  const { execution: execState, messages, outputs, loading, isStreaming } = store;
   const { persistRun, persistOutputsBatch } = useExecutionHistory();
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
 
-  // ═══ UI state ═══
-  const [messages, setMessages] = useState<Message[]>([]);
+  // ═══ UI-only state (panels, menus — local) ═══
   const initialQ = searchParams.get("q") || "";
   const [input, setInput] = useState(initialQ);
-  const [loading, setLoading] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [showTaskTree, setShowTaskTree] = useState(false);
   const [showMemory, setShowMemory] = useState(false);
-  const [outputs, setOutputs] = useState<OutputItem[]>([]);
   const [showOutputs, setShowOutputs] = useState(false);
   const [showPostExecution, setShowPostExecution] = useState(false);
   const [showEconomicGate, setShowEconomicGate] = useState(false);
@@ -108,11 +105,11 @@ export default function Home() {
 
   // ═══ Realtime step tracking ═══
   useRealtimeSteps({
-    actionId: cmdState.state.actionId,
-    enabled: cmdState.state.phase === "executing" || cmdState.state.phase === "delivering",
-    onStepUpdate: cmdState.updateStep,
+    actionId: execState.actionId,
+    enabled: execState.phase === "executing" || execState.phase === "delivering",
+    onStepUpdate: executionActions.updateStep,
     onAllCompleted: () => {
-      if (cmdState.state.phase === "executing") cmdState.transition("delivering");
+      if (execState.phase === "executing") executionActions.transition("delivering");
     },
   });
 
@@ -124,7 +121,7 @@ export default function Home() {
         inputZoneRef.current?.focus();
       }
       if (e.key === "Escape") {
-        if (loading) { abortRef.current?.abort(); setLoading(false); setIsStreaming(false); }
+        if (loading) { abortRef.current?.abort(); executionActions.setLoading(false); executionActions.setStreaming(false); }
         else if (showMemory) setShowMemory(false);
         else if (showOutputs) setShowOutputs(false);
       }
@@ -138,7 +135,7 @@ export default function Home() {
     if (!user || sessionLoaded) return;
     setSessionLoaded(true);
     loadCurrentSession().then((loaded) => {
-      if (loaded.length > 0) setMessages(loaded);
+      if (loaded.length > 0) executionActions.setMessages(loaded);
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
@@ -231,7 +228,7 @@ export default function Home() {
 
     const userMessage: Message = { id: crypto.randomUUID(), role: "user", content: userContent, timestamp: new Date() };
 
-    setMessages(prev => [...prev, userMessage]);
+    executionActions.addMessage(userMessage);
     setInput("");
     setFiles([]);
     setShowOutputs(false);
@@ -239,23 +236,20 @@ export default function Home() {
     setPermissionBlock(null);
     setPendingRoute(route);
     saveMessage(userMessage);
-    cmdState.transition("planning");
-    setLoading(true);
+    executionActions.transition("planning");
+    executionActions.setLoading(true);
 
     try {
       await executeCommand(userContent, userMessage);
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
-        cmdState.failExecution(e instanceof Error ? e.message : "Unknown error");
+        executionActions.failExecution(e instanceof Error ? e.message : "Unknown error");
         toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
-        setMessages(prev => [
-          ...prev,
-          { id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() },
-        ]);
+        executionActions.addMessage({ id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() });
       }
     } finally {
-      setLoading(false);
-      setIsStreaming(false);
+      executionActions.setLoading(false);
+      executionActions.setStreaming(false);
       abortRef.current = null;
     }
   };
@@ -349,7 +343,7 @@ export default function Home() {
     const assistantId = crypto.randomUUID();
 
     if (resp.body) {
-      setIsStreaming(true);
+      executionActions.setStreaming(true);
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
@@ -372,27 +366,23 @@ export default function Home() {
             const parsed = JSON.parse(d);
             if (parsed.agent_meta) {
               const meta = parsed.agent_meta;
-              cmdState.setPlan({
+              executionActions.setPlan({
                 actionId: meta.action_id, intent: meta.intent, confidence: meta.confidence,
                 planName: meta.plan_name, totalCredits: meta.total_credits,
                 steps: meta.steps || [], objective: meta.objective, outputPreview: meta.output_preview,
               });
               setShowTaskTree(true);
               if (meta.total_credits === 0 || meta.intent === "general" || meta.intent === "help" || meta.intent === "check_status") {
-                cmdState.confirmExecution();
+                executionActions.confirmExecution();
               }
             }
             const c = parsed.choices?.[0]?.delta?.content;
             if (c) {
-              if (cmdState.state.phase === "confirming") cmdState.confirmExecution();
+              if (execState.phase === "confirming") executionActions.confirmExecution();
               fullContent += c;
-              setMessages(prev => {
-                const existing = prev.find(m => m.id === assistantId);
-                if (existing) return prev.map(m => m.id === assistantId ? { ...m, content: fullContent } : m);
-                return [...prev, { id: assistantId, role: "assistant" as const, content: fullContent, timestamp: new Date() }];
-              });
-              if (fullContent.includes("Searching") || fullContent.includes("searching")) cmdState.updateStep("search_neurons", { status: "running" });
-              if (fullContent.includes("Found") || fullContent.includes("results")) cmdState.updateStep("search_neurons", { status: "completed" });
+              executionActions.upsertAssistantMessage(assistantId, fullContent);
+              if (fullContent.includes("Searching") || fullContent.includes("searching")) executionActions.updateStep("search_neurons", { status: "running" });
+              if (fullContent.includes("Found") || fullContent.includes("results")) executionActions.updateStep("search_neurons", { status: "completed" });
             }
           } catch { /* partial JSON */ }
         }
@@ -410,7 +400,7 @@ export default function Home() {
             const c = parsed.choices?.[0]?.delta?.content;
             if (c) {
               fullContent += c;
-              setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: fullContent } : m));
+              executionActions.updateMessage(assistantId, fullContent);
             }
           } catch { /* ignore */ }
         }
@@ -419,52 +409,52 @@ export default function Home() {
 
     if (!fullContent) {
       fullContent = t("common:no_response");
-      setMessages(prev => [...prev, { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() }]);
+      executionActions.addMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
     }
 
     const parsedOutputs = parseOutputs(fullContent);
     if (parsedOutputs.length > 0) {
-      cmdState.transition("delivering");
-      setOutputs(parsedOutputs);
+      executionActions.transition("delivering");
+      executionActions.setOutputs(parsedOutputs);
       setShowOutputs(true);
     }
 
-    cmdState.completeExecution();
+    executionActions.completeExecution();
     setShowPostExecution(true);
     saveMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
 
     if (user) {
-      const startTime = cmdState.state.startedAt ? new Date(cmdState.state.startedAt).getTime() : Date.now();
-      logExecutionCompleted(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, parsedOutputs.length, Date.now() - startTime);
-      persistRun({ execution: { ...cmdState.state, phase: "completed", completedAt: new Date().toISOString() }, outputCount: parsedOutputs.length });
+      const startTime = execState.startedAt ? new Date(execState.startedAt).getTime() : Date.now();
+      logExecutionCompleted(user.id, execState.actionId, execState.intent, execState.totalCredits, parsedOutputs.length, Date.now() - startTime);
+      persistRun({ execution: { ...execState, phase: "completed", completedAt: new Date().toISOString() }, outputCount: parsedOutputs.length });
     }
   };
 
   // ═══ Handlers ═══
-  const handleStop = () => { abortRef.current?.abort(); setLoading(false); setIsStreaming(false); cmdState.failExecution("Cancelled by user"); };
+  const handleStop = () => { abortRef.current?.abort(); executionActions.setLoading(false); executionActions.setStreaming(false); executionActions.failExecution("Cancelled by user"); };
 
   const clearChat = () => {
-    newSession(); cmdState.reset();
-    setMessages([]);
-    setOutputs([]); setShowOutputs(false); setShowTaskTree(false); setShowPostExecution(false);
+    newSession(); executionActions.reset();
+    executionActions.clearMessages();
+    executionActions.setOutputs([]); setShowOutputs(false); setShowTaskTree(false); setShowPostExecution(false);
   };
 
   const handleSaveAllOutputs = async () => {
     if (outputs.length === 0) return;
     setSavingAllOutputs(true);
-    const count = await persistOutputsBatch(outputs.map(o => ({ title: o.title, content: o.content, type: o.type })), [cmdState.state.intent]);
+    const count = await persistOutputsBatch(outputs.map(o => ({ title: o.title, content: o.content, type: o.type })), [execState.intent]);
     setSavingAllOutputs(false);
     toast[count > 0 ? "success" : "error"](count > 0 ? `Saved ${count} outputs as assets` : "Failed to save outputs");
   };
 
   const handleSaveTemplate = async () => {
-    if (!user || cmdState.state.phase !== "completed") return;
+    if (!user || execState.phase !== "completed") return;
     try {
       const { error } = await supabase.from("agent_plan_templates").insert({
-        intent_key: cmdState.state.intent, name: `${cmdState.state.planName} (saved)`,
-        description: cmdState.state.objective,
-        steps: cmdState.state.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })) as any,
-        estimated_credits: cmdState.state.totalCredits, estimated_duration_seconds: cmdState.state.steps.length * 5, is_default: false,
+        intent_key: execState.intent, name: `${execState.planName} (saved)`,
+        description: execState.objective,
+        steps: execState.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })) as any,
+        estimated_credits: execState.totalCredits, estimated_duration_seconds: execState.steps.length * 5, is_default: false,
       });
       if (error) throw error;
       toast.success("Workflow saved as template");
@@ -486,10 +476,10 @@ export default function Home() {
   const hour = new Date().getHours();
   const greeting = hour < 6 ? "Noapte bună" : hour < 12 ? "Bună dimineața" : hour < 18 ? "Bună ziua" : "Bună seara";
   const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
-  const showRightPanel = cmdState.state.phase !== "idle";
+  const showRightPanel = execState.phase !== "idle";
   const durationSeconds =
-    cmdState.state.startedAt && cmdState.state.completedAt
-      ? Math.round((new Date(cmdState.state.completedAt).getTime() - new Date(cmdState.state.startedAt).getTime()) / 1000)
+    execState.startedAt && execState.completedAt
+      ? Math.round((new Date(execState.completedAt).getTime() - new Date(execState.startedAt).getTime()) / 1000)
       : 0;
 
   if (authLoading) return <HomeSkeleton />;
@@ -509,7 +499,7 @@ export default function Home() {
           onNewSession={() => { clearChat(); setShowHistory(false); }}
           onLoadSession={async (sid) => {
             const loaded = await loadSession(sid);
-            if (loaded.length > 0) setMessages(loaded);
+            if (loaded.length > 0) executionActions.setMessages(loaded);
             setShowHistory(false);
           }}
           onDeleteSession={async (sid) => {
@@ -585,11 +575,11 @@ export default function Home() {
 
           {/* ── Execution Status Bar ── */}
           <ExecutionStatusBar
-            phase={cmdState.state.phase} intent={cmdState.state.intent}
-            totalCredits={cmdState.state.totalCredits}
-            stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
-            totalSteps={cmdState.state.steps.length}
-            startedAt={cmdState.state.startedAt} errorMessage={cmdState.state.errorMessage}
+            phase={execState.phase} intent={execState.intent}
+            totalCredits={execState.totalCredits}
+            stepsCompleted={execState.steps.filter(s => s.status === "completed").length}
+            totalSteps={execState.steps.length}
+            startedAt={execState.startedAt} errorMessage={execState.errorMessage}
           />
 
           {/* ── Permission gate ── */}
@@ -605,46 +595,46 @@ export default function Home() {
           </AnimatePresence>
 
           {/* ── Plan Preview ── */}
-          {cmdState.state.phase === "confirming" && cmdState.state.totalCredits > 0 && !showEconomicGate && (
+          {execState.phase === "confirming" && execState.totalCredits > 0 && !showEconomicGate && (
             <div className="px-4 py-2 relative z-10">
               <PlanPreview
                 plan={{
-                  action_id: cmdState.state.actionId, intent: cmdState.state.intent,
-                  confidence: cmdState.state.confidence, plan_name: cmdState.state.planName,
-                  total_credits: cmdState.state.totalCredits,
-                  steps: cmdState.state.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })),
-                  objective: cmdState.state.objective, output_preview: cmdState.state.outputPreview,
+                  action_id: execState.actionId, intent: execState.intent,
+                  confidence: execState.confidence, plan_name: execState.planName,
+                  total_credits: execState.totalCredits,
+                  steps: execState.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })),
+                  objective: execState.objective, output_preview: execState.outputPreview,
                 }}
                 balance={balance}
                 onExecute={() => {
-                  if (cmdState.state.totalCredits > 50) { setShowEconomicGate(true); }
+                  if (execState.totalCredits > 50) { setShowEconomicGate(true); }
                   else {
-                    if (user) logPlanConfirmed(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, cmdState.state.steps.length);
-                    cmdState.confirmExecution();
+                    if (user) logPlanConfirmed(user.id, execState.actionId, execState.intent, execState.totalCredits, execState.steps.length);
+                    executionActions.confirmExecution();
                   }
                 }}
-                onEdit={() => { setInput(`Refine plan: ${cmdState.state.intent}`); inputZoneRef.current?.focus(); }}
-                onDismiss={() => cmdState.reset()}
+                onEdit={() => { setInput(`Refine plan: ${execState.intent}`); inputZoneRef.current?.focus(); }}
+                onDismiss={() => executionActions.reset()}
                 executing={loading}
               />
             </div>
           )}
 
           {/* ── Economic Gate ── */}
-          {showEconomicGate && cmdState.state.phase === "confirming" && (
+          {showEconomicGate && execState.phase === "confirming" && (
             <div className="px-4 py-2 relative z-10">
               <EconomicGate
-                balance={balance} estimatedCost={cmdState.state.totalCredits}
+                balance={balance} estimatedCost={execState.totalCredits}
                 tierDiscount={tierDiscount} tier={tier}
                 onProceed={() => {
                   setShowEconomicGate(false);
                   if (user) {
-                    logEconomicGate(user.id, true, balance, cmdState.state.totalCredits, tierDiscount);
-                    logPlanConfirmed(user.id, cmdState.state.actionId, cmdState.state.intent, cmdState.state.totalCredits, cmdState.state.steps.length);
+                    logEconomicGate(user.id, true, balance, execState.totalCredits, tierDiscount);
+                    logPlanConfirmed(user.id, execState.actionId, execState.intent, execState.totalCredits, execState.steps.length);
                   }
-                  cmdState.confirmExecution();
+                  executionActions.confirmExecution();
                 }}
-                onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, cmdState.state.totalCredits, tierDiscount); cmdState.reset(); }}
+                onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
               />
             </div>
           )}
@@ -731,19 +721,19 @@ export default function Home() {
                         <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
                       </div>
                       <span className="text-xs text-muted-foreground ml-1">
-                        {cmdState.state.phase === "planning" ? "Planning..." : "Thinking..."}
+                        {execState.phase === "planning" ? "Planning..." : "Thinking..."}
                       </span>
                     </div>
                   </div>
                 )}
 
-                {(cmdState.state.phase === "completed" || cmdState.state.phase === "failed") && (
+                {(execState.phase === "completed" || execState.phase === "failed") && (
                   <ExecutionSummary
-                    phase={cmdState.state.phase} intent={cmdState.state.intent}
-                    planName={cmdState.state.planName} totalCredits={cmdState.state.totalCredits}
-                    stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
-                    totalSteps={cmdState.state.steps.length} outputCount={outputs.length}
-                    durationSeconds={durationSeconds} errorMessage={cmdState.state.errorMessage}
+                    phase={execState.phase} intent={execState.intent}
+                    planName={execState.planName} totalCredits={execState.totalCredits}
+                    stepsCompleted={execState.steps.filter(s => s.status === "completed").length}
+                    totalSteps={execState.steps.length} outputCount={outputs.length}
+                    durationSeconds={durationSeconds} errorMessage={execState.errorMessage}
                     onSaveTemplate={handleSaveTemplate} onSaveAllOutputs={handleSaveAllOutputs}
                     onRerun={handleRerun} onViewOutputs={() => setShowOutputs(true)}
                   />
@@ -798,10 +788,10 @@ export default function Home() {
           </AnimatePresence>
 
           {/* ── Post execution panel ── */}
-          {cmdState.state.phase === "completed" && showPostExecution && (
+          {execState.phase === "completed" && showPostExecution && (
             <div className="px-4 pb-2 relative z-10">
               <PostExecutionPanel
-                intent={cmdState.state.intent as any} creditsSpent={cmdState.state.totalCredits}
+                intent={execState.intent as any} creditsSpent={execState.totalCredits}
                 outputCount={outputs.length}
                 onAction={(prompt) => { setInput(prompt); setShowPostExecution(false); inputZoneRef.current?.focus(); }}
                 onSaveTemplate={handleSaveTemplate} onDismiss={() => setShowPostExecution(false)} userTier={tier}
@@ -812,7 +802,7 @@ export default function Home() {
           {/* ── Context Actions ── */}
           <ContextActions
             neuronCount={totalNeurons} episodeCount={totalEpisodes}
-            lastIntent={cmdState.state.intent || undefined} phase={cmdState.state.phase}
+            lastIntent={execState.intent || undefined} phase={execState.phase}
             onAction={handleCommand}
             onOpenPipeline={() => setShowPipeline(true)}
           />
@@ -832,7 +822,7 @@ export default function Home() {
         <AnimatePresence>
           {showRightPanel && (
             <ExecutionRightPanel
-              execution={cmdState.state}
+              execution={execState}
               outputCount={outputs.length}
               balance={balance}
               onSaveTemplate={handleSaveTemplate}
@@ -844,12 +834,12 @@ export default function Home() {
         {/* ═══ Side Panels (Task Tree + Memory) ═══ */}
         <SidePanels
           showTaskTree={showTaskTree} showMemory={showMemory}
-          execution={cmdState.state}
+          execution={execState}
           onCloseTaskTree={() => setShowTaskTree(false)} onCloseMemory={() => setShowMemory(false)}
           onSaveTemplate={handleSaveTemplate}
           onReplay={(intent) => { setInput(`/${intent} `); inputZoneRef.current?.focus(); setShowMemory(false); }}
           onExecuteTemplate={(template) => { setInput(`/${template.intent_key} (using template: ${template.name})`); setShowMemory(false); inputZoneRef.current?.focus(); }}
-          sessions={sessions} onLoadSession={async (sid) => { const loaded = await loadSession(sid); if (loaded.length > 0) setMessages(loaded); setShowMemory(false); }}
+          sessions={sessions} onLoadSession={async (sid) => { const loaded = await loadSession(sid); if (loaded.length > 0) executionActions.setMessages(loaded); setShowMemory(false); }}
           onDeleteSession={async (sid) => { await deleteSession(sid); toast.success("Sesiune ștearsă"); }}
           currentSessionId={sessionId}
         />
