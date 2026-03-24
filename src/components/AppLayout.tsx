@@ -18,6 +18,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
+import { Brain } from "lucide-react";
 
 // Lazy-load non-critical components
 const LowBalanceBanner = lazy(() => import("@/components/credits/LowBalanceBanner").then(m => ({ default: m.LowBalanceBanner })));
@@ -31,8 +33,6 @@ const MobileBottomNav = lazy(() => import("@/components/MobileBottomNav").then(m
 const ContextualFeedbackPrompt = lazy(() => import("@/components/feedback/ContextualFeedbackPrompt").then(m => ({ default: m.ContextualFeedbackPrompt })));
 const GamificationToasts = lazy(() => import("@/components/gamification/GamificationToasts").then(m => ({ default: m.GamificationToasts })));
 
-
-
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
   { code: "ro", label: "Română", flag: "🇷🇴" },
@@ -41,7 +41,6 @@ const LANG_OPTIONS = [
 
 interface AppLayoutProps {
   children: ReactNode;
-  /** If true, the content uses full viewport height (no footer, no scroll header). E.g. NeuronEditor */
   fullHeight?: boolean;
 }
 
@@ -52,7 +51,6 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   usePageTracking();
   useDailyActivity();
 
-  // Prefetch UI control registry once on mount
   const prefetched = useRef(false);
   useEffect(() => {
     if (!prefetched.current) {
@@ -66,7 +64,6 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        {/* Skip-to-content — WCAG 2.4.1 */}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-ring"
@@ -75,49 +72,80 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
         </a>
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          {/* Mobile-first scroll-aware header */}
+          {/* ═══ HEADER: 3-zone control panel ═══ */}
           <header
             className={cn(
-              "sticky top-0 z-40 h-[var(--header-height)] flex items-center border-b border-border bg-background/90 backdrop-blur-md px-3 gap-2 transition-transform duration-200",
+              "sticky top-0 z-40 h-[var(--header-height)] flex items-center border-b border-border/50 bg-background/95 backdrop-blur-md px-3 transition-transform duration-200",
               "md:translate-y-0",
               direction === "down" && !isAtTop
                 ? "-translate-y-full md:translate-y-0"
                 : "translate-y-0"
             )}
           >
-            <SidebarTrigger />
-            <AppBreadcrumbs />
-            <div className="flex-1" />
-            <Suspense fallback={null}><GlobalSearch /></Suspense>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
-                  <span className="text-sm leading-none">{currentLang.flag}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[140px]">
-                {LANG_OPTIONS.map(lang => (
-                  <DropdownMenuItem
-                    key={lang.code}
-                    onClick={() => changeLanguage(lang.code as any)}
-                    className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
-                  >
-                    <span>{lang.flag}</span>
-                    {lang.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <ThemeToggle />
-            {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
-            {user && <Suspense fallback={null}><UserMenu /></Suspense>}
-          </header>
-
-          {user && (
-            <div className="border-b border-border px-3 py-1 min-h-[32px]">
-              <Suspense fallback={<div className="h-[24px]" />}><CompactPipeline /></Suspense>
+            {/* ─── LEFT: Identity ─── */}
+            <div className="flex items-center gap-2 shrink-0">
+              <SidebarTrigger />
+              <Link to="/home" className="flex items-center gap-1.5 group" title="Home">
+                <div className="h-6 w-6 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+                  <Brain className="h-3.5 w-3.5 text-primary" />
+                </div>
+                <span className="text-sm font-bold tracking-tight hidden sm:inline text-foreground">
+                  AI-IDEI
+                </span>
+              </Link>
+              {/* Breadcrumbs (hidden on /home) */}
+              <div className="hidden md:block ml-1">
+                <AppBreadcrumbs />
+              </div>
             </div>
-          )}
+
+            {/* ─── CENTER: Pipeline Context ─── */}
+            <div className="flex-1 flex items-center justify-center min-w-0 mx-4">
+              {user && (
+                <div className="hidden md:flex items-center">
+                  <Suspense fallback={<div className="h-4 w-48 bg-muted/30 rounded animate-pulse" />}>
+                    <CompactPipeline />
+                  </Suspense>
+                </div>
+              )}
+            </div>
+
+            {/* ─── RIGHT: Controls ─── */}
+            <div className="flex items-center gap-1 shrink-0">
+              {/* Search */}
+              <Suspense fallback={null}><GlobalSearch /></Suspense>
+
+              {/* System group */}
+              <div className="flex items-center border-l border-border/30 pl-1 ml-1">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" title="Language">
+                      <span className="text-sm leading-none">{currentLang.flag}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="min-w-[140px]">
+                    {LANG_OPTIONS.map(lang => (
+                      <DropdownMenuItem
+                        key={lang.code}
+                        onClick={() => changeLanguage(lang.code as any)}
+                        className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
+                      >
+                        <span>{lang.flag}</span>
+                        {lang.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <ThemeToggle />
+              </div>
+
+              {/* User group */}
+              <div className="flex items-center border-l border-border/30 pl-1 ml-1">
+                {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
+                {user && <Suspense fallback={null}><UserMenu /></Suspense>}
+              </div>
+            </div>
+          </header>
 
           <div className="min-h-0">
             <Suspense fallback={null}><LowBalanceBanner /></Suspense>
