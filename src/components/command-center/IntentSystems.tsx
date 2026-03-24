@@ -229,7 +229,7 @@ export function IntentChips({ onSelect }: IntentChipsProps) {
         {INTENT_CHIPS.map((chip) => (
           <button
             key={chip.label}
-            onClick={() => onSelect(chip.prompt)}
+            onClick={() => { trackInternalEvent({ event: AnalyticsEvents.INTENT_CHIP_CLICKED, params: { label: chip.label, prompt: chip.prompt } }); onSelect(chip.prompt); }}
             className={cn(
               "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium",
               "border border-border/40 bg-card/50 backdrop-blur-sm",
