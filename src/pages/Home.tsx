@@ -458,7 +458,7 @@ export default function Home() {
             </div>
 
             {/* CENTER RAIL — the main chat stays here, never moves */}
-            <div className="absolute inset-x-0 top-[calc(50%-2.5rem)] -translate-y-1/2 z-30 px-4 sm:px-6 pointer-events-none">
+            <div className="absolute inset-x-0 top-[42%] -translate-y-1/2 z-30 px-4 sm:px-6 pointer-events-none">
               <div className="max-w-3xl mx-auto pointer-events-auto">
                 <CommandInputZone
                   ref={inputZoneRef} input={input} onInputChange={setInput}
