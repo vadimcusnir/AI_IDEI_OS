@@ -392,7 +392,7 @@ export default function Home() {
           {/* ═══ CONTENT AREA ═══ */}
           <div className="flex-1 relative z-10 min-h-0 overflow-hidden">
             {/* TOP REGION — scrolls independently above the fixed center rail */}
-            <div className="absolute inset-x-0 top-0 bottom-1/2 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 bottom-[calc(50%+2.5rem)] overflow-hidden">
               {isEmptyState ? (
                 <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-20">
                   <div className="w-full max-w-3xl flex flex-col items-center gap-4">
