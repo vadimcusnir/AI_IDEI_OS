@@ -270,7 +270,7 @@ export default function Onboarding() {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 text-[9px] font-semibold text-primary/70">
+                    <div className="flex items-center gap-1 text-[9px] font-semibold text-[hsl(var(--gold-oxide)/0.7)]">
                       <Gift className="h-3 w-3" />
                       {step.reward}
                     </div>
