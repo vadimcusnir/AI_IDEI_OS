@@ -37,6 +37,7 @@ import { CommandInputZone, type CommandInputZoneRef } from "@/components/command
 import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
 import { SuggestionTabs } from "@/components/command-center/SuggestionTabs";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
+import { InlineServiceSuggestions } from "@/components/command-center/InlineServiceSuggestions";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
@@ -444,18 +445,41 @@ export default function Home() {
                     onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
                     showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
                     onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+                    onAttachAction={(action) => {
+                      const actionPrompts: Record<string, string> = {
+                        extract_neurons: "/extract neurons from content",
+                        generate_content: "/generate content from neurons",
+                        analyze_data: "/analyze my data and competitors",
+                        build_funnel: "/build a sales funnel",
+                        trending: "/analyze trending patterns in my library",
+                        recommended: "/suggest next best actions based on my data",
+                      };
+                      const prompt = actionPrompts[action];
+                      if (prompt) handleCommand(prompt, true);
+                    }}
                   />
                 </motion.div>
 
-                {/* Suggestion Tabs — compact */}
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.3 }}
-                  className="w-full max-w-2xl"
-                >
-                  <SuggestionTabs onCommand={(prompt) => handleCommand(prompt, true)} />
-                </motion.div>
+                {/* Inline service suggestions */}
+                {input.length >= 3 && (
+                  <InlineServiceSuggestions
+                    input={input}
+                    visible={true}
+                    onSelect={(prompt) => handleCommand(prompt, true)}
+                  />
+                )}
+
+                {/* Suggestion Tabs — compact (hidden when typing) */}
+                {input.length < 3 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.3 }}
+                    className="w-full max-w-2xl"
+                  >
+                    <SuggestionTabs onCommand={(prompt) => handleCommand(prompt, true)} />
+                  </motion.div>
+                )}
               </div>
             </div>
           ) : (
@@ -543,6 +567,13 @@ export default function Home() {
             </div>
           )}
 
+          {/* ═══ INLINE SERVICE SUGGESTIONS ═══ */}
+          <InlineServiceSuggestions
+            input={input}
+            visible={!isEmptyState && !loading && input.length >= 3}
+            onSelect={(prompt) => { handleCommand(prompt, true); }}
+          />
+
           {/* ═══ INPUT ZONE — Bottom, only in active state ═══ */}
           {!isEmptyState && (
             <CommandInputZone
@@ -552,6 +583,18 @@ export default function Home() {
               onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
               showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
               onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+              onAttachAction={(action) => {
+                const actionPrompts: Record<string, string> = {
+                  extract_neurons: "/extract neurons from content",
+                  generate_content: "/generate content from neurons",
+                  analyze_data: "/analyze my data and competitors",
+                  build_funnel: "/build a sales funnel",
+                  trending: "/analyze trending patterns in my library",
+                  recommended: "/suggest next best actions based on my data",
+                };
+                const prompt = actionPrompts[action];
+                if (prompt) handleCommand(prompt, true);
+              }}
             />
           )}
         </div>

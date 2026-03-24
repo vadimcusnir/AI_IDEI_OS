@@ -4,18 +4,20 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier, type UserTier } from "@/hooks/useUserTier";
+import { useChatHistory } from "@/hooks/useChatHistory";
 import { Logo } from "@/components/shared/Logo";
 import {
   Brain, Shield, Sparkles, Coins,
   LogOut, Home, User, ScrollText,
   BarChart3, Bell, BookOpen, Network,
   FileText, Bot, Store, Layers,
-  Lock, ChevronRight, GraduationCap, Terminal,
+  Lock, ChevronRight, GraduationCap,
   Wallet, Trophy, Activity,
   Zap, Plug, Database, Crown,
   Rocket, Code, FolderOpen,
   Package, TrendingUp, Eye, Cpu, Wrench,
   DollarSign, PenTool, MessageCircle, Upload,
+  Clock, Trash2, Plus,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
@@ -32,6 +34,10 @@ import { ControlledNavItem } from "@/components/ControlledNavItem";
 import {
   Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { formatDistanceToNow } from "date-fns";
+import { ro } from "date-fns/locale";
+import { toast } from "sonner";
 
 interface NavItem {
   labelKey: string;
@@ -54,9 +60,8 @@ interface NavSection {
 }
 
 /*
- * SINGLE SIDEBAR — CENTRALIZED CONTROL
- * Sections: PRIMARY → OPERATIONS → SYSTEM → EXPANSION → USER
- * Max 5 items per section. Icons-only when collapsed.
+ * SIDEBAR — RESTRUCTURED
+ * CORE NAV → EXECUTION → [DIVIDER] → SESSIONS → [DIVIDER] → SYSTEM
  */
 
 const PUBLIC_SECTIONS: NavSection[] = [
@@ -80,69 +85,68 @@ const PUBLIC_SECTIONS: NavSection[] = [
   },
 ];
 
-const AUTH_SECTIONS: NavSection[] = [
-  // ═══ PRIMARY — Home + Execute ═══
-  {
-    labelKey: "execute_section",
-    icon: Zap,
-    defaultOpen: true,
-    authOnly: true,
-    items: [
-      { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
-      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-    ],
-  },
+// ═══ CORE NAVIGATION (always visible, always open) ═══
+const CORE_NAV: NavSection = {
+  labelKey: "core_section",
+  icon: Home,
+  defaultOpen: true,
+  authOnly: true,
+  items: [
+    { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
+    { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
+    { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+  ],
+};
 
-  // ═══ OPERATIONS — Generate, Extract, Jobs ═══
-  {
-    labelKey: "operations_section",
-    icon: Rocket,
-    authOnly: true,
-    items: [
-      { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
-      { labelKey: "jobs", to: "/jobs", icon: Rocket, controlId: "nav.jobs" },
-      { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
-    ],
-  },
+// ═══ EXECUTION (tools) ═══
+const EXECUTION_NAV: NavSection = {
+  labelKey: "execution_section",
+  icon: Zap,
+  defaultOpen: true,
+  authOnly: true,
+  items: [
+    { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+    { labelKey: "jobs", to: "/jobs", icon: Rocket, controlId: "nav.jobs" },
+    { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
+  ],
+};
 
-  // ═══ SYSTEM — Marketplace, Library ═══
-  {
-    labelKey: "systems_section",
-    icon: Package,
-    authOnly: true,
-    items: [
-      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { labelKey: "master_agent", to: "/master-agent", icon: Bot, controlId: "nav.master-agent" },
-      { labelKey: "prompt_forge", to: "/prompt-forge", icon: PenTool, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
-    ],
-  },
+// ═══ SYSTEM (advanced) ═══
+const SYSTEM_NAV: NavSection = {
+  labelKey: "systems_section",
+  icon: Package,
+  authOnly: true,
+  items: [
+    { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+    { labelKey: "master_agent", to: "/master-agent", icon: Bot, controlId: "nav.master-agent" },
+    { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", minTier: "pro" as UserTier },
+    { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
+  ],
+};
 
-  // ═══ EXPANSION — Intelligence, Creator ═══
-  {
-    labelKey: "intelligence_section",
-    icon: Brain,
-    authOnly: true,
-    minTier: "pro" as UserTier,
-    items: [
-      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
-      { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
-      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { labelKey: "capitalization", to: "/capitalization", icon: TrendingUp, controlId: "nav.capitalization" },
-    ],
-  },
+// ═══ CREATOR ═══
+const CREATOR_NAV: NavSection = {
+  labelKey: "creator_section",
+  icon: PenTool,
+  authOnly: true,
+  minTier: "pro" as UserTier,
+  items: [
+    { labelKey: "capitalization", to: "/capitalization", icon: TrendingUp, controlId: "nav.capitalization" },
+    { labelKey: "prompt_forge", to: "/prompt-forge", icon: PenTool, controlId: "nav.prompt-forge" },
+  ],
+};
 
-  // ═══ USER — Account ═══
-  {
-    labelKey: "account_section",
-    icon: User,
-    authOnly: true,
-    items: [
-      { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
-      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-      { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
-    ],
-  },
-];
+// ═══ ACCOUNT ═══
+const ACCOUNT_NAV: NavSection = {
+  labelKey: "account_section",
+  icon: User,
+  authOnly: true,
+  items: [
+    { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
+    { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+    { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
+  ],
+};
 
 const CONTROL_SECTION: NavSection = {
   labelKey: "control_section",
@@ -176,6 +180,7 @@ export function AppSidebar() {
   const { isAdmin } = useAdminCheck();
   const { balance, loading: balanceLoading } = useCreditBalance();
   const { tier } = useUserTier();
+  const { sessions, loadSession, deleteSession, newSession } = useChatHistory();
 
   const TIER_ORDER: Record<UserTier, number> = { free: 0, authenticated: 1, pro: 2, vip: 3 };
 
@@ -191,15 +196,123 @@ export function AppSidebar() {
     return true;
   };
 
-  const resolvedSections = (() => {
+  // Build sections: CORE → EXECUTION → [sessions] → SYSTEM → CREATOR → ACCOUNT → ADMIN
+  const navSections = (() => {
     if (!user) return PUBLIC_SECTIONS;
-    const sections = [...AUTH_SECTIONS];
+    const sections = [CORE_NAV, EXECUTION_NAV];
+    // Sessions inserted separately below
+    sections.push(SYSTEM_NAV);
+    if (TIER_ORDER[tier] >= TIER_ORDER["pro" as UserTier]) {
+      sections.push(CREATOR_NAV);
+    }
+    sections.push(ACCOUNT_NAV);
     if (isAdmin) {
       sections.push(CONTROL_SECTION);
       sections.push(INFRA_SECTION);
     }
     return sections;
   })();
+
+  const renderSection = (section: NavSection, idx: number) => {
+    const visibleItems = section.items.filter(isItemVisible);
+    if (visibleItems.length === 0) return null;
+
+    const hasActive = sectionHasActive(section);
+    const SectionIcon = section.icon;
+
+    if (collapsed) {
+      return (
+        <SidebarGroup key={section.labelKey}>
+          {idx > 0 && <SidebarSeparator className="my-1" />}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {visibleItems.map((item) => {
+                const menuItem = (
+                  <SidebarMenuItem key={item.to}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(item.to)}
+                      tooltip={t(`navigation:${item.labelKey}`)}
+                    >
+                      <button onClick={() => navigate(item.to)} className="w-full">
+                        <item.icon className={cn("h-4 w-4", item.highlight && !isActive(item.to) && "text-primary")} />
+                      </button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+                if (item.controlId) {
+                  return (
+                    <ControlledNavItem key={item.to} elementId={item.controlId}>
+                      {menuItem}
+                    </ControlledNavItem>
+                  );
+                }
+                return menuItem;
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      );
+    }
+
+    return (
+      <Collapsible
+        key={section.labelKey}
+        defaultOpen={section.defaultOpen || hasActive}
+        className="group/collapsible"
+      >
+        <SidebarGroup>
+          <CollapsibleTrigger asChild>
+            <SidebarGroupLabel className="text-[10px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5">
+              <SectionIcon className="h-3 w-3 text-muted-foreground/70" />
+              <span className="flex-1">{t(`navigation:${section.labelKey}`)}</span>
+              <ChevronRight className="h-3 w-3 text-muted-foreground/50 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            </SidebarGroupLabel>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {visibleItems.map((item) => {
+                  const menuItem = (
+                    <SidebarMenuItem key={item.to}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive(item.to)}
+                        tooltip={t(`navigation:${item.labelKey}`)}
+                      >
+                        <button onClick={() => navigate(item.to)} className={cn(
+                          "w-full",
+                          item.highlight && !isActive(item.to) && "text-primary font-medium"
+                        )}>
+                          <item.icon className="h-4 w-4" />
+                          <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
+                          {item.minTier && (
+                            <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
+                          )}
+                        </button>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+
+                  if (item.controlId) {
+                    return (
+                      <ControlledNavItem key={item.to} elementId={item.controlId}>
+                        {menuItem}
+                      </ControlledNavItem>
+                    );
+                  }
+                  return menuItem;
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </CollapsibleContent>
+        </SidebarGroup>
+      </Collapsible>
+    );
+  };
+
+  // Recent sessions (max 8)
+  const recentSessions = (sessions || []).slice(0, 8);
 
   return (
     <Sidebar collapsible="icon">
@@ -253,103 +366,88 @@ export function AppSidebar() {
 
       {/* Navigation */}
       <SidebarContent>
-        {resolvedSections.map((section, idx) => {
-          const visibleItems = section.items.filter(isItemVisible);
-          if (visibleItems.length === 0) return null;
+        {/* CORE + EXECUTION sections */}
+        {navSections.slice(0, 2).map((section, idx) => renderSection(section, idx))}
 
-          const hasActive = sectionHasActive(section);
-          const SectionIcon = section.icon;
-
-          if (collapsed) {
-            return (
-              <SidebarGroup key={section.labelKey}>
-                {idx > 0 && <SidebarSeparator className="my-1" />}
-                <SidebarGroupContent>
+        {/* ═══ SESSIONS SECTION ═══ */}
+        {user && !collapsed && (
+          <>
+            <SidebarSeparator className="my-1" />
+            <SidebarGroup>
+              <SidebarGroupLabel className="text-[10px] flex items-center gap-1.5">
+                <Clock className="h-3 w-3 text-muted-foreground/70" />
+                <span className="flex-1">Sesiuni recente</span>
+                <button
+                  onClick={() => { newSession(); navigate("/home"); }}
+                  className="h-4 w-4 rounded flex items-center justify-center hover:bg-muted transition-colors"
+                  title="Sesiune nouă"
+                >
+                  <Plus className="h-2.5 w-2.5 text-muted-foreground" />
+                </button>
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <ScrollArea className="max-h-[180px]">
                   <SidebarMenu>
-                    {visibleItems.map((item) => {
-                      const menuItem = (
-                        <SidebarMenuItem key={item.to}>
-                          <SidebarMenuButton
-                            asChild
-                            isActive={isActive(item.to)}
-                            tooltip={t(`navigation:${item.labelKey}`)}
+                    {recentSessions.length === 0 && (
+                      <p className="text-[11px] text-muted-foreground/40 px-3 py-2">Nicio sesiune</p>
+                    )}
+                    {recentSessions.map((session) => (
+                      <SidebarMenuItem key={session.session_id}>
+                        <SidebarMenuButton
+                          className="group/session text-xs h-8"
+                          onClick={() => {
+                            loadSession(session.session_id);
+                            navigate("/home");
+                          }}
+                        >
+                          <MessageCircle className="h-3 w-3 text-muted-foreground/50 shrink-0" />
+                          <span className="flex-1 truncate text-muted-foreground group-hover/session:text-foreground">
+                            {session.last_message?.slice(0, 40) || formatDistanceToNow(new Date(session.created_at), { addSuffix: true, locale: ro })}
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteSession(session.session_id);
+                              toast.success("Sesiune ștearsă");
+                            }}
+                            className="opacity-0 group-hover/session:opacity-100 h-4 w-4 rounded flex items-center justify-center hover:bg-destructive/10 transition-all"
                           >
-                            <button onClick={() => navigate(item.to)} className="w-full">
-                              <item.icon className={cn("h-4 w-4", item.highlight && !isActive(item.to) && "text-primary")} />
-                            </button>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      );
-                      if (item.controlId) {
-                        return (
-                          <ControlledNavItem key={item.to} elementId={item.controlId}>
-                            {menuItem}
-                          </ControlledNavItem>
-                        );
-                      }
-                      return menuItem;
-                    })}
+                            <Trash2 className="h-2.5 w-2.5 text-muted-foreground hover:text-destructive" />
+                          </button>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
                   </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            );
-          }
+                </ScrollArea>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
 
-          return (
-            <Collapsible
-              key={section.labelKey}
-              defaultOpen={section.defaultOpen || hasActive}
-              className="group/collapsible"
-            >
-              <SidebarGroup>
-                <CollapsibleTrigger asChild>
-                  <SidebarGroupLabel className="text-[10px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5">
-                    <SectionIcon className="h-3 w-3 text-muted-foreground/70" />
-                    <span className="flex-1">{t(`navigation:${section.labelKey}`)}</span>
-                    <ChevronRight className="h-3 w-3 text-muted-foreground/50 transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                  </SidebarGroupLabel>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {visibleItems.map((item) => {
-                        const menuItem = (
-                          <SidebarMenuItem key={item.to}>
-                            <SidebarMenuButton
-                              asChild
-                              isActive={isActive(item.to)}
-                              tooltip={t(`navigation:${item.labelKey}`)}
-                            >
-                              <button onClick={() => navigate(item.to)} className={cn(
-                                "w-full",
-                                item.highlight && !isActive(item.to) && "text-primary font-medium"
-                              )}>
-                                <item.icon className="h-4 w-4" />
-                                <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
-                                {item.minTier && (
-                                  <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
-                                )}
-                              </button>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        );
+        {user && collapsed && (
+          <>
+            <SidebarSeparator className="my-1" />
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      tooltip="Sesiuni recente"
+                      onClick={() => { newSession(); navigate("/home"); }}
+                    >
+                      <Clock className="h-4 w-4" />
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
 
-                        if (item.controlId) {
-                          return (
-                            <ControlledNavItem key={item.to} elementId={item.controlId}>
-                              {menuItem}
-                            </ControlledNavItem>
-                          );
-                        }
-                        return menuItem;
-                      })}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </CollapsibleContent>
-              </SidebarGroup>
-            </Collapsible>
-          );
-        })}
+        <SidebarSeparator className="my-1" />
+
+        {/* SYSTEM + CREATOR + ACCOUNT + ADMIN sections */}
+        {navSections.slice(2).map((section, idx) => renderSection(section, idx + 2))}
       </SidebarContent>
 
       <SidebarFooter>
