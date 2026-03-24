@@ -58,18 +58,18 @@ const NAV_LINKS = [
 /* ── Extraction Spine — recurring vertical signature ── */
 function ExtractionSpine({ labels }: { labels: string[] }) {
   return (
-    <div className="hidden lg:flex flex-col items-center gap-0 fixed left-6 top-1/2 -translate-y-1/2 z-40" aria-hidden="true">
-      <div className="w-px h-8 bg-[hsl(var(--gold-oxide)/0.2)]" />
+    <div className="hidden xl:flex flex-col items-center gap-0 fixed left-8 top-1/2 -translate-y-1/2 z-40" aria-hidden="true">
+      <div className="w-px h-10 bg-[hsl(var(--gold-oxide)/0.12)]" />
       {labels.map((l, i) => (
         <div key={l} className="flex flex-col items-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] my-1" />
-          <span className="text-[9px] lg:text-[10px] font-mono tracking-[0.2em] text-[hsl(var(--ivory-dim)/0.4)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
+          <div className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] my-1.5" />
+          <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--ivory-dim)/0.25)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
             {l}
           </span>
-          {i < labels.length - 1 && <div className="w-px h-12 bg-[hsl(var(--gold-oxide)/0.1)]" />}
+          {i < labels.length - 1 && <div className="w-px h-14 bg-[hsl(var(--gold-oxide)/0.06)]" />}
         </div>
       ))}
-      <div className="w-px h-8 bg-[hsl(var(--gold-oxide)/0.2)]" />
+      <div className="w-px h-10 bg-[hsl(var(--gold-oxide)/0.12)]" />
     </div>
   );
 }
@@ -81,7 +81,7 @@ function ScrollProgress() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-[2px] bg-[hsl(var(--gold-oxide)/0.6)] origin-left z-[60]"
+      className="fixed top-0 left-0 right-0 h-[2px] bg-[hsl(var(--gold-oxide)/0.45)] origin-left z-[60]"
       style={{ scaleX }}
     />
   );
