@@ -39,12 +39,16 @@ export function DowngradeRetention({ open, onClose, onConfirmCancel, currentTier
     async function loadStats() {
       setLoading(true);
       try {
-        const [jobs, artifacts, neurons, credits] = await Promise.all([
+        const [jobs, artifacts, neurons] = await Promise.all([
           supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("user_id", user!.id),
           supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
           supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user!.id),
-          supabase.from("credit_transactions").select("amount").eq("user_id", user!.id).eq("type", "debit"),
         ]);
+        const credits = await supabase
+          .from("credit_transactions")
+          .select("amount")
+          .eq("user_id", user!.id)
+          .eq("type", "debit");
 
         const memberSince = user!.created_at ? new Date(user!.created_at) : new Date();
         const daysDiff = Math.floor((Date.now() - memberSince.getTime()) / (1000 * 60 * 60 * 24));
