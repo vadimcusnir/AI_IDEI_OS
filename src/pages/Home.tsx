@@ -544,6 +544,13 @@ export default function Home() {
             </div>
           )}
 
+          {/* ═══ INLINE SERVICE SUGGESTIONS ═══ */}
+          <InlineServiceSuggestions
+            input={input}
+            visible={!isEmptyState && !loading && input.length >= 3}
+            onSelect={(prompt) => { handleCommand(prompt, true); }}
+          />
+
           {/* ═══ INPUT ZONE — Bottom, only in active state ═══ */}
           {!isEmptyState && (
             <CommandInputZone
@@ -553,6 +560,18 @@ export default function Home() {
               onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
               showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
               onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+              onAttachAction={(action) => {
+                const actionPrompts: Record<string, string> = {
+                  extract_neurons: "/extract neurons from content",
+                  generate_content: "/generate content from neurons",
+                  analyze_data: "/analyze my data and competitors",
+                  build_funnel: "/build a sales funnel",
+                  trending: "/analyze trending patterns in my library",
+                  recommended: "/suggest next best actions based on my data",
+                };
+                const prompt = actionPrompts[action];
+                if (prompt) handleCommand(prompt, true);
+              }}
             />
           )}
         </div>
