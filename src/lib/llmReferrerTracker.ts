@@ -5,13 +5,13 @@
 import { supabase } from "@/integrations/supabase/client";
 
 const LLM_REFERRER_PATTERNS: Record<string, RegExp[]> = {
-  ChatGPT: [/chat\.openai\.com/i, /chatgpt\.com/i],
-  Perplexity: [/perplexity\.ai/i],
-  Gemini: [/gemini\.google\.com/i, /bard\.google\.com/i],
-  Claude: [/claude\.ai/i],
-  Copilot: [/copilot\.microsoft\.com/i, /bing\.com\/chat/i],
-  "You.com": [/you\.com/i],
-  Phind: [/phind\.com/i],
+  ChatGPT: [/^chat\.openai\.com$/i, /^chatgpt\.com$/i],
+  Perplexity: [/^perplexity\.ai$/i],
+  Gemini: [/^gemini\.google\.com$/i, /^bard\.google\.com$/i],
+  Claude: [/^claude\.ai$/i],
+  Copilot: [/^copilot\.microsoft\.com$/i, /^bing\.com$/i],
+  "You.com": [/^you\.com$/i],
+  Phind: [/^phind\.com$/i],
 };
 
 const LLM_BOT_PATTERNS: Record<string, RegExp> = {
