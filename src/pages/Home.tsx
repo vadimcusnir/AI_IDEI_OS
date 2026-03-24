@@ -500,7 +500,6 @@ export default function Home() {
 
                   {isEmptyState && input.length < 2 && (
                   <div className="w-full max-w-2xl mx-auto">
-                    >
                       <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
                   </div>
                   )}
