@@ -33,16 +33,31 @@ interface AgentResult {
   status: string;
   reason?: string;
   job_id?: string;
+  kernel?: {
+    tier: string;
+    strategy: string;
+    cost_charged: number;
+    tier_discount_pct: number;
+    safety: string;
+    memory_runs: number;
+    state_flow: string[];
+  };
   summary?: {
     neurons_extracted: number;
     clusters_formed: number;
     services_matched: number;
     services_executed: number;
+    services_failed?: number;
     assets_generated: number;
+    assets_rejected?: number;
     marketplace_drafts: number;
     new_services_created: number;
     top_ranked: any[];
   };
+  estimated_cost?: number;
+  balance?: number;
+  deficit?: number;
+  tier_discount_pct?: number;
   neurons?: any[];
   clusters?: any[];
   selected_services?: any[];
@@ -50,10 +65,17 @@ interface AgentResult {
   marketplace_items?: any[];
   new_services?: any[];
   ranking?: any[];
+  scored_assets?: any[];
   steps?: StepLog[];
 }
 
 const STEP_LABELS: Record<string, { label: string; icon: typeof Brain }> = {
+  safety_guard: { label: "Safety Guard", icon: AlertTriangle },
+  tier_resolution: { label: "Tier Check", icon: Target },
+  memory_load: { label: "Memory Load", icon: Brain },
+  planner: { label: "Planner", icon: Layers },
+  economy_controller: { label: "Economy Gate", icon: Zap },
+  reserve_neurons: { label: "Reserve NEURONS", icon: Zap },
   neuron_extraction: { label: "Extragere Neuroni", icon: Brain },
   pattern_synthesis: { label: "Sinteză Patternuri", icon: Layers },
   service_matching: { label: "Potrivire Servicii", icon: Target },
@@ -64,6 +86,7 @@ const STEP_LABELS: Record<string, { label: string; icon: typeof Brain }> = {
   marketplace_packaging: { label: "Packaging Marketplace", icon: Store },
   auto_service_generation: { label: "Auto-Generare Servicii", icon: Sparkles },
   idea_rank_scoring: { label: "IdeaRank Scoring", icon: TrendingUp },
+  settle_neurons: { label: "Settle NEURONS", icon: Zap },
 };
 
 const DEPTH_CONFIG: Record<ExecutionDepth, { label: string; desc: string; neurons: string }> = {
@@ -135,6 +158,20 @@ export default function MasterAgent() {
         setStatus("failed");
         setResult(data);
         toast.error(data.reason || "Date insuficiente pentru procesare");
+        return;
+      }
+
+      if (data.status === "INSUFFICIENT_BALANCE") {
+        setStatus("failed");
+        setResult(data);
+        toast.error(`NEURONS insuficienți. Ai nevoie de ${data.estimated_cost}N, ai ${data.balance}N.`);
+        return;
+      }
+
+      if (data.status === "BLOCKED") {
+        setStatus("failed");
+        setResult(data);
+        toast.error(data.reason || "Execuție blocată de Safety Guard");
         return;
       }
 
@@ -337,33 +374,76 @@ export default function MasterAgent() {
               ))}
             </div>
 
-            {/* Pipeline Steps */}
+            {/* Kernel Info Strip */}
+            {result.kernel && (
+              <div className="bg-muted/30 border border-border rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <Zap className="h-3 w-3 text-primary" /> Kernel Control
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+                  <div>
+                    <span className="text-muted-foreground">Tier</span>
+                    <p className="font-semibold capitalize text-foreground">{result.kernel.tier}</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Strategy</span>
+                    <p className="font-semibold text-foreground">{result.kernel.strategy}</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Cost</span>
+                    <p className="font-semibold font-mono text-foreground">{result.kernel.cost_charged?.toLocaleString()}N</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Discount</span>
+                    <p className="font-semibold text-primary">{result.kernel.tier_discount_pct}%</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Memory Runs</span>
+                    <p className="font-semibold text-foreground">{result.kernel.memory_runs}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {result.steps && (
               <div className="bg-card border border-border rounded-xl p-4">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Pipeline Execuție</p>
                 <div className="space-y-1.5">
-                  {result.steps.map((step, i) => (
+                  {result.steps.map((step, i) => {
+                    const d = (step as any).data || step;
+                    const statusStr = step.status;
+                    const isPassed = statusStr === "completed" || statusStr === "passed" || statusStr === "resolved" || statusStr === "approved" || statusStr === "settled" || statusStr === "reserved" || statusStr === "loaded" || statusStr === "plan_ready";
+                    const isWarn = statusStr === "warning";
+                    return (
                     <div key={i} className="flex items-center gap-2 text-xs">
-                      {step.status === "completed" ? (
+                      {isPassed ? (
                         <CheckCircle className="h-3 w-3 text-primary shrink-0" />
-                      ) : step.status === "warning" ? (
+                      ) : isWarn ? (
                         <AlertTriangle className="h-3 w-3 text-amber-500 shrink-0" />
+                      ) : statusStr === "running" ? (
+                        <Loader2 className="h-3 w-3 text-primary animate-spin shrink-0" />
                       ) : (
                         <XCircle className="h-3 w-3 text-destructive shrink-0" />
                       )}
-                      <span className="text-muted-foreground w-28 shrink-0 font-mono text-[10px]">
+                      <span className="text-muted-foreground w-32 shrink-0 font-mono text-[10px]">
                         {STEP_LABELS[step.step]?.label || step.step}
                       </span>
-                      <span className="text-foreground text-[10px]">
-                        {step.count !== undefined && `${step.count} items`}
-                        {step.outputs !== undefined && `${step.outputs} outputs`}
-                        {step.items !== undefined && `${step.items} items`}
-                        {step.qualified !== undefined && `${step.qualified}/${step.total} qualified`}
-                        {step.ranked !== undefined && `${step.ranked} ranked`}
-                        {step.steps_count !== undefined && `${step.steps_count} steps`}
+                      <span className="text-foreground text-[10px] truncate">
+                        {d.count !== undefined && `${d.count} items`}
+                        {d.outputs !== undefined && ` ${d.outputs} outputs`}
+                        {d.items !== undefined && ` ${d.items} items`}
+                        {d.qualified !== undefined && ` ${d.qualified}/${d.total} qualified`}
+                        {d.ranked !== undefined && ` ${d.ranked} ranked`}
+                        {d.steps !== undefined && ` ${d.steps} steps`}
+                        {d.tier !== undefined && ` tier: ${d.tier}`}
+                        {d.cost !== undefined && ` ${d.cost}N`}
+                        {d.amount !== undefined && ` ${d.amount}N`}
+                        {d.strategy !== undefined && ` ${d.strategy}`}
+                        {d.reason !== undefined && ` ${d.reason}`}
                       </span>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
