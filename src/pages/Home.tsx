@@ -677,15 +677,17 @@ export default function Home() {
             </div>
           )}
 
-          {/* ═══ INPUT ZONE — Always at bottom ═══ */}
-          <CommandInputZone
-            ref={inputZoneRef} input={input} onInputChange={setInput}
-            onSubmit={handleSubmit} onStop={handleStop} loading={loading}
-            files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
-            onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
-            showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
-            onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
-          />
+          {/* ═══ INPUT ZONE — Bottom, only in active state ═══ */}
+          {!isEmptyState && (
+            <CommandInputZone
+              ref={inputZoneRef} input={input} onInputChange={setInput}
+              onSubmit={handleSubmit} onStop={handleStop} loading={loading}
+              files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
+              onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
+              showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
+              onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+            />
+          )}
         </div>
 
         {/* ═══ RIGHT: Context Drawer (on demand) ═══ */}
