@@ -409,7 +409,7 @@ export default function Home() {
 
     if (!fullContent) {
       fullContent = t("common:no_response");
-      setMessages(prev => [...prev, { id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() }]);
+      executionActions.addMessage({ id: assistantId, role: "assistant", content: fullContent, timestamp: new Date() });
     }
 
     const parsedOutputs = parseOutputs(fullContent);
