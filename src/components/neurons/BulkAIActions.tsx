@@ -82,7 +82,7 @@ export function BulkAIActions({ selectedCount, selectedIds, disabled }: BulkAIAc
           <DropdownMenuItem
             key={action.label}
             onClick={() => {
-              navigate(`/chat?q=${encodeURIComponent(action.prompt)}`);
+              navigate(`/home?q=${encodeURIComponent(action.prompt)}`);
             }}
             className="flex items-start gap-2 py-2"
           >
