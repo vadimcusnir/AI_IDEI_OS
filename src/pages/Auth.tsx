@@ -162,7 +162,7 @@ export default function Auth() {
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@example.com"
-                  className="w-full h-11 pl-10 pr-3 rounded-xl border border-input bg-background/80 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200" />
+                  className="w-full h-11 min-h-[44px] pl-10 pr-3 rounded-xl border border-input bg-background/80 text-base sm:text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200" />
               </div>
             </div>
 
