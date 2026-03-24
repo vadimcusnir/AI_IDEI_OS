@@ -74,6 +74,8 @@ Deno.serve(async (req: Request) => {
       // Clean up whitespace
       .replace(/[ \t]+/g, " ")
       .replace(/\n\s*\n/g, "\n\n")
+      // Remove any remaining angle brackets to avoid partial HTML tags
+      .replace(/[<>]/g, "")
       .trim();
 
     // Limit content length
