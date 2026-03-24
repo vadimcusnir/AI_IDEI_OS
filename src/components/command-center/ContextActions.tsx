@@ -85,7 +85,7 @@ export function ContextActions({
         icon: Brain,
         label: "Extract from analysis",
         prompt: "/extract neurons from the analysis above",
-        color: "text-purple-500 border-purple-500/20 hover:bg-purple-500/5",
+        color: "text-semantic-purple border-semantic-purple/20 hover:bg-semantic-purple/5",
       });
     }
 
