@@ -14,7 +14,7 @@ import { AdminRoute } from "@/components/AdminRoute";
 import { CookieConsent } from "@/components/global/CookieConsent";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { Loader2 } from "lucide-react";
+
 
 /** Retry dynamic imports once on failure (handles stale chunk hashes after deploys) */
 function lazyRetry(factory: () => Promise<any>) {
