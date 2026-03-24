@@ -213,7 +213,7 @@ export default function Onboarding() {
                   {idx < STEPS.length - 1 && (
                     <div className={cn(
                       "h-0.5 w-3 sm:w-6 rounded-full transition-colors shrink-0",
-                      status[STEPS[idx].checkField] > 0 ? "bg-primary" : "bg-muted-foreground/15"
+                      status[STEPS[idx].checkField] > 0 ? "bg-[hsl(var(--gold-oxide))]" : "bg-muted-foreground/10"
                     )} />
                   )}
                 </div>
