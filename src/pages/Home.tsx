@@ -39,6 +39,7 @@ import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { IntentChips, SystemRecommendations, matchIntentToSystems, type MMSystem } from "@/components/command-center/IntentSystems";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WorkspaceLayerTabs, type WorkspaceLayer } from "@/components/command-center/WorkspaceLayerTabs";
+import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { routeCommand, type RouteResult } from "@/components/command-center/CommandRouter";
