@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { type RegistryServiceItem, LEVEL_META, TIER_COLORS } from "./RegistryCard";
 import { useWalletAtomicity } from "@/hooks/useWalletAtomicity";
+import { useAbandonmentDetector } from "@/hooks/useAbandonmentDetector";
 
 interface ExecuteServiceDialogProps {
   service: RegistryServiceItem | null;
