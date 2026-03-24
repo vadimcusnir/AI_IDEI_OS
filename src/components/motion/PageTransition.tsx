@@ -1,72 +1,31 @@
-import { motion, AnimatePresence } from "framer-motion";
 import { ReactNode } from "react";
 
-const pageVariants = {
-  initial: { opacity: 0, y: 8 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] as const } },
-  exit: { opacity: 0, y: -4, transition: { duration: 0.15 } },
-};
+/**
+ * PageTransition — now instant (no layout shifts).
+ * All translateY animations removed to prevent "floating" UI.
+ */
 
-const staggerContainer = {
-  animate: { transition: { staggerChildren: 0.05 } },
-};
-
-const staggerItem = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const } },
-};
-
-/** Wraps a page in a smooth fade-up entrance animation */
+/** Wraps a page — renders instantly, no animation */
 export function PageTransition({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <motion.div
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
-/** Container that staggers its children's entrance */
+/** Container that renders children instantly */
 export function StaggerContainer({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <motion.div
-      variants={staggerContainer}
-      initial="initial"
-      animate="animate"
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
-/** Individual stagger item — use inside StaggerContainer */
+/** Individual stagger item — renders instantly */
 export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <motion.div variants={staggerItem} className={className}>
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
-/** Fade-in on scroll (viewport entry) */
-export function FadeInView({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.4, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+/** Fade-in on scroll — opacity only, no vertical movement */
+export function FadeInView({ children, className }: { children: ReactNode; className?: string; delay?: number }) {
+  return <div className={className}>{children}</div>;
 }
 
-export { pageVariants, staggerContainer, staggerItem };
+/** Legacy exports for compatibility */
+export const pageVariants = {};
+export const staggerContainer = {};
+export const staggerItem = {};
