@@ -37,25 +37,17 @@ export function SidePanels({
       )}
 
       {/* Mobile Task Tree */}
-      <AnimatePresence>
-        {showRightPanel && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="md:hidden fixed inset-y-0 right-0 w-[280px] z-50 border-l border-border bg-card shadow-xl"
-          >
-            <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-              <span className="text-xs font-bold">Task Tree</span>
-              <button onClick={onCloseTaskTree} className="p-1 text-muted-foreground hover:text-foreground">
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <TaskTree execution={execution} onSaveTemplate={onSaveTemplate} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {showRightPanel && (
+        <div className="md:hidden fixed inset-y-0 right-0 w-[280px] z-50 border-l border-border bg-card shadow-xl">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-border">
+            <span className="text-xs font-bold">Task Tree</span>
+            <button onClick={onCloseTaskTree} className="p-1 text-muted-foreground hover:text-foreground">
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <TaskTree execution={execution} onSaveTemplate={onSaveTemplate} />
+        </div>
+      )}
 
       {/* Memory Panel */}
       <AnimatePresence>
