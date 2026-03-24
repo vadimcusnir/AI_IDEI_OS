@@ -43,3 +43,5 @@ project_id = "swghuuxkcilayybesadm"
     verify_jwt = false
   [functions.inevitability-engine]
     verify_jwt = false
+  [functions.intelligence-extract]
+    verify_jwt = false

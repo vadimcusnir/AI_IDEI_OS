@@ -250,6 +250,7 @@ const App = () => (
                 <Route path="/admin/kernel" element={<AdminRoute><AppLayout><AdminKernel /></AppLayout></AdminRoute>} />
                 <Route path="/admin/domination" element={<AdminRoute><AppLayout><AdminDomination /></AppLayout></AdminRoute>} />
                 <Route path="/admin/inevitability" element={<AdminRoute><AppLayout><AdminInevitability /></AppLayout></AdminRoute>} />
+                <Route path="/admin/financialization" element={<AdminRoute><AppLayout><AdminFinancialization /></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
