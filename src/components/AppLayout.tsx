@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useRef, lazy, Suspense, memo } from "react";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useLocale } from "@/hooks/useLocale";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
