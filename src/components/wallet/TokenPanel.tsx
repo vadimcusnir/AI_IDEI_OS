@@ -78,7 +78,7 @@ export function TokenPanel() {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/30">
           <div className="flex items-center gap-2">
-            <Coins className="h-4 w-4 text-amber-500" />
+            <Coins className="h-4 w-4 text-semantic-amber" />
             <h3 className="text-sm font-semibold">NOTA2 Token</h3>
           </div>
           <div className="flex items-center gap-2">
