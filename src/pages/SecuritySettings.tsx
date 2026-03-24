@@ -111,9 +111,9 @@ export default function SecuritySettings() {
                 <span className="text-muted-foreground/60 text-[10px] block mb-0.5">Email verified</span>
                 <span className="font-medium flex items-center gap-1">
                   {user?.email_confirmed_at ? (
-                    <><CheckCircle2 className="h-3 w-3 text-emerald-500" /> Yes</>
+                    <><CheckCircle2 className="h-3 w-3 text-success" /> Yes</>
                   ) : (
-                    <><XCircle className="h-3 w-3 text-amber-500" /> Pending</>
+                    <><XCircle className="h-3 w-3 text-warning" /> Pending</>
                   )}
                 </span>
               </div>
