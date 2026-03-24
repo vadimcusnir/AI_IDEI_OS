@@ -205,7 +205,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
           </div>
 
           {/* Keyboard hint — compact */}
-          <p className="text-[9px] text-muted-foreground/25 text-center mt-1 select-none">
+          <p className="text-[9px] text-muted-foreground/20 text-center mt-1.5 select-none tracking-wide">
             <kbd className="font-mono">Enter</kbd> trimite · <kbd className="font-mono">/</kbd> comenzi · <kbd className="font-mono">+</kbd> servicii
           </p>
         </div>

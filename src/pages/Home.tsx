@@ -583,13 +583,13 @@ export default function Home() {
                 <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-6">
                   <div className="w-full max-w-3xl flex flex-col items-center gap-4">
                     <div className="w-full text-center space-y-2">
-                      <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
+                      <h1 className="text-2xl sm:text-3xl font-bold tracking-[-0.02em] leading-[1.15] text-foreground">
                         {greeting},{" "}
-                        <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
+                        <span className="text-[hsl(var(--gold-oxide))]">
                           {userName}
                         </span>
                       </h1>
-                      <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                      <p className="text-sm text-muted-foreground/70 max-w-md mx-auto leading-relaxed">
                         Ce vrei să obții?
                       </p>
                     </div>
