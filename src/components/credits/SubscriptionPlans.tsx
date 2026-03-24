@@ -124,6 +124,16 @@ export function SubscriptionPlans() {
           );
         })}
       </div>
+
+      <DowngradeRetention
+        open={showRetention}
+        onClose={() => setShowRetention(false)}
+        onConfirmCancel={() => {
+          setShowRetention(false);
+          handleManage();
+        }}
+        currentTier={tier}
+      />
     </div>
   );
 }
