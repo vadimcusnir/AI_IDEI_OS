@@ -1,10 +1,16 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
-import {
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
-  getTierLimits, economyPreFlight, safetyCheck,
-  loadExecutionMemory, buildExecutionPlan, applyScoreVerdicts,
-  createKernelLog, type KernelState, type ExecutionPlan,
+import {
+  getTierLimits,
+  economyPreFlight,
+  safetyCheck,
+  loadExecutionMemory,
+  buildExecutionPlan,
+  applyScoreVerdicts,
+  createKernelLog,
+  type KernelState,
+  type ExecutionPlan,
 } from "../_shared/kernel-modules.ts";
 
 const corsHeaders = {
