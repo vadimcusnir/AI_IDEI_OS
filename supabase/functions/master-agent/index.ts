@@ -378,6 +378,117 @@ serve(async (req) => {
       kernel.log("idea_rank_scoring", "MONETIZING", "completed", { ranked: ranking.length });
 
       // ═══════════════════════════════════════
+      // STEP 11 — DECISION ENGINE (Layer 3)
+      // Converts execution results into scored action blueprint
+      // ═══════════════════════════════════════
+      kernel.log("decision_engine", "SCORING", "running");
+      let decisionBlueprint: any = null;
+      try {
+        const decisionFindings = [
+          {
+            type: "execution_summary",
+            source: "master_agent",
+            data: {
+              neurons_extracted: neurons.neurons.length,
+              clusters_formed: clusters?.clusters?.length || 0,
+              services_matched: selectedServices.length,
+              services_failed: failedServiceKeys.length,
+              assets_generated: qualifiedAssets.length,
+              assets_rejected: rejected.length,
+              cost_charged: economy.estimated_cost,
+            },
+          },
+          {
+            type: "quality_analysis",
+            source: "scorer",
+            data: {
+              accepted_count: accepted.length,
+              rejected_count: rejected.length,
+              avg_score: accepted.length > 0
+                ? accepted.reduce((s: number, a: any) => s + a.final_score, 0) / accepted.length
+                : 0,
+              score_distribution: scoredAssets.map((s: any) => ({
+                index: s.index,
+                score: s.final_score,
+                verdict: s.verdict,
+              })),
+            },
+          },
+          {
+            type: "service_performance",
+            source: "executor",
+            data: {
+              selected: selectedServices.map((s: any) => s.service_key),
+              failed: failedServiceKeys,
+              success_rate: selectedServices.length > 0
+                ? (selectedServices.length - failedServiceKeys.length) / selectedServices.length
+                : 0,
+            },
+          },
+          ...(failedServiceKeys.length > 0 ? [{
+            type: "failure_analysis",
+            source: "executor",
+            data: {
+              failed_services: failedServiceKeys,
+              recovery_suggestion: "retry_with_different_model_or_skip",
+            },
+          }] : []),
+        ];
+
+        decisionBlueprint = await callAI(
+          `You are the Decision Engine for AI-IDEI. Analyze the master-agent execution results and produce a scored action blueprint.
+
+SCORING (1-10):
+- clarity: How clear and actionable are outputs?
+- redundancy: How much overlap between assets?
+- visual_consistency: How uniform is the output quality?
+- conversion_impact: Revenue potential of generated assets
+- technical_integrity: Execution reliability
+
+Return JSON:
+{
+  "system_state": {
+    "total_assets": N,
+    "quality_pass_rate": 0.0-1.0,
+    "service_success_rate": 0.0-1.0,
+    "cost_efficiency": 0.0-1.0
+  },
+  "structural_verdict": "coherent|overfragmented|inconsistent",
+  "quality_verdict": "high|medium|low",
+  "commercial_verdict": "high_conversion|medium|leaking",
+  "decisions": [
+    {
+      "action": "retry|merge|enhance|remove|reprice",
+      "priority": "P0|P1|P2",
+      "target": "...",
+      "reason": "...",
+      "scores": { "clarity": N, "redundancy": N, "visual_consistency": N, "conversion_impact": N, "technical_integrity": N },
+      "final_score": N,
+      "method": ["step1", "step2"],
+      "estimated_effort": "trivial|small|medium|large"
+    }
+  ],
+  "compression_actions": ["merge X into Y", "..."],
+  "next_run_recommendations": {
+    "services_to_prioritize": ["..."],
+    "services_to_avoid": ["..."],
+    "optimal_depth": "quick|standard|full",
+    "estimated_improvement_pct": N
+  }
+}
+Max 10 decisions. Be decisive, not descriptive.`,
+          `EXECUTION FINDINGS:\n${JSON.stringify(decisionFindings, null, 1).slice(0, 8000)}`
+        );
+        kernel.log("decision_engine", "SCORING", "completed", {
+          decisions: decisionBlueprint?.decisions?.length || 0,
+          verdict: decisionBlueprint?.commercial_verdict || "unknown",
+        });
+      } catch (decisionErr) {
+        console.error("Decision engine phase failed (non-critical):", decisionErr);
+        kernel.log("decision_engine", "SCORING", "failed", { error: String(decisionErr) });
+      }
+
+      // ═══════════════════════════════════════
       // SETTLE NEURONS (SUCCESS)
       // ═══════════════════════════════════════
       kernel.log("settle_neurons", "COMPLETED", "running");
@@ -453,6 +564,7 @@ serve(async (req) => {
           new_services_created: generatedServices.length,
           top_ranked: ranking.slice(0, 5),
         },
+        decision_blueprint: decisionBlueprint || null,
         neurons: neurons.neurons,
         clusters: clusters?.clusters || [],
         selected_services: selectedServices,
