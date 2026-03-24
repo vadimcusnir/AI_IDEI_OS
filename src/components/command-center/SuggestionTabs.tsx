@@ -58,7 +58,7 @@ export function SuggestionTabs({ onCommand }: SuggestionTabsProps) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2, duration: 0.4 }}
-      className="w-full max-w-3xl mx-auto px-4 sm:px-6"
+      className="w-full"
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-3 px-1">

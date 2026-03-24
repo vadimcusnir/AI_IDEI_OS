@@ -9,8 +9,7 @@ import { CommandBubble, type Message } from "./CommandBubble";
 import { WelcomeScreen } from "./WelcomeScreen";
 import { SuggestionTabs } from "./SuggestionTabs";
 import { ExecutionSummary } from "./ExecutionSummary";
-import type { CommandPhase, ExecutionState } from "@/hooks/useCommandState";
-import type { OutputItem } from "./OutputPanel";
+import type { CommandPhase, ExecutionState, OutputItem } from "@/stores/executionStore";
 import { cn } from "@/lib/utils";
 
 interface MessageStreamProps {

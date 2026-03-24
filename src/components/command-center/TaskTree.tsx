@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import type { ExecutionState, TaskStep, CommandPhase } from "@/hooks/useCommandState";
+import type { ExecutionState, TaskStep, CommandPhase } from "@/stores/executionStore";
 
 const TOOL_ICONS: Record<string, typeof Brain> = {
   transcribe_source: Globe,

@@ -26,7 +26,7 @@ import { ArrowUp, Sparkles, RotateCcw, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { CommandBubble } from "@/components/command-center/CommandBubble";
-import { type OutputItem } from "@/components/command-center/OutputPanel";
+import { type OutputItem } from "@/stores/executionStore";
 import { OutputPanel } from "@/components/command-center/OutputPanel";
 import { PlanPreview } from "@/components/command-center/PlanPreview";
 import { EconomicGate } from "@/components/command-center/EconomicGate";
@@ -544,14 +544,14 @@ export default function Home() {
 
           {/* ═══ CONTENT AREA ═══ */}
           {isEmptyState ? (
-            /* IDLE: Centered hero */
-            <div className="flex-1 flex flex-col items-center justify-center relative z-10 overflow-hidden px-4 sm:px-6">
-              <div className="w-full max-w-3xl flex flex-col items-center gap-5">
+            /* IDLE: Centered hero — viewport-locked, no scroll */
+            <div className="flex-1 flex flex-col items-center justify-center relative z-10 overflow-hidden px-4 sm:px-6" style={{ marginTop: "-5%" }}>
+              <div className="w-full max-w-3xl flex flex-col items-center gap-4">
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="w-full text-center space-y-2"
+                  className="w-full text-center space-y-1.5"
                 >
                   <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15]">
                     {greeting},{" "}
@@ -564,38 +564,31 @@ export default function Home() {
                   </p>
                 </motion.div>
 
-                {/* Proactive suggestions */}
-                {decisionSuggestions.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="grid grid-cols-2 gap-2 max-w-lg w-full"
-                  >
-                    {decisionSuggestions.slice(0, 4).map((s: any) => (
-                      <button
-                        key={s.id}
-                        onClick={() => handleCommand(s.prompt, true)}
-                        className="group flex items-start gap-2.5 p-2.5 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] hover:border-primary/30 transition-all text-left"
-                      >
-                        <span className="text-base shrink-0 mt-0.5">{s.icon}</span>
-                        <div className="min-w-0">
-                          <p className="text-xs font-medium truncate">{s.label}</p>
-                          <p className="text-[11px] text-muted-foreground line-clamp-1">{s.description}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
+                {/* Input zone — centered in idle */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="w-full max-w-2xl"
+                >
+                  <CommandInputZone
+                    ref={inputZoneRef} input={input} onInputChange={setInput}
+                    onSubmit={handleSubmit} onStop={handleStop} loading={loading}
+                    files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
+                    onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
+                    showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
+                    onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+                  />
+                </motion.div>
 
-                {/* Suggestion Tabs */}
+                {/* Suggestion Tabs — compact */}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.3 }}
                   className="w-full max-w-2xl"
                 >
-                  <SuggestionTabs onCommand={handleCommand} />
+                  <SuggestionTabs onCommand={(prompt) => handleCommand(prompt, true)} />
                 </motion.div>
               </div>
             </div>
@@ -684,15 +677,17 @@ export default function Home() {
             </div>
           )}
 
-          {/* ═══ INPUT ZONE — Always at bottom ═══ */}
-          <CommandInputZone
-            ref={inputZoneRef} input={input} onInputChange={setInput}
-            onSubmit={handleSubmit} onStop={handleStop} loading={loading}
-            files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
-            onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
-            showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
-            onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
-          />
+          {/* ═══ INPUT ZONE — Bottom, only in active state ═══ */}
+          {!isEmptyState && (
+            <CommandInputZone
+              ref={inputZoneRef} input={input} onInputChange={setInput}
+              onSubmit={handleSubmit} onStop={handleStop} loading={loading}
+              files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
+              onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
+              showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
+              onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+            />
+          )}
         </div>
 
         {/* ═══ RIGHT: Context Drawer (on demand) ═══ */}

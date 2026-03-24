@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TaskTree } from "./TaskTree";
 import { MemoryPanel } from "./MemoryPanel";
-import type { ExecutionState } from "@/hooks/useCommandState";
+import type { ExecutionState } from "@/stores/executionStore";
 
 interface SidePanelsProps {
   showTaskTree: boolean;

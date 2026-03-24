@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight, Save, Package, CheckCircle2, XCircle, Zap, Clock, Coins, Loader2, History } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ExecutionState, TaskStep } from "@/hooks/useCommandState";
-import type { OutputItem } from "@/components/command-center/OutputPanel";
+import type { ExecutionState, TaskStep, OutputItem } from "@/stores/executionStore";
 
 interface ContextDrawerProps {
   execution: ExecutionState;
