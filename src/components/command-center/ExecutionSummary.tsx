@@ -17,6 +17,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import type { CommandPhase } from "@/stores/executionStore";
+import { OutputCounter } from "./OutputCounter";
 
 interface ExecutionSummaryProps {
   phase: CommandPhase;
