@@ -248,7 +248,7 @@ Deno.serve(async (req) => {
           levelOutputs[level.level] = `Error at level ${level.level}: ${resp.status}`;
         }
       } catch (e) {
-        levelOutputs[level.level] = `Error at level ${level.level}: ${e.message}`;
+        levelOutputs[level.level] = `Error at level ${level.level}: ${(e as Error).message}`;
       }
 
       if (job_id) {
