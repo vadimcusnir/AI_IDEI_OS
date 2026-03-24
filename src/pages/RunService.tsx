@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { SEOHead } from "@/components/SEOHead";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -69,12 +69,16 @@ export default function RunService() {
   const { serviceKey } = useParams<{ serviceKey: string }>();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const prefillState = (location.state as { prefillInput?: string; prefillGoal?: string } | null);
   const { tier: userTier } = useUserTier();
   const { t } = useTranslation("pages");
   const { balance: creditBalance, loading: creditsLoading } = useCreditBalance();
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
-  const [inputs, setInputs] = useState<Record<string, string>>({});
+  const [inputs, setInputs] = useState<Record<string, string>>(
+    prefillState?.prefillInput ? { content: prefillState.prefillInput } : {}
+  );
   const [jobStatus, setJobStatus] = useState<JobStatus>("idle");
   const [jobResult, setJobResult] = useState("");
   const [jobId, setJobId] = useState<string | null>(null);
@@ -680,6 +684,11 @@ export default function RunService() {
                       <PostExecutionRecommendations
                         serviceKey={service.service_key}
                         serviceCategory={service.category}
+                        lastOutput={jobResult}
+                        lastGoal={inputs["content"] || inputs["text"] || ""}
+                        onChainService={(chainKey, prefill) => {
+                          navigate(`/run/${chainKey}`, { state: { prefillInput: prefill.input, prefillGoal: prefill.goal } });
+                        }}
                       />
 
                       {/* Upsell — monetization loop */}

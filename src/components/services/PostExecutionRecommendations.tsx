@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 interface Recommendation {
   label: string;
   description: string;
-  route: string;
+  route?: string;
+  serviceKey?: string;
   icon: React.ElementType;
   priority: "high" | "medium";
   costHint?: string;
@@ -17,6 +18,9 @@ interface PostExecutionRecommendationsProps {
   serviceKey: string;
   serviceCategory?: string;
   className?: string;
+  lastOutput?: string;
+  lastGoal?: string;
+  onChainService?: (serviceKey: string, prefill: { input: string; goal: string }) => void;
 }
 
 const SERVICE_CATEGORY_MAP: Record<string, string> = {
@@ -44,42 +48,63 @@ const SERVICE_CATEGORY_MAP: Record<string, string> = {
   "product-description": "content",
 };
 
-const RECOMMENDATIONS_BY_CATEGORY: Record<string, Recommendation[]> = {
+const CHAIN_RECOMMENDATIONS: Record<string, Recommendation[]> = {
   strategy: [
-    { label: "Generează conținut din strategie", description: "Transformă strategia în articole, posturi, emailuri", route: "/services?category=content", icon: Sparkles, priority: "high", costHint: "~290N" },
-    { label: "Analiză competitivă", description: "Compară strategia ta cu piața", route: "/run/competitive-analysis", icon: TrendingUp, priority: "high", costHint: "~440N" },
+    { label: "Generează conținut din strategie", description: "Transformă strategia în articole, posturi, emailuri", serviceKey: "content-plan", icon: Sparkles, priority: "high", costHint: "~290N" },
+    { label: "Analiză competitivă", description: "Compară strategia ta cu piața", serviceKey: "competitive-analysis", icon: TrendingUp, priority: "high", costHint: "~440N" },
     { label: "Publică ca asset", description: "Vinde strategia pe marketplace", route: "/marketplace", icon: Package, priority: "medium" },
   ],
   content: [
-    { label: "Generează variante", description: "Creează versiuni alternative optimizate", route: "/services?category=content", icon: Sparkles, priority: "high", costHint: "~290N" },
-    { label: "Strategie completă", description: "Construiește o strategie din conținut", route: "/services?category=strategy", icon: TrendingUp, priority: "medium", costHint: "~440N" },
+    { label: "Generează variante", description: "Creează versiuni alternative optimizate", serviceKey: "social-media-posts", icon: Sparkles, priority: "high", costHint: "~290N" },
+    { label: "Strategie completă", description: "Construiește o strategie din conținut", serviceKey: "marketing-strategy", icon: TrendingUp, priority: "medium", costHint: "~440N" },
     { label: "Salvează ca template", description: "Listează pe marketplace", route: "/marketplace", icon: Package, priority: "medium" },
   ],
   research: [
-    { label: "Aplică în strategie", description: "Folosește insights în planificare", route: "/services?category=strategy", icon: Zap, priority: "high", costHint: "~440N" },
-    { label: "Generează raport complet", description: "Creează raport detaliat", route: "/services?category=research", icon: Sparkles, priority: "high", costHint: "~580N" },
+    { label: "Aplică în strategie", description: "Folosește insights în planificare", serviceKey: "marketing-strategy", icon: Zap, priority: "high", costHint: "~440N" },
+    { label: "Generează raport complet", description: "Creează raport detaliat", serviceKey: "seo-audit", icon: Sparkles, priority: "high", costHint: "~580N" },
     { label: "Export & vinde", description: "Listează pe marketplace", route: "/marketplace", icon: Package, priority: "medium" },
   ],
   education: [
-    { label: "Generează materiale", description: "Slide-uri, exerciții, quizuri", route: "/services?category=content", icon: Sparkles, priority: "high", costHint: "~440N" },
-    { label: "Strategie de lansare", description: "Plan de monetizare & marketing", route: "/services?category=strategy", icon: TrendingUp, priority: "medium", costHint: "~440N" },
+    { label: "Generează materiale", description: "Slide-uri, exerciții, quizuri", serviceKey: "course-outline", icon: Sparkles, priority: "high", costHint: "~440N" },
+    { label: "Strategie de lansare", description: "Plan de monetizare & marketing", serviceKey: "marketing-strategy", icon: TrendingUp, priority: "medium", costHint: "~440N" },
     { label: "Publică ca produs", description: "Vinde pe marketplace", route: "/marketplace", icon: Package, priority: "medium" },
   ],
 };
 
-const DEFAULT_RECOMMENDATIONS: Recommendation[] = [
-  { label: "Continuă cu un serviciu AI", description: "Folosește rezultatul ca input", route: "/services", icon: Sparkles, priority: "high", costHint: "~290N" },
+const DEFAULT_CHAIN: Recommendation[] = [
+  { label: "Continuă cu un serviciu AI", description: "Folosește rezultatul ca input", serviceKey: "insight-extractor", icon: Sparkles, priority: "high", costHint: "~290N" },
   { label: "Extrage cunoștințe", description: "Transformă în neuroni reutilizabili", route: "/extractor", icon: Zap, priority: "high" },
   { label: "Explorează marketplace", description: "Templates și assets gata de folosit", route: "/marketplace", icon: Package, priority: "medium" },
 ];
 
-export function PostExecutionRecommendations({ serviceKey, serviceCategory, className }: PostExecutionRecommendationsProps) {
+export function PostExecutionRecommendations({
+  serviceKey,
+  serviceCategory,
+  className,
+  lastOutput,
+  lastGoal,
+  onChainService,
+}: PostExecutionRecommendationsProps) {
   const navigate = useNavigate();
 
   const recommendations = useMemo(() => {
     const category = serviceCategory || SERVICE_CATEGORY_MAP[serviceKey] || "default";
-    return RECOMMENDATIONS_BY_CATEGORY[category] || DEFAULT_RECOMMENDATIONS;
+    return CHAIN_RECOMMENDATIONS[category] || DEFAULT_CHAIN;
   }, [serviceKey, serviceCategory]);
+
+  const handleClick = (rec: Recommendation) => {
+    if (rec.serviceKey && onChainService && lastOutput) {
+      const truncatedOutput = lastOutput.length > 4000 ? lastOutput.slice(0, 4000) + "\n\n[...truncated]" : lastOutput;
+      onChainService(rec.serviceKey, {
+        input: truncatedOutput,
+        goal: lastGoal || `Continuare din ${serviceKey}`,
+      });
+    } else if (rec.route) {
+      navigate(rec.route);
+    } else {
+      navigate("/services");
+    }
+  };
 
   return (
     <motion.div
@@ -91,6 +116,9 @@ export function PostExecutionRecommendations({ serviceKey, serviceCategory, clas
       <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
         <Zap className="h-3 w-3 text-primary" />
         Acțiuni recomandate
+        {lastOutput && (
+          <span className="text-primary/60 ml-1">— click pentru auto-chain</span>
+        )}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         {recommendations.map((rec, i) => (
@@ -99,18 +127,20 @@ export function PostExecutionRecommendations({ serviceKey, serviceCategory, clas
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 + i * 0.1 }}
-            onClick={() => navigate(rec.route)}
+            onClick={() => handleClick(rec)}
             className={cn(
               "group text-left p-3 rounded-xl border transition-all",
-              rec.priority === "high"
-                ? "border-primary/20 bg-primary/5 hover:border-primary/40 hover:bg-primary/10"
-                : "border-border bg-card hover:border-primary/20 hover:bg-muted/30"
+              rec.serviceKey && lastOutput && onChainService
+                ? "border-primary/30 bg-primary/5 hover:border-primary/50 hover:bg-primary/15 ring-1 ring-primary/10"
+                : rec.priority === "high"
+                  ? "border-primary/20 bg-primary/5 hover:border-primary/40 hover:bg-primary/10"
+                  : "border-border bg-card hover:border-primary/20 hover:bg-muted/30"
             )}
           >
             <div className="flex items-start gap-2">
               <rec.icon className={cn(
                 "h-4 w-4 mt-0.5 shrink-0",
-                rec.priority === "high" ? "text-primary" : "text-muted-foreground"
+                rec.serviceKey && lastOutput ? "text-primary" : rec.priority === "high" ? "text-primary" : "text-muted-foreground"
               )} />
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors">
@@ -119,11 +149,18 @@ export function PostExecutionRecommendations({ serviceKey, serviceCategory, clas
                 <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">
                   {rec.description}
                 </p>
-                {rec.costHint && (
-                  <span className="inline-block mt-1 text-[9px] font-mono text-primary/70 bg-primary/10 rounded px-1 py-0.5">
-                    {rec.costHint}
-                  </span>
-                )}
+                <div className="flex items-center gap-1.5 mt-1">
+                  {rec.costHint && (
+                    <span className="inline-block text-[9px] font-mono text-primary/70 bg-primary/10 rounded px-1 py-0.5">
+                      {rec.costHint}
+                    </span>
+                  )}
+                  {rec.serviceKey && lastOutput && onChainService && (
+                    <span className="inline-block text-[9px] font-medium text-primary bg-primary/10 rounded px-1 py-0.5">
+                      ⚡ auto-fill
+                    </span>
+                  )}
+                </div>
               </div>
               <ArrowRight className="h-3 w-3 text-muted-foreground/30 group-hover:text-primary transition-colors mt-1 shrink-0" />
             </div>

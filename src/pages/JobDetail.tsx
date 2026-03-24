@@ -294,6 +294,11 @@ export default function JobDetail() {
           <PostExecutionRecommendations
             serviceKey={(job.input as any)?.service_key || job.worker_type}
             serviceCategory={(job.input as any)?.service_category}
+            lastOutput={typeof job.result === "string" ? job.result : JSON.stringify(job.result, null, 2)}
+            lastGoal={(job.input as any)?.goal || ""}
+            onChainService={(chainKey, prefill) => {
+              navigate(`/run/${chainKey}`, { state: { prefillInput: prefill.input, prefillGoal: prefill.goal } });
+            }}
           />
         )}
       </div>
