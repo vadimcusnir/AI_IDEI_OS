@@ -145,11 +145,11 @@ export default function Landing() {
       <ExtractionSpine labels={["CAPTURE", "DISTILL", "STRUCTURE", "MULTIPLY", "DEPLOY"]} />
 
       {/* ═══ TOP BAR — Marquee ═══ */}
-      <div className="relative overflow-hidden bg-foreground border-b border-border">
-        <div className="flex whitespace-nowrap animate-[marquee_12s_linear_infinite] py-2.5">
+      <div className="relative overflow-hidden bg-foreground/95 border-b border-border/50">
+        <div className="flex whitespace-nowrap animate-[marquee_14s_linear_infinite] py-2.5">
           {[...Array(4)].map((_, i) => (
-            <span key={i} className="flex items-center gap-6 px-6 text-xs sm:text-sm font-mono tracking-[0.12em] text-background shrink-0">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+            <span key={i} className="flex items-center gap-8 px-8 text-[11px] sm:text-xs font-mono tracking-[0.15em] text-background/90 shrink-0">
+              <span className="h-1 w-1 rounded-full bg-[hsl(var(--gold-oxide))] shrink-0" />
               Turn rough ideas into copy, content, offers, and campaigns — faster.
             </span>
           ))}
