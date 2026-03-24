@@ -114,12 +114,12 @@ export function ExecutionSummary({
       {/* Header */}
       <div className="px-4 py-3 flex items-center gap-3">
         {isSuccess ? (
-          <div className="h-8 w-8 rounded-xl bg-success/10 flex items-center justify-center">
-            <CheckCircle2 className="h-4 w-4 text-success" />
+          <div className="h-9 w-9 rounded-xl bg-success/10 flex items-center justify-center border border-success/10">
+            <SigilCheck size={18} className="text-success" />
           </div>
         ) : (
-          <div className="h-8 w-8 rounded-xl bg-destructive/10 flex items-center justify-center">
-            <XCircle className="h-4 w-4 text-destructive" />
+          <div className="h-9 w-9 rounded-xl bg-destructive/10 flex items-center justify-center border border-destructive/10">
+            <SigilFail size={18} className="text-destructive" />
           </div>
         )}
         <div className="flex-1 min-w-0">
