@@ -51,6 +51,7 @@ export interface OutputItem {
   type: "transcript" | "summary" | "insights" | "frameworks" | "action_plan" | "content" | "raw";
   title: string;
   content: string;
+  metadata?: Record<string, unknown>;
 }
 
 interface StoreState {
