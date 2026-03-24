@@ -52,37 +52,37 @@
     --sp-16: 4rem;
 
     /* Semantic text colors */
-    --text-primary: 220 20% 10%;
-    --text-secondary: 220 10% 38%;
-    --text-muted: 220 10% 46%;
+    --text-primary: 220 25% 8%;
+    --text-secondary: 220 12% 32%;
+    --text-muted: 220 10% 42%;
 
     --background: 220 16% 96%;
-    --foreground: 220 20% 10%;
+    --foreground: 220 25% 8%;
 
-    --card: 220 20% 99%;
-    --card-foreground: 220 20% 10%;
+    --card: 220 18% 99%;
+    --card-foreground: 220 25% 8%;
 
-    --popover: 220 20% 99%;
-    --popover-foreground: 220 20% 10%;
+    --popover: 220 18% 99%;
+    --popover-foreground: 220 25% 8%;
 
-    --primary: 25 95% 53%;
+    --primary: 24 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 92%;
-    --secondary-foreground: 220 20% 25%;
+    --secondary: 220 14% 90%;
+    --secondary-foreground: 220 22% 20%;
 
-    --muted: 220 14% 94%;
-    --muted-foreground: 220 10% 38%;
+    --muted: 220 14% 92%;
+    --muted-foreground: 220 12% 32%;
 
-    --accent: 25 95% 53%;
+    --accent: 24 100% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 78% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 14% 90%;
-    --input: 220 14% 90%;
-    --ring: 25 95% 53%;
+    --border: 220 16% 86%;
+    --input: 220 16% 86%;
+    --ring: 24 100% 50%;
 
     --radius: 0.5rem;
 
