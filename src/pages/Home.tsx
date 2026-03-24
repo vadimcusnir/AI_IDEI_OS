@@ -441,7 +441,7 @@ export default function Home() {
                     </span>
                   </h1>
                   <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
-                    Ce vrei să producem astăzi?
+                    Ce vrei să obții?
                   </p>
                 </motion.div>
 
@@ -474,24 +474,24 @@ export default function Home() {
                   />
                 </motion.div>
 
-                {/* Inline service suggestions */}
-                {input.length >= 3 && (
-                  <InlineServiceSuggestions
+                {/* Decision Engine: System Recommendations when typing */}
+                {input.length >= 2 && (
+                  <SystemRecommendations
+                    systems={matchIntentToSystems(input)}
                     input={input}
-                    visible={true}
-                    onSelect={(prompt) => handleCommand(prompt, true)}
+                    onSelect={(sys: MMSystem) => handleCommand(sys.prompt, true)}
                   />
                 )}
 
-                {/* Suggestion Tabs — compact (hidden when typing) */}
-                {input.length < 3 && (
+                {/* Intent Chips — shown when idle (no typing) */}
+                {input.length < 2 && (
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.3 }}
                     className="w-full max-w-2xl"
                   >
-                    <SuggestionTabs onCommand={(prompt) => handleCommand(prompt, true)} />
+                    <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
                   </motion.div>
                 )}
               </div>
