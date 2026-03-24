@@ -66,6 +66,7 @@ const AdminAuditLog = lazyRetry(() => import("./pages/AdminAuditLog"));
 const AdminKernel = lazyRetry(() => import("./pages/AdminKernel"));
 const AdminDomination = lazyRetry(() => import("./pages/AdminDomination"));
 const AdminInevitability = lazyRetry(() => import("./pages/AdminInevitability"));
+const AdminFinancialization = lazyRetry(() => import("./pages/AdminFinancialization"));
 const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
