@@ -400,7 +400,7 @@ export default function Home() {
             const c = parsed.choices?.[0]?.delta?.content;
             if (c) {
               fullContent += c;
-              setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: fullContent } : m));
+              executionActions.updateMessage(assistantId, fullContent);
             }
           } catch { /* ignore */ }
         }
