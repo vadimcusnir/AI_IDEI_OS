@@ -39,6 +39,7 @@ import { SuggestionTabs } from "@/components/command-center/SuggestionTabs";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { InlineServiceSuggestions } from "@/components/command-center/InlineServiceSuggestions";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
+import { WorkspaceLayerTabs, type WorkspaceLayer } from "@/components/command-center/WorkspaceLayerTabs";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { routeCommand, type RouteResult } from "@/components/command-center/CommandRouter";
@@ -88,6 +89,7 @@ export default function Home() {
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
+  const [activeLayer, setActiveLayer] = useState<WorkspaceLayer>("chat");
 
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -106,7 +108,13 @@ export default function Home() {
     },
   });
 
-  // ═══ Keyboard shortcuts ═══
+  // Auto-switch to execution layer when execution starts
+  useEffect(() => {
+    if (execState.phase === "planning" || execState.phase === "executing") {
+      setActiveLayer("chat"); // keep chat visible during execution — ContextDrawer shows execution details
+    }
+  }, [execState.phase]);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -343,6 +351,13 @@ export default function Home() {
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full bg-primary/[0.02] blur-[120px]" />
           </div>
+
+          {/* Workspace Layer Tabs */}
+          <WorkspaceLayerTabs
+            active={activeLayer}
+            onChange={setActiveLayer}
+            executionActive={execState.phase !== "idle"}
+          />
 
           {/* Execution Status Bar */}
           <ExecutionStatusBar
