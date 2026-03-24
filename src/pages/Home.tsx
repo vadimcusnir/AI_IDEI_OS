@@ -706,61 +706,53 @@ export default function Home() {
                 </motion.div>
               </div>
             </div>
-              ) : (
-                /* ── ACTIVE: Message stream ── */
-                <div className="py-6 space-y-6">
-                  {messages.map((msg) => (
-                    <CommandBubble
-                      key={msg.id}
-                      msg={msg}
-                      isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"}
-                      onRetry={msg.role === "assistant" ? handleRerun : undefined}
-                    />
-                  ))}
+          ) : (
+            /* ── ACTIVE: Message stream — only this scrolls ── */
+            <div ref={scrollRef} className="flex-1 overflow-y-auto relative z-10 min-h-0">
+              <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 space-y-4">
+                {messages.map((msg) => (
+                  <CommandBubble
+                    key={msg.id}
+                    msg={msg}
+                    isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"}
+                    onRetry={msg.role === "assistant" ? handleRerun : undefined}
+                  />
+                ))}
 
-                  {/* Loading indicator */}
-                  {loading && !isStreaming && (
-                    <div className="flex items-start gap-2.5">
-                      <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
-                        <Sparkles className="h-3 w-3 text-primary" />
-                      </div>
-                      <div className="flex items-center gap-2 pt-2">
-                        <div className="flex gap-1">
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
-                        </div>
-                        <span className="text-xs text-muted-foreground ml-1">
-                          {cmdState.state.phase === "planning" ? "Planning..." : "Thinking..."}
-                        </span>
-                      </div>
+                {loading && !isStreaming && (
+                  <div className="flex items-start gap-2.5">
+                    <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
+                      <Sparkles className="h-3 w-3 text-primary" />
                     </div>
-                  )}
+                    <div className="flex items-center gap-2 pt-2">
+                      <div className="flex gap-1">
+                        <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
+                        <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
+                        <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+                      </div>
+                      <span className="text-xs text-muted-foreground ml-1">
+                        {cmdState.state.phase === "planning" ? "Planning..." : "Thinking..."}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
-                  {/* Execution Summary */}
-                  {(cmdState.state.phase === "completed" || cmdState.state.phase === "failed") && (
-                    <ExecutionSummary
-                      phase={cmdState.state.phase}
-                      intent={cmdState.state.intent}
-                      planName={cmdState.state.planName}
-                      totalCredits={cmdState.state.totalCredits}
-                      stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
-                      totalSteps={cmdState.state.steps.length}
-                      outputCount={outputs.length}
-                      durationSeconds={durationSeconds}
-                      errorMessage={cmdState.state.errorMessage}
-                      onSaveTemplate={handleSaveTemplate}
-                      onSaveAllOutputs={handleSaveAllOutputs}
-                      onRerun={handleRerun}
-                      onViewOutputs={() => setShowOutputs(true)}
-                    />
-                  )}
+                {(cmdState.state.phase === "completed" || cmdState.state.phase === "failed") && (
+                  <ExecutionSummary
+                    phase={cmdState.state.phase} intent={cmdState.state.intent}
+                    planName={cmdState.state.planName} totalCredits={cmdState.state.totalCredits}
+                    stepsCompleted={cmdState.state.steps.filter(s => s.status === "completed").length}
+                    totalSteps={cmdState.state.steps.length} outputCount={outputs.length}
+                    durationSeconds={durationSeconds} errorMessage={cmdState.state.errorMessage}
+                    onSaveTemplate={handleSaveTemplate} onSaveAllOutputs={handleSaveAllOutputs}
+                    onRerun={handleRerun} onViewOutputs={() => setShowOutputs(true)}
+                  />
+                )}
 
-                  <div ref={messagesEndRef} />
-                </div>
-              )}
+                <div ref={messagesEndRef} />
+              </div>
             </div>
-          </div>
+          )}
 
           {/* ── Output panel ── */}
           <AnimatePresence>
