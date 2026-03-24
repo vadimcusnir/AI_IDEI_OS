@@ -101,7 +101,8 @@ export default function Services() {
   const [activeIntent, setActiveIntent] = useState<string | null>(categoryParam || null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-  const [activeSection, setActiveSection] = useState<SectionKey>(initialSearch || categoryParam ? "services" : "pipelines");
+  const [activeSection, setActiveSection] = useState<SectionKey>(initialSearch || categoryParam ? "services" : "quick-start");
+  const [activeTier, setActiveTier] = useState<ServiceTier | null>(null);
 
   // Drawer state
   const [drawerService, setDrawerService] = useState<Service | null>(null);
