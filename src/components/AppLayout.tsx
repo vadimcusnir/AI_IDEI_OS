@@ -9,7 +9,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useScrollDirection } from "@/hooks/useScrollDirection";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
