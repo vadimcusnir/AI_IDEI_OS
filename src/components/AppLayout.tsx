@@ -156,12 +156,12 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           {fullHeight ? (
             <main id="main-content" className="flex-1 flex flex-col min-h-0">
-              <ErrorBoundary>{children}</ErrorBoundary>
+              <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
             </main>
           ) : (
             <>
               <main id="main-content" className="flex-1 flex flex-col pb-16 md:pb-0">
-                <ErrorBoundary>{children}</ErrorBoundary>
+                <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
               </main>
               <Suspense fallback={null}><Footer /></Suspense>
             </>
