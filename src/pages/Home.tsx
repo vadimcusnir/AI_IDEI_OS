@@ -439,7 +439,7 @@ export default function Home() {
           ) : (
             /* ACTIVE: Scrollable message stream — takes remaining space above fixed input */
             <div ref={scrollRef} className="flex-1 overflow-y-auto relative z-10 min-h-0">
-              <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 space-y-4">
+              <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 pb-36 space-y-4">
                 {messages.map((msg) => (
                   <CommandBubble
                     key={msg.id}
