@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { DowngradeRetention } from "@/components/revenue/DowngradeRetention";
 
 export function SubscriptionPlans() {
   const { subscribed, tier, subscriptionEnd, loading, subscribe, manageSubscription } = useSubscription();
   const [subscribing, setSubscribing] = useState<string | null>(null);
+  const [showRetention, setShowRetention] = useState(false);
 
   const handleSubscribe = async (priceId: string, tierKey: string) => {
     setSubscribing(tierKey);
