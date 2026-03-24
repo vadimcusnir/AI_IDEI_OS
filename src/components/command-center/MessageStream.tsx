@@ -1,9 +1,9 @@
 import { useRef, useEffect, useCallback } from "react";
-import { Loader2, Command } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { CommandBubble, type Message } from "./CommandBubble";
 import { WelcomeScreen } from "./WelcomeScreen";
 import { ExecutionSummary } from "./ExecutionSummary";
-import type { CommandPhase, ExecutionState, TaskStep } from "@/hooks/useCommandState";
+import type { CommandPhase, ExecutionState } from "@/hooks/useCommandState";
 import type { OutputItem } from "./OutputPanel";
 
 interface MessageStreamProps {
@@ -45,7 +45,7 @@ export function MessageStream({
       : 0;
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+    <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-5">
       {messages.map((msg) => (
         <CommandBubble
           key={msg.id}
@@ -65,14 +65,14 @@ export function MessageStream({
       )}
 
       {loading && !isStreaming && (
-        <div className="flex gap-2.5">
-          <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-            <Command className="h-3 w-3 text-primary" />
+        <div className="flex gap-3">
+          <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
+            <Sparkles className="h-3 w-3 text-primary" />
           </div>
-          <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
-            <div className="flex items-center gap-2">
-              <Loader2 className="h-3 w-3 animate-spin text-primary" />
-              <span className="text-[10px] text-muted-foreground">
+          <div className="bg-card border border-border/60 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+            <div className="flex items-center gap-2.5">
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+              <span className="text-xs text-muted-foreground">
                 {phase === "planning" ? "Generating execution plan..." : "Processing..."}
               </span>
             </div>
