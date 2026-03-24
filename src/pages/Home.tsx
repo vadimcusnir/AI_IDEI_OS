@@ -548,7 +548,7 @@ export default function Home() {
                           }}
                           onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
                         />
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
 
