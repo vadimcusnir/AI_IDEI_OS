@@ -91,14 +91,14 @@
     --font-mono: 'JetBrains Mono', monospace;
 
     /* Panel system */
-    --panel-bg: 220 20% 99%;
-    --panel-border: 220 14% 90%;
-    --panel-header: 220 16% 96%;
+    --panel-bg: 220 18% 99%;
+    --panel-border: 220 16% 86%;
+    --panel-header: 220 16% 95%;
 
     /* Toolbar */
     --toolbar-bg: 220 16% 97%;
-    --toolbar-border: 220 14% 90%;
-    --toolbar-active: 25 95% 53%;
+    --toolbar-border: 220 16% 86%;
+    --toolbar-active: 24 100% 50%;
 
     /* Semantic feedback colors */
     --success: 152 60% 40%;
