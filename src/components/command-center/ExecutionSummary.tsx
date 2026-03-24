@@ -163,8 +163,8 @@ export function ExecutionSummary({
       {/* Actions */}
       <div className="px-4 py-2.5 border-t border-border/30 flex items-center gap-2 flex-wrap">
         {isSuccess && outputCount > 0 && (
-          <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-lg" onClick={onViewOutputs}>
-            <FileText className="h-3 w-3" /> View Outputs
+          <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-xl" onClick={onViewOutputs}>
+            <SigilDocument size={13} /> View Outputs
           </Button>
         )}
         {isSuccess && outputCount > 1 && (
