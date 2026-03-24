@@ -205,53 +205,49 @@ export default function Home() {
     return items;
   }, []);
 
-  // ═══ SUBMIT ═══
-  const handleSubmit = async () => {
+  // ═══ SUBMIT — Routes through execution engine ═══
+  const handleSubmit = async (autoExec = false) => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
 
-    const fileNames = files.map(f => f.name);
-    const route = routeCommand(input.trim(), tier, balance, fileNames);
-
-    if (!route.permitted) {
-      setPermissionBlock(route);
-      logPermissionDenied(user.id, route.intent.category, route.intent.requiredTier, tier);
-      return;
-    }
-
-    logCommandSubmitted(user.id, route.intent.category, route.input.type, route.intent.estimatedCredits);
-
-    if (balance < 20) {
-      toast.error(t("errors:insufficient_credits_agent"), {
-        action: { label: t("common:top_up"), onClick: () => navigate("/credits") },
-      });
-      return;
-    }
-
-    const userContent = input.trim() + (files.length > 0
-      ? `\n\n[${t("common:files_attached", { count: files.length, names: files.map(f => f.name).join(", ") })}]`
-      : "");
-
-    const userMessage: Message = { id: crypto.randomUUID(), role: "user", content: userContent, timestamp: new Date() };
-
-    executionActions.addMessage(userMessage);
+    const rawInput = input.trim();
     setInput("");
     setFiles([]);
     setShowOutputs(false);
     setShowPostExecution(false);
     setPermissionBlock(null);
-    setPendingRoute(route);
-    saveMessage(userMessage);
-    executionActions.transition("planning");
-    executionActions.setLoading(true);
 
     try {
-      await executeCommand(userContent, userMessage);
+      const { route, isExecution } = await executionEngine.execute(rawInput, files, { autoExecute: autoExec });
+
+      if (!route.permitted) {
+        setPermissionBlock(route);
+        logPermissionDenied(user.id, route.intent.category, route.intent.requiredTier, tier);
+        return;
+      }
+
+      setPendingRoute(route);
+      saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
+      setShowTaskTree(true);
+
+      if (isExecution && execState.phase === "confirming" && route.intent.confidence < 0.9 && !autoExec) {
+        // Plan preview shown — wait for user confirmation
+        return;
+      }
+
+      if (isExecution) {
+        // High confidence or auto-execute — run immediately
+        await executionEngine.confirmAndRun(rawInput, route);
+      } else {
+        // Conversation/chat path — use existing agent-console stream
+        executionActions.transition("planning");
+        executionActions.setLoading(true);
+        await executeCommand(rawInput, { id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
+      }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
         executionActions.failExecution(e instanceof Error ? e.message : "Unknown error");
         toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
-        executionActions.addMessage({ id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() });
       }
     } finally {
       executionActions.setLoading(false);
