@@ -223,7 +223,7 @@ export default function Landing() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden h-8 w-8 flex items-center justify-center text-muted-foreground"
+              className="lg:hidden h-11 w-11 flex items-center justify-center text-muted-foreground rounded-md hover:bg-accent/10 transition-colors"
               aria-label="Menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
