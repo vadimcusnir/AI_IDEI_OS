@@ -252,7 +252,7 @@
 
   @media (min-width: 768px) {
     body {
-      font-size: var(--body-size); /* 0.875rem / 14px on desktop — denser UI */
+      font-size: var(--body-dense-size); /* 14px on desktop — denser UI */
     }
   }
 

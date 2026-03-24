@@ -17,7 +17,7 @@ export function LandingWhoFor() {
           <p className="text-base text-muted-foreground max-w-lg mb-10 sm:mb-14 text-flow">{t("who_for.subtitle")}</p>
         </FadeInView>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {roles.map((role, i) => {
             const RoleIcon = ICONS[i];
             return (
