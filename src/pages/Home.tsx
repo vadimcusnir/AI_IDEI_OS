@@ -433,7 +433,7 @@ export default function Home() {
   };
 
   // ═══ Handlers ═══
-  const handleStop = () => { abortRef.current?.abort(); executionActions.setLoading(false); executionActions.setStreaming(false); executionActions.failExecution("Cancelled by user"); };
+  const handleStop = () => { executionEngine.stop(); };
 
   const clearChat = () => {
     newSession(); executionActions.reset();
@@ -468,9 +468,17 @@ export default function Home() {
     if (lastUser) { setInput(lastUser.content); inputZoneRef.current?.focus(); }
   };
 
-  const handleCommand = (prompt: string) => {
+  /** Quick actions auto-execute — they don't just prefill */
+  const handleCommand = (prompt: string, autoExec = false) => {
     setInput(prompt);
-    inputZoneRef.current?.focus();
+    if (autoExec) {
+      // Use setTimeout to let state update, then auto-submit
+      setTimeout(() => {
+        handleSubmit(true);
+      }, 50);
+    } else {
+      inputZoneRef.current?.focus();
+    }
   };
 
   // ═══ Derived state ═══
