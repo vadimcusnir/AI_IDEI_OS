@@ -84,7 +84,7 @@ export function InputAttachMenu({ onFileClick, onAction }: InputAttachMenuProps)
         title="Servicii și surse"
         aria-label="Servicii și surse"
       >
-        <Plus className="h-4.5 w-4.5 transition-transform duration-200" />
+        <Plus className="h-4 w-4 transition-transform duration-200" />
       </button>
 
       <AnimatePresence>
