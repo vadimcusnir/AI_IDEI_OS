@@ -37,6 +37,7 @@ import { CommandInputZone, type CommandInputZoneRef } from "@/components/command
 import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
 import { SuggestionTabs } from "@/components/command-center/SuggestionTabs";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
+import { InlineServiceSuggestions } from "@/components/command-center/InlineServiceSuggestions";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
