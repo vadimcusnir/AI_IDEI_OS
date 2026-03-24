@@ -42,7 +42,11 @@ const WELCOME_MSG: Message = {
   timestamp: new Date(),
 };
 
-export function CommandCenter() {
+interface CommandCenterProps {
+  initialInput?: string;
+}
+
+export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
@@ -62,7 +66,7 @@ export function CommandCenter() {
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([WELCOME_MSG]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(initialInput ?? "");
   const [loading, setLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
