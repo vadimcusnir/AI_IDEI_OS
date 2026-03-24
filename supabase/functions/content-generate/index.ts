@@ -199,7 +199,7 @@ Deno.serve(async (req) => {
           const data = await resp.json();
           return { key, name: gen.name, content: data.choices?.[0]?.message?.content || "" };
         } catch (e) {
-          return { key, name: gen.name, content: `Error: ${e.message}` };
+          return { key, name: gen.name, content: `Error: ${(e as Error).message}` };
         }
       }));
 
