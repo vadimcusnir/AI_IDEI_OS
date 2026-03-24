@@ -146,7 +146,7 @@ export default function Landing() {
 
       {/* ═══ TOP BAR — Marquee ═══ */}
       <div className="relative overflow-hidden bg-foreground border-b border-border">
-        <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite] py-2.5">
+        <div className="flex whitespace-nowrap animate-[marquee_12s_linear_infinite] py-2.5">
           {[...Array(4)].map((_, i) => (
             <span key={i} className="flex items-center gap-6 px-6 text-xs sm:text-sm font-mono tracking-[0.12em] text-background shrink-0">
               <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
