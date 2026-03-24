@@ -63,7 +63,7 @@ export function ContextActions({
         icon: Sparkles,
         label: "Generate",
         prompt: "/generate ",
-        color: "text-pink-500 border-pink-500/20 hover:bg-pink-500/5",
+        color: "text-semantic-rose border-semantic-rose/20 hover:bg-semantic-rose/5",
       });
     }
 
