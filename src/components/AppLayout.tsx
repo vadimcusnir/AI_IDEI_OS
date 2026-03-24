@@ -9,7 +9,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useScrollDirection } from "@/hooks/useScrollDirection";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,6 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
-  const { direction, isAtTop } = useScrollDirection();
   const { currentLanguage, changeLanguage } = useLocale();
   const { user } = useAuth();
   usePageTracking();
@@ -64,7 +63,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="h-svh flex w-full overflow-hidden">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-ring"
@@ -72,12 +71,10 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           Skip to content
         </a>
         <AppSidebar />
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
           {/* ═══ HEADER: 3-zone control panel ═══ */}
           <header
-            className={cn(
-              "sticky top-0 z-40 h-[var(--header-height)] flex items-center border-b border-border/50 bg-background/95 backdrop-blur-md px-3 sm:px-4"
-            )}
+            className="shrink-0 z-40 h-[var(--header-height)] flex items-center border-b border-border/50 bg-background px-3 sm:px-4"
           >
             {/* ─── LEFT: Identity ─── */}
             <div className="flex items-center gap-2 shrink-0">
@@ -138,28 +135,28 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           {/* ═══ PIPELINE CONTEXT BAR — below header, visible only when active ═══ */}
           {user && (
-            <div className="hidden md:flex items-center justify-center border-b border-border/30 bg-muted/20 py-1.5 px-4">
+            <div className="hidden md:flex items-center justify-center border-b border-border/30 bg-muted/20 py-1.5 px-4 shrink-0">
               <Suspense fallback={null}>
                 <CompactPipeline />
               </Suspense>
             </div>
           )}
 
-          <div className="min-h-0">
+          <div className="shrink-0">
             <Suspense fallback={null}><LowBalanceBanner /></Suspense>
             <Suspense fallback={null}><BehaviorOverlay /></Suspense>
           </div>
 
           {fullHeight ? (
-            <main id="main-content" className="flex-1 flex flex-col min-h-0">
+            <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-hidden">
               <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
             </main>
           ) : (
             <>
-              <main id="main-content" className="flex-1 flex flex-col pb-16 md:pb-0">
+              <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">
                 <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
+                <Suspense fallback={null}><Footer /></Suspense>
               </main>
-              <Suspense fallback={null}><Footer /></Suspense>
             </>
           )}
         </div>
