@@ -346,6 +346,13 @@ export default function Home() {
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full bg-primary/[0.02] blur-[120px]" />
           </div>
 
+          {/* Workspace Layer Tabs */}
+          <WorkspaceLayerTabs
+            active={activeLayer}
+            onChange={setActiveLayer}
+            executionActive={execState.phase !== "idle"}
+          />
+
           {/* Execution Status Bar */}
           <ExecutionStatusBar
             phase={execState.phase} intent={execState.intent}
