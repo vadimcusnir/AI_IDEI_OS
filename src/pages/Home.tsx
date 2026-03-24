@@ -47,6 +47,10 @@ export default function Home() {
     navigate(`/services?intent=${encodeURIComponent(q)}`);
   };
 
+  const handleQuickIntent = (search: string, intentCategory: string) => {
+    navigate(`/services?search=${encodeURIComponent(search)}&category=${encodeURIComponent(intentCategory)}`);
+  };
+
   return (
     <PageTransition>
       <WelcomeModal />
