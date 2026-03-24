@@ -90,7 +90,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
                   <Brain className="h-3.5 w-3.5 text-primary" />
                 </div>
                 <span className="text-sm font-bold tracking-tight hidden sm:inline text-foreground">
-                  AI-IDEI
+                  {"\n"}
                 </span>
               </Link>
               {/* Breadcrumbs (hidden on /home) */}
