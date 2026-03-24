@@ -106,7 +106,7 @@ export function CommandBubble({ msg, isStreaming, onRetry, onEdit }: CommandBubb
           <Sparkles className="h-3 w-3 text-[hsl(var(--gold-oxide))]" />
         </div>
         <div className="relative min-w-0">
-          <div className="text-[14px] leading-[1.7] text-foreground">
+          <div className="text-sm leading-[1.7] text-foreground">
             <div className="prose prose-sm dark:prose-invert max-w-none
               [&_p]:mb-3 [&_p]:last:mb-0
               [&_ul]:mb-3 [&_ol]:mb-3
