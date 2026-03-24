@@ -500,11 +500,7 @@ export default function Home() {
                   )}
 
                   {isEmptyState && input.length < 2 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2, duration: 0.3 }}
-                      className="w-full max-w-2xl mx-auto"
+                  <div className="w-full max-w-2xl mx-auto">
                     >
                       <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
                     </motion.div>
