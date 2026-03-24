@@ -6,26 +6,26 @@
 import { motion } from "framer-motion";
 
 const ORBITS = [
-  { label: "Content", angle: 0, radius: 100, size: 28 },
-  { label: "Education", angle: 72, radius: 105, size: 24 },
-  { label: "Sales", angle: 144, radius: 98, size: 26 },
-  { label: "Knowledge", angle: 216, radius: 102, size: 22 },
-  { label: "Assistants", angle: 288, radius: 96, size: 20 },
+  { label: "Content", angle: 0, radius: 98, size: 26 },
+  { label: "Education", angle: 72, radius: 102, size: 22 },
+  { label: "Sales", angle: 144, radius: 96, size: 24 },
+  { label: "Knowledge", angle: 216, radius: 100, size: 20 },
+  { label: "Assistants", angle: 288, radius: 94, size: 18 },
 ];
 
 export function OutputGalaxy() {
   return (
-    <div className="relative w-full max-w-md sm:max-w-lg mx-auto">
+    <div className="relative w-full max-w-sm sm:max-w-md mx-auto">
       <svg viewBox="-150 -150 300 300" className="w-full h-auto" fill="none" role="img" aria-label="Output Galaxy showing content, education, sales, knowledge, and assistant asset families">
-        {/* Orbital rings */}
-        {[60, 95, 130].map((r, i) => (
+        {/* Orbital rings — subtler */}
+        {[58, 92, 128].map((r, i) => (
           <circle
             key={r}
             cx={0} cy={0} r={r}
             stroke="hsl(var(--ivory-dim))"
-            strokeWidth="0.4"
-            opacity={0.12 + i * 0.03}
-            strokeDasharray="2 4"
+            strokeWidth="0.35"
+            opacity={0.08 + i * 0.025}
+            strokeDasharray="2 5"
           />
         ))}
 
@@ -34,19 +34,19 @@ export function OutputGalaxy() {
           initial={{ scale: 0, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <circle cx={0} cy={0} r={20} fill="hsl(var(--gold-oxide))" opacity={0.15} />
-          <circle cx={0} cy={0} r={12} fill="hsl(var(--gold-oxide))" opacity={0.3} />
-          <circle cx={0} cy={0} r={5} fill="hsl(var(--gold-oxide))" opacity={0.8} />
+          <circle cx={0} cy={0} r={18} fill="hsl(var(--gold-oxide))" opacity={0.1} />
+          <circle cx={0} cy={0} r={10} fill="hsl(var(--gold-oxide))" opacity={0.22} />
+          <circle cx={0} cy={0} r={4} fill="hsl(var(--gold-oxide))" opacity={0.7} />
           <text
-            x={0} y={32}
+            x={0} y={30}
             textAnchor="middle"
-            fontSize="5"
+            fontSize="4.5"
             fill="hsl(var(--gold-oxide))"
             fontFamily="var(--font-mono)"
-            letterSpacing="0.15em"
-            opacity={0.6}
+            letterSpacing="0.18em"
+            opacity={0.5}
           >
             KNOWLEDGE CORE
           </text>
@@ -60,34 +60,34 @@ export function OutputGalaxy() {
           return (
             <motion.g
               key={orb.label}
-              initial={{ opacity: 0, scale: 0.5 }}
+              initial={{ opacity: 0, scale: 0.4 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.4 + i * 0.12, duration: 0.5 }}
+              transition={{ delay: 0.35 + i * 0.1, duration: 0.45 }}
             >
               <line
                 x1={0} y1={0} x2={cx} y2={cy}
                 stroke="hsl(var(--gold-oxide))"
-                strokeWidth="0.5"
-                opacity={0.2}
+                strokeWidth="0.4"
+                opacity={0.15}
               />
               <circle
                 cx={cx} cy={cy}
                 r={orb.size / 2}
                 stroke="hsl(var(--ivory-dim))"
-                strokeWidth="0.8"
+                strokeWidth="0.6"
                 fill="hsl(var(--obsidian-light))"
-                opacity={0.8}
+                opacity={0.7}
               />
-              <circle cx={cx} cy={cy} r={2} fill="hsl(var(--gold-oxide))" opacity={0.6} />
+              <circle cx={cx} cy={cy} r={1.8} fill="hsl(var(--gold-oxide))" opacity={0.5} />
               <text
                 x={cx} y={cy + orb.size / 2 + 10}
                 textAnchor="middle"
-                fontSize="5.5"
+                fontSize="5"
                 fill="hsl(var(--ivory-dim))"
                 fontFamily="var(--font-mono)"
-                letterSpacing="0.08em"
-                opacity={0.7}
+                letterSpacing="0.1em"
+                opacity={0.6}
               >
                 {orb.label.toUpperCase()}
               </text>

@@ -58,18 +58,18 @@ const NAV_LINKS = [
 /* ── Extraction Spine — recurring vertical signature ── */
 function ExtractionSpine({ labels }: { labels: string[] }) {
   return (
-    <div className="hidden lg:flex flex-col items-center gap-0 fixed left-6 top-1/2 -translate-y-1/2 z-40" aria-hidden="true">
-      <div className="w-px h-8 bg-[hsl(var(--gold-oxide)/0.2)]" />
+    <div className="hidden xl:flex flex-col items-center gap-0 fixed left-8 top-1/2 -translate-y-1/2 z-40" aria-hidden="true">
+      <div className="w-px h-10 bg-[hsl(var(--gold-oxide)/0.12)]" />
       {labels.map((l, i) => (
         <div key={l} className="flex flex-col items-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] my-1" />
-          <span className="text-[9px] lg:text-[10px] font-mono tracking-[0.2em] text-[hsl(var(--ivory-dim)/0.4)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
+          <div className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] my-1.5" />
+          <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--ivory-dim)/0.25)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
             {l}
           </span>
-          {i < labels.length - 1 && <div className="w-px h-12 bg-[hsl(var(--gold-oxide)/0.1)]" />}
+          {i < labels.length - 1 && <div className="w-px h-14 bg-[hsl(var(--gold-oxide)/0.06)]" />}
         </div>
       ))}
-      <div className="w-px h-8 bg-[hsl(var(--gold-oxide)/0.2)]" />
+      <div className="w-px h-10 bg-[hsl(var(--gold-oxide)/0.12)]" />
     </div>
   );
 }
@@ -81,7 +81,7 @@ function ScrollProgress() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-[2px] bg-[hsl(var(--gold-oxide)/0.6)] origin-left z-[60]"
+      className="fixed top-0 left-0 right-0 h-[2px] bg-[hsl(var(--gold-oxide)/0.45)] origin-left z-[60]"
       style={{ scaleX }}
     />
   );
@@ -145,11 +145,11 @@ export default function Landing() {
       <ExtractionSpine labels={["CAPTURE", "DISTILL", "STRUCTURE", "MULTIPLY", "DEPLOY"]} />
 
       {/* ═══ TOP BAR — Marquee ═══ */}
-      <div className="relative overflow-hidden bg-foreground border-b border-border">
-        <div className="flex whitespace-nowrap animate-[marquee_12s_linear_infinite] py-2.5">
+      <div className="relative overflow-hidden bg-foreground/95 border-b border-border/50">
+        <div className="flex whitespace-nowrap animate-[marquee_14s_linear_infinite] py-2.5">
           {[...Array(4)].map((_, i) => (
-            <span key={i} className="flex items-center gap-6 px-6 text-xs sm:text-sm font-mono tracking-[0.12em] text-background shrink-0">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+            <span key={i} className="flex items-center gap-8 px-8 text-[11px] sm:text-xs font-mono tracking-[0.15em] text-background/90 shrink-0">
+              <span className="h-1 w-1 rounded-full bg-[hsl(var(--gold-oxide))] shrink-0" />
               Turn rough ideas into copy, content, offers, and campaigns — faster.
             </span>
           ))}
@@ -157,21 +157,21 @@ export default function Landing() {
       </div>
 
       {/* ═══ NAV ═══ */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/92 backdrop-blur-xl" role="banner">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/90 backdrop-blur-2xl" role="banner">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5 group shrink-0 focus-ring rounded-md" aria-label="AI-IDEI home">
-            <Logo size="h-8 w-8" loading="eager" />
+            <Logo size="h-7 w-7" loading="eager" />
             <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
           </button>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
+          <nav className="hidden lg:flex items-center gap-10" aria-label="Main navigation">
             {NAV_LINKS.map(link => (
               <button
                 key={link.label}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
-                  "text-xs font-mono tracking-[0.1em] transition-colors relative py-1 focus-ring rounded-sm",
+                  "text-[11px] font-mono tracking-[0.12em] transition-colors relative py-1.5 focus-ring rounded-sm",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
                     : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"
@@ -181,7 +181,7 @@ export default function Landing() {
                 {activeSection === link.to && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute -bottom-[18px] left-0 right-0 h-[2px] bg-[hsl(var(--gold-oxide))]"
+                    className="absolute -bottom-[17px] left-0 right-0 h-[2px] bg-[hsl(var(--gold-oxide))]"
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -189,7 +189,7 @@ export default function Landing() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2.5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="Language">
@@ -211,7 +211,7 @@ export default function Landing() {
             </DropdownMenu>
             <ThemeToggle />
             {user ? (
-              <Button size="sm" onClick={() => navigate("/home")} className="gap-2 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+              <Button size="sm" onClick={() => navigate("/home")} className="gap-2 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] transition-all duration-200">
                 Dashboard
               </Button>
             ) : (
@@ -219,7 +219,7 @@ export default function Landing() {
                 <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-muted-foreground">
                   Log in
                 </Button>
-                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex">
+                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex transition-all duration-200">
                   Start Free
                   <ArrowRight className="h-3 w-3" />
                 </Button>
@@ -243,21 +243,21 @@ export default function Landing() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
-              className="lg:hidden border-t border-border bg-background/98 overflow-hidden"
+              transition={{ duration: 0.2 }}
+              className="lg:hidden border-t border-border/50 bg-background/98 overflow-hidden"
             >
-              <div className="px-5 py-4 space-y-1">
+              <div className="px-5 py-5 space-y-1">
                 {NAV_LINKS.map(link => (
                   <button
                     key={link.label}
                     onClick={() => scrollTo(link.to)}
-                    className="block w-full text-left text-sm font-mono tracking-[0.08em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3 min-h-[44px] flex items-center border-b border-border"
+                    className="block w-full text-left text-sm font-mono tracking-[0.1em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3.5 min-h-[44px] flex items-center border-b border-border/30"
                   >
                     {link.label.toUpperCase()}
                   </button>
                 ))}
                 {!user && (
-                  <div className="flex gap-3 pt-3">
+                  <div className="flex gap-3 pt-4">
                     <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-sm h-11 min-h-[44px] flex-1 text-muted-foreground">
                       Log in
                     </Button>
