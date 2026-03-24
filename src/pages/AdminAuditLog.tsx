@@ -52,7 +52,7 @@ interface AdminSession {
 
 const SEVERITY_COLORS: Record<string, string> = {
   info: "bg-muted text-muted-foreground",
-  warning: "bg-yellow-500/10 text-yellow-600",
+  warning: "bg-warning/10 text-warning",
   critical: "bg-destructive/10 text-destructive",
 };
 

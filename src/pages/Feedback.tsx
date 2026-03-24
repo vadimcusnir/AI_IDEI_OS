@@ -49,8 +49,8 @@ const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; labe
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   pending: { label: "Pending", color: "bg-muted text-muted-foreground" },
   reviewed: { label: "Reviewed", color: "bg-primary/10 text-primary" },
-  resolved: { label: "Resolved", color: "bg-emerald-500/10 text-emerald-600" },
-  published: { label: "Published", color: "bg-amber-500/10 text-amber-600" },
+  resolved: { label: "Resolved", color: "bg-semantic-emerald/10 text-semantic-emerald" },
+  published: { label: "Published", color: "bg-semantic-amber/10 text-semantic-amber" },
 };
 
 export default function Feedback() {

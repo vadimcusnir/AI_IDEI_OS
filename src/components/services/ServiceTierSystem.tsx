@@ -135,7 +135,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                     "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full",
                     tier.key === "otos" && "bg-muted text-muted-foreground",
                     tier.key === "mms" && "bg-primary/15 text-primary",
-                    tier.key === "lcss" && "bg-amber-500/15 text-amber-600",
+                    tier.key === "lcss" && "bg-semantic-amber/15 text-semantic-amber",
                   )}>
                     {tier.badge}
                   </span>
@@ -153,7 +153,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                     "h-5 w-5",
                     tier.key === "otos" && "text-muted-foreground",
                     tier.key === "mms" && "text-primary",
-                    tier.key === "lcss" && "text-amber-500",
+                    tier.key === "lcss" && "text-semantic-amber",
                   )} />
                   <div>
                     <h3 className="text-sm font-bold">{tier.label}</h3>
@@ -180,7 +180,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                         "h-2.5 w-2.5 shrink-0",
                         tier.key === "otos" && "text-muted-foreground/40",
                         tier.key === "mms" && "text-primary/60",
-                        tier.key === "lcss" && "text-amber-500/60",
+                        tier.key === "lcss" && "text-semantic-amber/60",
                       )} />
                       <span>{f}</span>
                     </div>

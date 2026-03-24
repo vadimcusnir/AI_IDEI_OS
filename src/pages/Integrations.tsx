@@ -28,8 +28,8 @@ const ICON_MAP: Record<string, React.ElementType> = {
 };
 
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  connected: { icon: CheckCircle2, color: "text-green-500", label: "Connected" },
-  syncing: { icon: RefreshCw, color: "text-blue-500 animate-spin", label: "Syncing" },
+  connected: { icon: CheckCircle2, color: "text-success", label: "Connected" },
+  syncing: { icon: RefreshCw, color: "text-semantic-blue animate-spin", label: "Syncing" },
   error: { icon: AlertCircle, color: "text-destructive", label: "Error" },
   disconnected: { icon: XCircle, color: "text-muted-foreground", label: "Disconnected" },
 };

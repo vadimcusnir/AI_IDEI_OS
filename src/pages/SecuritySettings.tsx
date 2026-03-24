@@ -111,9 +111,9 @@ export default function SecuritySettings() {
                 <span className="text-muted-foreground/60 text-[10px] block mb-0.5">Email verified</span>
                 <span className="font-medium flex items-center gap-1">
                   {user?.email_confirmed_at ? (
-                    <><CheckCircle2 className="h-3 w-3 text-emerald-500" /> Yes</>
+                    <><CheckCircle2 className="h-3 w-3 text-success" /> Yes</>
                   ) : (
-                    <><XCircle className="h-3 w-3 text-amber-500" /> Pending</>
+                    <><XCircle className="h-3 w-3 text-warning" /> Pending</>
                   )}
                 </span>
               </div>
@@ -168,17 +168,17 @@ export default function SecuritySettings() {
                         <div key={i} className={cn(
                           "h-1 flex-1 rounded-full transition-colors",
                           i <= pwStrength
-                            ? pwStrength <= 1 ? "bg-destructive" : pwStrength === 2 ? "bg-amber-500" : pwStrength === 3 ? "bg-primary" : "bg-emerald-500"
-                            : "bg-muted"
-                        )} />
+                             ? pwStrength <= 1 ? "bg-destructive" : pwStrength === 2 ? "bg-warning" : pwStrength === 3 ? "bg-primary" : "bg-success"
+                             : "bg-muted"
+                         )} />
                       ))}
                     </div>
                     <div className="grid grid-cols-2 gap-1">
                       {PASSWORD_CHECKS.map(c => (
                         <div key={c.label} className="flex items-center gap-1">
-                          {c.test(newPw) ? <CheckCircle2 className="h-2.5 w-2.5 text-emerald-500" /> : <XCircle className="h-2.5 w-2.5 text-muted-foreground/30" />}
-                          <span className={cn("text-[9px]", c.test(newPw) ? "text-foreground" : "text-muted-foreground/50")}>{c.label}</span>
-                        </div>
+                           {c.test(newPw) ? <CheckCircle2 className="h-2.5 w-2.5 text-success" /> : <XCircle className="h-2.5 w-2.5 text-muted-foreground/30" />}
+                           <span className={cn("text-[9px]", c.test(newPw) ? "text-foreground" : "text-muted-foreground/50")}>{c.label}</span>
+                         </div>
                       ))}
                     </div>
                   </div>
@@ -250,19 +250,19 @@ export default function SecuritySettings() {
             </h3>
             <ul className="space-y-2 text-[10px] text-muted-foreground">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+                <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Use a unique password not shared with other services
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+                <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Enable browser notifications for security alerts
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+                <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Review your active sessions regularly
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+                <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Keep your email address up to date for account recovery
               </li>
             </ul>

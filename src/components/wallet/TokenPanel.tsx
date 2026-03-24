@@ -13,10 +13,10 @@ import { useTranslation } from "react-i18next";
 
 const TIER_COLORS: Record<string, string> = {
   free: "bg-muted text-muted-foreground",
-  holder: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  holder: "bg-semantic-blue/10 text-semantic-blue",
   staker: "bg-primary/10 text-primary",
-  governor: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
-  vip: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  governor: "bg-semantic-purple/10 text-semantic-purple",
+  vip: "bg-semantic-amber/10 text-semantic-amber",
 };
 
 interface TokenTx {
@@ -78,7 +78,7 @@ export function TokenPanel() {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/30">
           <div className="flex items-center gap-2">
-            <Coins className="h-4 w-4 text-amber-500" />
+            <Coins className="h-4 w-4 text-semantic-amber" />
             <h3 className="text-sm font-semibold">NOTA2 Token</h3>
           </div>
           <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ export function TokenPanel() {
         <div className="grid grid-cols-3 gap-px bg-border">
           <div className="bg-card px-4 py-3 bg-primary/[0.02]">
             <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp className="h-3.5 w-3.5 text-amber-500" />
+              <TrendingUp className="h-3.5 w-3.5 text-semantic-amber" />
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
                 {t("token.available", "Available")}
               </span>
@@ -149,7 +149,7 @@ export function TokenPanel() {
         </h4>
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-lg bg-muted/50 p-3">
-            <p className="text-[10px] font-semibold text-amber-500 mb-0.5">NOTA2</p>
+            <p className="text-[10px] font-semibold text-semantic-amber mb-0.5">NOTA2</p>
             <p className="text-xs text-muted-foreground">{t("token.access_desc", "Access rights, governance, tier unlock")}</p>
           </div>
           <div className="rounded-lg bg-muted/50 p-3">

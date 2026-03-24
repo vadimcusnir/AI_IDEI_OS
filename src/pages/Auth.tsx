@@ -38,9 +38,9 @@ export default function Auth() {
   function getStrength(pw: string): { score: number; label: string; color: string } {
     const passed = PASSWORD_CHECKS.filter((c) => c.test(pw)).length;
     if (passed <= 1) return { score: 1, label: t("auth.pw_weak"), color: "bg-destructive" };
-    if (passed === 2) return { score: 2, label: t("auth.pw_fair"), color: "bg-amber-500" };
+    if (passed === 2) return { score: 2, label: t("auth.pw_fair"), color: "bg-warning" };
     if (passed === 3) return { score: 3, label: t("auth.pw_good"), color: "bg-primary" };
-    return { score: 4, label: t("auth.pw_strong"), color: "bg-emerald-500" };
+    return { score: 4, label: t("auth.pw_strong"), color: "bg-success" };
   }
 
   function friendlyError(msg: string): string {
@@ -124,7 +124,7 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-background gradient-bg-animated noise-overlay relative flex items-center justify-center px-4 py-8 sm:py-12">
       <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/[0.05] rounded-full blur-[150px] animate-float" />
-      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-500/[0.04] rounded-full blur-[120px] animate-float" style={{ animationDelay: "3s" }} />
+      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-semantic-purple/[0.04] rounded-full blur-[120px] animate-float" style={{ animationDelay: "3s" }} />
 
       <SEOHead title="Sign In — AI-IDEI" description="Sign in or create your AI-IDEI account to start extracting knowledge." />
 

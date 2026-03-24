@@ -31,8 +31,8 @@ const TYPE_ICONS: Record<string, React.ElementType> = {
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  feedback: "text-primary", testimonial: "text-emerald-500", review: "text-amber-500",
-  proposal: "text-amber-500", complaint: "text-destructive",
+  feedback: "text-primary", testimonial: "text-success", review: "text-semantic-amber",
+  proposal: "text-semantic-amber", complaint: "text-destructive",
 };
 
 export function AdminFeedbackTab() {
@@ -169,7 +169,7 @@ export function AdminFeedbackTab() {
           <p className="text-[9px] text-muted-foreground uppercase">Total</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <p className="text-lg font-bold font-mono text-amber-500">{stats.pending}</p>
+          <p className="text-lg font-bold font-mono text-warning">{stats.pending}</p>
           <p className="text-[9px] text-muted-foreground uppercase">Pending</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
@@ -227,14 +227,14 @@ export function AdminFeedbackTab() {
                       </span>
                       <span className={cn(
                         "text-[8px] px-1.5 py-0.5 rounded uppercase",
-                        item.status === "pending" ? "bg-amber-500/10 text-amber-600" :
-                        item.status === "resolved" ? "bg-emerald-500/10 text-emerald-600" :
+                        item.status === "pending" ? "bg-warning/10 text-warning" :
+                        item.status === "resolved" ? "bg-success/10 text-success" :
                         "bg-primary/10 text-primary"
                       )}>
                         {item.status}
                       </span>
                       {item.is_public && (
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600">
+                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-success/10 text-success">
                           PUBLIC
                         </span>
                       )}
@@ -247,7 +247,7 @@ export function AdminFeedbackTab() {
                         {[1, 2, 3, 4, 5].map((s) => (
                           <Star
                             key={s}
-                            className={cn("h-3 w-3", s <= item.rating! ? "text-amber-400 fill-amber-400" : "text-muted-foreground/20")}
+                            className={cn("h-3 w-3", s <= item.rating! ? "text-semantic-amber fill-semantic-amber" : "text-muted-foreground/20")}
                           />
                         ))}
                       </div>
