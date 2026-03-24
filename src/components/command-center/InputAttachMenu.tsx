@@ -108,7 +108,7 @@ export function InputAttachMenu({ onFileClick, onAction }: InputAttachMenuProps)
                     {section.label}
                   </span>
                 </div>
-                <div className="pb-1">
+                <div className="pb-0.5">
                   {section.items.map((item) => (
                     <button
                       key={item.id}
@@ -117,13 +117,13 @@ export function InputAttachMenu({ onFileClick, onAction }: InputAttachMenuProps)
                         if (item.id === "upload") onFileClick();
                         else onAction(item.id);
                       }}
-                      className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-muted/60 transition-colors group"
+                      className="w-full flex items-center gap-2.5 px-3 py-1.5 text-left hover:bg-muted/60 transition-colors group rounded-md"
                     >
-                      <div className="h-7 w-7 rounded-lg bg-muted/60 flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
-                        <item.icon className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <div className="h-6 w-6 rounded-md bg-muted/60 flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                        <item.icon className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground leading-tight">{item.label}</p>
+                        <p className="text-[13px] font-medium text-foreground leading-tight">{item.label}</p>
                         <p className="text-[10px] text-muted-foreground/60 leading-tight">{item.desc}</p>
                       </div>
                     </button>

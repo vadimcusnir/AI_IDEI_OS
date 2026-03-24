@@ -104,7 +104,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
           )}
         </AnimatePresence>
 
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-4 pt-2">
+        <div className="max-w-3xl mx-auto px-3 sm:px-5 pb-3 pt-1.5">
           {/* Attached files */}
           <AnimatePresence>
             {files.length > 0 && (
@@ -112,14 +112,14 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="flex gap-2 flex-wrap pb-2 overflow-hidden"
+                className="flex gap-1.5 flex-wrap pb-1.5 overflow-hidden"
               >
                 {files.map((f, i) => (
-                  <div key={i} className="flex items-center gap-1.5 bg-card border border-border/40 rounded-lg px-2.5 py-1.5 text-xs shadow-sm">
-                    <Paperclip className="h-3 w-3 text-muted-foreground/60" />
-                    <span className="truncate max-w-[140px] text-foreground">{f.name}</span>
+                  <div key={i} className="flex items-center gap-1 bg-card border border-border/40 rounded-md px-2 py-1 text-[11px] shadow-sm">
+                    <Paperclip className="h-2.5 w-2.5 text-muted-foreground/60" />
+                    <span className="truncate max-w-[120px] text-foreground">{f.name}</span>
                     <button onClick={() => onRemoveFile(i)} className="text-muted-foreground hover:text-foreground transition-colors ml-0.5">
-                      <X className="h-3 w-3" />
+                      <X className="h-2.5 w-2.5" />
                     </button>
                   </div>
                 ))}
@@ -127,11 +127,11 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
             )}
           </AnimatePresence>
 
-          {/* Main input container */}
+          {/* Main input container — COMPACT */}
           <div className={cn(
-            "relative flex items-end gap-1 rounded-2xl border bg-card transition-all duration-300",
+            "relative flex items-end gap-0.5 rounded-[14px] border bg-card transition-all duration-200",
             "shadow-sm",
-            "border-border/50 focus-within:border-primary/40 focus-within:shadow-lg focus-within:shadow-primary/[0.04] focus-within:ring-1 focus-within:ring-primary/10"
+            "border-border/50 focus-within:border-primary/40 focus-within:shadow-md focus-within:shadow-primary/[0.03] focus-within:ring-1 focus-within:ring-primary/10"
           )}>
             <input
               ref={fileInputRef}
@@ -142,16 +142,16 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               onChange={onFileSelect}
             />
 
-            {/* Plus menu (Perplexity-style) */}
-            <div className="ml-1 mb-1">
+            {/* Plus menu */}
+            <div className="ml-0.5 mb-0.5">
               <InputAttachMenu
                 onFileClick={() => fileInputRef.current?.click()}
                 onAction={handleAttachAction}
               />
             </div>
 
-            {/* Textarea */}
-            <div className="flex-1 relative py-1">
+            {/* Textarea — compact */}
+            <div className="flex-1 relative py-0.5">
               <textarea
                 ref={inputRef}
                 value={input}
@@ -160,14 +160,14 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                   onShowSlashMenuChange(e.target.value.startsWith("/") && !e.target.value.includes(" "));
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Întreabă orice..."
-                className="w-full resize-none bg-transparent px-1 py-2 text-[15px] leading-relaxed focus:outline-none placeholder:text-muted-foreground/35 min-h-[40px] max-h-[200px]"
+                placeholder="Execută comandă..."
+                className="w-full resize-none bg-transparent px-1 py-1.5 text-[14px] leading-[20px] focus:outline-none placeholder:text-muted-foreground/35 min-h-[36px] max-h-[180px]"
                 rows={1}
                 style={{ height: "auto" }}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
                   target.style.height = "auto";
-                  target.style.height = Math.min(target.scrollHeight, 200) + "px";
+                  target.style.height = Math.min(target.scrollHeight, 180) + "px";
                 }}
               />
               {showSlashMenu && (
@@ -183,22 +183,22 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               )}
             </div>
 
-            {/* Send / Stop button */}
+            {/* Send / Stop — compact 32px */}
             {loading ? (
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-9 w-9 p-0 shrink-0 rounded-xl mr-1 mb-1 bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
+                className="h-8 w-8 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
                 onClick={onStop}
                 title="Oprește generarea"
               >
-                <Square className="h-3.5 w-3.5 fill-current" />
+                <Square className="h-3 w-3 fill-current" />
               </Button>
             ) : (
               <Button
                 size="sm"
                 className={cn(
-                  "h-9 w-9 p-0 shrink-0 rounded-xl mr-1 mb-1 transition-all duration-200",
+                  "h-8 w-8 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 transition-all duration-200",
                   (input.trim() || files.length > 0)
                     ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20 hover:shadow-md"
                     : "bg-muted text-muted-foreground/30"
@@ -206,14 +206,14 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                 onClick={onSubmit}
                 disabled={!input.trim() && files.length === 0}
               >
-                <ArrowUp className="h-4 w-4" />
+                <ArrowUp className="h-3.5 w-3.5" />
               </Button>
             )}
           </div>
 
-          {/* Keyboard hint */}
-          <p className="text-[10px] text-muted-foreground/30 text-center mt-1.5 select-none">
-            <kbd className="font-mono">Enter</kbd> trimite · <kbd className="font-mono">Shift+Enter</kbd> linie nouă · <kbd className="font-mono">/</kbd> comenzi · <kbd className="font-mono">+</kbd> atașează
+          {/* Keyboard hint — compact */}
+          <p className="text-[9px] text-muted-foreground/25 text-center mt-1 select-none">
+            <kbd className="font-mono">Enter</kbd> trimite · <kbd className="font-mono">/</kbd> comenzi · <kbd className="font-mono">+</kbd> servicii
           </p>
         </div>
       </div>
