@@ -119,32 +119,32 @@
     --graph-highlight: 262 65% 52%;
 
     /* AI panel */
-    --ai-bg: 262 30% 97%;
-    --ai-border: 262 20% 90%;
-    --ai-accent: 262 60% 55%;
+    --ai-bg: 262 30% 96%;
+    --ai-border: 262 25% 86%;
+    --ai-accent: 262 65% 52%;
 
     /* Note colors */
-    --note-yellow: 48 96% 89%;
-    --note-green: 142 40% 89%;
-    --note-blue: 210 50% 90%;
-    --note-pink: 340 50% 92%;
-    --note-purple: 270 40% 92%;
-    --note-default: 220 20% 99%;
+    --note-yellow: 48 96% 87%;
+    --note-green: 142 45% 87%;
+    --note-blue: 210 55% 88%;
+    --note-pink: 340 55% 90%;
+    --note-purple: 270 45% 90%;
+    --note-default: 220 18% 98%;
 
     /* Semantic category colors — canonical, themed */
-    --color-emerald: 152 55% 42%;
-    --color-amber: 38 92% 50%;
-    --color-blue: 210 75% 50%;
-    --color-purple: 262 60% 55%;
-    --color-rose: 350 65% 52%;
-    --color-cyan: 185 60% 42%;
-    --color-teal: 170 55% 38%;
-    --color-indigo: 230 60% 55%;
+    --color-emerald: 152 62% 38%;
+    --color-amber: 32 92% 48%;
+    --color-blue: 210 80% 48%;
+    --color-purple: 262 65% 52%;
+    --color-rose: 350 70% 48%;
+    --color-cyan: 185 65% 38%;
+    --color-teal: 170 60% 35%;
+    --color-indigo: 230 65% 52%;
 
     /* Tier colors */
-    --tier-vip: 43 96% 56%;
-    --tier-pro: 25 95% 53%;
-    --tier-free: 220 10% 46%;
+    --tier-vip: 43 96% 52%;
+    --tier-pro: 24 100% 50%;
+    --tier-free: 220 12% 42%;
 
     /* Sidebar */
     --sidebar-background: 220 20% 97%;
