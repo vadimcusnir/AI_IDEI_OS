@@ -29,15 +29,15 @@
 
     /* ── Landing proprietary palette (LIGHT mode) ── */
     --obsidian: 220 16% 96%;
-    --obsidian-light: 220 14% 90%;
+    --obsidian-light: 220 14% 88%;
     --ivory: 220 20% 10%;
-    --ivory-dim: 220 10% 36%;
-    --gold-oxide: 38 60% 35%;
-    --gold-dim: 38 40% 26%;
-    --gold-subtle: 38 45% 52%;
-    --petrol: 180 35% 35%;
-    --petrol-dim: 180 20% 25%;
-    --signal-red: 0 72% 43%;
+    --ivory-dim: 220 10% 32%;
+    --gold-oxide: 32 85% 45%;
+    --gold-dim: 32 65% 32%;
+    --gold-subtle: 32 70% 55%;
+    --petrol: 180 45% 32%;
+    --petrol-dim: 180 30% 22%;
+    --signal-red: 0 78% 45%;
 
     /* Spacing scale (canonical): 4 8 12 16 24 32 40 48 64 */
 
