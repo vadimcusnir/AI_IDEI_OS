@@ -484,9 +484,9 @@ export default function Home() {
             </div>
 
             {/* BOTTOM REGION — menus/panels open around the fixed rail, below it */}
-            <div className="absolute inset-x-0 top-[42%] bottom-0 overflow-hidden">
+            <div className="absolute inset-x-0 top-[45%] bottom-0 overflow-hidden">
               <div className="h-full overflow-y-auto">
-                <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-6">
+                <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-16 pb-6">
                   {isEmptyState && input.length >= 2 && (
                     <SystemRecommendations
                       systems={matchIntentToSystems(input)}
