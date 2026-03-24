@@ -50,55 +50,42 @@ export function SidePanels({
       )}
 
       {/* Memory Panel */}
-      <AnimatePresence>
-        {showMemory && (
-          <>
-            <div className="hidden md:block">
-              <MemoryPanel
-                visible={showMemory}
-                onClose={onCloseMemory}
-                onReplay={onReplay}
-                onExecuteTemplate={onExecuteTemplate}
-                sessions={sessions}
-                onLoadSession={onLoadSession}
-                onDeleteSession={onDeleteSession}
-                currentSessionId={currentSessionId}
-              />
-            </div>
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="md:hidden fixed inset-y-0 right-0 w-[300px] z-50 shadow-xl"
-            >
-              <MemoryPanel
-                visible={showMemory}
-                onClose={onCloseMemory}
-                onReplay={onReplay}
-                onExecuteTemplate={onExecuteTemplate}
-                sessions={sessions}
-                onLoadSession={onLoadSession}
-                onDeleteSession={onDeleteSession}
-                currentSessionId={currentSessionId}
-              />
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {showMemory && (
+        <>
+          <div className="hidden md:block">
+            <MemoryPanel
+              visible={showMemory}
+              onClose={onCloseMemory}
+              onReplay={onReplay}
+              onExecuteTemplate={onExecuteTemplate}
+              sessions={sessions}
+              onLoadSession={onLoadSession}
+              onDeleteSession={onDeleteSession}
+              currentSessionId={currentSessionId}
+            />
+          </div>
+          <div className="md:hidden fixed inset-y-0 right-0 w-[300px] z-50 shadow-xl">
+            <MemoryPanel
+              visible={showMemory}
+              onClose={onCloseMemory}
+              onReplay={onReplay}
+              onExecuteTemplate={onExecuteTemplate}
+              sessions={sessions}
+              onLoadSession={onLoadSession}
+              onDeleteSession={onDeleteSession}
+              currentSessionId={currentSessionId}
+            />
+          </div>
+        </>
+      )}
 
       {/* Mobile backdrop */}
-      <AnimatePresence>
-        {(showRightPanel || showMemory) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
-            onClick={() => { onCloseTaskTree(); onCloseMemory(); }}
-          />
-        )}
-      </AnimatePresence>
+      {(showRightPanel || showMemory) && (
+        <div
+          className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
+          onClick={() => { onCloseTaskTree(); onCloseMemory(); }}
+        />
+      )}
     </>
   );
 }
