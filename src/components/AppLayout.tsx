@@ -99,16 +99,8 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               </div>
             </div>
 
-            {/* ─── CENTER: Pipeline Context ─── */}
-            <div className="flex-1 flex items-center justify-center min-w-0 mx-4">
-              {user && (
-                <div className="hidden md:flex items-center">
-                  <Suspense fallback={<div className="h-4 w-48 bg-muted/30 rounded animate-pulse" />}>
-                    <CompactPipeline />
-                  </Suspense>
-                </div>
-              )}
-            </div>
+            {/* ─── CENTER: Spacer ─── */}
+            <div className="flex-1 min-w-0" />
 
             {/* ─── RIGHT: Controls ─── */}
             <div className="flex items-center gap-1 shrink-0">
@@ -146,6 +138,15 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               </div>
             </div>
           </header>
+
+          {/* ═══ PIPELINE CONTEXT BAR — below header, visible only when active ═══ */}
+          {user && (
+            <div className="hidden md:flex items-center justify-center border-b border-border/30 bg-muted/20 py-1.5 px-4">
+              <Suspense fallback={null}>
+                <CompactPipeline />
+              </Suspense>
+            </div>
+          )}
 
           <div className="min-h-0">
             <Suspense fallback={null}><LowBalanceBanner /></Suspense>
