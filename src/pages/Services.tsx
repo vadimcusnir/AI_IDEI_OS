@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
@@ -101,7 +101,7 @@ export default function Services() {
   const [drawerService, setDrawerService] = useState<Service | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleServiceClick = (service: Service) => {
+  const handleServiceClick = useCallback((service: Service) => {
     if (!user) { navigate("/auth"); return; }
     const requiredTier = service.access_tier || "free";
     if (!tierSatisfied(userTier, requiredTier)) {
@@ -111,7 +111,7 @@ export default function Services() {
     }
     setDrawerService(service);
     setDrawerOpen(true);
-  };
+  }, [user, userTier, navigate]);
 
   useEffect(() => {
     if (authLoading) return;
