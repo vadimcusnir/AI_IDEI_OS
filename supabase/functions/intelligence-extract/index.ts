@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
       });
     } catch (innerErr) {
       if (!settled) {
-        await supabase.rpc("release_neurons", { _user_id: user.id, _amount: estimatedCost }).then(() => {}).catch(() => {});
+        try { await supabase.rpc("release_neurons", { _user_id: user.id, _amount: estimatedCost }); } catch (_) { /* ignore */ }
       }
       throw innerErr;
     }
