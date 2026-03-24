@@ -103,8 +103,8 @@ export function InputAttachMenu({ onFileClick, onAction }: InputAttachMenuProps)
             {MENU_SECTIONS.map((section, sIdx) => (
               <div key={section.id}>
                 {sIdx > 0 && <div className="border-t border-border/30" />}
-                <div className="px-3.5 pt-2.5 pb-1">
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-semibold">
+                <div className="px-3 pt-2 pb-0.5">
+                  <span className="text-[9px] uppercase tracking-wider text-muted-foreground/50 font-semibold">
                     {section.label}
                   </span>
                 </div>
