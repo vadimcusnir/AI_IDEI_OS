@@ -1,16 +1,22 @@
 /**
- * TaskExecutionCard — Inline execution timeline card.
- * Replaces passive chat with a production terminal view.
- * Shows: steps, progress, cost, time, status, monetization.
+ * TaskExecutionCard — Minimal 3-layer execution card.
+ * Layer 1: PRIMARY (status + title + cost/time)
+ * Layer 2: SECONDARY (progress bar + steps collapsed)
+ * Layer 3: TERTIARY (actions)
+ * 
+ * Color rules:
+ *   green = success ONLY
+ *   red = error ONLY
+ *   everything else = grayscale
  */
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
-  CheckCircle2, XCircle, Loader2, Clock, Coins, Layers,
-  ChevronDown, ChevronRight, Zap, Lock, FileText, RotateCcw,
-  Save, TrendingUp, Sparkles, AlertTriangle,
+  CheckCircle2, XCircle, Loader2, Clock, Coins,
+  ChevronDown, ChevronRight, FileText, RotateCcw,
+  Save, Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { CommandPhase, TaskStep, ExecutionState, OutputItem } from "@/stores/executionStore";
@@ -24,29 +30,21 @@ interface TaskExecutionCardProps {
   onViewOutputs?: () => void;
 }
 
-const STATUS_ICON: Record<TaskStep["status"], React.ElementType> = {
-  pending: Clock,
-  running: Loader2,
-  completed: CheckCircle2,
-  failed: XCircle,
-  skipped: AlertTriangle,
-};
-
-const STATUS_COLOR: Record<TaskStep["status"], string> = {
-  pending: "text-muted-foreground/40",
-  running: "text-primary",
-  completed: "text-green-500",
-  failed: "text-destructive",
-  skipped: "text-muted-foreground/30",
+const STEP_ICON: Record<TaskStep["status"], React.ReactNode> = {
+  pending: <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/20" />,
+  running: <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />,
+  completed: <CheckCircle2 className="h-3 w-3 text-green-500" />,
+  failed: <XCircle className="h-3 w-3 text-destructive" />,
+  skipped: <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/10" />,
 };
 
 export function TaskExecutionCard({
   execution, outputs, onRetry, onSaveTemplate, onSaveAllOutputs, onViewOutputs,
 }: TaskExecutionCardProps) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [elapsed, setElapsed] = useState(0);
 
-  const { phase, intent, planName, totalCredits, steps, startedAt, completedAt, errorMessage, confidence } = execution;
+  const { phase, intent, planName, totalCredits, steps, startedAt, completedAt, errorMessage } = execution;
 
   // Live elapsed timer
   useEffect(() => {
@@ -58,7 +56,6 @@ export function TaskExecutionCard({
     return () => clearInterval(interval);
   }, [startedAt, completedAt]);
 
-  // Calculate final elapsed if completed
   const finalElapsed = startedAt && completedAt
     ? Math.round((new Date(completedAt).getTime() - new Date(startedAt).getTime()) / 1000)
     : elapsed;
@@ -77,207 +74,173 @@ export function TaskExecutionCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "rounded-2xl border overflow-hidden transition-colors duration-300",
-        isDone && "border-green-500/20 bg-gradient-to-b from-green-500/[0.02] to-transparent",
-        isFailed && "border-destructive/20 bg-gradient-to-b from-destructive/[0.02] to-transparent",
-        isActive && "border-primary/20 bg-gradient-to-b from-primary/[0.02] to-transparent",
+        "rounded-xl border overflow-hidden",
+        isDone && "border-green-500/15",
+        isFailed && "border-destructive/15",
+        isActive && "border-border/30",
       )}
     >
-      {/* ═══ Header — always visible ═══ */}
-      <button
-        onClick={() => setExpanded(e => !e)}
-        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-muted/20 transition-colors"
-      >
-        {/* Status icon */}
-        <div className={cn(
-          "h-8 w-8 rounded-xl flex items-center justify-center shrink-0",
-          isDone && "bg-green-500/10",
-          isFailed && "bg-destructive/10",
-          isActive && "bg-primary/10",
-        )}>
-          {isActive ? (
-            <Loader2 className="h-4 w-4 text-primary animate-spin" />
-          ) : isDone ? (
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
-          ) : (
-            <XCircle className="h-4 w-4 text-destructive" />
-          )}
-        </div>
+      {/* ═══ LAYER 1: PRIMARY — Status + Title + Meta ═══ */}
+      <div className="px-4 py-3 flex items-center gap-3">
+        {/* Status icon — the ONLY colored element */}
+        {isActive ? (
+          <Loader2 className="h-4 w-4 text-muted-foreground animate-spin shrink-0" />
+        ) : isDone ? (
+          <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+        ) : (
+          <XCircle className="h-4 w-4 text-destructive shrink-0" />
+        )}
 
-        {/* Title + intent */}
-        <div className="flex-1 min-w-0 text-left">
-          <p className="text-[13px] font-semibold truncate">
-            {planName || intent.replace(/_/g, " ") || "Execution"}
+        {/* Title */}
+        <div className="flex-1 min-w-0">
+          <p className="text-[13px] font-semibold text-foreground truncate">
+            {isDone ? "Execution Complete" : isFailed ? "Execution Failed" : planName || intent.replace(/_/g, " ") || "Processing..."}
           </p>
-          {intent && (
-            <p className="text-[10px] text-muted-foreground/60 font-medium uppercase tracking-wider">
-              {intent.replace(/_/g, " ")}
-            </p>
-          )}
         </div>
 
-        {/* Live metrics — always visible */}
-        <div className="flex items-center gap-3 shrink-0">
-          {/* Progress */}
-          {steps.length > 0 && (
-            <div className="flex items-center gap-1.5">
-              <div className="h-1.5 w-16 bg-border/40 rounded-full overflow-hidden">
-                <motion.div
-                  className={cn(
-                    "h-full rounded-full",
-                    isDone ? "bg-green-500" : isFailed ? "bg-destructive" : "bg-primary"
-                  )}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
-              <span className="text-[10px] tabular-nums text-muted-foreground">
-                {completedSteps}/{steps.length}
-              </span>
-            </div>
-          )}
-
-          {/* Cost */}
-          <div className="flex items-center gap-1 text-[10px] tabular-nums text-muted-foreground">
+        {/* Inline meta — cost + time */}
+        <div className="flex items-center gap-3 shrink-0 text-[11px] tabular-nums text-muted-foreground">
+          <span className="flex items-center gap-1">
             <Coins className="h-3 w-3" />
-            <span>{consumedCredits}/{totalCredits} N</span>
-          </div>
-
-          {/* Time */}
-          {(startedAt || finalElapsed > 0) && (
-            <div className="flex items-center gap-1 text-[10px] tabular-nums text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              <span>{finalElapsed}s</span>
-            </div>
-          )}
-
-          {/* Expand toggle */}
-          {expanded
-            ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/40" />
-            : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
-          }
+            {consumedCredits}N
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {finalElapsed}s
+          </span>
         </div>
-      </button>
+      </div>
 
-      {/* ═══ Expandable body ═══ */}
+      {/* ═══ LAYER 2: SECONDARY — Progress + Output summary ═══ */}
+      {steps.length > 0 && (
+        <div className="px-4 pb-2">
+          {/* Progress bar — neutral color */}
+          <div className="h-1 bg-muted/40 rounded-full overflow-hidden">
+            <motion.div
+              className={cn(
+                "h-full rounded-full",
+                isDone ? "bg-green-500" : isFailed ? "bg-destructive" : "bg-muted-foreground/40"
+              )}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+          <div className="flex items-center justify-between mt-1.5">
+            <span className="text-[10px] text-muted-foreground/50 tabular-nums">
+              {completedSteps}/{steps.length} steps
+            </span>
+            {/* Expand toggle for steps */}
+            <button
+              onClick={() => setExpanded(e => !e)}
+              className="flex items-center gap-0.5 text-[10px] text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+            >
+              {expanded ? "Hide" : "Details"}
+              {expanded
+                ? <ChevronDown className="h-3 w-3" />
+                : <ChevronRight className="h-3 w-3" />
+              }
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Steps detail — collapsed by default */}
       <AnimatePresence initial={false}>
-        {expanded && (
+        {expanded && steps.length > 0 && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             className="overflow-hidden"
           >
-            {/* Steps timeline */}
-            {steps.length > 0 && (
-              <div className="px-4 py-2 border-t border-border/20 space-y-0.5">
-                {steps.map((step, i) => {
-                  const Icon = STATUS_ICON[step.status];
-                  return (
-                    <div key={step.id} className="flex items-center gap-2.5 py-1">
-                      {/* Connector line */}
-                      <div className="relative flex flex-col items-center w-4 shrink-0">
-                        <Icon className={cn(
-                          "h-3.5 w-3.5",
-                          STATUS_COLOR[step.status],
-                          step.status === "running" && "animate-spin"
-                        )} />
-                        {i < steps.length - 1 && (
-                          <div className={cn(
-                            "absolute top-4 left-1/2 -translate-x-1/2 w-px h-4",
-                            step.status === "completed" ? "bg-green-500/30" : "bg-border/30"
-                          )} />
-                        )}
-                      </div>
-                      {/* Label */}
-                      <span className={cn(
-                        "text-[11px] flex-1",
-                        step.status === "completed" && "text-foreground",
-                        step.status === "running" && "text-primary font-medium",
-                        step.status === "pending" && "text-muted-foreground/50",
-                        step.status === "failed" && "text-destructive",
-                        step.status === "skipped" && "text-muted-foreground/30 line-through",
-                      )}>
-                        {step.label}
-                      </span>
-                      {/* Step cost */}
-                      <span className="text-[9px] tabular-nums text-muted-foreground/40">
-                        {step.credits}N
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Error message */}
-            {errorMessage && (
-              <div className="px-4 py-2 border-t border-destructive/10 bg-destructive/[0.02]">
-                <p className="text-[11px] text-destructive">{errorMessage}</p>
-              </div>
-            )}
-
-            {/* Output preview */}
-            {isDone && outputs.length > 0 && (
-              <div className="px-4 py-2.5 border-t border-border/20">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <Sparkles className="h-3 w-3 text-primary" />
-                  <span className="text-[11px] font-semibold text-foreground">
-                    {outputs.length} asset{outputs.length !== 1 ? "s" : ""} generat{outputs.length !== 1 ? "e" : ""}
+            <div className="px-4 pb-2 space-y-0.5">
+              {steps.map(step => (
+                <div key={step.id} className="flex items-center gap-2 py-1 text-[11px]">
+                  <div className="shrink-0 w-3 flex items-center justify-center">
+                    {STEP_ICON[step.status]}
+                  </div>
+                  <span className={cn(
+                    "flex-1 truncate",
+                    step.status === "completed" ? "text-foreground" :
+                    step.status === "running" ? "text-foreground font-medium" :
+                    step.status === "failed" ? "text-destructive" :
+                    "text-muted-foreground/40",
+                  )}>
+                    {step.label}
+                  </span>
+                  <span className="text-[9px] tabular-nums text-muted-foreground/30 shrink-0">
+                    {step.credits}N
                   </span>
                 </div>
-                <div className="space-y-1">
-                  {outputs.slice(0, 3).map((out) => (
-                    <div key={out.id} className="flex items-center gap-2 py-1 px-2 rounded-lg bg-muted/30">
-                      <FileText className="h-3 w-3 text-muted-foreground shrink-0" />
-                      <span className="text-[11px] text-foreground truncate flex-1">{out.title}</span>
-                      <span className="text-[9px] text-muted-foreground/50 uppercase">{out.type}</span>
-                    </div>
-                  ))}
-                  {outputs.length > 3 && (
-                    <div className="flex items-center gap-2 py-1 px-2">
-                      <Lock className="h-3 w-3 text-muted-foreground/30" />
-                      <span className="text-[10px] text-muted-foreground/50">
-                        +{outputs.length - 3} locked — unlock all
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Actions */}
-            {(isDone || isFailed) && (
-              <div className="px-4 py-2.5 border-t border-border/20 flex items-center gap-2 flex-wrap">
-                {isDone && outputs.length > 0 && onViewOutputs && (
-                  <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1.5 rounded-lg" onClick={onViewOutputs}>
-                    <FileText className="h-3 w-3" /> View
-                  </Button>
-                )}
-                {isDone && outputs.length > 1 && onSaveAllOutputs && (
-                  <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1.5 rounded-lg" onClick={onSaveAllOutputs}>
-                    <Save className="h-3 w-3" /> Save All
-                  </Button>
-                )}
-                {isDone && onSaveTemplate && (
-                  <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1.5 rounded-lg" onClick={onSaveTemplate}>
-                    <TrendingUp className="h-3 w-3" /> Save Workflow
-                  </Button>
-                )}
-                {onRetry && (
-                  <Button size="sm" variant="ghost" className="h-7 text-[11px] gap-1.5 rounded-lg" onClick={onRetry}>
-                    <RotateCcw className="h-3 w-3" /> {isDone ? "Re-run" : "Retry"}
-                  </Button>
-                )}
-              </div>
-            )}
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Error */}
+      {errorMessage && (
+        <div className="px-4 py-2 border-t border-destructive/10">
+          <p className="text-[11px] text-destructive">{errorMessage}</p>
+        </div>
+      )}
+
+      {/* Output summary — compact, no grid */}
+      {isDone && outputs.length > 0 && (
+        <div className="px-4 py-2.5 border-t border-border/15">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <Sparkles className="h-3 w-3 text-foreground/60" />
+            <span className="text-[11px] font-semibold text-foreground">
+              {outputs.length} output{outputs.length !== 1 ? "s" : ""} generated
+            </span>
+          </div>
+          <div className="space-y-0.5">
+            {outputs.slice(0, 3).map((out) => (
+              <div key={out.id} className="flex items-center gap-2 py-0.5">
+                <FileText className="h-3 w-3 text-muted-foreground/40 shrink-0" />
+                <span className="text-[11px] text-muted-foreground truncate flex-1">{out.title}</span>
+                <span className="text-[9px] text-muted-foreground/30 uppercase shrink-0">{out.type}</span>
+              </div>
+            ))}
+            {outputs.length > 3 && (
+              <span className="text-[10px] text-muted-foreground/40">
+                +{outputs.length - 3} more
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ LAYER 3: TERTIARY — Actions (max 2 CTAs) ═══ */}
+      {(isDone || isFailed) && (
+        <div className="px-4 py-2.5 border-t border-border/15 flex items-center gap-2">
+          {/* Primary CTA */}
+          {isDone && outputs.length > 0 && onViewOutputs && (
+            <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1.5 rounded-lg" onClick={onViewOutputs}>
+              <FileText className="h-3 w-3" /> View Outputs
+            </Button>
+          )}
+          {isDone && onSaveTemplate && (
+            <Button size="sm" variant="ghost" className="h-7 text-[11px] gap-1.5 rounded-lg text-muted-foreground" onClick={onSaveTemplate}>
+              <Save className="h-3 w-3" /> Save Workflow
+            </Button>
+          )}
+          {isFailed && onRetry && (
+            <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1.5 rounded-lg" onClick={onRetry}>
+              <RotateCcw className="h-3 w-3" /> Retry
+            </Button>
+          )}
+          {isDone && onRetry && (
+            <Button size="sm" variant="ghost" className="h-7 text-[11px] gap-1.5 rounded-lg text-muted-foreground/50" onClick={onRetry}>
+              <RotateCcw className="h-3 w-3" /> Re-run
+            </Button>
+          )}
+        </div>
+      )}
     </motion.div>
   );
 }
