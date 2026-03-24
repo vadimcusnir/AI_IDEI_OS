@@ -46,7 +46,7 @@ export function SubscriptionPlans() {
           <Crown className="h-4 w-4 text-primary" /> Planuri de Abonament
         </h3>
         {subscribed && (
-          <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={handleManage}>
+          <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => setShowRetention(true)}>
             <Settings className="h-3 w-3" /> Gestionează abonament
           </Button>
         )}
