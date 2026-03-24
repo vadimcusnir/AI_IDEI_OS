@@ -62,11 +62,11 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ error: "Admin access required" }), {
       status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
+  }
 
   // Rate limit (user-based, post-auth)
   const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
   if (rateLimited) return rateLimited;
-  }
 
   try {
     const body = await req.json().catch(() => ({}));
