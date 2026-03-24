@@ -264,8 +264,10 @@ export default function Services() {
         {/* ── Section tabs ── */}
         <div className="flex items-center gap-1 border-b border-border">
           {([
+            { key: "quick-start" as const, label: "Quick Start", icon: Zap, count: null },
             { key: "pipelines" as const, label: "Pipelines", icon: Workflow, count: 5 },
             { key: "services" as const, label: t("services.tab_all", { defaultValue: "All Services" }), icon: Sparkles, count: services.length },
+            { key: "outputs" as const, label: "Output Families", icon: Layers, count: 12 },
             ...(user ? [{ key: "history" as const, label: "History", icon: Clock, count: null }] : []),
           ]).map(tab => {
             const Icon = tab.icon;
@@ -296,6 +298,15 @@ export default function Services() {
           })}
         </div>
 
+        {/* ═══ QUICK START ═══ */}
+        {activeSection === "quick-start" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+            <QuickStartFlow onStart={() => navigate("/home")} />
+            <ServiceTierSystem activeTier={activeTier} onTierChange={setActiveTier} />
+            <OutputFamilies compact />
+          </motion.div>
+        )}
+
         {/* ═══ PIPELINES ═══ */}
         {activeSection === "pipelines" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
@@ -307,6 +318,13 @@ export default function Services() {
               className="mb-4"
             />
             <PipelinesHub />
+          </motion.div>
+        )}
+
+        {/* ═══ OUTPUT FAMILIES ═══ */}
+        {activeSection === "outputs" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
+            <OutputFamilies />
           </motion.div>
         )}
 
