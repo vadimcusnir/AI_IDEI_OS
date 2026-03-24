@@ -29,6 +29,15 @@ export function trackLLMReferrer() {
   tracked = true;
 
   const referrer = document.referrer;
+  let referrerHost = referrer;
+  try {
+    if (referrer) {
+      const url = new URL(referrer);
+      referrerHost = url.hostname;
+    }
+  } catch {
+    // If referrer is not a valid URL, fall back to the raw string
+  }
   const userAgent = navigator.userAgent;
   const pagePath = window.location.pathname;
 
@@ -36,7 +45,7 @@ export function trackLLMReferrer() {
   let source: string | null = null;
 
   for (const [name, patterns] of Object.entries(LLM_REFERRER_PATTERNS)) {
-    if (patterns.some(p => p.test(referrer))) {
+    if (patterns.some(p => p.test(referrerHost))) {
       source = name;
       break;
     }
