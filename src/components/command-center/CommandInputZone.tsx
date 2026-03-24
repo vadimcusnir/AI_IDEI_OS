@@ -106,14 +106,8 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
 
         <div className="max-w-3xl mx-auto px-3 sm:px-5 pb-2 pt-2">
           {/* Attached files */}
-          <AnimatePresence>
-            {files.length > 0 && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="flex gap-1.5 flex-wrap pb-1.5 overflow-hidden"
-              >
+          {files.length > 0 && (
+              <div className="flex gap-1.5 flex-wrap pb-1.5">
                 {files.map((f, i) => (
                   <div key={i} className="flex items-center gap-1 bg-card border border-border/40 rounded-md px-2 py-1 text-[11px] shadow-sm">
                     <Paperclip className="h-2.5 w-2.5 text-muted-foreground/60" />
@@ -123,9 +117,8 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                     </button>
                   </div>
                 ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+          )}
 
           {/* Main input container — COMPACT */}
           <div className={cn(
