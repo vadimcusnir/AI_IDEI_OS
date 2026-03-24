@@ -8,7 +8,12 @@ let sessionId: string | null = null;
 
 function getSessionId(): string {
   if (!sessionId) {
-    sessionId = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+    const randomBytes = new Uint8Array(6);
+    crypto.getRandomValues(randomBytes);
+    const randomPart = Array.from(randomBytes)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    sessionId = `${Date.now()}-${randomPart}`;
   }
   return sessionId;
 }
