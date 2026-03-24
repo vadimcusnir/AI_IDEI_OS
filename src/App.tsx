@@ -226,7 +226,7 @@ const App = () => (
                 <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Data privacy failed to load"><DataPrivacy /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/security-settings" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Security settings failed to load"><SecuritySettings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="API docs failed to load"><ApiDocs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
+                <Route path="/workspace" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Workspace failed to load"><WorkspaceSettings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<Navigate to="/library" replace />} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="VIP failed to load"><VIPDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/cusnir-os" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="CusnirOS failed to load"><CusnirOSPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
