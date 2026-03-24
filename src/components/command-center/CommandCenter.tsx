@@ -455,8 +455,12 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
   const isEmptyState = messages.length <= 1 && !loading;
 
   return (
-    <div className="flex h-full overflow-hidden">
-      <div className="flex flex-col h-full transition-all flex-1 min-w-0">
+    <div className="flex h-full overflow-hidden relative">
+      {/* Subtle background matching Home */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-primary/[0.02] blur-[100px]" />
+      </div>
+      <div className="flex flex-col h-full transition-all flex-1 min-w-0 relative z-10">
         <CommandHeader
           totalNeurons={totalNeurons}
           totalEpisodes={totalEpisodes}
