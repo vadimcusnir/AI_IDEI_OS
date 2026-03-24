@@ -389,49 +389,8 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* Plan Preview */}
-          {execState.phase === "confirming" && execState.totalCredits > 0 && !showEconomicGate && (
-            <div className="px-4 py-2 relative z-10">
-              <PlanPreview
-                plan={{
-                  action_id: execState.actionId, intent: execState.intent,
-                  confidence: execState.confidence, plan_name: execState.planName,
-                  total_credits: execState.totalCredits,
-                  steps: execState.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })),
-                  objective: execState.objective, output_preview: execState.outputPreview,
-                }}
-                balance={balance}
-                onExecute={async () => {
-                  if (execState.totalCredits > 50) { setShowEconomicGate(true); }
-                  else if (pendingRoute) {
-                    const lastUserMsg = messages.filter(m => m.role === "user").pop();
-                    await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
-                  }
-                }}
-                onEdit={() => { setInput(`Refine plan: ${execState.intent}`); inputZoneRef.current?.focus(); }}
-                onDismiss={() => executionActions.reset()}
-                executing={loading}
-              />
-            </div>
-          )}
 
-          {/* Economic Gate */}
-          {showEconomicGate && execState.phase === "confirming" && (
-            <div className="px-4 py-2 relative z-10">
-              <EconomicGate
-                balance={balance} estimatedCost={execState.totalCredits}
-                tierDiscount={tierDiscount} tier={tier}
-                onProceed={async () => {
-                  setShowEconomicGate(false);
-                  if (pendingRoute) {
-                    const lastUserMsg = messages.filter(m => m.role === "user").pop();
-                    await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
-                  }
-                }}
-                onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
-              />
-            </div>
-          )}
+
 
           {/* ═══ CONTENT AREA ═══ */}
           {isEmptyState ? (
