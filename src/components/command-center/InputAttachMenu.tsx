@@ -95,9 +95,9 @@ export function InputAttachMenu({ onFileClick, onAction }: InputAttachMenuProps)
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             className={cn(
-              "absolute bottom-full left-0 mb-2 w-[300px] z-50",
-              "bg-card/95 backdrop-blur-xl border border-border/60 rounded-xl shadow-2xl shadow-black/20",
-              "overflow-hidden max-h-[420px] overflow-y-auto"
+              "absolute bottom-full left-0 mb-2 w-[260px] z-50",
+              "bg-card/95 backdrop-blur-xl border border-border/60 rounded-xl shadow-lg shadow-black/10",
+              "overflow-hidden max-h-[380px] overflow-y-auto"
             )}
           >
             {MENU_SECTIONS.map((section, sIdx) => (
