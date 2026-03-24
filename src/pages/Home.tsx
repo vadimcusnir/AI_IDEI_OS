@@ -616,11 +616,11 @@ export default function Home() {
                   objective: execState.objective, output_preview: execState.outputPreview,
                 }}
                 balance={balance}
-                onExecute={() => {
+                onExecute={async () => {
                   if (execState.totalCredits > 50) { setShowEconomicGate(true); }
-                  else {
-                    if (user) logPlanConfirmed(user.id, execState.actionId, execState.intent, execState.totalCredits, execState.steps.length);
-                    executionActions.confirmExecution();
+                  else if (pendingRoute) {
+                    const lastUserMsg = messages.filter(m => m.role === "user").pop();
+                    await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
                   }
                 }}
                 onEdit={() => { setInput(`Refine plan: ${execState.intent}`); inputZoneRef.current?.focus(); }}
