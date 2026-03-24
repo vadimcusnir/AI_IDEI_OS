@@ -122,9 +122,9 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
 
           {/* Main input container — COMPACT */}
           <div className={cn(
-            "relative flex items-end gap-0.5 rounded-[14px] border bg-card transition-all duration-200",
+            "relative flex items-end gap-0.5 rounded-[14px] border bg-card/90 backdrop-blur-sm transition-all duration-200",
             "shadow-sm",
-            "border-border/50 focus-within:border-primary/40 focus-within:shadow-md focus-within:shadow-primary/[0.03] focus-within:ring-1 focus-within:ring-primary/10"
+            "border-border/50 focus-within:border-[hsl(var(--gold-oxide)/0.4)] focus-within:shadow-md focus-within:shadow-[hsl(var(--gold-oxide)/0.04)] focus-within:ring-1 focus-within:ring-[hsl(var(--gold-oxide)/0.15)]"
           )}>
             <input
               ref={fileInputRef}
