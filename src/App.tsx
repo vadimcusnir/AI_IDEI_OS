@@ -223,8 +223,8 @@ const App = () => (
                 <Route path="/guests" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Guest pages failed to load"><GuestPages /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/chat" element={<Navigate to="/home" replace />} />
                 <Route path="/onboarding" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Onboarding failed to load"><Onboarding /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
-                <Route path="/security-settings" element={<ProtectedRoute><AppLayout><SecuritySettings /></AppLayout></ProtectedRoute>} />
+                <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Data privacy failed to load"><DataPrivacy /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/security-settings" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Security settings failed to load"><SecuritySettings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="API docs failed to load"><ApiDocs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<Navigate to="/library" replace />} />
