@@ -100,8 +100,8 @@ export default function AdminInevitability() {
 
   const lockInTiers = [
     { key: "locked", label: "Locked", color: "bg-primary" },
-    { key: "dependent", label: "Dependent", color: "bg-blue-500" },
-    { key: "engaged", label: "Engaged", color: "bg-amber-500" },
+    { key: "dependent", label: "Dependent", color: "bg-semantic-blue" },
+    { key: "engaged", label: "Engaged", color: "bg-semantic-amber" },
     { key: "explorer", label: "Explorer", color: "bg-muted-foreground/30" },
   ];
 
