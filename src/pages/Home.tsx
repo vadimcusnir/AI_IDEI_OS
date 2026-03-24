@@ -322,26 +322,21 @@ export default function Home() {
                       ))}
                     </motion.div>
                   </motion.div>
+
+                  {/* Suggestion Tabs — Claude "Learn" style */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.45, duration: 0.5 }}
+                    className="w-full"
+                  >
+                    <SuggestionTabs onCommand={handleSuggestionCommand} />
+                  </motion.div>
                 </div>
 
-                {/* Suggestion Tabs — Claude "Learn" style */}
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45, duration: 0.5 }}
-                  className="max-w-3xl mx-auto pb-6"
-                >
-                  <SuggestionTabs onCommand={handleSuggestionCommand} />
-                </motion.div>
-
-                {/* Bottom stats strip */}
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6, duration: 0.5 }}
-                  className="max-w-xl mx-auto px-4 sm:px-6 pb-12"
-                >
-                  <div className="flex items-center justify-center gap-8 sm:gap-12 pt-8 border-t border-border/30">
+                {/* Bottom stats — pinned to bottom */}
+                <div className="shrink-0 max-w-xl mx-auto w-full px-4 sm:px-6 pb-4">
+                  <div className="flex items-center justify-center gap-8 sm:gap-12 pt-4 border-t border-border/30">
                     {STATS.map((stat) => (
                       <div key={stat.label} className="flex items-center gap-2.5 text-center">
                         <stat.icon className="h-4 w-4 text-muted-foreground/40" />
@@ -352,7 +347,7 @@ export default function Home() {
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               </motion.div>
             ) : (
               /* ═══ COMMAND MODE — Full Command Center ═══ */
