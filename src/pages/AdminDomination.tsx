@@ -80,10 +80,10 @@ export default function AdminDomination() {
   });
 
   const actions: { key: DomAction; label: string; icon: any; desc: string; color: string }[] = [
-    { key: "capture", label: "Demand Capture", icon: Target, desc: "Detect intent → generate pages", color: "text-emerald-400" },
-    { key: "distribute", label: "Distribute Assets", icon: Globe, desc: "Push assets across channels", color: "text-blue-400" },
-    { key: "feedback", label: "Feedback Loop", icon: RefreshCw, desc: "Boost top → kill underperformers", color: "text-amber-400" },
-    { key: "autoscale", label: "Auto-Scale", icon: Rocket, desc: "Expand pages & services", color: "text-purple-400" },
+    { key: "capture", label: "Demand Capture", icon: Target, desc: "Detect intent → generate pages", color: "text-semantic-emerald" },
+    { key: "distribute", label: "Distribute Assets", icon: Globe, desc: "Push assets across channels", color: "text-semantic-blue" },
+    { key: "feedback", label: "Feedback Loop", icon: RefreshCw, desc: "Boost top → kill underperformers", color: "text-semantic-amber" },
+    { key: "autoscale", label: "Auto-Scale", icon: Rocket, desc: "Expand pages & services", color: "text-semantic-purple" },
   ];
 
   return (

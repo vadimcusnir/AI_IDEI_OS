@@ -125,10 +125,10 @@ export default function AdminInevitability() {
       {/* Real Metrics Strip */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {[
-          { label: "Revenue / User", value: metrics ? `${metrics.revenue_per_user}N` : "—", icon: DollarSign, color: "text-emerald-500" },
-          { label: "Assets / Execution", value: metrics?.assets_per_execution ?? "—", icon: TrendingUp, color: "text-blue-500" },
-          { label: "Marketplace Velocity", value: metrics ? `${metrics.marketplace_velocity}/day` : "—", icon: Activity, color: "text-amber-500" },
-          { label: "Reuse Rate", value: metrics ? `${(metrics.reuse_rate * 100).toFixed(1)}%` : "—", icon: Repeat, color: "text-purple-500" },
+          { label: "Revenue / User", value: metrics ? `${metrics.revenue_per_user}N` : "—", icon: DollarSign, color: "text-semantic-emerald" },
+          { label: "Assets / Execution", value: metrics?.assets_per_execution ?? "—", icon: TrendingUp, color: "text-semantic-blue" },
+          { label: "Marketplace Velocity", value: metrics ? `${metrics.marketplace_velocity}/day` : "—", icon: Activity, color: "text-semantic-amber" },
+          { label: "Reuse Rate", value: metrics ? `${(metrics.reuse_rate * 100).toFixed(1)}%` : "—", icon: Repeat, color: "text-semantic-purple" },
           { label: "Avg Lock-In", value: metrics ? `${metrics.avg_lock_in_score}/10` : "—", icon: Lock, color: "text-primary" },
         ].map(kpi => (
           <div key={kpi.label} className="rounded-xl border border-border bg-card p-4">

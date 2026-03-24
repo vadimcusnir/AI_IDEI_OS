@@ -39,14 +39,14 @@ interface GuardrailResult {
 
 const STATUS_COLORS: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
-  review: "bg-yellow-500/10 text-yellow-600",
-  published: "bg-green-500/10 text-green-600",
+  review: "bg-warning/10 text-warning",
+  published: "bg-success/10 text-success",
   blocked: "bg-destructive/10 text-destructive",
 };
 
 const RISK_COLORS: Record<string, string> = {
-  low: "text-green-600",
-  medium: "text-yellow-600",
+  low: "text-success",
+  medium: "text-warning",
   high: "text-destructive",
 };
 
