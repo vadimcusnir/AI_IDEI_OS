@@ -52,7 +52,7 @@ export function ContextActions({
         icon: Brain,
         label: "Extract Neurons",
         prompt: "/extract neurons from my latest episode",
-        color: "text-purple-500 border-purple-500/20 hover:bg-purple-500/5",
+        color: "text-semantic-purple border-semantic-purple/20 hover:bg-semantic-purple/5",
       });
     }
 
