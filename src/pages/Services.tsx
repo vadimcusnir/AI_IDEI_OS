@@ -97,6 +97,8 @@ export default function Services() {
   const [expandedIntents, setExpandedIntents] = useState<Set<string>>(new Set());
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
+  const [guestGateOpen, setGuestGateOpen] = useState(false);
+  const [guestGateService, setGuestGateService] = useState<string | undefined>();
 
   // Drawer state
   const [drawerService, setDrawerService] = useState<Service | null>(null);
