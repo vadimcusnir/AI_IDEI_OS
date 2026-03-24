@@ -352,7 +352,7 @@ export default function Onboarding() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-8 p-6 rounded-2xl border-2 border-primary/30 bg-primary/5 text-center"
+            className="mt-10 p-7 rounded-2xl border-2 border-[hsl(var(--gold-oxide)/0.25)] bg-[hsl(var(--gold-oxide)/0.03)] text-center"
           >
             <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
               <Crown className="h-7 w-7 text-primary" />
