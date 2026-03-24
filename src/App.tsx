@@ -198,7 +198,7 @@ const App = () => (
                 <Route path="/community/:category/thread/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
 
                 {/* Protected routes — require authentication */}
-                <Route path="/home" element={<ProtectedRoute><AppLayout fullHeight><Home /></AppLayout></ProtectedRoute>} />
+                <Route path="/home" element={<ProtectedRoute><AppLayout><Home /></AppLayout></ProtectedRoute>} />
                 <Route path="/neurons" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Neurons failed to load"><Index /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/n/new" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Editor failed to load"><NeuronEditor /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/n/:number" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Editor failed to load"><NeuronEditor /></ErrorBoundary></AppLayout></ProtectedRoute>} />
