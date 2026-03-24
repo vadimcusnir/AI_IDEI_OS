@@ -410,7 +410,7 @@ export default function Home() {
                       <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
                         Ce vrei să obții?
                       </p>
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
               ) : (
