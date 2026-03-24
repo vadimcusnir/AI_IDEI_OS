@@ -390,7 +390,193 @@ export default function Home() {
 
 
           {/* ═══ CONTENT AREA ═══ */}
-          <div className="flex-1 relative z-10 min-h-0 overflow-hidden">
+          {/* Desktop: absolute split layout. Mobile: normal flex flow with fixed input */}
+          
+          {/* ── MOBILE LAYOUT (< md) ── */}
+          <div className="flex-1 flex flex-col min-h-0 md:hidden">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-40">
+              {isEmptyState ? (
+                <div className="flex flex-col items-center justify-center min-h-[40vh] pt-8">
+                  <div className="w-full text-center space-y-2 mb-6">
+                    <h1 className="text-2xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
+                      {greeting},{" "}
+                      <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
+                        {userName}
+                      </span>
+                    </h1>
+                    <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                      Ce vrei să obții?
+                    </p>
+                  </div>
+                  <div className="w-full max-w-2xl mx-auto">
+                    <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
+                  </div>
+                </div>
+              ) : (
+                <div ref={scrollRef} className="space-y-4 pt-4">
+                  {messages.map((msg) => (
+                    <CommandBubble
+                      key={msg.id}
+                      msg={msg}
+                      isStreaming={isStreaming && msg === messages[messages.length - 1] && msg.role === "assistant"}
+                      onRetry={msg.role === "assistant" ? handleRerun : undefined}
+                    />
+                  ))}
+                  {loading && !isStreaming && (
+                    <div className="flex items-start gap-2.5">
+                      <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
+                        <Sparkles className="h-3 w-3 text-primary" />
+                      </div>
+                      <div className="flex items-center gap-2 pt-2">
+                        <div className="flex gap-1">
+                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
+                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
+                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+                        </div>
+                        <span className="text-xs text-muted-foreground ml-1">
+                          {execState.phase === "planning" ? "Planning..." : "Thinking..."}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {(execState.phase === "completed" || execState.phase === "failed") && (
+                    <ExecutionSummary
+                      phase={execState.phase} intent={execState.intent}
+                      planName={execState.planName} totalCredits={execState.totalCredits}
+                      stepsCompleted={execState.steps.filter(s => s.status === "completed").length}
+                      totalSteps={execState.steps.length} outputCount={outputs.length}
+                      durationSeconds={durationSeconds} errorMessage={execState.errorMessage}
+                      onSaveTemplate={handleSaveTemplate} onSaveAllOutputs={handleSaveAllOutputs}
+                      onRerun={handleRerun} onViewOutputs={() => setShowOutputs(true)}
+                    />
+                  )}
+                  <div ref={messagesEndRef} />
+
+                  {!isEmptyState && (
+                    <div className="flex justify-center py-1">
+                      <Button variant="ghost" size="sm" onClick={clearChat}
+                        className="h-7 px-3 text-[11px] text-muted-foreground/50 hover:text-foreground gap-1.5">
+                        <RotateCcw className="h-3 w-3" />
+                        Sesiune nouă
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Mobile panels inline */}
+              <AnimatePresence>
+                {execState.phase === "confirming" && execState.totalCredits > 0 && !showEconomicGate && (
+                  <div className="pb-2 mt-4">
+                    <PlanPreview
+                      plan={{
+                        action_id: execState.actionId, intent: execState.intent,
+                        confidence: execState.confidence, plan_name: execState.planName,
+                        total_credits: execState.totalCredits,
+                        steps: execState.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })),
+                        objective: execState.objective, output_preview: execState.outputPreview,
+                      }}
+                      balance={balance}
+                      onExecute={async () => {
+                        if (execState.totalCredits > 50) { setShowEconomicGate(true); }
+                        else if (pendingRoute) {
+                          const lastUserMsg = messages.filter(m => m.role === "user").pop();
+                          await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
+                        }
+                      }}
+                      onEdit={() => { setInput(`Refine plan: ${execState.intent}`); inputZoneRef.current?.focus(); }}
+                      onDismiss={() => executionActions.reset()}
+                      executing={loading}
+                    />
+                  </div>
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {showEconomicGate && execState.phase === "confirming" && (
+                  <div className="pb-2">
+                    <EconomicGate
+                      balance={balance} estimatedCost={execState.totalCredits}
+                      tierDiscount={tierDiscount} tier={tier}
+                      onProceed={async () => {
+                        setShowEconomicGate(false);
+                        if (pendingRoute) {
+                          const lastUserMsg = messages.filter(m => m.role === "user").pop();
+                          await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
+                        }
+                      }}
+                      onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
+                    />
+                  </div>
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {showOutputs && outputs.length > 0 && (
+                  <div className="pb-2">
+                    <OutputPanel outputs={outputs} visible={showOutputs} onRerun={handleRerun}
+                      onClose={() => setShowOutputs(false)} onSaveAll={handleSaveAllOutputs} savingAll={savingAllOutputs} />
+                  </div>
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {execState.phase === "completed" && showPostExecution && (
+                  <div className="pb-2">
+                    <PostExecutionPanel
+                      intent={execState.intent as any} creditsSpent={execState.totalCredits}
+                      outputCount={outputs.length}
+                      onAction={(prompt) => { setInput(prompt); setShowPostExecution(false); inputZoneRef.current?.focus(); }}
+                      onSaveTemplate={handleSaveTemplate} onDismiss={() => setShowPostExecution(false)} userTier={tier}
+                    />
+                  </div>
+                )}
+              </AnimatePresence>
+
+              {isEmptyState && input.length >= 2 && (
+                <SystemRecommendations
+                  systems={matchIntentToSystems(input)}
+                  input={input}
+                  onSelect={(sys: MMSystem) => handleCommand(sys.prompt, true)}
+                />
+              )}
+              {!isEmptyState && !loading && input.length >= 2 && (
+                <div className="pb-1">
+                  <SystemRecommendations
+                    systems={matchIntentToSystems(input)}
+                    input={input}
+                    onSelect={(sys: MMSystem) => handleCommand(sys.prompt, true)}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Mobile fixed input at bottom */}
+            <div className="shrink-0 border-t border-border/30 bg-background px-4 py-2 safe-area-bottom">
+              <div className="max-w-3xl mx-auto">
+                <CommandInputZone
+                  ref={inputZoneRef} input={input} onInputChange={setInput}
+                  onSubmit={handleSubmit} onStop={handleStop} loading={loading}
+                  files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
+                  onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
+                  showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
+                  onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+                  onAttachAction={(action) => {
+                    const actionPrompts: Record<string, string> = {
+                      extract_neurons: "/extract neurons from content",
+                      generate_content: "/generate content from neurons",
+                      analyze_data: "/analyze my data and competitors",
+                      build_funnel: "/build a sales funnel",
+                      trending: "/analyze trending patterns in my library",
+                      recommended: "/suggest next best actions based on my data",
+                    };
+                    const prompt = actionPrompts[action];
+                    if (prompt) handleCommand(prompt, true);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ── DESKTOP LAYOUT (>= md) ── */}
+          <div className="flex-1 relative z-10 min-h-0 overflow-hidden hidden md:block">
             {/* TOP REGION — scrolls independently above the fixed center rail */}
             <div className="absolute inset-x-0 top-0 bottom-[calc(55%+2.5rem)] overflow-hidden">
               {isEmptyState ? (
