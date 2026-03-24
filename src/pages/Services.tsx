@@ -63,13 +63,13 @@ function mapCategoryToIntent(category: string, serviceKey: string): string {
 }
 
 const CATEGORY_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  extraction: { label: "Extraction", icon: Sparkles, color: "text-purple-500" },
-  analysis: { label: "Analysis", icon: TrendingUp, color: "text-blue-500" },
-  content: { label: "Content", icon: Megaphone, color: "text-status-validated" },
-  strategy: { label: "Strategy", icon: TrendingUp, color: "text-amber-500" },
-  production: { label: "Production", icon: Sparkles, color: "text-rose-500" },
+  extraction: { label: "Extraction", icon: Sparkles, color: "text-color-purple" },
+  analysis: { label: "Analysis", icon: TrendingUp, color: "text-color-blue" },
+  content: { label: "Content", icon: Megaphone, color: "text-color-emerald" },
+  strategy: { label: "Strategy", icon: TrendingUp, color: "text-color-amber" },
+  production: { label: "Production", icon: Sparkles, color: "text-color-rose" },
   orchestration: { label: "Orchestration", icon: Zap, color: "text-primary" },
-  document: { label: "Document", icon: Sparkles, color: "text-sky-500" },
+  document: { label: "Document", icon: Sparkles, color: "text-color-cyan" },
 };
 
 const CLASS_BADGE: Record<string, { label: string; description: string; className: string }> = {

@@ -7,10 +7,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Save, RotateCcw, Share2 } from "lucide-react";
 import {
-  CheckCircle2, XCircle, Clock, Coins, Layers,
-  FileText, Save, RotateCcw, TrendingUp, Share2,
-} from "lucide-react";
+  SigilCheck, SigilFail, SigilClock, SigilNeuron,
+  SigilCrystal, SigilDocument, SigilTrend,
+} from "@/components/icons/SigilIcons";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -113,12 +114,12 @@ export function ExecutionSummary({
       {/* Header */}
       <div className="px-4 py-3 flex items-center gap-3">
         {isSuccess ? (
-          <div className="h-8 w-8 rounded-xl bg-success/10 flex items-center justify-center">
-            <CheckCircle2 className="h-4 w-4 text-success" />
+          <div className="h-9 w-9 rounded-xl bg-success/10 flex items-center justify-center border border-success/10">
+            <SigilCheck size={18} className="text-success" />
           </div>
         ) : (
-          <div className="h-8 w-8 rounded-xl bg-destructive/10 flex items-center justify-center">
-            <XCircle className="h-4 w-4 text-destructive" />
+          <div className="h-9 w-9 rounded-xl bg-destructive/10 flex items-center justify-center border border-destructive/10">
+            <SigilFail size={18} className="text-destructive" />
           </div>
         )}
         <div className="flex-1 min-w-0">
@@ -135,16 +136,16 @@ export function ExecutionSummary({
       <div className="px-4 py-2.5 border-t border-border/30 space-y-2">
         <div className="flex items-center gap-5 flex-wrap">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Layers className="h-3.5 w-3.5" />
-            <span className="tabular-nums">{stepsCompleted}/{totalSteps} steps</span>
+            <SigilCrystal size={14} className="text-muted-foreground/50" />
+            <span className="tabular-nums font-mono text-[11px]">{stepsCompleted}/{totalSteps} steps</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Coins className="h-3.5 w-3.5" />
-            <span className="tabular-nums">{totalCredits} N</span>
+            <SigilNeuron size={14} className="text-muted-foreground/50" />
+            <span className="tabular-nums font-mono text-[11px]">{totalCredits} N</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Clock className="h-3.5 w-3.5" />
-            <span className="tabular-nums">{durationSeconds}s</span>
+            <SigilClock size={14} className="text-muted-foreground/50" />
+            <span className="tabular-nums font-mono text-[11px]">{durationSeconds}s</span>
           </div>
         </div>
         {outputCount > 0 && (
@@ -162,8 +163,8 @@ export function ExecutionSummary({
       {/* Actions */}
       <div className="px-4 py-2.5 border-t border-border/30 flex items-center gap-2 flex-wrap">
         {isSuccess && outputCount > 0 && (
-          <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-lg" onClick={onViewOutputs}>
-            <FileText className="h-3 w-3" /> View Outputs
+          <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-xl" onClick={onViewOutputs}>
+            <SigilDocument size={13} /> View Outputs
           </Button>
         )}
         {isSuccess && outputCount > 1 && (
@@ -172,8 +173,8 @@ export function ExecutionSummary({
           </Button>
         )}
         {isSuccess && (
-          <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-lg" onClick={onSaveTemplate}>
-            <TrendingUp className="h-3 w-3" /> Save Workflow
+          <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-xl" onClick={onSaveTemplate}>
+            <SigilTrend size={13} /> Save Workflow
           </Button>
         )}
         {isSuccess && user && (
