@@ -121,14 +121,13 @@ const PSYCHOLOGY_MODULES = [
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders }
-
-    // Rate limit guard (IP-based)
-    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
-    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
-    if (rateLimited) return rateLimited;
-);
+    return new Response(null, { headers: corsHeaders });
   }
+
+  // Rate limit guard (IP-based)
+  const clientIP = req.headers.get("x-forwarded-for") || "unknown";
+  const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+  if (rateLimited) return rateLimited;
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
