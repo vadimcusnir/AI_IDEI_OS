@@ -178,7 +178,7 @@ export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33P
                     <Card key={id} className="border-border/50">
                       <CardHeader className="pb-2 pt-3 px-4">
                         <div className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                          <CheckCircle2 className="h-4 w-4 text-success" />
                           <span className="font-medium text-sm">{r.name}</span>
                         </div>
                       </CardHeader>

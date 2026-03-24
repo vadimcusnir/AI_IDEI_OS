@@ -128,7 +128,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
                 <Star
                   className={cn(
                     "h-5 w-5 transition-colors",
-                    rating && s <= rating ? "text-amber-400 fill-amber-400" : "text-muted-foreground/30"
+                    rating && s <= rating ? "text-tier-vip fill-tier-vip" : "text-muted-foreground/30"
                   )}
                 />
               </button>

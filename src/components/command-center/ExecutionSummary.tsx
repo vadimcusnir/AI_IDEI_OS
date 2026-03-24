@@ -106,7 +106,7 @@ export function ExecutionSummary({
       className={cn(
         "rounded-2xl border overflow-hidden",
         isSuccess
-          ? "border-green-500/15 bg-gradient-to-b from-green-500/[0.03] to-transparent"
+          ? "border-success/15 bg-gradient-to-b from-success/[0.03] to-transparent"
           : "border-destructive/15 bg-gradient-to-b from-destructive/[0.03] to-transparent"
       )}
     >
