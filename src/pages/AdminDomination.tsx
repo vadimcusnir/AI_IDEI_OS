@@ -188,12 +188,12 @@ export default function AdminDomination() {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-xs text-muted-foreground mb-1">DATA MOAT</div>
-              <div className="text-lg font-bold text-emerald-400">Active</div>
+              <div className="text-lg font-bold text-semantic-emerald">Active</div>
               <div className="text-[10px] text-muted-foreground">neurons + executions + outcomes</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">ECONOMIC MOAT</div>
-              <div className="text-lg font-bold text-blue-400">Active</div>
+              <div className="text-lg font-bold text-semantic-blue">Active</div>
               <div className="text-[10px] text-muted-foreground">user assets + marketplace income</div>
             </div>
             <div>

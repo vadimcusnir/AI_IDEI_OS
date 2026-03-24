@@ -274,7 +274,7 @@ export default function AdminFinancialization() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm flex items-center gap-1.5">
-                <Award className="h-3.5 w-3.5 text-purple-500" /> Certification System
+                <Award className="h-3.5 w-3.5 text-semantic-purple" /> Certification System
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
