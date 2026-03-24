@@ -70,6 +70,12 @@ interface AgentResult {
 }
 
 const STEP_LABELS: Record<string, { label: string; icon: typeof Brain }> = {
+  safety_guard: { label: "Safety Guard", icon: AlertTriangle },
+  tier_resolution: { label: "Tier Check", icon: Target },
+  memory_load: { label: "Memory Load", icon: Brain },
+  planner: { label: "Planner", icon: Layers },
+  economy_controller: { label: "Economy Gate", icon: Zap },
+  reserve_neurons: { label: "Reserve NEURONS", icon: Zap },
   neuron_extraction: { label: "Extragere Neuroni", icon: Brain },
   pattern_synthesis: { label: "Sinteză Patternuri", icon: Layers },
   service_matching: { label: "Potrivire Servicii", icon: Target },
@@ -80,6 +86,7 @@ const STEP_LABELS: Record<string, { label: string; icon: typeof Brain }> = {
   marketplace_packaging: { label: "Packaging Marketplace", icon: Store },
   auto_service_generation: { label: "Auto-Generare Servicii", icon: Sparkles },
   idea_rank_scoring: { label: "IdeaRank Scoring", icon: TrendingUp },
+  settle_neurons: { label: "Settle NEURONS", icon: Zap },
 };
 
 const DEPTH_CONFIG: Record<ExecutionDepth, { label: string; desc: string; neurons: string }> = {
