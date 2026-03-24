@@ -121,9 +121,21 @@ export default function Marketplace() {
             <span>{t("marketplace.breadcrumb")}</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">{t("marketplace.title")}</h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed mb-4">
             {t("marketplace.description")}
           </p>
+          {user && (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => navigate("/marketplace/drafts")}>
+                <FileText className="h-3.5 w-3.5" />
+                Drafturi
+              </Button>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => navigate("/marketplace/earnings")}>
+                <BarChart3 className="h-3.5 w-3.5" />
+                Câștiguri
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
