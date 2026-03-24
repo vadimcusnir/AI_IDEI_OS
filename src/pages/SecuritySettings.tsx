@@ -168,9 +168,9 @@ export default function SecuritySettings() {
                         <div key={i} className={cn(
                           "h-1 flex-1 rounded-full transition-colors",
                           i <= pwStrength
-                            ? pwStrength <= 1 ? "bg-destructive" : pwStrength === 2 ? "bg-amber-500" : pwStrength === 3 ? "bg-primary" : "bg-emerald-500"
-                            : "bg-muted"
-                        )} />
+                             ? pwStrength <= 1 ? "bg-destructive" : pwStrength === 2 ? "bg-warning" : pwStrength === 3 ? "bg-primary" : "bg-success"
+                             : "bg-muted"
+                         )} />
                       ))}
                     </div>
                     <div className="grid grid-cols-2 gap-1">
