@@ -70,23 +70,20 @@ export default function Home() {
     saveMessage, loadSession, loadCurrentSession,
     deleteSession, newSession, refreshSessions,
   } = useChatHistory();
-  const cmdState = useCommandState();
+  const store = useExecutionStore();
+  const { execution: execState, messages, outputs, loading, isStreaming } = store;
   const { persistRun, persistOutputsBatch } = useExecutionHistory();
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
 
-  // ═══ UI state ═══
-  const [messages, setMessages] = useState<Message[]>([]);
+  // ═══ UI-only state (panels, menus — local) ═══
   const initialQ = searchParams.get("q") || "";
   const [input, setInput] = useState(initialQ);
-  const [loading, setLoading] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [showTaskTree, setShowTaskTree] = useState(false);
   const [showMemory, setShowMemory] = useState(false);
-  const [outputs, setOutputs] = useState<OutputItem[]>([]);
   const [showOutputs, setShowOutputs] = useState(false);
   const [showPostExecution, setShowPostExecution] = useState(false);
   const [showEconomicGate, setShowEconomicGate] = useState(false);
