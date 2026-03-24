@@ -14,7 +14,7 @@ import { AdminRoute } from "@/components/AdminRoute";
 import { CookieConsent } from "@/components/global/CookieConsent";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { Loader2 } from "lucide-react";
+
 
 /** Retry dynamic imports once on failure (handles stale chunk hashes after deploys) */
 function lazyRetry(factory: () => Promise<any>) {
@@ -116,11 +116,7 @@ const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
 const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
 const PublicProfileEntityPage = lazyRetry(() => import("./pages/PublicProfileEntityPage"));
 function PageLoader() {
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    </div>
-  );
+  return null; // Critical CSS inline spinner handles initial load; avoids importing Loader2 into main chunk
 }
 
 const queryClient = new QueryClient({

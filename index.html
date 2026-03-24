@@ -118,11 +118,19 @@
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       font-src 'self' https://fonts.gstatic.com;
       img-src 'self' data: blob: https:;
-      connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://ai-idei.com;
+      connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://ai-idei.com https://ai.gateway.lovable.dev;
       frame-src 'self' https://js.stripe.com;
       object-src 'none';
       base-uri 'self';
     " />
+
+    <!-- Critical CSS: inline skeleton to reduce FCP -->
+    <style>
+      #root{min-height:100vh}
+      #root:empty{display:flex;align-items:center;justify-content:center;background:#09090b}
+      #root:empty::after{content:'';width:2rem;height:2rem;border:2px solid #27272a;border-top-color:#f97316;border-radius:50%;animation:sp .6s linear infinite}
+      @keyframes sp{to{transform:rotate(360deg)}}
+    </style>
 </head>
 
   <body>
