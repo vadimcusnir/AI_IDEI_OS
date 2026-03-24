@@ -535,7 +535,7 @@ export default function Home() {
 
                   <AnimatePresence>
                     {showEconomicGate && execState.phase === "confirming" && (
-                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pb-2">
+                      <div className="pb-2">
                         <EconomicGate
                           balance={balance} estimatedCost={execState.totalCredits}
                           tierDiscount={tierDiscount} tier={tier}
