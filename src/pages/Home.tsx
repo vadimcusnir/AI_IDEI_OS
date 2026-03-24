@@ -135,10 +135,10 @@ export default function Home() {
                 key="hero"
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0, y: -20, transition: { duration: 0.3 } }}
-                className="flex-1 overflow-auto relative"
+                className="flex-1 flex flex-col relative"
               >
                 {/* Top bar with history toggle + balance */}
-                <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-4 flex items-center justify-between">
+                <div className="relative max-w-5xl mx-auto w-full px-4 sm:px-6 pt-4 flex items-center justify-between shrink-0">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -169,8 +169,8 @@ export default function Home() {
                   </motion.button>
                 </div>
 
-                {/* Hero — Claude-style centered greeting + input */}
-                <div className="relative max-w-3xl mx-auto px-4 sm:px-6 flex flex-col items-center justify-center min-h-[52vh] pt-4">
+                {/* Center zone — greeting + input + suggestions all centered vertically */}
+                <div className="flex-1 flex flex-col items-center justify-center max-w-3xl mx-auto w-full px-4 sm:px-6 pb-8">
                   <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
