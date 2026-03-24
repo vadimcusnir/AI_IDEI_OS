@@ -107,7 +107,7 @@ export function ContextActions({
         icon: Layers,
         label: "Compare",
         prompt: "/compare ",
-        color: "text-orange-500 border-orange-500/20 hover:bg-orange-500/5",
+        color: "text-semantic-amber border-semantic-amber/20 hover:bg-semantic-amber/5",
       });
     }
 

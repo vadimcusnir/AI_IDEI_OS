@@ -470,13 +470,13 @@ export function AppSidebar() {
               onClick={() => navigate("/credits")}
               className={cn(
                 "h-7 w-7 rounded-lg flex items-center justify-center transition-colors",
-                tier === "vip" ? "bg-yellow-500/10" : tier === "pro" ? "bg-primary/10" : "bg-muted/50 hover:bg-primary/10"
+                tier === "vip" ? "bg-tier-vip/10" : tier === "pro" ? "bg-primary/10" : "bg-muted/50 hover:bg-primary/10"
               )}
               title={`${tier.toUpperCase()} — ${balance}N`}
             >
               <Crown className={cn(
                 "h-3.5 w-3.5",
-                tier === "vip" ? "text-yellow-500" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
+                tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
               )} />
             </button>
           </div>

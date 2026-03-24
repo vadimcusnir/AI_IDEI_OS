@@ -37,15 +37,15 @@ const CATEGORY_LABELS: Record<string, { label: string; icon: React.ElementType }
 };
 
 const TIER_COLORS: Record<string, string> = {
-  bronze: "from-amber-700/20 to-amber-600/10 border-amber-600/30",
-  silver: "from-slate-400/20 to-slate-300/10 border-slate-400/30",
-  gold: "from-yellow-500/20 to-yellow-400/10 border-yellow-500/30",
+  bronze: "from-semantic-amber/20 to-semantic-amber/10 border-semantic-amber/30",
+  silver: "from-muted-foreground/20 to-muted-foreground/10 border-muted-foreground/30",
+  gold: "from-tier-vip/20 to-tier-vip/10 border-tier-vip/30",
 };
 
 const TIER_BADGE: Record<string, string> = {
-  bronze: "bg-amber-700/10 text-amber-700 border-amber-700/20",
-  silver: "bg-slate-400/10 text-slate-500 border-slate-400/20",
-  gold: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
+  bronze: "bg-semantic-amber/10 text-semantic-amber border-semantic-amber/20",
+  silver: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
+  gold: "bg-tier-vip/10 text-tier-vip border-tier-vip/20",
 };
 
 export function AchievementGallery() {

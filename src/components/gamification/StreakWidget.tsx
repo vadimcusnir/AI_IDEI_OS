@@ -12,11 +12,11 @@ export function StreakWidget() {
 
   const days = streak.current_streak;
   const flameColor = days >= 30
-    ? "text-red-500"
+    ? "text-destructive"
     : days >= 8
-    ? "text-orange-500"
+    ? "text-semantic-amber"
     : days > 0
-    ? "text-blue-500"
+    ? "text-semantic-blue"
     : "text-muted-foreground/40";
 
   const isGrace = streak.grace_period_used && days > 0;

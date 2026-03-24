@@ -33,7 +33,7 @@ interface TaskExecutionCardProps {
 const STEP_ICON: Record<TaskStep["status"], React.ReactNode> = {
   pending: <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/20" />,
   running: <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />,
-  completed: <CheckCircle2 className="h-3 w-3 text-green-500" />,
+  completed: <CheckCircle2 className="h-3 w-3 text-success" />,
   failed: <XCircle className="h-3 w-3 text-destructive" />,
   skipped: <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/10" />,
 };
