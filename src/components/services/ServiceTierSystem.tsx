@@ -153,7 +153,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                     "h-5 w-5",
                     tier.key === "otos" && "text-muted-foreground",
                     tier.key === "mms" && "text-primary",
-                    tier.key === "lcss" && "text-amber-500",
+                    tier.key === "lcss" && "text-semantic-amber",
                   )} />
                   <div>
                     <h3 className="text-sm font-bold">{tier.label}</h3>
