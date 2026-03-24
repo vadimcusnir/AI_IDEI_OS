@@ -82,6 +82,7 @@ export function InputAttachMenu({ onFileClick, onAction }: InputAttachMenuProps)
           open && "bg-muted text-foreground rotate-45"
         )}
         title="Servicii și surse"
+        aria-label="Servicii și surse"
       >
         <Plus className="h-4.5 w-4.5 transition-transform duration-200" />
       </button>
