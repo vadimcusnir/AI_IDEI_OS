@@ -33,16 +33,31 @@ interface AgentResult {
   status: string;
   reason?: string;
   job_id?: string;
+  kernel?: {
+    tier: string;
+    strategy: string;
+    cost_charged: number;
+    tier_discount_pct: number;
+    safety: string;
+    memory_runs: number;
+    state_flow: string[];
+  };
   summary?: {
     neurons_extracted: number;
     clusters_formed: number;
     services_matched: number;
     services_executed: number;
+    services_failed?: number;
     assets_generated: number;
+    assets_rejected?: number;
     marketplace_drafts: number;
     new_services_created: number;
     top_ranked: any[];
   };
+  estimated_cost?: number;
+  balance?: number;
+  deficit?: number;
+  tier_discount_pct?: number;
   neurons?: any[];
   clusters?: any[];
   selected_services?: any[];
@@ -50,6 +65,7 @@ interface AgentResult {
   marketplace_items?: any[];
   new_services?: any[];
   ranking?: any[];
+  scored_assets?: any[];
   steps?: StepLog[];
 }
 
