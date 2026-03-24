@@ -399,11 +399,7 @@ export default function Home() {
               {isEmptyState ? (
                 <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-20">
                   <div className="w-full max-w-3xl flex flex-col items-center gap-4">
-                    <motion.div
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                      className="w-full text-center space-y-2"
+                    <div className="w-full text-center space-y-2">
                     >
                       <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
                         {greeting},{" "}
