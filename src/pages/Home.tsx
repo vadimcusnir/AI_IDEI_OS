@@ -185,7 +185,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 + i * 0.06, duration: 0.35 }}
-                  onClick={() => handleSubmit(qi.intent)}
+                  onClick={() => handleQuickIntent(qi.search, qi.intentCategory)}
                   className={cn(
                     "group flex items-center gap-2 px-3.5 py-2 rounded-xl",
                     "border border-border/40 bg-card/50 backdrop-blur-sm",
