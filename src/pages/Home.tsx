@@ -637,6 +637,13 @@ export default function Home() {
           onRerun={handleRerun}
         />
       </div>
+
+      {/* ═══ LOW BALANCE GATE — auto-triggered ═══ */}
+      <AnimatePresence>
+        {showLowBalance && (
+          <LowBalanceGate balance={balance} onDismiss={() => setShowLowBalance(false)} />
+        )}
+      </AnimatePresence>
     </>
   );
 }
