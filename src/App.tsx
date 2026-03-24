@@ -243,16 +243,16 @@ const App = () => (
                 <Route path="/services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
                 <Route path="/master-agent" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Master Agent failed"><MasterAgent /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 {/* Admin routes */}
-                <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
-                <Route path="/cusnir-os/operator" element={<AdminRoute><AppLayout><CusnirOSOperator /></AppLayout></AdminRoute>} />
-                <Route path="/analytics" element={<AdminRoute><AppLayout><AnalyticsDashboard /></AppLayout></AdminRoute>} />
-                <Route path="/security" element={<AdminRoute><AppLayout><SecurityDocs /></AppLayout></AdminRoute>} />
-                <Route path="/db-schema" element={<AdminRoute><AppLayout><DatabaseRelations /></AppLayout></AdminRoute>} />
-                <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
-                <Route path="/admin/kernel" element={<AdminRoute><AppLayout><AdminKernel /></AppLayout></AdminRoute>} />
-                <Route path="/admin/domination" element={<AdminRoute><AppLayout><AdminDomination /></AppLayout></AdminRoute>} />
-                <Route path="/admin/inevitability" element={<AdminRoute><AppLayout><AdminInevitability /></AppLayout></AdminRoute>} />
-                <Route path="/admin/financialization" element={<AdminRoute><AppLayout><AdminFinancialization /></AppLayout></AdminRoute>} />
+                <Route path="/runtime" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Runtime failed to load"><RuntimeDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/cusnir-os/operator" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Operator failed to load"><CusnirOSOperator /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/analytics" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Analytics failed to load"><AnalyticsDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/security" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Security failed to load"><SecurityDocs /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/db-schema" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="DB Schema failed to load"><DatabaseRelations /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Admin failed to load"><AdminDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/kernel" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Kernel failed to load"><AdminKernel /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/domination" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Domination failed to load"><AdminDomination /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/inevitability" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Inevitability failed to load"><AdminInevitability /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/financialization" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Financialization failed to load"><AdminFinancialization /></ErrorBoundary></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
