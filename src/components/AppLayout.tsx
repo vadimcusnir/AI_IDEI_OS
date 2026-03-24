@@ -75,7 +75,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           {/* ═══ HEADER: 3-zone control panel ═══ */}
           <header
             className={cn(
-              "sticky top-0 z-40 h-[var(--header-height)] flex items-center border-b border-border/50 bg-background/95 backdrop-blur-md px-3 transition-transform duration-200",
+              "sticky top-0 z-40 h-[var(--header-height)] flex items-center border-b border-border/50 bg-background/95 backdrop-blur-md px-3 sm:px-4 transition-transform duration-200",
               "md:translate-y-0",
               direction === "down" && !isAtTop
                 ? "-translate-y-full md:translate-y-0"
