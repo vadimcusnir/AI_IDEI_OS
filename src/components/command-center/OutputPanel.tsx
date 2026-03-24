@@ -14,7 +14,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-export type { OutputItem } from "@/stores/executionStore";
+import type { OutputItem } from "@/stores/executionStore";
+export type { OutputItem };
 
 const TYPE_CONFIG: Record<string, { icon: typeof FileText; label: string; color: string }> = {
   transcript: { icon: FileText, label: "Transcript", color: "text-blue-500" },
