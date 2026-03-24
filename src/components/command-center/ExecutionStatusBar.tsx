@@ -1,11 +1,9 @@
 /**
- * ExecutionStatusBar — Persistent status strip showing live execution phase,
- * route info, and credit consumption.
- * Sits between the header and the message area.
+ * ExecutionStatusBar — Premium status strip showing live execution phase.
+ * Matches the Home page's aesthetic with subtle gradients and backdrop blur.
  */
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
 import {
   Loader2, CheckCircle2, XCircle, Shield,
   Coins, Clock, Zap, AlertTriangle,
@@ -30,14 +28,14 @@ const PHASE_CONFIG: Record<CommandPhase, {
   bg: string;
   animate?: boolean;
 }> = {
-  idle: { label: "Ready", icon: Shield, color: "text-muted-foreground", bg: "bg-muted/50" },
-  planning: { label: "Planning execution...", icon: Loader2, color: "text-blue-500", bg: "bg-blue-500/5", animate: true },
-  confirming: { label: "Awaiting confirmation", icon: AlertTriangle, color: "text-yellow-500", bg: "bg-yellow-500/5" },
-  executing: { label: "Executing", icon: Zap, color: "text-primary", bg: "bg-primary/5", animate: true },
-  delivering: { label: "Delivering outputs", icon: Loader2, color: "text-green-500", bg: "bg-green-500/5", animate: true },
-  storing: { label: "Storing to memory", icon: Loader2, color: "text-purple-500", bg: "bg-purple-500/5", animate: true },
-  completed: { label: "Completed", icon: CheckCircle2, color: "text-green-500", bg: "bg-green-500/5" },
-  failed: { label: "Failed", icon: XCircle, color: "text-destructive", bg: "bg-destructive/5" },
+  idle: { label: "Ready", icon: Shield, color: "text-muted-foreground", bg: "bg-transparent" },
+  planning: { label: "Planning execution...", icon: Loader2, color: "text-primary", bg: "bg-primary/[0.03]", animate: true },
+  confirming: { label: "Awaiting confirmation", icon: AlertTriangle, color: "text-yellow-500", bg: "bg-yellow-500/[0.03]" },
+  executing: { label: "Executing", icon: Zap, color: "text-primary", bg: "bg-primary/[0.03]", animate: true },
+  delivering: { label: "Delivering outputs", icon: Loader2, color: "text-green-500", bg: "bg-green-500/[0.03]", animate: true },
+  storing: { label: "Storing to memory", icon: Loader2, color: "text-primary", bg: "bg-primary/[0.03]", animate: true },
+  completed: { label: "Completed", icon: CheckCircle2, color: "text-green-500", bg: "bg-green-500/[0.03]" },
+  failed: { label: "Failed", icon: XCircle, color: "text-destructive", bg: "bg-destructive/[0.03]" },
 };
 
 export function ExecutionStatusBar({
@@ -56,35 +54,35 @@ export function ExecutionStatusBar({
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: "auto", opacity: 1 }}
         exit={{ height: 0, opacity: 0 }}
-        className={cn("border-b border-border overflow-hidden", config.bg)}
+        className={cn("border-b border-border/30 overflow-hidden backdrop-blur-sm", config.bg)}
       >
-        <div className="px-4 py-1.5 flex items-center gap-3">
+        <div className="px-4 sm:px-6 py-2 flex items-center gap-3">
           {/* Phase indicator */}
-          <div className="flex items-center gap-1.5">
-            <Icon className={cn("h-3 w-3", config.color, config.animate && "animate-spin")} />
-            <span className={cn("text-[10px] font-medium", config.color)}>
+          <div className="flex items-center gap-2">
+            <Icon className={cn("h-3.5 w-3.5", config.color, config.animate && "animate-spin")} />
+            <span className={cn("text-xs font-medium", config.color)}>
               {config.label}
             </span>
           </div>
 
-          {/* Intent badge */}
+          {/* Intent */}
           {intent && (
-            <Badge variant="outline" className="text-[8px] h-4 px-1.5">
+            <span className="text-[10px] font-medium text-muted-foreground/70 px-2 py-0.5 rounded-full bg-muted/50 border border-border/30">
               {intent.replace(/_/g, " ")}
-            </Badge>
+            </span>
           )}
 
-          {/* Progress */}
+          {/* Progress bar */}
           {totalSteps > 0 && (phase === "executing" || phase === "delivering") && (
-            <div className="flex items-center gap-1.5 flex-1 max-w-[120px]">
-              <div className="h-1 flex-1 bg-border rounded-full overflow-hidden">
+            <div className="flex items-center gap-2 flex-1 max-w-[140px]">
+              <div className="h-1.5 flex-1 bg-border/40 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-primary rounded-full"
+                  className="h-full bg-gradient-to-r from-primary to-primary/70 rounded-full"
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.3 }}
                 />
               </div>
-              <span className="text-[8px] text-muted-foreground shrink-0">
+              <span className="text-[10px] tabular-nums text-muted-foreground shrink-0">
                 {stepsCompleted}/{totalSteps}
               </span>
             </div>
@@ -94,23 +92,23 @@ export function ExecutionStatusBar({
 
           {/* Credits */}
           {totalCredits > 0 && (
-            <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
-              <Coins className="h-2.5 w-2.5" />
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground tabular-nums">
+              <Coins className="h-3 w-3" />
               <span>{totalCredits} N</span>
             </div>
           )}
 
           {/* Elapsed time */}
           {elapsed > 0 && phase === "executing" && (
-            <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
-              <Clock className="h-2.5 w-2.5" />
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground tabular-nums">
+              <Clock className="h-3 w-3" />
               <span>{elapsed}s</span>
             </div>
           )}
 
           {/* Error */}
           {errorMessage && (
-            <span className="text-[9px] text-destructive truncate max-w-[200px]">{errorMessage}</span>
+            <span className="text-[10px] text-destructive truncate max-w-[200px]">{errorMessage}</span>
           )}
         </div>
       </motion.div>
