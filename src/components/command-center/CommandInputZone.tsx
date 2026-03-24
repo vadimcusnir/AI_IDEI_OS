@@ -154,7 +154,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                 }}
                 onKeyDown={handleKeyDown}
                 placeholder="Execută comandă..."
-                className="w-full resize-none bg-transparent px-1 py-1.5 text-[14px] leading-[20px] focus:outline-none placeholder:text-muted-foreground/35 min-h-[36px] max-h-[180px]"
+                className="w-full resize-none bg-transparent px-1 py-1.5 text-sm leading-[20px] focus:outline-none placeholder:text-muted-foreground/30 min-h-[36px] max-h-[180px]"
                 rows={1}
                 style={{ height: "auto" }}
                 onInput={(e) => {
