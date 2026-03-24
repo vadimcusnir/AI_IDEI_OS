@@ -246,6 +246,7 @@ const App = () => (
                 <Route path="/db-schema" element={<AdminRoute><AppLayout><DatabaseRelations /></AppLayout></AdminRoute>} />
                 <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
                 <Route path="/admin/kernel" element={<AdminRoute><AppLayout><AdminKernel /></AppLayout></AdminRoute>} />
+                <Route path="/admin/domination" element={<AdminRoute><AppLayout><AdminDomination /></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
