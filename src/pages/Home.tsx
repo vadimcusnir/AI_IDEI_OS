@@ -245,10 +245,7 @@ export default function Home() {
       if ((e as Error).name !== "AbortError") {
         executionActions.failExecution(e instanceof Error ? e.message : "Unknown error");
         toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
-        setMessages(prev => [
-          ...prev,
-          { id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() },
-        ]);
+        executionActions.addMessage({ id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() });
       }
     } finally {
       executionActions.setLoading(false);
