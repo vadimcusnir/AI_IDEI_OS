@@ -229,6 +229,7 @@ const App = () => (
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<Navigate to="/library" replace />} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="VIP failed to load"><VIPDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/cusnir-os" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="CusnirOS failed to load"><CusnirOSPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/wallet" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Wallet failed to load"><WalletPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Gamification failed to load"><GamificationPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><DataPipeline /></ErrorBoundary></AppLayout></ProtectedRoute>} />
