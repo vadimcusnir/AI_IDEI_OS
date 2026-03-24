@@ -1,11 +1,9 @@
 /**
  * ContextDrawer — Economic Control Panel (Right Sidebar).
- * 3 tabs: State · Runs · Assets
+ * 4 tabs: State · Runs · Assets · Progress
  * 
- * PURPOSE: Context + economic pressure + output access
+ * PURPOSE: Context + economic pressure + output access + behavioral retention
  * RULE: Does NOT duplicate chat content. Shows ONLY support data.
- * 
- * Auto-switches based on execution state + credit level.
  */
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,14 +11,16 @@ import { useNavigate } from "react-router-dom";
 import {
   X, ChevronRight, CheckCircle2, XCircle, Zap,
   Clock, Coins, Loader2, Crown, TrendingDown,
-  FileText, Lock, Package, Rocket, Eye,
+  FileText, Lock, Package, Rocket, Eye, Trophy,
+  Flame, Star, Target,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUserTier } from "@/hooks/useUserTier";
+import { useGamification } from "@/hooks/useGamification";
 import { Button } from "@/components/ui/button";
 import type { ExecutionState, TaskStep, OutputItem } from "@/stores/executionStore";
 
-type RightTab = "state" | "runs" | "assets";
+type RightTab = "state" | "runs" | "assets" | "progress";
 
 interface ContextDrawerProps {
   execution: ExecutionState;
@@ -74,6 +74,7 @@ export function ContextDrawer({
     { id: "state", label: "State", icon: Eye, badge: balance < 200 },
     { id: "runs", label: "Runs", icon: Zap, badge: isActive },
     { id: "assets", label: "Assets", icon: Package },
+    { id: "progress", label: "Progress", icon: Trophy },
   ];
 
   // Collapsed icon strip
@@ -126,7 +127,7 @@ export function ContextDrawer({
                   )}
                 >
                   <tab.icon className="h-3 w-3" />
-                  <span>{tab.label}</span>
+                  <span className="hidden xl:inline">{tab.label}</span>
                   {tab.badge && (
                     <span className={cn(
                       "h-1.5 w-1.5 rounded-full animate-pulse",
@@ -157,6 +158,9 @@ export function ContextDrawer({
               )}
               {activeTab === "assets" && (
                 <AssetsTab outputs={outputs} onViewOutputs={onViewOutputs} />
+              )}
+              {activeTab === "progress" && (
+                <ProgressTab navigate={navigate} />
               )}
             </div>
           </motion.div>
@@ -201,7 +205,6 @@ function StateTab({ tier, balance, phase, navigate }: {
 
   return (
     <div className="p-3 space-y-3">
-      {/* Balance — dominant element */}
       <div className="rounded-lg border border-border/20 p-3">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Balance</span>
@@ -217,7 +220,6 @@ function StateTab({ tier, balance, phase, navigate }: {
         </p>
       </div>
 
-      {/* Economic pressure — runway + burn rate */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-[11px]">
           <span className="text-muted-foreground/60 flex items-center gap-1">
@@ -239,7 +241,6 @@ function StateTab({ tier, balance, phase, navigate }: {
         )}
       </div>
 
-      {/* Low balance warning */}
       {balance < 500 && (
         <div className={cn(
           "rounded-lg px-3 py-2 text-[11px]",
@@ -251,7 +252,6 @@ function StateTab({ tier, balance, phase, navigate }: {
         </div>
       )}
 
-      {/* CTAs */}
       <div className="space-y-1.5 pt-1">
         <Button size="sm" className="w-full h-8 text-xs gap-1.5" onClick={() => navigate("/credits")}>
           <Coins className="h-3 w-3" /> Cumpără NEURONS
@@ -263,7 +263,6 @@ function StateTab({ tier, balance, phase, navigate }: {
         )}
       </div>
 
-      {/* Cusnir_OS teaser */}
       <div className="rounded-lg border border-border/15 p-3 mt-2">
         <div className="flex items-center gap-2 mb-1.5">
           <Lock className="h-3 w-3 text-muted-foreground/30" />
@@ -283,7 +282,7 @@ function StateTab({ tier, balance, phase, navigate }: {
   );
 }
 
-// ═══ TAB: RUNS — Minimal execution context ═══
+// ═══ TAB: RUNS ═══
 function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, consumedCredits, totalCredits }: {
   steps: TaskStep[]; phase: string; elapsed: number; progress: number;
   isDone: boolean; isFailed: boolean; isActive: boolean;
@@ -300,7 +299,6 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
 
   return (
     <div className="p-3 space-y-3">
-      {/* Summary metrics — 3 values only */}
       <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
         <span className="flex items-center gap-1 tabular-nums">
           <Clock className="h-3 w-3" /> {elapsed}s
@@ -313,7 +311,6 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
         </span>
       </div>
 
-      {/* Progress */}
       {steps.length > 0 && (
         <div className="h-1 bg-muted/30 rounded-full overflow-hidden">
           <motion.div
@@ -324,7 +321,6 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
         </div>
       )}
 
-      {/* Steps — minimal */}
       {steps.length > 0 && (
         <div className="space-y-0.5">
           {steps.map(step => (
@@ -398,6 +394,161 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
           🔒 {outputs.length - 3} locked — unlock with NEURONS
         </p>
       )}
+    </div>
+  );
+}
+
+// ═══ TAB: PROGRESS — Behavioral Retention Engine ═══
+
+const RANK_LABELS: Record<string, { icon: React.ElementType; next: string }> = {
+  "Novice": { icon: Star, next: "Operator" },
+  "Operator": { icon: Zap, next: "Architect" },
+  "Architect": { icon: Target, next: "Strategist" },
+  "Strategist": { icon: Trophy, next: "Master" },
+  "Master": { icon: Crown, next: "Legend" },
+  "Legend": { icon: Flame, next: "—" },
+};
+
+const MISSIONS = [
+  { id: "run_1", label: "Run 1 service today", xp: 50, metric: "tasks" },
+  { id: "gen_5", label: "Generate 5 outputs", xp: 80, metric: "outputs" },
+  { id: "spend_500", label: "Spend 500 neurons this week", xp: 200, metric: "neurons" },
+];
+
+const BADGES = [
+  { id: "first_exec", label: "First Execution", icon: "⚡", unlockXp: 0 },
+  { id: "100_outputs", label: "100 Outputs", icon: "📦", unlockXp: 500 },
+  { id: "1k_neurons", label: "1K Neurons Used", icon: "🧠", unlockXp: 1000 },
+  { id: "content_machine", label: "Content Machine", icon: "🏭", unlockXp: 5000 },
+  { id: "knowledge_architect", label: "Knowledge Architect", icon: "🏛️", unlockXp: 10000 },
+  { id: "system_master", label: "System Master", icon: "👑", unlockXp: 25000 },
+];
+
+function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
+  const { xp, streak, loading, levelProgress, xpForNextLevel, tierMultiplier } = useGamification();
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center py-12">
+        <Loader2 className="h-4 w-4 text-muted-foreground/30 animate-spin" />
+      </div>
+    );
+  }
+
+  const rankInfo = RANK_LABELS[xp.rank_name] || RANK_LABELS["Novice"];
+  const RankIcon = rankInfo.icon;
+
+  return (
+    <div className="p-3 space-y-3">
+      {/* Section 1: Identity — Level + Rank */}
+      <div className="rounded-lg border border-border/20 p-3">
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="h-8 w-8 rounded-lg bg-muted/30 flex items-center justify-center">
+            <RankIcon className="h-4 w-4 text-foreground/70" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[13px] font-bold text-foreground">
+              Level {xp.level} — <span className="font-semibold">{xp.rank_name}</span>
+            </p>
+            <p className="text-[10px] text-muted-foreground/50">
+              Next: Level {xp.level + 1} — {rankInfo.next}
+            </p>
+          </div>
+        </div>
+        {/* XP Progress bar */}
+        <div className="h-1.5 bg-muted/30 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full bg-primary transition-all duration-500"
+            style={{ width: `${levelProgress}%` }}
+          />
+        </div>
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-[9px] text-muted-foreground/40 tabular-nums">{xp.total_xp} XP</span>
+          <span className="text-[9px] text-muted-foreground/40 tabular-nums">{xpForNextLevel} XP</span>
+        </div>
+      </div>
+
+      {/* Section 2: Streak */}
+      <div className="flex items-center gap-2.5 px-1">
+        <Flame className={cn("h-4 w-4", streak.current_streak > 0 ? "text-orange-500" : "text-muted-foreground/20")} />
+        <div className="flex-1">
+          <p className="text-[11px] font-semibold text-foreground tabular-nums">
+            {streak.current_streak} day{streak.current_streak !== 1 ? "s" : ""} streak
+          </p>
+          <p className="text-[9px] text-muted-foreground/40">
+            {streak.current_streak > 0 ? "Keep going — don't break it!" : "Start a streak today"}
+          </p>
+        </div>
+        {tierMultiplier > 1 && (
+          <span className="text-[9px] font-semibold text-primary tabular-nums">
+            {tierMultiplier}× XP
+          </span>
+        )}
+      </div>
+
+      {/* Section 3: Daily Missions */}
+      <div className="space-y-1">
+        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider font-semibold px-1">Missions</p>
+        {MISSIONS.map(mission => (
+          <div key={mission.id} className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted/15 transition-colors">
+            <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/20 shrink-0" />
+            <span className="text-[11px] text-muted-foreground flex-1">{mission.label}</span>
+            <span className="text-[9px] text-primary/60 font-medium tabular-nums">+{mission.xp} XP</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Section 4: Badges */}
+      <div className="space-y-1.5">
+        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider font-semibold px-1">Badges</p>
+        <div className="grid grid-cols-3 gap-1.5">
+          {BADGES.map(badge => {
+            const unlocked = xp.total_xp >= badge.unlockXp;
+            return (
+              <div
+                key={badge.id}
+                className={cn(
+                  "flex flex-col items-center gap-1 py-2 px-1 rounded-lg border text-center",
+                  unlocked
+                    ? "border-border/20 bg-muted/10"
+                    : "border-border/10 opacity-30"
+                )}
+              >
+                <span className="text-sm">{badge.icon}</span>
+                <span className="text-[8px] text-muted-foreground leading-tight">{badge.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Section 5: Cusnir_OS Unlock Progress */}
+      <div className="rounded-lg border border-border/15 p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <Lock className="h-3 w-3 text-muted-foreground/30" />
+          <span className="text-[11px] font-semibold text-muted-foreground/60">Cusnir_OS</span>
+        </div>
+        {/* Progress bar — months */}
+        <div className="h-1.5 bg-muted/20 rounded-full overflow-hidden mb-1.5">
+          <div className="h-full rounded-full bg-muted-foreground/15" style={{ width: "0%" }} />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-[9px] text-muted-foreground/30 tabular-nums">0/11 months</span>
+          <button
+            onClick={() => navigate("/cusnir-os")}
+            className="text-[9px] text-muted-foreground/30 hover:text-foreground transition-colors"
+          >
+            Details →
+          </button>
+        </div>
+      </div>
+
+      {/* Level perks hint */}
+      <div className="px-1">
+        <p className="text-[9px] text-muted-foreground/30 leading-relaxed">
+          Level 3 unlocks -10% neuron cost. Level 5 unlocks advanced services.
+        </p>
+      </div>
     </div>
   );
 }
