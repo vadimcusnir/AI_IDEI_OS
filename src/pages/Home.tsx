@@ -380,11 +380,7 @@ export default function Home() {
             if (c) {
               if (execState.phase === "confirming") executionActions.confirmExecution();
               fullContent += c;
-              setMessages(prev => {
-                const existing = prev.find(m => m.id === assistantId);
-                if (existing) return prev.map(m => m.id === assistantId ? { ...m, content: fullContent } : m);
-                return [...prev, { id: assistantId, role: "assistant" as const, content: fullContent, timestamp: new Date() }];
-              });
+              executionActions.upsertAssistantMessage(assistantId, fullContent);
               if (fullContent.includes("Searching") || fullContent.includes("searching")) executionActions.updateStep("search_neurons", { status: "running" });
               if (fullContent.includes("Found") || fullContent.includes("results")) executionActions.updateStep("search_neurons", { status: "completed" });
             }
