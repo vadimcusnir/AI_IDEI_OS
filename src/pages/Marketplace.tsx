@@ -47,6 +47,7 @@ type SortOption = "popular" | "newest" | "rating" | "price_low" | "price_high";
 
 export default function Marketplace() {
   const { t } = useTranslation("pages");
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { balance } = useCreditBalance();
   const [assets, setAssets] = useState<KnowledgeAsset[]>([]);
