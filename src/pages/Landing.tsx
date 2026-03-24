@@ -144,11 +144,16 @@ export default function Landing() {
       <ScrollProgress />
       <ExtractionSpine labels={["CAPTURE", "DISTILL", "STRUCTURE", "MULTIPLY", "DEPLOY"]} />
 
-      {/* ═══ TOP BAR ═══ */}
-      <div className="border-b border-border">
-        <p className="text-center text-xs sm:text-sm font-mono tracking-[0.12em] text-muted-foreground py-2.5 px-4">
-          Turn rough ideas into copy, content, offers, and campaigns — faster.
-        </p>
+      {/* ═══ TOP BAR — Marquee ═══ */}
+      <div className="relative overflow-hidden bg-foreground border-b border-border">
+        <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite] py-2.5">
+          {[...Array(4)].map((_, i) => (
+            <span key={i} className="flex items-center gap-6 px-6 text-xs sm:text-sm font-mono tracking-[0.12em] text-background shrink-0">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+              Turn rough ideas into copy, content, offers, and campaigns — faster.
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* ═══ NAV ═══ */}
