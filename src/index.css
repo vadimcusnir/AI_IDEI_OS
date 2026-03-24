@@ -9,7 +9,7 @@
 
 @layer base {
   :root {
-    --header-height: 2.75rem; /* 44px mobile */
+    --header-height: 3.5rem; /* 56px mobile */
 
     /* ── RULE.VISUAL.TEXT v2.0 tokens ── */
     --text-max: 70ch;
@@ -145,7 +145,7 @@
   /* Responsive header height */
   @media (min-width: 768px) {
     :root {
-      --header-height: 3rem; /* 48px desktop */
+      --header-height: 3.5rem; /* 56px desktop, max 72px at xl */
     }
   }
 

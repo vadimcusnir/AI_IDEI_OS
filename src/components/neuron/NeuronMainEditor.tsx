@@ -153,7 +153,7 @@ export function NeuronMainEditor({
 
   return (
     <div ref={editorRef} className="flex-1 overflow-y-auto bg-card">
-      <div className="max-w-2xl mx-auto px-8 py-10">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
         {/* Title */}
         <div className="mb-1">
           <input

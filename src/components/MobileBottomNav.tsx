@@ -179,7 +179,7 @@ export function MobileBottomNav() {
                 )}
               >
                 <Icon className={cn("h-5 w-5 transition-all", active && "stroke-[2.5]")} />
-                <span className={cn("text-[9px] leading-none transition-all", active ? "font-bold" : "font-medium")}>
+                <span className={cn("text-[10px] leading-none transition-all", active ? "font-bold" : "font-medium")}>
                   {t(`navigation:${labelKey}`)}
                 </span>
                 {active && (
@@ -196,7 +196,7 @@ export function MobileBottomNav() {
             )}
           >
             <Menu className="h-5 w-5" />
-            <span className="text-[9px] font-medium leading-none">{t("common:more")}</span>
+            <span className="text-[10px] font-medium leading-none">{t("common:more")}</span>
           </button>
         </div>
       </nav>
@@ -263,7 +263,7 @@ export function MobileBottomNav() {
             <div className="border-t border-border mt-2 pt-2 px-4">
               <button
                 onClick={() => { signOut(); setMenuOpen(false); }}
-                className="flex items-center gap-3 w-full py-2.5 text-sm text-destructive hover:bg-destructive/10 rounded-lg px-2 transition-colors"
+                className="flex items-center gap-3 w-full py-3 text-sm text-destructive hover:bg-destructive/10 rounded-lg px-2 transition-colors min-h-[44px]"
               >
                 <LogOut className="h-4 w-4" />
                 <span>{t("common:sign_out")}</span>
