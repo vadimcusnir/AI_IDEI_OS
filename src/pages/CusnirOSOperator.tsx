@@ -16,7 +16,7 @@ import { format } from "date-fns";
 
 const HEALTH_COLORS: Record<string, string> = {
   healthy: "text-status-validated bg-status-validated/10",
-  warning: "text-amber-500 bg-amber-500/10",
+  warning: "text-warning bg-warning/10",
   critical: "text-destructive bg-destructive/10",
 };
 
