@@ -143,25 +143,25 @@ export default function Onboarding() {
     <OnboardingTutorial open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
     <div className="flex-1 overflow-y-auto">
       <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 4 steps." />
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
         {/* Hero Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+          className="text-center mb-10"
         >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))] text-[10px] font-semibold uppercase tracking-[0.15em] mb-5">
             <Zap className="h-3 w-3" />
             4 Steps to Knowledge Assets
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold mb-2">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-[-0.02em] mb-2.5">
             {t("onboarding.title")}
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-3">
+          <p className="text-sm text-muted-foreground/70 max-w-md mx-auto mb-4 leading-relaxed">
             {t("onboarding.subtitle")}
           </p>
-          <Button variant="outline" size="sm" onClick={() => setTutorialOpen(true)} className="gap-1.5 text-xs">
+          <Button variant="outline" size="sm" onClick={() => setTutorialOpen(true)} className="gap-1.5 text-xs border-border/50 hover:border-[hsl(var(--gold-oxide)/0.3)]">
             <BookOpen className="h-3.5 w-3.5" />
             Interactive Tutorial (+50 NEURONS)
           </Button>
