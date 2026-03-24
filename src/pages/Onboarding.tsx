@@ -354,8 +354,8 @@ export default function Onboarding() {
             animate={{ opacity: 1, scale: 1 }}
             className="mt-10 p-7 rounded-2xl border-2 border-[hsl(var(--gold-oxide)/0.25)] bg-[hsl(var(--gold-oxide)/0.03)] text-center"
           >
-            <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
-              <Crown className="h-7 w-7 text-primary" />
+            <div className="h-14 w-14 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-4">
+              <Crown className="h-7 w-7 text-[hsl(var(--gold-oxide))]" />
             </div>
             <h2 className="text-lg font-bold mb-1.5">{t("onboarding.pipeline_active_title")}</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
