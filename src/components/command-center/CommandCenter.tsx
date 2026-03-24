@@ -641,6 +641,19 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
         />
       </div>
 
+      {/* Right Panel: Execution cost/progress/outputs */}
+      <AnimatePresence>
+        {cmdState.state.phase !== "idle" && (
+          <ExecutionRightPanel
+            execution={cmdState.state}
+            outputCount={outputs.length}
+            balance={balance}
+            onSaveTemplate={handleSaveTemplate}
+            onViewOutputs={() => setShowOutputs(true)}
+          />
+        )}
+      </AnimatePresence>
+
       <SidePanels
         showTaskTree={showTaskTree} showMemory={showMemory}
         execution={cmdState.state}
