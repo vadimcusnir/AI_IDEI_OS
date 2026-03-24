@@ -78,7 +78,7 @@ export function TaskExecutionCard({
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         "rounded-xl border overflow-hidden",
-        isDone && "border-green-500/15",
+        isDone && "border-success/15",
         isFailed && "border-destructive/15",
         isActive && "border-border/30",
       )}
