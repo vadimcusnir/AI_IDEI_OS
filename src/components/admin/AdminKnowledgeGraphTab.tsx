@@ -239,14 +239,14 @@ export function AdminKnowledgeGraphTab() {
                       <span className="text-xs">{m.title}</span>
                       <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
                     </div>
-                    <span className="text-right text-xs font-mono font-bold text-emerald-500">
+                    <span className="text-right text-xs font-mono font-bold text-semantic-emerald">
                       {(m.emergence_score * 100).toFixed(1)}
                     </span>
-                    <PVSBar value={m.novelty_score} color="bg-violet-500/70" />
-                    <PVSBar value={m.acceleration_score} color="bg-sky-500/70" />
-                    <PVSBar value={Math.min(1, m.connectivity_growth)} color="bg-amber-500/70" />
-                    <PVSBar value={Math.min(1, m.centrality_delta * 10)} color="bg-rose-500/70" />
-                    <PVSBar value={m.structural_rarity} color="bg-teal-500/70" />
+                    <PVSBar value={m.novelty_score} color="bg-semantic-purple/70" />
+                    <PVSBar value={m.acceleration_score} color="bg-semantic-blue/70" />
+                    <PVSBar value={Math.min(1, m.connectivity_growth)} color="bg-semantic-amber/70" />
+                    <PVSBar value={Math.min(1, m.centrality_delta * 10)} color="bg-semantic-rose/70" />
+                    <PVSBar value={m.structural_rarity} color="bg-semantic-teal/70" />
                   </div>
                 ))}
               </div>
