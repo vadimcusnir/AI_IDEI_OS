@@ -181,8 +181,8 @@ const App = () => (
                 <Route path="/marketplace" element={<AppLayout><ErrorBoundary fallbackTitle="Marketplace failed to load"><Marketplace /></ErrorBoundary></AppLayout>} />
                 <Route path="/marketplace/drafts" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Drafts failed to load"><MarketplaceDrafts /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/marketplace/earnings" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Earnings failed to load"><MarketplaceEarnings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
-                <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
+                <Route path="/marketplace/:id" element={<AppLayout><ErrorBoundary fallbackTitle="Marketplace detail failed"><MarketplaceDetail /></ErrorBoundary></AppLayout>} />
+                <Route path="/media/profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Media profiles failed to load"><MediaProfiles /></ErrorBoundary></AppLayout>} />
                 <Route path="/media/profiles/:slug" element={<MediaProfilePublic />} />
                 <Route path="/admin/media-profiles" element={<AppLayout><AdminMediaProfiles /></AppLayout>} />
                 <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
