@@ -105,7 +105,11 @@ export default function Services() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleServiceClick = useCallback((service: Service) => {
-    if (!user) { navigate("/auth"); return; }
+    if (!user) {
+      setGuestGateService(service.name);
+      setGuestGateOpen(true);
+      return;
+    }
     const requiredTier = service.access_tier || "free";
     if (!tierSatisfied(userTier, requiredTier)) {
       setPaywallService({ name: service.name, tier: requiredTier });
