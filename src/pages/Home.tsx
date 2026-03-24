@@ -89,6 +89,7 @@ export default function Home() {
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
+  const [activeLayer, setActiveLayer] = useState<WorkspaceLayer>("chat");
 
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
