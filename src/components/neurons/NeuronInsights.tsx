@@ -95,7 +95,7 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
         title: `${stats.uncategorized} neurons uncategorized`,
         description: "Run AI categorization to organize your knowledge library",
         action: "Auto-categorize",
-        route: "/chat?q=/extract categorize uncategorized neurons",
+        route: "/home?q=/extract categorize uncategorized neurons",
         priority: "high",
       });
     }
