@@ -392,7 +392,7 @@ export default function Home() {
           {/* ═══ CONTENT AREA ═══ */}
           <div className="flex-1 relative z-10 min-h-0 overflow-hidden">
             {/* TOP REGION — scrolls independently above the fixed center rail */}
-            <div className="absolute inset-x-0 top-0 bottom-1/2 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 bottom-[calc(50%+2.5rem)] overflow-hidden">
               {isEmptyState ? (
                 <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-20">
                   <div className="w-full max-w-3xl flex flex-col items-center gap-4">
@@ -458,7 +458,7 @@ export default function Home() {
             </div>
 
             {/* CENTER RAIL — the main chat stays here, never moves */}
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 px-4 sm:px-6 pointer-events-none">
+            <div className="absolute inset-x-0 top-[calc(50%-2.5rem)] -translate-y-1/2 z-30 px-4 sm:px-6 pointer-events-none">
               <div className="max-w-3xl mx-auto pointer-events-auto">
                 <CommandInputZone
                   ref={inputZoneRef} input={input} onInputChange={setInput}
@@ -484,7 +484,7 @@ export default function Home() {
             </div>
 
             {/* BOTTOM REGION — menus/panels open around the fixed rail, below it */}
-            <div className="absolute inset-x-0 top-1/2 bottom-0 overflow-hidden">
+            <div className="absolute inset-x-0 top-[calc(50%-2.5rem)] bottom-0 overflow-hidden">
               <div className="h-full overflow-y-auto">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-6">
                   {isEmptyState && input.length >= 2 && (
