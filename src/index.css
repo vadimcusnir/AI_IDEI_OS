@@ -243,6 +243,21 @@
     --note-purple: 270 25% 14%;
     --note-default: 222 20% 12%;
 
+    /* Semantic category colors — dark mode */
+    --color-emerald: 152 55% 52%;
+    --color-amber: 38 85% 58%;
+    --color-blue: 210 75% 58%;
+    --color-purple: 262 60% 65%;
+    --color-rose: 350 65% 58%;
+    --color-cyan: 185 60% 52%;
+    --color-teal: 170 55% 48%;
+    --color-indigo: 230 60% 62%;
+
+    /* Tier colors — dark mode */
+    --tier-vip: 43 96% 58%;
+    --tier-pro: 25 95% 55%;
+    --tier-free: 220 10% 58%;
+
     --sidebar-background: 222 22% 8%;
     --sidebar-foreground: 220 14% 82%;
     --sidebar-primary: 25 95% 55%;
