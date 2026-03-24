@@ -303,7 +303,7 @@ export default function Onboarding() {
                   {/* Status + Action */}
                   <div className="flex items-center justify-between">
                     {isCompleted && (
-                      <p className="text-xs text-primary font-medium">
+                      <p className="text-xs text-[hsl(var(--gold-oxide))] font-medium">
                         {status[step.checkField]} {step.checkField} {t("onboarding.created_suffix")}
                       </p>
                     )}
