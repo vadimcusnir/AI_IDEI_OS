@@ -116,14 +116,14 @@ Deno.serve(async (req) => {
     const authClient = createClient(supabaseUrl, anonKey);
     const { data: { user }, error: authError } = await authClient.auth.getUser(token);
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Invalid token" }
-    // Rate limit guard
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
-    if (rateLimited) return rateLimited;
-), {
+      return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
+
+    // Rate limit guard
+    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, cors);
+    if (rateLimited) return rateLimited;
 
     const supabase = createClient(supabaseUrl, serviceKey);
 
