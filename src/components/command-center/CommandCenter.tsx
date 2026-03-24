@@ -26,6 +26,9 @@ import { PipelineComposer, type PipelineStep } from "./PipelineComposer";
 import { CommandInputZone, type CommandInputZoneRef } from "./CommandInputZone";
 import { MessageStream } from "./MessageStream";
 import { SidePanels } from "./SidePanels";
+import { ChatHistorySidebar } from "./ChatHistorySidebar";
+import { ExecutionRightPanel } from "./ExecutionRightPanel";
+import { SuggestionTabs } from "./SuggestionTabs";
 import { useUserTier } from "@/hooks/useUserTier";
 import { routeCommand, type RouteResult } from "./CommandRouter";
 import {
