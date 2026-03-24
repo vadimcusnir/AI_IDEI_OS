@@ -35,9 +35,8 @@ import { PostExecutionPanel } from "@/components/command-center/PostExecutionPan
 import { ExecutionStatusBar } from "@/components/command-center/ExecutionStatusBar";
 import { CommandInputZone, type CommandInputZoneRef } from "@/components/command-center/CommandInputZone";
 import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
-import { SuggestionTabs } from "@/components/command-center/SuggestionTabs";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
-import { InlineServiceSuggestions } from "@/components/command-center/InlineServiceSuggestions";
+import { IntentChips, SystemRecommendations, matchIntentToSystems, type MMSystem } from "@/components/command-center/IntentSystems";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WorkspaceLayerTabs, type WorkspaceLayer } from "@/components/command-center/WorkspaceLayerTabs";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
