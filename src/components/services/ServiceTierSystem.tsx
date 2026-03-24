@@ -135,7 +135,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                     "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full",
                     tier.key === "otos" && "bg-muted text-muted-foreground",
                     tier.key === "mms" && "bg-primary/15 text-primary",
-                    tier.key === "lcss" && "bg-amber-500/15 text-amber-600",
+                    tier.key === "lcss" && "bg-semantic-amber/15 text-semantic-amber",
                   )}>
                     {tier.badge}
                   </span>
