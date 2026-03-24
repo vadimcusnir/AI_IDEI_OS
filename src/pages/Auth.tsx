@@ -38,9 +38,9 @@ export default function Auth() {
   function getStrength(pw: string): { score: number; label: string; color: string } {
     const passed = PASSWORD_CHECKS.filter((c) => c.test(pw)).length;
     if (passed <= 1) return { score: 1, label: t("auth.pw_weak"), color: "bg-destructive" };
-    if (passed === 2) return { score: 2, label: t("auth.pw_fair"), color: "bg-amber-500" };
+    if (passed === 2) return { score: 2, label: t("auth.pw_fair"), color: "bg-warning" };
     if (passed === 3) return { score: 3, label: t("auth.pw_good"), color: "bg-primary" };
-    return { score: 4, label: t("auth.pw_strong"), color: "bg-emerald-500" };
+    return { score: 4, label: t("auth.pw_strong"), color: "bg-success" };
   }
 
   function friendlyError(msg: string): string {
