@@ -2,7 +2,7 @@
  * ExecutionRightPanel — Cost/progress/outputs tracker.
  * Shows during active execution and completed states.
  */
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Coins, Clock, CheckCircle2, XCircle,
   Package, TrendingUp, Loader2, Zap,
@@ -36,12 +36,8 @@ export function ExecutionRightPanel({
   const isFailed = phase === "failed";
 
   return (
-    <motion.div
-      initial={{ width: 0, opacity: 0 }}
-      animate={{ width: 280, opacity: 1 }}
-      exit={{ width: 0, opacity: 0 }}
-      transition={{ duration: 0.25 }}
-      className="hidden lg:flex flex-col h-full border-l border-border/30 bg-card/30 backdrop-blur-sm overflow-hidden shrink-0"
+    <div
+      className="hidden lg:flex flex-col h-full w-[280px] border-l border-border/30 bg-card/30 backdrop-blur-sm overflow-hidden shrink-0"
     >
       <div className="flex-1 overflow-y-auto p-4 space-y-5">
         {/* Plan header */}
@@ -132,7 +128,7 @@ export function ExecutionRightPanel({
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 

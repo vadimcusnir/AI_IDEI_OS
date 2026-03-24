@@ -113,108 +113,89 @@ export function ContextDrawer({
 
   return (
     <>
-      {/* Desktop drawer */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 300, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="hidden lg:flex flex-col h-full border-l border-border/20 bg-background/60 backdrop-blur-md overflow-hidden shrink-0"
+      {/* Desktop drawer — NO width animation, deterministic layout */}
+      {isOpen && (
+        <div
+          className="hidden lg:flex flex-col h-full w-[300px] border-l border-border/20 bg-background/60 backdrop-blur-md overflow-hidden shrink-0"
+        >
+          {/* Tab bar — premium treatment */}
+          <div className="flex items-center border-b border-border/15 px-2 py-1.5 gap-0.5 bg-muted/20">
+            {TABS.map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-semibold tracking-wide transition-colors relative",
+                    activeTab === tab.id
+                      ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
+                      : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
+                  )}
+                >
+                  <Icon size={13} className={activeTab === tab.id ? "text-primary" : ""} />
+                  <span className="hidden xl:inline uppercase tracking-widest">{tab.label}</span>
+                  {tab.badge && (
+                    <span className={cn(
+                      "h-1.5 w-1.5 rounded-full",
+                      tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
+                    )} />
+                  )}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground/25 hover:text-foreground hover:bg-muted/30 transition-colors ml-0.5 shrink-0"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </div>
+
+          {/* Tab content — no x-translate animation, just opacity */}
+          <div className="flex-1 overflow-y-auto">
+            <div key={activeTab}>
+              {activeTab === "state" && (
+                <StateTab tier={tier} balance={balance} phase={phase} navigate={navigate} />
+              )}
+              {activeTab === "runs" && (
+                <RunsTab
+                  steps={steps} phase={phase} elapsed={elapsed} progress={progress}
+                  isDone={isDone} isFailed={isFailed} isActive={isActive}
+                  consumedCredits={consumedCredits} totalCredits={totalCredits}
+                />
+              )}
+              {activeTab === "assets" && (
+                <AssetsTab outputs={outputs} onViewOutputs={onViewOutputs} />
+              )}
+              {activeTab === "progress" && (
+                <ProgressTab navigate={navigate} />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile overlay — keeps slide animation (acceptable on mobile) */}
+      {isOpen && (
+        <>
+          <div
+            className="lg:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
+            onClick={() => setIsOpen(false)}
+          />
+          <div
+            className="lg:hidden fixed inset-y-0 right-0 w-[300px] z-50 border-l border-border/20 bg-background shadow-2xl shadow-black/20 overflow-y-auto"
           >
-            {/* Tab bar — premium treatment */}
-            <div className="flex items-center border-b border-border/15 px-2 py-1.5 gap-0.5 bg-muted/20">
-              {TABS.map(tab => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={cn(
-                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-semibold tracking-wide transition-all relative",
-                      activeTab === tab.id
-                        ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
-                        : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
-                    )}
-                  >
-                    <Icon size={13} className={activeTab === tab.id ? "text-primary" : ""} />
-                    <span className="hidden xl:inline uppercase tracking-widest">{tab.label}</span>
-                    {tab.badge && (
-                      <span className={cn(
-                        "h-1.5 w-1.5 rounded-full",
-                        tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
-                      )} />
-                    )}
-                  </button>
-                );
-              })}
-              <button
-                onClick={() => setIsOpen(false)}
-                className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground/25 hover:text-foreground hover:bg-muted/30 transition-colors ml-0.5 shrink-0"
-              >
-                <X className="h-3 w-3" />
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/15 bg-muted/20">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Panel</span>
+              <button onClick={() => setIsOpen(false)} className="p-1.5 text-muted-foreground/40 hover:text-foreground rounded-lg hover:bg-muted/30 transition-colors">
+                <X className="h-3.5 w-3.5" />
               </button>
             </div>
-
-            {/* Tab content */}
-            <div className="flex-1 overflow-y-auto">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0, x: 8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -8 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  {activeTab === "state" && (
-                    <StateTab tier={tier} balance={balance} phase={phase} navigate={navigate} />
-                  )}
-                  {activeTab === "runs" && (
-                    <RunsTab
-                      steps={steps} phase={phase} elapsed={elapsed} progress={progress}
-                      isDone={isDone} isFailed={isFailed} isActive={isActive}
-                      consumedCredits={consumedCredits} totalCredits={totalCredits}
-                    />
-                  )}
-                  {activeTab === "assets" && (
-                    <AssetsTab outputs={outputs} onViewOutputs={onViewOutputs} />
-                  )}
-                  {activeTab === "progress" && (
-                    <ProgressTab navigate={navigate} />
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mobile overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="lg:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
-              onClick={() => setIsOpen(false)}
-            />
-            <motion.div
-              initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed inset-y-0 right-0 w-[300px] z-50 border-l border-border/20 bg-background shadow-2xl shadow-black/20 overflow-y-auto"
-            >
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border/15 bg-muted/20">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Panel</span>
-                <button onClick={() => setIsOpen(false)} className="p-1.5 text-muted-foreground/40 hover:text-foreground rounded-lg hover:bg-muted/30 transition-colors">
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
-              <StateTab tier={tier} balance={balance} phase={phase} navigate={navigate} />
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+            <StateTab tier={tier} balance={balance} phase={phase} navigate={navigate} />
+          </div>
+        </>
+      )}
     </>
   );
 }
