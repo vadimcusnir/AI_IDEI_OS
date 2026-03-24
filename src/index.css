@@ -15,12 +15,13 @@
     --text-max: 70ch;
     --h1-size: clamp(1.75rem, 4vw + 1rem, 3.5rem);
     --h2-size: clamp(1.5rem, 3vw + 0.75rem, 2.25rem);
-    --h3-size: 1rem;
-    --h4-size: 0.875rem;
-    --body-size: 0.875rem;
-    --secondary-size: 0.8125rem;
+    --h3-size: 1.25rem;
+    --h4-size: 1.125rem;
+    --body-size: 1rem;
+    --body-dense-size: 0.875rem;
+    --secondary-size: 0.875rem;
     --caption-size: 0.75rem;
-    --eyebrow-size: 0.625rem;
+    --eyebrow-size: 0.6875rem;
     --lh-h1: 1.1;
     --lh-h2: 1.2;
     --lh-body: 1.65;
@@ -251,7 +252,7 @@
 
   @media (min-width: 768px) {
     body {
-      font-size: var(--body-size); /* 0.875rem / 14px on desktop — denser UI */
+      font-size: var(--body-dense-size); /* 14px on desktop — denser UI */
     }
   }
 

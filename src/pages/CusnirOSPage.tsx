@@ -43,7 +43,7 @@ export default function CusnirOSPage() {
           title="Cusnir_OS — Governance Layer"
           description="System-level control interface. Earned through consistency, not purchased through convenience."
         />
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <CusnirOSCopy
             monthProgress={currentMonth}
             eligible={eligible}

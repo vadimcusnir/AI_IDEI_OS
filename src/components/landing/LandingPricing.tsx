@@ -24,7 +24,7 @@ export function LandingPricing({ ctaAction }: Props) {
           <h2 id="pricing-heading" className="heading-2 mb-4">{t("pricing.title")}</h2>
           <p className="text-base text-muted-foreground max-w-lg mx-auto text-flow">{t("pricing.subtitle")}</p>
         </FadeInView>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden max-w-4xl mx-auto">
           {plans.map((plan, i) => {
             const featured = i === FEATURED_INDEX;
             return (

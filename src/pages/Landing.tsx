@@ -223,7 +223,7 @@ export default function Landing() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden h-8 w-8 flex items-center justify-center text-muted-foreground"
+              className="lg:hidden h-11 w-11 flex items-center justify-center text-muted-foreground rounded-md hover:bg-accent/10 transition-colors"
               aria-label="Menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -246,17 +246,17 @@ export default function Landing() {
                   <button
                     key={link.label}
                     onClick={() => scrollTo(link.to)}
-                    className="block w-full text-left text-sm font-mono tracking-[0.08em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3 border-b border-border"
+                    className="block w-full text-left text-sm font-mono tracking-[0.08em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3 min-h-[44px] flex items-center border-b border-border"
                   >
                     {link.label.toUpperCase()}
                   </button>
                 ))}
                 {!user && (
                   <div className="flex gap-3 pt-3">
-                    <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-xs h-9 flex-1 text-muted-foreground">
+                    <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-sm h-11 min-h-[44px] flex-1 text-muted-foreground">
                       Log in
                     </Button>
-                    <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-xs h-9 flex-1 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+                    <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-sm h-11 min-h-[44px] flex-1 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
                       Start Free
                       <ArrowRight className="h-3 w-3" />
                     </Button>

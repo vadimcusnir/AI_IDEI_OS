@@ -20,7 +20,7 @@ export function LandingMechanism() {
           </p>
         </FadeInView>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden mb-16">
           {steps.map((step, i) => {
             const StepIcon = ICONS[i];
             return (

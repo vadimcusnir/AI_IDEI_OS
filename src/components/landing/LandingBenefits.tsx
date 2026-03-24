@@ -16,7 +16,7 @@ export function LandingBenefits() {
           <h2 className="heading-2 mb-4">{t("benefits.title")}</h2>
         </FadeInView>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {items.map((b, i) => {
             const Icon = ICONS[i];
             return (
