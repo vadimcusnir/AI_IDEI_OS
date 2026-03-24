@@ -7,10 +7,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Save, RotateCcw, Share2 } from "lucide-react";
 import {
-  CheckCircle2, XCircle, Clock, Coins, Layers,
-  FileText, Save, RotateCcw, TrendingUp, Share2,
-} from "lucide-react";
+  SigilCheck, SigilFail, SigilClock, SigilNeuron,
+  SigilCrystal, SigilDocument, SigilTrend,
+} from "@/components/icons/SigilIcons";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
