@@ -581,12 +581,16 @@ export default function Home() {
             </div>
           )}
 
-          {/* ═══ INLINE SERVICE SUGGESTIONS ═══ */}
-          <InlineServiceSuggestions
-            input={input}
-            visible={!isEmptyState && !loading && input.length >= 3}
-            onSelect={(prompt) => { handleCommand(prompt, true); }}
-          />
+          {/* ═══ INLINE SYSTEM RECOMMENDATIONS (active state) ═══ */}
+          {!isEmptyState && !loading && input.length >= 2 && (
+            <div className="px-4 sm:px-6 pb-1">
+              <SystemRecommendations
+                systems={matchIntentToSystems(input)}
+                input={input}
+                onSelect={(sys: MMSystem) => handleCommand(sys.prompt, true)}
+              />
+            </div>
+          )}
 
           {/* ═══ INPUT ZONE — Bottom, only in active state ═══ */}
           {!isEmptyState && (
