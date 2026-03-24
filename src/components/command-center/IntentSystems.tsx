@@ -222,22 +222,22 @@ export function IntentChips({ onSelect }: IntentChipsProps) {
       className="w-full"
     >
       <div className="flex items-center gap-2 mb-4 px-1">
-        <Target className="h-3.5 w-3.5 text-primary/40" />
-        <span className="text-[11px] uppercase tracking-widest text-muted-foreground/50 font-semibold">Ce vrei să obții?</span>
+        <Target className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide)/0.5)]" />
+        <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold">Ce vrei să obții?</span>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
         {INTENT_CHIPS.map((chip) => (
           <button
             key={chip.label}
             onClick={() => { trackInternalEvent({ event: AnalyticsEvents.INTENT_CHIP_CLICKED, params: { label: chip.label, prompt: chip.prompt } }); onSelect(chip.prompt); }}
             className={cn(
-              "flex items-center gap-2.5 px-4 py-3 rounded-xl text-[13px] font-medium",
-              "border border-border/30 bg-card/60",
-              "hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary hover:shadow-sm",
+              "flex items-center gap-2.5 px-4 py-3.5 rounded-xl text-[13px] font-medium",
+              "border border-border/40 bg-card/60 backdrop-blur-sm",
+              "hover:border-[hsl(var(--gold-oxide)/0.35)] hover:bg-[hsl(var(--gold-oxide)/0.04)] hover:text-foreground hover:shadow-sm hover:shadow-[hsl(var(--gold-oxide)/0.05)]",
               "transition-all duration-200 group"
             )}
           >
-            <chip.icon className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
+            <chip.icon className="h-4 w-4 text-muted-foreground/40 group-hover:text-[hsl(var(--gold-oxide))] transition-colors shrink-0" />
             <span>{chip.label}</span>
           </button>
         ))}
