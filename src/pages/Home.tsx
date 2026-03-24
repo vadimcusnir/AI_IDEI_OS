@@ -1,9 +1,9 @@
 /**
- * Home — Unified Execution Hub.
- * Single interface: INPUT → CONTEXT → EXECUTE → OUTPUT.
- * Inspired by Claude/Perplexity/Manus patterns.
+ * Home — Unified Execution Surface.
+ * LEFT = AppSidebar (control), CENTER = execution, RIGHT = ContextDrawer (on demand).
+ * Zero navigation on execution. Single surface.
  */
-import { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useExecution } from "@/hooks/useExecution";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
-import { useChatHistory, type ChatMessage } from "@/hooks/useChatHistory";
+import { useChatHistory } from "@/hooks/useChatHistory";
 import { useExecutionStore, executionActions, type Message } from "@/stores/executionStore";
 import { useExecutionHistory } from "@/hooks/useExecutionHistory";
 import { useRealtimeSteps } from "@/hooks/useRealtimeSteps";
@@ -22,13 +22,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import {
-  Coins, ArrowUp, Sparkles, PanelLeftOpen, History,
-  RotateCcw, Square, Paperclip, X, PanelRightOpen, PanelRightClose,
-} from "lucide-react";
+import { ArrowUp, Sparkles, RotateCcw, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Command Center components
 import { CommandBubble } from "@/components/command-center/CommandBubble";
 import { type OutputItem } from "@/components/command-center/OutputPanel";
 import { OutputPanel } from "@/components/command-center/OutputPanel";
@@ -36,17 +32,11 @@ import { PlanPreview } from "@/components/command-center/PlanPreview";
 import { EconomicGate } from "@/components/command-center/EconomicGate";
 import { PermissionGate } from "@/components/command-center/PermissionGate";
 import { PostExecutionPanel } from "@/components/command-center/PostExecutionPanel";
-import { ContextActions } from "@/components/command-center/ContextActions";
 import { ExecutionStatusBar } from "@/components/command-center/ExecutionStatusBar";
-import { PipelineComposer } from "@/components/command-center/PipelineComposer";
 import { CommandInputZone, type CommandInputZoneRef } from "@/components/command-center/CommandInputZone";
 import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
-import { ChatHistorySidebar } from "@/components/command-center/ChatHistorySidebar";
-import { ExecutionRightPanel } from "@/components/command-center/ExecutionRightPanel";
 import { SuggestionTabs } from "@/components/command-center/SuggestionTabs";
-import { WelcomeScreen } from "@/components/command-center/WelcomeScreen";
-import { SidePanels } from "@/components/command-center/SidePanels";
-import { InputAttachMenu } from "@/components/command-center/InputAttachMenu";
+import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
@@ -85,13 +75,11 @@ export default function Home() {
   });
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
 
-  // ═══ UI-only state (panels, menus — local) ═══
+  // ═══ UI state ═══
   const initialQ = searchParams.get("q") || "";
   const [input, setInput] = useState(initialQ);
   const [files, setFiles] = useState<File[]>([]);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
-  const [showTaskTree, setShowTaskTree] = useState(false);
-  const [showMemory, setShowMemory] = useState(false);
   const [showOutputs, setShowOutputs] = useState(false);
   const [showPostExecution, setShowPostExecution] = useState(false);
   const [showEconomicGate, setShowEconomicGate] = useState(false);
@@ -99,8 +87,6 @@ export default function Home() {
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
-  const [showPipeline, setShowPipeline] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
 
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -128,13 +114,12 @@ export default function Home() {
       }
       if (e.key === "Escape") {
         if (loading) { abortRef.current?.abort(); executionActions.setLoading(false); executionActions.setStreaming(false); }
-        else if (showMemory) setShowMemory(false);
         else if (showOutputs) setShowOutputs(false);
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [loading, showMemory, showOutputs]);
+  }, [loading, showOutputs]);
 
   // ═══ Load session on mount ═══
   useEffect(() => {
@@ -145,14 +130,12 @@ export default function Home() {
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
-  // ═══ Auto-submit from ?q= param ═══
+  // ═══ Auto-submit from ?q= ═══
   const autoSubmittedRef = useRef(false);
   useEffect(() => {
     if (initialQ && user && sessionLoaded && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true;
-      // Clean the URL param
       setSearchParams({}, { replace: true });
-      // Auto-focus and let user see the input before submitting
       const timer = setTimeout(() => inputZoneRef.current?.focus(), 200);
       return () => clearTimeout(timer);
     }
@@ -174,7 +157,6 @@ export default function Home() {
   const scrollToBottom = useCallback((smooth = true) => {
     messagesEndRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "instant" });
   }, []);
-
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
 
   // ═══ Parse outputs ═══
@@ -205,7 +187,7 @@ export default function Home() {
     return items;
   }, []);
 
-  // ═══ SUBMIT — Routes through execution engine ═══
+  // ═══ SUBMIT ═══
   const handleSubmit = async (autoExec = false) => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
@@ -228,18 +210,14 @@ export default function Home() {
 
       setPendingRoute(route);
       saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
-      setShowTaskTree(true);
 
       if (isExecution && execState.phase === "confirming" && route.intent.confidence < 0.9 && !autoExec) {
-        // Plan preview shown — wait for user confirmation
         return;
       }
 
       if (isExecution) {
-        // High confidence or auto-execute — run immediately
         await executionEngine.confirmAndRun(rawInput, route);
       } else {
-        // Conversation/chat path — use existing agent-console stream
         executionActions.transition("planning");
         executionActions.setLoading(true);
         await executeCommand(rawInput, { id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
@@ -373,7 +351,6 @@ export default function Home() {
                 planName: meta.plan_name, totalCredits: meta.total_credits,
                 steps: meta.steps || [], objective: meta.objective, outputPreview: meta.output_preview,
               });
-              setShowTaskTree(true);
               if (meta.total_credits === 0 || meta.intent === "general" || meta.intent === "help" || meta.intent === "check_status") {
                 executionActions.confirmExecution();
               }
@@ -383,8 +360,6 @@ export default function Home() {
               if (execState.phase === "confirming") executionActions.confirmExecution();
               fullContent += c;
               executionActions.upsertAssistantMessage(assistantId, fullContent);
-              if (fullContent.includes("Searching") || fullContent.includes("searching")) executionActions.updateStep("search_neurons", { status: "running" });
-              if (fullContent.includes("Found") || fullContent.includes("results")) executionActions.updateStep("search_neurons", { status: "completed" });
             }
           } catch { /* partial JSON */ }
         }
@@ -438,7 +413,7 @@ export default function Home() {
   const clearChat = () => {
     newSession(); executionActions.reset();
     executionActions.clearMessages();
-    executionActions.setOutputs([]); setShowOutputs(false); setShowTaskTree(false); setShowPostExecution(false);
+    executionActions.setOutputs([]); setShowOutputs(false); setShowPostExecution(false);
   };
 
   const handleSaveAllOutputs = async () => {
@@ -468,25 +443,20 @@ export default function Home() {
     if (lastUser) { setInput(lastUser.content); inputZoneRef.current?.focus(); }
   };
 
-  /** Quick actions auto-execute — they don't just prefill */
   const handleCommand = (prompt: string, autoExec = false) => {
     setInput(prompt);
     if (autoExec) {
-      // Use setTimeout to let state update, then auto-submit
-      setTimeout(() => {
-        handleSubmit(true);
-      }, 50);
+      setTimeout(() => { handleSubmit(true); }, 50);
     } else {
       inputZoneRef.current?.focus();
     }
   };
 
-  // ═══ Derived state ═══
+  // ═══ Derived ═══
   const isEmptyState = messages.length === 0 && !loading;
   const hour = new Date().getHours();
   const greeting = hour < 6 ? "Noapte bună" : hour < 12 ? "Bună dimineața" : hour < 18 ? "Bună ziua" : "Bună seara";
   const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
-  const showRightPanel = execState.phase !== "idle";
   const durationSeconds =
     execState.startedAt && execState.completedAt
       ? Math.round((new Date(execState.completedAt).getTime() - new Date(execState.startedAt).getTime()) / 1000)
@@ -500,90 +470,14 @@ export default function Home() {
       <SEOHead title={`${t("pages:home.cockpit")} — AI-IDEI`} description={t("pages:home.cockpit_desc")} />
 
       <div className="flex-1 flex h-[calc(100vh-var(--header-height,56px))] overflow-hidden relative">
-        {/* ═══ LEFT: Chat History Sidebar ═══ */}
-        <ChatHistorySidebar
-          sessions={sessions}
-          currentSessionId={sessionId}
-          isOpen={showHistory}
-          onToggle={() => setShowHistory(!showHistory)}
-          onNewSession={() => { clearChat(); setShowHistory(false); }}
-          onLoadSession={async (sid) => {
-            const loaded = await loadSession(sid);
-            if (loaded.length > 0) executionActions.setMessages(loaded);
-            setShowHistory(false);
-          }}
-          onDeleteSession={async (sid) => {
-            await deleteSession(sid);
-            toast.success("Sesiune ștearsă");
-          }}
-        />
-
-        {/* ═══ CENTER: Main execution area ═══ */}
+        {/* ═══ CENTER: Execution Surface ═══ */}
         <div className="flex-1 flex flex-col min-w-0 relative">
-          {/* Ambient background */}
+          {/* Ambient glow */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full bg-primary/[0.02] blur-[120px]" />
           </div>
 
-          {/* ── Top bar ── */}
-          <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-border/20 bg-background/60 backdrop-blur-xl">
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 rounded-lg text-muted-foreground/50 hover:text-foreground"
-                onClick={() => setShowHistory(!showHistory)}
-              >
-                <PanelLeftOpen className="h-4 w-4" />
-              </Button>
-
-              <div className="flex items-center gap-2">
-                <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center border border-primary/10">
-                  <Sparkles className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <span className="text-sm font-semibold tracking-tight text-foreground hidden sm:inline">AI-IDEI</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              {/* Stats (hidden on mobile) */}
-              <div className="hidden md:flex items-center gap-3 mr-3 text-[11px] text-muted-foreground/60">
-                <span className="tabular-nums">{totalNeurons} neurons</span>
-                <span className="opacity-30">·</span>
-                <span className="tabular-nums">{totalEpisodes} episodes</span>
-              </div>
-
-              {/* Balance pill */}
-              <button
-                onClick={() => navigate("/credits")}
-                className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-full",
-                  "border border-border/40 bg-card/60 backdrop-blur-md",
-                  "hover:border-primary/30 hover:shadow-sm",
-                  "transition-all duration-200"
-                )}
-              >
-                <Coins className="h-3 w-3 text-primary" />
-                <span className="text-xs font-bold tabular-nums text-foreground">{balance?.toLocaleString() ?? "—"}</span>
-                <span className="text-[9px] font-medium text-muted-foreground/60 tracking-wider">N</span>
-              </button>
-
-              {/* Action buttons */}
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-lg text-muted-foreground/40 hover:text-foreground" onClick={() => setShowMemory(!showMemory)} title="Memory">
-                <History className="h-3.5 w-3.5" />
-              </Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-lg text-muted-foreground/40 hover:text-foreground" onClick={clearChat} title="Sesiune nouă">
-                <RotateCcw className="h-3.5 w-3.5" />
-              </Button>
-              {showRightPanel && (
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-lg text-muted-foreground/40 hover:text-foreground" onClick={() => setShowTaskTree(!showTaskTree)} title="Task Tree">
-                  {showTaskTree ? <PanelRightClose className="h-3.5 w-3.5" /> : <PanelRightOpen className="h-3.5 w-3.5" />}
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* ── Execution Status Bar ── */}
+          {/* Execution Status Bar */}
           <ExecutionStatusBar
             phase={execState.phase} intent={execState.intent}
             totalCredits={execState.totalCredits}
@@ -592,7 +486,7 @@ export default function Home() {
             startedAt={execState.startedAt} errorMessage={execState.errorMessage}
           />
 
-          {/* ── Permission gate ── */}
+          {/* Permission gate */}
           <AnimatePresence>
             {permissionBlock && (
               <PermissionGate
@@ -604,7 +498,7 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* ── Plan Preview ── */}
+          {/* Plan Preview */}
           {execState.phase === "confirming" && execState.totalCredits > 0 && !showEconomicGate && (
             <div className="px-4 py-2 relative z-10">
               <PlanPreview
@@ -630,7 +524,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* ── Economic Gate ── */}
+          {/* Economic Gate */}
           {showEconomicGate && execState.phase === "confirming" && (
             <div className="px-4 py-2 relative z-10">
               <EconomicGate
@@ -648,16 +542,16 @@ export default function Home() {
             </div>
           )}
 
-          {/* ═══ MESSAGE STREAM / EMPTY STATE ═══ */}
+          {/* ═══ CONTENT AREA ═══ */}
           {isEmptyState ? (
-            /* ── IDLE: Centered — fills available space, no scroll ── */
+            /* IDLE: Centered hero */
             <div className="flex-1 flex flex-col items-center justify-center relative z-10 overflow-hidden px-4 sm:px-6">
-              <div className="w-full max-w-3xl flex flex-col items-center gap-6">
+              <div className="w-full max-w-3xl flex flex-col items-center gap-5">
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="w-full text-center space-y-3"
+                  className="w-full text-center space-y-2"
                 >
                   <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15]">
                     {greeting},{" "}
@@ -694,7 +588,7 @@ export default function Home() {
                   </motion.div>
                 )}
 
-                {/* Suggestion Tabs — compact */}
+                {/* Suggestion Tabs */}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -706,7 +600,7 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            /* ── ACTIVE: Message stream — only this scrolls ── */
+            /* ACTIVE: Scrollable message stream */
             <div ref={scrollRef} className="flex-1 overflow-y-auto relative z-10 min-h-0">
               <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 space-y-4">
                 {messages.map((msg) => (
@@ -753,7 +647,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* ── Output panel ── */}
+          {/* Output panel */}
           <AnimatePresence>
             {showOutputs && outputs.length > 0 && (
               <div className="px-4 pb-2 relative z-10">
@@ -763,40 +657,7 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* ── Pipeline Composer ── */}
-          <AnimatePresence>
-            {showPipeline && (
-              <div className="px-4 pb-2 relative z-10">
-                <PipelineComposer
-                  balance={balance}
-                  onExecute={(steps) => {
-                    const pipelinePrompt = `/pipeline ${steps.map(s => s.label).join(" → ")}`;
-                    setInput(pipelinePrompt);
-                    setShowPipeline(false);
-                    inputZoneRef.current?.focus();
-                  }}
-                  onSave={async (steps, name) => {
-                    if (!user) return;
-                    try {
-                      const { error } = await supabase.from("agent_plan_templates").insert({
-                        intent_key: "pipeline", name,
-                        description: `Pipeline: ${steps.map(s => s.label).join(" → ")}`,
-                        steps: steps.map(s => ({ tool: s.intent, label: s.label, credits: s.credits, config: s.config })) as any,
-                        estimated_credits: steps.reduce((sum, s) => sum + s.credits, 0),
-                        estimated_duration_seconds: steps.length * 10, is_default: false,
-                      });
-                      if (error) throw error;
-                      toast.success(`Pipeline "${name}" saved`);
-                      setShowPipeline(false);
-                    } catch { toast.error("Failed to save pipeline"); }
-                  }}
-                  onClose={() => setShowPipeline(false)}
-                />
-              </div>
-            )}
-          </AnimatePresence>
-
-          {/* ── Post execution panel ── */}
+          {/* Post execution */}
           {execState.phase === "completed" && showPostExecution && (
             <div className="px-4 pb-2 relative z-10">
               <PostExecutionPanel
@@ -808,15 +669,22 @@ export default function Home() {
             </div>
           )}
 
-          {/* ── Context Actions ── */}
-          <ContextActions
-            neuronCount={totalNeurons} episodeCount={totalEpisodes}
-            lastIntent={execState.intent || undefined} phase={execState.phase}
-            onAction={handleCommand}
-            onOpenPipeline={() => setShowPipeline(true)}
-          />
+          {/* New session button — minimal */}
+          {!isEmptyState && (
+            <div className="flex justify-center py-1 relative z-10">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearChat}
+                className="h-7 px-3 text-[11px] text-muted-foreground/50 hover:text-foreground gap-1.5"
+              >
+                <RotateCcw className="h-3 w-3" />
+                Sesiune nouă
+              </Button>
+            </div>
+          )}
 
-          {/* ── Input Zone ── */}
+          {/* ═══ INPUT ZONE — Always at bottom ═══ */}
           <CommandInputZone
             ref={inputZoneRef} input={input} onInputChange={setInput}
             onSubmit={handleSubmit} onStop={handleStop} loading={loading}
@@ -827,30 +695,14 @@ export default function Home() {
           />
         </div>
 
-        {/* ═══ RIGHT: Execution Panel ═══ */}
-        <AnimatePresence>
-          {showRightPanel && (
-            <ExecutionRightPanel
-              execution={execState}
-              outputCount={outputs.length}
-              balance={balance}
-              onSaveTemplate={handleSaveTemplate}
-              onViewOutputs={() => setShowOutputs(true)}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* ═══ Side Panels (Task Tree + Memory) ═══ */}
-        <SidePanels
-          showTaskTree={showTaskTree} showMemory={showMemory}
+        {/* ═══ RIGHT: Context Drawer (on demand) ═══ */}
+        <ContextDrawer
           execution={execState}
-          onCloseTaskTree={() => setShowTaskTree(false)} onCloseMemory={() => setShowMemory(false)}
+          outputs={outputs}
+          balance={balance}
           onSaveTemplate={handleSaveTemplate}
-          onReplay={(intent) => { setInput(`/${intent} `); inputZoneRef.current?.focus(); setShowMemory(false); }}
-          onExecuteTemplate={(template) => { setInput(`/${template.intent_key} (using template: ${template.name})`); setShowMemory(false); inputZoneRef.current?.focus(); }}
-          sessions={sessions} onLoadSession={async (sid) => { const loaded = await loadSession(sid); if (loaded.length > 0) executionActions.setMessages(loaded); setShowMemory(false); }}
-          onDeleteSession={async (sid) => { await deleteSession(sid); toast.success("Sesiune ștearsă"); }}
-          currentSessionId={sessionId}
+          onViewOutputs={() => setShowOutputs(true)}
+          onRerun={handleRerun}
         />
       </div>
     </>

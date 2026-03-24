@@ -51,17 +51,14 @@ interface NavSection {
   minTier?: UserTier;
   authOnly?: boolean;
   adminOnly?: boolean;
-  /** Visual zone label shown above section group */
-  zone?: "primary" | "core" | "expansion" | "control";
 }
 
 /*
- * COMMAND CENTER ARCHITECTURE v5
- * ⚡ EXECUTE → 📦 SYSTEMS → 🛒 MARKETPLACE → 🧠 INTELLIGENCE → 👤 CREATOR → ⚙ CONTROL → 🧬 INFRA
- * Progressive disclosure by tier: free → auth → pro → admin
+ * SINGLE SIDEBAR — CENTRALIZED CONTROL
+ * Sections: PRIMARY → OPERATIONS → SYSTEM → EXPANSION → USER
+ * Max 5 items per section. Icons-only when collapsed.
  */
 
-/** Visitor sections */
 const PUBLIC_SECTIONS: NavSection[] = [
   {
     labelKey: "explore_section",
@@ -83,77 +80,58 @@ const PUBLIC_SECTIONS: NavSection[] = [
   },
 ];
 
-/** Authenticated user — Command Center structure */
 const AUTH_SECTIONS: NavSection[] = [
-  // ═══ PRIMARY ZONE ═══
+  // ═══ PRIMARY — Home + Execute ═══
   {
     labelKey: "execute_section",
     icon: Zap,
     defaultOpen: true,
     authOnly: true,
-    zone: "primary",
     items: [
-      { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home" },
-      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services", highlight: true },
-      { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
-      { labelKey: "command_center", to: "/home", icon: Terminal, controlId: "nav.chat" },
-      { labelKey: "jobs", to: "/jobs", icon: Rocket, controlId: "nav.jobs" },
+      { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
+      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
     ],
   },
 
-  // ═══ CORE ZONE ═══
+  // ═══ OPERATIONS — Generate, Extract, Jobs ═══
+  {
+    labelKey: "operations_section",
+    icon: Rocket,
+    authOnly: true,
+    items: [
+      { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
+      { labelKey: "jobs", to: "/jobs", icon: Rocket, controlId: "nav.jobs" },
+      { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
+    ],
+  },
+
+  // ═══ SYSTEM — Marketplace, Library ═══
   {
     labelKey: "systems_section",
     icon: Package,
     authOnly: true,
-    zone: "core",
-    items: [
-      { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
-      { labelKey: "master_agent", to: "/master-agent", icon: Bot, controlId: "nav.master-agent" },
-      { labelKey: "prompt_forge", to: "/prompt-forge", icon: PenTool, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
-      { labelKey: "headline_generator", to: "/headline-generator", icon: Zap, controlId: "nav.headline-generator" },
-    ],
-  },
-  {
-    labelKey: "marketplace_section",
-    icon: Store,
-    authOnly: true,
-    zone: "core",
     items: [
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { labelKey: "marketplace_drafts", to: "/marketplace/drafts", icon: FileText, controlId: "nav.marketplace-drafts" },
-      { labelKey: "marketplace_earnings", to: "/marketplace/earnings", icon: DollarSign, controlId: "nav.marketplace-earnings" },
+      { labelKey: "master_agent", to: "/master-agent", icon: Bot, controlId: "nav.master-agent" },
+      { labelKey: "prompt_forge", to: "/prompt-forge", icon: PenTool, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
     ],
   },
 
-  // ═══ EXPANSION ZONE ═══
+  // ═══ EXPANSION — Intelligence, Creator ═══
   {
     labelKey: "intelligence_section",
     icon: Brain,
     authOnly: true,
-    zone: "expansion",
     minTier: "pro" as UserTier,
     items: [
       { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
-      { labelKey: "topics", to: "/topics", icon: Eye, controlId: "nav.topics" },
-      { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units" },
-    ],
-  },
-  {
-    labelKey: "creator_section",
-    icon: Crown,
-    authOnly: true,
-    zone: "expansion",
-    items: [
       { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
       { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { labelKey: "capitalization", to: "/capitalization", icon: TrendingUp, controlId: "nav.capitalization" },
-      { labelKey: "notebooks", to: "/notebooks", icon: FileText, controlId: "nav.notebooks" },
-      { labelKey: "guest_pages", to: "/guests", icon: User, controlId: "nav.guests" },
     ],
   },
 
-  // ═══ ACCOUNT ═══
+  // ═══ USER — Account ═══
   {
     labelKey: "account_section",
     icon: User,
@@ -161,37 +139,17 @@ const AUTH_SECTIONS: NavSection[] = [
     items: [
       { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
       { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-      { labelKey: "wallet", to: "/wallet", icon: Wallet, controlId: "nav.wallet" },
       { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
-      { labelKey: "gamification", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
-    ],
-  },
-
-  // ═══ LEARN ═══
-  {
-    labelKey: "learn_section",
-    icon: GraduationCap,
-    authOnly: true,
-    items: [
-      { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
-      { labelKey: "api", to: "/api", icon: Code, controlId: "nav.api" },
-      { labelKey: "changelog", to: "/changelog", icon: ScrollText, controlId: "nav.changelog" },
-      { labelKey: "feedback", to: "/feedback", icon: MessageCircle, controlId: "nav.feedback" },
     ],
   },
 ];
 
-/** Control & Infra — admin/power user */
 const CONTROL_SECTION: NavSection = {
   labelKey: "control_section",
   icon: Shield,
-  zone: "control",
   items: [
     { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
     { labelKey: "kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
-    { labelKey: "domination", to: "/admin/domination", icon: TrendingUp, adminOnly: true },
-    { labelKey: "inevitability", to: "/admin/inevitability", icon: Lock, adminOnly: true },
-    { labelKey: "financialization", to: "/admin/financialization", icon: DollarSign, adminOnly: true },
     { labelKey: "runtime", to: "/runtime", icon: Activity, adminOnly: true },
     { labelKey: "analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
     { labelKey: "security", to: "/security", icon: Shield, adminOnly: true },
@@ -201,21 +159,11 @@ const CONTROL_SECTION: NavSection = {
 const INFRA_SECTION: NavSection = {
   labelKey: "infra_section",
   icon: Wrench,
-  zone: "control",
   items: [
     { labelKey: "services_catalog", to: "/services-catalog", icon: Database, adminOnly: true },
     { labelKey: "data_pipeline", to: "/data-pipeline", icon: Layers, adminOnly: true },
-    { labelKey: "collection_runs", to: "/collection-runs", icon: FolderOpen, adminOnly: true },
-    { labelKey: "db_schema", to: "/db-schema", icon: Network, adminOnly: true },
     { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
   ],
-};
-
-const ZONE_LABELS: Record<string, string> = {
-  primary: "",
-  core: "CORE",
-  expansion: "EXPANSION",
-  control: "CONTROL",
 };
 
 export function AppSidebar() {
@@ -253,12 +201,8 @@ export function AppSidebar() {
     return sections;
   })();
 
-  // Track which zone labels we've already rendered
-  let lastZone: string | undefined;
-
   return (
     <Sidebar collapsible="icon">
-      {/* Brand */}
       <SidebarHeader>
         <button onClick={() => navigate(user ? "/home" : "/")} className="flex items-center gap-2.5 px-1 py-1">
           <Logo size="h-7 w-7" className="shrink-0" loading="eager" />
@@ -268,7 +212,7 @@ export function AppSidebar() {
 
       <SidebarSeparator />
 
-      {/* Credits & XP — compact widget */}
+      {/* Credits widget */}
       {user && !collapsed && (
         <div className="px-3 py-2 space-y-2">
           <WorkspaceSwitcher collapsed={false} />
@@ -307,7 +251,7 @@ export function AppSidebar() {
         </div>
       )}
 
-      {/* Navigation — Command Center sections */}
+      {/* Navigation */}
       <SidebarContent>
         {resolvedSections.map((section, idx) => {
           const visibleItems = section.items.filter(isItemVisible);
@@ -316,22 +260,6 @@ export function AppSidebar() {
           const hasActive = sectionHasActive(section);
           const SectionIcon = section.icon;
 
-          // Zone separator label
-          let zoneLabel: React.ReactNode = null;
-          if (!collapsed && section.zone && section.zone !== lastZone && ZONE_LABELS[section.zone]) {
-            lastZone = section.zone;
-            zoneLabel = (
-              <div className="px-3 pt-3 pb-0.5">
-                <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">
-                  {ZONE_LABELS[section.zone]}
-                </span>
-              </div>
-            );
-          } else if (section.zone !== lastZone) {
-            lastZone = section.zone;
-          }
-
-          // Collapsed mode — flat icons
           if (collapsed) {
             return (
               <SidebarGroup key={section.labelKey}>
@@ -367,70 +295,63 @@ export function AppSidebar() {
             );
           }
 
-          // Expanded mode — collapsible sections
           return (
-            <div key={section.labelKey}>
-              {zoneLabel}
-              <Collapsible
-                defaultOpen={section.defaultOpen || hasActive}
-                className="group/collapsible"
-              >
-                <SidebarGroup>
-                  <CollapsibleTrigger asChild>
-                    <SidebarGroupLabel className="text-[10px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5">
-                      <SectionIcon className={cn(
-                        "h-3 w-3",
-                        section.zone === "primary" ? "text-primary" : "text-muted-foreground/70"
-                      )} />
-                      <span className="flex-1">{t(`navigation:${section.labelKey}`)}</span>
-                      <ChevronRight className="h-3 w-3 text-muted-foreground/50 transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarGroupLabel>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarGroupContent>
-                      <SidebarMenu>
-                        {visibleItems.map((item) => {
-                          const menuItem = (
-                            <SidebarMenuItem key={item.to}>
-                              <SidebarMenuButton
-                                asChild
-                                isActive={isActive(item.to)}
-                                tooltip={t(`navigation:${item.labelKey}`)}
-                              >
-                                <button onClick={() => navigate(item.to)} className={cn(
-                                  "w-full",
-                                  item.highlight && !isActive(item.to) && "text-primary font-medium"
-                                )}>
-                                  <item.icon className="h-4 w-4" />
-                                  <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
-                                  {item.minTier && (
-                                    <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
-                                  )}
-                                </button>
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
-                          );
+            <Collapsible
+              key={section.labelKey}
+              defaultOpen={section.defaultOpen || hasActive}
+              className="group/collapsible"
+            >
+              <SidebarGroup>
+                <CollapsibleTrigger asChild>
+                  <SidebarGroupLabel className="text-[10px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5">
+                    <SectionIcon className="h-3 w-3 text-muted-foreground/70" />
+                    <span className="flex-1">{t(`navigation:${section.labelKey}`)}</span>
+                    <ChevronRight className="h-3 w-3 text-muted-foreground/50 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                  </SidebarGroupLabel>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {visibleItems.map((item) => {
+                        const menuItem = (
+                          <SidebarMenuItem key={item.to}>
+                            <SidebarMenuButton
+                              asChild
+                              isActive={isActive(item.to)}
+                              tooltip={t(`navigation:${item.labelKey}`)}
+                            >
+                              <button onClick={() => navigate(item.to)} className={cn(
+                                "w-full",
+                                item.highlight && !isActive(item.to) && "text-primary font-medium"
+                              )}>
+                                <item.icon className="h-4 w-4" />
+                                <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
+                                {item.minTier && (
+                                  <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
+                                )}
+                              </button>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        );
 
-                          if (item.controlId) {
-                            return (
-                              <ControlledNavItem key={item.to} elementId={item.controlId}>
-                                {menuItem}
-                              </ControlledNavItem>
-                            );
-                          }
-                          return menuItem;
-                        })}
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </CollapsibleContent>
-                </SidebarGroup>
-              </Collapsible>
-            </div>
+                        if (item.controlId) {
+                          return (
+                            <ControlledNavItem key={item.to} elementId={item.controlId}>
+                              {menuItem}
+                            </ControlledNavItem>
+                          );
+                        }
+                        return menuItem;
+                      })}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </CollapsibleContent>
+              </SidebarGroup>
+            </Collapsible>
           );
         })}
       </SidebarContent>
 
-      {/* Footer */}
       <SidebarFooter>
         <SidebarSeparator />
         <SidebarMenu>
