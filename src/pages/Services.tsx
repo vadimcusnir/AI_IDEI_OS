@@ -14,6 +14,7 @@ import {
   Loader2, Sparkles, Search, X, Coins,
   ArrowRight, Zap, AlertTriangle, Workflow, Clock,
   ShoppingCart, GraduationCap, Megaphone, TrendingUp,
+  Layers, Atom,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
@@ -25,6 +26,9 @@ import { FlowTip } from "@/components/onboarding/FlowTip";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceDrawer } from "@/components/services/ServiceDrawer";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ServiceTierSystem, type ServiceTier } from "@/components/services/ServiceTierSystem";
+import { OutputFamilies } from "@/components/services/OutputFamilies";
+import { QuickStartFlow } from "@/components/services/QuickStartFlow";
 
 interface Service {
   id: string;
