@@ -46,7 +46,7 @@ const MENU_SECTIONS: MenuSection[] = [
       { path: "/home", icon: Home, labelKey: "cockpit" },
       { path: "/services", icon: Sparkles, labelKey: "services" },
       { path: "/extractor", icon: Upload, labelKey: "extractor" },
-      { path: "/chat", icon: Terminal, labelKey: "command_center" },
+      { path: "/home", icon: Terminal, labelKey: "command_center" },
       { path: "/jobs", icon: Rocket, labelKey: "jobs" },
     ],
   },

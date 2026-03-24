@@ -96,7 +96,7 @@ const AUTH_SECTIONS: NavSection[] = [
       { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home" },
       { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services", highlight: true },
       { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
-      { labelKey: "command_center", to: "/chat", icon: Terminal, controlId: "nav.chat" },
+      { labelKey: "command_center", to: "/home", icon: Terminal, controlId: "nav.chat" },
       { labelKey: "jobs", to: "/jobs", icon: Rocket, controlId: "nav.jobs" },
     ],
   },

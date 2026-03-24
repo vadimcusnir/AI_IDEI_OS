@@ -22,7 +22,7 @@ const STATIC_ROUTES = [
   "/home", "/neurons", "/dashboard", "/extractor", "/services", "/jobs",
   "/credits", "/library", "/intelligence", "/prompt-forge", "/profile-extractor",
   "/profile", "/notifications", "/feedback", "/guests", "/onboarding",
-  "/community", "/marketplace", "/chat", "/admin",
+  "/community", "/marketplace", "/admin",
   "/docs/getting-started/overview", "/docs/foundation/neuron-model",
   "/docs/pipeline/extraction", "/docs/architecture/overview",
 ];
