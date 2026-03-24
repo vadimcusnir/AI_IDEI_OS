@@ -7,14 +7,13 @@ const corsHeaders = {
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders }
-
-    // Rate limit guard (IP-based)
-    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
-    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 20, windowSeconds: 60 }, corsHeaders);
-    if (rateLimited) return rateLimited;
-);
+    return new Response(null, { headers: corsHeaders });
   }
+
+  // Rate limit guard (IP-based)
+  const clientIP = req.headers.get("x-forwarded-for") || "unknown";
+  const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 20, windowSeconds: 60 }, corsHeaders);
+  if (rateLimited) return rateLimited;
 
   try {
     const { messages, sources, mode } = await req.json();
