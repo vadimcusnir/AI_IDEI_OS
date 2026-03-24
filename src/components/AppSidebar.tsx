@@ -440,7 +440,7 @@ export function AppSidebar() {
               <div
                 className={cn(
                   "h-full rounded-full transition-all duration-500",
-                  balance < 200 ? "bg-destructive" : balance < 1000 ? "bg-yellow-500" : "bg-primary"
+                  balance < 200 ? "bg-destructive" : balance < 1000 ? "bg-warning" : "bg-primary"
                 )}
                 style={{ width: `${Math.min(100, (balance / 5000) * 100)}%` }}
               />
