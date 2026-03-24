@@ -427,6 +427,12 @@ export default function Services() {
         requiredTier={paywallService?.tier}
         serviceName={paywallService?.name}
       />
+
+      <GuestConversionGate
+        open={guestGateOpen}
+        onClose={() => setGuestGateOpen(false)}
+        serviceName={guestGateService}
+      />
     </div>
     </PageTransition>
     </TooltipProvider>
