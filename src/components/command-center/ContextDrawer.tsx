@@ -543,11 +543,37 @@ function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
         </div>
       </div>
 
-      {/* Level perks hint */}
-      <div className="px-1">
-        <p className="text-[9px] text-muted-foreground/30 leading-relaxed">
-          Level 3 unlocks -10% neuron cost. Level 5 unlocks advanced services.
-        </p>
+      {/* Level perks */}
+      <div className="space-y-1">
+        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider font-semibold px-1">Perks</p>
+        <div className={cn(
+          "flex items-center gap-2 px-2 py-1.5 rounded-lg border",
+          xp.level >= 3 ? "border-primary/20 bg-primary/5" : "border-border/10 opacity-40"
+        )}>
+          <div className={cn(
+            "h-5 w-5 rounded-md flex items-center justify-center text-[10px] font-bold shrink-0",
+            xp.level >= 3 ? "bg-primary/10 text-primary" : "bg-muted/20 text-muted-foreground/30"
+          )}>3</div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-medium text-foreground">-10% neuron cost</p>
+            <p className="text-[9px] text-muted-foreground/40">All service executions</p>
+          </div>
+          {xp.level >= 3 && <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />}
+        </div>
+        <div className={cn(
+          "flex items-center gap-2 px-2 py-1.5 rounded-lg border",
+          xp.level >= 5 ? "border-primary/20 bg-primary/5" : "border-border/10 opacity-40"
+        )}>
+          <div className={cn(
+            "h-5 w-5 rounded-md flex items-center justify-center text-[10px] font-bold shrink-0",
+            xp.level >= 5 ? "bg-primary/10 text-primary" : "bg-muted/20 text-muted-foreground/30"
+          )}>5</div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-medium text-foreground">Advanced services</p>
+            <p className="text-[9px] text-muted-foreground/40">Deep analysis & multi-agent</p>
+          </div>
+          {xp.level >= 5 && <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />}
+        </div>
       </div>
     </div>
   );
