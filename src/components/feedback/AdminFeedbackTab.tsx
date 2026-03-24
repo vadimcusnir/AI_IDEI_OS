@@ -234,7 +234,7 @@ export function AdminFeedbackTab() {
                         {item.status}
                       </span>
                       {item.is_public && (
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600">
+                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-success/10 text-success">
                           PUBLIC
                         </span>
                       )}
