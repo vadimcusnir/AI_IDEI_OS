@@ -943,6 +943,56 @@ export type Database = {
           },
         ]
       }
+      asset_tokens: {
+        Row: {
+          asset_id: string
+          created_at: string | null
+          creator_id: string
+          id: string
+          price_per_unit: number
+          revenue_share_pct: number | null
+          status: string | null
+          total_revenue: number | null
+          total_units: number
+          units_sold: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string | null
+          creator_id: string
+          id?: string
+          price_per_unit?: number
+          revenue_share_pct?: number | null
+          status?: string | null
+          total_revenue?: number | null
+          total_units?: number
+          units_sold?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string | null
+          creator_id?: string
+          id?: string
+          price_per_unit?: number
+          revenue_share_pct?: number | null
+          status?: string | null
+          total_revenue?: number | null
+          total_units?: number
+          units_sold?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_tokens_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       asset_transactions: {
         Row: {
           amount_neurons: number
@@ -1068,6 +1118,42 @@ export type Database = {
           reset_at?: string
           updated_at?: string
           utilization?: number | null
+        }
+        Relationships: []
+      }
+      certifications: {
+        Row: {
+          badge_icon: string | null
+          cert_key: string
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          level: string | null
+          name: string
+          requirements: Json | null
+        }
+        Insert: {
+          badge_icon?: string | null
+          cert_key: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          level?: string | null
+          name: string
+          requirements?: Json | null
+        }
+        Update: {
+          badge_icon?: string | null
+          cert_key?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          level?: string | null
+          name?: string
+          requirements?: Json | null
         }
         Relationships: []
       }
@@ -1719,6 +1805,45 @@ export type Database = {
           is_active?: boolean
           title?: string
           xp_reward?: number
+        }
+        Relationships: []
+      }
+      data_products: {
+        Row: {
+          data_snapshot: Json | null
+          description: string | null
+          expires_at: string | null
+          generated_at: string | null
+          id: string
+          is_published: boolean | null
+          price_neurons: number | null
+          product_type: string | null
+          title: string
+          total_sales: number | null
+        }
+        Insert: {
+          data_snapshot?: Json | null
+          description?: string | null
+          expires_at?: string | null
+          generated_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          price_neurons?: number | null
+          product_type?: string | null
+          title: string
+          total_sales?: number | null
+        }
+        Update: {
+          data_snapshot?: Json | null
+          description?: string | null
+          expires_at?: string | null
+          generated_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          price_neurons?: number | null
+          product_type?: string | null
+          title?: string
+          total_sales?: number | null
         }
         Relationships: []
       }
@@ -3797,6 +3922,59 @@ export type Database = {
         }
         Relationships: []
       }
+      intelligence_reports: {
+        Row: {
+          author_id: string
+          cost_neurons: number | null
+          created_at: string | null
+          full_report: string | null
+          id: string
+          input_summary: string | null
+          job_id: string | null
+          positioning: Json | null
+          report_type: string | null
+          strategies: Json | null
+          title: string
+          weaknesses: Json | null
+        }
+        Insert: {
+          author_id: string
+          cost_neurons?: number | null
+          created_at?: string | null
+          full_report?: string | null
+          id?: string
+          input_summary?: string | null
+          job_id?: string | null
+          positioning?: Json | null
+          report_type?: string | null
+          strategies?: Json | null
+          title: string
+          weaknesses?: Json | null
+        }
+        Update: {
+          author_id?: string
+          cost_neurons?: number | null
+          created_at?: string | null
+          full_report?: string | null
+          id?: string
+          input_summary?: string | null
+          job_id?: string | null
+          positioning?: Json | null
+          report_type?: string | null
+          strategies?: Json | null
+          title?: string
+          weaknesses?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_reports_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kb_analytics: {
         Row: {
           article_id: string
@@ -5725,6 +5903,65 @@ export type Database = {
           },
         ]
       }
+      performance_listings: {
+        Row: {
+          asset_id: string | null
+          conversion_rate: number | null
+          created_at: string | null
+          creator_id: string
+          id: string
+          performance_type: string | null
+          price_neurons: number | null
+          proof_data: Json | null
+          revenue_generated: number | null
+          status: string | null
+          title: string
+          total_sales: number | null
+          verified: boolean | null
+          verified_at: string | null
+        }
+        Insert: {
+          asset_id?: string | null
+          conversion_rate?: number | null
+          created_at?: string | null
+          creator_id: string
+          id?: string
+          performance_type?: string | null
+          price_neurons?: number | null
+          proof_data?: Json | null
+          revenue_generated?: number | null
+          status?: string | null
+          title: string
+          total_sales?: number | null
+          verified?: boolean | null
+          verified_at?: string | null
+        }
+        Update: {
+          asset_id?: string | null
+          conversion_rate?: number | null
+          created_at?: string | null
+          creator_id?: string
+          id?: string
+          performance_type?: string | null
+          price_neurons?: number | null
+          proof_data?: Json | null
+          revenue_generated?: number | null
+          status?: string | null
+          title?: string
+          total_sales?: number | null
+          verified?: boolean | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "performance_listings_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       person_dimension_scores: {
         Row: {
           dimension_id: string
@@ -7402,6 +7639,41 @@ export type Database = {
         }
         Relationships: []
       }
+      token_holdings: {
+        Row: {
+          holder_id: string
+          id: string
+          purchase_price: number
+          purchased_at: string | null
+          token_id: string
+          units: number
+        }
+        Insert: {
+          holder_id: string
+          id?: string
+          purchase_price?: number
+          purchased_at?: string | null
+          token_id: string
+          units?: number
+        }
+        Update: {
+          holder_id?: string
+          id?: string
+          purchase_price?: number
+          purchased_at?: string | null
+          token_id?: string
+          units?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "token_holdings_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "asset_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       token_transactions: {
         Row: {
           amount: number
@@ -7874,6 +8146,41 @@ export type Database = {
           xp_reward?: number | null
         }
         Relationships: []
+      }
+      user_certifications: {
+        Row: {
+          awarded_at: string | null
+          cert_id: string
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string | null
+          cert_id: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string | null
+          cert_id?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_certifications_cert_id_fkey"
+            columns: ["cert_id"]
+            isOneToOne: false
+            referencedRelation: "certifications"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_credits: {
         Row: {
