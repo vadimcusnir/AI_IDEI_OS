@@ -392,22 +392,22 @@ export function AppSidebar() {
                       <p className="text-[11px] text-muted-foreground/40 px-3 py-2">Nicio sesiune</p>
                     )}
                     {recentSessions.map((session) => (
-                      <SidebarMenuItem key={session.id}>
+                      <SidebarMenuItem key={session.session_id}>
                         <SidebarMenuButton
                           className="group/session text-xs h-8"
                           onClick={() => {
-                            loadSession(session.id);
+                            loadSession(session.session_id);
                             navigate("/home");
                           }}
                         >
                           <MessageCircle className="h-3 w-3 text-muted-foreground/50 shrink-0" />
                           <span className="flex-1 truncate text-muted-foreground group-hover/session:text-foreground">
-                            {session.title || formatDistanceToNow(new Date(session.updated_at), { addSuffix: true, locale: ro })}
+                            {session.last_message?.slice(0, 40) || formatDistanceToNow(new Date(session.created_at), { addSuffix: true, locale: ro })}
                           </span>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              deleteSession(session.id);
+                              deleteSession(session.session_id);
                               toast.success("Sesiune ștearsă");
                             }}
                             className="opacity-0 group-hover/session:opacity-100 h-4 w-4 rounded flex items-center justify-center hover:bg-destructive/10 transition-all"
