@@ -421,11 +421,11 @@ export function AppSidebar() {
               <div className="flex items-center gap-1.5">
                 <Crown className={cn(
                   "h-3 w-3",
-                  tier === "vip" ? "text-yellow-500" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
+                  tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
                 )} />
                 <span className={cn(
                   "text-[10px] font-bold uppercase tracking-wider",
-                  tier === "vip" ? "text-yellow-500" : tier === "pro" ? "text-primary" : "text-muted-foreground"
+                  tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground"
                 )}>
                   {tier === "vip" ? "VIP" : tier === "pro" ? "PRO" : "FREE"}
                 </span>
