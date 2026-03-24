@@ -1609,6 +1609,42 @@ export type Database = {
         }
         Relationships: []
       }
+      creator_rankings: {
+        Row: {
+          avg_asset_rating: number | null
+          creator_rank: number | null
+          creator_tier: string | null
+          portfolio_value: number | null
+          reputation_score: number | null
+          total_assets_sold: number | null
+          total_revenue_neurons: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          avg_asset_rating?: number | null
+          creator_rank?: number | null
+          creator_tier?: string | null
+          portfolio_value?: number | null
+          reputation_score?: number | null
+          total_assets_sold?: number | null
+          total_revenue_neurons?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          avg_asset_rating?: number | null
+          creator_rank?: number | null
+          creator_tier?: string | null
+          portfolio_value?: number | null
+          reputation_score?: number | null
+          total_assets_sold?: number | null
+          total_revenue_neurons?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       credit_transactions: {
         Row: {
           amount: number
@@ -5876,6 +5912,54 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_metrics: {
+        Row: {
+          active_users_7d: number | null
+          assets_per_execution: number | null
+          avg_lock_in_score: number | null
+          created_at: string | null
+          id: string
+          marketplace_velocity: number | null
+          metric_date: string
+          reuse_rate: number | null
+          revenue_per_user: number | null
+          total_assets: number | null
+          total_executions: number | null
+          total_revenue_neurons: number | null
+          total_users: number | null
+        }
+        Insert: {
+          active_users_7d?: number | null
+          assets_per_execution?: number | null
+          avg_lock_in_score?: number | null
+          created_at?: string | null
+          id?: string
+          marketplace_velocity?: number | null
+          metric_date?: string
+          reuse_rate?: number | null
+          revenue_per_user?: number | null
+          total_assets?: number | null
+          total_executions?: number | null
+          total_revenue_neurons?: number | null
+          total_users?: number | null
+        }
+        Update: {
+          active_users_7d?: number | null
+          assets_per_execution?: number | null
+          avg_lock_in_score?: number | null
+          created_at?: string | null
+          id?: string
+          marketplace_velocity?: number | null
+          metric_date?: string
+          reuse_rate?: number | null
+          revenue_per_user?: number | null
+          total_assets?: number | null
+          total_executions?: number | null
+          total_revenue_neurons?: number | null
+          total_users?: number | null
+        }
+        Relationships: []
+      }
       product_surface_pages: {
         Row: {
           created_at: string
@@ -8002,6 +8086,45 @@ export type Database = {
           id?: string
           position?: number | null
           title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_lock_in: {
+        Row: {
+          asset_dependency: number | null
+          assets_count: number | null
+          executions_count: number | null
+          identity_dependency: number | null
+          marketplace_revenue: number | null
+          revenue_dependency: number | null
+          tier: string | null
+          total_score: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          asset_dependency?: number | null
+          assets_count?: number | null
+          executions_count?: number | null
+          identity_dependency?: number | null
+          marketplace_revenue?: number | null
+          revenue_dependency?: number | null
+          tier?: string | null
+          total_score?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          asset_dependency?: number | null
+          assets_count?: number | null
+          executions_count?: number | null
+          identity_dependency?: number | null
+          marketplace_revenue?: number | null
+          revenue_dependency?: number | null
+          tier?: string | null
+          total_score?: number | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
