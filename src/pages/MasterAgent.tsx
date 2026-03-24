@@ -31,6 +31,7 @@ interface StepLog {
 
 interface AgentResult {
   status: string;
+  reason?: string;
   job_id?: string;
   summary?: {
     neurons_extracted: number;
