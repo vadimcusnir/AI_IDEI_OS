@@ -139,6 +139,15 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
             </div>
           </header>
 
+          {/* ═══ PIPELINE CONTEXT BAR — below header, visible only when active ═══ */}
+          {user && (
+            <div className="hidden md:flex items-center justify-center border-b border-border/30 bg-muted/20 py-1.5 px-4">
+              <Suspense fallback={null}>
+                <CompactPipeline />
+              </Suspense>
+            </div>
+          )}
+
           <div className="min-h-0">
             <Suspense fallback={null}><LowBalanceBanner /></Suspense>
             <Suspense fallback={null}><BehaviorOverlay /></Suspense>
