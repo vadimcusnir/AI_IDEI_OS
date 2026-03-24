@@ -445,10 +445,32 @@ export default function Home() {
                     onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
                     showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
                     onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+                    onAttachAction={(action) => {
+                      const actionPrompts: Record<string, string> = {
+                        extract_neurons: "/extract neurons from content",
+                        generate_content: "/generate content from neurons",
+                        analyze_data: "/analyze my data and competitors",
+                        build_funnel: "/build a sales funnel",
+                        trending: "/analyze trending patterns in my library",
+                        recommended: "/suggest next best actions based on my data",
+                      };
+                      const prompt = actionPrompts[action];
+                      if (prompt) handleCommand(prompt, true);
+                    }}
                   />
                 </motion.div>
 
-                {/* Suggestion Tabs — compact */}
+                {/* Inline service suggestions */}
+                {input.length >= 3 && (
+                  <InlineServiceSuggestions
+                    input={input}
+                    visible={true}
+                    onSelect={(prompt) => handleCommand(prompt, true)}
+                  />
+                )}
+
+                {/* Suggestion Tabs — compact (hidden when typing) */}
+                {input.length < 3 && (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
