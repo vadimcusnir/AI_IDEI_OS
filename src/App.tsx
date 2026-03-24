@@ -157,9 +157,9 @@ const App = () => (
                 <Route path="/guest/:slug" element={<GuestProfile />} />
 
                 {/* Public knowledge infrastructure — with global layout */}
-                <Route path="/docs" element={<AppLayout><Docs /></AppLayout>} />
-                <Route path="/docs/:section/:topic" element={<AppLayout><Docs /></AppLayout>} />
-                <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
+                <Route path="/docs" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
+                <Route path="/docs/:section/:topic" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
+                <Route path="/changelog" element={<AppLayout><ErrorBoundary fallbackTitle="Changelog failed to load"><Changelog /></ErrorBoundary></AppLayout>} />
                 {/* ═══ Public SEO-indexable entity pages (lightweight, no Auth providers) ═══ */}
                 <Route path="/knowledge/:slug" element={<PublicEntityPage />} />
                 <Route path="/insights/:slug" element={<PublicInsightPage />} />
