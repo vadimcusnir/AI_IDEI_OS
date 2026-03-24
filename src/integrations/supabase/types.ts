@@ -1823,6 +1823,89 @@ export type Database = {
         }
         Relationships: []
       }
+      distribution_events: {
+        Row: {
+          action: string
+          asset_id: string | null
+          channel: string
+          clicks: number | null
+          conversions: number | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          reach_estimate: number | null
+        }
+        Insert: {
+          action?: string
+          asset_id?: string | null
+          channel: string
+          clicks?: number | null
+          conversions?: number | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          reach_estimate?: number | null
+        }
+        Update: {
+          action?: string
+          asset_id?: string | null
+          channel?: string
+          clicks?: number | null
+          conversions?: number | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          reach_estimate?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distribution_events_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      domination_metrics: {
+        Row: {
+          action_taken: string | null
+          conversions: number
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          metric_date: string
+          quality_score: number
+          revenue: number
+          usage_count: number
+        }
+        Insert: {
+          action_taken?: string | null
+          conversions?: number
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          metric_date?: string
+          quality_score?: number
+          revenue?: number
+          usage_count?: number
+        }
+        Update: {
+          action_taken?: string | null
+          conversions?: number
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          metric_date?: string
+          quality_score?: number
+          revenue?: number
+          usage_count?: number
+        }
+        Relationships: []
+      }
       dynamic_pricing_log: {
         Row: {
           base_price: number
