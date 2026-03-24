@@ -82,7 +82,7 @@ const CLASS_BADGE: Record<string, { label: string; description: string; classNam
   S: { label: "Sync", description: "Real-time synchronized processing across services.", className: "bg-status-validated/15 text-status-validated" },
 };
 
-type SectionKey = "pipelines" | "services" | "history";
+type SectionKey = "quick-start" | "pipelines" | "services" | "outputs" | "history";
 
 export default function Services() {
   const { t } = useTranslation("pages");
