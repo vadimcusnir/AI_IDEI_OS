@@ -151,8 +151,8 @@ const App = () => (
                 <Route path="/" element={<Landing />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/links" element={<AppLayout><Links /></AppLayout>} />
-                <Route path="/architecture" element={<AppLayout><Architecture /></AppLayout>} />
+                <Route path="/links" element={<AppLayout><ErrorBoundary fallbackTitle="Links failed to load"><Links /></ErrorBoundary></AppLayout>} />
+                <Route path="/architecture" element={<AppLayout><ErrorBoundary fallbackTitle="Architecture failed to load"><Architecture /></ErrorBoundary></AppLayout>} />
                 <Route path="/u/:username" element={<PublicUserProfile />} />
                 <Route path="/guest/:slug" element={<GuestProfile />} />
 
