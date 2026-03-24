@@ -4,6 +4,7 @@
  * Inspired by Claude/Perplexity/Manus patterns.
  */
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
+import { useExecution } from "@/hooks/useExecution";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
