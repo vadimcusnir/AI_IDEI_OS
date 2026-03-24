@@ -226,7 +226,7 @@ export default function Onboarding() {
             <div className="flex items-center gap-1.5">
               <div className="w-24 h-1.5 rounded-full bg-muted overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-primary"
+                  className="h-full rounded-full bg-[hsl(var(--gold-oxide))]"
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
