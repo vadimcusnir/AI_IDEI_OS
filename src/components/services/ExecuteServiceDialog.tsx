@@ -23,9 +23,9 @@ type ExecState = "configure" | "executing" | "done" | "error";
 
 /** service_registry.id IS the service_key (slug format) */
 
-export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceDialogProps) {
-  const [input, setInput] = useState("");
-  const [goal, setGoal] = useState("");
+export function ExecuteServiceDialog({ service, open, onClose, initialInput, initialGoal }: ExecuteServiceDialogProps) {
+  const [input, setInput] = useState(initialInput || "");
+  const [goal, setGoal] = useState(initialGoal || "");
   const [state, setState] = useState<ExecState>("configure");
   const [output, setOutput] = useState("");
   const [costCharged, setCostCharged] = useState(0);
@@ -35,12 +35,12 @@ export function ExecuteServiceDialog({ service, open, onClose }: ExecuteServiceD
   useEffect(() => {
     if (service) {
       setState("configure");
-      setInput("");
-      setGoal("");
+      setInput(initialInput || "");
+      setGoal(initialGoal || "");
       setOutput("");
       setCostCharged(0);
     }
-  }, [service?.id]);
+  }, [service?.id, initialInput, initialGoal]);
 
   const estimatedCost = service
     ? Math.round((service.neurons_cost_min + service.neurons_cost_max) / 2)
