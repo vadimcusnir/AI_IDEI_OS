@@ -56,7 +56,7 @@ export default function PipelineOverview() {
 
   const handleExecutePipeline = (steps: PipelineStep[]) => {
     const prompt = `/pipeline ${steps.map(s => s.label).join(" → ")}`;
-    navigate(`/chat?q=${encodeURIComponent(prompt)}`);
+    navigate(`/home?q=${encodeURIComponent(prompt)}`);
   };
 
   const handleSavePipeline = async (steps: PipelineStep[], name: string) => {
