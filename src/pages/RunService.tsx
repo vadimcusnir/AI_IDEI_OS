@@ -680,6 +680,11 @@ export default function RunService() {
                       <PostExecutionRecommendations
                         serviceKey={service.service_key}
                         serviceCategory={service.category}
+                        lastOutput={jobResult}
+                        lastGoal={inputs["content"] || inputs["text"] || ""}
+                        onChainService={(chainKey, prefill) => {
+                          navigate(`/run/${chainKey}`, { state: { prefillInput: prefill.input, prefillGoal: prefill.goal } });
+                        }}
                       />
 
                       {/* Upsell — monetization loop */}
