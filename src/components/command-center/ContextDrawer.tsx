@@ -4,16 +4,19 @@
  * 
  * PURPOSE: Context + economic pressure + output access + behavioral retention
  * RULE: Does NOT duplicate chat content. Shows ONLY support data.
+ * 
+ * VISUAL: Obsidian Sigil icons, premium spacing, gold-oxide accents.
  */
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { Loader2, X, ChevronRight } from "lucide-react";
 import {
-  X, ChevronRight, CheckCircle2, XCircle, Zap,
-  Clock, Coins, Loader2, Crown, TrendingDown,
-  FileText, Lock, Package, Rocket, Eye, Trophy,
-  Flame, Star, Target,
-} from "lucide-react";
+  SigilEye, SigilBolt, SigilCrystal, SigilSpiral,
+  SigilCrown, SigilLock, SigilFlame, SigilNeuron,
+  SigilCheck, SigilFail, SigilDocument, SigilTrend,
+  SigilRocket, SigilClock, SigilTarget, SigilStar,
+} from "@/components/icons/SigilIcons";
 import { cn } from "@/lib/utils";
 import { useUserTier } from "@/hooks/useUserTier";
 import { useGamification } from "@/hooks/useGamification";
@@ -70,33 +73,40 @@ export function ContextDrawer({
   const isActive = phase === "executing" || phase === "delivering" || phase === "planning";
   const consumedCredits = steps.filter(s => s.status === "completed" || s.status === "running").reduce((sum, s) => sum + s.credits, 0);
 
-  const TABS: Array<{ id: RightTab; label: string; icon: React.ElementType; badge?: boolean }> = [
-    { id: "state", label: "State", icon: Eye, badge: balance < 200 },
-    { id: "runs", label: "Runs", icon: Zap, badge: isActive },
-    { id: "assets", label: "Assets", icon: Package },
-    { id: "progress", label: "Progress", icon: Trophy },
+  const TABS: Array<{ id: RightTab; label: string; icon: React.FC<{ className?: string; size?: number }>; badge?: boolean }> = [
+    { id: "state", label: "State", icon: SigilEye, badge: balance < 200 },
+    { id: "runs", label: "Runs", icon: SigilBolt, badge: isActive },
+    { id: "assets", label: "Assets", icon: SigilCrystal },
+    { id: "progress", label: "Progress", icon: SigilSpiral },
   ];
 
   // Collapsed icon strip
   if (!isOpen) {
     return (
-      <div className="hidden lg:flex flex-col items-center py-3 px-1 border-l border-border/20 bg-card/30 shrink-0">
-        {TABS.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => { setIsOpen(true); setActiveTab(tab.id); }}
-            className="h-8 w-8 rounded-lg flex items-center justify-center mb-1 transition-colors relative text-muted-foreground/40 hover:text-foreground hover:bg-muted/40"
-            title={tab.label}
-          >
-            <tab.icon className="h-3.5 w-3.5" />
-            {tab.badge && (
-              <span className={cn(
-                "absolute top-1 right-1 h-1.5 w-1.5 rounded-full animate-pulse",
-                tab.id === "state" ? "bg-destructive" : "bg-primary"
-              )} />
-            )}
-          </button>
-        ))}
+      <div className="hidden lg:flex flex-col items-center py-4 px-1.5 border-l border-border/15 bg-background/50 backdrop-blur-sm shrink-0 gap-1">
+        {TABS.map(tab => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => { setIsOpen(true); setActiveTab(tab.id); }}
+              className={cn(
+                "h-9 w-9 rounded-xl flex items-center justify-center transition-all relative group",
+                "text-muted-foreground/30 hover:text-foreground hover:bg-muted/30",
+                "hover:shadow-sm hover:shadow-primary/5"
+              )}
+              title={tab.label}
+            >
+              <Icon size={15} />
+              {tab.badge && (
+                <span className={cn(
+                  "absolute top-1.5 right-1.5 h-2 w-2 rounded-full ring-2 ring-background",
+                  tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
+                )} />
+              )}
+            </button>
+          );
+        })}
       </div>
     );
   }
@@ -110,35 +120,38 @@ export function ContextDrawer({
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 300, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="hidden lg:flex flex-col h-full border-l border-border/30 bg-card/50 backdrop-blur-sm overflow-hidden shrink-0"
+            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            className="hidden lg:flex flex-col h-full border-l border-border/20 bg-background/60 backdrop-blur-md overflow-hidden shrink-0"
           >
-            {/* Tab bar */}
-            <div className="flex items-center border-b border-border/20 px-1.5 py-1 gap-0.5">
-              {TABS.map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[10px] font-medium transition-colors relative",
-                    activeTab === tab.id
-                      ? "bg-muted/50 text-foreground"
-                      : "text-muted-foreground/40 hover:text-foreground hover:bg-muted/20"
-                  )}
-                >
-                  <tab.icon className="h-3 w-3" />
-                  <span className="hidden xl:inline">{tab.label}</span>
-                  {tab.badge && (
-                    <span className={cn(
-                      "h-1.5 w-1.5 rounded-full animate-pulse",
-                      tab.id === "state" ? "bg-destructive" : "bg-primary"
-                    )} />
-                  )}
-                </button>
-              ))}
+            {/* Tab bar — premium treatment */}
+            <div className="flex items-center border-b border-border/15 px-2 py-1.5 gap-0.5 bg-muted/20">
+              {TABS.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-semibold tracking-wide transition-all relative",
+                      activeTab === tab.id
+                        ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
+                        : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
+                    )}
+                  >
+                    <Icon size={13} className={activeTab === tab.id ? "text-primary" : ""} />
+                    <span className="hidden xl:inline uppercase tracking-widest">{tab.label}</span>
+                    {tab.badge && (
+                      <span className={cn(
+                        "h-1.5 w-1.5 rounded-full",
+                        tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
+                      )} />
+                    )}
+                  </button>
+                );
+              })}
               <button
                 onClick={() => setIsOpen(false)}
-                className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground/30 hover:text-foreground hover:bg-muted/50 transition-colors ml-0.5 shrink-0"
+                className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground/25 hover:text-foreground hover:bg-muted/30 transition-colors ml-0.5 shrink-0"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -146,22 +159,32 @@ export function ContextDrawer({
 
             {/* Tab content */}
             <div className="flex-1 overflow-y-auto">
-              {activeTab === "state" && (
-                <StateTab tier={tier} balance={balance} phase={phase} navigate={navigate} />
-              )}
-              {activeTab === "runs" && (
-                <RunsTab
-                  steps={steps} phase={phase} elapsed={elapsed} progress={progress}
-                  isDone={isDone} isFailed={isFailed} isActive={isActive}
-                  consumedCredits={consumedCredits} totalCredits={totalCredits}
-                />
-              )}
-              {activeTab === "assets" && (
-                <AssetsTab outputs={outputs} onViewOutputs={onViewOutputs} />
-              )}
-              {activeTab === "progress" && (
-                <ProgressTab navigate={navigate} />
-              )}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, x: 8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -8 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  {activeTab === "state" && (
+                    <StateTab tier={tier} balance={balance} phase={phase} navigate={navigate} />
+                  )}
+                  {activeTab === "runs" && (
+                    <RunsTab
+                      steps={steps} phase={phase} elapsed={elapsed} progress={progress}
+                      isDone={isDone} isFailed={isFailed} isActive={isActive}
+                      consumedCredits={consumedCredits} totalCredits={totalCredits}
+                    />
+                  )}
+                  {activeTab === "assets" && (
+                    <AssetsTab outputs={outputs} onViewOutputs={onViewOutputs} />
+                  )}
+                  {activeTab === "progress" && (
+                    <ProgressTab navigate={navigate} />
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </motion.div>
         )}
@@ -179,11 +202,11 @@ export function ContextDrawer({
             <motion.div
               initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed inset-y-0 right-0 w-[280px] z-50 border-l border-border bg-card shadow-xl overflow-y-auto"
+              className="lg:hidden fixed inset-y-0 right-0 w-[300px] z-50 border-l border-border/20 bg-background shadow-2xl shadow-black/20 overflow-y-auto"
             >
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border/20">
-                <span className="text-xs font-semibold text-muted-foreground">Control Panel</span>
-                <button onClick={() => setIsOpen(false)} className="p-1 text-muted-foreground hover:text-foreground">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border/15 bg-muted/20">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Panel</span>
+                <button onClick={() => setIsOpen(false)} className="p-1.5 text-muted-foreground/40 hover:text-foreground rounded-lg hover:bg-muted/30 transition-colors">
                   <X className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -204,76 +227,127 @@ function StateTab({ tier, balance, phase, navigate }: {
   const runway = burnRate > 0 ? Math.floor(balance / burnRate) : 999;
 
   return (
-    <div className="p-3 space-y-3">
-      <div className="rounded-lg border border-border/20 p-3">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Balance</span>
-          <div className="flex items-center gap-1">
-            <Crown className={cn("h-3 w-3", tier === "vip" ? "text-yellow-500" : tier === "pro" ? "text-primary" : "text-muted-foreground/30")} />
-            <span className={cn("text-[10px] font-semibold", tier === "vip" ? "text-yellow-500" : tier === "pro" ? "text-primary" : "text-muted-foreground/50")}>
+    <div className="p-4 space-y-4">
+      {/* Balance card — hero element */}
+      <div className="rounded-xl border border-border/20 p-4 bg-card/50 relative overflow-hidden">
+        {/* Subtle gradient accent */}
+        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/[0.04] to-transparent rounded-bl-full" />
+        
+        <div className="flex items-center justify-between mb-3 relative">
+          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">Balance</span>
+          <div className="flex items-center gap-1.5">
+            <SigilCrown
+              size={14}
+              className={cn(
+                tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/25"
+              )}
+            />
+            <span className={cn(
+              "text-[9px] font-bold uppercase tracking-[0.15em]",
+              tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
+            )}>
               {(tier || "free").toUpperCase()}
             </span>
           </div>
         </div>
-        <p className={cn("text-xl font-bold tabular-nums", balance < 200 ? "text-destructive" : "text-foreground")}>
-          {balance.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">N</span>
+
+        <p className={cn(
+          "text-2xl font-bold tabular-nums tracking-tight relative",
+          balance < 200 ? "text-destructive" : "text-foreground"
+        )}>
+          {balance.toLocaleString()}
+          <span className="text-xs font-medium text-muted-foreground/40 ml-1.5">N</span>
         </p>
+
+        {/* Usage bar */}
+        <div className="mt-3 h-1 w-full bg-border/20 rounded-full overflow-hidden">
+          <motion.div
+            className={cn(
+              "h-full rounded-full transition-colors",
+              balance < 200 ? "bg-destructive" : balance < 1000 ? "bg-warning" : "bg-primary/60"
+            )}
+            initial={{ width: 0 }}
+            animate={{ width: `${Math.min(100, (balance / 5000) * 100)}%` }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          />
+        </div>
       </div>
 
-      <div className="space-y-1.5">
+      {/* Metrics — clean grid */}
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between text-[11px]">
-          <span className="text-muted-foreground/60 flex items-center gap-1">
-            <TrendingDown className="h-3 w-3" /> Burn rate
+          <span className="text-muted-foreground/50 flex items-center gap-2">
+            <SigilTrend size={13} className="text-muted-foreground/30" />
+            Burn rate
           </span>
-          <span className="text-muted-foreground tabular-nums">~{burnRate} N/task</span>
+          <span className="text-muted-foreground font-mono tabular-nums text-[10px]">~{burnRate} N/task</span>
         </div>
         <div className="flex items-center justify-between text-[11px]">
-          <span className="text-muted-foreground/60">Runway</span>
-          <span className={cn("tabular-nums font-medium", runway < 10 ? "text-destructive" : "text-foreground")}>
+          <span className="text-muted-foreground/50 flex items-center gap-2">
+            <SigilTarget size={13} className="text-muted-foreground/30" />
+            Runway
+          </span>
+          <span className={cn(
+            "font-mono tabular-nums text-[10px] font-semibold",
+            runway < 10 ? "text-destructive" : "text-foreground"
+          )}>
             ~{runway} tasks
           </span>
         </div>
         {tier !== "vip" && tier !== "pro" && (
           <div className="flex items-center justify-between text-[11px]">
-            <span className="text-muted-foreground/60">Discount</span>
-            <span className="text-muted-foreground/40">0% — upgrade for 25%</span>
+            <span className="text-muted-foreground/50">Discount</span>
+            <span className="text-muted-foreground/30 text-[10px]">0% — upgrade for 25%</span>
           </div>
         )}
       </div>
 
+      {/* Warning */}
       {balance < 500 && (
         <div className={cn(
-          "rounded-lg px-3 py-2 text-[11px]",
+          "rounded-xl px-3.5 py-2.5 text-[11px] leading-relaxed border",
           balance < 200
-            ? "bg-destructive/5 border border-destructive/10 text-destructive"
-            : "bg-muted/30 border border-border/20 text-muted-foreground"
+            ? "bg-destructive/[0.04] border-destructive/10 text-destructive"
+            : "bg-muted/20 border-border/15 text-muted-foreground/60"
         )}>
           {balance < 200 ? "⚠ Sold critic — reîncarcă" : "Sold scăzut — planifică reîncărcarea"}
         </div>
       )}
 
-      <div className="space-y-1.5 pt-1">
-        <Button size="sm" className="w-full h-8 text-xs gap-1.5" onClick={() => navigate("/credits")}>
-          <Coins className="h-3 w-3" /> Cumpără NEURONS
+      {/* CTAs */}
+      <div className="space-y-2 pt-1">
+        <Button
+          size="sm"
+          className="w-full h-9 text-xs gap-2 font-semibold rounded-xl shadow-sm shadow-primary/10"
+          onClick={() => navigate("/credits")}
+        >
+          <SigilNeuron size={14} /> Cumpără NEURONS
         </Button>
         {tier !== "vip" && tier !== "pro" && (
-          <Button size="sm" variant="ghost" className="w-full h-7 text-[11px] gap-1.5 text-muted-foreground" onClick={() => navigate("/credits")}>
-            <Rocket className="h-3 w-3" /> Upgrade plan
+          <Button
+            size="sm"
+            variant="ghost"
+            className="w-full h-8 text-[11px] gap-2 text-muted-foreground/60 hover:text-foreground rounded-xl"
+            onClick={() => navigate("/credits")}
+          >
+            <SigilRocket size={13} /> Upgrade plan
           </Button>
         )}
       </div>
 
-      <div className="rounded-lg border border-border/15 p-3 mt-2">
-        <div className="flex items-center gap-2 mb-1.5">
-          <Lock className="h-3 w-3 text-muted-foreground/30" />
-          <span className="text-[11px] font-semibold text-muted-foreground/60">Cusnir_OS</span>
+      {/* Cusnir_OS teaser */}
+      <div className="rounded-xl border border-border/10 p-4 bg-card/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
+        <div className="flex items-center gap-2.5 mb-2 relative">
+          <SigilLock size={14} className="text-muted-foreground/25" />
+          <span className="text-[11px] font-bold text-muted-foreground/50 tracking-wide">Cusnir_OS</span>
         </div>
-        <p className="text-[10px] text-muted-foreground/40 leading-relaxed">
+        <p className="text-[10px] text-muted-foreground/30 leading-[1.6] relative">
           Advanced cognitive infrastructure. Requires 11 months consecutive VIP.
         </p>
         <button
           onClick={() => navigate("/cusnir-os")}
-          className="mt-2 flex items-center gap-1 text-[10px] text-muted-foreground/40 hover:text-foreground transition-colors"
+          className="mt-3 flex items-center gap-1.5 text-[10px] text-muted-foreground/30 hover:text-foreground transition-colors relative"
         >
           Learn more <ChevronRight className="h-3 w-3" />
         </button>
@@ -290,61 +364,68 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
 }) {
   if (phase === "idle") {
     return (
-      <div className="p-4 flex flex-col items-center justify-center py-12 text-center">
-        <Zap className="h-5 w-5 text-muted-foreground/15 mb-2" />
-        <p className="text-[11px] text-muted-foreground/30">No active execution</p>
+      <div className="p-4 flex flex-col items-center justify-center py-16 text-center">
+        <SigilBolt size={24} className="text-muted-foreground/10 mb-3" />
+        <p className="text-[11px] text-muted-foreground/25 font-medium">No active execution</p>
+        <p className="text-[9px] text-muted-foreground/15 mt-1">Run a command to see progress here</p>
       </div>
     );
   }
 
   return (
-    <div className="p-3 space-y-3">
-      <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
-        <span className="flex items-center gap-1 tabular-nums">
-          <Clock className="h-3 w-3" /> {elapsed}s
+    <div className="p-4 space-y-4">
+      {/* Metrics strip */}
+      <div className="flex items-center gap-5 text-[11px] text-muted-foreground/60">
+        <span className="flex items-center gap-1.5 tabular-nums font-mono text-[10px]">
+          <SigilClock size={13} className="text-muted-foreground/30" /> {elapsed}s
         </span>
-        <span className="flex items-center gap-1 tabular-nums">
-          <Coins className="h-3 w-3" /> {consumedCredits}/{totalCredits}N
+        <span className="flex items-center gap-1.5 tabular-nums font-mono text-[10px]">
+          <SigilNeuron size={13} className="text-muted-foreground/30" /> {consumedCredits}/{totalCredits}N
         </span>
-        <span className="tabular-nums">
+        <span className="tabular-nums font-mono text-[10px]">
           {steps.filter(s => s.status === "completed").length}/{steps.length}
         </span>
       </div>
 
+      {/* Progress bar */}
       {steps.length > 0 && (
-        <div className="h-1 bg-muted/30 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-muted/20 rounded-full overflow-hidden">
           <motion.div
-            className={cn("h-full rounded-full", isDone ? "bg-green-500" : isFailed ? "bg-destructive" : "bg-muted-foreground/30")}
+            className={cn(
+              "h-full rounded-full",
+              isDone ? "bg-success" : isFailed ? "bg-destructive" : "bg-primary/50"
+            )}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           />
         </div>
       )}
 
+      {/* Steps */}
       {steps.length > 0 && (
         <div className="space-y-0.5">
           {steps.map(step => (
             <div key={step.id} className={cn(
-              "flex items-center gap-2 px-2 py-1 rounded text-[11px]",
-              step.status === "running" && "bg-muted/20",
+              "flex items-center gap-2.5 px-3 py-2 rounded-lg text-[11px] transition-colors",
+              step.status === "running" && "bg-primary/[0.03] border border-primary/10",
             )}>
-              <div className="shrink-0 w-3 flex items-center justify-center">
-                {step.status === "pending" && <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/15" />}
-                {step.status === "running" && <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />}
-                {step.status === "completed" && <CheckCircle2 className="h-3 w-3 text-green-500" />}
-                {step.status === "failed" && <XCircle className="h-3 w-3 text-destructive" />}
-                {step.status === "skipped" && <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/10" />}
+              <div className="shrink-0 w-4 flex items-center justify-center">
+                {step.status === "pending" && <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/12" />}
+                {step.status === "running" && <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />}
+                {step.status === "completed" && <SigilCheck size={14} className="text-success" />}
+                {step.status === "failed" && <SigilFail size={14} className="text-destructive" />}
+                {step.status === "skipped" && <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/8" />}
               </div>
               <span className={cn(
                 "truncate flex-1",
                 step.status === "completed" ? "text-foreground" :
-                step.status === "running" ? "text-foreground" :
+                step.status === "running" ? "text-foreground font-medium" :
                 step.status === "failed" ? "text-destructive" :
-                "text-muted-foreground/30",
+                "text-muted-foreground/25",
               )}>
                 {step.label}
               </span>
-              <span className="text-[9px] tabular-nums text-muted-foreground/25 shrink-0">{step.credits}N</span>
+              <span className="text-[9px] tabular-nums text-muted-foreground/20 shrink-0 font-mono">{step.credits}N</span>
             </div>
           ))}
         </div>
@@ -357,41 +438,46 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
 function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOutputs: () => void }) {
   if (outputs.length === 0) {
     return (
-      <div className="p-4 flex flex-col items-center justify-center py-12 text-center">
-        <Package className="h-5 w-5 text-muted-foreground/15 mb-2" />
-        <p className="text-[11px] text-muted-foreground/30">No assets yet</p>
+      <div className="p-4 flex flex-col items-center justify-center py-16 text-center">
+        <SigilCrystal size={24} className="text-muted-foreground/10 mb-3" />
+        <p className="text-[11px] text-muted-foreground/25 font-medium">No assets yet</p>
+        <p className="text-[9px] text-muted-foreground/15 mt-1">Execute a service to generate outputs</p>
       </div>
     );
   }
 
   return (
-    <div className="p-3 space-y-2">
+    <div className="p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground/50">
+        <span className="text-[9px] text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">
           {outputs.length} asset{outputs.length !== 1 ? "s" : ""}
         </span>
-        <button onClick={onViewOutputs} className="text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors">
+        <button onClick={onViewOutputs} className="text-[10px] text-primary/60 hover:text-primary font-medium transition-colors">
           View all →
         </button>
       </div>
 
-      <div className="space-y-0.5">
+      <div className="space-y-1">
         {outputs.slice(0, 5).map((out, i) => (
-          <div
+          <motion.div
             key={out.id}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05 }}
             onClick={onViewOutputs}
-            className="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-muted/20 transition-colors cursor-pointer"
+            className="flex items-center gap-2.5 py-2 px-3 rounded-xl hover:bg-muted/15 transition-all cursor-pointer group"
           >
-            <FileText className="h-3 w-3 text-muted-foreground/30 shrink-0" />
+            <SigilDocument size={14} className="text-muted-foreground/25 group-hover:text-foreground/50 transition-colors shrink-0" />
             <span className="text-[11px] text-foreground truncate flex-1">{out.title}</span>
-            {i >= 3 && <Lock className="h-3 w-3 text-muted-foreground/15 shrink-0" />}
-          </div>
+            {i >= 3 && <SigilLock size={12} className="text-muted-foreground/12 shrink-0" />}
+          </motion.div>
         ))}
       </div>
 
       {outputs.length > 3 && (
-        <p className="text-[10px] text-muted-foreground/40 px-2">
-          🔒 {outputs.length - 3} locked — unlock with NEURONS
+        <p className="text-[10px] text-muted-foreground/30 px-3 flex items-center gap-1.5">
+          <SigilLock size={11} className="text-muted-foreground/15" />
+          {outputs.length - 3} locked — unlock with NEURONS
         </p>
       )}
     </div>
@@ -400,13 +486,13 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
 
 // ═══ TAB: PROGRESS — Behavioral Retention Engine ═══
 
-const RANK_LABELS: Record<string, { icon: React.ElementType; next: string }> = {
-  "Novice": { icon: Star, next: "Operator" },
-  "Operator": { icon: Zap, next: "Architect" },
-  "Architect": { icon: Target, next: "Strategist" },
-  "Strategist": { icon: Trophy, next: "Master" },
-  "Master": { icon: Crown, next: "Legend" },
-  "Legend": { icon: Flame, next: "—" },
+const RANK_LABELS: Record<string, { icon: React.FC<{ className?: string; size?: number }>; next: string }> = {
+  "Novice": { icon: SigilStar, next: "Operator" },
+  "Operator": { icon: SigilBolt, next: "Architect" },
+  "Architect": { icon: SigilTarget, next: "Strategist" },
+  "Strategist": { icon: SigilSpiral, next: "Master" },
+  "Master": { icon: SigilCrown, next: "Legend" },
+  "Legend": { icon: SigilFlame, next: "—" },
 };
 
 const MISSIONS = [
@@ -416,12 +502,12 @@ const MISSIONS = [
 ];
 
 const BADGES = [
-  { id: "first_exec", label: "First Execution", icon: "⚡", unlockXp: 0 },
-  { id: "100_outputs", label: "100 Outputs", icon: "📦", unlockXp: 500 },
-  { id: "1k_neurons", label: "1K Neurons Used", icon: "🧠", unlockXp: 1000 },
-  { id: "content_machine", label: "Content Machine", icon: "🏭", unlockXp: 5000 },
-  { id: "knowledge_architect", label: "Knowledge Architect", icon: "🏛️", unlockXp: 10000 },
-  { id: "system_master", label: "System Master", icon: "👑", unlockXp: 25000 },
+  { id: "first_exec", label: "First Execution", icon: SigilBolt, unlockXp: 0 },
+  { id: "100_outputs", label: "100 Outputs", icon: SigilCrystal, unlockXp: 500 },
+  { id: "1k_neurons", label: "1K Neurons", icon: SigilNeuron, unlockXp: 1000 },
+  { id: "content_machine", label: "Content Machine", icon: SigilTarget, unlockXp: 5000 },
+  { id: "knowledge_architect", label: "Knowledge Architect", icon: SigilSpiral, unlockXp: 10000 },
+  { id: "system_master", label: "System Master", icon: SigilCrown, unlockXp: 25000 },
 ];
 
 function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
@@ -429,8 +515,8 @@ function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
 
   if (loading) {
     return (
-      <div className="p-4 flex items-center justify-center py-12">
-        <Loader2 className="h-4 w-4 text-muted-foreground/30 animate-spin" />
+      <div className="p-4 flex items-center justify-center py-16">
+        <Loader2 className="h-4 w-4 text-muted-foreground/20 animate-spin" />
       </div>
     );
   }
@@ -439,83 +525,90 @@ function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
   const RankIcon = rankInfo.icon;
 
   return (
-    <div className="p-3 space-y-3">
+    <div className="p-4 space-y-4">
       {/* Section 1: Identity — Level + Rank */}
-      <div className="rounded-lg border border-border/20 p-3">
-        <div className="flex items-center gap-2.5 mb-2">
-          <div className="h-8 w-8 rounded-lg bg-muted/30 flex items-center justify-center">
-            <RankIcon className="h-4 w-4 text-foreground/70" />
+      <div className="rounded-xl border border-border/15 p-4 bg-card/30 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+        <div className="flex items-center gap-3 mb-3">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/10 to-primary/[0.02] flex items-center justify-center border border-primary/10">
+            <RankIcon size={20} className="text-primary/70" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] font-bold text-foreground">
-              Level {xp.level} — <span className="font-semibold">{xp.rank_name}</span>
+            <p className="text-sm font-bold text-foreground tracking-tight">
+              Level {xp.level}
             </p>
-            <p className="text-[10px] text-muted-foreground/50">
-              Next: Level {xp.level + 1} — {rankInfo.next}
+            <p className="text-[10px] text-muted-foreground/40 font-medium">
+              {xp.rank_name} → {rankInfo.next}
             </p>
           </div>
         </div>
         {/* XP Progress bar */}
-        <div className="h-1.5 bg-muted/30 rounded-full overflow-hidden">
-          <div
-            className="h-full rounded-full bg-primary transition-all duration-500"
-            style={{ width: `${levelProgress}%` }}
+        <div className="h-1.5 bg-muted/20 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-primary to-primary/60"
+            initial={{ width: 0 }}
+            animate={{ width: `${levelProgress}%` }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           />
         </div>
-        <div className="flex items-center justify-between mt-1">
-          <span className="text-[9px] text-muted-foreground/40 tabular-nums">{xp.total_xp} XP</span>
-          <span className="text-[9px] text-muted-foreground/40 tabular-nums">{xpForNextLevel} XP</span>
+        <div className="flex items-center justify-between mt-1.5">
+          <span className="text-[9px] text-muted-foreground/30 tabular-nums font-mono">{xp.total_xp} XP</span>
+          <span className="text-[9px] text-muted-foreground/30 tabular-nums font-mono">{xpForNextLevel} XP</span>
         </div>
       </div>
 
       {/* Section 2: Streak */}
-      <div className="flex items-center gap-2.5 px-1">
-        <Flame className={cn("h-4 w-4", streak.current_streak > 0 ? "text-orange-500" : "text-muted-foreground/20")} />
+      <div className="flex items-center gap-3 px-1">
+        <SigilFlame
+          size={18}
+          className={cn(streak.current_streak > 0 ? "text-warning" : "text-muted-foreground/15")}
+        />
         <div className="flex-1">
-          <p className="text-[11px] font-semibold text-foreground tabular-nums">
+          <p className="text-[12px] font-bold text-foreground tabular-nums">
             {streak.current_streak} day{streak.current_streak !== 1 ? "s" : ""} streak
           </p>
-          <p className="text-[9px] text-muted-foreground/40">
+          <p className="text-[9px] text-muted-foreground/35">
             {streak.current_streak > 0 ? "Keep going — don't break it!" : "Start a streak today"}
           </p>
         </div>
         {tierMultiplier > 1 && (
-          <span className="text-[9px] font-semibold text-primary tabular-nums">
+          <span className="text-[10px] font-bold text-primary tabular-nums font-mono">
             {tierMultiplier}× XP
           </span>
         )}
       </div>
 
       {/* Section 3: Daily Missions */}
-      <div className="space-y-1">
-        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider font-semibold px-1">Missions</p>
+      <div className="space-y-1.5">
+        <p className="text-[9px] text-muted-foreground/30 uppercase tracking-[0.2em] font-bold px-1">Missions</p>
         {MISSIONS.map(mission => (
-          <div key={mission.id} className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted/15 transition-colors">
-            <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/20 shrink-0" />
-            <span className="text-[11px] text-muted-foreground flex-1">{mission.label}</span>
-            <span className="text-[9px] text-primary/60 font-medium tabular-nums">+{mission.xp} XP</span>
+          <div key={mission.id} className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-muted/10 transition-colors">
+            <div className="h-1.5 w-1.5 rounded-full bg-primary/20 shrink-0" />
+            <span className="text-[11px] text-muted-foreground/60 flex-1">{mission.label}</span>
+            <span className="text-[9px] text-primary/50 font-bold tabular-nums font-mono">+{mission.xp}</span>
           </div>
         ))}
       </div>
 
       {/* Section 4: Badges */}
-      <div className="space-y-1.5">
-        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider font-semibold px-1">Badges</p>
-        <div className="grid grid-cols-3 gap-1.5">
+      <div className="space-y-2">
+        <p className="text-[9px] text-muted-foreground/30 uppercase tracking-[0.2em] font-bold px-1">Badges</p>
+        <div className="grid grid-cols-3 gap-2">
           {BADGES.map(badge => {
             const unlocked = xp.total_xp >= badge.unlockXp;
+            const BadgeIcon = badge.icon;
             return (
               <div
                 key={badge.id}
                 className={cn(
-                  "flex flex-col items-center gap-1 py-2 px-1 rounded-lg border text-center",
+                  "flex flex-col items-center gap-1.5 py-3 px-1.5 rounded-xl border text-center transition-all",
                   unlocked
-                    ? "border-border/20 bg-muted/10"
-                    : "border-border/10 opacity-30"
+                    ? "border-primary/15 bg-primary/[0.03] shadow-sm shadow-primary/5"
+                    : "border-border/8 opacity-25"
                 )}
               >
-                <span className="text-sm">{badge.icon}</span>
-                <span className="text-[8px] text-muted-foreground leading-tight">{badge.label}</span>
+                <BadgeIcon size={18} className={unlocked ? "text-primary/70" : "text-muted-foreground/30"} />
+                <span className="text-[8px] text-muted-foreground/60 leading-tight font-medium">{badge.label}</span>
               </div>
             );
           })}
@@ -523,20 +616,20 @@ function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
       </div>
 
       {/* Section 5: Cusnir_OS Unlock Progress */}
-      <div className="rounded-lg border border-border/15 p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <Lock className="h-3 w-3 text-muted-foreground/30" />
-          <span className="text-[11px] font-semibold text-muted-foreground/60">Cusnir_OS</span>
+      <div className="rounded-xl border border-border/10 p-4 bg-card/20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent" />
+        <div className="flex items-center gap-2.5 mb-2.5 relative">
+          <SigilLock size={14} className="text-muted-foreground/20" />
+          <span className="text-[11px] font-bold text-muted-foreground/40 tracking-wide">Cusnir_OS</span>
         </div>
-        {/* Progress bar — months */}
-        <div className="h-1.5 bg-muted/20 rounded-full overflow-hidden mb-1.5">
-          <div className="h-full rounded-full bg-muted-foreground/15" style={{ width: "0%" }} />
+        <div className="h-1.5 bg-muted/15 rounded-full overflow-hidden mb-2 relative">
+          <div className="h-full rounded-full bg-muted-foreground/8" style={{ width: "0%" }} />
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-[9px] text-muted-foreground/30 tabular-nums">0/11 months</span>
+        <div className="flex items-center justify-between relative">
+          <span className="text-[9px] text-muted-foreground/20 tabular-nums font-mono">0/11 months</span>
           <button
             onClick={() => navigate("/cusnir-os")}
-            className="text-[9px] text-muted-foreground/30 hover:text-foreground transition-colors"
+            className="text-[9px] text-muted-foreground/25 hover:text-foreground transition-colors font-medium"
           >
             Details →
           </button>
@@ -544,35 +637,35 @@ function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
       </div>
 
       {/* Level perks */}
-      <div className="space-y-1">
-        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider font-semibold px-1">Perks</p>
+      <div className="space-y-1.5">
+        <p className="text-[9px] text-muted-foreground/30 uppercase tracking-[0.2em] font-bold px-1">Perks</p>
         <div className={cn(
-          "flex items-center gap-2 px-2 py-1.5 rounded-lg border",
-          xp.level >= 3 ? "border-primary/20 bg-primary/5" : "border-border/10 opacity-40"
+          "flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all",
+          xp.level >= 3 ? "border-primary/15 bg-primary/[0.03]" : "border-border/8 opacity-35"
         )}>
           <div className={cn(
-            "h-5 w-5 rounded-md flex items-center justify-center text-[10px] font-bold shrink-0",
-            xp.level >= 3 ? "bg-primary/10 text-primary" : "bg-muted/20 text-muted-foreground/30"
+            "h-6 w-6 rounded-lg flex items-center justify-center text-[10px] font-bold shrink-0 font-mono",
+            xp.level >= 3 ? "bg-primary/10 text-primary" : "bg-muted/15 text-muted-foreground/25"
           )}>3</div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-medium text-foreground">-10% neuron cost</p>
-            <p className="text-[9px] text-muted-foreground/40">All service executions</p>
+            <p className="text-[11px] font-semibold text-foreground">-10% neuron cost</p>
+            <p className="text-[9px] text-muted-foreground/30">All service executions</p>
           </div>
-          {xp.level >= 3 && <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />}
+          {xp.level >= 3 && <SigilCheck size={14} className="text-primary shrink-0" />}
         </div>
         <div className={cn(
-          "flex items-center gap-2 px-2 py-1.5 rounded-lg border",
-          xp.level >= 5 ? "border-primary/20 bg-primary/5" : "border-border/10 opacity-40"
+          "flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all",
+          xp.level >= 5 ? "border-primary/15 bg-primary/[0.03]" : "border-border/8 opacity-35"
         )}>
           <div className={cn(
-            "h-5 w-5 rounded-md flex items-center justify-center text-[10px] font-bold shrink-0",
-            xp.level >= 5 ? "bg-primary/10 text-primary" : "bg-muted/20 text-muted-foreground/30"
+            "h-6 w-6 rounded-lg flex items-center justify-center text-[10px] font-bold shrink-0 font-mono",
+            xp.level >= 5 ? "bg-primary/10 text-primary" : "bg-muted/15 text-muted-foreground/25"
           )}>5</div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-medium text-foreground">Advanced services</p>
-            <p className="text-[9px] text-muted-foreground/40">Deep analysis & multi-agent</p>
+            <p className="text-[11px] font-semibold text-foreground">Advanced services</p>
+            <p className="text-[9px] text-muted-foreground/30">Deep analysis & multi-agent</p>
           </div>
-          {xp.level >= 5 && <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />}
+          {xp.level >= 5 && <SigilCheck size={14} className="text-primary shrink-0" />}
         </div>
       </div>
     </div>
