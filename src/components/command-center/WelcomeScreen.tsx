@@ -29,10 +29,10 @@ interface WelcomeScreenProps {
 }
 
 const QUICK_COMMANDS = [
-  { label: "Analyze a source", desc: "YouTube, podcast, article", icon: Globe, example: "Analyze this YouTube video: https://...", color: "from-blue-500/10 to-blue-500/5 border-blue-500/10" },
-  { label: "Extract neurons", desc: "From your latest content", icon: Brain, example: "Extract neurons from my latest episode", color: "from-purple-500/10 to-purple-500/5 border-purple-500/10" },
-  { label: "Generate assets", desc: "Articles, frameworks, courses", icon: Sparkles, example: "Generate an article from neurons about leadership", color: "from-amber-500/10 to-amber-500/5 border-amber-500/10" },
-  { label: "Search knowledge", desc: "Find patterns and insights", icon: Network, example: "Show all neurons about persuasion techniques", color: "from-green-500/10 to-green-500/5 border-green-500/10" },
+  { label: "Analyze a source", desc: "YouTube, podcast, article", icon: Globe, example: "Analyze this YouTube video: https://...", color: "from-primary/10 to-primary/5 border-primary/10" },
+  { label: "Extract neurons", desc: "From your latest content", icon: Brain, example: "Extract neurons from my latest episode", color: "from-color-purple/10 to-color-purple/5 border-color-purple/10" },
+  { label: "Generate assets", desc: "Articles, frameworks, courses", icon: Sparkles, example: "Generate an article from neurons about leadership", color: "from-color-amber/10 to-color-amber/5 border-color-amber/10" },
+  { label: "Search knowledge", desc: "Find patterns and insights", icon: Network, example: "Show all neurons about persuasion techniques", color: "from-color-emerald/10 to-color-emerald/5 border-color-emerald/10" },
 ];
 
 export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
