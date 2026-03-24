@@ -119,7 +119,7 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
         title: "Low average quality score",
         description: `Average score: ${stats.avgScore}. Enrich neurons with more context to improve quality.`,
         action: "Improve quality",
-        route: "/chat?q=/analyze neuron quality and suggest improvements",
+        route: "/home?q=/analyze neuron quality and suggest improvements",
         priority: "high",
       });
     }
