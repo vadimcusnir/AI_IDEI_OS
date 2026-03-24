@@ -274,9 +274,9 @@ export function AdminKnowledgeGraphTab() {
                     <div className="truncate">
                       <span className="text-xs">{m.title}</span>
                       <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
-                      {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-500">EMERGING</span>}
+                      {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-success/20 text-success">EMERGING</span>}
                     </div>
-                    <span className="text-right text-xs font-mono font-bold text-sky-500">
+                    <span className="text-right text-xs font-mono font-bold text-semantic-blue">
                       {(m.acceleration_score * 100).toFixed(1)}
                     </span>
                     <PVSBar value={m.pagerank_score} color="bg-violet-500/70" />
