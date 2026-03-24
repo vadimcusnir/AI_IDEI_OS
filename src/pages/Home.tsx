@@ -563,7 +563,7 @@ export default function Home() {
 
                   <AnimatePresence>
                     {execState.phase === "completed" && showPostExecution && (
-                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pb-2">
+                      <div className="pb-2">
                         <PostExecutionPanel
                           intent={execState.intent as any} creditsSpent={execState.totalCredits}
                           outputCount={outputs.length}
