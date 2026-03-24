@@ -392,9 +392,9 @@ export default function Home() {
           {/* ═══ CONTENT AREA ═══ */}
           <div className="flex-1 relative z-10 min-h-0 overflow-hidden">
             {/* TOP REGION — scrolls independently above the fixed center rail */}
-            <div className="absolute inset-x-0 top-0 bottom-[calc(58%+2.5rem)] overflow-hidden">
+            <div className="absolute inset-x-0 top-0 bottom-[calc(55%+2.5rem)] overflow-hidden">
               {isEmptyState ? (
-                <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-20">
+                <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-6">
                   <div className="w-full max-w-3xl flex flex-col items-center gap-4">
                     <div className="w-full text-center space-y-2">
                       <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
@@ -458,7 +458,7 @@ export default function Home() {
             </div>
 
             {/* CENTER RAIL — the main chat stays here, never moves */}
-            <div className="absolute inset-x-0 top-[42%] -translate-y-1/2 z-30 px-4 sm:px-6 pointer-events-none">
+            <div className="absolute inset-x-0 top-[45%] -translate-y-1/2 z-30 px-4 sm:px-6 pointer-events-none">
               <div className="max-w-3xl mx-auto pointer-events-auto">
                 <CommandInputZone
                   ref={inputZoneRef} input={input} onInputChange={setInput}
@@ -484,9 +484,9 @@ export default function Home() {
             </div>
 
             {/* BOTTOM REGION — menus/panels open around the fixed rail, below it */}
-            <div className="absolute inset-x-0 top-[42%] bottom-0 overflow-hidden">
+            <div className="absolute inset-x-0 top-[45%] bottom-0 overflow-hidden">
               <div className="h-full overflow-y-auto">
-                <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-6">
+                <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-16 pb-6">
                   {isEmptyState && input.length >= 2 && (
                     <SystemRecommendations
                       systems={matchIntentToSystems(input)}
