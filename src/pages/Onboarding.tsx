@@ -253,10 +253,10 @@ export default function Onboarding() {
 
               return (
                 <div className={cn(
-                  "rounded-2xl border p-5 sm:p-6 transition-all",
+                  "rounded-2xl border p-6 sm:p-7 transition-all",
                   isCompleted
-                    ? "border-primary/20 bg-primary/5"
-                    : "border-border bg-card"
+                    ? "border-[hsl(var(--gold-oxide)/0.2)] bg-[hsl(var(--gold-oxide)/0.03)]"
+                    : "border-border/50 bg-card/80"
                 )}>
                   {/* Step number + reward */}
                   <div className="flex items-center justify-between mb-4">
