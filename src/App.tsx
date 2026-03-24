@@ -189,14 +189,14 @@ const App = () => (
                 <Route path="/pipeline" element={<AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><PipelineOverview /></ErrorBoundary></AppLayout>} />
                 <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
                 {/* /knowledge/:slug is handled above as public route */}
-                <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
-                <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
-                <Route path="/pricing" element={<AppLayout><Pricing /></AppLayout>} />
-                <Route path="/payment/result" element={<AppLayout><PaymentResult /></AppLayout>} />
-                <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
-                <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
-                <Route path="/community/:category" element={<AppLayout><Community /></AppLayout>} />
-                <Route path="/community/:category/thread/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
+                <Route path="/products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
+                <Route path="/terms" element={<AppLayout><ErrorBoundary fallbackTitle="Terms failed to load"><TermsOfService /></ErrorBoundary></AppLayout>} />
+                <Route path="/pricing" element={<AppLayout><ErrorBoundary fallbackTitle="Pricing failed to load"><Pricing /></ErrorBoundary></AppLayout>} />
+                <Route path="/payment/result" element={<AppLayout><ErrorBoundary fallbackTitle="Payment failed to load"><PaymentResult /></ErrorBoundary></AppLayout>} />
+                <Route path="/privacy" element={<AppLayout><ErrorBoundary fallbackTitle="Privacy failed to load"><PrivacyPolicy /></ErrorBoundary></AppLayout>} />
+                <Route path="/community" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
+                <Route path="/community/:category" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
+                <Route path="/community/:category/thread/:threadId" element={<AppLayout><ErrorBoundary fallbackTitle="Thread failed to load"><CommunityThread /></ErrorBoundary></AppLayout>} />
 
                 {/* Protected routes — require authentication */}
                 <Route path="/home" element={<ProtectedRoute><AppLayout fullHeight><Home /></AppLayout></ProtectedRoute>} />
