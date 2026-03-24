@@ -4,7 +4,7 @@
  */
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import type { TaskStep } from "./useCommandState";
+import type { TaskStep } from "@/stores/executionStore";
 
 interface UseRealtimeStepsOptions {
   actionId: string | null;
