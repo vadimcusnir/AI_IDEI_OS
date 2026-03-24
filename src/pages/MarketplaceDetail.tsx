@@ -217,7 +217,7 @@ export default function MarketplaceDetail() {
           <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline" className="text-[10px]">{asset.asset_type}</Badge>
             {asset.is_featured && (
-              <Badge className="bg-amber-500/10 text-amber-600 text-[9px] border-amber-500/30">
+              <Badge className="bg-semantic-amber/10 text-semantic-amber text-[9px] border-semantic-amber/30">
                 <Crown className="h-2.5 w-2.5 mr-1" /> {t("marketplace_detail.featured")}
               </Badge>
             )}

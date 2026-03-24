@@ -35,8 +35,8 @@ const STATUS_COLORS: Record<string, string> = {
 
 const RISK_COLORS: Record<string, string> = {
   low: "text-status-validated",
-  medium: "text-amber-500",
-  high: "text-orange-500",
+  medium: "text-warning",
+  high: "text-semantic-amber",
   critical: "text-destructive",
 };
 

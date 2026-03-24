@@ -34,12 +34,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 const TYPE_CONFIG: Record<string, { labelKey: string; color: string }> = {
   document: { labelKey: "artifacts.type_document", color: "bg-primary/10 text-primary" },
-  article: { labelKey: "artifacts.type_article", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
-  script: { labelKey: "artifacts.type_script", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
-  framework: { labelKey: "artifacts.type_framework", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
-  course: { labelKey: "artifacts.type_course", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
-  social_post: { labelKey: "artifacts.type_social", color: "bg-pink-500/10 text-pink-600 dark:text-pink-400" },
-  copy: { labelKey: "artifacts.type_copy", color: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400" },
+  article: { labelKey: "artifacts.type_article", color: "bg-semantic-blue/10 text-semantic-blue" },
+  script: { labelKey: "artifacts.type_script", color: "bg-semantic-purple/10 text-semantic-purple" },
+  framework: { labelKey: "artifacts.type_framework", color: "bg-semantic-emerald/10 text-semantic-emerald" },
+  course: { labelKey: "artifacts.type_course", color: "bg-semantic-amber/10 text-semantic-amber" },
+  social_post: { labelKey: "artifacts.type_social", color: "bg-semantic-rose/10 text-semantic-rose" },
+  copy: { labelKey: "artifacts.type_copy", color: "bg-semantic-cyan/10 text-semantic-cyan" },
 };
 
 type LibraryTab = "deliverables" | "context" | "bundles";

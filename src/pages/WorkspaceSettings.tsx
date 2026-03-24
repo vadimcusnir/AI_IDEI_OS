@@ -22,9 +22,9 @@ const ROLE_ICONS: Record<string, typeof Crown> = {
 };
 
 const ROLE_COLORS: Record<string, string> = {
-  owner: "bg-amber-500/10 text-amber-600 border-amber-500/20",
-  admin: "bg-red-500/10 text-red-600 border-red-500/20",
-  editor: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+  owner: "bg-semantic-amber/10 text-semantic-amber border-semantic-amber/20",
+  admin: "bg-destructive/10 text-destructive border-destructive/20",
+  editor: "bg-semantic-blue/10 text-semantic-blue border-semantic-blue/20",
   viewer: "bg-muted text-muted-foreground",
 };
 

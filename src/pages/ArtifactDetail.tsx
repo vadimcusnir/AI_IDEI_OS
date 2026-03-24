@@ -40,11 +40,11 @@ interface LinkedNeuron {
 
 const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
   document: { label: "Document", color: "bg-primary/10 text-primary" },
-  report: { label: "Report", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
-  prompt: { label: "Prompt", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
-  course: { label: "Course", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
-  strategy: { label: "Strategy", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
-  profile: { label: "Profile", color: "bg-pink-500/10 text-pink-600 dark:text-pink-400" },
+  report: { label: "Report", color: "bg-semantic-blue/10 text-semantic-blue" },
+  prompt: { label: "Prompt", color: "bg-semantic-purple/10 text-semantic-purple" },
+  course: { label: "Course", color: "bg-semantic-amber/10 text-semantic-amber" },
+  strategy: { label: "Strategy", color: "bg-semantic-emerald/10 text-semantic-emerald" },
+  profile: { label: "Profile", color: "bg-semantic-rose/10 text-semantic-rose" },
 };
 
 export default function ArtifactDetail() {

@@ -124,7 +124,7 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-background gradient-bg-animated noise-overlay relative flex items-center justify-center px-4 py-8 sm:py-12">
       <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/[0.05] rounded-full blur-[150px] animate-float" />
-      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-500/[0.04] rounded-full blur-[120px] animate-float" style={{ animationDelay: "3s" }} />
+      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-semantic-purple/[0.04] rounded-full blur-[120px] animate-float" style={{ animationDelay: "3s" }} />
 
       <SEOHead title="Sign In — AI-IDEI" description="Sign in or create your AI-IDEI account to start extracting knowledge." />
 

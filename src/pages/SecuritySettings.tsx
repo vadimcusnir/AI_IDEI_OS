@@ -250,19 +250,19 @@ export default function SecuritySettings() {
             </h3>
             <ul className="space-y-2 text-[10px] text-muted-foreground">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+                <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Use a unique password not shared with other services
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+                <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Enable browser notifications for security alerts
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+                <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Review your active sessions regularly
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+                <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Keep your email address up to date for account recovery
               </li>
             </ul>
