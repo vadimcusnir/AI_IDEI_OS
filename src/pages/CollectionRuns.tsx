@@ -60,6 +60,7 @@ export default function CollectionRuns() {
   }
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Collection Runs" fallback="overlay">
     <PageTransition>
       <div className="flex-1 overflow-auto">
         <SEOHead title="Collection Runs — AI-IDEI" description="View your knowledge collection pipeline runs." />
