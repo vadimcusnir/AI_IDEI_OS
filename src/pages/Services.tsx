@@ -14,6 +14,7 @@ import {
   Loader2, Sparkles, Search, X, Coins,
   ArrowRight, Zap, AlertTriangle, Workflow, Clock,
   ShoppingCart, GraduationCap, Megaphone, TrendingUp,
+  Layers, Atom,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
@@ -25,6 +26,9 @@ import { FlowTip } from "@/components/onboarding/FlowTip";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceDrawer } from "@/components/services/ServiceDrawer";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ServiceTierSystem, type ServiceTier } from "@/components/services/ServiceTierSystem";
+import { OutputFamilies } from "@/components/services/OutputFamilies";
+import { QuickStartFlow } from "@/components/services/QuickStartFlow";
 
 interface Service {
   id: string;
@@ -78,7 +82,7 @@ const CLASS_BADGE: Record<string, { label: string; description: string; classNam
   S: { label: "Sync", description: "Real-time synchronized processing across services.", className: "bg-status-validated/15 text-status-validated" },
 };
 
-type SectionKey = "pipelines" | "services" | "history";
+type SectionKey = "quick-start" | "pipelines" | "services" | "outputs" | "history";
 
 export default function Services() {
   const { t } = useTranslation("pages");
@@ -97,7 +101,8 @@ export default function Services() {
   const [activeIntent, setActiveIntent] = useState<string | null>(categoryParam || null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-  const [activeSection, setActiveSection] = useState<SectionKey>(initialSearch || categoryParam ? "services" : "pipelines");
+  const [activeSection, setActiveSection] = useState<SectionKey>(initialSearch || categoryParam ? "services" : "quick-start");
+  const [activeTier, setActiveTier] = useState<ServiceTier | null>(null);
 
   // Drawer state
   const [drawerService, setDrawerService] = useState<Service | null>(null);
@@ -259,8 +264,10 @@ export default function Services() {
         {/* ── Section tabs ── */}
         <div className="flex items-center gap-1 border-b border-border">
           {([
+            { key: "quick-start" as const, label: "Quick Start", icon: Zap, count: null },
             { key: "pipelines" as const, label: "Pipelines", icon: Workflow, count: 5 },
             { key: "services" as const, label: t("services.tab_all", { defaultValue: "All Services" }), icon: Sparkles, count: services.length },
+            { key: "outputs" as const, label: "Output Families", icon: Layers, count: 12 },
             ...(user ? [{ key: "history" as const, label: "History", icon: Clock, count: null }] : []),
           ]).map(tab => {
             const Icon = tab.icon;
@@ -291,6 +298,15 @@ export default function Services() {
           })}
         </div>
 
+        {/* ═══ QUICK START ═══ */}
+        {activeSection === "quick-start" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+            <QuickStartFlow onStart={() => navigate("/home")} />
+            <ServiceTierSystem activeTier={activeTier} onTierChange={setActiveTier} />
+            <OutputFamilies compact />
+          </motion.div>
+        )}
+
         {/* ═══ PIPELINES ═══ */}
         {activeSection === "pipelines" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
@@ -302,6 +318,13 @@ export default function Services() {
               className="mb-4"
             />
             <PipelinesHub />
+          </motion.div>
+        )}
+
+        {/* ═══ OUTPUT FAMILIES ═══ */}
+        {activeSection === "outputs" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
+            <OutputFamilies />
           </motion.div>
         )}
 
