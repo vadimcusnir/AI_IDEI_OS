@@ -136,28 +136,28 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           {/* ═══ PIPELINE CONTEXT BAR — below header, visible only when active ═══ */}
           {user && (
-            <div className="hidden md:flex items-center justify-center border-b border-border/30 bg-muted/20 py-1.5 px-4">
+            <div className="hidden md:flex items-center justify-center border-b border-border/30 bg-muted/20 py-1.5 px-4 shrink-0">
               <Suspense fallback={null}>
                 <CompactPipeline />
               </Suspense>
             </div>
           )}
 
-          <div className="min-h-0">
+          <div className="shrink-0">
             <Suspense fallback={null}><LowBalanceBanner /></Suspense>
             <Suspense fallback={null}><BehaviorOverlay /></Suspense>
           </div>
 
           {fullHeight ? (
-            <main id="main-content" className="flex-1 flex flex-col min-h-0">
+            <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-hidden">
               <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
             </main>
           ) : (
             <>
-              <main id="main-content" className="flex-1 flex flex-col pb-16 md:pb-0">
+              <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">
                 <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
+                <Suspense fallback={null}><Footer /></Suspense>
               </main>
-              <Suspense fallback={null}><Footer /></Suspense>
             </>
           )}
         </div>
