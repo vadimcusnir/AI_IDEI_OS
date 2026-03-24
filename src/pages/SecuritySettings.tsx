@@ -176,9 +176,9 @@ export default function SecuritySettings() {
                     <div className="grid grid-cols-2 gap-1">
                       {PASSWORD_CHECKS.map(c => (
                         <div key={c.label} className="flex items-center gap-1">
-                          {c.test(newPw) ? <CheckCircle2 className="h-2.5 w-2.5 text-emerald-500" /> : <XCircle className="h-2.5 w-2.5 text-muted-foreground/30" />}
-                          <span className={cn("text-[9px]", c.test(newPw) ? "text-foreground" : "text-muted-foreground/50")}>{c.label}</span>
-                        </div>
+                           {c.test(newPw) ? <CheckCircle2 className="h-2.5 w-2.5 text-success" /> : <XCircle className="h-2.5 w-2.5 text-muted-foreground/30" />}
+                           <span className={cn("text-[9px]", c.test(newPw) ? "text-foreground" : "text-muted-foreground/50")}>{c.label}</span>
+                         </div>
                       ))}
                     </div>
                   </div>
