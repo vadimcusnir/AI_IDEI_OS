@@ -80,13 +80,16 @@ export function MessageStream({
         ))}
 
         {isEmptyState && (
-          <WelcomeScreen
-            onCommand={onCommand}
-            suggestions={suggestions}
-            neuronCount={totalNeurons}
-            episodeCount={totalEpisodes}
-            balance={balance}
-          />
+          <>
+            <WelcomeScreen
+              onCommand={onCommand}
+              suggestions={suggestions}
+              neuronCount={totalNeurons}
+              episodeCount={totalEpisodes}
+              balance={balance}
+            />
+            <SuggestionTabs onCommand={onCommand} />
+          </>
         )}
 
         {loading && !isStreaming && (
