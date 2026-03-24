@@ -136,16 +136,16 @@ export function ExecutionSummary({
       <div className="px-4 py-2.5 border-t border-border/30 space-y-2">
         <div className="flex items-center gap-5 flex-wrap">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Layers className="h-3.5 w-3.5" />
-            <span className="tabular-nums">{stepsCompleted}/{totalSteps} steps</span>
+            <SigilCrystal size={14} className="text-muted-foreground/50" />
+            <span className="tabular-nums font-mono text-[11px]">{stepsCompleted}/{totalSteps} steps</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Coins className="h-3.5 w-3.5" />
-            <span className="tabular-nums">{totalCredits} N</span>
+            <SigilNeuron size={14} className="text-muted-foreground/50" />
+            <span className="tabular-nums font-mono text-[11px]">{totalCredits} N</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Clock className="h-3.5 w-3.5" />
-            <span className="tabular-nums">{durationSeconds}s</span>
+            <SigilClock size={14} className="text-muted-foreground/50" />
+            <span className="tabular-nums font-mono text-[11px]">{durationSeconds}s</span>
           </div>
         </div>
         {outputCount > 0 && (
