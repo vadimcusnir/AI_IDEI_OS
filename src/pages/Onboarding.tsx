@@ -192,10 +192,10 @@ export default function Onboarding() {
                     <div className={cn(
                       "h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center transition-all border-2",
                       isCompleted
-                        ? "bg-primary border-primary text-primary-foreground"
+                        ? "bg-[hsl(var(--gold-oxide))] border-[hsl(var(--gold-oxide))] text-[hsl(var(--obsidian))]"
                         : isActive
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-muted-foreground/20 bg-muted text-muted-foreground"
+                        ? "border-[hsl(var(--gold-oxide))] bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]"
+                        : "border-muted-foreground/15 bg-muted/50 text-muted-foreground/50"
                     )}>
                       {isCompleted ? (
                         <Check className="h-4 w-4" />
