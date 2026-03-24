@@ -1,3 +1,17 @@
+/**
+ * AppSidebar — SYSTEM MAP, not a link list.
+ *
+ * 7 groups reflecting the platform architecture:
+ *   CORE         — daily operations
+ *   INTELLIGENCE — knowledge layer
+ *   PRODUCTION   — execution layer
+ *   GROWTH       — retention & engagement
+ *   ECONOMY      — monetization & billing
+ *   CONTROL      — settings & compliance
+ *   ELITE        — VIP & Cusnir_OS
+ *
+ * Every route has exactly 1 entry here. No duplicates, no hidden routes.
+ */
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,21 +21,15 @@ import { useUserTier, type UserTier } from "@/hooks/useUserTier";
 import { useChatHistory } from "@/hooks/useChatHistory";
 import { Logo } from "@/components/shared/Logo";
 import {
-  Brain, Shield, Sparkles, Coins,
-  LogOut, Home, User, ScrollText,
-  BarChart3, Bell, BookOpen, Network,
-  FileText, Bot, Store, Layers,
-  Lock, ChevronRight, GraduationCap,
-  Wallet, Trophy, Activity,
-  Zap, Plug, Database, Crown,
-  Rocket, Code, FolderOpen,
-  Package, TrendingUp, Eye, Cpu, Wrench,
-  DollarSign, PenTool, MessageCircle, Upload,
-  Clock, Trash2, Plus,
+  Home, Upload, BookOpen, Sparkles, User,
+  Brain, Network, Database, Layers,
+  Trophy, TrendingUp, Target, Activity,
+  Wallet, Coins, FileText, BarChart3,
+  Settings, Code, Shield, Lock,
+  Crown, Rocket, ChevronRight, Plus,
+  Clock, Trash2, MessageCircle, Store,
+  Cpu, Eye, Zap,
 } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { StreakWidget } from "@/components/gamification/StreakWidget";
-import { XPProgressBar } from "@/components/gamification/XPProgressBar";
 import { cn } from "@/lib/utils";
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup,
@@ -39,68 +47,138 @@ import { formatDistanceToNow } from "date-fns";
 import { ro } from "date-fns/locale";
 import { toast } from "sonner";
 
+// ═══ ROUTE REGISTRY — Single Source of Truth ═══
+
 interface NavItem {
-  labelKey: string;
+  label: string;
   to: string;
   icon: React.ElementType;
-  adminOnly?: boolean;
   controlId?: string;
   minTier?: UserTier;
   highlight?: boolean;
+  locked?: boolean;
+  adminOnly?: boolean;
 }
 
-interface NavSection {
-  labelKey: string;
+interface NavGroup {
+  key: string;
+  label: string;
   icon: React.ElementType;
   items: NavItem[];
   defaultOpen?: boolean;
-  minTier?: UserTier;
   authOnly?: boolean;
   adminOnly?: boolean;
 }
 
-/*
- * SIDEBAR — MINIMAL CONTEXT SWITCHER
- * Max 5 primary items (flat, no collapsible)
- * Sessions below
- * Admin only for admins (collapsed)
- */
-
-const PUBLIC_SECTIONS: NavSection[] = [
+const SYSTEM_MAP: NavGroup[] = [
+  // ─── CORE ───
   {
-    labelKey: "explore_section",
-    icon: Eye,
+    key: "core",
+    label: "CORE",
+    icon: Home,
     defaultOpen: true,
     items: [
-      { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
+      { label: "Command Center", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
+      { label: "Extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
+      { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs" },
+    ],
+  },
+  // ─── INTELLIGENCE ───
+  {
+    key: "intelligence",
+    label: "INTELLIGENCE",
+    icon: Brain,
+    authOnly: true,
+    items: [
+      { label: "Neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
+      { label: "Knowledge Graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
+      { label: "Data Pipeline", to: "/data-pipeline", icon: Database, controlId: "nav.data-pipeline", minTier: "pro" },
+    ],
+  },
+  // ─── PRODUCTION ───
+  {
+    key: "production",
+    label: "PRODUCTION",
+    icon: Sparkles,
+    authOnly: true,
+    items: [
+      { label: "Services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+      { label: "Pipelines", to: "/pipeline-overview", icon: Layers, controlId: "nav.pipelines" },
+      { label: "Master Agent", to: "/master-agent", icon: Zap, controlId: "nav.master-agent" },
+    ],
+  },
+  // ─── GROWTH ───
+  {
+    key: "growth",
+    label: "GROWTH",
+    icon: Trophy,
+    authOnly: true,
+    items: [
+      { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
+      { label: "Leaderboard", to: "/community", icon: TrendingUp, controlId: "nav.community" },
+      { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+    ],
+  },
+  // ─── ECONOMY ───
+  {
+    key: "economy",
+    label: "ECONOMY",
+    icon: Wallet,
+    authOnly: true,
+    items: [
+      { label: "Wallet", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { label: "Pricing", to: "/pricing", icon: Wallet, controlId: "nav.pricing" },
+      { label: "Usage", to: "/analytics-dashboard", icon: BarChart3, controlId: "nav.usage" },
+    ],
+  },
+  // ─── CONTROL ───
+  {
+    key: "control",
+    label: "CONTROL",
+    icon: Settings,
+    authOnly: true,
+    items: [
+      { label: "Profile", to: "/profile", icon: User, controlId: "nav.profile" },
+      { label: "Workspace", to: "/workspace-settings", icon: Settings, controlId: "nav.workspace" },
+      { label: "API & Docs", to: "/docs", icon: Code, controlId: "nav.docs" },
+      { label: "Data Privacy", to: "/data-privacy", icon: Shield, controlId: "nav.privacy" },
+    ],
+  },
+  // ─── ELITE ───
+  {
+    key: "elite",
+    label: "ELITE",
+    icon: Crown,
+    authOnly: true,
+    items: [
+      { label: "VIP Dashboard", to: "/vip", icon: Crown, controlId: "nav.vip" },
+      { label: "Cusnir_OS", to: "/cusnir-os", icon: Lock, controlId: "nav.cusnir-os", locked: true },
     ],
   },
 ];
 
-// ═══ PRIMARY NAV — flat, always visible, max 5 items ═══
-const PRIMARY_ITEMS: NavItem[] = [
-  { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
-  { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
-  { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-  { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-  { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
-];
-
-// ═══ ADMIN (collapsed, admin-only) ═══
-const ADMIN_NAV: NavSection = {
-  labelKey: "control_section",
+const ADMIN_GROUP: NavGroup = {
+  key: "admin",
+  label: "ADMIN",
   icon: Shield,
   adminOnly: true,
   items: [
-    { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
-    { labelKey: "kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
-    { labelKey: "runtime", to: "/runtime", icon: Activity, adminOnly: true },
-    { labelKey: "analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
-    { labelKey: "services_catalog", to: "/services-catalog", icon: Database, adminOnly: true },
+    { label: "Dashboard", to: "/admin", icon: Shield, adminOnly: true },
+    { label: "Kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
+    { label: "Runtime", to: "/runtime", icon: Activity, adminOnly: true },
+    { label: "Analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
+    { label: "Catalog", to: "/services-catalog", icon: Database, adminOnly: true },
   ],
 };
+
+const PUBLIC_ITEMS: NavItem[] = [
+  { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
+  { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+  { label: "Docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
+];
+
+// ═══ COMPONENT ═══
 
 export function AppSidebar() {
   const { t } = useTranslation(["navigation", "common"]);
@@ -117,22 +195,37 @@ export function AppSidebar() {
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
 
-  const recentSessions = (sessions || []).slice(0, 6);
+  const recentSessions = (sessions || []).slice(0, 5);
 
   const renderNavItem = (item: NavItem) => {
-    const menuItem = (
+    const content = (
       <SidebarMenuItem key={item.to}>
         <SidebarMenuButton
           asChild
           isActive={isActive(item.to)}
-          tooltip={t(`navigation:${item.labelKey}`)}
+          tooltip={item.label}
         >
           <button onClick={() => navigate(item.to)} className={cn(
             "w-full",
-            item.highlight && !isActive(item.to) && "text-primary font-medium"
+            item.highlight && !isActive(item.to) && "text-primary font-medium",
+            item.locked && "opacity-60",
           )}>
-            <item.icon className={cn("h-4 w-4", item.highlight && !isActive(item.to) && "text-primary")} />
-            {!collapsed && <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>}
+            <item.icon className={cn(
+              "h-4 w-4",
+              item.highlight && !isActive(item.to) && "text-primary",
+              item.locked && "text-muted-foreground/40",
+            )} />
+            {!collapsed && (
+              <span className="flex-1 flex items-center gap-1.5">
+                {item.label}
+                {item.locked && <Lock className="h-2.5 w-2.5 text-muted-foreground/30" />}
+                {item.minTier && (
+                  <span className="text-[8px] font-bold uppercase tracking-wider text-primary/50 bg-primary/5 px-1 rounded">
+                    {item.minTier}
+                  </span>
+                )}
+              </span>
+            )}
           </button>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -140,11 +233,46 @@ export function AppSidebar() {
     if (item.controlId) {
       return (
         <ControlledNavItem key={item.to} elementId={item.controlId}>
-          {menuItem}
+          {content}
         </ControlledNavItem>
       );
     }
-    return menuItem;
+    return content;
+  };
+
+  const renderGroup = (group: NavGroup) => {
+    if (group.authOnly && !user) return null;
+    if (group.adminOnly && !isAdmin) return null;
+
+    // Check if any item in this group is active
+    const groupActive = group.items.some(i => isActive(i.to));
+
+    return (
+      <Collapsible key={group.key} defaultOpen={group.defaultOpen || groupActive} className="group/collapsible">
+        <SidebarGroup>
+          <CollapsibleTrigger asChild>
+            <SidebarGroupLabel className="text-[9px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5 tracking-[0.15em]">
+              <group.icon className="h-3 w-3 text-muted-foreground/50" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 font-bold">{group.label}</span>
+                  <ChevronRight className="h-3 w-3 text-muted-foreground/30 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                </>
+              )}
+            </SidebarGroupLabel>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items
+                  .filter(i => !i.adminOnly || isAdmin)
+                  .map(renderNavItem)}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </CollapsibleContent>
+        </SidebarGroup>
+      </Collapsible>
+    );
   };
 
   return (
@@ -188,141 +316,107 @@ export function AppSidebar() {
       )}
 
       <SidebarContent>
-        {/* ═══ PRIMARY NAVIGATION — flat, 5 items ═══ */}
         {user ? (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {PRIMARY_ITEMS.map(renderNavItem)}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ) : (
-          /* Public sections */
-          PUBLIC_SECTIONS.map((section) => (
-            <SidebarGroup key={section.labelKey}>
-              {!collapsed && (
-                <SidebarGroupLabel className="text-[10px]">
-                  {t(`navigation:${section.labelKey}`)}
-                </SidebarGroupLabel>
-              )}
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {section.items.map(renderNavItem)}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          ))
-        )}
-
-        {/* ═══ SESSIONS ═══ */}
-        {user && !collapsed && (
           <>
-            <SidebarSeparator className="my-1" />
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-[10px] flex items-center gap-1.5">
-                <Clock className="h-3 w-3 text-muted-foreground/70" />
-                <span className="flex-1">Sesiuni</span>
-                <button
-                  onClick={() => { newSession(); navigate("/home"); }}
-                  className="h-4 w-4 rounded flex items-center justify-center hover:bg-muted transition-colors"
-                  title="Sesiune nouă"
-                >
-                  <Plus className="h-2.5 w-2.5 text-muted-foreground" />
-                </button>
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <ScrollArea className="max-h-[160px]">
-                  <SidebarMenu>
-                    {recentSessions.length === 0 && (
-                      <p className="text-[10px] text-muted-foreground/40 px-3 py-1.5">Nicio sesiune</p>
-                    )}
-                    {recentSessions.map((session) => (
-                      <SidebarMenuItem key={session.session_id}>
-                        <SidebarMenuButton
-                          className="group/session text-[11px] h-7"
-                          onClick={() => {
-                            loadSession(session.session_id);
-                            navigate("/home");
-                          }}
-                        >
-                          <MessageCircle className="h-3 w-3 text-muted-foreground/50 shrink-0" />
-                          <span className="flex-1 truncate text-muted-foreground group-hover/session:text-foreground">
-                            {session.last_message?.slice(0, 35) || formatDistanceToNow(new Date(session.created_at), { addSuffix: true, locale: ro })}
-                          </span>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteSession(session.session_id);
-                              toast.success("Sesiune ștearsă");
-                            }}
-                            className="opacity-0 group-hover/session:opacity-100 h-3.5 w-3.5 rounded flex items-center justify-center hover:bg-destructive/10 transition-all"
-                          >
-                            <Trash2 className="h-2 w-2 text-muted-foreground hover:text-destructive" />
-                          </button>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </ScrollArea>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </>
-        )}
-        {user && collapsed && (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Sesiuni"
-                    onClick={() => { newSession(); navigate("/home"); }}
-                  >
-                    <Clock className="h-4 w-4" />
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
+            {/* ═══ SYSTEM MAP — 7 groups ═══ */}
+            {SYSTEM_MAP.map(renderGroup)}
 
-        {/* ═══ ADMIN — collapsed, admin-only ═══ */}
-        {user && isAdmin && (
-          <>
-            <SidebarSeparator className="my-1" />
-            <Collapsible className="group/collapsible">
-              <SidebarGroup>
-                <CollapsibleTrigger asChild>
-                  <SidebarGroupLabel className="text-[10px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5">
-                    <Shield className="h-3 w-3 text-muted-foreground/70" />
-                    {!collapsed && (
-                      <>
-                        <span className="flex-1">Admin</span>
-                        <ChevronRight className="h-3 w-3 text-muted-foreground/50 transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                      </>
-                    )}
+            {/* ═══ SESSIONS ═══ */}
+            {!collapsed && (
+              <>
+                <SidebarSeparator className="my-1" />
+                <SidebarGroup>
+                  <SidebarGroupLabel className="text-[9px] flex items-center gap-1.5 tracking-[0.15em]">
+                    <MessageCircle className="h-3 w-3 text-muted-foreground/50" />
+                    <span className="flex-1 font-bold">SESSIONS</span>
+                    <button
+                      onClick={() => { newSession(); navigate("/home"); }}
+                      className="h-4 w-4 rounded flex items-center justify-center hover:bg-muted transition-colors"
+                      title="Sesiune nouă"
+                    >
+                      <Plus className="h-2.5 w-2.5 text-muted-foreground" />
+                    </button>
                   </SidebarGroupLabel>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
                   <SidebarGroupContent>
-                    <SidebarMenu>
-                      {ADMIN_NAV.items.map(renderNavItem)}
-                    </SidebarMenu>
+                    <ScrollArea className="max-h-[120px]">
+                      <SidebarMenu>
+                        {recentSessions.length === 0 && (
+                          <p className="text-[10px] text-muted-foreground/40 px-3 py-1.5">Nicio sesiune</p>
+                        )}
+                        {recentSessions.map((session) => (
+                          <SidebarMenuItem key={session.session_id}>
+                            <SidebarMenuButton
+                              className="group/session text-[11px] h-7"
+                              onClick={() => { loadSession(session.session_id); navigate("/home"); }}
+                            >
+                              <MessageCircle className="h-3 w-3 text-muted-foreground/50 shrink-0" />
+                              <span className="flex-1 truncate text-muted-foreground group-hover/session:text-foreground">
+                                {session.last_message?.slice(0, 30) || formatDistanceToNow(new Date(session.created_at), { addSuffix: true, locale: ro })}
+                              </span>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); deleteSession(session.session_id); toast.success("Ștearsă"); }}
+                                className="opacity-0 group-hover/session:opacity-100 h-3.5 w-3.5 rounded flex items-center justify-center hover:bg-destructive/10 transition-all"
+                              >
+                                <Trash2 className="h-2 w-2 text-muted-foreground hover:text-destructive" />
+                              </button>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </ScrollArea>
                   </SidebarGroupContent>
-                </CollapsibleContent>
+                </SidebarGroup>
+              </>
+            )}
+            {collapsed && (
+              <SidebarGroup>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        tooltip="Sesiuni"
+                        onClick={() => { newSession(); navigate("/home"); }}
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
               </SidebarGroup>
-            </Collapsible>
+            )}
+
+            {/* ═══ ADMIN ═══ */}
+            {isAdmin && (
+              <>
+                <SidebarSeparator className="my-1" />
+                {renderGroup(ADMIN_GROUP)}
+              </>
+            )}
           </>
+        ) : (
+          /* ═══ PUBLIC (logged out) ═══ */
+          <SidebarGroup>
+            {!collapsed && (
+              <SidebarGroupLabel className="text-[9px] tracking-[0.15em] font-bold">
+                EXPLORE
+              </SidebarGroupLabel>
+            )}
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {PUBLIC_ITEMS.map(renderNavItem)}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         )}
       </SidebarContent>
 
       <SidebarFooter>
         <SidebarSeparator />
 
-        {/* ═══ MONETIZATION ENGINE ═══ */}
+        {/* ═══ FOOTER: Plan + Upgrade ═══ */}
         {user && !collapsed && (
           <div className="px-3 py-2 space-y-2">
-            {/* Plan badge + balance */}
+            {/* Plan badge */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Crown className={cn(
@@ -352,17 +446,7 @@ export function AppSidebar() {
               />
             </div>
 
-            {/* Low balance warning */}
-            {balance < 200 && (
-              <button
-                onClick={() => navigate("/credits")}
-                className="w-full text-[10px] text-destructive bg-destructive/5 rounded-lg px-2 py-1.5 text-left hover:bg-destructive/10 transition-colors"
-              >
-                ⚠ Sold scăzut — Reîncarcă
-              </button>
-            )}
-
-            {/* Upgrade CTA — only for non-pro users */}
+            {/* Upgrade CTA */}
             {tier !== "vip" && tier !== "pro" && (
               <button
                 onClick={() => navigate("/credits")}
@@ -371,51 +455,15 @@ export function AppSidebar() {
                 <Rocket className="h-3.5 w-3.5 text-primary shrink-0" />
                 <div className="flex-1 text-left">
                   <p className="text-[11px] font-semibold text-primary">Upgrade to PRO</p>
-                  <p className="text-[9px] text-muted-foreground">25% discount execuție + batch</p>
+                  <p className="text-[9px] text-muted-foreground">25% discount + batch</p>
                 </div>
                 <ChevronRight className="h-3 w-3 text-primary/40 group-hover:translate-x-0.5 transition-transform" />
               </button>
             )}
-
-            {/* Cusnir_OS — locked preview */}
-            <Collapsible>
-              <CollapsibleTrigger className="w-full">
-                <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-muted/30 border border-border/20 hover:border-border/40 transition-colors group cursor-pointer">
-                  <div className="h-5 w-5 rounded-md bg-foreground/5 flex items-center justify-center shrink-0">
-                    <Lock className="h-3 w-3 text-muted-foreground/40" />
-                  </div>
-                  <div className="flex-1 text-left min-w-0">
-                    <p className="text-[10px] font-bold text-muted-foreground/60 tracking-wide">CUSNIR_OS</p>
-                  </div>
-                  <ChevronRight className="h-3 w-3 text-muted-foreground/30 transition-transform group-data-[state=open]:rotate-90" />
-                </div>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="mt-1 px-2.5 py-2 rounded-lg bg-muted/20 space-y-1.5">
-                  <div className="space-y-0.5">
-                    {["Multi-agent orchestration", "Economic system control", "Private neuron layers"].map(cap => (
-                      <div key={cap} className="flex items-center gap-1.5">
-                        <Lock className="h-2.5 w-2.5 text-muted-foreground/25 shrink-0" />
-                        <span className="text-[9px] text-muted-foreground/40">{cap}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-[9px] text-muted-foreground/30 italic">
-                    11 luni VIP consecutive sau $9,992
-                  </p>
-                  <button
-                    onClick={() => navigate("/cusnir-os")}
-                    className="w-full text-[9px] font-medium text-primary/60 hover:text-primary transition-colors py-0.5"
-                  >
-                    Vezi cerințe →
-                  </button>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
           </div>
         )}
 
-        {/* Collapsed — just upgrade icon */}
+        {/* Collapsed footer */}
         {user && collapsed && (
           <div className="flex flex-col items-center gap-1.5 py-2">
             <button
@@ -434,7 +482,7 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* Sign in for logged-out users */}
+        {/* Sign in */}
         {!user && (
           <SidebarMenu>
             <SidebarMenuItem>
