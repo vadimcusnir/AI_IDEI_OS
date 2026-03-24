@@ -9,7 +9,7 @@ import {
   Coins, Clock, Zap, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { CommandPhase } from "@/hooks/useCommandState";
+import type { CommandPhase } from "@/stores/executionStore";
 
 interface ExecutionStatusBarProps {
   phase: CommandPhase;
