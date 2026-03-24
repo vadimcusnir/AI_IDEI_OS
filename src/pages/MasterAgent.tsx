@@ -409,28 +409,41 @@ export default function MasterAgent() {
               <div className="bg-card border border-border rounded-xl p-4">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Pipeline Execuție</p>
                 <div className="space-y-1.5">
-                  {result.steps.map((step, i) => (
+                  {result.steps.map((step, i) => {
+                    const d = (step as any).data || step;
+                    const statusStr = step.status;
+                    const isPassed = statusStr === "completed" || statusStr === "passed" || statusStr === "resolved" || statusStr === "approved" || statusStr === "settled" || statusStr === "reserved" || statusStr === "loaded" || statusStr === "plan_ready";
+                    const isWarn = statusStr === "warning";
+                    return (
                     <div key={i} className="flex items-center gap-2 text-xs">
-                      {step.status === "completed" ? (
+                      {isPassed ? (
                         <CheckCircle className="h-3 w-3 text-primary shrink-0" />
-                      ) : step.status === "warning" ? (
+                      ) : isWarn ? (
                         <AlertTriangle className="h-3 w-3 text-amber-500 shrink-0" />
+                      ) : statusStr === "running" ? (
+                        <Loader2 className="h-3 w-3 text-primary animate-spin shrink-0" />
                       ) : (
                         <XCircle className="h-3 w-3 text-destructive shrink-0" />
                       )}
-                      <span className="text-muted-foreground w-28 shrink-0 font-mono text-[10px]">
+                      <span className="text-muted-foreground w-32 shrink-0 font-mono text-[10px]">
                         {STEP_LABELS[step.step]?.label || step.step}
                       </span>
-                      <span className="text-foreground text-[10px]">
-                        {step.count !== undefined && `${step.count} items`}
-                        {step.outputs !== undefined && `${step.outputs} outputs`}
-                        {step.items !== undefined && `${step.items} items`}
-                        {step.qualified !== undefined && `${step.qualified}/${step.total} qualified`}
-                        {step.ranked !== undefined && `${step.ranked} ranked`}
-                        {step.steps_count !== undefined && `${step.steps_count} steps`}
+                      <span className="text-foreground text-[10px] truncate">
+                        {d.count !== undefined && `${d.count} items`}
+                        {d.outputs !== undefined && ` ${d.outputs} outputs`}
+                        {d.items !== undefined && ` ${d.items} items`}
+                        {d.qualified !== undefined && ` ${d.qualified}/${d.total} qualified`}
+                        {d.ranked !== undefined && ` ${d.ranked} ranked`}
+                        {d.steps !== undefined && ` ${d.steps} steps`}
+                        {d.tier !== undefined && ` tier: ${d.tier}`}
+                        {d.cost !== undefined && ` ${d.cost}N`}
+                        {d.amount !== undefined && ` ${d.amount}N`}
+                        {d.strategy !== undefined && ` ${d.strategy}`}
+                        {d.reason !== undefined && ` ${d.reason}`}
                       </span>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
