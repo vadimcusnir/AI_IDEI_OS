@@ -77,7 +77,7 @@ export function InputAttachMenu({ onFileClick, onAction }: InputAttachMenuProps)
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          "h-9 w-9 rounded-xl flex items-center justify-center transition-all duration-200",
+          "h-8 w-8 rounded-[10px] flex items-center justify-center transition-all duration-200",
           "text-muted-foreground/50 hover:text-foreground hover:bg-muted",
           open && "bg-muted text-foreground rotate-45"
         )}
