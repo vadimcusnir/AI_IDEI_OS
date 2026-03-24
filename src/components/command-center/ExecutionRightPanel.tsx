@@ -2,7 +2,7 @@
  * ExecutionRightPanel — Cost/progress/outputs tracker.
  * Shows during active execution and completed states.
  */
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Coins, Clock, CheckCircle2, XCircle,
   Package, TrendingUp, Loader2, Zap,
