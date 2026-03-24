@@ -1,6 +1,5 @@
 import { X } from "lucide-react";
 import { TaskTree } from "./TaskTree";
-import { TaskTree } from "./TaskTree";
 import { MemoryPanel } from "./MemoryPanel";
 import type { ExecutionState } from "@/stores/executionStore";
 
