@@ -126,7 +126,7 @@ export default function AdminDomination() {
             <div className="text-xs text-muted-foreground flex items-center gap-1"><TrendingUp className="h-3 w-3" /> Weekly Revenue</div>
             <div className="text-2xl font-bold mt-1">{metrics ? `${metrics.totalRevenue}N` : "—"}</div>
             <div className="text-xs">
-              <span className="text-emerald-400">{metrics?.boosted ?? 0} boosted</span>
+              <span className="text-semantic-emerald">{metrics?.boosted ?? 0} boosted</span>
               {" · "}
               <span className="text-destructive">{metrics?.killed ?? 0} killed</span>
             </div>
