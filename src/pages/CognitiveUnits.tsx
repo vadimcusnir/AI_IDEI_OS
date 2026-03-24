@@ -90,6 +90,7 @@ export default function CognitiveUnits() {
   }
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Cognitive Units" fallback="overlay">
     <PageTransition>
       <div className="flex-1 overflow-auto">
         <SEOHead title="Cognitive Units — AI-IDEI" description="Browse and manage extracted cognitive units from your knowledge base." />
