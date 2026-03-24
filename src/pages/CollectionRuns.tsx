@@ -139,5 +139,6 @@ export default function CollectionRuns() {
         </div>
       </div>
     </PageTransition>
+    </PremiumGate>
   );
 }
