@@ -76,6 +76,8 @@ export default function Home() {
   const { persistRun, persistOutputsBatch } = useExecutionHistory();
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
+  const [totalNeurons, setTotalNeurons] = useState(0);
+  const [totalEpisodes, setTotalEpisodes] = useState(0);
   const executionEngine = useExecution({
     neuronCount: totalNeurons,
     episodeCount: totalEpisodes,
@@ -95,8 +97,6 @@ export default function Home() {
   const [showEconomicGate, setShowEconomicGate] = useState(false);
   const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
-  const [totalNeurons, setTotalNeurons] = useState(0);
-  const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [showPipeline, setShowPipeline] = useState(false);
