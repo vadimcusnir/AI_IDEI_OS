@@ -95,7 +95,7 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
         title: `${stats.uncategorized} neurons uncategorized`,
         description: "Run AI categorization to organize your knowledge library",
         action: "Auto-categorize",
-        route: "/chat?q=/extract categorize uncategorized neurons",
+        route: "/home?q=/extract categorize uncategorized neurons",
         priority: "high",
       });
     }
@@ -119,7 +119,7 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
         title: "Low average quality score",
         description: `Average score: ${stats.avgScore}. Enrich neurons with more context to improve quality.`,
         action: "Improve quality",
-        route: "/chat?q=/analyze neuron quality and suggest improvements",
+        route: "/home?q=/analyze neuron quality and suggest improvements",
         priority: "high",
       });
     }

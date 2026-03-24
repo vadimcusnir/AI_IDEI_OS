@@ -79,7 +79,7 @@ const TermsOfService = lazyRetry(() => import("./pages/TermsOfService"));
 const PrivacyPolicy = lazyRetry(() => import("./pages/PrivacyPolicy"));
 const DataPrivacy = lazyRetry(() => import("./pages/DataPrivacy"));
 const PublicUserProfile = lazyRetry(() => import("./pages/PublicUserProfile"));
-const ChatPage = lazyRetry(() => import("./pages/ChatPage"));
+
 const ApiDocs = lazyRetry(() => import("./pages/ApiDocs"));
 const WorkspaceSettings = lazyRetry(() => import("./pages/WorkspaceSettings"));
 const Community = lazyRetry(() => import("./pages/Community"));

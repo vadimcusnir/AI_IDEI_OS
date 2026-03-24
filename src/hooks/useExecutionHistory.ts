@@ -5,7 +5,7 @@
 import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import type { ExecutionState } from "./useCommandState";
+import type { ExecutionState } from "@/stores/executionStore";
 
 interface PersistOptions {
   execution: ExecutionState;
