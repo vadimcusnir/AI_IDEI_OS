@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -89,6 +90,7 @@ export default function CognitiveUnits() {
   }
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Cognitive Units" fallback="overlay">
     <PageTransition>
       <div className="flex-1 overflow-auto">
         <SEOHead title="Cognitive Units — AI-IDEI" description="Browse and manage extracted cognitive units from your knowledge base." />
@@ -256,5 +258,6 @@ export default function CognitiveUnits() {
         </div>
       </div>
     </PageTransition>
+    </PremiumGate>
   );
 }

@@ -17,6 +17,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import type { CommandPhase } from "@/stores/executionStore";
+import { OutputCounter } from "./OutputCounter";
 
 interface ExecutionSummaryProps {
   phase: CommandPhase;
@@ -130,25 +131,24 @@ export function ExecutionSummary({
         </div>
       </div>
 
-      {/* Metrics */}
-      <div className="px-4 py-2.5 border-t border-border/30 flex items-center gap-5 flex-wrap">
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Layers className="h-3.5 w-3.5" />
-          <span className="tabular-nums">{stepsCompleted}/{totalSteps} steps</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Coins className="h-3.5 w-3.5" />
-          <span className="tabular-nums">{totalCredits} N</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Clock className="h-3.5 w-3.5" />
-          <span className="tabular-nums">{durationSeconds}s</span>
+      {/* Metrics + Output Counter */}
+      <div className="px-4 py-2.5 border-t border-border/30 space-y-2">
+        <div className="flex items-center gap-5 flex-wrap">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Layers className="h-3.5 w-3.5" />
+            <span className="tabular-nums">{stepsCompleted}/{totalSteps} steps</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Coins className="h-3.5 w-3.5" />
+            <span className="tabular-nums">{totalCredits} N</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Clock className="h-3.5 w-3.5" />
+            <span className="tabular-nums">{durationSeconds}s</span>
+          </div>
         </div>
         {outputCount > 0 && (
-          <div className="flex items-center gap-1.5 text-xs text-primary font-medium">
-            <FileText className="h-3.5 w-3.5" />
-            <span className="tabular-nums">{outputCount} outputs</span>
-          </div>
+          <OutputCounter targetCount={outputCount} isActive={isSuccess} />
         )}
       </div>
 

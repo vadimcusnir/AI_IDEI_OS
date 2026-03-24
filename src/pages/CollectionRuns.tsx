@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,6 +60,7 @@ export default function CollectionRuns() {
   }
 
   return (
+    <PremiumGate requiredTier="pro" featureName="Collection Runs" fallback="overlay">
     <PageTransition>
       <div className="flex-1 overflow-auto">
         <SEOHead title="Collection Runs — AI-IDEI" description="View your knowledge collection pipeline runs." />
@@ -137,5 +139,6 @@ export default function CollectionRuns() {
         </div>
       </div>
     </PageTransition>
+    </PremiumGate>
   );
 }

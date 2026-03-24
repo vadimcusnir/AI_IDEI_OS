@@ -39,6 +39,7 @@ import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { IntentChips, SystemRecommendations, matchIntentToSystems, type MMSystem } from "@/components/command-center/IntentSystems";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WorkspaceLayerTabs, type WorkspaceLayer } from "@/components/command-center/WorkspaceLayerTabs";
+import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { routeCommand, type RouteResult } from "@/components/command-center/CommandRouter";
@@ -89,6 +90,15 @@ export default function Home() {
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [activeLayer, setActiveLayer] = useState<WorkspaceLayer>("chat");
+  const [showLowBalance, setShowLowBalance] = useState(false);
+
+  // Auto-trigger low balance gate when balance hits 0 after execution
+  useEffect(() => {
+    if (balance <= 0 && execState.phase === "completed" && !showLowBalance) {
+      const timer = setTimeout(() => setShowLowBalance(true), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [balance, execState.phase, showLowBalance]);
 
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -627,6 +637,13 @@ export default function Home() {
           onRerun={handleRerun}
         />
       </div>
+
+      {/* ═══ LOW BALANCE GATE — auto-triggered ═══ */}
+      <AnimatePresence>
+        {showLowBalance && (
+          <LowBalanceGate balance={balance} onDismiss={() => setShowLowBalance(false)} />
+        )}
+      </AnimatePresence>
     </>
   );
 }
