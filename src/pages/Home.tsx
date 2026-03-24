@@ -395,7 +395,7 @@ export default function Home() {
           {/* ═══ CONTENT AREA ═══ */}
           {isEmptyState ? (
             /* IDLE: Centered hero — viewport-locked, no scroll */
-            <div className="flex-1 flex flex-col items-center justify-center relative z-10 overflow-hidden px-4 sm:px-6" style={{ marginTop: "-5%" }}>
+            <div className="flex-1 flex flex-col items-center justify-center relative z-10 overflow-hidden px-4 sm:px-6 pb-32" style={{ marginTop: "-5%" }}>
               <div className="w-full max-w-3xl flex flex-col items-center gap-4">
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
