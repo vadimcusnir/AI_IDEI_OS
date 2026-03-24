@@ -135,7 +135,7 @@ export default function Home() {
     if (!user || sessionLoaded) return;
     setSessionLoaded(true);
     loadCurrentSession().then((loaded) => {
-      if (loaded.length > 0) setMessages(loaded);
+      if (loaded.length > 0) executionActions.setMessages(loaded);
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
@@ -442,8 +442,8 @@ export default function Home() {
 
   const clearChat = () => {
     newSession(); executionActions.reset();
-    setMessages([]);
-    setOutputs([]); setShowOutputs(false); setShowTaskTree(false); setShowPostExecution(false);
+    executionActions.clearMessages();
+    executionActions.setOutputs([]); setShowOutputs(false); setShowTaskTree(false); setShowPostExecution(false);
   };
 
   const handleSaveAllOutputs = async () => {
@@ -506,7 +506,7 @@ export default function Home() {
           onNewSession={() => { clearChat(); setShowHistory(false); }}
           onLoadSession={async (sid) => {
             const loaded = await loadSession(sid);
-            if (loaded.length > 0) setMessages(loaded);
+            if (loaded.length > 0) executionActions.setMessages(loaded);
             setShowHistory(false);
           }}
           onDeleteSession={async (sid) => {
@@ -846,7 +846,7 @@ export default function Home() {
           onSaveTemplate={handleSaveTemplate}
           onReplay={(intent) => { setInput(`/${intent} `); inputZoneRef.current?.focus(); setShowMemory(false); }}
           onExecuteTemplate={(template) => { setInput(`/${template.intent_key} (using template: ${template.name})`); setShowMemory(false); inputZoneRef.current?.focus(); }}
-          sessions={sessions} onLoadSession={async (sid) => { const loaded = await loadSession(sid); if (loaded.length > 0) setMessages(loaded); setShowMemory(false); }}
+          sessions={sessions} onLoadSession={async (sid) => { const loaded = await loadSession(sid); if (loaded.length > 0) executionActions.setMessages(loaded); setShowMemory(false); }}
           onDeleteSession={async (sid) => { await deleteSession(sid); toast.success("Sesiune ștearsă"); }}
           currentSessionId={sessionId}
         />
