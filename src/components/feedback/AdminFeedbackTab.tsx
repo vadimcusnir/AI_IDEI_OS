@@ -227,8 +227,8 @@ export function AdminFeedbackTab() {
                       </span>
                       <span className={cn(
                         "text-[8px] px-1.5 py-0.5 rounded uppercase",
-                        item.status === "pending" ? "bg-amber-500/10 text-amber-600" :
-                        item.status === "resolved" ? "bg-emerald-500/10 text-emerald-600" :
+                        item.status === "pending" ? "bg-warning/10 text-warning" :
+                        item.status === "resolved" ? "bg-success/10 text-success" :
                         "bg-primary/10 text-primary"
                       )}>
                         {item.status}
