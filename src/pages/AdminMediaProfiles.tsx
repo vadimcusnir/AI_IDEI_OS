@@ -39,14 +39,14 @@ interface GuardrailResult {
 
 const STATUS_COLORS: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
-  review: "bg-yellow-500/10 text-yellow-600",
-  published: "bg-green-500/10 text-green-600",
+  review: "bg-warning/10 text-warning",
+  published: "bg-success/10 text-success",
   blocked: "bg-destructive/10 text-destructive",
 };
 
 const RISK_COLORS: Record<string, string> = {
-  low: "text-green-600",
-  medium: "text-yellow-600",
+  low: "text-success",
+  medium: "text-warning",
   high: "text-destructive",
 };
 
@@ -257,14 +257,14 @@ export default function AdminMediaProfiles() {
                   </h4>
                   {guardrails.checks.map((check, i) => (
                     <div key={i} className="flex items-center gap-2 text-xs">
-                      {check.status === "PASS" ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> :
+                      {check.status === "PASS" ? <CheckCircle2 className="h-3.5 w-3.5 text-success" /> :
                        check.status === "FAIL" ? <XCircle className="h-3.5 w-3.5 text-destructive" /> :
                        <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
                       <span className="capitalize">{check.gate.replace("_", " ")}</span>
                       {check.reason && <span className="text-muted-foreground">({check.reason})</span>}
                     </div>
                   ))}
-                  <div className={cn("text-xs font-medium px-2 py-1 rounded", guardrails.all_pass ? "bg-green-500/10 text-green-600" : "bg-destructive/10 text-destructive")}>
+                  <div className={cn("text-xs font-medium px-2 py-1 rounded", guardrails.all_pass ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive")}>
                     {guardrails.all_pass ? "✅ Ready for publish" : "⛔ Cannot publish"}
                   </div>
                 </div>

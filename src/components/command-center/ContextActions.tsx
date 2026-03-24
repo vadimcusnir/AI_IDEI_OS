@@ -42,7 +42,7 @@ export function ContextActions({
       icon: Globe,
       label: "Analyze",
       prompt: "/analyze ",
-      color: "text-blue-500 border-blue-500/20 hover:bg-blue-500/5",
+      color: "text-semantic-blue border-semantic-blue/20 hover:bg-semantic-blue/5",
     });
 
     // If user has episodes but few neurons → suggest extraction
@@ -52,7 +52,7 @@ export function ContextActions({
         icon: Brain,
         label: "Extract Neurons",
         prompt: "/extract neurons from my latest episode",
-        color: "text-purple-500 border-purple-500/20 hover:bg-purple-500/5",
+        color: "text-semantic-purple border-semantic-purple/20 hover:bg-semantic-purple/5",
       });
     }
 
@@ -63,7 +63,7 @@ export function ContextActions({
         icon: Sparkles,
         label: "Generate",
         prompt: "/generate ",
-        color: "text-pink-500 border-pink-500/20 hover:bg-pink-500/5",
+        color: "text-semantic-rose border-semantic-rose/20 hover:bg-semantic-rose/5",
       });
     }
 
@@ -74,7 +74,7 @@ export function ContextActions({
         icon: Network,
         label: "Search",
         prompt: "/search ",
-        color: "text-green-500 border-green-500/20 hover:bg-green-500/5",
+        color: "text-semantic-emerald border-semantic-emerald/20 hover:bg-semantic-emerald/5",
       });
     }
 
@@ -85,7 +85,7 @@ export function ContextActions({
         icon: Brain,
         label: "Extract from analysis",
         prompt: "/extract neurons from the analysis above",
-        color: "text-purple-500 border-purple-500/20 hover:bg-purple-500/5",
+        color: "text-semantic-purple border-semantic-purple/20 hover:bg-semantic-purple/5",
       });
     }
 
@@ -96,7 +96,7 @@ export function ContextActions({
         icon: FileText,
         label: "Generate from neurons",
         prompt: "/generate content pack from extracted neurons",
-        color: "text-pink-500 border-pink-500/20 hover:bg-pink-500/5",
+        color: "text-semantic-rose border-semantic-rose/20 hover:bg-semantic-rose/5",
       });
     }
 
@@ -107,7 +107,7 @@ export function ContextActions({
         icon: Layers,
         label: "Compare",
         prompt: "/compare ",
-        color: "text-orange-500 border-orange-500/20 hover:bg-orange-500/5",
+        color: "text-semantic-amber border-semantic-amber/20 hover:bg-semantic-amber/5",
       });
     }
 

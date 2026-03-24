@@ -80,10 +80,10 @@ export default function AdminDomination() {
   });
 
   const actions: { key: DomAction; label: string; icon: any; desc: string; color: string }[] = [
-    { key: "capture", label: "Demand Capture", icon: Target, desc: "Detect intent → generate pages", color: "text-emerald-400" },
-    { key: "distribute", label: "Distribute Assets", icon: Globe, desc: "Push assets across channels", color: "text-blue-400" },
-    { key: "feedback", label: "Feedback Loop", icon: RefreshCw, desc: "Boost top → kill underperformers", color: "text-amber-400" },
-    { key: "autoscale", label: "Auto-Scale", icon: Rocket, desc: "Expand pages & services", color: "text-purple-400" },
+    { key: "capture", label: "Demand Capture", icon: Target, desc: "Detect intent → generate pages", color: "text-semantic-emerald" },
+    { key: "distribute", label: "Distribute Assets", icon: Globe, desc: "Push assets across channels", color: "text-semantic-blue" },
+    { key: "feedback", label: "Feedback Loop", icon: RefreshCw, desc: "Boost top → kill underperformers", color: "text-semantic-amber" },
+    { key: "autoscale", label: "Auto-Scale", icon: Rocket, desc: "Expand pages & services", color: "text-semantic-purple" },
   ];
 
   return (
@@ -112,7 +112,7 @@ export default function AdminDomination() {
           <CardContent className="pt-4 pb-3">
             <div className="text-xs text-muted-foreground flex items-center gap-1"><Globe className="h-3 w-3" /> Landing Pages</div>
             <div className="text-2xl font-bold mt-1">{pages?.total ?? "—"}</div>
-            <div className="text-xs text-emerald-400">{pages?.published ?? 0} published</div>
+            <div className="text-xs text-semantic-emerald">{pages?.published ?? 0} published</div>
           </CardContent>
         </Card>
         <Card>
@@ -126,7 +126,7 @@ export default function AdminDomination() {
             <div className="text-xs text-muted-foreground flex items-center gap-1"><TrendingUp className="h-3 w-3" /> Weekly Revenue</div>
             <div className="text-2xl font-bold mt-1">{metrics ? `${metrics.totalRevenue}N` : "—"}</div>
             <div className="text-xs">
-              <span className="text-emerald-400">{metrics?.boosted ?? 0} boosted</span>
+              <span className="text-semantic-emerald">{metrics?.boosted ?? 0} boosted</span>
               {" · "}
               <span className="text-destructive">{metrics?.killed ?? 0} killed</span>
             </div>
@@ -188,17 +188,17 @@ export default function AdminDomination() {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-xs text-muted-foreground mb-1">DATA MOAT</div>
-              <div className="text-lg font-bold text-emerald-400">Active</div>
+              <div className="text-lg font-bold text-semantic-emerald">Active</div>
               <div className="text-[10px] text-muted-foreground">neurons + executions + outcomes</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">ECONOMIC MOAT</div>
-              <div className="text-lg font-bold text-blue-400">Active</div>
+              <div className="text-lg font-bold text-semantic-blue">Active</div>
               <div className="text-[10px] text-muted-foreground">user assets + marketplace income</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">BEHAVIORAL MOAT</div>
-              <div className="text-lg font-bold text-purple-400">Active</div>
+              <div className="text-lg font-bold text-semantic-purple">Active</div>
               <div className="text-[10px] text-muted-foreground">user dependency on outputs</div>
             </div>
           </div>

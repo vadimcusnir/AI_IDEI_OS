@@ -100,12 +100,12 @@ export default function AdminFinancialization() {
       {/* KPI Strip */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
-          { label: "Tokenized Assets", value: tokenStats?.count ?? "—", icon: Coins, color: "text-amber-500" },
-          { label: "Units Sold", value: tokenStats?.soldUnits ?? "—", icon: TrendingUp, color: "text-emerald-500" },
-          { label: "Perf. Listings", value: perfStats?.total ?? "—", icon: Target, color: "text-blue-500" },
-          { label: "Certifications", value: certStats?.awarded ?? "—", icon: Award, color: "text-purple-500" },
+          { label: "Tokenized Assets", value: tokenStats?.count ?? "—", icon: Coins, color: "text-semantic-amber" },
+          { label: "Units Sold", value: tokenStats?.soldUnits ?? "—", icon: TrendingUp, color: "text-semantic-emerald" },
+          { label: "Perf. Listings", value: perfStats?.total ?? "—", icon: Target, color: "text-semantic-blue" },
+          { label: "Certifications", value: certStats?.awarded ?? "—", icon: Award, color: "text-semantic-purple" },
           { label: "Intel Reports", value: intelStats?.total ?? "—", icon: Brain, color: "text-primary" },
-          { label: "Data Products", value: dataStats?.published ?? "—", icon: Globe, color: "text-cyan-500" },
+          { label: "Data Products", value: dataStats?.published ?? "—", icon: Globe, color: "text-semantic-cyan" },
         ].map(kpi => (
           <div key={kpi.label} className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-1.5 mb-1">
@@ -188,7 +188,7 @@ export default function AdminFinancialization() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm flex items-center gap-1.5">
-                <BarChart3 className="h-3.5 w-3.5 text-blue-500" /> Performance Market
+                <BarChart3 className="h-3.5 w-3.5 text-semantic-blue" /> Performance Market
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -199,7 +199,7 @@ export default function AdminFinancialization() {
                 </div>
                 <div>
                   <span className="text-[10px] text-muted-foreground">Verified</span>
-                  <p className="text-lg font-bold text-emerald-500">{perfStats?.verified ?? 0}</p>
+                  <p className="text-lg font-bold text-semantic-emerald">{perfStats?.verified ?? 0}</p>
                 </div>
                 <div>
                   <span className="text-[10px] text-muted-foreground">Total Sales</span>
@@ -274,7 +274,7 @@ export default function AdminFinancialization() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm flex items-center gap-1.5">
-                <Award className="h-3.5 w-3.5 text-purple-500" /> Certification System
+                <Award className="h-3.5 w-3.5 text-semantic-purple" /> Certification System
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">

@@ -137,7 +137,7 @@ export default function ServiceResults() {
 
   const statusIcon = (status: string) => {
     switch (status) {
-      case "completed": return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
+      case "completed": return <CheckCircle2 className="h-4 w-4 text-success" />;
       case "failed": return <XCircle className="h-4 w-4 text-destructive" />;
       case "running": return <Loader2 className="h-4 w-4 animate-spin text-primary" />;
       default: return <Clock className="h-4 w-4 text-muted-foreground" />;

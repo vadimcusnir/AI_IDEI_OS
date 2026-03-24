@@ -239,14 +239,14 @@ export function AdminKnowledgeGraphTab() {
                       <span className="text-xs">{m.title}</span>
                       <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
                     </div>
-                    <span className="text-right text-xs font-mono font-bold text-emerald-500">
+                    <span className="text-right text-xs font-mono font-bold text-semantic-emerald">
                       {(m.emergence_score * 100).toFixed(1)}
                     </span>
-                    <PVSBar value={m.novelty_score} color="bg-violet-500/70" />
-                    <PVSBar value={m.acceleration_score} color="bg-sky-500/70" />
-                    <PVSBar value={Math.min(1, m.connectivity_growth)} color="bg-amber-500/70" />
-                    <PVSBar value={Math.min(1, m.centrality_delta * 10)} color="bg-rose-500/70" />
-                    <PVSBar value={m.structural_rarity} color="bg-teal-500/70" />
+                    <PVSBar value={m.novelty_score} color="bg-semantic-purple/70" />
+                    <PVSBar value={m.acceleration_score} color="bg-semantic-blue/70" />
+                    <PVSBar value={Math.min(1, m.connectivity_growth)} color="bg-semantic-amber/70" />
+                    <PVSBar value={Math.min(1, m.centrality_delta * 10)} color="bg-semantic-rose/70" />
+                    <PVSBar value={m.structural_rarity} color="bg-semantic-teal/70" />
                   </div>
                 ))}
               </div>
@@ -274,9 +274,9 @@ export function AdminKnowledgeGraphTab() {
                     <div className="truncate">
                       <span className="text-xs">{m.title}</span>
                       <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
-                      {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-500">EMERGING</span>}
+                      {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-success/20 text-success">EMERGING</span>}
                     </div>
-                    <span className="text-right text-xs font-mono font-bold text-sky-500">
+                    <span className="text-right text-xs font-mono font-bold text-semantic-blue">
                       {(m.acceleration_score * 100).toFixed(1)}
                     </span>
                     <PVSBar value={m.pagerank_score} color="bg-violet-500/70" />
@@ -312,16 +312,16 @@ export function AdminKnowledgeGraphTab() {
                     <div className="truncate">
                       <span className="text-xs">{m.title}</span>
                       <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
-                      {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-500">↑</span>}
+                      {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-success/20 text-success">↑</span>}
                     </div>
                     <span className="text-right text-xs font-mono font-bold text-primary">
                       {(m.propagation_value_score * 100).toFixed(1)}
                     </span>
-                    <PVSBar value={m.activation_score} color="bg-emerald-500/70" />
-                    <PVSBar value={m.growth_score} color="bg-sky-500/70" />
-                    <PVSBar value={m.pagerank_score} color="bg-violet-500/70" />
-                    <PVSBar value={m.authority_score} color="bg-amber-500/70" />
-                    <PVSBar value={m.economic_conversion_score} color="bg-rose-500/70" />
+                    <PVSBar value={m.activation_score} color="bg-semantic-emerald/70" />
+                    <PVSBar value={m.growth_score} color="bg-semantic-blue/70" />
+                    <PVSBar value={m.pagerank_score} color="bg-semantic-purple/70" />
+                    <PVSBar value={m.authority_score} color="bg-semantic-amber/70" />
+                    <PVSBar value={m.economic_conversion_score} color="bg-semantic-rose/70" />
                     <span className="text-right text-[10px] font-mono text-muted-foreground">
                       {(m.amplification_probability * 100).toFixed(0)}%
                     </span>

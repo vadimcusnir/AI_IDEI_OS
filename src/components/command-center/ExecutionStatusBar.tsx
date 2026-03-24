@@ -30,11 +30,11 @@ const PHASE_CONFIG: Record<CommandPhase, {
 }> = {
   idle: { label: "Ready", icon: Shield, color: "text-muted-foreground", bg: "bg-transparent" },
   planning: { label: "Planning execution...", icon: Loader2, color: "text-primary", bg: "bg-primary/[0.03]", animate: true },
-  confirming: { label: "Awaiting confirmation", icon: AlertTriangle, color: "text-yellow-500", bg: "bg-yellow-500/[0.03]" },
+  confirming: { label: "Awaiting confirmation", icon: AlertTriangle, color: "text-warning", bg: "bg-warning/[0.03]" },
   executing: { label: "Executing", icon: Zap, color: "text-primary", bg: "bg-primary/[0.03]", animate: true },
-  delivering: { label: "Delivering outputs", icon: Loader2, color: "text-green-500", bg: "bg-green-500/[0.03]", animate: true },
+  delivering: { label: "Delivering outputs", icon: Loader2, color: "text-success", bg: "bg-success/[0.03]", animate: true },
   storing: { label: "Storing to memory", icon: Loader2, color: "text-primary", bg: "bg-primary/[0.03]", animate: true },
-  completed: { label: "Completed", icon: CheckCircle2, color: "text-green-500", bg: "bg-green-500/[0.03]" },
+  completed: { label: "Completed", icon: CheckCircle2, color: "text-success", bg: "bg-success/[0.03]" },
   failed: { label: "Failed", icon: XCircle, color: "text-destructive", bg: "bg-destructive/[0.03]" },
 };
 

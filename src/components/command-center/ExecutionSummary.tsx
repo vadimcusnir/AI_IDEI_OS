@@ -106,15 +106,15 @@ export function ExecutionSummary({
       className={cn(
         "rounded-2xl border overflow-hidden",
         isSuccess
-          ? "border-green-500/15 bg-gradient-to-b from-green-500/[0.03] to-transparent"
+          ? "border-success/15 bg-gradient-to-b from-success/[0.03] to-transparent"
           : "border-destructive/15 bg-gradient-to-b from-destructive/[0.03] to-transparent"
       )}
     >
       {/* Header */}
       <div className="px-4 py-3 flex items-center gap-3">
         {isSuccess ? (
-          <div className="h-8 w-8 rounded-xl bg-green-500/10 flex items-center justify-center">
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
+          <div className="h-8 w-8 rounded-xl bg-success/10 flex items-center justify-center">
+            <CheckCircle2 className="h-4 w-4 text-success" />
           </div>
         ) : (
           <div className="h-8 w-8 rounded-xl bg-destructive/10 flex items-center justify-center">

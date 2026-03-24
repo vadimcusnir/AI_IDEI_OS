@@ -18,8 +18,8 @@ import { toast } from "sonner";
 
 const FEEDBACK_TYPES = [
   { key: "feedback", label: "Feedback", icon: ThumbsUp, color: "text-primary" },
-  { key: "testimonial", label: "Testimonial", icon: Quote, color: "text-emerald-500" },
-  { key: "proposal", label: "Proposal", icon: Lightbulb, color: "text-amber-500" },
+  { key: "testimonial", label: "Testimonial", icon: Quote, color: "text-success" },
+  { key: "proposal", label: "Proposal", icon: Lightbulb, color: "text-semantic-amber" },
   { key: "complaint", label: "Complaint", icon: AlertTriangle, color: "text-destructive" },
   { key: "review", label: "Review", icon: Star, color: "text-primary" },
 ] as const;
@@ -128,7 +128,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
                 <Star
                   className={cn(
                     "h-5 w-5 transition-colors",
-                    rating && s <= rating ? "text-amber-400 fill-amber-400" : "text-muted-foreground/30"
+                    rating && s <= rating ? "text-tier-vip fill-tier-vip" : "text-muted-foreground/30"
                   )}
                 />
               </button>

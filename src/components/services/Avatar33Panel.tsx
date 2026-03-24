@@ -18,10 +18,10 @@ import {
 import { cn } from "@/lib/utils";
 
 const PHASES = [
-  { id: "discovery", name: "Discovery", icon: Brain, color: "text-purple-500", count: 8 },
-  { id: "commercial", name: "Commercial", icon: Target, color: "text-amber-500", count: 8 },
-  { id: "content", name: "Content", icon: FileText, color: "text-emerald-500", count: 8 },
-  { id: "synthesis", name: "Synthesis", icon: Lightbulb, color: "text-blue-500", count: 9 },
+  { id: "discovery", name: "Discovery", icon: Brain, color: "text-semantic-purple", count: 8 },
+  { id: "commercial", name: "Commercial", icon: Target, color: "text-semantic-amber", count: 8 },
+  { id: "content", name: "Content", icon: FileText, color: "text-semantic-emerald", count: 8 },
+  { id: "synthesis", name: "Synthesis", icon: Lightbulb, color: "text-semantic-blue", count: 9 },
 ];
 
 interface Avatar33PanelProps {
@@ -178,7 +178,7 @@ export function Avatar33Panel({ content: initialContent, onComplete }: Avatar33P
                     <Card key={id} className="border-border/50">
                       <CardHeader className="pb-2 pt-3 px-4">
                         <div className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                          <CheckCircle2 className="h-4 w-4 text-success" />
                           <span className="font-medium text-sm">{r.name}</span>
                         </div>
                       </CardHeader>

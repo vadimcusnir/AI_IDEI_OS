@@ -33,7 +33,7 @@ interface TaskExecutionCardProps {
 const STEP_ICON: Record<TaskStep["status"], React.ReactNode> = {
   pending: <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/20" />,
   running: <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />,
-  completed: <CheckCircle2 className="h-3 w-3 text-green-500" />,
+  completed: <CheckCircle2 className="h-3 w-3 text-success" />,
   failed: <XCircle className="h-3 w-3 text-destructive" />,
   skipped: <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/10" />,
 };
@@ -78,7 +78,7 @@ export function TaskExecutionCard({
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         "rounded-xl border overflow-hidden",
-        isDone && "border-green-500/15",
+        isDone && "border-success/15",
         isFailed && "border-destructive/15",
         isActive && "border-border/30",
       )}
@@ -89,7 +89,7 @@ export function TaskExecutionCard({
         {isActive ? (
           <Loader2 className="h-4 w-4 text-muted-foreground animate-spin shrink-0" />
         ) : isDone ? (
-          <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+          <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
         ) : (
           <XCircle className="h-4 w-4 text-destructive shrink-0" />
         )}
@@ -122,7 +122,7 @@ export function TaskExecutionCard({
             <motion.div
               className={cn(
                 "h-full rounded-full",
-                isDone ? "bg-green-500" : isFailed ? "bg-destructive" : "bg-muted-foreground/40"
+                isDone ? "bg-success" : isFailed ? "bg-destructive" : "bg-muted-foreground/40"
               )}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3 }}

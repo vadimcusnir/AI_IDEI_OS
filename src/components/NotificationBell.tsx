@@ -27,20 +27,20 @@ const NOTIF_ICONS: Record<string, React.ElementType> = {
 };
 
 const NOTIF_COLORS: Record<string, string> = {
-  job_completed: "text-emerald-500",
+  job_completed: "text-success",
   job_failed: "text-destructive",
   extraction_done: "text-primary",
-  credits_low: "text-amber-500",
+  credits_low: "text-warning",
   version_created: "text-muted-foreground",
   feedback_new: "text-primary",
-  feedback_response: "text-emerald-500",
+  feedback_response: "text-success",
   forum_reply: "text-primary",
   forum_mention: "text-primary",
   changelog: "text-primary",
-  level_up: "text-amber-500",
-  vip_milestone: "text-amber-500",
-  artifact_created: "text-emerald-500",
-  marketplace_sale: "text-emerald-500",
+  level_up: "text-semantic-amber",
+  vip_milestone: "text-tier-vip",
+  artifact_created: "text-success",
+  marketplace_sale: "text-success",
 };
 
 export function NotificationBell() {

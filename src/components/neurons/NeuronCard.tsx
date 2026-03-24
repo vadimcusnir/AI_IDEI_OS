@@ -8,13 +8,13 @@ import { cn } from "@/lib/utils";
 import type { NeuronListItem, ViewMode } from "@/hooks/useNeuronList";
 
 const CATEGORY_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  insight: { icon: Lightbulb, color: "text-amber-500 bg-amber-500/10", label: "Insight" },
-  framework: { icon: Layers, color: "text-blue-500 bg-blue-500/10", label: "Framework" },
-  pattern: { icon: Network, color: "text-purple-500 bg-purple-500/10", label: "Pattern" },
-  narrative: { icon: MessageSquareQuote, color: "text-emerald-500 bg-emerald-500/10", label: "Narrative" },
-  commercial: { icon: Target, color: "text-rose-500 bg-rose-500/10", label: "Commercial" },
-  psychological: { icon: Brain, color: "text-pink-500 bg-pink-500/10", label: "Psychological" },
-  strategy: { icon: Boxes, color: "text-cyan-500 bg-cyan-500/10", label: "Strategy" },
+  insight: { icon: Lightbulb, color: "text-semantic-amber bg-semantic-amber/10", label: "Insight" },
+  framework: { icon: Layers, color: "text-semantic-blue bg-semantic-blue/10", label: "Framework" },
+  pattern: { icon: Network, color: "text-semantic-purple bg-semantic-purple/10", label: "Pattern" },
+  narrative: { icon: MessageSquareQuote, color: "text-semantic-emerald bg-semantic-emerald/10", label: "Narrative" },
+  commercial: { icon: Target, color: "text-semantic-rose bg-semantic-rose/10", label: "Commercial" },
+  psychological: { icon: Brain, color: "text-semantic-rose bg-semantic-rose/10", label: "Psychological" },
+  strategy: { icon: Boxes, color: "text-semantic-cyan bg-semantic-cyan/10", label: "Strategy" },
 };
 
 const STATUS_COLORS: Record<string, string> = {

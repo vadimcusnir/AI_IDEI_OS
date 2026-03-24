@@ -24,7 +24,7 @@ const CATEGORY_KEYS: Record<string, { key: string; icon: React.ElementType; colo
   improvement: { key: "changelog.cat_improvement", icon: Wrench, color: "bg-status-validated/15 text-status-validated" },
   bug_fix: { key: "changelog.cat_bug_fix", icon: Bug, color: "bg-destructive/10 text-destructive" },
   ui_ux: { key: "changelog.cat_ui_ux", icon: Palette, color: "bg-ai-accent/15 text-ai-accent" },
-  performance: { key: "changelog.cat_performance", icon: Zap, color: "bg-orange-500/10 text-orange-600" },
+  performance: { key: "changelog.cat_performance", icon: Zap, color: "bg-semantic-amber/10 text-semantic-amber" },
   integration: { key: "changelog.cat_integration", icon: Plug, color: "bg-primary/10 text-primary" },
   documentation: { key: "changelog.cat_documentation", icon: BookOpen, color: "bg-muted text-muted-foreground" },
 };
