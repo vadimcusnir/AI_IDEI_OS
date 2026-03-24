@@ -32,6 +32,10 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
   const [costCharged, setCostCharged] = useState(0);
   const { reserve, settle, release } = useWalletAtomicity();
   const reservedRef = useRef<{ amount: number; jobId?: string } | null>(null);
+  const { markStarted, markCompleted } = useAbandonmentDetector({
+    serviceName: service?.name,
+    timeoutSeconds: 45,
+  });
 
   useEffect(() => {
     if (service) {
