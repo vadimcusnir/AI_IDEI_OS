@@ -90,6 +90,15 @@ export default function Home() {
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [activeLayer, setActiveLayer] = useState<WorkspaceLayer>("chat");
+  const [showLowBalance, setShowLowBalance] = useState(false);
+
+  // Auto-trigger low balance gate when balance hits 0 after execution
+  useEffect(() => {
+    if (balance <= 0 && execState.phase === "completed" && !showLowBalance) {
+      const timer = setTimeout(() => setShowLowBalance(true), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [balance, execState.phase, showLowBalance]);
 
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
