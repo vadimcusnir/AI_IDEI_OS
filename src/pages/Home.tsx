@@ -399,12 +399,7 @@ export default function Home() {
               {isEmptyState ? (
                 <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-20">
                   <div className="w-full max-w-3xl flex flex-col items-center gap-4">
-                    <motion.div
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                      className="w-full text-center space-y-2"
-                    >
+                    <div className="w-full text-center space-y-2">
                       <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
                         {greeting},{" "}
                         <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
@@ -414,7 +409,7 @@ export default function Home() {
                       <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
                         Ce vrei să obții?
                       </p>
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -504,19 +499,14 @@ export default function Home() {
                   )}
 
                   {isEmptyState && input.length < 2 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2, duration: 0.3 }}
-                      className="w-full max-w-2xl mx-auto"
-                    >
+                  <div className="w-full max-w-2xl mx-auto">
                       <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
-                    </motion.div>
+                  </div>
                   )}
 
                   <AnimatePresence>
                     {execState.phase === "confirming" && execState.totalCredits > 0 && !showEconomicGate && (
-                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pb-2">
+                      <div className="pb-2">
                         <PlanPreview
                           plan={{
                             action_id: execState.actionId, intent: execState.intent,
@@ -537,13 +527,13 @@ export default function Home() {
                           onDismiss={() => executionActions.reset()}
                           executing={loading}
                         />
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
 
                   <AnimatePresence>
                     {showEconomicGate && execState.phase === "confirming" && (
-                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pb-2">
+                      <div className="pb-2">
                         <EconomicGate
                           balance={balance} estimatedCost={execState.totalCredits}
                           tierDiscount={tierDiscount} tier={tier}
@@ -556,29 +546,29 @@ export default function Home() {
                           }}
                           onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
                         />
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
 
                   <AnimatePresence>
                     {showOutputs && outputs.length > 0 && (
-                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pb-2">
+                      <div className="pb-2">
                         <OutputPanel outputs={outputs} visible={showOutputs} onRerun={handleRerun}
                           onClose={() => setShowOutputs(false)} onSaveAll={handleSaveAllOutputs} savingAll={savingAllOutputs} />
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
 
                   <AnimatePresence>
                     {execState.phase === "completed" && showPostExecution && (
-                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pb-2">
+                      <div className="pb-2">
                         <PostExecutionPanel
                           intent={execState.intent as any} creditsSpent={execState.totalCredits}
                           outputCount={outputs.length}
                           onAction={(prompt) => { setInput(prompt); setShowPostExecution(false); inputZoneRef.current?.focus(); }}
                           onSaveTemplate={handleSaveTemplate} onDismiss={() => setShowPostExecution(false)} userTier={tier}
                         />
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
 
