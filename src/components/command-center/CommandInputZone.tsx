@@ -104,7 +104,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
           )}
         </AnimatePresence>
 
-        <div className="max-w-3xl mx-auto px-3 sm:px-5 pb-3 pt-1.5">
+        <div className="max-w-3xl mx-auto px-3 sm:px-5 pb-2 pt-2">
           {/* Attached files */}
           <AnimatePresence>
             {files.length > 0 && (
