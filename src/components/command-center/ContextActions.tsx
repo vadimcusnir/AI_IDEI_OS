@@ -42,7 +42,7 @@ export function ContextActions({
       icon: Globe,
       label: "Analyze",
       prompt: "/analyze ",
-      color: "text-blue-500 border-blue-500/20 hover:bg-blue-500/5",
+      color: "text-semantic-blue border-semantic-blue/20 hover:bg-semantic-blue/5",
     });
 
     // If user has episodes but few neurons → suggest extraction
