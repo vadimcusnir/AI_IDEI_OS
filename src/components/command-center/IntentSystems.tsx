@@ -357,7 +357,7 @@ export function SystemRecommendations({ systems, onSelect, input }: SystemRecomm
 
                         {/* Execute CTA */}
                         <button
-                          onClick={(e) => { e.stopPropagation(); onSelect(sys); }}
+                          onClick={(e) => { e.stopPropagation(); trackInternalEvent({ event: AnalyticsEvents.MMS_SELECTED, params: { system_id: sys.id, system_name: sys.name, credits: sys.estimatedCredits } }); onSelect(sys); }}
                           className={cn(
                             "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg",
                             "bg-primary text-primary-foreground font-semibold text-sm",
