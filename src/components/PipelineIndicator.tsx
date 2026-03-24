@@ -132,6 +132,9 @@ export function CompactPipelineIndicator() {
 
   const completedCount = STAGES.filter(s => s.check(stats)).length;
 
+  // Hide when nothing completed — no context to show
+  if (completedCount === 0) return null;
+
   return (
     <div className="flex items-center gap-1.5">
       {STAGES.map((stage, i) => {
