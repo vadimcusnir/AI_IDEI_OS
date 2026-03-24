@@ -311,7 +311,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
                 <Textarea
                   placeholder="Lipește conținutul, contextul sau datele aici..."
                   value={input}
-                  onChange={e => setInput(e.target.value)}
+                  onChange={e => { setInput(e.target.value); markStarted(e.target.value.length); }}
                   className="min-h-[140px] text-sm"
                 />
                 {service.intent && (
