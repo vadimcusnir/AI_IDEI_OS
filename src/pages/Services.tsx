@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { GuestConversionGate } from "@/components/revenue/GuestConversionGate";
 import { SEOHead } from "@/components/SEOHead";
 import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
