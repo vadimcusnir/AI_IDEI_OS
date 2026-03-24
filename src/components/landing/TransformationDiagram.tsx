@@ -42,56 +42,56 @@ export function TransformationDiagram() {
   const [activeStep, setActiveStep] = useState<number | null>(null);
 
   return (
-    <section className="py-16 sm:py-28 border-y border-[hsl(var(--ivory-dim)/0.06)]">
+    <section className="py-20 sm:py-32 border-y border-border/40">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-12 sm:mb-16">
-          <span className="text-xs font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide))] mb-4 block">TRANSFORMATION</span>
-          <h2 className="heading-2 text-[hsl(var(--ivory))] mb-4">From rough thought to finished asset</h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto text-flow">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-14 sm:mb-20">
+          <span className="text-[11px] font-mono tracking-[0.3em] uppercase text-[hsl(var(--gold-oxide))] mb-5 block">TRANSFORMATION</span>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-5 leading-[1.2]">From rough thought to finished asset</h2>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto leading-[1.7]">
             See how one idea moves through the system and becomes multiple usable outputs.
           </p>
         </motion.div>
 
-        {/* 3-column flow: Input → Process → Output */}
+        {/* 3-column flow */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr_auto_1.5fr] gap-6 lg:gap-0 items-start">
           {/* INPUTS */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}>
-            <span className="text-xs font-mono tracking-[0.2em] text-muted-foreground mb-4 block">INPUT</span>
-            <div className="space-y-2">
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-muted-foreground mb-5 block">INPUT</span>
+            <div className="space-y-2.5">
               {INPUTS.map((input) => (
                 <div
                   key={input.label}
-                  className="flex items-center gap-3 p-3 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.2)] hover:border-[hsl(var(--gold-oxide)/0.12)] transition-all cursor-default landing-card"
+                  className="flex items-center gap-3.5 p-3.5 rounded-lg border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.15)] transition-all cursor-default landing-card"
                   onMouseEnter={() => setActiveStep(0)}
                   onMouseLeave={() => setActiveStep(null)}
                 >
                   <span className="text-sm">{input.icon}</span>
-                  <span className="text-sm text-foreground">{input.label}</span>
+                  <span className="text-sm text-foreground font-medium">{input.label}</span>
                 </div>
               ))}
             </div>
           </motion.div>
 
           {/* Arrow 1 */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp} className="hidden lg:flex items-center justify-center px-4 pt-8">
-            <div className="flex flex-col items-center gap-1">
-              <div className={`w-12 h-px transition-colors duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)]' : 'bg-[hsl(var(--ivory-dim)/0.12)]'}`} />
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp} className="hidden lg:flex items-center justify-center px-5 pt-10">
+            <div className="flex flex-col items-center gap-1.5">
+              <div className={`w-14 h-px transition-colors duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)]' : 'bg-border/30'}`} />
               <span className="text-xs font-mono text-[hsl(var(--gold-oxide))]">→</span>
             </div>
           </motion.div>
 
           {/* PROCESS */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2} variants={fadeUp}>
-            <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">PROCESS</span>
-            <div className="space-y-2">
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-[hsl(var(--gold-oxide))] mb-5 block">PROCESS</span>
+            <div className="space-y-2.5">
               {PROCESSES.map((proc) => (
                 <div
                   key={proc.label}
-                  className="p-3 rounded-lg border border-[hsl(var(--gold-oxide)/0.08)] bg-[hsl(var(--obsidian-light)/0.3)] hover:border-[hsl(var(--gold-oxide)/0.2)] transition-all cursor-default group landing-card"
+                  className="p-3.5 rounded-lg border border-[hsl(var(--gold-oxide)/0.08)] bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.2)] transition-all cursor-default group landing-card"
                   onMouseEnter={() => setActiveStep(1)}
                   onMouseLeave={() => setActiveStep(null)}
                 >
-                  <p className="text-sm font-semibold text-foreground mb-0.5">{proc.label}</p>
+                  <p className="text-sm font-bold text-foreground mb-0.5">{proc.label}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">{proc.desc}</p>
                 </div>
               ))}
@@ -99,40 +99,40 @@ export function TransformationDiagram() {
           </motion.div>
 
           {/* Arrow 2 */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={3} variants={fadeUp} className="hidden lg:flex items-center justify-center px-4 pt-8">
-            <div className="flex flex-col items-center gap-1">
-              <div className={`w-12 h-px transition-colors duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)]' : 'bg-[hsl(var(--ivory-dim)/0.12)]'}`} />
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={3} variants={fadeUp} className="hidden lg:flex items-center justify-center px-5 pt-10">
+            <div className="flex flex-col items-center gap-1.5">
+              <div className={`w-14 h-px transition-colors duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)]' : 'bg-border/30'}`} />
               <span className="text-xs font-mono text-[hsl(var(--gold-oxide))]">→</span>
             </div>
           </motion.div>
 
           {/* OUTPUTS */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={4} variants={fadeUp}>
-            <span className="text-xs font-mono tracking-[0.2em] text-muted-foreground mb-4 block">OUTPUT</span>
-            <div className="grid grid-cols-2 gap-2">
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-muted-foreground mb-5 block">OUTPUT</span>
+            <div className="grid grid-cols-2 gap-2.5">
               {OUTPUTS.map((output) => (
                 <div
                   key={output.label}
-                  className="p-2.5 rounded-lg border border-[hsl(var(--ivory-dim)/0.06)] bg-[hsl(var(--obsidian-light)/0.2)] hover:border-[hsl(var(--gold-oxide)/0.15)] transition-all cursor-default landing-card"
+                  className="p-3 rounded-lg border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.15)] transition-all cursor-default landing-card"
                   onMouseEnter={() => setActiveStep(2)}
                   onMouseLeave={() => setActiveStep(null)}
                 >
                   <p className="text-xs sm:text-sm font-medium text-foreground">{output.label}</p>
-                  <p className="text-xs font-mono text-[hsl(var(--gold-oxide))] mt-0.5">{output.family}</p>
+                  <p className="text-[11px] font-mono text-[hsl(var(--gold-oxide))] mt-0.5">{output.family}</p>
                 </div>
               ))}
             </div>
           </motion.div>
         </div>
 
-        {/* Mobile flow arrows */}
-        <div className="flex lg:hidden justify-center my-4">
-          <div className="flex items-center gap-2 text-[hsl(var(--gold-oxide))]">
-            <span className="text-xs font-mono">INPUT</span>
-            <span>→</span>
-            <span className="text-xs font-mono">PROCESS</span>
-            <span>→</span>
-            <span className="text-xs font-mono">OUTPUT</span>
+        {/* Mobile flow label */}
+        <div className="flex lg:hidden justify-center my-6">
+          <div className="flex items-center gap-3 text-[hsl(var(--gold-oxide))]">
+            <span className="text-[11px] font-mono tracking-wider uppercase">INPUT</span>
+            <span className="text-xs">→</span>
+            <span className="text-[11px] font-mono tracking-wider uppercase">PROCESS</span>
+            <span className="text-xs">→</span>
+            <span className="text-[11px] font-mono tracking-wider uppercase">OUTPUT</span>
           </div>
         </div>
       </div>
