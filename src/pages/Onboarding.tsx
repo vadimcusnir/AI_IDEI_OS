@@ -285,7 +285,7 @@ export default function Onboarding() {
                       <Icon className={cn("h-6 w-6", isCompleted ? "text-[hsl(var(--gold-oxide))]" : "text-foreground")} />
                     </div>
                     <div>
-                      <h2 className="text-base sm:text-lg font-bold">{step.title}</h2>
+                      <h2 className="text-base sm:text-lg font-bold tracking-[-0.01em]">{step.title}</h2>
                       <p className="text-[10px] text-muted-foreground font-medium">{step.subtitle}</p>
                     </div>
                   </div>
