@@ -92,8 +92,8 @@ export function ContextDrawer({
               onClick={() => { setIsOpen(true); setActiveTab(tab.id); }}
               className={cn(
                 "h-9 w-9 rounded-xl flex items-center justify-center transition-all relative group",
-                "text-muted-foreground/30 hover:text-foreground hover:bg-muted/30",
-                "hover:shadow-sm hover:shadow-primary/5"
+                "text-primary/70 hover:text-primary hover:bg-primary/10",
+                "hover:shadow-sm hover:shadow-primary/10"
               )}
               title={tab.label}
             >
