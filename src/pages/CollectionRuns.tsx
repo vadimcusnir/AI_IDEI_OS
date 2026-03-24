@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { PremiumGate } from "@/components/premium/PremiumGate";
 import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";

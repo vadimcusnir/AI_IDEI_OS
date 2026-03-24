@@ -258,5 +258,6 @@ export default function CognitiveUnits() {
         </div>
       </div>
     </PageTransition>
+    </PremiumGate>
   );
 }
