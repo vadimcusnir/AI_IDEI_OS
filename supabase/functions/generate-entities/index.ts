@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 function slugify(text: string): string {
   return text
@@ -115,7 +116,11 @@ Deno.serve(async (req) => {
     const authClient = createClient(supabaseUrl, anonKey);
     const { data: { user }, error: authError } = await authClient.auth.getUser(token);
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
+      return new Response(JSON.stringify({ error: "Invalid token" }
+    // Rate limit guard
+    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
+), {
         status: 401, headers: { ...cors, "Content-Type": "application/json" },
       });
     }

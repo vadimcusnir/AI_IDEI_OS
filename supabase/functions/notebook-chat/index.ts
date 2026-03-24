@@ -1,3 +1,4 @@
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -6,7 +7,13 @@ const corsHeaders = {
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders }
+
+    // Rate limit guard (IP-based)
+    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
+    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 20, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
+);
   }
 
   try {

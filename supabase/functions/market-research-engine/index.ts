@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 /**
  * Market Research Engine — Class C Orchestrated Pipeline
@@ -138,6 +139,12 @@ Be direct, actionable, and honest about uncertainty.`,
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
+
+    // Rate limit guard (IP-based)
+    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
+    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 5, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
+
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;

@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -30,7 +31,13 @@ Răspunde EXCLUSIV cu un JSON array valid, fără markdown, fără explicații:
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders }
+
+    // Rate limit guard (IP-based)
+    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
+    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 15, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
+);
   }
 
   try {
