@@ -263,7 +263,7 @@ export function MobileBottomNav() {
             <div className="border-t border-border mt-2 pt-2 px-4">
               <button
                 onClick={() => { signOut(); setMenuOpen(false); }}
-                className="flex items-center gap-3 w-full py-2.5 text-sm text-destructive hover:bg-destructive/10 rounded-lg px-2 transition-colors"
+                className="flex items-center gap-3 w-full py-3 text-sm text-destructive hover:bg-destructive/10 rounded-lg px-2 transition-colors min-h-[44px]"
               >
                 <LogOut className="h-4 w-4" />
                 <span>{t("common:sign_out")}</span>
