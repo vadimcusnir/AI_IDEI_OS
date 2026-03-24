@@ -9,7 +9,7 @@ import {
   ChevronRight, Save, ShoppingCart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ExecutionState, TaskStep } from "@/hooks/useCommandState";
+import type { ExecutionState, TaskStep } from "@/stores/executionStore";
 
 interface ExecutionRightPanelProps {
   execution: ExecutionState;

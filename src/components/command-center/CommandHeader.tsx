@@ -4,7 +4,7 @@ import {
   PanelRightOpen, PanelRightClose, PanelLeftOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { CommandPhase } from "@/hooks/useCommandState";
+import type { CommandPhase } from "@/stores/executionStore";
 
 interface CommandHeaderProps {
   totalNeurons: number;
