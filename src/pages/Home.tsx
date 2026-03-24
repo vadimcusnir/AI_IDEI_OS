@@ -570,7 +570,7 @@ export default function Home() {
                           onAction={(prompt) => { setInput(prompt); setShowPostExecution(false); inputZoneRef.current?.focus(); }}
                           onSaveTemplate={handleSaveTemplate} onDismiss={() => setShowPostExecution(false)} userTier={tier}
                         />
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
 
