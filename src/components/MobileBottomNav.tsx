@@ -179,7 +179,7 @@ export function MobileBottomNav() {
                 )}
               >
                 <Icon className={cn("h-5 w-5 transition-all", active && "stroke-[2.5]")} />
-                <span className={cn("text-[9px] leading-none transition-all", active ? "font-bold" : "font-medium")}>
+                <span className={cn("text-[10px] leading-none transition-all", active ? "font-bold" : "font-medium")}>
                   {t(`navigation:${labelKey}`)}
                 </span>
                 {active && (
