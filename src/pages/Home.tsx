@@ -529,7 +529,7 @@ export default function Home() {
                           onDismiss={() => executionActions.reset()}
                           executing={loading}
                         />
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
 
