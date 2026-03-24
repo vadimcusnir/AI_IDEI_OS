@@ -4,6 +4,7 @@
  * Inspired by Claude/Perplexity/Manus patterns.
  */
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
+import { useExecution } from "@/hooks/useExecution";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
@@ -75,6 +76,13 @@ export default function Home() {
   const { persistRun, persistOutputsBatch } = useExecutionHistory();
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
+  const [totalNeurons, setTotalNeurons] = useState(0);
+  const [totalEpisodes, setTotalEpisodes] = useState(0);
+  const executionEngine = useExecution({
+    neuronCount: totalNeurons,
+    episodeCount: totalEpisodes,
+    workspaceId: currentWorkspace?.id ?? null,
+  });
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
 
   // ═══ UI-only state (panels, menus — local) ═══
@@ -89,8 +97,6 @@ export default function Home() {
   const [showEconomicGate, setShowEconomicGate] = useState(false);
   const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
-  const [totalNeurons, setTotalNeurons] = useState(0);
-  const [totalEpisodes, setTotalEpisodes] = useState(0);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [showPipeline, setShowPipeline] = useState(false);
@@ -199,53 +205,49 @@ export default function Home() {
     return items;
   }, []);
 
-  // ═══ SUBMIT ═══
-  const handleSubmit = async () => {
+  // ═══ SUBMIT — Routes through execution engine ═══
+  const handleSubmit = async (autoExec = false) => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
 
-    const fileNames = files.map(f => f.name);
-    const route = routeCommand(input.trim(), tier, balance, fileNames);
-
-    if (!route.permitted) {
-      setPermissionBlock(route);
-      logPermissionDenied(user.id, route.intent.category, route.intent.requiredTier, tier);
-      return;
-    }
-
-    logCommandSubmitted(user.id, route.intent.category, route.input.type, route.intent.estimatedCredits);
-
-    if (balance < 20) {
-      toast.error(t("errors:insufficient_credits_agent"), {
-        action: { label: t("common:top_up"), onClick: () => navigate("/credits") },
-      });
-      return;
-    }
-
-    const userContent = input.trim() + (files.length > 0
-      ? `\n\n[${t("common:files_attached", { count: files.length, names: files.map(f => f.name).join(", ") })}]`
-      : "");
-
-    const userMessage: Message = { id: crypto.randomUUID(), role: "user", content: userContent, timestamp: new Date() };
-
-    executionActions.addMessage(userMessage);
+    const rawInput = input.trim();
     setInput("");
     setFiles([]);
     setShowOutputs(false);
     setShowPostExecution(false);
     setPermissionBlock(null);
-    setPendingRoute(route);
-    saveMessage(userMessage);
-    executionActions.transition("planning");
-    executionActions.setLoading(true);
 
     try {
-      await executeCommand(userContent, userMessage);
+      const { route, isExecution } = await executionEngine.execute(rawInput, files, { autoExecute: autoExec });
+
+      if (!route.permitted) {
+        setPermissionBlock(route);
+        logPermissionDenied(user.id, route.intent.category, route.intent.requiredTier, tier);
+        return;
+      }
+
+      setPendingRoute(route);
+      saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
+      setShowTaskTree(true);
+
+      if (isExecution && execState.phase === "confirming" && route.intent.confidence < 0.9 && !autoExec) {
+        // Plan preview shown — wait for user confirmation
+        return;
+      }
+
+      if (isExecution) {
+        // High confidence or auto-execute — run immediately
+        await executionEngine.confirmAndRun(rawInput, route);
+      } else {
+        // Conversation/chat path — use existing agent-console stream
+        executionActions.transition("planning");
+        executionActions.setLoading(true);
+        await executeCommand(rawInput, { id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
+      }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
         executionActions.failExecution(e instanceof Error ? e.message : "Unknown error");
         toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
-        executionActions.addMessage({ id: crypto.randomUUID(), role: "assistant", content: t("common:error_retry"), timestamp: new Date() });
       }
     } finally {
       executionActions.setLoading(false);
@@ -431,7 +433,7 @@ export default function Home() {
   };
 
   // ═══ Handlers ═══
-  const handleStop = () => { abortRef.current?.abort(); executionActions.setLoading(false); executionActions.setStreaming(false); executionActions.failExecution("Cancelled by user"); };
+  const handleStop = () => { executionEngine.stop(); };
 
   const clearChat = () => {
     newSession(); executionActions.reset();
@@ -466,9 +468,17 @@ export default function Home() {
     if (lastUser) { setInput(lastUser.content); inputZoneRef.current?.focus(); }
   };
 
-  const handleCommand = (prompt: string) => {
+  /** Quick actions auto-execute — they don't just prefill */
+  const handleCommand = (prompt: string, autoExec = false) => {
     setInput(prompt);
-    inputZoneRef.current?.focus();
+    if (autoExec) {
+      // Use setTimeout to let state update, then auto-submit
+      setTimeout(() => {
+        handleSubmit(true);
+      }, 50);
+    } else {
+      inputZoneRef.current?.focus();
+    }
   };
 
   // ═══ Derived state ═══
@@ -606,11 +616,11 @@ export default function Home() {
                   objective: execState.objective, output_preview: execState.outputPreview,
                 }}
                 balance={balance}
-                onExecute={() => {
+                onExecute={async () => {
                   if (execState.totalCredits > 50) { setShowEconomicGate(true); }
-                  else {
-                    if (user) logPlanConfirmed(user.id, execState.actionId, execState.intent, execState.totalCredits, execState.steps.length);
-                    executionActions.confirmExecution();
+                  else if (pendingRoute) {
+                    const lastUserMsg = messages.filter(m => m.role === "user").pop();
+                    await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
                   }
                 }}
                 onEdit={() => { setInput(`Refine plan: ${execState.intent}`); inputZoneRef.current?.focus(); }}
@@ -626,13 +636,12 @@ export default function Home() {
               <EconomicGate
                 balance={balance} estimatedCost={execState.totalCredits}
                 tierDiscount={tierDiscount} tier={tier}
-                onProceed={() => {
+                onProceed={async () => {
                   setShowEconomicGate(false);
-                  if (user) {
-                    logEconomicGate(user.id, true, balance, execState.totalCredits, tierDiscount);
-                    logPlanConfirmed(user.id, execState.actionId, execState.intent, execState.totalCredits, execState.steps.length);
+                  if (pendingRoute) {
+                    const lastUserMsg = messages.filter(m => m.role === "user").pop();
+                    await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
                   }
-                  executionActions.confirmExecution();
                 }}
                 onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
               />
@@ -672,7 +681,7 @@ export default function Home() {
                     {decisionSuggestions.slice(0, 4).map((s: any) => (
                       <button
                         key={s.id}
-                        onClick={() => handleCommand(s.prompt)}
+                        onClick={() => handleCommand(s.prompt, true)}
                         className="group flex items-start gap-2.5 p-2.5 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] hover:border-primary/30 transition-all text-left"
                       >
                         <span className="text-base shrink-0 mt-0.5">{s.icon}</span>
