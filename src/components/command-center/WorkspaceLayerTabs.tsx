@@ -31,7 +31,7 @@ const LAYERS: Array<{
 
 export function WorkspaceLayerTabs({ active, onChange, executionActive }: WorkspaceLayerTabsProps) {
   return (
-    <div className="flex items-center gap-0.5 px-4 sm:px-6 py-1 border-b border-border/20 bg-background/60 backdrop-blur-sm">
+    <div className="flex items-center gap-0.5 px-4 sm:px-6 h-10 border-b border-border/20 bg-background">
       {LAYERS.map((layer) => (
         <button
           key={layer.id}
