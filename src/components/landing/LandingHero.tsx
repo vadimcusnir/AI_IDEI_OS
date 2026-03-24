@@ -14,36 +14,36 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
 
   return (
     <section ref={heroRef} className="relative overflow-hidden" aria-label="Hero">
-      {/* Layered ambient glow */}
+      {/* Layered ambient glow — asymmetric for visual tension */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] rounded-full bg-[hsl(var(--gold-oxide)/0.04)] blur-[220px]" />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[300px] rounded-full bg-[hsl(var(--gold-oxide)/0.02)] blur-[160px]" />
+        <div className="absolute top-1/4 left-[55%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-[hsl(var(--gold-oxide)/0.05)] blur-[180px]" />
+        <div className="absolute bottom-0 left-[30%] w-[350px] h-[250px] rounded-full bg-[hsl(var(--gold-oxide)/0.025)] blur-[140px]" />
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-5 sm:px-6 pt-20 sm:pt-32 md:pt-40 pb-8 sm:pb-16 text-center">
-        {/* Mono tagline */}
-        <p className="text-[11px] sm:text-xs font-mono tracking-[0.3em] uppercase text-[hsl(var(--gold-oxide))] mb-8 sm:mb-10">
+      <div className="relative max-w-3xl mx-auto px-5 sm:px-6 pt-24 sm:pt-36 md:pt-44 pb-10 sm:pb-20 text-center">
+        {/* Mono tagline — eyebrow */}
+        <p className="text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-[hsl(var(--gold-oxide))] mb-10 sm:mb-12">
           {t("hero.tagline")}
         </p>
 
-        {/* H1 — larger, tighter, bolder */}
-        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.1] tracking-tight text-foreground mb-6 sm:mb-7 px-1">
+        {/* H1 — dominant, tight, commanding */}
+        <h1 className="text-[clamp(2.25rem,5.5vw,4rem)] font-bold leading-[1.05] tracking-[-0.02em] text-foreground mb-7 sm:mb-8">
           {t("hero.title_prefix")}{" "}
           <span className="text-[hsl(var(--gold-oxide))]">{t("hero.title_highlight")}</span>
           {" "}{t("hero.title_suffix")}
         </h1>
 
-        {/* Subtitle — constrained width, relaxed line-height */}
-        <p className="text-base sm:text-lg text-muted-foreground leading-[1.7] max-w-xl mx-auto mb-10 sm:mb-14 px-2">
+        {/* Subtitle — narrower, more breathing */}
+        <p className="text-[15px] sm:text-lg text-muted-foreground leading-[1.75] max-w-[480px] mx-auto mb-12 sm:mb-16 px-2">
           {t("hero.subtitle")}
         </p>
 
-        {/* CTA cluster — more breathing room */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-16 sm:mb-20 px-4 sm:px-0">
+        {/* CTA cluster — generous spacing, clear hierarchy */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-20 sm:mb-24 px-4 sm:px-0">
           <Button
             size="lg"
             onClick={ctaAction}
-            className="gap-2.5 text-sm font-semibold px-10 h-13 sm:h-14 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-dim))] text-[hsl(var(--obsidian))] shadow-lg shadow-[hsl(var(--gold-oxide)/0.2)] w-full sm:w-auto min-h-[48px] rounded-lg"
+            className="gap-2.5 text-sm font-semibold px-10 h-[52px] sm:h-14 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-dim))] text-[hsl(var(--obsidian))] shadow-lg shadow-[hsl(var(--gold-oxide)/0.18)] w-full sm:w-auto min-h-[48px] rounded-lg transition-all duration-200"
           >
             {t("hero.cta_start")}
             <ArrowRight className="h-4 w-4" />
@@ -52,7 +52,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
             variant="outline"
             size="lg"
             onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })}
-            className="gap-2.5 text-sm h-13 sm:h-14 w-full sm:w-auto border-border/60 text-muted-foreground hover:bg-accent/8 min-h-[48px] rounded-lg"
+            className="gap-2.5 text-sm h-[52px] sm:h-14 w-full sm:w-auto border-border/50 text-muted-foreground hover:bg-accent/8 hover:border-[hsl(var(--gold-oxide)/0.3)] min-h-[48px] rounded-lg transition-all duration-200"
           >
             <Eye className="h-4 w-4" />
             {t("hero.cta_mechanism")}
@@ -60,8 +60,8 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
         </div>
       </div>
 
-      {/* Extraction engine visual */}
-      <div className="relative max-w-4xl mx-auto px-3 sm:px-4 pb-16 sm:pb-28">
+      {/* Extraction engine visual — more top spacing for separation */}
+      <div className="relative max-w-3xl mx-auto px-3 sm:px-4 pb-20 sm:pb-32">
         <ExtractionEngine />
       </div>
     </section>
