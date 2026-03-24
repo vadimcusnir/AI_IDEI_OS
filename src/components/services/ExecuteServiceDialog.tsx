@@ -320,7 +320,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
                 )}
               </div>
 
-              <Button className="w-full gap-2" size="lg" onClick={handleExecute} disabled={!input.trim()}>
+              <Button className="w-full gap-2" size="lg" onClick={handleExecute} disabled={!input.trim()} data-execute-btn>
                 <Play className="h-4 w-4" />
                 Execută — ~{estimatedCost} NEURONS
               </Button>
