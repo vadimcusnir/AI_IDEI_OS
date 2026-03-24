@@ -30,18 +30,11 @@ export function SidePanels({
   return (
     <>
       {/* Desktop Task Tree */}
-      <AnimatePresence>
-        {showRightPanel && (
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 280, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            className="hidden md:block border-l border-border bg-card overflow-hidden shrink-0"
-          >
-            <TaskTree execution={execution} onSaveTemplate={onSaveTemplate} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {showRightPanel && (
+        <div className="hidden md:block w-[280px] border-l border-border bg-card overflow-hidden shrink-0">
+          <TaskTree execution={execution} onSaveTemplate={onSaveTemplate} />
+        </div>
+      )}
 
       {/* Mobile Task Tree */}
       <AnimatePresence>

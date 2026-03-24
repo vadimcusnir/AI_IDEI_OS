@@ -128,7 +128,7 @@ export function ExecutionRightPanel({
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
