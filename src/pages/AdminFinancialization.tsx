@@ -188,7 +188,7 @@ export default function AdminFinancialization() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm flex items-center gap-1.5">
-                <BarChart3 className="h-3.5 w-3.5 text-blue-500" /> Performance Market
+                <BarChart3 className="h-3.5 w-3.5 text-semantic-blue" /> Performance Market
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
