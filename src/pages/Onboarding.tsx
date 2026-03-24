@@ -265,7 +265,7 @@ export default function Onboarding() {
                         {t("onboarding.step", { number: activeStep + 1 })} of {STEPS.length}
                       </span>
                       {isCompleted && (
-                        <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                        <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]">
                           {t("onboarding.step_completed")}
                         </span>
                       )}
