@@ -22,20 +22,22 @@ export function CommandHeader({
   showTaskTree, onToggleMemory, onClearChat, onToggleTaskTree,
 }: CommandHeaderProps) {
   return (
-    <div className="flex items-center justify-between px-4 py-2 border-b border-border/40 bg-background/60 backdrop-blur-md">
+    <div className="flex items-center justify-between px-4 sm:px-6 py-2 border-b border-border/30 bg-background/80 backdrop-blur-xl">
       <div className="flex items-center gap-3">
-        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border border-primary/10">
+        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center border border-primary/10">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
         </div>
-        <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-          <span className="font-semibold text-foreground text-xs tracking-tight">Command Center</span>
-          <span className="hidden sm:inline opacity-40">·</span>
-          <span className="hidden sm:inline tabular-nums">{totalNeurons} neurons</span>
-          <span className="hidden sm:inline opacity-40">·</span>
-          <span className="hidden sm:inline tabular-nums">{totalEpisodes} episodes</span>
-          <span className="opacity-40">·</span>
+        <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
+          <span className="font-semibold text-foreground tracking-tight">Command Center</span>
+          <div className="hidden sm:flex items-center gap-2.5 text-[10px]">
+            <span className="opacity-30">·</span>
+            <span className="tabular-nums">{totalNeurons} neurons</span>
+            <span className="opacity-30">·</span>
+            <span className="tabular-nums">{totalEpisodes} episodes</span>
+          </div>
+          <span className="opacity-30">·</span>
           <span className="flex items-center gap-1 text-primary font-semibold tabular-nums">
-            <Coins className="h-2.5 w-2.5" />
+            <Coins className="h-3 w-3" />
             {balance.toLocaleString()}
           </span>
         </div>
@@ -44,7 +46,7 @@ export function CommandHeader({
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground"
+          className="h-7 w-7 p-0 rounded-lg text-muted-foreground/50 hover:text-foreground"
           onClick={onToggleMemory}
           title="Memory & History"
         >
@@ -53,7 +55,7 @@ export function CommandHeader({
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground"
+          className="h-7 w-7 p-0 rounded-lg text-muted-foreground/50 hover:text-foreground"
           onClick={onClearChat}
           title="New session"
         >
@@ -63,7 +65,7 @@ export function CommandHeader({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground"
+            className="h-7 w-7 p-0 rounded-lg text-muted-foreground/50 hover:text-foreground"
             onClick={onToggleTaskTree}
             title="Task Tree"
           >
