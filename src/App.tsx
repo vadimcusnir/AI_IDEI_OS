@@ -89,6 +89,7 @@ const VIPDashboard = lazyRetry(() => import("./pages/VIPDashboard"));
 const DataPipeline = lazyRetry(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazyRetry(() => import("./pages/RuntimeDashboard"));
 const CusnirOSOperator = lazyRetry(() => import("./pages/CusnirOSOperator"));
+const CusnirOSPage = lazyRetry(() => import("./pages/CusnirOSPage"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
 const DatabaseRelations = lazyRetry(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
@@ -228,6 +229,7 @@ const App = () => (
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<Navigate to="/library" replace />} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="VIP failed to load"><VIPDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/cusnir-os" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="CusnirOS failed to load"><CusnirOSPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/wallet" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Wallet failed to load"><WalletPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Gamification failed to load"><GamificationPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><DataPipeline /></ErrorBoundary></AppLayout></ProtectedRoute>} />
@@ -242,7 +244,7 @@ const App = () => (
                 <Route path="/master-agent" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Master Agent failed"><MasterAgent /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
-                <Route path="/cusnir-os" element={<AdminRoute><AppLayout><CusnirOSOperator /></AppLayout></AdminRoute>} />
+                <Route path="/cusnir-os/operator" element={<AdminRoute><AppLayout><CusnirOSOperator /></AppLayout></AdminRoute>} />
                 <Route path="/analytics" element={<AdminRoute><AppLayout><AnalyticsDashboard /></AppLayout></AdminRoute>} />
                 <Route path="/security" element={<AdminRoute><AppLayout><SecurityDocs /></AppLayout></AdminRoute>} />
                 <Route path="/db-schema" element={<AdminRoute><AppLayout><DatabaseRelations /></AppLayout></AdminRoute>} />
