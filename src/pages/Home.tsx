@@ -4,7 +4,7 @@
  * Inspired by Claude/Perplexity/Manus patterns.
  */
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { useAuth } from "@/contexts/AuthContext";
@@ -62,6 +62,7 @@ export default function Home() {
   const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation(["common", "errors", "pages"]);
 
   const {
@@ -77,7 +78,8 @@ export default function Home() {
 
   // ═══ UI state ═══
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
+  const initialQ = searchParams.get("q") || "";
+  const [input, setInput] = useState(initialQ);
   const [loading, setLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
