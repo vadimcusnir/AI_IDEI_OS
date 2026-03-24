@@ -4,80 +4,94 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import {
-  Home, Brain, Upload, BookOpen, Menu,
-  Sparkles, Briefcase, BarChart3, Network, Lightbulb,
-  Store, Users, Bot, Layers, Rocket, Shield,
-  Coins, Bell, MessageCircle, FileText, ScrollText,
-  User, LogOut, Eye, Settings, Plug, Key,
-  GraduationCap, Terminal, Wallet, Trophy, Zap,
+  Home, Brain, Upload, Menu,
+  Sparkles, Rocket, BarChart3, Network,
+  Store, Bot, Layers,
+  Coins, Bell, FileText, ScrollText,
+  User, LogOut, Eye,
+  Terminal, Wallet, Trophy, Zap,
+  Crown, TrendingUp, Shield, Database,
+  DollarSign, PenTool, MessageCircle,
+  Package, BookOpen, Wrench, Plug, FolderOpen,
+  Cpu, Lock, Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
 
-/* Bottom bar: 4 core actions + hamburger (= 5 touch targets) */
+/* Bottom bar: 4 core actions + hamburger */
 const BAR_ITEMS = [
-  { path: "/home", icon: Home, labelKey: "home" },
-  { path: "/extractor", icon: Upload, labelKey: "extractor" },
-  { path: "/neurons", icon: Brain, labelKey: "neurons" },
-  { path: "/library", icon: BookOpen, labelKey: "library" },
+  { path: "/home", icon: Home, labelKey: "cockpit" },
+  { path: "/services", icon: Sparkles, labelKey: "services" },
+  { path: "/marketplace", icon: Store, labelKey: "marketplace" },
+  { path: "/jobs", icon: Rocket, labelKey: "jobs" },
 ];
 
-/* Full menu — mirrors sidebar 6-section architecture */
+/* Command Center menu structure */
 interface MenuSection {
   label: string;
   labelKey: string;
   icon: React.ElementType;
+  zone?: string;
   items: { path: string; icon: React.ElementType; labelKey: string; adminOnly?: boolean }[];
 }
 
 const MENU_SECTIONS: MenuSection[] = [
   {
-    label: "Dashboard",
-    labelKey: "dashboard_section",
-    icon: Home,
+    label: "Execute",
+    labelKey: "execute_section",
+    icon: Zap,
     items: [
       { path: "/home", icon: Home, labelKey: "cockpit" },
-    ],
-  },
-  {
-    label: "Create",
-    labelKey: "create_section",
-    icon: Upload,
-    items: [
-      { path: "/transcribe", icon: FileText, labelKey: "transcribe" },
-      { path: "/extractor", icon: Upload, labelKey: "extractor" },
-      { path: "/neurons", icon: Brain, labelKey: "neurons" },
       { path: "/services", icon: Sparkles, labelKey: "services" },
-      { path: "/headline-generator", icon: Zap, labelKey: "headline_generator" },
-      { path: "/prompt-forge", icon: Bot, labelKey: "prompt_forge" },
-      { path: "/profile-extractor", icon: Users, labelKey: "profile_extractor" },
-      { path: "/notebooks", icon: FileText, labelKey: "notebooks" },
+      { path: "/extractor", icon: Upload, labelKey: "extractor" },
+      { path: "/chat", icon: Terminal, labelKey: "command_center" },
+      { path: "/jobs", icon: Rocket, labelKey: "jobs" },
     ],
   },
   {
-    label: "Explore",
-    labelKey: "explore_section",
-    icon: Eye,
+    label: "Systems",
+    labelKey: "systems_section",
+    icon: Package,
+    zone: "CORE",
     items: [
-      { path: "/topics", icon: Lightbulb, labelKey: "topics" },
-      { path: "/marketplace", icon: Store, labelKey: "marketplace" },
-      { path: "/intelligence", icon: Network, labelKey: "intelligence" },
-      { path: "/community", icon: Users, labelKey: "community" },
-      { path: "/chat", icon: Terminal, labelKey: "chat" },
-    ],
-  },
-  {
-    label: "Operate",
-    labelKey: "operate_section",
-    icon: Settings,
-    items: [
-      { path: "/jobs", icon: Briefcase, labelKey: "jobs" },
-      { path: "/library", icon: BookOpen, labelKey: "library" },
       { path: "/pipeline", icon: Layers, labelKey: "pipeline" },
-      { path: "/integrations", icon: Plug, labelKey: "integrations" },
-      { path: "/api", icon: Key, labelKey: "api" },
+      { path: "/master-agent", icon: Bot, labelKey: "master_agent" },
+      { path: "/prompt-forge", icon: PenTool, labelKey: "prompt_forge" },
+      { path: "/headline-generator", icon: Zap, labelKey: "headline_generator" },
+    ],
+  },
+  {
+    label: "Marketplace",
+    labelKey: "marketplace_section",
+    icon: Store,
+    items: [
+      { path: "/marketplace", icon: Store, labelKey: "marketplace" },
+      { path: "/marketplace/drafts", icon: FileText, labelKey: "marketplace_drafts" },
+      { path: "/marketplace/earnings", icon: DollarSign, labelKey: "marketplace_earnings" },
+    ],
+  },
+  {
+    label: "Intelligence",
+    labelKey: "intelligence_section",
+    icon: Brain,
+    zone: "EXPANSION",
+    items: [
+      { path: "/intelligence", icon: Network, labelKey: "intelligence" },
+      { path: "/topics", icon: Eye, labelKey: "topics" },
+      { path: "/cognitive-units", icon: Database, labelKey: "cognitive_units" },
+    ],
+  },
+  {
+    label: "Creator",
+    labelKey: "creator_section",
+    icon: Crown,
+    items: [
+      { path: "/neurons", icon: Brain, labelKey: "neurons" },
+      { path: "/library", icon: BookOpen, labelKey: "library" },
+      { path: "/capitalization", icon: TrendingUp, labelKey: "capitalization" },
+      { path: "/notebooks", icon: FileText, labelKey: "notebooks" },
     ],
   },
   {
@@ -90,13 +104,12 @@ const MENU_SECTIONS: MenuSection[] = [
       { path: "/wallet", icon: Wallet, labelKey: "wallet" },
       { path: "/notifications", icon: Bell, labelKey: "notifications" },
       { path: "/gamification", icon: Trophy, labelKey: "gamification" },
-      { path: "/guests", icon: Users, labelKey: "guest_pages" },
     ],
   },
   {
     label: "Learn",
     labelKey: "learn_section",
-    icon: GraduationCap,
+    icon: BookOpen,
     items: [
       { path: "/docs", icon: FileText, labelKey: "docs" },
       { path: "/changelog", icon: ScrollText, labelKey: "changelog" },
@@ -104,11 +117,25 @@ const MENU_SECTIONS: MenuSection[] = [
     ],
   },
   {
-    label: "Admin",
-    labelKey: "admin_section",
+    label: "Control",
+    labelKey: "control_section",
     icon: Shield,
+    zone: "CONTROL",
     items: [
       { path: "/admin", icon: Shield, labelKey: "admin", adminOnly: true },
+      { path: "/admin/kernel", icon: Cpu, labelKey: "kernel", adminOnly: true },
+      { path: "/runtime", icon: Activity, labelKey: "runtime", adminOnly: true },
+      { path: "/analytics", icon: BarChart3, labelKey: "analytics", adminOnly: true },
+    ],
+  },
+  {
+    label: "Infra",
+    labelKey: "infra_section",
+    icon: Wrench,
+    items: [
+      { path: "/services-catalog", icon: Database, labelKey: "services_catalog", adminOnly: true },
+      { path: "/data-pipeline", icon: Layers, labelKey: "data_pipeline", adminOnly: true },
+      { path: "/integrations", icon: Plug, labelKey: "integrations" },
     ],
   },
 ];
@@ -130,6 +157,8 @@ export function MobileBottomNav() {
     navigate(path);
     setMenuOpen(false);
   };
+
+  let lastZone: string | undefined;
 
   return (
     <>
@@ -172,7 +201,7 @@ export function MobileBottomNav() {
         </div>
       </nav>
 
-      {/* Slide-out full menu — 6 sections */}
+      {/* Slide-out Command Center menu */}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="w-[280px] p-0 overflow-y-auto">
           <SheetHeader className="p-4 pb-2">
@@ -185,8 +214,23 @@ export function MobileBottomNav() {
               );
               if (visibleItems.length === 0) return null;
               const SectionIcon = section.icon;
+
+              // Zone label
+              let zoneLabel: React.ReactNode = null;
+              if (section.zone && section.zone !== lastZone) {
+                lastZone = section.zone;
+                zoneLabel = (
+                  <div className="px-4 pt-4 pb-0.5">
+                    <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">
+                      {section.zone}
+                    </span>
+                  </div>
+                );
+              }
+
               return (
                 <div key={section.labelKey}>
+                  {zoneLabel}
                   <div className="flex items-center gap-1.5 px-4 pt-3 pb-1">
                     <SectionIcon className="h-3 w-3 text-muted-foreground/70" />
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">

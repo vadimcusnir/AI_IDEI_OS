@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,14 +6,16 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier, type UserTier } from "@/hooks/useUserTier";
 import { Logo } from "@/components/shared/Logo";
 import {
-  Brain, Shield, Upload, Sparkles, Briefcase, Coins,
-  LogOut, Home, User, MessageCircle, ScrollText,
-  BarChart3, Bell, BookOpen, Users, Network,
-  FileText, Lightbulb, Bot, Store, Layers, MessagesSquare,
+  Brain, Shield, Sparkles, Coins,
+  LogOut, Home, User, ScrollText,
+  BarChart3, Bell, BookOpen, Network,
+  FileText, Bot, Store, Layers,
   Lock, ChevronRight, GraduationCap, Terminal,
-  Wallet, Trophy, Eye, ShieldCheck,
-  Activity, Zap, Plug, Database, Notebook, Crown,
-  Rocket, Code, UserPlus, FolderOpen,
+  Wallet, Trophy, Activity,
+  Zap, Plug, Database, Crown,
+  Rocket, Code, FolderOpen,
+  Package, TrendingUp, Eye, Cpu, Wrench,
+  DollarSign, PenTool, MessageCircle, Upload,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakWidget } from "@/components/gamification/StreakWidget";
@@ -38,8 +39,8 @@ interface NavItem {
   icon: React.ElementType;
   adminOnly?: boolean;
   controlId?: string;
-  proOnly?: boolean;
   minTier?: UserTier;
+  highlight?: boolean;
 }
 
 interface NavSection {
@@ -47,28 +48,28 @@ interface NavSection {
   icon: React.ElementType;
   items: NavItem[];
   defaultOpen?: boolean;
-  /** Minimum tier to see this entire section */
   minTier?: UserTier;
-  /** Only show when user is authenticated */
   authOnly?: boolean;
+  adminOnly?: boolean;
+  /** Visual zone label shown above section group */
+  zone?: "primary" | "core" | "expansion" | "control";
 }
 
 /*
- * Navigation Architecture v4 — Role-based adaptation
- * Sections adapt based on user tier: free → authenticated → pro → vip → admin
- * Progressive disclosure: visitors see Explore+Learn, auth users see Create+Operate
+ * COMMAND CENTER ARCHITECTURE v5
+ * ⚡ EXECUTE → 📦 SYSTEMS → 🛒 MARKETPLACE → 🧠 INTELLIGENCE → 👤 CREATOR → ⚙ CONTROL → 🧬 INFRA
+ * Progressive disclosure by tier: free → auth → pro → admin
  */
 
-/** Sections visible to everyone (including visitors) */
+/** Visitor sections */
 const PUBLIC_SECTIONS: NavSection[] = [
   {
     labelKey: "explore_section",
     icon: Eye,
     defaultOpen: true,
     items: [
-      { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
+      { labelKey: "community", to: "/community", icon: MessageCircle, controlId: "nav.community" },
       { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
     ],
   },
@@ -82,66 +83,91 @@ const PUBLIC_SECTIONS: NavSection[] = [
   },
 ];
 
-/** Sections for authenticated users */
+/** Authenticated user — Command Center structure */
 const AUTH_SECTIONS: NavSection[] = [
+  // ═══ PRIMARY ZONE ═══
   {
-    labelKey: "core_section",
-    icon: Home,
+    labelKey: "execute_section",
+    icon: Zap,
     defaultOpen: true,
     authOnly: true,
+    zone: "primary",
     items: [
       { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home" },
+      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services", highlight: true },
       { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
-      { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
-      { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-      { labelKey: "jobs", to: "/jobs", icon: Briefcase, controlId: "nav.jobs" },
-      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-      { labelKey: "guest_pages", to: "/guests", icon: UserPlus, controlId: "nav.guests" },
-    ],
-  },
-  {
-    labelKey: "tools_section",
-    icon: Sparkles,
-    authOnly: true,
-    items: [
-      { labelKey: "transcribe", to: "/transcribe", icon: FileText, controlId: "nav.transcribe" },
-      { labelKey: "headline_generator", to: "/headline-generator", icon: Zap, controlId: "nav.headline-generator" },
-      { labelKey: "notebooks", to: "/notebooks", icon: Notebook, controlId: "nav.notebooks" },
-      { labelKey: "prompt_forge", to: "/prompt-forge", icon: Bot, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
-      { labelKey: "profile_extractor", to: "/profile-extractor", icon: Users, controlId: "nav.profile-extractor" },
-      { labelKey: "capitalization", to: "/capitalization", icon: Crown, controlId: "nav.capitalization" },
       { labelKey: "command_center", to: "/chat", icon: Terminal, controlId: "nav.chat" },
+      { labelKey: "jobs", to: "/jobs", icon: Rocket, controlId: "nav.jobs" },
+    ],
+  },
+
+  // ═══ CORE ZONE ═══
+  {
+    labelKey: "systems_section",
+    icon: Package,
+    authOnly: true,
+    zone: "core",
+    items: [
       { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
-      { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
-      { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units", minTier: "pro" as UserTier },
-      { labelKey: "collection_runs", to: "/collection-runs", icon: FolderOpen, controlId: "nav.collection-runs", minTier: "pro" as UserTier },
+      { labelKey: "master_agent", to: "/master-agent", icon: Bot, controlId: "nav.master-agent" },
+      { labelKey: "prompt_forge", to: "/prompt-forge", icon: PenTool, controlId: "nav.prompt-forge", minTier: "pro" as UserTier },
+      { labelKey: "headline_generator", to: "/headline-generator", icon: Zap, controlId: "nav.headline-generator" },
     ],
   },
   {
-    labelKey: "explore_section",
-    icon: Eye,
+    labelKey: "marketplace_section",
+    icon: Store,
     authOnly: true,
+    zone: "core",
     items: [
-      { labelKey: "topics", to: "/topics", icon: Lightbulb, controlId: "nav.topics" },
-      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", minTier: "pro" as UserTier },
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { labelKey: "community", to: "/community", icon: MessagesSquare, controlId: "nav.community" },
+      { labelKey: "marketplace_drafts", to: "/marketplace/drafts", icon: FileText, controlId: "nav.marketplace-drafts" },
+      { labelKey: "marketplace_earnings", to: "/marketplace/earnings", icon: DollarSign, controlId: "nav.marketplace-earnings" },
     ],
   },
+
+  // ═══ EXPANSION ZONE ═══
+  {
+    labelKey: "intelligence_section",
+    icon: Brain,
+    authOnly: true,
+    zone: "expansion",
+    minTier: "pro" as UserTier,
+    items: [
+      { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
+      { labelKey: "topics", to: "/topics", icon: Eye, controlId: "nav.topics" },
+      { labelKey: "cognitive_units", to: "/cognitive-units", icon: Database, controlId: "nav.cognitive-units" },
+    ],
+  },
+  {
+    labelKey: "creator_section",
+    icon: Crown,
+    authOnly: true,
+    zone: "expansion",
+    items: [
+      { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
+      { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { labelKey: "capitalization", to: "/capitalization", icon: TrendingUp, controlId: "nav.capitalization" },
+      { labelKey: "notebooks", to: "/notebooks", icon: FileText, controlId: "nav.notebooks" },
+      { labelKey: "guest_pages", to: "/guests", icon: User, controlId: "nav.guests" },
+    ],
+  },
+
+  // ═══ ACCOUNT ═══
   {
     labelKey: "account_section",
     icon: User,
     authOnly: true,
     items: [
       { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
+      { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
       { labelKey: "wallet", to: "/wallet", icon: Wallet, controlId: "nav.wallet" },
-      { labelKey: "vip", to: "/vip", icon: Crown, controlId: "nav.vip" },
       { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
       { labelKey: "gamification", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
-      { labelKey: "onboarding", to: "/onboarding", icon: Rocket, controlId: "nav.onboarding" },
     ],
   },
+
+  // ═══ LEARN ═══
   {
     labelKey: "learn_section",
     icon: GraduationCap,
@@ -155,17 +181,41 @@ const AUTH_SECTIONS: NavSection[] = [
   },
 ];
 
-const ADMIN_SECTION: NavSection = {
-  labelKey: "admin_section",
+/** Control & Infra — admin/power user */
+const CONTROL_SECTION: NavSection = {
+  labelKey: "control_section",
   icon: Shield,
+  zone: "control",
   items: [
     { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
+    { labelKey: "kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
+    { labelKey: "domination", to: "/admin/domination", icon: TrendingUp, adminOnly: true },
+    { labelKey: "inevitability", to: "/admin/inevitability", icon: Lock, adminOnly: true },
+    { labelKey: "financialization", to: "/admin/financialization", icon: DollarSign, adminOnly: true },
     { labelKey: "runtime", to: "/runtime", icon: Activity, adminOnly: true },
-    { labelKey: "data_pipeline", to: "/data-pipeline", icon: Database, adminOnly: true },
     { labelKey: "analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
-    { labelKey: "security", to: "/security", icon: ShieldCheck, adminOnly: true },
-    { labelKey: "db_schema", to: "/db-schema", icon: Network, adminOnly: true },
+    { labelKey: "security", to: "/security", icon: Shield, adminOnly: true },
   ],
+};
+
+const INFRA_SECTION: NavSection = {
+  labelKey: "infra_section",
+  icon: Wrench,
+  zone: "control",
+  items: [
+    { labelKey: "services_catalog", to: "/services-catalog", icon: Database, adminOnly: true },
+    { labelKey: "data_pipeline", to: "/data-pipeline", icon: Layers, adminOnly: true },
+    { labelKey: "collection_runs", to: "/collection-runs", icon: FolderOpen, adminOnly: true },
+    { labelKey: "db_schema", to: "/db-schema", icon: Network, adminOnly: true },
+    { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
+  ],
+};
+
+const ZONE_LABELS: Record<string, string> = {
+  primary: "",
+  core: "CORE",
+  expansion: "EXPANSION",
+  control: "CONTROL",
 };
 
 export function AppSidebar() {
@@ -193,17 +243,18 @@ export function AppSidebar() {
     return true;
   };
 
-  // ─── Role-based section resolution ───
   const resolvedSections = (() => {
-    if (!user) {
-      // Visitor: only public sections
-      return PUBLIC_SECTIONS;
-    }
-    // Authenticated user: full sections
+    if (!user) return PUBLIC_SECTIONS;
     const sections = [...AUTH_SECTIONS];
-    if (isAdmin) sections.push(ADMIN_SECTION);
+    if (isAdmin) {
+      sections.push(CONTROL_SECTION);
+      sections.push(INFRA_SECTION);
+    }
     return sections;
   })();
+
+  // Track which zone labels we've already rendered
+  let lastZone: string | undefined;
 
   return (
     <Sidebar collapsible="icon">
@@ -217,7 +268,7 @@ export function AppSidebar() {
 
       <SidebarSeparator />
 
-      {/* Workspace & Credits — compact */}
+      {/* Credits & XP — compact widget */}
       {user && !collapsed && (
         <div className="px-3 py-2 space-y-2">
           <WorkspaceSwitcher collapsed={false} />
@@ -256,7 +307,7 @@ export function AppSidebar() {
         </div>
       )}
 
-      {/* Navigation — role-adaptive sections */}
+      {/* Navigation — Command Center sections */}
       <SidebarContent>
         {resolvedSections.map((section, idx) => {
           const visibleItems = section.items.filter(isItemVisible);
@@ -265,7 +316,22 @@ export function AppSidebar() {
           const hasActive = sectionHasActive(section);
           const SectionIcon = section.icon;
 
-          // In collapsed mode, just show items flat
+          // Zone separator label
+          let zoneLabel: React.ReactNode = null;
+          if (!collapsed && section.zone && section.zone !== lastZone && ZONE_LABELS[section.zone]) {
+            lastZone = section.zone;
+            zoneLabel = (
+              <div className="px-3 pt-3 pb-0.5">
+                <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">
+                  {ZONE_LABELS[section.zone]}
+                </span>
+              </div>
+            );
+          } else if (section.zone !== lastZone) {
+            lastZone = section.zone;
+          }
+
+          // Collapsed mode — flat icons
           if (collapsed) {
             return (
               <SidebarGroup key={section.labelKey}>
@@ -281,7 +347,7 @@ export function AppSidebar() {
                             tooltip={t(`navigation:${item.labelKey}`)}
                           >
                             <button onClick={() => navigate(item.to)} className="w-full">
-                              <item.icon className="h-4 w-4" />
+                              <item.icon className={cn("h-4 w-4", item.highlight && !isActive(item.to) && "text-primary")} />
                             </button>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -301,57 +367,65 @@ export function AppSidebar() {
             );
           }
 
-          // Expanded mode: collapsible sections with progressive disclosure
+          // Expanded mode — collapsible sections
           return (
-            <Collapsible
-              key={section.labelKey}
-              defaultOpen={section.defaultOpen || hasActive}
-              className="group/collapsible"
-            >
-              <SidebarGroup>
-                <CollapsibleTrigger asChild>
-                  <SidebarGroupLabel className="text-[10px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5">
-                    <SectionIcon className="h-3 w-3 text-muted-foreground/70" />
-                    <span className="flex-1">{t(`navigation:${section.labelKey}`)}</span>
-                    <ChevronRight className="h-3 w-3 text-muted-foreground/50 transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                  </SidebarGroupLabel>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {visibleItems.map((item) => {
-                        const menuItem = (
-                          <SidebarMenuItem key={item.to}>
-                            <SidebarMenuButton
-                              asChild
-                              isActive={isActive(item.to)}
-                              tooltip={t(`navigation:${item.labelKey}`)}
-                            >
-                              <button onClick={() => navigate(item.to)} className="w-full">
-                                <item.icon className="h-4 w-4" />
-                                <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
-                                {item.proOnly && (
-                                  <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
-                                )}
-                              </button>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        );
-
-                        if (item.controlId) {
-                          return (
-                            <ControlledNavItem key={item.to} elementId={item.controlId}>
-                              {menuItem}
-                            </ControlledNavItem>
+            <div key={section.labelKey}>
+              {zoneLabel}
+              <Collapsible
+                defaultOpen={section.defaultOpen || hasActive}
+                className="group/collapsible"
+              >
+                <SidebarGroup>
+                  <CollapsibleTrigger asChild>
+                    <SidebarGroupLabel className="text-[10px] cursor-pointer hover:text-foreground transition-colors select-none flex items-center gap-1.5">
+                      <SectionIcon className={cn(
+                        "h-3 w-3",
+                        section.zone === "primary" ? "text-primary" : "text-muted-foreground/70"
+                      )} />
+                      <span className="flex-1">{t(`navigation:${section.labelKey}`)}</span>
+                      <ChevronRight className="h-3 w-3 text-muted-foreground/50 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarGroupLabel>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        {visibleItems.map((item) => {
+                          const menuItem = (
+                            <SidebarMenuItem key={item.to}>
+                              <SidebarMenuButton
+                                asChild
+                                isActive={isActive(item.to)}
+                                tooltip={t(`navigation:${item.labelKey}`)}
+                              >
+                                <button onClick={() => navigate(item.to)} className={cn(
+                                  "w-full",
+                                  item.highlight && !isActive(item.to) && "text-primary font-medium"
+                                )}>
+                                  <item.icon className="h-4 w-4" />
+                                  <span className="flex-1">{t(`navigation:${item.labelKey}`)}</span>
+                                  {item.minTier && (
+                                    <Lock className="h-2.5 w-2.5 text-primary/50 shrink-0" />
+                                  )}
+                                </button>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
                           );
-                        }
-                        return menuItem;
-                      })}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </CollapsibleContent>
-              </SidebarGroup>
-            </Collapsible>
+
+                          if (item.controlId) {
+                            return (
+                              <ControlledNavItem key={item.to} elementId={item.controlId}>
+                                {menuItem}
+                              </ControlledNavItem>
+                            );
+                          }
+                          return menuItem;
+                        })}
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </CollapsibleContent>
+                </SidebarGroup>
+              </Collapsible>
+            </div>
           );
         })}
       </SidebarContent>
