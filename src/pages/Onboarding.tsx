@@ -205,7 +205,7 @@ export default function Onboarding() {
                     </div>
                     <span className={cn(
                       "text-[9px] sm:text-[10px] font-semibold tracking-wide",
-                      isActive ? "text-primary" : isCompleted ? "text-foreground" : "text-muted-foreground"
+                      isActive ? "text-[hsl(var(--gold-oxide))]" : isCompleted ? "text-foreground" : "text-muted-foreground/50"
                     )}>
                       {step.key.charAt(0).toUpperCase() + step.key.slice(1)}
                     </span>
