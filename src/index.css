@@ -147,14 +147,14 @@
     --tier-free: 220 12% 42%;
 
     /* Sidebar */
-    --sidebar-background: 220 20% 97%;
-    --sidebar-foreground: 220 15% 25%;
-    --sidebar-primary: 25 95% 53%;
+    --sidebar-background: 220 18% 96%;
+    --sidebar-foreground: 220 18% 20%;
+    --sidebar-primary: 24 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 94%;
-    --sidebar-accent-foreground: 220 20% 15%;
-    --sidebar-border: 220 14% 90%;
-    --sidebar-ring: 25 95% 53%;
+    --sidebar-accent: 220 14% 92%;
+    --sidebar-accent-foreground: 220 22% 12%;
+    --sidebar-border: 220 16% 86%;
+    --sidebar-ring: 24 100% 50%;
   }
 
   /* Responsive header height */
