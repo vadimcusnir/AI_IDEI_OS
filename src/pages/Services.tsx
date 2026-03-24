@@ -8,27 +8,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
   Loader2, Sparkles, Search, X, Coins,
-  ArrowRight, Zap, AlertTriangle, Workflow, Clock,
+  ArrowRight, Zap, AlertTriangle,
   ShoppingCart, GraduationCap, Megaphone, TrendingUp,
-  Layers, Atom,
+  Clock, LayoutGrid, List,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier } from "@/hooks/useUserTier";
 import { PremiumPaywall, tierSatisfied } from "@/components/premium/PremiumPaywall";
 import { useTranslation } from "react-i18next";
-import { PipelinesHub } from "@/components/services/PipelinesHub";
-import { FlowTip } from "@/components/onboarding/FlowTip";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceDrawer } from "@/components/services/ServiceDrawer";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ServiceTierSystem, type ServiceTier } from "@/components/services/ServiceTierSystem";
+import { ServicesHero } from "@/components/services/ServicesHero";
+import { ValueComparison } from "@/components/services/ValueComparison";
+import { ServicePricingBreakdown } from "@/components/services/ServicePricingBreakdown";
 import { OutputFamilies } from "@/components/services/OutputFamilies";
-import { QuickStartFlow } from "@/components/services/QuickStartFlow";
 
 interface Service {
   id: string;
@@ -44,21 +43,19 @@ interface Service {
 }
 
 /* ── Intent-based categories ── */
-const INTENT_CONFIG: Record<string, { label: string; icon: React.ElementType; description: string }> = {
-  sell: { label: "SELL", icon: ShoppingCart, description: "Copywriting, landing pages, sales funnels" },
-  educate: { label: "EDUCATE", icon: GraduationCap, description: "Courses, frameworks, knowledge assets" },
-  attract: { label: "ATTRACT", icon: Megaphone, description: "Social media, SEO, content marketing" },
-  convert: { label: "CONVERT", icon: TrendingUp, description: "Analytics, strategy, optimization" },
+const INTENT_CONFIG: Record<string, { label: string; icon: React.ElementType; description: string; tagline: string }> = {
+  attract: { label: "ATTRACT", icon: Megaphone, description: "Social media, SEO, content marketing", tagline: "Generează conținut care atrage" },
+  educate: { label: "EDUCATE", icon: GraduationCap, description: "Cursuri, frameworks, knowledge assets", tagline: "Transformă expertiza în active" },
+  sell: { label: "SELL", icon: ShoppingCart, description: "Copywriting, landing pages, sales funnels", tagline: "Produce copy care vinde" },
+  convert: { label: "CONVERT", icon: TrendingUp, description: "Analytics, strategy, optimization", tagline: "Optimizează pentru conversie" },
 };
 
-/* Map service categories to business intents */
 function mapCategoryToIntent(category: string, serviceKey: string): string {
   const key = (category + " " + serviceKey).toLowerCase();
   if (/content|social|seo|attract|blog|newsletter|post/.test(key)) return "attract";
   if (/copy|sales|landing|funnel|sell|persuasion|offer/.test(key)) return "sell";
   if (/course|framework|education|teach|train|knowledge|extract/.test(key)) return "educate";
   if (/strategy|analysis|research|optim|analytics|convert|market-research/.test(key)) return "convert";
-  // Fallback by category
   if (category === "content" || category === "production") return "attract";
   if (category === "extraction") return "educate";
   if (category === "analysis" || category === "strategy") return "convert";
@@ -82,7 +79,7 @@ const CLASS_BADGE: Record<string, { label: string; description: string; classNam
   S: { label: "Sync", description: "Real-time synchronized processing across services.", className: "bg-status-validated/15 text-status-validated" },
 };
 
-type SectionKey = "quick-start" | "pipelines" | "services" | "outputs" | "history";
+const MAX_VISIBLE_PER_INTENT = 6;
 
 export default function Services() {
   const { t } = useTranslation("pages");
@@ -93,16 +90,12 @@ export default function Services() {
   const { tier: userTier } = useUserTier();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
-  const intentParam = searchParams.get("intent") || "";
-  const searchParam = searchParams.get("search") || "";
-  const categoryParam = searchParams.get("category") || "";
-  const initialSearch = searchParam || intentParam;
-  const [search, setSearch] = useState(initialSearch);
-  const [activeIntent, setActiveIntent] = useState<string | null>(categoryParam || null);
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [activeIntent, setActiveIntent] = useState<string | null>(searchParams.get("category") || null);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [expandedIntents, setExpandedIntents] = useState<Set<string>>(new Set());
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-  const [activeSection, setActiveSection] = useState<SectionKey>(initialSearch || categoryParam ? "services" : "quick-start");
-  const [activeTier, setActiveTier] = useState<ServiceTier | null>(null);
 
   // Drawer state
   const [drawerService, setDrawerService] = useState<Service | null>(null);
@@ -145,14 +138,12 @@ export default function Services() {
         s.service_key.toLowerCase().includes(q)
       );
     }
-
-    const groups: Record<string, Service[]> = { sell: [], educate: [], attract: [], convert: [] };
+    const groups: Record<string, Service[]> = { attract: [], educate: [], sell: [], convert: [] };
     list.forEach(s => {
       const intent = mapCategoryToIntent(s.category, s.service_key);
       if (groups[intent]) groups[intent].push(s);
       else groups.sell.push(s);
     });
-
     if (activeIntent) {
       return { [activeIntent]: groups[activeIntent] || [] };
     }
@@ -172,15 +163,13 @@ export default function Services() {
     );
   }
 
-  const isVisitor = !user;
-
   return (
     <TooltipProvider delayDuration={300}>
     <PageTransition>
     <div className="flex-1 overflow-y-auto">
       <SEOHead
-        title="AI Services — AI-IDEI"
-        description="120+ AI-powered knowledge services: extraction, analysis, content generation. Transform expertise into structured intellectual assets."
+        title="AI Services — Transformă input în 50+ outputs | AI-IDEI"
+        description="120+ sisteme AI: extracție, analiză, generare conținut. Transformă expertiza în active digitale structurate. Cost mediu: $0.14/output."
       />
       <BreadcrumbJsonLd items={[
         { name: "Home", url: "https://ai-idei.com" },
@@ -199,20 +188,17 @@ export default function Services() {
         })),
       }} />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-8">
 
-        {/* ── Header ── */}
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight mb-1">{t("services.title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("services.description")}</p>
-        </div>
+        {/* ═══ LAYER 1: HERO ═══ */}
+        <ServicesHero isLoggedIn={!!user} serviceCount={services.length} />
 
         {/* ── Low balance alert ── */}
         {!balanceLoading && balance < 100 && user && (
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-destructive/20 bg-destructive/5">
             <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
             <p className="text-xs flex-1">
-              <span className="font-medium">{t("services.low_balance")}:</span>{" "}
+              <span className="font-medium">Balanță scăzută:</span>{" "}
               <span className="font-mono font-bold">{balance}</span> NEURONS
             </p>
             <Button size="sm" variant="outline" className="shrink-0 text-xs gap-1 h-7" onClick={() => navigate("/credits")}>
@@ -221,238 +207,203 @@ export default function Services() {
           </div>
         )}
 
-        {/* ── Visitor CTA ── */}
-        {isVisitor && (
-          <div className="flex items-center gap-3 px-4 py-4 rounded-xl border border-primary/20 bg-primary/5">
-            <Sparkles className="h-5 w-5 text-primary shrink-0" />
-            <div className="flex-1">
-              <p className="text-sm font-medium">Start free with 500 NEURONS</p>
-              <p className="text-xs text-muted-foreground">Sign up to run any AI service.</p>
-            </div>
-            <Button size="sm" className="shrink-0 text-xs gap-1" onClick={() => navigate("/auth")}>
-              Get Started <ArrowRight className="h-3 w-3" />
-            </Button>
+        {/* ═══ LAYER 2: INTENT SELECTION ═══ */}
+        <section className="space-y-3">
+          <h2 className="text-sm font-bold tracking-tight">Ce vrei să obții?</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {Object.entries(INTENT_CONFIG).map(([key, cfg]) => {
+              const Icon = cfg.icon;
+              const count = services.filter(s => mapCategoryToIntent(s.category, s.service_key) === key).length;
+              const isActive = activeIntent === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setActiveIntent(isActive ? null : key)}
+                  className={cn(
+                    "rounded-xl border p-3 text-left transition-all duration-200",
+                    isActive
+                      ? "border-primary/40 bg-primary/5 shadow-sm"
+                      : "border-border hover:border-primary/20 hover:bg-primary/[0.02]"
+                  )}
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <div className={cn(
+                      "h-7 w-7 rounded-lg flex items-center justify-center",
+                      isActive ? "bg-primary/15" : "bg-muted"
+                    )}>
+                      <Icon className={cn("h-3.5 w-3.5", isActive ? "text-primary" : "text-muted-foreground")} />
+                    </div>
+                    <span className="text-[10px] font-mono text-muted-foreground">{count}</span>
+                  </div>
+                  <p className="text-xs font-bold">{cfg.label}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{cfg.tagline}</p>
+                </button>
+              );
+            })}
           </div>
-        )}
+        </section>
 
-        {/* ── Intent banner ── */}
-        {intentParam && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-primary/20 bg-primary/5"
-          >
-            <Zap className="h-4 w-4 text-primary shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground">Obiectivul tău:</p>
-              <p className="text-sm font-medium truncate">{intentParam}</p>
-            </div>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="shrink-0 text-xs h-7"
-              onClick={() => {
-                setSearch("");
-                setSearchParams({});
-              }}
-            >
-              <X className="h-3 w-3" />
-            </Button>
-          </motion.div>
-        )}
-
-        {/* ── Section tabs ── */}
-        <div className="flex items-center gap-1 border-b border-border">
-          {([
-            { key: "quick-start" as const, label: "Quick Start", icon: Zap, count: null },
-            { key: "pipelines" as const, label: "Pipelines", icon: Workflow, count: 5 },
-            { key: "services" as const, label: t("services.tab_all", { defaultValue: "All Services" }), icon: Sparkles, count: services.length },
-            { key: "outputs" as const, label: "Output Families", icon: Layers, count: 12 },
-            ...(user ? [{ key: "history" as const, label: "History", icon: Clock, count: null }] : []),
-          ]).map(tab => {
-            const Icon = tab.icon;
-            const active = activeSection === tab.key;
-            return (
-              <button
-                key={tab.key}
-                onClick={() => setActiveSection(tab.key)}
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 -mb-px transition-colors whitespace-nowrap",
-                  active
-                    ? "text-primary border-primary"
-                    : "text-muted-foreground border-transparent hover:text-foreground"
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                {tab.label}
-                {tab.count !== null && (
-                  <span className={cn(
-                    "text-[9px] font-mono px-1.5 py-0.5 rounded-full",
-                    active ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-                  )}>
-                    {tab.count}
-                  </span>
-                )}
+        {/* ═══ LAYER 3: SEARCH + VIEW CONTROLS ═══ */}
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
+            <Input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Caută servicii..."
+              className="pl-9 pr-8 h-9 text-sm bg-card"
+            />
+            {search && (
+              <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                <X className="h-3.5 w-3.5" />
               </button>
+            )}
+          </div>
+          <div className="flex items-center border border-border rounded-lg overflow-hidden shrink-0">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={cn("p-2 transition-colors", viewMode === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
+            >
+              <LayoutGrid className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={cn("p-2 transition-colors", viewMode === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
+            >
+              <List className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <span className="text-[10px] font-mono text-muted-foreground shrink-0">
+            {totalFiltered}/{services.length}
+          </span>
+        </div>
+
+        {/* ═══ LAYER 4: SERVICE CLUSTERS ═══ */}
+        <div className="space-y-8">
+          {totalFiltered === 0 && (
+            <div className="text-center py-16">
+              <Search className="h-8 w-8 mx-auto mb-3 text-muted-foreground/20" />
+              <p className="text-sm text-muted-foreground mb-1">Niciun serviciu găsit</p>
+              <Button variant="outline" size="sm" className="text-xs mt-2" onClick={() => { setSearch(""); setActiveIntent(null); }}>
+                Resetează filtrele
+              </Button>
+            </div>
+          )}
+
+          {Object.entries(intentGroups).map(([intentKey, intentServices]) => {
+            if (intentServices.length === 0) return null;
+            const cfg = INTENT_CONFIG[intentKey];
+            if (!cfg) return null;
+            const IntentIcon = cfg.icon;
+            const isExpanded = expandedIntents.has(intentKey) || search.trim() !== "";
+            const visibleServices = isExpanded ? intentServices : intentServices.slice(0, MAX_VISIBLE_PER_INTENT);
+            const hasMore = intentServices.length > MAX_VISIBLE_PER_INTENT && !isExpanded;
+
+            return (
+              <motion.section
+                key={intentKey}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-3"
+              >
+                {/* Intent header */}
+                <div className="flex items-center gap-2.5">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <IntentIcon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+                      {cfg.label}
+                    </h3>
+                    <p className="text-[10px] text-muted-foreground">{cfg.tagline}</p>
+                  </div>
+                  <span className="text-[10px] font-mono text-muted-foreground/60">
+                    {intentServices.length} servicii
+                  </span>
+                </div>
+
+                {/* Service grid/list */}
+                <div className={cn(
+                  viewMode === "grid"
+                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+                    : "space-y-2"
+                )}>
+                  {visibleServices.map((service, i) => (
+                    <ServiceCard
+                      key={service.id}
+                      service={service}
+                      viewMode={viewMode}
+                      index={i}
+                      userTier={userTier}
+                      categoryConfig={CATEGORY_CONFIG}
+                      classBadge={CLASS_BADGE}
+                      onClick={() => handleServiceClick(service)}
+                    />
+                  ))}
+                </div>
+
+                {/* Show more */}
+                {hasMore && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full text-xs text-muted-foreground gap-1.5"
+                    onClick={() => setExpandedIntents(prev => new Set(prev).add(intentKey))}
+                  >
+                    Vezi toate {intentServices.length} servicii {cfg.label}
+                    <ArrowRight className="h-3 w-3" />
+                  </Button>
+                )}
+              </motion.section>
             );
           })}
         </div>
 
-        {/* ═══ QUICK START ═══ */}
-        {activeSection === "quick-start" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
-            <QuickStartFlow onStart={() => navigate("/home")} />
-            <ServiceTierSystem activeTier={activeTier} onTierChange={setActiveTier} />
-            <OutputFamilies compact />
-          </motion.div>
-        )}
+        {/* ═══ LAYER 5: OUTPUT FAMILIES ═══ */}
+        <OutputFamilies compact />
 
-        {/* ═══ PIPELINES ═══ */}
-        {activeSection === "pipelines" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-            <FlowTip
-              tipId="pipelines-intro"
-              variant="info"
-              title="What are Pipelines?"
-              description="Pipelines chain multiple AI services into one automated flow. Upload content once and get dozens of professional deliverables — articles, strategies, social posts, scripts — generated automatically."
-              className="mb-4"
-            />
-            <PipelinesHub />
-          </motion.div>
-        )}
+        {/* ═══ LAYER 6: PRICING BREAKDOWN ═══ */}
+        <ServicePricingBreakdown userTier={userTier} />
 
-        {/* ═══ OUTPUT FAMILIES ═══ */}
-        {activeSection === "outputs" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-            <OutputFamilies />
-          </motion.div>
-        )}
+        {/* ═══ LAYER 7: VALUE COMPARISON ═══ */}
+        <ValueComparison />
 
-        {/* ═══ ALL SERVICES — Intent-grouped ═══ */}
-        {activeSection === "services" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-5">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-              <Input
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder={t("services.search_placeholder")}
-                className="pl-9 pr-8 h-9 text-sm bg-card"
-              />
-              {search && (
-                <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
+        {/* ═══ LAYER 8: FINAL CTA ═══ */}
+        <motion.section
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/[0.02] p-6 text-center space-y-3"
+        >
+          <Zap className="h-8 w-8 text-primary mx-auto" />
+          <h2 className="text-lg font-bold">Începe producția</h2>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+            {services.length}+ sisteme AI. 50+ outputs per execuție. Cost mediu: $0.14/output.
+          </p>
+          <Button
+            size="lg"
+            className="gap-2 px-8"
+            onClick={() => user ? navigate("/home") : navigate("/auth")}
+          >
+            <Zap className="h-4 w-4" />
+            {user ? "Start Production" : "Creează cont gratuit"}
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+          {!user && (
+            <p className="text-[11px] text-muted-foreground">
+              500 NEURONS gratuit la înregistrare • Fără card
+            </p>
+          )}
+        </motion.section>
+
+        {/* ═══ HISTORY (logged in users) ═══ */}
+        {user && (
+          <section className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <h2 className="text-sm font-bold tracking-tight">Execuții recente</h2>
             </div>
-
-            {/* Intent filter chips */}
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                onClick={() => setActiveIntent(null)}
-                className={cn(
-                  "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
-                  !activeIntent ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
-                )}
-              >
-                Toate ({services.length})
-              </button>
-              {Object.entries(INTENT_CONFIG).map(([key, cfg]) => {
-                const Icon = cfg.icon;
-                const count = services.filter(s => mapCategoryToIntent(s.category, s.service_key) === key).length;
-                if (count === 0) return null;
-                return (
-                  <button
-                    key={key}
-                    onClick={() => setActiveIntent(activeIntent === key ? null : key)}
-                    className={cn(
-                      "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors flex items-center gap-1.5",
-                      activeIntent === key ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
-                    )}
-                  >
-                    <Icon className="h-3 w-3" />
-                    {cfg.label} ({count})
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Results info */}
-            {(search || activeIntent) && (
-              <p className="text-xs text-muted-foreground">
-                {totalFiltered} of {services.length} services
-                {search && <> matching "<span className="font-medium text-foreground">{search}</span>"</>}
-              </p>
-            )}
-
-            {/* No results */}
-            {totalFiltered === 0 && (
-              <div className="text-center py-16">
-                <Search className="h-8 w-8 mx-auto mb-3 text-muted-foreground/20" />
-                <p className="text-sm text-muted-foreground mb-1">{t("services.no_match")}</p>
-                <Button variant="outline" size="sm" className="text-xs mt-2" onClick={() => { setSearch(""); setActiveIntent(null); }}>
-                  {t("services.clear_filters")}
-                </Button>
-              </div>
-            )}
-
-            {/* Intent groups */}
-            {Object.entries(intentGroups).map(([intentKey, intentServices]) => {
-              if (intentServices.length === 0) return null;
-              const cfg = INTENT_CONFIG[intentKey];
-              if (!cfg) return null;
-              const IntentIcon = cfg.icon;
-
-              return (
-                <motion.div
-                  key={intentKey}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3"
-                >
-                  {/* Intent header */}
-                  <div className="flex items-center gap-2.5 pt-2">
-                    <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <IntentIcon className="h-3.5 w-3.5 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                        {cfg.label}
-                      </h3>
-                      <p className="text-[10px] text-muted-foreground">{cfg.description}</p>
-                    </div>
-                    <span className="text-[9px] font-mono text-muted-foreground/60 ml-auto">
-                      {intentServices.length}
-                    </span>
-                  </div>
-
-                  {/* Service grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {intentServices.map((service, i) => (
-                      <ServiceCard
-                        key={service.id}
-                        service={service}
-                        viewMode="grid"
-                        index={i}
-                        userTier={userTier}
-                        categoryConfig={CATEGORY_CONFIG}
-                        classBadge={CLASS_BADGE}
-                        onClick={() => handleServiceClick(service)}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        )}
-
-        {/* ═══ HISTORY ═══ */}
-        {activeSection === "history" && user && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-            <ServiceRunHistory limit={25} />
-          </motion.div>
+            <ServiceRunHistory limit={5} />
+          </section>
         )}
       </div>
 
