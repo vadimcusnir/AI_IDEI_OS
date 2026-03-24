@@ -503,7 +503,7 @@ export default function Home() {
                   <div className="w-full max-w-2xl mx-auto">
                     >
                       <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
-                    </motion.div>
+                  </div>
                   )}
 
                   <AnimatePresence>
