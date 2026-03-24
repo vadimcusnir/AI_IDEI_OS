@@ -557,7 +557,7 @@ export default function Home() {
                       <div className="pb-2">
                         <OutputPanel outputs={outputs} visible={showOutputs} onRerun={handleRerun}
                           onClose={() => setShowOutputs(false)} onSaveAll={handleSaveAllOutputs} savingAll={savingAllOutputs} />
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
 
