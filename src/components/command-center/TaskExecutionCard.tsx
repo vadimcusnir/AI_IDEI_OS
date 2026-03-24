@@ -89,7 +89,7 @@ export function TaskExecutionCard({
         {isActive ? (
           <Loader2 className="h-4 w-4 text-muted-foreground animate-spin shrink-0" />
         ) : isDone ? (
-          <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+          <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
         ) : (
           <XCircle className="h-4 w-4 text-destructive shrink-0" />
         )}
