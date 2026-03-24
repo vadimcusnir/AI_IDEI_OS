@@ -619,8 +619,8 @@ export default function Home() {
               </div>
             )}
 
-            {/* ═══ INPUT ZONE — always at bottom ═══ */}
-            {!isEmptyState && (
+            {/* ═══ INPUT ZONE — always pinned at bottom ═══ */}
+            <div className="max-w-3xl mx-auto w-full">
               <CommandInputZone
                 ref={inputZoneRef} input={input} onInputChange={setInput}
                 onSubmit={handleSubmit} onStop={handleStop} loading={loading}
@@ -641,7 +641,7 @@ export default function Home() {
                   if (prompt) handleCommand(prompt, true);
                 }}
               />
-            )}
+            </div>
           </div>
         </div>
 
