@@ -58,4 +58,14 @@ export const AnalyticsEvents = {
   CTA_CLICKED: "cta_clicked",
   BEHAVIOR_TRIGGER: "behavior_trigger",
   UPGRADE_PROMPT_SHOWN: "upgrade_prompt_shown",
+  // ═══ Decision Engine Events (Phase 2) ═══
+  INTENT_SUBMITTED: "intent_submitted",
+  MMS_SELECTED: "mms_selected",
+  MMS_EXECUTED: "mms_executed",
+  MMS_COMPLETED: "mms_completed",
+  INTENT_CHIP_CLICKED: "intent_chip_clicked",
+  SYSTEM_RECOMMENDATION_SHOWN: "system_recommendation_shown",
+  RESULT_SHARED_COMMUNITY: "result_shared_community",
+  OUTPUT_GENERATED: "output_generated",
+  PURCHASE_COMPLETED: "purchase_completed",
 } as const;
