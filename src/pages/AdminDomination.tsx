@@ -112,7 +112,7 @@ export default function AdminDomination() {
           <CardContent className="pt-4 pb-3">
             <div className="text-xs text-muted-foreground flex items-center gap-1"><Globe className="h-3 w-3" /> Landing Pages</div>
             <div className="text-2xl font-bold mt-1">{pages?.total ?? "—"}</div>
-            <div className="text-xs text-emerald-400">{pages?.published ?? 0} published</div>
+            <div className="text-xs text-semantic-emerald">{pages?.published ?? 0} published</div>
           </CardContent>
         </Card>
         <Card>
