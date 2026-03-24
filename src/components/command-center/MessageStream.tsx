@@ -1,6 +1,5 @@
 /**
  * MessageStream — World-class chat message area.
- * Best practices: centered max-width, scroll-to-bottom FAB, proper spacing.
  */
 
 import { useRef, useEffect, useCallback, useState } from "react";
@@ -8,6 +7,7 @@ import { Loader2, Sparkles, ArrowDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CommandBubble, type Message } from "./CommandBubble";
 import { WelcomeScreen } from "./WelcomeScreen";
+import { SuggestionTabs } from "./SuggestionTabs";
 import { ExecutionSummary } from "./ExecutionSummary";
 import type { CommandPhase, ExecutionState } from "@/hooks/useCommandState";
 import type { OutputItem } from "./OutputPanel";
@@ -80,13 +80,16 @@ export function MessageStream({
         ))}
 
         {isEmptyState && (
-          <WelcomeScreen
-            onCommand={onCommand}
-            suggestions={suggestions}
-            neuronCount={totalNeurons}
-            episodeCount={totalEpisodes}
-            balance={balance}
-          />
+          <>
+            <WelcomeScreen
+              onCommand={onCommand}
+              suggestions={suggestions}
+              neuronCount={totalNeurons}
+              episodeCount={totalEpisodes}
+              balance={balance}
+            />
+            <SuggestionTabs onCommand={onCommand} />
+          </>
         )}
 
         {loading && !isStreaming && (

@@ -1,12 +1,12 @@
 /**
- * CommandInputZone — World-class chat input.
- * Best practices: centered max-width, drag & drop, auto-grow, prominent stop, keyboard hints.
+ * CommandInputZone — Premium chat input with Perplexity-style + menu.
  */
 
 import { useRef, useState, forwardRef, useImperativeHandle, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Paperclip, X, Send, Square, ArrowUp } from "lucide-react";
+import { Paperclip, X, Square, ArrowUp } from "lucide-react";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
+import { InputAttachMenu } from "./InputAttachMenu";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -26,12 +26,13 @@ interface CommandInputZoneProps {
   showSlashMenu: boolean;
   onShowSlashMenuChange: (show: boolean) => void;
   onSlashSelect: (cmd: string) => void;
+  onAttachAction?: (action: string) => void;
 }
 
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
     { input, onInputChange, onSubmit, onStop, loading, files, onFileSelect, onRemoveFile,
-      showSlashMenu, onShowSlashMenuChange, onSlashSelect },
+      showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction },
     ref,
   ) {
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -49,7 +50,6 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
       }
     };
 
-    // Drag & drop handlers
     const handleDragOver = useCallback((e: React.DragEvent) => {
       e.preventDefault();
       setIsDragging(true);
@@ -63,6 +63,25 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
         onFileSelect(syntheticEvent);
       }
     }, [onFileSelect]);
+
+    const handleAttachAction = useCallback((action: string) => {
+      if (onAttachAction) {
+        onAttachAction(action);
+      } else {
+        // Default: insert action as slash command
+        const actionMap: Record<string, string> = {
+          web_search: "/search ",
+          deep_research: "/research ",
+          generate_image: "/generate ",
+          analyze_url: "/analyze ",
+          voice_input: "/voice ",
+        };
+        if (actionMap[action]) {
+          onInputChange(actionMap[action]);
+          inputRef.current?.focus();
+        }
+      }
+    }, [onAttachAction, onInputChange]);
 
     return (
       <div
@@ -80,7 +99,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               exit={{ opacity: 0 }}
               className="absolute inset-0 z-50 bg-primary/[0.04] border-2 border-dashed border-primary/30 rounded-xl flex items-center justify-center backdrop-blur-sm"
             >
-              <p className="text-sm font-medium text-primary">Drop files here</p>
+              <p className="text-sm font-medium text-primary">Trage fișierele aici</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -110,7 +129,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
 
           {/* Main input container */}
           <div className={cn(
-            "relative flex items-end gap-2 rounded-2xl border bg-card transition-all duration-300",
+            "relative flex items-end gap-1 rounded-2xl border bg-card transition-all duration-300",
             "shadow-sm",
             "border-border/50 focus-within:border-primary/40 focus-within:shadow-lg focus-within:shadow-primary/[0.04] focus-within:ring-1 focus-within:ring-primary/10"
           )}>
@@ -123,16 +142,13 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               onChange={onFileSelect}
             />
 
-            {/* Attach button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-9 w-9 p-0 shrink-0 rounded-xl ml-1 mb-1 text-muted-foreground/40 hover:text-foreground"
-              onClick={() => fileInputRef.current?.click()}
-              title="Attach file (or drag & drop)"
-            >
-              <Paperclip className="h-4 w-4" />
-            </Button>
+            {/* Plus menu (Perplexity-style) */}
+            <div className="ml-1 mb-1">
+              <InputAttachMenu
+                onFileClick={() => fileInputRef.current?.click()}
+                onAction={handleAttachAction}
+              />
+            </div>
 
             {/* Textarea */}
             <div className="flex-1 relative py-1">
@@ -144,7 +160,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                   onShowSlashMenuChange(e.target.value.startsWith("/") && !e.target.value.includes(" "));
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Message AI-IDEI..."
+                placeholder="Întreabă orice..."
                 className="w-full resize-none bg-transparent px-1 py-2 text-[15px] leading-relaxed focus:outline-none placeholder:text-muted-foreground/35 min-h-[40px] max-h-[200px]"
                 rows={1}
                 style={{ height: "auto" }}
@@ -174,7 +190,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                 size="sm"
                 className="h-9 w-9 p-0 shrink-0 rounded-xl mr-1 mb-1 bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
                 onClick={onStop}
-                title="Stop generating"
+                title="Oprește generarea"
               >
                 <Square className="h-3.5 w-3.5 fill-current" />
               </Button>
@@ -197,7 +213,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
 
           {/* Keyboard hint */}
           <p className="text-[10px] text-muted-foreground/30 text-center mt-1.5 select-none">
-            <kbd className="font-mono">Enter</kbd> to send · <kbd className="font-mono">Shift+Enter</kbd> new line · <kbd className="font-mono">/</kbd> commands
+            <kbd className="font-mono">Enter</kbd> trimite · <kbd className="font-mono">Shift+Enter</kbd> linie nouă · <kbd className="font-mono">/</kbd> comenzi · <kbd className="font-mono">+</kbd> atașează
           </p>
         </div>
       </div>

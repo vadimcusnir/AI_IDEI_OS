@@ -26,6 +26,9 @@ import { PipelineComposer, type PipelineStep } from "./PipelineComposer";
 import { CommandInputZone, type CommandInputZoneRef } from "./CommandInputZone";
 import { MessageStream } from "./MessageStream";
 import { SidePanels } from "./SidePanels";
+import { ChatHistorySidebar } from "./ChatHistorySidebar";
+import { ExecutionRightPanel } from "./ExecutionRightPanel";
+import { SuggestionTabs } from "./SuggestionTabs";
 import { useUserTier } from "@/hooks/useUserTier";
 import { routeCommand, type RouteResult } from "./CommandRouter";
 import {
@@ -82,6 +85,7 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [pendingInput, setPendingInput] = useState("");
   const [showPipeline, setShowPipeline] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -460,6 +464,25 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-primary/[0.02] blur-[100px]" />
       </div>
+
+      {/* Chat History Sidebar (ChatGPT-style) */}
+      <ChatHistorySidebar
+        sessions={sessions}
+        currentSessionId={sessionId}
+        isOpen={showHistory}
+        onToggle={() => setShowHistory(!showHistory)}
+        onNewSession={() => { newSession(); clearChat(); setShowHistory(false); }}
+        onLoadSession={async (sid) => {
+          const loaded = await loadSession(sid);
+          if (loaded.length > 0) setMessages(loaded);
+          setShowHistory(false);
+        }}
+        onDeleteSession={async (sid) => {
+          await deleteSession(sid);
+          toast.success("Sesiune ștearsă");
+        }}
+      />
+
       <div className="flex flex-col h-full transition-all flex-1 min-w-0 relative z-10">
         <CommandHeader
           totalNeurons={totalNeurons}
@@ -470,6 +493,7 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
           onToggleMemory={() => setShowMemory(!showMemory)}
           onClearChat={clearChat}
           onToggleTaskTree={() => setShowTaskTree(!showTaskTree)}
+          onToggleHistory={() => setShowHistory(!showHistory)}
         />
 
         <ExecutionStatusBar
@@ -616,6 +640,19 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
           onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
         />
       </div>
+
+      {/* Right Panel: Execution cost/progress/outputs */}
+      <AnimatePresence>
+        {cmdState.state.phase !== "idle" && (
+          <ExecutionRightPanel
+            execution={cmdState.state}
+            outputCount={outputs.length}
+            balance={balance}
+            onSaveTemplate={handleSaveTemplate}
+            onViewOutputs={() => setShowOutputs(true)}
+          />
+        )}
+      </AnimatePresence>
 
       <SidePanels
         showTaskTree={showTaskTree} showMemory={showMemory}
