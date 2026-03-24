@@ -99,16 +99,8 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               </div>
             </div>
 
-            {/* ─── CENTER: Pipeline Context ─── */}
-            <div className="flex-1 flex items-center justify-center min-w-0 mx-4">
-              {user && (
-                <div className="hidden md:flex items-center">
-                  <Suspense fallback={<div className="h-4 w-48 bg-muted/30 rounded animate-pulse" />}>
-                    <CompactPipeline />
-                  </Suspense>
-                </div>
-              )}
-            </div>
+            {/* ─── CENTER: Spacer ─── */}
+            <div className="flex-1 min-w-0" />
 
             {/* ─── RIGHT: Controls ─── */}
             <div className="flex items-center gap-1 shrink-0">
