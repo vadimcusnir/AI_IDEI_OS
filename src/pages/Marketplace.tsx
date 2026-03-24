@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
-import { Store, Star, Coins, DollarSign, Search, Tag, ShoppingCart, Crown, TrendingUp, Clock, MessageSquare, Loader2, CheckCircle2 } from "lucide-react";
+import { Store, Star, Coins, DollarSign, Search, Tag, ShoppingCart, Crown, TrendingUp, Clock, MessageSquare, Loader2, CheckCircle2, FileText, BarChart3 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,6 +47,7 @@ type SortOption = "popular" | "newest" | "rating" | "price_low" | "price_high";
 
 export default function Marketplace() {
   const { t } = useTranslation("pages");
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { balance } = useCreditBalance();
   const [assets, setAssets] = useState<KnowledgeAsset[]>([]);
@@ -121,9 +122,21 @@ export default function Marketplace() {
             <span>{t("marketplace.breadcrumb")}</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">{t("marketplace.title")}</h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed mb-4">
             {t("marketplace.description")}
           </p>
+          {user && (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => navigate("/marketplace/drafts")}>
+                <FileText className="h-3.5 w-3.5" />
+                Drafturi
+              </Button>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => navigate("/marketplace/earnings")}>
+                <BarChart3 className="h-3.5 w-3.5" />
+                Câștiguri
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
