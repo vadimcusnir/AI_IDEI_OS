@@ -173,8 +173,8 @@ export function ExecutionSummary({
           </Button>
         )}
         {isSuccess && (
-          <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-lg" onClick={onSaveTemplate}>
-            <TrendingUp className="h-3 w-3" /> Save Workflow
+          <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-xl" onClick={onSaveTemplate}>
+            <SigilTrend size={13} /> Save Workflow
           </Button>
         )}
         {isSuccess && user && (
