@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { DowngradeRetention } from "@/components/revenue/DowngradeRetention";
 
 export function SubscriptionPlans() {
   const { subscribed, tier, subscriptionEnd, loading, subscribe, manageSubscription } = useSubscription();
   const [subscribing, setSubscribing] = useState<string | null>(null);
+  const [showRetention, setShowRetention] = useState(false);
 
   const handleSubscribe = async (priceId: string, tierKey: string) => {
     setSubscribing(tierKey);
@@ -44,7 +46,7 @@ export function SubscriptionPlans() {
           <Crown className="h-4 w-4 text-primary" /> Planuri de Abonament
         </h3>
         {subscribed && (
-          <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={handleManage}>
+          <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => setShowRetention(true)}>
             <Settings className="h-3 w-3" /> Gestionează abonament
           </Button>
         )}
@@ -122,6 +124,16 @@ export function SubscriptionPlans() {
           );
         })}
       </div>
+
+      <DowngradeRetention
+        open={showRetention}
+        onClose={() => setShowRetention(false)}
+        onConfirmCancel={() => {
+          setShowRetention(false);
+          handleManage();
+        }}
+        currentTier={tier}
+      />
     </div>
   );
 }

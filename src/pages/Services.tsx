@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { GuestConversionGate } from "@/components/revenue/GuestConversionGate";
 import { SEOHead } from "@/components/SEOHead";
 import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
@@ -96,13 +97,19 @@ export default function Services() {
   const [expandedIntents, setExpandedIntents] = useState<Set<string>>(new Set());
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
+  const [guestGateOpen, setGuestGateOpen] = useState(false);
+  const [guestGateService, setGuestGateService] = useState<string | undefined>();
 
   // Drawer state
   const [drawerService, setDrawerService] = useState<Service | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleServiceClick = useCallback((service: Service) => {
-    if (!user) { navigate("/auth"); return; }
+    if (!user) {
+      setGuestGateService(service.name);
+      setGuestGateOpen(true);
+      return;
+    }
     const requiredTier = service.access_tier || "free";
     if (!tierSatisfied(userTier, requiredTier)) {
       setPaywallService({ name: service.name, tier: requiredTier });
@@ -419,6 +426,12 @@ export default function Services() {
         onOpenChange={setPaywallOpen}
         requiredTier={paywallService?.tier}
         serviceName={paywallService?.name}
+      />
+
+      <GuestConversionGate
+        open={guestGateOpen}
+        onClose={() => setGuestGateOpen(false)}
+        serviceName={guestGateService}
       />
     </div>
     </PageTransition>

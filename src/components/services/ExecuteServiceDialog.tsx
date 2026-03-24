@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { type RegistryServiceItem, LEVEL_META, TIER_COLORS } from "./RegistryCard";
 import { useWalletAtomicity } from "@/hooks/useWalletAtomicity";
+import { useAbandonmentDetector } from "@/hooks/useAbandonmentDetector";
 
 interface ExecuteServiceDialogProps {
   service: RegistryServiceItem | null;
@@ -31,6 +32,10 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
   const [costCharged, setCostCharged] = useState(0);
   const { reserve, settle, release } = useWalletAtomicity();
   const reservedRef = useRef<{ amount: number; jobId?: string } | null>(null);
+  const { markStarted, markCompleted } = useAbandonmentDetector({
+    serviceName: service?.name,
+    timeoutSeconds: 45,
+  });
 
   useEffect(() => {
     if (service) {
@@ -53,6 +58,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
     }
 
     setState("executing");
+    markCompleted();
     setOutput("");
 
     try {
@@ -306,7 +312,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
                 <Textarea
                   placeholder="Lipește conținutul, contextul sau datele aici..."
                   value={input}
-                  onChange={e => setInput(e.target.value)}
+                  onChange={e => { setInput(e.target.value); markStarted(e.target.value.length); }}
                   className="min-h-[140px] text-sm"
                 />
                 {service.intent && (
@@ -314,7 +320,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
                 )}
               </div>
 
-              <Button className="w-full gap-2" size="lg" onClick={handleExecute} disabled={!input.trim()}>
+              <Button className="w-full gap-2" size="lg" onClick={handleExecute} disabled={!input.trim()} data-execute-btn>
                 <Play className="h-4 w-4" />
                 Execută — ~{estimatedCost} NEURONS
               </Button>
