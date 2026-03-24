@@ -389,49 +389,8 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* Plan Preview */}
-          {execState.phase === "confirming" && execState.totalCredits > 0 && !showEconomicGate && (
-            <div className="px-4 py-2 relative z-10">
-              <PlanPreview
-                plan={{
-                  action_id: execState.actionId, intent: execState.intent,
-                  confidence: execState.confidence, plan_name: execState.planName,
-                  total_credits: execState.totalCredits,
-                  steps: execState.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })),
-                  objective: execState.objective, output_preview: execState.outputPreview,
-                }}
-                balance={balance}
-                onExecute={async () => {
-                  if (execState.totalCredits > 50) { setShowEconomicGate(true); }
-                  else if (pendingRoute) {
-                    const lastUserMsg = messages.filter(m => m.role === "user").pop();
-                    await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
-                  }
-                }}
-                onEdit={() => { setInput(`Refine plan: ${execState.intent}`); inputZoneRef.current?.focus(); }}
-                onDismiss={() => executionActions.reset()}
-                executing={loading}
-              />
-            </div>
-          )}
 
-          {/* Economic Gate */}
-          {showEconomicGate && execState.phase === "confirming" && (
-            <div className="px-4 py-2 relative z-10">
-              <EconomicGate
-                balance={balance} estimatedCost={execState.totalCredits}
-                tierDiscount={tierDiscount} tier={tier}
-                onProceed={async () => {
-                  setShowEconomicGate(false);
-                  if (pendingRoute) {
-                    const lastUserMsg = messages.filter(m => m.role === "user").pop();
-                    await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
-                  }
-                }}
-                onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
-              />
-            </div>
-          )}
+
 
           {/* ═══ CONTENT AREA ═══ */}
           {isEmptyState ? (
@@ -453,35 +412,6 @@ export default function Home() {
                   <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
                     Ce vrei să obții?
                   </p>
-                </motion.div>
-
-                {/* Input zone — centered in idle */}
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="w-full max-w-2xl"
-                >
-                  <CommandInputZone
-                    ref={inputZoneRef} input={input} onInputChange={setInput}
-                    onSubmit={handleSubmit} onStop={handleStop} loading={loading}
-                    files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
-                    onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
-                    showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
-                    onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
-                    onAttachAction={(action) => {
-                      const actionPrompts: Record<string, string> = {
-                        extract_neurons: "/extract neurons from content",
-                        generate_content: "/generate content from neurons",
-                        analyze_data: "/analyze my data and competitors",
-                        build_funnel: "/build a sales funnel",
-                        trending: "/analyze trending patterns in my library",
-                        recommended: "/suggest next best actions based on my data",
-                      };
-                      const prompt = actionPrompts[action];
-                      if (prompt) handleCommand(prompt, true);
-                    }}
-                  />
                 </motion.div>
 
                 {/* Decision Engine: System Recommendations when typing */}
@@ -507,7 +437,7 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            /* ACTIVE: Scrollable message stream */
+            /* ACTIVE: Scrollable message stream — takes remaining space above fixed input */
             <div ref={scrollRef} className="flex-1 overflow-y-auto relative z-10 min-h-0">
               <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 space-y-4">
                 {messages.map((msg) => (
@@ -554,77 +484,124 @@ export default function Home() {
             </div>
           )}
 
-          {/* Output panel */}
-          <AnimatePresence>
-            {showOutputs && outputs.length > 0 && (
-              <div className="px-4 pb-2 relative z-10">
-                <OutputPanel outputs={outputs} visible={showOutputs} onRerun={handleRerun}
-                  onClose={() => setShowOutputs(false)} onSaveAll={handleSaveAllOutputs} savingAll={savingAllOutputs} />
+          {/* ═══ BOTTOM FIXED ZONE — never moves ═══ */}
+          <div className="shrink-0 relative z-10">
+            {/* Plan Preview — inline above input */}
+            {execState.phase === "confirming" && execState.totalCredits > 0 && !showEconomicGate && (
+              <div className="px-4 py-2">
+                <PlanPreview
+                  plan={{
+                    action_id: execState.actionId, intent: execState.intent,
+                    confidence: execState.confidence, plan_name: execState.planName,
+                    total_credits: execState.totalCredits,
+                    steps: execState.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })),
+                    objective: execState.objective, output_preview: execState.outputPreview,
+                  }}
+                  balance={balance}
+                  onExecute={async () => {
+                    if (execState.totalCredits > 50) { setShowEconomicGate(true); }
+                    else if (pendingRoute) {
+                      const lastUserMsg = messages.filter(m => m.role === "user").pop();
+                      await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
+                    }
+                  }}
+                  onEdit={() => { setInput(`Refine plan: ${execState.intent}`); inputZoneRef.current?.focus(); }}
+                  onDismiss={() => executionActions.reset()}
+                  executing={loading}
+                />
               </div>
             )}
-          </AnimatePresence>
 
-          {/* Post execution */}
-          {execState.phase === "completed" && showPostExecution && (
-            <div className="px-4 pb-2 relative z-10">
-              <PostExecutionPanel
-                intent={execState.intent as any} creditsSpent={execState.totalCredits}
-                outputCount={outputs.length}
-                onAction={(prompt) => { setInput(prompt); setShowPostExecution(false); inputZoneRef.current?.focus(); }}
-                onSaveTemplate={handleSaveTemplate} onDismiss={() => setShowPostExecution(false)} userTier={tier}
+            {/* Economic Gate */}
+            {showEconomicGate && execState.phase === "confirming" && (
+              <div className="px-4 py-2">
+                <EconomicGate
+                  balance={balance} estimatedCost={execState.totalCredits}
+                  tierDiscount={tierDiscount} tier={tier}
+                  onProceed={async () => {
+                    setShowEconomicGate(false);
+                    if (pendingRoute) {
+                      const lastUserMsg = messages.filter(m => m.role === "user").pop();
+                      await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
+                    }
+                  }}
+                  onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
+                />
+              </div>
+            )}
+
+            {/* Output panel */}
+            <AnimatePresence>
+              {showOutputs && outputs.length > 0 && (
+                <div className="px-4 pb-2">
+                  <OutputPanel outputs={outputs} visible={showOutputs} onRerun={handleRerun}
+                    onClose={() => setShowOutputs(false)} onSaveAll={handleSaveAllOutputs} savingAll={savingAllOutputs} />
+                </div>
+              )}
+            </AnimatePresence>
+
+            {/* Post execution */}
+            {execState.phase === "completed" && showPostExecution && (
+              <div className="px-4 pb-2">
+                <PostExecutionPanel
+                  intent={execState.intent as any} creditsSpent={execState.totalCredits}
+                  outputCount={outputs.length}
+                  onAction={(prompt) => { setInput(prompt); setShowPostExecution(false); inputZoneRef.current?.focus(); }}
+                  onSaveTemplate={handleSaveTemplate} onDismiss={() => setShowPostExecution(false)} userTier={tier}
+                />
+              </div>
+            )}
+
+            {/* New session button */}
+            {!isEmptyState && (
+              <div className="flex justify-center py-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearChat}
+                  className="h-7 px-3 text-[11px] text-muted-foreground/50 hover:text-foreground gap-1.5"
+                >
+                  <RotateCcw className="h-3 w-3" />
+                  Sesiune nouă
+                </Button>
+              </div>
+            )}
+
+            {/* System Recommendations (active state) */}
+            {!isEmptyState && !loading && input.length >= 2 && (
+              <div className="px-4 sm:px-6 pb-1">
+                <SystemRecommendations
+                  systems={matchIntentToSystems(input)}
+                  input={input}
+                  onSelect={(sys: MMSystem) => handleCommand(sys.prompt, true)}
+                />
+              </div>
+            )}
+
+            {/* ═══ INPUT ZONE — always pinned at bottom ═══ */}
+            <div className="max-w-3xl mx-auto w-full">
+              <CommandInputZone
+                ref={inputZoneRef} input={input} onInputChange={setInput}
+                onSubmit={handleSubmit} onStop={handleStop} loading={loading}
+                files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
+                onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
+                showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
+                onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
+                onAttachAction={(action) => {
+                  const actionPrompts: Record<string, string> = {
+                    extract_neurons: "/extract neurons from content",
+                    generate_content: "/generate content from neurons",
+                    analyze_data: "/analyze my data and competitors",
+                    build_funnel: "/build a sales funnel",
+                    trending: "/analyze trending patterns in my library",
+                    recommended: "/suggest next best actions based on my data",
+                  };
+                  const prompt = actionPrompts[action];
+                  if (prompt) handleCommand(prompt, true);
+                }}
               />
             </div>
-          )}
-
-          {/* New session button — minimal */}
-          {!isEmptyState && (
-            <div className="flex justify-center py-1 relative z-10">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearChat}
-                className="h-7 px-3 text-[11px] text-muted-foreground/50 hover:text-foreground gap-1.5"
-              >
-                <RotateCcw className="h-3 w-3" />
-                Sesiune nouă
-              </Button>
-            </div>
-          )}
-
-          {/* ═══ INLINE SYSTEM RECOMMENDATIONS (active state) ═══ */}
-          {!isEmptyState && !loading && input.length >= 2 && (
-            <div className="px-4 sm:px-6 pb-1">
-              <SystemRecommendations
-                systems={matchIntentToSystems(input)}
-                input={input}
-                onSelect={(sys: MMSystem) => handleCommand(sys.prompt, true)}
-              />
-            </div>
-          )}
-
-          {/* ═══ INPUT ZONE — Bottom, only in active state ═══ */}
-          {!isEmptyState && (
-            <CommandInputZone
-              ref={inputZoneRef} input={input} onInputChange={setInput}
-              onSubmit={handleSubmit} onStop={handleStop} loading={loading}
-              files={files} onFileSelect={(e) => { if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]); }}
-              onRemoveFile={(idx) => setFiles(prev => prev.filter((_, i) => i !== idx))}
-              showSlashMenu={showSlashMenu} onShowSlashMenuChange={setShowSlashMenu}
-              onSlashSelect={(cmd) => { setInput(cmd); inputZoneRef.current?.focus(); }}
-              onAttachAction={(action) => {
-                const actionPrompts: Record<string, string> = {
-                  extract_neurons: "/extract neurons from content",
-                  generate_content: "/generate content from neurons",
-                  analyze_data: "/analyze my data and competitors",
-                  build_funnel: "/build a sales funnel",
-                  trending: "/analyze trending patterns in my library",
-                  recommended: "/suggest next best actions based on my data",
-                };
-                const prompt = actionPrompts[action];
-                if (prompt) handleCommand(prompt, true);
-              }}
-            />
-          )}
+          </div>
         </div>
 
         {/* ═══ RIGHT: Context Drawer (on demand) ═══ */}
