@@ -374,7 +374,37 @@ export default function MasterAgent() {
               ))}
             </div>
 
-            {/* Pipeline Steps */}
+            {/* Kernel Info Strip */}
+            {result.kernel && (
+              <div className="bg-muted/30 border border-border rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <Zap className="h-3 w-3 text-primary" /> Kernel Control
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+                  <div>
+                    <span className="text-muted-foreground">Tier</span>
+                    <p className="font-semibold capitalize text-foreground">{result.kernel.tier}</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Strategy</span>
+                    <p className="font-semibold text-foreground">{result.kernel.strategy}</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Cost</span>
+                    <p className="font-semibold font-mono text-foreground">{result.kernel.cost_charged?.toLocaleString()}N</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Discount</span>
+                    <p className="font-semibold text-primary">{result.kernel.tier_discount_pct}%</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Memory Runs</span>
+                    <p className="font-semibold text-foreground">{result.kernel.memory_runs}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {result.steps && (
               <div className="bg-card border border-border rounded-xl p-4">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Pipeline Execuție</p>
