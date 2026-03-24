@@ -424,9 +424,9 @@ export default function Home() {
                   ))}
                   {loading && !isStreaming && (
                     <div className="flex items-start gap-2.5">
-                      <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
-                        <Sparkles className="h-3 w-3 text-primary" />
-                      </div>
+                       <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[hsl(var(--gold-oxide)/0.15)] to-[hsl(var(--gold-oxide)/0.05)] flex items-center justify-center shrink-0 border border-[hsl(var(--gold-oxide)/0.1)]">
+                         <Sparkles className="h-3 w-3 text-[hsl(var(--gold-oxide))]" />
+                       </div>
                       <div className="flex items-center gap-2 pt-2">
                         <div className="flex gap-1">
                           <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
