@@ -58,6 +58,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
     }
 
     setState("executing");
+    markCompleted();
     setOutput("");
 
     try {
