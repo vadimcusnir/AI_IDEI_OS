@@ -169,7 +169,7 @@ export function AdminFeedbackTab() {
           <p className="text-[9px] text-muted-foreground uppercase">Total</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <p className="text-lg font-bold font-mono text-amber-500">{stats.pending}</p>
+          <p className="text-lg font-bold font-mono text-warning">{stats.pending}</p>
           <p className="text-[9px] text-muted-foreground uppercase">Pending</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
