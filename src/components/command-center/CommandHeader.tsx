@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   RotateCcw, History, Coins, Sparkles,
-  PanelRightOpen, PanelRightClose,
+  PanelRightOpen, PanelRightClose, PanelLeftOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CommandPhase } from "@/hooks/useCommandState";
@@ -15,15 +15,26 @@ interface CommandHeaderProps {
   onToggleMemory: () => void;
   onClearChat: () => void;
   onToggleTaskTree: () => void;
+  onToggleHistory: () => void;
 }
 
 export function CommandHeader({
   totalNeurons, totalEpisodes, balance, phase,
-  showTaskTree, onToggleMemory, onClearChat, onToggleTaskTree,
+  showTaskTree, onToggleMemory, onClearChat, onToggleTaskTree, onToggleHistory,
 }: CommandHeaderProps) {
   return (
     <div className="flex items-center justify-between px-4 sm:px-6 py-2 border-b border-border/30 bg-background/80 backdrop-blur-xl">
       <div className="flex items-center gap-3">
+        {/* History sidebar toggle */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 rounded-lg text-muted-foreground/50 hover:text-foreground"
+          onClick={onToggleHistory}
+          title="Istoric conversații"
+        >
+          <PanelLeftOpen className="h-3.5 w-3.5" />
+        </Button>
         <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center border border-primary/10">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
         </div>
@@ -57,7 +68,7 @@ export function CommandHeader({
           size="sm"
           className="h-7 w-7 p-0 rounded-lg text-muted-foreground/50 hover:text-foreground"
           onClick={onClearChat}
-          title="New session"
+          title="Sesiune nouă"
         >
           <RotateCcw className="h-3.5 w-3.5" />
         </Button>

@@ -493,6 +493,7 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
           onToggleMemory={() => setShowMemory(!showMemory)}
           onClearChat={clearChat}
           onToggleTaskTree={() => setShowTaskTree(!showTaskTree)}
+          onToggleHistory={() => setShowHistory(!showHistory)}
         />
 
         <ExecutionStatusBar
