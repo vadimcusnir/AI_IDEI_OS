@@ -109,20 +109,14 @@ export function MessageStream({
           </div>
         )}
 
-        {(phase === "completed" || phase === "failed") && !isEmptyState && (
-          <ExecutionSummary
-            phase={phase}
-            intent={execution.intent}
-            planName={execution.planName}
-            totalCredits={execution.totalCredits}
-            stepsCompleted={execution.steps.filter(s => s.status === "completed").length}
-            totalSteps={execution.steps.length}
-            outputCount={outputs.length}
-            durationSeconds={durationSeconds}
-            errorMessage={execution.errorMessage}
+        {/* Task Execution Card — visible during and after execution */}
+        {phase !== "idle" && !isEmptyState && (
+          <TaskExecutionCard
+            execution={execution}
+            outputs={outputs}
+            onRetry={onRerun}
             onSaveTemplate={onSaveTemplate}
             onSaveAllOutputs={onSaveAllOutputs}
-            onRerun={onRerun}
             onViewOutputs={onViewOutputs}
           />
         )}
