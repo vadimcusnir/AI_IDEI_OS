@@ -60,8 +60,10 @@ interface NavSection {
 }
 
 /*
- * SIDEBAR — RESTRUCTURED
- * CORE NAV → EXECUTION → [DIVIDER] → SESSIONS → [DIVIDER] → SYSTEM
+ * SIDEBAR — MINIMAL CONTEXT SWITCHER
+ * Max 5 primary items (flat, no collapsible)
+ * Sessions below
+ * Admin only for admins (collapsed)
  */
 
 const PUBLIC_SECTIONS: NavSection[] = [
@@ -71,147 +73,34 @@ const PUBLIC_SECTIONS: NavSection[] = [
     defaultOpen: true,
     items: [
       { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { labelKey: "community", to: "/community", icon: MessageCircle, controlId: "nav.community" },
       { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-    ],
-  },
-  {
-    labelKey: "learn_section",
-    icon: GraduationCap,
-    items: [
       { labelKey: "docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
-      { labelKey: "changelog", to: "/changelog", icon: ScrollText, controlId: "nav.changelog" },
     ],
   },
 ];
 
-// ═══ CORE NAVIGATION (always visible, always open) ═══
-const CORE_NAV: NavSection = {
-  labelKey: "core_section",
-  icon: Home,
-  defaultOpen: true,
-  authOnly: true,
-  items: [
-    { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
-    { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
-    { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-  ],
-};
+// ═══ PRIMARY NAV — flat, always visible, max 5 items ═══
+const PRIMARY_ITEMS: NavItem[] = [
+  { labelKey: "cockpit", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
+  { labelKey: "extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
+  { labelKey: "library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+  { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+  { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
+];
 
-// ═══ EXECUTION (tools) ═══
-const EXECUTION_NAV: NavSection = {
-  labelKey: "execution_section",
-  icon: Zap,
-  defaultOpen: true,
-  authOnly: true,
-  items: [
-    { labelKey: "services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-    { labelKey: "jobs", to: "/jobs", icon: Rocket, controlId: "nav.jobs" },
-    { labelKey: "pipeline", to: "/pipeline", icon: Layers, controlId: "nav.pipeline" },
-  ],
-};
-
-// ═══ SYSTEM (advanced) ═══
-const SYSTEM_NAV: NavSection = {
-  labelKey: "systems_section",
-  icon: Package,
-  authOnly: true,
-  items: [
-    { labelKey: "marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-    { labelKey: "master_agent", to: "/master-agent", icon: Bot, controlId: "nav.master-agent" },
-    { labelKey: "intelligence", to: "/intelligence", icon: Network, controlId: "nav.intelligence", minTier: "pro" as UserTier },
-    { labelKey: "neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
-  ],
-};
-
-// ═══ CREATOR ═══
-const CREATOR_NAV: NavSection = {
-  labelKey: "creator_section",
-  icon: PenTool,
-  authOnly: true,
-  minTier: "pro" as UserTier,
-  items: [
-    { labelKey: "capitalization", to: "/capitalization", icon: TrendingUp, controlId: "nav.capitalization" },
-    { labelKey: "prompt_forge", to: "/prompt-forge", icon: PenTool, controlId: "nav.prompt-forge" },
-  ],
-};
-
-// ═══ ACCOUNT ═══
-const ACCOUNT_NAV: NavSection = {
-  labelKey: "account_section",
-  icon: User,
-  authOnly: true,
-  items: [
-    { labelKey: "profile", to: "/profile", icon: User, controlId: "nav.profile" },
-    { labelKey: "credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-    { labelKey: "notifications", to: "/notifications", icon: Bell, controlId: "nav.notifications" },
-  ],
-};
-
-const CONTROL_SECTION: NavSection = {
+// ═══ ADMIN (collapsed, admin-only) ═══
+const ADMIN_NAV: NavSection = {
   labelKey: "control_section",
   icon: Shield,
+  adminOnly: true,
   items: [
     { labelKey: "admin", to: "/admin", icon: Shield, adminOnly: true },
     { labelKey: "kernel", to: "/admin/kernel", icon: Cpu, adminOnly: true },
     { labelKey: "runtime", to: "/runtime", icon: Activity, adminOnly: true },
     { labelKey: "analytics", to: "/analytics", icon: BarChart3, adminOnly: true },
-    { labelKey: "security", to: "/security", icon: Shield, adminOnly: true },
-  ],
-};
-
-const INFRA_SECTION: NavSection = {
-  labelKey: "infra_section",
-  icon: Wrench,
-  items: [
     { labelKey: "services_catalog", to: "/services-catalog", icon: Database, adminOnly: true },
-    { labelKey: "data_pipeline", to: "/data-pipeline", icon: Layers, adminOnly: true },
-    { labelKey: "integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
   ],
 };
-
-export function AppSidebar() {
-  const { t } = useTranslation(["navigation", "common"]);
-  const { state } = useSidebar();
-  const collapsed = state === "collapsed";
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-  const { isAdmin } = useAdminCheck();
-  const { balance, loading: balanceLoading } = useCreditBalance();
-  const { tier } = useUserTier();
-  const { sessions, loadSession, deleteSession, newSession } = useChatHistory();
-
-  const TIER_ORDER: Record<UserTier, number> = { free: 0, authenticated: 1, pro: 2, vip: 3 };
-
-  const isActive = (path: string) =>
-    location.pathname === path || location.pathname.startsWith(path + "/");
-
-  const sectionHasActive = (section: NavSection) =>
-    section.items.some((item) => isActive(item.to));
-
-  const isItemVisible = (item: NavItem) => {
-    if (item.adminOnly && !isAdmin) return false;
-    if (item.minTier && TIER_ORDER[tier] < TIER_ORDER[item.minTier]) return false;
-    return true;
-  };
-
-  // Build sections: CORE → EXECUTION → [sessions] → SYSTEM → CREATOR → ACCOUNT → ADMIN
-  const navSections = (() => {
-    if (!user) return PUBLIC_SECTIONS;
-    const sections = [CORE_NAV, EXECUTION_NAV];
-    // Sessions inserted separately below
-    sections.push(SYSTEM_NAV);
-    if (TIER_ORDER[tier] >= TIER_ORDER["pro" as UserTier]) {
-      sections.push(CREATOR_NAV);
-    }
-    sections.push(ACCOUNT_NAV);
-    if (isAdmin) {
-      sections.push(CONTROL_SECTION);
-      sections.push(INFRA_SECTION);
-    }
-    return sections;
-  })();
 
   const renderSection = (section: NavSection, idx: number) => {
     const visibleItems = section.items.filter(isItemVisible);
