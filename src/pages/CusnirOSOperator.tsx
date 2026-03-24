@@ -30,7 +30,7 @@ const STATUS_COLORS: Record<string, string> = {
   active: "bg-status-validated/10 text-status-validated",
   locked: "bg-muted text-muted-foreground",
   deprecated: "bg-destructive/10 text-destructive",
-  experimental: "bg-amber-500/10 text-amber-500",
+  experimental: "bg-warning/10 text-warning",
 };
 
 const RISK_COLORS: Record<string, string> = {
