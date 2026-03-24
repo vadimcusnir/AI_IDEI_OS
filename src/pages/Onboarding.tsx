@@ -232,7 +232,7 @@ export default function Onboarding() {
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 />
               </div>
-              <span className="text-[10px] font-mono font-bold text-primary">{progressPercent}%</span>
+              <span className="text-[10px] font-mono font-bold text-[hsl(var(--gold-oxide))]">{progressPercent}%</span>
             </div>
           </div>
         </motion.div>
