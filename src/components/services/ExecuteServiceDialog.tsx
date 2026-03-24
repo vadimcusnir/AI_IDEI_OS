@@ -15,6 +15,8 @@ interface ExecuteServiceDialogProps {
   service: RegistryServiceItem | null;
   open: boolean;
   onClose: () => void;
+  initialInput?: string;
+  initialGoal?: string;
 }
 
 type ExecState = "configure" | "executing" | "done" | "error";
