@@ -39,10 +39,10 @@ export function DowngradeRetention({ open, onClose, onConfirmCancel, currentTier
     async function loadStats() {
       setLoading(true);
       try {
-        const jobsQ = supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("user_id", user!.id) as any;
-        const artifactsQ = supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("author_id", user!.id) as any;
-        const neuronsQ = supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user!.id) as any;
-        const creditsQ = supabase.from("credit_transactions").select("amount").eq("user_id", user!.id) as any;
+        const jobsQ = (supabase as any).from("neuron_jobs").select("id", { count: "exact", head: true }).eq("user_id", user!.id);
+        const artifactsQ = (supabase as any).from("artifacts").select("id", { count: "exact", head: true }).eq("author_id", user!.id);
+        const neuronsQ = (supabase as any).from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user!.id);
+        const creditsQ = (supabase as any).from("credit_transactions").select("amount").eq("user_id", user!.id);
 
         const [jobs, artifacts, neurons, credits] = await Promise.all([jobsQ, artifactsQ, neuronsQ, creditsQ]);
 
