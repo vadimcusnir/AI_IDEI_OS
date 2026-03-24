@@ -172,7 +172,7 @@ export default function Onboarding() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="mb-8"
+          className="mb-10"
         >
           <div className="flex items-center gap-1 sm:gap-2">
             {STEPS.map((step, idx) => {
