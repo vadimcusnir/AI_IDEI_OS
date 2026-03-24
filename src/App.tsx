@@ -66,6 +66,7 @@ const AdminAuditLog = lazyRetry(() => import("./pages/AdminAuditLog"));
 const AdminKernel = lazyRetry(() => import("./pages/AdminKernel"));
 const AdminDomination = lazyRetry(() => import("./pages/AdminDomination"));
 const AdminInevitability = lazyRetry(() => import("./pages/AdminInevitability"));
+const AdminFinancialization = lazyRetry(() => import("./pages/AdminFinancialization"));
 const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
@@ -249,6 +250,7 @@ const App = () => (
                 <Route path="/admin/kernel" element={<AdminRoute><AppLayout><AdminKernel /></AppLayout></AdminRoute>} />
                 <Route path="/admin/domination" element={<AdminRoute><AppLayout><AdminDomination /></AppLayout></AdminRoute>} />
                 <Route path="/admin/inevitability" element={<AdminRoute><AppLayout><AdminInevitability /></AppLayout></AdminRoute>} />
+                <Route path="/admin/financialization" element={<AdminRoute><AppLayout><AdminFinancialization /></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
