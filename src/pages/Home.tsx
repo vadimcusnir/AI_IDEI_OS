@@ -35,9 +35,8 @@ import { PostExecutionPanel } from "@/components/command-center/PostExecutionPan
 import { ExecutionStatusBar } from "@/components/command-center/ExecutionStatusBar";
 import { CommandInputZone, type CommandInputZoneRef } from "@/components/command-center/CommandInputZone";
 import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
-import { SuggestionTabs } from "@/components/command-center/SuggestionTabs";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
-import { InlineServiceSuggestions } from "@/components/command-center/InlineServiceSuggestions";
+import { IntentChips, SystemRecommendations, matchIntentToSystems, type MMSystem } from "@/components/command-center/IntentSystems";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WorkspaceLayerTabs, type WorkspaceLayer } from "@/components/command-center/WorkspaceLayerTabs";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
@@ -442,7 +441,7 @@ export default function Home() {
                     </span>
                   </h1>
                   <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
-                    Ce vrei să producem astăzi?
+                    Ce vrei să obții?
                   </p>
                 </motion.div>
 
@@ -475,24 +474,24 @@ export default function Home() {
                   />
                 </motion.div>
 
-                {/* Inline service suggestions */}
-                {input.length >= 3 && (
-                  <InlineServiceSuggestions
+                {/* Decision Engine: System Recommendations when typing */}
+                {input.length >= 2 && (
+                  <SystemRecommendations
+                    systems={matchIntentToSystems(input)}
                     input={input}
-                    visible={true}
-                    onSelect={(prompt) => handleCommand(prompt, true)}
+                    onSelect={(sys: MMSystem) => handleCommand(sys.prompt, true)}
                   />
                 )}
 
-                {/* Suggestion Tabs — compact (hidden when typing) */}
-                {input.length < 3 && (
+                {/* Intent Chips — shown when idle (no typing) */}
+                {input.length < 2 && (
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.3 }}
                     className="w-full max-w-2xl"
                   >
-                    <SuggestionTabs onCommand={(prompt) => handleCommand(prompt, true)} />
+                    <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
                   </motion.div>
                 )}
               </div>
@@ -582,12 +581,16 @@ export default function Home() {
             </div>
           )}
 
-          {/* ═══ INLINE SERVICE SUGGESTIONS ═══ */}
-          <InlineServiceSuggestions
-            input={input}
-            visible={!isEmptyState && !loading && input.length >= 3}
-            onSelect={(prompt) => { handleCommand(prompt, true); }}
-          />
+          {/* ═══ INLINE SYSTEM RECOMMENDATIONS (active state) ═══ */}
+          {!isEmptyState && !loading && input.length >= 2 && (
+            <div className="px-4 sm:px-6 pb-1">
+              <SystemRecommendations
+                systems={matchIntentToSystems(input)}
+                input={input}
+                onSelect={(sys: MMSystem) => handleCommand(sys.prompt, true)}
+              />
+            </div>
+          )}
 
           {/* ═══ INPUT ZONE — Bottom, only in active state ═══ */}
           {!isEmptyState && (
