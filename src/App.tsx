@@ -105,6 +105,7 @@ const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngin
 const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
 const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
+const MasterAgent = lazyRetry(() => import("./pages/MasterAgent"));
 
 const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
 const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
@@ -234,6 +235,7 @@ const App = () => (
                 <Route path="/capitalization" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Engine failed to load"><CapitalizationEngine /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/headline-generator" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Generator failed to load"><HeadlineGenerator /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
+                <Route path="/master-agent" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Master Agent failed"><MasterAgent /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
                 <Route path="/cusnir-os" element={<AdminRoute><AppLayout><CusnirOSOperator /></AppLayout></AdminRoute>} />
