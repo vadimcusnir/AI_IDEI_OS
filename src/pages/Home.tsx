@@ -681,7 +681,7 @@ export default function Home() {
                     {decisionSuggestions.slice(0, 4).map((s: any) => (
                       <button
                         key={s.id}
-                        onClick={() => handleCommand(s.prompt)}
+                        onClick={() => handleCommand(s.prompt, true)}
                         className="group flex items-start gap-2.5 p-2.5 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] hover:border-primary/30 transition-all text-left"
                       >
                         <span className="text-base shrink-0 mt-0.5">{s.icon}</span>
