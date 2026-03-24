@@ -122,7 +122,7 @@ export function TaskExecutionCard({
             <motion.div
               className={cn(
                 "h-full rounded-full",
-                isDone ? "bg-green-500" : isFailed ? "bg-destructive" : "bg-muted-foreground/40"
+                isDone ? "bg-success" : isFailed ? "bg-destructive" : "bg-muted-foreground/40"
               )}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3 }}

@@ -18,19 +18,19 @@ import {
 import { cn } from "@/lib/utils";
 
 const LEVELS = [
-  { level: 0, name: "Input Layer", color: "bg-slate-500" },
-  { level: 1, name: "Segmentation", color: "bg-slate-400" },
-  { level: 2, name: "Atomic Extraction", color: "bg-purple-500" },
-  { level: 3, name: "Entity Extraction", color: "bg-blue-500" },
-  { level: 4, name: "Structural", color: "bg-indigo-500" },
-  { level: 5, name: "Psychological", color: "bg-pink-500" },
-  { level: 6, name: "Narrative", color: "bg-amber-500" },
-  { level: 7, name: "Commercial", color: "bg-emerald-500" },
-  { level: 8, name: "Patterns", color: "bg-red-500" },
-  { level: 9, name: "Synthesis", color: "bg-violet-500" },
-  { level: 10, name: "Profile Gen", color: "bg-teal-500" },
-  { level: 11, name: "Knowledge Graph", color: "bg-cyan-500" },
-  { level: 12, name: "Content Production", color: "bg-rose-500" },
+  { level: 0, name: "Input Layer", color: "bg-muted-foreground" },
+  { level: 1, name: "Segmentation", color: "bg-muted-foreground/70" },
+  { level: 2, name: "Atomic Extraction", color: "bg-semantic-purple" },
+  { level: 3, name: "Entity Extraction", color: "bg-semantic-blue" },
+  { level: 4, name: "Structural", color: "bg-semantic-indigo" },
+  { level: 5, name: "Psychological", color: "bg-semantic-rose" },
+  { level: 6, name: "Narrative", color: "bg-semantic-amber" },
+  { level: 7, name: "Commercial", color: "bg-semantic-emerald" },
+  { level: 8, name: "Patterns", color: "bg-destructive" },
+  { level: 9, name: "Synthesis", color: "bg-semantic-purple" },
+  { level: 10, name: "Profile Gen", color: "bg-semantic-teal" },
+  { level: 11, name: "Knowledge Graph", color: "bg-semantic-cyan" },
+  { level: 12, name: "Content Production", color: "bg-semantic-rose" },
 ];
 
 export function ExtractionPipelinePanel() {
