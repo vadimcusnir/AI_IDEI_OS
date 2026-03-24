@@ -124,11 +124,6 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Rate limit guard (IP-based)
-  const clientIP = req.headers.get("x-forwarded-for") || "unknown";
-  const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
-  if (rateLimited) return rateLimited;
-
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
@@ -142,6 +137,10 @@ serve(async (req) => {
     const { data: userData, error: userError } = await supabase.auth.getUser(token);
     if (userError || !userData.user) throw new Error("Authentication failed");
     const userId = userData.user.id;
+
+    // Rate limit (user-based, post-auth)
+    const rateLimited = rateLimitGuard(userId, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
     logStep("Authenticated", { userId });
 
     const PsychSchema = z.object({

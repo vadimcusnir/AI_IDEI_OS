@@ -118,12 +118,6 @@ Format with ## per carousel, ### per slide.`,
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
-    // Rate limit guard (IP-based)
-    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
-    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
-    if (rateLimited) return rateLimited;
-
-
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, serviceRoleKey);
@@ -141,6 +135,10 @@ Deno.serve(async (req) => {
     if (authErr || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+
+    // Rate limit (user-based, post-auth)
+    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
 
     if (req.method === "GET") {
       const generators = Object.entries(CONTENT_GENERATORS).map(([key, g]) => ({

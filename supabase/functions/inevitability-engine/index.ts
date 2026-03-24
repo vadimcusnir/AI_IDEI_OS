@@ -22,12 +22,6 @@ function jsonResp(data: any, status = 200) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-    // Rate limit guard (IP-based)
-    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
-    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 5, windowSeconds: 60 }, corsHeaders);
-    if (rateLimited) return rateLimited;
-
-
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -46,6 +40,10 @@ Deno.serve(async (req) => {
   const { data: roleData } = await supabase
     .from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").single();
   if (!roleData) return jsonResp({ error: "Admin access required" }, 403);
+
+  // Rate limit (user-based, post-auth)
+  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, corsHeaders);
+  if (rateLimited) return rateLimited;
 
   try {
     const body = await req.json().catch(() => ({}));

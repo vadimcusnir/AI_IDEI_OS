@@ -17,12 +17,6 @@ const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-    // Rate limit guard (IP-based)
-    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
-    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
-    if (rateLimited) return rateLimited;
-
-
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -40,6 +34,10 @@ Deno.serve(async (req) => {
   });
   const { data: { user }, error: authErr } = await userClient.auth.getUser();
   if (authErr || !user) return jsonResp({ error: "Unauthorized" }, 401);
+
+  // Rate limit (user-based, post-auth)
+  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+  if (rateLimited) return rateLimited;
 
   if (!apiKey) return jsonResp({ error: "AI not configured" }, 500);
 
