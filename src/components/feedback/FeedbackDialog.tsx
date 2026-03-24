@@ -18,8 +18,8 @@ import { toast } from "sonner";
 
 const FEEDBACK_TYPES = [
   { key: "feedback", label: "Feedback", icon: ThumbsUp, color: "text-primary" },
-  { key: "testimonial", label: "Testimonial", icon: Quote, color: "text-emerald-500" },
-  { key: "proposal", label: "Proposal", icon: Lightbulb, color: "text-amber-500" },
+  { key: "testimonial", label: "Testimonial", icon: Quote, color: "text-success" },
+  { key: "proposal", label: "Proposal", icon: Lightbulb, color: "text-semantic-amber" },
   { key: "complaint", label: "Complaint", icon: AlertTriangle, color: "text-destructive" },
   { key: "review", label: "Review", icon: Star, color: "text-primary" },
 ] as const;
