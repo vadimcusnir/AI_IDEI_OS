@@ -464,6 +464,25 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-primary/[0.02] blur-[100px]" />
       </div>
+
+      {/* Chat History Sidebar (ChatGPT-style) */}
+      <ChatHistorySidebar
+        sessions={sessions}
+        currentSessionId={sessionId}
+        isOpen={showHistory}
+        onToggle={() => setShowHistory(!showHistory)}
+        onNewSession={() => { newSession(); clearChat(); setShowHistory(false); }}
+        onLoadSession={async (sid) => {
+          const loaded = await loadSession(sid);
+          if (loaded.length > 0) setMessages(loaded);
+          setShowHistory(false);
+        }}
+        onDeleteSession={async (sid) => {
+          await deleteSession(sid);
+          toast.success("Sesiune ștearsă");
+        }}
+      />
+
       <div className="flex flex-col h-full transition-all flex-1 min-w-0 relative z-10">
         <CommandHeader
           totalNeurons={totalNeurons}
