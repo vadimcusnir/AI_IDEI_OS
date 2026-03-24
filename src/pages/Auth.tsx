@@ -178,7 +178,7 @@ export default function Auth() {
                     required
                     minLength={6}
                     placeholder="••••••••"
-                    className="w-full h-11 pl-10 pr-10 rounded-xl border border-input bg-background/80 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                    className="w-full h-11 min-h-[44px] pl-10 pr-10 rounded-xl border border-input bg-background/80 text-base sm:text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
                   />
                   <button
                     type="button"
