@@ -74,7 +74,7 @@ export function ContextActions({
         icon: Network,
         label: "Search",
         prompt: "/search ",
-        color: "text-green-500 border-green-500/20 hover:bg-green-500/5",
+        color: "text-semantic-emerald border-semantic-emerald/20 hover:bg-semantic-emerald/5",
       });
     }
 
