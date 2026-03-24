@@ -20,8 +20,6 @@ import { TranscriptHistory } from "@/components/extractor/TranscriptHistory";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-
-// Inline ProfileExtractor content (no separate page needed)
 import { ProfileExtractorInline } from "@/components/extractor/ProfileExtractorInline";
 
 interface Episode {
@@ -105,7 +103,7 @@ export default function Extractor() {
   if (authLoading || wsLoading || loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
       </div>
     );
   }
@@ -114,29 +112,42 @@ export default function Extractor() {
     <TooltipProvider delayDuration={300}>
     <PageTransition>
     <div className="flex-1 overflow-y-auto">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <SEOHead title="Adaugă Material — AI-IDEI" description="Încarcă conținut, transcrie audio/video și pregătește-l pentru generare AI." />
 
-        {/* Page header — rebranded */}
-        <div className="mb-5">
-          <h1 className="text-lg font-semibold tracking-tight">Adaugă Material</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
+        {/* ── Page Header ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-8"
+        >
+          <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-primary mb-2">
+            Data Input
+          </p>
+          <h1 className="text-[length:var(--h2-size)] font-bold leading-[var(--lh-h2)] text-foreground tracking-tight">
+            Adaugă Material
+          </h1>
+          <p className="text-[length:var(--secondary-size)] leading-[var(--lh-body)] text-muted-foreground mt-2 max-w-xl">
             Încarcă context brut — texte, video-uri, podcast-uri, profiluri — și pregătește-l pentru generare.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Success banner */}
+        {/* ── Success Banner ── */}
         {successCount !== null && successCount > 0 && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-5 p-4 rounded-xl border border-primary/30 bg-primary/5 flex items-center gap-4"
+            className="mb-8 p-5 rounded-2xl border border-primary/20 bg-primary/5 flex items-center gap-5"
           >
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-foreground">
-                ✅ Context analizat. Gata pentru generare.
+            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <ArrowRight className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[length:var(--body-dense-size)] font-semibold text-foreground">
+                Context analizat. Gata pentru generare.
               </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-[length:var(--caption-size)] text-muted-foreground mt-0.5">
                 Materialul tău a fost procesat cu succes și este pregătit pentru serviciile AI.
               </p>
             </div>
@@ -147,8 +158,8 @@ export default function Extractor() {
           </motion.div>
         )}
 
-        {/* Tab switcher */}
-        <div className="flex items-center gap-1 border-b border-border mb-5">
+        {/* ── Tab Switcher ── */}
+        <div className="flex items-center gap-0.5 border-b border-border mb-8">
           {TABS.map(tab => {
             const Icon = tab.icon;
             const active = activeTab === tab.key;
@@ -157,13 +168,13 @@ export default function Extractor() {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 -mb-px transition-colors whitespace-nowrap",
+                  "flex items-center gap-2 px-4 py-3 text-[length:var(--body-dense-size)] font-medium border-b-2 -mb-px transition-all whitespace-nowrap",
                   active
                     ? "text-primary border-primary"
-                    : "text-muted-foreground border-transparent hover:text-foreground"
+                    : "text-muted-foreground border-transparent hover:text-foreground hover:border-border"
                 )}
               >
-                <Icon className="h-3.5 w-3.5" />
+                <Icon className="h-4 w-4" />
                 {tab.label}
               </button>
             );
@@ -172,45 +183,58 @@ export default function Extractor() {
 
         {/* ═══ TAB: Upload / Extract ═══ */}
         {activeTab === "upload" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-            {/* Flow guidance — rebranded */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
             <FlowTip tipId="extractor-intro" variant="info" title="Cum funcționează"
               description="Încarcă un podcast, video sau text → sistemul transcrie automat → apoi poți pregăti conținutul pentru generare."
-              show={episodes.length === 0} className="mb-4" />
+              show={episodes.length === 0} className="mb-6" />
             <FlowTip tipId="extractor-has-content" variant="next-step" title="Material pregătit"
               description="Ai episoade transcrise. Apasă 'Analizează' pe oricare pentru a-l pregăti pentru servicii."
               show={episodes.length > 0 && episodes.some(e => e.status === "transcribed")}
-              className="mb-4" />
+              className="mb-6" />
 
             {/* Instant Action Surface */}
-            <div className="mb-6">
+            <div className="mb-8">
               <InstantActionSurface onComplete={handleExtractionComplete} compact />
             </div>
 
-            {/* Episode stats */}
+            {/* Episode stats bar */}
             {episodes.length > 0 && (
-              <p className="text-[10px] text-muted-foreground/60 mb-4">
-                {stats.total} materiale · {stats.transcribed} transcrise · {stats.analyzed} analizate
-              </p>
+              <div className="flex items-center gap-4 mb-5">
+                <div className="flex items-center gap-3 text-[length:var(--caption-size)] text-muted-foreground">
+                  <span className="font-semibold text-foreground">{stats.total}</span> materiale
+                  <span className="text-border">·</span>
+                  <span className="font-semibold text-foreground">{stats.transcribed}</span> transcrise
+                  <span className="text-border">·</span>
+                  <span className="font-semibold text-foreground">{stats.analyzed}</span> analizate
+                </div>
+              </div>
             )}
 
             {/* Empty state */}
             {episodes.length === 0 && (
-              <div className="text-center py-16 bg-card border border-dashed border-border rounded-2xl animate-fade-in">
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <FileText className="h-7 w-7 text-primary/40" />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-20 bg-card border border-dashed border-border rounded-2xl"
+              >
+                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                  <FileText className="h-8 w-8 text-primary/40" />
                 </div>
-                <h3 className="text-base font-semibold mb-1.5">Niciun material încărcat</h3>
-                <p className="text-sm text-muted-foreground max-w-xs mx-auto mb-1">
+                <h3 className="text-[length:var(--h3-size)] font-semibold text-foreground mb-2">
+                  Niciun material încărcat
+                </h3>
+                <p className="text-[length:var(--body-dense-size)] text-muted-foreground max-w-sm mx-auto mb-2">
                   Lipește un link, încarcă un fișier sau scrie text direct.
                 </p>
-                <p className="text-xs text-muted-foreground/50">YouTube, MP3, MP4, PDF, text</p>
-              </div>
+                <p className="text-[length:var(--caption-size)] text-muted-foreground/50">
+                  YouTube, MP3, MP4, PDF, text
+                </p>
+              </motion.div>
             )}
 
             {/* Episodes list */}
             {episodes.length > 0 && (
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {episodes.map(ep => (
                   <EpisodeCard
                     key={ep.id}
@@ -235,10 +259,15 @@ export default function Extractor() {
 
         {/* ═══ TAB: YouTube Transcriber ═══ */}
         {activeTab === "youtube" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
-            <div className="text-center mb-4">
-              <h2 className="text-lg font-semibold mb-1">YouTube → Transcript</h2>
-              <p className="text-sm text-muted-foreground">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }} className="space-y-8">
+            <div className="text-center mb-2">
+              <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-primary mb-2">
+                Transcriere
+              </p>
+              <h2 className="text-[length:var(--h3-size)] font-bold text-foreground mb-1.5">
+                YouTube → Transcript
+              </h2>
+              <p className="text-[length:var(--body-dense-size)] text-muted-foreground max-w-md mx-auto">
                 Lipește un link YouTube și obține transcrierea completă în secunde.
               </p>
             </div>
@@ -248,9 +277,13 @@ export default function Extractor() {
                 <TranscriptHistory />
               </>
             ) : (
-              <div className="rounded-2xl border-2 border-dashed border-border bg-card p-8 text-center">
-                <Youtube className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground mb-4">Autentifică-te pentru a începe.</p>
+              <div className="rounded-2xl border-2 border-dashed border-border bg-card p-10 text-center">
+                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Youtube className="h-7 w-7 text-primary/40" />
+                </div>
+                <p className="text-[length:var(--body-dense-size)] text-muted-foreground mb-5">
+                  Autentifică-te pentru a începe.
+                </p>
                 <Button onClick={() => navigate("/auth")} className="gap-2">
                   Începe gratuit <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -261,7 +294,7 @@ export default function Extractor() {
 
         {/* ═══ TAB: Profile Extractor ═══ */}
         {activeTab === "profile" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
             <ProfileExtractorInline />
           </motion.div>
         )}
