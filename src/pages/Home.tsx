@@ -636,13 +636,13 @@ export default function Home() {
               <EconomicGate
                 balance={balance} estimatedCost={execState.totalCredits}
                 tierDiscount={tierDiscount} tier={tier}
-                onProceed={() => {
+                onProceed={async () => {
                   setShowEconomicGate(false);
-                  if (user) {
-                    logEconomicGate(user.id, true, balance, execState.totalCredits, tierDiscount);
-                    logPlanConfirmed(user.id, execState.actionId, execState.intent, execState.totalCredits, execState.steps.length);
+                  if (pendingRoute) {
+                    const lastUserMsg = messages.filter(m => m.role === "user").pop();
+                    await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
                   }
-                  executionActions.confirmExecution();
+                }}
                 }}
                 onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
               />
