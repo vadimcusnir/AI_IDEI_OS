@@ -17,10 +17,10 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import { cn } from "@/lib/utils";
 
 const QUICK_INTENTS = [
-  { label: "Landing Page", icon: FileText, intent: "Scrie un landing page complet", color: "text-blue-500" },
-  { label: "Social Media", icon: Share2, intent: "Creează un plan complet de social media", color: "text-emerald-500" },
-  { label: "Market Research", icon: BarChart3, intent: "Fă un research complet de piață", color: "text-amber-500" },
-  { label: "Generează Curs", icon: Sparkles, intent: "Generează structura completă a unui curs", color: "text-purple-500" },
+  { label: "Landing Page", icon: FileText, search: "landing", intentCategory: "sell", color: "text-blue-500" },
+  { label: "Social Media", icon: Share2, search: "social", intentCategory: "attract", color: "text-emerald-500" },
+  { label: "Market Research", icon: BarChart3, search: "research", intentCategory: "convert", color: "text-amber-500" },
+  { label: "Generează Curs", icon: Sparkles, search: "course", intentCategory: "educate", color: "text-purple-500" },
 ];
 
 const STATS = [
