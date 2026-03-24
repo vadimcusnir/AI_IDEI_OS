@@ -28,7 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 // Command Center components
-import { CommandBubble, type Message } from "@/components/command-center/CommandBubble";
+import { CommandBubble } from "@/components/command-center/CommandBubble";
 import { type OutputItem } from "@/components/command-center/OutputPanel";
 import { OutputPanel } from "@/components/command-center/OutputPanel";
 import { PlanPreview } from "@/components/command-center/PlanPreview";
