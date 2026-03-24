@@ -471,14 +471,15 @@ export default function Home() {
 
                 {/* Suggestion Tabs — compact (hidden when typing) */}
                 {input.length < 3 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.3 }}
-                  className="w-full max-w-2xl"
-                >
-                  <SuggestionTabs onCommand={(prompt) => handleCommand(prompt, true)} />
-                </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.3 }}
+                    className="w-full max-w-2xl"
+                  >
+                    <SuggestionTabs onCommand={(prompt) => handleCommand(prompt, true)} />
+                  </motion.div>
+                )}
               </div>
             </div>
           ) : (
