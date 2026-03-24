@@ -199,7 +199,7 @@ export default function AdminFinancialization() {
                 </div>
                 <div>
                   <span className="text-[10px] text-muted-foreground">Verified</span>
-                  <p className="text-lg font-bold text-emerald-500">{perfStats?.verified ?? 0}</p>
+                  <p className="text-lg font-bold text-semantic-emerald">{perfStats?.verified ?? 0}</p>
                 </div>
                 <div>
                   <span className="text-[10px] text-muted-foreground">Total Sales</span>
