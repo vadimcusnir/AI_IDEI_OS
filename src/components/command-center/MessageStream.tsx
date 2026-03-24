@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CommandBubble, type Message } from "./CommandBubble";
 import { WelcomeScreen } from "./WelcomeScreen";
 import { SuggestionTabs } from "./SuggestionTabs";
-import { ExecutionSummary } from "./ExecutionSummary";
+import { TaskExecutionCard } from "./TaskExecutionCard";
 import type { CommandPhase, ExecutionState, OutputItem } from "@/stores/executionStore";
 import { cn } from "@/lib/utils";
 
