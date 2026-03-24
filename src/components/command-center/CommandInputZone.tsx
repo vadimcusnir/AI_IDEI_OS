@@ -85,7 +85,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
 
     return (
       <div
-        className="border-t border-border/30 bg-gradient-to-t from-background via-background to-background/80"
+        className="bg-background"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
