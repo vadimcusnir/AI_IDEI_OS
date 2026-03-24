@@ -650,65 +650,62 @@ export default function Home() {
           )}
 
           {/* ═══ MESSAGE STREAM / EMPTY STATE ═══ */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto relative z-10">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6">
-              {isEmptyState ? (
-                /* ── IDLE: Centered greeting + suggestions ── */
-                <div className="flex flex-col items-center justify-center min-h-[calc(100vh-220px)] py-12">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                    className="w-full text-center space-y-8"
-                  >
-                    {/* Greeting */}
-                    <div className="space-y-2">
-                      <h1 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.15]">
-                        {greeting},{" "}
-                        <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
-                          {userName}
-                        </span>
-                      </h1>
-                      <p className="text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
-                        Ce vrei să producem astăzi?
-                      </p>
-                    </div>
+          {isEmptyState ? (
+            /* ── IDLE: Centered — fills available space, no scroll ── */
+            <div className="flex-1 flex flex-col items-center justify-center relative z-10 overflow-hidden px-4 sm:px-6">
+              <div className="w-full max-w-3xl flex flex-col items-center gap-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="w-full text-center space-y-3"
+                >
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15]">
+                    {greeting},{" "}
+                    <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
+                      {userName}
+                    </span>
+                  </h1>
+                  <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                    Ce vrei să producem astăzi?
+                  </p>
+                </motion.div>
 
-                    {/* Proactive suggestions */}
-                    {decisionSuggestions.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.15 }}
-                        className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-lg mx-auto"
+                {/* Proactive suggestions */}
+                {decisionSuggestions.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="grid grid-cols-2 gap-2 max-w-lg w-full"
+                  >
+                    {decisionSuggestions.slice(0, 4).map((s: any) => (
+                      <button
+                        key={s.id}
+                        onClick={() => handleCommand(s.prompt)}
+                        className="group flex items-start gap-2.5 p-2.5 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] hover:border-primary/30 transition-all text-left"
                       >
-                        {decisionSuggestions.slice(0, 4).map((s: any) => (
-                          <button
-                            key={s.id}
-                            onClick={() => handleCommand(s.prompt)}
-                            className="group flex items-start gap-3 p-3 rounded-xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] hover:border-primary/30 transition-all text-left"
-                          >
-                            <span className="text-lg shrink-0 mt-0.5">{s.icon}</span>
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium truncate">{s.label}</p>
-                              <p className="text-xs text-muted-foreground line-clamp-1">{s.description}</p>
-                            </div>
-                          </button>
-                        ))}
-                      </motion.div>
-                    )}
+                        <span className="text-base shrink-0 mt-0.5">{s.icon}</span>
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium truncate">{s.label}</p>
+                          <p className="text-[11px] text-muted-foreground line-clamp-1">{s.description}</p>
+                        </div>
+                      </button>
+                    ))}
                   </motion.div>
+                )}
 
-                  {/* Suggestion Tabs */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.4 }}
-                    className="w-full mt-8"
-                  >
-                    <SuggestionTabs onCommand={handleCommand} />
-                  </motion.div>
-                </div>
+                {/* Suggestion Tabs — compact */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.3 }}
+                  className="w-full max-w-2xl"
+                >
+                  <SuggestionTabs onCommand={handleCommand} />
+                </motion.div>
+              </div>
+            </div>
               ) : (
                 /* ── ACTIVE: Message stream ── */
                 <div className="py-6 space-y-6">
