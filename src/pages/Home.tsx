@@ -142,7 +142,19 @@ export default function Home() {
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
-  // ═══ Fetch workspace stats ═══
+  // ═══ Auto-submit from ?q= param ═══
+  const autoSubmittedRef = useRef(false);
+  useEffect(() => {
+    if (initialQ && user && sessionLoaded && !autoSubmittedRef.current) {
+      autoSubmittedRef.current = true;
+      // Clean the URL param
+      setSearchParams({}, { replace: true });
+      // Auto-focus and let user see the input before submitting
+      const timer = setTimeout(() => inputZoneRef.current?.focus(), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [initialQ, user, sessionLoaded, setSearchParams]);
+
   useEffect(() => {
     if (!user || !currentWorkspace) return;
     const wsId = currentWorkspace.id;
