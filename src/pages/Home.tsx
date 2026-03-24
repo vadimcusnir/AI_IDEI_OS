@@ -400,7 +400,6 @@ export default function Home() {
                 <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-20">
                   <div className="w-full max-w-3xl flex flex-col items-center gap-4">
                     <div className="w-full text-center space-y-2">
-                    >
                       <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
                         {greeting},{" "}
                         <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
