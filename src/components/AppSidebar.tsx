@@ -318,32 +318,137 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarSeparator />
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <div className="flex items-center justify-between px-2 py-1">
-              {!collapsed && <ThemeToggle />}
-              {user ? (
-                <SidebarMenuButton
-                  tooltip={t("common:sign_out")}
-                  className={cn(collapsed ? "w-full" : "w-auto flex-shrink-0")}
-                  onClick={() => signOut()}
-                >
-                  <LogOut className="h-4 w-4" />
-                  {!collapsed && <span>{t("common:sign_out")}</span>}
-                </SidebarMenuButton>
-              ) : (
-                <SidebarMenuButton
-                  tooltip="Sign In"
-                  className={cn(collapsed ? "w-full" : "w-auto flex-shrink-0")}
-                  onClick={() => navigate("/auth")}
-                >
-                  <User className="h-4 w-4" />
-                  {!collapsed && <span>Sign In</span>}
-                </SidebarMenuButton>
-              )}
+
+        {/* ═══ MONETIZATION ENGINE ═══ */}
+        {user && !collapsed && (
+          <div className="px-3 py-2 space-y-2">
+            {/* Plan badge + balance */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <Crown className={cn(
+                  "h-3 w-3",
+                  tier === "vip" ? "text-yellow-500" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
+                )} />
+                <span className={cn(
+                  "text-[10px] font-bold uppercase tracking-wider",
+                  tier === "vip" ? "text-yellow-500" : tier === "pro" ? "text-primary" : "text-muted-foreground"
+                )}>
+                  {tier === "vip" ? "VIP" : tier === "pro" ? "PRO" : "FREE"}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono tabular-nums text-muted-foreground">
+                {balanceLoading ? "…" : balance.toLocaleString()} N
+              </span>
             </div>
-          </SidebarMenuItem>
-        </SidebarMenu>
+
+            {/* Usage bar */}
+            <div className="h-1 w-full bg-border/30 rounded-full overflow-hidden">
+              <div
+                className={cn(
+                  "h-full rounded-full transition-all duration-500",
+                  balance < 200 ? "bg-destructive" : balance < 1000 ? "bg-yellow-500" : "bg-primary"
+                )}
+                style={{ width: `${Math.min(100, (balance / 5000) * 100)}%` }}
+              />
+            </div>
+
+            {/* Low balance warning */}
+            {balance < 200 && (
+              <button
+                onClick={() => navigate("/credits")}
+                className="w-full text-[10px] text-destructive bg-destructive/5 rounded-lg px-2 py-1.5 text-left hover:bg-destructive/10 transition-colors"
+              >
+                ⚠ Sold scăzut — Reîncarcă
+              </button>
+            )}
+
+            {/* Upgrade CTA — only for non-pro users */}
+            {tier !== "vip" && tier !== "pro" && (
+              <button
+                onClick={() => navigate("/credits")}
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/15 hover:border-primary/30 transition-all group"
+              >
+                <Rocket className="h-3.5 w-3.5 text-primary shrink-0" />
+                <div className="flex-1 text-left">
+                  <p className="text-[11px] font-semibold text-primary">Upgrade to PRO</p>
+                  <p className="text-[9px] text-muted-foreground">25% discount execuție + batch</p>
+                </div>
+                <ChevronRight className="h-3 w-3 text-primary/40 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            )}
+
+            {/* Cusnir_OS — locked preview */}
+            <Collapsible>
+              <CollapsibleTrigger className="w-full">
+                <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-muted/30 border border-border/20 hover:border-border/40 transition-colors group cursor-pointer">
+                  <div className="h-5 w-5 rounded-md bg-foreground/5 flex items-center justify-center shrink-0">
+                    <Lock className="h-3 w-3 text-muted-foreground/40" />
+                  </div>
+                  <div className="flex-1 text-left min-w-0">
+                    <p className="text-[10px] font-bold text-muted-foreground/60 tracking-wide">CUSNIR_OS</p>
+                  </div>
+                  <ChevronRight className="h-3 w-3 text-muted-foreground/30 transition-transform group-data-[state=open]:rotate-90" />
+                </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="mt-1 px-2.5 py-2 rounded-lg bg-muted/20 space-y-1.5">
+                  <div className="space-y-0.5">
+                    {["Multi-agent orchestration", "Economic system control", "Private neuron layers"].map(cap => (
+                      <div key={cap} className="flex items-center gap-1.5">
+                        <Lock className="h-2.5 w-2.5 text-muted-foreground/25 shrink-0" />
+                        <span className="text-[9px] text-muted-foreground/40">{cap}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[9px] text-muted-foreground/30 italic">
+                    11 luni VIP consecutive sau $9,992
+                  </p>
+                  <button
+                    onClick={() => navigate("/cusnir-os")}
+                    className="w-full text-[9px] font-medium text-primary/60 hover:text-primary transition-colors py-0.5"
+                  >
+                    Vezi cerințe →
+                  </button>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
+        )}
+
+        {/* Collapsed — just upgrade icon */}
+        {user && collapsed && (
+          <div className="flex flex-col items-center gap-1.5 py-2">
+            <button
+              onClick={() => navigate("/credits")}
+              className={cn(
+                "h-7 w-7 rounded-lg flex items-center justify-center transition-colors",
+                tier === "vip" ? "bg-yellow-500/10" : tier === "pro" ? "bg-primary/10" : "bg-muted/50 hover:bg-primary/10"
+              )}
+              title={`${tier.toUpperCase()} — ${balance}N`}
+            >
+              <Crown className={cn(
+                "h-3.5 w-3.5",
+                tier === "vip" ? "text-yellow-500" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
+              )} />
+            </button>
+          </div>
+        )}
+
+        {/* Sign in for logged-out users */}
+        {!user && (
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                tooltip="Sign In"
+                className="w-full"
+                onClick={() => navigate("/auth")}
+              >
+                <User className="h-4 w-4" />
+                {!collapsed && <span>Sign In</span>}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
