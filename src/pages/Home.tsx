@@ -76,6 +76,11 @@ export default function Home() {
   const { persistRun, persistOutputsBatch } = useExecutionHistory();
   const { tier } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
+  const executionEngine = useExecution({
+    neuronCount: totalNeurons,
+    episodeCount: totalEpisodes,
+    workspaceId: currentWorkspace?.id ?? null,
+  });
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
 
   // ═══ UI-only state (panels, menus — local) ═══
