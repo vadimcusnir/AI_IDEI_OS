@@ -5,6 +5,7 @@
  * POST /llm-crawler { action: "crawl" | "analyze" | "score" | "detect-issues", limit?: number }
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,6 +30,12 @@ const STATIC_ROUTES = [
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+    // Rate limit guard (IP-based)
+    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
+    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
+
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
