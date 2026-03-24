@@ -282,7 +282,7 @@ export default function Onboarding() {
                       "h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br",
                       step.gradient
                     )}>
-                      <Icon className={cn("h-6 w-6", isCompleted ? "text-primary" : "text-foreground")} />
+                      <Icon className={cn("h-6 w-6", isCompleted ? "text-[hsl(var(--gold-oxide))]" : "text-foreground")} />
                     </div>
                     <div>
                       <h2 className="text-base sm:text-lg font-bold">{step.title}</h2>
