@@ -9,20 +9,20 @@ export function LandingFAQ() {
   const items = t("faq.items", { returnObjects: true }) as Array<{ q: string; a: string }>;
 
   return (
-    <section id="faq" className="py-20 sm:py-28 border-t border-border" aria-labelledby="faq-heading">
+    <section id="faq" className="py-24 sm:py-36 border-t border-border/60" aria-labelledby="faq-heading">
       <div className="max-w-2xl mx-auto px-5 sm:px-6">
-        <FadeInView className="text-center mb-12">
-          <span className="text-xs font-mono tracking-[0.2em] text-[hsl(var(--gold-oxide))] mb-4 block">{t("faq.label")}</span>
-          <h2 id="faq-heading" className="heading-2">{t("faq.title")}</h2>
+        <FadeInView className="text-center mb-14 sm:mb-16">
+          <span className="text-[11px] font-mono tracking-[0.25em] uppercase text-[hsl(var(--gold-oxide))] mb-5 block">{t("faq.label")}</span>
+          <h2 id="faq-heading" className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-[1.2]">{t("faq.title")}</h2>
         </FadeInView>
         <FadeInView delay={0.1}>
-          <Accordion type="single" collapsible className="space-y-2">
+          <Accordion type="single" collapsible className="space-y-3">
             {items.map((faq, i) => (
-              <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-lg px-5 data-[state=open]:border-[hsl(var(--gold-oxide)/0.25)] data-[state=open]:bg-card transition-all">
-                <AccordionTrigger className="text-base font-medium py-4 hover:no-underline text-foreground text-left min-h-[44px]">
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-border/60 rounded-xl px-6 data-[state=open]:border-[hsl(var(--gold-oxide)/0.2)] data-[state=open]:bg-card transition-all">
+                <AccordionTrigger className="text-base font-semibold py-5 hover:no-underline text-foreground text-left min-h-[48px]">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed">
+                <AccordionContent className="text-sm text-muted-foreground pb-5 leading-[1.7]">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>
