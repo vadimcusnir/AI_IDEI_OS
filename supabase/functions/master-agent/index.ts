@@ -69,12 +69,6 @@ function jsonRes(body: any, status = 200) {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-    // Rate limit guard (IP-based)
-    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
-    const rateLimited = rateLimitGuard(clientIP, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
-    if (rateLimited) return rateLimited;
-
-
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const svcKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, svcKey);
@@ -86,6 +80,10 @@ serve(async (req) => {
   const anonClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!);
   const { data: { user }, error: authErr } = await anonClient.auth.getUser(authHeader.replace("Bearer ", ""));
   if (authErr || !user) return jsonRes({ error: "Invalid token" }, 401);
+
+  // Rate limit (user-based, post-auth)
+  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+  if (rateLimited) return rateLimited;
 
   const kernel = createKernelLog();
 
