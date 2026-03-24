@@ -180,7 +180,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                         "h-2.5 w-2.5 shrink-0",
                         tier.key === "otos" && "text-muted-foreground/40",
                         tier.key === "mms" && "text-primary/60",
-                        tier.key === "lcss" && "text-amber-500/60",
+                        tier.key === "lcss" && "text-semantic-amber/60",
                       )} />
                       <span>{f}</span>
                     </div>

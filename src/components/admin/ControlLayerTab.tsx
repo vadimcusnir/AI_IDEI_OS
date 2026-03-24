@@ -87,7 +87,7 @@ const RiskBadge = ({ level }: { level: string }) => {
   const colors: Record<string, string> = {
     low: "bg-status-validated/15 text-status-validated",
     medium: "bg-primary/15 text-primary",
-    high: "bg-amber-500/15 text-amber-600",
+    high: "bg-warning/15 text-warning",
     critical: "bg-destructive/15 text-destructive",
   };
   return (

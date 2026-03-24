@@ -12,12 +12,12 @@ import {
 import { cn } from "@/lib/utils";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  cognitive: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-  behavioral: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-  rhetorical: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
-  strategic: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
-  emotional: "bg-pink-500/10 text-pink-600 dark:text-pink-400",
-  risk: "bg-red-500/10 text-red-600 dark:text-red-400",
+  cognitive: "bg-semantic-blue/10 text-semantic-blue",
+  behavioral: "bg-semantic-amber/10 text-semantic-amber",
+  rhetorical: "bg-semantic-purple/10 text-semantic-purple",
+  strategic: "bg-semantic-emerald/10 text-semantic-emerald",
+  emotional: "bg-semantic-rose/10 text-semantic-rose",
+  risk: "bg-destructive/10 text-destructive",
 };
 
 const ENTITY_ICONS: Record<string, typeof User> = {

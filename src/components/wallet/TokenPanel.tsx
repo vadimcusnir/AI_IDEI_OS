@@ -13,10 +13,10 @@ import { useTranslation } from "react-i18next";
 
 const TIER_COLORS: Record<string, string> = {
   free: "bg-muted text-muted-foreground",
-  holder: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  holder: "bg-semantic-blue/10 text-semantic-blue",
   staker: "bg-primary/10 text-primary",
-  governor: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
-  vip: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  governor: "bg-semantic-purple/10 text-semantic-purple",
+  vip: "bg-semantic-amber/10 text-semantic-amber",
 };
 
 interface TokenTx {

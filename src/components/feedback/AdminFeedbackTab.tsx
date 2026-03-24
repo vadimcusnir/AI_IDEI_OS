@@ -31,8 +31,8 @@ const TYPE_ICONS: Record<string, React.ElementType> = {
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  feedback: "text-primary", testimonial: "text-emerald-500", review: "text-amber-500",
-  proposal: "text-amber-500", complaint: "text-destructive",
+  feedback: "text-primary", testimonial: "text-success", review: "text-semantic-amber",
+  proposal: "text-semantic-amber", complaint: "text-destructive",
 };
 
 export function AdminFeedbackTab() {
