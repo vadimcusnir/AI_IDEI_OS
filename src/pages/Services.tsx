@@ -90,11 +90,14 @@ export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const intentParam = searchParams.get("intent") || "";
-  const [search, setSearch] = useState(intentParam);
-  const [activeIntent, setActiveIntent] = useState<string | null>(null);
+  const searchParam = searchParams.get("search") || "";
+  const categoryParam = searchParams.get("category") || "";
+  const initialSearch = searchParam || intentParam;
+  const [search, setSearch] = useState(initialSearch);
+  const [activeIntent, setActiveIntent] = useState<string | null>(categoryParam || null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
-  const [activeSection, setActiveSection] = useState<SectionKey>(intentParam ? "services" : "pipelines");
+  const [activeSection, setActiveSection] = useState<SectionKey>(initialSearch || categoryParam ? "services" : "pipelines");
 
   // Drawer state
   const [drawerService, setDrawerService] = useState<Service | null>(null);

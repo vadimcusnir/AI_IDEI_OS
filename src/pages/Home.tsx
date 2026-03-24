@@ -17,10 +17,10 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import { cn } from "@/lib/utils";
 
 const QUICK_INTENTS = [
-  { label: "Landing Page", icon: FileText, intent: "Scrie un landing page complet", color: "text-blue-500" },
-  { label: "Social Media", icon: Share2, intent: "Creează un plan complet de social media", color: "text-emerald-500" },
-  { label: "Market Research", icon: BarChart3, intent: "Fă un research complet de piață", color: "text-amber-500" },
-  { label: "Generează Curs", icon: Sparkles, intent: "Generează structura completă a unui curs", color: "text-purple-500" },
+  { label: "Landing Page", icon: FileText, search: "landing", intentCategory: "sell", color: "text-blue-500" },
+  { label: "Social Media", icon: Share2, search: "social", intentCategory: "attract", color: "text-emerald-500" },
+  { label: "Market Research", icon: BarChart3, search: "research", intentCategory: "convert", color: "text-amber-500" },
+  { label: "Generează Curs", icon: Sparkles, search: "course", intentCategory: "educate", color: "text-purple-500" },
 ];
 
 const STATS = [
@@ -45,6 +45,10 @@ export default function Home() {
     const q = (text || intent).trim();
     if (!q) return;
     navigate(`/services?intent=${encodeURIComponent(q)}`);
+  };
+
+  const handleQuickIntent = (search: string, intentCategory: string) => {
+    navigate(`/services?search=${encodeURIComponent(search)}&category=${encodeURIComponent(intentCategory)}`);
   };
 
   return (
@@ -181,7 +185,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 + i * 0.06, duration: 0.35 }}
-                  onClick={() => handleSubmit(qi.intent)}
+                  onClick={() => handleQuickIntent(qi.search, qi.intentCategory)}
                   className={cn(
                     "group flex items-center gap-2 px-3.5 py-2 rounded-xl",
                     "border border-border/40 bg-card/50 backdrop-blur-sm",
