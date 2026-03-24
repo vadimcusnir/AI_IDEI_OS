@@ -85,6 +85,7 @@ export function CommandCenter({ initialInput }: CommandCenterProps = {}) {
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const autoSubmittedRef = useRef(false);
 
   // ═══ Realtime step tracking ═══
   useRealtimeSteps({
