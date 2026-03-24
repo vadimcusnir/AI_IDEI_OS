@@ -151,15 +151,15 @@ const App = () => (
                 <Route path="/" element={<Landing />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/links" element={<AppLayout><Links /></AppLayout>} />
-                <Route path="/architecture" element={<AppLayout><Architecture /></AppLayout>} />
+                <Route path="/links" element={<AppLayout><ErrorBoundary fallbackTitle="Links failed to load"><Links /></ErrorBoundary></AppLayout>} />
+                <Route path="/architecture" element={<AppLayout><ErrorBoundary fallbackTitle="Architecture failed to load"><Architecture /></ErrorBoundary></AppLayout>} />
                 <Route path="/u/:username" element={<PublicUserProfile />} />
                 <Route path="/guest/:slug" element={<GuestProfile />} />
 
                 {/* Public knowledge infrastructure — with global layout */}
-                <Route path="/docs" element={<AppLayout><Docs /></AppLayout>} />
-                <Route path="/docs/:section/:topic" element={<AppLayout><Docs /></AppLayout>} />
-                <Route path="/changelog" element={<AppLayout><Changelog /></AppLayout>} />
+                <Route path="/docs" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
+                <Route path="/docs/:section/:topic" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
+                <Route path="/changelog" element={<AppLayout><ErrorBoundary fallbackTitle="Changelog failed to load"><Changelog /></ErrorBoundary></AppLayout>} />
                 {/* ═══ Public SEO-indexable entity pages (lightweight, no Auth providers) ═══ */}
                 <Route path="/knowledge/:slug" element={<PublicEntityPage />} />
                 <Route path="/insights/:slug" element={<PublicInsightPage />} />
@@ -178,25 +178,25 @@ const App = () => (
                 <Route path="/profiles" element={<Navigate to="/library" replace />} />
                 <Route path="/topics" element={<Navigate to="/library" replace />} />
                 <Route path="/topics/discovery" element={<Navigate to="/library" replace />} />
-                <Route path="/marketplace" element={<AppLayout><Marketplace /></AppLayout>} />
+                <Route path="/marketplace" element={<AppLayout><ErrorBoundary fallbackTitle="Marketplace failed to load"><Marketplace /></ErrorBoundary></AppLayout>} />
                 <Route path="/marketplace/drafts" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Drafts failed to load"><MarketplaceDrafts /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/marketplace/earnings" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Earnings failed to load"><MarketplaceEarnings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/marketplace/:id" element={<AppLayout><MarketplaceDetail /></AppLayout>} />
-                <Route path="/media/profiles" element={<AppLayout><MediaProfiles /></AppLayout>} />
+                <Route path="/marketplace/:id" element={<AppLayout><ErrorBoundary fallbackTitle="Marketplace detail failed"><MarketplaceDetail /></ErrorBoundary></AppLayout>} />
+                <Route path="/media/profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Media profiles failed to load"><MediaProfiles /></ErrorBoundary></AppLayout>} />
                 <Route path="/media/profiles/:slug" element={<MediaProfilePublic />} />
-                <Route path="/admin/media-profiles" element={<AppLayout><AdminMediaProfiles /></AppLayout>} />
+                <Route path="/admin/media-profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Admin media failed"><AdminMediaProfiles /></ErrorBoundary></AppLayout>} />
                 <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
-                <Route path="/pipeline" element={<AppLayout><PipelineOverview /></AppLayout>} />
+                <Route path="/pipeline" element={<AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><PipelineOverview /></ErrorBoundary></AppLayout>} />
                 <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
                 {/* /knowledge/:slug is handled above as public route */}
-                <Route path="/products/:slug" element={<AppLayout><ProductSurfacePage /></AppLayout>} />
-                <Route path="/terms" element={<AppLayout><TermsOfService /></AppLayout>} />
-                <Route path="/pricing" element={<AppLayout><Pricing /></AppLayout>} />
-                <Route path="/payment/result" element={<AppLayout><PaymentResult /></AppLayout>} />
-                <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
-                <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
-                <Route path="/community/:category" element={<AppLayout><Community /></AppLayout>} />
-                <Route path="/community/:category/thread/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
+                <Route path="/products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
+                <Route path="/terms" element={<AppLayout><ErrorBoundary fallbackTitle="Terms failed to load"><TermsOfService /></ErrorBoundary></AppLayout>} />
+                <Route path="/pricing" element={<AppLayout><ErrorBoundary fallbackTitle="Pricing failed to load"><Pricing /></ErrorBoundary></AppLayout>} />
+                <Route path="/payment/result" element={<AppLayout><ErrorBoundary fallbackTitle="Payment failed to load"><PaymentResult /></ErrorBoundary></AppLayout>} />
+                <Route path="/privacy" element={<AppLayout><ErrorBoundary fallbackTitle="Privacy failed to load"><PrivacyPolicy /></ErrorBoundary></AppLayout>} />
+                <Route path="/community" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
+                <Route path="/community/:category" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
+                <Route path="/community/:category/thread/:threadId" element={<AppLayout><ErrorBoundary fallbackTitle="Thread failed to load"><CommunityThread /></ErrorBoundary></AppLayout>} />
 
                 {/* Protected routes — require authentication */}
                 <Route path="/home" element={<ProtectedRoute><AppLayout fullHeight><Home /></AppLayout></ProtectedRoute>} />
@@ -223,10 +223,10 @@ const App = () => (
                 <Route path="/guests" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Guest pages failed to load"><GuestPages /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/chat" element={<Navigate to="/home" replace />} />
                 <Route path="/onboarding" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Onboarding failed to load"><Onboarding /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><DataPrivacy /></AppLayout></ProtectedRoute>} />
-                <Route path="/security-settings" element={<ProtectedRoute><AppLayout><SecuritySettings /></AppLayout></ProtectedRoute>} />
+                <Route path="/data-privacy" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Data privacy failed to load"><DataPrivacy /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/security-settings" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Security settings failed to load"><SecuritySettings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/api" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="API docs failed to load"><ApiDocs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/workspace" element={<ProtectedRoute><AppLayout><WorkspaceSettings /></AppLayout></ProtectedRoute>} />
+                <Route path="/workspace" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Workspace failed to load"><WorkspaceSettings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<Navigate to="/library" replace />} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="VIP failed to load"><VIPDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/cusnir-os" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="CusnirOS failed to load"><CusnirOSPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
@@ -243,16 +243,16 @@ const App = () => (
                 <Route path="/services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
                 <Route path="/master-agent" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Master Agent failed"><MasterAgent /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 {/* Admin routes */}
-                <Route path="/runtime" element={<AdminRoute><AppLayout><RuntimeDashboard /></AppLayout></AdminRoute>} />
-                <Route path="/cusnir-os/operator" element={<AdminRoute><AppLayout><CusnirOSOperator /></AppLayout></AdminRoute>} />
-                <Route path="/analytics" element={<AdminRoute><AppLayout><AnalyticsDashboard /></AppLayout></AdminRoute>} />
-                <Route path="/security" element={<AdminRoute><AppLayout><SecurityDocs /></AppLayout></AdminRoute>} />
-                <Route path="/db-schema" element={<AdminRoute><AppLayout><DatabaseRelations /></AppLayout></AdminRoute>} />
-                <Route path="/admin" element={<AdminRoute><AppLayout><AdminDashboard /></AppLayout></AdminRoute>} />
-                <Route path="/admin/kernel" element={<AdminRoute><AppLayout><AdminKernel /></AppLayout></AdminRoute>} />
-                <Route path="/admin/domination" element={<AdminRoute><AppLayout><AdminDomination /></AppLayout></AdminRoute>} />
-                <Route path="/admin/inevitability" element={<AdminRoute><AppLayout><AdminInevitability /></AppLayout></AdminRoute>} />
-                <Route path="/admin/financialization" element={<AdminRoute><AppLayout><AdminFinancialization /></AppLayout></AdminRoute>} />
+                <Route path="/runtime" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Runtime failed to load"><RuntimeDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/cusnir-os/operator" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Operator failed to load"><CusnirOSOperator /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/analytics" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Analytics failed to load"><AnalyticsDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/security" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Security failed to load"><SecurityDocs /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/db-schema" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="DB Schema failed to load"><DatabaseRelations /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Admin failed to load"><AdminDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/kernel" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Kernel failed to load"><AdminKernel /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/domination" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Domination failed to load"><AdminDomination /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/inevitability" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Inevitability failed to load"><AdminInevitability /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/financialization" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Financialization failed to load"><AdminFinancialization /></ErrorBoundary></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
