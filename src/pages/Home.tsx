@@ -508,7 +508,7 @@ export default function Home() {
 
                   <AnimatePresence>
                     {execState.phase === "confirming" && execState.totalCredits > 0 && !showEconomicGate && (
-                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pb-2">
+                      <div className="pb-2">
                         <PlanPreview
                           plan={{
                             action_id: execState.actionId, intent: execState.intent,
