@@ -1,11 +1,13 @@
 /**
- * ServiceCard — Grid and list card for a single service.
+ * ServiceCard — Decision-focused card with outcome, pricing breakdown, and CTA.
+ * Grid mode = conversion card. List mode = compact row.
  */
 import { motion } from "framer-motion";
-import { Coins, ArrowRight, Lock } from "lucide-react";
+import { Coins, ArrowRight, Lock, Clock, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { TierBadge, tierSatisfied } from "@/components/premium/PremiumPaywall";
+import { Button } from "@/components/ui/button";
 
 interface ServiceCardProps {
   service: {
@@ -30,6 +32,22 @@ interface ServiceCardProps {
   isComparing?: boolean;
 }
 
+/** Estimate outputs and time from service class */
+function getServiceMeta(serviceClass: string, creditsCost: number) {
+  const costPerNeuron = 0.002;
+  const usd = (creditsCost * costPerNeuron).toFixed(2);
+  switch (serviceClass) {
+    case "S":
+      return { outputs: "50+", time: "~5min", costPerOutput: (creditsCost * costPerNeuron / 50).toFixed(2) };
+    case "C":
+      return { outputs: "30-50", time: "~5min", costPerOutput: (creditsCost * costPerNeuron / 40).toFixed(2) };
+    case "B":
+      return { outputs: "10-30", time: "~2min", costPerOutput: (creditsCost * costPerNeuron / 20).toFixed(2) };
+    default:
+      return { outputs: "5-15", time: "~30s", costPerOutput: (creditsCost * costPerNeuron / 10).toFixed(2) };
+  }
+}
+
 export function ServiceCard({
   service, viewMode, index, userTier,
   categoryConfig, classBadge, onClick,
@@ -39,6 +57,8 @@ export function ServiceCard({
   const clsBadge = classBadge[service.service_class] || classBadge.A;
   const locked = !tierSatisfied(userTier, service.access_tier);
   const showTierBadge = service.access_tier && service.access_tier !== "free" && service.access_tier !== "authenticated";
+  const meta = getServiceMeta(service.service_class, service.credits_cost);
+  const costUsd = (service.credits_cost * 0.002).toFixed(2);
 
   if (viewMode === "list") {
     return (
@@ -61,9 +81,16 @@ export function ServiceCard({
           <span className="text-sm font-medium group-hover:text-primary transition-colors">{service.name}</span>
           <p className="text-[10px] text-muted-foreground line-clamp-1">{service.description}</p>
         </div>
-        <span className="text-[9px] uppercase text-muted-foreground/60 hidden sm:block w-20 text-right">
-          {catCfg?.label || service.category}
-        </span>
+        <div className="hidden sm:flex items-center gap-3 text-[10px] text-muted-foreground shrink-0">
+          <span className="flex items-center gap-1">
+            <FileText className="h-3 w-3" />
+            {meta.outputs}
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {meta.time}
+          </span>
+        </div>
         <div className="flex items-center gap-1 shrink-0">
           <Coins className="h-3 w-3 text-ai-accent" />
           <span className="text-xs font-bold font-mono w-8 text-right">{service.credits_cost}</span>
@@ -84,15 +111,15 @@ export function ServiceCard({
       transition={{ delay: Math.min(index * 0.02, 0.3) }}
       onClick={onClick}
       className={cn(
-        "group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer",
+        "group relative bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer flex flex-col",
         locked && "opacity-75",
         isComparing && "ring-2 ring-primary/40"
       )}
     >
       {/* Top row: category + class */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          {catCfg && <catCfg.icon className={cn("h-4 w-4", catCfg.color)} />}
+          {catCfg && <catCfg.icon className={cn("h-3.5 w-3.5", catCfg.color)} />}
           <span className={cn("text-[9px] font-semibold uppercase tracking-wider", catCfg?.color || "text-muted-foreground")}>
             {catCfg?.label || service.category}
           </span>
@@ -114,25 +141,60 @@ export function ServiceCard({
       <h3 className="text-sm font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
         {service.name}
       </h3>
-      <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2 mb-4 min-h-[2.5rem]">
+      <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2 mb-3">
         {service.description}
       </p>
 
-      {/* Footer: cost + lock/arrow */}
-      <div className="flex items-center justify-between pt-3 border-t border-border">
-        <div className="flex items-center gap-1.5">
-          <Coins className="h-3 w-3 text-ai-accent" />
-          <span className="text-xs font-bold font-mono">{service.credits_cost}</span>
-          <span className="text-[9px] text-muted-foreground">NEURONS</span>
+      {/* Output meta row */}
+      <div className="flex items-center gap-3 text-[10px] text-muted-foreground mb-3">
+        <span className="flex items-center gap-1">
+          <FileText className="h-3 w-3 text-primary/50" />
+          <span className="font-semibold text-foreground">{meta.outputs}</span> outputs
+        </span>
+        <span className="flex items-center gap-1">
+          <Clock className="h-3 w-3 text-primary/50" />
+          {meta.time}
+        </span>
+      </div>
+
+      {/* Footer: pricing breakdown */}
+      <div className="mt-auto pt-3 border-t border-border">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-1.5">
+            <Coins className="h-3 w-3 text-ai-accent" />
+            <span className="text-xs font-bold font-mono">{service.credits_cost}</span>
+            <span className="text-[9px] text-muted-foreground">N</span>
+            <span className="text-[9px] text-muted-foreground/60 ml-1">~${costUsd}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            {showTierBadge && <TierBadge tier={service.access_tier} />}
+            {locked ? (
+              <Lock className="h-3.5 w-3.5 text-muted-foreground/40" />
+            ) : (
+              <span className="text-[9px] text-primary/70 font-mono">${meta.costPerOutput}/output</span>
+            )}
+          </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          {showTierBadge && <TierBadge tier={service.access_tier} />}
+        
+        {/* CTA */}
+        <Button
+          variant={locked ? "outline" : "default"}
+          size="sm"
+          className="w-full h-8 text-[11px] font-semibold gap-1.5"
+          onClick={(e) => { e.stopPropagation(); onClick(); }}
+        >
           {locked ? (
-            <Lock className="h-3.5 w-3.5 text-muted-foreground/40" />
+            <>
+              <Lock className="h-3 w-3" />
+              Upgrade necesar
+            </>
           ) : (
-            <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+            <>
+              Rulează
+              <ArrowRight className="h-3 w-3" />
+            </>
           )}
-        </div>
+        </Button>
       </div>
     </motion.div>
   );
