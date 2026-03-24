@@ -398,13 +398,13 @@ export default function Home() {
               {isEmptyState ? (
                 <div className="flex flex-col items-center justify-center min-h-[40vh] pt-8">
                   <div className="w-full text-center space-y-2 mb-6">
-                    <h1 className="text-2xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
+                   <h1 className="text-2xl font-bold tracking-[-0.02em] leading-[1.15] text-foreground">
                       {greeting},{" "}
-                      <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
+                      <span className="text-[hsl(var(--gold-oxide))]">
                         {userName}
                       </span>
                     </h1>
-                    <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                    <p className="text-sm text-muted-foreground/70 max-w-md mx-auto leading-relaxed">
                       Ce vrei să obții?
                     </p>
                   </div>
