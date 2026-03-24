@@ -162,8 +162,9 @@ Respond in Romanian.`
     });
   } catch (e) {
     console.error("changelog-generate error:", e);
-    const status = e.message === "Unauthorized" || e.message === "Admin required" ? 401 : 500;
-    return new Response(JSON.stringify({ error: e.message }), {
+    const msg = (e as Error).message;
+    const status = msg === "Unauthorized" || msg === "Admin required" ? 401 : 500;
+    return new Response(JSON.stringify({ error: msg }), {
       status,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

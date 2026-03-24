@@ -35,14 +35,14 @@ Deno.serve(async (req) => {
     });
     const { data: { user }, error: authError } = await userClient.auth.getUser();
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }
-    // Rate limit guard
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, corsHeaders);
-    if (rateLimited) return rateLimited;
-), {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Rate limit guard
+    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
 
     const body = await req.json();
     const { pipeline_id, trigger_data, neuron_id } = body;

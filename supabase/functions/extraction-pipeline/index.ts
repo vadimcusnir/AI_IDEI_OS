@@ -248,7 +248,7 @@ Deno.serve(async (req) => {
           levelOutputs[level.level] = `Error at level ${level.level}: ${resp.status}`;
         }
       } catch (e) {
-        levelOutputs[level.level] = `Error at level ${level.level}: ${e.message}`;
+        levelOutputs[level.level] = `Error at level ${level.level}: ${(e as Error).message}`;
       }
 
       if (job_id) {
@@ -300,6 +300,6 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("extraction-pipeline error:", e);
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });

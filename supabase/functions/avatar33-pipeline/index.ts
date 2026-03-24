@@ -191,7 +191,7 @@ Deno.serve(async (req) => {
           const data = await resp.json();
           return { id: mod.id, name: mod.name, phase: mod.phase, content: data.choices?.[0]?.message?.content || "" };
         } catch (e) {
-          return { id: mod.id, name: mod.name, phase: mod.phase, content: `Error: ${e.message}` };
+          return { id: mod.id, name: mod.name, phase: mod.phase, content: `Error: ${(e as Error).message}` };
         }
       }));
 
@@ -239,6 +239,6 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("avatar33-pipeline error:", e);
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });

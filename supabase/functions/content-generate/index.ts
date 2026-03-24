@@ -199,7 +199,7 @@ Deno.serve(async (req) => {
           const data = await resp.json();
           return { key, name: gen.name, content: data.choices?.[0]?.message?.content || "" };
         } catch (e) {
-          return { key, name: gen.name, content: `Error: ${e.message}` };
+          return { key, name: gen.name, content: `Error: ${(e as Error).message}` };
         }
       }));
 
@@ -237,6 +237,6 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("content-generate error:", e);
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
