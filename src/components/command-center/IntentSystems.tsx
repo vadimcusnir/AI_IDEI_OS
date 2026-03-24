@@ -10,6 +10,7 @@ import {
   ArrowRight, Zap, ChevronRight, Sparkles, CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
 // ═══ MMS System definitions ═══
 
@@ -228,7 +229,7 @@ export function IntentChips({ onSelect }: IntentChipsProps) {
         {INTENT_CHIPS.map((chip) => (
           <button
             key={chip.label}
-            onClick={() => onSelect(chip.prompt)}
+            onClick={() => { trackInternalEvent({ event: AnalyticsEvents.INTENT_CHIP_CLICKED, params: { label: chip.label, prompt: chip.prompt } }); onSelect(chip.prompt); }}
             className={cn(
               "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium",
               "border border-border/40 bg-card/50 backdrop-blur-sm",
@@ -356,7 +357,7 @@ export function SystemRecommendations({ systems, onSelect, input }: SystemRecomm
 
                         {/* Execute CTA */}
                         <button
-                          onClick={(e) => { e.stopPropagation(); onSelect(sys); }}
+                          onClick={(e) => { e.stopPropagation(); trackInternalEvent({ event: AnalyticsEvents.MMS_SELECTED, params: { system_id: sys.id, system_name: sys.name, credits: sys.estimatedCredits } }); onSelect(sys); }}
                           className={cn(
                             "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg",
                             "bg-primary text-primary-foreground font-semibold text-sm",

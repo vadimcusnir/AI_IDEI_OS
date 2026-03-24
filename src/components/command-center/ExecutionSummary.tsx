@@ -1,15 +1,21 @@
 /**
  * ExecutionSummary — Premium completion card.
  * Inline in chat stream, visually distinct.
+ * Includes: Share to Community, Save, Re-run.
  */
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   CheckCircle2, XCircle, Clock, Coins, Layers,
-  FileText, Save, RotateCcw, TrendingUp,
+  FileText, Save, RotateCcw, TrendingUp, Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import type { CommandPhase } from "@/stores/executionStore";
 
 interface ExecutionSummaryProps {
@@ -33,10 +39,64 @@ export function ExecutionSummary({
   outputCount, durationSeconds, errorMessage,
   onSaveTemplate, onSaveAllOutputs, onRerun, onViewOutputs,
 }: ExecutionSummaryProps) {
+  const { user } = useAuth();
+  const [sharing, setSharing] = useState(false);
+
   if (phase !== "completed" && phase !== "failed") return null;
 
   const isSuccess = phase === "completed";
-  const successRate = totalSteps > 0 ? Math.round((stepsCompleted / totalSteps) * 100) : 0;
+
+  const handleShareToCommunity = async () => {
+    if (!user || sharing) return;
+    setSharing(true);
+    try {
+      // Find "results-sharing" category or first available
+      const { data: categories } = await supabase
+        .from("forum_categories")
+        .select("id, slug")
+        .order("position", { ascending: true })
+        .limit(5);
+
+      const targetCat = categories?.find(c => c.slug === "results" || c.slug === "showcase" || c.slug === "general") || categories?.[0];
+      if (!targetCat) throw new Error("No community category found");
+
+      const title = `🏭 ${planName || intent.replace(/_/g, " ")} — ${outputCount} outputs in ${durationSeconds}s`;
+      const content = [
+        `## Execution Result`,
+        ``,
+        `**System**: ${planName || intent.replace(/_/g, " ")}`,
+        `**Steps**: ${stepsCompleted}/${totalSteps} completed`,
+        `**Cost**: ${totalCredits} NEURONS`,
+        `**Duration**: ${durationSeconds}s`,
+        `**Outputs Generated**: ${outputCount}`,
+        ``,
+        `---`,
+        ``,
+        `*Shared automatically from AI-IDEI execution engine.*`,
+      ].join("\n");
+
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80);
+      const { error } = await supabase
+        .from("forum_threads")
+        .insert({
+          category_id: targetCat.id,
+          author_id: user.id,
+          title,
+          slug: `${slug}-${Date.now()}`,
+          content,
+          tags: ["execution-result", intent],
+        } as any);
+
+      if (error) throw error;
+
+      trackInternalEvent({ event: "result_shared_community", params: { intent, outputs: outputCount, credits: totalCredits } });
+      toast.success("Rezultat distribuit în comunitate!");
+    } catch (e: any) {
+      toast.error(e.message || "Nu s-a putut distribui");
+    } finally {
+      setSharing(false);
+    }
+  };
 
   return (
     <motion.div
@@ -114,6 +174,17 @@ export function ExecutionSummary({
         {isSuccess && (
           <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5 rounded-lg" onClick={onSaveTemplate}>
             <TrendingUp className="h-3 w-3" /> Save Workflow
+          </Button>
+        )}
+        {isSuccess && user && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 text-xs gap-1.5 rounded-lg border-primary/20 text-primary hover:bg-primary/5"
+            onClick={handleShareToCommunity}
+            disabled={sharing}
+          >
+            <Share2 className="h-3 w-3" /> {sharing ? "Sharing..." : "Share"}
           </Button>
         )}
         <Button size="sm" variant="ghost" className="h-7 text-xs gap-1.5 rounded-lg" onClick={onRerun}>
