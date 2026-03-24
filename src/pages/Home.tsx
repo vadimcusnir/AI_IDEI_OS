@@ -643,7 +643,6 @@ export default function Home() {
                     await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
                   }
                 }}
-                }}
                 onCancel={() => { setShowEconomicGate(false); if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount); executionActions.reset(); }}
               />
             </div>
