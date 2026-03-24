@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useRef, lazy, Suspense, memo } from "react";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useLocale } from "@/hooks/useLocale";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
@@ -155,12 +156,12 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           {fullHeight ? (
             <main id="main-content" className="flex-1 flex flex-col min-h-0">
-              <ErrorBoundary>{children}</ErrorBoundary>
+              <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
             </main>
           ) : (
             <>
               <main id="main-content" className="flex-1 flex flex-col pb-16 md:pb-0">
-                <ErrorBoundary>{children}</ErrorBoundary>
+                <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
               </main>
               <Suspense fallback={null}><Footer /></Suspense>
             </>

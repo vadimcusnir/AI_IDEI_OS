@@ -124,7 +124,7 @@ export function MFAEnrollment() {
         <div className="space-y-4">
           <p className="text-xs text-muted-foreground">Scan this QR code with your authenticator app:</p>
           <div className="flex flex-col items-center gap-3">
-            {qrUri && <img src={qrUri} alt="MFA QR Code" className="w-48 h-48 rounded-lg border border-border" />}
+            {qrUri && <img src={qrUri} alt="MFA QR Code" loading="lazy" className="w-48 h-48 rounded-lg border border-border" />}
             <div className="flex items-center gap-2">
               <code className="text-[10px] font-mono bg-muted px-2 py-1 rounded select-all">{secret}</code>
               <Button variant="ghost" size="sm" onClick={copySecret} className="h-6 w-6 p-0">
