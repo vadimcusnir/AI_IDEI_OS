@@ -189,7 +189,7 @@ export function useOSSuperlayer() {
       const { data, error } = await supabase.rpc("start_agent_execution", {
         _user_id: user.id,
         _agent_id: agentId,
-        _input: input || {},
+        _input: (input || {}) as unknown as Record<string, never>,
         _estimated_credits: cost,
       });
       if (error) throw error;
