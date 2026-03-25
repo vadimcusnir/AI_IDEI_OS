@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, FileText, FileJson, File, FileType, Copy, Archive } from "lucide-react";
+import { Download, FileText, FileJson, File, FileType, Copy, Archive, Printer } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
@@ -114,6 +114,21 @@ export function ArtifactExportMenu({
     toast.success(t("common:exported_as", { format: "HTML" }));
   };
 
+  const exportPDF = () => {
+    const html = generateHTMLDoc(title, content, serviceKey, createdAt);
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      toast.error("Pop-up blocked. Please allow pop-ups.");
+      return;
+    }
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.print();
+    };
+    toast.success(t("common:exported_as", { format: "PDF" }));
+  };
+
   const exportCSV = () => {
     const lines = content.split("\n").filter(l => l.trim());
     const csvRows = ["\"Section\",\"Content\""];
@@ -163,7 +178,11 @@ export function ArtifactExportMenu({
         </DropdownMenuItem>
         <DropdownMenuItem onClick={exportHTML} className="gap-2 text-xs">
           <FileType className="h-3.5 w-3.5" />
-          HTML / DOCX (.html)
+          HTML (.html)
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={exportPDF} className="gap-2 text-xs">
+          <Printer className="h-3.5 w-3.5" />
+          PDF (Print)
         </DropdownMenuItem>
         <DropdownMenuItem onClick={exportCSV} className="gap-2 text-xs">
           <Archive className="h-3.5 w-3.5" />

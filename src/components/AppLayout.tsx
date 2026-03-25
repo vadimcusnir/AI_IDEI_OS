@@ -5,6 +5,7 @@ import { useLocale } from "@/hooks/useLocale";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { prefetchUIControls } from "@/hooks/useUIControl";
+import { useKeyboardNav } from "@/hooks/useKeyboardNav";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
@@ -60,6 +61,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   }, []);
 
   const currentLang = LANG_OPTIONS.find(l => l.code === currentLanguage) || LANG_OPTIONS[0];
+  useKeyboardNav();
 
   return (
     <SidebarProvider>

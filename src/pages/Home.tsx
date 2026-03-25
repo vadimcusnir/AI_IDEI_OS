@@ -41,6 +41,8 @@ import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WorkspaceLayerTabs, type WorkspaceLayer } from "@/components/command-center/WorkspaceLayerTabs";
 import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
+import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
+import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { routeCommand, type RouteResult } from "@/components/command-center/CommandRouter";
 import {
@@ -351,6 +353,7 @@ export default function Home() {
   return (
     <>
       <WelcomeModal />
+      <GuidedTooltip tourId="home-command-center" steps={HOME_TOUR} delay={3000} />
       <SEOHead title={`${t("pages:home.cockpit")} — AI-IDEI`} description={t("pages:home.cockpit_desc")} />
 
       <div className="flex-1 flex h-[calc(100vh-var(--header-height,56px))] overflow-hidden relative">
@@ -359,13 +362,14 @@ export default function Home() {
           {/* No ambient glow — clean fixed layout */}
 
           {/* Workspace Layer Tabs */}
+          <div data-tour="workspace-tabs">
           <WorkspaceLayerTabs
             active={activeLayer}
             onChange={setActiveLayer}
             executionActive={execState.phase !== "idle"}
           />
+          </div>
 
-          {/* Execution Status Bar */}
           <ExecutionStatusBar
             phase={execState.phase} intent={execState.intent}
             totalCredits={execState.totalCredits}
@@ -408,7 +412,7 @@ export default function Home() {
                       Ce vrei să obții?
                     </p>
                   </div>
-                  <div className="w-full max-w-2xl mx-auto">
+                  <div className="w-full max-w-2xl mx-auto" data-tour="intent-chips">
                     <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
                   </div>
                 </div>
@@ -550,7 +554,7 @@ export default function Home() {
 
             {/* Mobile fixed input at bottom */}
             <div className="shrink-0 border-t border-border/30 bg-background px-4 py-2 safe-area-bottom">
-              <div className="max-w-3xl mx-auto">
+              <div className="max-w-3xl mx-auto" data-tour="command-input">
                 <CommandInputZone
                   ref={inputZoneRef} input={input} onInputChange={setInput}
                   onSubmit={handleSubmit} onStop={handleStop} loading={loading}

@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { ServicesSkeleton } from "@/components/skeletons/ServicesSkeleton";
+import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
+import { SERVICES_TOUR } from "@/components/onboarding/tourDefinitions";
 import { GuestConversionGate } from "@/components/revenue/GuestConversionGate";
 import { SEOHead } from "@/components/SEOHead";
 import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
@@ -30,6 +32,7 @@ import { ServicesHero } from "@/components/services/ServicesHero";
 import { ValueComparison } from "@/components/services/ValueComparison";
 import { ServicePricingBreakdown } from "@/components/services/ServicePricingBreakdown";
 import { OutputFamilies } from "@/components/services/OutputFamilies";
+import { ServiceWizard } from "@/components/services/ServiceWizard";
 
 interface Service {
   id: string;
@@ -100,6 +103,7 @@ export default function Services() {
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
   const [guestGateOpen, setGuestGateOpen] = useState(false);
   const [guestGateService, setGuestGateService] = useState<string | undefined>();
+  const [showWizard, setShowWizard] = useState(() => !searchParams.get("category") && !searchParams.get("search"));
 
   // Drawer state
   const [drawerService, setDrawerService] = useState<Service | null>(null);
@@ -191,8 +195,24 @@ export default function Services() {
           item: { "@type": "Service", name: s.name, description: s.description, provider: { "@type": "Organization", name: "AI-IDEI" } },
         })),
       }} />
+      <GuidedTooltip tourId="services" steps={SERVICES_TOUR} />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-8">
+
+        {/* ═══ WIZARD ═══ */}
+        <AnimatePresence>
+          {showWizard && user && (
+            <ServiceWizard
+              onComplete={(contentType, goal) => {
+                setShowWizard(false);
+                const intentMap: Record<string, string> = { extract: "educate", generate: "attract", analyze: "sell" };
+                setActiveIntent(intentMap[goal] || null);
+                setSearch(contentType);
+              }}
+              onDismiss={() => setShowWizard(false)}
+            />
+          )}
+        </AnimatePresence>
 
         {/* ═══ LAYER 1: HERO ═══ */}
         <ServicesHero isLoggedIn={!!user} serviceCount={services.length} />
