@@ -335,7 +335,7 @@ export default function ProfilePage() {
                             className={cn(
                               "px-3 py-1.5 rounded-full text-[11px] font-medium transition-all min-h-[32px]",
                               prefs.email_digest === opt.key
-                                ? "bg-primary text-primary-foreground shadow-sm"
+                                ? "bg-[hsl(var(--gold-oxide))] text-white shadow-sm"
                                 : "bg-muted text-muted-foreground hover:bg-muted/80"
                             )}
                           >
