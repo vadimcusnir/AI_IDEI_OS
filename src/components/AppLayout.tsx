@@ -6,35 +6,20 @@ import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { prefetchUIControls } from "@/hooks/useUIControl";
 import { useKeyboardNav } from "@/hooks/useKeyboardNav";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Link } from "react-router-dom";
-import { Brain } from "lucide-react";
+import { Header } from "@/components/global/Header";
 
 // Lazy-load non-critical components
 const LowBalanceBanner = lazy(() => import("@/components/credits/LowBalanceBanner").then(m => ({ default: m.LowBalanceBanner })));
 const BehaviorOverlay = lazy(() => import("@/components/behavior/BehaviorOverlay").then(m => ({ default: m.BehaviorOverlay })));
 const CompactPipeline = lazy(() => import("@/components/PipelineIndicator").then(m => ({ default: m.CompactPipelineIndicator })));
-const GlobalSearch = lazy(() => import("@/components/GlobalSearch").then(m => ({ default: m.GlobalSearch })));
-const NotificationBell = lazy(() => import("@/components/NotificationBell").then(m => ({ default: m.NotificationBell })));
-const UserMenu = lazy(() => import("@/components/UserMenu").then(m => ({ default: m.UserMenu })));
 const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
 const MobileBottomNav = lazy(() => import("@/components/MobileBottomNav").then(m => ({ default: m.MobileBottomNav })));
 const ContextualFeedbackPrompt = lazy(() => import("@/components/feedback/ContextualFeedbackPrompt").then(m => ({ default: m.ContextualFeedbackPrompt })));
 const GamificationToasts = lazy(() => import("@/components/gamification/GamificationToasts").then(m => ({ default: m.GamificationToasts })));
-const PresenceBar = lazy(() => import("@/components/collaboration/PresenceBar").then(m => ({ default: m.PresenceBar })));
 
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
