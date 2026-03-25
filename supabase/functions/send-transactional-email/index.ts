@@ -3,10 +3,7 @@ import { render } from 'npm:@react-email/components@0.0.22'
 import { ContactConfirmationEmail } from '../_shared/email-templates/contact-confirmation.tsx'
 import { CreditsNotificationEmail } from '../_shared/email-templates/credits-notification.tsx'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 type TemplateType = 'contact_confirmation' | 'credits_low' | 'credits_topup'
 
