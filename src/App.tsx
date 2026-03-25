@@ -111,6 +111,7 @@ const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
 const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
 const MasterAgent = lazyRetry(() => import("./pages/MasterAgent"));
+const AutomationTemplates = lazyRetry(() => import("./pages/AutomationTemplates"));
 
 const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
 const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
