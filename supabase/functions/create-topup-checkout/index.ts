@@ -69,7 +69,8 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
-    return new Response(JSON.stringify({ error: msg }), {
+    console.error("[create-topup-checkout]", msg);
+    return new Response(JSON.stringify({ error: "Checkout creation failed" }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,
     });
