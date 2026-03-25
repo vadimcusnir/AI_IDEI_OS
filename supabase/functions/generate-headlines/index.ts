@@ -1,12 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 const SYSTEM_PROMPT = `Ești un copywriter expert în Direct Response, specializat în limba română.
 
 Generezi titluri folosind formula canonică în 7 straturi:
@@ -31,7 +25,7 @@ Răspunde EXCLUSIV cu un JSON array valid, fără markdown, fără explicații:
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   try {
@@ -39,7 +33,7 @@ Deno.serve(async (req: Request) => {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -51,12 +45,12 @@ Deno.serve(async (req: Request) => {
     const { data: { user }, error: authError } = await userClient.auth.getUser();
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
     // Rate limit guard (user-based)
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 15, windowSeconds: 60 }, corsHeaders);
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 15, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
     const { topic, audience, pain } = await req.json();
@@ -64,7 +58,7 @@ Deno.serve(async (req: Request) => {
     if (!topic || typeof topic !== "string") {
       return new Response(
         JSON.stringify({ error: "Topic is required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -125,13 +119,13 @@ Deno.serve(async (req: Request) => {
 
     return new Response(
       JSON.stringify({ headlines }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("generate-headlines error:", error);
     return new Response(
       JSON.stringify({ error: error.message || "Internal error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

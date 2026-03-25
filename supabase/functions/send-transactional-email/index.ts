@@ -3,10 +3,7 @@ import { render } from 'npm:@react-email/components@0.0.22'
 import { ContactConfirmationEmail } from '../_shared/email-templates/contact-confirmation.tsx'
 import { CreditsNotificationEmail } from '../_shared/email-templates/credits-notification.tsx'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 type TemplateType = 'contact_confirmation' | 'credits_low' | 'credits_topup'
 
@@ -47,7 +44,7 @@ function renderTemplate(template: TemplateType, data: Record<string, unknown>): 
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
+    return new Response(null, { headers: getCorsHeaders(req) })
   }
 
   try {
@@ -59,7 +56,7 @@ Deno.serve(async (req) => {
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Missing authorization' }), {
         status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       })
     }
 
@@ -70,7 +67,7 @@ Deno.serve(async (req) => {
     if (authError || !user) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       })
     }
 
@@ -80,7 +77,7 @@ Deno.serve(async (req) => {
     if (!template || !to) {
       return new Response(JSON.stringify({ error: 'Missing template or to' }), {
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       })
     }
 
@@ -88,7 +85,7 @@ Deno.serve(async (req) => {
     if (!validTemplates.includes(template)) {
       return new Response(JSON.stringify({ error: `Invalid template. Must be one of: ${validTemplates.join(', ')}` }), {
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       })
     }
 
@@ -116,18 +113,18 @@ Deno.serve(async (req) => {
       console.error('Failed to enqueue email', enqueueError)
       return new Response(JSON.stringify({ error: 'Failed to enqueue email' }), {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       })
     }
 
     return new Response(JSON.stringify({ success: true, message_id: messageId }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
     })
   } catch (error) {
     console.error('send-transactional-email error', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
     })
   }
 })

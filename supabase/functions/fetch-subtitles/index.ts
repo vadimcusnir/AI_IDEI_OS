@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 /**
  * fetch-subtitles: Downloads YouTube subtitles/captions.
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
     if (!url || typeof url !== "string") {
       return new Response(JSON.stringify({ error: "Missing url" }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -94,7 +94,7 @@ Deno.serve(async (req) => {
     if (!ytMatch?.[1]) {
       return new Response(
         JSON.stringify({ error: "Only YouTube URLs are supported for subtitle download" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
     const videoId = ytMatch[1];
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
     if (!listResp.ok) {
       return new Response(
         JSON.stringify({ error: "Failed to fetch subtitle list", subtitles_available: false }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
     if (availableLangs.length === 0) {
       return new Response(
         JSON.stringify({ error: "No subtitles available", subtitles_available: false }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
     if (!selectedLang) {
       return new Response(
         JSON.stringify({ error: "No matching subtitle language found", subtitles_available: false }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -180,7 +180,7 @@ Deno.serve(async (req) => {
     if (!subResp.ok) {
       return new Response(
         JSON.stringify({ error: "Failed to download subtitles" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -190,7 +190,7 @@ Deno.serve(async (req) => {
     if (!text.trim()) {
       return new Response(
         JSON.stringify({ error: "Downloaded subtitles are empty" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -232,13 +232,13 @@ Deno.serve(async (req) => {
         word_count: text.split(/\s+/).length,
         available_languages: availableLangs.map((l) => l.code),
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   } catch (e) {
     console.error("fetch-subtitles error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

@@ -2,12 +2,6 @@ import Stripe from "https://esm.sh/stripe@17.7.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 // Root2 pricing: digit sum = 2 | 1N = $0.002 → $1 = 500N
 const PACKAGES: Record<string, { neurons: number; priceId: string }> = {
   micro: { neurons: 1000, priceId: "price_1TEDhPIK7fwtty4oChZnMfTa" },
@@ -19,7 +13,7 @@ const PACKAGES: Record<string, { neurons: number; priceId: string }> = {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   const supabaseClient = createClient(
@@ -34,7 +28,7 @@ Deno.serve(async (req) => {
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated");
     // Rate limit guard
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, corsHeaders);
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
 
@@ -70,13 +64,13 @@ Deno.serve(async (req) => {
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     return new Response(JSON.stringify({ error: msg }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,
     });
   }

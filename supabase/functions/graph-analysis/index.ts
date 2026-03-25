@@ -3,15 +3,10 @@
  * POST /graph-analysis { action: "contradictions" | "gaps" | "suggestions", workspace_id }
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -41,12 +36,12 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({ error: "Invalid action" }), {
       status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (err: any) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: err.message === "Unauthorized" ? 401 : 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });
@@ -239,12 +234,12 @@ Return ONLY valid JSON: [{"suggestion": "...", "priority": "high|medium|low", "e
   return jsonResponse({ suggestions });
 }
 
-function jsonResponse(data: any, status = 200) {
+function jsonResponse(data: any, status = 200, req?: Request) {
+  const headers = req ? getCorsHeaders(req) : { "Access-Control-Allow-Origin": "https://ai-idei-os.lovable.app" };
   return new Response(JSON.stringify(data), {
     status,
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+      ...headers,
       "Content-Type": "application/json",
     },
   });

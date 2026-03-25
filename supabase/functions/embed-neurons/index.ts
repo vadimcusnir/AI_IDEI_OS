@@ -7,14 +7,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-internal-secret, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -24,7 +18,7 @@ Deno.serve(async (req) => {
 
   if (!LOVABLE_API_KEY) {
     return new Response(JSON.stringify({ error: "LOVABLE_API_KEY not configured" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -48,7 +42,7 @@ Deno.serve(async (req) => {
     if (!isInternal) {
       if (!authHeader.startsWith("Bearer ")) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       const token = authHeader.replace("Bearer ", "");
@@ -58,7 +52,7 @@ Deno.serve(async (req) => {
       const { data: { user }, error } = await userClient.auth.getUser();
       if (error || !user) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       userId = user.id;
@@ -69,7 +63,7 @@ Deno.serve(async (req) => {
     const blockReason = checkRegimeBlock(regime, 0);
     if (blockReason) {
       return new Response(JSON.stringify({ error: blockReason }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -99,14 +93,14 @@ Deno.serve(async (req) => {
       });
       if (!embResponse.ok) {
         return new Response(JSON.stringify({ error: "Embedding generation failed" }), {
-          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       const embData = await embResponse.json();
       const embText = embData.choices?.[0]?.message?.content?.trim();
       if (!embText) {
         return new Response(JSON.stringify({ error: "Empty embedding response" }), {
-          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       const numbers = embText.split(",").map((n: string) => parseFloat(n.trim())).filter((n: number) => !isNaN(n));
@@ -115,7 +109,7 @@ Deno.serve(async (req) => {
       const magnitude = Math.sqrt(numbers.reduce((s: number, n: number) => s + n * n, 0));
       const normalized = magnitude > 0 ? numbers.map((n: number) => n / magnitude) : numbers;
       return new Response(JSON.stringify({ embedding: normalized }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -146,7 +140,7 @@ Deno.serve(async (req) => {
     const { data: neurons, error: nErr } = await query;
     if (nErr || !neurons?.length) {
       return new Response(JSON.stringify({ error: "No neurons found", embedded: 0 }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -268,14 +262,14 @@ Deno.serve(async (req) => {
       credits_charged: embeddedCount > 0 ? embeddedCount : 0,
       errors: errors.length > 0 ? errors : undefined,
     }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("embed-neurons error:", e);
     return new Response(JSON.stringify({
       error: e instanceof Error ? e.message : "Unknown error",
     }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });

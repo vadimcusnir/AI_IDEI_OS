@@ -6707,6 +6707,30 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_entries: {
+        Row: {
+          id: string
+          request_count: number
+          updated_at: string
+          window_seconds: number
+          window_start: string
+        }
+        Insert: {
+          id: string
+          request_count?: number
+          updated_at?: string
+          window_seconds?: number
+          window_start?: string
+        }
+        Update: {
+          id?: string
+          request_count?: number
+          updated_at?: string
+          window_seconds?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
       risk_signals: {
         Row: {
           created_at: string
@@ -9103,6 +9127,18 @@ export type Database = {
         Returns: Json
       }
       check_cusnir_os_eligibility: { Args: { _user_id: string }; Returns: Json }
+      check_rate_limit: {
+        Args: {
+          p_key: string
+          p_max_requests?: number
+          p_window_seconds?: number
+        }
+        Returns: {
+          allowed: boolean
+          remaining: number
+          reset_at: string
+        }[]
+      }
       check_vip_access: {
         Args: { _unlock_key: string; _user_id: string }
         Returns: boolean
@@ -9115,6 +9151,7 @@ export type Database = {
         Args: { _milestone_id: string; _user_id: string }
         Returns: Json
       }
+      cleanup_rate_limits: { Args: never; Returns: undefined }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
       complete_onboarding_tutorial: {
         Args: { _user_id: string }

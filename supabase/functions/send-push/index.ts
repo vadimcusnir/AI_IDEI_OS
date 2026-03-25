@@ -2,15 +2,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import webpush from "https://esm.sh/web-push@3.6.7?target=deno";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-internal-secret, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   const supabaseAdmin = createClient(
@@ -40,7 +34,7 @@ Deno.serve(async (req) => {
 
     if (!authorized) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         status: 403,
       });
     }
@@ -56,7 +50,7 @@ Deno.serve(async (req) => {
 
     if (!config || config.length < 2) {
       return new Response(JSON.stringify({ sent: 0, reason: "vapid_not_configured" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -74,7 +68,7 @@ Deno.serve(async (req) => {
 
     if (!prefs?.push_enabled) {
       return new Response(JSON.stringify({ sent: 0, reason: "push_disabled" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -91,7 +85,7 @@ Deno.serve(async (req) => {
 
     if (type && type in typePrefs && !typePrefs[type]) {
       return new Response(JSON.stringify({ sent: 0, reason: "type_disabled" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -103,7 +97,7 @@ Deno.serve(async (req) => {
 
     if (!subscriptions || subscriptions.length === 0) {
       return new Response(JSON.stringify({ sent: 0, reason: "no_subscriptions" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -133,13 +127,13 @@ Deno.serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ sent }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("send-push error:", msg);
     return new Response(JSON.stringify({ error: msg }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,
     });
   }

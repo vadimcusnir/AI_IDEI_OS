@@ -7,12 +7,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 const SITE_BASE = "https://ai-idei-os.lovable.app";
 
 // Known static routes from ROUTE_TREE
@@ -29,7 +23,7 @@ const STATIC_ROUTES = [
 ];
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -41,7 +35,7 @@ Deno.serve(async (req) => {
   const authHeader = req.headers.get("authorization") || "";
   if (!authHeader.startsWith("Bearer ")) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
   const token = authHeader.replace("Bearer ", "");
@@ -51,7 +45,7 @@ Deno.serve(async (req) => {
   const { data: { user }, error: authErr } = await userClient.auth.getUser();
   if (authErr || !user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -60,12 +54,12 @@ Deno.serve(async (req) => {
     .eq("user_id", user.id).eq("role", "admin").single();
   if (!roleData) {
     return new Response(JSON.stringify({ error: "Admin access required" }), {
-      status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
   // Rate limit (user-based, post-auth)
-  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+  const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
   if (rateLimited) return rateLimited;
 
   try {
@@ -92,7 +86,7 @@ Deno.serve(async (req) => {
 
 function jsonResp(data: any, status = 200) {
   return new Response(JSON.stringify(data), {
-    status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    status, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
 }
 

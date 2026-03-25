@@ -1,15 +1,10 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
 const BASE_URL = "https://ai-idei.com";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   const url = new URL(req.url);
@@ -33,7 +28,7 @@ Deno.serve(async (req) => {
   ${subs.map((t) => `<sitemap><loc>${BASE_URL}/api/sitemap?type=${t}</loc></sitemap>`).join("\n  ")}
 </sitemapindex>`;
       return new Response(xml, {
-        headers: { ...corsHeaders, "Content-Type": "application/xml" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/xml" },
       });
     }
 
@@ -157,7 +152,7 @@ function xmlResponse(body: string) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${body}
 </urlset>`,
-    { headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/xml" } }
+    { headers: { ...getCorsHeaders(req), "Content-Type": "application/xml" } }
   );
 }
 

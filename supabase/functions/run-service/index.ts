@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
 
@@ -879,7 +879,7 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -889,7 +889,7 @@ Deno.serve(async (req) => {
     const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
     if (authError || !caller) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     // CRITICAL: Always derive user_id from JWT, never from request body
@@ -898,7 +898,7 @@ Deno.serve(async (req) => {
     // ── Rate limit check ──
     if (!checkRateLimit(user_id)) {
       return new Response(JSON.stringify({ error: "Rate limit exceeded (20 service runs/hour)" }), {
-        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -915,7 +915,7 @@ Deno.serve(async (req) => {
     const parsed = InputSchema.safeParse(await req.json());
     if (!parsed.success) {
       return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const { job_id, service_key, neuron_id, inputs } = parsed.data;
@@ -925,7 +925,7 @@ Deno.serve(async (req) => {
     const blockReason = checkRegimeBlock(regime, 0);
     if (blockReason) {
       return new Response(JSON.stringify({ error: "Service blocked by execution regime", reason: blockReason, regime: regime.regime }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const isDryRun = regime.dryRun || regime.regime === "simulation";
@@ -939,7 +939,7 @@ Deno.serve(async (req) => {
 
     if (currentJob?.dead_letter) {
       return new Response(JSON.stringify({ error: "Job is in dead letter queue" }), {
-        status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 410, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -955,7 +955,7 @@ Deno.serve(async (req) => {
     if (!service) {
       await supabase.from("neuron_jobs").update({ status: "failed", completed_at: new Date().toISOString(), result: { error: "Service not found" } }).eq("id", job_id);
       return new Response(JSON.stringify({ error: "Service not found" }), {
-        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -983,7 +983,7 @@ Deno.serve(async (req) => {
         reason_code: reasonCode,
         ...spendResult,
       }), {
-        status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -999,7 +999,7 @@ Deno.serve(async (req) => {
       // Refund credits in simulation
       await supabase.rpc("refund_credits", { _user_id: user_id, _amount: service.credits_cost, _job_id: job_id });
       return new Response(JSON.stringify({ dry_run: true, regime: regime.regime }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -1049,16 +1049,16 @@ Deno.serve(async (req) => {
 
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Credits refunded." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: "AI credits exhausted. Credits refunded." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       return new Response(JSON.stringify({ error: "AI service unavailable. Credits refunded." }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -1173,13 +1173,13 @@ Deno.serve(async (req) => {
     finalizeJob();
 
     return new Response(clientStream, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "text/event-stream" },
     });
   } catch (e) {
     console.error("run-service error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

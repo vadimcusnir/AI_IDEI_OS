@@ -3,7 +3,7 @@
  * Kept for backward compatibility.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -34,13 +34,13 @@ Deno.serve(async (req) => {
     const data = await resp.text();
     return new Response(data, {
       status: resp.status,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("transcribe-audio redirect error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

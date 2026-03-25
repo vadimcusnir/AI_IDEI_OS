@@ -1,12 +1,6 @@
 import Stripe from "npm:stripe@17.7.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 // Product → tier mapping (must match useSubscription.ts SUBSCRIPTION_TIERS)
 const PRODUCT_TIERS: Record<string, { tier: string; neurons: number; label: string }> = {
   prod_U74a8adWSDNymI: { tier: "core", neurons: 2000, label: "Core" },
@@ -21,7 +15,7 @@ const log = (step: string, details?: any) => {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY") || "";
@@ -32,7 +26,7 @@ Deno.serve(async (req) => {
   if (!webhookSecret) {
     console.error("[stripe-webhook] STRIPE_WEBHOOK_SECRET not configured");
     return new Response(JSON.stringify({ error: "Webhook secret not configured" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -44,7 +38,7 @@ Deno.serve(async (req) => {
     const signature = req.headers.get("stripe-signature");
     if (!signature) {
       return new Response(JSON.stringify({ error: "Missing stripe-signature" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -54,7 +48,7 @@ Deno.serve(async (req) => {
     } catch (err) {
       console.error("[stripe-webhook] Signature verification failed:", err instanceof Error ? err.message : err);
       return new Response(JSON.stringify({ error: "Invalid signature" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -423,7 +417,7 @@ Deno.serve(async (req) => {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("[stripe-webhook] Unhandled error:", msg);
     return new Response(JSON.stringify({ error: msg }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });
@@ -438,6 +432,6 @@ async function resolveUserByEmail(db: any, email: string | null | undefined): Pr
 
 function ok(extra?: Record<string, any>) {
   return new Response(JSON.stringify({ received: true, ...extra }), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
 }

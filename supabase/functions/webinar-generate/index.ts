@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 /**
@@ -146,18 +146,18 @@ Deno.serve(async (req) => {
   try {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
     const token = authHeader.replace("Bearer ", "");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
     const { data: { user }, error: authErr } = await userClient.auth.getUser();
     if (authErr || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     // Rate limit (user-based, post-auth)
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, corsHeaders);
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
     if (req.method === "GET") {
@@ -168,13 +168,13 @@ Deno.serve(async (req) => {
         modules, stages: ["planning", "content", "production", "conversion", "support", "validation"],
         total_prompts: WEBINAR_MODULES.reduce((s, m) => s + m.prompts.length, 0),
         estimated_credits: 48 * 40,
-      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const { content, selected_modules, job_id, webinar_config } = await req.json();
 
     if (!content || content.length < 50) {
-      return new Response(JSON.stringify({ error: "Content must be at least 50 characters" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Content must be at least 50 characters" }), { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const modulesToRun = selected_modules?.length
@@ -192,7 +192,7 @@ Deno.serve(async (req) => {
 
     if (!spendResult?.success) {
       return new Response(JSON.stringify({ error: spendResult?.error || "Insufficient credits", needed: totalCost }), {
-        status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -281,11 +281,11 @@ Deno.serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ results, prompts_completed: completedPrompts, credits_spent: totalCost }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
 
   } catch (e) {
     console.error("webinar-generate error:", e);
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

@@ -3,14 +3,9 @@ import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   const supabaseClient = createClient(
@@ -26,7 +21,7 @@ serve(async (req) => {
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated");
     // Rate limit guard
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 3, windowSeconds: 60 }, corsHeaders);
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 3, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
 
@@ -67,14 +62,14 @@ serve(async (req) => {
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("[create-subscription]", msg);
     return new Response(JSON.stringify({ error: msg }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,
     });
   }

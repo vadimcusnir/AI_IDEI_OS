@@ -1,15 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-api-key, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
 }
 
@@ -101,7 +95,7 @@ function parsePath(url: URL): string[] {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   const url = new URL(req.url);
   const segments = parsePath(url);

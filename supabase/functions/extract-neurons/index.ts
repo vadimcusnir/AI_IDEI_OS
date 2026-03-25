@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
@@ -421,7 +421,7 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -431,14 +431,14 @@ Deno.serve(async (req) => {
     const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
     if (authError || !caller) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const userId = caller.id;
 
     if (!checkRateLimit(userId)) {
       return new Response(JSON.stringify({ error: "Rate limit exceeded (10 extractions/hour)" }), {
-        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -452,7 +452,7 @@ Deno.serve(async (req) => {
     const parsed = InputSchema.safeParse(await req.json());
     if (!parsed.success) {
       return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const { episode_id } = parsed.data;
@@ -463,14 +463,14 @@ Deno.serve(async (req) => {
 
     if (!episode || epErr) {
       return new Response(JSON.stringify({ error: "Episode not found" }), {
-        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
     const transcript = episode.transcript || "";
     if (!transcript.trim()) {
       return new Response(JSON.stringify({ error: "Episode has no transcript content" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -480,7 +480,7 @@ Deno.serve(async (req) => {
     const blockReason = checkRegimeBlock(regime, EXTRACTION_COST);
     if (blockReason) {
       return new Response(JSON.stringify({ error: blockReason }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -496,7 +496,7 @@ Deno.serve(async (req) => {
         error: "Insufficient credits for extraction",
         reason_code: "RC.CREDITS.INSUFFICIENT",
         needed: EXTRACTION_COST,
-      }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }), { status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);
@@ -531,7 +531,7 @@ Deno.serve(async (req) => {
       });
       await supabase.from("episodes").update({ status: "transcribed" }).eq("id", episode_id);
       return new Response(JSON.stringify({ error: "No neurons extracted" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -660,13 +660,13 @@ Deno.serve(async (req) => {
       neurons: createdNeurons,
       credits_spent: EXTRACTION_COST,
       episode_status: "analyzed",
-    }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
 
   } catch (e) {
     console.error("extract-neurons error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 /**
@@ -410,7 +410,7 @@ Deno.serve(async (req) => {
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -424,7 +424,7 @@ Deno.serve(async (req) => {
     if (authError || !caller) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -432,7 +432,7 @@ Deno.serve(async (req) => {
     if (!checkRateLimit(caller.id)) {
       return new Response(
         JSON.stringify({ error: "Rate limit exceeded (10/hour)" }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -442,7 +442,7 @@ Deno.serve(async (req) => {
     if (blockReason) {
       return new Response(
         JSON.stringify({ error: "Service blocked", reason: blockReason }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -453,7 +453,7 @@ Deno.serve(async (req) => {
     if (!url && !file_path) {
       return new Response(
         JSON.stringify({ error: "Provide url or file_path" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -469,7 +469,7 @@ Deno.serve(async (req) => {
       if (error || !data) {
         return new Response(
           JSON.stringify({ error: "Episode not found or access denied" }),
-          { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
         );
       }
       episode = data;
@@ -552,7 +552,7 @@ Deno.serve(async (req) => {
               ? { title: metadata.title, uploader: metadata.uploader, thumbnail_url: metadata.thumbnail_url }
               : null,
           }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
         );
       }
 
@@ -617,7 +617,7 @@ Deno.serve(async (req) => {
                 ? { title: metadata.title, uploader: metadata.uploader, thumbnail_url: metadata.thumbnail_url }
                 : null,
             }),
-            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
           );
         }
       } catch (e) {
@@ -636,7 +636,7 @@ Deno.serve(async (req) => {
         }
         return new Response(
           JSON.stringify({ error: "Transcription returned empty text" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
         );
       }
 
@@ -681,7 +681,7 @@ Deno.serve(async (req) => {
             ? { title: metadata.title, uploader: metadata.uploader, thumbnail_url: metadata.thumbnail_url }
             : null,
         }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
       );
     }
 
@@ -693,13 +693,13 @@ Deno.serve(async (req) => {
       JSON.stringify({
         error: "No transcription backend available. Configure ELEVENLABS_API_KEY or TRANSCRIPTION_SERVICE_URL.",
       }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   } catch (e) {
     console.error("[transcribe-source] Fatal error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

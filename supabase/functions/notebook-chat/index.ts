@@ -1,15 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   try {
@@ -17,7 +11,7 @@ Deno.serve(async (req: Request) => {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -29,12 +23,12 @@ Deno.serve(async (req: Request) => {
     const { data: { user }, error: authError } = await userClient.auth.getUser();
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
     // Rate limit guard (user-based)
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, corsHeaders);
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
     const { messages, sources, mode } = await req.json();
@@ -81,29 +75,29 @@ ${sourceContext || "Nicio sursă selectată. Cere utilizatorului să adauge surs
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: "Payment required. Please add credits." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       const errText = await response.text();
       console.error("AI gateway error:", response.status, errText);
       return new Response(JSON.stringify({ error: "AI gateway error" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "text/event-stream" },
     });
   } catch (error) {
     console.error("notebook-chat error:", error);
     return new Response(
       JSON.stringify({ error: error.message || "Internal error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

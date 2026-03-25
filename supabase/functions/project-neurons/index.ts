@@ -8,7 +8,7 @@
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 function slugify(text: string): string {
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
     const { data: { user }, error: authErr } = await userClient.auth.getUser();
     if (authErr || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
     const blockReason = checkRegimeBlock(regime, 0);
     if (blockReason) {
       return new Response(JSON.stringify({ error: blockReason }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
     const parsed = ProjectSchema.safeParse(await req.json());
     if (!parsed.success) {
       return new Response(JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const { episode_id } = parsed.data;
@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
     if (nErr) throw nErr;
     if (!neurons || neurons.length === 0) {
       return new Response(JSON.stringify({ success: true, entities_created: 0, message: "No neurons to project" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -282,13 +282,13 @@ Deno.serve(async (req) => {
       entities_created: created,
       entities_updated: updated,
       relations_created: relationsCreated,
-    }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
 
   } catch (e) {
     console.error("project-neurons error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

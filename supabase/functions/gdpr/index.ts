@@ -1,11 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
-
 // ── Rate limiting ──
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 3; // per hour (GDPR ops are sensitive)
@@ -25,7 +19,7 @@ function checkRateLimit(userId: string): boolean {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   // Auth
@@ -33,7 +27,7 @@ Deno.serve(async (req) => {
   if (!authHeader) {
     return new Response(JSON.stringify({ error: "Missing authorization" }), {
       status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -50,7 +44,7 @@ Deno.serve(async (req) => {
   if (!user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -60,7 +54,7 @@ Deno.serve(async (req) => {
   if (!checkRateLimit(userId)) {
     return new Response(JSON.stringify({ error: "Rate limit exceeded (3 GDPR requests/hour)" }), {
       status: 429,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -70,7 +64,7 @@ Deno.serve(async (req) => {
   } catch {
     return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
       status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -80,7 +74,7 @@ Deno.serve(async (req) => {
   if (!action || !["export", "delete"].includes(action)) {
     return new Response(JSON.stringify({ error: "Invalid action. Use 'export' or 'delete'." }), {
       status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -129,8 +123,7 @@ Deno.serve(async (req) => {
     };
 
     return new Response(JSON.stringify(exportData, null, 2), {
-      headers: {
-        ...corsHeaders,
+      headers: { ...getCorsHeaders(req),
         "Content-Type": "application/json",
         "Content-Disposition": `attachment; filename="ai-idei-export-${userId.slice(0, 8)}.json"`,
       },
@@ -184,19 +177,19 @@ Deno.serve(async (req) => {
         JSON.stringify({ status: "partial", errors }),
         {
           status: 207,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         }
       );
     }
 
     return new Response(
       JSON.stringify({ status: "deleted", message: "All user data has been permanently removed." }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 
   return new Response(JSON.stringify({ error: "Invalid action. Use 'export' or 'delete'." }), {
     status: 400,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
 });

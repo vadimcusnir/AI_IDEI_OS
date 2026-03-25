@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
 // ══════════════════════════════════════════════════
@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -92,14 +92,14 @@ Deno.serve(async (req) => {
     const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
     if (authError || !caller) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const userId = caller.id;
 
     if (!checkRateLimit(userId)) {
       return new Response(JSON.stringify({ error: "Rate limit exceeded (20 chunk operations/hour)" }), {
-        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
     const blockReason = checkRegimeBlock(regime, 0);
     if (blockReason) {
       return new Response(JSON.stringify({ error: "Service blocked", reason: blockReason, regime: regime.regime }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -122,7 +122,7 @@ Deno.serve(async (req) => {
     const parsed = InputSchema.safeParse(await req.json());
     if (!parsed.success) {
       return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const { episode_id, min_chars, max_chars, overlap_chars } = parsed.data;
@@ -140,14 +140,14 @@ Deno.serve(async (req) => {
 
     if (!episode || epErr) {
       return new Response(JSON.stringify({ error: "Episode not found" }), {
-        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
     const transcript = episode.transcript || "";
     if (!transcript.trim()) {
       return new Response(JSON.stringify({ error: "Episode has no transcript content" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -186,13 +186,13 @@ Deno.serve(async (req) => {
         params: { min_chars: minC, max_chars: maxC, overlap_chars },
         chunks: result,
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   } catch (e) {
     console.error("chunk-transcript error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

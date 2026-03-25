@@ -13,11 +13,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
 // ═══════════════════════════════════════
@@ -129,7 +124,7 @@ async function callAI(system: string, prompt: string): Promise<any> {
 function jsonRes(body: any, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
 }
 
@@ -442,7 +437,7 @@ CONVERSION:\n${JSON.stringify(conversionOutput, null, 1).slice(0, 3000)}`
 // ═══════════════════════════════════════
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const svcKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
