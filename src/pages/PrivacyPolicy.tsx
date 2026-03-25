@@ -84,6 +84,16 @@ export default function PrivacyPolicy() {
           <h2 className="text-lg font-semibold mb-2">{t("privacy.s10_title")}</h2>
           <p>{t("privacy.s10_text")}</p>
         </section>
+        <section>
+          <h2 className="text-lg font-semibold mb-2">{t("privacy.s11_title")}</h2>
+          <p className="mb-3">{t("privacy.s11_text")}</p>
+          <div className="bg-muted/50 rounded-lg p-4 space-y-1.5 text-sm">
+            <p className="font-semibold">{t("privacy.s11_company")}</p>
+            <p className="text-muted-foreground">{t("privacy.s11_address")}</p>
+            <p className="text-muted-foreground">{t("privacy.s11_admin")}</p>
+            <p className="text-muted-foreground">E-mail: <a href="mailto:vadim.kusnir@gmail.com" className="text-primary hover:underline">{t("privacy.s11_email")}</a></p>
+          </div>
+        </section>
       </article>
     </div>
   );
