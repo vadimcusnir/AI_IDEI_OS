@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { ServicesSkeleton } from "@/components/skeletons/ServicesSkeleton";
+import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
+import { SERVICES_TOUR } from "@/components/onboarding/tourDefinitions";
 import { GuestConversionGate } from "@/components/revenue/GuestConversionGate";
 import { SEOHead } from "@/components/SEOHead";
 import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
