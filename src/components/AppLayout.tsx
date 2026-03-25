@@ -61,6 +61,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   }, []);
 
   const currentLang = LANG_OPTIONS.find(l => l.code === currentLanguage) || LANG_OPTIONS[0];
+  useKeyboardNav();
 
   return (
     <SidebarProvider>
