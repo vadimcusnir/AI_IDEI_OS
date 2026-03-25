@@ -152,7 +152,7 @@ function xmlResponse(body: string) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${body}
 </urlset>`,
-    { headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/xml" } }
+    { headers: { ...getCorsHeaders(req), "Content-Type": "application/xml" } }
   );
 }
 
