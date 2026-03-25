@@ -353,7 +353,9 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
         });
       } else {
         setStage("complete");
-        setResult({ neurons: 0, episode_id: ep.id });
+        const simpleResult = { neurons: 0, episode_id: ep.id };
+        setResult(simpleResult);
+        onPipelineComplete?.(simpleResult);
         toast.success(t("episode_created_hint"));
       }
 
