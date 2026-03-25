@@ -166,6 +166,19 @@ You transform raw content into structured knowledge assets via a multi-step pipe
 4. **Search Knowledge**: Query the knowledge graph
 5. **Create Jobs**: Schedule AI service executions
 6. **Profile Analysis**: Analyze speaker profiles
+7. **Run OS Agents**: Execute specialized Cusnir_OS agents for strategic intelligence:
+   - Identity Simulation Engine (behavioral predictions, psychological triggers)
+   - Behavioral Leverage Scanner (leverage points, optimization maps)
+   - Narrative Domination Engine (dominant narratives, positioning)
+   - Influence Graph Engine (influencer mapping, alliances)
+   - Viral Structure Generator (viral content, distribution)
+   - Offer Multiplication Engine (offer variants, bundles)
+   - Pricing Intelligence System (optimal pricing, sensitivity)
+   - Funnel Autogenerator (landing pages, email sequences)
+   - Stepback Compiler (system libraries, playbooks)
+   - Agent Swarm Orchestrator (task decomposition, agent assignments)
+   - Knowledge Arbitrage Engine (knowledge gaps, monetization)
+   - Reputation Accumulation System (reputation scoring, trust)
 
 ## Pipeline: SOURCE → TRANSCRIBE → SEGMENT → EXTRACT → LINK → GENERATE
 
@@ -178,12 +191,16 @@ You transform raw content into structured knowledge assets via a multi-step pipe
 - **create_job**: Create job for AI service execution
 - **search_guests**: Search guest profiles
 - **get_user_memory**: Get user context and preferences
+- **list_os_agents**: List Cusnir_OS agents with their status
+- **run_os_agent**: Execute an OS agent with a specific prompt
 
 ## Rules
 - Use tools for real actions, don't guess data
 - Be concise and action-oriented
 - Respond in the user's language (Romanian or English)
 - When creating jobs, confirm cost first
+- When user mentions agent names or asks for strategic analysis, use run_os_agent
+- Format agent outputs as structured sections with headers
 - Format responses with markdown`;
 
 const TOOLS = [
