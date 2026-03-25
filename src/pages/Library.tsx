@@ -296,7 +296,7 @@ export default function Library() {
                       if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
                       else { setSortField(field); setSortDir("desc"); }
                     }}
-                    className={cn(sortField === field && "text-primary")}>
+                    className={cn(sortField === field && "text-[hsl(var(--gold-oxide))]")}>
                     {label}
                     {sortField === field && (
                       sortDir === "desc" ? <SortDesc className="h-3 w-3 ml-auto" /> : <SortAsc className="h-3 w-3 ml-auto" />
