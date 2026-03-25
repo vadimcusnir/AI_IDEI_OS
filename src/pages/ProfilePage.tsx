@@ -279,7 +279,7 @@ export default function ProfilePage() {
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <BellRing className="h-4 w-4 text-primary" />
+                          <BellRing className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
                           <div>
                             <p className="text-xs font-medium">{t("profile.browser_notifications")}</p>
                             <p className="text-[10px] text-muted-foreground">
