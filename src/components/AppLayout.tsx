@@ -34,6 +34,7 @@ const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ defa
 const MobileBottomNav = lazy(() => import("@/components/MobileBottomNav").then(m => ({ default: m.MobileBottomNav })));
 const ContextualFeedbackPrompt = lazy(() => import("@/components/feedback/ContextualFeedbackPrompt").then(m => ({ default: m.ContextualFeedbackPrompt })));
 const GamificationToasts = lazy(() => import("@/components/gamification/GamificationToasts").then(m => ({ default: m.GamificationToasts })));
+const PresenceBar = lazy(() => import("@/components/collaboration/PresenceBar").then(m => ({ default: m.PresenceBar })));
 
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
