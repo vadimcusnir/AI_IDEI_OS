@@ -32,6 +32,7 @@ import { ServicesHero } from "@/components/services/ServicesHero";
 import { ValueComparison } from "@/components/services/ValueComparison";
 import { ServicePricingBreakdown } from "@/components/services/ServicePricingBreakdown";
 import { OutputFamilies } from "@/components/services/OutputFamilies";
+import { ServiceWizard } from "@/components/services/ServiceWizard";
 
 interface Service {
   id: string;
