@@ -104,8 +104,8 @@ export function useOSSuperlayer() {
       supabase.from("os_otos").select("id, name, mechanism, output_type, domain, status, created_at").order("created_at", { ascending: false }).limit(50),
       supabase.from("os_mms").select("id, name, intent, complexity_level, status, created_at").order("created_at", { ascending: false }).limit(50),
       supabase.from("os_lcss").select("id, name, macro_intent, strategic_value, status, created_at").order("created_at", { ascending: false }).limit(50),
-      supabase.from("os_agents").select("id, role, capabilities, agent_type, status, performance_score, last_active_at").order("created_at", { ascending: false }).limit(50),
-      supabase.from("os_executions").select("id, status, credits_cost, duration_ms, started_at, completed_at, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
+      supabase.from("os_agents").select("id, role, capabilities, agent_type, status, performance_score, last_active_at, metadata").order("created_at", { ascending: false }).limit(50),
+      supabase.from("os_executions").select("id, agent_id, status, credits_cost, duration_ms, started_at, completed_at, created_at, output, performance").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
       supabase.from("os_memory_patterns").select("id, pattern_type, category, frequency, effectiveness_score, last_used_at, created_at").eq("user_id", user.id).order("frequency", { ascending: false }).limit(50),
       supabase.from("os_power_unlocks").select("id, capability_key, capability_name, unlocked_at, xp_cost, tier").eq("user_id", user.id).order("unlocked_at", { ascending: false }),
     ]);
