@@ -192,6 +192,15 @@ export function AppSidebar() {
   const { balance, loading: balanceLoading } = useCreditBalance();
   const { tier } = useUserTier();
   const { sessions, loadSession, deleteSession, newSession } = useChatHistory();
+  const { prefetchServices, prefetchCredits, prefetchLibrary } = usePrefetch();
+
+  const prefetchMap: Record<string, (() => void) | undefined> = {
+    "/services": prefetchServices,
+    "/services-catalog": prefetchServices,
+    "/credits": prefetchCredits,
+    "/wallet": prefetchCredits,
+    "/library": prefetchLibrary,
+  };
 
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
