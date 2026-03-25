@@ -246,7 +246,7 @@ export default function Credits() {
                 <Coins className={cn(
                   "h-5 w-5",
                   balanceHealth === "healthy" ? "text-status-validated" :
-                  balanceHealth === "warning" ? "text-primary" : "text-destructive"
+                  balanceHealth === "warning" ? "text-[hsl(var(--gold-oxide))]" : "text-destructive"
                 )} />
               </div>
             </div>
