@@ -96,17 +96,17 @@ export function MagicButton({ children, className }: { children: React.ReactNode
   const explode = useCallback(() => {
     setRipple(true);
     setGlowing(true);
-    setTimeout(() => setRipple(false), 700);
-    setTimeout(() => setGlowing(false), 1400);
+    setTimeout(() => setRipple(false), 1000);
+    setTimeout(() => setGlowing(false), 2000);
 
-    const newParticles: Particle[] = Array.from({ length: 22 }, () => {
+    const newParticles: Particle[] = Array.from({ length: 32 }, () => {
       idRef.current++;
       return {
         id: idRef.current,
         angle: Math.random() * 360,
-        distance: 50 + Math.random() * 140,
-        scale: 0.4 + Math.random() * 0.8,
-        duration: 0.6 + Math.random() * 0.7,
+        distance: 80 + Math.random() * 220,
+        scale: 0.7 + Math.random() * 1.2,
+        duration: 0.8 + Math.random() * 0.9,
         shape: Math.floor(Math.random() * SHAPE_COUNT),
         rotation: Math.random() * 360,
       };
@@ -116,7 +116,7 @@ export function MagicButton({ children, className }: { children: React.ReactNode
 
     setTimeout(() => {
       setParticles((prev) => prev.filter((p) => !newParticles.includes(p)));
-    }, 1600);
+    }, 2200);
   }, []);
 
   return (
