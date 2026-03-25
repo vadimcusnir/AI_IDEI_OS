@@ -362,6 +362,7 @@ export default function Home() {
           {/* No ambient glow — clean fixed layout */}
 
           {/* Workspace Layer Tabs */}
+          <div data-tour="workspace-tabs">
           <WorkspaceLayerTabs
             active={activeLayer}
             onChange={setActiveLayer}
