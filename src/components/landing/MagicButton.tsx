@@ -96,17 +96,17 @@ export function MagicButton({ children, className }: { children: React.ReactNode
   const explode = useCallback(() => {
     setRipple(true);
     setGlowing(true);
-    setTimeout(() => setRipple(false), 700);
-    setTimeout(() => setGlowing(false), 1400);
+    setTimeout(() => setRipple(false), 1000);
+    setTimeout(() => setGlowing(false), 2000);
 
-    const newParticles: Particle[] = Array.from({ length: 22 }, () => {
+    const newParticles: Particle[] = Array.from({ length: 32 }, () => {
       idRef.current++;
       return {
         id: idRef.current,
         angle: Math.random() * 360,
-        distance: 50 + Math.random() * 140,
-        scale: 0.4 + Math.random() * 0.8,
-        duration: 0.6 + Math.random() * 0.7,
+        distance: 80 + Math.random() * 220,
+        scale: 0.7 + Math.random() * 1.2,
+        duration: 0.8 + Math.random() * 0.9,
         shape: Math.floor(Math.random() * SHAPE_COUNT),
         rotation: Math.random() * 360,
       };
@@ -116,7 +116,7 @@ export function MagicButton({ children, className }: { children: React.ReactNode
 
     setTimeout(() => {
       setParticles((prev) => prev.filter((p) => !newParticles.includes(p)));
-    }, 1600);
+    }, 2200);
   }, []);
 
   return (
@@ -131,11 +131,11 @@ export function MagicButton({ children, className }: { children: React.ReactNode
       <AnimatePresence>
         {glowing && (
           <motion.span
-            className="absolute inset-0 -inset-x-6 -inset-y-3 rounded-xl bg-[hsl(var(--gold-oxide)/0.15)] blur-2xl pointer-events-none"
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1.4 }}
-            exit={{ opacity: 0, scale: 1.8 }}
-            transition={{ duration: 1 }}
+            className="absolute inset-0 -inset-x-16 -inset-y-8 rounded-2xl bg-[hsl(var(--gold-oxide)/0.22)] blur-3xl pointer-events-none"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1.8 }}
+            exit={{ opacity: 0, scale: 2.5 }}
+            transition={{ duration: 1.4 }}
           />
         )}
       </AnimatePresence>
@@ -146,17 +146,17 @@ export function MagicButton({ children, className }: { children: React.ReactNode
           <motion.span
             className="absolute pointer-events-none"
             style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
-            initial={{ opacity: 0.8, scale: 0.3 }}
-            animate={{ opacity: 0, scale: 3.5 }}
+            initial={{ opacity: 0.9, scale: 0.2 }}
+            animate={{ opacity: 0, scale: 5 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <svg width="90" height="90" viewBox="0 0 60 60" fill="none">
               <path
                 d="M30 3L55 16.5V43.5L30 57L5 43.5V16.5L30 3Z"
                 stroke="hsl(var(--gold-oxide))"
-                strokeWidth="1.5"
-                opacity="0.6"
+                strokeWidth="2"
+                opacity="0.7"
               />
             </svg>
           </motion.span>
@@ -196,7 +196,7 @@ export function MagicButton({ children, className }: { children: React.ReactNode
               exit={{ opacity: 0 }}
               transition={{ duration: p.duration, ease: "easeOut" }}
             >
-              <SigilParticle shape={p.shape} size={Math.round(p.scale * 22)} />
+              <SigilParticle shape={p.shape} size={Math.round(p.scale * 32)} />
             </motion.span>
           );
         })}
