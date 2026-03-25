@@ -45,7 +45,6 @@ import {
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
-import { ro } from "date-fns/locale";
 import { toast } from "sonner";
 
 // ═══ ROUTE REGISTRY — Single Source of Truth ═══
