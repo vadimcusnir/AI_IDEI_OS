@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { fireFinalConfetti } from "@/components/onboarding/useConfetti";
 import { OnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
+import { InstantAnalysisFlow } from "@/components/onboarding/InstantAnalysisFlow";
 
 interface StepStatus {
   episodes: number;
