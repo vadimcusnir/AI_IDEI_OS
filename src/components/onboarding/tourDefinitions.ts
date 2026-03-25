@@ -4,22 +4,22 @@ import type { TooltipStep } from "@/components/onboarding/GuidedTooltip";
 
 export const HOME_TOUR: TooltipStep[] = [
   {
-    target: "[data-tour='quick-actions']",
-    title: "Quick Actions",
-    description: "Start here — upload content, run services, or explore your knowledge library.",
-    position: "bottom",
-  },
-  {
-    target: "[data-tour='stats-overview']",
-    title: "Your Stats",
-    description: "Track neurons, credits, and extraction activity at a glance.",
-    position: "bottom",
-  },
-  {
-    target: "[data-tour='recent-activity']",
-    title: "Recent Activity",
-    description: "Your latest extractions and service runs appear here.",
+    target: "[data-tour='command-input']",
+    title: "Command Center",
+    description: "Type what you want to achieve. The AI agent will create an execution plan automatically.",
     position: "top",
+  },
+  {
+    target: "[data-tour='intent-chips']",
+    title: "Quick Intents",
+    description: "Click a suggested intent to get started quickly — extract neurons, generate content, analyze patterns.",
+    position: "top",
+  },
+  {
+    target: "[data-tour='workspace-tabs']",
+    title: "Workspace Layers",
+    description: "Switch between Execute, Explore, and Build modes depending on your current task.",
+    position: "bottom",
   },
 ];
 
