@@ -6,9 +6,10 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   Shield, Cpu, Network, Zap, Brain,
-  ChevronRight, Lock, Crown,
+  ChevronRight, Lock, Crown, Map,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 12 },
