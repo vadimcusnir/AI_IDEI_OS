@@ -98,7 +98,7 @@ export default function CusnirOSOperator() {
   const { unlocks, patterns, executions, stats: supStats, loading: supLoading } = useOSSuperlayer();
   const [tab, setTab] = useState<Tab>("modules");
 
-  if (authLoading || adminLoading || loading) {
+  if (authLoading || adminLoading || loading || supLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
