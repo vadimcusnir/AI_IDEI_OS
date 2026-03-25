@@ -11,12 +11,7 @@
   "close": "Inchide",
   "back": "Inapoi",
   "next": "Inainte",
-  "search": {
-    "type_neuron": "Neuron",
-    "type_artifact": "Artefact",
-    "type_guest": "Invitat",
-    "type_insight": "Idee"
-  },
+  "search": "Caută",
   "no_results": "Fara rezultate",
   "confirm": "Confirma",
   "apply": "Aplica",
@@ -722,5 +717,70 @@
   "tutorial.start_exploring": "Începe Explorarea",
   "auth.disposable_email": "Adresele de email temporare nu sunt permise. Folosește un email permanent.",
   "auth.accept_tos": "Accept Termenii Serviciului și Politica de Confidențialitate",
-  "auth.tos_required": "Trebuie să accepți Termenii pentru a continua"
+  "auth.tos_required": "Trebuie să accepți Termenii pentru a continua",
+  "behavior": {
+    "explorer_cta": "Începe explorarea",
+    "momentum": "Ești în formă! Menține ritmul.",
+    "near_cap": "Te apropii de limita de utilizare",
+    "savings": "Economisești {{percent}}%",
+    "see_plans": "Vezi planuri",
+    "social_proof": "Folosit de {{count}} profesioniști",
+    "start_free": "Începe gratuit",
+    "streak_lost": "Seria ta a fost resetată",
+    "streak_recover": "Recuperează seria",
+    "upgrade_hint": "Upgradează pentru mai multă putere",
+    "upgrade_limit": "Ai atins limita planului tău"
+  },
+  "distribution": {
+    "cta_note": "CTA va fi adăugat la conținutul partajat",
+    "download_pack": "Descarcă pachetul",
+    "hide_variants": "Ascunde variante",
+    "show_variants": "Arată variante",
+    "title": "Distribuție",
+    "variants": "Variante"
+  },
+  "memory": {
+    "compound_level": "Nivel compus",
+    "compounding": "Acumulare de cunoștințe",
+    "lockin_high": "Blocare ridicată",
+    "lockin_low": "Blocare scăzută",
+    "lockin_medium": "Blocare medie",
+    "lockin_score": "Scor de blocare",
+    "suggestions": "Sugestii",
+    "title": "Inteligență de memorie",
+    "top_topics": "Subiecte de top"
+  },
+  "share": {
+    "copied": "Copiat în clipboard!",
+    "copied_btn": "Copiat!",
+    "copy_failed": "Copierea a eșuat",
+    "copy_with_cta": "Copiază cu CTA",
+    "cta_embedded": "CTA inclus",
+    "download_md": "Descarcă Markdown",
+    "downloaded": "Descărcat!",
+    "share": "Partajează",
+    "viral_ready": "Gata de viralitate"
+  },
+  "token": {
+    "access_desc": "Tokenurile oferă acces la funcții premium",
+    "access_model": "Model de acces",
+    "activity": "Activitate",
+    "available": "Disponibil",
+    "compute_desc": "Creditele alimentează calculele AI",
+    "earn_hint": "Câștigă tokeni contribuind cu cunoștințe",
+    "not_initialized": "Portofelul nu este inițializat",
+    "staked": "Blocat (stake)",
+    "tier_expires": "Tier-ul expiră {{date}}",
+    "total_earned": "Total câștigat",
+    "total_supply": "Ofertă totală"
+  },
+  "upload_failed": "Încărcarea a eșuat",
+  "upsell": {
+    "continue_title": "Continuă cu mai mulți neuroni",
+    "low_balance_title": "Neuroni pe terminate",
+    "save": "Economisești {{percent}}%",
+    "spend_context": "Această operațiune costă {{cost}} neuroni",
+    "topup_cta": "Reîncarcă acum"
+  },
+  "description": "Descriere"
 }
