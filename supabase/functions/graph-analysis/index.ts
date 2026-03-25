@@ -32,9 +32,13 @@ Deno.serve(async (req) => {
       return await findGaps(supabase, workspace_id);
     } else if (action === "suggestions") {
       return await getSuggestions(supabase, workspace_id);
+    } else if (action === "cluster") {
+      return await clusterGraph(supabase);
+    } else if (action === "cross_episode") {
+      return await crossEpisodeConnections(supabase);
     }
 
-    return new Response(JSON.stringify({ error: "Invalid action" }), {
+    return new Response(JSON.stringify({ error: "Invalid action. Use: contradictions, gaps, suggestions, cluster, cross_episode" }), {
       status: 400,
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
