@@ -11,13 +11,41 @@ import pagesEN from "@/locales/en/pages.json";
 import architectureEN from "@/locales/en/architecture.json";
 import landingEN from "@/locales/en/landing.json";
 
-// RO and RU are lazy-loaded on language switch only
-
 export const defaultNS = "common";
 export const supportedLanguages = ["en", "ro", "ru"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 const allNamespaces = ["common", "navigation", "errors", "forms", "pages", "architecture", "landing"] as const;
+
+// Track loaded languages
+const loadedLanguages = new Set(["en"]);
+
+/**
+ * Load all namespace bundles for a given language.
+ * Returns true if successfully loaded.
+ */
+async function loadLanguageBundles(lng: string): Promise<boolean> {
+  if (lng === "en" || loadedLanguages.has(lng)) return true;
+
+  try {
+    const bundles = await Promise.all(
+      allNamespaces.map(async (ns) => {
+        const mod = await import(`../locales/${lng}/${ns}.json`);
+        return { ns, data: mod.default };
+      })
+    );
+
+    bundles.forEach(({ ns, data }) => {
+      i18n.addResourceBundle(lng, ns, data, true, true);
+    });
+
+    loadedLanguages.add(lng);
+    return true;
+  } catch (e) {
+    console.warn(`Failed to load locale: ${lng}`, e);
+    return false;
+  }
+}
 
 i18n
   .use(LanguageDetector)
@@ -46,36 +74,29 @@ i18n
       lookupLocalStorage: "i18nextLng",
       caches: ["localStorage"],
     },
+    react: {
+      useSuspense: false,
+    },
   });
 
 // Lazy-load RO/RU namespaces when language changes
-const loadedLanguages = new Set(["en"]);
-
-i18n.on("languageChanged", async (lng) => {
-  if (lng === "en" || loadedLanguages.has(lng)) return;
-
-  try {
-    const bundles = await Promise.all(
-      allNamespaces.map(async (ns) => {
-        const mod = await import(`../locales/${lng}/${ns}.json`);
-        return { ns, data: mod.default };
-      })
-    );
-
-    bundles.forEach(({ ns, data }) => {
-      i18n.addResourceBundle(lng, ns, data, true, true);
-    });
-
-    loadedLanguages.add(lng);
-  } catch (e) {
-    console.warn(`Failed to load locale: ${lng}`, e);
-  }
+i18n.on("languageChanged", (lng) => {
+  loadLanguageBundles(lng);
 });
 
-// If detected language is not EN, trigger load immediately
+// Pre-load detected language before first render
 const detectedLng = i18n.language?.split("-")[0];
-if (detectedLng && detectedLng !== "en" && supportedLanguages.includes(detectedLng as any)) {
-  i18n.changeLanguage(detectedLng);
-}
+
+/**
+ * Promise that resolves when the initial language is fully loaded.
+ * Import this in main.tsx to await before rendering.
+ */
+export const i18nReady: Promise<void> = (async () => {
+  if (detectedLng && detectedLng !== "en" && supportedLanguages.includes(detectedLng as SupportedLanguage)) {
+    await loadLanguageBundles(detectedLng);
+    // Now change language after bundles are loaded (no flash of untranslated keys)
+    await i18n.changeLanguage(detectedLng);
+  }
+})();
 
 export default i18n;
