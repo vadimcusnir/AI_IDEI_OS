@@ -6258,6 +6258,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          onboarding_completed: boolean | null
           preferred_language: string | null
           updated_at: string
           user_id: string
@@ -6269,6 +6270,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          onboarding_completed?: boolean | null
           preferred_language?: string | null
           updated_at?: string
           user_id: string
@@ -6280,6 +6282,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          onboarding_completed?: boolean | null
           preferred_language?: string | null
           updated_at?: string
           user_id?: string
@@ -9275,6 +9278,17 @@ export type Database = {
       mark_units_llm_ready: {
         Args: { _category_id: string; _min_quality?: number }
         Returns: number
+      }
+      match_neurons: {
+        Args: {
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          neuron_id: number
+          similarity: number
+        }[]
       }
       move_to_dlq: {
         Args: {
