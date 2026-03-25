@@ -6982,6 +6982,71 @@ export type Database = {
           },
         ]
       }
+      public_analyses: {
+        Row: {
+          analysis_type: string
+          author_id: string
+          content: string
+          created_at: string | null
+          id: string
+          is_published: boolean | null
+          meta_description: string | null
+          meta_title: string | null
+          og_image_url: string | null
+          slug: string
+          source_artifact_id: string | null
+          summary: string
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+          view_count: number | null
+        }
+        Insert: {
+          analysis_type?: string
+          author_id: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
+          slug: string
+          source_artifact_id?: string | null
+          summary?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          analysis_type?: string
+          author_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
+          slug?: string
+          source_artifact_id?: string | null
+          summary?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_analyses_source_artifact_id_fkey"
+            columns: ["source_artifact_id"]
+            isOneToOne: false
+            referencedRelation: "artifacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       push_config: {
         Row: {
           created_at: string | null
@@ -9589,6 +9654,7 @@ export type Database = {
         }[]
       }
       i18n_coverage_report: { Args: never; Returns: Json }
+      increment_analysis_views: { Args: { _slug: string }; Returns: undefined }
       is_feature_enabled: {
         Args: { _key: string; _user_id?: string }
         Returns: boolean
