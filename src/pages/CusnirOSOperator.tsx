@@ -278,6 +278,16 @@ export default function CusnirOSOperator() {
             </div>
           )}
 
+          {/* Economy Layer */}
+          {tab === "economy" && (
+            <EconomyLayerPanel unlocks={unlocks} stats={supStats} />
+          )}
+
+          {/* Memory + Learning Engine */}
+          {tab === "memory" && (
+            <MemoryLayerPanel patterns={patterns} executions={executions} />
+          )}
+
           {/* Decision Ledger Monitor */}
           {tab === "ledger" && (
             <Card>
