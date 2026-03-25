@@ -18,7 +18,7 @@ The platform has a strong security posture. All critical and high findings from 
 | SEC-003 | **MEDIUM** | Auth | `chunk-transcript` uses anon key for auth header | ✅ FIXED |
 | SEC-004 | **MEDIUM** | Config | Leaked password protection disabled | ⚠️ MANUAL (requires Pro Plan) |
 | SEC-005 | **LOW** | RLS | `push_config` table has no RLS policies | ✅ FIXED |
-| SEC-006 | **LOW** | CORS | All edge functions use `Access-Control-Allow-Origin: *` | ✅ FIXED |
+| SEC-006 | **LOW** | CORS | All edge functions use `Access-Control-Allow-Origin: *` | ✅ FIXED (v2) |
 | SEC-007 | **INFO** | Auth | No rate limiting on auth endpoints | ⚠️ OPEN |
 | SEC-008 | **INFO** | Input | Limited input validation on edge function payloads | ✅ FIXED |
 
