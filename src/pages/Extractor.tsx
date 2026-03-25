@@ -101,11 +101,7 @@ export default function Extractor() {
   };
 
   if (authLoading || wsLoading || loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-5 w-5 animate-spin text-primary" />
-      </div>
-    );
+    return <ExtractorSkeleton />;
   }
 
   return (
