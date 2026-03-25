@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ExtractorSkeleton } from "@/components/skeletons/ExtractorSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
