@@ -4,11 +4,17 @@
  * Used by a reverse proxy or middleware to inject SEO data into SPA shell.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const BASE_URL = "https://ai-idei.com";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
+
+  // Rate limit by IP (public endpoint, no auth)
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const rateLimited = await rateLimitGuard(`prerender:${ip}`, req, { maxRequests: 30, windowSeconds: 60 }, getCorsHeaders(req));
+  if (rateLimited) return rateLimited;
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
