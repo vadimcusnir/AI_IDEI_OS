@@ -229,8 +229,8 @@ export default function Services() {
                   className={cn(
                     "rounded-xl border p-3 text-left transition-all duration-200",
                     isActive
-                      ? "border-primary/40 bg-primary/5 shadow-sm"
-                      : "border-border hover:border-primary/20 hover:bg-primary/[0.02]"
+                      ? "border-[hsl(var(--gold-oxide)/0.4)] bg-[hsl(var(--gold-oxide)/0.05)] shadow-sm"
+                      : "border-border hover:border-[hsl(var(--gold-oxide)/0.2)] hover:bg-[hsl(var(--gold-oxide)/0.02)]"
                   )}
                 >
                   <div className="flex items-center gap-2 mb-1.5">
