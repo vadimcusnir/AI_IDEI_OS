@@ -368,8 +368,8 @@ export default function Home() {
             onChange={setActiveLayer}
             executionActive={execState.phase !== "idle"}
           />
+          </div>
 
-          {/* Execution Status Bar */}
           <ExecutionStatusBar
             phase={execState.phase} intent={execState.intent}
             totalCredits={execState.totalCredits}
