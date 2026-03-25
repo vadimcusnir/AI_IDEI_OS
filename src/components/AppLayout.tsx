@@ -96,8 +96,10 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               </div>
             </div>
 
-            {/* ─── CENTER: Spacer ─── */}
-            <div className="flex-1 min-w-0" />
+            {/* ─── CENTER: Presence + Spacer ─── */}
+            <div className="flex-1 min-w-0 flex items-center justify-center">
+              {user && <Suspense fallback={null}><PresenceBar /></Suspense>}
+            </div>
 
             {/* ─── RIGHT: Controls ─── */}
             <div className="flex items-center gap-1 shrink-0">
