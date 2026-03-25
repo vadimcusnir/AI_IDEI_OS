@@ -52,8 +52,8 @@ export default function WalletPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-5">
 
           <div className="flex items-center gap-3 mb-6">
-            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Wallet className="h-5 w-5 text-primary" />
+            <div className="h-10 w-10 rounded-xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center">
+              <Wallet className="h-5 w-5 text-[hsl(var(--gold-oxide))]" />
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">{t("wallet.title")}</h1>
