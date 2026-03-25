@@ -282,6 +282,17 @@ export default function CusnirOSOperator() {
             </div>
           )}
 
+          {/* Agent Swarm */}
+          {tab === "agents" && (
+            <AgentExecutionPanel
+              agents={agents}
+              executions={executions}
+              onStartExecution={startExecution}
+              onCompleteExecution={completeExecution}
+              executing={executing}
+            />
+          )}
+
           {/* Economy Layer */}
           {tab === "economy" && (
             <EconomyLayerPanel
