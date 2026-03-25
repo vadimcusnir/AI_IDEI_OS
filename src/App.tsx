@@ -181,7 +181,7 @@ const App = () => (
                 <Route path="/media/profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Media profiles failed to load"><MediaProfiles /></ErrorBoundary></AppLayout>} />
                 <Route path="/media/profiles/:slug" element={<ErrorBoundary fallbackTitle="Media profile failed"><MediaProfilePublic /></ErrorBoundary>} />
                 <Route path="/admin/media-profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Admin media failed"><AdminMediaProfiles /></ErrorBoundary></AppLayout>} />
-                <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
+                <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><ErrorBoundary fallbackTitle="Audit log failed to load"><AdminAuditLog /></ErrorBoundary></AdminRoute></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><PipelineOverview /></ErrorBoundary></AppLayout>} />
                 <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
                 {/* /knowledge/:slug is handled above as public route */}
