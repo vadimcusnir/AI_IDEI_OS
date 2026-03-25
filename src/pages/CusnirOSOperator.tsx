@@ -1,6 +1,7 @@
 import { useOSOperator } from "@/hooks/useOSOperator";
 import { useOSSuperlayer } from "@/hooks/useOSSuperlayer";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useGamification } from "@/hooks/useGamification";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
