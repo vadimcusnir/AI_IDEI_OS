@@ -20,6 +20,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { EconomyLayerPanel } from "@/components/cusnir-os/EconomyLayerPanel";
 import { MemoryLayerPanel } from "@/components/cusnir-os/MemoryLayerPanel";
+import { AgentExecutionPanel } from "@/components/cusnir-os/AgentExecutionPanel";
 const HEALTH_COLORS: Record<string, string> = {
   healthy: "text-status-validated bg-status-validated/10",
   warning: "text-warning bg-warning/10",
