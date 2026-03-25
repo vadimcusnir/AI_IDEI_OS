@@ -179,8 +179,8 @@ export default function ProfilePage() {
                         className="h-20 w-20 rounded-2xl object-cover border-2 border-border shadow-sm"
                       />
                     ) : (
-                      <div className="h-20 w-20 rounded-2xl bg-primary/10 border-2 border-border flex items-center justify-center shadow-sm">
-                        <span className="text-2xl font-bold text-primary">{avatarInitial}</span>
+                      <div className="h-20 w-20 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] border-2 border-border flex items-center justify-center shadow-sm">
+                        <span className="text-2xl font-bold text-[hsl(var(--gold-oxide))]">{avatarInitial}</span>
                       </div>
                     )}
                   </div>
