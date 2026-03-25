@@ -91,7 +91,7 @@ const MODULE_STATUS_COLORS: Record<string, string> = {
   experimental: "bg-warning/10 text-warning",
 };
 
-type Tab = "modules" | "superlayer" | "economy" | "memory" | "ledger";
+type Tab = "modules" | "superlayer" | "agents" | "economy" | "memory" | "ledger";
 
 export default function CusnirOSOperator() {
   const { user, loading: authLoading } = useAuth();
