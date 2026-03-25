@@ -428,8 +428,15 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
 
       <Divider />
 
+      {/* SUPERLAYER MODULES */}
+      <motion.div {...fade(0.44)}>
+        <SuperlayerModules eligible={eligible} />
+      </motion.div>
+
+      <Divider />
+
       {/* CTA */}
-      <motion.div {...fade(0.45)} className="text-center space-y-4 pb-6">
+      <motion.div {...fade(0.48)} className="text-center space-y-4 pb-6">
         <CopyBlock className="!text-center">
           <p className="text-foreground/80 font-medium">
             Remain active.<br />
@@ -442,11 +449,17 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
         </CopyBlock>
 
         {eligible && (
-          <div className="flex items-center justify-center gap-2 pt-2">
+          <div className="flex items-center justify-center gap-2 pt-2 flex-wrap">
             <Button asChild size="sm" className="h-8 text-xs gap-1.5">
               <Link to="/cusnir-os/map">
                 <Map className="h-3 w-3" />
-                System Map — Harta Sistemului
+                System Map
+              </Link>
+            </Button>
+            <Button asChild size="sm" variant="outline" className="h-8 text-xs gap-1.5">
+              <Link to="/cusnir-os/architecture">
+                <FileText className="h-3 w-3" />
+                Architecture Spec
               </Link>
             </Button>
           </div>

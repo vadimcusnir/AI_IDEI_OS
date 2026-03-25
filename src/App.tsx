@@ -91,6 +91,7 @@ const RuntimeDashboard = lazyRetry(() => import("./pages/RuntimeDashboard"));
 const CusnirOSOperator = lazyRetry(() => import("./pages/CusnirOSOperator"));
 const CusnirOSPage = lazyRetry(() => import("./pages/CusnirOSPage"));
 const CusnirOSMap = lazyRetry(() => import("./pages/CusnirOSMap"));
+const CusnirOSArchitecture = lazyRetry(() => import("./pages/CusnirOSArchitecture"));
 const About = lazyRetry(() => import("./pages/About"));
 const AboutVadimCusnir = lazyRetry(() => import("./pages/AboutVadimCusnir"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
