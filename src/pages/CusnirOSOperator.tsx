@@ -189,7 +189,9 @@ export default function CusnirOSOperator() {
           </div>
 
           {/* Module Registry Table */}
+          <AnimatePresence mode="wait">
           {tab === "modules" && (
+            <motion.div key="modules" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
