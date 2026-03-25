@@ -230,7 +230,7 @@ export default function Library() {
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={cn(
                 "flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium transition-colors border-b-2 -mb-px",
-                activeTab === tab.key ? "text-primary border-primary" : "text-muted-foreground border-transparent hover:text-foreground"
+                activeTab === tab.key ? "text-[hsl(var(--gold-oxide))] border-[hsl(var(--gold-oxide))]" : "text-muted-foreground border-transparent hover:text-foreground"
               )}>
               <tab.icon className="h-3.5 w-3.5" />
               {tab.label}
