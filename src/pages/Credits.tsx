@@ -180,9 +180,9 @@ export default function Credits() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
         {/* Page title */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold tracking-tight">{t("credits.title")}</h1>
+            <h1 className="text-lg font-bold tracking-tight">{t("credits.title")}</h1>
             <span className={cn(
               "text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
               balanceHealth === "healthy" ? "bg-status-validated/15 text-status-validated" :
@@ -246,7 +246,7 @@ export default function Credits() {
                 <Coins className={cn(
                   "h-5 w-5",
                   balanceHealth === "healthy" ? "text-status-validated" :
-                  balanceHealth === "warning" ? "text-primary" : "text-destructive"
+                  balanceHealth === "warning" ? "text-[hsl(var(--gold-oxide))]" : "text-destructive"
                 )} />
               </div>
             </div>
@@ -363,7 +363,7 @@ export default function Credits() {
                   onClick={() => setTxFilter(f.value)}
                   className={cn(
                     "px-2 py-1 rounded text-[10px] font-medium transition-colors",
-                    txFilter === f.value ? "bg-primary/10 text-primary" : "text-muted-foreground/60 hover:text-foreground"
+                    txFilter === f.value ? "bg-[hsl(var(--gold-oxide)/0.1)] text-[hsl(var(--gold-oxide))]" : "text-muted-foreground/60 hover:text-foreground"
                   )}
                 >
                   {t(f.labelKey)}

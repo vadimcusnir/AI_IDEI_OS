@@ -229,16 +229,16 @@ export default function Services() {
                   className={cn(
                     "rounded-xl border p-3 text-left transition-all duration-200",
                     isActive
-                      ? "border-primary/40 bg-primary/5 shadow-sm"
-                      : "border-border hover:border-primary/20 hover:bg-primary/[0.02]"
+                      ? "border-[hsl(var(--gold-oxide)/0.4)] bg-[hsl(var(--gold-oxide)/0.05)] shadow-sm"
+                      : "border-border hover:border-[hsl(var(--gold-oxide)/0.2)] hover:bg-[hsl(var(--gold-oxide)/0.02)]"
                   )}
                 >
                   <div className="flex items-center gap-2 mb-1.5">
                     <div className={cn(
                       "h-7 w-7 rounded-lg flex items-center justify-center",
-                      isActive ? "bg-primary/15" : "bg-muted"
+                      isActive ? "bg-[hsl(var(--gold-oxide)/0.12)]" : "bg-muted"
                     )}>
-                      <Icon className={cn("h-3.5 w-3.5", isActive ? "text-primary" : "text-muted-foreground")} />
+                      <Icon className={cn("h-3.5 w-3.5", isActive ? "text-[hsl(var(--gold-oxide))]" : "text-muted-foreground")} />
                     </div>
                     <span className="text-[10px] font-mono text-muted-foreground">{count}</span>
                   </div>
@@ -269,13 +269,13 @@ export default function Services() {
           <div className="flex items-center border border-border rounded-lg overflow-hidden shrink-0">
             <button
               onClick={() => setViewMode("grid")}
-              className={cn("p-2 transition-colors", viewMode === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
+              className={cn("p-2 transition-colors", viewMode === "grid" ? "bg-[hsl(var(--gold-oxide)/0.1)] text-[hsl(var(--gold-oxide))]" : "text-muted-foreground hover:text-foreground")}
             >
               <LayoutGrid className="h-3.5 w-3.5" />
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={cn("p-2 transition-colors", viewMode === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
+              className={cn("p-2 transition-colors", viewMode === "list" ? "bg-[hsl(var(--gold-oxide)/0.1)] text-[hsl(var(--gold-oxide))]" : "text-muted-foreground hover:text-foreground")}
             >
               <List className="h-3.5 w-3.5" />
             </button>
@@ -315,8 +315,8 @@ export default function Services() {
               >
                 {/* Intent header */}
                 <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <IntentIcon className="h-4 w-4 text-primary" />
+                  <div className="h-8 w-8 rounded-lg bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center">
+                    <IntentIcon className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
@@ -379,9 +379,9 @@ export default function Services() {
         <motion.section
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/[0.02] p-6 text-center space-y-3"
+          className="rounded-2xl border border-[hsl(var(--gold-oxide)/0.2)] bg-gradient-to-br from-[hsl(var(--gold-oxide)/0.05)] via-background to-[hsl(var(--gold-oxide)/0.02)] p-8 text-center space-y-4"
         >
-          <Zap className="h-8 w-8 text-primary mx-auto" />
+          <Zap className="h-8 w-8 text-[hsl(var(--gold-oxide))] mx-auto" />
           <h2 className="text-lg font-bold">Începe producția</h2>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
             {services.length}+ sisteme AI. 50+ outputs per execuție. Cost mediu: $0.14/output.

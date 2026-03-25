@@ -134,7 +134,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold tracking-tight">{t("profile.title")}</h1>
                 {(tier === "pro" || tier === "vip") && (
-                  <Badge variant="outline" className="text-[8px] px-1.5 py-0 gap-0.5 border-primary/30 text-primary">
+                  <Badge variant="outline" className="text-[8px] px-1.5 py-0 gap-0.5 border-[hsl(var(--gold-oxide)/0.3)] text-[hsl(var(--gold-oxide))]">
                     <Crown className="h-2.5 w-2.5" />
                     {tier === "vip" ? "VIP" : "PRO"}
                   </Badge>
@@ -179,8 +179,8 @@ export default function ProfilePage() {
                         className="h-20 w-20 rounded-2xl object-cover border-2 border-border shadow-sm"
                       />
                     ) : (
-                      <div className="h-20 w-20 rounded-2xl bg-primary/10 border-2 border-border flex items-center justify-center shadow-sm">
-                        <span className="text-2xl font-bold text-primary">{avatarInitial}</span>
+                      <div className="h-20 w-20 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] border-2 border-border flex items-center justify-center shadow-sm">
+                        <span className="text-2xl font-bold text-[hsl(var(--gold-oxide))]">{avatarInitial}</span>
                       </div>
                     )}
                   </div>
@@ -265,7 +265,7 @@ export default function ProfilePage() {
               <ControlledSection elementId="profile.notification_prefs">
               <div className="bg-card border border-border rounded-xl p-6">
                 <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                  <Bell className="h-4 w-4 text-primary" />
+                  <Bell className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
                   {t("profile.notification_prefs")}
                 </h2>
 
@@ -279,7 +279,7 @@ export default function ProfilePage() {
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <BellRing className="h-4 w-4 text-primary" />
+                          <BellRing className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
                           <div>
                             <p className="text-xs font-medium">{t("profile.browser_notifications")}</p>
                             <p className="text-[10px] text-muted-foreground">
@@ -335,7 +335,7 @@ export default function ProfilePage() {
                             className={cn(
                               "px-3 py-1.5 rounded-full text-[11px] font-medium transition-all min-h-[32px]",
                               prefs.email_digest === opt.key
-                                ? "bg-primary text-primary-foreground shadow-sm"
+                                ? "bg-[hsl(var(--gold-oxide))] text-white shadow-sm"
                                 : "bg-muted text-muted-foreground hover:bg-muted/80"
                             )}
                           >
@@ -433,7 +433,7 @@ export default function ProfilePage() {
             <StaggerItem>
               <Link
                 to="/data-privacy"
-                className="block bg-card border border-border rounded-xl p-5 hover:border-primary/30 hover-lift transition-all"
+                className="block bg-card border border-border rounded-xl p-5 hover:border-[hsl(var(--gold-oxide)/0.3)] hover-lift transition-all"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -442,7 +442,7 @@ export default function ProfilePage() {
                       {t("profile.data_privacy_desc")}
                     </p>
                   </div>
-                  <span className="text-xs text-primary">→</span>
+                  <span className="text-xs text-[hsl(var(--gold-oxide))]">→</span>
                 </div>
               </Link>
             </StaggerItem>

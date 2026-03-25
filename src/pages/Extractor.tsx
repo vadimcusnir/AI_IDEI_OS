@@ -122,7 +122,7 @@ export default function Extractor() {
           transition={{ duration: 0.4 }}
           className="mb-8"
         >
-          <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-primary mb-2">
+          <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[hsl(var(--gold-oxide))] mb-2">
             Data Input
           </p>
           <h1 className="text-[length:var(--h2-size)] font-bold leading-[var(--lh-h2)] text-foreground tracking-tight">
@@ -138,10 +138,10 @@ export default function Extractor() {
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-5 rounded-2xl border border-primary/20 bg-primary/5 flex items-center gap-5"
+            className="mb-8 p-5 rounded-2xl border border-[hsl(var(--gold-oxide)/0.2)] bg-[hsl(var(--gold-oxide)/0.05)] flex items-center gap-5"
           >
-            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <ArrowRight className="h-5 w-5 text-primary" />
+            <div className="h-10 w-10 rounded-xl bg-[hsl(var(--gold-oxide)/0.1)] flex items-center justify-center shrink-0">
+              <ArrowRight className="h-5 w-5 text-[hsl(var(--gold-oxide))]" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[length:var(--body-dense-size)] font-semibold text-foreground">
@@ -170,7 +170,7 @@ export default function Extractor() {
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 text-[length:var(--body-dense-size)] font-medium border-b-2 -mb-px transition-all whitespace-nowrap",
                   active
-                    ? "text-primary border-primary"
+                    ? "text-[hsl(var(--gold-oxide))] border-[hsl(var(--gold-oxide))]"
                     : "text-muted-foreground border-transparent hover:text-foreground hover:border-border"
                 )}
               >
@@ -217,8 +217,8 @@ export default function Extractor() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-20 bg-card border border-dashed border-border rounded-2xl"
               >
-                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                  <FileText className="h-8 w-8 text-primary/40" />
+                <div className="h-16 w-16 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-5">
+                  <FileText className="h-8 w-8 text-[hsl(var(--gold-oxide)/0.4)]" />
                 </div>
                 <h3 className="text-[length:var(--h3-size)] font-semibold text-foreground mb-2">
                   Niciun material încărcat
@@ -261,7 +261,7 @@ export default function Extractor() {
         {activeTab === "youtube" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }} className="space-y-8">
             <div className="text-center mb-2">
-              <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-primary mb-2">
+              <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[hsl(var(--gold-oxide))] mb-2">
                 Transcriere
               </p>
               <h2 className="text-[length:var(--h3-size)] font-bold text-foreground mb-1.5">
@@ -278,8 +278,8 @@ export default function Extractor() {
               </>
             ) : (
               <div className="rounded-2xl border-2 border-dashed border-border bg-card p-10 text-center">
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <Youtube className="h-7 w-7 text-primary/40" />
+                <div className="h-14 w-14 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-4">
+                  <Youtube className="h-7 w-7 text-[hsl(var(--gold-oxide)/0.4)]" />
                 </div>
                 <p className="text-[length:var(--body-dense-size)] text-muted-foreground mb-5">
                   Autentifică-te pentru a începe.

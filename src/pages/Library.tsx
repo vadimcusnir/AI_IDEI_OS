@@ -210,7 +210,7 @@ export default function Library() {
             </Button>
             <div>
               <h1 className="text-xl font-bold flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-primary" /> Librărie
+                <BookOpen className="h-5 w-5 text-[hsl(var(--gold-oxide))]" /> Librărie
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5">
                 {artifacts.length} livrabile · {neurons.length} date context · {bundles.length} pachete
@@ -230,13 +230,13 @@ export default function Library() {
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={cn(
                 "flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium transition-colors border-b-2 -mb-px",
-                activeTab === tab.key ? "text-primary border-primary" : "text-muted-foreground border-transparent hover:text-foreground"
+                activeTab === tab.key ? "text-[hsl(var(--gold-oxide))] border-[hsl(var(--gold-oxide))]" : "text-muted-foreground border-transparent hover:text-foreground"
               )}>
               <tab.icon className="h-3.5 w-3.5" />
               {tab.label}
               <span className={cn(
                 "text-[9px] font-mono px-1.5 py-0.5 rounded-full",
-                activeTab === tab.key ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+                activeTab === tab.key ? "bg-[hsl(var(--gold-oxide)/0.12)] text-[hsl(var(--gold-oxide))]" : "bg-muted text-muted-foreground"
               )}>
                 {tab.count}
               </span>
@@ -296,7 +296,7 @@ export default function Library() {
                       if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
                       else { setSortField(field); setSortDir("desc"); }
                     }}
-                    className={cn(sortField === field && "text-primary")}>
+                    className={cn(sortField === field && "text-[hsl(var(--gold-oxide))]")}>
                     {label}
                     {sortField === field && (
                       sortDir === "desc" ? <SortDesc className="h-3 w-3 ml-auto" /> : <SortAsc className="h-3 w-3 ml-auto" />
@@ -357,7 +357,7 @@ export default function Library() {
                     <div key={key} className="rounded-xl border border-border bg-card p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Package className="h-4 w-4 text-primary" />
+                          <Package className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
                           <div>
                             <h3 className="text-sm font-semibold">
                               {serviceKey.replace(/[-_]/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
@@ -377,7 +377,7 @@ export default function Library() {
                             <div
                               key={item.id}
                               onClick={() => navigate(`/library/${item.id}`)}
-                              className="flex items-center gap-2 p-2.5 rounded-lg border border-border hover:border-primary/30 transition-colors cursor-pointer"
+                              className="flex items-center gap-2 p-2.5 rounded-lg border border-border hover:border-[hsl(var(--gold-oxide)/0.3)] transition-colors cursor-pointer"
                             >
                               <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                               <div className="flex-1 min-w-0">
