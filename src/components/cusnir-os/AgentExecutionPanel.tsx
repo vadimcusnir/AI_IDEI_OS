@@ -230,6 +230,17 @@ export function AgentExecutionPanel({
                       ))}
                     </div>
 
+                    {/* Prompt Input */}
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder={`Prompt pentru ${agent.role}...`}
+                        className="h-7 text-[10px]"
+                        value={prompts[agent.id] || ""}
+                        onChange={e => setPrompts(p => ({ ...p, [agent.id]: e.target.value }))}
+                        disabled={isStandby || isExecuting}
+                      />
+                    </div>
+
                     {/* Footer */}
                     <div className="flex items-center justify-between pt-1">
                       <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
@@ -240,12 +251,16 @@ export function AgentExecutionPanel({
                         size="sm"
                         className="h-7 text-[10px] gap-1"
                         disabled={isStandby || isExecuting}
-                        onClick={() => onStartExecution(agent.id, { mode: "standard" })}
+                        onClick={() => {
+                          const prompt = prompts[agent.id] || undefined;
+                          onStartExecution(agent.id, prompt ? { prompt } : { mode: "standard" });
+                          setPrompts(p => ({ ...p, [agent.id]: "" }));
+                        }}
                       >
                         {isExecuting ? (
-                          <><Loader2 className="h-3 w-3 animate-spin" /> Pornire...</>
+                          <><Loader2 className="h-3 w-3 animate-spin" /> Execuție AI...</>
                         ) : (
-                          <><Play className="h-3 w-3" /> Execută</>
+                          <><Play className="h-3 w-3" /> Execută AI</>
                         )}
                       </Button>
                     </div>
