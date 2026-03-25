@@ -204,6 +204,11 @@
     "privacy": "Конфиденциальность",
     "data_privacy": "Защита данных",
     "copyright": "От грубой идеи к убедительному активу.",
-    "docs": "Документация"
+    "docs": "Документация",
+    "pricing": "Цены",
+    "about_section": "О нас",
+    "about_platform": "Об AI-IDEI",
+    "about_vadim": "О Вадиме Кушнире",
+    "about_cusnir_os": "Cusnir_OS"
   }
 }
