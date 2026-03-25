@@ -186,6 +186,7 @@ export function useOSSuperlayer() {
       const costMap: Record<string, number> = { cognitive: 15, social: 12, commercial: 18, infrastructure: 20 };
       const cost = costMap[agent?.agent_type || ""] || 10;
 
+      // Step 1: Reserve credits and create execution record
       const { data, error } = await supabase.rpc("start_agent_execution", {
         _user_id: user.id,
         _agent_id: agentId,
@@ -194,8 +195,24 @@ export function useOSSuperlayer() {
       });
       if (error) throw error;
       const result = data as any;
-      if (result?.success) await load();
-      return result;
+      if (!result?.success) return result;
+
+      // Step 2: Call AI-powered execution edge function
+      const { data: aiResult, error: aiError } = await supabase.functions.invoke("execute-os-agent", {
+        body: {
+          agent_id: agentId,
+          user_id: user.id,
+          input: input || { prompt: `Run standard ${agent?.role || "agent"} analysis` },
+          execution_id: result.execution_id,
+        },
+      });
+
+      if (aiError) {
+        console.error("AI execution error:", aiError);
+      }
+
+      await load();
+      return { ...result, ai_output: aiResult?.output };
     } catch {
       return { success: false, error: "rpc_failed" };
     } finally {
