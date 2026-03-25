@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, FileText, FileJson, File, FileType, Copy, Archive } from "lucide-react";
+import { Download, FileText, FileJson, File, FileType, Copy, Archive, Printer } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
