@@ -188,193 +188,195 @@ export default function CusnirOSOperator() {
             })}
           </div>
 
-          {/* Module Registry Table */}
           <AnimatePresence mode="wait">
-          {tab === "modules" && (
-            <motion.div key="modules" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Server className="h-4 w-4 text-primary" /> Module Registry ({modules.length})
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="border-b border-border bg-muted/30">
-                        <th className="text-left p-3 font-medium">Module</th>
-                        <th className="text-left p-3 font-medium">Type</th>
-                        <th className="text-left p-3 font-medium">Version</th>
-                        <th className="text-left p-3 font-medium">Status</th>
-                        <th className="text-left p-3 font-medium">Health</th>
-                        <th className="text-left p-3 font-medium">Risk</th>
-                        <th className="text-right p-3 font-medium">Latency</th>
-                        <th className="text-right p-3 font-medium">Error %</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {modules.map((m) => {
-                        const HealthIcon = HEALTH_ICONS[m.health_status] || Activity;
-                        return (
-                          <tr key={m.id} className="border-b border-border/50 hover:bg-muted/20">
-                            <td className="p-3">
-                              <div className="font-medium">{m.module_name}</div>
-                              <div className="text-muted-foreground text-[10px] mt-0.5 max-w-[200px] truncate">{m.description}</div>
-                            </td>
-                            <td className="p-3 capitalize">{m.module_type}</td>
-                            <td className="p-3 font-mono">{m.version}</td>
-                            <td className="p-3">
-                              <Badge className={cn("text-[10px]", STATUS_COLORS[m.status] || "")}>{m.status}</Badge>
-                            </td>
-                            <td className="p-3">
-                              <span className={cn("inline-flex items-center gap-1", HEALTH_COLORS[m.health_status] || "")}>
-                                <HealthIcon className="h-3 w-3" /> {m.health_status}
-                              </span>
-                            </td>
-                            <td className="p-3">
-                              <span className={cn("font-medium", RISK_COLORS[m.risk_level] || "")}>{m.risk_level}</span>
-                            </td>
-                            <td className="p-3 text-right tabular-nums">{m.avg_latency_ms}ms</td>
-                            <td className="p-3 text-right tabular-nums">{(m.error_rate * 100).toFixed(1)}%</td>
+            {tab === "modules" && (
+              <motion.div key="modules" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Server className="h-4 w-4 text-primary" /> Module Registry ({modules.length})
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-xs">
+                        <thead>
+                          <tr className="border-b border-border bg-muted/30">
+                            <th className="text-left p-3 font-medium">Module</th>
+                            <th className="text-left p-3 font-medium">Type</th>
+                            <th className="text-left p-3 font-medium">Version</th>
+                            <th className="text-left p-3 font-medium">Status</th>
+                            <th className="text-left p-3 font-medium">Health</th>
+                            <th className="text-left p-3 font-medium">Risk</th>
+                            <th className="text-right p-3 font-medium">Latency</th>
+                            <th className="text-right p-3 font-medium">Error %</th>
                           </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                        </thead>
+                        <tbody>
+                          {modules.map((m) => {
+                            const HealthIcon = HEALTH_ICONS[m.health_status] || Activity;
+                            return (
+                              <tr key={m.id} className="border-b border-border/50 hover:bg-muted/20">
+                                <td className="p-3">
+                                  <div className="font-medium">{m.module_name}</div>
+                                  <div className="text-muted-foreground text-[10px] mt-0.5 max-w-[200px] truncate">{m.description}</div>
+                                </td>
+                                <td className="p-3 capitalize">{m.module_type}</td>
+                                <td className="p-3 font-mono">{m.version}</td>
+                                <td className="p-3">
+                                  <Badge className={cn("text-[10px]", STATUS_COLORS[m.status] || "")}>{m.status}</Badge>
+                                </td>
+                                <td className="p-3">
+                                  <span className={cn("inline-flex items-center gap-1", HEALTH_COLORS[m.health_status] || "")}>
+                                    <HealthIcon className="h-3 w-3" /> {m.health_status}
+                                  </span>
+                                </td>
+                                <td className="p-3">
+                                  <span className={cn("font-medium", RISK_COLORS[m.risk_level] || "")}>{m.risk_level}</span>
+                                </td>
+                                <td className="p-3 text-right tabular-nums">{m.avg_latency_ms}ms</td>
+                                <td className="p-3 text-right tabular-nums">{(m.error_rate * 100).toFixed(1)}%</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
 
-          </motion.div>
-          )}
-
-          {tab === "superlayer" && (
-            <motion.div key="superlayer" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
-            <div className="space-y-4">
-              {["Psihologică", "Socială", "Comercială", "Infrastructură"].map(axis => {
-                const axisModules = SUPER_MODULES.filter(m => m.axis === axis);
-                return (
-                  <Card key={axis}>
-                    <CardHeader className="pb-2">
-                      <CardTitle className={cn("text-sm flex items-center gap-2", AXIS_COLORS[axis] || "")}>
-                        {axis === "Psihologică" && <Brain className="h-4 w-4" />}
-                        {axis === "Socială" && <Users className="h-4 w-4" />}
-                        {axis === "Comercială" && <TrendingUp className="h-4 w-4" />}
-                        {axis === "Infrastructură" && <Layers className="h-4 w-4" />}
-                        Axa {axis}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      <div className="divide-y divide-border/50">
-                        {axisModules.map(mod => (
-                          <div key={mod.key} className="p-4 flex items-start gap-3">
-                            <div className="h-8 w-8 rounded-lg bg-muted/30 flex items-center justify-center shrink-0">
-                              <mod.icon className="h-4 w-4 text-muted-foreground" />
-                            </div>
-                            <div className="flex-1 min-w-0 space-y-1.5">
-                              <div className="flex items-center gap-2">
-                                <p className="text-xs font-semibold text-foreground">{mod.name}</p>
-                                <Badge className={cn("text-[9px]", MODULE_STATUS_COLORS[mod.status])}>{mod.status}</Badge>
-                              </div>
-                              <div className="flex flex-wrap gap-3 text-[10px]">
-                                <div>
-                                  <span className="text-muted-foreground/50">Inputs: </span>
-                                  <span className="text-muted-foreground">{mod.inputs.join(", ")}</span>
+            {tab === "superlayer" && (
+              <motion.div key="superlayer" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
+                <div className="space-y-4">
+                  {["Psihologică", "Socială", "Comercială", "Infrastructură"].map(axis => {
+                    const axisModules = SUPER_MODULES.filter(m => m.axis === axis);
+                    return (
+                      <Card key={axis}>
+                        <CardHeader className="pb-2">
+                          <CardTitle className={cn("text-sm flex items-center gap-2", AXIS_COLORS[axis] || "")}>
+                            {axis === "Psihologică" && <Brain className="h-4 w-4" />}
+                            {axis === "Socială" && <Users className="h-4 w-4" />}
+                            {axis === "Comercială" && <TrendingUp className="h-4 w-4" />}
+                            {axis === "Infrastructură" && <Layers className="h-4 w-4" />}
+                            Axa {axis}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                          <div className="divide-y divide-border/50">
+                            {axisModules.map(mod => (
+                              <div key={mod.key} className="p-4 flex items-start gap-3">
+                                <div className="h-8 w-8 rounded-lg bg-muted/30 flex items-center justify-center shrink-0">
+                                  <mod.icon className="h-4 w-4 text-muted-foreground" />
                                 </div>
-                                <div>
-                                  <span className="text-muted-foreground/50">Outputs: </span>
-                                  <span className="text-foreground/70">{mod.outputs.join(", ")}</span>
+                                <div className="flex-1 min-w-0 space-y-1.5">
+                                  <div className="flex items-center gap-2">
+                                    <p className="text-xs font-semibold text-foreground">{mod.name}</p>
+                                    <Badge className={cn("text-[9px]", MODULE_STATUS_COLORS[mod.status])}>{mod.status}</Badge>
+                                  </div>
+                                  <div className="flex flex-wrap gap-3 text-[10px]">
+                                    <div>
+                                      <span className="text-muted-foreground/50">Inputs: </span>
+                                      <span className="text-muted-foreground">{mod.inputs.join(", ")}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground/50">Outputs: </span>
+                                      <span className="text-foreground/70">{mod.outputs.join(", ")}</span>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            ))}
                           </div>
-                        ))}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+
+            {tab === "agents" && (
+              <motion.div key="agents" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
+                <AgentExecutionPanel
+                  agents={agents}
+                  executions={executions}
+                  onStartExecution={startExecution}
+                  onCompleteExecution={completeExecution}
+                  executing={executing}
+                />
+              </motion.div>
+            )}
+
+            {tab === "economy" && (
+              <motion.div key="economy" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
+                <EconomyLayerPanel
+                  unlocks={unlocks}
+                  stats={supStats}
+                  userXP={xp.total_xp}
+                  onActivate={activateUnlock}
+                  onRevoke={revokeUnlock}
+                  toggling={toggling}
+                />
+              </motion.div>
+            )}
+
+            {tab === "memory" && (
+              <motion.div key="memory" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
+                <MemoryLayerPanel patterns={patterns} executions={executions} />
+              </motion.div>
+            )}
+
+            {tab === "ledger" && (
+              <motion.div key="ledger" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <ScrollText className="h-4 w-4 text-primary" /> Decision Ledger (recent)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    {ledger.length === 0 ? (
+                      <div className="py-8 text-center text-xs text-muted-foreground">Nicio intrare în ledger.</div>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="border-b border-border bg-muted/30">
+                              <th className="text-left p-3 font-medium">Timestamp</th>
+                              <th className="text-left p-3 font-medium">Event</th>
+                              <th className="text-left p-3 font-medium">Resource</th>
+                              <th className="text-left p-3 font-medium">Verdict</th>
+                              <th className="text-left p-3 font-medium">Reason</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {ledger.map((e) => (
+                              <tr key={e.id} className="border-b border-border/50">
+                                <td className="p-3 tabular-nums text-muted-foreground">{format(new Date(e.created_at), "dd MMM HH:mm")}</td>
+                                <td className="p-3 font-medium">{e.event_type}</td>
+                                <td className="p-3">{e.target_resource || "—"}</td>
+                                <td className="p-3">
+                                  {e.verdict && (
+                                    <Badge variant="outline" className={cn("text-[10px]",
+                                      e.verdict === "ALLOW" ? "text-status-validated" :
+                                      e.verdict === "DENY" ? "text-destructive" : ""
+                                    )}>{e.verdict}</Badge>
+                                  )}
+                                </td>
+                                <td className="p-3 text-muted-foreground max-w-[200px] truncate">{e.reason || "—"}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Agent Swarm */}
-          {tab === "agents" && (
-            <AgentExecutionPanel
-              agents={agents}
-              executions={executions}
-              onStartExecution={startExecution}
-              onCompleteExecution={completeExecution}
-              executing={executing}
-            />
-          )}
-
-          {/* Economy Layer */}
-          {tab === "economy" && (
-            <EconomyLayerPanel
-              unlocks={unlocks}
-              stats={supStats}
-              userXP={xp.total_xp}
-              onActivate={activateUnlock}
-              onRevoke={revokeUnlock}
-              toggling={toggling}
-            />
-          )}
-
-          {/* Memory + Learning Engine */}
-          {tab === "memory" && (
-            <MemoryLayerPanel patterns={patterns} executions={executions} />
-          )}
-
-          {/* Decision Ledger Monitor */}
-          {tab === "ledger" && (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <ScrollText className="h-4 w-4 text-primary" /> Decision Ledger (recent)
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                {ledger.length === 0 ? (
-                  <div className="py-8 text-center text-xs text-muted-foreground">Nicio intrare în ledger.</div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/30">
-                          <th className="text-left p-3 font-medium">Timestamp</th>
-                          <th className="text-left p-3 font-medium">Event</th>
-                          <th className="text-left p-3 font-medium">Resource</th>
-                          <th className="text-left p-3 font-medium">Verdict</th>
-                          <th className="text-left p-3 font-medium">Reason</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {ledger.map((e) => (
-                          <tr key={e.id} className="border-b border-border/50">
-                            <td className="p-3 tabular-nums text-muted-foreground">{format(new Date(e.created_at), "dd MMM HH:mm")}</td>
-                            <td className="p-3 font-medium">{e.event_type}</td>
-                            <td className="p-3">{e.target_resource || "—"}</td>
-                            <td className="p-3">
-                              {e.verdict && (
-                                <Badge variant="outline" className={cn("text-[10px]",
-                                  e.verdict === "ALLOW" ? "text-status-validated" :
-                                  e.verdict === "DENY" ? "text-destructive" : ""
-                                )}>{e.verdict}</Badge>
-                              )}
-                            </td>
-                            <td className="p-3 text-muted-foreground max-w-[200px] truncate">{e.reason || "—"}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-        </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
       </div>
     </PageTransition>
   );
