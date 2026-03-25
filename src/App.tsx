@@ -74,6 +74,7 @@ const MarketplaceDetail = lazyRetry(() => import("./pages/MarketplaceDetail"));
 const MarketplaceDrafts = lazyRetry(() => import("./pages/MarketplaceDrafts"));
 const MarketplaceEarnings = lazyRetry(() => import("./pages/MarketplaceEarnings"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
+const PublicAnalysis = lazyRetry(() => import("./pages/PublicAnalysis"));
 const PaymentResult = lazyRetry(() => import("./pages/PaymentResult"));
 const TermsOfService = lazyRetry(() => import("./pages/TermsOfService"));
 const PrivacyPolicy = lazyRetry(() => import("./pages/PrivacyPolicy"));
