@@ -236,7 +236,7 @@ export default function Library() {
               {tab.label}
               <span className={cn(
                 "text-[9px] font-mono px-1.5 py-0.5 rounded-full",
-                activeTab === tab.key ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+                activeTab === tab.key ? "bg-[hsl(var(--gold-oxide)/0.12)] text-[hsl(var(--gold-oxide))]" : "bg-muted text-muted-foreground"
               )}>
                 {tab.count}
               </span>
