@@ -261,7 +261,7 @@ export default function Extractor() {
         {activeTab === "youtube" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }} className="space-y-8">
             <div className="text-center mb-2">
-              <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-primary mb-2">
+              <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[hsl(var(--gold-oxide))] mb-2">
                 Transcriere
               </p>
               <h2 className="text-[length:var(--h3-size)] font-bold text-foreground mb-1.5">
