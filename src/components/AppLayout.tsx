@@ -21,11 +21,10 @@ const MobileBottomNav = lazy(() => import("@/components/MobileBottomNav").then(m
 const ContextualFeedbackPrompt = lazy(() => import("@/components/feedback/ContextualFeedbackPrompt").then(m => ({ default: m.ContextualFeedbackPrompt })));
 const GamificationToasts = lazy(() => import("@/components/gamification/GamificationToasts").then(m => ({ default: m.GamificationToasts })));
 
-const LANG_OPTIONS = [
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "ro", label: "Română", flag: "🇷🇴" },
-  { code: "ru", label: "Русский", flag: "🇷🇺" },
-];
+interface AppLayoutProps {
+  children: ReactNode;
+  fullHeight?: boolean;
+}
 
 interface AppLayoutProps {
   children: ReactNode;
