@@ -16,6 +16,7 @@ import { StatsOverview } from "@/components/intelligence/StatsOverview";
 import { DuplicateMergePanel } from "@/components/neurons/DuplicateMergePanel";
 import { PremiumGate } from "@/components/premium/PremiumGate";
 import { GraphAnalysisPanel } from "@/components/intelligence/GraphAnalysisPanel";
+import { SemanticSearchPanel } from "@/components/knowledge/SemanticSearchPanel";
 import { AdvancedSearch } from "@/components/intelligence/AdvancedSearch";
 import { IntelligenceProfiles } from "@/components/intelligence/IntelligenceProfiles";
 import { GitMerge } from "lucide-react";
@@ -150,7 +151,10 @@ export default function Intelligence() {
 
           <TabsContent value="search" className="mt-0">
             <ControlledSection elementId="intelligence.search">
-              <AdvancedSearch />
+              <div className="space-y-6">
+                <SemanticSearchPanel />
+                <AdvancedSearch />
+              </div>
             </ControlledSection>
           </TabsContent>
 

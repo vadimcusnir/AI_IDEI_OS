@@ -111,6 +111,7 @@ const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
 const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
 const MasterAgent = lazyRetry(() => import("./pages/MasterAgent"));
+const AutomationTemplates = lazyRetry(() => import("./pages/AutomationTemplates"));
 
 const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
 const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
@@ -238,6 +239,7 @@ const App = () => (
                 <Route path="/headline-generator" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Generator failed to load"><HeadlineGenerator /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
                 <Route path="/master-agent" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Master Agent failed"><MasterAgent /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/automations" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Automations failed"><AutomationTemplates /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Runtime failed to load"><RuntimeDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
                 <Route path="/cusnir-os/operator" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Operator failed to load"><CusnirOSOperator /></ErrorBoundary></AppLayout></AdminRoute>} />
