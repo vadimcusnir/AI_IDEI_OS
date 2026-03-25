@@ -360,7 +360,7 @@ export function AppSidebar() {
                             >
                               <MessageCircle className="h-3 w-3 text-muted-foreground/50 shrink-0" />
                               <span className="flex-1 truncate text-muted-foreground group-hover/session:text-foreground">
-                                {session.last_message?.slice(0, 30) || formatDistanceToNow(new Date(session.created_at), { addSuffix: true, locale: ro })}
+                                {session.last_message?.slice(0, 30) || formatDistanceToNow(new Date(session.created_at), { addSuffix: true })}
                               </span>
                               <button
                                 onClick={(e) => { e.stopPropagation(); deleteSession(session.session_id); toast.success("Ștearsă"); }}
