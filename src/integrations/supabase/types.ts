@@ -6258,6 +6258,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          onboarding_completed: boolean | null
           preferred_language: string | null
           updated_at: string
           user_id: string
@@ -6269,6 +6270,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          onboarding_completed?: boolean | null
           preferred_language?: string | null
           updated_at?: string
           user_id: string
@@ -6280,6 +6282,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          onboarding_completed?: boolean | null
           preferred_language?: string | null
           updated_at?: string
           user_id?: string
