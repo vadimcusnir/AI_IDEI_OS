@@ -217,8 +217,8 @@ export default function Extractor() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-20 bg-card border border-dashed border-border rounded-2xl"
               >
-                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                  <FileText className="h-8 w-8 text-primary/40" />
+                <div className="h-16 w-16 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-5">
+                  <FileText className="h-8 w-8 text-[hsl(var(--gold-oxide)/0.4)]" />
                 </div>
                 <h3 className="text-[length:var(--h3-size)] font-semibold text-foreground mb-2">
                   Niciun material încărcat
