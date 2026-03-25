@@ -193,6 +193,7 @@ export default function Services() {
           item: { "@type": "Service", name: s.name, description: s.description, provider: { "@type": "Organization", name: "AI-IDEI" } },
         })),
       }} />
+      <GuidedTooltip tourId="services" steps={SERVICES_TOUR} />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-8">
 
