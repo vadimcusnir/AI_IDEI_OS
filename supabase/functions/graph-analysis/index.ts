@@ -3,6 +3,7 @@
  * POST /graph-analysis { action: "contradictions" | "gaps" | "suggestions", workspace_id }
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
