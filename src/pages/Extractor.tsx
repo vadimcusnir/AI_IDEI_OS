@@ -113,6 +113,7 @@ export default function Extractor() {
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <SEOHead title="Adaugă Material — AI-IDEI" description="Încarcă conținut, transcrie audio/video și pregătește-l pentru generare AI." />
+        <GuidedTooltip tourId="extractor" steps={EXTRACTOR_TOUR} />
 
         {/* ── Page Header ── */}
         <motion.div 
