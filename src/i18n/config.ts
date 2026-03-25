@@ -2,13 +2,11 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
-// Eagerly load EN (default language) — all namespaces
+// Eagerly load critical EN namespaces only — defer large ones
 import commonEN from "@/locales/en/common.json";
 import navigationEN from "@/locales/en/navigation.json";
 import errorsEN from "@/locales/en/errors.json";
 import formsEN from "@/locales/en/forms.json";
-import pagesEN from "@/locales/en/pages.json";
-import architectureEN from "@/locales/en/architecture.json";
 import landingEN from "@/locales/en/landing.json";
 
 export const defaultNS = "common";
