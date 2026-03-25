@@ -131,11 +131,11 @@ export function MagicButton({ children, className }: { children: React.ReactNode
       <AnimatePresence>
         {glowing && (
           <motion.span
-            className="absolute inset-0 -inset-x-6 -inset-y-3 rounded-xl bg-[hsl(var(--gold-oxide)/0.15)] blur-2xl pointer-events-none"
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1.4 }}
-            exit={{ opacity: 0, scale: 1.8 }}
-            transition={{ duration: 1 }}
+            className="absolute inset-0 -inset-x-16 -inset-y-8 rounded-2xl bg-[hsl(var(--gold-oxide)/0.22)] blur-3xl pointer-events-none"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1.8 }}
+            exit={{ opacity: 0, scale: 2.5 }}
+            transition={{ duration: 1.4 }}
           />
         )}
       </AnimatePresence>
