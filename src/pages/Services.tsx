@@ -236,9 +236,9 @@ export default function Services() {
                   <div className="flex items-center gap-2 mb-1.5">
                     <div className={cn(
                       "h-7 w-7 rounded-lg flex items-center justify-center",
-                      isActive ? "bg-primary/15" : "bg-muted"
+                      isActive ? "bg-[hsl(var(--gold-oxide)/0.12)]" : "bg-muted"
                     )}>
-                      <Icon className={cn("h-3.5 w-3.5", isActive ? "text-primary" : "text-muted-foreground")} />
+                      <Icon className={cn("h-3.5 w-3.5", isActive ? "text-[hsl(var(--gold-oxide))]" : "text-muted-foreground")} />
                     </div>
                     <span className="text-[10px] font-mono text-muted-foreground">{count}</span>
                   </div>
