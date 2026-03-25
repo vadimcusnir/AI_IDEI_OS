@@ -66,6 +66,7 @@ interface MemoryPattern {
   effectiveness_score: number;
   last_used_at: string | null;
   created_at: string;
+  pattern_data?: Record<string, unknown>;
 }
 
 interface PowerUnlock {
