@@ -54,10 +54,21 @@ const ACCEPTED_TRANSCRIPTS = ".txt,.srt,.vtt,.md,.pdf";
 
 interface InstantActionSurfaceProps {
   onComplete?: () => void;
+  onPipelineStart?: () => void;
+  onPipelineComplete?: (result: {
+    neurons: number;
+    episode_id: string;
+    type_distribution?: Record<string, number>;
+    frameworks?: number;
+    raw_extracted?: number;
+    after_dedup?: number;
+    meta?: { major_insights?: string[]; emerging_themes?: string[]; unexpected_ideas?: string[] };
+  } | null) => void;
   compact?: boolean;
+  autoShowProgress?: boolean;
 }
 
-export function InstantActionSurface({ onComplete, compact = false }: InstantActionSurfaceProps) {
+export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineComplete, compact = false, autoShowProgress = false }: InstantActionSurfaceProps) {
   const { t } = useTranslation("common");
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
@@ -157,6 +168,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
     try {
       // === SOURCE ===
       setStage("source");
+      onPipelineStart?.();
       let title = "";
       let transcript: string | null = null;
       let filePath: string | null = null;
@@ -323,7 +335,7 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
 
         // === COMPLETE ===
         setStage("complete");
-        setResult({
+        const completedResult = {
           neurons: neuronsCreated,
           episode_id: ep.id,
           type_distribution: data.type_distribution,
@@ -331,7 +343,9 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
           raw_extracted: data.raw_extracted,
           after_dedup: data.after_dedup,
           meta: data.meta,
-        });
+        };
+        setResult(completedResult);
+        onPipelineComplete?.(completedResult);
         toast.success(t("neurons_extracted_instant", { neurons: neuronsCreated, credits: creditsSpent }), { duration: 8000 });
         trackEvent({
           name: "neurons_extracted",
@@ -339,7 +353,9 @@ export function InstantActionSurface({ onComplete, compact = false }: InstantAct
         });
       } else {
         setStage("complete");
-        setResult({ neurons: 0, episode_id: ep.id });
+        const simpleResult = { neurons: 0, episode_id: ep.id };
+        setResult(simpleResult);
+        onPipelineComplete?.(simpleResult);
         toast.success(t("episode_created_hint"));
       }
 
