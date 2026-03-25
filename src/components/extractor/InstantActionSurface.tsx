@@ -335,7 +335,7 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
 
         // === COMPLETE ===
         setStage("complete");
-        setResult({
+        const completedResult = {
           neurons: neuronsCreated,
           episode_id: ep.id,
           type_distribution: data.type_distribution,
@@ -343,7 +343,9 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
           raw_extracted: data.raw_extracted,
           after_dedup: data.after_dedup,
           meta: data.meta,
-        });
+        };
+        setResult(completedResult);
+        onPipelineComplete?.(completedResult);
         toast.success(t("neurons_extracted_instant", { neurons: neuronsCreated, credits: creditsSpent }), { duration: 8000 });
         trackEvent({
           name: "neurons_extracted",
