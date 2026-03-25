@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { EconomyLayerPanel } from "@/components/cusnir-os/EconomyLayerPanel";
 import { MemoryLayerPanel } from "@/components/cusnir-os/MemoryLayerPanel";
 import { AgentExecutionPanel } from "@/components/cusnir-os/AgentExecutionPanel";
