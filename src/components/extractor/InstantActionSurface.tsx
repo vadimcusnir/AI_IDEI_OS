@@ -54,7 +54,18 @@ const ACCEPTED_TRANSCRIPTS = ".txt,.srt,.vtt,.md,.pdf";
 
 interface InstantActionSurfaceProps {
   onComplete?: () => void;
+  onPipelineStart?: () => void;
+  onPipelineComplete?: (result: {
+    neurons: number;
+    episode_id: string;
+    type_distribution?: Record<string, number>;
+    frameworks?: number;
+    raw_extracted?: number;
+    after_dedup?: number;
+    meta?: { major_insights?: string[]; emerging_themes?: string[]; unexpected_ideas?: string[] };
+  } | null) => void;
   compact?: boolean;
+  autoShowProgress?: boolean;
 }
 
 export function InstantActionSurface({ onComplete, compact = false }: InstantActionSurfaceProps) {
