@@ -210,7 +210,7 @@ export default function Library() {
             </Button>
             <div>
               <h1 className="text-xl font-bold flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-primary" /> Librărie
+                <BookOpen className="h-5 w-5 text-[hsl(var(--gold-oxide))]" /> Librărie
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5">
                 {artifacts.length} livrabile · {neurons.length} date context · {bundles.length} pachete
