@@ -247,8 +247,11 @@ export default function CusnirOSOperator() {
             </Card>
           )}
 
-          {/* Superlayer Axes */}
+          </motion.div>
+          )}
+
           {tab === "superlayer" && (
+            <motion.div key="superlayer" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
             <div className="space-y-4">
               {["Psihologică", "Socială", "Comercială", "Infrastructură"].map(axis => {
                 const axisModules = SUPER_MODULES.filter(m => m.axis === axis);
