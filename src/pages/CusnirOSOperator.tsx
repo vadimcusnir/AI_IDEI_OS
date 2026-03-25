@@ -95,6 +95,7 @@ export default function CusnirOSOperator() {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const { modules, stats, ledger, loading } = useOSOperator();
+  const { unlocks, patterns, executions, stats: supStats, loading: supLoading } = useOSSuperlayer();
   const [tab, setTab] = useState<Tab>("modules");
 
   if (authLoading || adminLoading || loading) {
