@@ -269,13 +269,13 @@ export default function Services() {
           <div className="flex items-center border border-border rounded-lg overflow-hidden shrink-0">
             <button
               onClick={() => setViewMode("grid")}
-              className={cn("p-2 transition-colors", viewMode === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
+              className={cn("p-2 transition-colors", viewMode === "grid" ? "bg-[hsl(var(--gold-oxide)/0.1)] text-[hsl(var(--gold-oxide))]" : "text-muted-foreground hover:text-foreground")}
             >
               <LayoutGrid className="h-3.5 w-3.5" />
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={cn("p-2 transition-colors", viewMode === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
+              className={cn("p-2 transition-colors", viewMode === "list" ? "bg-[hsl(var(--gold-oxide)/0.1)] text-[hsl(var(--gold-oxide))]" : "text-muted-foreground hover:text-foreground")}
             >
               <List className="h-3.5 w-3.5" />
             </button>
