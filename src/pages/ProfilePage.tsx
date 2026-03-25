@@ -134,7 +134,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold tracking-tight">{t("profile.title")}</h1>
                 {(tier === "pro" || tier === "vip") && (
-                  <Badge variant="outline" className="text-[8px] px-1.5 py-0 gap-0.5 border-primary/30 text-primary">
+                  <Badge variant="outline" className="text-[8px] px-1.5 py-0 gap-0.5 border-[hsl(var(--gold-oxide)/0.3)] text-[hsl(var(--gold-oxide))]">
                     <Crown className="h-2.5 w-2.5" />
                     {tier === "vip" ? "VIP" : "PRO"}
                   </Badge>
