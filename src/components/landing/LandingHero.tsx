@@ -1,6 +1,7 @@
 import { ArrowRight, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ExtractionEngine } from "./ExtractionEngine";
+import { MagicButton } from "./MagicButton";
 import { RefObject } from "react";
 import { useTranslation } from "react-i18next";
 
