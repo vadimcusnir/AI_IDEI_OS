@@ -400,9 +400,9 @@ export default function Home() {
           <div className="flex-1 flex flex-col min-h-0 md:hidden">
             <div className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-4 pb-32 scroll-smooth">
               {isEmptyState ? (
-                <div className="flex flex-col items-center justify-center min-h-[40vh] pt-8">
-                  <div className="w-full text-center space-y-2 mb-6">
-                   <h1 className="text-2xl font-bold tracking-[-0.02em] leading-[1.15] text-foreground">
+                <div className="flex flex-col items-center justify-center min-h-[35vh] pt-6">
+                  <div className="w-full text-center space-y-1.5 mb-5">
+                   <h1 className="text-xl font-bold tracking-[-0.02em] leading-[1.15] text-foreground">
                       {greeting},{" "}
                       <span className="text-[hsl(var(--gold-oxide))]">
                         {userName}
