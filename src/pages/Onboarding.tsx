@@ -238,7 +238,25 @@ export default function Onboarding() {
           </div>
         </motion.div>
 
-        {/* Active Step Detail Card */}
+        {/* Instant Analysis — try it now */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-10"
+        >
+          <div className="rounded-2xl border border-[hsl(var(--gold-oxide)/0.15)] bg-[hsl(var(--gold-oxide)/0.02)] p-5 sm:p-6">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Sparkles className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
+              <h2 className="text-sm font-bold">Try It Now — Instant Analysis</h2>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4">
+              Paste any text or URL and get structured intelligence in under 60 seconds. No setup needed.
+            </p>
+            <InstantAnalysisFlow />
+          </div>
+        </motion.div>
+
         <AnimatePresence mode="wait">
           <motion.div
             key={activeStep}
