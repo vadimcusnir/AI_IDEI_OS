@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 // ── Types ──
 type Intent = "analyze_video" | "extract_knowledge" | "generate_content" | "search_knowledge" |
@@ -297,7 +297,7 @@ Deno.serve(async (req) => {
   try {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
     const token = authHeader.replace("Bearer ", "");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -306,10 +306,10 @@ Deno.serve(async (req) => {
 
     const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
     const { data: { user }, error: authError } = await userClient.auth.getUser();
-    if (authError || !user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    if (authError || !user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
 
     if (!checkRateLimit(user.id)) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -317,7 +317,7 @@ Deno.serve(async (req) => {
 
     const parsed = InputSchema.safeParse(await req.json());
     if (!parsed.success) {
-      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const { messages, context } = parsed.data;
@@ -394,10 +394,10 @@ Deno.serve(async (req) => {
 
     if (!firstResponse.ok) {
       const status = firstResponse.status;
-      if (status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+      if (status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted" }), { status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
       console.error("AI gateway error:", status, await firstResponse.text());
-      return new Response(JSON.stringify({ error: "AI service unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "AI service unavailable" }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const firstResult = await firstResponse.json();
@@ -449,7 +449,7 @@ Deno.serve(async (req) => {
 
       if (!secondResponse.ok) {
         console.error("Second AI call error:", await secondResponse.text());
-        return new Response(JSON.stringify({ error: "AI service error" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return new Response(JSON.stringify({ error: "AI service error" }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
       }
 
       // Prepend action metadata as SSE
@@ -469,7 +469,7 @@ Deno.serve(async (req) => {
         },
       });
 
-      return new Response(metaStream, { headers: { ...corsHeaders, "Content-Type": "text/event-stream" } });
+      return new Response(metaStream, { headers: { ...getCorsHeaders(req), "Content-Type": "text/event-stream" } });
     }
 
     // No tool calls — mark action completed
@@ -489,12 +489,12 @@ Deno.serve(async (req) => {
     });
 
     if (!streamResponse.ok) {
-      return new Response(JSON.stringify({ error: "AI service unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "AI service unavailable" }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
-    return new Response(streamResponse.body, { headers: { ...corsHeaders, "Content-Type": "text/event-stream" } });
+    return new Response(streamResponse.body, { headers: { ...getCorsHeaders(req), "Content-Type": "text/event-stream" } });
   } catch (e) {
     console.error("agent-console error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

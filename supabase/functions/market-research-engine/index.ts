@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 /**
@@ -149,14 +149,14 @@ Deno.serve(async (req) => {
     // Auth
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
     const token = authHeader.replace("Bearer ", "");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
     const { data: { user }, error: authErr } = await userClient.auth.getUser();
     if (authErr || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     // Rate limit (user-based, post-auth)
@@ -167,13 +167,13 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({
         sections: SECTIONS.map(s => ({ id: s.id, name: s.name, depends_on: s.depends_on, cost: s.cost })),
         total_cost: SECTIONS.reduce((s, sec) => s + sec.cost, 0),
-      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const { industry, country, market_phase, context, job_id } = await req.json();
 
     if (!industry || industry.length < 3) {
-      return new Response(JSON.stringify({ error: "Industry is required (min 3 chars)" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Industry is required (min 3 chars)" }), { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const totalCost = SECTIONS.reduce((s, sec) => s + sec.cost, 0);
@@ -187,7 +187,7 @@ Deno.serve(async (req) => {
 
     if (!spendResult?.success) {
       return new Response(JSON.stringify({ error: spendResult?.error || "Insufficient credits", needed: totalCost }), {
-        status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -279,10 +279,10 @@ Deno.serve(async (req) => {
       ),
       sections_completed: completed.size,
       credits_spent: totalCost,
-    }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
 
   } catch (e) {
     console.error("market-research-engine error:", e);
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

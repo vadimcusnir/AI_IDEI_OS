@@ -1,5 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 /**
  * send-digest — Weekly / Monthly notification digest emails.
@@ -13,7 +13,7 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { headers: getCorsHeaders(req) });
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
   if (usersErr || !users?.length) {
     return new Response(
       JSON.stringify({ processed: 0, reason: usersErr?.message || "no_subscribers" }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 
@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
 
   return new Response(
     JSON.stringify({ processed: enqueued, type: digestType }),
-    { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
   );
 });
 

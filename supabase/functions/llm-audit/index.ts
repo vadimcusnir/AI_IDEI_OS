@@ -36,7 +36,7 @@ const KNOWN_ROUTES = [
 ];
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
   const authHeader = req.headers.get("authorization") || "";
   if (!authHeader.startsWith("Bearer ")) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
   const token = authHeader.replace("Bearer ", "");
@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
   const { data: { user }, error: authErr } = await userClient.auth.getUser();
   if (authErr || !user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
   
   if (!roleData) {
     return new Response(JSON.stringify({ error: "Admin access required" }), {
-      status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -86,13 +86,13 @@ Deno.serve(async (req) => {
       return await handleFix(supabase, LOVABLE_API_KEY);
     } else {
       return new Response(JSON.stringify({ error: "Invalid action or missing API key" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
   } catch (err) {
     console.error("llm-audit error:", err);
     return new Response(JSON.stringify({ error: err instanceof Error ? err.message : "Unknown error" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });
@@ -231,7 +231,7 @@ async function handleScan(supabase: any) {
     entity_pages: (entities || []).length,
     guest_pages: (guests || []).length,
   }), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
 }
 
@@ -246,7 +246,7 @@ async function handleFix(supabase: any, apiKey: string) {
 
   if (!pages?.length) {
     return new Response(JSON.stringify({ fixes_generated: 0, message: "No low-scoring pages found" }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -323,6 +323,6 @@ Output as JSON array: [{ "issue_type": "...", "current_value": "...", "suggested
     fixes_generated: fixCount,
     pages_analyzed: pages.length,
   }), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
 }

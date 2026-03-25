@@ -181,7 +181,7 @@ async function loadExtractors(
 
 // ── Main handler ──
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   // Handle GET for listing available extractors
   if (req.method === "GET") {
@@ -213,11 +213,11 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({
         families: familiesWithExtractors,
         total_extractors: extractors.length,
-      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     } catch (e) {
       console.error("GET extractors error:", e);
       return new Response(JSON.stringify({ error: "Failed to load extractors" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
   }
@@ -232,7 +232,7 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
@@ -242,14 +242,14 @@ Deno.serve(async (req) => {
     const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
     if (authError || !caller) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const userId = caller.id;
 
     if (!checkRateLimit(userId)) {
       return new Response(JSON.stringify({ error: "Rate limit exceeded (5 deep extractions/hour)" }), {
-        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -264,7 +264,7 @@ Deno.serve(async (req) => {
     const parsed = DeepExtractSchema.safeParse(await req.json());
     if (!parsed.success) {
       return new Response(JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const { episode_id, families, extractor_ids } = parsed.data;
@@ -275,7 +275,7 @@ Deno.serve(async (req) => {
 
     if (!episode || epErr) {
       return new Response(JSON.stringify({ error: "Episode not found" }), {
-        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -284,7 +284,7 @@ Deno.serve(async (req) => {
     const transcript = episode.transcript || "";
     if (!transcript.trim()) {
       return new Response(JSON.stringify({ error: "No transcript content" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -292,7 +292,7 @@ Deno.serve(async (req) => {
     const extractors = await loadExtractors(supabase, families, extractor_ids);
     if (extractors.length === 0) {
       return new Response(JSON.stringify({ error: "No extractors found for selected families" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -316,7 +316,7 @@ Deno.serve(async (req) => {
         error: "Insufficient credits",
         needed: totalCost,
         reason_code: "RC.CREDITS.INSUFFICIENT",
-      }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }), { status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     // Update status
@@ -340,7 +340,7 @@ Deno.serve(async (req) => {
     if (blockReason) {
       await supabase.rpc("add_credits", { _user_id: userId, _amount: totalCost, _description: `REFUND: Regime blocked — ${blockReason}`, _type: "refund" });
       return new Response(JSON.stringify({ error: blockReason }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -483,7 +483,7 @@ Deno.serve(async (req) => {
         }).eq("id", jobId);
       }
       return new Response(JSON.stringify({ error: "No neurons extracted" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -527,13 +527,13 @@ Deno.serve(async (req) => {
       families_used: familiesUsed,
       results,
       job_id: jobId,
-    }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
 
   } catch (e) {
     console.error("deep-extract error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });

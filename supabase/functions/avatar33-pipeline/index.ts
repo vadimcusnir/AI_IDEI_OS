@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 /**
@@ -115,14 +115,14 @@ Deno.serve(async (req) => {
     // Auth
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
     const token = authHeader.replace("Bearer ", "");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
     const { data: { user }, error: authErr } = await userClient.auth.getUser();
     if (authErr || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     // Rate limit (user-based, post-auth)
@@ -134,7 +134,7 @@ Deno.serve(async (req) => {
       const modules = AVATAR33_MODULES.map(m => ({ id: m.id, name: m.name, phase: m.phase }));
       const phases = ["discovery", "commercial", "content", "synthesis"];
       return new Response(JSON.stringify({ modules, phases, total: modules.length, estimated_credits: 33 * 50 }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
     const { content, selected_modules, job_id } = body;
 
     if (!content || content.length < 50) {
-      return new Response(JSON.stringify({ error: "Content must be at least 50 characters" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Content must be at least 50 characters" }), { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const modulesToRun = selected_modules?.length
@@ -160,7 +160,7 @@ Deno.serve(async (req) => {
 
     if (!spendResult?.success) {
       return new Response(JSON.stringify({ error: spendResult?.error || "Insufficient credits", needed: totalCost }), {
-        status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -232,11 +232,11 @@ Deno.serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ results, modules_completed: completedCount, credits_spent: totalCost }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
 
   } catch (e) {
     console.error("avatar33-pipeline error:", e);
-    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

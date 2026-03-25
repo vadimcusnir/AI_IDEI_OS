@@ -14,7 +14,7 @@ const corsHeaders = {
 const BASE_URL = "https://ai-idei.com";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
@@ -144,7 +144,7 @@ Deno.serve(async (req) => {
 
     if (!meta) {
       return new Response(JSON.stringify({ found: false }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -172,7 +172,7 @@ ${meta.jsonLd ? `<script type="application/ld+json">${JSON.stringify(meta.jsonLd
       jsonLd: meta.jsonLd,
       headHtml,
     }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("prerender-meta error:", e);
@@ -180,7 +180,7 @@ ${meta.jsonLd ? `<script type="application/ld+json">${JSON.stringify(meta.jsonLd
       error: e instanceof Error ? e.message : "Unknown error",
     }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });

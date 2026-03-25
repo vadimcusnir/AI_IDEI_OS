@@ -121,7 +121,7 @@ const PSYCHOLOGY_MODULES = [
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   const supabase = createClient(
@@ -150,7 +150,7 @@ serve(async (req) => {
     const parsed = PsychSchema.safeParse(await req.json());
     if (!parsed.success) {
       return new Response(JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const { guest_profile_id, tier } = parsed.data;
@@ -160,7 +160,7 @@ serve(async (req) => {
     const blockReason = checkRegimeBlock(regime, 0);
     if (blockReason) {
       return new Response(JSON.stringify({ error: "Service blocked", reason: blockReason, regime: regime.regime }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
     const isDryRun = regime.dryRun || regime.regime === "simulation";
@@ -203,7 +203,7 @@ serve(async (req) => {
     if (isDryRun) {
       logStep("DRY RUN — skipping AI call");
       return new Response(JSON.stringify({ success: false, dry_run: true, regime: regime.regime }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -353,13 +353,13 @@ Return a comprehensive JSON object with scores (0-100), classifications, and con
       modules_completed: Object.keys(moduleResults).length,
       profile: profileData,
     }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     logStep("ERROR", { message: msg });
     return new Response(JSON.stringify({ error: msg }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,
     });
   }

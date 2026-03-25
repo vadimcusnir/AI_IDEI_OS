@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 /**
@@ -170,14 +170,14 @@ Deno.serve(async (req) => {
   try {
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
     const token = authHeader.replace("Bearer ", "");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
     const { data: { user }, error: authErr } = await userClient.auth.getUser();
     if (authErr || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     // Rate limit (user-based, post-auth)
@@ -192,13 +192,13 @@ Deno.serve(async (req) => {
         })),
         total_levels: PIPELINE_LEVELS.length,
         estimated_credits: Math.round(PIPELINE_LEVELS.reduce((s, l) => s + 50 * l.cost_multiplier, 0)),
-      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const { content, start_level = 0, end_level = 12, job_id, episode_id } = await req.json();
 
     if (!content || content.length < 100) {
-      return new Response(JSON.stringify({ error: "Content must be at least 100 characters" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Content must be at least 100 characters" }), { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
     const levelsToRun = PIPELINE_LEVELS.filter(l => l.level >= start_level && l.level <= end_level);
@@ -212,7 +212,7 @@ Deno.serve(async (req) => {
 
     if (!spendResult?.success) {
       return new Response(JSON.stringify({ error: spendResult?.error || "Insufficient credits", needed: totalCost }), {
-        status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -293,11 +293,11 @@ Deno.serve(async (req) => {
     );
 
     return new Response(JSON.stringify({ results, levels_completed: levelsToRun.length, credits_spent: totalCost }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
 
   } catch (e) {
     console.error("extraction-pipeline error:", e);
-    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

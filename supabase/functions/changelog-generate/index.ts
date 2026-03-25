@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   try {
     const authHeader = req.headers.get("Authorization");
@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
 
     if (!rawChanges?.length) {
       return new Response(JSON.stringify({ drafts: 0, message: "Nu sunt schimbări noi de procesat. Toate schimbările anterioare au fost deja transformate în changelog." }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -109,12 +109,12 @@ Respond in Romanian.`
       console.error("AI gateway error:", aiResponse.status, errText);
       if (aiResponse.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded, try again later" }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       if (aiResponse.status === 402) {
         return new Response(JSON.stringify({ error: "AI credits exhausted" }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       throw new Error(`AI error: ${aiResponse.status}`);
@@ -158,7 +158,7 @@ Respond in Romanian.`
       entries: inserted,
       raw_processed: processedIds.length,
     }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("changelog-generate error:", e);
@@ -166,7 +166,7 @@ Respond in Romanian.`
     const status = msg === "Unauthorized" || msg === "Admin required" ? 401 : 500;
     return new Response(JSON.stringify({ error: msg }), {
       status,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });

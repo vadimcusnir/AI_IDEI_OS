@@ -15,7 +15,7 @@ const corsHeaders = {
 const BASE_URL = "https://ai-idei.com";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -35,8 +35,7 @@ Deno.serve(async (req) => {
 
       if (cached && new Date(cached.expires_at) > new Date()) {
         return new Response(JSON.stringify(cached.graph_data), {
-          headers: {
-            ...corsHeaders,
+          headers: { ...getCorsHeaders(req),
             "Content-Type": "application/ld+json",
             "X-Cache": "HIT",
             "X-Entity-Count": String(cached.entity_count),
@@ -196,8 +195,7 @@ Deno.serve(async (req) => {
     }, { onConflict: "cache_key" });
 
     return new Response(JSON.stringify(jsonLd), {
-      headers: {
-        ...corsHeaders,
+      headers: { ...getCorsHeaders(req),
         "Content-Type": "application/ld+json",
         "X-Cache": "MISS",
         "X-Entity-Count": String(entityCount),
@@ -207,7 +205,7 @@ Deno.serve(async (req) => {
     console.error("knowledge-graph-export error:", err);
     return new Response(JSON.stringify({ error: "Failed to generate knowledge graph" }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });

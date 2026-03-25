@@ -1,6 +1,6 @@
 import Stripe from "https://esm.sh/stripe@17.7.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { getCorsHeaders, corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 const PACKAGE_NEURONS: Record<string, number> = {
   starter: 500,
@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
 
     if (session.payment_status !== "paid") {
       return new Response(JSON.stringify({ error: "Payment not completed" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         status: 400,
       });
     }
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     const metaUserId = session.metadata?.user_id;
     if (metaUserId !== user.id) {
       return new Response(JSON.stringify({ error: "User mismatch" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         status: 403,
       });
     }
@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
 
     if (existingTx) {
       return new Response(JSON.stringify({ success: true, already_processed: true }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -82,13 +82,13 @@ Deno.serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ success: true, neurons_added: neurons }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("verify-topup error:", msg);
     return new Response(JSON.stringify({ error: msg }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,
     });
   }

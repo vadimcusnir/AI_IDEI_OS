@@ -9,7 +9,7 @@ const BASE_URL = "https://ai-idei.com";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   const url = new URL(req.url);
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
   ${subs.map((t) => `<sitemap><loc>${BASE_URL}/api/sitemap?type=${t}</loc></sitemap>`).join("\n  ")}
 </sitemapindex>`;
       return new Response(xml, {
-        headers: { ...corsHeaders, "Content-Type": "application/xml" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/xml" },
       });
     }
 
