@@ -332,7 +332,6 @@ async function executeTool(name: string, args: Record<string, any>, userId: stri
 
       // Call execute-os-agent edge function
       const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-      const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY")!;
       try {
         const agentResp = await fetch(`${supabaseUrl}/functions/v1/execute-os-agent`, {
           method: "POST",
