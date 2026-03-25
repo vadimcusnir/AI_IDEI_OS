@@ -97,6 +97,8 @@ export function AgentExecutionPanel({
   executing,
 }: AgentExecutionPanelProps) {
   const [view, setView] = useState<"agents" | "history">("agents");
+  const [prompts, setPrompts] = useState<Record<string, string>>({});
+  const [expandedExec, setExpandedExec] = useState<string | null>(null);
 
   const activeExecs = executions.filter(e => e.status === "running");
   const historyExecs = executions.filter(e => e.status !== "running").slice(0, 15);
