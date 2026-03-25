@@ -122,7 +122,7 @@ export default function Extractor() {
           transition={{ duration: 0.4 }}
           className="mb-8"
         >
-          <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-primary mb-2">
+          <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[hsl(var(--gold-oxide))] mb-2">
             Data Input
           </p>
           <h1 className="text-[length:var(--h2-size)] font-bold leading-[var(--lh-h2)] text-foreground tracking-tight">
