@@ -59,8 +59,8 @@ export async function checkRateLimit(
       resetAt: new Date(row.reset_at).getTime(),
     };
   } catch (err) {
-    console.error("Rate limit error, failing open:", err);
-    return { allowed: true, remaining: maxRequests - 1, resetAt: Date.now() + windowSeconds * 1000 };
+    console.error("Rate limit error, BLOCKING request (fail-closed):", err);
+    return { allowed: false, remaining: 0, resetAt: Date.now() + windowSeconds * 1000 };
   }
 }
 

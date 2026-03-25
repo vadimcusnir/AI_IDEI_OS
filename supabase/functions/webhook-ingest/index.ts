@@ -33,15 +33,28 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Validate webhook key
-    const { data: webhook, error: whError } = await supabase
+    // Validate webhook key — constant-time comparison to prevent timing attacks
+    const { data: webhooks, error: whError } = await supabase
       .from("incoming_webhooks")
       .select("*")
-      .eq("webhook_key", webhookKey)
-      .eq("is_active", true)
-      .single();
+      .eq("is_active", true);
 
-    if (whError || !webhook) {
+    let webhook = null;
+    if (!whError && webhooks) {
+      const keyBytes = new TextEncoder().encode(webhookKey);
+      for (const wh of webhooks) {
+        const whKeyBytes = new TextEncoder().encode(wh.webhook_key);
+        if (keyBytes.length === whKeyBytes.length) {
+          let diff = 0;
+          for (let i = 0; i < keyBytes.length; i++) diff |= keyBytes[i] ^ whKeyBytes[i];
+          if (diff === 0) { webhook = wh; break; }
+        }
+      }
+    }
+
+    if (!webhook) {
+      // Constant delay to prevent timing analysis on key length
+      await new Promise(r => setTimeout(r, 100 + Math.random() * 50));
       return new Response(JSON.stringify({ error: "Invalid or inactive webhook" }), {
         status: 401,
         headers: { ...cors, "Content-Type": "application/json" },
