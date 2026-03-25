@@ -6,9 +6,10 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   Shield, Cpu, Network, Zap, Brain,
-  ChevronRight, Lock, Crown,
+  ChevronRight, Lock, Crown, Map,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 12 },
@@ -439,6 +440,17 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
             The system observes.
           </p>
         </CopyBlock>
+
+        {eligible && (
+          <div className="flex items-center justify-center gap-2 pt-2">
+            <Button asChild size="sm" className="h-8 text-xs gap-1.5">
+              <Link to="/cusnir-os/map">
+                <Map className="h-3 w-3" />
+                System Map — Harta Sistemului
+              </Link>
+            </Button>
+          </div>
+        )}
 
         {!eligible && (
           <div className="flex items-center justify-center gap-2 pt-2">
