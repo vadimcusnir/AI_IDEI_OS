@@ -37,7 +37,7 @@ function classifyIntentKeyword(text: string): { intent: Intent; confidence: numb
     extract_knowledge: ["extract", "extrage", "neuron", "knowledge", "insight", "framework", "pattern"],
     generate_content: ["genereaz", "generate", "scrie", "write", "article", "blog", "linkedin", "tweet", "creeaz"],
     search_knowledge: ["search", "caut", "find", "show", "list", "browse", "găsește", "arată"],
-    run_service: ["run", "execute", "service", "pipeline", "avatar33", "webinar"],
+    run_service: ["run", "execute", "service", "pipeline", "avatar33", "webinar", "agent", "swarm", "narrative domination", "viral structure", "influence graph", "offer multiplication", "pricing intelligence", "funnel autogenerator", "stepback", "knowledge arbitrage", "reputation", "behavioral leverage", "identity simulation", "os agent", "rulează agent"],
     compare_sources: ["compare", "compar", "cross-ref", "versus", "diferenț"],
     profile_analysis: ["profil", "speaker", "guest", "who", "person", "expert"],
     build_course: ["course", "curs", "curriculum", "module", "lesson", "lecți"],
