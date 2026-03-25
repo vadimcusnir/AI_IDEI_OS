@@ -153,8 +153,11 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
                 onCopy={handleCopy}
                 onSave={handleSaveAsArtifact}
                 onExport={handleExport}
+                onPublish={handlePublish}
                 saving={savingId === o.id}
                 saved={savedIds.has(o.id)}
+                publishing={publishing}
+                published={publishedIds.has(o.id)}
               />
             </TabsContent>
           ))}
@@ -165,8 +168,11 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
           onCopy={handleCopy}
           onSave={handleSaveAsArtifact}
           onExport={handleExport}
+          onPublish={handlePublish}
           saving={savingId === outputs[0].id}
           saved={savedIds.has(outputs[0].id)}
+          publishing={publishing}
+          published={publishedIds.has(outputs[0].id)}
         />
       )}
     </motion.div>
