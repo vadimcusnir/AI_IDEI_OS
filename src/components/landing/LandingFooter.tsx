@@ -71,13 +71,16 @@ export function LandingFooter() {
 
         {/* Bottom bar */}
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border/30 pt-8 sm:flex-row">
-          <span className="text-xs font-mono text-muted-foreground">
-            © {new Date().getFullYear()} AI-IDEI · {t("footer.copyright")}
-          </span>
+          <div className="flex flex-col items-center sm:items-start gap-1">
+            <span className="text-xs font-mono text-muted-foreground">
+              © {new Date().getFullYear()} Cușnir Media SRL · AI-IDEI · {t("footer.copyright")}
+            </span>
+            <span className="text-[10px] text-muted-foreground/50">Republic of Moldova · vadim.kusnir@gmail.com</span>
+          </div>
           <div className="flex items-center gap-6">
             <FooterLink to="/terms">{t("footer.terms")}</FooterLink>
             <FooterLink to="/privacy">{t("footer.privacy")}</FooterLink>
-            <FooterLink to="/docs">{t("footer.docs")}</FooterLink>
+            <a href="https://about.me/vadimcusnir" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors rounded">About</a>
           </div>
         </div>
       </div>
