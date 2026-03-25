@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 /**
  * fetch-metadata: Fetches metadata for YouTube/Vimeo URLs using oEmbed APIs.
@@ -136,6 +137,10 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Rate limit
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const { url, platform, episode_id } = await req.json();
 
     if (!url || typeof url !== "string") {
@@ -209,7 +214,7 @@ Deno.serve(async (req) => {
   } catch (e) {
     console.error("fetch-metadata error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "Failed to fetch metadata" }),
       { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }

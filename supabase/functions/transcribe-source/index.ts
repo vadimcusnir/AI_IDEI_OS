@@ -15,22 +15,7 @@ import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
  * Output: { transcript, segments, language, source, metadata }
  */
 
-// ── Rate limiting ──
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 10;
-const RATE_WINDOW = 3600_000;
-
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(userId);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 // ── Source Detection ──
 interface SourceInfo {
@@ -428,13 +413,9 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Rate limit ──
-    if (!checkRateLimit(caller.id)) {
-      return new Response(
-        JSON.stringify({ error: "Rate limit exceeded (10/hour)" }),
-        { status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
-      );
-    }
+    // ── Rate limit (DB-backed, persistent) ──
+    const rateLimited = await rateLimitGuard(caller.id, req, { maxRequests: 10, windowSeconds: 3600 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
 
     // ── Regime ──
     const regime = await getRegimeConfig("transcribe-audio");
