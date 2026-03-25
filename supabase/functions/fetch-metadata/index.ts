@@ -137,6 +137,10 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Rate limit
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const { url, platform, episode_id } = await req.json();
 
     if (!url || typeof url !== "string") {
