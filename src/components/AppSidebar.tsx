@@ -292,13 +292,13 @@ export function AppSidebar() {
           <WorkspaceSwitcher collapsed={false} />
           <button
             onClick={() => navigate("/credits")}
-            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-primary/10 hover:bg-primary/15 transition-colors"
+            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[hsl(var(--gold-oxide)/0.06)] hover:bg-[hsl(var(--gold-oxide)/0.1)] transition-colors"
           >
-            <Coins className="h-3.5 w-3.5 text-primary shrink-0" />
-            <span className="text-xs font-mono font-bold text-primary">
+            <Coins className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide))] shrink-0" />
+            <span className="text-xs font-mono font-bold text-[hsl(var(--gold-oxide))]">
               {balanceLoading ? "…" : balance.toLocaleString()}
             </span>
-            <span className="text-[9px] text-muted-foreground ml-auto">{t("common:neurons_currency")}</span>
+            <span className="text-[9px] text-muted-foreground/60 ml-auto">{t("common:neurons_currency")}</span>
           </button>
         </div>
       )}
@@ -307,10 +307,10 @@ export function AppSidebar() {
           <WorkspaceSwitcher collapsed={true} />
           <button
             onClick={() => navigate("/credits")}
-            className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/15 transition-colors"
+            className="h-7 w-7 rounded-lg bg-[hsl(var(--gold-oxide)/0.06)] flex items-center justify-center hover:bg-[hsl(var(--gold-oxide)/0.1)] transition-colors"
             title={`${balance} ${t("common:neurons_currency")}`}
           >
-            <Coins className="h-3.5 w-3.5 text-primary" />
+            <Coins className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide))]" />
           </button>
         </div>
       )}

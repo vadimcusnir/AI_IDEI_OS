@@ -143,25 +143,25 @@ export default function Onboarding() {
     <OnboardingTutorial open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
     <div className="flex-1 overflow-y-auto">
       <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 4 steps." />
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
         {/* Hero Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+          className="text-center mb-10"
         >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))] text-[10px] font-semibold uppercase tracking-[0.15em] mb-5">
             <Zap className="h-3 w-3" />
             4 Steps to Knowledge Assets
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold mb-2">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-[-0.02em] mb-2.5">
             {t("onboarding.title")}
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-3">
+          <p className="text-sm text-muted-foreground/70 max-w-md mx-auto mb-4 leading-relaxed">
             {t("onboarding.subtitle")}
           </p>
-          <Button variant="outline" size="sm" onClick={() => setTutorialOpen(true)} className="gap-1.5 text-xs">
+          <Button variant="outline" size="sm" onClick={() => setTutorialOpen(true)} className="gap-1.5 text-xs border-border/50 hover:border-[hsl(var(--gold-oxide)/0.3)]">
             <BookOpen className="h-3.5 w-3.5" />
             Interactive Tutorial (+50 NEURONS)
           </Button>
@@ -172,7 +172,7 @@ export default function Onboarding() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="mb-8"
+          className="mb-10"
         >
           <div className="flex items-center gap-1 sm:gap-2">
             {STEPS.map((step, idx) => {
@@ -192,10 +192,10 @@ export default function Onboarding() {
                     <div className={cn(
                       "h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center transition-all border-2",
                       isCompleted
-                        ? "bg-primary border-primary text-primary-foreground"
+                        ? "bg-[hsl(var(--gold-oxide))] border-[hsl(var(--gold-oxide))] text-[hsl(var(--obsidian))]"
                         : isActive
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-muted-foreground/20 bg-muted text-muted-foreground"
+                        ? "border-[hsl(var(--gold-oxide))] bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]"
+                        : "border-muted-foreground/15 bg-muted/50 text-muted-foreground/50"
                     )}>
                       {isCompleted ? (
                         <Check className="h-4 w-4" />
@@ -205,7 +205,7 @@ export default function Onboarding() {
                     </div>
                     <span className={cn(
                       "text-[9px] sm:text-[10px] font-semibold tracking-wide",
-                      isActive ? "text-primary" : isCompleted ? "text-foreground" : "text-muted-foreground"
+                      isActive ? "text-[hsl(var(--gold-oxide))]" : isCompleted ? "text-foreground" : "text-muted-foreground/50"
                     )}>
                       {step.key.charAt(0).toUpperCase() + step.key.slice(1)}
                     </span>
@@ -213,7 +213,7 @@ export default function Onboarding() {
                   {idx < STEPS.length - 1 && (
                     <div className={cn(
                       "h-0.5 w-3 sm:w-6 rounded-full transition-colors shrink-0",
-                      status[STEPS[idx].checkField] > 0 ? "bg-primary" : "bg-muted-foreground/15"
+                      status[STEPS[idx].checkField] > 0 ? "bg-[hsl(var(--gold-oxide))]" : "bg-muted-foreground/10"
                     )} />
                   )}
                 </div>
@@ -226,13 +226,13 @@ export default function Onboarding() {
             <div className="flex items-center gap-1.5">
               <div className="w-24 h-1.5 rounded-full bg-muted overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-primary"
+                  className="h-full rounded-full bg-[hsl(var(--gold-oxide))]"
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 />
               </div>
-              <span className="text-[10px] font-mono font-bold text-primary">{progressPercent}%</span>
+              <span className="text-[10px] font-mono font-bold text-[hsl(var(--gold-oxide))]">{progressPercent}%</span>
             </div>
           </div>
         </motion.div>
@@ -253,10 +253,10 @@ export default function Onboarding() {
 
               return (
                 <div className={cn(
-                  "rounded-2xl border p-5 sm:p-6 transition-all",
+                  "rounded-2xl border p-6 sm:p-7 transition-all",
                   isCompleted
-                    ? "border-primary/20 bg-primary/5"
-                    : "border-border bg-card"
+                    ? "border-[hsl(var(--gold-oxide)/0.2)] bg-[hsl(var(--gold-oxide)/0.03)]"
+                    : "border-border/50 bg-card/80"
                 )}>
                   {/* Step number + reward */}
                   <div className="flex items-center justify-between mb-4">
@@ -265,12 +265,12 @@ export default function Onboarding() {
                         {t("onboarding.step", { number: activeStep + 1 })} of {STEPS.length}
                       </span>
                       {isCompleted && (
-                        <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                        <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]">
                           {t("onboarding.step_completed")}
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 text-[9px] font-semibold text-primary/70">
+                    <div className="flex items-center gap-1 text-[9px] font-semibold text-[hsl(var(--gold-oxide)/0.7)]">
                       <Gift className="h-3 w-3" />
                       {step.reward}
                     </div>
@@ -282,10 +282,10 @@ export default function Onboarding() {
                       "h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br",
                       step.gradient
                     )}>
-                      <Icon className={cn("h-6 w-6", isCompleted ? "text-primary" : "text-foreground")} />
+                      <Icon className={cn("h-6 w-6", isCompleted ? "text-[hsl(var(--gold-oxide))]" : "text-foreground")} />
                     </div>
                     <div>
-                      <h2 className="text-base sm:text-lg font-bold">{step.title}</h2>
+                      <h2 className="text-base sm:text-lg font-bold tracking-[-0.01em]">{step.title}</h2>
                       <p className="text-[10px] text-muted-foreground font-medium">{step.subtitle}</p>
                     </div>
                   </div>
@@ -293,17 +293,17 @@ export default function Onboarding() {
                   <p className="text-xs text-muted-foreground leading-relaxed mb-4">{step.desc}</p>
 
                   {/* Tip */}
-                  <div className="rounded-lg bg-muted/50 border border-border/50 p-3 mb-4">
+                  <div className="rounded-xl bg-muted/30 border border-border/30 p-3.5 mb-5">
                     <div className="flex items-center gap-1.5">
-                      <Play className="h-3 w-3 text-primary shrink-0" />
-                      <p className="text-[10px] text-muted-foreground italic">{step.tip}</p>
+                      <Play className="h-3 w-3 text-[hsl(var(--gold-oxide))] shrink-0" />
+                      <p className="text-[10px] text-muted-foreground/70 italic">{step.tip}</p>
                     </div>
                   </div>
 
                   {/* Status + Action */}
                   <div className="flex items-center justify-between">
                     {isCompleted && (
-                      <p className="text-xs text-primary font-medium">
+                      <p className="text-xs text-[hsl(var(--gold-oxide))] font-medium">
                         {status[step.checkField]} {step.checkField} {t("onboarding.created_suffix")}
                       </p>
                     )}
@@ -352,10 +352,10 @@ export default function Onboarding() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-8 p-6 rounded-2xl border-2 border-primary/30 bg-primary/5 text-center"
+            className="mt-10 p-7 rounded-2xl border-2 border-[hsl(var(--gold-oxide)/0.25)] bg-[hsl(var(--gold-oxide)/0.03)] text-center"
           >
-            <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
-              <Crown className="h-7 w-7 text-primary" />
+            <div className="h-14 w-14 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-4">
+              <Crown className="h-7 w-7 text-[hsl(var(--gold-oxide))]" />
             </div>
             <h2 className="text-lg font-bold mb-1.5">{t("onboarding.pipeline_active_title")}</h2>
             <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">

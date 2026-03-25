@@ -122,9 +122,9 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
 
           {/* Main input container — COMPACT */}
           <div className={cn(
-            "relative flex items-end gap-0.5 rounded-[14px] border bg-card transition-all duration-200",
+            "relative flex items-end gap-0.5 rounded-[14px] border bg-card/90 backdrop-blur-sm transition-all duration-200",
             "shadow-sm",
-            "border-border/50 focus-within:border-primary/40 focus-within:shadow-md focus-within:shadow-primary/[0.03] focus-within:ring-1 focus-within:ring-primary/10"
+            "border-border/50 focus-within:border-[hsl(var(--gold-oxide)/0.4)] focus-within:shadow-md focus-within:shadow-[hsl(var(--gold-oxide)/0.04)] focus-within:ring-1 focus-within:ring-[hsl(var(--gold-oxide)/0.15)]"
           )}>
             <input
               ref={fileInputRef}
@@ -154,7 +154,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                 }}
                 onKeyDown={handleKeyDown}
                 placeholder="Execută comandă..."
-                className="w-full resize-none bg-transparent px-1 py-1.5 text-[14px] leading-[20px] focus:outline-none placeholder:text-muted-foreground/35 min-h-[36px] max-h-[180px]"
+                className="w-full resize-none bg-transparent px-1 py-1.5 text-sm leading-[20px] focus:outline-none placeholder:text-muted-foreground/30 min-h-[36px] max-h-[180px]"
                 rows={1}
                 style={{ height: "auto" }}
                 onInput={(e) => {
@@ -193,7 +193,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                 className={cn(
                   "h-8 w-8 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 transition-all duration-200",
                   (input.trim() || files.length > 0)
-                    ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20 hover:shadow-md"
+                    ? "bg-[hsl(var(--gold-oxide))] text-[hsl(var(--obsidian))] shadow-sm shadow-[hsl(var(--gold-oxide)/0.2)] hover:shadow-md hover:bg-[hsl(var(--gold-dim))]"
                     : "bg-muted text-muted-foreground/30"
                 )}
                 onClick={onSubmit}
@@ -205,7 +205,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
           </div>
 
           {/* Keyboard hint — compact */}
-          <p className="text-[9px] text-muted-foreground/25 text-center mt-1 select-none">
+          <p className="text-[9px] text-muted-foreground/20 text-center mt-1.5 select-none tracking-wide">
             <kbd className="font-mono">Enter</kbd> trimite · <kbd className="font-mono">/</kbd> comenzi · <kbd className="font-mono">+</kbd> servicii
           </p>
         </div>

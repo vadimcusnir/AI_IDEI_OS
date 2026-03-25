@@ -398,13 +398,13 @@ export default function Home() {
               {isEmptyState ? (
                 <div className="flex flex-col items-center justify-center min-h-[40vh] pt-8">
                   <div className="w-full text-center space-y-2 mb-6">
-                    <h1 className="text-2xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
+                   <h1 className="text-2xl font-bold tracking-[-0.02em] leading-[1.15] text-foreground">
                       {greeting},{" "}
-                      <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
+                      <span className="text-[hsl(var(--gold-oxide))]">
                         {userName}
                       </span>
                     </h1>
-                    <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                    <p className="text-sm text-muted-foreground/70 max-w-md mx-auto leading-relaxed">
                       Ce vrei să obții?
                     </p>
                   </div>
@@ -424,14 +424,14 @@ export default function Home() {
                   ))}
                   {loading && !isStreaming && (
                     <div className="flex items-start gap-2.5">
-                      <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
-                        <Sparkles className="h-3 w-3 text-primary" />
-                      </div>
+                       <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[hsl(var(--gold-oxide)/0.15)] to-[hsl(var(--gold-oxide)/0.05)] flex items-center justify-center shrink-0 border border-[hsl(var(--gold-oxide)/0.1)]">
+                         <Sparkles className="h-3 w-3 text-[hsl(var(--gold-oxide))]" />
+                       </div>
                       <div className="flex items-center gap-2 pt-2">
                         <div className="flex gap-1">
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+                             <span className="w-2 h-2 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] animate-bounce" style={{ animationDelay: "0ms" }} />
+                             <span className="w-2 h-2 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] animate-bounce" style={{ animationDelay: "150ms" }} />
+                             <span className="w-2 h-2 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] animate-bounce" style={{ animationDelay: "300ms" }} />
                         </div>
                         <span className="text-xs text-muted-foreground ml-1">
                           {execState.phase === "planning" ? "Planning..." : "Thinking..."}
@@ -583,13 +583,13 @@ export default function Home() {
                 <div className="h-full flex flex-col items-center justify-end px-4 sm:px-6 pb-6">
                   <div className="w-full max-w-3xl flex flex-col items-center gap-4">
                     <div className="w-full text-center space-y-2">
-                      <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-[1.15] text-foreground">
+                      <h1 className="text-2xl sm:text-3xl font-bold tracking-[-0.02em] leading-[1.15] text-foreground">
                         {greeting},{" "}
-                        <span className="bg-gradient-to-r from-primary via-primary/85 to-primary/70 bg-clip-text text-transparent">
+                        <span className="text-[hsl(var(--gold-oxide))]">
                           {userName}
                         </span>
                       </h1>
-                      <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                      <p className="text-sm text-muted-foreground/70 max-w-md mx-auto leading-relaxed">
                         Ce vrei să obții?
                       </p>
                     </div>
@@ -609,14 +609,14 @@ export default function Home() {
 
                     {loading && !isStreaming && (
                       <div className="flex items-start gap-2.5">
-                        <div className="h-7 w-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
-                          <Sparkles className="h-3 w-3 text-primary" />
-                        </div>
+                         <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[hsl(var(--gold-oxide)/0.15)] to-[hsl(var(--gold-oxide)/0.05)] flex items-center justify-center shrink-0 border border-[hsl(var(--gold-oxide)/0.1)]">
+                           <Sparkles className="h-3 w-3 text-[hsl(var(--gold-oxide))]" />
+                         </div>
                         <div className="flex items-center gap-2 pt-2">
                           <div className="flex gap-1">
-                            <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-                            <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-                            <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+                             <span className="w-2 h-2 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] animate-bounce" style={{ animationDelay: "0ms" }} />
+                             <span className="w-2 h-2 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] animate-bounce" style={{ animationDelay: "150ms" }} />
+                             <span className="w-2 h-2 rounded-full bg-[hsl(var(--gold-oxide)/0.4)] animate-bounce" style={{ animationDelay: "300ms" }} />
                           </div>
                           <span className="text-xs text-muted-foreground ml-1">
                             {execState.phase === "planning" ? "Planning..." : "Thinking..."}

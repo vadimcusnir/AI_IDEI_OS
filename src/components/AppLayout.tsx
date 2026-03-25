@@ -74,14 +74,14 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
         <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
           {/* ═══ HEADER: 3-zone control panel ═══ */}
           <header
-            className="shrink-0 z-40 h-[var(--header-height)] flex items-center border-b border-border/50 bg-background px-3 sm:px-4"
+            className="shrink-0 z-40 h-[var(--header-height)] flex items-center border-b border-border/40 bg-background/95 backdrop-blur-sm px-3 sm:px-4"
           >
             {/* ─── LEFT: Identity ─── */}
             <div className="flex items-center gap-2 shrink-0">
               <SidebarTrigger />
               <Link to="/home" className="flex items-center gap-1.5 group" title="Home">
-                <div className="h-6 w-6 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
-                  <Brain className="h-3.5 w-3.5 text-primary" />
+                <div className="h-6 w-6 rounded-lg bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center group-hover:bg-[hsl(var(--gold-oxide)/0.12)] transition-colors">
+                  <Brain className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide))]" />
                 </div>
                 <span className="text-sm font-bold tracking-tight hidden sm:inline text-foreground">
                   {"\n"}
@@ -135,7 +135,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           {/* ═══ PIPELINE CONTEXT BAR — below header, visible only when active ═══ */}
           {user && (
-            <div className="hidden md:flex items-center justify-center border-b border-border/30 bg-muted/20 py-1.5 px-4 shrink-0">
+            <div className="hidden md:flex items-center justify-center border-b border-border/20 bg-muted/10 py-1.5 px-4 shrink-0">
               <Suspense fallback={null}>
                 <CompactPipeline />
               </Suspense>

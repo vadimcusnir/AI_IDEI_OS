@@ -31,7 +31,7 @@ const LAYERS: Array<{
 
 export function WorkspaceLayerTabs({ active, onChange, executionActive }: WorkspaceLayerTabsProps) {
   return (
-    <div className="flex items-center gap-0.5 px-4 sm:px-6 h-10 border-b border-border/20 bg-background">
+    <div className="flex items-center gap-0.5 px-4 sm:px-6 h-10 border-b border-border/20 bg-background/80 backdrop-blur-sm">
       {LAYERS.map((layer) => (
         <button
           key={layer.id}
@@ -39,14 +39,14 @@ export function WorkspaceLayerTabs({ active, onChange, executionActive }: Worksp
           className={cn(
             "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150",
             active === layer.id
-              ? "bg-primary/10 text-primary"
-              : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/40"
+              ? "bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]"
+              : "text-muted-foreground/50 hover:text-foreground hover:bg-muted/30"
           )}
         >
           <layer.icon className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">{layer.label}</span>
           {layer.badge && executionActive && (
-            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold-oxide))] animate-pulse" />
           )}
         </button>
       ))}
