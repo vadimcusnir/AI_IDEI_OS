@@ -177,7 +177,7 @@ ${meta.jsonLd ? `<script type="application/ld+json">${JSON.stringify(meta.jsonLd
   } catch (e) {
     console.error("prerender-meta error:", e);
     return new Response(JSON.stringify({
-      error: e instanceof Error ? e.message : "Unknown error",
+      error: "Failed to generate meta data",
     }), {
       status: 500,
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },

@@ -214,7 +214,7 @@ Deno.serve(async (req) => {
   } catch (e) {
     console.error("fetch-metadata error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "Failed to fetch metadata" }),
       { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
