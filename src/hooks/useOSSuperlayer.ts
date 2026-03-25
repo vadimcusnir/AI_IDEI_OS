@@ -42,16 +42,20 @@ interface OSAgent {
   status: string;
   performance_score: number;
   last_active_at: string | null;
+  metadata?: Record<string, unknown>;
 }
 
 interface OSExecution {
   id: string;
+  agent_id?: string;
   status: string;
   credits_cost: number;
   duration_ms: number | null;
   started_at: string | null;
   completed_at: string | null;
   created_at: string;
+  output?: Record<string, unknown>;
+  performance?: Record<string, unknown>;
 }
 
 interface MemoryPattern {
