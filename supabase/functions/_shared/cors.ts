@@ -27,9 +27,4 @@ export function getCorsHeaders(req: Request): Record<string, string> {
   };
 }
 
-/** Legacy compat — use getCorsHeaders(req) for new code */
-export const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-internal-secret, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+/** @deprecated — removed. Use getCorsHeaders(req) instead. */
