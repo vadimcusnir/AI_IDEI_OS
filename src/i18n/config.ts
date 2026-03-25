@@ -2,13 +2,11 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
-// Eagerly load EN (default language) — all namespaces
+// Eagerly load critical EN namespaces only — defer large ones
 import commonEN from "@/locales/en/common.json";
 import navigationEN from "@/locales/en/navigation.json";
 import errorsEN from "@/locales/en/errors.json";
 import formsEN from "@/locales/en/forms.json";
-import pagesEN from "@/locales/en/pages.json";
-import architectureEN from "@/locales/en/architecture.json";
 import landingEN from "@/locales/en/landing.json";
 
 export const defaultNS = "common";
@@ -16,9 +14,21 @@ export const supportedLanguages = ["en", "ro", "ru"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 const allNamespaces = ["common", "navigation", "errors", "forms", "pages", "architecture", "landing"] as const;
+const deferredNamespaces = ["pages", "architecture"] as const;
 
-// Track loaded languages
+// Track loaded languages & deferred EN namespaces
 const loadedLanguages = new Set(["en"]);
+const deferredENLoaded = new Set<string>();
+
+// Lazy-load deferred EN namespaces on first use
+i18n.on("initialized", () => {
+  deferredNamespaces.forEach(async (ns) => {
+    if (deferredENLoaded.has(ns)) return;
+    deferredENLoaded.add(ns);
+    const mod = await import(`../locales/en/${ns}.json`);
+    i18n.addResourceBundle("en", ns, mod.default, true, true);
+  });
+});
 
 /**
  * Load all namespace bundles for a given language.
@@ -63,8 +73,6 @@ i18n
         navigation: navigationEN,
         errors: errorsEN,
         forms: formsEN,
-        pages: pagesEN,
-        architecture: architectureEN,
         landing: landingEN,
       },
     },
