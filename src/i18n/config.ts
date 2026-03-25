@@ -61,8 +61,6 @@ i18n
         navigation: navigationEN,
         errors: errorsEN,
         forms: formsEN,
-        pages: pagesEN,
-        architecture: architectureEN,
         landing: landingEN,
       },
     },
