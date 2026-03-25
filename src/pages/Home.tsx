@@ -412,7 +412,7 @@ export default function Home() {
                       Ce vrei să obții?
                     </p>
                   </div>
-                  <div className="w-full max-w-2xl mx-auto">
+                  <div className="w-full max-w-2xl mx-auto" data-tour="intent-chips">
                     <IntentChips onSelect={(prompt) => { setInput(prompt); inputZoneRef.current?.focus(); }} />
                   </div>
                 </div>
