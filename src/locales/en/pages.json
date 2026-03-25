@@ -865,7 +865,13 @@
     "s9_title": "9. Children's Privacy",
     "s9_text": "The Service is not directed to children under 16. We do not knowingly collect data from children.",
     "s10_title": "10. Changes to This Policy",
-    "s10_text": "We may update this policy periodically. We will notify you of significant changes via email or in-app notification."
+    "s10_text": "We may update this policy periodically. We will notify you of significant changes via email or in-app notification.",
+    "s11_title": "11. Data Controller",
+    "s11_text": "The data controller for this Service is:",
+    "s11_company": "Cușnir Media SRL",
+    "s11_address": "Republic of Moldova, r. Ocnița, s-tul Bîrlădeni",
+    "s11_admin": "Administrator: Vadim Cușnir",
+    "s11_email": "vadim.kusnir@gmail.com"
   },
   "guest_profile": {
     "not_found_title": "Profile not found",

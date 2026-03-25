@@ -865,7 +865,13 @@
     "s9_title": "9. Confidențialitatea Copiilor",
     "s9_text": "Serviciul nu este destinat copiilor sub 16 ani. Nu colectăm cu bună știință date de la copii.",
     "s10_title": "10. Modificări ale Politicii",
-    "s10_text": "Putem actualiza această politică periodic. Vă vom notifica despre modificările semnificative prin email sau notificare în aplicație."
+    "s10_text": "Putem actualiza această politică periodic. Vă vom notifica despre modificările semnificative prin email sau notificare în aplicație.",
+    "s11_title": "11. Operator Date",
+    "s11_text": "Operatorul de date pentru acest Serviciu este:",
+    "s11_company": "Cușnir Media SRL",
+    "s11_address": "Republica Moldova, r. Ocnița, s-tul Bîrlădeni",
+    "s11_admin": "Administrator: Vadim Cușnir",
+    "s11_email": "vadim.kusnir@gmail.com"
   },
   "guest_profile": {
     "not_found_title": "Profil inexistent",
