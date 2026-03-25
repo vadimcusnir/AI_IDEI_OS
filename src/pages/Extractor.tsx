@@ -170,7 +170,7 @@ export default function Extractor() {
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 text-[length:var(--body-dense-size)] font-medium border-b-2 -mb-px transition-all whitespace-nowrap",
                   active
-                    ? "text-primary border-primary"
+                    ? "text-[hsl(var(--gold-oxide))] border-[hsl(var(--gold-oxide))]"
                     : "text-muted-foreground border-transparent hover:text-foreground hover:border-border"
                 )}
               >
