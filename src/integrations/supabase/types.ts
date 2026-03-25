@@ -9486,6 +9486,15 @@ export type Database = {
       }
       cleanup_rate_limits: { Args: never; Returns: undefined }
       collection_pipeline_stats: { Args: { _user_id: string }; Returns: Json }
+      complete_agent_execution: {
+        Args: {
+          _execution_id: string
+          _output?: Json
+          _performance?: Json
+          _success?: boolean
+        }
+        Returns: Json
+      }
       complete_onboarding_tutorial: {
         Args: { _user_id: string }
         Returns: Json
@@ -9742,6 +9751,15 @@ export type Database = {
           _amount: number
           _description: string
           _job_id?: string
+          _user_id: string
+        }
+        Returns: Json
+      }
+      start_agent_execution: {
+        Args: {
+          _agent_id: string
+          _estimated_credits?: number
+          _input?: Json
           _user_id: string
         }
         Returns: Json
