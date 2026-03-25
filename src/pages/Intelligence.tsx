@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { GenericPageSkeleton } from "@/components/skeletons/GenericPageSkeleton";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
@@ -95,11 +96,7 @@ export default function Intelligence() {
   };
 
   if (authLoading || wsLoading || loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <GenericPageSkeleton />;
   }
 
   if (!stats) return null;

@@ -19,6 +19,7 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier, type UserTier } from "@/hooks/useUserTier";
 import { useChatHistory } from "@/hooks/useChatHistory";
+import { usePrefetch } from "@/hooks/usePrefetch";
 import { Logo } from "@/components/shared/Logo";
 import {
   Home, Upload, BookOpen, Sparkles, User,
@@ -191,6 +192,15 @@ export function AppSidebar() {
   const { balance, loading: balanceLoading } = useCreditBalance();
   const { tier } = useUserTier();
   const { sessions, loadSession, deleteSession, newSession } = useChatHistory();
+  const { prefetchServices, prefetchCredits, prefetchLibrary } = usePrefetch();
+
+  const prefetchMap: Record<string, (() => void) | undefined> = {
+    "/services": prefetchServices,
+    "/services-catalog": prefetchServices,
+    "/credits": prefetchCredits,
+    "/wallet": prefetchCredits,
+    "/library": prefetchLibrary,
+  };
 
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
@@ -205,7 +215,7 @@ export function AppSidebar() {
           isActive={isActive(item.to)}
           tooltip={item.label}
         >
-          <button onClick={() => navigate(item.to)} className={cn(
+          <button onClick={() => navigate(item.to)} onMouseEnter={prefetchMap[item.to]} className={cn(
             "w-full",
             item.highlight && !isActive(item.to) && "text-primary font-medium",
             item.locked && "opacity-60",

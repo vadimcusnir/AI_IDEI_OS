@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import { GenericPageSkeleton } from "@/components/skeletons/GenericPageSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
@@ -166,11 +167,7 @@ export default function Credits() {
   const balanceHealth = (credits?.balance ?? 0) > 200 ? "healthy" : (credits?.balance ?? 0) > 50 ? "warning" : "critical";
 
   if (authLoading || loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <GenericPageSkeleton />;
   }
 
   return (

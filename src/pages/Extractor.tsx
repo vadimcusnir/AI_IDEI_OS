@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ExtractorSkeleton } from "@/components/skeletons/ExtractorSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
@@ -101,11 +102,7 @@ export default function Extractor() {
   };
 
   if (authLoading || wsLoading || loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-5 w-5 animate-spin text-primary" />
-      </div>
-    );
+    return <ExtractorSkeleton />;
   }
 
   return (

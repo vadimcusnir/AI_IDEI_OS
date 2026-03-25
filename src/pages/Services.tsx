@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { ServicesSkeleton } from "@/components/skeletons/ServicesSkeleton";
 import { GuestConversionGate } from "@/components/revenue/GuestConversionGate";
 import { SEOHead } from "@/components/SEOHead";
 import { ServiceRunHistory } from "@/components/services/ServiceRunHistory";
@@ -163,11 +164,7 @@ export default function Services() {
   );
 
   if (authLoading || loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <ServicesSkeleton />;
   }
 
   return (

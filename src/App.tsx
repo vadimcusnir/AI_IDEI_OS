@@ -149,22 +149,22 @@ const App = () => (
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/links" element={<AppLayout><ErrorBoundary fallbackTitle="Links failed to load"><Links /></ErrorBoundary></AppLayout>} />
                 <Route path="/architecture" element={<AppLayout><ErrorBoundary fallbackTitle="Architecture failed to load"><Architecture /></ErrorBoundary></AppLayout>} />
-                <Route path="/u/:username" element={<PublicUserProfile />} />
-                <Route path="/guest/:slug" element={<GuestProfile />} />
+                <Route path="/u/:username" element={<ErrorBoundary fallbackTitle="Profile failed to load"><PublicUserProfile /></ErrorBoundary>} />
+                <Route path="/guest/:slug" element={<ErrorBoundary fallbackTitle="Guest profile failed to load"><GuestProfile /></ErrorBoundary>} />
 
                 {/* Public knowledge infrastructure — with global layout */}
                 <Route path="/docs" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
                 <Route path="/docs/:section/:topic" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
                 <Route path="/changelog" element={<AppLayout><ErrorBoundary fallbackTitle="Changelog failed to load"><Changelog /></ErrorBoundary></AppLayout>} />
                 {/* ═══ Public SEO-indexable entity pages (lightweight, no Auth providers) ═══ */}
-                <Route path="/knowledge/:slug" element={<PublicEntityPage />} />
-                <Route path="/insights/:slug" element={<PublicInsightPage />} />
-                <Route path="/profiles/:slug" element={<PublicProfileEntityPage />} />
-                <Route path="/patterns/:slug" element={<PublicEntityPage />} />
-                <Route path="/formulas/:slug" element={<PublicEntityPage />} />
-                <Route path="/contradictions/:slug" element={<PublicEntityPage />} />
-                <Route path="/applications/:slug" element={<PublicEntityPage />} />
-                <Route path="/topics/:slug" element={<PublicEntityPage />} />
+                <Route path="/knowledge/:slug" element={<ErrorBoundary fallbackTitle="Knowledge page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/insights/:slug" element={<ErrorBoundary fallbackTitle="Insight page failed"><PublicInsightPage /></ErrorBoundary>} />
+                <Route path="/profiles/:slug" element={<ErrorBoundary fallbackTitle="Profile page failed"><PublicProfileEntityPage /></ErrorBoundary>} />
+                <Route path="/patterns/:slug" element={<ErrorBoundary fallbackTitle="Pattern page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/formulas/:slug" element={<ErrorBoundary fallbackTitle="Formula page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/contradictions/:slug" element={<ErrorBoundary fallbackTitle="Contradiction page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/applications/:slug" element={<ErrorBoundary fallbackTitle="Application page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/topics/:slug" element={<ErrorBoundary fallbackTitle="Topic page failed"><PublicEntityPage /></ErrorBoundary>} />
                 {/* Index pages → library for authenticated users */}
                 <Route path="/insights" element={<Navigate to="/library" replace />} />
                 <Route path="/patterns" element={<Navigate to="/library" replace />} />
@@ -179,9 +179,9 @@ const App = () => (
                 <Route path="/marketplace/earnings" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Earnings failed to load"><MarketplaceEarnings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/marketplace/:id" element={<AppLayout><ErrorBoundary fallbackTitle="Marketplace detail failed"><MarketplaceDetail /></ErrorBoundary></AppLayout>} />
                 <Route path="/media/profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Media profiles failed to load"><MediaProfiles /></ErrorBoundary></AppLayout>} />
-                <Route path="/media/profiles/:slug" element={<MediaProfilePublic />} />
+                <Route path="/media/profiles/:slug" element={<ErrorBoundary fallbackTitle="Media profile failed"><MediaProfilePublic /></ErrorBoundary>} />
                 <Route path="/admin/media-profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Admin media failed"><AdminMediaProfiles /></ErrorBoundary></AppLayout>} />
-                <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><AdminAuditLog /></AdminRoute></AppLayout>} />
+                <Route path="/admin/audit-log" element={<AppLayout><AdminRoute><ErrorBoundary fallbackTitle="Audit log failed to load"><AdminAuditLog /></ErrorBoundary></AdminRoute></AppLayout>} />
                 <Route path="/pipeline" element={<AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><PipelineOverview /></ErrorBoundary></AppLayout>} />
                 <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
                 {/* /knowledge/:slug is handled above as public route */}
