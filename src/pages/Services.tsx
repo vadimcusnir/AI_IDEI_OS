@@ -103,6 +103,7 @@ export default function Services() {
   const [paywallService, setPaywallService] = useState<{ name: string; tier: string } | null>(null);
   const [guestGateOpen, setGuestGateOpen] = useState(false);
   const [guestGateService, setGuestGateService] = useState<string | undefined>();
+  const [showWizard, setShowWizard] = useState(() => !searchParams.get("category") && !searchParams.get("search"));
 
   // Drawer state
   const [drawerService, setDrawerService] = useState<Service | null>(null);
