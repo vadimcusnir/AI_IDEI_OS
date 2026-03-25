@@ -47,9 +47,9 @@ export async function checkRateLimit(
     });
 
     if (error || !data || data.length === 0) {
-      console.error("Rate limit check failed, allowing request:", error);
-      // Fail open — don't block users if DB is down
-      return { allowed: true, remaining: maxRequests - 1, resetAt: Date.now() + windowSeconds * 1000 };
+      console.error("Rate limit check failed, BLOCKING request (fail-closed):", error);
+      // FAIL CLOSED — block if we can't verify rate limit
+      return { allowed: false, remaining: 0, resetAt: Date.now() + windowSeconds * 1000 };
     }
 
     const row = data[0];
@@ -59,8 +59,8 @@ export async function checkRateLimit(
       resetAt: new Date(row.reset_at).getTime(),
     };
   } catch (err) {
-    console.error("Rate limit error, failing open:", err);
-    return { allowed: true, remaining: maxRequests - 1, resetAt: Date.now() + windowSeconds * 1000 };
+    console.error("Rate limit error, BLOCKING request (fail-closed):", err);
+    return { allowed: false, remaining: 0, resetAt: Date.now() + windowSeconds * 1000 };
   }
 }
 

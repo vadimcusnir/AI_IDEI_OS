@@ -1,23 +1,33 @@
 /**
  * Shared CORS headers for edge functions.
  * Restricts origin to known domains for defense-in-depth.
+ * 
+ * SECURITY: No localhost in production, specific Lovable preview subdomain pattern.
  */
 
 const ALLOWED_ORIGINS = [
   "https://ai-idei-os.lovable.app",
   "https://ai-idei.com",
   "https://www.ai-idei.com",
-  "http://localhost:5173",
-  "http://localhost:8080",
 ];
+
+// In development, allow localhost origins
+const isDev = Deno.env.get("ENVIRONMENT") === "development";
+if (isDev) {
+  ALLOWED_ORIGINS.push("http://localhost:5173", "http://localhost:8080");
+}
+
+// Specific Lovable preview pattern: id-preview--<uuid>.lovable.app
+const LOVABLE_PREVIEW_REGEX = /^https:\/\/[a-z0-9-]+-preview--[a-f0-9-]+\.lovable\.app$/;
+const LOVABLE_PROJECT_REGEX = /^https:\/\/[a-f0-9-]+\.lovableproject\.com$/;
 
 export function getCorsHeaders(req: Request): Record<string, string> {
   const origin = req.headers.get("Origin") || "";
-  // Also allow Lovable preview URLs
+
   const isAllowed =
     ALLOWED_ORIGINS.includes(origin) ||
-    origin.endsWith(".lovable.app") ||
-    origin.endsWith(".lovableproject.com");
+    LOVABLE_PREVIEW_REGEX.test(origin) ||
+    LOVABLE_PROJECT_REGEX.test(origin);
 
   return {
     "Access-Control-Allow-Origin": isAllowed ? origin : ALLOWED_ORIGINS[0],
