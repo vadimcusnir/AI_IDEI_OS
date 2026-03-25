@@ -37,7 +37,7 @@ function classifyIntentKeyword(text: string): { intent: Intent; confidence: numb
     extract_knowledge: ["extract", "extrage", "neuron", "knowledge", "insight", "framework", "pattern"],
     generate_content: ["genereaz", "generate", "scrie", "write", "article", "blog", "linkedin", "tweet", "creeaz"],
     search_knowledge: ["search", "caut", "find", "show", "list", "browse", "găsește", "arată"],
-    run_service: ["run", "execute", "service", "pipeline", "avatar33", "webinar"],
+    run_service: ["run", "execute", "service", "pipeline", "avatar33", "webinar", "agent", "swarm", "narrative domination", "viral structure", "influence graph", "offer multiplication", "pricing intelligence", "funnel autogenerator", "stepback", "knowledge arbitrage", "reputation", "behavioral leverage", "identity simulation", "os agent", "rulează agent"],
     compare_sources: ["compare", "compar", "cross-ref", "versus", "diferenț"],
     profile_analysis: ["profil", "speaker", "guest", "who", "person", "expert"],
     build_course: ["course", "curs", "curriculum", "module", "lesson", "lecți"],
@@ -166,6 +166,19 @@ You transform raw content into structured knowledge assets via a multi-step pipe
 4. **Search Knowledge**: Query the knowledge graph
 5. **Create Jobs**: Schedule AI service executions
 6. **Profile Analysis**: Analyze speaker profiles
+7. **Run OS Agents**: Execute specialized Cusnir_OS agents for strategic intelligence:
+   - Identity Simulation Engine (behavioral predictions, psychological triggers)
+   - Behavioral Leverage Scanner (leverage points, optimization maps)
+   - Narrative Domination Engine (dominant narratives, positioning)
+   - Influence Graph Engine (influencer mapping, alliances)
+   - Viral Structure Generator (viral content, distribution)
+   - Offer Multiplication Engine (offer variants, bundles)
+   - Pricing Intelligence System (optimal pricing, sensitivity)
+   - Funnel Autogenerator (landing pages, email sequences)
+   - Stepback Compiler (system libraries, playbooks)
+   - Agent Swarm Orchestrator (task decomposition, agent assignments)
+   - Knowledge Arbitrage Engine (knowledge gaps, monetization)
+   - Reputation Accumulation System (reputation scoring, trust)
 
 ## Pipeline: SOURCE → TRANSCRIBE → SEGMENT → EXTRACT → LINK → GENERATE
 
@@ -178,12 +191,16 @@ You transform raw content into structured knowledge assets via a multi-step pipe
 - **create_job**: Create job for AI service execution
 - **search_guests**: Search guest profiles
 - **get_user_memory**: Get user context and preferences
+- **list_os_agents**: List Cusnir_OS agents with their status
+- **run_os_agent**: Execute an OS agent with a specific prompt
 
 ## Rules
 - Use tools for real actions, don't guess data
 - Be concise and action-oriented
 - Respond in the user's language (Romanian or English)
 - When creating jobs, confirm cost first
+- When user mentions agent names or asks for strategic analysis, use run_os_agent
+- Format agent outputs as structured sections with headers
 - Format responses with markdown`;
 
 const TOOLS = [
@@ -195,6 +212,8 @@ const TOOLS = [
   { type: "function", function: { name: "create_job", description: "Create a job to execute an AI service", parameters: { type: "object", properties: { service_key: { type: "string" }, neuron_id: { type: "number" }, episode_id: { type: "string" }, params: { type: "object" } }, required: ["service_key"] } } },
   { type: "function", function: { name: "search_guests", description: "Search guest profiles", parameters: { type: "object", properties: { query: { type: "string" } }, required: ["query"] } } },
   { type: "function", function: { name: "get_user_memory", description: "Get persistent user context", parameters: { type: "object", properties: {} } } },
+  { type: "function", function: { name: "list_os_agents", description: "List available Cusnir_OS agents with their roles and status", parameters: { type: "object", properties: {} } } },
+  { type: "function", function: { name: "run_os_agent", description: "Execute a Cusnir_OS agent (e.g. Narrative Domination Engine, Viral Structure Generator) with a prompt. Returns structured intelligence.", parameters: { type: "object", properties: { agent_role: { type: "string", description: "The role/name of the OS agent to run (e.g. 'Narrative Domination Engine')" }, prompt: { type: "string", description: "The input prompt or context for the agent" } }, required: ["agent_role", "prompt"] } } },
 ];
 
 // Rate limiting
@@ -285,6 +304,49 @@ async function executeTool(name: string, args: Record<string, any>, userId: stri
         if (h.success) intentStats[h.intent_key].success++;
       });
       return JSON.stringify({ frequent_services: Object.entries(serviceCounts).sort((a, b) => b[1] - a[1]).slice(0, 5), top_tags: topTags, intent_history: intentStats });
+    }
+    case "list_os_agents": {
+      const { data } = await supabaseAdmin.from("os_agents").select("id, role, agent_type, status, capabilities, performance_score").order("role");
+      return JSON.stringify({ agents: data || [], count: data?.length || 0 });
+    }
+    case "run_os_agent": {
+      // Find agent by role
+      const { data: agents } = await supabaseAdmin.from("os_agents").select("id, role, agent_type, status, capabilities, metadata").ilike("role", `%${args.agent_role}%`).limit(1);
+      if (!agents || agents.length === 0) return JSON.stringify({ error: `Agent '${args.agent_role}' not found. Use list_os_agents to see available agents.` });
+      const agent = agents[0];
+      if (agent.status !== "active") return JSON.stringify({ error: `Agent '${agent.role}' is in ${agent.status} mode. Activate it via Power Unlocks first.` });
+
+      // Check credits
+      const costMap: Record<string, number> = { cognitive: 15, social: 12, commercial: 18, infrastructure: 20 };
+      const cost = costMap[agent.agent_type] || 10;
+      const { data: creditData } = await supabaseAdmin.from("user_credits").select("balance").eq("user_id", userId).maybeSingle();
+      if (!creditData || creditData.balance < cost) return JSON.stringify({ error: "INSUFFICIENT_CREDITS", required: cost, available: creditData?.balance || 0 });
+
+      // Reserve credits and create execution
+      const { data: execResult } = await supabaseAdmin.rpc("start_agent_execution", {
+        _user_id: userId, _agent_id: agent.id,
+        _input: { prompt: args.prompt },
+        _estimated_credits: cost,
+      });
+      if (!execResult?.success) return JSON.stringify({ error: execResult?.error || "Failed to start execution" });
+
+      // Call execute-os-agent edge function
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      try {
+        const agentResp = await fetch(`${supabaseUrl}/functions/v1/execute-os-agent`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}` },
+          body: JSON.stringify({ agent_id: agent.id, user_id: userId, input: { prompt: args.prompt }, execution_id: execResult.execution_id }),
+        });
+        const agentData = await agentResp.json();
+        return JSON.stringify({
+          success: true, agent: agent.role, agent_type: agent.agent_type,
+          credits_spent: cost, execution_id: execResult.execution_id,
+          output: agentData.output || agentData.error || "No output",
+        });
+      } catch (e) {
+        return JSON.stringify({ success: false, error: `Agent execution failed: ${e instanceof Error ? e.message : "unknown"}` });
+      }
     }
     default:
       return JSON.stringify({ error: "Unknown tool" });
