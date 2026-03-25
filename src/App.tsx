@@ -157,14 +157,14 @@ const App = () => (
                 <Route path="/docs/:section/:topic" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
                 <Route path="/changelog" element={<AppLayout><ErrorBoundary fallbackTitle="Changelog failed to load"><Changelog /></ErrorBoundary></AppLayout>} />
                 {/* ═══ Public SEO-indexable entity pages (lightweight, no Auth providers) ═══ */}
-                <Route path="/knowledge/:slug" element={<PublicEntityPage />} />
-                <Route path="/insights/:slug" element={<PublicInsightPage />} />
-                <Route path="/profiles/:slug" element={<PublicProfileEntityPage />} />
-                <Route path="/patterns/:slug" element={<PublicEntityPage />} />
-                <Route path="/formulas/:slug" element={<PublicEntityPage />} />
-                <Route path="/contradictions/:slug" element={<PublicEntityPage />} />
-                <Route path="/applications/:slug" element={<PublicEntityPage />} />
-                <Route path="/topics/:slug" element={<PublicEntityPage />} />
+                <Route path="/knowledge/:slug" element={<ErrorBoundary fallbackTitle="Knowledge page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/insights/:slug" element={<ErrorBoundary fallbackTitle="Insight page failed"><PublicInsightPage /></ErrorBoundary>} />
+                <Route path="/profiles/:slug" element={<ErrorBoundary fallbackTitle="Profile page failed"><PublicProfileEntityPage /></ErrorBoundary>} />
+                <Route path="/patterns/:slug" element={<ErrorBoundary fallbackTitle="Pattern page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/formulas/:slug" element={<ErrorBoundary fallbackTitle="Formula page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/contradictions/:slug" element={<ErrorBoundary fallbackTitle="Contradiction page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/applications/:slug" element={<ErrorBoundary fallbackTitle="Application page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/topics/:slug" element={<ErrorBoundary fallbackTitle="Topic page failed"><PublicEntityPage /></ErrorBoundary>} />
                 {/* Index pages → library for authenticated users */}
                 <Route path="/insights" element={<Navigate to="/library" replace />} />
                 <Route path="/patterns" element={<Navigate to="/library" replace />} />
