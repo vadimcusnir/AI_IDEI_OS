@@ -20,6 +20,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { EconomyLayerPanel } from "@/components/cusnir-os/EconomyLayerPanel";
 import { MemoryLayerPanel } from "@/components/cusnir-os/MemoryLayerPanel";
+import { AgentExecutionPanel } from "@/components/cusnir-os/AgentExecutionPanel";
 const HEALTH_COLORS: Record<string, string> = {
   healthy: "text-status-validated bg-status-validated/10",
   warning: "text-warning bg-warning/10",
@@ -90,13 +91,13 @@ const MODULE_STATUS_COLORS: Record<string, string> = {
   experimental: "bg-warning/10 text-warning",
 };
 
-type Tab = "modules" | "superlayer" | "economy" | "memory" | "ledger";
+type Tab = "modules" | "superlayer" | "agents" | "economy" | "memory" | "ledger";
 
 export default function CusnirOSOperator() {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const { modules, stats, ledger, loading } = useOSOperator();
-  const { unlocks, patterns, executions, stats: supStats, loading: supLoading, activateUnlock, revokeUnlock, toggling } = useOSSuperlayer();
+  const { unlocks, patterns, executions, agents, stats: supStats, loading: supLoading, activateUnlock, revokeUnlock, toggling, startExecution, completeExecution, executing } = useOSSuperlayer();
   const { xp } = useGamification();
   const [tab, setTab] = useState<Tab>("modules");
 
@@ -149,10 +150,11 @@ export default function CusnirOSOperator() {
 
           {/* Tab Navigation */}
           <div className="flex gap-1 border-b border-border/30 pb-0 overflow-x-auto">
-            {(["modules", "superlayer", "economy", "memory", "ledger"] as Tab[]).map(t => {
+            {(["modules", "superlayer", "agents", "economy", "memory", "ledger"] as Tab[]).map(t => {
               const labels: Record<Tab, string> = {
                 modules: "Module Registry",
                 superlayer: "Superlayer Axes",
+                agents: "Agent Swarm",
                 economy: "Economy Layer",
                 memory: "Memory Engine",
                 ledger: "Decision Ledger",
@@ -278,6 +280,17 @@ export default function CusnirOSOperator() {
                 );
               })}
             </div>
+          )}
+
+          {/* Agent Swarm */}
+          {tab === "agents" && (
+            <AgentExecutionPanel
+              agents={agents}
+              executions={executions}
+              onStartExecution={startExecution}
+              onCompleteExecution={completeExecution}
+              executing={executing}
+            />
           )}
 
           {/* Economy Layer */}
