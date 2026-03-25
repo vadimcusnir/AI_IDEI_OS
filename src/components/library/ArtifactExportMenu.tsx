@@ -178,7 +178,11 @@ export function ArtifactExportMenu({
         </DropdownMenuItem>
         <DropdownMenuItem onClick={exportHTML} className="gap-2 text-xs">
           <FileType className="h-3.5 w-3.5" />
-          HTML / DOCX (.html)
+          HTML (.html)
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={exportPDF} className="gap-2 text-xs">
+          <Printer className="h-3.5 w-3.5" />
+          PDF (Print)
         </DropdownMenuItem>
         <DropdownMenuItem onClick={exportCSV} className="gap-2 text-xs">
           <Archive className="h-3.5 w-3.5" />
