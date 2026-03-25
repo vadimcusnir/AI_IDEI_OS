@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import { GenericPageSkeleton } from "@/components/skeletons/GenericPageSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
