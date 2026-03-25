@@ -192,6 +192,7 @@ const App = () => (
                 <Route path="/terms" element={<AppLayout><ErrorBoundary fallbackTitle="Terms failed to load"><TermsOfService /></ErrorBoundary></AppLayout>} />
                 <Route path="/pricing" element={<AppLayout><ErrorBoundary fallbackTitle="Pricing failed to load"><Pricing /></ErrorBoundary></AppLayout>} />
                 <Route path="/about" element={<AppLayout><ErrorBoundary fallbackTitle="About failed to load"><About /></ErrorBoundary></AppLayout>} />
+                <Route path="/about-vadim-cusnir" element={<AppLayout><ErrorBoundary fallbackTitle="About Vadim failed to load"><AboutVadimCusnir /></ErrorBoundary></AppLayout>} />
                 <Route path="/payment/result" element={<AppLayout><ErrorBoundary fallbackTitle="Payment failed to load"><PaymentResult /></ErrorBoundary></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><ErrorBoundary fallbackTitle="Privacy failed to load"><PrivacyPolicy /></ErrorBoundary></AppLayout>} />
                 <Route path="/community" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
