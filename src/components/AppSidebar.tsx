@@ -307,10 +307,10 @@ export function AppSidebar() {
           <WorkspaceSwitcher collapsed={true} />
           <button
             onClick={() => navigate("/credits")}
-            className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/15 transition-colors"
+            className="h-7 w-7 rounded-lg bg-[hsl(var(--gold-oxide)/0.06)] flex items-center justify-center hover:bg-[hsl(var(--gold-oxide)/0.1)] transition-colors"
             title={`${balance} ${t("common:neurons_currency")}`}
           >
-            <Coins className="h-3.5 w-3.5 text-primary" />
+            <Coins className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide))]" />
           </button>
         </div>
       )}
