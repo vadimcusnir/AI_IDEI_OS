@@ -196,7 +196,7 @@ export function MagicButton({ children, className }: { children: React.ReactNode
               exit={{ opacity: 0 }}
               transition={{ duration: p.duration, ease: "easeOut" }}
             >
-              <SigilParticle shape={p.shape} size={Math.round(p.scale * 22)} />
+              <SigilParticle shape={p.shape} size={Math.round(p.scale * 32)} />
             </motion.span>
           );
         })}
