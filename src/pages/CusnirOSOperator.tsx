@@ -377,6 +377,7 @@ export default function CusnirOSOperator() {
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
       </div>
     </PageTransition>
   );
