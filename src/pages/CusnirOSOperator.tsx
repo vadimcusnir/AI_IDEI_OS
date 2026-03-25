@@ -282,7 +282,14 @@ export default function CusnirOSOperator() {
 
           {/* Economy Layer */}
           {tab === "economy" && (
-            <EconomyLayerPanel unlocks={unlocks} stats={supStats} />
+            <EconomyLayerPanel
+              unlocks={unlocks}
+              stats={supStats}
+              userXP={xp.total_xp}
+              onActivate={activateUnlock}
+              onRevoke={revokeUnlock}
+              toggling={toggling}
+            />
           )}
 
           {/* Memory + Learning Engine */}
