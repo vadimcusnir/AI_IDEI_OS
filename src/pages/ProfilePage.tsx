@@ -265,7 +265,7 @@ export default function ProfilePage() {
               <ControlledSection elementId="profile.notification_prefs">
               <div className="bg-card border border-border rounded-xl p-6">
                 <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                  <Bell className="h-4 w-4 text-primary" />
+                  <Bell className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
                   {t("profile.notification_prefs")}
                 </h2>
 
