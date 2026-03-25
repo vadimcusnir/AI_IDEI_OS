@@ -41,6 +41,8 @@ import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
 import { WorkspaceLayerTabs, type WorkspaceLayer } from "@/components/command-center/WorkspaceLayerTabs";
 import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
+import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
+import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { routeCommand, type RouteResult } from "@/components/command-center/CommandRouter";
 import {
