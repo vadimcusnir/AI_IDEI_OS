@@ -1,11 +1,12 @@
 /**
  * AgentExecutionPanel — Agent Swarm control surface
- * Launch agents, monitor live executions, view history
+ * Launch agents with AI, monitor live executions, view results
  */
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   Bot, Play, Loader2, CheckCircle2, XCircle, Clock,
