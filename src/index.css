@@ -32,8 +32,8 @@
     --obsidian-light: 220 14% 88%;
     --ivory: 220 20% 10%;
     --ivory-dim: 220 10% 32%;
-    --gold-oxide: 32 85% 45%;
-    --gold-dim: 32 65% 32%;
+    --gold-oxide: 32 85% 35%;
+    --gold-dim: 32 65% 28%;
     --gold-subtle: 32 70% 55%;
     --petrol: 180 45% 32%;
     --petrol-dim: 180 30% 22%;
@@ -65,7 +65,7 @@
     --popover: 220 18% 99%;
     --popover-foreground: 220 25% 8%;
 
-    --primary: 24 100% 50%;
+    --primary: 24 100% 39%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 14% 90%;
@@ -74,7 +74,7 @@
     --muted: 220 14% 92%;
     --muted-foreground: 220 12% 32%;
 
-    --accent: 24 100% 50%;
+    --accent: 24 100% 39%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 78% 48%;
@@ -82,7 +82,7 @@
 
     --border: 220 16% 86%;
     --input: 220 16% 86%;
-    --ring: 24 100% 50%;
+    --ring: 24 100% 39%;
 
     --radius: 0.5rem;
 
@@ -98,7 +98,7 @@
     /* Toolbar */
     --toolbar-bg: 220 16% 97%;
     --toolbar-border: 220 16% 86%;
-    --toolbar-active: 24 100% 50%;
+    --toolbar-active: 24 100% 39%;
 
     /* Semantic feedback colors */
     --success: 152 68% 36%;
@@ -111,10 +111,10 @@
     /* Status colors */
     --status-draft: 220 12% 42%;
     --status-validated: 152 68% 36%;
-    --status-published: 24 100% 50%;
+    --status-published: 24 100% 39%;
 
     /* Graph colors */
-    --graph-node: 24 100% 50%;
+    --graph-node: 24 100% 39%;
     --graph-edge: 220 14% 70%;
     --graph-highlight: 262 65% 52%;
 
@@ -143,18 +143,18 @@
 
     /* Tier colors */
     --tier-vip: 43 96% 52%;
-    --tier-pro: 24 100% 50%;
+    --tier-pro: 24 100% 39%;
     --tier-free: 220 12% 42%;
 
     /* Sidebar */
     --sidebar-background: 220 18% 96%;
     --sidebar-foreground: 220 18% 20%;
-    --sidebar-primary: 24 100% 50%;
+    --sidebar-primary: 24 100% 39%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 14% 92%;
     --sidebar-accent-foreground: 220 22% 12%;
     --sidebar-border: 220 16% 86%;
-    --sidebar-ring: 24 100% 50%;
+    --sidebar-ring: 24 100% 39%;
   }
 
   /* Responsive header height */

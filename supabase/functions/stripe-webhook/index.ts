@@ -422,12 +422,36 @@ Deno.serve(async (req) => {
   }
 });
 
-/** Resolve Supabase user ID by email */
+/** Resolve Supabase user ID by email — uses stripe_customers table for O(1) lookup */
 async function resolveUserByEmail(db: any, email: string | null | undefined): Promise<string | null> {
   if (!email) return null;
-  const { data } = await db.auth.admin.listUsers();
-  const user = data?.users?.find((u: any) => u.email === email);
-  return user?.id || null;
+
+  // 1. Try stripe_customers table first (O(1) indexed lookup)
+  const { data: customer } = await db
+    .from("stripe_customers")
+    .select("user_id")
+    .eq("email", email)
+    .maybeSingle();
+  if (customer?.user_id) return customer.user_id;
+
+  // 2. Try profiles table (has user_id + email)
+  const { data: profile } = await db
+    .from("profiles")
+    .select("user_id")
+    .eq("email", email)
+    .maybeSingle();
+  if (profile?.user_id) return profile.user_id;
+
+  // 3. Fallback to admin API (single user lookup, not listUsers)
+  try {
+    const { data: userData } = await db.auth.admin.listUsers({ 
+      filter: `email.eq.${email}`,
+      perPage: 1 
+    });
+    return userData?.users?.[0]?.id || null;
+  } catch {
+    return null;
+  }
 }
 
 function ok(extra?: Record<string, any>) {
