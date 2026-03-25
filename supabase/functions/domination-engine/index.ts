@@ -12,12 +12,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
@@ -44,7 +38,7 @@ Deno.serve(async (req) => {
   if (!roleData) return jsonResp({ error: "Admin access required" }, 403);
 
   // Rate limit (user-based, post-auth)
-  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, corsHeaders);
+  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
   if (rateLimited) return rateLimited;
 
   try {

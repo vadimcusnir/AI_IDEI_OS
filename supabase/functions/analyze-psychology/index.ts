@@ -5,12 +5,6 @@ import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 const logStep = (step: string, details?: unknown) => {
   console.log(`[ANALYZE-PSYCHOLOGY] ${step}${details ? ` — ${JSON.stringify(details)}` : ""}`);
 };
@@ -139,7 +133,7 @@ serve(async (req) => {
     const userId = userData.user.id;
 
     // Rate limit (user-based, post-auth)
-    const rateLimited = rateLimitGuard(userId, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+    const rateLimited = rateLimitGuard(userId, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
     logStep("Authenticated", { userId });
 

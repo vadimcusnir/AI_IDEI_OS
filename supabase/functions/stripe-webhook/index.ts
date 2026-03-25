@@ -1,12 +1,6 @@
 import Stripe from "npm:stripe@17.7.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 // Product → tier mapping (must match useSubscription.ts SUBSCRIPTION_TIERS)
 const PRODUCT_TIERS: Record<string, { tier: string; neurons: number; label: string }> = {
   prod_U74a8adWSDNymI: { tier: "core", neurons: 2000, label: "Core" },

@@ -13,11 +13,6 @@ import {
   type ExecutionPlan,
 } from "../_shared/kernel-modules.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
 async function callAI(system: string, prompt: string, json = true): Promise<any> {
@@ -82,7 +77,7 @@ serve(async (req) => {
   if (authErr || !user) return jsonRes({ error: "Invalid token" }, 401);
 
   // Rate limit (user-based, post-auth)
-  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
   if (rateLimited) return rateLimited;
 
   const kernel = createKernelLog();

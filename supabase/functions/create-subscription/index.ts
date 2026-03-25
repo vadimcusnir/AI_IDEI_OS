@@ -3,11 +3,6 @@ import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: getCorsHeaders(req) });
@@ -26,7 +21,7 @@ serve(async (req) => {
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated");
     // Rate limit guard
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 3, windowSeconds: 60 }, corsHeaders);
+    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 3, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
 
