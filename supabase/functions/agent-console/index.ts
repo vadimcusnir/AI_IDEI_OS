@@ -288,6 +288,50 @@ async function executeTool(name: string, args: Record<string, any>, userId: stri
       });
       return JSON.stringify({ frequent_services: Object.entries(serviceCounts).sort((a, b) => b[1] - a[1]).slice(0, 5), top_tags: topTags, intent_history: intentStats });
     }
+    case "list_os_agents": {
+      const { data } = await supabaseAdmin.from("os_agents").select("id, role, agent_type, status, capabilities, performance_score").order("role");
+      return JSON.stringify({ agents: data || [], count: data?.length || 0 });
+    }
+    case "run_os_agent": {
+      // Find agent by role
+      const { data: agents } = await supabaseAdmin.from("os_agents").select("id, role, agent_type, status, capabilities, metadata").ilike("role", `%${args.agent_role}%`).limit(1);
+      if (!agents || agents.length === 0) return JSON.stringify({ error: `Agent '${args.agent_role}' not found. Use list_os_agents to see available agents.` });
+      const agent = agents[0];
+      if (agent.status !== "active") return JSON.stringify({ error: `Agent '${agent.role}' is in ${agent.status} mode. Activate it via Power Unlocks first.` });
+
+      // Check credits
+      const costMap: Record<string, number> = { cognitive: 15, social: 12, commercial: 18, infrastructure: 20 };
+      const cost = costMap[agent.agent_type] || 10;
+      const { data: creditData } = await supabaseAdmin.from("user_credits").select("balance").eq("user_id", userId).maybeSingle();
+      if (!creditData || creditData.balance < cost) return JSON.stringify({ error: "INSUFFICIENT_CREDITS", required: cost, available: creditData?.balance || 0 });
+
+      // Reserve credits and create execution
+      const { data: execResult } = await supabaseAdmin.rpc("start_agent_execution", {
+        _user_id: userId, _agent_id: agent.id,
+        _input: { prompt: args.prompt },
+        _estimated_credits: cost,
+      });
+      if (!execResult?.success) return JSON.stringify({ error: execResult?.error || "Failed to start execution" });
+
+      // Call execute-os-agent edge function
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY")!;
+      try {
+        const agentResp = await fetch(`${supabaseUrl}/functions/v1/execute-os-agent`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}` },
+          body: JSON.stringify({ agent_id: agent.id, user_id: userId, input: { prompt: args.prompt }, execution_id: execResult.execution_id }),
+        });
+        const agentData = await agentResp.json();
+        return JSON.stringify({
+          success: true, agent: agent.role, agent_type: agent.agent_type,
+          credits_spent: cost, execution_id: execResult.execution_id,
+          output: agentData.output || agentData.error || "No output",
+        });
+      } catch (e) {
+        return JSON.stringify({ success: false, error: `Agent execution failed: ${e instanceof Error ? e.message : "unknown"}` });
+      }
+    }
     default:
       return JSON.stringify({ error: "Unknown tool" });
   }
