@@ -32,9 +32,13 @@ Deno.serve(async (req) => {
       return await findGaps(supabase, workspace_id);
     } else if (action === "suggestions") {
       return await getSuggestions(supabase, workspace_id);
+    } else if (action === "cluster") {
+      return await clusterGraph(supabase);
+    } else if (action === "cross_episode") {
+      return await crossEpisodeConnections(supabase);
     }
 
-    return new Response(JSON.stringify({ error: "Invalid action" }), {
+    return new Response(JSON.stringify({ error: "Invalid action. Use: contradictions, gaps, suggestions, cluster, cross_episode" }), {
       status: 400,
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
@@ -232,6 +236,85 @@ Return ONLY valid JSON: [{"suggestion": "...", "priority": "high|medium|low", "e
   } catch { suggestions = []; }
 
   return jsonResponse({ suggestions });
+}
+
+// P3-003: Graph Clustering via Union-Find connected components
+async function clusterGraph(supabase: any) {
+  const { data: relations } = await supabase
+    .from("entity_relations")
+    .select("source_entity_id, target_entity_id, weight")
+    .limit(5000);
+
+  if (!relations || relations.length === 0) {
+    return jsonResponse({ clusters: [], total_clusters: 0 });
+  }
+
+  const parent: Record<string, string> = {};
+  function find(x: string): string {
+    if (!parent[x]) parent[x] = x;
+    if (parent[x] !== x) parent[x] = find(parent[x]);
+    return parent[x];
+  }
+  function union(a: string, b: string) {
+    const ra = find(a), rb = find(b);
+    if (ra !== rb) parent[ra] = rb;
+  }
+
+  for (const r of relations) union(r.source_entity_id, r.target_entity_id);
+
+  const allNodes = new Set<string>();
+  for (const r of relations) { allNodes.add(r.source_entity_id); allNodes.add(r.target_entity_id); }
+
+  const groups: Record<string, string[]> = {};
+  for (const n of allNodes) {
+    const root = find(n);
+    if (!groups[root]) groups[root] = [];
+    groups[root].push(n);
+  }
+
+  const sorted = Object.entries(groups)
+    .map(([root, members]) => ({ cluster_id: root, size: members.length, members }))
+    .sort((a, b) => b.size - a.size);
+
+  return jsonResponse({ total_clusters: sorted.length, total_entities: allNodes.size, clusters: sorted.slice(0, 50) });
+}
+
+// P3-004: Cross-Episode Connections
+async function crossEpisodeConnections(supabase: any) {
+  const { data: entities } = await supabase
+    .from("entities")
+    .select("id, title, entity_type, neuron_id")
+    .not("neuron_id", "is", null)
+    .limit(2000);
+
+  if (!entities || entities.length === 0) return jsonResponse({ connections: [], total: 0 });
+
+  const neuronIds = [...new Set(entities.map((e: any) => e.neuron_id).filter(Boolean))];
+  const { data: neurons } = await supabase.from("neurons").select("id, episode_id").in("id", neuronIds);
+
+  const nMap: Record<number, string> = {};
+  for (const n of neurons || []) if (n.episode_id) nMap[n.id] = n.episode_id;
+
+  const titleMap: Record<string, Array<{ entity_id: string; episode_id: string }>> = {};
+  for (const e of entities) {
+    const ep = e.neuron_id ? nMap[e.neuron_id] : null;
+    if (!ep) continue;
+    const key = e.title.toLowerCase().trim();
+    if (!titleMap[key]) titleMap[key] = [];
+    titleMap[key].push({ entity_id: e.id, episode_id: ep });
+  }
+
+  const connections = Object.entries(titleMap)
+    .filter(([, entries]) => new Set(entries.map(e => e.episode_id)).size >= 2)
+    .map(([title, entries]) => ({
+      title,
+      episode_count: new Set(entries.map(e => e.episode_id)).size,
+      entity_ids: entries.map(e => e.entity_id),
+      episode_ids: [...new Set(entries.map(e => e.episode_id))],
+    }))
+    .sort((a, b) => b.episode_count - a.episode_count);
+
+  return jsonResponse({ total_cross_episode: connections.length, connections: connections.slice(0, 100) });
 }
 
 function jsonResponse(data: any, status = 200, req?: Request) {
