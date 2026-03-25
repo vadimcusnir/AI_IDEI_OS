@@ -433,7 +433,7 @@ export default function ProfilePage() {
             <StaggerItem>
               <Link
                 to="/data-privacy"
-                className="block bg-card border border-border rounded-xl p-5 hover:border-primary/30 hover-lift transition-all"
+                className="block bg-card border border-border rounded-xl p-5 hover:border-[hsl(var(--gold-oxide)/0.3)] hover-lift transition-all"
               >
                 <div className="flex items-center justify-between">
                   <div>
