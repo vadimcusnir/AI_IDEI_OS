@@ -150,10 +150,11 @@ export default function CusnirOSOperator() {
 
           {/* Tab Navigation */}
           <div className="flex gap-1 border-b border-border/30 pb-0 overflow-x-auto">
-            {(["modules", "superlayer", "economy", "memory", "ledger"] as Tab[]).map(t => {
+            {(["modules", "superlayer", "agents", "economy", "memory", "ledger"] as Tab[]).map(t => {
               const labels: Record<Tab, string> = {
                 modules: "Module Registry",
                 superlayer: "Superlayer Axes",
+                agents: "Agent Swarm",
                 economy: "Economy Layer",
                 memory: "Memory Engine",
                 ledger: "Decision Ledger",
