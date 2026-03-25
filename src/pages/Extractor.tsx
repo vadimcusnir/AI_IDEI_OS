@@ -140,8 +140,8 @@ export default function Extractor() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8 p-5 rounded-2xl border border-[hsl(var(--gold-oxide)/0.2)] bg-[hsl(var(--gold-oxide)/0.05)] flex items-center gap-5"
           >
-            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <ArrowRight className="h-5 w-5 text-primary" />
+            <div className="h-10 w-10 rounded-xl bg-[hsl(var(--gold-oxide)/0.1)] flex items-center justify-center shrink-0">
+              <ArrowRight className="h-5 w-5 text-[hsl(var(--gold-oxide))]" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[length:var(--body-dense-size)] font-semibold text-foreground">
