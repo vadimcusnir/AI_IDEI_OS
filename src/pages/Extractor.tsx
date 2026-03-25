@@ -278,8 +278,8 @@ export default function Extractor() {
               </>
             ) : (
               <div className="rounded-2xl border-2 border-dashed border-border bg-card p-10 text-center">
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <Youtube className="h-7 w-7 text-primary/40" />
+                <div className="h-14 w-14 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-4">
+                  <Youtube className="h-7 w-7 text-[hsl(var(--gold-oxide)/0.4)]" />
                 </div>
                 <p className="text-[length:var(--body-dense-size)] text-muted-foreground mb-5">
                   Autentifică-te pentru a începe.

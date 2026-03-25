@@ -363,7 +363,7 @@ export default function Credits() {
                   onClick={() => setTxFilter(f.value)}
                   className={cn(
                     "px-2 py-1 rounded text-[10px] font-medium transition-colors",
-                    txFilter === f.value ? "bg-primary/10 text-primary" : "text-muted-foreground/60 hover:text-foreground"
+                    txFilter === f.value ? "bg-[hsl(var(--gold-oxide)/0.1)] text-[hsl(var(--gold-oxide))]" : "text-muted-foreground/60 hover:text-foreground"
                   )}
                 >
                   {t(f.labelKey)}

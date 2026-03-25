@@ -379,9 +379,9 @@ export default function Services() {
         <motion.section
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/[0.02] p-6 text-center space-y-3"
+          className="rounded-2xl border border-[hsl(var(--gold-oxide)/0.2)] bg-gradient-to-br from-[hsl(var(--gold-oxide)/0.05)] via-background to-[hsl(var(--gold-oxide)/0.02)] p-8 text-center space-y-4"
         >
-          <Zap className="h-8 w-8 text-primary mx-auto" />
+          <Zap className="h-8 w-8 text-[hsl(var(--gold-oxide))] mx-auto" />
           <h2 className="text-lg font-bold">Începe producția</h2>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
             {services.length}+ sisteme AI. 50+ outputs per execuție. Cost mediu: $0.14/output.

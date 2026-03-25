@@ -377,7 +377,7 @@ export default function Library() {
                             <div
                               key={item.id}
                               onClick={() => navigate(`/library/${item.id}`)}
-                              className="flex items-center gap-2 p-2.5 rounded-lg border border-border hover:border-primary/30 transition-colors cursor-pointer"
+                              className="flex items-center gap-2 p-2.5 rounded-lg border border-border hover:border-[hsl(var(--gold-oxide)/0.3)] transition-colors cursor-pointer"
                             >
                               <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                               <div className="flex-1 min-w-0">

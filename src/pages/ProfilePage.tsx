@@ -442,7 +442,7 @@ export default function ProfilePage() {
                       {t("profile.data_privacy_desc")}
                     </p>
                   </div>
-                  <span className="text-xs text-primary">→</span>
+                  <span className="text-xs text-[hsl(var(--gold-oxide))]">→</span>
                 </div>
               </Link>
             </StaggerItem>
