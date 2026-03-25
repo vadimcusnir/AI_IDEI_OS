@@ -1,9 +1,38 @@
+const CACHE_NAME = 'ai-idei-v1';
+
 self.addEventListener('install', function(event) {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.addAll(['/', '/home', '/manifest.json']);
+    })
+  );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', function(event) {
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    caches.keys().then(function(keys) {
+      return Promise.all(keys.filter(function(k) { return k !== CACHE_NAME; }).map(function(k) { return caches.delete(k); }));
+    }).then(function() { return clients.claim(); })
+  );
+});
+
+self.addEventListener('fetch', function(event) {
+  if (event.request.method !== 'GET') return;
+  var url = new URL(event.request.url);
+  if (url.hostname.includes('supabase') || url.pathname.startsWith('/rest/')) return;
+
+  event.respondWith(
+    fetch(event.request).then(function(response) {
+      if (response.ok && (url.pathname.endsWith('.js') || url.pathname.endsWith('.css'))) {
+        var clone = response.clone();
+        caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, clone); });
+      }
+      return response;
+    }).catch(function() {
+      return caches.match(event.request);
+    })
+  );
 });
 
 self.addEventListener('push', function(event) {
