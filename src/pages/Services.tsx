@@ -315,8 +315,8 @@ export default function Services() {
               >
                 {/* Intent header */}
                 <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <IntentIcon className="h-4 w-4 text-primary" />
+                  <div className="h-8 w-8 rounded-lg bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center">
+                    <IntentIcon className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
