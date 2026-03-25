@@ -83,6 +83,17 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
     URL.revokeObjectURL(url);
   }, []);
 
+  const handlePublish = useCallback(async (output: OutputItem) => {
+    const result = await publish({
+      title: output.title,
+      content: output.content,
+      tags: [output.type],
+    });
+    if (result) {
+      setPublishedIds(prev => new Set(prev).add(output.id));
+    }
+  }, [publish]);
+
   if (!visible || outputs.length === 0) return null;
 
   const activeTab = outputs[0]?.type || "raw";
