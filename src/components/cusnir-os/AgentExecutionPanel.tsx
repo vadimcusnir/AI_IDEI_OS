@@ -299,25 +299,49 @@ export function AgentExecutionPanel({
                   const agent = agents.find(a => a.id === exec.agent_id);
                   const statusInfo = EXEC_STATUS[exec.status] || EXEC_STATUS.completed;
                   const StatusIcon = statusInfo.icon;
+                  const hasOutput = exec.output && Object.keys(exec.output).length > 0 && !('error' in exec.output);
+                  const isExpanded = expandedExec === exec.id;
 
                   return (
-                    <div key={exec.id} className="p-3 flex items-center gap-3">
-                      <StatusIcon className={cn(
-                        "h-4 w-4 shrink-0",
-                        statusInfo.color,
-                        exec.status === "running" && "animate-spin"
-                      )} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium truncate">{agent?.role || "Agent necunoscut"}</p>
-                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
-                          <span>{format(new Date(exec.created_at), "dd MMM HH:mm")}</span>
-                          {exec.duration_ms && <span>· {(exec.duration_ms / 1000).toFixed(1)}s</span>}
-                          <span>· {exec.credits_cost}N</span>
+                    <div key={exec.id}>
+                      <button
+                        className="w-full p-3 flex items-center gap-3 hover:bg-muted/20 transition-colors text-left"
+                        onClick={() => hasOutput && setExpandedExec(isExpanded ? null : exec.id)}
+                      >
+                        <StatusIcon className={cn(
+                          "h-4 w-4 shrink-0",
+                          statusInfo.color,
+                          exec.status === "running" && "animate-spin"
+                        )} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium truncate">{agent?.role || "Agent necunoscut"}</p>
+                          <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
+                            <span>{format(new Date(exec.created_at), "dd MMM HH:mm")}</span>
+                            {exec.duration_ms && <span>· {(exec.duration_ms / 1000).toFixed(1)}s</span>}
+                            <span>· {exec.credits_cost}N</span>
+                            {hasOutput && <Badge variant="outline" className="text-[8px] h-3.5 text-primary">AI Output ↓</Badge>}
+                          </div>
                         </div>
-                      </div>
-                      <Badge variant="outline" className={cn("text-[9px]", statusInfo.color)}>
-                        {exec.status}
-                      </Badge>
+                        <Badge variant="outline" className={cn("text-[9px]", statusInfo.color)}>
+                          {exec.status}
+                        </Badge>
+                      </button>
+                      <AnimatePresence>
+                        {isExpanded && hasOutput && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="px-3 pb-3">
+                              <div className="bg-muted/30 rounded-lg p-3 text-[10px] font-mono max-h-60 overflow-auto whitespace-pre-wrap text-foreground/80">
+                                {JSON.stringify(exec.output, null, 2)}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   );
                 })}
