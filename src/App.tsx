@@ -171,6 +171,7 @@ const App = () => (
                 <Route path="/contradictions/:slug" element={<ErrorBoundary fallbackTitle="Contradiction page failed"><PublicEntityPage /></ErrorBoundary>} />
                 <Route path="/applications/:slug" element={<ErrorBoundary fallbackTitle="Application page failed"><PublicEntityPage /></ErrorBoundary>} />
                 <Route path="/topics/:slug" element={<ErrorBoundary fallbackTitle="Topic page failed"><PublicEntityPage /></ErrorBoundary>} />
+                <Route path="/analysis/:slug" element={<ErrorBoundary fallbackTitle="Analysis page failed"><PublicAnalysis /></ErrorBoundary>} />
                 {/* Index pages → library for authenticated users */}
                 <Route path="/insights" element={<Navigate to="/library" replace />} />
                 <Route path="/patterns" element={<Navigate to="/library" replace />} />
