@@ -180,9 +180,9 @@ export default function Credits() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5">
 
         {/* Page title */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold tracking-tight">{t("credits.title")}</h1>
+            <h1 className="text-lg font-bold tracking-tight">{t("credits.title")}</h1>
             <span className={cn(
               "text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
               balanceHealth === "healthy" ? "bg-status-validated/15 text-status-validated" :
