@@ -199,6 +199,21 @@ export default function Services() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-8">
 
+        {/* ═══ WIZARD ═══ */}
+        <AnimatePresence>
+          {showWizard && user && (
+            <ServiceWizard
+              onComplete={(contentType, goal) => {
+                setShowWizard(false);
+                const intentMap: Record<string, string> = { extract: "educate", generate: "attract", analyze: "sell" };
+                setActiveIntent(intentMap[goal] || null);
+                setSearch(contentType);
+              }}
+              onDismiss={() => setShowWizard(false)}
+            />
+          )}
+        </AnimatePresence>
+
         {/* ═══ LAYER 1: HERO ═══ */}
         <ServicesHero isLoggedIn={!!user} serviceCount={services.length} />
 
