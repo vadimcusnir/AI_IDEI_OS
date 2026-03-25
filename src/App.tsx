@@ -90,6 +90,7 @@ const DataPipeline = lazyRetry(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazyRetry(() => import("./pages/RuntimeDashboard"));
 const CusnirOSOperator = lazyRetry(() => import("./pages/CusnirOSOperator"));
 const CusnirOSPage = lazyRetry(() => import("./pages/CusnirOSPage"));
+const About = lazyRetry(() => import("./pages/About"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
 const DatabaseRelations = lazyRetry(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
