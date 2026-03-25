@@ -14,9 +14,21 @@ export const supportedLanguages = ["en", "ro", "ru"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 const allNamespaces = ["common", "navigation", "errors", "forms", "pages", "architecture", "landing"] as const;
+const deferredNamespaces = ["pages", "architecture"] as const;
 
-// Track loaded languages
+// Track loaded languages & deferred EN namespaces
 const loadedLanguages = new Set(["en"]);
+const deferredENLoaded = new Set<string>();
+
+// Lazy-load deferred EN namespaces on first use
+i18n.on("initialized", () => {
+  deferredNamespaces.forEach(async (ns) => {
+    if (deferredENLoaded.has(ns)) return;
+    deferredENLoaded.add(ns);
+    const mod = await import(`../locales/en/${ns}.json`);
+    i18n.addResourceBundle("en", ns, mod.default, true, true);
+  });
+});
 
 /**
  * Load all namespace bundles for a given language.
