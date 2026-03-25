@@ -3,19 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
-import { Store, Star, Coins, DollarSign, Search, Tag, ShoppingCart, Crown, TrendingUp, Clock, MessageSquare, Loader2, CheckCircle2, FileText, BarChart3 } from "lucide-react";
+import {
+  Store, Star, Coins, DollarSign, Search, Tag, ShoppingCart, Crown,
+  TrendingUp, Clock, Loader2, CheckCircle2, FileText, BarChart3,
+  Sparkles, ArrowRight,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SEOHead } from "@/components/SEOHead";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
 import { ControlledSection } from "@/components/ControlledSection";
 import { useTranslation } from "react-i18next";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface KnowledgeAsset {
   id: string;
@@ -34,15 +36,6 @@ interface KnowledgeAsset {
   is_featured?: boolean;
 }
 
-interface AssetReview {
-  id: string;
-  asset_id: string;
-  user_id: string;
-  rating: number;
-  review_text: string;
-  created_at: string;
-}
-
 type SortOption = "popular" | "newest" | "rating" | "price_low" | "price_high";
 
 export default function Marketplace() {
@@ -57,12 +50,12 @@ export default function Marketplace() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [sort, setSort] = useState<SortOption>("popular");
 
-  const SORT_OPTIONS: { value: SortOption; label: string; icon: typeof TrendingUp }[] = [
-    { value: "popular", label: t("marketplace.sort_popular"), icon: TrendingUp },
-    { value: "newest", label: t("marketplace.sort_newest"), icon: Clock },
-    { value: "rating", label: t("marketplace.sort_rating"), icon: Star },
-    { value: "price_low", label: t("marketplace.sort_price_asc"), icon: Coins },
-    { value: "price_high", label: t("marketplace.sort_price_desc"), icon: Coins },
+  const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+    { value: "popular", label: t("marketplace.sort_popular") },
+    { value: "newest", label: t("marketplace.sort_newest") },
+    { value: "rating", label: t("marketplace.sort_rating") },
+    { value: "price_low", label: t("marketplace.sort_price_asc") },
+    { value: "price_high", label: t("marketplace.sort_price_desc") },
   ];
 
   useEffect(() => {
@@ -75,7 +68,7 @@ export default function Marketplace() {
         .eq("is_featured", true);
       const { data: featuredData } = await featuredQuery
         .order("sales_count", { ascending: false })
-        .limit(6);
+        .limit(4);
       setFeatured((featuredData as KnowledgeAsset[]) || []);
 
       let query = supabase
@@ -114,154 +107,241 @@ export default function Marketplace() {
         description="Browse and purchase knowledge assets, templates, and intelligence packages on the AI-IDEI marketplace."
       />
 
-      {/* Hero */}
-      <div className="border-b border-border bg-card">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-            <Store className="h-3.5 w-3.5" />
-            <span>{t("marketplace.breadcrumb")}</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{t("marketplace.title")}</h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-[65ch] leading-relaxed mb-4">
-            {t("marketplace.description")}
-          </p>
-          {user && (
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => navigate("/marketplace/drafts")}>
-                <FileText className="h-3.5 w-3.5" />
-                Drafturi
-              </Button>
-              <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => navigate("/marketplace/earnings")}>
-                <BarChart3 className="h-3.5 w-3.5" />
-                Câștiguri
-              </Button>
+      {/* ═══ Hero ═══ */}
+      <div className="relative border-b border-border overflow-hidden">
+        {/* Subtle gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-[hsl(var(--gold-oxide)/0.05)]" />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[hsl(var(--gold-oxide))] mb-2">
+              Knowledge Exchange
+            </p>
+            <h1 className="text-2xl sm:text-4xl font-bold text-foreground mb-2 tracking-tight">
+              {t("marketplace.title")}
+            </h1>
+            <p className="text-sm text-muted-foreground max-w-lg leading-relaxed mb-5">
+              {t("marketplace.description")}
+            </p>
+
+            {/* Quick actions */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {user && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs gap-1.5 h-8"
+                    onClick={() => navigate("/marketplace/drafts")}
+                  >
+                    <FileText className="h-3.5 w-3.5" />
+                    My Drafts
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs gap-1.5 h-8"
+                    onClick={() => navigate("/marketplace/earnings")}
+                  >
+                    <BarChart3 className="h-3.5 w-3.5" />
+                    Earnings
+                  </Button>
+                </>
+              )}
+              {user && (
+                <div className="flex items-center gap-1.5 ml-auto text-xs text-muted-foreground">
+                  <Coins className="h-3 w-3" />
+                  <span className="font-mono font-semibold text-foreground">{balance}</span>
+                  NEURONS
+                </div>
+              )}
             </div>
-          )}
+          </motion.div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-        {/* Featured Section */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+        {/* ═══ Featured ═══ */}
         {featured.length > 0 && (
           <ControlledSection elementId="marketplace.featured">
-          <section>
-            <div className="flex items-center gap-2 mb-4">
-              <Crown className="h-4 w-4 text-amber-500" />
-              <h2 className="text-sm font-semibold">{t("marketplace.featured")}</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {featured.map(asset => (
-                <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} creditBalance={balance} isFeatured />
-              ))}
-            </div>
-            <Separator className="mt-8" />
-          </section>
+            <motion.section
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.35 }}
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Crown className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
+                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
+                  {t("marketplace.featured")}
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {featured.map((asset, i) => (
+                  <FeaturedCard key={asset.id} asset={asset} index={i} />
+                ))}
+              </div>
+            </motion.section>
           </ControlledSection>
         )}
 
-        {/* Filters & Sort */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder={t("marketplace.search_placeholder")}
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="pl-10 text-sm"
-            />
+        {/* ═══ Search + Filter Bar ═══ */}
+        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm -mx-4 px-4 sm:-mx-6 sm:px-6 py-3 border-b border-border/50">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={t("marketplace.search_placeholder")}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="pl-10 text-sm h-9"
+              />
+            </div>
+            <Select value={sort} onValueChange={(v) => setSort(v as SortOption)}>
+              <SelectTrigger className="w-full sm:w-36 text-xs h-9">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SORT_OPTIONS.map(o => (
+                  <SelectItem key={o.value} value={o.value} className="text-xs">{o.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={sort} onValueChange={(v) => setSort(v as SortOption)}>
-            <SelectTrigger className="w-40 text-xs h-9">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {SORT_OPTIONS.map(o => (
-                <SelectItem key={o.value} value={o.value} className="text-xs">{o.label}</SelectItem>
+
+          {/* Type pills */}
+          {types.length > 0 && (
+            <div className="flex gap-1.5 mt-2 overflow-x-auto pb-1 scrollbar-none">
+              <button
+                onClick={() => setSelectedType(null)}
+                className={cn(
+                  "shrink-0 px-3 py-1 rounded-full text-[11px] font-medium transition-colors",
+                  selectedType === null
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                )}
+              >
+                All
+              </button>
+              {types.map(tp => (
+                <button
+                  key={tp}
+                  onClick={() => setSelectedType(tp)}
+                  className={cn(
+                    "shrink-0 px-3 py-1 rounded-full text-[11px] font-medium transition-colors whitespace-nowrap",
+                    selectedType === tp
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  )}
+                >
+                  {tp}
+                </button>
               ))}
-            </SelectContent>
-          </Select>
+            </div>
+          )}
         </div>
 
-        {/* Type filters */}
-        <div className="flex gap-2 flex-wrap">
-          <Button
-            variant={selectedType === null ? "default" : "outline"}
-            size="sm"
-            className="text-xs h-7"
-            onClick={() => setSelectedType(null)}
-          >
-            {t("marketplace.all")}
-          </Button>
-          {types.map(tp => (
-            <Button
-              key={tp}
-              variant={selectedType === tp ? "default" : "outline"}
-              size="sm"
-              className="text-xs h-7"
-              onClick={() => setSelectedType(tp)}
-            >
-              {tp}
-            </Button>
-          ))}
-        </div>
-
-        {/* Grid */}
+        {/* ═══ Asset Grid ═══ */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20">
-            <Store className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">
-              {search ? t("marketplace.no_search_match") : t("marketplace.no_assets")}
-            </p>
-          </div>
+          <EmptyState search={search} t={t} />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map(asset => (
-              <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} creditBalance={balance} />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+          >
+            {filtered.map((asset, i) => (
+              <AssetCard key={asset.id} asset={asset} currentUserId={user?.id} creditBalance={balance} index={i} />
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>
   );
 }
 
-function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { asset: KnowledgeAsset; currentUserId?: string; creditBalance?: number; isFeatured?: boolean }) {
-  const { t } = useTranslation("pages");
-  const cardNavigate = useNavigate();
-  const [showReview, setShowReview] = useState(false);
-  const [showReviews, setShowReviews] = useState(false);
-  const [reviewText, setReviewText] = useState("");
-  const [rating, setRating] = useState(5);
-  const [submitting, setSubmitting] = useState(false);
-  const [reviews, setReviews] = useState<AssetReview[]>([]);
-  const [loadingReviews, setLoadingReviews] = useState(false);
+/* ─── Featured Card ─── */
+function FeaturedCard({ asset, index }: { asset: KnowledgeAsset; index: number }) {
+  const navigate = useNavigate();
+  const price = asset.price_neurons || 0;
+  const isFree = price === 0 && (!asset.price_usd || Number(asset.price_usd) === 0);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, duration: 0.3 }}
+      onClick={() => navigate(`/marketplace/${asset.id}`)}
+      className="group relative bg-card border border-[hsl(var(--gold-oxide)/0.2)] rounded-xl overflow-hidden cursor-pointer hover:border-[hsl(var(--gold-oxide)/0.4)] transition-all hover:shadow-md hover:shadow-[hsl(var(--gold-oxide)/0.05)]"
+    >
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[hsl(var(--gold-oxide)/0.5)] to-transparent" />
+      <div className="p-4 space-y-2.5">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Crown className="h-3 w-3 text-[hsl(var(--gold-oxide))] shrink-0" />
+              <Badge variant="outline" className="text-[8px] px-1.5 py-0">{asset.asset_type}</Badge>
+            </div>
+            <h3 className="text-sm font-bold line-clamp-2 group-hover:text-primary transition-colors">{asset.title}</h3>
+          </div>
+          <div className="text-right shrink-0">
+            {isFree ? (
+              <span className="text-xs font-bold text-emerald-600">FREE</span>
+            ) : (
+              <span className="flex items-center gap-0.5 text-sm font-bold font-mono text-primary">
+                <Coins className="h-3 w-3" />{price}
+              </span>
+            )}
+          </div>
+        </div>
+        {asset.description && (
+          <p className="text-[11px] text-muted-foreground line-clamp-2">{asset.description}</p>
+        )}
+        <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-0.5">
+            {[1, 2, 3, 4, 5].map(s => (
+              <Star key={s} className={cn("h-2.5 w-2.5", s <= (asset.rating_avg || 0) ? "fill-amber-500 text-amber-500" : "text-muted-foreground/20")} />
+            ))}
+            <span className="ml-1">{(asset.rating_avg || 0).toFixed(1)}</span>
+          </div>
+          <span>{asset.sales_count || 0} sales</span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── Asset Card ─── */
+function AssetCard({ asset, currentUserId, creditBalance = 0, index }: {
+  asset: KnowledgeAsset;
+  currentUserId?: string;
+  creditBalance?: number;
+  index: number;
+}) {
+  const navigate = useNavigate();
   const [purchasing, setPurchasing] = useState(false);
   const [purchased, setPurchased] = useState(false);
+  const { t } = useTranslation("pages");
 
   const isOwn = currentUserId === asset.author_id;
   const price = asset.price_neurons || 0;
   const isFree = price === 0 && (!asset.price_usd || Number(asset.price_usd) === 0);
   const canAfford = creditBalance >= price;
 
-  const handlePurchase = async () => {
-    if (!currentUserId) {
-      toast.error(t("marketplace.sign_in_purchase"));
-      return;
-    }
+  const handlePurchase = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!currentUserId) { toast.error(t("marketplace.sign_in_purchase")); return; }
     if (!isFree && !canAfford) {
-      toast.error(t("marketplace.insufficient_credits", { price, balance: creditBalance }), {
-        action: {
-          label: "Top-up",
-          onClick: () => cardNavigate("/credits"),
-        },
-      });
+      toast.error(t("marketplace.insufficient_credits", { price, balance: creditBalance }));
       return;
     }
-
     setPurchasing(true);
     try {
       const { data, error } = await supabase.rpc("purchase_marketplace_asset", {
@@ -270,231 +350,132 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, isFeatured }: { as
       });
       if (error) throw new Error(error.message);
       const result = data as any;
-      if (!result?.success) throw new Error(result?.error || t("marketplace.purchase_failed"));
-
+      if (!result?.success) throw new Error(result?.error || "Purchase failed");
       setPurchased(true);
       toast.success(isFree ? t("marketplace.asset_acquired") : t("marketplace.purchased_for", { price: result.price }));
     } catch (err: any) {
-      toast.error(t("marketplace.purchase_failed") + ": " + (err.message || "Try again"));
+      toast.error(err.message || "Purchase failed");
     } finally {
       setPurchasing(false);
     }
   };
 
-  const loadReviews = useCallback(async () => {
-    setLoadingReviews(true);
-    const { data } = await supabase
-      .from("asset_reviews")
-      .select("*")
-      .eq("asset_id", asset.id)
-      .order("created_at", { ascending: false })
-      .limit(20);
-    setReviews((data as AssetReview[]) || []);
-    setLoadingReviews(false);
-  }, [asset.id]);
-
-  const handleSubmitReview = async () => {
-    if (!currentUserId) return;
-    setSubmitting(true);
-    const { error } = await supabase
-      .from("asset_reviews")
-      .upsert({
-        asset_id: asset.id,
-        user_id: currentUserId,
-        rating,
-        review_text: reviewText,
-      } as any, { onConflict: "asset_id,user_id" });
-
-    setSubmitting(false);
-    if (error) {
-      toast.error(t("marketplace.review_failed"));
-    } else {
-      toast.success(t("marketplace.review_submitted"));
-      setShowReview(false);
-      setReviewText("");
-    }
-  };
-
-  const nav = useNavigate();
-
   return (
-    <div
-      onClick={() => nav(`/marketplace/${asset.id}`)}
-      className={cn(
-        "bg-card border rounded-xl overflow-hidden hover:border-primary/30 transition-colors cursor-pointer",
-        isFeatured ? "border-amber-500/30 ring-1 ring-amber-500/10" : "border-border"
-      )}
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: Math.min(index * 0.04, 0.3), duration: 0.25 }}
+      onClick={() => navigate(`/marketplace/${asset.id}`)}
+      className="group bg-card border border-border rounded-xl overflow-hidden cursor-pointer hover:border-primary/30 hover:shadow-sm transition-all"
     >
-      {isFeatured && (
-        <div className="px-3 py-1 bg-amber-500/10 flex items-center gap-1.5">
-          <Crown className="h-3 w-3 text-amber-500" />
-          <span className="text-[9px] font-semibold text-amber-600">FEATURED</span>
-        </div>
-      )}
-
+      {/* Preview snippet */}
       {asset.preview_content && (
-        <div className="p-4 bg-muted/30 border-b border-border">
-          <p className="text-[10px] text-muted-foreground line-clamp-3">{asset.preview_content}</p>
+        <div className="px-4 pt-3 pb-2 border-b border-border/50">
+          <p className="text-[10px] text-muted-foreground/70 line-clamp-2 italic">{asset.preview_content}</p>
         </div>
       )}
 
       <div className="p-4 space-y-3">
+        {/* Type + Title */}
         <div>
-          <Badge variant="outline" className="text-[9px] mb-1.5">{asset.asset_type}</Badge>
-          <h3 className="text-sm font-semibold line-clamp-2">{asset.title}</h3>
+          <Badge variant="outline" className="text-[8px] px-1.5 py-0 mb-1.5">{asset.asset_type}</Badge>
+          <h3 className="text-sm font-semibold line-clamp-2 group-hover:text-primary transition-colors">{asset.title}</h3>
         </div>
 
         {asset.description && (
           <p className="text-[10px] text-muted-foreground line-clamp-2">{asset.description}</p>
         )}
 
+        {/* Tags */}
         {asset.tags && asset.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {asset.tags.slice(0, 4).map(tag => (
-              <span key={tag} className="inline-flex items-center gap-0.5 text-[8px] px-1.5 py-0.5 bg-muted rounded-full text-muted-foreground">
-                <Tag className="h-2 w-2" /> {tag}
+            {asset.tags.slice(0, 3).map(tag => (
+              <span key={tag} className="text-[8px] px-1.5 py-0.5 bg-muted rounded-full text-muted-foreground">
+                {tag}
               </span>
             ))}
+            {asset.tags.length > 3 && (
+              <span className="text-[8px] text-muted-foreground/50">+{asset.tags.length - 3}</span>
+            )}
           </div>
         )}
 
-        {/* Rating + Reviews link */}
-        <div className="flex items-center gap-2">
+        {/* Rating + Sales */}
+        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
           <div className="flex items-center gap-0.5">
             {[1, 2, 3, 4, 5].map(s => (
-              <Star
-                key={s}
-                className={cn(
-                  "h-3 w-3",
-                  s <= (asset.rating_avg || 0) ? "fill-primary text-primary" : "text-muted-foreground/30"
-                )}
-              />
+              <Star key={s} className={cn("h-2.5 w-2.5", s <= (asset.rating_avg || 0) ? "fill-amber-500 text-amber-500" : "text-muted-foreground/20")} />
             ))}
           </div>
-          <button
-            onClick={() => { setShowReviews(true); loadReviews(); }}
-            className="text-[9px] text-muted-foreground hover:text-primary transition-colors"
-          >
-            {(asset.rating_avg || 0).toFixed(1)} ({asset.rating_count || 0} {t("marketplace.reviews")})
-          </button>
-          <span className="text-[9px] text-muted-foreground ml-auto">
-            {asset.sales_count || 0} {t("marketplace.sales")}
-          </span>
+          <span>{(asset.rating_avg || 0).toFixed(1)} ({asset.rating_count || 0})</span>
+          <span className="ml-auto">{asset.sales_count || 0} sales</span>
         </div>
 
-        {/* Price */}
-        <div className="flex items-center justify-between pt-2 border-t border-border">
-          <div className="flex items-center gap-3">
-            {asset.price_neurons && asset.price_neurons > 0 && (
-              <span className="flex items-center gap-1 text-xs font-mono font-bold text-primary">
-                <Coins className="h-3 w-3" /> {asset.price_neurons}
+        {/* Price + Buy */}
+        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+          <div>
+            {isFree ? (
+              <span className="text-xs font-bold text-emerald-600">FREE</span>
+            ) : (
+              <span className="flex items-center gap-1 text-sm font-bold font-mono text-primary">
+                <Coins className="h-3 w-3" />{price}
               </span>
-            )}
-            {asset.price_usd && Number(asset.price_usd) > 0 && (
-              <span className="flex items-center gap-1 text-xs font-mono text-muted-foreground">
-                <DollarSign className="h-3 w-3" /> ${Number(asset.price_usd).toFixed(0)}
-              </span>
-            )}
-            {(!asset.price_neurons || asset.price_neurons === 0) && (!asset.price_usd || Number(asset.price_usd) === 0) && (
-              <span className="text-xs font-semibold text-primary">{t("marketplace.free")}</span>
             )}
           </div>
-
-          <div className="flex gap-1.5">
-            {currentUserId && !isOwn && (
-              <Button variant="ghost" size="sm" className="h-7 text-[10px] gap-1" onClick={() => setShowReview(true)}>
-                <Star className="h-3 w-3" /> {t("marketplace.review_label")}
+          {!isOwn && (
+            purchased ? (
+              <span className="flex items-center gap-1 text-[10px] text-emerald-600 font-medium">
+                <CheckCircle2 className="h-3 w-3" /> Owned
+              </span>
+            ) : (
+              <Button
+                size="sm"
+                className="h-7 text-[11px] gap-1 px-3"
+                onClick={handlePurchase}
+                disabled={purchasing || (!isFree && !canAfford)}
+              >
+                {purchasing ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <ShoppingCart className="h-3 w-3" />
+                )}
+                {isFree ? "Get" : `${price} N`}
               </Button>
-            )}
-            {!isOwn && (
-              purchased ? (
-                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-emerald-600" disabled>
-                  <CheckCircle2 className="h-3 w-3" /> {t("marketplace.owned")}
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  className="h-7 text-xs gap-1"
-                  onClick={handlePurchase}
-                  disabled={purchasing || (!isFree && !canAfford)}
-                >
-                  {purchasing ? (
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  ) : (
-                    <ShoppingCart className="h-3 w-3" />
-                  )}
-                  {isFree ? t("marketplace.get_free") : `${price} N`}
-                </Button>
-              )
-            )}
-          </div>
+            )
+          )}
+          {isOwn && (
+            <span className="text-[10px] text-muted-foreground/60 font-medium">Your asset</span>
+          )}
         </div>
       </div>
+    </motion.div>
+  );
+}
 
-      {/* Submit Review Dialog */}
-      <Dialog open={showReview} onOpenChange={setShowReview}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="text-sm">{t("marketplace.review_label")}: {asset.title}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="flex items-center gap-1 justify-center">
-              {[1, 2, 3, 4, 5].map(s => (
-                <button key={s} onClick={() => setRating(s)}>
-                  <Star className={cn(
-                    "h-7 w-7 transition-colors",
-                    s <= rating ? "fill-primary text-primary" : "text-muted-foreground/30 hover:text-primary/50"
-                  )} />
-                </button>
-              ))}
-            </div>
-            <Textarea
-              placeholder={t("marketplace.share_experience")}
-              value={reviewText}
-              onChange={e => setReviewText(e.target.value)}
-              rows={4}
-            />
-            <Button className="w-full" onClick={handleSubmitReview} disabled={submitting}>
-              {submitting ? t("marketplace.submitting") : t("marketplace.submit_review")}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Reviews List Dialog */}
-      <Dialog open={showReviews} onOpenChange={setShowReviews}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-sm flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" />
-              {t("marketplace.reviews_for")} {asset.title}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3 max-h-[60vh] overflow-y-auto">
-            {loadingReviews ? (
-              <div className="flex justify-center py-8">
-                <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              </div>
-            ) : reviews.length === 0 ? (
-              <p className="text-xs text-muted-foreground text-center py-8">{t("marketplace.no_reviews")}</p>
-            ) : (
-              reviews.map(r => (
-                <div key={r.id} className="p-3 bg-muted/30 rounded-lg space-y-1.5">
-                  <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map(s => (
-                      <Star key={s} className={cn("h-3 w-3", s <= r.rating ? "fill-primary text-primary" : "text-muted-foreground/20")} />
-                    ))}
-                    <span className="text-[9px] text-muted-foreground ml-2">
-                      {new Date(r.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  {r.review_text && <p className="text-xs text-foreground">{r.review_text}</p>}
-                </div>
-              ))
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+/* ─── Empty State ─── */
+function EmptyState({ search, t }: { search: string; t: any }) {
+  const navigate = useNavigate();
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="text-center py-20"
+    >
+      <div className="h-14 w-14 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
+        <Store className="h-7 w-7 text-muted-foreground/30" />
+      </div>
+      <p className="text-sm font-medium text-foreground mb-1">
+        {search ? t("marketplace.no_search_match") : "No assets yet"}
+      </p>
+      <p className="text-xs text-muted-foreground mb-4">
+        {search ? "Try different keywords" : "Be the first to publish a knowledge asset"}
+      </p>
+      {!search && (
+        <Button size="sm" variant="outline" className="gap-1.5" onClick={() => navigate("/library")}>
+          <Sparkles className="h-3.5 w-3.5" />
+          Create Asset
+        </Button>
+      )}
+    </motion.div>
   );
 }
