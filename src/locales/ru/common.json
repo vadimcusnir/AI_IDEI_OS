@@ -11,12 +11,7 @@
   "close": "Закрыть",
   "back": "Назад",
   "next": "Далее",
-  "search": {
-    "type_neuron": "Нейрон",
-    "type_artifact": "Артефакт",
-    "type_guest": "Гость",
-    "type_insight": "Идея"
-  },
+  "search": "Поиск",
   "no_results": "Нет результатов",
   "confirm": "Подтвердить",
   "apply": "Применить",
@@ -722,5 +717,70 @@
   "tutorial.start_exploring": "Начать исследование",
   "auth.disposable_email": "Одноразовые email-адреса запрещены. Используйте постоянный email.",
   "auth.accept_tos": "Принимаю Условия использования и Политику конфиденциальности",
-  "auth.tos_required": "Необходимо принять Условия для продолжения"
+  "auth.tos_required": "Необходимо принять Условия для продолжения",
+  "behavior": {
+    "explorer_cta": "Начать исследование",
+    "momentum": "Вы на волне! Продолжайте в том же духе.",
+    "near_cap": "Вы приближаетесь к лимиту использования",
+    "savings": "Экономия {{percent}}%",
+    "see_plans": "Смотреть планы",
+    "social_proof": "Доверяют {{count}} специалистов",
+    "start_free": "Начать бесплатно",
+    "streak_lost": "Ваша серия была сброшена",
+    "streak_recover": "Восстановить серию",
+    "upgrade_hint": "Обновите для большей мощности",
+    "upgrade_limit": "Вы достигли лимита вашего плана"
+  },
+  "distribution": {
+    "cta_note": "CTA будет добавлен к общему контенту",
+    "download_pack": "Скачать пакет",
+    "hide_variants": "Скрыть варианты",
+    "show_variants": "Показать варианты",
+    "title": "Распространение",
+    "variants": "Варианты"
+  },
+  "memory": {
+    "compound_level": "Составной уровень",
+    "compounding": "Накопление знаний",
+    "lockin_high": "Высокая привязка",
+    "lockin_low": "Низкая привязка",
+    "lockin_medium": "Средняя привязка",
+    "lockin_score": "Оценка привязки",
+    "suggestions": "Предложения",
+    "title": "Интеллект памяти",
+    "top_topics": "Топ тем"
+  },
+  "share": {
+    "copied": "Скопировано в буфер!",
+    "copied_btn": "Скопировано!",
+    "copy_failed": "Ошибка копирования",
+    "copy_with_cta": "Копировать с CTA",
+    "cta_embedded": "CTA встроен",
+    "download_md": "Скачать Markdown",
+    "downloaded": "Загружено!",
+    "share": "Поделиться",
+    "viral_ready": "Готов к вирусности"
+  },
+  "token": {
+    "access_desc": "Токены дают доступ к премиум-функциям",
+    "access_model": "Модель доступа",
+    "activity": "Активность",
+    "available": "Доступно",
+    "compute_desc": "Кредиты обеспечивают AI вычисления",
+    "earn_hint": "Зарабатывайте токены, внося знания",
+    "not_initialized": "Кошелек не инициализирован",
+    "staked": "Застейкано",
+    "tier_expires": "Уровень истекает {{date}}",
+    "total_earned": "Всего заработано",
+    "total_supply": "Общее предложение"
+  },
+  "upload_failed": "Ошибка загрузки",
+  "upsell": {
+    "continue_title": "Продолжайте с большим количеством нейронов",
+    "low_balance_title": "Нейронов мало",
+    "save": "Экономия {{percent}}%",
+    "spend_context": "Эта операция стоит {{cost}} нейронов",
+    "topup_cta": "Пополнить сейчас"
+  },
+  "description": "Описание"
 }

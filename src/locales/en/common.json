@@ -11,12 +11,7 @@
   "close": "Close",
   "back": "Back",
   "next": "Next",
-  "search": {
-    "type_neuron": "Neuron",
-    "type_artifact": "Artefact",
-    "type_guest": "Guest",
-    "type_insight": "Insight"
-  },
+  "search": "Search",
   "no_results": "No results",
   "confirm": "Confirm",
   "apply": "Apply",
@@ -722,5 +717,70 @@
   "tutorial.start_exploring": "Start Exploring",
   "auth.disposable_email": "Disposable email addresses are not allowed. Please use a permanent email.",
   "auth.accept_tos": "I accept the Terms of Service and Privacy Policy",
-  "auth.tos_required": "You must accept the Terms of Service to continue"
+  "auth.tos_required": "You must accept the Terms of Service to continue",
+  "behavior": {
+    "explorer_cta": "Start Exploring",
+    "momentum": "You're on a roll! Keep the momentum.",
+    "near_cap": "You're approaching your usage limit",
+    "savings": "Save {{percent}}%",
+    "see_plans": "See Plans",
+    "social_proof": "Trusted by {{count}} knowledge workers",
+    "start_free": "Start Free",
+    "streak_lost": "Your streak was reset",
+    "streak_recover": "Recover Streak",
+    "upgrade_hint": "Upgrade for more power",
+    "upgrade_limit": "You've reached your plan limit"
+  },
+  "distribution": {
+    "cta_note": "CTA will be appended to shared content",
+    "download_pack": "Download Pack",
+    "hide_variants": "Hide Variants",
+    "show_variants": "Show Variants",
+    "title": "Distribution",
+    "variants": "Variants"
+  },
+  "memory": {
+    "compound_level": "Compound Level",
+    "compounding": "Knowledge Compounding",
+    "lockin_high": "High lock-in",
+    "lockin_low": "Low lock-in",
+    "lockin_medium": "Medium lock-in",
+    "lockin_score": "Lock-in Score",
+    "suggestions": "Suggestions",
+    "title": "Memory Intelligence",
+    "top_topics": "Top Topics"
+  },
+  "share": {
+    "copied": "Copied to clipboard!",
+    "copied_btn": "Copied!",
+    "copy_failed": "Copy failed",
+    "copy_with_cta": "Copy with CTA",
+    "cta_embedded": "CTA embedded",
+    "download_md": "Download Markdown",
+    "downloaded": "Downloaded!",
+    "share": "Share",
+    "viral_ready": "Viral Ready"
+  },
+  "token": {
+    "access_desc": "Tokens grant access to premium features",
+    "access_model": "Access Model",
+    "activity": "Activity",
+    "available": "Available",
+    "compute_desc": "Credits power AI computations",
+    "earn_hint": "Earn tokens by contributing knowledge",
+    "not_initialized": "Wallet not initialized",
+    "staked": "Staked",
+    "tier_expires": "Tier expires {{date}}",
+    "total_earned": "Total Earned",
+    "total_supply": "Total Supply"
+  },
+  "upload_failed": "Upload failed",
+  "upsell": {
+    "continue_title": "Continue with more neurons",
+    "low_balance_title": "Running low on neurons",
+    "save": "Save {{percent}}%",
+    "spend_context": "This operation costs {{cost}} neurons",
+    "topup_cta": "Top Up Now"
+  },
+  "description": "Description"
 }
