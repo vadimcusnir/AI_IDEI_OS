@@ -114,6 +114,21 @@ export function ArtifactExportMenu({
     toast.success(t("common:exported_as", { format: "HTML" }));
   };
 
+  const exportPDF = () => {
+    const html = generateHTMLDoc(title, content, serviceKey, createdAt);
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      toast.error("Pop-up blocked. Please allow pop-ups.");
+      return;
+    }
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.print();
+    };
+    toast.success(t("common:exported_as", { format: "PDF" }));
+  };
+
   const exportCSV = () => {
     const lines = content.split("\n").filter(l => l.trim());
     const csvRows = ["\"Section\",\"Content\""];
