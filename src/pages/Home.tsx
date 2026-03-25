@@ -554,7 +554,7 @@ export default function Home() {
 
             {/* Mobile fixed input at bottom */}
             <div className="shrink-0 border-t border-border/30 bg-background px-4 py-2 safe-area-bottom">
-              <div className="max-w-3xl mx-auto">
+              <div className="max-w-3xl mx-auto" data-tour="command-input">
                 <CommandInputZone
                   ref={inputZoneRef} input={input} onInputChange={setInput}
                   onSubmit={handleSubmit} onStop={handleStop} loading={loading}
