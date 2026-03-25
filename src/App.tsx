@@ -91,6 +91,7 @@ const RuntimeDashboard = lazyRetry(() => import("./pages/RuntimeDashboard"));
 const CusnirOSOperator = lazyRetry(() => import("./pages/CusnirOSOperator"));
 const CusnirOSPage = lazyRetry(() => import("./pages/CusnirOSPage"));
 const CusnirOSMap = lazyRetry(() => import("./pages/CusnirOSMap"));
+const CusnirOSArchitecture = lazyRetry(() => import("./pages/CusnirOSArchitecture"));
 const About = lazyRetry(() => import("./pages/About"));
 const AboutVadimCusnir = lazyRetry(() => import("./pages/AboutVadimCusnir"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
@@ -233,6 +234,7 @@ const App = () => (
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="VIP failed to load"><VIPDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/cusnir-os" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="CusnirOS failed to load"><CusnirOSPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/cusnir-os/map" element={<ProtectedRoute><ErrorBoundary fallbackTitle="Map failed to load"><CusnirOSMap /></ErrorBoundary></ProtectedRoute>} />
+                <Route path="/cusnir-os/architecture" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Architecture failed to load"><CusnirOSArchitecture /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/wallet" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Wallet failed to load"><WalletPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Gamification failed to load"><GamificationPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><DataPipeline /></ErrorBoundary></AppLayout></ProtectedRoute>} />
