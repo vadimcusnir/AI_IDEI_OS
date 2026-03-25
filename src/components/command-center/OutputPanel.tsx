@@ -1,12 +1,13 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePublishAnalysis } from "@/hooks/usePublishAnalysis";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Save, Download, RotateCcw, Copy, FileText, Brain,
   Lightbulb, Target, BookOpen, Sparkles, Check,
-  ChevronRight, ExternalLink, X, Loader2,
+  ChevronRight, ExternalLink, X, Loader2, Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
@@ -40,6 +41,8 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
   const { user } = useAuth();
   const [savingId, setSavingId] = useState<string | null>(null);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [publishedIds, setPublishedIds] = useState<Set<string>>(new Set());
+  const { publish, publishing } = usePublishAnalysis();
 
   const handleCopy = useCallback((content: string) => {
     navigator.clipboard.writeText(content);
@@ -79,6 +82,17 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
     a.click();
     URL.revokeObjectURL(url);
   }, []);
+
+  const handlePublish = useCallback(async (output: OutputItem) => {
+    const result = await publish({
+      title: output.title,
+      content: output.content,
+      tags: [output.type],
+    });
+    if (result) {
+      setPublishedIds(prev => new Set(prev).add(output.id));
+    }
+  }, [publish]);
 
   if (!visible || outputs.length === 0) return null;
 
@@ -139,8 +153,11 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
                 onCopy={handleCopy}
                 onSave={handleSaveAsArtifact}
                 onExport={handleExport}
+                onPublish={handlePublish}
                 saving={savingId === o.id}
                 saved={savedIds.has(o.id)}
+                publishing={publishing}
+                published={publishedIds.has(o.id)}
               />
             </TabsContent>
           ))}
@@ -151,8 +168,11 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
           onCopy={handleCopy}
           onSave={handleSaveAsArtifact}
           onExport={handleExport}
+          onPublish={handlePublish}
           saving={savingId === outputs[0].id}
           saved={savedIds.has(outputs[0].id)}
+          publishing={publishing}
+          published={publishedIds.has(outputs[0].id)}
         />
       )}
     </motion.div>
@@ -164,15 +184,21 @@ function OutputCard({
   onCopy,
   onSave,
   onExport,
+  onPublish,
   saving,
   saved,
+  publishing,
+  published,
 }: {
   output: OutputItem;
   onCopy: (content: string) => void;
   onSave: (output: OutputItem) => void;
   onExport: (output: OutputItem) => void;
+  onPublish: (output: OutputItem) => void;
   saving: boolean;
   saved: boolean;
+  publishing: boolean;
+  published: boolean;
 }) {
   const cfg = TYPE_CONFIG[output.type] || TYPE_CONFIG.raw;
 
@@ -198,15 +224,24 @@ function OutputCard({
             disabled={saving || saved}
           >
             {saved ? (
-              <>
-                <Check className="h-3 w-3 text-green-500" />
-                Saved
-              </>
+              <><Check className="h-3 w-3 text-green-500" /> Saved</>
             ) : (
-              <>
-                <Save className="h-3 w-3" />
-                Save as Asset
-              </>
+              <><Save className="h-3 w-3" /> Save</>
+            )}
+          </Button>
+          <Button
+            variant={published ? "ghost" : "outline"}
+            size="sm"
+            className="h-6 text-[9px] gap-1"
+            onClick={() => onPublish(output)}
+            disabled={publishing || published}
+          >
+            {published ? (
+              <><Check className="h-3 w-3 text-green-500" /> Published</>
+            ) : publishing ? (
+              <><Loader2 className="h-3 w-3 animate-spin" /> Publishing...</>
+            ) : (
+              <><Globe className="h-3 w-3" /> Publish</>
             )}
           </Button>
         </div>
