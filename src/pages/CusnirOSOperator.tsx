@@ -1,6 +1,7 @@
 import { useOSOperator } from "@/hooks/useOSOperator";
 import { useOSSuperlayer } from "@/hooks/useOSSuperlayer";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useGamification } from "@/hooks/useGamification";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
@@ -95,7 +96,8 @@ export default function CusnirOSOperator() {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const { modules, stats, ledger, loading } = useOSOperator();
-  const { unlocks, patterns, executions, stats: supStats, loading: supLoading } = useOSSuperlayer();
+  const { unlocks, patterns, executions, stats: supStats, loading: supLoading, activateUnlock, revokeUnlock, toggling } = useOSSuperlayer();
+  const { xp } = useGamification();
   const [tab, setTab] = useState<Tab>("modules");
 
   if (authLoading || adminLoading || loading || supLoading) {
@@ -280,7 +282,14 @@ export default function CusnirOSOperator() {
 
           {/* Economy Layer */}
           {tab === "economy" && (
-            <EconomyLayerPanel unlocks={unlocks} stats={supStats} />
+            <EconomyLayerPanel
+              unlocks={unlocks}
+              stats={supStats}
+              userXP={xp.total_xp}
+              onActivate={activateUnlock}
+              onRevoke={revokeUnlock}
+              toggling={toggling}
+            />
           )}
 
           {/* Memory + Learning Engine */}

@@ -9413,6 +9413,16 @@ export type Database = {
         Args: { _control_type: string; _reason: string; _scope?: string }
         Returns: string
       }
+      activate_power_unlock: {
+        Args: {
+          _capability_key: string
+          _capability_name: string
+          _tier: string
+          _user_id: string
+          _xp_cost: number
+        }
+        Returns: Json
+      }
       add_credits: {
         Args: {
           _amount: number
@@ -9661,6 +9671,10 @@ export type Database = {
       }
       reset_api_key_counters: { Args: never; Returns: undefined }
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
+      revoke_power_unlock: {
+        Args: { _capability_key: string; _user_id: string }
+        Returns: Json
+      }
       root2_nearest: { Args: { _price: number }; Returns: number }
       root2_validate: { Args: { _price: number }; Returns: boolean }
       run_intelligence_pipeline: { Args: { _person_id: string }; Returns: Json }
