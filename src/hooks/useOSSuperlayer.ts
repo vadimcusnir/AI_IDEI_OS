@@ -95,6 +95,7 @@ export function useOSSuperlayer() {
   const [unlocks, setUnlocks] = useState<PowerUnlock[]>([]);
   const [stats, setStats] = useState<SupStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [toggling, setToggling] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!user) { setLoading(false); return; }
@@ -134,7 +135,48 @@ export function useOSSuperlayer() {
     setLoading(false);
   }, [user]);
 
+  const activateUnlock = useCallback(async (capKey: string, capName: string, xpCost: number, tier: string) => {
+    if (!user) return { success: false, error: "not_authenticated" };
+    setToggling(capKey);
+    try {
+      const { data, error } = await supabase.rpc("activate_power_unlock", {
+        _user_id: user.id,
+        _capability_key: capKey,
+        _capability_name: capName,
+        _xp_cost: xpCost,
+        _tier: tier,
+      });
+      if (error) throw error;
+      const result = data as any;
+      if (result?.success) await load();
+      return result;
+    } catch {
+      return { success: false, error: "rpc_failed" };
+    } finally {
+      setToggling(null);
+    }
+  }, [user, load]);
+
+  const revokeUnlock = useCallback(async (capKey: string) => {
+    if (!user) return { success: false, error: "not_authenticated" };
+    setToggling(capKey);
+    try {
+      const { data, error } = await supabase.rpc("revoke_power_unlock", {
+        _user_id: user.id,
+        _capability_key: capKey,
+      });
+      if (error) throw error;
+      const result = data as any;
+      if (result?.success) await load();
+      return result;
+    } catch {
+      return { success: false, error: "rpc_failed" };
+    } finally {
+      setToggling(null);
+    }
+  }, [user, load]);
+
   useEffect(() => { load(); }, [load]);
 
-  return { otos, mms, lcss, agents, executions, patterns, unlocks, stats, loading, reload: load };
+  return { otos, mms, lcss, agents, executions, patterns, unlocks, stats, loading, reload: load, activateUnlock, revokeUnlock, toggling };
 }
