@@ -413,13 +413,9 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Rate limit ──
-    if (!checkRateLimit(caller.id)) {
-      return new Response(
-        JSON.stringify({ error: "Rate limit exceeded (10/hour)" }),
-        { status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
-      );
-    }
+    // ── Rate limit (DB-backed, persistent) ──
+    const rateLimited = await rateLimitGuard(caller.id, req, { maxRequests: 10, windowSeconds: 3600 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
 
     // ── Regime ──
     const regime = await getRegimeConfig("transcribe-audio");
