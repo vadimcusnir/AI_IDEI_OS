@@ -146,6 +146,12 @@ export function EconomyLayerPanel({ unlocks, stats, userXP, onActivate, onRevoke
                           {cap.name}
                         </p>
                         <p className="text-[10px] text-muted-foreground/50">{cap.desc}</p>
+                        {cap.linkedAgent && (
+                          <p className={cn("text-[9px] mt-0.5 flex items-center gap-1", unlocked ? "text-primary" : "text-muted-foreground/30")}>
+                            <Bot className="h-2.5 w-2.5" />
+                            Agent: {unlocked ? "Activ" : "Standby"}
+                          </p>
+                        )}
                         {unlocked && unlock && (
                           <p className="text-[10px] text-status-validated mt-0.5">
                             Activ din {format(new Date(unlock.unlocked_at), "dd MMM yyyy")}
