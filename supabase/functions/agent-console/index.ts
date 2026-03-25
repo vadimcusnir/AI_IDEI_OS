@@ -195,6 +195,8 @@ const TOOLS = [
   { type: "function", function: { name: "create_job", description: "Create a job to execute an AI service", parameters: { type: "object", properties: { service_key: { type: "string" }, neuron_id: { type: "number" }, episode_id: { type: "string" }, params: { type: "object" } }, required: ["service_key"] } } },
   { type: "function", function: { name: "search_guests", description: "Search guest profiles", parameters: { type: "object", properties: { query: { type: "string" } }, required: ["query"] } } },
   { type: "function", function: { name: "get_user_memory", description: "Get persistent user context", parameters: { type: "object", properties: {} } } },
+  { type: "function", function: { name: "list_os_agents", description: "List available Cusnir_OS agents with their roles and status", parameters: { type: "object", properties: {} } } },
+  { type: "function", function: { name: "run_os_agent", description: "Execute a Cusnir_OS agent (e.g. Narrative Domination Engine, Viral Structure Generator) with a prompt. Returns structured intelligence.", parameters: { type: "object", properties: { agent_role: { type: "string", description: "The role/name of the OS agent to run (e.g. 'Narrative Domination Engine')" }, prompt: { type: "string", description: "The input prompt or context for the agent" } }, required: ["agent_role", "prompt"] } } },
 ];
 
 // Rate limiting
