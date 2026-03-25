@@ -1,3 +1,11 @@
+/**
+ * LANDING FOOTER — components/landing/LandingFooter.tsx
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * Marketing-variant footer for the landing page.
+ * Same data structure as global Footer but with landing aesthetics.
+ * Uses semantic tokens only. No fixed positioning.
+ */
+
 import { Link } from "react-router-dom";
 import { Logo } from "@/components/shared/Logo";
 import { useTranslation } from "react-i18next";
@@ -26,6 +34,11 @@ export function LandingFooter() {
             <p className="max-w-[200px] text-sm text-muted-foreground leading-[1.65]">
               {t("footer.brand_desc")}
             </p>
+            <div className="text-[11px] text-muted-foreground/50 space-y-0.5 pt-1">
+              <p className="font-medium text-muted-foreground/70">Cușnir Media SRL</p>
+              <p>Republic of Moldova, r. Ocnița</p>
+              <p>Administrator: Vadim Cușnir</p>
+            </div>
           </div>
 
           {/* Platform */}
@@ -58,13 +71,23 @@ export function LandingFooter() {
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Legal & Contact */}
           <div className="space-y-4">
             <h3 className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] text-muted-foreground uppercase">{t("footer.legal")}</h3>
             <ul className="space-y-3.5">
               <li><FooterLink to="/terms">{t("footer.terms")}</FooterLink></li>
               <li><FooterLink to="/privacy">{t("footer.privacy")}</FooterLink></li>
               <li><FooterLink to="/data-privacy">{t("footer.data_privacy")}</FooterLink></li>
+              <li>
+                <a href="mailto:vadim.kusnir@gmail.com" className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors">
+                  E-mail
+                </a>
+              </li>
+              <li>
+                <a href="https://about.me/vadimcusnir" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors">
+                  about.me
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -75,12 +98,16 @@ export function LandingFooter() {
             <span className="text-xs font-mono text-muted-foreground">
               © {new Date().getFullYear()} Cușnir Media SRL · AI-IDEI · {t("footer.copyright")}
             </span>
-            <span className="text-[10px] text-muted-foreground/50">Republic of Moldova · vadim.kusnir@gmail.com</span>
+            <span className="text-[10px] text-muted-foreground/50">
+              MD: +373 79 236 493 · UA: +380 96 012 48 42 · RO: +40 750 257 375
+            </span>
           </div>
           <div className="flex items-center gap-6">
             <FooterLink to="/terms">{t("footer.terms")}</FooterLink>
             <FooterLink to="/privacy">{t("footer.privacy")}</FooterLink>
-            <a href="https://about.me/vadimcusnir" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors rounded">About</a>
+            <a href="https://about.me/vadimcusnir" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors rounded">
+              About
+            </a>
           </div>
         </div>
       </div>
