@@ -149,8 +149,8 @@ const App = () => (
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/links" element={<AppLayout><ErrorBoundary fallbackTitle="Links failed to load"><Links /></ErrorBoundary></AppLayout>} />
                 <Route path="/architecture" element={<AppLayout><ErrorBoundary fallbackTitle="Architecture failed to load"><Architecture /></ErrorBoundary></AppLayout>} />
-                <Route path="/u/:username" element={<PublicUserProfile />} />
-                <Route path="/guest/:slug" element={<GuestProfile />} />
+                <Route path="/u/:username" element={<ErrorBoundary fallbackTitle="Profile failed to load"><PublicUserProfile /></ErrorBoundary>} />
+                <Route path="/guest/:slug" element={<ErrorBoundary fallbackTitle="Guest profile failed to load"><GuestProfile /></ErrorBoundary>} />
 
                 {/* Public knowledge infrastructure — with global layout */}
                 <Route path="/docs" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
