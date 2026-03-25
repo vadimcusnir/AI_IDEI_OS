@@ -1,4 +1,5 @@
 import { useOSOperator } from "@/hooks/useOSOperator";
+import { useOSSuperlayer } from "@/hooks/useOSSuperlayer";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead } from "@/components/SEOHead";
@@ -11,11 +12,13 @@ import {
   CheckCircle2, XCircle, Loader2, Terminal, Zap, ScrollText,
   Brain, Users, TrendingUp, Layers, Eye, Target, Megaphone,
   Network, Sparkles, Shield, Workflow, Bot, Search, Boxes,
+  Coins, Database,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useState } from "react";
-
+import { EconomyLayerPanel } from "@/components/cusnir-os/EconomyLayerPanel";
+import { MemoryLayerPanel } from "@/components/cusnir-os/MemoryLayerPanel";
 const HEALTH_COLORS: Record<string, string> = {
   healthy: "text-status-validated bg-status-validated/10",
   warning: "text-warning bg-warning/10",
@@ -86,15 +89,16 @@ const MODULE_STATUS_COLORS: Record<string, string> = {
   experimental: "bg-warning/10 text-warning",
 };
 
-type Tab = "modules" | "superlayer" | "ledger";
+type Tab = "modules" | "superlayer" | "economy" | "memory" | "ledger";
 
 export default function CusnirOSOperator() {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const { modules, stats, ledger, loading } = useOSOperator();
+  const { unlocks, patterns, executions, stats: supStats, loading: supLoading } = useOSSuperlayer();
   const [tab, setTab] = useState<Tab>("modules");
 
-  if (authLoading || adminLoading || loading) {
+  if (authLoading || adminLoading || loading || supLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -142,21 +146,30 @@ export default function CusnirOSOperator() {
           )}
 
           {/* Tab Navigation */}
-          <div className="flex gap-1 border-b border-border/30 pb-0">
-            {(["modules", "superlayer", "ledger"] as Tab[]).map(t => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={cn(
-                  "px-3 py-2 text-xs font-medium border-b-2 transition-colors capitalize",
-                  tab === t
-                    ? "border-primary text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {t === "modules" ? "Module Registry" : t === "superlayer" ? "Superlayer Axes" : "Decision Ledger"}
-              </button>
-            ))}
+          <div className="flex gap-1 border-b border-border/30 pb-0 overflow-x-auto">
+            {(["modules", "superlayer", "economy", "memory", "ledger"] as Tab[]).map(t => {
+              const labels: Record<Tab, string> = {
+                modules: "Module Registry",
+                superlayer: "Superlayer Axes",
+                economy: "Economy Layer",
+                memory: "Memory Engine",
+                ledger: "Decision Ledger",
+              };
+              return (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={cn(
+                    "px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap",
+                    tab === t
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {labels[t]}
+                </button>
+              );
+            })}
           </div>
 
           {/* Module Registry Table */}
@@ -263,6 +276,16 @@ export default function CusnirOSOperator() {
                 );
               })}
             </div>
+          )}
+
+          {/* Economy Layer */}
+          {tab === "economy" && (
+            <EconomyLayerPanel unlocks={unlocks} stats={supStats} />
+          )}
+
+          {/* Memory + Learning Engine */}
+          {tab === "memory" && (
+            <MemoryLayerPanel patterns={patterns} executions={executions} />
           )}
 
           {/* Decision Ledger Monitor */}

@@ -5808,6 +5808,251 @@ export type Database = {
         }
         Relationships: []
       }
+      os_agents: {
+        Row: {
+          agent_type: string
+          assigned_to: string | null
+          capabilities: string[] | null
+          created_at: string
+          id: string
+          last_active_at: string | null
+          metadata: Json | null
+          performance_score: number | null
+          role: string
+          status: string
+        }
+        Insert: {
+          agent_type?: string
+          assigned_to?: string | null
+          capabilities?: string[] | null
+          created_at?: string
+          id?: string
+          last_active_at?: string | null
+          metadata?: Json | null
+          performance_score?: number | null
+          role: string
+          status?: string
+        }
+        Update: {
+          agent_type?: string
+          assigned_to?: string | null
+          capabilities?: string[] | null
+          created_at?: string
+          id?: string
+          last_active_at?: string | null
+          metadata?: Json | null
+          performance_score?: number | null
+          role?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      os_executions: {
+        Row: {
+          agent_id: string | null
+          completed_at: string | null
+          created_at: string
+          credits_cost: number | null
+          duration_ms: number | null
+          id: string
+          input: Json | null
+          lcss_id: string | null
+          mms_id: string | null
+          otos_id: string | null
+          output: Json | null
+          performance: Json | null
+          started_at: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          credits_cost?: number | null
+          duration_ms?: number | null
+          id?: string
+          input?: Json | null
+          lcss_id?: string | null
+          mms_id?: string | null
+          otos_id?: string | null
+          output?: Json | null
+          performance?: Json | null
+          started_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          credits_cost?: number | null
+          duration_ms?: number | null
+          id?: string
+          input?: Json | null
+          lcss_id?: string | null
+          mms_id?: string | null
+          otos_id?: string | null
+          output?: Json | null
+          performance?: Json | null
+          started_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "os_executions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "os_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "os_executions_lcss_id_fkey"
+            columns: ["lcss_id"]
+            isOneToOne: false
+            referencedRelation: "os_lcss"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "os_executions_mms_id_fkey"
+            columns: ["mms_id"]
+            isOneToOne: false
+            referencedRelation: "os_mms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "os_executions_otos_id_fkey"
+            columns: ["otos_id"]
+            isOneToOne: false
+            referencedRelation: "os_otos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      os_lcss: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          macro_intent: string
+          metadata: Json | null
+          mms_ids: string[] | null
+          name: string
+          owner_id: string | null
+          status: string
+          strategic_value: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          macro_intent?: string
+          metadata?: Json | null
+          mms_ids?: string[] | null
+          name: string
+          owner_id?: string | null
+          status?: string
+          strategic_value?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          macro_intent?: string
+          metadata?: Json | null
+          mms_ids?: string[] | null
+          name?: string
+          owner_id?: string | null
+          status?: string
+          strategic_value?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      os_memory_patterns: {
+        Row: {
+          category: string
+          created_at: string
+          effectiveness_score: number | null
+          frequency: number
+          id: string
+          last_used_at: string | null
+          pattern_data: Json
+          pattern_type: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          effectiveness_score?: number | null
+          frequency?: number
+          id?: string
+          last_used_at?: string | null
+          pattern_data?: Json
+          pattern_type?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          effectiveness_score?: number | null
+          frequency?: number
+          id?: string
+          last_used_at?: string | null
+          pattern_data?: Json
+          pattern_type?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      os_mms: {
+        Row: {
+          complexity_level: number
+          created_at: string
+          description: string | null
+          id: string
+          intent: string
+          metadata: Json | null
+          name: string
+          otos_ids: string[] | null
+          owner_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          complexity_level?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          intent?: string
+          metadata?: Json | null
+          name: string
+          otos_ids?: string[] | null
+          owner_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          complexity_level?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          intent?: string
+          metadata?: Json | null
+          name?: string
+          otos_ids?: string[] | null
+          owner_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       os_modules: {
         Row: {
           avg_latency_ms: number | null
@@ -5859,6 +6104,81 @@ export type Database = {
           status?: string
           updated_at?: string
           version?: string
+        }
+        Relationships: []
+      }
+      os_otos: {
+        Row: {
+          created_at: string
+          description: string | null
+          domain: string | null
+          id: string
+          mechanism: string
+          metadata: Json | null
+          name: string
+          output_type: string
+          owner_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          mechanism?: string
+          metadata?: Json | null
+          name: string
+          output_type?: string
+          owner_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          mechanism?: string
+          metadata?: Json | null
+          name?: string
+          output_type?: string
+          owner_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      os_power_unlocks: {
+        Row: {
+          capability_key: string
+          capability_name: string
+          id: string
+          metadata: Json | null
+          tier: string
+          unlocked_at: string
+          user_id: string
+          xp_cost: number
+        }
+        Insert: {
+          capability_key: string
+          capability_name: string
+          id?: string
+          metadata?: Json | null
+          tier?: string
+          unlocked_at?: string
+          user_id: string
+          xp_cost?: number
+        }
+        Update: {
+          capability_key?: string
+          capability_name?: string
+          id?: string
+          metadata?: Json | null
+          tier?: string
+          unlocked_at?: string
+          user_id?: string
+          xp_cost?: number
         }
         Relationships: []
       }
