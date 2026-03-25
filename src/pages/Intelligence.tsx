@@ -151,7 +151,10 @@ export default function Intelligence() {
 
           <TabsContent value="search" className="mt-0">
             <ControlledSection elementId="intelligence.search">
-              <AdvancedSearch />
+              <div className="space-y-6">
+                <SemanticSearchPanel />
+                <AdvancedSearch />
+              </div>
             </ControlledSection>
           </TabsContent>
 
