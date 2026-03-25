@@ -1,23 +1,10 @@
 /**
  * Shared rate limiter for edge functions.
- * Uses in-memory Map with TTL — suitable for single-instance edge functions.
- * For multi-instance, migrate to Redis or DB-based tracking.
+ * Uses database-backed persistence via check_rate_limit() RPC.
+ * Survives edge function restarts and works across multiple instances.
  */
 
-interface RateLimitEntry {
-  count: number;
-  resetAt: number;
-}
-
-const store = new Map<string, RateLimitEntry>();
-
-// Cleanup stale entries periodically
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of store) {
-    if (now > entry.resetAt) store.delete(key);
-  }
-}, 60_000);
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 export interface RateLimitConfig {
   /** Max requests allowed in the window */
@@ -34,63 +21,76 @@ const DEFAULT_CONFIG: RateLimitConfig = {
 export interface RateLimitResult {
   allowed: boolean;
   remaining: number;
-  resetAt: number;
+  resetAt: number; // epoch ms
 }
 
 /**
- * Check and increment rate limit for a given key (usually user_id or IP).
+ * Check and increment rate limit for a given key (usually user_id or user_id:function_name).
+ * Uses DB-backed atomic check via RPC.
  */
-export function checkRateLimit(
+export async function checkRateLimit(
   key: string,
   config: Partial<RateLimitConfig> = {}
-): RateLimitResult {
+): Promise<RateLimitResult> {
   const { maxRequests, windowSeconds } = { ...DEFAULT_CONFIG, ...config };
-  const now = Date.now();
-  const windowMs = windowSeconds * 1000;
 
-  let entry = store.get(key);
+  try {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
 
-  if (!entry || now > entry.resetAt) {
-    entry = { count: 1, resetAt: now + windowMs };
-    store.set(key, entry);
-    return { allowed: true, remaining: maxRequests - 1, resetAt: entry.resetAt };
+    const { data, error } = await supabase.rpc("check_rate_limit", {
+      p_key: key,
+      p_max_requests: maxRequests,
+      p_window_seconds: windowSeconds,
+    });
+
+    if (error || !data || data.length === 0) {
+      console.error("Rate limit check failed, allowing request:", error);
+      // Fail open — don't block users if DB is down
+      return { allowed: true, remaining: maxRequests - 1, resetAt: Date.now() + windowSeconds * 1000 };
+    }
+
+    const row = data[0];
+    return {
+      allowed: row.allowed,
+      remaining: row.remaining,
+      resetAt: new Date(row.reset_at).getTime(),
+    };
+  } catch (err) {
+    console.error("Rate limit error, failing open:", err);
+    return { allowed: true, remaining: maxRequests - 1, resetAt: Date.now() + windowSeconds * 1000 };
   }
-
-  entry.count++;
-
-  if (entry.count > maxRequests) {
-    return { allowed: false, remaining: 0, resetAt: entry.resetAt };
-  }
-
-  return { allowed: true, remaining: maxRequests - entry.count, resetAt: entry.resetAt };
 }
 
 /**
  * Middleware-style helper: returns 429 Response if rate limited, null if allowed.
  * Usage:
- *   const blocked = rateLimitGuard(userId, req);
+ *   const blocked = await rateLimitGuard(userId, req);
  *   if (blocked) return blocked;
  */
-export function rateLimitGuard(
+export async function rateLimitGuard(
   key: string,
   _req: Request,
   config: Partial<RateLimitConfig> = {},
   corsHeaders: Record<string, string> = {}
-): Response | null {
-  const result = checkRateLimit(key, config);
+): Promise<Response | null> {
+  const result = await checkRateLimit(key, config);
 
   if (!result.allowed) {
+    const retryAfter = Math.ceil((result.resetAt - Date.now()) / 1000);
     return new Response(
       JSON.stringify({
         error: "Too many requests",
-        retry_after: Math.ceil((result.resetAt - Date.now()) / 1000),
+        retry_after: retryAfter,
       }),
       {
         status: 429,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",
-          "Retry-After": String(Math.ceil((result.resetAt - Date.now()) / 1000)),
+          "Retry-After": String(retryAfter),
         },
       }
     );
