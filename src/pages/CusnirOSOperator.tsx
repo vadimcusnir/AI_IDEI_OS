@@ -1,4 +1,5 @@
 import { useOSOperator } from "@/hooks/useOSOperator";
+import { useOSSuperlayer } from "@/hooks/useOSSuperlayer";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useAuth } from "@/contexts/AuthContext";
 import { SEOHead } from "@/components/SEOHead";
@@ -11,11 +12,13 @@ import {
   CheckCircle2, XCircle, Loader2, Terminal, Zap, ScrollText,
   Brain, Users, TrendingUp, Layers, Eye, Target, Megaphone,
   Network, Sparkles, Shield, Workflow, Bot, Search, Boxes,
+  Coins, Database,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useState } from "react";
-
+import { EconomyLayerPanel } from "@/components/cusnir-os/EconomyLayerPanel";
+import { MemoryLayerPanel } from "@/components/cusnir-os/MemoryLayerPanel";
 const HEALTH_COLORS: Record<string, string> = {
   healthy: "text-status-validated bg-status-validated/10",
   warning: "text-warning bg-warning/10",
