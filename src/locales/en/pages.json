@@ -789,9 +789,9 @@
   },
   "terms": {
     "title": "Terms of Service",
-    "last_updated": "Last updated: March 10, 2026",
+    "last_updated": "Last updated: March 25, 2026",
     "s1_title": "1. Acceptance of Terms",
-    "s1_text": "By accessing or using the AI-IDEI Knowledge OS platform (\"Service\"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.",
+    "s1_text": "By accessing or using the AI-IDEI Knowledge OS platform (\"Service\"), operated by Cușnir Media SRL, Republic of Moldova, you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.",
     "s2_title": "2. Description of Service",
     "s2_text": "AI-IDEI is an AI-powered knowledge extraction and capitalization platform. It transforms raw content (audio, video, text) into structured knowledge units called \"neurons\" and generates reusable digital assets (\"artifacts\").",
     "s3_title": "3. User Accounts",
@@ -815,7 +815,14 @@
     "s10_title": "10. Changes to Terms",
     "s10_text": "We may update these Terms from time to time. Continued use of the Service after changes constitutes acceptance of the revised Terms.",
     "s11_title": "11. Contact",
-    "s11_text": "For questions about these Terms, please use the",
+    "s11_text": "For questions about these Terms, contact us:",
+    "s11_company": "Cușnir Media SRL",
+    "s11_address": "Republic of Moldova, r. Ocnița, s-tul Bîrlădeni",
+    "s11_admin": "Administrator: Vadim Cușnir",
+    "s11_email": "vadim.kusnir@gmail.com",
+    "s11_phone_md": "+373 79 236 493",
+    "s11_phone_ua": "+380 96 012 48 42",
+    "s11_phone_ro": "+40 750 257 375",
     "s11_link": "feedback form"
   },
   "privacy": {
@@ -858,7 +865,13 @@
     "s9_title": "9. Children's Privacy",
     "s9_text": "The Service is not directed to children under 16. We do not knowingly collect data from children.",
     "s10_title": "10. Changes to This Policy",
-    "s10_text": "We may update this policy periodically. We will notify you of significant changes via email or in-app notification."
+    "s10_text": "We may update this policy periodically. We will notify you of significant changes via email or in-app notification.",
+    "s11_title": "11. Data Controller",
+    "s11_text": "The data controller for this Service is:",
+    "s11_company": "Cușnir Media SRL",
+    "s11_address": "Republic of Moldova, r. Ocnița, s-tul Bîrlădeni",
+    "s11_admin": "Administrator: Vadim Cușnir",
+    "s11_email": "vadim.kusnir@gmail.com"
   },
   "guest_profile": {
     "not_found_title": "Profile not found",

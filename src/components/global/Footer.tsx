@@ -74,12 +74,15 @@ export function Footer() {
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 text-xs text-muted-foreground sm:flex-row">
-          <span>© {new Date().getFullYear()} AI-IDEI. All rights reserved.</span>
+          <div className="flex flex-col items-center sm:items-start gap-1">
+            <span>© {new Date().getFullYear()} Cușnir Media SRL · AI-IDEI. All rights reserved.</span>
+            <span className="text-[10px] text-muted-foreground/60">Republic of Moldova · vadim.kusnir@gmail.com</span>
+          </div>
           <div className="flex flex-wrap items-center gap-4">
             <FooterLink to="/terms">Terms</FooterLink>
             <FooterLink to="/privacy">Privacy</FooterLink>
             <FooterLink to="/docs">Docs</FooterLink>
-            <FooterLink to="/community">Community</FooterLink>
+            <a href="https://about.me/vadimcusnir" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</a>
           </div>
         </div>
       </div>

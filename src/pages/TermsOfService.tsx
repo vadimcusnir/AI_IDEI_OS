@@ -64,10 +64,19 @@ export default function TermsOfService() {
         </section>
         <section>
           <h2 className="text-lg font-semibold mb-2">{t("terms.s11_title")}</h2>
-          <p>
-            {t("terms.s11_text")}{" "}
-            <Link to="/feedback" className="text-primary hover:underline">{t("terms.s11_link")}</Link>.
-          </p>
+          <p className="mb-3">{t("terms.s11_text")}</p>
+          <div className="bg-muted/50 rounded-lg p-4 space-y-1.5 text-sm">
+            <p className="font-semibold">{t("terms.s11_company")}</p>
+            <p className="text-muted-foreground">{t("terms.s11_address")}</p>
+            <p className="text-muted-foreground">{t("terms.s11_admin")}</p>
+            <p className="text-muted-foreground">E-mail: <a href="mailto:vadim.kusnir@gmail.com" className="text-primary hover:underline">{t("terms.s11_email")}</a></p>
+            <p className="text-muted-foreground">MD: {t("terms.s11_phone_md")} · UA: {t("terms.s11_phone_ua")} · RO: {t("terms.s11_phone_ro")}</p>
+            <p className="text-muted-foreground mt-2">
+              <Link to="/feedback" className="text-primary hover:underline">{t("terms.s11_link")}</Link>
+              {" · "}
+              <a href="https://about.me/vadimcusnir" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">about.me/vadimcusnir</a>
+            </p>
+          </div>
         </section>
       </article>
     </div>
