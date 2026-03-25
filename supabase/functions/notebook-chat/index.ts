@@ -96,7 +96,7 @@ ${sourceContext || "Nicio sursă selectată. Cere utilizatorului să adauge surs
   } catch (error) {
     console.error("notebook-chat error:", error);
     return new Response(
-      JSON.stringify({ error: error.message || "Internal error" }),
+      JSON.stringify({ error: "Chat processing failed" }),
       { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }

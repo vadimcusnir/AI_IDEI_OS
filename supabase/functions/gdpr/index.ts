@@ -34,13 +34,9 @@ Deno.serve(async (req) => {
 
   const userId = user.id;
 
-  // ── Rate limit check ──
-  if (!checkRateLimit(userId)) {
-    return new Response(JSON.stringify({ error: "Rate limit exceeded (3 GDPR requests/hour)" }), {
-      status: 429,
-      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
-  }
+  // ── Rate limit check (DB-backed) ──
+  const rateLimited = await rateLimitGuard(userId, req, { maxRequests: 3, windowSeconds: 3600 }, getCorsHeaders(req));
+  if (rateLimited) return rateLimited;
 
   let body: any;
   try {

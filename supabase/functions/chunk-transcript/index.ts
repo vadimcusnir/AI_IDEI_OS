@@ -82,11 +82,9 @@ Deno.serve(async (req) => {
     }
     const userId = caller.id;
 
-    if (!checkRateLimit(userId)) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded (20 chunk operations/hour)" }), {
-        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
+    // Rate limit (DB-backed)
+    const rateLimited = await rateLimitGuard(userId, req, { maxRequests: 20, windowSeconds: 3600 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
 
     // ── Regime enforcement ──
     const regime = await getRegimeConfig("chunk-transcript");

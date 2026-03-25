@@ -68,7 +68,7 @@ serve(async (req) => {
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("[create-subscription]", msg);
-    return new Response(JSON.stringify({ error: msg }), {
+    return new Response(JSON.stringify({ error: "Subscription creation failed" }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       status: 500,
     });
