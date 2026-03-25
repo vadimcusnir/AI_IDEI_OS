@@ -41,6 +41,8 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
   const { user } = useAuth();
   const [savingId, setSavingId] = useState<string | null>(null);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [publishedIds, setPublishedIds] = useState<Set<string>>(new Set());
+  const { publish, publishing } = usePublishAnalysis();
 
   const handleCopy = useCallback((content: string) => {
     navigator.clipboard.writeText(content);
