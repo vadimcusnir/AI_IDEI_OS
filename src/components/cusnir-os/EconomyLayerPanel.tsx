@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   Zap, ShoppingBag, Eye, Lock, Unlock, Trophy, ArrowUpRight,
-  Loader2, AlertCircle, Undo2,
+  Loader2, AlertCircle, Undo2, Bot,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
