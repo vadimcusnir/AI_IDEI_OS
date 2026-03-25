@@ -176,7 +176,52 @@ export function useOSSuperlayer() {
     }
   }, [user, load]);
 
+  const [executing, setExecuting] = useState<string | null>(null);
+
+  const startExecution = useCallback(async (agentId: string, input?: Record<string, unknown>) => {
+    if (!user) return { success: false, error: "not_authenticated" };
+    setExecuting(agentId);
+    try {
+      const agent = agents.find(a => a.id === agentId);
+      const costMap: Record<string, number> = { cognitive: 15, social: 12, commercial: 18, infrastructure: 20 };
+      const cost = costMap[agent?.agent_type || ""] || 10;
+
+      const { data, error } = await supabase.rpc("start_agent_execution", {
+        _user_id: user.id,
+        _agent_id: agentId,
+        _input: input || {},
+        _estimated_credits: cost,
+      });
+      if (error) throw error;
+      const result = data as any;
+      if (result?.success) await load();
+      return result;
+    } catch {
+      return { success: false, error: "rpc_failed" };
+    } finally {
+      setExecuting(null);
+    }
+  }, [user, agents, load]);
+
+  const completeExecution = useCallback(async (executionId: string) => {
+    if (!user) return { success: false, error: "not_authenticated" };
+    try {
+      const { data, error } = await supabase.rpc("complete_agent_execution", {
+        _execution_id: executionId,
+        _output: { result: "execution_completed", artifacts: [] },
+        _performance: { quality: 0.85 },
+        _success: true,
+      });
+      if (error) throw error;
+      const result = data as any;
+      if (result?.success) await load();
+      return result;
+    } catch {
+      return { success: false, error: "rpc_failed" };
+    }
+  }, [user, load]);
+
   useEffect(() => { load(); }, [load]);
 
-  return { otos, mms, lcss, agents, executions, patterns, unlocks, stats, loading, reload: load, activateUnlock, revokeUnlock, toggling };
+  return { otos, mms, lcss, agents, executions, patterns, unlocks, stats, loading, reload: load, activateUnlock, revokeUnlock, toggling, startExecution, completeExecution, executing };
 }
