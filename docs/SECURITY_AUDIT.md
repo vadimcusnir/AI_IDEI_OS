@@ -40,15 +40,21 @@ The platform has a strong security posture. All critical and high findings from 
 
 **Resolution:** Zod validation schemas added to `extract-neurons` (episode_id UUID), `chunk-transcript` (episode_id, min/max tokens), `run-service` (job_id, service_key, neuron_id, inputs max 50k), `neuron-chat` (messages array with role enum, neuron_context object). Frontend form validation added for email + password on Auth.tsx.
 
+### SEC-006 v2: CORS Legacy Wildcard Cleanup — FIXED 2026-03-25
+
+**Resolution:** Removed ALL local `const corsHeaders = { Allow-Origin: * }` definitions from 57+ edge functions. Every function now uses `getCorsHeaders(req)` from `_shared/cors.ts`. Legacy `corsHeaders` export removed from shared module.
+
+### SEC-007: Rate Limiting — FIXED 2026-03-25
+
+**Resolution:** Migrated from volatile in-memory `Map` to database-backed `rate_limit_entries` table with atomic `check_rate_limit()` RPC function. Rate limiting now persists across edge function restarts and works in multi-instance deployments. Fail-open design ensures availability if DB is temporarily unreachable.
+
+### SEC-004: Leaked Password Protection — ✅ FIXED 2026-03-25
+
+**Resolution:** Activated Password HIBP Check in Lovable Cloud → Auth Settings → Email settings.
+
 ## Remaining Items
 
-### SEC-004: Leaked Password Protection — MANUAL
-
-Requires activation from Lovable Cloud dashboard (Pro Plan). Cannot be automated.
-
-### SEC-007: Rate Limiting — OPEN
-
-No rate limiting on auth endpoints or AI extraction calls. Recommend implementing via edge function middleware.
+None — all findings remediated.
 
 ## Positive Security Findings
 
