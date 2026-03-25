@@ -19,10 +19,12 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import {
-  OrbitalRings, PipelineTimeline, StatCard,
-  DEPTH_CONFIG, type ExecutionDepth, type AgentStatus,
+  OrbitalRings, PipelineTimeline, StatCard, PIPELINE_STEPS,
+  DEPTH_CONFIG, type ExecutionDepth,
   type AgentResult, type StepLog,
 } from "@/components/agent/MasterAgentComponents";
+
+type AgentStatus = "idle" | "running" | "completed" | "failed";
 
 export default function MasterAgent() {
   const { user } = useAuth();
