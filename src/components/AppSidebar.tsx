@@ -19,6 +19,7 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier, type UserTier } from "@/hooks/useUserTier";
 import { useChatHistory } from "@/hooks/useChatHistory";
+import { usePrefetch } from "@/hooks/usePrefetch";
 import { Logo } from "@/components/shared/Logo";
 import {
   Home, Upload, BookOpen, Sparkles, User,
