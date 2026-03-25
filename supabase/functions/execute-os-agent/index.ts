@@ -1,11 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 // Agent-specific system prompts
 const AGENT_PROMPTS: Record<string, string> = {
@@ -85,7 +81,15 @@ Output as structured JSON with keys: reputation_score, action_plan, credibility_
 const DEFAULT_PROMPT = `You are a CusnirOS agent. Analyze the input and produce actionable intelligence as structured JSON.`;
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  // Rate limit by auth header or IP
+  const authHeader = req.headers.get("authorization") || "";
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const limitKey = `os-agent:${authHeader ? "auth" : ip}`;
+  const rateLimited = await rateLimitGuard(limitKey, req, { maxRequests: 20, windowSeconds: 60 }, corsHeaders);
+  if (rateLimited) return rateLimited;
 
   try {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
