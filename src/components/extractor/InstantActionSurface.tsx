@@ -168,6 +168,7 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
     try {
       // === SOURCE ===
       setStage("source");
+      onPipelineStart?.();
       let title = "";
       let transcript: string | null = null;
       let filePath: string | null = null;
