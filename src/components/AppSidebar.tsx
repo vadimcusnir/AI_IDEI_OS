@@ -215,7 +215,7 @@ export function AppSidebar() {
           isActive={isActive(item.to)}
           tooltip={item.label}
         >
-          <button onClick={() => navigate(item.to)} className={cn(
+          <button onClick={() => navigate(item.to)} onMouseEnter={prefetchMap[item.to]} className={cn(
             "w-full",
             item.highlight && !isActive(item.to) && "text-primary font-medium",
             item.locked && "opacity-60",
