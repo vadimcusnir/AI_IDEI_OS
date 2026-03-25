@@ -20,28 +20,29 @@ interface Comment {
   content: string;
   created_at: string;
   user_id: string;
-  parent_id: string | null;
 }
 
 /**
  * P3-007: Commenting System
- * Displays and manages comments on neurons, artifacts, entities.
+ * Uses chat_messages table with session_id as "comment:{targetType}:{targetId}"
+ * to store threaded comments on any resource.
  */
 export function CommentThread({ targetType, targetId, className }: CommentThreadProps) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [newComment, setNewComment] = useState("");
 
-  const queryKey = ["comments", targetType, String(targetId)];
+  const sessionKey = `comment:${targetType}:${targetId}`;
+  const queryKey = ["comments", sessionKey];
 
   const { data: comments = [], isLoading } = useQuery({
     queryKey,
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("annotations")
-        .select("id, content, created_at, user_id, parent_id")
-        .eq("target_type", targetType)
-        .eq("target_id", String(targetId))
+        .from("chat_messages")
+        .select("id, content, created_at, user_id")
+        .eq("session_id", sessionKey)
+        .eq("role", "comment")
         .order("created_at", { ascending: true });
 
       if (error) throw error;
@@ -52,12 +53,11 @@ export function CommentThread({ targetType, targetId, className }: CommentThread
   const addComment = useMutation({
     mutationFn: async (content: string) => {
       if (!user) throw new Error("Not authenticated");
-      const { error } = await supabase.from("annotations").insert({
-        target_type: targetType,
-        target_id: String(targetId),
+      const { error } = await supabase.from("chat_messages").insert({
+        session_id: sessionKey,
         content,
         user_id: user.id,
-        annotation_type: "comment",
+        role: "comment",
       });
       if (error) throw error;
     },

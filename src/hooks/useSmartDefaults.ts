@@ -11,7 +11,7 @@ interface SmartDefaults {
 
 /**
  * P2-008: Smart Defaults Engine
- * Analyzes user's past service executions to pre-select
+ * Analyzes user's past service runs to pre-select
  * services, categories, and options based on behavior patterns.
  */
 export function useSmartDefaults(): SmartDefaults & { isLoading: boolean } {
@@ -20,18 +20,17 @@ export function useSmartDefaults(): SmartDefaults & { isLoading: boolean } {
   const { data, isLoading } = useQuery({
     queryKey: ["smart-defaults", user?.id],
     enabled: !!user?.id,
-    staleTime: 5 * 60 * 1000, // 5 min
+    staleTime: 5 * 60 * 1000,
     queryFn: async () => {
-      // Get last 50 service executions for frequency analysis
-      const { data: executions } = await supabase
-        .from("service_executions")
+      const { data: runs } = await supabase
+        .from("service_run_history")
         .select("service_key, status, created_at")
         .eq("user_id", user!.id)
         .eq("status", "completed")
         .order("created_at", { ascending: false })
         .limit(50);
 
-      if (!executions || executions.length === 0) {
+      if (!runs || runs.length === 0) {
         return {
           preferredCategory: null,
           preferredServiceKeys: [],
@@ -40,32 +39,22 @@ export function useSmartDefaults(): SmartDefaults & { isLoading: boolean } {
         };
       }
 
-      // Count frequency per service_key
       const freq: Record<string, number> = {};
-      for (const ex of executions) {
-        freq[ex.service_key] = (freq[ex.service_key] || 0) + 1;
+      for (const r of runs) {
+        freq[r.service_key] = (freq[r.service_key] || 0) + 1;
       }
 
-      // Sort by frequency
-      const sorted = Object.entries(freq)
-        .sort(([, a], [, b]) => b - a);
-
+      const sorted = Object.entries(freq).sort(([, a], [, b]) => b - a);
       const topKeys = sorted.slice(0, 5).map(([k]) => k);
 
-      // Infer preferred category from top service keys
       const categoryMap: Record<string, string> = {
-        social: "attract",
-        seo: "attract",
-        blog: "attract",
-        course: "educate",
-        framework: "educate",
-        copy: "sell",
-        landing: "sell",
-        analytics: "convert",
-        strategy: "convert",
+        social: "attract", seo: "attract", blog: "attract",
+        course: "educate", framework: "educate",
+        copy: "sell", landing: "sell",
+        analytics: "convert", strategy: "convert",
       };
 
-      let categoryScore: Record<string, number> = {};
+      const categoryScore: Record<string, number> = {};
       for (const [key, count] of sorted) {
         for (const [pattern, cat] of Object.entries(categoryMap)) {
           if (key.toLowerCase().includes(pattern)) {
@@ -77,12 +66,8 @@ export function useSmartDefaults(): SmartDefaults & { isLoading: boolean } {
       const preferredCategory = Object.entries(categoryScore)
         .sort(([, a], [, b]) => b - a)[0]?.[0] ?? null;
 
-      // Infer content type from recent executions
       const contentTypePatterns: Record<string, string> = {
-        transcript: "podcast",
-        video: "video",
-        text: "text",
-        pdf: "document",
+        transcript: "podcast", video: "video", text: "text", pdf: "document",
       };
 
       let contentType: string | null = null;
@@ -96,7 +81,6 @@ export function useSmartDefaults(): SmartDefaults & { isLoading: boolean } {
         if (contentType) break;
       }
 
-      // Suggest complementary services not yet used
       const allUsed = new Set(sorted.map(([k]) => k));
       const complementary: Record<string, string[]> = {
         attract: ["seo_optimization", "social_media_pack", "newsletter_generator"],

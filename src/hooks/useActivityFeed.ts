@@ -22,10 +22,9 @@ export function useActivityFeed(workspaceId?: string, limit = 30) {
     enabled: !!user?.id,
     staleTime: 30_000,
     queryFn: async () => {
-      // Combine multiple activity sources into a unified feed
-      const [neurons, artifacts, jobs] = await Promise.all([
+      const [neurons, artifacts, runs] = await Promise.all([
         supabase
-          .from("neurons")
+          .from("neurons" as any)
           .select("id, title, created_at, author_id")
           .eq("author_id", user!.id)
           .order("created_at", { ascending: false })
@@ -37,7 +36,7 @@ export function useActivityFeed(workspaceId?: string, limit = 30) {
           .order("created_at", { ascending: false })
           .limit(limit),
         supabase
-          .from("neuron_jobs")
+          .from("service_run_history")
           .select("id, service_key, status, created_at, user_id")
           .eq("user_id", user!.id)
           .order("created_at", { ascending: false })
@@ -46,7 +45,7 @@ export function useActivityFeed(workspaceId?: string, limit = 30) {
 
       const feed: ActivityItem[] = [];
 
-      for (const n of neurons.data || []) {
+      for (const n of (neurons.data || []) as any[]) {
         feed.push({
           id: `neuron-${n.id}`,
           event_type: "neuron_created",
@@ -56,7 +55,7 @@ export function useActivityFeed(workspaceId?: string, limit = 30) {
         });
       }
 
-      for (const a of artifacts.data || []) {
+      for (const a of (artifacts.data || []) as any[]) {
         feed.push({
           id: `artifact-${a.id}`,
           event_type: "artifact_created",
@@ -66,19 +65,17 @@ export function useActivityFeed(workspaceId?: string, limit = 30) {
         });
       }
 
-      for (const j of jobs.data || []) {
+      for (const r of (runs.data || []) as any[]) {
         feed.push({
-          id: `job-${j.id}`,
+          id: `run-${r.id}`,
           event_type: "job_completed",
-          description: `Job ${j.service_key} → ${j.status}`,
-          created_at: j.created_at,
-          metadata: { service: j.service_key, status: j.status },
+          description: `Service ${r.service_key} → ${r.status}`,
+          created_at: r.created_at,
+          metadata: { service: r.service_key, status: r.status },
         });
       }
 
-      // Sort by most recent
       feed.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
       return feed.slice(0, limit);
     },
   });
