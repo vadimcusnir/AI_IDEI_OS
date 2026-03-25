@@ -130,12 +130,23 @@ export default function CusnirOSOperator() {
           {/* System Indicators Bar */}
           {stats && (
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-              <IndicatorCard icon={Terminal} label="OS Version" value={stats.os_version} />
-              <IndicatorCard icon={Cpu} label="Prompt System" value={stats.prompt_system_version} />
-              <IndicatorCard icon={Activity} label="Avg Latency" value={`${Math.round(stats.avg_latency_ms)}ms`} />
-              <IndicatorCard icon={Server} label="Queue Depth" value={String(stats.queue_depth)} />
-              <IndicatorCard icon={Zap} label="Active Jobs" value={String(stats.active_jobs)} />
-              <IndicatorCard icon={ScrollText} label="Ledger 24h" value={String(stats.decision_ledger_24h)} />
+              {[
+                { icon: Terminal, label: "OS Version", value: stats.os_version },
+                { icon: Cpu, label: "Prompt System", value: stats.prompt_system_version },
+                { icon: Activity, label: "Avg Latency", value: `${Math.round(stats.avg_latency_ms)}ms` },
+                { icon: Server, label: "Queue Depth", value: String(stats.queue_depth) },
+                { icon: Zap, label: "Active Jobs", value: String(stats.active_jobs) },
+                { icon: ScrollText, label: "Ledger 24h", value: String(stats.decision_ledger_24h) },
+              ].map((item, i) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                >
+                  <IndicatorCard icon={item.icon} label={item.label} value={item.value} />
+                </motion.div>
+              ))}
             </div>
           )}
 
