@@ -68,7 +68,7 @@ interface InstantActionSurfaceProps {
   autoShowProgress?: boolean;
 }
 
-export function InstantActionSurface({ onComplete, compact = false }: InstantActionSurfaceProps) {
+export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineComplete, compact = false, autoShowProgress = false }: InstantActionSurfaceProps) {
   const { t } = useTranslation("common");
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
