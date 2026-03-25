@@ -146,21 +146,30 @@ export default function CusnirOSOperator() {
           )}
 
           {/* Tab Navigation */}
-          <div className="flex gap-1 border-b border-border/30 pb-0">
-            {(["modules", "superlayer", "ledger"] as Tab[]).map(t => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={cn(
-                  "px-3 py-2 text-xs font-medium border-b-2 transition-colors capitalize",
-                  tab === t
-                    ? "border-primary text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {t === "modules" ? "Module Registry" : t === "superlayer" ? "Superlayer Axes" : "Decision Ledger"}
-              </button>
-            ))}
+          <div className="flex gap-1 border-b border-border/30 pb-0 overflow-x-auto">
+            {(["modules", "superlayer", "economy", "memory", "ledger"] as Tab[]).map(t => {
+              const labels: Record<Tab, string> = {
+                modules: "Module Registry",
+                superlayer: "Superlayer Axes",
+                economy: "Economy Layer",
+                memory: "Memory Engine",
+                ledger: "Decision Ledger",
+              };
+              return (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={cn(
+                    "px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap",
+                    tab === t
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {labels[t]}
+                </button>
+              );
+            })}
           </div>
 
           {/* Module Registry Table */}
