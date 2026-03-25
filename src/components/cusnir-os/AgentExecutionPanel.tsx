@@ -1,11 +1,12 @@
 /**
  * AgentExecutionPanel — Agent Swarm control surface
- * Launch agents, monitor live executions, view history
+ * Launch agents with AI, monitor live executions, view results
  */
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   Bot, Play, Loader2, CheckCircle2, XCircle, Clock,
@@ -96,6 +97,8 @@ export function AgentExecutionPanel({
   executing,
 }: AgentExecutionPanelProps) {
   const [view, setView] = useState<"agents" | "history">("agents");
+  const [prompts, setPrompts] = useState<Record<string, string>>({});
+  const [expandedExec, setExpandedExec] = useState<string | null>(null);
 
   const activeExecs = executions.filter(e => e.status === "running");
   const historyExecs = executions.filter(e => e.status !== "running").slice(0, 15);
@@ -227,6 +230,17 @@ export function AgentExecutionPanel({
                       ))}
                     </div>
 
+                    {/* Prompt Input */}
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder={`Prompt pentru ${agent.role}...`}
+                        className="h-7 text-[10px]"
+                        value={prompts[agent.id] || ""}
+                        onChange={e => setPrompts(p => ({ ...p, [agent.id]: e.target.value }))}
+                        disabled={isStandby || isExecuting}
+                      />
+                    </div>
+
                     {/* Footer */}
                     <div className="flex items-center justify-between pt-1">
                       <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
@@ -237,12 +251,16 @@ export function AgentExecutionPanel({
                         size="sm"
                         className="h-7 text-[10px] gap-1"
                         disabled={isStandby || isExecuting}
-                        onClick={() => onStartExecution(agent.id, { mode: "standard" })}
+                        onClick={() => {
+                          const prompt = prompts[agent.id] || undefined;
+                          onStartExecution(agent.id, prompt ? { prompt } : { mode: "standard" });
+                          setPrompts(p => ({ ...p, [agent.id]: "" }));
+                        }}
                       >
                         {isExecuting ? (
-                          <><Loader2 className="h-3 w-3 animate-spin" /> Pornire...</>
+                          <><Loader2 className="h-3 w-3 animate-spin" /> Execuție AI...</>
                         ) : (
-                          <><Play className="h-3 w-3" /> Execută</>
+                          <><Play className="h-3 w-3" /> Execută AI</>
                         )}
                       </Button>
                     </div>
@@ -281,25 +299,49 @@ export function AgentExecutionPanel({
                   const agent = agents.find(a => a.id === exec.agent_id);
                   const statusInfo = EXEC_STATUS[exec.status] || EXEC_STATUS.completed;
                   const StatusIcon = statusInfo.icon;
+                  const hasOutput = exec.output && Object.keys(exec.output).length > 0 && !('error' in exec.output);
+                  const isExpanded = expandedExec === exec.id;
 
                   return (
-                    <div key={exec.id} className="p-3 flex items-center gap-3">
-                      <StatusIcon className={cn(
-                        "h-4 w-4 shrink-0",
-                        statusInfo.color,
-                        exec.status === "running" && "animate-spin"
-                      )} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium truncate">{agent?.role || "Agent necunoscut"}</p>
-                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
-                          <span>{format(new Date(exec.created_at), "dd MMM HH:mm")}</span>
-                          {exec.duration_ms && <span>· {(exec.duration_ms / 1000).toFixed(1)}s</span>}
-                          <span>· {exec.credits_cost}N</span>
+                    <div key={exec.id}>
+                      <button
+                        className="w-full p-3 flex items-center gap-3 hover:bg-muted/20 transition-colors text-left"
+                        onClick={() => hasOutput && setExpandedExec(isExpanded ? null : exec.id)}
+                      >
+                        <StatusIcon className={cn(
+                          "h-4 w-4 shrink-0",
+                          statusInfo.color,
+                          exec.status === "running" && "animate-spin"
+                        )} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium truncate">{agent?.role || "Agent necunoscut"}</p>
+                          <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
+                            <span>{format(new Date(exec.created_at), "dd MMM HH:mm")}</span>
+                            {exec.duration_ms && <span>· {(exec.duration_ms / 1000).toFixed(1)}s</span>}
+                            <span>· {exec.credits_cost}N</span>
+                            {hasOutput && <Badge variant="outline" className="text-[8px] h-3.5 text-primary">AI Output ↓</Badge>}
+                          </div>
                         </div>
-                      </div>
-                      <Badge variant="outline" className={cn("text-[9px]", statusInfo.color)}>
-                        {exec.status}
-                      </Badge>
+                        <Badge variant="outline" className={cn("text-[9px]", statusInfo.color)}>
+                          {exec.status}
+                        </Badge>
+                      </button>
+                      <AnimatePresence>
+                        {isExpanded && hasOutput && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="px-3 pb-3">
+                              <div className="bg-muted/30 rounded-lg p-3 text-[10px] font-mono max-h-60 overflow-auto whitespace-pre-wrap text-foreground/80">
+                                {JSON.stringify(exec.output, null, 2)}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   );
                 })}

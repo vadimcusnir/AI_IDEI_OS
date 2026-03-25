@@ -42,16 +42,20 @@ interface OSAgent {
   status: string;
   performance_score: number;
   last_active_at: string | null;
+  metadata?: Record<string, unknown>;
 }
 
 interface OSExecution {
   id: string;
+  agent_id?: string;
   status: string;
   credits_cost: number;
   duration_ms: number | null;
   started_at: string | null;
   completed_at: string | null;
   created_at: string;
+  output?: Record<string, unknown>;
+  performance?: Record<string, unknown>;
 }
 
 interface MemoryPattern {
@@ -104,8 +108,8 @@ export function useOSSuperlayer() {
       supabase.from("os_otos").select("id, name, mechanism, output_type, domain, status, created_at").order("created_at", { ascending: false }).limit(50),
       supabase.from("os_mms").select("id, name, intent, complexity_level, status, created_at").order("created_at", { ascending: false }).limit(50),
       supabase.from("os_lcss").select("id, name, macro_intent, strategic_value, status, created_at").order("created_at", { ascending: false }).limit(50),
-      supabase.from("os_agents").select("id, role, capabilities, agent_type, status, performance_score, last_active_at").order("created_at", { ascending: false }).limit(50),
-      supabase.from("os_executions").select("id, status, credits_cost, duration_ms, started_at, completed_at, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
+      supabase.from("os_agents").select("id, role, capabilities, agent_type, status, performance_score, last_active_at, metadata").order("created_at", { ascending: false }).limit(50),
+      supabase.from("os_executions").select("id, agent_id, status, credits_cost, duration_ms, started_at, completed_at, created_at, output, performance").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
       supabase.from("os_memory_patterns").select("id, pattern_type, category, frequency, effectiveness_score, last_used_at, created_at").eq("user_id", user.id).order("frequency", { ascending: false }).limit(50),
       supabase.from("os_power_unlocks").select("id, capability_key, capability_name, unlocked_at, xp_cost, tier").eq("user_id", user.id).order("unlocked_at", { ascending: false }),
     ]);
@@ -186,6 +190,7 @@ export function useOSSuperlayer() {
       const costMap: Record<string, number> = { cognitive: 15, social: 12, commercial: 18, infrastructure: 20 };
       const cost = costMap[agent?.agent_type || ""] || 10;
 
+      // Step 1: Reserve credits and create execution record
       const { data, error } = await supabase.rpc("start_agent_execution", {
         _user_id: user.id,
         _agent_id: agentId,
@@ -194,8 +199,24 @@ export function useOSSuperlayer() {
       });
       if (error) throw error;
       const result = data as any;
-      if (result?.success) await load();
-      return result;
+      if (!result?.success) return result;
+
+      // Step 2: Call AI-powered execution edge function
+      const { data: aiResult, error: aiError } = await supabase.functions.invoke("execute-os-agent", {
+        body: {
+          agent_id: agentId,
+          user_id: user.id,
+          input: input || { prompt: `Run standard ${agent?.role || "agent"} analysis` },
+          execution_id: result.execution_id,
+        },
+      });
+
+      if (aiError) {
+        console.error("AI execution error:", aiError);
+      }
+
+      await load();
+      return { ...result, ai_output: aiResult?.output };
     } catch {
       return { success: false, error: "rpc_failed" };
     } finally {
