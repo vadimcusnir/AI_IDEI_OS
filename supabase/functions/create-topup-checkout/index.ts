@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated");
     // Rate limit guard
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 5, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
 

@@ -77,7 +77,7 @@ serve(async (req) => {
   if (authErr || !user) return jsonRes({ error: "Invalid token" }, 401);
 
   // Rate limit (user-based, post-auth)
-  const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+  const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
   if (rateLimited) return rateLimited;
 
   const kernel = createKernelLog();

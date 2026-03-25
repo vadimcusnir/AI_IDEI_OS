@@ -28,7 +28,7 @@ Deno.serve(async (req: Request) => {
     }
 
     // Rate limit guard (user-based)
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
     const { messages, sources, mode } = await req.json();

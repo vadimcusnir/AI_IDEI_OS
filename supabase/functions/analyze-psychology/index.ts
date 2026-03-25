@@ -133,7 +133,7 @@ serve(async (req) => {
     const userId = userData.user.id;
 
     // Rate limit (user-based, post-auth)
-    const rateLimited = rateLimitGuard(userId, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+    const rateLimited = await rateLimitGuard(userId, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
     logStep("Authenticated", { userId });
 

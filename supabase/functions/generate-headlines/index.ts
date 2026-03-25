@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
     }
 
     // Rate limit guard (user-based)
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 15, windowSeconds: 60 }, getCorsHeaders(req));
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 15, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
     const { topic, audience, pain } = await req.json();

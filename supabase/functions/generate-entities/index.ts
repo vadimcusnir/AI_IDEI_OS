@@ -122,7 +122,7 @@ Deno.serve(async (req) => {
     }
 
     // Rate limit guard
-    const rateLimited = rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, cors);
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, cors);
     if (rateLimited) return rateLimited;
 
     const supabase = createClient(supabaseUrl, serviceKey);
