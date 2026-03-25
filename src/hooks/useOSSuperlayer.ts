@@ -245,5 +245,19 @@ export function useOSSuperlayer() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Realtime subscriptions for live dashboard updates
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel("os-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "os_agents" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "os_executions", filter: `user_id=eq.${user.id}` }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "os_memory_patterns", filter: `user_id=eq.${user.id}` }, () => load())
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user, load]);
+
   return { otos, mms, lcss, agents, executions, patterns, unlocks, stats, loading, reload: load, activateUnlock, revokeUnlock, toggling, startExecution, completeExecution, executing };
 }

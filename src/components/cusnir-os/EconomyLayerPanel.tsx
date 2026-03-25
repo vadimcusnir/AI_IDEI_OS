@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   Zap, ShoppingBag, Eye, Lock, Unlock, Trophy, ArrowUpRight,
-  Loader2, AlertCircle, Undo2,
+  Loader2, AlertCircle, Undo2, Bot,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -39,14 +39,14 @@ interface SupStats {
 }
 
 const ALL_CAPABILITIES = [
-  { key: "multi_agent", name: "Multi-Agent Orchestration", tier: "operator", xp: 500, desc: "Orchestrare paralelă a mai multor agenți AI" },
-  { key: "private_neurons", name: "Private Neuron Layer", tier: "operator", xp: 300, desc: "Stratul privat de neuroni pentru date sensibile" },
-  { key: "funnel_auto", name: "Funnel Autogenerator", tier: "advanced", xp: 800, desc: "Generare automată de funnel-uri complete" },
-  { key: "pricing_intel", name: "Pricing Intelligence", tier: "advanced", xp: 600, desc: "Optimizare inteligentă a prețurilor în timp real" },
-  { key: "narrative_dom", name: "Narrative Domination", tier: "elite", xp: 1200, desc: "Engine de dominare narativă și poziționare" },
-  { key: "knowledge_arb", name: "Knowledge Arbitrage", tier: "elite", xp: 1000, desc: "Arbitraj de cunoștințe și oportunități ascunse" },
-  { key: "viral_gen", name: "Viral Structure Generator", tier: "advanced", xp: 700, desc: "Generare de structuri virale optimizate" },
-  { key: "identity_sim", name: "Identity Simulation", tier: "elite", xp: 1500, desc: "Simulare completă de identitate și comportament" },
+  { key: "multi_agent", name: "Multi-Agent Orchestration", tier: "operator", xp: 500, desc: "Orchestrare paralelă a mai multor agenți AI", linkedAgent: "agent_swarm" },
+  { key: "private_neurons", name: "Private Neuron Layer", tier: "operator", xp: 300, desc: "Stratul privat de neuroni pentru date sensibile", linkedAgent: null },
+  { key: "funnel_auto", name: "Funnel Autogenerator", tier: "advanced", xp: 800, desc: "Generare automată de funnel-uri complete", linkedAgent: "funnel_auto" },
+  { key: "pricing_intel", name: "Pricing Intelligence", tier: "advanced", xp: 600, desc: "Optimizare inteligentă a prețurilor în timp real", linkedAgent: "pricing_intel" },
+  { key: "narrative_dom", name: "Narrative Domination", tier: "elite", xp: 1200, desc: "Engine de dominare narativă și poziționare", linkedAgent: "narrative_dom" },
+  { key: "knowledge_arb", name: "Knowledge Arbitrage", tier: "elite", xp: 1000, desc: "Arbitraj de cunoștințe și oportunități ascunse", linkedAgent: "knowledge_arb" },
+  { key: "viral_gen", name: "Viral Structure Generator", tier: "advanced", xp: 700, desc: "Generare de structuri virale optimizate", linkedAgent: "viral_gen" },
+  { key: "identity_sim", name: "Identity Simulation", tier: "elite", xp: 1500, desc: "Simulare completă de identitate și comportament", linkedAgent: "identity_sim" },
 ];
 
 const TIER_COLORS: Record<string, string> = {
@@ -146,6 +146,12 @@ export function EconomyLayerPanel({ unlocks, stats, userXP, onActivate, onRevoke
                           {cap.name}
                         </p>
                         <p className="text-[10px] text-muted-foreground/50">{cap.desc}</p>
+                        {cap.linkedAgent && (
+                          <p className={cn("text-[9px] mt-0.5 flex items-center gap-1", unlocked ? "text-primary" : "text-muted-foreground/30")}>
+                            <Bot className="h-2.5 w-2.5" />
+                            Agent: {unlocked ? "Activ" : "Standby"}
+                          </p>
+                        )}
                         {unlocked && unlock && (
                           <p className="text-[10px] text-status-validated mt-0.5">
                             Activ din {format(new Date(unlock.unlocked_at), "dd MMM yyyy")}
