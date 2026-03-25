@@ -30,7 +30,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
         {/* H1 — dominant, tight, commanding */}
         <h1 className="text-[clamp(2.25rem,5.5vw,4rem)] font-bold leading-[1.05] tracking-[-0.02em] text-foreground mb-7 sm:mb-8">
           {t("hero.title_prefix")}{" "}
-          <span className="text-[hsl(var(--gold-oxide))]">{t("hero.title_highlight")}</span>
+          <MagicButton className="text-[hsl(var(--gold-oxide))]">{t("hero.title_highlight")}</MagicButton>
           {" "}{t("hero.title_suffix")}
         </h1>
 
