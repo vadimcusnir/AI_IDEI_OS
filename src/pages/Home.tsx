@@ -398,7 +398,7 @@ export default function Home() {
           
           {/* ── MOBILE LAYOUT (< md) ── */}
           <div className="flex-1 flex flex-col min-h-0 md:hidden">
-            <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-40">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-4 pb-32 scroll-smooth">
               {isEmptyState ? (
                 <div className="flex flex-col items-center justify-center min-h-[40vh] pt-8">
                   <div className="w-full text-center space-y-2 mb-6">
