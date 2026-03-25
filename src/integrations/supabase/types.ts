@@ -9279,6 +9279,17 @@ export type Database = {
         Args: { _category_id: string; _min_quality?: number }
         Returns: number
       }
+      match_neurons: {
+        Args: {
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          neuron_id: number
+          similarity: number
+        }[]
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
