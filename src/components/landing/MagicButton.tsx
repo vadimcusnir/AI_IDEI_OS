@@ -146,17 +146,17 @@ export function MagicButton({ children, className }: { children: React.ReactNode
           <motion.span
             className="absolute pointer-events-none"
             style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
-            initial={{ opacity: 0.8, scale: 0.3 }}
-            animate={{ opacity: 0, scale: 3.5 }}
+            initial={{ opacity: 0.9, scale: 0.2 }}
+            animate={{ opacity: 0, scale: 5 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <svg width="90" height="90" viewBox="0 0 60 60" fill="none">
               <path
                 d="M30 3L55 16.5V43.5L30 57L5 43.5V16.5L30 3Z"
                 stroke="hsl(var(--gold-oxide))"
-                strokeWidth="1.5"
-                opacity="0.6"
+                strokeWidth="2"
+                opacity="0.7"
               />
             </svg>
           </motion.span>
