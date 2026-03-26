@@ -1,5 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
+import { executeServiceSchema, validateInput } from "../_shared/validation.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
@@ -29,7 +31,10 @@ Deno.serve(async (req) => {
     const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
-    const { serviceName, serviceLevel, category, input } = await req.json();
+    const rawBody = await req.json();
+    const validation = validateInput(executeServiceSchema, rawBody, { ...getCorsHeaders(req), "Content-Type": "application/json" });
+    if (!validation.success) return validation.response;
+    const { serviceName, serviceLevel, category, input } = validation.data;
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 

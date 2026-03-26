@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { executeAgentSchema, validateInput } from "../_shared/validation.ts";
 
 // Agent-specific system prompts
 const AGENT_PROMPTS: Record<string, string> = {
@@ -99,7 +100,10 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { agent_id, user_id, input, execution_id } = await req.json();
+    const rawBody = await req.json();
+    const validation = validateInput(executeAgentSchema, rawBody, corsHeaders);
+    if (!validation.success) return validation.response;
+    const { agent_id, user_id, input, execution_id } = validation.data;
 
     // Fetch agent details
     const { data: agent, error: agentErr } = await supabase
