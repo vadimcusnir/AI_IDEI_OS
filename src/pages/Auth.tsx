@@ -15,6 +15,32 @@ import { useTranslation } from "react-i18next";
 
 type AuthMode = "login" | "signup" | "forgot";
 
+/** Track client-side login attempts for immediate UX feedback */
+const loginAttemptTracker = new Map<string, { count: number; firstAt: number }>();
+const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_CLIENT_ATTEMPTS = 5;
+
+function isClientRateLimited(email: string): boolean {
+  const key = email.toLowerCase();
+  const tracker = loginAttemptTracker.get(key);
+  if (!tracker) return false;
+  if (Date.now() - tracker.firstAt > LOGIN_WINDOW_MS) {
+    loginAttemptTracker.delete(key);
+    return false;
+  }
+  return tracker.count >= MAX_CLIENT_ATTEMPTS;
+}
+
+function recordClientAttempt(email: string) {
+  const key = email.toLowerCase();
+  const tracker = loginAttemptTracker.get(key);
+  if (!tracker || Date.now() - tracker.firstAt > LOGIN_WINDOW_MS) {
+    loginAttemptTracker.set(key, { count: 1, firstAt: Date.now() });
+  } else {
+    tracker.count++;
+  }
+}
+
 export default function Auth() {
   const { t } = useTranslation(["pages", "common"]);
   const [mode, setMode] = useState<AuthMode>("login");
@@ -26,6 +52,7 @@ export default function Auth() {
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
+  // Minimum 8 chars (upgraded from 6)
   const PASSWORD_CHECKS = useMemo(() => [
     { label: t("auth.pw_8_chars"), test: (pw: string) => pw.length >= 8 },
     { label: t("auth.pw_uppercase"), test: (pw: string) => /[A-Z]/.test(pw) },
@@ -41,6 +68,7 @@ export default function Auth() {
     return { score: 4, label: t("auth.pw_strong"), color: "bg-success" };
   }
 
+  /** Generic error messages — never reveal account existence */
   function friendlyError(msg: string): string {
     const lower = msg.toLowerCase();
     if (lower.includes("invalid login credentials")) return t("auth.error_invalid_login");
@@ -57,10 +85,23 @@ export default function Auth() {
 
   if (user) { navigate("/home", { replace: true }); return null; }
 
+  const logSecurityEvent = async (eventType: string, metadata: Record<string, unknown> = {}) => {
+    try {
+      await supabase.from("security_events").insert({
+        user_id: user ? (user as any).id : null,
+        event_type: eventType,
+        severity: eventType.includes("fail") ? "warning" : "info",
+        metadata: { ...metadata, timestamp: new Date().toISOString() },
+      });
+    } catch {
+      // Non-blocking — don't break auth flow for logging failures
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const trimmedEmail = email.trim();
+    const trimmedEmail = email.trim().toLowerCase();
     if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       toast.error(t("auth.invalid_email"));
       return;
@@ -73,8 +114,15 @@ export default function Auth() {
       toast.error(t("common:auth.tos_required"));
       return;
     }
+
+    // Client-side brute-force protection
+    if (mode === "login" && isClientRateLimited(trimmedEmail)) {
+      toast.error(t("auth.error_rate_limit"));
+      return;
+    }
+
     if (mode !== "forgot") {
-      if (password.length < 6) {
+      if (password.length < 8) {
         toast.error(t("auth.password_min"));
         return;
       }
@@ -90,20 +138,33 @@ export default function Auth() {
       const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
-      if (error) toast.error(friendlyError(error.message));
-      else toast.success(t("auth.reset_sent"));
+      // Always show success message to prevent email enumeration
+      toast.success(t("auth.reset_sent"));
+      if (error) console.warn("Reset error (hidden from user):", error.message);
+      await logSecurityEvent("password_reset_requested", { email: trimmedEmail });
       setLoading(false);
       return;
     }
 
     if (mode === "signup") {
       const { error } = await signUp(trimmedEmail, password);
-      if (error) toast.error(friendlyError(error.message));
-      else toast.success(t("auth.confirm_email"));
+      if (error) {
+        toast.error(friendlyError(error.message));
+        await logSecurityEvent("signup_failed", { email: trimmedEmail, reason: error.message });
+      } else {
+        toast.success(t("auth.confirm_email"));
+        await logSecurityEvent("signup_success", { email: trimmedEmail });
+      }
     } else {
       const { error } = await signIn(trimmedEmail, password);
-      if (error) toast.error(friendlyError(error.message));
-      else {
+      if (error) {
+        recordClientAttempt(trimmedEmail);
+        toast.error(friendlyError(error.message));
+        await logSecurityEvent("login_failed", { email: trimmedEmail });
+      } else {
+        // Reset client tracker on success
+        loginAttemptTracker.delete(trimmedEmail);
+        await logSecurityEvent("login_success", { email: trimmedEmail });
         const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
         navigate(count && count > 0 ? "/home" : "/onboarding");
       }
@@ -172,6 +233,7 @@ export default function Auth() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoComplete="email"
                   placeholder="you@example.com"
                   className="w-full h-12 min-h-[48px] pl-11 pr-4 rounded-xl border border-border/60 bg-background/60 text-sm outline-none focus:ring-2 focus:ring-[hsl(var(--gold-oxide)/0.25)] focus:border-[hsl(var(--gold-oxide)/0.5)] transition-all duration-200 placeholder:text-muted-foreground/40"
                 />
@@ -189,7 +251,8 @@ export default function Auth() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={6}
+                    minLength={8}
+                    autoComplete={mode === "signup" ? "new-password" : "current-password"}
                     placeholder="••••••••"
                     className="w-full h-12 min-h-[48px] pl-11 pr-11 rounded-xl border border-border/60 bg-background/60 text-sm outline-none focus:ring-2 focus:ring-[hsl(var(--gold-oxide)/0.25)] focus:border-[hsl(var(--gold-oxide)/0.5)] transition-all duration-200 placeholder:text-muted-foreground/40"
                   />

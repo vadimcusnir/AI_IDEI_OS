@@ -29,11 +29,34 @@ export default function ResetPassword() {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) { toast.error(t("reset_password.mismatch")); return; }
-    if (password.length < 6) { toast.error(t("reset_password.too_short")); return; }
+    // Enforce minimum 8 characters
+    if (password.length < 8) { toast.error(t("reset_password.too_short")); return; }
+    // Require at least one uppercase, one number, one special char
+    if (!/[A-Z]/.test(password) || !/\d/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
+      toast.error("Password must include uppercase, number, and special character");
+      return;
+    }
+
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
-    if (error) toast.error(error.message);
-    else { setSuccess(true); toast.success(t("reset_password.success_toast")); setTimeout(() => navigate("/home"), 2000); }
+    if (error) {
+      toast.error(error.message);
+    } else {
+      // Log password change security event
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.rpc("log_password_change", { p_user_id: user.id });
+        }
+      } catch { /* non-blocking */ }
+
+      setSuccess(true);
+      toast.success(t("reset_password.success_toast"));
+
+      // Sign out all sessions after password reset for security
+      await supabase.auth.signOut({ scope: "global" });
+      setTimeout(() => navigate("/auth"), 2000);
+    }
     setLoading(false);
   };
 
@@ -51,6 +74,7 @@ export default function ResetPassword() {
               <CheckCircle2 className="h-10 w-10 text-status-validated mx-auto mb-3" />
               <h2 className="text-lg font-semibold mb-1">{t("reset_password.success_title")}</h2>
               <p className="text-sm text-muted-foreground">{t("reset_password.success_desc")}</p>
+              <p className="text-xs text-muted-foreground mt-2">Redirecting to sign in...</p>
             </div>
           ) : (
             <>
@@ -61,15 +85,18 @@ export default function ResetPassword() {
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("reset_password.new_password")}</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} placeholder="••••••••"
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8}
+                      autoComplete="new-password" placeholder="••••••••"
                       className="w-full h-10 pl-10 pr-3 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary transition-colors" />
                   </div>
+                  <p className="text-[10px] text-muted-foreground mt-1">Min 8 chars, uppercase, number, special character</p>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("reset_password.confirm_password")}</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={6} placeholder="••••••••"
+                    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={8}
+                      autoComplete="new-password" placeholder="••••••••"
                       className="w-full h-10 pl-10 pr-3 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary transition-colors" />
                   </div>
                 </div>
