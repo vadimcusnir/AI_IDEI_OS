@@ -56,6 +56,13 @@ The platform has a strong security posture. All critical and high findings from 
 
 None — all findings remediated.
 
+## Additional Hardening (2026-03-26)
+
+1. ✅ **Zod Validation Schemas** — Centralized in `_shared/validation.ts` for `execute-os-agent`, `execute-service`, `webhook-ingest`
+2. ✅ **Client Security Library** — `src/lib/security.ts` with XSS strip, redirect validation, nonce generation
+3. ✅ **Privilege Escalation Fix** — Removed `user_roles_insert_own`, `admin_permissions_insert_own/update/delete` RLS policies
+4. ✅ **Rate Limiter Hardened** — Changed from fail-open to fail-closed design
+
 ## Positive Security Findings
 
 1. ✅ All 35+ tables have RLS enabled
@@ -71,7 +78,9 @@ None — all findings remediated.
 11. ✅ `handle_new_user()` trigger creates profile server-side
 12. ✅ Credit deduction happens server-side in edge functions
 13. ✅ No `dangerouslySetInnerHTML` with user content (except JSON-LD with server data)
-14. ✅ CORS restricted to known origins
+14. ✅ CORS restricted to known origins (67+ functions audited)
 15. ✅ All edge functions validate JWT before processing
 16. ✅ Zod input validation on critical edge functions
 17. ✅ i18n error messages standardized across EN/RO/RU
+18. ✅ DB-backed rate limiting with fail-closed design
+19. ✅ No self-role-assignment possible (privilege escalation blocked)
