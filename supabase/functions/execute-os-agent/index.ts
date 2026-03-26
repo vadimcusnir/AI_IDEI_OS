@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { executeAgentSchema, validateInput } from "../_shared/validation.ts";
 
 // Agent-specific system prompts
 const AGENT_PROMPTS: Record<string, string> = {
