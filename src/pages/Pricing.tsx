@@ -116,7 +116,7 @@ const FAQ_ITEMS = [
 export default function Pricing() {
   const navigate = useNavigate();
   const { user, session } = useAuth();
-  const { subscribed, tier, subscribe } = useSubscription();
+  const { subscribed, tier, subscribe, buyNeurons, manageSubscription } = useSubscription();
   const { t } = useTranslation("pages");
   const [processing, setProcessing] = useState<string | null>(null);
 
