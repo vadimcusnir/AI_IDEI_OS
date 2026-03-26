@@ -166,9 +166,9 @@ export default function Landing() {
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-10" aria-label="Main navigation">
-            {NAV_LINKS.map(link => (
+            {NAV_LINK_KEYS.map(link => (
               <button
-                key={link.label}
+                key={link.key}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
                   "text-[11px] font-mono tracking-[0.12em] transition-colors relative py-1.5 focus-ring rounded-sm",
