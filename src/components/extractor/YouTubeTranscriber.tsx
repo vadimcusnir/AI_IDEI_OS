@@ -264,7 +264,7 @@ export function YouTubeTranscriber() {
     toast.success(t("toast_copied"));
   };
 
-  const exportPDF = () => {
+  const exportPDF = async () => {
     if (!transcript) return;
     const { escapeHtml, textToSafeHtml } = await import("@/lib/html-sanitize");
     const safeTitle = escapeHtml(transcript.title);
