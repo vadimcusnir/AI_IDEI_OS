@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { trackEvent } from "@/lib/analytics";
+import { sanitizeSubtitleToText } from "@/lib/vtt-security";
 import { detectSource, detectFileSource, type SourceDetectionResult } from "@/lib/sourceDetection";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
