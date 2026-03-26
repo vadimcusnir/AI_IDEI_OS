@@ -149,6 +149,7 @@ const App = () => (
           <BrowserRouter>
             <Suspense fallback={<PageLoader />}>
               <ScrollToTop />
+              <GrowthHooks />
               <Routes>
                 {/* Public routes — accessible without login */}
                 <Route path="/" element={<Landing />} />
