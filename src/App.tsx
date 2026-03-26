@@ -68,6 +68,7 @@ const AdminKernel = lazyRetry(() => import("./pages/AdminKernel"));
 const AdminDomination = lazyRetry(() => import("./pages/AdminDomination"));
 const AdminInevitability = lazyRetry(() => import("./pages/AdminInevitability"));
 const AdminFinancialization = lazyRetry(() => import("./pages/AdminFinancialization"));
+const AdminRevenue = lazyRetry(() => import("./pages/AdminRevenue"));
 const PipelineOverview = lazyRetry(() => import("./pages/PipelineOverview"));
 
 const Marketplace = lazyRetry(() => import("./pages/Marketplace"));
@@ -263,6 +264,7 @@ const App = () => (
                 <Route path="/admin/domination" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Domination failed to load"><AdminDomination /></ErrorBoundary></AppLayout></AdminRoute>} />
                 <Route path="/admin/inevitability" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Inevitability failed to load"><AdminInevitability /></ErrorBoundary></AppLayout></AdminRoute>} />
                 <Route path="/admin/financialization" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Financialization failed to load"><AdminFinancialization /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/admin/revenue" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Revenue failed to load"><AdminRevenue /></ErrorBoundary></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
