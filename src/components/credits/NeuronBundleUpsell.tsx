@@ -13,9 +13,9 @@ interface NeuronBundleUpsellProps {
 
 const BUNDLES = [
   { neurons: 1000, price: 2, label: "Micro" },
-  { neurons: 5000, price: 10, label: "Starter" },
-  { neurons: 11000, price: 20, label: "Growth" },
-  { neurons: 25000, price: 47, label: "Pro" },
+  { neurons: 5500, price: 11, label: "Starter" },
+  { neurons: 10000, price: 20, label: "Standard" },
+  { neurons: 23500, price: 47, label: "Growth" },
 ];
 
 export function NeuronBundleUpsell({ neuronsSpent, currentBalance, className }: NeuronBundleUpsellProps) {
