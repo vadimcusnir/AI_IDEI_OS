@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import {
   Download, Trash2, Loader2, AlertTriangle, ShieldCheck,
 } from "lucide-react";
+import { ConsentPreferencesPanel } from "@/components/consent/ConsentPreferencesPanel";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
