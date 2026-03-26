@@ -224,8 +224,8 @@ export default function VttValidator() {
                       <h2 className="text-sm font-semibold">Validation Failed</h2>
                     </div>
                     <div className="bg-destructive/5 rounded-lg p-4">
-                      <p className="text-xs text-destructive font-medium mb-1">Error: {result.errorCode}</p>
-                      <p className="text-xs text-muted-foreground">{result.error}</p>
+                      <p className="text-xs text-destructive font-medium mb-1">Error: {(result as import("@/lib/vtt-security").VttParseError).errorCode}</p>
+                      <p className="text-xs text-muted-foreground">{(result as import("@/lib/vtt-security").VttParseError).error}</p>
                     </div>
                   </>
                 )}
