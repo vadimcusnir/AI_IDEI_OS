@@ -169,3 +169,49 @@ No edge function directly modifies the `user_credits` table. RLS policies restri
 | `idx_entities_type_published` | entities | Entity listing pages |
 | `idx_entity_relations_target` | entity_relations | Graph traversal |
 | `idx_artifacts_job` | artifacts | Pipeline job lookup |
+
+## Zero Trust IAM Hardening (2026-03-26)
+
+### Authentication Hardening
+- Password minimum length upgraded from 6 → 8 characters
+- Password reset now requires uppercase + number + special character
+- Password reset invalidates ALL sessions globally (`signOut({ scope: "global" })`)
+- Password reset redirects to `/auth` instead of `/home` (force re-authentication)
+- Password change logged via `log_password_change()` SECURITY DEFINER function
+- Forgot password always shows success message (prevents email enumeration)
+- Client-side brute-force protection: 5 attempts per email per 15 minutes
+- Login attempt tracking with in-memory rate limiter + `security_events` table
+- Proper `autoComplete` attributes on all auth inputs
+- Email normalized to lowercase before all operations
+
+### Session Security
+- 30-minute idle timeout with automatic sign-out
+- Activity-based timer reset (mousedown, keydown, scroll, touch)
+- Session state managed via `onAuthStateChange` listener (set up before `getSession()`)
+- `signUp`/`signIn`/`signOut` memoized with `useCallback` to prevent unnecessary re-renders
+
+### Security Audit Logging
+- New `security_events` table with RLS (users see own, admins see all)
+- New `login_attempts` table for brute-force detection (service role only)
+- `check_login_attempts()` SECURITY DEFINER function for server-side rate limiting
+- `log_security_event()` SECURITY DEFINER function for edge function logging
+- Events logged: login_success, login_failed, signup_success, signup_failed, password_reset_requested, password_changed
+
+### Access Control Matrix
+| Resource | anonymous | user | premium | admin |
+|----------|-----------|------|---------|-------|
+| Public pages | ✅ | ✅ | ✅ | ✅ |
+| Auth pages | ✅ | redirect | redirect | redirect |
+| Protected pages | redirect | ✅ | ✅ | ✅ |
+| Premium features | — | gate | ✅ | ✅ |
+| Admin dashboard | — | denied | denied | ✅ |
+| Security events (own) | — | ✅ | ✅ | ✅ |
+| Security events (all) | — | — | — | ✅ |
+| Edge functions | 401 | ✅ (JWT) | ✅ (JWT) | ✅ (JWT) |
+
+### Authorization Model
+- Frontend: `ProtectedRoute` (auth check) + `AdminRoute` (role check via `has_role` RPC)
+- Backend: All edge functions validate JWT via `getUser()` (36+ functions verified)
+- Database: Universal RLS on 200+ tables, `has_role()` SECURITY DEFINER for admin checks
+- Admin role stored in `user_roles` table (never in profiles/JWT claims)
+- No frontend-only authorization — all sensitive operations validated server-side
