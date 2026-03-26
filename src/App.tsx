@@ -98,6 +98,7 @@ const CusnirOSArchitecture = lazyRetry(() => import("./pages/CusnirOSArchitectur
 const About = lazyRetry(() => import("./pages/About"));
 const AboutVadimCusnir = lazyRetry(() => import("./pages/AboutVadimCusnir"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
+const VttValidator = lazyRetry(() => import("./pages/VttValidator"));
 const DatabaseRelations = lazyRetry(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
 const SecuritySettings = lazyRetry(() => import("./pages/SecuritySettings"));
