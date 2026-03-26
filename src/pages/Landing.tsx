@@ -177,7 +177,7 @@ export default function Landing() {
                     : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"
                 )}
               >
-                {link.label.toUpperCase()}
+                {t(`nav.${link.key}`).toUpperCase()}
                 {activeSection === link.to && (
                   <motion.div
                     layoutId="nav-indicator"
