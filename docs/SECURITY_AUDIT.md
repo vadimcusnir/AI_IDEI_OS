@@ -46,7 +46,7 @@ The platform has a strong security posture. All critical and high findings from 
 
 ### SEC-007: Rate Limiting — FIXED 2026-03-25
 
-**Resolution:** Migrated from volatile in-memory `Map` to database-backed `rate_limit_entries` table with atomic `check_rate_limit()` RPC function. Rate limiting now persists across edge function restarts and works in multi-instance deployments. Fail-open design ensures availability if DB is temporarily unreachable.
+**Resolution:** Migrated from volatile in-memory `Map` to database-backed `rate_limit_entries` table with atomic `check_rate_limit()` RPC function. Rate limiting now persists across edge function restarts and works in multi-instance deployments. **Fail-closed** design blocks requests if DB is unreachable (security over availability). Shared `_shared/rate-limiter.ts` provides `checkRateLimit()` and `rateLimitGuard()` middleware.
 
 ### SEC-004: Leaked Password Protection — ✅ FIXED 2026-03-25
 
