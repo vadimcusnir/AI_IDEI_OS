@@ -79,6 +79,11 @@ export default function DataPrivacy() {
         {t("data_privacy.description")}
       </p>
 
+      {/* Consent Preferences */}
+      <ConsentPreferencesPanel />
+
+      <div className="mt-4" />
+
       {/* Export Section */}
       <div className="bg-card border border-border rounded-xl p-6 mb-4">
         <div className="flex items-start gap-3">
