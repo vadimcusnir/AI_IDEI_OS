@@ -38,6 +38,7 @@ const ServiceManifestTab = lazy(() => import("@/components/admin/ServiceManifest
 const AdminAdvancedTab = lazy(() => import("@/components/admin/AdminAdvancedTab").then(m => ({ default: m.AdminAdvancedTab })));
 const Root2PricingTab = lazy(() => import("@/components/admin/Root2PricingTab").then(m => ({ default: m.Root2PricingTab })));
 const LLMIndexationTab = lazy(() => import("@/components/admin/LLMIndexationTab").then(m => ({ default: m.LLMIndexationTab })));
+const AdminOverviewTab = lazy(() => import("@/components/admin/AdminOverviewTab").then(m => ({ default: m.AdminOverviewTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -123,6 +124,12 @@ export default function AdminDashboard() {
   const [loadingData, setLoadingData] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
 
+  // Listen for quick-action tab changes from overview
+  useEffect(() => {
+    const handler = (e: Event) => setActiveTab((e as CustomEvent).detail);
+    window.addEventListener("admin-tab-change", handler);
+    return () => window.removeEventListener("admin-tab-change", handler);
+  }, []);
   // Credit adjustment state
   const [adjustingUser, setAdjustingUser] = useState<string | null>(null);
   const [adjustAmount, setAdjustAmount] = useState("");
@@ -394,54 +401,9 @@ export default function AdminDashboard() {
               <ScrollBar orientation="horizontal" className="h-1.5" />
             </ScrollArea>
 
-            {/* ─── Overview ─── */}
+            {/* ─── Overview (enhanced) ─── */}
             <TabsContent value="overview">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
-                    <Activity className="h-3 w-3" /> System Health
-                  </h3>
-                  <div className="space-y-3">
-                    <HealthRow label="Job Success Rate" value={stats.totalJobs > 0 ? `${Math.round((stats.completedJobs / stats.totalJobs) * 100)}%` : "N/A"} good={stats.failedJobs === 0} />
-                    <HealthRow label="Failed Jobs" value={String(stats.failedJobs)} good={stats.failedJobs === 0} />
-                    <HealthRow label="Active Services" value={String(stats.activeServices)} good={stats.activeServices > 0} />
-                    <HealthRow label="Avg Credits/User" value={stats.totalUsers > 0 ? String(Math.round(stats.totalCreditsCirculating / stats.totalUsers)) : "0"} good />
-                  </div>
-                </div>
-
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
-                    <Coins className="h-3 w-3" /> {t("admin.economy_title")}
-                  </h3>
-                  <div className="space-y-3">
-                    <EconRow label={t("admin.economy.in_circulation")} value={stats.totalCreditsCirculating} />
-                    <EconRow label={t("admin.economy.consumed")} value={stats.totalCreditsSpent} />
-                    <EconRow label={t("admin.economy.estimated_revenue")} value={`$${(stats.totalCreditsSpent * 0.01).toFixed(2)}`} />
-                    <EconRow label={t("admin.economy.neurons_per_user")} value={stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"} />
-                  </div>
-                </div>
-
-                <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
-                  <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-                    {t("admin.last_10_neurons")}
-                  </h3>
-                  <div className="space-y-1">
-                    {neurons.slice(0, 10).map(n => (
-                      <button
-                        key={n.id}
-                        onClick={() => navigate(`/n/${n.number}`)}
-                        className="w-full flex items-center gap-3 py-1.5 px-2 rounded-md hover:bg-muted/50 transition-colors text-left"
-                      >
-                        <span className="text-[10px] font-mono text-primary font-bold w-12">#{n.number}</span>
-                        <span className="text-xs truncate flex-1">{n.title}</span>
-                        <StatusBadge status={n.status} />
-                        <StatusBadge status={n.visibility} />
-                        <span className="text-[9px] text-muted-foreground">{new Date(n.created_at).toLocaleDateString()}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <Suspense fallback={<TabLoader />}><AdminOverviewTab stats={stats} /></Suspense>
             </TabsContent>
 
             {/* ─── Users (enhanced) ─── */}
