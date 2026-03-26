@@ -250,6 +250,86 @@ export default function Pricing() {
           </div>
         </section>
 
+        {/* Top-Up Packages */}
+        <section className="border-t border-border bg-card">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+            <div className="text-center mb-8">
+              <Badge variant="secondary" className="mb-3 text-xs">
+                <Coins className="h-3 w-3 mr-1" /> Pay As You Go
+              </Badge>
+              <h2 className="text-xl font-bold mb-2">NEURONS Top-Up Packages</h2>
+              <p className="text-xs text-muted-foreground max-w-[45ch] mx-auto">
+                No subscription needed. Buy credits anytime at $1 = 500 NEURONS.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {TOPUP_PACKAGES.map((pkg) => {
+                const isProcessingPkg = processing === `topup_${pkg.key}`;
+                return (
+                  <div
+                    key={pkg.key}
+                    className={cn(
+                      "relative flex flex-col items-center rounded-xl border p-4 transition-all",
+                      pkg.popular
+                        ? "border-primary/50 bg-primary/[0.03] shadow-md"
+                        : "border-border bg-background hover:border-primary/30"
+                    )}
+                  >
+                    {pkg.popular && (
+                      <Badge className="absolute -top-2 text-[9px]">Popular</Badge>
+                    )}
+                    <span className="text-2xl font-bold font-mono">${pkg.price}</span>
+                    <span className="text-xs text-muted-foreground mt-1">
+                      {pkg.neurons.toLocaleString()} N
+                    </span>
+                    <span className="text-[9px] text-muted-foreground/60 mt-0.5">
+                      ${(pkg.price / pkg.neurons * 1000).toFixed(1)}/1K
+                    </span>
+                    <Button
+                      size="sm"
+                      variant={pkg.popular ? "default" : "outline"}
+                      className="w-full mt-3 text-[10px] h-7 gap-1"
+                      disabled={!!processing || !user}
+                      onClick={async () => {
+                        if (!user) { navigate("/auth"); return; }
+                        setProcessing(`topup_${pkg.key}`);
+                        try {
+                          const { data, error } = await (await import("@/integrations/supabase/client")).supabase.functions.invoke("create-topup-checkout", {
+                            body: { package_key: pkg.key },
+                          });
+                          if (error) throw error;
+                          if (data?.url) window.open(data.url, "_blank");
+                        } catch (e: any) {
+                          toast.error(e?.message || "Checkout failed");
+                        } finally {
+                          setProcessing(null);
+                        }
+                      }}
+                    >
+                      {isProcessingPkg ? <Loader2 className="h-3 w-3 animate-spin" /> : <ShoppingCart className="h-3 w-3" />}
+                      {isProcessingPkg ? "..." : "Buy"}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Manage Subscription CTA */}
+        {subscribed && (
+          <section className="border-t border-border">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 text-center">
+              <p className="text-sm text-muted-foreground mb-3">
+                Ai un abonament activ. Gestionează plățile, schimbă planul sau anulează.
+              </p>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => manageSubscription()}>
+                <Settings className="h-3 w-3" /> Gestionează abonament
+              </Button>
+            </div>
+          </section>
+        )}
+
         {/* Credits explainer */}
         <section className="border-t border-border bg-card">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
