@@ -17,29 +17,49 @@ interface SubtitleSegment {
   text: string;
 }
 
+// ── Dangerous content patterns (XSS vectors) ──
+const DANGEROUS_PATTERNS = [
+  /<script/i, /onerror\s*=/i, /onload\s*=/i, /onclick\s*=/i,
+  /<iframe/i, /<object/i, /<embed/i, /javascript\s*:/i,
+  /data\s*:\s*text\/html/i, /<style/i, /<meta/i, /<link/i,
+];
+
+function sanitizeText(raw: string): string {
+  return raw
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/<[^>]+>/g, "") // strip ALL HTML tags
+    .replace(/[\u200B-\u200F\u2028-\u202F\uFEFF\u00AD]/g, "") // zero-width chars
+    .replace(/\n/g, " ")
+    .trim();
+}
+
+function containsMaliciousContent(text: string): boolean {
+  return DANGEROUS_PATTERNS.some(p => p.test(text));
+}
+
 function parseTimedTextXml(xml: string): { text: string; segments: SubtitleSegment[] } {
+  // Security: reject entire payload if malicious patterns detected
+  if (containsMaliciousContent(xml)) {
+    console.warn("[security] Malicious content detected in subtitle XML, rejecting");
+    return { text: "", segments: [] };
+  }
+
   const segments: SubtitleSegment[] = [];
   const textParts: string[] = [];
 
-  // Parse <text start="..." dur="...">content</text>
   const regex = /<text[^>]*\bstart="([\d.]+)"[^>]*\bdur="([\d.]+)"[^>]*>([\s\S]*?)<\/text>/g;
   let match;
 
   while ((match = regex.exec(xml)) !== null) {
     const start = parseFloat(match[1]);
     const dur = parseFloat(match[2]);
-    // Decode HTML entities
-    let text = match[3]
-      .replace(/&amp;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/<[^>]+>/g, "") // strip nested tags
-      .replace(/\n/g, " ")
-      .trim();
+    const text = sanitizeText(match[3]);
 
-    if (text) {
+    if (text && text.length <= 2000) {
       segments.push({ start, end: start + dur, text });
       textParts.push(text);
     }
