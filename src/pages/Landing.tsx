@@ -90,6 +90,7 @@ function ScrollProgress() {
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation("landing");
   const { currentLanguage, changeLanguage } = useLocale();
   const currentLang = LANG_OPTIONS.find(l => l.code === currentLanguage) || LANG_OPTIONS[0];
   const heroRef = useRef<HTMLDivElement>(null);
