@@ -48,11 +48,11 @@ const LANG_OPTIONS = [
   { code: "ru", label: "Русский", flag: "🇷🇺" },
 ];
 
-const NAV_LINKS = [
-  { label: "Mechanism", to: "#mechanism" },
-  { label: "Outputs", to: "#outputs" },
-  { label: "Control", to: "#control" },
-  { label: "Access", to: "#access" },
+const NAV_LINK_KEYS = [
+  { key: "mechanism", to: "#mechanism" },
+  { key: "outputs", to: "#outputs" },
+  { key: "control", to: "#control" },
+  { key: "access", to: "#access" },
 ];
 
 /* ── Extraction Spine — recurring vertical signature ── */
