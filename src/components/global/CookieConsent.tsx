@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { X } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-
-const CONSENT_KEY = "ai-idei-cookie-consent";
+import { X, Settings2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import {
+  shouldShowBanner,
+  acceptAll,
+  rejectAll,
+  saveCustomConsent,
+  getStoredCategories,
+  type ConsentCategories,
+} from "@/lib/consent";
 
 declare global {
   interface Window {
@@ -13,76 +20,116 @@ declare global {
   }
 }
 
-function updateGtagConsent(granted: boolean) {
-  if (typeof window.gtag !== "function") return;
-  const state = granted ? "granted" : "denied";
-  window.gtag("consent", "update", {
-    ad_storage: state,
-    ad_user_data: state,
-    ad_personalization: state,
-    analytics_storage: state,
-  });
-}
-
 export function CookieConsent() {
+  const { t } = useTranslation("common");
   const [visible, setVisible] = useState(false);
+  const [showCustomize, setShowCustomize] = useState(false);
+  const [categories, setCategories] = useState<ConsentCategories>(getStoredCategories);
 
   useEffect(() => {
-    const consent = localStorage.getItem(CONSENT_KEY);
-    if (!consent) {
-      const timer = setTimeout(() => setVisible(true), 1500);
+    if (shouldShowBanner()) {
+      const timer = setTimeout(() => setVisible(true), 1200);
       return () => clearTimeout(timer);
     }
   }, []);
 
-  const accept = () => {
-    localStorage.setItem(CONSENT_KEY, "accepted");
-    updateGtagConsent(true);
+  const handleAccept = () => {
+    acceptAll();
     setVisible(false);
   };
 
-  const decline = () => {
-    localStorage.setItem(CONSENT_KEY, "declined");
-    updateGtagConsent(false);
+  const handleReject = () => {
+    rejectAll();
     setVisible(false);
+  };
+
+  const handleSaveCustom = () => {
+    saveCustomConsent(categories);
+    setVisible(false);
+  };
+
+  const toggle = (key: keyof ConsentCategories) => {
+    setCategories((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   if (!visible) return null;
 
+  const categoryItems: { key: keyof ConsentCategories; labelKey: string; descKey: string }[] = [
+    { key: "analytics", labelKey: "consent.cat_analytics", descKey: "consent.cat_analytics_desc" },
+    { key: "ads", labelKey: "consent.cat_ads", descKey: "consent.cat_ads_desc" },
+    { key: "personalization", labelKey: "consent.cat_personalization", descKey: "consent.cat_personalization_desc" },
+    { key: "data_sharing", labelKey: "consent.cat_data_sharing", descKey: "consent.cat_data_sharing_desc" },
+  ];
+
   return (
     <div
       className={cn(
-        "fixed bottom-0 inset-x-0 z-50 p-4 sm:p-0",
+        "fixed bottom-0 inset-x-0 z-50 p-3 sm:p-0",
         "animate-in slide-in-from-bottom-4 duration-300"
       )}
     >
-      <div className="mx-auto max-w-lg sm:mb-4 rounded-xl border border-border bg-card shadow-lg p-4 sm:p-5">
+      <div className="mx-auto max-w-lg sm:mb-4 rounded-xl border border-border bg-card shadow-2xl p-4 sm:p-5">
+        {/* Header row */}
         <div className="flex items-start gap-3">
           <div className="flex-1 space-y-2">
-            <p className="text-sm font-medium text-foreground">🍪 Cookies</p>
+            <p className="text-sm font-semibold text-foreground">{t("consent.title")}</p>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              We use essential cookies for authentication and analytics cookies
-              to improve your experience. No third-party advertising cookies.{" "}
-              <Link to="/privacy" className="text-primary hover:underline">
-                Privacy Policy
-              </Link>
+              {t("consent.description")}
             </p>
-            <div className="flex items-center gap-2 pt-1">
-              <Button size="sm" onClick={accept} className="h-7 text-xs px-3">
-                Accept
-              </Button>
+
+            {/* Customize panel */}
+            {showCustomize && (
+              <div className="mt-3 space-y-2.5 border-t border-border pt-3">
+                {categoryItems.map(({ key, labelKey, descKey }) => (
+                  <div key={key} className="flex items-center justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-foreground">{t(labelKey)}</p>
+                      <p className="text-[10px] text-muted-foreground leading-snug">{t(descKey)}</p>
+                    </div>
+                    <Switch
+                      checked={categories[key]}
+                      onCheckedChange={() => toggle(key)}
+                      className="shrink-0"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Buttons */}
+            <div className="flex items-center gap-2 pt-2 flex-wrap">
+              {showCustomize ? (
+                <Button size="sm" onClick={handleSaveCustom} className="h-7 text-xs px-3">
+                  {t("consent.save")}
+                </Button>
+              ) : (
+                <Button size="sm" onClick={handleAccept} className="h-7 text-xs px-3">
+                  {t("consent.accept_all")}
+                </Button>
+              )}
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={decline}
+                onClick={handleReject}
                 className="h-7 text-xs px-3 text-muted-foreground"
               >
-                Decline
+                {t("consent.refuse")}
               </Button>
+              {!showCustomize && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowCustomize(true)}
+                  className="h-7 text-xs px-3 gap-1"
+                >
+                  <Settings2 className="h-3 w-3" />
+                  {t("consent.customize")}
+                </Button>
+              )}
             </div>
           </div>
           <button
-            onClick={decline}
+            onClick={handleReject}
             className="text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Close"
           >

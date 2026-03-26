@@ -44,24 +44,35 @@
       // Advanced: pass ad click / client ID info via URL when cookies denied
       gtag('set', 'url_passthrough', true);
 
-      // Restore consent from previous session (overrides regional default)
+      // Restore consent from previous session (granular categories)
       (function(){
         try {
-          var c = localStorage.getItem('ai-idei-cookie-consent');
-          if (c === 'accepted') {
+          var cats = localStorage.getItem('ai-idei-consent-categories');
+          if (cats) {
+            var p = JSON.parse(cats);
             gtag('consent', 'update', {
-              'ad_storage': 'granted',
-              'ad_user_data': 'granted',
-              'ad_personalization': 'granted',
-              'analytics_storage': 'granted'
+              'analytics_storage': p.analytics ? 'granted' : 'denied',
+              'ad_storage': p.ads ? 'granted' : 'denied',
+              'ad_user_data': p.ads ? 'granted' : 'denied',
+              'ad_personalization': p.personalization ? 'granted' : 'denied'
             });
-          } else if (c === 'declined') {
-            gtag('consent', 'update', {
-              'ad_storage': 'denied',
-              'ad_user_data': 'denied',
-              'ad_personalization': 'denied',
-              'analytics_storage': 'denied'
-            });
+          } else {
+            var c = localStorage.getItem('ai-idei-cookie-consent');
+            if (c === 'accepted') {
+              gtag('consent', 'update', {
+                'ad_storage': 'granted',
+                'ad_user_data': 'granted',
+                'ad_personalization': 'granted',
+                'analytics_storage': 'granted'
+              });
+            } else if (c === 'declined') {
+              gtag('consent', 'update', {
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'analytics_storage': 'denied'
+              });
+            }
           }
         } catch(e){}
       })();

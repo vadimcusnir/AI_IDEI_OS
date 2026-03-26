@@ -1532,6 +1532,42 @@ export type Database = {
         }
         Relationships: []
       }
+      consent_preferences: {
+        Row: {
+          ads: boolean
+          analytics: boolean
+          consent_version: string
+          consented_at: string
+          data_sharing: boolean
+          id: string
+          personalization: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ads?: boolean
+          analytics?: boolean
+          consent_version?: string
+          consented_at?: string
+          data_sharing?: boolean
+          id?: string
+          personalization?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ads?: boolean
+          analytics?: boolean
+          consent_version?: string
+          consented_at?: string
+          data_sharing?: boolean
+          id?: string
+          personalization?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       content_contributions: {
         Row: {
           author_id: string

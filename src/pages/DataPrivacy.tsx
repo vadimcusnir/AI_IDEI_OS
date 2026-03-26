@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import {
   Download, Trash2, Loader2, AlertTriangle, ShieldCheck,
 } from "lucide-react";
+import { ConsentPreferencesPanel } from "@/components/consent/ConsentPreferencesPanel";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -77,6 +78,11 @@ export default function DataPrivacy() {
       <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
         {t("data_privacy.description")}
       </p>
+
+      {/* Consent Preferences */}
+      <ConsentPreferencesPanel />
+
+      <div className="mt-4" />
 
       {/* Export Section */}
       <div className="bg-card border border-border rounded-xl p-6 mb-4">
