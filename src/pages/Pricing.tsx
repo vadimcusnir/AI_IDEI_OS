@@ -65,7 +65,7 @@ const PLANS = [
     mode: "subscription" as const,
     features: [
       "10,000 NEURONS / lună",
-      "-10% cost execuție",
+      "-25% cost execuție",
       "Tot din Core",
       "Acces la toate serviciile",
       "Procesare prioritară",
