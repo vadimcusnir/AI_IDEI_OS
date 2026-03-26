@@ -4806,6 +4806,33 @@ export type Database = {
           },
         ]
       }
+      login_attempts: {
+        Row: {
+          created_at: string
+          email: string
+          failure_reason: string | null
+          id: string
+          ip_hint: string | null
+          success: boolean
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          failure_reason?: string | null
+          id?: string
+          ip_hint?: string | null
+          success?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          failure_reason?: string | null
+          id?: string
+          ip_hint?: string | null
+          success?: boolean
+        }
+        Relationships: []
+      }
       mpi_scores: {
         Row: {
           applicability_score: number
@@ -7275,6 +7302,39 @@ export type Database = {
         }
         Relationships: []
       }
+      security_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          ip_hint: string | null
+          metadata: Json | null
+          severity: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_hint?: string | null
+          metadata?: Json | null
+          severity?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_hint?: string | null
+          metadata?: Json | null
+          severity?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       service_catalog: {
         Row: {
           access_tier: string
@@ -9561,6 +9621,14 @@ export type Database = {
         Returns: Json
       }
       check_cusnir_os_eligibility: { Args: { _user_id: string }; Returns: Json }
+      check_login_attempts: {
+        Args: {
+          p_email: string
+          p_max_attempts?: number
+          p_window_minutes?: number
+        }
+        Returns: Json
+      }
       check_rate_limit: {
         Args: {
           p_key: string
@@ -9714,6 +9782,16 @@ export type Database = {
           _target_type: string
         }
         Returns: string
+      }
+      log_password_change: { Args: { p_user_id: string }; Returns: undefined }
+      log_security_event: {
+        Args: {
+          p_event_type: string
+          p_metadata?: Json
+          p_severity?: string
+          p_user_id: string
+        }
+        Returns: undefined
       }
       maintain_streak: { Args: { _user_id: string }; Returns: Json }
       mark_units_llm_ready: {
