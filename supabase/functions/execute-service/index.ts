@@ -31,7 +31,10 @@ Deno.serve(async (req) => {
     const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
 
-    const { serviceName, serviceLevel, category, input } = await req.json();
+    const rawBody = await req.json();
+    const validation = validateInput(executeServiceSchema, rawBody, { ...getCorsHeaders(req), "Content-Type": "application/json" });
+    if (!validation.success) return validation.response;
+    const { serviceName, serviceLevel, category, input } = validation.data;
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
