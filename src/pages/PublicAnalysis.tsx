@@ -107,20 +107,34 @@ export default function PublicAnalysis() {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "AnalysisNewsArticle",
+    "@type": "Article",
     headline: analysis.title,
     description: metaDesc,
     datePublished: analysis.created_at,
     dateModified: analysis.updated_at,
     url: `https://ai-idei.com/analysis/${slug}`,
-    publisher: {
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://ai-idei.com/analysis/${slug}`,
+    },
+    author: {
       "@type": "Organization",
       name: "AI-IDEI",
       url: "https://ai-idei.com",
     },
+    publisher: {
+      "@type": "Organization",
+      name: "AI-IDEI",
+      url: "https://ai-idei.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://ai-idei.com/favicon.png",
+      },
+    },
     articleSection: typeLabel,
     keywords: analysis.tags.join(", "),
-    ...(analysis.og_image_url && { image: analysis.og_image_url }),
+    inLanguage: "en",
+    ...(analysis.og_image_url && { image: { "@type": "ImageObject", url: analysis.og_image_url, width: 1200, height: 630 } }),
   };
 
   return (
