@@ -96,6 +96,14 @@ const PLANS = [
     cta: "Alege VIP",
   },
 ];
+const TOPUP_PACKAGES = [
+  { key: "micro", neurons: 1000, price: 2, label: "Micro" },
+  { key: "starter", neurons: 5500, price: 11, label: "Starter" },
+  { key: "standard", neurons: 10000, price: 20, label: "Standard", popular: true },
+  { key: "growth", neurons: 23500, price: 47, label: "Growth" },
+  { key: "scale", neurons: 46000, price: 92, label: "Scale" },
+];
+
 const FAQ_ITEMS = [
   { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount based on complexity. Base rate: $1 = 500 NEURONS. Subscriptions include monthly neurons + execution discounts up to 40%." },
   { question: "Can I buy credits without a subscription?", answer: "Yes! Top up credits anytime at the base rate ($1 = 500N). Subscriptions give you a monthly allocation plus discounted execution costs." },
