@@ -7,7 +7,11 @@
     "docs": "Documentatie",
     "dashboard": "Panou de control",
     "login": "Autentificare",
-    "start_free": "Incepe Gratuit"
+    "start_free": "Incepe Gratuit",
+    "mechanism": "Mecanism",
+    "outputs": "Rezultate",
+    "control": "Control",
+    "access": "Acces"
   },
   "seo": {
     "title": "AI-IDEI — Sistem Operational de Extractie a Cunostintelor",

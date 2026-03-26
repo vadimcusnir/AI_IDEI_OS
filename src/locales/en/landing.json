@@ -7,7 +7,11 @@
     "docs": "Docs",
     "dashboard": "Dashboard",
     "login": "Login",
-    "start_free": "Start Free"
+    "start_free": "Start Free",
+    "mechanism": "Mechanism",
+    "outputs": "Outputs",
+    "control": "Control",
+    "access": "Access"
   },
   "seo": {
     "title": "AI-IDEI — Knowledge Extraction Operating System",
