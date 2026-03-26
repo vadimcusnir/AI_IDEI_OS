@@ -247,13 +247,13 @@ export default function Landing() {
               className="lg:hidden border-t border-border/50 bg-background/98 overflow-hidden"
             >
               <div className="px-5 py-5 space-y-1">
-                {NAV_LINKS.map(link => (
+                {NAV_LINK_KEYS.map(link => (
                   <button
-                    key={link.label}
+                    key={link.key}
                     onClick={() => scrollTo(link.to)}
                     className="block w-full text-left text-sm font-mono tracking-[0.1em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3.5 min-h-[44px] flex items-center border-b border-border/30"
                   >
-                    {link.label.toUpperCase()}
+                    {t(`nav.${link.key}`).toUpperCase()}
                   </button>
                 ))}
                 {!user && (
