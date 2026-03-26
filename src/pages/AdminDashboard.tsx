@@ -124,6 +124,12 @@ export default function AdminDashboard() {
   const [loadingData, setLoadingData] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
 
+  // Listen for quick-action tab changes from overview
+  useEffect(() => {
+    const handler = (e: Event) => setActiveTab((e as CustomEvent).detail);
+    window.addEventListener("admin-tab-change", handler);
+    return () => window.removeEventListener("admin-tab-change", handler);
+  }, []);
   // Credit adjustment state
   const [adjustingUser, setAdjustingUser] = useState<string | null>(null);
   const [adjustAmount, setAdjustAmount] = useState("");
