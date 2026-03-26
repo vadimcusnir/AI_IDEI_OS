@@ -100,7 +100,10 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { agent_id, user_id, input, execution_id } = await req.json();
+    const rawBody = await req.json();
+    const validation = validateInput(executeAgentSchema, rawBody, corsHeaders);
+    if (!validation.success) return validation.response;
+    const { agent_id, user_id, input, execution_id } = validation.data;
 
     // Fetch agent details
     const { data: agent, error: agentErr } = await supabase
