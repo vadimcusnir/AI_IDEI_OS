@@ -98,6 +98,7 @@ const CusnirOSArchitecture = lazyRetry(() => import("./pages/CusnirOSArchitectur
 const About = lazyRetry(() => import("./pages/About"));
 const AboutVadimCusnir = lazyRetry(() => import("./pages/AboutVadimCusnir"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
+const VttValidator = lazyRetry(() => import("./pages/VttValidator"));
 const DatabaseRelations = lazyRetry(() => import("./pages/DatabaseRelations"));
 const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
 const SecuritySettings = lazyRetry(() => import("./pages/SecuritySettings"));
@@ -200,6 +201,7 @@ const App = () => (
                 <Route path="/pricing" element={<AppLayout><ErrorBoundary fallbackTitle="Pricing failed to load"><Pricing /></ErrorBoundary></AppLayout>} />
                 <Route path="/about" element={<AppLayout><ErrorBoundary fallbackTitle="About failed to load"><About /></ErrorBoundary></AppLayout>} />
                 <Route path="/about-vadim-cusnir" element={<AppLayout><ErrorBoundary fallbackTitle="About Vadim failed to load"><AboutVadimCusnir /></ErrorBoundary></AppLayout>} />
+                <Route path="/tools/vtt-validator" element={<AppLayout><ErrorBoundary fallbackTitle="VTT Validator failed to load"><VttValidator /></ErrorBoundary></AppLayout>} />
                 <Route path="/payment/result" element={<AppLayout><ErrorBoundary fallbackTitle="Payment failed to load"><PaymentResult /></ErrorBoundary></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><ErrorBoundary fallbackTitle="Privacy failed to load"><PrivacyPolicy /></ErrorBoundary></AppLayout>} />
                 <Route path="/community" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />

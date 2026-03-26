@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { trackEvent } from "@/lib/analytics";
+import { sanitizeSubtitleToText } from "@/lib/vtt-security";
 import { detectSource, detectFileSource, type SourceDetectionResult } from "@/lib/sourceDetection";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
@@ -131,18 +132,7 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
 
 
   const parseSrtToText = (srt: string): string => {
-    return srt
-      .split(/\n\n+/)
-      .map(block => {
-        const lines = block.trim().split("\n");
-        return lines.filter(line =>
-          !line.match(/^\d+$/) &&
-          !line.match(/^\d{2}:\d{2}:\d{2}[,\.]\d{3}\s*-->/) &&
-          !line.match(/^WEBVTT/)
-        ).join(" ");
-      })
-      .filter(Boolean)
-      .join("\n");
+    return sanitizeSubtitleToText(srt);
   };
 
   // Main pipeline execution
