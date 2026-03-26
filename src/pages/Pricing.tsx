@@ -8,7 +8,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { FAQJsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Sparkles, Zap, Crown, ArrowRight, Brain, Loader2, ShoppingCart } from "lucide-react";
+import { Check, Sparkles, Zap, Crown, ArrowRight, Brain, Loader2, ShoppingCart, Coins, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { toast } from "sonner";
