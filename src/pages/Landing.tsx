@@ -48,11 +48,11 @@ const LANG_OPTIONS = [
   { code: "ru", label: "Русский", flag: "🇷🇺" },
 ];
 
-const NAV_LINKS = [
-  { label: "Mechanism", to: "#mechanism" },
-  { label: "Outputs", to: "#outputs" },
-  { label: "Control", to: "#control" },
-  { label: "Access", to: "#access" },
+const NAV_LINK_KEYS = [
+  { key: "mechanism", to: "#mechanism" },
+  { key: "outputs", to: "#outputs" },
+  { key: "control", to: "#control" },
+  { key: "access", to: "#access" },
 ];
 
 /* ── Extraction Spine — recurring vertical signature ── */
@@ -90,6 +90,7 @@ function ScrollProgress() {
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation("landing");
   const { currentLanguage, changeLanguage } = useLocale();
   const currentLang = LANG_OPTIONS.find(l => l.code === currentLanguage) || LANG_OPTIONS[0];
   const heroRef = useRef<HTMLDivElement>(null);
@@ -166,9 +167,9 @@ export default function Landing() {
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-10" aria-label="Main navigation">
-            {NAV_LINKS.map(link => (
+            {NAV_LINK_KEYS.map(link => (
               <button
-                key={link.label}
+                key={link.key}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
                   "text-[11px] font-mono tracking-[0.12em] transition-colors relative py-1.5 focus-ring rounded-sm",
@@ -177,7 +178,7 @@ export default function Landing() {
                     : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"
                 )}
               >
-                {link.label.toUpperCase()}
+                {t(`nav.${link.key}`).toUpperCase()}
                 {activeSection === link.to && (
                   <motion.div
                     layoutId="nav-indicator"
@@ -247,13 +248,13 @@ export default function Landing() {
               className="lg:hidden border-t border-border/50 bg-background/98 overflow-hidden"
             >
               <div className="px-5 py-5 space-y-1">
-                {NAV_LINKS.map(link => (
+                {NAV_LINK_KEYS.map(link => (
                   <button
-                    key={link.label}
+                    key={link.key}
                     onClick={() => scrollTo(link.to)}
                     className="block w-full text-left text-sm font-mono tracking-[0.1em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3.5 min-h-[44px] flex items-center border-b border-border/30"
                   >
-                    {link.label.toUpperCase()}
+                    {t(`nav.${link.key}`).toUpperCase()}
                   </button>
                 ))}
                 {!user && (

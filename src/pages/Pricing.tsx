@@ -13,89 +13,93 @@ import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { toast } from "sonner";
 
-const PLANS = [
-  {
-    key: "free",
-    name: "Explorer",
-    price: "0",
-    period: "",
-    neurons: "500",
-    badge: null,
-    highlight: false,
-    priceId: null,
-    mode: null as "subscription" | null,
-    features: [
-      "500 NEURONS bonus de bun venit",
-      "3 transcrieri / lună",
-      "Extracție de bază",
-      "Acces librărie",
-      "Acces comunitate",
-    ],
-    cta: "Începe gratuit",
-  },
-  {
-    key: "core",
-    name: "Core",
-    price: "11",
-    period: "/lună",
-    neurons: "2,000",
-    badge: null,
-    highlight: false,
-    priceId: SUBSCRIPTION_TIERS.core_monthly.price_id,
-    mode: "subscription" as const,
-    features: [
-      "2,000 NEURONS / lună",
-      "Acces la LCSS de bază",
-      "Transcrieri nelimitate",
-      "Pipeline complet de extracție",
-      "Toate serviciile AI de bază",
-      "Acces Knowledge Graph",
-    ],
-    cta: "Alege Core",
-  },
-  {
-    key: "pro",
-    name: "Pro",
-    price: "47",
-    period: "/lună",
-    neurons: "10,000",
-    badge: "Popular",
-    highlight: true,
-    priceId: SUBSCRIPTION_TIERS.pro_monthly.price_id,
-    mode: "subscription" as const,
-    features: [
-      "10,000 NEURONS / lună",
-      "-25% cost execuție",
-      "Tot din Core",
-      "Acces la toate serviciile",
-      "Procesare prioritară",
-      "Batch processing",
-      "Analytics avansat",
-    ],
-    cta: "Alege Pro",
-  },
-  {
-    key: "vip",
-    name: "VIP",
-    price: "128",
-    period: "/lună",
-    neurons: "30,000",
-    badge: "Max Power",
-    highlight: false,
-    priceId: SUBSCRIPTION_TIERS.elite_monthly.price_id,
-    mode: "subscription" as const,
-    features: [
-      "30,000 NEURONS / lună",
-      "Suport prioritar dedicat",
-      "Tot din Pro",
-      "API access complet",
-      "Integrări personalizate",
-      "SLA & asistență dedicată",
-      "Beneficii NOTA2",
-    ],
-    cta: "Alege VIP",
-  },
-];
+function usePlans() {
+  const { t } = useTranslation("pages");
+  return [
+    {
+      key: "free",
+      name: t("pricing.plan_explorer"),
+      price: "0",
+      period: "",
+      neurons: "500",
+      badge: null,
+      highlight: false,
+      priceId: null,
+      mode: null as "subscription" | null,
+      features: [
+        t("pricing.feat_welcome_bonus"),
+        t("pricing.feat_transcriptions_3"),
+        t("pricing.feat_basic_extraction"),
+        t("pricing.feat_library_access"),
+        t("pricing.feat_community_access"),
+      ],
+      cta: t("pricing.start_free"),
+    },
+    {
+      key: "core",
+      name: t("pricing.plan_core"),
+      price: "11",
+      period: t("pricing.per_month"),
+      neurons: "2,000",
+      badge: null,
+      highlight: false,
+      priceId: SUBSCRIPTION_TIERS.core_monthly.price_id,
+      mode: "subscription" as const,
+      features: [
+        t("pricing.feat_neurons_2000"),
+        t("pricing.feat_basic_lcss"),
+        t("pricing.feat_unlimited_transcriptions"),
+        t("pricing.feat_full_pipeline"),
+        t("pricing.feat_basic_ai"),
+        t("pricing.feat_knowledge_graph"),
+      ],
+      cta: t("pricing.choose_core"),
+    },
+    {
+      key: "pro",
+      name: t("pricing.plan_pro"),
+      price: "47",
+      period: t("pricing.per_month"),
+      neurons: "10,000",
+      badge: "Popular",
+      highlight: true,
+      priceId: SUBSCRIPTION_TIERS.pro_monthly.price_id,
+      mode: "subscription" as const,
+      features: [
+        t("pricing.feat_neurons_10000"),
+        t("pricing.feat_discount_25"),
+        t("pricing.feat_all_core"),
+        t("pricing.feat_all_services"),
+        t("pricing.feat_priority"),
+        t("pricing.feat_batch"),
+        t("pricing.feat_analytics"),
+      ],
+      cta: t("pricing.choose_pro"),
+    },
+    {
+      key: "vip",
+      name: t("pricing.plan_vip"),
+      price: "128",
+      period: t("pricing.per_month"),
+      neurons: "30,000",
+      badge: "Max Power",
+      highlight: false,
+      priceId: SUBSCRIPTION_TIERS.elite_monthly.price_id,
+      mode: "subscription" as const,
+      features: [
+        t("pricing.feat_neurons_30000"),
+        t("pricing.feat_priority_support"),
+        t("pricing.feat_all_pro"),
+        t("pricing.feat_api"),
+        t("pricing.feat_custom_integrations"),
+        t("pricing.feat_sla"),
+        t("pricing.feat_nota2"),
+      ],
+      cta: t("pricing.choose_vip"),
+    },
+  ];
+}
+
 const TOPUP_PACKAGES = [
   { key: "micro", neurons: 1000, price: 2, label: "Micro" },
   { key: "starter", neurons: 5500, price: 11, label: "Starter" },
@@ -104,14 +108,17 @@ const TOPUP_PACKAGES = [
   { key: "scale", neurons: 46000, price: 92, label: "Scale" },
 ];
 
-const FAQ_ITEMS = [
-  { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount based on complexity. Base rate: $1 = 500 NEURONS. Subscriptions include monthly neurons + execution discounts up to 40%." },
-  { question: "Can I buy credits without a subscription?", answer: "Yes! Top up credits anytime at the base rate ($1 = 500N). Subscriptions give you a monthly allocation plus discounted execution costs." },
-  { question: "What is Root2 pricing?", answer: "All AI-IDEI prices follow the Root2 principle — the digital root of every price equals 2 (e.g. $11, $47, $128). This unique pricing philosophy ensures mathematical harmony across our economy." },
-  { question: "How much does a typical service cost?", answer: "A simple extraction costs 20-47 NEURONS ($0.04-$0.09). An article generation costs ~74 NEURONS ($0.15). A complete capitalization pipeline costs ~290 NEURONS ($0.58). That's under $0.01 per deliverable vs $25+ from freelancers." },
-  { question: "What does 'execution discount' mean?", answer: "Subscribers pay fewer NEURONS per service. Core saves 10%, Pro saves 25%, Elite saves 40%. This means your included neurons go further — Pro's 10,000N effectively buys 13,300N worth of services." },
-  { question: "What happens when I run out of credits?", answer: "Your existing neurons and outputs remain accessible. You simply cannot run new AI services until you top up or your subscription renews." },
-];
+function useFaqItems() {
+  const { t } = useTranslation("pages");
+  return [
+    { question: t("pricing.faq_q1"), answer: t("pricing.faq_a1") },
+    { question: t("pricing.faq_q2"), answer: t("pricing.faq_a2") },
+    { question: t("pricing.faq_q3"), answer: t("pricing.faq_a3") },
+    { question: t("pricing.faq_q4"), answer: t("pricing.faq_a4") },
+    { question: t("pricing.faq_q5"), answer: t("pricing.faq_a5") },
+    { question: t("pricing.faq_q6"), answer: t("pricing.faq_a6") },
+  ];
+}
 
 export default function Pricing() {
   const navigate = useNavigate();
@@ -119,33 +126,29 @@ export default function Pricing() {
   const { subscribed, tier, subscribe, buyNeurons, manageSubscription } = useSubscription();
   const { t } = useTranslation("pages");
   const [processing, setProcessing] = useState<string | null>(null);
+  const PLANS = usePlans();
+  const FAQ_ITEMS = useFaqItems();
 
-  const handlePlanAction = async (plan: typeof PLANS[number]) => {
+  const handlePlanAction = async (plan: ReturnType<typeof usePlans>[number]) => {
     if (!user) {
       navigate("/auth");
       return;
     }
-
-    // Free plan — go to home
     if (plan.key === "free") {
       navigate("/home");
       return;
     }
-
-    // Subscription plan with priceId
     if (plan.mode === "subscription" && plan.priceId) {
       setProcessing(plan.key);
       try {
         await subscribe(plan.priceId);
       } catch (e: any) {
-        toast.error(e.message || "Checkout failed");
+        toast.error(e.message || t("pricing.checkout_failed"));
       } finally {
         setProcessing(null);
       }
       return;
     }
-
-    // Fallback — go to credits for contact/topup
     navigate("/credits");
   };
 
@@ -170,13 +173,13 @@ export default function Pricing() {
         <section className="border-b border-border bg-card">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-center">
             <Badge variant="secondary" className="mb-4 text-xs">
-              <Sparkles className="h-3 w-3 mr-1" /> Root2 Pricing
+              <Sparkles className="h-3 w-3 mr-1" /> {t("pricing.badge")}
             </Badge>
             <h1 className="text-3xl sm:text-4xl font-bold mb-3">
-              Transform Knowledge Into Assets
+              {t("pricing.hero_title")}
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground max-w-[50ch] mx-auto">
-              Start free. Scale as your knowledge library grows. Every credit turns expertise into reusable intellectual capital.
+              {t("pricing.hero_desc")}
             </p>
           </div>
         </section>
@@ -205,7 +208,7 @@ export default function Pricing() {
                   )}
                   {isCurrent && (
                     <Badge className="absolute -top-2.5 left-4 text-[10px] bg-primary text-primary-foreground">
-                      Planul tău
+                      {t("pricing.your_plan")}
                     </Badge>
                   )}
 
@@ -215,7 +218,7 @@ export default function Pricing() {
                     {plan.period && <span className="text-xs text-muted-foreground">{plan.period}</span>}
                   </div>
                   <p className="text-[10px] text-muted-foreground mb-4">
-                    {plan.neurons} NEURONS / month
+                    {plan.neurons} {t("pricing.neurons_per_month")}
                   </p>
 
                   <ul className="space-y-2 flex-1 mb-5">
@@ -235,10 +238,10 @@ export default function Pricing() {
                     disabled={isCurrent || !!processing}
                   >
                     {isProcessingThis ? (
-                      <><Loader2 className="h-3 w-3 animate-spin" /> Se procesează...</>
+                      <><Loader2 className="h-3 w-3 animate-spin" /> {t("pricing.processing")}</>
                     ) : isCurrent ? (
-                      "Plan activ"
-                    ) : plan.mode === "subscription" || plan.mode === "topup" ? (
+                      t("pricing.plan_active")
+                    ) : plan.mode === "subscription" ? (
                       <><ShoppingCart className="h-3 w-3" /> {plan.cta}</>
                     ) : (
                       <>{plan.cta} <ArrowRight className="h-3 w-3" /></>
@@ -255,11 +258,11 @@ export default function Pricing() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
             <div className="text-center mb-8">
               <Badge variant="secondary" className="mb-3 text-xs">
-                <Coins className="h-3 w-3 mr-1" /> Pay As You Go
+                <Coins className="h-3 w-3 mr-1" /> {t("pricing.topup_badge")}
               </Badge>
-              <h2 className="text-xl font-bold mb-2">NEURONS Top-Up Packages</h2>
+              <h2 className="text-xl font-bold mb-2">{t("pricing.topup_title")}</h2>
               <p className="text-xs text-muted-foreground max-w-[45ch] mx-auto">
-                No subscription needed. Buy credits anytime at $1 = 500 NEURONS.
+                {t("pricing.topup_desc")}
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -300,14 +303,14 @@ export default function Pricing() {
                           if (error) throw error;
                           if (data?.url) window.open(data.url, "_blank");
                         } catch (e: any) {
-                          toast.error(e?.message || "Checkout failed");
+                          toast.error(e?.message || t("pricing.checkout_failed"));
                         } finally {
                           setProcessing(null);
                         }
                       }}
                     >
                       {isProcessingPkg ? <Loader2 className="h-3 w-3 animate-spin" /> : <ShoppingCart className="h-3 w-3" />}
-                      {isProcessingPkg ? "..." : "Buy"}
+                      {isProcessingPkg ? "..." : t("pricing.buy")}
                     </Button>
                   </div>
                 );
@@ -321,10 +324,10 @@ export default function Pricing() {
           <section className="border-t border-border">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 text-center">
               <p className="text-sm text-muted-foreground mb-3">
-                Ai un abonament activ. Gestionează plățile, schimbă planul sau anulează.
+                {t("pricing.manage_sub_desc")}
               </p>
               <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => manageSubscription()}>
-                <Settings className="h-3 w-3" /> Gestionează abonament
+                <Settings className="h-3 w-3" /> {t("pricing.manage_sub_btn")}
               </Button>
             </div>
           </section>
@@ -333,28 +336,28 @@ export default function Pricing() {
         {/* Credits explainer */}
         <section className="border-t border-border bg-card">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-            <h2 className="text-xl font-bold mb-6 text-center">How NEURONS Credits Work</h2>
+            <h2 className="text-xl font-bold mb-6 text-center">{t("pricing.how_credits_title")}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
               <div>
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
                   <Brain className="h-5 w-5 text-primary" />
                 </div>
-                <p className="text-sm font-medium mb-1">Upload Content</p>
-                <p className="text-xs text-muted-foreground">Podcasts, videos, text — any knowledge source</p>
+                <p className="text-sm font-medium mb-1">{t("pricing.step_upload")}</p>
+                <p className="text-xs text-muted-foreground">{t("pricing.step_upload_desc")}</p>
               </div>
               <div>
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
-                <p className="text-sm font-medium mb-1">AI Processes</p>
-                <p className="text-xs text-muted-foreground">Each service consumes NEURONS based on complexity</p>
+                <p className="text-sm font-medium mb-1">{t("pricing.step_process")}</p>
+                <p className="text-xs text-muted-foreground">{t("pricing.step_process_desc")}</p>
               </div>
               <div>
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
                   <Crown className="h-5 w-5 text-primary" />
                 </div>
-                <p className="text-sm font-medium mb-1">Get Deliverables</p>
-                <p className="text-xs text-muted-foreground">50+ outputs from a single knowledge extraction</p>
+                <p className="text-sm font-medium mb-1">{t("pricing.step_deliver")}</p>
+                <p className="text-xs text-muted-foreground">{t("pricing.step_deliver_desc")}</p>
               </div>
             </div>
           </div>
@@ -362,7 +365,7 @@ export default function Pricing() {
 
         {/* FAQ */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <h2 className="text-xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
+          <h2 className="text-xl font-bold mb-6 text-center">{t("pricing.faq_title")}</h2>
           <div className="space-y-4">
             {FAQ_ITEMS.map((faq, i) => (
               <div key={i} className="border border-border rounded-lg p-4">
