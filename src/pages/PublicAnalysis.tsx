@@ -137,6 +137,16 @@ export default function PublicAnalysis() {
     ...(analysis.og_image_url && { image: { "@type": "ImageObject", url: analysis.og_image_url, width: 1200, height: 630 } }),
   };
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AI-IDEI", item: "https://ai-idei.com/" },
+      { "@type": "ListItem", position: 2, name: typeLabel, item: `https://ai-idei.com/insights` },
+      { "@type": "ListItem", position: 3, name: analysis.title },
+    ],
+  };
+
   return (
     <>
       <SEOHead

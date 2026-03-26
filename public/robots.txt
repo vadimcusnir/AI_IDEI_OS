@@ -57,4 +57,4 @@ Disallow: /extractor
 Disallow: /notifications
 
 Sitemap: https://ai-idei.com/sitemap-static.xml
-Sitemap: https://ai-idei.com/api/sitemap
+Sitemap: https://ai-idei.com/functions/v1/dynamic-sitemap
