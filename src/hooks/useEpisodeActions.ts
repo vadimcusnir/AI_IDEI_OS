@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { useTranslation } from "react-i18next";
+import { sanitizeSubtitleToText } from "@/lib/vtt-security";
 
 interface Episode {
   id: string;
