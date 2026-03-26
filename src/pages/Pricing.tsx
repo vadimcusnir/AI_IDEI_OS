@@ -65,7 +65,7 @@ const PLANS = [
     mode: "subscription" as const,
     features: [
       "10,000 NEURONS / lună",
-      "-10% cost execuție",
+      "-25% cost execuție",
       "Tot din Core",
       "Acces la toate serviciile",
       "Procesare prioritară",
@@ -107,9 +107,9 @@ const TOPUP_PACKAGES = [
 const FAQ_ITEMS = [
   { question: "What are NEURONS credits?", answer: "NEURONS are compute credits that power AI service execution. Each service consumes a specific amount based on complexity. Base rate: $1 = 500 NEURONS. Subscriptions include monthly neurons + execution discounts up to 40%." },
   { question: "Can I buy credits without a subscription?", answer: "Yes! Top up credits anytime at the base rate ($1 = 500N). Subscriptions give you a monthly allocation plus discounted execution costs." },
-  { question: "What is Root2 pricing?", answer: "All AI-IDEI prices follow the Root2 principle — the digital root of every price equals 2 (e.g. $11, $47, $137). This unique pricing philosophy ensures mathematical harmony across our economy." },
+  { question: "What is Root2 pricing?", answer: "All AI-IDEI prices follow the Root2 principle — the digital root of every price equals 2 (e.g. $11, $47, $128). This unique pricing philosophy ensures mathematical harmony across our economy." },
   { question: "How much does a typical service cost?", answer: "A simple extraction costs 20-47 NEURONS ($0.04-$0.09). An article generation costs ~74 NEURONS ($0.15). A complete capitalization pipeline costs ~290 NEURONS ($0.58). That's under $0.01 per deliverable vs $25+ from freelancers." },
-  { question: "What does 'execution discount' mean?", answer: "Subscribers pay fewer NEURONS per service. Core saves 10%, Pro saves 25%, Elite saves 40%. This means your included neurons go further — Pro's 12,000N effectively buys 16,000N worth of services." },
+  { question: "What does 'execution discount' mean?", answer: "Subscribers pay fewer NEURONS per service. Core saves 10%, Pro saves 25%, Elite saves 40%. This means your included neurons go further — Pro's 10,000N effectively buys 13,300N worth of services." },
   { question: "What happens when I run out of credits?", answer: "Your existing neurons and outputs remain accessible. You simply cannot run new AI services until you top up or your subscription renews." },
 ];
 
