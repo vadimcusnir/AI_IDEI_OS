@@ -131,7 +131,6 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
 
 
   const parseSrtToText = (srt: string): string => {
-    const { sanitizeSubtitleToText } = require("@/lib/vtt-security");
     return sanitizeSubtitleToText(srt);
   };
 
