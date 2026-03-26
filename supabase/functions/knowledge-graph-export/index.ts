@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * knowledge-graph-export — Exports the platform's knowledge graph as JSON-LD @graph.
  * Public endpoint, cached daily in knowledge_graph_cache table.

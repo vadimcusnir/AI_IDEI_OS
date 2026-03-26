@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * DECISION ENGINE — Sequential Pipeline
  * 

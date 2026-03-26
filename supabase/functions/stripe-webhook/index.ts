@@ -1,5 +1,6 @@
 import Stripe from "npm:stripe@17.7.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 // Product → tier mapping (must match useSubscription.ts SUBSCRIPTION_TIERS)
 const PRODUCT_TIERS: Record<string, { tier: string; neurons: number; label: string }> = {

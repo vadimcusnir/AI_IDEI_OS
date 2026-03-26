@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * generate-knowledge-pages — Auto-generates knowledge surface pages from entities/neurons.
  * 

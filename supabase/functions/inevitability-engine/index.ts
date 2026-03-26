@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * inevitability-engine — Lock-in computation, creator ranking, platform metrics
  * 

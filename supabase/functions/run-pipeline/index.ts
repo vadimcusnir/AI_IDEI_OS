@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * run-pipeline — IMF Multiplication Pipeline
  * Takes a trigger event + data and executes a sequence of services.
