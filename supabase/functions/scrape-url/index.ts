@@ -98,14 +98,28 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // 5. Fetch with timeout
+    // 5. DNS resolution check — prevent DNS rebinding attacks
+    try {
+      const dnsResult = await Deno.resolveDns(parsedUrl.hostname, "A");
+      for (const ip of dnsResult) {
+        if (BLOCKED_HOSTNAME_PATTERNS.some(r => r.test(ip))) {
+          return new Response(JSON.stringify({ error: "URL resolves to blocked IP" }), {
+            status: 403, headers: { ...cors, "Content-Type": "application/json" },
+          });
+        }
+      }
+    } catch {
+      // DNS resolution failed — could be IPv6-only or invalid, allow fetch to handle
+    }
+
+    // 6. Fetch with timeout and no redirect auto-follow (manual check)
     const resp = await fetch(parsedUrl.toString(), {
       headers: {
         "User-Agent": "Mozilla/5.0 (compatible; AI-IDEI/1.0; +https://ai-idei.com)",
         "Accept": "text/html,application/xhtml+xml,text/plain,*/*",
       },
       redirect: "follow",
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(10000),
     });
 
     if (!resp.ok) {
