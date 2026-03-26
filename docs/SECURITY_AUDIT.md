@@ -1,7 +1,7 @@
 # Security Audit — AI-IDEI v1.1
 
 **Audit Date:** 2026-03-10
-**Last Updated:** 2026-03-25
+**Last Updated:** 2026-03-26
 **Auditor:** Platform Architect Agent
 **Scope:** Full stack (frontend, backend, database, edge functions)
 
@@ -46,7 +46,7 @@ The platform has a strong security posture. All critical and high findings from 
 
 ### SEC-007: Rate Limiting — FIXED 2026-03-25
 
-**Resolution:** Migrated from volatile in-memory `Map` to database-backed `rate_limit_entries` table with atomic `check_rate_limit()` RPC function. Rate limiting now persists across edge function restarts and works in multi-instance deployments. Fail-open design ensures availability if DB is temporarily unreachable.
+**Resolution:** Migrated from volatile in-memory `Map` to database-backed `rate_limit_entries` table with atomic `check_rate_limit()` RPC function. Rate limiting now persists across edge function restarts and works in multi-instance deployments. **Fail-closed** design blocks requests if DB is unreachable (security over availability). Shared `_shared/rate-limiter.ts` provides `checkRateLimit()` and `rateLimitGuard()` middleware.
 
 ### SEC-004: Leaked Password Protection — ✅ FIXED 2026-03-25
 
@@ -55,6 +55,13 @@ The platform has a strong security posture. All critical and high findings from 
 ## Remaining Items
 
 None — all findings remediated.
+
+## Additional Hardening (2026-03-26)
+
+1. ✅ **Zod Validation Schemas** — Centralized in `_shared/validation.ts` for `execute-os-agent`, `execute-service`, `webhook-ingest`
+2. ✅ **Client Security Library** — `src/lib/security.ts` with XSS strip, redirect validation, nonce generation
+3. ✅ **Privilege Escalation Fix** — Removed `user_roles_insert_own`, `admin_permissions_insert_own/update/delete` RLS policies
+4. ✅ **Rate Limiter Hardened** — Changed from fail-open to fail-closed design
 
 ## Positive Security Findings
 
@@ -71,7 +78,9 @@ None — all findings remediated.
 11. ✅ `handle_new_user()` trigger creates profile server-side
 12. ✅ Credit deduction happens server-side in edge functions
 13. ✅ No `dangerouslySetInnerHTML` with user content (except JSON-LD with server data)
-14. ✅ CORS restricted to known origins
+14. ✅ CORS restricted to known origins (67+ functions audited)
 15. ✅ All edge functions validate JWT before processing
 16. ✅ Zod input validation on critical edge functions
 17. ✅ i18n error messages standardized across EN/RO/RU
+18. ✅ DB-backed rate limiting with fail-closed design
+19. ✅ No self-role-assignment possible (privilege escalation blocked)
