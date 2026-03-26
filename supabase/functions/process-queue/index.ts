@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * process-queue — Processes pending jobs with retry logic + execution regime enforcement.
  * Called via pg_cron or manual trigger.

@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import webpush from "https://esm.sh/web-push@3.6.7?target=deno";

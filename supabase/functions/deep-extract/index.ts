@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * deep-extract — Dynamic NEP-120 Extraction Engine
  * Loads extraction prompts from prompt_registry (NEP families)

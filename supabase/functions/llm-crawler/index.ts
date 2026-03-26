@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * llm-crawler — Crawls site pages, parses content, extracts entities,
  * computes scores, and detects indexation issues.

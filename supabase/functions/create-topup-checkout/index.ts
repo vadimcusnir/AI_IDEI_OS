@@ -1,6 +1,7 @@
 import Stripe from "https://esm.sh/stripe@17.7.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 // Root2 pricing: digit sum = 2 | 1N = $0.002 → $1 = 500N
 const PACKAGES: Record<string, { neurons: number; priceId: string }> = {

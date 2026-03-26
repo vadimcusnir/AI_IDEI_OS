@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 const SUPPORTED_LANGUAGES = ["en", "ro", "ru"];
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",

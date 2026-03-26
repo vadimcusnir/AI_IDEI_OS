@@ -4,6 +4,7 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 const logStep = (step: string, details?: unknown) => {
   console.log(`[ANALYZE-PSYCHOLOGY] ${step}${details ? ` — ${JSON.stringify(details)}` : ""}`);

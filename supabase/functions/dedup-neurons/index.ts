@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * dedup-neurons — Embedding-based duplicate detection (Phase 2.3)
  * Finds similar neurons using cosine similarity on embeddings.

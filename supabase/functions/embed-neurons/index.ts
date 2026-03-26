@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * embed-neurons — Generates vector embeddings for neurons using Lovable AI.
  * Stores in neuron_embeddings table for semantic search.

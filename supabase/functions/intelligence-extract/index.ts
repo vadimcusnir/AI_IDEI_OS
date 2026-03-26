@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * intelligence-extract — Competitive intelligence extraction engine
  * 

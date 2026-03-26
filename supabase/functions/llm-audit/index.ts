@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * llm-audit — Scans pages for LLM indexation issues and generates AI fix suggestions.
  * 

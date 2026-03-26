@@ -1,3 +1,4 @@
+import { getCorsHeaders } from "../_shared/cors.ts";
 /**
  * prerender-meta — Serves pre-rendered HTML <head> with meta/JSON-LD
  * for crawlers hitting public entity, topic, and knowledge surface pages.
