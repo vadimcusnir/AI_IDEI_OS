@@ -14,6 +14,7 @@ import { AdminRoute } from "@/components/AdminRoute";
 import { CookieConsent } from "@/components/global/CookieConsent";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { GrowthHooks } from "@/components/growth/GrowthHooks";
 
 
 /** Retry dynamic imports once on failure (handles stale chunk hashes after deploys) */
@@ -148,6 +149,7 @@ const App = () => (
           <BrowserRouter>
             <Suspense fallback={<PageLoader />}>
               <ScrollToTop />
+              <GrowthHooks />
               <Routes>
                 {/* Public routes — accessible without login */}
                 <Route path="/" element={<Landing />} />
