@@ -266,7 +266,10 @@ export function YouTubeTranscriber() {
 
   const exportPDF = () => {
     if (!transcript) return;
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${transcript.title}</title>
+    const { escapeHtml, textToSafeHtml } = await import("@/lib/html-sanitize");
+    const safeTitle = escapeHtml(transcript.title);
+    const safeBody = textToSafeHtml(transcript.text);
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${safeTitle}</title>
 <style>
   @page { margin: 2cm; }
   body { font-family: Georgia, 'Times New Roman', serif; font-size: 12pt; line-height: 1.8; color: #1a1a1a; max-width: 100%; }
@@ -276,14 +279,14 @@ export function YouTubeTranscriber() {
   p { text-align: justify; margin-bottom: 12pt; }
   .footer { margin-top: 32pt; padding-top: 12pt; border-top: 1px solid #ddd; font-size: 8pt; color: #999; text-align: center; }
 </style></head><body>
-<h1>${transcript.title}</h1>
+<h1>${safeTitle}</h1>
 <div class="meta">
   <span>${transcript.word_count.toLocaleString()} cuvinte</span>
-  <span>Limbă: ${transcript.language.toUpperCase()}</span>
+  <span>Limbă: ${escapeHtml(transcript.language.toUpperCase())}</span>
   ${transcript.duration_seconds ? `<span>Durată: ${Math.floor(transcript.duration_seconds / 60)} min</span>` : ""}
   <span>Generat de AI-IDEI</span>
 </div>
-${transcript.text.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("")}
+${safeBody}
 <div class="footer">Transcript generat de AI-IDEI · ai-idei.com · ${new Date().toLocaleDateString("ro-RO")}</div>
 </body></html>`;
     const w = window.open("", "_blank");
