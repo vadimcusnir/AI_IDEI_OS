@@ -21,6 +21,7 @@ Allow: /
 
 User-agent: *
 Allow: /
+Allow: /analysis/
 Allow: /knowledge/
 Allow: /insights/
 Allow: /profiles/
@@ -30,6 +31,12 @@ Allow: /marketplace/
 Allow: /media/profiles/
 Allow: /docs/
 Allow: /topics/
+Allow: /about
+Allow: /about-vadim-cusnir
+Allow: /pricing
+Allow: /changelog
+Allow: /terms
+Allow: /privacy
 Disallow: /admin
 Disallow: /runtime
 Disallow: /analytics
@@ -50,4 +57,4 @@ Disallow: /extractor
 Disallow: /notifications
 
 Sitemap: https://ai-idei.com/sitemap-static.xml
-Sitemap: https://ai-idei.com/api/sitemap
+Sitemap: https://ai-idei.com/functions/v1/dynamic-sitemap

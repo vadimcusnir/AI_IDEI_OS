@@ -11,6 +11,11 @@ const OG_IMAGE_MAP: Record<string, string> = {
   "/marketplace": "/og/og-marketplace.png",
   "/community": "/og/og-community.png",
   "/library": "/og/og-library.png",
+  "/pricing": "/og/og-default.png",
+  "/about": "/og/og-default.png",
+  "/about-vadim-cusnir": "/og/og-default.png",
+  "/docs": "/og/og-default.png",
+  "/changelog": "/og/og-default.png",
 };
 
 function resolveOgImage(path: string, custom?: string): string {
