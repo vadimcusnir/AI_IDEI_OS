@@ -8,7 +8,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 const REF_KEY = "referral_code";
 const REF_TIMESTAMP = "referral_ts";

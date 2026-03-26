@@ -9,7 +9,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ABTestOptions<V extends string> {
   /** Experiment name (unique key) */

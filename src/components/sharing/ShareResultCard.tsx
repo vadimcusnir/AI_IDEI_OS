@@ -9,7 +9,7 @@ import { Copy, Twitter, Linkedin, Send, CheckCircle2, ExternalLink } from "lucid
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import { getReferralLink } from "@/hooks/useReferralTracking";
 
 interface ShareResultCardProps {

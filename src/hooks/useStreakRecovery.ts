@@ -5,7 +5,7 @@
 
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LAST_VISIT_KEY = "last_active_date";
 const RECOVERY_SHOWN_KEY = "streak_recovery_shown";
