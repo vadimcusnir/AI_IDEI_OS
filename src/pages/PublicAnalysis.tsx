@@ -144,6 +144,7 @@ export default function PublicAnalysis() {
         description={metaDesc}
         ogImage={analysis.og_image_url || undefined}
         canonical={`https://ai-idei.com/analysis/${slug}`}
+        jsonLd={jsonLd}
       />
 
       {/* JSON-LD is injected via SEOHead jsonLd prop */}
