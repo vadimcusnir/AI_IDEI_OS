@@ -157,7 +157,12 @@ export default function PublicAnalysis() {
         jsonLd={jsonLd}
       />
 
-      {/* JSON-LD is injected via SEOHead jsonLd prop */}
+      {/* Breadcrumb JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+
 
       <div className="min-h-screen bg-background">
         {/* Header bar */}
