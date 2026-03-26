@@ -131,18 +131,8 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
 
 
   const parseSrtToText = (srt: string): string => {
-    return srt
-      .split(/\n\n+/)
-      .map(block => {
-        const lines = block.trim().split("\n");
-        return lines.filter(line =>
-          !line.match(/^\d+$/) &&
-          !line.match(/^\d{2}:\d{2}:\d{2}[,\.]\d{3}\s*-->/) &&
-          !line.match(/^WEBVTT/)
-        ).join(" ");
-      })
-      .filter(Boolean)
-      .join("\n");
+    const { sanitizeSubtitleToText } = require("@/lib/vtt-security");
+    return sanitizeSubtitleToText(srt);
   };
 
   // Main pipeline execution
