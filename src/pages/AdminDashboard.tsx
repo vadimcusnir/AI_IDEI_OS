@@ -38,6 +38,7 @@ const ServiceManifestTab = lazy(() => import("@/components/admin/ServiceManifest
 const AdminAdvancedTab = lazy(() => import("@/components/admin/AdminAdvancedTab").then(m => ({ default: m.AdminAdvancedTab })));
 const Root2PricingTab = lazy(() => import("@/components/admin/Root2PricingTab").then(m => ({ default: m.Root2PricingTab })));
 const LLMIndexationTab = lazy(() => import("@/components/admin/LLMIndexationTab").then(m => ({ default: m.LLMIndexationTab })));
+const AdminOverviewTab = lazy(() => import("@/components/admin/AdminOverviewTab").then(m => ({ default: m.AdminOverviewTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
