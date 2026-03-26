@@ -223,7 +223,7 @@ export default function VttValidator() {
                       </Button>
                     </div>
                   </>
-                ) : !result.success ? (
+                ) : (
                   <div className="bg-destructive/5 rounded-lg p-4">
                     <p className="text-xs text-destructive font-medium mb-1">Error: {result.errorCode}</p>
                     <p className="text-xs text-muted-foreground">{result.error}</p>
