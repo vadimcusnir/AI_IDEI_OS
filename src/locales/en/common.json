@@ -782,5 +782,25 @@
     "spend_context": "This operation costs {{cost}} neurons",
     "topup_cta": "Top Up Now"
   },
-  "description": "Description"
+  "description": "Description",
+  "consent": {
+    "title": "Your data, your control",
+    "description": "We use data to improve your experience and understand how you use the system. No third-party advertising cookies.",
+    "accept_all": "Accept All",
+    "refuse": "Refuse",
+    "customize": "Customize",
+    "save": "Save Preferences",
+    "cat_analytics": "Analytics",
+    "cat_analytics_desc": "Helps us understand how you use the platform.",
+    "cat_ads": "Advertising",
+    "cat_ads_desc": "Allows us to show you relevant offers.",
+    "cat_personalization": "Personalization",
+    "cat_personalization_desc": "Adapts the experience to your style.",
+    "cat_data_sharing": "Data Sharing",
+    "cat_data_sharing_desc": "Anonymized data used to improve our services.",
+    "preferences_title": "Privacy Preferences",
+    "preferences_desc": "Control how your data is used. Changes apply immediately.",
+    "save_success": "Privacy preferences saved",
+    "save_error": "Failed to save preferences"
+  }
 }

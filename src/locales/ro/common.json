@@ -782,5 +782,25 @@
     "spend_context": "Această operațiune costă {{cost}} neuroni",
     "topup_cta": "Reîncarcă acum"
   },
-  "description": "Descriere"
+  "description": "Descriere",
+  "consent": {
+    "title": "Datele tale, controlul tău",
+    "description": "Folosim date pentru a îmbunătăți experiența și pentru a înțelege cum utilizezi sistemul. Fără cookie-uri publicitare terțe.",
+    "accept_all": "Acceptă tot",
+    "refuse": "Refuză",
+    "customize": "Personalizează",
+    "save": "Salvează preferințele",
+    "cat_analytics": "Analiză",
+    "cat_analytics_desc": "Ne ajută să înțelegem cum folosești platforma.",
+    "cat_ads": "Publicitate",
+    "cat_ads_desc": "Ne permite să îți arătăm oferte relevante.",
+    "cat_personalization": "Personalizare",
+    "cat_personalization_desc": "Adaptăm experiența la stilul tău.",
+    "cat_data_sharing": "Partajarea datelor",
+    "cat_data_sharing_desc": "Date anonimizate folosite pentru îmbunătățirea serviciilor.",
+    "preferences_title": "Preferințe de confidențialitate",
+    "preferences_desc": "Controlează modul în care sunt utilizate datele tale. Modificările se aplică imediat.",
+    "save_success": "Preferințele de confidențialitate au fost salvate",
+    "save_error": "Salvarea preferințelor a eșuat"
+  }
 }
