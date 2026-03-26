@@ -146,11 +146,7 @@ export default function PublicAnalysis() {
         canonical={`https://ai-idei.com/analysis/${slug}`}
       />
 
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {/* JSON-LD is injected via SEOHead jsonLd prop */}
 
       <div className="min-h-screen bg-background">
         {/* Header bar */}
