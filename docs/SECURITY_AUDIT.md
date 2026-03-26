@@ -62,6 +62,10 @@ None — all findings remediated.
 2. ✅ **Client Security Library** — `src/lib/security.ts` with XSS strip, redirect validation, nonce generation
 3. ✅ **Privilege Escalation Fix** — Removed `user_roles_insert_own`, `admin_permissions_insert_own/update/delete` RLS policies
 4. ✅ **Rate Limiter Hardened** — Changed from fail-open to fail-closed design
+5. ✅ **SSRF DNS Rebinding Protection** — Added `Deno.resolveDns()` pre-check in `scrape-url` to validate resolved IPs against blocklist before fetch
+6. ✅ **33 Broken Edge Functions Fixed** — Added missing `getCorsHeaders` import to 33 edge functions that were crashing on every request
+7. ✅ **Unprotected Functions Secured** — `job-queue` now requires JWT/service-role auth; `webhook-retry` now requires service-role key
+8. ✅ **Timeout Reduced** — `scrape-url` fetch timeout reduced from 15s to 10s
 
 ## Positive Security Findings
 
