@@ -13,6 +13,7 @@ Deno.serve(async (req) => {
     // Allow service-role calls (cron) or authenticated admin calls
     const authHeader = req.headers.get("Authorization") || "";
     const isCronCall = authHeader.includes(Deno.env.get("SUPABASE_ANON_KEY")!);
+    let userId: string | null = null;
     
     if (!isCronCall) {
       const supabaseUser = createClient(
@@ -24,6 +25,7 @@ Deno.serve(async (req) => {
       if (!user) throw new Error("Unauthorized");
       const { data: roleCheck } = await supabaseUser.rpc("has_role", { _user_id: user.id, _role: "admin" });
       if (!roleCheck) throw new Error("Admin required");
+      userId = user.id;
     }
 
     const { version } = await req.json();
