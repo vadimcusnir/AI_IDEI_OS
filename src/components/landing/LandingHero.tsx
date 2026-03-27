@@ -21,7 +21,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
         <div className="absolute bottom-0 left-[30%] w-[350px] h-[250px] rounded-full bg-[hsl(var(--gold-oxide)/0.025)] blur-[140px]" />
       </div>
 
-      <div className="relative max-w-3xl mx-auto px-5 sm:px-6 pt-24 sm:pt-36 md:pt-44 pb-10 sm:pb-20 text-center">
+      <div className="relative max-w-5xl mx-auto px-5 sm:px-6 pt-24 sm:pt-36 md:pt-44 pb-10 sm:pb-20 text-center">
         {/* Mono tagline — eyebrow */}
         <p className="text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-[hsl(var(--gold-oxide))] mb-10 sm:mb-12">
           {t("hero.tagline")}
@@ -35,7 +35,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
         </h1>
 
         {/* Subtitle — narrower, more breathing */}
-        <p className="text-[15px] sm:text-lg text-muted-foreground leading-[1.75] max-w-[480px] mx-auto mb-12 sm:mb-16 px-2">
+        <p className="text-[15px] sm:text-lg text-muted-foreground leading-[1.75] max-w-[580px] mx-auto mb-12 sm:mb-16 px-2">
           {t("hero.subtitle")}
         </p>
 
