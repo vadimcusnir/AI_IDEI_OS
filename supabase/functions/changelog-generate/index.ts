@@ -139,7 +139,7 @@ Respond in Romanian.`
       status: "draft",
       position: i,
       release_date: new Date().toISOString().split("T")[0],
-      created_by: user.id,
+      created_by: userId,
     }));
 
     const { data: inserted, error: insertErr } = await supabase
