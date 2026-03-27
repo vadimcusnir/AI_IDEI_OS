@@ -35,7 +35,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
         </h1>
 
         {/* Subtitle — narrower, more breathing */}
-        <p className="text-[15px] sm:text-lg text-muted-foreground leading-[1.75] max-w-[480px] mx-auto mb-12 sm:mb-16 px-2">
+        <p className="text-[15px] sm:text-lg text-muted-foreground leading-[1.75] max-w-[580px] mx-auto mb-12 sm:mb-16 px-2">
           {t("hero.subtitle")}
         </p>
 
