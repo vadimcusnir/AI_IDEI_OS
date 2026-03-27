@@ -5,22 +5,26 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    const supabaseUser = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader || "" } } }
-    );
-    const { data: { user } } = await supabaseUser.auth.getUser();
-    if (!user) throw new Error("Unauthorized");
-
-    const { data: roleCheck } = await supabaseUser.rpc("has_role", { _user_id: user.id, _role: "admin" });
-    if (!roleCheck) throw new Error("Admin required");
-
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
+
+    // Allow service-role calls (cron) or authenticated admin calls
+    const authHeader = req.headers.get("Authorization") || "";
+    const isCronCall = authHeader.includes(Deno.env.get("SUPABASE_ANON_KEY")!);
+    
+    if (!isCronCall) {
+      const supabaseUser = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_ANON_KEY")!,
+        { global: { headers: { Authorization: authHeader } } }
+      );
+      const { data: { user } } = await supabaseUser.auth.getUser();
+      if (!user) throw new Error("Unauthorized");
+      const { data: roleCheck } = await supabaseUser.rpc("has_role", { _user_id: user.id, _role: "admin" });
+      if (!roleCheck) throw new Error("Admin required");
+    }
 
     const { version } = await req.json();
 
