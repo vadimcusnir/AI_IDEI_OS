@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, lazy, Suspense } from "react";
+import { useEffect, useState, useCallback, lazy, Suspense, useMemo } from "react";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot } from "lucide-react";
@@ -9,6 +9,7 @@ import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { KPI } from "@/components/admin/AdminSubComponents";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 // ── Lazy-loaded admin tabs ──
 const AdminOverviewTab = lazy(() => import("@/components/admin/AdminOverviewTab").then(m => ({ default: m.AdminOverviewTab })));
@@ -50,35 +51,69 @@ interface PlatformStats {
   activeServices: number;
 }
 
-const TABS = [
-  { value: "overview", label: "Overview", icon: Activity },
-  { value: "users", label: "Users", icon: Users },
-  { value: "neurons", label: "Neurons", icon: Brain },
-  { value: "jobs", label: "Jobs", icon: Briefcase },
-  { value: "services", label: "Services", icon: Coins },
-  { value: "logs", label: "Logs", icon: ScrollText },
-  { value: "feedback", label: "Feedback", icon: MessageCircle },
-  { value: "changelog", label: "Changelog", icon: ScrollText },
-  { value: "knowledge-graph", label: "Graph", icon: Network },
-  { value: "analytics", label: "Analytics", icon: BarChart3 },
-  { value: "access-sim", label: "Access Sim", icon: Shield },
-  { value: "ledger", label: "Ledger", icon: ScrollText },
-  { value: "abuse", label: "Abuse", icon: AlertTriangle },
-  { value: "wallets", label: "Wallets", icon: Wallet },
-  { value: "reconciliation", label: "Reconciliation", icon: DollarSign },
-  { value: "incidents", label: "Incidents", icon: AlertCircle },
-  { value: "entropy", label: "Entropy", icon: TrendingUp },
-  { value: "contributions", label: "Contributions", icon: Brain },
-  { value: "emergency", label: "Emergency", icon: ShieldAlert },
-  { value: "compliance", label: "Compliance", icon: ScrollText },
-  { value: "flags", label: "Flags", icon: Activity },
-  { value: "moderation", label: "Moderation", icon: MessageCircle },
-  { value: "control-layer", label: "Control", icon: Layers },
-  { value: "manifests", label: "Manifests", icon: Settings },
-  { value: "advanced", label: "Advanced", icon: TrendingUp },
-  { value: "root2", label: "Root2", icon: DollarSign },
-  { value: "llm-index", label: "LLM Index", icon: Bot },
+// ── Tab groups ──
+const TAB_GROUPS = [
+  {
+    group: "Core",
+    icon: Activity,
+    tabs: [
+      { value: "overview", label: "Overview", icon: Activity },
+      { value: "users", label: "Users", icon: Users },
+      { value: "neurons", label: "Neurons", icon: Brain },
+      { value: "jobs", label: "Jobs", icon: Briefcase },
+      { value: "services", label: "Services", icon: Coins },
+      { value: "logs", label: "Logs", icon: ScrollText },
+    ],
+  },
+  {
+    group: "Economy",
+    icon: DollarSign,
+    tabs: [
+      { value: "wallets", label: "Wallets", icon: Wallet },
+      { value: "reconciliation", label: "Reconciliation", icon: DollarSign },
+      { value: "root2", label: "Pricing", icon: DollarSign },
+    ],
+  },
+  {
+    group: "Content",
+    icon: Brain,
+    tabs: [
+      { value: "feedback", label: "Feedback", icon: MessageCircle },
+      { value: "changelog", label: "Changelog", icon: ScrollText },
+      { value: "knowledge-graph", label: "Graph", icon: Network },
+      { value: "analytics", label: "Analytics", icon: BarChart3 },
+      { value: "contributions", label: "Contributions", icon: Brain },
+      { value: "moderation", label: "Moderation", icon: MessageCircle },
+      { value: "llm-index", label: "LLM Index", icon: Bot },
+    ],
+  },
+  {
+    group: "Security",
+    icon: Shield,
+    tabs: [
+      { value: "access-sim", label: "Access Sim", icon: Shield },
+      { value: "ledger", label: "Ledger", icon: ScrollText },
+      { value: "abuse", label: "Abuse", icon: AlertTriangle },
+      { value: "compliance", label: "Compliance", icon: ScrollText },
+      { value: "incidents", label: "Incidents", icon: AlertCircle },
+      { value: "emergency", label: "Emergency", icon: ShieldAlert },
+    ],
+  },
+  {
+    group: "System",
+    icon: Settings,
+    tabs: [
+      { value: "entropy", label: "Entropy", icon: TrendingUp },
+      { value: "flags", label: "Flags", icon: Activity },
+      { value: "control-layer", label: "Control", icon: Layers },
+      { value: "manifests", label: "Manifests", icon: Settings },
+      { value: "advanced", label: "Advanced", icon: TrendingUp },
+    ],
+  },
 ];
+
+// Flat lookup for finding which group a tab belongs to
+const ALL_TABS = TAB_GROUPS.flatMap(g => g.tabs);
 
 export default function AdminDashboard() {
   const { t } = useTranslation("pages");
@@ -86,6 +121,15 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [loadingData, setLoadingData] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+
+  // Derive active group from active tab
+  const activeGroup = useMemo(() => {
+    return TAB_GROUPS.find(g => g.tabs.some(t => t.value === activeTab))?.group || "Core";
+  }, [activeTab]);
+
+  const activeGroupTabs = useMemo(() => {
+    return TAB_GROUPS.find(g => g.group === activeGroup)?.tabs || [];
+  }, [activeGroup]);
 
   useEffect(() => {
     const handler = (e: Event) => setActiveTab((e as CustomEvent).detail);
@@ -164,21 +208,41 @@ export default function AdminDashboard() {
             <KPI label={t("admin.credits_spent")} value={stats.totalCreditsSpent} icon={Coins} color="text-destructive" index={7} />
           </div>
 
-          {/* Tabs */}
+          {/* Two-level navigation */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
+            {/* Level 1: Group selector */}
+            <div className="flex gap-1 mb-2 flex-wrap">
+              {TAB_GROUPS.map(g => (
+                <button
+                  key={g.group}
+                  onClick={() => setActiveTab(g.tabs[0].value)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                    activeGroup === g.group
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <g.icon className="h-3 w-3" />
+                  {g.group}
+                </button>
+              ))}
+            </div>
+
+            {/* Level 2: Sub-tabs within group */}
             <ScrollArea className="w-full mb-4">
               <TabsList className="inline-flex w-max min-w-full h-auto flex-nowrap gap-0.5 p-1">
-                {TABS.map(tab => (
+                {activeGroupTabs.map(tab => (
                   <TabsTrigger key={tab.value} value={tab.value} className="text-xs gap-1 shrink-0 whitespace-nowrap px-3 py-1.5">
                     <tab.icon className="h-3 w-3" />
-                    <span className="hidden sm:inline">{tab.label}</span>
-                    <span className="sm:hidden">{tab.label.length > 6 ? tab.label.slice(0, 5) + "…" : tab.label}</span>
+                    {tab.label}
                   </TabsTrigger>
                 ))}
               </TabsList>
               <ScrollBar orientation="horizontal" className="h-1.5" />
             </ScrollArea>
 
+            {/* All tab content panels (hidden unless active) */}
             <TabsContent value="overview"><Suspense fallback={<TabLoader />}><AdminOverviewTab stats={stats} /></Suspense></TabsContent>
             <TabsContent value="users"><Suspense fallback={<TabLoader />}><AdminUserManagement /></Suspense></TabsContent>
             <TabsContent value="neurons"><Suspense fallback={<TabLoader />}><AdminNeuronsTab /></Suspense></TabsContent>
