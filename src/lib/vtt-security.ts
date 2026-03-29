@@ -79,8 +79,7 @@ export type VttResult = VttParseResult | VttParseError;
 /** Strip ALL HTML tags from text, decode entities, normalize whitespace */
 function sanitizeText(raw: string): string {
   return raw
-    // Decode common HTML entities first
-    .replace(/&amp;/g, "&")
+    // Decode common HTML entities first (ampersand must be decoded last)
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
@@ -89,6 +88,7 @@ function sanitizeText(raw: string): string {
     .replace(/&apos;/g, "'")
     .replace(/&#\d+;/g, "") // strip unknown numeric entities
     .replace(/&\w+;/g, "") // strip unknown named entities
+    .replace(/&amp;/g, "&")
     // Remove ALL HTML tags (including VTT formatting: <b>, <i>, <u>, <c>, <v>, <ruby>, <rt>)
     .replace(/<[^>]*>/g, "")
     // Remove zero-width/control characters (unicode obfuscation)
