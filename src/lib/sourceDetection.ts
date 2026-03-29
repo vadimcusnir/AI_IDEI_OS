@@ -22,6 +22,15 @@ const YOUTUBE_PATTERNS = [
   /(?:https?:\/\/)?music\.youtube\.com\/watch\?v=([\w-]{11})/,
 ];
 
+const YOUTUBE_HOSTS = new Set<string>([
+  "youtube.com",
+  "www.youtube.com",
+  "m.youtube.com",
+  "music.youtube.com",
+  "youtu.be",
+  "www.youtu.be",
+]);
+
 const VIMEO_PATTERNS = [
   /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)/,
   /(?:https?:\/\/)?player\.vimeo\.com\/video\/(\d+)/,
@@ -35,7 +44,7 @@ function extractYouTubeId(url: string): string | null {
   // Check for v= param in any YouTube URL
   try {
     const parsed = new URL(url);
-    if (parsed.hostname.includes("youtube.com") || parsed.hostname.includes("youtu.be")) {
+    if (YOUTUBE_HOSTS.has(parsed.hostname)) {
       const v = parsed.searchParams.get("v");
       if (v && /^[\w-]{11}$/.test(v)) return v;
     }
