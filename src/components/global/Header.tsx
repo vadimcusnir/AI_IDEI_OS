@@ -54,7 +54,7 @@ function BrandZone() {
           <Brain className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide))]" />
         </div>
         <span className="text-sm font-bold tracking-tight hidden sm:inline text-foreground">
-          {"\n"}
+          AI-IDEI
         </span>
       </Link>
       <div className="hidden md:block ml-1">
