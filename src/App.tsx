@@ -125,7 +125,11 @@ const PublicEntityPage = lazyRetry(() => import("./pages/PublicEntityPage"));
 const PublicInsightPage = lazyRetry(() => import("./pages/PublicInsightPage"));
 const PublicProfileEntityPage = lazyRetry(() => import("./pages/PublicProfileEntityPage"));
 function PageLoader() {
-  return null; // Critical CSS inline spinner handles initial load; avoids importing Loader2 into main chunk
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="h-8 w-8 border-2 border-muted border-t-primary rounded-full animate-spin" />
+    </div>
+  );
 }
 
 const queryClient = new QueryClient({
