@@ -113,14 +113,29 @@ export function AdminUserManagement() {
     const amount = parseInt(adjustAmount);
     if (!amount || !adjustDescription.trim()) return;
     setAdjustLoading(true);
+
+    // Insert credit transaction
     const { error } = await supabase.from("credit_transactions").insert({
       user_id: userId,
       amount,
       type: amount > 0 ? "admin_grant" : "admin_deduct",
       description: adjustDescription.trim(),
     });
-    if (error) toast.error(error.message);
-    else {
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      // Audit trail: log the admin action
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      await supabase.from("compliance_log" as any).insert({
+        actor_id: adminUser?.id,
+        action_type: "credit_adjustment",
+        target_type: "user",
+        target_id: userId,
+        description: `${amount > 0 ? "Granted" : "Deducted"} ${Math.abs(amount)} credits: ${adjustDescription.trim()}`,
+        severity: Math.abs(amount) > 500 ? "high" : "low",
+      });
+
       toast.success(t("credits_applied", { amount: `${amount > 0 ? "+" : ""}${amount}` }));
       setAdjustAmount("");
       setAdjustDescription("");
@@ -172,8 +187,8 @@ export function AdminUserManagement() {
               <TableRow key={u.user_id} className="cursor-pointer hover:bg-muted/50" onClick={() => openUserDetail(u)}>
                 <TableCell>
                   <div>
-                    <p className="text-xs font-mono">{u.user_id.substring(0, 12)}…</p>
-                    {u.email && <p className="text-[10px] text-muted-foreground">{u.email}</p>}
+                    <p className="text-xs font-medium">{u.email || "—"}</p>
+                    <p className="text-[9px] font-mono text-muted-foreground">{u.user_id.substring(0, 8)}…</p>
                   </div>
                 </TableCell>
                 <TableCell>
