@@ -7,6 +7,7 @@
  */
 
 import { ReactNode, useEffect, useRef, lazy, Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
@@ -70,7 +71,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           )}
 
           <div className="shrink-0">
-            <Suspense fallback={null}><LowBalanceBanner /></Suspense>
+            <Suspense fallback={<div className="h-8"><Skeleton className="h-8 w-full" /></div>}><LowBalanceBanner /></Suspense>
             <Suspense fallback={null}><BehaviorOverlay /></Suspense>
           </div>
 
@@ -81,12 +82,12 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           ) : (
             <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">
               <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
-              <Suspense fallback={null}><Footer /></Suspense>
+              <Suspense fallback={<div className="py-8"><Skeleton className="h-4 w-32 mx-auto" /></div>}><Footer /></Suspense>
             </main>
           )}
         </div>
       </div>
-      <Suspense fallback={null}><MobileBottomNav /></Suspense>
+      <Suspense fallback={<div className="fixed bottom-0 left-0 right-0 h-14 bg-background border-t border-border md:hidden"><Skeleton className="h-full w-full" /></div>}><MobileBottomNav /></Suspense>
       <Suspense fallback={null}>
         <ContextualFeedbackPrompt />
         <GamificationToasts />

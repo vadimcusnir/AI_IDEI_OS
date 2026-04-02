@@ -131,6 +131,17 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      spacing: {
+        'sp-1': 'var(--sp-1)',
+        'sp-2': 'var(--sp-2)',
+        'sp-3': 'var(--sp-3)',
+        'sp-4': 'var(--sp-4)',
+        'sp-6': 'var(--sp-6)',
+        'sp-8': 'var(--sp-8)',
+        'sp-10': 'var(--sp-10)',
+        'sp-12': 'var(--sp-12)',
+        'sp-16': 'var(--sp-16)',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
