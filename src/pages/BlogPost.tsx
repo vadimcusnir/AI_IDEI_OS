@@ -453,8 +453,8 @@ export default function BlogPost() {
             </section>
           )}
 
-          {/* ── Bottom spacer ── */}
-          <div className="h-16" />
+          {/* ── Bottom spacer (accounts for mobile bottom nav) ── */}
+          <div className="h-20 md:h-16" />
         </article>
       </div>
     </>
