@@ -44,11 +44,11 @@ const LANG_OPTIONS = [
 function BrandZone() {
   return (
     <div className="flex items-center gap-2 shrink-0">
-      <SidebarTrigger />
+      <SidebarTrigger aria-label="Toggle sidebar" />
       <Link
         to="/home"
         className="flex items-center gap-1.5 group min-h-[44px] min-w-[44px] items-center"
-        title="Home"
+        aria-label="AI-IDEI Home"
       >
         <div className="h-6 w-6 rounded-lg bg-primary/8 flex items-center justify-center group-hover:bg-primary/12 transition-colors">
           <Brain className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide))]" />
