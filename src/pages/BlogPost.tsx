@@ -12,6 +12,18 @@ import { useEffect, useState } from "react";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setIsAuthenticated(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+  const { slug } = useParams<{ slug: string }>();
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ["blog-post", slug],
