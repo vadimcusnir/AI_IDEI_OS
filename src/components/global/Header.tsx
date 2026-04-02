@@ -115,6 +115,8 @@ export function Header() {
 
   return (
     <header
+      role="banner"
+      aria-label="Main navigation"
       className={cn(
         "shrink-0 z-40 h-[var(--header-height)] flex items-center",
         "border-b border-border/40 bg-background/95 backdrop-blur-sm",
