@@ -26,6 +26,24 @@ export default function BlogPost() {
     enabled: !!slug,
   });
 
+  // Fetch all posts for auto-interlinking
+  const { data: allPosts } = useQuery({
+    queryKey: ["blog-posts-interlink"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("blog_posts")
+        .select("id, title, slug, tags, category")
+        .eq("status", "published")
+        .limit(200);
+      return (data || []) as Array<{ id: string; title: string; slug: string; tags: string[]; category: string }>;
+    },
+  });
+
+  const relatedPosts = useAutoInterlink(
+    post ? { id: post.id, title: post.title, slug: post.slug, tags: post.tags as string[], category: post.category as string } : null,
+    allPosts
+  );
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
