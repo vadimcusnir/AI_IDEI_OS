@@ -54,7 +54,7 @@ export default function Blog() {
         </section>
 
         {/* Posts Grid */}
-        <section className="container mx-auto px-4 py-12 md:py-16">
+        <section className="container mx-auto px-4 py-12 md:py-16 pb-24 md:pb-16">
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 6 }).map((_, i) => (
