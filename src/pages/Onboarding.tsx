@@ -125,10 +125,12 @@ export default function Onboarding() {
   const allDone = completedCount === STEPS.length;
 
   // Fire confetti when all steps complete
+  const { updateFlag } = useOnboardingState();
   useEffect(() => {
     if (allDone && !prevAllDoneRef.current) {
       fireFinalConfetti();
-      if (user) localStorage.setItem(`onboarding_completed_${user.id}`, "true");
+      updateFlag("checklist_completed", true);
+      trackInternalEvent({ event: AnalyticsEvents.ONBOARDING_COMPLETED });
     }
     prevAllDoneRef.current = allDone;
   }, [allDone]);
