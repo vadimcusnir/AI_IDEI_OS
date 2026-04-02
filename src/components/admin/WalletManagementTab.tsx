@@ -91,7 +91,12 @@ export function WalletManagementTab() {
             <TableBody>
               {wallets.map(w => (
                 <TableRow key={w.user_id}>
-                  <TableCell className="text-[10px] font-mono">{w.user_id.substring(0, 12)}…</TableCell>
+                  <TableCell>
+                    <div>
+                      <p className="text-[10px] font-medium">{w.email || "—"}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground">{w.user_id.substring(0, 8)}…</p>
+                    </div>
+                  </TableCell>
                   <TableCell className="text-xs font-mono text-right font-bold text-primary">{w.balance}</TableCell>
                   <TableCell className="text-xs font-mono text-right">{w.total_earned}</TableCell>
                   <TableCell className="text-xs font-mono text-right text-destructive">{w.total_spent}</TableCell>
