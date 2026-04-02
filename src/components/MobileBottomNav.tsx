@@ -4,23 +4,20 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import {
-  Home, Brain, Upload, Menu,
-  Sparkles, Rocket, BarChart3, Network,
-  Store, Bot, Layers,
-  Coins, Bell, FileText, ScrollText,
-  User, LogOut, Eye,
-  Terminal, Wallet, Trophy, Zap,
-  Crown, TrendingUp, Shield, Database,
-  DollarSign, PenTool, MessageCircle,
-  Package, BookOpen, Wrench, Plug, FolderOpen,
-  Cpu, Lock, Activity,
+  Home, Upload, BookOpen, Sparkles, User,
+  Brain, Network, Database, Layers,
+  Trophy, TrendingUp, Store,
+  Wallet, Coins, BarChart3,
+  Settings, Code, Shield, Lock,
+  Crown, Rocket, Menu,
+  Cpu, Activity, Clock, Zap, LogOut, Eye,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
 
-/* Bottom bar: 4 core actions + hamburger */
+/* ── Bottom bar: 4 core actions + hamburger ── */
 const BAR_ITEMS = [
   { path: "/home", icon: Home, labelKey: "cockpit" },
   { path: "/services", icon: Sparkles, labelKey: "services" },
@@ -28,114 +25,98 @@ const BAR_ITEMS = [
   { path: "/jobs", icon: Rocket, labelKey: "jobs" },
 ];
 
-/* Command Center menu structure */
+/* ── Menu structure — mirrors AppSidebar SYSTEM_MAP exactly ── */
 interface MenuSection {
+  key: string;
   label: string;
-  labelKey: string;
   icon: React.ElementType;
-  zone?: string;
-  items: { path: string; icon: React.ElementType; labelKey: string; adminOnly?: boolean }[];
+  items: { path: string; icon: React.ElementType; label: string; adminOnly?: boolean }[];
+  adminOnly?: boolean;
 }
 
 const MENU_SECTIONS: MenuSection[] = [
   {
-    label: "Execute",
-    labelKey: "execute_section",
-    icon: Zap,
+    key: "core",
+    label: "CORE",
+    icon: Home,
     items: [
-      { path: "/home", icon: Home, labelKey: "cockpit" },
-      { path: "/services", icon: Sparkles, labelKey: "services" },
-      { path: "/extractor", icon: Upload, labelKey: "extractor" },
-      { path: "/home", icon: Terminal, labelKey: "command_center" },
-      { path: "/jobs", icon: Rocket, labelKey: "jobs" },
+      { path: "/home", icon: Home, label: "Command Center" },
+      { path: "/extractor", icon: Upload, label: "Extractor" },
+      { path: "/library", icon: BookOpen, label: "Library" },
+      { path: "/jobs", icon: Clock, label: "Jobs" },
     ],
   },
   {
-    label: "Systems",
-    labelKey: "systems_section",
-    icon: Package,
-    zone: "CORE",
-    items: [
-      { path: "/pipeline", icon: Layers, labelKey: "pipeline" },
-      { path: "/master-agent", icon: Bot, labelKey: "master_agent" },
-      { path: "/prompt-forge", icon: PenTool, labelKey: "prompt_forge" },
-      { path: "/headline-generator", icon: Zap, labelKey: "headline_generator" },
-    ],
-  },
-  {
-    label: "Marketplace",
-    labelKey: "marketplace_section",
-    icon: Store,
-    items: [
-      { path: "/marketplace", icon: Store, labelKey: "marketplace" },
-      { path: "/marketplace/drafts", icon: FileText, labelKey: "marketplace_drafts" },
-      { path: "/marketplace/earnings", icon: DollarSign, labelKey: "marketplace_earnings" },
-    ],
-  },
-  {
-    label: "Intelligence",
-    labelKey: "intelligence_section",
+    key: "intelligence",
+    label: "INTELLIGENCE",
     icon: Brain,
-    zone: "EXPANSION",
     items: [
-      { path: "/intelligence", icon: Network, labelKey: "intelligence" },
-      { path: "/topics", icon: Eye, labelKey: "topics" },
-      { path: "/cognitive-units", icon: Database, labelKey: "cognitive_units" },
+      { path: "/neurons", icon: Brain, label: "Neurons" },
+      { path: "/intelligence", icon: Network, label: "Knowledge Graph" },
+      { path: "/data-pipeline", icon: Database, label: "Data Pipeline" },
     ],
   },
   {
-    label: "Creator",
-    labelKey: "creator_section",
+    key: "production",
+    label: "PRODUCTION",
+    icon: Sparkles,
+    items: [
+      { path: "/services", icon: Sparkles, label: "Services" },
+      { path: "/pipeline-overview", icon: Layers, label: "Pipelines" },
+      { path: "/master-agent", icon: Zap, label: "Master Agent" },
+    ],
+  },
+  {
+    key: "growth",
+    label: "GROWTH",
+    icon: Trophy,
+    items: [
+      { path: "/gamification", icon: Trophy, label: "Progress" },
+      { path: "/community", icon: TrendingUp, label: "Leaderboard" },
+      { path: "/marketplace", icon: Store, label: "Marketplace" },
+    ],
+  },
+  {
+    key: "economy",
+    label: "ECONOMY",
+    icon: Wallet,
+    items: [
+      { path: "/credits", icon: Coins, label: "Wallet" },
+      { path: "/pricing", icon: Wallet, label: "Pricing" },
+      { path: "/analytics-dashboard", icon: BarChart3, label: "Usage" },
+    ],
+  },
+  {
+    key: "control",
+    label: "CONTROL",
+    icon: Settings,
+    items: [
+      { path: "/profile", icon: User, label: "Profile" },
+      { path: "/workspace-settings", icon: Settings, label: "Workspace" },
+      { path: "/docs", icon: Code, label: "API & Docs" },
+      { path: "/data-privacy", icon: Shield, label: "Data Privacy" },
+    ],
+  },
+  {
+    key: "elite",
+    label: "ELITE",
     icon: Crown,
     items: [
-      { path: "/neurons", icon: Brain, labelKey: "neurons" },
-      { path: "/library", icon: BookOpen, labelKey: "library" },
-      { path: "/capitalization", icon: TrendingUp, labelKey: "capitalization" },
-      { path: "/notebooks", icon: FileText, labelKey: "notebooks" },
+      { path: "/vip", icon: Crown, label: "VIP Dashboard" },
+      { path: "/cusnir-os", icon: Lock, label: "Cusnir_OS" },
     ],
   },
   {
-    label: "Account",
-    labelKey: "account_section",
-    icon: User,
-    items: [
-      { path: "/profile", icon: User, labelKey: "profile" },
-      { path: "/credits", icon: Coins, labelKey: "credits" },
-      { path: "/wallet", icon: Wallet, labelKey: "wallet" },
-      { path: "/notifications", icon: Bell, labelKey: "notifications" },
-      { path: "/gamification", icon: Trophy, labelKey: "gamification" },
-    ],
-  },
-  {
-    label: "Learn",
-    labelKey: "learn_section",
-    icon: BookOpen,
-    items: [
-      { path: "/docs", icon: FileText, labelKey: "docs" },
-      { path: "/changelog", icon: ScrollText, labelKey: "changelog" },
-      { path: "/feedback", icon: MessageCircle, labelKey: "feedback" },
-    ],
-  },
-  {
-    label: "Control",
-    labelKey: "control_section",
+    key: "admin",
+    label: "ADMIN",
     icon: Shield,
-    zone: "CONTROL",
+    adminOnly: true,
     items: [
-      { path: "/admin", icon: Shield, labelKey: "admin", adminOnly: true },
-      { path: "/admin/kernel", icon: Cpu, labelKey: "kernel", adminOnly: true },
-      { path: "/runtime", icon: Activity, labelKey: "runtime", adminOnly: true },
-      { path: "/analytics", icon: BarChart3, labelKey: "analytics", adminOnly: true },
-    ],
-  },
-  {
-    label: "Infra",
-    labelKey: "infra_section",
-    icon: Wrench,
-    items: [
-      { path: "/services-catalog", icon: Database, labelKey: "services_catalog", adminOnly: true },
-      { path: "/data-pipeline", icon: Layers, labelKey: "data_pipeline", adminOnly: true },
-      { path: "/integrations", icon: Plug, labelKey: "integrations" },
+      { path: "/admin", icon: Shield, label: "Dashboard", adminOnly: true },
+      { path: "/admin/kernel", icon: Cpu, label: "Kernel", adminOnly: true },
+      { path: "/runtime", icon: Activity, label: "Runtime", adminOnly: true },
+      { path: "/analytics", icon: BarChart3, label: "Analytics", adminOnly: true },
+      { path: "/services-catalog", icon: Database, label: "Catalog", adminOnly: true },
     ],
   },
 ];
@@ -157,8 +138,6 @@ export function MobileBottomNav() {
     navigate(path);
     setMenuOpen(false);
   };
-
-  let lastZone: string | undefined;
 
   return (
     <>
@@ -201,7 +180,7 @@ export function MobileBottomNav() {
         </div>
       </nav>
 
-      {/* Slide-out Command Center menu */}
+      {/* Slide-out menu — mirrors sidebar structure */}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="w-[280px] p-0 overflow-y-auto">
           <SheetHeader className="p-4 pb-2">
@@ -209,32 +188,21 @@ export function MobileBottomNav() {
           </SheetHeader>
           <div className="flex flex-col gap-0.5 pb-20">
             {MENU_SECTIONS.map((section) => {
+              if (section.adminOnly && !isAdmin) return null;
+
               const visibleItems = section.items.filter(
                 (item) => !item.adminOnly || isAdmin
               );
               if (visibleItems.length === 0) return null;
+
               const SectionIcon = section.icon;
 
-              // Zone label
-              let zoneLabel: React.ReactNode = null;
-              if (section.zone && section.zone !== lastZone) {
-                lastZone = section.zone;
-                zoneLabel = (
-                  <div className="px-4 pt-4 pb-0.5">
-                    <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">
-                      {section.zone}
-                    </span>
-                  </div>
-                );
-              }
-
               return (
-                <div key={section.labelKey}>
-                  {zoneLabel}
-                  <div className="flex items-center gap-1.5 px-4 pt-3 pb-1">
-                    <SectionIcon className="h-3 w-3 text-muted-foreground/70" />
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                      {t(`navigation:${section.labelKey}`)}
+                <div key={section.key}>
+                  <div className="flex items-center gap-1.5 px-4 pt-4 pb-1">
+                    <SectionIcon className="h-3 w-3 text-muted-foreground/50" />
+                    <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                      {section.label}
                     </p>
                   </div>
                   {visibleItems.map((item) => {
@@ -251,7 +219,7 @@ export function MobileBottomNav() {
                         )}
                       >
                         <item.icon className="h-4 w-4 shrink-0" />
-                        <span>{t(`navigation:${item.labelKey}`)}</span>
+                        <span>{item.label}</span>
                       </button>
                     );
                   })}
