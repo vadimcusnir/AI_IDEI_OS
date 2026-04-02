@@ -292,6 +292,23 @@ Deno.serve(async (req) => {
       }
     }
 
+    // ═══ CONTENT MODERATION ═══
+    console.log("[blog-generate] Running content moderation...");
+    const modResult = await moderateContent(LOVABLE_API_KEY, articleData.content, articleData.title);
+    if (!modResult.pass) {
+      console.error("[blog-generate] Content moderation FAILED:", modResult.reason, modResult.flagged_dimensions);
+      if (topicId) await supabase.from("blog_topics").update({ status: "failed" }).eq("id", topicId);
+      return new Response(JSON.stringify({
+        error: "Content moderation failed",
+        reason: modResult.reason,
+        flagged: modResult.flagged_dimensions,
+        scores: modResult.scores,
+      }), {
+        status: 422, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+    pipelineScores.moderation = modResult.scores;
+
     // ═══ GENERATE THUMBNAIL ═══
     console.log("[blog-generate] Generating thumbnail...");
     let thumbnailUrl = "";
@@ -311,12 +328,10 @@ Deno.serve(async (req) => {
       const thumbData = await thumbResp.json();
       const base64 = thumbData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
       if (base64) {
-        const imgData = base64.replace(/^data:image\/\w+;base64,/, "");
-        const bytes = Uint8Array.from(atob(imgData), c => c.charCodeAt(0));
-        const fileName = `thumbnails/${articleData.slug}-thumb.png`;
-        await supabase.storage.from("blog-images").upload(fileName, bytes, { contentType: "image/png", upsert: true });
-        const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(fileName);
-        thumbnailUrl = urlData.publicUrl;
+        const { bytes, contentType, extension } = extractImageBytes(base64);
+        const fileName = `thumbnails/${articleData.slug}-thumb.${extension}`;
+        const url = await uploadOptimizedImage(supabase, "blog-images", fileName, bytes, contentType);
+        if (url) thumbnailUrl = url;
       }
     } catch (e) { console.error("[blog-generate] Thumbnail failed:", e); }
 
