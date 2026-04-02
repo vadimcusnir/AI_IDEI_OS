@@ -42,6 +42,7 @@ ${body}
     // ═══ Sitemap Index ═══
     if (type === "index") {
       const subs = [
+        "blog",
         "insights", "patterns", "formulas", "contradictions",
         "applications", "profiles", "topics", "marketplace",
         "knowledge", "media-profiles", "analyses",
