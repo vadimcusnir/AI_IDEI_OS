@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
