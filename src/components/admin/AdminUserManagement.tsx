@@ -172,8 +172,8 @@ export function AdminUserManagement() {
               <TableRow key={u.user_id} className="cursor-pointer hover:bg-muted/50" onClick={() => openUserDetail(u)}>
                 <TableCell>
                   <div>
-                    <p className="text-xs font-mono">{u.user_id.substring(0, 12)}…</p>
-                    {u.email && <p className="text-[10px] text-muted-foreground">{u.email}</p>}
+                    <p className="text-xs font-medium">{u.email || "—"}</p>
+                    <p className="text-[9px] font-mono text-muted-foreground">{u.user_id.substring(0, 8)}…</p>
                   </div>
                 </TableCell>
                 <TableCell>
