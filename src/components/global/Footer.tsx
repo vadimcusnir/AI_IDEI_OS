@@ -54,6 +54,7 @@ function PlatformColumn() {
         <li><FooterLink to="/marketplace">Marketplace</FooterLink></li>
         <li><FooterLink to="/docs">Documentation</FooterLink></li>
         <li><FooterLink to="/changelog">Changelog</FooterLink></li>
+        <li><FooterLink to="/blog">Blog</FooterLink></li>
         <li><FooterLink to="/pricing">Pricing</FooterLink></li>
       </ul>
     </div>
