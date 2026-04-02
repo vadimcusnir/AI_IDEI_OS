@@ -87,7 +87,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           )}
         </div>
       </div>
-      <Suspense fallback={null}><MobileBottomNav /></Suspense>
+      <Suspense fallback={<div className="fixed bottom-0 left-0 right-0 h-14 bg-background border-t border-border md:hidden"><Skeleton className="h-full w-full" /></div>}><MobileBottomNav /></Suspense>
       <Suspense fallback={null}>
         <ContextualFeedbackPrompt />
         <GamificationToasts />
