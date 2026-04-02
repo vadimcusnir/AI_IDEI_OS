@@ -120,7 +120,7 @@ function createMarkdownComponents() {
       </li>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
-      <blockquote className="relative my-10 py-6 px-8 border-l-[3px] border-primary/40 bg-card/60 rounded-r-xl">
+      <blockquote className="relative my-10 py-5 px-5 sm:px-8 border-l-[3px] border-primary/40 bg-card/60 rounded-r-xl">
         <div className="absolute -top-3 left-6 text-4xl text-primary/20 font-serif leading-none select-none">"</div>
         <div className="prose-compact text-foreground/80 italic [&>p]:mb-2 [&>p:last-child]:mb-0">
           {children}
@@ -168,13 +168,13 @@ function createMarkdownComponents() {
       );
     },
     pre: ({ children }: { children?: ReactNode }) => (
-      <pre className="my-8 overflow-x-auto rounded-xl border border-border bg-muted/50 p-5 text-[0.8125rem] leading-relaxed">
+      <pre className="my-8 overflow-x-auto rounded-xl border border-border bg-muted/50 p-4 sm:p-5 text-[0.8125rem] leading-relaxed -mx-2 sm:mx-0">
         {children}
       </pre>
     ),
     table: ({ children }: { children?: ReactNode }) => (
-      <div className="my-8 overflow-x-auto rounded-xl border border-border">
-        <table className="w-full text-sm">{children}</table>
+      <div className="my-8 overflow-x-auto rounded-xl border border-border -mx-2 sm:mx-0">
+        <table className="w-full text-sm min-w-[400px]">{children}</table>
       </div>
     ),
     thead: ({ children }: { children?: ReactNode }) => (
@@ -453,8 +453,8 @@ export default function BlogPost() {
             </section>
           )}
 
-          {/* ── Bottom spacer ── */}
-          <div className="h-16" />
+          {/* ── Bottom spacer (accounts for mobile bottom nav) ── */}
+          <div className="h-20 md:h-16" />
         </article>
       </div>
     </>
