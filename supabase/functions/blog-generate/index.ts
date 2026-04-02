@@ -3,6 +3,8 @@ import { getCorsHeaders } from "../_shared/cors.ts";
 import { aiCallWithRetry, extractAiContent } from "../_shared/ai-retry.ts";
 import { seoTransform } from "./seo-transform.ts";
 import { hardValidateArticle } from "../_shared/blog-validation.ts";
+import { extractImageBytes, uploadOptimizedImage } from "../_shared/image-optimize.ts";
+import { moderateContent } from "../_shared/content-moderation.ts";
 import {
   NORMALIZER_SYSTEM,
   PLANNER_SYSTEM,
