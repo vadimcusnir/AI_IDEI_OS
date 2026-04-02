@@ -321,7 +321,7 @@ export function AdminBlogTab() {
                             onClick={() => updateMutation.mutate({ id: post.id, status: "published" })}
                             title="Publish"
                           >
-                            <Send className="w-4 h-4 text-green-500" />
+                            <Send className="w-4 h-4 text-primary" />
                           </Button>
                         )}
                         {post.status === "published" && (
