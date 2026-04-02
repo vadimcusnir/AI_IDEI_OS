@@ -168,7 +168,7 @@ function createMarkdownComponents() {
       );
     },
     pre: ({ children }: { children?: ReactNode }) => (
-      <pre className="my-8 overflow-x-auto rounded-xl border border-border bg-muted/50 p-5 text-[0.8125rem] leading-relaxed">
+      <pre className="my-8 overflow-x-auto rounded-xl border border-border bg-muted/50 p-4 sm:p-5 text-[0.8125rem] leading-relaxed -mx-2 sm:mx-0">
         {children}
       </pre>
     ),
