@@ -34,46 +34,50 @@ Deno.serve(async (req) => {
       jsonLd?: Record<string, unknown>;
     } | null = null;
 
-    // ── Entity pages: /knowledge/:type/:slug ──
-    const entityMatch = path.match(/^\/knowledge\/(insights|patterns|formulas|applications|contradictions|profiles)\/(.+)$/);
-    if (entityMatch) {
-      const [, typePlural, slug] = entityMatch;
+    // ── Direct entity pages: /:type/:slug (e.g. /insights/my-insight) ──
+    const directEntityMatch = path.match(/^\/(insights|patterns|formulas|applications|contradictions|profiles|knowledge)\/([\w-]+)$/);
+    // ── Also match /knowledge/:type/:slug ──
+    const knowledgeEntityMatch = path.match(/^\/knowledge\/(insights|patterns|formulas|applications|contradictions|profiles)\/([\w-]+)$/);
+
+    const entityMatchResult = knowledgeEntityMatch || directEntityMatch;
+    if (entityMatchResult) {
+      const [, typePlural, slug] = entityMatchResult;
       const typeMap: Record<string, string> = {
         insights: "insight", patterns: "pattern", formulas: "formula",
         applications: "application", contradictions: "contradiction", profiles: "profile",
+        knowledge: "insight", // fallback for /knowledge/:slug
       };
       const entityType = typeMap[typePlural] || typePlural;
 
       const { data: entity } = await supabase
         .from("entities")
-        .select("title, summary, description, meta_description, slug, entity_type, confidence_score, importance_score, evidence_count, idea_rank, json_ld")
+        .select("title, summary, description, meta_description, slug, entity_type, json_ld")
         .eq("slug", slug)
         .eq("entity_type", entityType)
         .eq("is_published", true)
         .maybeSingle();
 
       if (entity) {
+        const canonicalPath = knowledgeEntityMatch ? `/knowledge/${typePlural}/${slug}` : `/${typePlural}/${slug}`;
         meta = {
           title: `${entity.title} | AI-IDEI Knowledge`,
           description: entity.meta_description || entity.summary || entity.description || `${entity.title} — ${entityType} in AI-IDEI knowledge graph`,
-          canonical: `${BASE_URL}/knowledge/${typePlural}/${slug}`,
+          canonical: `${BASE_URL}${canonicalPath}`,
           jsonLd: entity.json_ld as Record<string, unknown> || {
             "@context": "https://schema.org",
             "@type": "Article",
             name: entity.title,
             description: entity.summary || entity.description,
-            url: `${BASE_URL}/knowledge/${typePlural}/${slug}`,
+            url: `${BASE_URL}${canonicalPath}`,
             author: { "@type": "Organization", name: "AI-IDEI" },
             publisher: { "@type": "Organization", name: "AI-IDEI", url: BASE_URL },
-            datePublished: new Date().toISOString(),
-            mainEntityOfPage: `${BASE_URL}/knowledge/${typePlural}/${slug}`,
           },
         };
       }
     }
 
-    // ── Topic pages: /knowledge/topics/:slug ──
-    const topicMatch = path.match(/^\/knowledge\/topics\/(.+)$/);
+    // ── Topic pages: /topics/:slug or /knowledge/topics/:slug ──
+    const topicMatch = path.match(/^(?:\/knowledge)?\/topics\/([\w-]+)$/);
     if (!meta && topicMatch) {
       const [, slug] = topicMatch;
       const { data: topic } = await supabase
@@ -86,15 +90,104 @@ Deno.serve(async (req) => {
         meta = {
           title: `${topic.title} | AI-IDEI Topics`,
           description: topic.description || `Explore ${topic.title} — ${topic.entity_count || 0} connected entities in the AI-IDEI knowledge graph.`,
-          canonical: `${BASE_URL}/knowledge/topics/${slug}`,
+          canonical: `${BASE_URL}/topics/${slug}`,
           jsonLd: {
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: topic.title,
             description: topic.description,
-            url: `${BASE_URL}/knowledge/topics/${slug}`,
+            url: `${BASE_URL}/topics/${slug}`,
             publisher: { "@type": "Organization", name: "AI-IDEI", url: BASE_URL },
             numberOfItems: topic.entity_count || 0,
+          },
+        };
+      }
+    }
+
+    // ── Public analysis pages: /analysis/:slug ──
+    const analysisMatch = path.match(/^\/analysis\/([\w-]+)$/);
+    if (!meta && analysisMatch) {
+      const [, slug] = analysisMatch;
+      const { data: analysis } = await supabase
+        .from("artifacts")
+        .select("title, preview_content, created_at, artifact_type")
+        .eq("id", slug)
+        .eq("status", "published")
+        .maybeSingle();
+
+      if (analysis) {
+        meta = {
+          title: `${analysis.title} | AI-IDEI Analysis`,
+          description: analysis.preview_content?.substring(0, 155) || `${analysis.title} — AI-powered analysis on AI-IDEI`,
+          canonical: `${BASE_URL}/analysis/${slug}`,
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "AnalysisNewsArticle",
+            name: analysis.title,
+            description: analysis.preview_content?.substring(0, 155),
+            url: `${BASE_URL}/analysis/${slug}`,
+            publisher: { "@type": "Organization", name: "AI-IDEI", url: BASE_URL },
+            datePublished: analysis.created_at,
+          },
+        };
+      }
+    }
+
+    // ── Media profile pages: /media/profiles/:slug ──
+    const mediaMatch = path.match(/^\/media\/profiles\/([\w-]+)$/);
+    if (!meta && mediaMatch) {
+      const [, slug] = mediaMatch;
+      const { data: profile } = await supabase
+        .from("media_profiles")
+        .select("name, description, slug, avatar_url")
+        .eq("slug", slug)
+        .eq("is_published", true)
+        .maybeSingle();
+
+      if (profile) {
+        meta = {
+          title: `${profile.name} | AI-IDEI Media`,
+          description: profile.description?.substring(0, 155) || `${profile.name} — media profile on AI-IDEI`,
+          canonical: `${BASE_URL}/media/profiles/${slug}`,
+          ogImage: profile.avatar_url || undefined,
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: profile.name,
+            description: profile.description,
+            url: `${BASE_URL}/media/profiles/${slug}`,
+          },
+        };
+      }
+    }
+
+    // ── Marketplace detail: /marketplace/:id ──
+    const marketMatch = path.match(/^\/marketplace\/([\w-]+)$/);
+    if (!meta && marketMatch) {
+      const [, id] = marketMatch;
+      const { data: asset } = await supabase
+        .from("knowledge_assets")
+        .select("title, description, asset_type, price_neurons")
+        .eq("id", id)
+        .eq("status", "published")
+        .maybeSingle();
+
+      if (asset) {
+        meta = {
+          title: `${asset.title} | AI-IDEI Marketplace`,
+          description: asset.description?.substring(0, 155) || `${asset.title} — available on AI-IDEI marketplace`,
+          canonical: `${BASE_URL}/marketplace/${id}`,
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: asset.title,
+            description: asset.description,
+            url: `${BASE_URL}/marketplace/${id}`,
+            offers: {
+              "@type": "Offer",
+              price: asset.price_neurons,
+              priceCurrency: "NEURON",
+            },
           },
         };
       }
@@ -142,6 +235,7 @@ Deno.serve(async (req) => {
         };
       }
     }
+
 
     if (!meta) {
       return new Response(JSON.stringify({ found: false }), {
