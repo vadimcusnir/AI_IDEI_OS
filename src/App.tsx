@@ -53,6 +53,8 @@ const Notifications = lazyRetry(() => import("./pages/Notifications"));
 const Feedback = lazyRetry(() => import("./pages/Feedback"));
 const Index = lazyRetry(() => import("./pages/Index"));
 const Changelog = lazyRetry(() => import("./pages/Changelog"));
+const Blog = lazyRetry(() => import("./pages/Blog"));
+const BlogPost = lazyRetry(() => import("./pages/BlogPost"));
 const Library = lazyRetry(() => import("./pages/Library"));
 const ArtifactDetail = lazyRetry(() => import("./pages/ArtifactDetail"));
 const GuestPages = lazyRetry(() => import("./pages/GuestPages"));
@@ -170,6 +172,8 @@ const App = () => (
                 <Route path="/docs" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
                 <Route path="/docs/:section/:topic" element={<AppLayout><ErrorBoundary fallbackTitle="Docs failed to load"><Docs /></ErrorBoundary></AppLayout>} />
                 <Route path="/changelog" element={<AppLayout><ErrorBoundary fallbackTitle="Changelog failed to load"><Changelog /></ErrorBoundary></AppLayout>} />
+                <Route path="/blog" element={<AppLayout><ErrorBoundary fallbackTitle="Blog failed to load"><Blog /></ErrorBoundary></AppLayout>} />
+                <Route path="/blog/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Blog post failed to load"><BlogPost /></ErrorBoundary></AppLayout>} />
                 {/* ═══ Public SEO-indexable entity pages (lightweight, no Auth providers) ═══ */}
                 <Route path="/knowledge/:slug" element={<ErrorBoundary fallbackTitle="Knowledge page failed"><PublicEntityPage /></ErrorBoundary>} />
                 <Route path="/insights/:slug" element={<ErrorBoundary fallbackTitle="Insight page failed"><PublicInsightPage /></ErrorBoundary>} />

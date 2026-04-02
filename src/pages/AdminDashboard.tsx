@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, lazy, Suspense, useMemo } from "react";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot } from "lucide-react";
+import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,6 +39,7 @@ const ServiceManifestTab = lazy(() => import("@/components/admin/ServiceManifest
 const AdminAdvancedTab = lazy(() => import("@/components/admin/AdminAdvancedTab").then(m => ({ default: m.AdminAdvancedTab })));
 const Root2PricingTab = lazy(() => import("@/components/admin/Root2PricingTab").then(m => ({ default: m.Root2PricingTab })));
 const LLMIndexationTab = lazy(() => import("@/components/admin/LLMIndexationTab").then(m => ({ default: m.LLMIndexationTab })));
+const AdminBlogTab = lazy(() => import("@/components/admin/AdminBlogTab").then(m => ({ default: m.AdminBlogTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -85,6 +86,7 @@ const TAB_GROUPS = [
       { value: "contributions", label: "Contributions", icon: Brain },
       { value: "moderation", label: "Moderation", icon: MessageCircle },
       { value: "llm-index", label: "LLM Index", icon: Bot },
+      { value: "blog", label: "Blog", icon: FileText },
     ],
   },
   {
@@ -270,6 +272,7 @@ export default function AdminDashboard() {
             <TabsContent value="advanced"><Suspense fallback={<TabLoader />}><AdminAdvancedTab /></Suspense></TabsContent>
             <TabsContent value="root2"><Suspense fallback={<TabLoader />}><Root2PricingTab /></Suspense></TabsContent>
             <TabsContent value="llm-index"><Suspense fallback={<TabLoader />}><LLMIndexationTab /></Suspense></TabsContent>
+            <TabsContent value="blog"><Suspense fallback={<TabLoader />}><AdminBlogTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>

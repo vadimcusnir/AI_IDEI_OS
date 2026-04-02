@@ -45,3 +45,5 @@ project_id = "swghuuxkcilayybesadm"
     verify_jwt = false
   [functions.intelligence-extract]
     verify_jwt = false
+  [functions.blog-generate]
+    verify_jwt = false
