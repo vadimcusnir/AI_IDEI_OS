@@ -78,7 +78,7 @@ function ActionsZone() {
       <div className="flex items-center border-l border-border/30 pl-1 ml-1">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 min-h-[44px] min-w-[44px]" title="Language">
+            <Button variant="ghost" size="icon" className="h-8 w-8 min-h-[44px] min-w-[44px]" aria-label="Change language">
               <span className="text-sm leading-none">{currentLang.flag}</span>
             </Button>
           </DropdownMenuTrigger>
