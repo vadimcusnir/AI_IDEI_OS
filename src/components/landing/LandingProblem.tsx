@@ -1,5 +1,6 @@
 import { FadeInView } from "@/components/motion/PageTransition";
 import { useTranslation } from "react-i18next";
+import { SectionSigil } from "./SectionSigil";
 
 export function LandingProblem() {
   const { t } = useTranslation("landing");
@@ -7,7 +8,7 @@ export function LandingProblem() {
   const afterItems = t("problem.after_items", { returnObjects: true }) as string[];
 
   return (
-    <section className="py-24 sm:py-36 md:py-44" aria-label="Problem and solution">
+    <section className="py-32 sm:py-44" aria-label="Problem and solution">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
         <FadeInView>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
@@ -49,8 +50,8 @@ export function LandingProblem() {
               </div>
               <div className="mt-10 space-y-4">
                 {afterItems.map(item => (
-                  <div key={item} className="flex items-center gap-4 text-[15px] text-foreground">
-                    <div className="h-2 w-2 rounded-full bg-[hsl(var(--gold-oxide))] shrink-0" />
+                  <div key={item} className="flex items-center gap-4 text-[15px] text-foreground group">
+                    <div className="h-2 w-2 rounded-full bg-[hsl(var(--gold-oxide))] shrink-0 group-hover:scale-125 transition-transform duration-300" />
                     <span className="font-medium">{item}</span>
                   </div>
                 ))}
@@ -59,6 +60,8 @@ export function LandingProblem() {
             </div>
           </div>
         </FadeInView>
+
+        <SectionSigil className="mt-20 sm:mt-28" />
       </div>
     </section>
   );
