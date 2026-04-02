@@ -381,7 +381,7 @@ export function AdminBlogTab() {
                                     <SelectTrigger><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                       {CATEGORIES.map(c => (
-                                        <SelectItem key={c} value={c}>{c.replaceAll("-", " ")}</SelectItem>
+                                        <SelectItem key={c} value={c}>{c.split("-").join(" ")}</SelectItem>
                                       ))}
                                     </SelectContent>
                                   </Select>
