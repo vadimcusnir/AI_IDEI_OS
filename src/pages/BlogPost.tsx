@@ -7,9 +7,22 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/SEOHead";
 import ReactMarkdown from "react-markdown";
 import { useAutoInterlink } from "@/hooks/useAutoInterlink";
+import { ContentGate } from "@/components/blog/ContentGate";
+import { useEffect, useState } from "react";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setIsAuthenticated(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ["blog-post", slug],
@@ -158,45 +171,47 @@ export default function BlogPost() {
             </div>
           </header>
 
-          {/* Content */}
-          <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-xl prose-img:border prose-img:border-border">
-            <ReactMarkdown
-              components={{
-                img: ({ src, alt, ...props }) => (
-                  <figure className="my-8">
-                    <img
-                      src={src}
-                      alt={alt || ""}
-                      loading="lazy"
-                      className="w-full rounded-xl border border-border"
-                      {...props}
-                    />
-                    {alt && (
-                      <figcaption className="text-center text-sm text-muted-foreground mt-2 italic">
-                        {alt}
-                      </figcaption>
-                    )}
-                  </figure>
-                ),
-              }}
-            >
-              {post.content}
-            </ReactMarkdown>
-          </div>
+          {/* Content — gated for non-authenticated users */}
+          <ContentGate isAuthenticated={isAuthenticated}>
+            <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-xl prose-img:border prose-img:border-border">
+              <ReactMarkdown
+                components={{
+                  img: ({ src, alt, ...props }) => (
+                    <figure className="my-8">
+                      <img
+                        src={src}
+                        alt={alt || ""}
+                        loading="lazy"
+                        className="w-full rounded-xl border border-border"
+                        {...props}
+                      />
+                      {alt && (
+                        <figcaption className="text-center text-sm text-muted-foreground mt-2 italic">
+                          {alt}
+                        </figcaption>
+                      )}
+                    </figure>
+                  ),
+                }}
+              >
+                {post.content}
+              </ReactMarkdown>
+            </div>
 
-          {/* Tags */}
-          {(post.tags as string[])?.length > 0 && (
-            <footer className="mt-12 pt-8 border-t border-border">
-              <div className="flex items-center gap-2 flex-wrap">
-                <Tag className="w-4 h-4 text-muted-foreground" />
-                {(post.tags as string[]).map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </footer>
-          )}
+            {/* Tags */}
+            {(post.tags as string[])?.length > 0 && (
+              <footer className="mt-12 pt-8 border-t border-border">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Tag className="w-4 h-4 text-muted-foreground" />
+                  {(post.tags as string[]).map((tag) => (
+                    <Badge key={tag} variant="secondary" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </footer>
+            )}
+          </ContentGate>
 
           {/* Related Posts (Auto-Interlink) */}
           {relatedPosts.length > 0 && (
