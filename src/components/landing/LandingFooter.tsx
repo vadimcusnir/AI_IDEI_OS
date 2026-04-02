@@ -74,6 +74,7 @@ export function LandingFooter() {
             <ul className="space-y-3.5">
               <li><FooterLink to="/community">{t("footer.forum")}</FooterLink></li>
               <li><FooterLink to="/changelog">{t("footer.changelog")}</FooterLink></li>
+              <li><FooterLink to="/blog">Blog</FooterLink></li>
               <li><FooterLink to="/feedback">{t("footer.feedback")}</FooterLink></li>
             </ul>
           </div>

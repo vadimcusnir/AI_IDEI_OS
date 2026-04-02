@@ -42,6 +42,7 @@ ${body}
     // ═══ Sitemap Index ═══
     if (type === "index") {
       const subs = [
+        "blog",
         "insights", "patterns", "formulas", "contradictions",
         "applications", "profiles", "topics", "marketplace",
         "knowledge", "media-profiles", "analyses",
@@ -52,6 +53,21 @@ ${body}
   ${subs.map((t) => `<sitemap><loc>${BASE_URL}/functions/v1/sitemap?type=${t}</loc></sitemap>`).join("\n  ")}
 </sitemapindex>`;
       return new Response(xml, { headers: xmlHeaders });
+    }
+
+    // ═══ Blog ═══
+    if (type === "blog") {
+      const { data: posts } = await supabase
+        .from("blog_posts")
+        .select("slug, updated_at")
+        .eq("status", "published")
+        .order("published_at", { ascending: false })
+        .limit(5000);
+      const urls = [
+        `  <url><loc>${BASE_URL}/blog</loc><changefreq>daily</changefreq><priority>0.8</priority></url>`,
+        ...mapUrls(posts, "blog", 0.7),
+      ];
+      return xmlResponse(urls.join("\n"));
     }
 
     // ═══ Docs ═══
