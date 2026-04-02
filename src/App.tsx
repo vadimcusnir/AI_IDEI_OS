@@ -53,6 +53,8 @@ const Notifications = lazyRetry(() => import("./pages/Notifications"));
 const Feedback = lazyRetry(() => import("./pages/Feedback"));
 const Index = lazyRetry(() => import("./pages/Index"));
 const Changelog = lazyRetry(() => import("./pages/Changelog"));
+const Blog = lazyRetry(() => import("./pages/Blog"));
+const BlogPost = lazyRetry(() => import("./pages/BlogPost"));
 const Library = lazyRetry(() => import("./pages/Library"));
 const ArtifactDetail = lazyRetry(() => import("./pages/ArtifactDetail"));
 const GuestPages = lazyRetry(() => import("./pages/GuestPages"));
