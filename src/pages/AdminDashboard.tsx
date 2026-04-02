@@ -272,6 +272,7 @@ export default function AdminDashboard() {
             <TabsContent value="advanced"><Suspense fallback={<TabLoader />}><AdminAdvancedTab /></Suspense></TabsContent>
             <TabsContent value="root2"><Suspense fallback={<TabLoader />}><Root2PricingTab /></Suspense></TabsContent>
             <TabsContent value="llm-index"><Suspense fallback={<TabLoader />}><LLMIndexationTab /></Suspense></TabsContent>
+            <TabsContent value="blog"><Suspense fallback={<TabLoader />}><AdminBlogTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
