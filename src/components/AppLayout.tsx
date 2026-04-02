@@ -82,7 +82,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           ) : (
             <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">
               <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
-              <Suspense fallback={null}><Footer /></Suspense>
+              <Suspense fallback={<div className="py-8"><Skeleton className="h-4 w-32 mx-auto" /></div>}><Footer /></Suspense>
             </main>
           )}
         </div>
