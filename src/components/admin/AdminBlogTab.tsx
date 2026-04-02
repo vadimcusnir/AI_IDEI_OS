@@ -146,9 +146,9 @@ export function AdminBlogTab() {
 
   const statusIcon = (s: string) => {
     switch (s) {
-      case "published": case "completed": return <CheckCircle className="w-3 h-3 text-green-500" />;
+      case "published": case "completed": return <CheckCircle className="w-3 h-3 text-primary" />;
       case "failed": return <XCircle className="w-3 h-3 text-destructive" />;
-      case "scheduled": case "processing": return <Clock className="w-3 h-3 text-yellow-500" />;
+      case "scheduled": case "processing": return <Clock className="w-3 h-3 text-accent-foreground" />;
       default: return <FileText className="w-3 h-3 text-muted-foreground" />;
     }
   };
