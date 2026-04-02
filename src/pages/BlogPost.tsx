@@ -197,6 +197,29 @@ export default function BlogPost() {
               </div>
             </footer>
           )}
+
+          {/* Related Posts (Auto-Interlink) */}
+          {relatedPosts.length > 0 && (
+            <section className="mt-12 pt-8 border-t border-border">
+              <h2 className="text-xl font-semibold text-foreground mb-6">Related Articles</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {relatedPosts.slice(0, 4).map((rp) => (
+                  <Link
+                    key={rp.id}
+                    to={`/blog/${rp.slug}`}
+                    className="group flex items-center gap-3 p-4 rounded-lg border border-border hover:border-primary/40 transition-colors bg-card"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                        {rp.title}
+                      </p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary flex-shrink-0 transition-colors" />
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
         </article>
       </div>
     </>
