@@ -4,14 +4,7 @@
  */
 import { motion } from "framer-motion";
 import { useState } from "react";
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
-  }),
-};
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const INPUTS = [
   { label: "Rough idea", icon: "💭" },
@@ -40,14 +33,23 @@ const OUTPUTS = [
 
 export function TransformationDiagram() {
   const [activeStep, setActiveStep] = useState<number | null>(null);
+  const reduced = useReducedMotion();
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: reduced ? 0 : 20 },
+    visible: (i: number) => ({
+      opacity: 1, y: 0,
+      transition: { delay: i * 0.08, duration: reduced ? 0 : 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const },
+    }),
+  };
 
   return (
-    <section className="py-24 sm:py-36 border-y border-border/40">
+    <section className="py-28 sm:py-40 border-y border-border/40">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-16 sm:mb-24">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-20 sm:mb-28">
           <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-[hsl(var(--gold-oxide))] mb-6 block">TRANSFORMATION</span>
           <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold tracking-[-0.01em] text-foreground mb-6 leading-[1.15]">From rough thought to finished asset</h2>
-          <p className="text-[15px] text-muted-foreground max-w-[440px] mx-auto leading-[1.75]">
+          <p className="text-[15px] text-muted-foreground max-w-[480px] mx-auto leading-[1.75]">
             See how one idea moves through the system and becomes multiple usable outputs.
           </p>
         </motion.div>
@@ -61,7 +63,7 @@ export function TransformationDiagram() {
               {INPUTS.map((input) => (
                 <div
                   key={input.label}
-                  className="flex items-center gap-4 p-4 rounded-lg border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.15)] transition-all cursor-default landing-card"
+                  className="flex items-center gap-4 p-4 rounded-lg border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.2)] hover:bg-accent/5 transition-all duration-200 cursor-default landing-card"
                   onMouseEnter={() => setActiveStep(0)}
                   onMouseLeave={() => setActiveStep(null)}
                 >
@@ -75,7 +77,7 @@ export function TransformationDiagram() {
           {/* Arrow 1 */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp} className="hidden lg:flex items-center justify-center px-6 pt-12">
             <div className="flex flex-col items-center gap-2">
-              <div className={`w-16 h-px transition-colors duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.45)]' : 'bg-border/25'}`} />
+              <div className={`w-16 h-px transition-all duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)] w-20' : 'bg-border/25'}`} />
               <span className="text-xs font-mono text-[hsl(var(--gold-oxide)/0.6)]">→</span>
             </div>
           </motion.div>
@@ -87,7 +89,7 @@ export function TransformationDiagram() {
               {PROCESSES.map((proc) => (
                 <div
                   key={proc.label}
-                  className="p-4 rounded-lg border border-[hsl(var(--gold-oxide)/0.07)] bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.18)] transition-all cursor-default group landing-card"
+                  className="p-4 rounded-lg border border-[hsl(var(--gold-oxide)/0.07)] bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.22)] hover:bg-accent/5 transition-all duration-200 cursor-default group landing-card"
                   onMouseEnter={() => setActiveStep(1)}
                   onMouseLeave={() => setActiveStep(null)}
                 >
@@ -101,7 +103,7 @@ export function TransformationDiagram() {
           {/* Arrow 2 */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={3} variants={fadeUp} className="hidden lg:flex items-center justify-center px-6 pt-12">
             <div className="flex flex-col items-center gap-2">
-              <div className={`w-16 h-px transition-colors duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.45)]' : 'bg-border/25'}`} />
+              <div className={`w-16 h-px transition-all duration-300 ${activeStep !== null ? 'bg-[hsl(var(--gold-oxide)/0.5)] w-20' : 'bg-border/25'}`} />
               <span className="text-xs font-mono text-[hsl(var(--gold-oxide)/0.6)]">→</span>
             </div>
           </motion.div>
@@ -113,7 +115,7 @@ export function TransformationDiagram() {
               {OUTPUTS.map((output) => (
                 <div
                   key={output.label}
-                  className="p-3.5 rounded-lg border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.15)] transition-all cursor-default landing-card"
+                  className="p-3.5 rounded-lg border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.2)] hover:bg-accent/5 transition-all duration-200 cursor-default landing-card"
                   onMouseEnter={() => setActiveStep(2)}
                   onMouseLeave={() => setActiveStep(null)}
                 >
