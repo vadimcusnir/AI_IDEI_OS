@@ -330,7 +330,7 @@ export function AdminBlogTab() {
                             onClick={() => updateMutation.mutate({ id: post.id, status: "draft" })}
                             title="Unpublish"
                           >
-                            <XCircle className="w-4 h-4 text-yellow-500" />
+                            <XCircle className="w-4 h-4 text-accent-foreground" />
                           </Button>
                         )}
                         <Button
