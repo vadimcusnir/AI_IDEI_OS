@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
@@ -11,12 +12,13 @@ const ONBOARDING_EXEMPT = ["/onboarding", "/profile", "/auth", "/reset-password"
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
+  const { flags, loading: flagsLoading } = useOnboardingState();
   const location = useLocation();
 
-  if (loading) {
+  if (loading || flagsLoading) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Loading" />
       </div>
     );
   }
@@ -27,11 +29,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   // Enforce onboarding for new users (skip exempt routes)
   const isExempt = ONBOARDING_EXEMPT.some(p => location.pathname.startsWith(p));
-  if (!isExempt) {
-    const completed = localStorage.getItem(`onboarding_completed_${user.id}`);
-    if (!completed) {
-      return <Navigate to="/onboarding" replace />;
-    }
+  if (!isExempt && !flags.checklist_completed) {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return <>{children}</>;

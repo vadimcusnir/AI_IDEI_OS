@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
@@ -123,10 +125,12 @@ export default function Onboarding() {
   const allDone = completedCount === STEPS.length;
 
   // Fire confetti when all steps complete
+  const { updateFlag } = useOnboardingState();
   useEffect(() => {
     if (allDone && !prevAllDoneRef.current) {
       fireFinalConfetti();
-      if (user) localStorage.setItem(`onboarding_completed_${user.id}`, "true");
+      updateFlag("checklist_completed", true);
+      trackInternalEvent({ event: AnalyticsEvents.ONBOARDING_COMPLETED });
     }
     prevAllDoneRef.current = allDone;
   }, [allDone]);

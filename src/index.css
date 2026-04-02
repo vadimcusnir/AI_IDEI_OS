@@ -280,11 +280,7 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
-  @media (min-width: 768px) {
-    body {
-      font-size: var(--body-dense-size); /* 14px on desktop — denser UI */
-    }
-  }
+  /* 16px body globally — WCAG AA minimum. Dense UI uses utility classes, not base. */
 
   /* ── Global focus states — P1 accessibility ── */
   :focus-visible {
