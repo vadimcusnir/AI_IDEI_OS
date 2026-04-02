@@ -173,8 +173,8 @@ function createMarkdownComponents() {
       </pre>
     ),
     table: ({ children }: { children?: ReactNode }) => (
-      <div className="my-8 overflow-x-auto rounded-xl border border-border">
-        <table className="w-full text-sm">{children}</table>
+      <div className="my-8 overflow-x-auto rounded-xl border border-border -mx-2 sm:mx-0">
+        <table className="w-full text-sm min-w-[400px]">{children}</table>
       </div>
     ),
     thead: ({ children }: { children?: ReactNode }) => (
