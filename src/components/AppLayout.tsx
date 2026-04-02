@@ -7,6 +7,7 @@
  */
 
 import { ReactNode, useEffect, useRef, lazy, Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
