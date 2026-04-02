@@ -55,6 +55,56 @@ const IMAGE_STYLE_PROMPT = `Style requirements (MANDATORY):
 - Minimal or no text in the image
 - Abstract/conceptual representation`;
 
+function repairAndParseJson(raw: string): any {
+  // Strip markdown code fences
+  let cleaned = raw.replace(/```(?:json)?\s*/gi, "").replace(/```\s*/g, "").trim();
+
+  // Try direct parse
+  try { return JSON.parse(cleaned); } catch { /* continue */ }
+
+  // Find JSON boundaries
+  const jsonStart = cleaned.search(/[{[]/);
+  if (jsonStart === -1) {
+    console.error("[blog-generate] No JSON found in response, length:", raw.length);
+    return null;
+  }
+  const opener = cleaned[jsonStart];
+  const closer = opener === "{" ? "}" : "]";
+  const jsonEnd = cleaned.lastIndexOf(closer);
+  if (jsonEnd <= jsonStart) {
+    // Unbalanced — try to close
+    cleaned = cleaned.substring(jsonStart);
+  } else {
+    cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
+  }
+
+  // Repair common issues
+  cleaned = cleaned
+    .replace(/,\s*}/g, "}")
+    .replace(/,\s*]/g, "]")
+    .replace(/[\x00-\x1F\x7F]/g, (ch) => ch === "\n" || ch === "\t" ? ch : "");
+
+  try { return JSON.parse(cleaned); } catch { /* continue */ }
+
+  // Fix unbalanced braces/brackets
+  let braces = 0, brackets = 0;
+  for (const ch of cleaned) {
+    if (ch === "{") braces++;
+    if (ch === "}") braces--;
+    if (ch === "[") brackets++;
+    if (ch === "]") brackets--;
+  }
+  let repaired = cleaned;
+  while (brackets > 0) { repaired += "]"; brackets--; }
+  while (braces > 0) { repaired += "}"; braces--; }
+
+  try { return JSON.parse(repaired); } catch (e) {
+    console.error("[blog-generate] JSON repair failed:", (e as Error).message);
+    console.error("[blog-generate] First 500 chars:", raw.substring(0, 500));
+    return null;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
