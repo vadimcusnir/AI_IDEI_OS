@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, Tag, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/SEOHead";
 import ReactMarkdown from "react-markdown";
+import { useAutoInterlink } from "@/hooks/useAutoInterlink";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -24,6 +25,24 @@ export default function BlogPost() {
     },
     enabled: !!slug,
   });
+
+  // Fetch all posts for auto-interlinking
+  const { data: allPosts } = useQuery({
+    queryKey: ["blog-posts-interlink"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("blog_posts")
+        .select("id, title, slug, tags, category")
+        .eq("status", "published")
+        .limit(200);
+      return (data || []) as Array<{ id: string; title: string; slug: string; tags: string[]; category: string }>;
+    },
+  });
+
+  const relatedPosts = useAutoInterlink(
+    post ? { id: post.id, title: post.title, slug: post.slug, tags: post.tags as string[], category: post.category as string } : null,
+    allPosts
+  );
 
   if (isLoading) {
     return (
@@ -177,6 +196,29 @@ export default function BlogPost() {
                 ))}
               </div>
             </footer>
+          )}
+
+          {/* Related Posts (Auto-Interlink) */}
+          {relatedPosts.length > 0 && (
+            <section className="mt-12 pt-8 border-t border-border">
+              <h2 className="text-xl font-semibold text-foreground mb-6">Related Articles</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {relatedPosts.slice(0, 4).map((rp) => (
+                  <Link
+                    key={rp.id}
+                    to={`/blog/${rp.slug}`}
+                    className="group flex items-center gap-3 p-4 rounded-lg border border-border hover:border-primary/40 transition-colors bg-card"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                        {rp.title}
+                      </p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary flex-shrink-0 transition-colors" />
+                  </Link>
+                ))}
+              </div>
+            </section>
           )}
         </article>
       </div>

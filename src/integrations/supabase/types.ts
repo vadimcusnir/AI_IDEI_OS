@@ -1086,8 +1086,11 @@ export type Database = {
           id: string
           inline_images: Json | null
           metadata: Json | null
+          pipeline_scores: Json | null
+          pipeline_stage: string | null
           published_at: string | null
           reading_time_min: number | null
+          related_post_ids: string[] | null
           scheduled_at: string | null
           seo_description: string | null
           seo_title: string | null
@@ -1108,8 +1111,11 @@ export type Database = {
           id?: string
           inline_images?: Json | null
           metadata?: Json | null
+          pipeline_scores?: Json | null
+          pipeline_stage?: string | null
           published_at?: string | null
           reading_time_min?: number | null
+          related_post_ids?: string[] | null
           scheduled_at?: string | null
           seo_description?: string | null
           seo_title?: string | null
@@ -1130,8 +1136,11 @@ export type Database = {
           id?: string
           inline_images?: Json | null
           metadata?: Json | null
+          pipeline_scores?: Json | null
+          pipeline_stage?: string | null
           published_at?: string | null
           reading_time_min?: number | null
+          related_post_ids?: string[] | null
           scheduled_at?: string | null
           seo_description?: string | null
           seo_title?: string | null
@@ -1144,6 +1153,62 @@ export type Database = {
           word_count?: number | null
         }
         Relationships: []
+      }
+      blog_topics: {
+        Row: {
+          category: string
+          created_at: string
+          difficulty: string | null
+          generated_post_id: string | null
+          id: string
+          metadata: Json | null
+          priority: number | null
+          search_intent: string | null
+          slug: string
+          status: string
+          subcategory: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          difficulty?: string | null
+          generated_post_id?: string | null
+          id?: string
+          metadata?: Json | null
+          priority?: number | null
+          search_intent?: string | null
+          slug: string
+          status?: string
+          subcategory?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          difficulty?: string | null
+          generated_post_id?: string | null
+          id?: string
+          metadata?: Json | null
+          priority?: number | null
+          search_intent?: string | null
+          slug?: string
+          status?: string
+          subcategory?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_topics_generated_post_id_fkey"
+            columns: ["generated_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       capacity_state: {
         Row: {
