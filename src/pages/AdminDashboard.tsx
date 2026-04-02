@@ -86,6 +86,7 @@ const TAB_GROUPS = [
       { value: "contributions", label: "Contributions", icon: Brain },
       { value: "moderation", label: "Moderation", icon: MessageCircle },
       { value: "llm-index", label: "LLM Index", icon: Bot },
+      { value: "blog", label: "Blog", icon: FileText },
     ],
   },
   {
