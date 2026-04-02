@@ -33,12 +33,19 @@ export function WalletManagementTab() {
 
   const load = async () => {
     setLoading(true);
-    const [walletsRes, txRes] = await Promise.all([
+    const [walletsRes, txRes, profilesRes] = await Promise.all([
       supabase.from("user_credits").select("*").order("balance", { ascending: false }).limit(50),
       supabase.from("credit_transactions").select("*").order("created_at", { ascending: false }).limit(30),
+      supabase.from("profiles").select("id, email"),
     ]);
 
-    const w = (walletsRes.data as WalletRow[]) || [];
+    const emailMap = new Map<string, string>();
+    (profilesRes.data || []).forEach((p: any) => { if (p.email) emailMap.set(p.id, p.email); });
+
+    const w = ((walletsRes.data as WalletRow[]) || []).map(row => ({
+      ...row,
+      email: emailMap.get(row.user_id) || undefined,
+    }));
     setWallets(w);
     setRecentTx((txRes.data as RecentTx[]) || []);
     setTotals({
