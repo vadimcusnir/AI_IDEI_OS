@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOnboardingState } from "@/hooks/useOnboardingState";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import {
   Dialog,
   DialogContent,
@@ -15,14 +17,14 @@ import { useTranslation } from "react-i18next";
 export function WelcomeModal() {
   const { t } = useTranslation("common");
   const { user } = useAuth();
+  const { flags, loading, updateFlag } = useOnboardingState();
   const [open, setOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (!user) return;
-    const seen = localStorage.getItem(`welcome_seen_${user.id}`);
-    if (!seen) setOpen(true);
-  }, [user]);
+    if (!user || loading) return;
+    if (!flags.welcome_seen) setOpen(true);
+  }, [user, loading, flags.welcome_seen]);
 
   useEffect(() => {
     if (open && videoRef.current) {
@@ -35,7 +37,8 @@ export function WelcomeModal() {
   }, [open]);
 
   const handleClose = () => {
-    if (user) localStorage.setItem(`welcome_seen_${user.id}`, "true");
+    updateFlag("welcome_seen", true);
+    trackInternalEvent({ event: AnalyticsEvents.WELCOME_MODAL_CLOSED });
     setOpen(false);
   };
 
@@ -47,7 +50,7 @@ export function WelcomeModal() {
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) handleClose(); }}>
-      <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-primary/20">
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-primary/20" aria-label={t("welcome_title")}>
         <div className="relative bg-gradient-to-br from-primary/10 to-accent/5 p-4 pb-2">
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
@@ -62,6 +65,7 @@ export function WelcomeModal() {
                 controls
                 playsInline
                 preload="metadata"
+                aria-label={t("welcome_video_label", "Introductory video")}
               />
             </div>
           </motion.div>
@@ -70,7 +74,7 @@ export function WelcomeModal() {
         <div className="px-6 pb-6 pt-2">
           <DialogHeader className="text-left mb-4">
             <div className="flex items-center gap-2 mb-1">
-              <Rocket className="h-4 w-4 text-primary" />
+              <Rocket className="h-4 w-4 text-primary" aria-hidden="true" />
               <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">{t("welcome")}</span>
             </div>
             <DialogTitle className="text-lg">
@@ -81,10 +85,10 @@ export function WelcomeModal() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-2 mb-4">
+          <div className="space-y-2 mb-4" role="list" aria-label={t("welcome_steps_label", "Getting started steps")}>
             {steps.map((step, i) => (
-              <div key={i} className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[9px] font-bold shrink-0">
+              <div key={i} role="listitem" className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[9px] font-bold shrink-0" aria-hidden="true">
                   {i + 1}
                 </span>
                 {step}
@@ -93,9 +97,9 @@ export function WelcomeModal() {
           </div>
 
           <div className="flex gap-2">
-            <Button onClick={handleClose} className="flex-1 gap-2 text-xs">
+            <Button onClick={handleClose} className="flex-1 gap-2 text-xs" aria-label={t("start_now")}>
               {t("start_now")}
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Button>
             <Button variant="ghost" size="sm" onClick={handleClose} className="text-xs text-muted-foreground">
               {t("later")}
