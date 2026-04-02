@@ -23,7 +23,6 @@ export default function BlogPost() {
     });
     return () => subscription.unsubscribe();
   }, []);
-  const { slug } = useParams<{ slug: string }>();
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ["blog-post", slug],
