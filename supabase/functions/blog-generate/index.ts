@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { aiCallWithRetry, extractAiContent } from "../_shared/ai-retry.ts";
+import { seoTransform } from "./seo-transform.ts";
 import { hardValidateArticle } from "../_shared/blog-validation.ts";
 import {
   NORMALIZER_SYSTEM,
