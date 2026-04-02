@@ -1,47 +1,28 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { aiCallWithRetry, extractAiContent } from "../_shared/ai-retry.ts";
+import { hardValidateArticle } from "../_shared/blog-validation.ts";
+import {
+  NORMALIZER_SYSTEM,
+  PLANNER_SYSTEM,
+  RENDERER_SYSTEM,
+  VALIDATOR_SYSTEM,
+  REPAIR_SYSTEM,
+} from "../_shared/blog-prompts.ts";
 
 /**
- * Blog Post Generator — AI-IDEI Content Marketing Engine
- * Generates SEO-optimized blog posts with inline AI images.
+ * Blog Post Generator — AI-IDEI Content Marketing Engine (5-Stage Pipeline)
+ * Stages: Normalize → Plan → Render → Validate → Repair
  * 
  * POST: Generate a new blog post (admin only)
- *   body: { topic?: string, category?: string, schedule_hours?: number }
+ *   body: { topic?: string, topic_id?: string, category?: string, schedule_hours?: number, pipeline?: "5-stage" | "single-shot" }
  * 
  * POST /publish: Publish scheduled posts (called by cron)
  */
 
 const CATEGORIES = [
-  "knowledge-extraction",
-  "ai-strategy",
-  "content-intelligence",
-  "cognitive-frameworks",
-  "digital-economics",
-  "creator-systems",
-];
-
-const TOPIC_SEEDS = [
-  "How AI transforms raw content into structured knowledge assets",
-  "The neuron model: why atomic knowledge units outperform documents",
-  "Building a personal knowledge operating system from scratch",
-  "Why most content creators lose 90% of their intellectual value",
-  "The economics of knowledge extraction and monetization",
-  "Cognitive frameworks for decision-making under uncertainty",
-  "Pattern recognition in unstructured data: practical approaches",
-  "From podcast transcript to sellable intelligence report",
-  "The attention economy vs the knowledge economy",
-  "Why structured thinking beats raw information volume",
-  "Building systems that think: knowledge graphs in practice",
-  "The future of content: from consumption to extraction",
-  "How to price intellectual property in the AI age",
-  "Entity extraction: finding hidden connections in your content",
-  "The compound effect of systematic knowledge management",
-  "Digital twin of your expertise: building and monetizing",
-  "Why the best creators are becoming knowledge engineers",
-  "Automated insight generation: from data to actionable intelligence",
-  "The knowledge supply chain: extraction, refinement, delivery",
-  "Building anti-fragile content strategies with AI",
+  "knowledge-extraction", "ai-strategy", "content-intelligence",
+  "cognitive-frameworks", "digital-economics", "creator-systems",
 ];
 
 const IMAGE_STYLE_PROMPT = `Style requirements (MANDATORY):
@@ -56,29 +37,20 @@ const IMAGE_STYLE_PROMPT = `Style requirements (MANDATORY):
 - Abstract/conceptual representation`;
 
 function repairAndParseJson(raw: string): any {
-  // Strip markdown code fences
   let cleaned = raw.replace(/```(?:json)?\s*/gi, "").replace(/```\s*/g, "").trim();
-
-  // Try direct parse
   try { return JSON.parse(cleaned); } catch { /* continue */ }
 
-  // Find JSON boundaries
   const jsonStart = cleaned.search(/[{[]/);
-  if (jsonStart === -1) {
-    console.error("[blog-generate] No JSON found in response, length:", raw.length);
-    return null;
-  }
+  if (jsonStart === -1) return null;
   const opener = cleaned[jsonStart];
   const closer = opener === "{" ? "}" : "]";
   const jsonEnd = cleaned.lastIndexOf(closer);
   if (jsonEnd <= jsonStart) {
-    // Unbalanced — try to close
     cleaned = cleaned.substring(jsonStart);
   } else {
     cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
   }
 
-  // Repair common issues
   cleaned = cleaned
     .replace(/,\s*}/g, "}")
     .replace(/,\s*]/g, "]")
@@ -86,7 +58,6 @@ function repairAndParseJson(raw: string): any {
 
   try { return JSON.parse(cleaned); } catch { /* continue */ }
 
-  // Fix unbalanced braces/brackets
   let braces = 0, brackets = 0;
   for (const ch of cleaned) {
     if (ch === "{") braces++;
@@ -100,7 +71,6 @@ function repairAndParseJson(raw: string): any {
 
   try { return JSON.parse(repaired); } catch (e) {
     console.error("[blog-generate] JSON repair failed:", (e as Error).message);
-    console.error("[blog-generate] First 500 chars:", raw.substring(0, 500));
     return null;
   }
 }
@@ -123,7 +93,7 @@ Deno.serve(async (req) => {
     const url = new URL(req.url);
     const isPublishAction = url.pathname.endsWith("/publish");
 
-    // === AUTO-PUBLISH ENDPOINT (called by cron) ===
+    // === AUTO-PUBLISH ENDPOINT ===
     if (isPublishAction) {
       const now = new Date().toISOString();
       const { data: posts, error } = await supabase
@@ -138,102 +108,188 @@ Deno.serve(async (req) => {
       });
     }
 
-    // === GENERATE ENDPOINT (admin only) ===
+    // === AUTH CHECK (admin only) ===
     const authHeader = req.headers.get("authorization") || "";
-    if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+    let isAdminUser = false;
+    let userId = "";
+
+    if (authHeader.startsWith("Bearer ")) {
+      const token = authHeader.replace("Bearer ", "");
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
       });
-    }
-    const token = authHeader.replace("Bearer ", "");
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const userClient = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: `Bearer ${token}` } },
-    });
-    const { data: { user }, error: authErr } = await userClient.auth.getUser();
-    if (authErr || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
+      const { data: { user }, error: authErr } = await userClient.auth.getUser();
+      if (user && !authErr) {
+        const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+        isAdminUser = !!roleCheck;
+        userId = user.id;
+      }
     }
 
-    // Check admin role
-    const { data: roleCheck } = await supabase.rpc("has_role", {
-      _user_id: user.id, _role: "admin",
-    });
-    if (!roleCheck) {
+    // Allow cron (no auth) or admin users
+    const isCronCall = !authHeader;
+    if (!isAdminUser && !isCronCall) {
       return new Response(JSON.stringify({ error: "Admin access required" }), {
         status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
     const body = await req.json().catch(() => ({}));
-    const topicHint = body.topic || TOPIC_SEEDS[Math.floor(Math.random() * TOPIC_SEEDS.length)];
-    const category = body.category || CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+    const pipelineMode = body.pipeline || "5-stage";
     const scheduleHours = body.schedule_hours ?? 0;
 
-    // Step 1: Generate article content
-    console.log("[blog-generate] Generating article for topic:", topicHint);
-    const articleResponse = await aiCallWithRetry(LOVABLE_API_KEY, {
-      model: "google/gemini-2.5-flash",
-      messages: [
-        {
-          role: "system",
-          content: `You are an expert content writer for AI-IDEI, a knowledge extraction operating system platform.
-Write a comprehensive, insightful blog post in English.
+    // Resolve topic: from body, topic_id, or random from DB
+    let topicHint = body.topic || "";
+    let topicId = body.topic_id || null;
+    let category = body.category || "";
 
-Rules:
-- Title: SEO-optimized, max 60 characters, compelling
-- Write 1500-2500 words
-- Use markdown formatting with ## for H2 sections and ### for H3
-- Include 5-7 H2 sections
-- Each section should be 200-400 words
-- Include practical insights, not generic advice
-- Write with authority and depth
-- Include a compelling introduction (150-200 words)
-- Include a conclusion with clear takeaway
-- Generate an excerpt (2-3 sentences, max 160 chars for SEO)
-- Generate an SEO meta description (max 155 chars)
-- Generate 3-5 relevant tags
+    if (!topicHint) {
+      // Try to get a pending topic from the topic bank
+      const { data: nextTopic } = await supabase
+        .from("blog_topics")
+        .select("id, title, category")
+        .eq("status", "pending")
+        .order("priority", { ascending: false })
+        .limit(1)
+        .single();
 
-IMPORTANT: After every 250-300 words, insert a placeholder like [IMAGE_N: description of what the image should show — be specific about the concept, diagram type, or visual metaphor].
+      if (nextTopic) {
+        topicHint = nextTopic.title;
+        topicId = nextTopic.id;
+        category = nextTopic.category;
+        // Mark as processing
+        await supabase.from("blog_topics").update({ status: "processing" }).eq("id", nextTopic.id);
+      } else {
+        // Fallback to random category
+        topicHint = "AI-powered knowledge extraction trends and practical applications";
+        category = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+      }
+    }
 
-Output format (strict JSON):
-{
-  "title": "...",
-  "slug": "...",
-  "excerpt": "...",
-  "seo_description": "...",
-  "content": "... markdown with [IMAGE_N: ...] placeholders ...",
-  "tags": ["tag1", "tag2"],
-  "image_prompts": [
-    { "key": "IMAGE_1", "prompt": "detailed description for AI image generation" },
-    { "key": "IMAGE_2", "prompt": "..." }
-  ],
-  "thumbnail_prompt": "description for the thumbnail image — abstract representation of the main concept"
-}`,
-        },
-        {
-          role: "user",
-          content: `Write a blog post about: ${topicHint}\nCategory: ${category}`,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: 8000,
-    });
+    if (!category) category = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
 
-    const rawContent = extractAiContent(articleResponse);
-    
-    // Parse JSON from response with robust repair
-    const articleData = repairAndParseJson(rawContent);
-    if (!articleData || !articleData.title || !articleData.content) {
-      console.error("[blog-generate] Invalid article structure after parse");
-      return new Response(JSON.stringify({ error: "Failed to parse generated content" }), {
+    let articleData: any;
+    let pipelineScores: any = null;
+
+    if (pipelineMode === "5-stage") {
+      // ═══ STAGE 1: NORMALIZE ═══
+      console.log("[blog-generate] Stage 1: Normalize");
+      const normalizeResp = await aiCallWithRetry(LOVABLE_API_KEY, {
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: NORMALIZER_SYSTEM },
+          { role: "user", content: `Topic: ${topicHint}\nCategory: ${category}` },
+        ],
+        temperature: 0.5, max_tokens: 2000,
+      });
+      const normalized = repairAndParseJson(extractAiContent(normalizeResp));
+      if (!normalized) {
+        console.error("[blog-generate] Normalize stage failed, falling back to single-shot");
+        articleData = await singleShotGenerate(LOVABLE_API_KEY, topicHint, category);
+      } else {
+        // ═══ STAGE 2: PLAN ═══
+        console.log("[blog-generate] Stage 2: Plan");
+        const planResp = await aiCallWithRetry(LOVABLE_API_KEY, {
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: PLANNER_SYSTEM },
+            { role: "user", content: `Normalized analysis:\n${JSON.stringify(normalized, null, 2)}` },
+          ],
+          temperature: 0.5, max_tokens: 3000,
+        });
+        const plan = repairAndParseJson(extractAiContent(planResp));
+
+        // ═══ STAGE 3: RENDER ═══
+        console.log("[blog-generate] Stage 3: Render");
+        const renderResp = await aiCallWithRetry(LOVABLE_API_KEY, {
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: RENDERER_SYSTEM },
+            { role: "user", content: `Topic: ${topicHint}\nCategory: ${category}\n\nNormalized analysis:\n${JSON.stringify(normalized, null, 2)}\n\nEditorial plan:\n${JSON.stringify(plan || {}, null, 2)}` },
+          ],
+          temperature: 0.7, max_tokens: 8000,
+        });
+        articleData = repairAndParseJson(extractAiContent(renderResp));
+
+        if (articleData?.title && articleData?.content) {
+          // ═══ STAGE 4: VALIDATE ═══
+          console.log("[blog-generate] Stage 4: Validate");
+          const validateResp = await aiCallWithRetry(LOVABLE_API_KEY, {
+            model: "google/gemini-2.5-flash",
+            messages: [
+              { role: "system", content: VALIDATOR_SYSTEM },
+              { role: "user", content: `Topic: ${topicHint}\n\nArticle JSON:\n${JSON.stringify(articleData, null, 2)}` },
+            ],
+            temperature: 0.3, max_tokens: 2000,
+          });
+          const validation = repairAndParseJson(extractAiContent(validateResp));
+          pipelineScores = validation?.scores || null;
+
+          // ═══ STAGE 5: REPAIR (conditional) ═══
+          if (validation?.decision === "repair" && validation?.repair_instructions) {
+            console.log("[blog-generate] Stage 5: Repair");
+            const repairResp = await aiCallWithRetry(LOVABLE_API_KEY, {
+              model: "google/gemini-2.5-flash",
+              messages: [
+                { role: "system", content: REPAIR_SYSTEM },
+                { role: "user", content: `Original article:\n${JSON.stringify(articleData, null, 2)}\n\nRepair instructions:\n${validation.repair_instructions}` },
+              ],
+              temperature: 0.5, max_tokens: 8000,
+            });
+            const repaired = repairAndParseJson(extractAiContent(repairResp));
+            if (repaired?.title && repaired?.content) {
+              articleData = repaired;
+            }
+          } else if (validation?.decision === "reject") {
+            console.log("[blog-generate] Validator rejected, falling back to single-shot");
+            articleData = await singleShotGenerate(LOVABLE_API_KEY, topicHint, category);
+            pipelineScores = null;
+          }
+        } else {
+          console.log("[blog-generate] Render failed, falling back to single-shot");
+          articleData = await singleShotGenerate(LOVABLE_API_KEY, topicHint, category);
+        }
+      }
+    } else {
+      articleData = await singleShotGenerate(LOVABLE_API_KEY, topicHint, category);
+    }
+
+    if (!articleData?.title || !articleData?.content) {
+      // Update topic status to failed
+      if (topicId) await supabase.from("blog_topics").update({ status: "failed" }).eq("id", topicId);
+      return new Response(JSON.stringify({ error: "Failed to generate content" }), {
         status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
-    // Step 2: Generate thumbnail
+    // ═══ HARD VALIDATION (code-level) ═══
+    const hardResult = hardValidateArticle(articleData);
+    console.log("[blog-generate] Hard validation:", hardResult.valid ? "PASS" : "FAIL", hardResult.errors);
+
+    if (!hardResult.valid) {
+      // One repair attempt
+      console.log("[blog-generate] Hard validation failed, attempting repair");
+      const repairResp = await aiCallWithRetry(LOVABLE_API_KEY, {
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: REPAIR_SYSTEM },
+          { role: "user", content: `Article:\n${JSON.stringify(articleData, null, 2)}\n\nRepair these structural issues:\n${hardResult.errors.join("\n")}` },
+        ],
+        temperature: 0.5, max_tokens: 8000,
+      });
+      const repaired = repairAndParseJson(extractAiContent(repairResp));
+      if (repaired?.title && repaired?.content) {
+        const recheck = hardValidateArticle(repaired);
+        if (recheck.valid) {
+          articleData = repaired;
+        } else {
+          console.error("[blog-generate] Repair failed hard validation again");
+        }
+      }
+    }
+
+    // ═══ GENERATE THUMBNAIL ═══
     console.log("[blog-generate] Generating thumbnail...");
     let thumbnailUrl = "";
     try {
@@ -244,7 +300,7 @@ Output format (strict JSON):
           model: "google/gemini-2.5-flash-image",
           messages: [{
             role: "user",
-            content: `Generate an image: ${articleData.thumbnail_prompt || articleData.title}. ${IMAGE_STYLE_PROMPT}. Aspect ratio: 16:9, landscape orientation. The image should be abstract and conceptual, representing the core idea visually.`,
+            content: `Generate an image: ${articleData.thumbnail_prompt || articleData.title}. ${IMAGE_STYLE_PROMPT}. Aspect ratio: 16:9, landscape orientation. Abstract and conceptual.`,
           }],
           modalities: ["image", "text"],
         }),
@@ -255,22 +311,17 @@ Output format (strict JSON):
         const imgData = base64.replace(/^data:image\/\w+;base64,/, "");
         const bytes = Uint8Array.from(atob(imgData), c => c.charCodeAt(0));
         const fileName = `thumbnails/${articleData.slug}-thumb.png`;
-        await supabase.storage.from("blog-images").upload(fileName, bytes, {
-          contentType: "image/png", upsert: true,
-        });
+        await supabase.storage.from("blog-images").upload(fileName, bytes, { contentType: "image/png", upsert: true });
         const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(fileName);
         thumbnailUrl = urlData.publicUrl;
       }
-    } catch (e) {
-      console.error("[blog-generate] Thumbnail generation failed:", e);
-    }
+    } catch (e) { console.error("[blog-generate] Thumbnail failed:", e); }
 
-    // Step 3: Generate inline images
+    // ═══ GENERATE INLINE IMAGES ═══
     console.log("[blog-generate] Generating inline images...");
     const inlineImages: Array<{ key: string; url: string; prompt: string }> = [];
     const imagePrompts = articleData.image_prompts || [];
 
-    // Process 2 at a time to avoid rate limits
     for (let i = 0; i < imagePrompts.length; i += 2) {
       const batch = imagePrompts.slice(i, i + 2);
       const results = await Promise.allSettled(
@@ -282,7 +333,7 @@ Output format (strict JSON):
               model: "google/gemini-2.5-flash-image",
               messages: [{
                 role: "user",
-                content: `Generate an image: ${img.prompt}. ${IMAGE_STYLE_PROMPT}. This is an inline blog illustration. Create a visual that could be a: diagram, mind map, classification schema, conceptual flowchart, or meaning metaphor. Aspect ratio: 3:2, landscape.`,
+                content: `Generate an image: ${img.prompt}. ${IMAGE_STYLE_PROMPT}. Inline blog illustration. Create a diagram, mind map, schema, or visual metaphor. Aspect ratio: 3:2, landscape.`,
               }],
               modalities: ["image", "text"],
             }),
@@ -290,45 +341,60 @@ Output format (strict JSON):
           const data = await resp.json();
           const base64 = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
           if (!base64) throw new Error("No image in response");
-
           const imgBytes = Uint8Array.from(
             atob(base64.replace(/^data:image\/\w+;base64,/, "")),
             c => c.charCodeAt(0)
           );
           const fileName = `inline/${articleData.slug}-${img.key.toLowerCase()}.png`;
-          await supabase.storage.from("blog-images").upload(fileName, imgBytes, {
-            contentType: "image/png", upsert: true,
-          });
+          await supabase.storage.from("blog-images").upload(fileName, imgBytes, { contentType: "image/png", upsert: true });
           const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(fileName);
           return { key: img.key, url: urlData.publicUrl, prompt: img.prompt };
         })
       );
-
       for (const r of results) {
         if (r.status === "fulfilled") inlineImages.push(r.value);
       }
-
-      // Small delay between batches
       if (i + 2 < imagePrompts.length) await new Promise(r => setTimeout(r, 2000));
     }
 
-    // Step 4: Replace image placeholders in content
+    // Replace image placeholders
     let finalContent = articleData.content;
     for (const img of inlineImages) {
       const placeholder = new RegExp(`\\[${img.key}:[^\\]]*\\]`, "g");
-      finalContent = finalContent.replace(
-        placeholder,
-        `\n\n![${img.prompt}](${img.url})\n\n`
-      );
+      finalContent = finalContent.replace(placeholder, `\n\n![${img.prompt}](${img.url})\n\n`);
     }
-    // Remove any unreplaced placeholders
     finalContent = finalContent.replace(/\[IMAGE_\d+:[^\]]*\]/g, "");
 
-    // Calculate word count and reading time
     const wordCount = finalContent.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200);
 
-    // Step 5: Save to DB
+    // ═══ AUTO-INTERLINK: find related posts ═══
+    let relatedPostIds: string[] = [];
+    try {
+      const { data: existingPosts } = await supabase
+        .from("blog_posts")
+        .select("id, title, tags, category")
+        .eq("status", "published")
+        .limit(100);
+
+      if (existingPosts?.length) {
+        const newTags = new Set((articleData.tags || []).map((t: string) => t.toLowerCase()));
+        const scored = existingPosts
+          .map((p: any) => {
+            let score = 0;
+            if (p.category === category) score += 2;
+            const pTags = (p.tags || []).map((t: string) => t.toLowerCase());
+            for (const t of pTags) { if (newTags.has(t)) score += 3; }
+            return { id: p.id, score };
+          })
+          .filter((s: any) => s.score > 0)
+          .sort((a: any, b: any) => b.score - a.score)
+          .slice(0, 5);
+        relatedPostIds = scored.map((s: any) => s.id);
+      }
+    } catch (e) { console.error("[blog-generate] Interlink failed:", e); }
+
+    // ═══ SAVE TO DB ═══
     const scheduledAt = scheduleHours > 0
       ? new Date(Date.now() + scheduleHours * 3600000).toISOString()
       : null;
@@ -346,16 +412,22 @@ Output format (strict JSON):
         tags: articleData.tags || [],
         status: scheduledAt ? "scheduled" : "draft",
         scheduled_at: scheduledAt,
-        author_id: user.id,
+        author_id: userId || null,
         seo_title: articleData.title,
         seo_description: articleData.seo_description || articleData.excerpt,
         reading_time_min: readingTime,
         word_count: wordCount,
+        pipeline_stage: pipelineMode,
+        pipeline_scores: pipelineScores,
+        related_post_ids: relatedPostIds,
         metadata: {
           generated_at: new Date().toISOString(),
           topic_seed: topicHint,
+          topic_id: topicId,
           images_generated: inlineImages.length,
           has_thumbnail: !!thumbnailUrl,
+          pipeline_mode: pipelineMode,
+          hard_validation: hardValidateArticle(articleData),
         },
       })
       .select()
@@ -363,16 +435,27 @@ Output format (strict JSON):
 
     if (insertErr) {
       console.error("[blog-generate] Insert error:", insertErr);
+      if (topicId) await supabase.from("blog_topics").update({ status: "failed" }).eq("id", topicId);
       return new Response(JSON.stringify({ error: insertErr.message }), {
         status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
+    }
+
+    // Update topic status
+    if (topicId) {
+      await supabase.from("blog_topics")
+        .update({ status: "completed", generated_post_id: post.id })
+        .eq("id", topicId);
     }
 
     console.log("[blog-generate] Post created:", post.id, post.title);
     return new Response(JSON.stringify({
       success: true,
       post: { id: post.id, title: post.title, slug: post.slug, status: post.status },
+      pipeline: pipelineMode,
+      scores: pipelineScores,
       images: { thumbnail: !!thumbnailUrl, inline: inlineImages.length },
+      related: relatedPostIds.length,
     }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
@@ -384,3 +467,48 @@ Output format (strict JSON):
     });
   }
 });
+
+// ═══ FALLBACK: Single-shot generation ═══
+async function singleShotGenerate(apiKey: string, topic: string, category: string) {
+  const resp = await aiCallWithRetry(apiKey, {
+    model: "google/gemini-2.5-flash",
+    messages: [
+      { role: "system", content: `You are an expert content writer for AI-IDEI, a knowledge extraction operating system platform.
+Write a comprehensive, insightful blog post in English.
+
+Rules:
+- Title: SEO-optimized, max 70 characters, compelling
+- Write 1500-2500 words
+- Use markdown formatting with ## for H2 sections and ### for H3
+- Include 5-7 H2 sections
+- Each section should be 200-400 words
+- Include practical insights, not generic advice
+- Write with authority and depth
+- Include a compelling introduction (150-200 words)
+- Include a conclusion with clear takeaway
+- Generate an excerpt (2-3 sentences, max 160 chars for SEO)
+- Generate an SEO meta description (max 155 chars)
+- Generate 3-5 relevant tags
+
+IMPORTANT: After every 250-300 words, insert a placeholder like [IMAGE_N: description of what the image should show].
+
+Output format (strict JSON):
+{
+  "title": "...",
+  "slug": "...",
+  "excerpt": "...",
+  "seo_description": "...",
+  "content": "... markdown with [IMAGE_N: ...] placeholders ...",
+  "tags": ["tag1", "tag2"],
+  "image_prompts": [
+    { "key": "IMAGE_1", "prompt": "detailed description for AI image generation" }
+  ],
+  "thumbnail_prompt": "description for the thumbnail image"
+}` },
+      { role: "user", content: `Write a blog post about: ${topic}\nCategory: ${category}` },
+    ],
+    temperature: 0.7,
+    max_tokens: 8000,
+  });
+  return repairAndParseJson(extractAiContent(resp));
+}
