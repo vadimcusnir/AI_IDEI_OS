@@ -359,14 +359,11 @@ Deno.serve(async (req) => {
           const data = await resp.json();
           const base64 = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
           if (!base64) throw new Error("No image in response");
-          const imgBytes = Uint8Array.from(
-            atob(base64.replace(/^data:image\/\w+;base64,/, "")),
-            c => c.charCodeAt(0)
-          );
-          const fileName = `inline/${articleData.slug}-${img.key.toLowerCase()}.png`;
-          await supabase.storage.from("blog-images").upload(fileName, imgBytes, { contentType: "image/png", upsert: true });
-          const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(fileName);
-          return { key: img.key, url: urlData.publicUrl, prompt: img.prompt };
+          const { bytes, contentType, extension } = extractImageBytes(base64);
+          const fileName = `inline/${articleData.slug}-${img.key.toLowerCase()}.${extension}`;
+          const url = await uploadOptimizedImage(supabase, "blog-images", fileName, bytes, contentType);
+          if (!url) throw new Error("Upload failed");
+          return { key: img.key, url, prompt: img.prompt };
         })
       );
       for (const r of results) {
