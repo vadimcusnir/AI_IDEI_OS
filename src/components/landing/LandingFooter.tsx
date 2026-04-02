@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
-    <Link to={to} className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors rounded">
+    <Link to={to} className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors duration-200 rounded inline-block">
       {children}
     </Link>
   );
@@ -18,7 +18,7 @@ function FooterLink({ to, children }: { to: string; children: React.ReactNode })
 
 function ExtLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors rounded">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors duration-200 rounded inline-block">
       {children}
     </a>
   );
@@ -29,8 +29,8 @@ export function LandingFooter() {
 
   return (
     <footer className="border-t border-border/50 bg-background" role="contentinfo">
-      <div className="mx-auto max-w-5xl px-5 sm:px-6 py-16 sm:py-24">
-        <div className="grid grid-cols-1 xs:grid-cols-2 gap-12 lg:grid-cols-5">
+      <div className="mx-auto max-w-5xl px-5 sm:px-6 py-20 sm:py-28">
+        <div className="grid grid-cols-1 xs:grid-cols-2 gap-14 lg:grid-cols-5">
           {/* Brand */}
           <div className="space-y-5 col-span-2 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5">
@@ -91,7 +91,7 @@ export function LandingFooter() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border/30 pt-8 sm:flex-row">
+        <div className="mt-20 flex flex-col items-center justify-between gap-4 border-t border-border/30 pt-8 sm:flex-row">
           <span className="text-xs font-mono text-muted-foreground">
             © {new Date().getFullYear()} Cușnir Media SRL · AI-IDEI · {t("footer.copyright")}
           </span>

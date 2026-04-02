@@ -547,24 +547,57 @@
 
   /* Landing: calm-premium micro-interactions */
   .landing-card {
-    transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    transition: border-color 0.35s ease, background-color 0.35s ease, transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.35s ease;
   }
   .landing-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px -8px hsl(var(--gold-oxide) / 0.1), 0 2px 8px -2px hsl(var(--foreground) / 0.04);
+  }
+
+  /* Landing CTA glow on hover */
+  .cta-glow {
+    position: relative;
+    overflow: visible;
+  }
+  .cta-glow::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(var(--gold-oxide) / 0.35), hsl(var(--gold-oxide) / 0.1));
+    filter: blur(16px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .cta-glow:hover::before {
+    opacity: 1;
   }
 
   /* Landing: section gold divider */
   .gold-divider {
-    @apply w-full h-px;
+    @apply w-full;
+    height: 2px;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      hsl(var(--gold-oxide) / 0.08) 20%,
-      hsl(var(--gold-oxide) / 0.2) 50%,
-      hsl(var(--gold-oxide) / 0.08) 80%,
+      hsl(var(--gold-oxide) / 0.06) 15%,
+      hsl(var(--gold-oxide) / 0.25) 50%,
+      hsl(var(--gold-oxide) / 0.06) 85%,
       transparent 100%
     );
   }
+
+  /* SVG section separator pattern */
+  .section-sigil {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--sp-4) 0;
+  }
+
+  /* Landing section spacing rhythm: major=py-32/py-44, minor=py-20/py-28 */
 
   /* Reduced motion — disable ALL decorative animations */
   @media (prefers-reduced-motion: reduce) {
