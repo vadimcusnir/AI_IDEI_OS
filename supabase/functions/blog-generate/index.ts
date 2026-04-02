@@ -174,13 +174,10 @@ Output format (strict JSON):
 
     const rawContent = extractAiContent(articleResponse);
     
-    // Parse JSON from response (handle markdown code blocks)
-    let articleData: any;
-    try {
-      const jsonMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, rawContent];
-      articleData = JSON.parse(jsonMatch[1]!.trim());
-    } catch {
-      console.error("[blog-generate] Failed to parse article JSON");
+    // Parse JSON from response with robust repair
+    const articleData = repairAndParseJson(rawContent);
+    if (!articleData || !articleData.title || !articleData.content) {
+      console.error("[blog-generate] Invalid article structure after parse");
       return new Response(JSON.stringify({ error: "Failed to parse generated content" }), {
         status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
