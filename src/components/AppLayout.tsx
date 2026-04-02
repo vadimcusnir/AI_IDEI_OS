@@ -71,7 +71,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           )}
 
           <div className="shrink-0">
-            <Suspense fallback={null}><LowBalanceBanner /></Suspense>
+            <Suspense fallback={<div className="h-8"><Skeleton className="h-8 w-full" /></div>}><LowBalanceBanner /></Suspense>
             <Suspense fallback={null}><BehaviorOverlay /></Suspense>
           </div>
 
