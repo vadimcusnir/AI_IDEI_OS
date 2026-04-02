@@ -5828,6 +5828,8 @@ export type Database = {
       }
       onboarding_progress: {
         Row: {
+          checklist_completed: boolean
+          checklist_dismissed: boolean
           completed_at: string | null
           completion_bonus_received: boolean
           created_at: string
@@ -5837,11 +5839,15 @@ export type Database = {
           tos_accepted_at: string | null
           tutorial_completed: boolean
           tutorial_modules_completed: Json
+          tutorial_skipped: boolean
           tutorial_started: boolean
           user_id: string
           welcome_bonus_received: boolean
+          welcome_seen: boolean
         }
         Insert: {
+          checklist_completed?: boolean
+          checklist_dismissed?: boolean
           completed_at?: string | null
           completion_bonus_received?: boolean
           created_at?: string
@@ -5851,11 +5857,15 @@ export type Database = {
           tos_accepted_at?: string | null
           tutorial_completed?: boolean
           tutorial_modules_completed?: Json
+          tutorial_skipped?: boolean
           tutorial_started?: boolean
           user_id: string
           welcome_bonus_received?: boolean
+          welcome_seen?: boolean
         }
         Update: {
+          checklist_completed?: boolean
+          checklist_dismissed?: boolean
           completed_at?: string | null
           completion_bonus_received?: boolean
           created_at?: string
@@ -5865,9 +5875,11 @@ export type Database = {
           tos_accepted_at?: string | null
           tutorial_completed?: boolean
           tutorial_modules_completed?: Json
+          tutorial_skipped?: boolean
           tutorial_started?: boolean
           user_id?: string
           welcome_bonus_received?: boolean
+          welcome_seen?: boolean
         }
         Relationships: []
       }
