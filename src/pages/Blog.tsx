@@ -38,7 +38,7 @@ export default function Blog() {
       <SEOHead
         title="Blog — AI-IDEI | Knowledge Extraction Insights"
         description="Expert insights on AI, knowledge extraction, content intelligence, and cognitive frameworks from the AI-IDEI platform."
-        path="/blog"
+        canonical="https://ai-idei.com/blog"
       />
       <div className="min-h-screen bg-background">
         {/* Hero */}

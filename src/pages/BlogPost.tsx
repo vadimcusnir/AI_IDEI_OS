@@ -87,7 +87,7 @@ export default function BlogPost() {
       <SEOHead
         title={`${post.seo_title || post.title} — AI-IDEI Blog`}
         description={post.seo_description || post.excerpt}
-        path={`/blog/${post.slug}`}
+        canonical={`https://ai-idei.com/blog/${post.slug}`}
         ogImage={post.thumbnail_url || undefined}
       />
       <script
