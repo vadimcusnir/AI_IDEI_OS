@@ -7,6 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/SEOHead";
 import ReactMarkdown from "react-markdown";
 import { useAutoInterlink } from "@/hooks/useAutoInterlink";
+import { ContentGate } from "@/components/blog/ContentGate";
+import { useEffect, useState } from "react";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
