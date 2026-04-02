@@ -450,6 +450,34 @@ Deno.serve(async (req) => {
     }
 
     console.log("[blog-generate] Post created:", post.id, post.title);
+
+    // ═══ POST-PUBLISH SEO ENRICHMENT (async, non-blocking) ═══
+    let seoData = null;
+    try {
+      seoData = await seoTransform(apiKey, {
+        id: post.id,
+        title: post.title,
+        content: finalContent,
+        excerpt: articleData.excerpt,
+        slug: articleData.slug,
+        category,
+        tags: articleData.tags || [],
+      });
+      if (seoData) {
+        await supabase.from("blog_posts").update({
+          seo_title: seoData.seo_title || post.seo_title,
+          seo_description: seoData.meta_description || post.seo_description,
+          metadata: {
+            ...post.metadata as any,
+            seo_enrichment: seoData,
+          },
+        }).eq("id", post.id);
+        console.log("[blog-generate] SEO enrichment applied for:", post.id);
+      }
+    } catch (seoErr) {
+      console.error("[blog-generate] SEO enrichment failed (non-critical):", seoErr);
+    }
+
     return new Response(JSON.stringify({
       success: true,
       post: { id: post.id, title: post.title, slug: post.slug, status: post.status },
@@ -457,6 +485,7 @@ Deno.serve(async (req) => {
       scores: pipelineScores,
       images: { thumbnail: !!thumbnailUrl, inline: inlineImages.length },
       related: relatedPostIds.length,
+      seo: !!seoData,
     }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
