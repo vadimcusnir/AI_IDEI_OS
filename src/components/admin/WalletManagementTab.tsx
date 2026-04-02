@@ -12,6 +12,7 @@ interface WalletRow {
   total_earned: number;
   total_spent: number;
   updated_at: string;
+  email?: string;
 }
 
 interface RecentTx {
