@@ -120,7 +120,7 @@ function createMarkdownComponents() {
       </li>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
-      <blockquote className="relative my-10 py-6 px-8 border-l-[3px] border-primary/40 bg-card/60 rounded-r-xl">
+      <blockquote className="relative my-10 py-5 px-5 sm:px-8 border-l-[3px] border-primary/40 bg-card/60 rounded-r-xl">
         <div className="absolute -top-3 left-6 text-4xl text-primary/20 font-serif leading-none select-none">"</div>
         <div className="prose-compact text-foreground/80 italic [&>p]:mb-2 [&>p:last-child]:mb-0">
           {children}
