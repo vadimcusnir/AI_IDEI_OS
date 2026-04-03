@@ -92,18 +92,11 @@ const Community = lazyRetry(() => import("./pages/Community"));
 const CommunityThread = lazyRetry(() => import("./pages/CommunityThread"));
 
 const VIPDashboard = lazyRetry(() => import("./pages/VIPDashboard"));
-const DataPipeline = lazyRetry(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazyRetry(() => import("./pages/RuntimeDashboard"));
-const CusnirOSOperator = lazyRetry(() => import("./pages/CusnirOSOperator"));
-const CusnirOSPage = lazyRetry(() => import("./pages/CusnirOSPage"));
-const CusnirOSMap = lazyRetry(() => import("./pages/CusnirOSMap"));
-const CusnirOSArchitecture = lazyRetry(() => import("./pages/CusnirOSArchitecture"));
 const About = lazyRetry(() => import("./pages/About"));
 const AboutVadimCusnir = lazyRetry(() => import("./pages/AboutVadimCusnir"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
-const VttValidator = lazyRetry(() => import("./pages/VttValidator"));
 const DatabaseRelations = lazyRetry(() => import("./pages/DatabaseRelations"));
-const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
 const SecuritySettings = lazyRetry(() => import("./pages/SecuritySettings"));
 const GamificationPage = lazyRetry(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazyRetry(() => import("./pages/AnalyticsDashboard"));
