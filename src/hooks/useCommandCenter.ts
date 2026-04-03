@@ -4,6 +4,7 @@
  * CC-T06: Reduces Home.tsx from 800+ lines to ~300 lines of layout.
  */
 import { useState, useRef, useEffect, useCallback } from "react";
+import type { CommandMode } from "@/components/command-center/ModeChipBar";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
