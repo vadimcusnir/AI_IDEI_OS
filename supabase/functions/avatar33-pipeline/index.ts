@@ -233,12 +233,19 @@ Deno.serve(async (req) => {
       }).eq("id", job_id);
     }
 
+    // SETTLE neurons on success
+    await supabase.rpc("settle_neurons", { _user_id: user.id, _amount: totalCost, _description: `SETTLE: Avatar33 Pipeline` });
+    settled = true;
+
     return new Response(JSON.stringify({ results, modules_completed: completedCount, credits_spent: totalCost }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
 
   } catch (e) {
     console.error("avatar33-pipeline error:", e);
+    if (typeof settled !== "undefined" && !settled && user?.id && typeof totalCost !== "undefined") {
+      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Avatar33 — error` }).catch(() => {});
+    }
     return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

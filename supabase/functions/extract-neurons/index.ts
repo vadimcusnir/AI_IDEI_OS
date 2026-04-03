@@ -650,6 +650,10 @@ Deno.serve(async (req) => {
       },
     } as any).eq("id", episode_id);
 
+    // SETTLE neurons on success
+    await supabase.rpc("settle_neurons", { _user_id: userId, _amount: EXTRACTION_COST, _description: `SETTLE: Extraction — ${createdNeurons.length} neurons` });
+    settled = true;
+
     return new Response(JSON.stringify({
       success: true,
       neurons_created: createdNeurons.length,
@@ -667,6 +671,10 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("extract-neurons error:", e);
+    // RELEASE neurons on unhandled failure
+    if (typeof settled !== "undefined" && !settled && userId) {
+      await supabase.rpc("release_neurons", { _user_id: userId, _amount: EXTRACTION_COST, _description: `RELEASE: Extraction — error` }).catch(() => {});
+    }
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
       { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }

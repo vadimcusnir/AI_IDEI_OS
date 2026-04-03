@@ -283,12 +283,19 @@ Deno.serve(async (req) => {
       }).eq("id", job_id);
     }
 
+    // SETTLE neurons on success
+    await supabase.rpc("settle_neurons", { _user_id: user.id, _amount: totalCost, _description: `SETTLE: Webinar Generation` });
+    settled = true;
+
     return new Response(JSON.stringify({ results, prompts_completed: completedPrompts, credits_spent: totalCost }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
 
   } catch (e) {
     console.error("webinar-generate error:", e);
+    if (typeof settled !== "undefined" && !settled && user?.id && typeof totalCost !== "undefined") {
+      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Webinar — error` }).catch(() => {});
+    }
     return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

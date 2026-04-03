@@ -295,12 +295,19 @@ Deno.serve(async (req) => {
       })
     );
 
+    // SETTLE neurons on success
+    await supabase.rpc("settle_neurons", { _user_id: user.id, _amount: totalCost, _description: `SETTLE: Pipeline L${start_level}-L${end_level}` });
+    settled = true;
+
     return new Response(JSON.stringify({ results, levels_completed: levelsToRun.length, credits_spent: totalCost }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
 
   } catch (e) {
     console.error("extraction-pipeline error:", e);
+    if (typeof settled !== "undefined" && !settled && user?.id && typeof totalCost !== "undefined") {
+      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Pipeline — error` }).catch(() => {});
+    }
     return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });
