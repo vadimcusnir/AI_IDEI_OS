@@ -1474,5 +1474,28 @@
     "faq_a5": "Subscribers pay fewer NEURONS per service. Core saves 10%, Pro saves 25%, VIP saves 40%.",
     "faq_q6": "What happens when I run out of credits?",
     "faq_a6": "Your existing neurons and outputs remain accessible. You simply cannot run new AI services until you top up or your subscription renews."
+  },
+  "programs": {
+    "title": "Growth Programs",
+    "subtitle": "Long-term execution programs that combine multiple systems for sustained results.",
+    "no_programs": "No programs available yet.",
+    "included_systems": "Included Systems",
+    "estimated_cost": "Estimated Cost",
+    "start_program": "Start Program",
+    "duration": "Duration",
+    "outputs_over_time": "Outputs Over Time"
+  },
+  "command_panel": {
+    "title": "Command Engine",
+    "analyze": "Analyze",
+    "execute": "Execute",
+    "goal_placeholder": "What do you want to achieve?",
+    "actions_found": "{{count}} actions",
+    "pipeline_time": "{{ms}}ms",
+    "no_actions": "No matching actions found for this goal",
+    "executing": "Executing: {{title}}",
+    "priority": "Priority",
+    "estimated_credits": "Estimated Credits",
+    "warnings": "Warnings"
   }
 }
