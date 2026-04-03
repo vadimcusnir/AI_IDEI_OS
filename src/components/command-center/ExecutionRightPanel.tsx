@@ -65,8 +65,8 @@ export function ExecutionRightPanel({
         <div className="grid grid-cols-2 gap-2">
           <StatCard icon={Coins} label="Cost" value={`${totalCredits} N`} color="text-primary" />
           <StatCard icon={Clock} label="Timp" value={`${elapsed}s`} color="text-muted-foreground" />
-          <StatCard icon={Package} label="Outputs" value={`${outputCount}`} color="text-green-500" />
-          <StatCard icon={TrendingUp} label="Balanță" value={`${balance.toLocaleString()}`} color="text-amber-500" />
+          <StatCard icon={Package} label="Outputs" value={`${outputCount}`} color="text-success" />
+          <StatCard icon={TrendingUp} label="Balanță" value={`${balance.toLocaleString()}`} color="text-warning" />
         </div>
 
         {/* Progress */}
