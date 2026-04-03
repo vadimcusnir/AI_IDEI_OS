@@ -24,8 +24,6 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
-import { format } from "date-fns";
-import { useTranslation } from "react-i18next";
 
 interface UserRow {
   user_id: string;
