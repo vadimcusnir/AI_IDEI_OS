@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory } from "@/hooks/useChatHistory";
-import { useExecutionStore, executionActions, type Message } from "@/stores/executionStore";
+import { useExecutionStore, executionActions, getExecutionState, type Message } from "@/stores/executionStore";
 import { useExecutionHistory } from "@/hooks/useExecutionHistory";
 import { useRealtimeSteps } from "@/hooks/useRealtimeSteps";
 import { useAgentDecisionEngine } from "@/hooks/useAgentDecisionEngine";
