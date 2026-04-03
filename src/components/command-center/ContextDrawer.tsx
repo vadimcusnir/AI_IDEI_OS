@@ -1,26 +1,22 @@
 /**
  * ContextDrawer — Economic Control Panel (Right Sidebar).
- * 4 tabs: State · Runs · Assets · Progress
+ * 3 tabs: State · Runs · Assets
  * 
- * PURPOSE: Context + economic pressure + output access + behavioral retention
+ * PURPOSE: Context + economic pressure + output access
  * RULE: Does NOT duplicate chat content. Shows ONLY support data.
- * 
- * VISUAL: Obsidian Sigil icons, premium spacing, gold-oxide accents.
  */
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { CommandCenterKPIs } from "./CommandCenterKPIs";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Loader2, X, ChevronRight } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import {
-  SigilEye, SigilBolt, SigilCrystal, SigilSpiral,
-  SigilCrown, SigilLock, SigilFlame, SigilNeuron,
+  SigilEye, SigilBolt, SigilCrystal,
+  SigilCrown, SigilLock, SigilNeuron,
   SigilCheck, SigilFail, SigilDocument, SigilTrend,
-  SigilRocket, SigilClock, SigilTarget, SigilStar,
+  SigilRocket, SigilClock, SigilTarget,
 } from "@/components/icons/SigilIcons";
 import { cn } from "@/lib/utils";
 import { useUserTier } from "@/hooks/useUserTier";
-import { useGamification } from "@/hooks/useGamification";
 import { Button } from "@/components/ui/button";
 import type { ExecutionState, TaskStep, OutputItem } from "@/stores/executionStore";
 
@@ -487,173 +483,3 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
   );
 }
 
-// ═══ TAB: PROGRESS — Behavioral Retention Engine ═══
-
-const RANK_LABELS: Record<string, { icon: React.FC<{ className?: string; size?: number }>; next: string }> = {
-  "Novice": { icon: SigilStar, next: "Operator" },
-  "Operator": { icon: SigilBolt, next: "Architect" },
-  "Architect": { icon: SigilTarget, next: "Strategist" },
-  "Strategist": { icon: SigilSpiral, next: "Master" },
-  "Master": { icon: SigilCrown, next: "Legend" },
-  "Legend": { icon: SigilFlame, next: "—" },
-};
-
-const MISSIONS = [
-  { id: "run_1", label: "Run 1 service today", xp: 50, metric: "tasks" },
-  { id: "gen_5", label: "Generate 5 outputs", xp: 80, metric: "outputs" },
-  { id: "spend_500", label: "Spend 500 neurons this week", xp: 200, metric: "neurons" },
-];
-
-const BADGES = [
-  { id: "first_exec", label: "First Execution", icon: SigilBolt, unlockXp: 0 },
-  { id: "100_outputs", label: "100 Outputs", icon: SigilCrystal, unlockXp: 500 },
-  { id: "1k_neurons", label: "1K Neurons", icon: SigilNeuron, unlockXp: 1000 },
-  { id: "content_machine", label: "Content Machine", icon: SigilTarget, unlockXp: 5000 },
-  { id: "knowledge_architect", label: "Knowledge Architect", icon: SigilSpiral, unlockXp: 10000 },
-  { id: "system_master", label: "System Master", icon: SigilCrown, unlockXp: 25000 },
-];
-
-function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
-  const { xp, streak, loading, levelProgress, xpForNextLevel, tierMultiplier } = useGamification();
-
-  if (loading) {
-    return (
-      <div className="p-4 flex items-center justify-center py-16">
-        <Loader2 className="h-4 w-4 text-muted-foreground/20 animate-spin" />
-      </div>
-    );
-  }
-
-  const rankInfo = RANK_LABELS[xp.rank_name] || RANK_LABELS["Novice"];
-  const RankIcon = rankInfo.icon;
-
-  return (
-    <div className="p-4 space-y-4">
-      {/* CC-V05: KPI Dashboard */}
-      <CommandCenterKPIs />
-      {/* Section 1: Identity — Level + Rank */}
-      <div className="rounded-xl border border-border/15 p-4 bg-card/30 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-        <div className="flex items-center gap-3 mb-3">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/10 to-primary/[0.02] flex items-center justify-center border border-primary/10">
-            <RankIcon size={20} className="text-primary/70" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-foreground tracking-tight">
-              Level {xp.level}
-            </p>
-            <p className="text-[10px] text-muted-foreground/40 font-medium">
-              {xp.rank_name} → {rankInfo.next}
-            </p>
-          </div>
-        </div>
-        {/* XP Progress bar */}
-        <div className="h-1.5 bg-muted/20 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-primary to-primary/60"
-            initial={{ width: 0 }}
-            animate={{ width: `${levelProgress}%` }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          />
-        </div>
-        <div className="flex items-center justify-between mt-1.5">
-          <span className="text-[9px] text-muted-foreground/30 tabular-nums font-mono">{xp.total_xp} XP</span>
-          <span className="text-[9px] text-muted-foreground/30 tabular-nums font-mono">{xpForNextLevel} XP</span>
-        </div>
-      </div>
-
-      {/* Section 2: Streak */}
-      <div className="flex items-center gap-3 px-1">
-        <SigilFlame
-          size={18}
-          className={cn(streak.current_streak > 0 ? "text-warning" : "text-muted-foreground/15")}
-        />
-        <div className="flex-1">
-          <p className="text-[12px] font-bold text-foreground tabular-nums">
-            {streak.current_streak} day{streak.current_streak !== 1 ? "s" : ""} streak
-          </p>
-          <p className="text-[9px] text-muted-foreground/35">
-            {streak.current_streak > 0 ? "Keep going — don't break it!" : "Start a streak today"}
-          </p>
-        </div>
-        {tierMultiplier > 1 && (
-          <span className="text-[10px] font-bold text-primary tabular-nums font-mono">
-            {tierMultiplier}× XP
-          </span>
-        )}
-      </div>
-
-      {/* Section 3: Daily Missions */}
-      <div className="space-y-1.5">
-        <p className="text-[9px] text-muted-foreground/30 uppercase tracking-[0.2em] font-bold px-1">Missions</p>
-        {MISSIONS.map(mission => (
-          <div key={mission.id} className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-muted/10 transition-colors">
-            <div className="h-1.5 w-1.5 rounded-full bg-primary/20 shrink-0" />
-            <span className="text-[11px] text-muted-foreground/60 flex-1">{mission.label}</span>
-            <span className="text-[9px] text-primary/50 font-bold tabular-nums font-mono">+{mission.xp}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Section 4: Badges */}
-      <div className="space-y-2">
-        <p className="text-[9px] text-muted-foreground/30 uppercase tracking-[0.2em] font-bold px-1">Badges</p>
-        <div className="grid grid-cols-3 gap-2">
-          {BADGES.map(badge => {
-            const unlocked = xp.total_xp >= badge.unlockXp;
-            const BadgeIcon = badge.icon;
-            return (
-              <div
-                key={badge.id}
-                className={cn(
-                  "flex flex-col items-center gap-1.5 py-3 px-1.5 rounded-xl border text-center transition-all",
-                  unlocked
-                    ? "border-primary/15 bg-primary/[0.03] shadow-sm shadow-primary/5"
-                    : "border-border/8 opacity-25"
-                )}
-              >
-                <BadgeIcon size={18} className={unlocked ? "text-primary/70" : "text-muted-foreground/30"} />
-                <span className="text-[8px] text-muted-foreground/60 leading-tight font-medium">{badge.label}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Section 5: Cusnir_OS Unlock Progress */}
-
-      {/* Level perks */}
-      <div className="space-y-1.5">
-        <p className="text-[9px] text-muted-foreground/30 uppercase tracking-[0.2em] font-bold px-1">Perks</p>
-        <div className={cn(
-          "flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all",
-          xp.level >= 3 ? "border-primary/15 bg-primary/[0.03]" : "border-border/8 opacity-35"
-        )}>
-          <div className={cn(
-            "h-6 w-6 rounded-lg flex items-center justify-center text-[10px] font-bold shrink-0 font-mono",
-            xp.level >= 3 ? "bg-primary/10 text-primary" : "bg-muted/15 text-muted-foreground/25"
-          )}>3</div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-foreground">-10% neuron cost</p>
-            <p className="text-[9px] text-muted-foreground/30">All service executions</p>
-          </div>
-          {xp.level >= 3 && <SigilCheck size={14} className="text-primary shrink-0" />}
-        </div>
-        <div className={cn(
-          "flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all",
-          xp.level >= 5 ? "border-primary/15 bg-primary/[0.03]" : "border-border/8 opacity-35"
-        )}>
-          <div className={cn(
-            "h-6 w-6 rounded-lg flex items-center justify-center text-[10px] font-bold shrink-0 font-mono",
-            xp.level >= 5 ? "bg-primary/10 text-primary" : "bg-muted/15 text-muted-foreground/25"
-          )}>5</div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-foreground">Advanced services</p>
-            <p className="text-[9px] text-muted-foreground/30">Deep analysis & multi-agent</p>
-          </div>
-          {xp.level >= 5 && <SigilCheck size={14} className="text-primary shrink-0" />}
-        </div>
-      </div>
-    </div>
-  );
-}

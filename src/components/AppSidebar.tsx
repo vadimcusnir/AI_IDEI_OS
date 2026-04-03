@@ -27,7 +27,7 @@ import {
   Trophy, TrendingUp, Target, Activity,
   Wallet, Coins, FileText, BarChart3,
   Settings, Code, Shield, Lock,
-  Crown, Rocket, ChevronRight, Plus,
+  Crown, ChevronRight, Plus,
   Clock, Trash2, MessageCircle, Store,
   Cpu, Eye, Zap,
 } from "lucide-react";
