@@ -27,6 +27,12 @@ import {
   logCommandSubmitted, logPlanConfirmed, logExecutionCompleted,
   logPermissionDenied, logEconomicGate,
 } from "@/components/command-center/AuditLogger";
+import {
+  trackCommandSubmitted, trackFirstToken, trackExecutionCompleted,
+  trackExecutionFailed, trackOutputEngagement, trackEconomicGate,
+  trackSessionAction, trackError,
+} from "@/lib/commandCenterTelemetry";
+import { classifyError } from "@/components/command-center/ErrorRecoveryHandler";
 
 export function useCommandCenter() {
   const { user, loading: authLoading } = useAuth();
