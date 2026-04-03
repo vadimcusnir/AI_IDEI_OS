@@ -23,7 +23,7 @@ const KNOWN_PROVIDERS = [
   { key: "sentry", label: "Sentry" },
 ];
 
-function ProviderRow({ provider }: { provider: ProviderHealth | null; label: string; providerKey: string }) {
+function ProviderRow({ provider, label, providerKey }: { provider: ProviderHealth | null; label: string; providerKey: string }) {
   const p = provider;
   const status = p?.status || "unknown";
   const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.unknown;
