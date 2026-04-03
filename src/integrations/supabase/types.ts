@@ -8118,20 +8118,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "fk_deliverable"
-            columns: ["deliverable_id"]
-            isOneToOne: false
-            referencedRelation: "deliverable_contracts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_prompt"
-            columns: ["prompt_id"]
-            isOneToOne: false
-            referencedRelation: "prompt_vault"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "service_units_lcss_id_fkey"
             columns: ["lcss_id"]
             isOneToOne: false
