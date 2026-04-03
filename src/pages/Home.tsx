@@ -14,7 +14,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { cn } from "@/lib/utils";
 import { executionActions } from "@/stores/executionStore";
 import { ModeChipBar } from "@/components/command-center/ModeChipBar";
-import { ExtractPanel, GeneratePanel, StructurePanel, MonetizePanel, LibraryPanel, ResearchPanel } from "@/components/command-center/mode-panels";
+import { ExtractPanel, GeneratePanel, StructurePanel, AnalyzePanel } from "@/components/command-center/mode-panels";
 
 import { useCommandCenter } from "@/hooks/useCommandCenter";
 import { WelcomeScreen } from "@/components/command-center/WelcomeScreen";
