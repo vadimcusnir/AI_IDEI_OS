@@ -14,7 +14,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { cn } from "@/lib/utils";
 import { executionActions } from "@/stores/executionStore";
 import { ModeChipBar } from "@/components/command-center/ModeChipBar";
-import { ExtractPanel, GeneratePanel, StructurePanel, MonetizePanel, LibraryPanel, ResearchPanel } from "@/components/command-center/mode-panels";
+import { ExtractPanel, GeneratePanel, StructurePanel, AnalyzePanel } from "@/components/command-center/mode-panels";
 
 import { useCommandCenter } from "@/hooks/useCommandCenter";
 import { WelcomeScreen } from "@/components/command-center/WelcomeScreen";
@@ -230,10 +230,8 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 {cc.activeMode === "extract" && <ExtractPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} neuronCount={cc.totalNeurons} />}
                 {cc.activeMode === "generate" && <GeneratePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
+                {cc.activeMode === "analyze" && <AnalyzePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
                 {cc.activeMode === "structure" && <StructurePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
-                {cc.activeMode === "monetize" && <MonetizePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
-                {cc.activeMode === "library" && <LibraryPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} neuronCount={cc.totalNeurons} />}
-                {cc.activeMode === "research" && <ResearchPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
               </AnimatePresence>
 
               {/* Mode Chip Bar */}
