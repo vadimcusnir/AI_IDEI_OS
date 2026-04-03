@@ -104,6 +104,7 @@ const SYSTEM_MAP: NavGroup[] = [
     authOnly: true,
     items: [
       { label: "Services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+      { label: "Programs", to: "/programs", icon: Crown, controlId: "nav.programs" },
       { label: "Pipelines", to: "/pipeline-overview", icon: Layers, controlId: "nav.pipelines" },
       { label: "Master Agent", to: "/master-agent", icon: Zap, controlId: "nav.master-agent" },
     ],
