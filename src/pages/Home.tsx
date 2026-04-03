@@ -91,7 +91,7 @@ export default function Home() {
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
-  const [activeLayer, setActiveLayer] = useState<WorkspaceLayer>("chat");
+  // activeLayer removed — CC-T03
   const [showLowBalance, setShowLowBalance] = useState(false);
 
   // Auto-trigger low balance gate when balance hits 0 after execution
