@@ -1,10 +1,11 @@
 /**
  * WelcomeScreen — Clean empty state for Command Center.
- * Compact: greeting + up to 4 proactive suggestions + stats.
+ * Compact: greeting + Magic Pipeline + up to 4 proactive suggestions + stats.
  */
 
 import { motion } from "framer-motion";
 import { Sparkles, Zap } from "lucide-react";
+import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
 
 interface Suggestion {
   id: string;
@@ -41,6 +42,15 @@ export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCoun
             Describe what you need, upload a file, or pick a suggestion below.
           </p>
         </div>
+      </motion.div>
+
+      {/* Magic Pipeline — one-click full extraction */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.15 }}
+      >
+        <MagicPipelineButton />
       </motion.div>
 
       {/* Proactive suggestions — max 4 */}
