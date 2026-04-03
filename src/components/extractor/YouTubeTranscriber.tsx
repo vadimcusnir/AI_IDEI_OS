@@ -449,7 +449,7 @@ ${safeBody}
                 </div>
                 <div>
                   <h2 className="text-base font-semibold">YouTube → Transcript</h2>
-                  <p className="text-xs text-muted-foreground">Lipește un link YouTube. Obții transcrierea instant.</p>
+                  <p className="text-xs text-muted-foreground">Lipește un link YouTube. Audio-ul se extrage și se transcrie automat.</p>
                 </div>
               </div>
 
