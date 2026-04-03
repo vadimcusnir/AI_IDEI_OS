@@ -1214,6 +1214,162 @@ export type Database = {
           },
         ]
       }
+      automation_jobs: {
+        Row: {
+          config: Json
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          job_type: string
+          last_run_at: string | null
+          max_runs: number | null
+          name: string
+          next_run_at: string | null
+          schedule_cron: string | null
+          service_unit_id: string | null
+          total_runs: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          job_type?: string
+          last_run_at?: string | null
+          max_runs?: number | null
+          name: string
+          next_run_at?: string | null
+          schedule_cron?: string | null
+          service_unit_id?: string | null
+          total_runs?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          job_type?: string
+          last_run_at?: string | null
+          max_runs?: number | null
+          name?: string
+          next_run_at?: string | null
+          schedule_cron?: string | null
+          service_unit_id?: string | null
+          total_runs?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_jobs_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_runs: {
+        Row: {
+          artifact_ids: string[] | null
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          job_id: string
+          metadata: Json | null
+          neurons_spent: number
+          result_summary: string | null
+          started_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          artifact_ids?: string[] | null
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          job_id: string
+          metadata?: Json | null
+          neurons_spent?: number
+          result_summary?: string | null
+          started_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          artifact_ids?: string[] | null
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          job_id?: string
+          metadata?: Json | null
+          neurons_spent?: number
+          result_summary?: string | null
+          started_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_runs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "automation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_triggers: {
+        Row: {
+          created_at: string
+          fire_count: number
+          id: string
+          is_active: boolean
+          job_id: string
+          last_fired_at: string | null
+          trigger_config: Json
+          trigger_type: string
+        }
+        Insert: {
+          created_at?: string
+          fire_count?: number
+          id?: string
+          is_active?: boolean
+          job_id: string
+          last_fired_at?: string | null
+          trigger_config?: Json
+          trigger_type?: string
+        }
+        Update: {
+          created_at?: string
+          fire_count?: number
+          id?: string
+          is_active?: boolean
+          job_id?: string
+          last_fired_at?: string | null
+          trigger_config?: Json
+          trigger_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_triggers_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "automation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       block_type_registry: {
         Row: {
           category: string
@@ -2524,6 +2680,45 @@ export type Database = {
           },
         ]
       }
+      distribution_channels: {
+        Row: {
+          channel_name: string
+          channel_type: string
+          config: Json
+          created_at: string
+          id: string
+          is_active: boolean
+          last_used_at: string | null
+          total_sends: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          channel_name: string
+          channel_type: string
+          config?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_used_at?: string | null
+          total_sends?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          channel_name?: string
+          channel_type?: string
+          config?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_used_at?: string | null
+          total_sends?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       distribution_events: {
         Row: {
           action: string
@@ -2564,6 +2759,67 @@ export type Database = {
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "knowledge_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      distribution_sends: {
+        Row: {
+          artifact_id: string | null
+          automation_run_id: string | null
+          channel_id: string
+          content_preview: string | null
+          created_at: string
+          delivery_metadata: Json | null
+          id: string
+          sent_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          artifact_id?: string | null
+          automation_run_id?: string | null
+          channel_id: string
+          content_preview?: string | null
+          created_at?: string
+          delivery_metadata?: Json | null
+          id?: string
+          sent_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          artifact_id?: string | null
+          automation_run_id?: string | null
+          channel_id?: string
+          content_preview?: string | null
+          created_at?: string
+          delivery_metadata?: Json | null
+          id?: string
+          sent_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distribution_sends_artifact_id_fkey"
+            columns: ["artifact_id"]
+            isOneToOne: false
+            referencedRelation: "artifacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distribution_sends_automation_run_id_fkey"
+            columns: ["automation_run_id"]
+            isOneToOne: false
+            referencedRelation: "automation_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distribution_sends_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "distribution_channels"
             referencedColumns: ["id"]
           },
         ]
