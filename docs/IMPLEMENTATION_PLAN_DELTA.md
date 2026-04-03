@@ -30,7 +30,7 @@
 | **Admin Compliance Tab** | Root2, atomicity, schema, i18n, prompt exposure, overlap checks | ✅ COMPLET |
 | **Admin Command Tab** | Strategic suggestions, priority scoring, warnings, system analysis | ✅ COMPLET |
 | **Admin Analytics Extended** | Revenue per level, neurons burn, intent funnel, roles/mechanisms | ✅ COMPLET |
-| **Command Layer** | Decision engine, priority engine, command types | 🔴 NEEXISTENT |
+| **Command Layer** | command_decisions, decision_pipeline_stages, command_types (5), command-engine EF, CommandPanel UI | ✅ COMPLET |
 | **i18n RU** | Limba rusă pe suprafețe publice | 🔴 NEEXISTENT |
 | **Release Gates** | Validare automată atomicitate + dedup + Root2 + schema | 🔴 NEEXISTENT |
 | **AIAS Infiltration** | Structured inputs, output contracts, agent certification | 🔴 NEEXISTENT |
