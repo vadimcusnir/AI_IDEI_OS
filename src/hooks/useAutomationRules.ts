@@ -55,9 +55,15 @@ export function useAutomationRules() {
 
   const createRule = useMutation({
     mutationFn: async (rule: Partial<AutomationRule>) => {
+      const { condition, action_config, ...rest } = rule;
       const { data, error } = await supabase
         .from("automation_rules")
-        .insert({ user_id: user!.id, ...rule })
+        .insert({
+          user_id: user!.id,
+          ...rest,
+          condition: (condition ?? {}) as Json,
+          action_config: (action_config ?? {}) as Json,
+        })
         .select()
         .single();
       if (error) throw error;
