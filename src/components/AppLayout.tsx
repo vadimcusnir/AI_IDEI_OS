@@ -79,7 +79,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
 
           {fullHeight ? (
             <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
+              <ErrorBoundary><div className="flex-1 flex flex-col min-h-0">{children}</div></ErrorBoundary>
             </main>
           ) : (
             <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">

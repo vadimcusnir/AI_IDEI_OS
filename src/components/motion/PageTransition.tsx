@@ -5,7 +5,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
  * PageTransition — instant render wrapper (no layout shifts).
  */
 export function PageTransition({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={`flex-1 flex flex-col min-h-0 ${className ?? ""}`}>{children}</div>;
+  return <div className={className ?? ""}>{children}</div>;
 }
 
 /** Container that renders children instantly */
