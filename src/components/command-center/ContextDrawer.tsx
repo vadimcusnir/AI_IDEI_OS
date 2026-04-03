@@ -1,26 +1,22 @@
 /**
  * ContextDrawer — Economic Control Panel (Right Sidebar).
- * 4 tabs: State · Runs · Assets · Progress
+ * 3 tabs: State · Runs · Assets
  * 
- * PURPOSE: Context + economic pressure + output access + behavioral retention
+ * PURPOSE: Context + economic pressure + output access
  * RULE: Does NOT duplicate chat content. Shows ONLY support data.
- * 
- * VISUAL: Obsidian Sigil icons, premium spacing, gold-oxide accents.
  */
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { CommandCenterKPIs } from "./CommandCenterKPIs";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Loader2, X, ChevronRight } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import {
-  SigilEye, SigilBolt, SigilCrystal, SigilSpiral,
-  SigilCrown, SigilLock, SigilFlame, SigilNeuron,
+  SigilEye, SigilBolt, SigilCrystal,
+  SigilCrown, SigilLock, SigilNeuron,
   SigilCheck, SigilFail, SigilDocument, SigilTrend,
-  SigilRocket, SigilClock, SigilTarget, SigilStar,
+  SigilRocket, SigilClock, SigilTarget,
 } from "@/components/icons/SigilIcons";
 import { cn } from "@/lib/utils";
 import { useUserTier } from "@/hooks/useUserTier";
-import { useGamification } from "@/hooks/useGamification";
 import { Button } from "@/components/ui/button";
 import type { ExecutionState, TaskStep, OutputItem } from "@/stores/executionStore";
 
