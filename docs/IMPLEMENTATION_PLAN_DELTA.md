@@ -275,6 +275,5 @@ naming_translation:
 
 ## STARE CURENTĂ
 
-- **Fazele 0-3**: ✅ COMPLETATE (curățare DB, scoring OTOS, manifeste, mode panels, admin paginare+logs+safety)
-- **Fazele 4-11**: ✅ COMPLETATE (Contract System, Execution Kernel, User Translation, Admin, Command Layer, i18n+Gates, AIAS, Automation & Distribution)
-- **Faza 12**: 🔴 URMĂTOAREA — Cusnir OS Kernel
+- **Fazele 0-12**: ✅ TOATE COMPLETATE
+- **Rămâne**: Ruta /programs (LCSS expuse ca Programs pentru user)

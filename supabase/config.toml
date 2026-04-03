@@ -57,3 +57,5 @@ project_id = "swghuuxkcilayybesadm"
     verify_jwt = false
   [functions.automation-engine]
     verify_jwt = false
+  [functions.step-back-engine]
+    verify_jwt = false
