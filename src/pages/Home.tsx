@@ -91,7 +91,7 @@ export default function Home() {
               balance={cc.balance}
               onExecute={cc.handlePlanExecute}
               onEdit={() => { cc.setInput(`Refine plan: ${cc.execState.intent}`); cc.inputZoneRef.current?.focus(); }}
-              onDismiss={() => { const { reset } = require("@/stores/executionStore").executionActions; reset(); }}
+              onDismiss={() => { import("@/stores/executionStore").then(m => m.executionActions.reset()); }}
               executing={cc.loading}
             />
           </div>
