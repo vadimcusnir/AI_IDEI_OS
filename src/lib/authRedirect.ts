@@ -1,19 +1,27 @@
 /**
  * Auth redirect utilities — preserves user intent across auth flows.
  * 
- * Usage:
- *   navigate(buildAuthUrl("/services?tab=sell"))
- *   navigate(buildAuthUrl(location.pathname + location.search))
- * 
- * After login, Auth.tsx reads the redirect target and returns the user.
+ * Handles: email login, signup, Google OAuth, email verification callbacks.
+ * Stores redirect with TTL to prevent stale redirects from old sessions.
  */
 
 const REDIRECT_KEY = "ai_idei_auth_redirect";
+const REDIRECT_TS_KEY = "ai_idei_auth_redirect_ts";
+/** Max age for stored redirect: 30 minutes */
+const MAX_REDIRECT_AGE_MS = 30 * 60 * 1000;
+
+/** Routes that should never be redirect targets */
+const BLOCKED_TARGETS = ["/auth", "/reset-password"];
+
+function isValidTarget(path: string): boolean {
+  if (!path || path === "/") return false;
+  return !BLOCKED_TARGETS.some(b => path === b || path.startsWith(b + "?"));
+}
 
 /** Build /auth URL with redirect query param */
 export function buildAuthUrl(returnTo: string, mode?: "login" | "signup"): string {
   const params = new URLSearchParams();
-  if (returnTo && returnTo !== "/" && returnTo !== "/auth") {
+  if (isValidTarget(returnTo)) {
     params.set("redirect", returnTo);
   }
   if (mode) params.set("mode", mode);
@@ -23,23 +31,36 @@ export function buildAuthUrl(returnTo: string, mode?: "login" | "signup"): strin
 
 /** Store redirect target in sessionStorage (backup for OAuth/email flows) */
 export function storeRedirect(path: string) {
-  if (path && path !== "/" && path !== "/auth" && !path.startsWith("/auth?")) {
-    try {
-      sessionStorage.setItem(REDIRECT_KEY, path);
-    } catch {}
-  }
+  if (!isValidTarget(path)) return;
+  try {
+    sessionStorage.setItem(REDIRECT_KEY, path);
+    sessionStorage.setItem(REDIRECT_TS_KEY, String(Date.now()));
+  } catch {}
 }
 
-/** Read and clear stored redirect target */
+/** Read and clear stored redirect target (single-use) */
 export function consumeRedirect(): string | null {
   try {
     const stored = sessionStorage.getItem(REDIRECT_KEY);
-    if (stored) {
-      sessionStorage.removeItem(REDIRECT_KEY);
-      return stored;
-    }
+    const ts = sessionStorage.getItem(REDIRECT_TS_KEY);
+    // Always clear regardless
+    sessionStorage.removeItem(REDIRECT_KEY);
+    sessionStorage.removeItem(REDIRECT_TS_KEY);
+    if (!stored) return null;
+    // Check TTL — reject stale redirects
+    if (ts && Date.now() - Number(ts) > MAX_REDIRECT_AGE_MS) return null;
+    if (!isValidTarget(stored)) return null;
+    return stored;
   } catch {}
   return null;
+}
+
+/** Clear stored redirect (e.g. on logout) */
+export function clearRedirect() {
+  try {
+    sessionStorage.removeItem(REDIRECT_KEY);
+    sessionStorage.removeItem(REDIRECT_TS_KEY);
+  } catch {}
 }
 
 /** Get the best redirect target from multiple sources */
@@ -49,11 +70,11 @@ export function getRedirectTarget(
 ): string | null {
   // Priority 1: explicit ?redirect= param
   const fromParam = searchParams.get("redirect");
-  if (fromParam && fromParam !== "/auth") return fromParam;
+  if (fromParam && isValidTarget(fromParam)) return fromParam;
   
   // Priority 2: router state (from ProtectedRoute)
   const fromState = locationState?.from?.pathname;
-  if (fromState && fromState !== "/auth") {
+  if (fromState && isValidTarget(fromState)) {
     const search = locationState?.from?.search || "";
     const hash = locationState?.from?.hash || "";
     return fromState + search + hash;
