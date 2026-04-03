@@ -266,7 +266,9 @@ export function useCommandCenter() {
 
         if (user) {
           const startTime = freshExec.startedAt ? new Date(freshExec.startedAt).getTime() : Date.now();
-          logExecutionCompleted(user.id, freshExec.actionId, freshExec.intent, freshExec.totalCredits, freshOutputs.length, Date.now() - startTime);
+          const durationMs = Date.now() - startTime;
+          logExecutionCompleted(user.id, freshExec.actionId, freshExec.intent, freshExec.totalCredits, freshOutputs.length, durationMs);
+          trackExecutionCompleted(freshExec.intent, freshExec.totalCredits, freshOutputs.length, durationMs);
           persistRun({ execution: { ...freshExec, phase: "completed", completedAt: new Date().toISOString() }, outputCount: freshOutputs.length });
         }
       }
