@@ -1019,13 +1019,12 @@ Deno.serve(async (req) => {
     });
 
     if (!response.ok) {
-      // Refund credits on AI failure via atomic function
-      await supabase.rpc("add_credits", {
+      // RELEASE reserved neurons on AI failure
+      await supabase.rpc("release_neurons", {
         _user_id: user_id,
         _amount: service.credits_cost,
-        _description: `REFUND: ${service.name} — AI error ${response.status}`,
-        _type: "refund",
-      });
+        _description: `RELEASE: ${service.name} — AI error ${response.status}`,
+      }).catch(() => {});
 
       // Mark failed with error message for retry system
       const retryCount = currentJob?.retry_count || 0;
@@ -1046,16 +1045,16 @@ Deno.serve(async (req) => {
       }).eq("id", job_id);
 
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Credits refunded." }), {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded. Credits released." }), {
           status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Credits refunded." }), {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Credits released." }), {
           status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
-      return new Response(JSON.stringify({ error: "AI service unavailable. Credits refunded." }), {
+      return new Response(JSON.stringify({ error: "AI service unavailable. Credits released." }), {
         status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
