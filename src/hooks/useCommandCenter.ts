@@ -72,6 +72,7 @@ export function useCommandCenter() {
   const [showEconomicGate, setShowEconomicGate] = useState(false);
   const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
+  const [activeMode, setActiveMode] = useState<CommandMode>(null);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [showLowBalance, setShowLowBalance] = useState(false);
