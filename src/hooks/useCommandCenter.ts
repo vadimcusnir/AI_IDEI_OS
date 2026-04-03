@@ -131,12 +131,15 @@ export function useCommandCenter() {
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
-  // Auto-submit from ?q=
+  // Auto-submit from ?q= — CC-R02: actually execute, not just focus
   useEffect(() => {
     if (initialQ && user && sessionLoaded && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true;
       setSearchParams({}, { replace: true });
-      const timer = setTimeout(() => inputZoneRef.current?.focus(), 200);
+      // Defer to next tick so input state is settled
+      const timer = setTimeout(() => {
+        handleSubmit(true);
+      }, 100);
       return () => clearTimeout(timer);
     }
   }, [initialQ, user, sessionLoaded, setSearchParams]);
