@@ -108,10 +108,6 @@ const Pricing = lazyRetry(() => import("./pages/Pricing"));
 
 const ServiceResults = lazyRetry(() => import("./pages/ServiceResults"));
 const ProductSurfacePage = lazyRetry(() => import("./pages/ProductSurfacePage"));
-const NotebookWorkspace = lazyRetry(() => import("./pages/NotebookWorkspace"));
-const NotebookDetail = lazyRetry(() => import("./pages/NotebookDetail"));
-const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngine"));
-const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
 const Programs = lazyRetry(() => import("./pages/Programs"));
 const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
