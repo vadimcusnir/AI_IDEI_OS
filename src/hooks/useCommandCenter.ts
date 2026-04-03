@@ -4,6 +4,7 @@
  * CC-T06: Reduces Home.tsx from 800+ lines to ~300 lines of layout.
  */
 import { useState, useRef, useEffect, useCallback } from "react";
+import type { CommandMode } from "@/components/command-center/ModeChipBar";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
@@ -71,6 +72,7 @@ export function useCommandCenter() {
   const [showEconomicGate, setShowEconomicGate] = useState(false);
   const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
+  const [activeMode, setActiveMode] = useState<CommandMode>(null);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [showLowBalance, setShowLowBalance] = useState(false);
@@ -405,6 +407,7 @@ export function useCommandCenter() {
     showOutputs, setShowOutputs, showPostExecution, setShowPostExecution,
     showEconomicGate, permissionBlock, setPermissionBlock,
     savingAllOutputs, showLowBalance, setShowLowBalance,
+    activeMode, setActiveMode,
     isEmptyState, greeting, userName, durationSeconds,
     // Counts
     totalNeurons, totalEpisodes,
