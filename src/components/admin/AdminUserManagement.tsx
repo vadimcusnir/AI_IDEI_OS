@@ -242,6 +242,38 @@ export function AdminUserManagement() {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
+                    {/* Ban user */}
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" title="Ban user">
+                          <Ban className="h-3.5 w-3.5 text-destructive" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-destructive">Ban User?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will record an abuse event and freeze credits for {u.email || u.user_id.substring(0, 8)}. The action is logged.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction className="bg-destructive text-destructive-foreground" onClick={async () => {
+                            await supabase.from("abuse_events").insert({
+                              user_id: u.user_id,
+                              abuse_type: "admin_ban",
+                              severity: "critical",
+                              action_taken: "account_frozen",
+                              details: { banned_by: "admin", email: u.email },
+                            });
+                            toast.success("User banned — abuse event recorded");
+                            loadUsers();
+                          }}>
+                            Ban User
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </TableCell>
               </TableRow>
