@@ -1,23 +1,29 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
-
-/**
- * transcribe-source: Unified transcription pipeline
- * 
- * Flow:
- *   Client → Edge API → Detect source → Fetch metadata
- *   → Try subtitles (fast path, <1s)
- *   → Fallback to ElevenLabs STT
- *   → Store transcript in DB
- * 
- * Input: { url, episode_id, language? }
- * Output: { transcript, segments, language, source, metadata }
- */
-
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-// ── Source Detection ──
+/**
+ * transcribe-source: UNIFIED AUDIO-FIRST transcription pipeline.
+ *
+ * Architecture (non-negotiable):
+ *   1. Detect source (YouTube / direct audio / direct video)
+ *   2. Fetch metadata (oEmbed)
+ *   3. Extract audio (cobalt.tools for YouTube, direct download for files)
+ *   4. Upload to temp storage
+ *   5. ElevenLabs Scribe v2 (STT + diarization + language detection)
+ *   6. Normalize transcript (unified schema)
+ *   7. Store in DB + generate SRT
+ *   8. [Optional] Fetch subtitles as comparison metadata ONLY
+ *
+ * RULE: Subtitles are NEVER the primary transcript source.
+ * RULE: Original spoken language is always preserved.
+ * RULE: Same pipeline for YouTube and uploaded files.
+ */
+
+// ═══════════════════════════════════════
+// Source Detection
+// ═══════════════════════════════════════
 interface SourceInfo {
   platform: "youtube" | "vimeo" | "direct" | "unknown";
   source_type: "video" | "audio" | "webpage";
@@ -33,7 +39,6 @@ const AUDIO_EXTS = /\.(mp3|wav|m4a|ogg|flac|opus|aac|webm)$/i;
 const VIDEO_EXTS = /\.(mp4|mov|avi|mkv|wmv|flv)$/i;
 
 function detectSource(url: string): SourceInfo {
-  // YouTube
   for (const pattern of YOUTUBE_PATTERNS) {
     const match = url.match(pattern);
     if (match?.[1]) {
@@ -45,48 +50,33 @@ function detectSource(url: string): SourceInfo {
       };
     }
   }
-  // Also check query param
   try {
     const parsed = new URL(url);
     if (parsed.hostname.includes("youtube.com")) {
       const v = parsed.searchParams.get("v");
       if (v && /^[\w-]{11}$/.test(v)) {
-        return {
-          platform: "youtube",
-          source_type: "video",
-          video_id: v,
-          canonical_url: `https://www.youtube.com/watch?v=${v}`,
-        };
+        return { platform: "youtube", source_type: "video", video_id: v, canonical_url: `https://www.youtube.com/watch?v=${v}` };
       }
     }
   } catch {}
 
-  // Vimeo
   const vimeoMatch = url.match(VIMEO_PATTERN);
   if (vimeoMatch?.[1]) {
-    return {
-      platform: "vimeo",
-      source_type: "video",
-      video_id: vimeoMatch[1],
-      canonical_url: `https://vimeo.com/${vimeoMatch[1]}`,
-    };
+    return { platform: "vimeo", source_type: "video", video_id: vimeoMatch[1], canonical_url: `https://vimeo.com/${vimeoMatch[1]}` };
   }
 
-  // Direct audio/video
   try {
     const pathname = new URL(url).pathname;
-    if (AUDIO_EXTS.test(pathname)) {
-      return { platform: "direct", source_type: "audio", video_id: null, canonical_url: url };
-    }
-    if (VIDEO_EXTS.test(pathname)) {
-      return { platform: "direct", source_type: "video", video_id: null, canonical_url: url };
-    }
+    if (AUDIO_EXTS.test(pathname)) return { platform: "direct", source_type: "audio", video_id: null, canonical_url: url };
+    if (VIDEO_EXTS.test(pathname)) return { platform: "direct", source_type: "video", video_id: null, canonical_url: url };
   } catch {}
 
   return { platform: "unknown", source_type: "webpage", video_id: null, canonical_url: url };
 }
 
-// ── Metadata Fetch ──
+// ═══════════════════════════════════════
+// Metadata
+// ═══════════════════════════════════════
 interface SourceMetadata {
   title: string;
   duration_seconds: number | null;
@@ -95,18 +85,10 @@ interface SourceMetadata {
 }
 
 async function fetchMetadata(source: SourceInfo): Promise<SourceMetadata> {
-  const fallback: SourceMetadata = {
-    title: "",
-    duration_seconds: null,
-    uploader: "",
-    thumbnail_url: null,
-  };
-
+  const fallback: SourceMetadata = { title: "", duration_seconds: null, uploader: "", thumbnail_url: null };
   try {
     if (source.platform === "youtube") {
-      const resp = await fetch(
-        `https://www.youtube.com/oembed?url=${encodeURIComponent(source.canonical_url)}&format=json`
-      );
+      const resp = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(source.canonical_url)}&format=json`);
       if (resp.ok) {
         const data = await resp.json();
         return {
@@ -117,168 +99,155 @@ async function fetchMetadata(source: SourceInfo): Promise<SourceMetadata> {
         };
       }
     } else if (source.platform === "vimeo") {
-      const resp = await fetch(
-        `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(source.canonical_url)}`
-      );
+      const resp = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(source.canonical_url)}`);
       if (resp.ok) {
         const data = await resp.json();
-        return {
-          title: data.title || "",
-          duration_seconds: data.duration || null,
-          uploader: data.author_name || "",
-          thumbnail_url: data.thumbnail_url || null,
-        };
-      }
-    } else {
-      // Generic: scrape <title>
-      const resp = await fetch(source.canonical_url, {
-        headers: { "User-Agent": "Mozilla/5.0 AI-IDEI Bot" },
-        redirect: "follow",
-      });
-      if (resp.ok) {
-        const html = await resp.text();
-        const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-        if (titleMatch?.[1]) {
-          return { ...fallback, title: titleMatch[1].trim() };
-        }
+        return { title: data.title || "", duration_seconds: data.duration || null, uploader: data.author_name || "", thumbnail_url: data.thumbnail_url || null };
       }
     }
   } catch (e) {
-    console.warn("Metadata fetch failed:", e);
+    console.warn("[metadata] Failed:", e);
   }
-
-  // URL-based title fallback
   try {
-    const pathname = new URL(source.canonical_url).pathname;
-    const parts = pathname.split("/").filter(Boolean);
+    const parts = new URL(source.canonical_url).pathname.split("/").filter(Boolean);
     if (parts.length > 0) {
-      const last = decodeURIComponent(parts[parts.length - 1])
-        .replace(/[-_]/g, " ")
-        .replace(/\.\w+$/, "")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
+      const last = decodeURIComponent(parts[parts.length - 1]).replace(/[-_]/g, " ").replace(/\.\w+$/, "").replace(/\b\w/g, c => c.toUpperCase());
       if (last.length > 2) return { ...fallback, title: last };
     }
-    return { ...fallback, title: new URL(source.canonical_url).hostname.replace("www.", "") };
-  } catch {
-    return { ...fallback, title: `Episode ${new Date().toLocaleDateString()}` };
-  }
+  } catch {}
+  return { ...fallback, title: `Episode ${new Date().toLocaleDateString()}` };
 }
 
-// ── Subtitle Fetch (Fast Path) ──
-interface SubtitleResult {
-  text: string;
-  language: string;
-  segments: Array<{ start: number; end: number; text: string }>;
-  kind: string;
+// ═══════════════════════════════════════
+// Failure Taxonomy
+// ═══════════════════════════════════════
+type FailureClass =
+  | "invalid_url"
+  | "unsupported_source"
+  | "video_private_or_blocked"
+  | "media_fetch_failed"
+  | "media_too_long"
+  | "audio_decode_failed"
+  | "transcription_timeout"
+  | "language_detection_failed"
+  | "diarization_failed_non_blocking"
+  | "storage_write_failed"
+  | "downstream_pipeline_failed"
+  | "no_backend_configured"
+  | "auth_failed";
+
+function failResponse(
+  failure_class: FailureClass,
+  message: string,
+  status: number,
+  headers: Record<string, string>,
+  retryable = false,
+) {
+  return new Response(
+    JSON.stringify({ error: message, failure_class, retryable }),
+    { status, headers: { ...headers, "Content-Type": "application/json" } },
+  );
 }
 
-const SUBTITLE_LANG_PRIORITY = ["ro", "en"];
+// ═══════════════════════════════════════
+// Audio Extraction — YouTube via cobalt.tools
+// ═══════════════════════════════════════
+async function extractYouTubeAudio(videoId: string): Promise<{ audioUrl: string; filename: string } | null> {
+  const COBALT_INSTANCES = [
+    "https://api.cobalt.tools",
+  ];
 
-async function fetchSubtitles(videoId: string): Promise<SubtitleResult | null> {
-  try {
-    // Get available tracks
-    const listResp = await fetch(`https://video.google.com/timedtext?v=${videoId}&type=list`);
-    if (!listResp.ok) return null;
+  for (const instance of COBALT_INSTANCES) {
+    try {
+      console.log(`[audio-extract] Trying cobalt: ${instance}`);
+      const resp = await fetch(`${instance}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          url: `https://www.youtube.com/watch?v=${videoId}`,
+          downloadMode: "audio",
+          audioFormat: "mp3",
+        }),
+      });
 
-    const listXml = await listResp.text();
-    const tracks: Array<{ code: string; kind?: string }> = [];
-    const trackRegex = /lang_code="([^"]+)"(?:[^>]*kind="([^"]*)")?/g;
-    let match;
-    while ((match = trackRegex.exec(listXml)) !== null) {
-      tracks.push({ code: match[1], kind: match[2] });
-    }
-
-    if (tracks.length === 0) return null;
-
-    // Select best track: manual in priority order, then auto, then first
-    let selected: { code: string; kind?: string } | null = null;
-
-    for (const lang of SUBTITLE_LANG_PRIORITY) {
-      const manual = tracks.find((t) => t.code === lang && t.kind !== "asr");
-      if (manual) { selected = manual; break; }
-    }
-    if (!selected) {
-      for (const lang of SUBTITLE_LANG_PRIORITY) {
-        const auto = tracks.find((t) => t.code === lang);
-        if (auto) { selected = auto; break; }
+      if (!resp.ok) {
+        console.warn(`[audio-extract] cobalt ${instance} returned ${resp.status}`);
+        continue;
       }
-    }
-    if (!selected) selected = tracks[0];
 
-    // Download captions
-    let subUrl = `https://video.google.com/timedtext?v=${videoId}&lang=${selected.code}`;
-    if (selected.kind) subUrl += `&kind=${selected.kind}`;
-
-    const subResp = await fetch(subUrl);
-    if (!subResp.ok) return null;
-
-    const xml = await subResp.text();
-
-    // Parse <text start="..." dur="...">content</text>
-    const segments: SubtitleResult["segments"] = [];
-    const textParts: string[] = [];
-    const segRegex = /<text[^>]*\bstart="([\d.]+)"[^>]*\bdur="([\d.]+)"[^>]*>([\s\S]*?)<\/text>/g;
-    let seg;
-    while ((seg = segRegex.exec(xml)) !== null) {
-      const start = parseFloat(seg[1]);
-      const dur = parseFloat(seg[2]);
-      const text = seg[3]
-        .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
-        .replace(/<[^>]+>/g, "").replace(/\n/g, " ").trim();
-      if (text) {
-        segments.push({ start, end: start + dur, text });
-        textParts.push(text);
+      const data = await resp.json();
+      if (data.status === "tunnel" || data.status === "redirect") {
+        const audioUrl = data.url;
+        if (audioUrl) {
+          console.log(`[audio-extract] ✓ Got audio URL from cobalt`);
+          return { audioUrl, filename: `yt_${videoId}.mp3` };
+        }
       }
+      if (data.status === "picker" && data.picker?.length > 0) {
+        // Pick audio track
+        const audioTrack = data.picker.find((p: any) => p.type === "audio") || data.picker[0];
+        if (audioTrack?.url) {
+          return { audioUrl: audioTrack.url, filename: `yt_${videoId}.mp3` };
+        }
+      }
+      console.warn(`[audio-extract] cobalt response status: ${data.status}`);
+    } catch (e) {
+      console.warn(`[audio-extract] cobalt ${instance} error:`, e);
     }
-
-    const fullText = textParts.join(" ");
-    if (!fullText.trim()) return null;
-
-    return {
-      text: fullText,
-      language: selected.code,
-      segments,
-      kind: selected.kind === "asr" ? "auto" : "manual",
-    };
-  } catch (e) {
-    console.warn("Subtitle fetch failed:", e);
-    return null;
   }
+
+  return null;
 }
 
-// ── ElevenLabs STT (Fallback) ──
-interface STTResult {
+// ═══════════════════════════════════════
+// Download audio to Blob
+// ═══════════════════════════════════════
+async function downloadAudioBlob(audioUrl: string, maxSizeMB = 500): Promise<Blob> {
+  const resp = await fetch(audioUrl, {
+    headers: { "User-Agent": "Mozilla/5.0 AI-IDEI Transcription Bot" },
+    redirect: "follow",
+  });
+
+  if (!resp.ok) throw new Error(`Audio download failed: HTTP ${resp.status}`);
+
+  const contentLength = parseInt(resp.headers.get("Content-Length") || "0");
+  if (contentLength > maxSizeMB * 1024 * 1024) {
+    throw new Error(`Audio file too large: ${(contentLength / 1024 / 1024).toFixed(0)} MB (max ${maxSizeMB} MB)`);
+  }
+
+  return await resp.blob();
+}
+
+// ═══════════════════════════════════════
+// ElevenLabs Scribe v2 — Core STT Engine
+// ═══════════════════════════════════════
+interface TranscriptResult {
   text: string;
-  segments: Array<{ start: number; end: number; text: string }>;
+  segments: Array<{ start: number; end: number; text: string; speaker?: string }>;
   duration_seconds: number | null;
-  language: string | null;
+  detected_language: string | null;
+  speakers: string[];
+  confidence: number;
+  processing_mode: "elevenlabs_scribe_v2";
 }
 
 async function transcribeWithElevenLabs(
-  supabase: any,
-  filePath: string,
-  language: string | undefined,
-  apiKey: string
-): Promise<STTResult> {
-  // Download from storage
-  const { data: fileData, error: dlErr } = await supabase.storage
-    .from("episode-files")
-    .download(filePath);
-
-  if (!fileData || dlErr) {
-    throw new Error("Failed to download file from storage");
-  }
-
-  const fileName = filePath.split("/").pop() || "audio.mp3";
+  audioBlob: Blob,
+  filename: string,
+  apiKey: string,
+  preferredLanguage?: string,
+): Promise<TranscriptResult> {
   const formData = new FormData();
-  formData.append("file", new File([fileData], fileName, { type: fileData.type }));
+  formData.append("file", new File([audioBlob], filename, { type: audioBlob.type || "audio/mpeg" }));
   formData.append("model_id", "scribe_v2");
   formData.append("tag_audio_events", "true");
   formData.append("diarize", "true");
-  if (language) formData.append("language_code", language);
+  if (preferredLanguage) formData.append("language_code", preferredLanguage);
 
-  console.log(`[STT] ElevenLabs: ${fileName} (${(fileData.size / 1024 / 1024).toFixed(2)} MB)`);
+  console.log(`[stt] ElevenLabs Scribe v2: ${filename} (${(audioBlob.size / 1024 / 1024).toFixed(2)} MB), diarize=true`);
 
   const resp = await fetch("https://api.elevenlabs.io/v1/speech-to-text", {
     method: "POST",
@@ -294,16 +263,45 @@ async function transcribeWithElevenLabs(
   const result = await resp.json();
   const text = result.text || "";
 
-  // Build segments from word timestamps
-  const segments: STTResult["segments"] = [];
+  // Build segments with speaker labels from word timestamps
+  const segments: TranscriptResult["segments"] = [];
+  const speakerSet = new Set<string>();
+
   if (result.words?.length > 0) {
-    const blockSize = 10;
-    for (let i = 0; i < result.words.length; i += blockSize) {
-      const block = result.words.slice(i, i + blockSize);
+    let currentSpeaker = result.words[0].speaker || "speaker_0";
+    let blockStart = result.words[0].start;
+    let blockWords: string[] = [];
+
+    for (let i = 0; i < result.words.length; i++) {
+      const word = result.words[i];
+      const speaker = word.speaker || "speaker_0";
+      speakerSet.add(speaker);
+
+      // New segment on speaker change or every ~10 words
+      if (speaker !== currentSpeaker || blockWords.length >= 10) {
+        if (blockWords.length > 0) {
+          segments.push({
+            start: blockStart,
+            end: result.words[i - 1].end,
+            text: blockWords.join(" "),
+            speaker: currentSpeaker,
+          });
+        }
+        currentSpeaker = speaker;
+        blockStart = word.start;
+        blockWords = [word.text];
+      } else {
+        blockWords.push(word.text);
+      }
+    }
+
+    // Flush remaining
+    if (blockWords.length > 0) {
       segments.push({
-        start: block[0].start,
-        end: block[block.length - 1].end,
-        text: block.map((w: any) => w.text).join(" "),
+        start: blockStart,
+        end: result.words[result.words.length - 1].end,
+        text: blockWords.join(" "),
+        speaker: currentSpeaker,
       });
     }
   }
@@ -313,54 +311,50 @@ async function transcribeWithElevenLabs(
     duration_seconds = Math.ceil(result.words[result.words.length - 1].end);
   }
 
-  return { text, segments, duration_seconds, language: null };
-}
+  // Detect language from result or first words
+  const detected_language = result.language_code || result.detected_language || null;
 
-// ── External transcription service ──
-async function transcribeWithExternalService(
-  serviceUrl: string,
-  apiSecret: string | undefined,
-  sourceUrl: string,
-  language: string | undefined
-): Promise<{
-  text: string;
-  segments: Array<{ start: number; end: number; text: string }>;
-  duration_seconds: number | null;
-  language: string | null;
-  source: string;
-}> {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (apiSecret) headers["Authorization"] = `Bearer ${apiSecret}`;
-
-  const resp = await fetch(`${serviceUrl}/transcribe`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      url: sourceUrl,
-      language: language || null,
-      prefer_subtitles: true,
-    }),
-  });
-
-  if (!resp.ok) {
-    const errBody = await resp.text();
-    throw new Error(`External service error ${resp.status}: ${errBody}`);
-  }
-
-  const data = await resp.json();
   return {
-    text: data.transcript_text || data.transcript || "",
-    segments: data.segments || [],
-    duration_seconds: data.duration_seconds || null,
-    language: data.language || null,
-    source: data.source || "external",
+    text,
+    segments,
+    duration_seconds,
+    detected_language,
+    speakers: Array.from(speakerSet),
+    confidence: result.language_probability || 0.9,
+    processing_mode: "elevenlabs_scribe_v2",
   };
 }
 
-// ── Build SRT ──
-function buildSrt(segments: Array<{ start: number; end: number; text: string }>): string {
+// ═══════════════════════════════════════
+// ElevenLabs from Storage path (uploaded files)
+// ═══════════════════════════════════════
+async function transcribeFromStorage(
+  supabase: any,
+  filePath: string,
+  apiKey: string,
+  language?: string,
+): Promise<TranscriptResult> {
+  const { data: fileData, error: dlErr } = await supabase.storage
+    .from("episode-files")
+    .download(filePath);
+
+  if (!fileData || dlErr) {
+    throw new Error("Failed to download file from storage");
+  }
+
+  const fileName = filePath.split("/").pop() || "audio.mp3";
+  return transcribeWithElevenLabs(fileData, fileName, apiKey, language);
+}
+
+// ═══════════════════════════════════════
+// SRT Builder
+// ═══════════════════════════════════════
+function buildSrt(segments: Array<{ start: number; end: number; text: string; speaker?: string }>): string {
   return segments
-    .map((seg, i) => `${i + 1}\n${fmtSrt(seg.start)} --> ${fmtSrt(seg.end)}\n${seg.text}\n`)
+    .map((seg, i) => {
+      const speakerPrefix = seg.speaker ? `[${seg.speaker}] ` : "";
+      return `${i + 1}\n${fmtSrt(seg.start)} --> ${fmtSrt(seg.end)}\n${speakerPrefix}${seg.text}\n`;
+    })
     .join("\n");
 }
 
@@ -373,58 +367,96 @@ function fmtSrt(sec: number): string {
 }
 
 // ═══════════════════════════════════════
-// Main handler
+// Subtitle fetch — METADATA ONLY
+// ═══════════════════════════════════════
+async function fetchSubtitlesAsMetadata(videoId: string): Promise<{
+  available: boolean;
+  languages: string[];
+  has_manual: boolean;
+} | null> {
+  try {
+    const listResp = await fetch(`https://video.google.com/timedtext?v=${videoId}&type=list`);
+    if (!listResp.ok) return null;
+
+    const listXml = await listResp.text();
+    const languages: string[] = [];
+    let hasManual = false;
+    const trackRegex = /lang_code="([^"]+)"(?:[^>]*kind="([^"]*)")?/g;
+    let match;
+    while ((match = trackRegex.exec(listXml)) !== null) {
+      languages.push(match[1]);
+      if (match[2] !== "asr") hasManual = true;
+    }
+
+    return { available: languages.length > 0, languages, has_manual: hasManual };
+  } catch {
+    return null;
+  }
+}
+
+// ═══════════════════════════════════════
+// Unified Transcript Schema
+// ═══════════════════════════════════════
+interface UnifiedTranscript {
+  source_type: string;
+  source_url: string | null;
+  media_origin: string;
+  detected_language: string | null;
+  transcript_language: string | null;
+  transcript_text: string;
+  segments: Array<{ start: number; end: number; text: string; speaker?: string }>;
+  speakers: string[];
+  confidence: number;
+  duration_seconds: number | null;
+  processing_mode: string;
+  fallback_used: boolean;
+  failure_reason: string | null;
+}
+
+// ═══════════════════════════════════════
+// MAIN HANDLER
 // ═══════════════════════════════════════
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: getCorsHeaders(req) });
   }
 
+  const corsHeaders = getCorsHeaders(req);
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
-  const TRANSCRIPTION_SERVICE_URL = Deno.env.get("TRANSCRIPTION_SERVICE_URL");
-  const TRANSCRIPTION_API_SECRET = Deno.env.get("TRANSCRIPTION_API_SECRET");
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  // Timing
+  const timings: Record<string, number> = {};
+  const startTotal = Date.now();
 
   try {
     // ── Auth ──
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
+      return failResponse("auth_failed", "Unauthorized", 401, corsHeaders);
     }
     const token = authHeader.replace("Bearer ", "");
     const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
-    const {
-      data: { user: caller },
-      error: authError,
-    } = await userClient.auth.getUser();
+    const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
     if (authError || !caller) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
+      return failResponse("auth_failed", "Unauthorized", 401, corsHeaders);
     }
 
-    // ── Rate limit (DB-backed, persistent) ──
-    const rateLimited = await rateLimitGuard(caller.id, req, { maxRequests: 10, windowSeconds: 3600 }, getCorsHeaders(req));
+    // Rate limit
+    const rateLimited = await rateLimitGuard(caller.id, req, { maxRequests: 10, windowSeconds: 3600 }, corsHeaders);
     if (rateLimited) return rateLimited;
 
-    // ── Regime ──
+    // Regime
     const regime = await getRegimeConfig("transcribe-audio");
     const blockReason = checkRegimeBlock(regime, 0);
     if (blockReason) {
-      return new Response(
-        JSON.stringify({ error: "Service blocked", reason: blockReason }),
-        { status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
-      );
+      return failResponse("unsupported_source", `Service blocked: ${blockReason}`, 403, corsHeaders);
     }
 
     // ── Input ──
@@ -432,10 +464,7 @@ Deno.serve(async (req) => {
     const { url, episode_id, file_path, language } = body;
 
     if (!url && !file_path) {
-      return new Response(
-        JSON.stringify({ error: "Provide url or file_path" }),
-        { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
-      );
+      return failResponse("invalid_url", "Provide url or file_path", 400, corsHeaders);
     }
 
     // ── Verify episode ownership ──
@@ -448,239 +477,237 @@ Deno.serve(async (req) => {
         .eq("author_id", caller.id)
         .single();
       if (error || !data) {
-        return new Response(
-          JSON.stringify({ error: "Episode not found or access denied" }),
-          { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
-        );
+        return failResponse("invalid_url", "Episode not found or access denied", 404, corsHeaders);
       }
       episode = data;
-      await supabase.from("episodes").update({ status: "transcribing" }).eq("id", episode_id);
     }
 
-    // ═══════════════════════════════
-    // STEP 1: Detect source
-    // ═══════════════════════════════
+    // Update status
+    const updateStatus = async (status: string, extra?: Record<string, any>) => {
+      if (!episode_id) return;
+      const update: any = { status };
+      if (extra) {
+        update.metadata = {
+          ...(typeof episode?.metadata === "object" && episode?.metadata ? episode.metadata : {}),
+          ...extra,
+        };
+      }
+      await supabase.from("episodes").update(update).eq("id", episode_id);
+    };
+
+    // ═══ STEP 1: Detect source ═══
     let source: SourceInfo | null = null;
     if (url) {
       source = detectSource(url);
       console.log(`[pipeline] Source: ${source.platform} (${source.source_type})`);
     }
 
-    // ═══════════════════════════════
-    // STEP 2: Fetch metadata
-    // ═══════════════════════════════
+    // ═══ STEP 2: Fetch metadata ═══
+    const t2 = Date.now();
     let metadata: SourceMetadata | null = null;
     if (source) {
       metadata = await fetchMetadata(source);
       console.log(`[pipeline] Metadata: "${metadata.title}" by ${metadata.uploader}`);
     }
+    timings.metadata_ms = Date.now() - t2;
 
-    // ═══════════════════════════════
-    // STEP 3: Try subtitles (fast path)
-    // ═══════════════════════════════
-    if (source?.platform === "youtube" && source.video_id) {
-      console.log("[pipeline] Attempting YouTube subtitle download...");
-      const subs = await fetchSubtitles(source.video_id);
+    // Update episode title early
+    if (episode_id && metadata?.title) {
+      await supabase.from("episodes").update({
+        title: metadata.title,
+        source_url: source?.canonical_url || url,
+      } as any).eq("id", episode_id);
+    }
 
-      if (subs && subs.text.trim()) {
-        console.log(`[pipeline] ✓ Subtitles found: ${subs.language} (${subs.kind}), ${subs.segments.length} segments`);
+    // ═══ CHECK: ElevenLabs API key required ═══
+    if (!ELEVENLABS_API_KEY) {
+      return failResponse("no_backend_configured", "Transcription backend not configured (ELEVENLABS_API_KEY required)", 500, corsHeaders);
+    }
 
-        const srtContent = buildSrt(subs.segments);
-        const lastSeg = subs.segments[subs.segments.length - 1];
-        const durationSeconds = lastSeg ? Math.ceil(lastSeg.end) : metadata?.duration_seconds || null;
+    let sttResult: TranscriptResult;
 
-        // Store in episode
-        if (episode_id) {
-          await supabase
-            .from("episodes")
-            .update({
-              transcript: subs.text,
-              status: "transcribed",
-              duration_seconds: durationSeconds,
-              language: subs.language,
-              title: metadata?.title || episode?.title || "Untitled",
-              metadata: {
-                ...(typeof episode?.metadata === "object" && episode?.metadata ? episode.metadata : {}),
-                transcription_source: "youtube_captions",
-                subtitle_language: subs.language,
-                subtitle_kind: subs.kind,
-                uploader: metadata?.uploader,
-                thumbnail_url: metadata?.thumbnail_url,
-                segment_count: subs.segments.length,
-                word_count: subs.text.split(/\s+/).length,
-                has_srt: true,
-                transcribed_at: new Date().toISOString(),
-              },
-            } as any)
-            .eq("id", episode_id);
-        }
+    // ═══ STEP 3: Audio acquisition + STT ═══
+    if (file_path) {
+      // ── PATH A: Uploaded file → direct ElevenLabs ──
+      await updateStatus("transcribing", { stage: "transcribing_audio" });
+      console.log(`[pipeline] File path: ${file_path}`);
 
-        return new Response(
-          JSON.stringify({
-            success: true,
-            episode_id,
-            transcript: subs.text,
-            transcript_length: subs.text.length,
-            word_count: subs.text.split(/\s+/).length,
-            language: subs.language,
-            source: "subtitles",
-            subtitle_kind: subs.kind,
-            duration_seconds: durationSeconds,
-            segments: subs.segments,
-            has_srt: true,
-            srt: srtContent,
-            metadata: metadata
-              ? { title: metadata.title, uploader: metadata.uploader, thumbnail_url: metadata.thumbnail_url }
-              : null,
-          }),
-          { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+      const t3 = Date.now();
+      sttResult = await transcribeFromStorage(supabase, file_path, ELEVENLABS_API_KEY, language);
+      timings.stt_ms = Date.now() - t3;
+
+    } else if (source?.platform === "youtube" && source.video_id) {
+      // ── PATH B: YouTube → extract audio → ElevenLabs ──
+      await updateStatus("transcribing", { stage: "extracting_audio" });
+
+      // Step 3a: Extract audio from YouTube
+      const t3a = Date.now();
+      const audioExtract = await extractYouTubeAudio(source.video_id);
+      timings.audio_extract_ms = Date.now() - t3a;
+
+      if (!audioExtract) {
+        await updateStatus("error", { failure_class: "media_fetch_failed" });
+        return failResponse(
+          "media_fetch_failed",
+          "Could not extract audio from YouTube video. The video may be private, age-restricted, or geo-blocked.",
+          422,
+          corsHeaders,
+          true,
         );
       }
 
-      console.log("[pipeline] No subtitles found, falling back to speech recognition");
-    }
-
-    // ═══════════════════════════════
-    // STEP 4: Speech recognition fallback
-    // ═══════════════════════════════
-
-    // Strategy A: External service (yt-dlp + faster-whisper)
-    if (TRANSCRIPTION_SERVICE_URL && url) {
-      console.log(`[pipeline] Using external transcription service`);
+      // Step 3b: Download audio blob
+      await updateStatus("transcribing", { stage: "downloading_audio" });
+      const t3b = Date.now();
+      let audioBlob: Blob;
       try {
-        const extResult = await transcribeWithExternalService(
-          TRANSCRIPTION_SERVICE_URL,
-          TRANSCRIPTION_API_SECRET,
-          url,
-          language
-        );
-
-        if (extResult.text.trim()) {
-          const srtContent = buildSrt(extResult.segments);
-
-          if (episode_id) {
-            await supabase
-              .from("episodes")
-              .update({
-                transcript: extResult.text,
-                status: "transcribed",
-                duration_seconds: extResult.duration_seconds,
-                language: extResult.language,
-                title: metadata?.title || episode?.title || "Untitled",
-                metadata: {
-                  ...(typeof episode?.metadata === "object" && episode?.metadata ? episode.metadata : {}),
-                  transcription_source: extResult.source,
-                  uploader: metadata?.uploader,
-                  thumbnail_url: metadata?.thumbnail_url,
-                  word_count: extResult.text.split(/\s+/).length,
-                  segment_count: extResult.segments.length,
-                  has_srt: extResult.segments.length > 0,
-                  transcribed_at: new Date().toISOString(),
-                },
-              } as any)
-              .eq("id", episode_id);
-          }
-
-          return new Response(
-            JSON.stringify({
-              success: true,
-              episode_id,
-              transcript: extResult.text,
-              transcript_length: extResult.text.length,
-              word_count: extResult.text.split(/\s+/).length,
-              language: extResult.language,
-              source: extResult.source,
-              duration_seconds: extResult.duration_seconds,
-              segments: extResult.segments,
-              has_srt: extResult.segments.length > 0,
-              srt: srtContent || null,
-              metadata: metadata
-                ? { title: metadata.title, uploader: metadata.uploader, thumbnail_url: metadata.thumbnail_url }
-                : null,
-            }),
-            { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
-          );
-        }
+        audioBlob = await downloadAudioBlob(audioExtract.audioUrl);
       } catch (e) {
-        console.warn("[pipeline] External service failed, trying ElevenLabs:", e);
-      }
-    }
-
-    // Strategy B: ElevenLabs STT (file-based)
-    if (file_path && ELEVENLABS_API_KEY) {
-      console.log(`[pipeline] Using ElevenLabs STT`);
-      const sttResult = await transcribeWithElevenLabs(supabase, file_path, language, ELEVENLABS_API_KEY);
-
-      if (!sttResult.text.trim()) {
-        if (episode_id) {
-          await supabase.from("episodes").update({ status: "error" }).eq("id", episode_id);
-        }
-        return new Response(
-          JSON.stringify({ error: "Transcription returned empty text" }),
-          { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        await updateStatus("error", { failure_class: "media_fetch_failed" });
+        return failResponse(
+          "media_fetch_failed",
+          e instanceof Error ? e.message : "Audio download failed",
+          422,
+          corsHeaders,
+          true,
         );
       }
+      timings.download_ms = Date.now() - t3b;
+      console.log(`[pipeline] Audio downloaded: ${(audioBlob.size / 1024 / 1024).toFixed(2)} MB`);
 
-      const srtContent = buildSrt(sttResult.segments);
+      // Step 3c: Transcribe with ElevenLabs
+      await updateStatus("transcribing", { stage: "transcribing_audio" });
+      const t3c = Date.now();
+      sttResult = await transcribeWithElevenLabs(audioBlob, audioExtract.filename, ELEVENLABS_API_KEY, language);
+      timings.stt_ms = Date.now() - t3c;
 
-      if (episode_id) {
-        await supabase
-          .from("episodes")
-          .update({
-            transcript: sttResult.text,
-            status: "transcribed",
-            duration_seconds: sttResult.duration_seconds,
-            title: metadata?.title || episode?.title || "Untitled",
-            metadata: {
-              ...(typeof episode?.metadata === "object" && episode?.metadata ? episode.metadata : {}),
-              transcription_source: "elevenlabs_scribe_v2",
-              uploader: metadata?.uploader,
-              thumbnail_url: metadata?.thumbnail_url,
-              word_count: sttResult.text.split(/\s+/).length,
-              segment_count: sttResult.segments.length,
-              has_srt: sttResult.segments.length > 0,
-              transcribed_at: new Date().toISOString(),
-            },
-          } as any)
-          .eq("id", episode_id);
+    } else if (source?.platform === "direct" || source?.platform === "vimeo") {
+      // ── PATH C: Direct URL → download → ElevenLabs ──
+      await updateStatus("transcribing", { stage: "downloading_audio" });
+
+      const t3 = Date.now();
+      let audioBlob: Blob;
+      try {
+        audioBlob = await downloadAudioBlob(source.canonical_url);
+      } catch (e) {
+        await updateStatus("error", { failure_class: "media_fetch_failed" });
+        return failResponse("media_fetch_failed", e instanceof Error ? e.message : "Download failed", 422, corsHeaders, true);
       }
+      timings.download_ms = Date.now() - t3;
 
-      return new Response(
-        JSON.stringify({
-          success: true,
-          episode_id,
-          transcript: sttResult.text,
-          transcript_length: sttResult.text.length,
-          word_count: sttResult.text.split(/\s+/).length,
-          language: sttResult.language,
-          source: "elevenlabs",
-          duration_seconds: sttResult.duration_seconds,
-          segments: sttResult.segments,
-          has_srt: sttResult.segments.length > 0,
-          srt: srtContent || null,
-          metadata: metadata
-            ? { title: metadata.title, uploader: metadata.uploader, thumbnail_url: metadata.thumbnail_url }
-            : null,
-        }),
-        { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
-      );
+      await updateStatus("transcribing", { stage: "transcribing_audio" });
+      const t3b = Date.now();
+      const filename = source.canonical_url.split("/").pop()?.split("?")[0] || "audio.mp3";
+      sttResult = await transcribeWithElevenLabs(audioBlob, filename, ELEVENLABS_API_KEY, language);
+      timings.stt_ms = Date.now() - t3b;
+
+    } else {
+      await updateStatus("error", { failure_class: "unsupported_source" });
+      return failResponse("unsupported_source", "Unsupported source type. Provide a YouTube URL, audio/video URL, or upload a file.", 400, corsHeaders);
     }
 
-    // No backend available
+    // ═══ STEP 4: Validate STT result ═══
+    if (!sttResult.text.trim()) {
+      await updateStatus("error", { failure_class: "audio_decode_failed" });
+      return failResponse("audio_decode_failed", "Transcription returned empty text. Audio may be silent, corrupted, or too short.", 400, corsHeaders, true);
+    }
+
+    console.log(`[pipeline] ✓ STT complete: ${sttResult.text.split(/\s+/).length} words, ${sttResult.segments.length} segments, ${sttResult.speakers.length} speakers, lang=${sttResult.detected_language}`);
+
+    // ═══ STEP 5: Optional subtitle metadata (YouTube only) ═══
+    let subtitleMeta: { available: boolean; languages: string[]; has_manual: boolean } | null = null;
+    if (source?.platform === "youtube" && source.video_id) {
+      subtitleMeta = await fetchSubtitlesAsMetadata(source.video_id);
+    }
+
+    // ═══ STEP 6: Build SRT ═══
+    const srtContent = buildSrt(sttResult.segments);
+
+    // ═══ STEP 7: Store in DB ═══
+    const unified: UnifiedTranscript = {
+      source_type: source?.source_type || "audio",
+      source_url: source?.canonical_url || url || null,
+      media_origin: source?.platform || "upload",
+      detected_language: sttResult.detected_language,
+      transcript_language: sttResult.detected_language,
+      transcript_text: sttResult.text,
+      segments: sttResult.segments,
+      speakers: sttResult.speakers,
+      confidence: sttResult.confidence,
+      duration_seconds: sttResult.duration_seconds,
+      processing_mode: sttResult.processing_mode,
+      fallback_used: false,
+      failure_reason: null,
+    };
+
     if (episode_id) {
-      await supabase.from("episodes").update({ status: "error" }).eq("id", episode_id);
+      await supabase.from("episodes").update({
+        transcript: sttResult.text,
+        status: "transcribed",
+        duration_seconds: sttResult.duration_seconds,
+        language: sttResult.detected_language,
+        title: metadata?.title || episode?.title || "Untitled",
+        metadata: {
+          ...(typeof episode?.metadata === "object" && episode?.metadata ? episode.metadata : {}),
+          transcription_source: "elevenlabs_scribe_v2",
+          processing_mode: "audio_first",
+          detected_language: sttResult.detected_language,
+          speakers: sttResult.speakers,
+          speaker_count: sttResult.speakers.length,
+          confidence: sttResult.confidence,
+          uploader: metadata?.uploader,
+          thumbnail_url: metadata?.thumbnail_url,
+          word_count: sttResult.text.split(/\s+/).length,
+          segment_count: sttResult.segments.length,
+          has_srt: true,
+          has_diarization: sttResult.speakers.length > 1,
+          subtitle_metadata: subtitleMeta,
+          timings,
+          total_processing_ms: Date.now() - startTotal,
+          transcribed_at: new Date().toISOString(),
+        },
+      } as any).eq("id", episode_id);
     }
+
+    // ═══ STEP 8: Response ═══
+    timings.total_ms = Date.now() - startTotal;
+
     return new Response(
       JSON.stringify({
-        error: "No transcription backend available. Configure ELEVENLABS_API_KEY or TRANSCRIPTION_SERVICE_URL.",
+        success: true,
+        episode_id,
+        transcript: sttResult.text,
+        transcript_length: sttResult.text.length,
+        word_count: sttResult.text.split(/\s+/).length,
+        language: sttResult.detected_language,
+        source: "audio_stt",
+        processing_mode: "elevenlabs_scribe_v2",
+        duration_seconds: sttResult.duration_seconds,
+        segments: sttResult.segments,
+        speakers: sttResult.speakers,
+        speaker_count: sttResult.speakers.length,
+        has_diarization: sttResult.speakers.length > 1,
+        confidence: sttResult.confidence,
+        has_srt: true,
+        srt: srtContent,
+        fallback_used: false,
+        timings,
+        metadata: metadata
+          ? { title: metadata.title, uploader: metadata.uploader, thumbnail_url: metadata.thumbnail_url }
+          : null,
+        subtitle_metadata: subtitleMeta,
       }),
-      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
     console.error("[transcribe-source] Fatal error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+      JSON.stringify({
+        error: e instanceof Error ? e.message : "Unknown error",
+        failure_class: "downstream_pipeline_failed",
+        retryable: true,
+      }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
 });
