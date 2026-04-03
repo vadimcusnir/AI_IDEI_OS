@@ -67,15 +67,26 @@ export default function Home() {
         </div>
       )}
       {(cc.execState.phase === "completed" || cc.execState.phase === "failed") && (
-        <ExecutionSummary
-          phase={cc.execState.phase} intent={cc.execState.intent}
-          planName={cc.execState.planName} totalCredits={cc.execState.totalCredits}
-          stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
-          totalSteps={cc.execState.steps.length} outputCount={cc.outputs.length}
-          durationSeconds={cc.durationSeconds} errorMessage={cc.execState.errorMessage}
-          onSaveTemplate={cc.handleSaveTemplate} onSaveAllOutputs={cc.handleSaveAllOutputs}
-          onRerun={cc.handleRerun} onViewOutputs={() => cc.setShowOutputs(true)}
-        />
+        <>
+          {cc.execState.phase === "failed" && cc.execState.errorMessage && (
+            <ErrorRecoveryHandler
+              errorType={classifyError(new Error(cc.execState.errorMessage)).type}
+              message={cc.execState.errorMessage}
+              onRetry={cc.handleRerun}
+              onDismiss={() => executionActions.reset()}
+              className="mb-2"
+            />
+          )}
+          <ExecutionSummary
+            phase={cc.execState.phase} intent={cc.execState.intent}
+            planName={cc.execState.planName} totalCredits={cc.execState.totalCredits}
+            stepsCompleted={cc.execState.steps.filter(s => s.status === "completed").length}
+            totalSteps={cc.execState.steps.length} outputCount={cc.outputs.length}
+            durationSeconds={cc.durationSeconds} errorMessage={cc.execState.errorMessage}
+            onSaveTemplate={cc.handleSaveTemplate} onSaveAllOutputs={cc.handleSaveAllOutputs}
+            onRerun={cc.handleRerun} onViewOutputs={() => cc.setShowOutputs(true)}
+          />
+        </>
       )}
       <div ref={cc.messagesEndRef} />
     </div>
