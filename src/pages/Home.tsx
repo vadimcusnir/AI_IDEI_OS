@@ -228,6 +228,24 @@ export default function Home() {
         return;
       }
 
+      // CC-T01: Check if intent is blocked (insufficient balance)
+      if (route.intent.blocked) {
+        setPendingRoute(route);
+        saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
+        executionActions.setPlan({
+          actionId: null,
+          intent: route.intent.category,
+          confidence: route.intent.confidence,
+          planName: route.intent.label,
+          totalCredits: route.intent.estimatedCredits,
+          steps: [],
+          objective: route.intent.description,
+        });
+        setShowEconomicGate(true);
+        if (user) logEconomicGate(user.id, false, balance, route.intent.estimatedCredits, tierDiscount);
+        return;
+      }
+
       setPendingRoute(route);
       saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
 
