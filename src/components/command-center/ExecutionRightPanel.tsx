@@ -84,7 +84,7 @@ export function ExecutionRightPanel({
               <motion.div
                 className={cn(
                   "h-full rounded-full",
-                  isDone ? "bg-green-500" : isFailed ? "bg-destructive" : "bg-primary"
+                  isDone ? "bg-success" : isFailed ? "bg-destructive" : "bg-primary"
                 )}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.3 }}
