@@ -67,6 +67,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       const { data } = await supabase
         .from("workspaces")
         .select("*")
+        .or(`owner_id.eq.${user.id},id.in.(select workspace_id from workspace_members where user_id='${user.id}')`)
         .order("created_at");
 
       let ws = (data || []) as Workspace[];
