@@ -1096,6 +1096,14 @@ Deno.serve(async (req) => {
           result: { content: fullResult, credits_spent: service.credits_cost, service: service.name },
         }).eq("id", job_id);
 
+        // SETTLE neurons on successful completion
+        await supabase.rpc("settle_neurons", {
+          _user_id: user_id,
+          _amount: service.credits_cost,
+          _description: `SETTLE: ${service.name}`,
+        });
+        settled = true;
+
         // Save as neuron block
         if (neuron_id && fullResult) {
           await supabase.from("neuron_blocks").insert({
@@ -1160,6 +1168,14 @@ Deno.serve(async (req) => {
         }
       } catch (e) {
         console.error("Finalize job error:", e);
+        // RELEASE neurons if settle didn't happen
+        if (!settled) {
+          await supabase.rpc("release_neurons", {
+            _user_id: user_id,
+            _amount: service.credits_cost,
+            _description: `RELEASE: ${service.name} — finalization error`,
+          }).catch(() => {});
+        }
         await supabase.from("neuron_jobs").update({
           status: "completed", completed_at: new Date().toISOString(),
           result: { error: "Finalization error", partial: true },
