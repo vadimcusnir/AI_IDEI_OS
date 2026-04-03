@@ -36,7 +36,7 @@
 | **AIAS Infiltration** | aias_agent_profiles, aias_output_contracts, aias_routing_metadata, prompt-broker AIAS-enhanced (Context/Execution/Verdict), aias-gate EF (validate/wrap/audit) | ✅ COMPLET |
 | **Automation & Distribution** | automation_jobs, automation_runs, automation_triggers, distribution_channels, distribution_sends, automation-engine EF (create/trigger/process/distribute), AutomationPanel UI | ✅ COMPLET |
 | **Cusnir OS Kernel** | step-back-engine EF (causal chain → control points → mechanisms → OTOS → MMS → LCSS), Memory Engine (trg_extract_execution_pattern, 80/20 efficacy), Power Unlocks (activate/revoke, 50% refund) | ✅ COMPLET |
-| **Ruta /programs** | LCSS expuse ca Programs pentru user | 🔴 NEEXISTENT |
+| **Ruta /programs** | LCSS expuse ca Programs pentru user, lazy-loaded, in sidebar nav | ✅ COMPLET |
 
 ---
 
@@ -276,4 +276,4 @@ naming_translation:
 ## STARE CURENTĂ
 
 - **Fazele 0-12**: ✅ TOATE COMPLETATE
-- **Rămâne**: Ruta /programs (LCSS expuse ca Programs pentru user)
+- **Ruta /programs**: ✅ COMPLETĂ (exista deja)
