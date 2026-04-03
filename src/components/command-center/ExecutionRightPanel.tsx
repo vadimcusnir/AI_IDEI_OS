@@ -47,7 +47,7 @@ export function ExecutionRightPanel({
               "h-6 w-6 rounded-lg flex items-center justify-center",
               isDone ? "bg-success/10" : isFailed ? "bg-destructive/10" : "bg-primary/10"
             )}>
-              {isDone ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> :
+              {isDone ? <CheckCircle2 className="h-3.5 w-3.5 text-success" /> :
                isFailed ? <XCircle className="h-3.5 w-3.5 text-destructive" /> :
                <Zap className="h-3.5 w-3.5 text-primary" />}
             </div>
