@@ -9,6 +9,7 @@
  */
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CommandCenterKPIs } from "./CommandCenterKPIs";
 import { useNavigate } from "react-router-dom";
 import { Loader2, X, ChevronRight } from "lucide-react";
 import {
