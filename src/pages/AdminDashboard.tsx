@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, lazy, Suspense, useMemo } from "react";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText, Server, Gauge, ShieldCheck, Compass } from "lucide-react";
+import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText, Server, Gauge, ShieldCheck, Compass, Bell, HeartPulse } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -45,6 +45,9 @@ const AdminRuntimeTab = lazy(() => import("@/components/admin/AdminRuntimeTab").
 const AdminComplianceTab = lazy(() => import("@/components/admin/AdminComplianceTab").then(m => ({ default: m.AdminComplianceTab })));
 const AdminCommandTab = lazy(() => import("@/components/admin/AdminCommandTab").then(m => ({ default: m.AdminCommandTab })));
 const AdminAnalyticsExtendedTab = lazy(() => import("@/components/admin/AdminAnalyticsExtendedTab").then(m => ({ default: m.AdminAnalyticsExtendedTab })));
+const ProviderHealthTab = lazy(() => import("@/components/admin/ProviderHealthTab").then(m => ({ default: m.ProviderHealthTab })));
+const AlertCenterTab = lazy(() => import("@/components/admin/AlertCenterTab").then(m => ({ default: m.AlertCenterTab })));
+const FinOpsTab = lazy(() => import("@/components/admin/FinOpsTab").then(m => ({ default: m.FinOpsTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -87,6 +90,15 @@ const TAB_GROUPS = [
       { value: "wallets", label: "Wallets", icon: Wallet },
       { value: "reconciliation", label: "Reconciliation", icon: DollarSign },
       { value: "root2", label: "Pricing", icon: DollarSign },
+    ],
+  },
+  {
+    group: "FinOps",
+    icon: HeartPulse,
+    tabs: [
+      { value: "provider-health", label: "Providers", icon: HeartPulse },
+      { value: "alerts", label: "Alerts", icon: Bell },
+      { value: "finops", label: "Costs & Unit Econ", icon: BarChart3 },
     ],
   },
   {
@@ -294,6 +306,9 @@ export default function AdminDashboard() {
             <TabsContent value="compliance-audit"><Suspense fallback={<TabLoader />}><AdminComplianceTab /></Suspense></TabsContent>
             <TabsContent value="command"><Suspense fallback={<TabLoader />}><AdminCommandTab /></Suspense></TabsContent>
             <TabsContent value="analytics-ext"><Suspense fallback={<TabLoader />}><AdminAnalyticsExtendedTab /></Suspense></TabsContent>
+            <TabsContent value="provider-health"><Suspense fallback={<TabLoader />}><ProviderHealthTab /></Suspense></TabsContent>
+            <TabsContent value="alerts"><Suspense fallback={<TabLoader />}><AlertCenterTab /></Suspense></TabsContent>
+            <TabsContent value="finops"><Suspense fallback={<TabLoader />}><FinOpsTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
