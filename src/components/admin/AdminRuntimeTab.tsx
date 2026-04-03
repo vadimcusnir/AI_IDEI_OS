@@ -99,6 +99,8 @@ export function AdminRuntimeTab() {
 
   return (
     <div className="space-y-4">
+      {/* Kill Switch — top of runtime */}
+      <KillSwitchPanel />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
