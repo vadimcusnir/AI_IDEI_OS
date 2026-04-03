@@ -1474,5 +1474,28 @@
     "faq_a5": "Abonații plătesc mai puține NEURONS per serviciu. Core economisește 10%, Pro 25%, VIP 40%.",
     "faq_q6": "Ce se întâmplă când rămân fără credite?",
     "faq_a6": "Neuronii și rezultatele existente rămân accesibile. Pur și simplu nu poți rula servicii AI noi până la reîncărcare sau reînnoire."
+  },
+  "programs": {
+    "title": "Programe de Creștere",
+    "subtitle": "Programe de execuție pe termen lung care combină mai multe sisteme pentru rezultate sustenabile.",
+    "no_programs": "Niciun program disponibil încă.",
+    "included_systems": "Sisteme Incluse",
+    "estimated_cost": "Cost Estimat",
+    "start_program": "Începe Programul",
+    "duration": "Durată",
+    "outputs_over_time": "Rezultate în Timp"
+  },
+  "command_panel": {
+    "title": "Motor de Comandă",
+    "analyze": "Analizează",
+    "execute": "Execută",
+    "goal_placeholder": "Ce vrei să realizezi?",
+    "actions_found": "{{count}} acțiuni",
+    "pipeline_time": "{{ms}}ms",
+    "no_actions": "Nu s-au găsit acțiuni pentru acest obiectiv",
+    "executing": "Se execută: {{title}}",
+    "priority": "Prioritate",
+    "estimated_credits": "Credite Estimate",
+    "warnings": "Avertismente"
   }
 }
