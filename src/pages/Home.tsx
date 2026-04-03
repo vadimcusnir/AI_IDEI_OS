@@ -374,14 +374,7 @@ export default function Home() {
         <div className="flex-1 flex flex-col min-w-0 relative">
           {/* No ambient glow — clean fixed layout */}
 
-          {/* Workspace Layer Tabs */}
-          <div data-tour="workspace-tabs">
-          <WorkspaceLayerTabs
-            active={activeLayer}
-            onChange={setActiveLayer}
-            executionActive={execState.phase !== "idle"}
-          />
-          </div>
+          {/* WorkspaceLayerTabs removed — CC-T03 */}
 
           <ExecutionStatusBar
             phase={execState.phase} intent={execState.intent}
