@@ -1,4 +1,5 @@
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 const SUPPORTED_LANGUAGES = ["en", "ro", "ru"];
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
@@ -21,6 +22,11 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":auto-translate", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 

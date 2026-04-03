@@ -6,6 +6,7 @@ import { hardValidateArticle } from "../_shared/blog-validation.ts";
 import { extractImageBytes, uploadOptimizedImage } from "../_shared/image-optimize.ts";
 import { moderateContent } from "../_shared/content-moderation.ts";
 import {
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
   NORMALIZER_SYSTEM,
   PLANNER_SYSTEM,
   RENDERER_SYSTEM,
@@ -41,7 +42,12 @@ const IMAGE_STYLE_PROMPT = `Style requirements (MANDATORY):
 
 function repairAndParseJson(raw: string): any {
   let cleaned = raw.replace(/```(?:json)?\s*/gi, "").replace(/```\s*/g, "").trim();
-  try { return JSON.parse(cleaned); } catch { /* continue */ }
+  try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":blog-generate", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+ return JSON.parse(cleaned); } catch { /* continue */ }
 
   const jsonStart = cleaned.search(/[{[]/);
   if (jsonStart === -1) return null;
