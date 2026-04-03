@@ -51,7 +51,7 @@ export function EconomicGate({
           </div>
           <div className="space-y-0.5">
             <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Your Cost</p>
-            <p className={cn("text-sm font-bold flex items-center gap-1", tierDiscount > 0 && "text-green-500")}>
+            <p className={cn("text-sm font-bold flex items-center gap-1", tierDiscount > 0 && "text-success")}>
               <Coins className="h-3.5 w-3.5" />
               {discountedCost}
               <span className="text-[10px] font-normal text-muted-foreground">N</span>
