@@ -312,7 +312,7 @@ ${safeBody}
     toast.success(t("toast_pdf_opening"));
   };
 
-  const isRunning = ["detecting", "fetching", "processing"].includes(stage);
+  const isRunning = ["detecting", "extracting_audio", "downloading_audio", "transcribing_audio", "detecting_language"].includes(stage);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
