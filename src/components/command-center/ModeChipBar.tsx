@@ -1,15 +1,11 @@
 /**
- * ModeChipBar — 6 contextual mode chips above the composer.
- * Selecting a mode opens a contextual panel with quick actions.
+ * ModeChipBar — 4 core execution mode chips above the composer.
+ * Extract | Generate | Analyze | Structure
  */
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Upload, Wand2, LayoutGrid, DollarSign, Library, Search,
-} from "lucide-react";
+import { Upload, Wand2, BarChart3, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type CommandMode = "extract" | "generate" | "structure" | "monetize" | "library" | "research" | null;
+export type CommandMode = "extract" | "generate" | "analyze" | "structure" | null;
 
 interface ModeChipBarProps {
   activeMode: CommandMode;
@@ -19,10 +15,8 @@ interface ModeChipBarProps {
 const MODES = [
   { key: "extract" as const, label: "Extract", icon: Upload, color: "text-blue-400" },
   { key: "generate" as const, label: "Generate", icon: Wand2, color: "text-emerald-400" },
+  { key: "analyze" as const, label: "Analyze", icon: BarChart3, color: "text-amber-400" },
   { key: "structure" as const, label: "Structure", icon: LayoutGrid, color: "text-violet-400" },
-  { key: "monetize" as const, label: "Monetize", icon: DollarSign, color: "text-amber-400" },
-  { key: "library" as const, label: "Library", icon: Library, color: "text-cyan-400" },
-  { key: "research" as const, label: "Research", icon: Search, color: "text-rose-400" },
 ] as const;
 
 export function ModeChipBar({ activeMode, onModeChange }: ModeChipBarProps) {
