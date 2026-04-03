@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { cn } from "@/lib/utils";
+import { executionActions } from "@/stores/executionStore";
 
 import { useCommandCenter } from "@/hooks/useCommandCenter";
 import { CommandBubble } from "@/components/command-center/CommandBubble";
