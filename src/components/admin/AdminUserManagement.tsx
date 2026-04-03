@@ -12,11 +12,18 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Search, UserPlus, UserMinus, Coins, PlusCircle, Ban, ShieldCheck,
   Eye, Loader2, Clock, Brain, Briefcase, FileText, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 
