@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useStorageUsage, formatBytes } from "@/hooks/useStorageUsage";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -5,6 +6,7 @@ import { HardDrive, FileText, AlertTriangle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function StorageUsagePanel() {
+  const { t } = useTranslation("common");
   const {
     buckets,
     totalBytes,
@@ -31,12 +33,12 @@ export function StorageUsagePanel() {
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold flex items-center gap-1.5">
           <HardDrive className="h-4 w-4 text-primary" />
-          Storage
+          {t("storage.title")}
         </h3>
         {isNearLimit && (
           <Badge variant="destructive" className="text-[9px] gap-1">
             <AlertTriangle className="h-3 w-3" />
-            {isOverLimit ? "Limită atinsă" : "Aproape plin"}
+            {isOverLimit ? t("storage.limit_reached") : t("storage.almost_full")}
           </Badge>
         )}
       </div>
@@ -44,7 +46,7 @@ export function StorageUsagePanel() {
       {/* Main usage bar */}
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Spațiu folosit</span>
+          <span className="text-muted-foreground">{t("storage.space_used")}</span>
           <span className="font-mono font-medium">
             {formatBytes(totalBytes)} / {limit ? formatBytes(limit.max_bytes) : "—"}
           </span>
@@ -54,8 +56,8 @@ export function StorageUsagePanel() {
           className={cn("h-2", isOverLimit && "[&>div]:bg-destructive", isNearLimit && !isOverLimit && "[&>div]:bg-amber-500")}
         />
         <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-          <span>{usagePercent.toFixed(1)}% utilizat</span>
-          <span>{totalFiles} fișiere{limit ? ` / ${limit.max_files.toLocaleString()} max` : ""}</span>
+          <span>{usagePercent.toFixed(1)}% {t("storage.used_pct")}</span>
+          <span>{totalFiles} {t("storage.files")}{limit ? ` / ${limit.max_files.toLocaleString()} max` : ""}</span>
         </div>
       </div>
 
@@ -63,7 +65,7 @@ export function StorageUsagePanel() {
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground flex items-center gap-1">
-            <FileText className="h-3 w-3" /> Fișiere
+            <FileText className="h-3 w-3" /> {t("storage.files")}
           </span>
           <span className="font-mono text-[11px]">{filesPercent.toFixed(1)}%</span>
         </div>
@@ -74,7 +76,7 @@ export function StorageUsagePanel() {
       {buckets.length > 0 && (
         <div className="space-y-1.5 pt-2 border-t border-border">
           <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-            Per bucket
+            {t("storage.per_bucket")}
           </span>
           {buckets.map((b) => (
             <div

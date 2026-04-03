@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   useAutomationRules,
   TRIGGER_EVENTS,
@@ -31,6 +32,7 @@ const ACTION_ICONS: Record<string, typeof Bell> = {
 };
 
 export function RuleEnginePanel() {
+  const { t } = useTranslation("common");
   const { rules, loading, createRule, deleteRule, toggleRule } = useAutomationRules();
   const [showCreate, setShowCreate] = useState(false);
 
@@ -47,18 +49,18 @@ export function RuleEnginePanel() {
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold flex items-center gap-1.5">
           <Settings2 className="h-4 w-4 text-primary" />
-          Rule Engine
+          {t("rules.title")}
         </h3>
         <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => setShowCreate(true)}>
-          <Plus className="h-3 w-3" /> Regulă nouă
+          <Plus className="h-3 w-3" /> {t("rules.new_rule")}
         </Button>
       </div>
 
       {rules.length === 0 ? (
         <div className="text-center py-8 text-sm text-muted-foreground">
           <Zap className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" />
-          <p>Nicio regulă configurată.</p>
-          <p className="text-xs mt-1">Creează reguli pentru a automatiza reacțiile la evenimente.</p>
+          <p>{t("rules.no_rules")}</p>
+          <p className="text-xs mt-1">{t("rules.no_rules_hint")}</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -89,7 +91,8 @@ function RuleCard({
   onToggle: (p: { id: string; is_active: boolean }) => void;
   onDelete: (id: string) => void;
 }) {
-  const trigger = TRIGGER_EVENTS.find((t) => t.key === rule.trigger_event);
+  const { t } = useTranslation("common");
+  const trigger = TRIGGER_EVENTS.find((tr) => tr.key === rule.trigger_event);
   const action = ACTION_TYPES.find((a) => a.key === rule.action_type);
   const ActionIcon = ACTION_ICONS[rule.action_type] ?? Zap;
 
@@ -109,14 +112,14 @@ function RuleCard({
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium truncate">{rule.name}</span>
           <Badge variant="outline" className="text-[9px] shrink-0">
-            {trigger?.label ?? rule.trigger_event}
+            {trigger ? t(trigger.labelKey) : rule.trigger_event}
           </Badge>
         </div>
         <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-muted-foreground">
           <ActionIcon className="h-3 w-3" />
-          <span>{action?.label ?? rule.action_type}</span>
+          <span>{action ? t(action.labelKey) : rule.action_type}</span>
           {rule.fire_count > 0 && (
-            <span className="ml-1">• {rule.fire_count}× declanșat</span>
+            <span className="ml-1">• {rule.fire_count}× {t("rules.triggered_times")}</span>
           )}
         </div>
       </div>
@@ -141,7 +144,8 @@ function CreateRuleDialog({
   onClose: () => void;
   onCreate: (data: Partial<AutomationRule>) => void;
 }) {
-  const [name, setName] = useState("Regulă nouă");
+  const { t } = useTranslation("common");
+  const [name, setName] = useState(t("rules.new_rule"));
   const [trigger, setTrigger] = useState("low_credits");
   const [action, setAction] = useState("notify");
   const [threshold, setThreshold] = useState("100");
@@ -154,7 +158,7 @@ function CreateRuleDialog({
       condition: { threshold: Number(threshold) },
       action_config: {},
     });
-    setName("Regulă nouă");
+    setName(t("rules.new_rule"));
     setTrigger("low_credits");
     setAction("notify");
     setThreshold("100");
@@ -165,31 +169,31 @@ function CreateRuleDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-base flex items-center gap-2">
-            <Zap className="h-4 w-4 text-primary" /> Creare regulă
+            <Zap className="h-4 w-4 text-primary" /> {t("rules.create_title")}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-1.5">
-            <Label className="text-xs">Nume</Label>
+            <Label className="text-xs">{t("rules.name_label")}</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} className="h-8 text-sm" />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Eveniment declanșator</Label>
+            <Label className="text-xs">{t("rules.trigger_label")}</Label>
             <Select value={trigger} onValueChange={setTrigger}>
               <SelectTrigger className="h-8 text-xs">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {TRIGGER_EVENTS.map((t) => (
-                  <SelectItem key={t.key} value={t.key} className="text-xs">
-                    {t.label} — {t.description}
+                {TRIGGER_EVENTS.map((tr) => (
+                  <SelectItem key={tr.key} value={tr.key} className="text-xs">
+                    {t(tr.labelKey)} — {t(tr.descKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Prag (valoare)</Label>
+            <Label className="text-xs">{t("rules.threshold_label")}</Label>
             <Input
               type="number"
               value={threshold}
@@ -199,7 +203,7 @@ function CreateRuleDialog({
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Acțiune</Label>
+            <Label className="text-xs">{t("rules.action_label")}</Label>
             <Select value={action} onValueChange={setAction}>
               <SelectTrigger className="h-8 text-xs">
                 <SelectValue />
@@ -207,7 +211,7 @@ function CreateRuleDialog({
               <SelectContent>
                 {ACTION_TYPES.map((a) => (
                   <SelectItem key={a.key} value={a.key} className="text-xs">
-                    {a.label} — {a.description}
+                    {t(a.labelKey)} — {t(a.descKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -216,10 +220,10 @@ function CreateRuleDialog({
         </div>
         <DialogFooter>
           <Button variant="outline" size="sm" onClick={onClose}>
-            Anulează
+            {t("cancel")}
           </Button>
           <Button size="sm" onClick={handleCreate} className="gap-1">
-            <Plus className="h-3 w-3" /> Creează
+            <Plus className="h-3 w-3" /> {t("rules.create_btn")}
           </Button>
         </DialogFooter>
       </DialogContent>

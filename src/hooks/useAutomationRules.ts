@@ -3,20 +3,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import type { Json } from "@/integrations/supabase/types";
+import i18next from "i18next";
 
 export const TRIGGER_EVENTS = [
-  { key: "low_credits", label: "Credite scăzute", description: "Când soldul scade sub un prag" },
-  { key: "job_failed", label: "Job eșuat", description: "Când un job se termină cu eroare" },
-  { key: "storage_80", label: "Storage 80%+", description: "Când spațiul de stocare depășește 80%" },
-  { key: "daily_spend_high", label: "Consum zilnic ridicat", description: "Când cheltuielile zilnice depășesc un prag" },
-  { key: "subscription_expiring", label: "Abonament expiră", description: "Cu 3 zile înainte de expirare" },
+  { key: "low_credits", labelKey: "rules.trigger_low_credits", descKey: "rules.trigger_low_credits_desc" },
+  { key: "job_failed", labelKey: "rules.trigger_job_failed", descKey: "rules.trigger_job_failed_desc" },
+  { key: "storage_80", labelKey: "rules.trigger_storage_80", descKey: "rules.trigger_storage_80_desc" },
+  { key: "daily_spend_high", labelKey: "rules.trigger_daily_spend", descKey: "rules.trigger_daily_spend_desc" },
+  { key: "subscription_expiring", labelKey: "rules.trigger_sub_expiring", descKey: "rules.trigger_sub_expiring_desc" },
 ] as const;
 
 export const ACTION_TYPES = [
-  { key: "notify", label: "Notificare", description: "Trimite notificare in-app" },
-  { key: "retry_job", label: "Retry job", description: "Reîncearcă automat job-ul eșuat" },
-  { key: "pause_jobs", label: "Pauză joburi", description: "Oprește execuțiile noi temporar" },
-  { key: "email_alert", label: "Email alert", description: "Trimite email de alertă" },
+  { key: "notify", labelKey: "rules.action_notify", descKey: "rules.action_notify_desc" },
+  { key: "retry_job", labelKey: "rules.action_retry", descKey: "rules.action_retry_desc" },
+  { key: "pause_jobs", labelKey: "rules.action_pause", descKey: "rules.action_pause_desc" },
+  { key: "email_alert", labelKey: "rules.action_email", descKey: "rules.action_email_desc" },
 ] as const;
 
 export interface AutomationRule {
@@ -71,7 +72,7 @@ export function useAutomationRules() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
-      toast.success("Regulă creată");
+      toast.success(i18next.t("common:rules.rule_created"));
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -89,7 +90,7 @@ export function useAutomationRules() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
-      toast.success("Regulă actualizată");
+      toast.success(i18next.t("common:rules.rule_updated"));
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -104,7 +105,7 @@ export function useAutomationRules() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
-      toast.success("Regulă ștearsă");
+      toast.success(i18next.t("common:rules.rule_deleted"));
     },
     onError: (e: Error) => toast.error(e.message),
   });
