@@ -463,14 +463,13 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Refund if nothing extracted
+    // Release if nothing extracted
     if (totalNeurons === 0) {
-      await supabase.rpc("add_credits", {
+      await supabase.rpc("release_neurons", {
         _user_id: userId,
         _amount: totalCost,
-        _description: `REFUND: Deep extract ${episode.title} — no results`,
-        _type: "refund",
-      });
+        _description: `RELEASE: Deep extract ${episode.title} — no results`,
+      }).catch(() => {});
       await supabase.from("episodes").update({ status: "transcribed" }).eq("id", episode_id);
       if (jobId) {
         await supabase.from("neuron_jobs").update({
@@ -483,6 +482,14 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    // SETTLE neurons on success
+    await supabase.rpc("settle_neurons", {
+      _user_id: userId,
+      _amount: totalCost,
+      _description: `SETTLE: Deep Extract — ${totalNeurons} neurons`,
+    });
+    settled = true;
 
     // Finalize
     const familiesUsed = [...new Set(results.map(r => r.family))];
