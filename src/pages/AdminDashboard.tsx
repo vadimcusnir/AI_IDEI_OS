@@ -72,6 +72,15 @@ const TAB_GROUPS = [
     ],
   },
   {
+    group: "Kernel",
+    icon: Server,
+    tabs: [
+      { value: "kernel", label: "Contracts", icon: Server },
+      { value: "runtime", label: "Runtime", icon: Gauge },
+      { value: "command", label: "Command", icon: Compass },
+    ],
+  },
+  {
     group: "Economy",
     icon: DollarSign,
     tabs: [
@@ -88,6 +97,7 @@ const TAB_GROUPS = [
       { value: "changelog", label: "Changelog", icon: ScrollText },
       { value: "knowledge-graph", label: "Graph", icon: Network },
       { value: "analytics", label: "Analytics", icon: BarChart3 },
+      { value: "analytics-ext", label: "Extended", icon: TrendingUp },
       { value: "contributions", label: "Contributions", icon: Brain },
       { value: "moderation", label: "Moderation", icon: MessageCircle },
       { value: "llm-index", label: "LLM Index", icon: Bot },
@@ -102,6 +112,7 @@ const TAB_GROUPS = [
       { value: "ledger", label: "Ledger", icon: ScrollText },
       { value: "abuse", label: "Abuse", icon: AlertTriangle },
       { value: "compliance", label: "Compliance", icon: ScrollText },
+      { value: "compliance-audit", label: "Audit", icon: ShieldCheck },
       { value: "incidents", label: "Incidents", icon: AlertCircle },
       { value: "emergency", label: "Emergency", icon: ShieldAlert },
     ],
