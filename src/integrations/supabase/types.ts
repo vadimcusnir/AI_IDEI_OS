@@ -1627,6 +1627,102 @@ export type Database = {
         }
         Relationships: []
       }
+      command_decisions: {
+        Row: {
+          agent_sequences: Json | null
+          command_type: string
+          created_at: string
+          executed_at: string | null
+          id: string
+          next_actions: Json | null
+          pipeline_result: Json | null
+          priority_score: number | null
+          priority_tasks: Json | null
+          session_id: string | null
+          status: string
+          system_state: Json | null
+          user_goal: string
+          user_id: string
+          warnings: Json | null
+        }
+        Insert: {
+          agent_sequences?: Json | null
+          command_type?: string
+          created_at?: string
+          executed_at?: string | null
+          id?: string
+          next_actions?: Json | null
+          pipeline_result?: Json | null
+          priority_score?: number | null
+          priority_tasks?: Json | null
+          session_id?: string | null
+          status?: string
+          system_state?: Json | null
+          user_goal: string
+          user_id: string
+          warnings?: Json | null
+        }
+        Update: {
+          agent_sequences?: Json | null
+          command_type?: string
+          created_at?: string
+          executed_at?: string | null
+          id?: string
+          next_actions?: Json | null
+          pipeline_result?: Json | null
+          priority_score?: number | null
+          priority_tasks?: Json | null
+          session_id?: string | null
+          status?: string
+          system_state?: Json | null
+          user_goal?: string
+          user_id?: string
+          warnings?: Json | null
+        }
+        Relationships: []
+      }
+      command_types: {
+        Row: {
+          color: string
+          created_at: string
+          description: string
+          icon: string
+          is_active: boolean
+          label: string
+          type_key: string
+          weight_effort: number
+          weight_impact: number
+          weight_revenue: number
+          weight_urgency: number
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          is_active?: boolean
+          label: string
+          type_key: string
+          weight_effort?: number
+          weight_impact?: number
+          weight_revenue?: number
+          weight_urgency?: number
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          is_active?: boolean
+          label?: string
+          type_key?: string
+          weight_effort?: number
+          weight_impact?: number
+          weight_revenue?: number
+          weight_urgency?: number
+        }
+        Relationships: []
+      }
       compliance_log: {
         Row: {
           action_type: string
@@ -2058,6 +2154,50 @@ export type Database = {
           verdict?: string | null
         }
         Relationships: []
+      }
+      decision_pipeline_stages: {
+        Row: {
+          created_at: string
+          decision_id: string
+          duration_ms: number | null
+          id: string
+          input_data: Json | null
+          output_data: Json | null
+          stage_name: string
+          stage_order: number
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          decision_id: string
+          duration_ms?: number | null
+          id?: string
+          input_data?: Json | null
+          output_data?: Json | null
+          stage_name: string
+          stage_order: number
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          decision_id?: string
+          duration_ms?: number | null
+          id?: string
+          input_data?: Json | null
+          output_data?: Json | null
+          stage_name?: string
+          stage_order?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_pipeline_stages_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "command_decisions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       dedup_cluster_members: {
         Row: {
