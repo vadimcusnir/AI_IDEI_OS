@@ -87,7 +87,7 @@ export function OutputFamilies({ compact }: OutputFamiliesProps) {
 
       {/* Total */}
       <div className="flex items-center justify-center gap-3 py-2 text-xs text-muted-foreground">
-        <span>Total per execuție MMS:</span>
+        <span>Total per execuție sistem:</span>
         <span className="font-mono font-bold text-primary text-sm">50+</span>
         <span>deliverables profesionale</span>
       </div>

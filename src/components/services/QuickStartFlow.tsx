@@ -76,11 +76,11 @@ export function QuickStartFlow({ onStart }: QuickStartFlowProps) {
       <div className="flex items-center justify-center gap-4 mt-3 text-[10px] text-muted-foreground">
         <span className="flex items-center gap-1">
           <CheckCircle2 className="h-3 w-3 text-primary/50" />
-          1200+ formule OTOS
+          1200+ acțiuni AI
         </span>
         <span className="flex items-center gap-1">
           <CheckCircle2 className="h-3 w-3 text-primary/50" />
-          260+ sisteme MMS
+          260+ sisteme
         </span>
         <span className="flex items-center gap-1">
           <CheckCircle2 className="h-3 w-3 text-primary/50" />

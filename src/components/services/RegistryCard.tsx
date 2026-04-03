@@ -18,9 +18,9 @@ export interface RegistryServiceItem {
 }
 
 export const LEVEL_META = {
-  OTOS: { label: "OTOS", desc: "Atomic Formulas", icon: Zap, color: "text-blue-500" },
-  MMS: { label: "MMS", desc: "Multi-Module Systems", icon: Layers, color: "text-amber-500" },
-  LCSS: { label: "LCSS", desc: "Long-Term OS", icon: Server, color: "text-purple-500" },
+  OTOS: { label: "Action", desc: "Quick Actions", icon: Zap, color: "text-blue-500" },
+  MMS: { label: "System", desc: "Execution Systems", icon: Layers, color: "text-amber-500" },
+  LCSS: { label: "Program", desc: "Growth Programs", icon: Server, color: "text-purple-500" },
 } as const;
 
 export const TIER_COLORS: Record<string, string> = {
