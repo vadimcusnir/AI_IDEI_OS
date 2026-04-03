@@ -175,7 +175,7 @@ export default function PublicEntityPage() {
             Accesează librăria completă de cunoștințe, generează materiale marketing și transformă expertiza în active digitale.
           </p>
           <Button asChild>
-            <Link to="/auth">Creează cont gratuit</Link>
+            <Link to={`/auth?mode=signup&redirect=${encodeURIComponent(`/knowledge/${slug}`)}`}>Creează cont gratuit</Link>
           </Button>
         </div>
       </main>
