@@ -117,10 +117,10 @@ export function YouTubeTranscriber() {
       if (epErr || !ep) throw new Error("Failed to create episode");
       setLastEpisodeId(ep.id);
 
-      setProgress(50);
-      setStage("processing");
+      setProgress(40);
+      setStage("downloading_audio");
 
-      // Call transcribe-source
+      // Call transcribe-source (audio-first pipeline)
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-source`,
         {
