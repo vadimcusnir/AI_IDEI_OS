@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Eye, EyeOff, Trash2, RefreshCw, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Trash2, RefreshCw, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { StatusBadge } from "@/components/admin/AdminSubComponents";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
@@ -18,20 +18,36 @@ interface NeuronRow {
   author_id: string; created_at: string; score: number; lifecycle: string;
 }
 
+const PAGE_SIZE = 30;
+
 export function AdminNeuronsTab() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [neurons, setNeurons] = useState<NeuronRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("neurons")
-      .select("id, number, title, status, visibility, author_id, created_at, score, lifecycle")
-      .order("created_at", { ascending: false }).limit(50);
+    const from = page * PAGE_SIZE;
+    const to = from + PAGE_SIZE;
+
+    const [{ data, error }, { count }] = await Promise.all([
+      supabase.from("neurons")
+        .select("id, number, title, status, visibility, author_id, created_at, score, lifecycle")
+        .order("created_at", { ascending: false })
+        .range(from, to - 1),
+      supabase.from("neurons")
+        .select("id", { count: "exact", head: true }),
+    ]);
+
     setNeurons(data as NeuronRow[] || []);
+    setTotal(count || 0);
+    setHasMore((data?.length || 0) === PAGE_SIZE);
     setLoading(false);
-  }, []);
+  }, [page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -50,13 +66,14 @@ export function AdminNeuronsTab() {
     load();
   };
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
+  if (loading && neurons.length === 0) return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
 
   return (
     <div className="space-y-3">
-      <div className="flex justify-end">
-        <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={load}>
-          <RefreshCw className="h-3 w-3" /> Refresh
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{total} neuroni total · Pagina {page + 1}</span>
+        <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={load} disabled={loading}>
+          <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} /> Refresh
         </Button>
       </div>
       <div className="bg-card border border-border rounded-xl overflow-hidden">
@@ -101,7 +118,7 @@ export function AdminNeuronsTab() {
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>Delete Neuron #{n.number}?</AlertDialogTitle>
-                          <AlertDialogDescription>This action cannot be undone. The neuron and all related data will be permanently deleted.</AlertDialogDescription>
+                          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -115,6 +132,20 @@ export function AdminNeuronsTab() {
             ))}
           </TableBody>
         </Table>
+      </div>
+      {/* Pagination */}
+      <div className="flex items-center justify-between pt-1">
+        <span className="text-[10px] text-muted-foreground">
+          {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} din {total}
+        </span>
+        <div className="flex gap-1">
+          <Button variant="outline" size="sm" className="h-7 w-7 p-0" onClick={() => setPage(p => p - 1)} disabled={page === 0}>
+            <ChevronLeft className="h-3.5 w-3.5" />
+          </Button>
+          <Button variant="outline" size="sm" className="h-7 w-7 p-0" onClick={() => setPage(p => p + 1)} disabled={!hasMore}>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Button>
+        </div>
       </div>
     </div>
   );
