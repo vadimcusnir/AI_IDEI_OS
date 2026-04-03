@@ -25,9 +25,9 @@ export interface AutomationRule {
   name: string;
   description: string | null;
   trigger_event: string;
-  condition: Record<string, unknown>;
+  condition: Json;
   action_type: string;
-  action_config: Record<string, unknown>;
+  action_config: Json;
   is_active: boolean;
   fire_count: number;
   last_fired_at: string | null;
