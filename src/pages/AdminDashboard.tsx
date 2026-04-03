@@ -93,6 +93,15 @@ const TAB_GROUPS = [
     ],
   },
   {
+    group: "FinOps",
+    icon: HeartPulse,
+    tabs: [
+      { value: "provider-health", label: "Providers", icon: HeartPulse },
+      { value: "alerts", label: "Alerts", icon: Bell },
+      { value: "finops", label: "Costs & Unit Econ", icon: BarChart3 },
+    ],
+  },
+  {
     group: "Content",
     icon: Brain,
     tabs: [
