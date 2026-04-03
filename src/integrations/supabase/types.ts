@@ -2154,6 +2154,56 @@ export type Database = {
         }
         Relationships: []
       }
+      deliverable_contracts: {
+        Row: {
+          asset_type: Database["public"]["Enums"]["asset_type"]
+          created_at: string
+          exportability: string[]
+          id: string
+          ownership: string
+          primary_assets: Json
+          reuse_value: Database["public"]["Enums"]["reuse_value"]
+          secondary_assets: Json
+          service_unit_id: string
+          storage_target: string
+          updated_at: string
+        }
+        Insert: {
+          asset_type?: Database["public"]["Enums"]["asset_type"]
+          created_at?: string
+          exportability?: string[]
+          id?: string
+          ownership?: string
+          primary_assets?: Json
+          reuse_value?: Database["public"]["Enums"]["reuse_value"]
+          secondary_assets?: Json
+          service_unit_id: string
+          storage_target?: string
+          updated_at?: string
+        }
+        Update: {
+          asset_type?: Database["public"]["Enums"]["asset_type"]
+          created_at?: string
+          exportability?: string[]
+          id?: string
+          ownership?: string
+          primary_assets?: Json
+          reuse_value?: Database["public"]["Enums"]["reuse_value"]
+          secondary_assets?: Json
+          service_unit_id?: string
+          storage_target?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deliverable_contracts_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       distribution_events: {
         Row: {
           action: string
@@ -7106,6 +7156,65 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_vault: {
+        Row: {
+          access_scope: string
+          created_at: string
+          hash: string | null
+          id: string
+          input_schema: Json
+          is_active: boolean
+          output_schema: Json
+          purpose: string
+          quality_gate: Json
+          rules: Json
+          service_unit_id: string
+          system_role: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          access_scope?: string
+          created_at?: string
+          hash?: string | null
+          id?: string
+          input_schema?: Json
+          is_active?: boolean
+          output_schema?: Json
+          purpose: string
+          quality_gate?: Json
+          rules?: Json
+          service_unit_id: string
+          system_role?: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          access_scope?: string
+          created_at?: string
+          hash?: string | null
+          id?: string
+          input_schema?: Json
+          is_active?: boolean
+          output_schema?: Json
+          purpose?: string
+          quality_gate?: Json
+          rules?: Json
+          service_unit_id?: string
+          system_role?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_vault_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prompt_versions: {
         Row: {
           change_reason: string | null
@@ -7830,6 +7939,59 @@ export type Database = {
         }
         Relationships: []
       }
+      service_release_log: {
+        Row: {
+          approval_status: Database["public"]["Enums"]["approval_status"]
+          atomicity_check: boolean
+          created_at: string
+          duplication_check: boolean
+          id: string
+          monetization_check: boolean
+          review_notes: string | null
+          reviewed_by: string | null
+          root2_check: boolean
+          schema_check: boolean
+          service_unit_id: string
+          total_score: number | null
+        }
+        Insert: {
+          approval_status?: Database["public"]["Enums"]["approval_status"]
+          atomicity_check?: boolean
+          created_at?: string
+          duplication_check?: boolean
+          id?: string
+          monetization_check?: boolean
+          review_notes?: string | null
+          reviewed_by?: string | null
+          root2_check?: boolean
+          schema_check?: boolean
+          service_unit_id: string
+          total_score?: number | null
+        }
+        Update: {
+          approval_status?: Database["public"]["Enums"]["approval_status"]
+          atomicity_check?: boolean
+          created_at?: string
+          duplication_check?: boolean
+          id?: string
+          monetization_check?: boolean
+          review_notes?: string | null
+          reviewed_by?: string | null
+          root2_check?: boolean
+          schema_check?: boolean
+          service_unit_id?: string
+          total_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_release_log_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_run_history: {
         Row: {
           batch_id: string | null
@@ -7880,6 +8042,117 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      service_units: {
+        Row: {
+          cost_json: Json
+          created_at: string
+          deliverable_id: string | null
+          domain: string
+          id: string
+          intent: string
+          lcss_id: string | null
+          level: Database["public"]["Enums"]["service_level"]
+          mechanism: string
+          mms_id: string | null
+          name: string
+          otos_id: string | null
+          pricing_json: Json
+          prompt_id: string | null
+          role: string
+          score_json: Json
+          single_decision: string
+          single_function: string
+          single_output: string
+          status: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          cost_json?: Json
+          created_at?: string
+          deliverable_id?: string | null
+          domain?: string
+          id?: string
+          intent?: string
+          lcss_id?: string | null
+          level?: Database["public"]["Enums"]["service_level"]
+          mechanism: string
+          mms_id?: string | null
+          name: string
+          otos_id?: string | null
+          pricing_json?: Json
+          prompt_id?: string | null
+          role: string
+          score_json?: Json
+          single_decision: string
+          single_function: string
+          single_output: string
+          status?: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          cost_json?: Json
+          created_at?: string
+          deliverable_id?: string | null
+          domain?: string
+          id?: string
+          intent?: string
+          lcss_id?: string | null
+          level?: Database["public"]["Enums"]["service_level"]
+          mechanism?: string
+          mms_id?: string | null
+          name?: string
+          otos_id?: string | null
+          pricing_json?: Json
+          prompt_id?: string | null
+          role?: string
+          score_json?: Json
+          single_decision?: string
+          single_function?: string
+          single_output?: string
+          status?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_deliverable"
+            columns: ["deliverable_id"]
+            isOneToOne: false
+            referencedRelation: "deliverable_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_prompt"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_vault"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_units_lcss_id_fkey"
+            columns: ["lcss_id"]
+            isOneToOne: false
+            referencedRelation: "os_lcss"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_units_mms_id_fkey"
+            columns: ["mms_id"]
+            isOneToOne: false
+            referencedRelation: "os_mms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_units_otos_id_fkey"
+            columns: ["otos_id"]
+            isOneToOne: false
+            referencedRelation: "os_otos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       share_events: {
         Row: {
@@ -10205,6 +10478,8 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      approval_status: "pending" | "approved" | "rejected" | "revision_needed"
+      asset_type: "atomic_asset" | "compound_asset" | "system_asset"
       content_category:
         | "transcript"
         | "insight"
@@ -10235,8 +10510,10 @@ export type Database = {
       profile_source_type: "podcast" | "interview" | "conversation"
       profile_type: "public_figure" | "local_figure" | "anonymized_client"
       profile_visibility_status: "draft" | "review" | "published" | "blocked"
+      reuse_value: "low" | "medium" | "high"
       risk_level: "low" | "medium" | "high" | "critical"
       service_class: "A" | "B" | "C"
+      service_level: "otos" | "mms" | "lcss"
       workspace_role: "owner" | "admin" | "editor" | "viewer"
     }
     CompositeTypes: {
@@ -10366,6 +10643,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      approval_status: ["pending", "approved", "rejected", "revision_needed"],
+      asset_type: ["atomic_asset", "compound_asset", "system_asset"],
       content_category: [
         "transcript",
         "insight",
@@ -10399,8 +10678,10 @@ export const Constants = {
       profile_source_type: ["podcast", "interview", "conversation"],
       profile_type: ["public_figure", "local_figure", "anonymized_client"],
       profile_visibility_status: ["draft", "review", "published", "blocked"],
+      reuse_value: ["low", "medium", "high"],
       risk_level: ["low", "medium", "high", "critical"],
       service_class: ["A", "B", "C"],
+      service_level: ["otos", "mms", "lcss"],
       workspace_role: ["owner", "admin", "editor", "viewer"],
     },
   },
