@@ -40,6 +40,11 @@ const AdminAdvancedTab = lazy(() => import("@/components/admin/AdminAdvancedTab"
 const Root2PricingTab = lazy(() => import("@/components/admin/Root2PricingTab").then(m => ({ default: m.Root2PricingTab })));
 const LLMIndexationTab = lazy(() => import("@/components/admin/LLMIndexationTab").then(m => ({ default: m.LLMIndexationTab })));
 const AdminBlogTab = lazy(() => import("@/components/admin/AdminBlogTab").then(m => ({ default: m.AdminBlogTab })));
+const AdminKernelTab = lazy(() => import("@/components/admin/AdminKernelTab").then(m => ({ default: m.AdminKernelTab })));
+const AdminRuntimeTab = lazy(() => import("@/components/admin/AdminRuntimeTab").then(m => ({ default: m.AdminRuntimeTab })));
+const AdminComplianceTab = lazy(() => import("@/components/admin/AdminComplianceTab").then(m => ({ default: m.AdminComplianceTab })));
+const AdminCommandTab = lazy(() => import("@/components/admin/AdminCommandTab").then(m => ({ default: m.AdminCommandTab })));
+const AdminAnalyticsExtendedTab = lazy(() => import("@/components/admin/AdminAnalyticsExtendedTab").then(m => ({ default: m.AdminAnalyticsExtendedTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
