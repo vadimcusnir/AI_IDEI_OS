@@ -226,6 +226,19 @@ export default function Home() {
           {/* ── COMPOSER: anchored at bottom, never scrolls ── */}
           <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
             <div className="max-w-3xl mx-auto" data-tour="command-input">
+              {/* Mode Panels — contextual actions above input */}
+              <AnimatePresence mode="wait">
+                {cc.activeMode === "extract" && <ExtractPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} neuronCount={cc.totalNeurons} />}
+                {cc.activeMode === "generate" && <GeneratePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
+                {cc.activeMode === "structure" && <StructurePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
+                {cc.activeMode === "monetize" && <MonetizePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
+                {cc.activeMode === "library" && <LibraryPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} neuronCount={cc.totalNeurons} />}
+                {cc.activeMode === "research" && <ResearchPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
+              </AnimatePresence>
+
+              {/* Mode Chip Bar */}
+              <ModeChipBar activeMode={cc.activeMode} onModeChange={cc.setActiveMode} />
+
               <CommandInputZone
                 ref={cc.inputZoneRef} input={cc.input} onInputChange={cc.setInput}
                 onSubmit={cc.handleSubmit} onStop={cc.handleStop} loading={cc.loading}
