@@ -365,6 +365,7 @@ export function useCommandCenter() {
 
   const handleEconomicProceed = async () => {
     setShowEconomicGate(false);
+    trackEconomicGate("proceed", balance, execState.totalCredits);
     if (pendingRoute) {
       const lastUserMsg = messages.filter(m => m.role === "user").pop();
       await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
