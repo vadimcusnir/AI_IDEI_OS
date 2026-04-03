@@ -291,6 +291,7 @@ export function useCommandCenter() {
   const handleStop = useCallback(() => { stopActiveExecution(); }, [stopActiveExecution]);
 
   const clearChat = () => {
+    trackSessionAction("started");
     newSession(); executionActions.reset();
     executionActions.clearMessages();
     executionActions.setOutputs([]); setShowOutputs(false); setShowPostExecution(false);
