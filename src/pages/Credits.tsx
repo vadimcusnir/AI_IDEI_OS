@@ -21,6 +21,7 @@ const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChar
 import { EconomicProjections } from "@/components/credits/EconomicProjections";
 import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
 import { StorageUsagePanel } from "@/components/storage/StorageUsagePanel";
+import { RuleEnginePanel } from "@/components/automation/RuleEnginePanel";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 
@@ -234,6 +235,13 @@ export default function Credits() {
         <ControlledSection elementId="credits.vip_progress">
           <div className="mb-6">
             <VIPProgressTimeline />
+          </div>
+        </ControlledSection>
+
+        {/* Rule Engine */}
+        <ControlledSection elementId="credits.rule_engine">
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <RuleEnginePanel />
           </div>
         </ControlledSection>
 
