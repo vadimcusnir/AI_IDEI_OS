@@ -100,8 +100,8 @@ export function YouTubeTranscriber() {
         }
       }
 
-      setStage("fetching");
-      setProgress(30);
+      setStage("extracting_audio");
+      setProgress(20);
 
       // Create episode
       const { data: ep, error: epErr } = await supabase.from("episodes").insert({
