@@ -103,7 +103,7 @@ export default function Auth() {
   const strength = useMemo(() => getStrength(password), [password]);
   const checks = useMemo(() => PASSWORD_CHECKS.map((c) => ({ ...c, passed: c.test(password) })), [password]);
 
-  if (user) { navigate("/home", { replace: true }); return null; }
+  if (user) { navigate(redirectTarget || "/home", { replace: true }); return null; }
 
   const logSecurityEvent = async (eventType: string, metadata: Record<string, unknown> = {}) => {
     try {
