@@ -207,11 +207,11 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
 
       {/* Flow visualization */}
       <div className="flex items-center justify-center gap-2 py-2 text-[10px] text-muted-foreground">
-        <span className="bg-muted/50 px-2 py-1 rounded-full">OTOS (atomic)</span>
+        <span className="bg-muted/50 px-2 py-1 rounded-full">Actions (quick)</span>
         <ArrowRight className="h-3 w-3" />
-        <span className="bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">MMS (produse)</span>
+        <span className="bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">Systems (products)</span>
         <ArrowRight className="h-3 w-3" />
-        <span className="bg-amber-500/10 text-amber-600 px-2 py-1 rounded-full">LCSS (sisteme)</span>
+        <span className="bg-amber-500/10 text-amber-600 px-2 py-1 rounded-full">Programs (growth)</span>
       </div>
     </div>
   );

@@ -137,13 +137,13 @@ export default function ServicesCatalog() {
               <TabsList className="h-8">
                 <TabsTrigger value="ALL" className="text-xs h-6 px-2">All</TabsTrigger>
                 <TabsTrigger value="OTOS" className="text-xs h-6 px-2 gap-1">
-                  <Zap className="h-3 w-3" />OTOS
+                  <Zap className="h-3 w-3" />Actions
                 </TabsTrigger>
                 <TabsTrigger value="MMS" className="text-xs h-6 px-2 gap-1">
-                  <Layers className="h-3 w-3" />MMS
+                  <Layers className="h-3 w-3" />Systems
                 </TabsTrigger>
                 <TabsTrigger value="LCSS" className="text-xs h-6 px-2 gap-1">
-                  <Server className="h-3 w-3" />LCSS
+                  <Server className="h-3 w-3" />Programs
                 </TabsTrigger>
               </TabsList>
             </Tabs>
