@@ -38,7 +38,7 @@ import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { IntentChips, SystemRecommendations, matchIntentToSystems, type MMSystem } from "@/components/command-center/IntentSystems";
 import { AgentSlashMenu } from "@/components/agent/AgentSlashMenu";
-import { WorkspaceLayerTabs, type WorkspaceLayer } from "@/components/command-center/WorkspaceLayerTabs";
+// WorkspaceLayerTabs removed — tabs were non-functional (CC-T03)
 import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
