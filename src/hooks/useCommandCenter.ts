@@ -407,6 +407,7 @@ export function useCommandCenter() {
     showOutputs, setShowOutputs, showPostExecution, setShowPostExecution,
     showEconomicGate, permissionBlock, setPermissionBlock,
     savingAllOutputs, showLowBalance, setShowLowBalance,
+    activeMode, setActiveMode,
     isEmptyState, greeting, userName, durationSeconds,
     // Counts
     totalNeurons, totalEpisodes,
