@@ -245,14 +245,14 @@ const App = () => (
                 <Route path="/cusnir-os/architecture" element={<Navigate to="/home" replace />} />
                 <Route path="/wallet" element={<Navigate to="/credits" replace />} />
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Gamification failed to load"><GamificationPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><DataPipeline /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/data-pipeline" element={<Navigate to="/pipeline" replace />} />
                 <Route path="/integrations" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Integrations failed to load"><Integrations /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/cognitive-units" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Cognitive units failed to load"><CognitiveUnits /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/collection-runs" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Collection runs failed to load"><CollectionRuns /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/notebooks" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Notebooks failed to load"><NotebookWorkspace /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/notebook/:id" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Notebook failed to load"><NotebookDetail /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/capitalization" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Engine failed to load"><CapitalizationEngine /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/headline-generator" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Generator failed to load"><HeadlineGenerator /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/notebooks" element={<Navigate to="/library" replace />} />
+                <Route path="/notebook/:id" element={<Navigate to="/library" replace />} />
+                <Route path="/capitalization" element={<Navigate to="/marketplace" replace />} />
+                <Route path="/headline-generator" element={<Navigate to="/home" replace />} />
                 <Route path="/services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
                 <Route path="/master-agent" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Master Agent failed"><MasterAgent /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/automations" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Automations failed"><AutomationTemplates /></ErrorBoundary></AppLayout></ProtectedRoute>} />
