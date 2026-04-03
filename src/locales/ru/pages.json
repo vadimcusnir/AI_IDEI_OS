@@ -1482,6 +1482,8 @@
     "feat_knowledge_graph": "Доступ к Knowledge Graph",
     "feat_neurons_10000": "10 000 NEURONS / месяц",
     "feat_discount_25": "-25% стоимость выполнения",
+    "feat_discount_20": "-20% стоимость выполнения",
+    "feat_discount_40": "-40% стоимость выполнения",
     "feat_all_core": "Всё из Core",
     "feat_all_services": "Доступ ко всем сервисам",
     "feat_priority": "Приоритетная обработка",

@@ -1482,6 +1482,8 @@
     "feat_knowledge_graph": "Acces Knowledge Graph",
     "feat_neurons_10000": "10.000 NEURONS / lună",
     "feat_discount_25": "-25% cost execuție",
+    "feat_discount_20": "-20% cost execuție",
+    "feat_discount_40": "-40% cost execuție",
     "feat_all_core": "Tot din Core",
     "feat_all_services": "Acces la toate serviciile",
     "feat_priority": "Procesare prioritară",

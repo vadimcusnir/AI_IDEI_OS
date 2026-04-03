@@ -1482,6 +1482,8 @@
     "feat_knowledge_graph": "Knowledge Graph access",
     "feat_neurons_10000": "10,000 NEURONS / month",
     "feat_discount_25": "-25% execution cost",
+    "feat_discount_20": "-20% execution cost",
+    "feat_discount_40": "-40% execution cost",
     "feat_all_core": "Everything in Core",
     "feat_all_services": "Access to all services",
     "feat_priority": "Priority processing",
