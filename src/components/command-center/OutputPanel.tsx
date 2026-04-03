@@ -224,7 +224,7 @@ function OutputCard({
             disabled={saving || saved}
           >
             {saved ? (
-              <><Check className="h-3 w-3 text-green-500" /> Saved</>
+              <><Check className="h-3 w-3 text-success" /> Saved</>
             ) : (
               <><Save className="h-3 w-3" /> Save</>
             )}
