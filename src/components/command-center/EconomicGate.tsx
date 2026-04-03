@@ -78,7 +78,7 @@ export function EconomicGate({
           {canAfford && (
             <div className="text-[10px]">
               <span className="text-muted-foreground">After: </span>
-              <span className={cn("font-bold", balanceAfter < 200 ? "text-yellow-500" : "text-foreground")}>
+              <span className={cn("font-bold", balanceAfter < 200 ? "text-warning" : "text-foreground")}>
                 {balanceAfter.toLocaleString()} N
               </span>
             </div>

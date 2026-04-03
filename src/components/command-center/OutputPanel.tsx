@@ -237,7 +237,7 @@ function OutputCard({
             disabled={publishing || published}
           >
             {published ? (
-              <><Check className="h-3 w-3 text-green-500" /> Published</>
+              <><Check className="h-3 w-3 text-success" /> Published</>
             ) : publishing ? (
               <><Loader2 className="h-3 w-3 animate-spin" /> Publishing...</>
             ) : (

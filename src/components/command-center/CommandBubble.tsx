@@ -41,7 +41,7 @@ function CodeBlock({ children, className }: { children: string; className?: stri
           onClick={handleCopy}
           className="text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
         >
-          {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+          {copied ? <Check className="h-3 w-3 text-success" /> : <Copy className="h-3 w-3" />}
           {copied ? "Copied" : "Copy"}
         </button>
       </div>

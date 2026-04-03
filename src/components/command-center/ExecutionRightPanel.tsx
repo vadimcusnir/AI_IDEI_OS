@@ -150,7 +150,7 @@ function StepRow({ step }: { step: TaskStep }) {
   const statusIcon = {
     pending: <div className="h-2 w-2 rounded-full bg-border/60" />,
     running: <Loader2 className="h-3 w-3 text-primary animate-spin" />,
-    completed: <CheckCircle2 className="h-3 w-3 text-green-500" />,
+    completed: <CheckCircle2 className="h-3 w-3 text-success" />,
     failed: <XCircle className="h-3 w-3 text-destructive" />,
     skipped: <div className="h-2 w-2 rounded-full bg-muted-foreground/20" />,
   };
