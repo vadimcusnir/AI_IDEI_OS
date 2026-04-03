@@ -150,7 +150,7 @@ export function CommandBubble({ msg, isStreaming, onRetry, onEdit }: CommandBubb
                 className="p-1 rounded-md text-muted-foreground/40 hover:text-foreground hover:bg-muted transition-colors"
                 title="Copy"
               >
-                {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
               </button>
               {onRetry && (
                 <button
