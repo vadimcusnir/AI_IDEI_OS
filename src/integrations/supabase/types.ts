@@ -6222,41 +6222,62 @@ export type Database = {
       }
       os_mms: {
         Row: {
+          bundle_discount_pct: number | null
+          bundle_price_neurons: number | null
           complexity_level: number
           created_at: string
           description: string | null
           id: string
           intent: string
+          is_featured: boolean | null
           metadata: Json | null
           name: string
           otos_ids: string[] | null
           owner_id: string | null
+          score_c: number | null
+          score_p: number | null
+          score_s: number | null
+          score_total: number | null
           status: string
           updated_at: string
         }
         Insert: {
+          bundle_discount_pct?: number | null
+          bundle_price_neurons?: number | null
           complexity_level?: number
           created_at?: string
           description?: string | null
           id?: string
           intent?: string
+          is_featured?: boolean | null
           metadata?: Json | null
           name: string
           otos_ids?: string[] | null
           owner_id?: string | null
+          score_c?: number | null
+          score_p?: number | null
+          score_s?: number | null
+          score_total?: number | null
           status?: string
           updated_at?: string
         }
         Update: {
+          bundle_discount_pct?: number | null
+          bundle_price_neurons?: number | null
           complexity_level?: number
           created_at?: string
           description?: string | null
           id?: string
           intent?: string
+          is_featured?: boolean | null
           metadata?: Json | null
           name?: string
           otos_ids?: string[] | null
           owner_id?: string | null
+          score_c?: number | null
+          score_p?: number | null
+          score_s?: number | null
+          score_total?: number | null
           status?: string
           updated_at?: string
         }
@@ -6318,41 +6339,77 @@ export type Database = {
       }
       os_otos: {
         Row: {
+          complexity: string | null
           created_at: string
           description: string | null
           domain: string | null
           id: string
+          impact_band: string | null
+          index_code: string | null
+          intent: string | null
           mechanism: string
           metadata: Json | null
           name: string
+          neurons_cost: number | null
           output_type: string
           owner_id: string | null
+          score_complexity: number | null
+          score_conversion_power: number | null
+          score_frequency: number | null
+          score_leverage: number | null
+          score_perceived_value: number | null
+          score_tier: string | null
+          score_total: number | null
           status: string
           updated_at: string
         }
         Insert: {
+          complexity?: string | null
           created_at?: string
           description?: string | null
           domain?: string | null
           id?: string
+          impact_band?: string | null
+          index_code?: string | null
+          intent?: string | null
           mechanism?: string
           metadata?: Json | null
           name: string
+          neurons_cost?: number | null
           output_type?: string
           owner_id?: string | null
+          score_complexity?: number | null
+          score_conversion_power?: number | null
+          score_frequency?: number | null
+          score_leverage?: number | null
+          score_perceived_value?: number | null
+          score_tier?: string | null
+          score_total?: number | null
           status?: string
           updated_at?: string
         }
         Update: {
+          complexity?: string | null
           created_at?: string
           description?: string | null
           domain?: string | null
           id?: string
+          impact_band?: string | null
+          index_code?: string | null
+          intent?: string | null
           mechanism?: string
           metadata?: Json | null
           name?: string
+          neurons_cost?: number | null
           output_type?: string
           owner_id?: string | null
+          score_complexity?: number | null
+          score_conversion_power?: number | null
+          score_frequency?: number | null
+          score_leverage?: number | null
+          score_perceived_value?: number | null
+          score_tier?: string | null
+          score_total?: number | null
           status?: string
           updated_at?: string
         }
