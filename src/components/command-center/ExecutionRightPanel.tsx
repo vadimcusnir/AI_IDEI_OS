@@ -45,7 +45,7 @@ export function ExecutionRightPanel({
           <div className="flex items-center gap-2">
             <div className={cn(
               "h-6 w-6 rounded-lg flex items-center justify-center",
-              isDone ? "bg-green-500/10" : isFailed ? "bg-destructive/10" : "bg-primary/10"
+              isDone ? "bg-success/10" : isFailed ? "bg-destructive/10" : "bg-primary/10"
             )}>
               {isDone ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> :
                isFailed ? <XCircle className="h-3.5 w-3.5 text-destructive" /> :
