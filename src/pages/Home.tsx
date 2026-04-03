@@ -3,9 +3,9 @@
  * Layout: status bar → scrollable feed → sticky composer.
  * Single scroll region. No split-screen. No absolute positioning.
  */
-import { useRef, useEffect, useCallback } from "react";
-import { Sparkles, RotateCcw, ArrowDown } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { Sparkles, RotateCcw } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { cn } from "@/lib/utils";
