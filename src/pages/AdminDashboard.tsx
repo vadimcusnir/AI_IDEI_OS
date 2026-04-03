@@ -45,6 +45,9 @@ const AdminRuntimeTab = lazy(() => import("@/components/admin/AdminRuntimeTab").
 const AdminComplianceTab = lazy(() => import("@/components/admin/AdminComplianceTab").then(m => ({ default: m.AdminComplianceTab })));
 const AdminCommandTab = lazy(() => import("@/components/admin/AdminCommandTab").then(m => ({ default: m.AdminCommandTab })));
 const AdminAnalyticsExtendedTab = lazy(() => import("@/components/admin/AdminAnalyticsExtendedTab").then(m => ({ default: m.AdminAnalyticsExtendedTab })));
+const ProviderHealthTab = lazy(() => import("@/components/admin/ProviderHealthTab").then(m => ({ default: m.ProviderHealthTab })));
+const AlertCenterTab = lazy(() => import("@/components/admin/AlertCenterTab").then(m => ({ default: m.AlertCenterTab })));
+const FinOpsTab = lazy(() => import("@/components/admin/FinOpsTab").then(m => ({ default: m.FinOpsTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
