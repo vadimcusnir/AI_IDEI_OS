@@ -19,12 +19,12 @@ import type { OutputItem } from "@/stores/executionStore";
 export type { OutputItem };
 
 const TYPE_CONFIG: Record<string, { icon: typeof FileText; label: string; color: string }> = {
-  transcript: { icon: FileText, label: "Transcript", color: "text-blue-500" },
-  summary: { icon: BookOpen, label: "Summary", color: "text-green-500" },
-  insights: { icon: Lightbulb, label: "Insights", color: "text-yellow-500" },
-  frameworks: { icon: Brain, label: "Frameworks", color: "text-purple-500" },
-  action_plan: { icon: Target, label: "Action Plan", color: "text-orange-500" },
-  content: { icon: Sparkles, label: "Content", color: "text-pink-500" },
+  transcript: { icon: FileText, label: "Transcript", color: "text-info" },
+  summary: { icon: BookOpen, label: "Summary", color: "text-success" },
+  insights: { icon: Lightbulb, label: "Insights", color: "text-warning" },
+  frameworks: { icon: Brain, label: "Frameworks", color: "text-semantic-purple" },
+  action_plan: { icon: Target, label: "Action Plan", color: "text-warning" },
+  content: { icon: Sparkles, label: "Content", color: "text-semantic-rose" },
   raw: { icon: FileText, label: "Output", color: "text-muted-foreground" },
 };
 
