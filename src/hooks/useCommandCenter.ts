@@ -274,7 +274,7 @@ export function useCommandCenter() {
   };
 
   // ═══ Handlers ═══
-  const handleStop = () => { executionEngine.stop(); };
+  const handleStop = useCallback(() => { stopActiveExecution(); }, [stopActiveExecution]);
 
   const clearChat = () => {
     newSession(); executionActions.reset();
