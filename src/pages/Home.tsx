@@ -119,12 +119,7 @@ export default function Home() {
     },
   });
 
-  // Auto-switch to execution layer when execution starts
-  useEffect(() => {
-    if (execState.phase === "planning" || execState.phase === "executing") {
-      setActiveLayer("chat"); // keep chat visible during execution — ContextDrawer shows execution details
-    }
-  }, [execState.phase]);
+  // Auto-layer switch removed — CC-T03
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
