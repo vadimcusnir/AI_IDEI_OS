@@ -548,24 +548,28 @@ ${safeBody}
                     <Loader2 className="h-5 w-5 animate-spin text-primary" />
                     <span className="text-sm font-medium">
                       {stage === "detecting" && "Se detectează sursa…"}
-                      {stage === "fetching" && "Se descarcă subtitrarile…"}
-                      {stage === "processing" && "Se procesează transcrierea…"}
+                      {stage === "extracting_audio" && "Se extrage audio-ul din video…"}
+                      {stage === "downloading_audio" && "Se descarcă audio-ul…"}
+                      {stage === "transcribing_audio" && "Se transcrie audio-ul (speech-to-text)…"}
+                      {stage === "detecting_language" && "Se detectează limba și vorbitorii…"}
                     </span>
                   </div>
                   <Progress value={progress} className="h-1.5" />
                   <div className="flex justify-between mt-2">
-                    {["Detectare", "Descărcare", "Procesare"].map((label, i) => {
-                      const stageProgress = [10, 50, 80];
-                      const active = progress >= stageProgress[i];
-                      return (
-                        <span key={label} className={cn(
-                          "text-[9px] font-medium transition-colors",
-                          active ? "text-primary" : "text-muted-foreground/40"
-                        )}>
-                          {label}
-                        </span>
-                      );
-                    })}
+                    {[
+                      { label: "Detectare", threshold: 10 },
+                      { label: "Extragere Audio", threshold: 20 },
+                      { label: "Descărcare", threshold: 40 },
+                      { label: "Transcriere STT", threshold: 60 },
+                      { label: "Finalizare", threshold: 90 },
+                    ].map(({ label, threshold }) => (
+                      <span key={label} className={cn(
+                        "text-[9px] font-medium transition-colors",
+                        progress >= threshold ? "text-primary" : "text-muted-foreground/40"
+                      )}>
+                        {label}
+                      </span>
+                    ))}
                   </div>
                 </motion.div>
               )}
