@@ -86,14 +86,14 @@ export function YouTubeTranscriber() {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token || "";
 
-      // Charge credits (skip for first free)
+      // Reserve credits (skip for first free)
       if (!isFree) {
-        const { data: spent } = await supabase.rpc("spend_credits", {
+        const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
           _user_id: user.id,
           _amount: TRANSCRIPT_COST,
-          _description: "YouTube transcript download",
+          _description: "RESERVE: YouTube transcript",
         });
-        if (!spent) {
+        if (reserveErr || !reserved) {
           setShowTopUp(true);
           setStage("idle");
           return;
