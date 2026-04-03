@@ -49,3 +49,9 @@ project_id = "swghuuxkcilayybesadm"
     verify_jwt = false
   [functions.blog-rss]
     verify_jwt = false
+  [functions.intent-router]
+    verify_jwt = false
+  [functions.prompt-broker]
+    verify_jwt = false
+  [functions.mms-auto-composer]
+    verify_jwt = false

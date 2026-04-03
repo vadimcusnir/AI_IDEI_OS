@@ -4195,6 +4195,45 @@ export type Database = {
           },
         ]
       }
+      intent_map: {
+        Row: {
+          created_at: string
+          description: string
+          description_ro: string
+          domain_filter: string[]
+          intent_key: string
+          is_active: boolean
+          label: string
+          label_ro: string
+          min_tier: string
+          required_roles: string[]
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          description_ro?: string
+          domain_filter?: string[]
+          intent_key: string
+          is_active?: boolean
+          label: string
+          label_ro?: string
+          min_tier?: string
+          required_roles?: string[]
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          description_ro?: string
+          domain_filter?: string[]
+          intent_key?: string
+          is_active?: boolean
+          label?: string
+          label_ro?: string
+          min_tier?: string
+          required_roles?: string[]
+        }
+        Relationships: []
+      }
       kb_analytics: {
         Row: {
           article_id: string
@@ -5016,6 +5055,119 @@ export type Database = {
           success?: boolean
         }
         Relationships: []
+      }
+      mms_edges: {
+        Row: {
+          created_at: string
+          edge_type: string
+          from_node: string
+          id: string
+          metadata: Json | null
+          mms_id: string
+          to_node: string
+        }
+        Insert: {
+          created_at?: string
+          edge_type?: string
+          from_node: string
+          id?: string
+          metadata?: Json | null
+          mms_id: string
+          to_node: string
+        }
+        Update: {
+          created_at?: string
+          edge_type?: string
+          from_node?: string
+          id?: string
+          metadata?: Json | null
+          mms_id?: string
+          to_node?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mms_edges_from_node_fkey"
+            columns: ["from_node"]
+            isOneToOne: false
+            referencedRelation: "mms_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mms_edges_mms_id_fkey"
+            columns: ["mms_id"]
+            isOneToOne: false
+            referencedRelation: "os_mms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mms_edges_to_node_fkey"
+            columns: ["to_node"]
+            isOneToOne: false
+            referencedRelation: "mms_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mms_nodes: {
+        Row: {
+          config: Json | null
+          created_at: string
+          depends_on: string[] | null
+          id: string
+          label: string
+          mms_id: string
+          otos_id: string | null
+          role: string
+          service_unit_id: string | null
+          step_order: number
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string
+          depends_on?: string[] | null
+          id?: string
+          label?: string
+          mms_id: string
+          otos_id?: string | null
+          role?: string
+          service_unit_id?: string | null
+          step_order?: number
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string
+          depends_on?: string[] | null
+          id?: string
+          label?: string
+          mms_id?: string
+          otos_id?: string | null
+          role?: string
+          service_unit_id?: string | null
+          step_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mms_nodes_mms_id_fkey"
+            columns: ["mms_id"]
+            isOneToOne: false
+            referencedRelation: "os_mms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mms_nodes_otos_id_fkey"
+            columns: ["otos_id"]
+            isOneToOne: false
+            referencedRelation: "os_otos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mms_nodes_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       mpi_scores: {
         Row: {
