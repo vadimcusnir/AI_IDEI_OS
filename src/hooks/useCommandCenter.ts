@@ -97,6 +97,15 @@ export function useCommandCenter() {
     },
   });
 
+  // ═══ Unified stop routine ═══
+  const stopActiveExecution = useCallback(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    executionEngine.stop();
+    executionActions.setLoading(false);
+    executionActions.setStreaming(false);
+  }, [executionEngine]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -105,13 +114,13 @@ export function useCommandCenter() {
         inputZoneRef.current?.focus();
       }
       if (e.key === "Escape") {
-        if (loading) { abortRef.current?.abort(); executionActions.setLoading(false); executionActions.setStreaming(false); }
+        if (loading || isStreaming) { stopActiveExecution(); }
         else if (showOutputs) setShowOutputs(false);
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [loading, showOutputs]);
+  }, [loading, isStreaming, showOutputs, stopActiveExecution]);
 
   // Load session on mount
   useEffect(() => {
