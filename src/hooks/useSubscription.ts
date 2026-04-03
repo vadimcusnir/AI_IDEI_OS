@@ -6,35 +6,41 @@ import { toast } from "sonner";
 export const NEURONS_EXCHANGE_RATE = 0.002; // 1 NEURON = $0.002 USD → $1 = 500 NEURONS
 
 export const SUBSCRIPTION_TIERS = {
-  core_monthly: {
-    price_id: "price_1T8qQtIK7fwtty4o6GFGNU28",
-    product_id: "prod_U74a8adWSDNymI",
-    name: "Core",
-    price: 11,
-    interval: "month" as const,
-    neurons_quota: 2000,
-    execution_discount: 0.10,
-    features: ["2,000 NEURONS / lună", "Toate serviciile AI", "Extracție nelimitată", "Knowledge Graph", "-10% cost execuție"],
-  },
   pro_monthly: {
-    price_id: "price_1T8qRgIK7fwtty4ox2y0cEZJ",
-    product_id: "prod_U74aOlNMMVn7lY",
+    price_id: "price_1TIGqNIK7fwtty4oLe0Ei6TG",
+    product_id: "prod_UGoTOa86Co4yQD",
     name: "Pro",
-    price: 47,
+    price: 37,
     interval: "month" as const,
     neurons_quota: 10000,
     execution_discount: 0.25,
-    features: ["10,000 NEURONS / lună", "Tot din Core", "Procesare prioritară", "Batch processing", "Analytics avansat", "-25% cost execuție"],
+    features: [
+      "10,000 NEURONS / lună",
+      "Toate serviciile AI",
+      "Procesare prioritară",
+      "Batch processing",
+      "Analytics avansat",
+      "-25% cost execuție",
+    ],
   },
-  elite_monthly: {
-    price_id: "price_elite_placeholder",
-    product_id: "prod_elite_placeholder",
-    name: "Elite",
-    price: 128,
+  vip_monthly: {
+    price_id: "price_1TIGqPIK7fwtty4o2NnO4XYu",
+    product_id: "prod_UGoT6Lc0SAG6Xj",
+    name: "VIP",
+    price: 137,
     interval: "month" as const,
     neurons_quota: 30000,
     execution_discount: 0.40,
-    features: ["30,000 NEURONS / lună", "Tot din Pro", "Locuri nelimitate", "SLA & suport dedicat", "NOTA2 benefits", "-40% cost execuție"],
+    features: [
+      "30,000 NEURONS / lună",
+      "Tot din Pro",
+      "Locuri nelimitate",
+      "SLA & suport dedicat",
+      "API access",
+      "Integrări custom",
+      "NOTA2 benefits",
+      "-40% cost execuție",
+    ],
   },
 } as const;
 
@@ -95,11 +101,6 @@ export function useSubscription() {
     return () => clearInterval(interval);
   }, [checkSubscription]);
 
-  /**
-   * Unified checkout — creates a Stripe Checkout session and redirects.
-   * @param priceId — Stripe price ID
-   * @param mode — 'subscription' for recurring, 'payment' for one-time top-ups
-   */
   const createCheckoutSession = async (
     priceId: string,
     mode: "subscription" | "payment" = "subscription"
@@ -123,7 +124,6 @@ export function useSubscription() {
         throw new Error("Nu s-a primit URL-ul de checkout de la Stripe.");
       }
 
-      // Redirect to Stripe Checkout
       window.location.href = data.url;
     } catch (e: any) {
       const message = e?.message || "A apărut o eroare. Încearcă din nou.";
@@ -132,10 +132,7 @@ export function useSubscription() {
     }
   };
 
-  /** Shortcut: subscribe to a recurring plan */
   const subscribe = (priceId: string) => createCheckoutSession(priceId, "subscription");
-
-  /** Shortcut: one-time NEURONS purchase */
   const buyNeurons = (priceId: string) => createCheckoutSession(priceId, "payment");
 
   const manageSubscription = async () => {
