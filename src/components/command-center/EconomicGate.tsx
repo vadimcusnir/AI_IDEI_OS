@@ -61,9 +61,9 @@ export function EconomicGate({
 
         {/* Tier discount */}
         {tierDiscount > 0 && (
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-green-500/5 border border-green-500/20">
-            <TrendingDown className="h-3 w-3 text-green-500 shrink-0" />
-            <span className="text-[10px] text-green-600 dark:text-green-400">
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-success/5 border border-success/20">
+            <TrendingDown className="h-3 w-3 text-success shrink-0" />
+            <span className="text-[10px] text-success">
               {tier} discount: -{tierDiscount}% ({savings} NEURONS saved)
             </span>
           </div>
