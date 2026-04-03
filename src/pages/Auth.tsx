@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { SEOHead } from "@/components/SEOHead";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { getRedirectTarget, storeRedirect } from "@/lib/authRedirect";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -51,6 +52,25 @@ export default function Auth() {
   const [tosAccepted, setTosAccepted] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  // Resolve redirect target from ?redirect=, router state, or sessionStorage
+  const redirectTarget = useMemo(
+    () => getRedirectTarget(searchParams, location.state),
+    [searchParams, location.state]
+  );
+
+  // Store redirect for OAuth flows (Google login redirects away from page)
+  useMemo(() => {
+    if (redirectTarget) storeRedirect(redirectTarget);
+  }, [redirectTarget]);
+
+  // Read ?mode= param to set initial mode
+  useMemo(() => {
+    const modeParam = searchParams.get("mode");
+    if (modeParam === "signup") setMode("signup");
+  }, []);
 
   // Minimum 8 chars (upgraded from 6)
   const PASSWORD_CHECKS = useMemo(() => [
@@ -83,7 +103,7 @@ export default function Auth() {
   const strength = useMemo(() => getStrength(password), [password]);
   const checks = useMemo(() => PASSWORD_CHECKS.map((c) => ({ ...c, passed: c.test(password) })), [password]);
 
-  if (user) { navigate("/home", { replace: true }); return null; }
+  if (user) { navigate(redirectTarget || "/home", { replace: true }); return null; }
 
   const logSecurityEvent = async (eventType: string, metadata: Record<string, unknown> = {}) => {
     try {
@@ -165,8 +185,13 @@ export default function Auth() {
         // Reset client tracker on success
         loginAttemptTracker.delete(trimmedEmail);
         await logSecurityEvent("login_success", { email: trimmedEmail });
-        const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
-        navigate(count && count > 0 ? "/home" : "/onboarding");
+        // Redirect to original destination or fallback
+        if (redirectTarget) {
+          navigate(redirectTarget, { replace: true });
+        } else {
+          const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
+          navigate(count && count > 0 ? "/home" : "/onboarding", { replace: true });
+        }
       }
     }
     setLoading(false);

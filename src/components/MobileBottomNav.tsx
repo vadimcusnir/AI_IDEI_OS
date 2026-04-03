@@ -62,7 +62,7 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: Sparkles,
     items: [
       { path: "/services", icon: Sparkles, label: "Services" },
-      { path: "/pipeline-overview", icon: Layers, label: "Pipelines" },
+      { path: "/pipeline", icon: Layers, label: "Pipelines" },
       { path: "/master-agent", icon: Zap, label: "Master Agent" },
     ],
   },
@@ -83,7 +83,7 @@ const MENU_SECTIONS: MenuSection[] = [
     items: [
       { path: "/credits", icon: Coins, label: "Wallet" },
       { path: "/pricing", icon: Wallet, label: "Pricing" },
-      { path: "/analytics-dashboard", icon: BarChart3, label: "Usage" },
+      { path: "/wallet", icon: BarChart3, label: "Usage" },
     ],
   },
   {
@@ -92,7 +92,7 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: Settings,
     items: [
       { path: "/profile", icon: User, label: "Profile" },
-      { path: "/workspace-settings", icon: Settings, label: "Workspace" },
+      { path: "/workspace", icon: Settings, label: "Workspace" },
       { path: "/docs", icon: Code, label: "API & Docs" },
       { path: "/data-privacy", icon: Shield, label: "Data Privacy" },
     ],

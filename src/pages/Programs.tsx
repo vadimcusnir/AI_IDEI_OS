@@ -163,8 +163,8 @@ export default function Programs() {
                         size="sm"
                         className="shrink-0 gap-1.5"
                         onClick={() => {
-                          if (!user) {
-                            navigate("/auth");
+                           if (!user) {
+                            navigate(`/auth?redirect=${encodeURIComponent(`/home?program=${program.id}`)}`);
                             return;
                           }
                           navigate(`/home?program=${program.id}`);

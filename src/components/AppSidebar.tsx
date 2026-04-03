@@ -105,7 +105,7 @@ const SYSTEM_MAP: NavGroup[] = [
     items: [
       { label: "Services", to: "/services", icon: Sparkles, controlId: "nav.services" },
       { label: "Programs", to: "/programs", icon: Crown, controlId: "nav.programs" },
-      { label: "Pipelines", to: "/pipeline-overview", icon: Layers, controlId: "nav.pipelines" },
+      { label: "Pipelines", to: "/pipeline", icon: Layers, controlId: "nav.pipelines" },
       { label: "Master Agent", to: "/master-agent", icon: Zap, controlId: "nav.master-agent" },
     ],
   },
@@ -130,7 +130,7 @@ const SYSTEM_MAP: NavGroup[] = [
     items: [
       { label: "Wallet", to: "/credits", icon: Coins, controlId: "nav.credits" },
       { label: "Pricing", to: "/pricing", icon: Wallet, controlId: "nav.pricing" },
-      { label: "Usage", to: "/analytics-dashboard", icon: BarChart3, controlId: "nav.usage" },
+      { label: "Usage", to: "/wallet", icon: BarChart3, controlId: "nav.usage" },
     ],
   },
   // ─── CONTROL ───
@@ -141,7 +141,7 @@ const SYSTEM_MAP: NavGroup[] = [
     authOnly: true,
     items: [
       { label: "Profile", to: "/profile", icon: User, controlId: "nav.profile" },
-      { label: "Workspace", to: "/workspace-settings", icon: Settings, controlId: "nav.workspace" },
+      { label: "Workspace", to: "/workspace", icon: Settings, controlId: "nav.workspace" },
       { label: "API & Docs", to: "/docs", icon: Code, controlId: "nav.docs" },
       { label: "Data Privacy", to: "/data-privacy", icon: Shield, controlId: "nav.privacy" },
     ],
