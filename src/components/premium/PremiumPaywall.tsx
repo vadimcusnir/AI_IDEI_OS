@@ -77,7 +77,7 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
 
   const handleBuyNeurons = async () => {
     try {
-      await subscribe(SUBSCRIPTION_TIERS.core_monthly.price_id);
+      await subscribe(SUBSCRIPTION_TIERS.pro_monthly.price_id);
     } catch {
       navigate("/credits");
     }

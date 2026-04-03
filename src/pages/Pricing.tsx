@@ -36,29 +36,9 @@ function usePlans() {
       cta: t("pricing.start_free"),
     },
     {
-      key: "core",
-      name: t("pricing.plan_core"),
-      price: "11",
-      period: t("pricing.per_month"),
-      neurons: "2,000",
-      badge: null,
-      highlight: false,
-      priceId: SUBSCRIPTION_TIERS.core_monthly.price_id,
-      mode: "subscription" as const,
-      features: [
-        t("pricing.feat_neurons_2000"),
-        t("pricing.feat_basic_lcss"),
-        t("pricing.feat_unlimited_transcriptions"),
-        t("pricing.feat_full_pipeline"),
-        t("pricing.feat_basic_ai"),
-        t("pricing.feat_knowledge_graph"),
-      ],
-      cta: t("pricing.choose_core"),
-    },
-    {
       key: "pro",
       name: t("pricing.plan_pro"),
-      price: "47",
+      price: "37",
       period: t("pricing.per_month"),
       neurons: "10,000",
       badge: "Popular",
@@ -67,28 +47,28 @@ function usePlans() {
       mode: "subscription" as const,
       features: [
         t("pricing.feat_neurons_10000"),
-        t("pricing.feat_discount_25"),
-        t("pricing.feat_all_core"),
+        t("pricing.feat_discount_20"),
         t("pricing.feat_all_services"),
         t("pricing.feat_priority"),
         t("pricing.feat_batch"),
         t("pricing.feat_analytics"),
+        t("pricing.feat_knowledge_graph"),
       ],
       cta: t("pricing.choose_pro"),
     },
     {
       key: "vip",
       name: t("pricing.plan_vip"),
-      price: "128",
+      price: "137",
       period: t("pricing.per_month"),
       neurons: "30,000",
       badge: "Max Power",
       highlight: false,
-      priceId: SUBSCRIPTION_TIERS.elite_monthly.price_id,
+      priceId: SUBSCRIPTION_TIERS.vip_monthly.price_id,
       mode: "subscription" as const,
       features: [
         t("pricing.feat_neurons_30000"),
-        t("pricing.feat_priority_support"),
+        t("pricing.feat_discount_40"),
         t("pricing.feat_all_pro"),
         t("pricing.feat_api"),
         t("pricing.feat_custom_integrations"),
@@ -154,9 +134,8 @@ export default function Pricing() {
 
   const isCurrentPlan = (planKey: string) => {
     if (planKey === "free" && !subscribed) return true;
-    if (planKey === "core" && tier === "core_monthly") return true;
     if (planKey === "pro" && tier === "pro_monthly") return true;
-    if (planKey === "vip" && tier === "elite_monthly") return true;
+    if (planKey === "vip" && tier === "vip_monthly") return true;
     return false;
   };
 
@@ -186,7 +165,7 @@ export default function Pricing() {
 
         {/* Plans Grid */}
         <section className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {PLANS.map((plan) => {
               const isCurrent = isCurrentPlan(plan.key);
               const isProcessingThis = processing === plan.key;
