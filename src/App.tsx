@@ -270,7 +270,7 @@ const App = () => (
                 <Route path="/admin/revenue" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Revenue failed to load"><AdminRevenue /></ErrorBoundary></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
+                <Route path="*" element={<AppLayout><ErrorBoundary fallbackTitle="Page not found"><NotFound /></ErrorBoundary></AppLayout>} />
               </Routes>
             </Suspense>
             <CookieConsent />
