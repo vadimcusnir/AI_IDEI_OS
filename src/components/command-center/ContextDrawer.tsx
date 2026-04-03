@@ -168,9 +168,6 @@ export function ContextDrawer({
               {activeTab === "assets" && (
                 <AssetsTab outputs={outputs} onViewOutputs={onViewOutputs} />
               )}
-              {activeTab === "progress" && (
-                <ProgressTab navigate={navigate} />
-              )}
             </div>
           </div>
         </div>
