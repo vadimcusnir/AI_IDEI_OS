@@ -62,6 +62,7 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: Sparkles,
     items: [
       { path: "/services", icon: Sparkles, label: "Services" },
+      { path: "/programs", icon: Crown, label: "Programs" },
       { path: "/pipeline", icon: Layers, label: "Pipelines" },
       { path: "/master-agent", icon: Zap, label: "Master Agent" },
     ],
