@@ -1,16 +1,13 @@
 /**
- * AppSidebar — SYSTEM MAP, not a link list.
+ * AppSidebar — Command Center navigation.
  *
- * 7 groups reflecting the platform architecture:
- *   CORE         — daily operations
- *   INTELLIGENCE — knowledge layer
- *   PRODUCTION   — execution layer
- *   GROWTH       — retention & engagement
- *   ECONOMY      — monetization & billing
- *   CONTROL      — settings & compliance
- *   ELITE        — VIP & Cusnir_OS
+ * 3 groups + sessions:
+ *   CORE     — Command Center, Chats
+ *   WORK     — Library, Jobs, Credits
+ *   MORE     — Services, Neurons, Knowledge Graph, Marketplace, Progress, VIP (conditional)
  *
- * Every route has exactly 1 entry here. No duplicates, no hidden routes.
+ * Personal items (Profile, Workspace, Settings, Privacy, Docs) → UserMenu
+ * Admin → separate section for admins only
  */
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -22,14 +19,12 @@ import { useChatHistory } from "@/hooks/useChatHistory";
 import { usePrefetch } from "@/hooks/usePrefetch";
 import { Logo } from "@/components/shared/Logo";
 import {
-  Home, Upload, BookOpen, Sparkles, User,
-  Brain, Network, Database, Layers,
-  Trophy, TrendingUp, Target, Activity,
-  Wallet, Coins, FileText, BarChart3,
-  Settings, Code, Shield, Lock,
-  Crown, ChevronRight, Plus,
-  Clock, Trash2, MessageCircle, Store,
-  Cpu, Eye, Zap,
+  Home, BookOpen, Sparkles,
+  Brain, Network, Store,
+  Coins, Crown, Plus,
+  Clock, Trash2, MessageCircle,
+  Shield, Cpu, Activity, BarChart3, Database,
+  Trophy, ChevronRight, Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -47,7 +42,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 
-// ═══ ROUTE REGISTRY — Single Source of Truth ═══
+// ═══ ROUTE REGISTRY ═══
 
 interface NavItem {
   label: string;
@@ -79,80 +74,33 @@ const SYSTEM_MAP: NavGroup[] = [
     defaultOpen: true,
     items: [
       { label: "Command Center", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
-      { label: "Extractor", to: "/extractor", icon: Upload, controlId: "nav.extractor" },
-      { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs" },
     ],
   },
-  // ─── INTELLIGENCE ───
+  // ─── WORK ───
   {
-    key: "intelligence",
-    label: "INTELLIGENCE",
-    icon: Brain,
+    key: "work",
+    label: "WORK",
+    icon: BookOpen,
+    defaultOpen: true,
     authOnly: true,
     items: [
-      { label: "Neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
-      { label: "Knowledge Graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
-      { label: "Data Pipeline", to: "/data-pipeline", icon: Database, controlId: "nav.data-pipeline", minTier: "pro" },
+      { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
+      { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs" },
+      { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
     ],
   },
-  // ─── PRODUCTION ───
+  // ─── MORE ───
   {
-    key: "production",
-    label: "PRODUCTION",
+    key: "more",
+    label: "DISCOVER",
     icon: Sparkles,
     authOnly: true,
     items: [
       { label: "Services", to: "/services", icon: Sparkles, controlId: "nav.services" },
-      { label: "Programs", to: "/programs", icon: Crown, controlId: "nav.programs" },
-      { label: "Pipelines", to: "/pipeline", icon: Layers, controlId: "nav.pipelines" },
-      { label: "Master Agent", to: "/master-agent", icon: Zap, controlId: "nav.master-agent" },
-    ],
-  },
-  // ─── GROWTH ───
-  {
-    key: "growth",
-    label: "GROWTH",
-    icon: Trophy,
-    authOnly: true,
-    items: [
-      { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
-      { label: "Leaderboard", to: "/community", icon: TrendingUp, controlId: "nav.community" },
+      { label: "Neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
+      { label: "Knowledge Graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
       { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-    ],
-  },
-  // ─── ECONOMY ───
-  {
-    key: "economy",
-    label: "ECONOMY",
-    icon: Wallet,
-    authOnly: true,
-    items: [
-      { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-    ],
-  },
-  // ─── CONTROL ───
-  {
-    key: "control",
-    label: "CONTROL",
-    icon: Settings,
-    authOnly: true,
-    items: [
-      { label: "Profile", to: "/profile", icon: User, controlId: "nav.profile" },
-      { label: "Workspace", to: "/workspace", icon: Settings, controlId: "nav.workspace" },
-      { label: "API & Docs", to: "/docs", icon: Code, controlId: "nav.docs" },
-      { label: "Data Privacy", to: "/data-privacy", icon: Shield, controlId: "nav.privacy" },
-    ],
-  },
-  // ─── ELITE ───
-  {
-    key: "elite",
-    label: "ELITE",
-    icon: Crown,
-    authOnly: true,
-    items: [
-      { label: "VIP Dashboard", to: "/vip", icon: Crown, controlId: "nav.vip" },
-      { label: "Cusnir_OS", to: "/cusnir-os", icon: Lock, controlId: "nav.cusnir-os", locked: true },
+      { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
     ],
   },
 ];
@@ -174,7 +122,6 @@ const ADMIN_GROUP: NavGroup = {
 const PUBLIC_ITEMS: NavItem[] = [
   { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
   { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-  { label: "Docs", to: "/docs", icon: FileText, controlId: "nav.docs" },
 ];
 
 // ═══ COMPONENT ═══
@@ -185,7 +132,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { balance, loading: balanceLoading } = useCreditBalance();
   const { tier } = useUserTier();
@@ -196,14 +143,13 @@ export function AppSidebar() {
     "/services": prefetchServices,
     "/services-catalog": prefetchServices,
     "/credits": prefetchCredits,
-    "/wallet": prefetchCredits,
     "/library": prefetchLibrary,
   };
 
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
 
-  const recentSessions = (sessions || []).slice(0, 5);
+  const recentSessions = (sessions || []).slice(0, 8);
 
   const renderNavItem = (item: NavItem) => {
     const content = (
@@ -252,7 +198,6 @@ export function AppSidebar() {
     if (group.authOnly && !user) return null;
     if (group.adminOnly && !isAdmin) return null;
 
-    // Check if any item in this group is active
     const groupActive = group.items.some(i => isActive(i.to));
 
     return (
@@ -294,7 +239,7 @@ export function AppSidebar() {
 
       <SidebarSeparator />
 
-      {/* Credits — compact */}
+      {/* Credits badge — compact */}
       {user && !collapsed && (
         <div className="px-3 py-2 space-y-1.5">
           <WorkspaceSwitcher collapsed={false} />
@@ -326,7 +271,7 @@ export function AppSidebar() {
       <SidebarContent>
         {user ? (
           <>
-            {/* ═══ SYSTEM MAP — 7 groups ═══ */}
+            {/* ═══ 3 navigation groups ═══ */}
             {SYSTEM_MAP.map(renderGroup)}
 
             {/* ═══ SESSIONS ═══ */}
@@ -340,16 +285,18 @@ export function AppSidebar() {
                     <button
                       onClick={() => { newSession(); navigate("/home"); }}
                       className="h-4 w-4 rounded flex items-center justify-center hover:bg-muted transition-colors"
-                      title="Sesiune nouă"
+                      title="New session"
                     >
                       <Plus className="h-2.5 w-2.5 text-muted-foreground" />
                     </button>
                   </SidebarGroupLabel>
                   <SidebarGroupContent>
-                    <ScrollArea className="max-h-[120px]">
+                    <ScrollArea className="max-h-[180px]">
                       <SidebarMenu>
                         {recentSessions.length === 0 && (
-                          <p className="text-[10px] text-muted-foreground/40 px-3 py-1.5">Nicio sesiune</p>
+                          <p className="text-[10px] text-muted-foreground/40 px-3 py-1.5">
+                            {t("common:no_sessions", { defaultValue: "No sessions yet" })}
+                          </p>
                         )}
                         {recentSessions.map((session) => (
                           <SidebarMenuItem key={session.session_id}>
@@ -362,7 +309,7 @@ export function AppSidebar() {
                                 {session.last_message?.slice(0, 30) || formatDistanceToNow(new Date(session.created_at), { addSuffix: true })}
                               </span>
                               <button
-                                onClick={(e) => { e.stopPropagation(); deleteSession(session.session_id); toast.success("Ștearsă"); }}
+                                onClick={(e) => { e.stopPropagation(); deleteSession(session.session_id); toast.success("Deleted"); }}
                                 className="opacity-0 group-hover/session:opacity-100 h-3.5 w-3.5 rounded flex items-center justify-center hover:bg-destructive/10 transition-all"
                               >
                                 <Trash2 className="h-2 w-2 text-muted-foreground hover:text-destructive" />
@@ -382,7 +329,7 @@ export function AppSidebar() {
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton
-                        tooltip="Sesiuni"
+                        tooltip="Sessions"
                         onClick={() => { newSession(); navigate("/home"); }}
                       >
                         <MessageCircle className="h-4 w-4" />
@@ -421,10 +368,9 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarSeparator />
 
-        {/* ═══ FOOTER: Plan + Upgrade ═══ */}
+        {/* Tier badge — compact */}
         {user && !collapsed && (
-          <div className="px-3 py-2 space-y-2">
-            {/* Plan badge */}
+          <div className="px-3 py-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Crown className={cn(
@@ -442,18 +388,6 @@ export function AppSidebar() {
                 {balanceLoading ? "…" : balance.toLocaleString()} N
               </span>
             </div>
-
-            {/* Usage bar */}
-            <div className="h-1 w-full bg-border/30 rounded-full overflow-hidden">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-all duration-500",
-                  balance < 200 ? "bg-destructive" : balance < 1000 ? "bg-warning" : "bg-primary"
-                )}
-                style={{ width: `${Math.min(100, (balance / 5000) * 100)}%` }}
-              />
-            </div>
-
           </div>
         )}
 
@@ -485,7 +419,7 @@ export function AppSidebar() {
                 className="w-full"
                 onClick={() => navigate("/auth")}
               >
-                <User className="h-4 w-4" />
+                <Home className="h-4 w-4" />
                 {!collapsed && <span>Sign In</span>}
               </SidebarMenuButton>
             </SidebarMenuItem>

@@ -1,16 +1,19 @@
+/**
+ * MobileBottomNav — Synced with simplified sidebar.
+ * Bottom bar: Cockpit, Services, Marketplace, Jobs
+ * Hamburger → 3 groups (CORE, WORK, DISCOVER) + Sessions + Admin
+ */
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import {
-  Home, Upload, BookOpen, Sparkles, User,
-  Brain, Network, Database, Layers,
-  Trophy, TrendingUp, Store,
-  Wallet, Coins, BarChart3,
-  Settings, Code, Shield, Lock,
-  Crown, Rocket, Menu,
-  Cpu, Activity, Clock, Zap, LogOut, Eye,
+  Home, BookOpen, Sparkles,
+  Brain, Network, Store,
+  Coins, Clock, Trophy,
+  Shield, Cpu, Activity, BarChart3, Database,
+  Menu, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -22,10 +25,10 @@ const BAR_ITEMS = [
   { path: "/home", icon: Home, labelKey: "cockpit" },
   { path: "/services", icon: Sparkles, labelKey: "services" },
   { path: "/marketplace", icon: Store, labelKey: "marketplace" },
-  { path: "/jobs", icon: Rocket, labelKey: "jobs" },
+  { path: "/jobs", icon: Clock, labelKey: "jobs" },
 ];
 
-/* ── Menu structure — mirrors AppSidebar SYSTEM_MAP exactly ── */
+/* ── Menu structure — mirrors AppSidebar 3-group model ── */
 interface MenuSection {
   key: string;
   label: string;
@@ -41,70 +44,28 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: Home,
     items: [
       { path: "/home", icon: Home, label: "Command Center" },
-      { path: "/extractor", icon: Upload, label: "Extractor" },
+    ],
+  },
+  {
+    key: "work",
+    label: "WORK",
+    icon: BookOpen,
+    items: [
       { path: "/library", icon: BookOpen, label: "Library" },
       { path: "/jobs", icon: Clock, label: "Jobs" },
+      { path: "/credits", icon: Coins, label: "Credits" },
     ],
   },
   {
-    key: "intelligence",
-    label: "INTELLIGENCE",
-    icon: Brain,
-    items: [
-      { path: "/neurons", icon: Brain, label: "Neurons" },
-      { path: "/intelligence", icon: Network, label: "Knowledge Graph" },
-      { path: "/data-pipeline", icon: Database, label: "Data Pipeline" },
-    ],
-  },
-  {
-    key: "production",
-    label: "PRODUCTION",
+    key: "discover",
+    label: "DISCOVER",
     icon: Sparkles,
     items: [
       { path: "/services", icon: Sparkles, label: "Services" },
-      { path: "/programs", icon: Crown, label: "Programs" },
-      { path: "/pipeline", icon: Layers, label: "Pipelines" },
-      { path: "/master-agent", icon: Zap, label: "Master Agent" },
-    ],
-  },
-  {
-    key: "growth",
-    label: "GROWTH",
-    icon: Trophy,
-    items: [
-      { path: "/gamification", icon: Trophy, label: "Progress" },
-      { path: "/community", icon: TrendingUp, label: "Leaderboard" },
+      { path: "/neurons", icon: Brain, label: "Neurons" },
+      { path: "/intelligence", icon: Network, label: "Knowledge Graph" },
       { path: "/marketplace", icon: Store, label: "Marketplace" },
-    ],
-  },
-  {
-    key: "economy",
-    label: "ECONOMY",
-    icon: Wallet,
-    items: [
-      { path: "/credits", icon: Coins, label: "Wallet" },
-      { path: "/pricing", icon: Wallet, label: "Pricing" },
-      { path: "/wallet", icon: BarChart3, label: "Usage" },
-    ],
-  },
-  {
-    key: "control",
-    label: "CONTROL",
-    icon: Settings,
-    items: [
-      { path: "/profile", icon: User, label: "Profile" },
-      { path: "/workspace", icon: Settings, label: "Workspace" },
-      { path: "/docs", icon: Code, label: "API & Docs" },
-      { path: "/data-privacy", icon: Shield, label: "Data Privacy" },
-    ],
-  },
-  {
-    key: "elite",
-    label: "ELITE",
-    icon: Crown,
-    items: [
-      { path: "/vip", icon: Crown, label: "VIP Dashboard" },
-      { path: "/cusnir-os", icon: Lock, label: "Cusnir_OS" },
+      { path: "/gamification", icon: Trophy, label: "Progress" },
     ],
   },
   {
@@ -184,7 +145,7 @@ export function MobileBottomNav() {
         </div>
       </nav>
 
-      {/* Slide-out menu — mirrors sidebar structure */}
+      {/* Slide-out menu */}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="w-[280px] p-0 overflow-y-auto">
           <SheetHeader className="p-4 pb-2">
