@@ -155,6 +155,69 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_type: string
+          created_at: string
+          description: string | null
+          error_signal: string | null
+          first_seen: string
+          id: string
+          impact_scope: string | null
+          last_seen: string
+          metadata: Json | null
+          occurrences: number | null
+          provider_key: string | null
+          recommended_action: string | null
+          resolved_at: string | null
+          service_key: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type: string
+          created_at?: string
+          description?: string | null
+          error_signal?: string | null
+          first_seen?: string
+          id?: string
+          impact_scope?: string | null
+          last_seen?: string
+          metadata?: Json | null
+          occurrences?: number | null
+          provider_key?: string | null
+          recommended_action?: string | null
+          resolved_at?: string | null
+          service_key?: string | null
+          severity?: string
+          title: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          description?: string | null
+          error_signal?: string | null
+          first_seen?: string
+          id?: string
+          impact_scope?: string | null
+          last_seen?: string
+          metadata?: Json | null
+          occurrences?: number | null
+          provider_key?: string | null
+          recommended_action?: string | null
+          resolved_at?: string | null
+          service_key?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: []
+      }
       admin_approval_requests: {
         Row: {
           action_type: string
@@ -7513,6 +7576,57 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_cost_ledger: {
+        Row: {
+          amount_credits: number | null
+          amount_usd: number
+          cost_category: string
+          cost_type: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          period_end: string | null
+          period_start: string | null
+          provider_key: string | null
+          service_key: string | null
+          tier: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount_credits?: number | null
+          amount_usd?: number
+          cost_category?: string
+          cost_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          period_end?: string | null
+          period_start?: string | null
+          provider_key?: string | null
+          service_key?: string | null
+          tier?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount_credits?: number | null
+          amount_usd?: number
+          cost_category?: string
+          cost_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          period_end?: string | null
+          period_start?: string | null
+          provider_key?: string | null
+          service_key?: string | null
+          tier?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       platform_metrics: {
         Row: {
           active_users_7d: number | null
@@ -7989,6 +8103,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      provider_health_checks: {
+        Row: {
+          alert_level: string | null
+          auth_status: string
+          avg_latency_1h: number | null
+          avg_latency_24h: number | null
+          balance_remaining: number | null
+          checked_at: string
+          created_at: string
+          error_signatures: Json | null
+          failure_rate_1h: number | null
+          failure_rate_24h: number | null
+          id: string
+          last_failed_call: string | null
+          last_successful_call: string | null
+          metadata: Json | null
+          monthly_spend: number | null
+          provider_key: string
+          quota_limit: number | null
+          quota_remaining: number | null
+          quota_status: string
+          retry_rate: number | null
+          spend_status: string
+          status: string
+        }
+        Insert: {
+          alert_level?: string | null
+          auth_status?: string
+          avg_latency_1h?: number | null
+          avg_latency_24h?: number | null
+          balance_remaining?: number | null
+          checked_at?: string
+          created_at?: string
+          error_signatures?: Json | null
+          failure_rate_1h?: number | null
+          failure_rate_24h?: number | null
+          id?: string
+          last_failed_call?: string | null
+          last_successful_call?: string | null
+          metadata?: Json | null
+          monthly_spend?: number | null
+          provider_key: string
+          quota_limit?: number | null
+          quota_remaining?: number | null
+          quota_status?: string
+          retry_rate?: number | null
+          spend_status?: string
+          status?: string
+        }
+        Update: {
+          alert_level?: string | null
+          auth_status?: string
+          avg_latency_1h?: number | null
+          avg_latency_24h?: number | null
+          balance_remaining?: number | null
+          checked_at?: string
+          created_at?: string
+          error_signatures?: Json | null
+          failure_rate_1h?: number | null
+          failure_rate_24h?: number | null
+          id?: string
+          last_failed_call?: string | null
+          last_successful_call?: string | null
+          metadata?: Json | null
+          monthly_spend?: number | null
+          provider_key?: string
+          quota_limit?: number | null
+          quota_remaining?: number | null
+          quota_status?: string
+          retry_rate?: number | null
+          spend_status?: string
+          status?: string
+        }
+        Relationships: []
       }
       psychological_profiles: {
         Row: {
@@ -9826,6 +10015,42 @@ export type Database = {
         }
         Relationships: []
       }
+      unit_economics_daily: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          metric_key: string
+          metric_value: number
+          segment: string | null
+          service_key: string | null
+          snapshot_date: string
+          tier: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_key: string
+          metric_value?: number
+          segment?: string | null
+          service_key?: string | null
+          snapshot_date?: string
+          tier?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_key?: string
+          metric_value?: number
+          segment?: string | null
+          service_key?: string | null
+          snapshot_date?: string
+          tier?: string | null
+        }
+        Relationships: []
+      }
       user_achievements: {
         Row: {
           achievement_key: string
@@ -10908,6 +11133,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      finops_dashboard_stats: { Args: never; Returns: Json }
       forum_mark_solution: {
         Args: { _post_id: string; _thread_id: string }
         Returns: Json
