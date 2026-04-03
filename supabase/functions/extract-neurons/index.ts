@@ -527,10 +527,11 @@ Deno.serve(async (req) => {
     console.log(`Pass 1 complete: ${allRawUnits.length} raw units extracted`);
 
     if (allRawUnits.length === 0) {
-      await supabase.rpc("add_credits", {
+      // RELEASE reserved neurons — no output
+      await supabase.rpc("release_neurons", {
         _user_id: userId, _amount: EXTRACTION_COST,
-        _description: `REFUND: ${episode.title} — no neurons extracted`, _type: "refund",
-      });
+        _description: `RELEASE: ${episode.title} — no neurons extracted`,
+      }).catch(() => {});
       await supabase.from("episodes").update({ status: "transcribed" }).eq("id", episode_id);
       return new Response(JSON.stringify({ error: "No neurons extracted" }), {
         status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
