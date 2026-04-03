@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { executionActions } from "@/stores/executionStore";
 
 import { useCommandCenter } from "@/hooks/useCommandCenter";
+import { WelcomeScreen } from "@/components/command-center/WelcomeScreen";
 import { CommandBubble } from "@/components/command-center/CommandBubble";
 import { OutputPanel } from "@/components/command-center/OutputPanel";
 import { PlanPreview } from "@/components/command-center/PlanPreview";
