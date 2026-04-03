@@ -1,10 +1,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+
+let _currentReq: Request | null = null;
 
 function json(data: unknown, status = 200) {
+  const headers = _currentReq ? getCorsHeaders(_currentReq) : { "Content-Type": "application/json" };
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+    headers: { ...headers, "Content-Type": "application/json" },
   });
 }
 
