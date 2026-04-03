@@ -34,6 +34,7 @@
 | **i18n RU** | 2357+ chei EN/RO/RU la paritate 100%, +programs +command_panel keys | ✅ COMPLET |
 | **Release Gates** | validate_service_release() DB fn (6 checks: atomicity, dedup, schema, monetization, root2, score≥0.65) + check_i18n_coverage() | ✅ COMPLET |
 | **AIAS Infiltration** | aias_agent_profiles, aias_output_contracts, aias_routing_metadata, prompt-broker AIAS-enhanced (Context/Execution/Verdict), aias-gate EF (validate/wrap/audit) | ✅ COMPLET |
+| **Automation & Distribution** | automation_jobs, automation_runs, automation_triggers, distribution_channels, distribution_sends, automation-engine EF (create/trigger/process/distribute), AutomationPanel UI | ✅ COMPLET |
 | **Ruta /programs** | LCSS expuse ca Programs pentru user | 🔴 NEEXISTENT |
 
 ---
@@ -274,5 +275,5 @@ naming_translation:
 ## STARE CURENTĂ
 
 - **Fazele 0-3**: ✅ COMPLETATE (curățare DB, scoring OTOS, manifeste, mode panels, admin paginare+logs+safety)
-- **Faza 4**: 🔴 URMĂTOAREA — Service Contract System
-- **Fazele 5-12**: 🔴 PLANIFICATE
+- **Fazele 4-11**: ✅ COMPLETATE (Contract System, Execution Kernel, User Translation, Admin, Command Layer, i18n+Gates, AIAS, Automation & Distribution)
+- **Faza 12**: 🔴 URMĂTOAREA — Cusnir OS Kernel
