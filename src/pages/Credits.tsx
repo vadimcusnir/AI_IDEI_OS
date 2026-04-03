@@ -238,6 +238,13 @@ export default function Credits() {
           </div>
         </ControlledSection>
 
+        {/* Rule Engine */}
+        <ControlledSection elementId="credits.rule_engine">
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <RuleEnginePanel />
+          </div>
+        </ControlledSection>
+
         {/* Balance + Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
           {/* Main balance */}
