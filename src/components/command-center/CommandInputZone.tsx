@@ -181,17 +181,17 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 w-8 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
+                className="h-11 w-11 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
                 onClick={onStop}
                 title="Oprește generarea"
               >
-                <Square className="h-3 w-3 fill-current" />
+                <Square className="h-3.5 w-3.5 fill-current" />
               </Button>
             ) : (
               <Button
                 size="sm"
                 className={cn(
-                  "h-8 w-8 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 transition-all duration-200",
+                  "h-11 w-11 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 transition-all duration-200",
                   (input.trim() || files.length > 0)
                     ? "bg-[hsl(var(--gold-oxide))] text-[hsl(var(--obsidian))] shadow-sm shadow-[hsl(var(--gold-oxide)/0.2)] hover:shadow-md hover:bg-[hsl(var(--gold-dim))]"
                     : "bg-muted text-muted-foreground/30"
@@ -199,7 +199,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                 onClick={onSubmit}
                 disabled={!input.trim() && files.length === 0}
               >
-                <ArrowUp className="h-3.5 w-3.5" />
+                <ArrowUp className="h-4 w-4" />
               </Button>
             )}
           </div>

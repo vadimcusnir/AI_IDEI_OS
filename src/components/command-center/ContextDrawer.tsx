@@ -176,7 +176,7 @@ export function ContextDrawer({
         </div>
       )}
 
-      {/* Mobile overlay — keeps slide animation (acceptable on mobile) */}
+      {/* Mobile overlay — all tabs accessible */}
       {isOpen && (
         <>
           <div
@@ -184,15 +184,60 @@ export function ContextDrawer({
             onClick={() => setIsOpen(false)}
           />
           <div
-            className="lg:hidden fixed inset-y-0 right-0 w-[300px] z-50 border-l border-border/20 bg-background shadow-2xl shadow-black/20 overflow-y-auto"
+            className="lg:hidden fixed inset-y-0 right-0 w-[300px] z-50 border-l border-border/20 bg-background shadow-2xl shadow-black/20 overflow-hidden flex flex-col"
           >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border/15 bg-muted/20">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/15 bg-muted/20 shrink-0">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Panel</span>
               <button onClick={() => setIsOpen(false)} className="p-1.5 text-muted-foreground/40 hover:text-foreground rounded-lg hover:bg-muted/30 transition-colors">
                 <X className="h-3.5 w-3.5" />
               </button>
             </div>
-            <StateTab tier={tier} balance={balance} phase={phase} navigate={navigate} />
+            {/* Mobile tab bar */}
+            <div className="flex items-center border-b border-border/15 px-2 py-1.5 gap-0.5 bg-muted/20 shrink-0">
+              {TABS.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-semibold tracking-wide transition-colors relative",
+                      activeTab === tab.id
+                        ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
+                        : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
+                    )}
+                  >
+                    <Icon size={13} className={activeTab === tab.id ? "text-primary" : ""} />
+                    <span className="uppercase tracking-widest">{tab.label}</span>
+                    {tab.badge && (
+                      <span className={cn(
+                        "h-1.5 w-1.5 rounded-full",
+                        tab.id === "state" ? "bg-destructive animate-pulse" : "bg-primary animate-pulse"
+                      )} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            {/* Mobile tab content */}
+            <div className="flex-1 overflow-y-auto">
+              {activeTab === "state" && (
+                <StateTab tier={tier} balance={balance} phase={phase} navigate={navigate} />
+              )}
+              {activeTab === "runs" && (
+                <RunsTab
+                  steps={steps} phase={phase} elapsed={elapsed} progress={progress}
+                  isDone={isDone} isFailed={isFailed} isActive={isActive}
+                  consumedCredits={consumedCredits} totalCredits={totalCredits}
+                />
+              )}
+              {activeTab === "assets" && (
+                <AssetsTab outputs={outputs} onViewOutputs={onViewOutputs} />
+              )}
+              {activeTab === "progress" && (
+                <ProgressTab navigate={navigate} />
+              )}
+            </div>
           </div>
         </>
       )}

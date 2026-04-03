@@ -142,7 +142,10 @@ export function MobileBottomNav() {
   return (
     <>
       {/* Fixed bottom bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-border bg-background/95 backdrop-blur-md safe-area-bottom">
+      <nav className={cn(
+        "fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-border bg-background/95 backdrop-blur-md safe-area-bottom transition-transform duration-200",
+        location.pathname === "/home" && "translate-y-full pointer-events-none"
+      )}>
         <div className="flex items-center justify-around h-16 px-1">
           {BAR_ITEMS.map(({ path, icon: Icon, labelKey }) => {
             const active = isActive(path);
