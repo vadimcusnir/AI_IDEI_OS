@@ -169,20 +169,13 @@ export default function Home() {
   );
 
   const renderEmptyState = () => (
-    <div className="flex flex-col items-center justify-center min-h-[35vh] pt-6">
-      <div className="w-full text-center space-y-1.5 mb-5">
-        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-[-0.02em] leading-[1.15] text-foreground">
-          {cc.greeting},{" "}
-          <span className="text-[hsl(var(--gold-oxide))]">{cc.userName}</span>
-        </h1>
-        <p className="text-sm text-muted-foreground/70 max-w-md mx-auto leading-relaxed">
-          {cc.t("pages:home.what_do_you_want", { defaultValue: "What do you want to achieve?" })}
-        </p>
-      </div>
-      <div className="w-full max-w-2xl mx-auto" data-tour="intent-chips">
-        <IntentChips onSelect={(prompt) => { cc.setInput(prompt); cc.inputZoneRef.current?.focus(); }} />
-      </div>
-    </div>
+    <WelcomeScreen
+      onCommand={cc.handleCommand}
+      suggestions={cc.decisionSuggestions}
+      neuronCount={cc.totalNeurons}
+      episodeCount={cc.totalEpisodes}
+      balance={cc.balance}
+    />
   );
 
   return (
