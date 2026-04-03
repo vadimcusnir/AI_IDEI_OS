@@ -1339,6 +1339,54 @@ export type Database = {
           },
         ]
       }
+      automation_rules: {
+        Row: {
+          action_config: Json
+          action_type: string
+          condition: Json
+          created_at: string
+          description: string | null
+          fire_count: number
+          id: string
+          is_active: boolean
+          last_fired_at: string | null
+          name: string
+          trigger_event: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_config?: Json
+          action_type?: string
+          condition?: Json
+          created_at?: string
+          description?: string | null
+          fire_count?: number
+          id?: string
+          is_active?: boolean
+          last_fired_at?: string | null
+          name?: string
+          trigger_event?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_config?: Json
+          action_type?: string
+          condition?: Json
+          created_at?: string
+          description?: string | null
+          fire_count?: number
+          id?: string
+          is_active?: boolean
+          last_fired_at?: string | null
+          name?: string
+          trigger_event?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       automation_runs: {
         Row: {
           artifact_ids: string[] | null
