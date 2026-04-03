@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useChatHistory } from "@/hooks/useChatHistory";
-import { useExecutionStore, executionActions, type Message } from "@/stores/executionStore";
+import { useExecutionStore, executionActions, getExecutionState, type Message } from "@/stores/executionStore";
 import { useExecutionHistory } from "@/hooks/useExecutionHistory";
 import { useRealtimeSteps } from "@/hooks/useRealtimeSteps";
 import { useAgentDecisionEngine } from "@/hooks/useAgentDecisionEngine";
@@ -97,6 +97,15 @@ export function useCommandCenter() {
     },
   });
 
+  // ═══ Unified stop routine ═══
+  const stopActiveExecution = useCallback(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    executionEngine.stop();
+    executionActions.setLoading(false);
+    executionActions.setStreaming(false);
+  }, [executionEngine]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -105,13 +114,13 @@ export function useCommandCenter() {
         inputZoneRef.current?.focus();
       }
       if (e.key === "Escape") {
-        if (loading) { abortRef.current?.abort(); executionActions.setLoading(false); executionActions.setStreaming(false); }
+        if (loading || isStreaming) { stopActiveExecution(); }
         else if (showOutputs) setShowOutputs(false);
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [loading, showOutputs]);
+  }, [loading, isStreaming, showOutputs, stopActiveExecution]);
 
   // Load session on mount
   useEffect(() => {
@@ -122,12 +131,15 @@ export function useCommandCenter() {
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
-  // Auto-submit from ?q=
+  // Auto-submit from ?q= — CC-R02: actually execute, not just focus
   useEffect(() => {
     if (initialQ && user && sessionLoaded && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true;
       setSearchParams({}, { replace: true });
-      const timer = setTimeout(() => inputZoneRef.current?.focus(), 200);
+      // Defer to next tick so input state is settled
+      const timer = setTimeout(() => {
+        handleSubmit(true);
+      }, 100);
       return () => clearTimeout(timer);
     }
   }, [initialQ, user, sessionLoaded, setSearchParams]);
@@ -204,6 +216,10 @@ export function useCommandCenter() {
         executionActions.setLoading(true);
         executionActions.setStreaming(true);
 
+        // CC-R01: Persist AbortController before stream starts
+        const controller = new AbortController();
+        abortRef.current = controller;
+
         let fileContent = "";
         for (const file of files) {
           if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".csv") || file.name.endsWith(".json")) {
@@ -223,22 +239,26 @@ export function useCommandCenter() {
         }
 
         const contentWithFiles = rawInput + fileContent;
-        await executionEngine.streamAgentResponse(contentWithFiles, route, new AbortController().signal);
+        await executionEngine.streamAgentResponse(contentWithFiles, route, controller.signal);
+
+        // CC-R04: Read fresh state from store after stream completes, not stale closures
+        const freshState = getExecutionState();
+        const freshOutputs = freshState.outputs;
+        const freshExec = freshState.execution;
 
         executionActions.setStreaming(false);
         executionActions.setLoading(false);
 
-        const currentOutputs = store.outputs;
-        if (currentOutputs.length > 0) {
+        if (freshOutputs.length > 0) {
           setShowOutputs(true);
         }
         executionActions.completeExecution();
         setShowPostExecution(true);
 
         if (user) {
-          const startTime = execState.startedAt ? new Date(execState.startedAt).getTime() : Date.now();
-          logExecutionCompleted(user.id, execState.actionId, execState.intent, execState.totalCredits, currentOutputs.length, Date.now() - startTime);
-          persistRun({ execution: { ...execState, phase: "completed", completedAt: new Date().toISOString() }, outputCount: currentOutputs.length });
+          const startTime = freshExec.startedAt ? new Date(freshExec.startedAt).getTime() : Date.now();
+          logExecutionCompleted(user.id, freshExec.actionId, freshExec.intent, freshExec.totalCredits, freshOutputs.length, Date.now() - startTime);
+          persistRun({ execution: { ...freshExec, phase: "completed", completedAt: new Date().toISOString() }, outputCount: freshOutputs.length });
         }
       }
     } catch (e) {
@@ -254,7 +274,7 @@ export function useCommandCenter() {
   };
 
   // ═══ Handlers ═══
-  const handleStop = () => { executionEngine.stop(); };
+  const handleStop = useCallback(() => { stopActiveExecution(); }, [stopActiveExecution]);
 
   const clearChat = () => {
     newSession(); executionActions.reset();
