@@ -10,6 +10,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 function slugify(text: string): string {
   return text
@@ -70,6 +71,11 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":project-neurons", req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     // ── Auth ──
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {

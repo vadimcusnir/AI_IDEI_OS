@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -9,6 +10,11 @@ serve(async (req) => {
   }
 
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":customer-portal", req, { maxRequests: 30, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
 

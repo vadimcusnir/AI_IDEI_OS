@@ -10,6 +10,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const inputSchema = z.object({
   problem: z.string().min(10).max(3000),
@@ -25,6 +26,11 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":step-back-engine", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 

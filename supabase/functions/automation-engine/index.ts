@@ -10,6 +10,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const JOB_TYPES = [
   "recurring_extract",
@@ -70,7 +71,12 @@ Deno.serve(async (req: Request) => {
     });
     const { data: { user }, error: authError } = await userClient.auth.getUser(token);
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: "Unauthorized" }
+
+    // Rate limit guard
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

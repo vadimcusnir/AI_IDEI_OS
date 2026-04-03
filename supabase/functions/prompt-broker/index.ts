@@ -9,6 +9,7 @@
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 Deno.serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
@@ -18,6 +19,11 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":prompt-broker", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const { service_unit_id, user_inputs, user_id } = await req.json();
 
     if (!service_unit_id || !user_id) {

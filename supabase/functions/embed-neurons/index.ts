@@ -7,6 +7,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
@@ -24,6 +25,11 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":embed-neurons", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     // Auth — require authenticated user or internal secret
     const authHeader = req.headers.get("authorization") || "";
     const internalSecret = req.headers.get("x-internal-secret");

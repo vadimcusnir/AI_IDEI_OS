@@ -1615,6 +1615,10 @@ export type Database = {
           consumed_neurons: number
           current_multiplier: number
           id: number
+          kill_switch: boolean
+          kill_switch_activated_at: string | null
+          kill_switch_activated_by: string | null
+          kill_switch_reason: string | null
           llm_cost_per_credit: number
           margin_target: number
           monthly_capacity: number
@@ -1629,6 +1633,10 @@ export type Database = {
           consumed_neurons?: number
           current_multiplier?: number
           id?: number
+          kill_switch?: boolean
+          kill_switch_activated_at?: string | null
+          kill_switch_activated_by?: string | null
+          kill_switch_reason?: string | null
           llm_cost_per_credit?: number
           margin_target?: number
           monthly_capacity?: number
@@ -1643,6 +1651,10 @@ export type Database = {
           consumed_neurons?: number
           current_multiplier?: number
           id?: number
+          kill_switch?: boolean
+          kill_switch_activated_at?: string | null
+          kill_switch_activated_by?: string | null
+          kill_switch_reason?: string | null
           llm_cost_per_credit?: number
           margin_target?: number
           monthly_capacity?: number
@@ -4907,6 +4919,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      kill_switch_log: {
+        Row: {
+          action: string
+          activated_by: string
+          created_at: string
+          id: string
+          reason: string | null
+        }
+        Insert: {
+          action?: string
+          activated_by: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+        }
+        Update: {
+          action?: string
+          activated_by?: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+        }
+        Relationships: []
       }
       knowledge_assets: {
         Row: {
@@ -11051,6 +11087,7 @@ export type Database = {
       }
       check_cusnir_os_eligibility: { Args: { _user_id: string }; Returns: Json }
       check_i18n_coverage: { Args: { p_service_key: string }; Returns: Json }
+      check_kill_switch: { Args: never; Returns: boolean }
       check_login_attempts: {
         Args: {
           p_email: string
