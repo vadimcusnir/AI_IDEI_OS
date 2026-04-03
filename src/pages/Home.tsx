@@ -186,6 +186,8 @@ export default function Home() {
       <WelcomeModal />
       <GuidedTooltip tourId="home-command-center" steps={HOME_TOUR} delay={3000} />
       <SEOHead title={`${cc.t("pages:home.cockpit")} — AI-IDEI`} description={cc.t("pages:home.cockpit_desc")} />
+      <KeyboardShortcutsOverlay />
+      <OfflineBanner />
 
       <div className="flex-1 flex h-[calc(100vh-var(--header-height,56px))] overflow-hidden relative">
         {/* ═══ CENTER: Execution Surface ═══ */}
