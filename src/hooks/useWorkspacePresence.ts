@@ -14,7 +14,8 @@ interface PresenceUser {
  * Tracks online users in a workspace using Supabase Realtime Presence.
  */
 export function useWorkspacePresence(workspaceId?: string) {
-  const { user } = useAuth();
+  let user = null;
+  try { ({ user } = useAuth()); } catch { /* outside AuthProvider during HMR */ }
   const [onlineUsers, setOnlineUsers] = useState<PresenceUser[]>([]);
 
   const updatePresence = useCallback(() => {
