@@ -124,7 +124,7 @@ export default function PublicEntityPage() {
             AI-IDEI
           </Link>
           <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
-            <Link to="/auth">
+            <Link to={`/auth?redirect=${encodeURIComponent(`/knowledge/${slug}`)}`}>
               Conectează-te <ExternalLink className="h-3 w-3" />
             </Link>
           </Button>
