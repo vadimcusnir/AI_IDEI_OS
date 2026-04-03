@@ -582,6 +582,186 @@ export type Database = {
         }
         Relationships: []
       }
+      aias_agent_profiles: {
+        Row: {
+          agent_key: string
+          artifact_model: Json | null
+          avg_quality_score: number | null
+          canonical_schema: Json
+          certification_level: number
+          certified_at: string | null
+          compliance_score: number | null
+          created_at: string
+          display_name: string
+          id: string
+          input_contract: Json
+          is_certified: boolean | null
+          job_lifecycle: string[] | null
+          last_audit_at: string | null
+          output_contract: Json
+          scoring_dimensions: Json | null
+          service_unit_id: string | null
+          status: string
+          success_rate: number | null
+          total_executions: number | null
+          updated_at: string
+        }
+        Insert: {
+          agent_key: string
+          artifact_model?: Json | null
+          avg_quality_score?: number | null
+          canonical_schema?: Json
+          certification_level?: number
+          certified_at?: string | null
+          compliance_score?: number | null
+          created_at?: string
+          display_name: string
+          id?: string
+          input_contract?: Json
+          is_certified?: boolean | null
+          job_lifecycle?: string[] | null
+          last_audit_at?: string | null
+          output_contract?: Json
+          scoring_dimensions?: Json | null
+          service_unit_id?: string | null
+          status?: string
+          success_rate?: number | null
+          total_executions?: number | null
+          updated_at?: string
+        }
+        Update: {
+          agent_key?: string
+          artifact_model?: Json | null
+          avg_quality_score?: number | null
+          canonical_schema?: Json
+          certification_level?: number
+          certified_at?: string | null
+          compliance_score?: number | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          input_contract?: Json
+          is_certified?: boolean | null
+          job_lifecycle?: string[] | null
+          last_audit_at?: string | null
+          output_contract?: Json
+          scoring_dimensions?: Json | null
+          service_unit_id?: string | null
+          status?: string
+          success_rate?: number | null
+          total_executions?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aias_agent_profiles_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aias_output_contracts: {
+        Row: {
+          agent_profile_id: string | null
+          auto_library: boolean | null
+          context_schema: Json
+          created_at: string
+          execution_schema: Json
+          export_formats: string[] | null
+          id: string
+          quality_gate: Json | null
+          verdict_schema: Json
+        }
+        Insert: {
+          agent_profile_id?: string | null
+          auto_library?: boolean | null
+          context_schema?: Json
+          created_at?: string
+          execution_schema?: Json
+          export_formats?: string[] | null
+          id?: string
+          quality_gate?: Json | null
+          verdict_schema?: Json
+        }
+        Update: {
+          agent_profile_id?: string | null
+          auto_library?: boolean | null
+          context_schema?: Json
+          created_at?: string
+          execution_schema?: Json
+          export_formats?: string[] | null
+          id?: string
+          quality_gate?: Json | null
+          verdict_schema?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aias_output_contracts_agent_profile_id_fkey"
+            columns: ["agent_profile_id"]
+            isOneToOne: false
+            referencedRelation: "aias_agent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aias_routing_metadata: {
+        Row: {
+          agent_profile_id: string | null
+          block_reason: string | null
+          blocked: boolean | null
+          certification_check: boolean | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          request_intent: string | null
+          routing_confidence: number | null
+          schema_valid: boolean | null
+          score_check_passed: boolean | null
+          service_unit_id: string | null
+          user_id: string
+        }
+        Insert: {
+          agent_profile_id?: string | null
+          block_reason?: string | null
+          blocked?: boolean | null
+          certification_check?: boolean | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          request_intent?: string | null
+          routing_confidence?: number | null
+          schema_valid?: boolean | null
+          score_check_passed?: boolean | null
+          service_unit_id?: string | null
+          user_id: string
+        }
+        Update: {
+          agent_profile_id?: string | null
+          block_reason?: string | null
+          blocked?: boolean | null
+          certification_check?: boolean | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          request_intent?: string | null
+          routing_confidence?: number | null
+          schema_valid?: boolean | null
+          score_check_passed?: boolean | null
+          service_unit_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aias_routing_metadata_agent_profile_id_fkey"
+            columns: ["agent_profile_id"]
+            isOneToOne: false
+            referencedRelation: "aias_agent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analytics_events: {
         Row: {
           created_at: string
