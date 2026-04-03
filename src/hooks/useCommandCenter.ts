@@ -302,6 +302,7 @@ export function useCommandCenter() {
     setSavingAllOutputs(true);
     const count = await persistOutputsBatch(outputs.map(o => ({ title: o.title, content: o.content, type: o.type })), [execState.intent]);
     setSavingAllOutputs(false);
+    trackOutputEngagement("save_all", outputs.length);
     toast[count > 0 ? "success" : "error"](count > 0 ? `Saved ${count} outputs as assets` : "Failed to save outputs");
   };
 
