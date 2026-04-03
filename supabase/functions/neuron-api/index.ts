@@ -100,7 +100,15 @@ function parsePath(url: URL): string[] {
 }
 
 Deno.serve(async (req) => {
+  _currentReq = req;
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
+
+  // Rate limit (IP + API key based)
+  const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const apiKey = req.headers.get("x-api-key") || "";
+  const limitKey = apiKey ? `neuron-api:${apiKey.slice(0, 12)}` : `neuron-api:${clientIp}`;
+  const rateLimited = await rateLimitGuard(limitKey, req, { maxRequests: 60, windowSeconds: 60 }, getCorsHeaders(req));
+  if (rateLimited) return rateLimited;
 
   const url = new URL(req.url);
   const segments = parsePath(url);
