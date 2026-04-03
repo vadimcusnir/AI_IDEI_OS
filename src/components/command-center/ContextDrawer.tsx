@@ -78,7 +78,6 @@ export function ContextDrawer({
     { id: "state", label: "State", icon: SigilEye, badge: balance < 200 },
     { id: "runs", label: "Runs", icon: SigilBolt, badge: isActive },
     { id: "assets", label: "Assets", icon: SigilCrystal },
-    { id: "progress", label: "Progress", icon: SigilSpiral },
   ];
 
   // Collapsed icon strip

@@ -454,20 +454,6 @@ export function AppSidebar() {
               />
             </div>
 
-            {/* Upgrade CTA */}
-            {tier !== "vip" && tier !== "pro" && (
-              <button
-                onClick={() => navigate("/credits")}
-                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/15 hover:border-primary/30 transition-all group"
-              >
-                <Rocket className="h-3.5 w-3.5 text-primary shrink-0" />
-                <div className="flex-1 text-left">
-                  <p className="text-[11px] font-semibold text-primary">Upgrade to PRO</p>
-                  <p className="text-[9px] text-muted-foreground">25% discount + batch</p>
-                </div>
-                <ChevronRight className="h-3 w-3 text-primary/40 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            )}
           </div>
         )}
 
