@@ -181,6 +181,9 @@ export function useCommandCenter() {
     setShowPostExecution(false);
     setPermissionBlock(null);
 
+    // CC-V02: Track submission
+    trackCommandSubmitted(rawInput, files.length, autoExec);
+
     try {
       const { route, isExecution } = await executionEngine.execute(rawInput, files, { autoExecute: autoExec });
 
