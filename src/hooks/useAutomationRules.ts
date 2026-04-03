@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import type { Json } from "@/integrations/supabase/types";
 
 export const TRIGGER_EVENTS = [
   { key: "low_credits", label: "Credite scăzute", description: "Când soldul scade sub un prag" },
