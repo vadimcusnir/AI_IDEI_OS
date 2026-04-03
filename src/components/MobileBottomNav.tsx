@@ -83,7 +83,7 @@ const MENU_SECTIONS: MenuSection[] = [
     items: [
       { path: "/credits", icon: Coins, label: "Wallet" },
       { path: "/pricing", icon: Wallet, label: "Pricing" },
-      { path: "/analytics-dashboard", icon: BarChart3, label: "Usage" },
+      { path: "/wallet", icon: BarChart3, label: "Usage" },
     ],
   },
   {
