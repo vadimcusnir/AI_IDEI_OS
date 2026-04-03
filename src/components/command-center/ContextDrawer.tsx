@@ -355,23 +355,6 @@ function StateTab({ tier, balance, phase, navigate }: {
         )}
       </div>
 
-      {/* Cusnir_OS teaser */}
-      <div className="rounded-xl border border-border/10 p-4 bg-card/30 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
-        <div className="flex items-center gap-2.5 mb-2 relative">
-          <SigilLock size={14} className="text-muted-foreground/25" />
-          <span className="text-[11px] font-bold text-muted-foreground/50 tracking-wide">Cusnir_OS</span>
-        </div>
-        <p className="text-[10px] text-muted-foreground/30 leading-[1.6] relative">
-          Advanced cognitive infrastructure. Requires 11 months consecutive VIP.
-        </p>
-        <button
-          onClick={() => navigate("/cusnir-os")}
-          className="mt-3 flex items-center gap-1.5 text-[10px] text-muted-foreground/30 hover:text-foreground transition-colors relative"
-        >
-          Learn more <ChevronRight className="h-3 w-3" />
-        </button>
-      </div>
     </div>
   );
 }
