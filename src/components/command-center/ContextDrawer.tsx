@@ -24,7 +24,7 @@ import { useGamification } from "@/hooks/useGamification";
 import { Button } from "@/components/ui/button";
 import type { ExecutionState, TaskStep, OutputItem } from "@/stores/executionStore";
 
-type RightTab = "state" | "runs" | "assets" | "progress";
+type RightTab = "state" | "runs" | "assets";
 
 interface ContextDrawerProps {
   execution: ExecutionState;
