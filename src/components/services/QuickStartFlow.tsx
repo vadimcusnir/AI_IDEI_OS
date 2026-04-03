@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 const STEPS = [
   { num: 1, label: "Spune ce vrei", desc: "Scrie obiectivul tău", icon: Target, time: "5s" },
-  { num: 2, label: "Alege sistemul", desc: "AI recomandă top 3 MMS", icon: Sparkles, time: "10s" },
+  { num: 2, label: "Alege sistemul", desc: "AI recomandă top 3 sisteme", icon: Sparkles, time: "10s" },
   { num: 3, label: "Rulează", desc: "Primești 50+ deliverables", icon: Zap, time: "<2min" },
 ];
 
@@ -76,11 +76,11 @@ export function QuickStartFlow({ onStart }: QuickStartFlowProps) {
       <div className="flex items-center justify-center gap-4 mt-3 text-[10px] text-muted-foreground">
         <span className="flex items-center gap-1">
           <CheckCircle2 className="h-3 w-3 text-primary/50" />
-          1200+ formule OTOS
+          1200+ acțiuni AI
         </span>
         <span className="flex items-center gap-1">
           <CheckCircle2 className="h-3 w-3 text-primary/50" />
-          260+ sisteme MMS
+          260+ sisteme
         </span>
         <span className="flex items-center gap-1">
           <CheckCircle2 className="h-3 w-3 text-primary/50" />

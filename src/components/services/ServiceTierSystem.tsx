@@ -31,27 +31,27 @@ interface TierConfig {
 const TIERS: TierConfig[] = [
   {
     key: "otos",
-    label: "OTOS",
-    fullLabel: "One-Time Output Systems",
-    tagline: "Formule Atomice",
-    description: "Primitive de execuție. Fiecare OTOS produce un singur output determinist. Sunt blocurile fundamentale din care se construiesc sistemele mai mari.",
+    label: "Action",
+    fullLabel: "Quick Actions",
+    tagline: "Acțiuni Rapide",
+    description: "Fiecare acțiune produce un singur output determinist. Sunt blocurile fundamentale din care se construiesc sistemele mai mari.",
     icon: Atom,
     count: "1200+",
-    access: "Indirect (via MMS)",
-    badge: "ATOMIC",
+    access: "Indirect (via Systems)",
+    badge: "QUICK",
     features: [
-      "Output determinist per formulă",
+      "Output determinist per acțiune",
       "Execuție < 30s",
       "Cost: 2-50 NEURONS",
-      "Auto-selectate de MMS engine",
+      "Auto-selectate de engine",
     ],
   },
   {
     key: "mms",
-    label: "MMS",
-    fullLabel: "Multi-Module Systems",
+    label: "System",
+    fullLabel: "Execution Systems",
     tagline: "Sisteme de Producție",
-    description: "Combină OTOS-uri într-un pipeline inteligent care produce 10-50+ livrabile. Acesta este stratul principal cu care interacționezi.",
+    description: "Combină acțiuni într-un pipeline inteligent care produce 10-50+ livrabile. Acesta este stratul principal cu care interacționezi.",
     icon: Layers,
     count: "260+",
     access: "Direct",
@@ -65,19 +65,19 @@ const TIERS: TierConfig[] = [
   },
   {
     key: "lcss",
-    label: "LCSS",
-    fullLabel: "Long-Cycle Strategic Systems",
-    tagline: "Sisteme Operaționale",
-    description: "Orchestrare pe termen lung cu feedback loops. LCSS-urile rulează continuu, învață din rezultate și ajustează automat execuția.",
+    label: "Program",
+    fullLabel: "Growth Programs",
+    tagline: "Programe de Creștere",
+    description: "Orchestrare pe termen lung cu feedback loops. Programele rulează continuu, învață din rezultate și ajustează automat execuția.",
     icon: Crown,
-    count: "3",
+    count: "5",
     access: "Pro+",
     badge: "PREMIUM",
     features: [
       "Feedback loops automate",
       "Auto-ajustare execuție",
       "Monitorizare continuă",
-      "Acces: Pro / VIP / Cusnir_OS",
+      "Acces: Pro / VIP",
     ],
   },
 ];
@@ -116,7 +116,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
             >
               <button
                 onClick={() => {
-                  if (tier.key === "otos") return; // OTOS not directly accessible
+                  if (tier.key === "otos") return; // Actions not directly accessible
                   onTierChange(isActive ? null : tier.key);
                 }}
                 className={cn(
@@ -207,11 +207,11 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
 
       {/* Flow visualization */}
       <div className="flex items-center justify-center gap-2 py-2 text-[10px] text-muted-foreground">
-        <span className="bg-muted/50 px-2 py-1 rounded-full">OTOS (atomic)</span>
+        <span className="bg-muted/50 px-2 py-1 rounded-full">Actions (quick)</span>
         <ArrowRight className="h-3 w-3" />
-        <span className="bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">MMS (produse)</span>
+        <span className="bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">Systems (products)</span>
         <ArrowRight className="h-3 w-3" />
-        <span className="bg-amber-500/10 text-amber-600 px-2 py-1 rounded-full">LCSS (sisteme)</span>
+        <span className="bg-amber-500/10 text-amber-600 px-2 py-1 rounded-full">Programs (growth)</span>
       </div>
     </div>
   );

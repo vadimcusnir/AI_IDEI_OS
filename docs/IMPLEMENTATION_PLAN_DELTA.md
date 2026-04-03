@@ -24,7 +24,7 @@
 | Admin Dashboard | Paginare, logs reale, safety gates | ✅ COMPLET |
 | **Service Contract System** | service_units (120), prompt_vault (120), deliverable_contracts (120), service_release_log (120) | ✅ COMPLET |
 | **Execution Kernel** | intent_map (6 intents), mms_nodes (118), mms_edges (98), intent-router EF, prompt-broker EF, mms-auto-composer EF | ✅ COMPLET |
-| **User Surface Translation** | OTOS→Action, MMS→System, LCSS→Program în UI | 🔴 NEEXISTENT |
+| **User Surface Translation** | OTOS→Action, MMS→System, LCSS→Program în UI + /programs route + nav | ✅ COMPLET |
 | **Admin Kernel Tab** | CRUD pe service_units, prompt_vault, release gate | 🔴 NEEXISTENT |
 | **Admin Runtime Tab** | 6 panouri: router, jobs, prompt broker, artifacts, pricing, capacity | 🔴 NEEXISTENT |
 | **Command Layer** | Decision engine, priority engine, command types | 🔴 NEEXISTENT |

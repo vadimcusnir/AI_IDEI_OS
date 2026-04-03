@@ -119,6 +119,7 @@ const NotebookDetail = lazyRetry(() => import("./pages/NotebookDetail"));
 const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngine"));
 const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
+const Programs = lazyRetry(() => import("./pages/Programs"));
 const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
 const MasterAgent = lazyRetry(() => import("./pages/MasterAgent"));
 const AutomationTemplates = lazyRetry(() => import("./pages/AutomationTemplates"));
@@ -224,6 +225,7 @@ const App = () => (
                 <Route path="/dashboard" element={<Navigate to="/home" replace />} />
                 <Route path="/extractor" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Extractor failed to load"><Extractor /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/services" element={<AppLayout><ErrorBoundary fallbackTitle="Services failed to load"><Services /></ErrorBoundary></AppLayout>} />
+                <Route path="/programs" element={<AppLayout><ErrorBoundary fallbackTitle="Programs failed to load"><Programs /></ErrorBoundary></AppLayout>} />
                 <Route path="/run/:serviceKey" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Service runner failed"><RunService /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/jobs" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Jobs failed to load"><Jobs /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/jobs/:id" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Job detail failed"><JobDetail /></ErrorBoundary></AppLayout></ProtectedRoute>} />
