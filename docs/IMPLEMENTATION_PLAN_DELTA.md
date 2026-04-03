@@ -275,5 +275,5 @@ naming_translation:
 ## STARE CURENTĂ
 
 - **Fazele 0-3**: ✅ COMPLETATE (curățare DB, scoring OTOS, manifeste, mode panels, admin paginare+logs+safety)
-- **Faza 4**: 🔴 URMĂTOAREA — Service Contract System
-- **Fazele 5-12**: 🔴 PLANIFICATE
+- **Fazele 4-11**: ✅ COMPLETATE (Contract System, Execution Kernel, User Translation, Admin, Command Layer, i18n+Gates, AIAS, Automation & Distribution)
+- **Faza 12**: 🔴 URMĂTOAREA — Cusnir OS Kernel
