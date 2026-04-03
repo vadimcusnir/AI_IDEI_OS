@@ -152,9 +152,9 @@ const App = () => (
               <PostAuthRedirector />
               <Routes>
                 {/* Public routes — accessible without login */}
-                <Route path="/" element={<Landing />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/" element={<ErrorBoundary fallbackTitle="Landing failed to load"><Landing /></ErrorBoundary>} />
+                <Route path="/auth" element={<ErrorBoundary fallbackTitle="Auth failed to load"><Auth /></ErrorBoundary>} />
+                <Route path="/reset-password" element={<ErrorBoundary fallbackTitle="Reset password failed"><ResetPassword /></ErrorBoundary>} />
                 <Route path="/links" element={<AppLayout><ErrorBoundary fallbackTitle="Links failed to load"><Links /></ErrorBoundary></AppLayout>} />
                 <Route path="/architecture" element={<AppLayout><ErrorBoundary fallbackTitle="Architecture failed to load"><Architecture /></ErrorBoundary></AppLayout>} />
                 <Route path="/u/:username" element={<ErrorBoundary fallbackTitle="Profile failed to load"><PublicUserProfile /></ErrorBoundary>} />
