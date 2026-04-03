@@ -39,6 +39,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   usePageTracking();
   useDailyActivity();
   useKeyboardNav();
+  useAdoptionTracker();
 
   const prefetched = useRef(false);
   useEffect(() => {
