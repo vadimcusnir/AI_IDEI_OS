@@ -117,6 +117,15 @@ export function TemplateMarketplace({ onSelect }: TemplateMarketplaceProps) {
       price_neurons: template.price_neurons,
     });
 
+    // SETTLE neurons after successful purchase
+    if (template.price_neurons > 0) {
+      await supabase.rpc("settle_neurons", {
+        _user_id: user.id,
+        _amount: template.price_neurons,
+        _description: `SETTLE: Template: ${template.title}`,
+      });
+    }
+
     await supabase
       .from("prompt_templates")
       .update({ sales_count: (template.sales_count || 0) + 1 })
