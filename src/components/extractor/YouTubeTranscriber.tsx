@@ -136,11 +136,17 @@ export function YouTubeTranscriber() {
         }
       );
 
-      setProgress(80);
+      setStage("transcribing_audio");
+      setProgress(60);
       const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || "Transcription failed");
+      if (!resp.ok) {
+        const failureClass = data.failure_class || "unknown";
+        const retryable = data.retryable || false;
+        throw new Error(data.error || `Transcription failed (${failureClass})${retryable ? " — retryable" : ""}`);
+      }
 
-      setProgress(100);
+      setStage("detecting_language");
+      setProgress(90);
 
       // Fetch updated episode for title
       const { data: updated } = await supabase
@@ -149,14 +155,19 @@ export function YouTubeTranscriber() {
         .eq("id", ep.id)
         .single();
 
+      setProgress(100);
+
       setTranscript({
         text: data.transcript || updated?.transcript || "",
         language: data.language || updated?.language || "unknown",
         segments: data.segments || [],
         word_count: (data.transcript || updated?.transcript || "").split(/\s+/).length,
-        source: data.source || "subtitles",
+        source: data.source || "audio_stt",
         title: updated?.title || "YouTube Transcript",
         duration_seconds: data.duration_seconds || updated?.duration_seconds || null,
+        speakers: data.speakers || [],
+        has_diarization: data.has_diarization || false,
+        confidence: data.confidence,
       });
 
       setStage("ready");
