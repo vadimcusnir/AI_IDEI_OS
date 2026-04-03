@@ -119,6 +119,7 @@ const NotebookDetail = lazyRetry(() => import("./pages/NotebookDetail"));
 const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngine"));
 const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
+const Programs = lazyRetry(() => import("./pages/Programs"));
 const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
 const MasterAgent = lazyRetry(() => import("./pages/MasterAgent"));
 const AutomationTemplates = lazyRetry(() => import("./pages/AutomationTemplates"));
