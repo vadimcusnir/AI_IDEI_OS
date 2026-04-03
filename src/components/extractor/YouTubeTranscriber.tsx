@@ -500,7 +500,7 @@ ${safeBody}
                       )}
                     </div>
                     <span className="text-[9px] text-muted-foreground/40 flex items-center gap-1">
-                      <Subtitles className="h-2.5 w-2.5" /> Auto-detectare limbă
+                      <Subtitles className="h-2.5 w-2.5" /> Audio STT + diarizare
                     </span>
                   </div>
 
