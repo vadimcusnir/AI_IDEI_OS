@@ -107,7 +107,6 @@ Deno.serve(async (req) => {
       role: i === 0 ? "input" : i === selected.length - 1 ? "output" : "processor",
       neurons_cost: otos.neurons_cost || 20,
       mechanism: otos.mechanism,
-      single_output: otos.single_output,
     }));
 
     const edges = nodes.slice(0, -1).map((_, i) => ({
