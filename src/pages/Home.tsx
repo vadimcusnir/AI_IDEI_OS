@@ -24,6 +24,9 @@ import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
 import { IntentChips, SystemRecommendations, matchIntentToSystems, type MMSystem } from "@/components/command-center/IntentSystems";
 import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
+import { KeyboardShortcutsOverlay } from "@/components/command-center/KeyboardShortcutsOverlay";
+import { OfflineBanner } from "@/components/command-center/OfflineBanner";
+import { SessionHistoryPanel } from "@/components/command-center/SessionHistoryPanel";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
@@ -183,6 +186,8 @@ export default function Home() {
       <WelcomeModal />
       <GuidedTooltip tourId="home-command-center" steps={HOME_TOUR} delay={3000} />
       <SEOHead title={`${cc.t("pages:home.cockpit")} — AI-IDEI`} description={cc.t("pages:home.cockpit_desc")} />
+      <KeyboardShortcutsOverlay />
+      <OfflineBanner />
 
       <div className="flex-1 flex h-[calc(100vh-var(--header-height,56px))] overflow-hidden relative">
         {/* ═══ CENTER: Execution Surface ═══ */}
