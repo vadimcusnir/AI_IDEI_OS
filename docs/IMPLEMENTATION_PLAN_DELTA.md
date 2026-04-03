@@ -31,8 +31,8 @@
 | **Admin Command Tab** | Strategic suggestions, priority scoring, warnings, system analysis | ✅ COMPLET |
 | **Admin Analytics Extended** | Revenue per level, neurons burn, intent funnel, roles/mechanisms | ✅ COMPLET |
 | **Command Layer** | command_decisions, decision_pipeline_stages, command_types (5), command-engine EF, CommandPanel UI | ✅ COMPLET |
-| **i18n RU** | Limba rusă pe suprafețe publice | 🔴 NEEXISTENT |
-| **Release Gates** | Validare automată atomicitate + dedup + Root2 + schema | 🔴 NEEXISTENT |
+| **i18n RU** | 2357+ chei EN/RO/RU la paritate 100%, +programs +command_panel keys | ✅ COMPLET |
+| **Release Gates** | validate_service_release() DB fn (6 checks: atomicity, dedup, schema, monetization, root2, score≥0.65) + check_i18n_coverage() | ✅ COMPLET |
 | **AIAS Infiltration** | Structured inputs, output contracts, agent certification | 🔴 NEEXISTENT |
 | **Ruta /programs** | LCSS expuse ca Programs pentru user | 🔴 NEEXISTENT |
 
