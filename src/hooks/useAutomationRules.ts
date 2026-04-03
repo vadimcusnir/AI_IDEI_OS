@@ -77,10 +77,13 @@ export function useAutomationRules() {
   });
 
   const updateRule = useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<AutomationRule> & { id: string }) => {
+    mutationFn: async ({ id, condition, action_config, ...updates }: Partial<AutomationRule> & { id: string }) => {
+      const payload: Record<string, unknown> = { ...updates, updated_at: new Date().toISOString() };
+      if (condition !== undefined) payload.condition = condition as Json;
+      if (action_config !== undefined) payload.action_config = action_config as Json;
       const { error } = await supabase
         .from("automation_rules")
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update(payload)
         .eq("id", id);
       if (error) throw error;
     },
