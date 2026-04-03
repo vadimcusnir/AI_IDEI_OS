@@ -185,8 +185,13 @@ export default function Auth() {
         // Reset client tracker on success
         loginAttemptTracker.delete(trimmedEmail);
         await logSecurityEvent("login_success", { email: trimmedEmail });
-        const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
-        navigate(count && count > 0 ? "/home" : "/onboarding");
+        // Redirect to original destination or fallback
+        if (redirectTarget) {
+          navigate(redirectTarget, { replace: true });
+        } else {
+          const { count } = await supabase.from("neurons").select("id", { count: "exact", head: true });
+          navigate(count && count > 0 ? "/home" : "/onboarding", { replace: true });
+        }
       }
     }
     setLoading(false);
