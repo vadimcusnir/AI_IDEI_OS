@@ -92,7 +92,7 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: Settings,
     items: [
       { path: "/profile", icon: User, label: "Profile" },
-      { path: "/workspace-settings", icon: Settings, label: "Workspace" },
+      { path: "/workspace", icon: Settings, label: "Workspace" },
       { path: "/docs", icon: Code, label: "API & Docs" },
       { path: "/data-privacy", icon: Shield, label: "Data Privacy" },
     ],
