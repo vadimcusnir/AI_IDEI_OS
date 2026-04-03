@@ -10389,6 +10389,7 @@ export type Database = {
         Returns: Json
       }
       check_cusnir_os_eligibility: { Args: { _user_id: string }; Returns: Json }
+      check_i18n_coverage: { Args: { p_service_key: string }; Returns: Json }
       check_login_attempts: {
         Args: {
           p_email: string
@@ -10722,6 +10723,10 @@ export type Database = {
       }
       validate_profile_guardrails: {
         Args: { _profile_id: string }
+        Returns: Json
+      }
+      validate_service_release: {
+        Args: { p_service_unit_id: string }
         Returns: Json
       }
       vip_advance_month: { Args: { _user_id: string }; Returns: Json }
