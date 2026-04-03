@@ -374,6 +374,7 @@ export function useCommandCenter() {
 
   const handleEconomicCancel = () => {
     setShowEconomicGate(false);
+    trackEconomicGate("cancel", balance, execState.totalCredits);
     if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount);
     executionActions.reset();
   };
