@@ -241,27 +241,40 @@ export function EpisodeCard({
           )}
 
           {/* Error state */}
-          {ep.status === "error" && (
-            <div className="bg-destructive/5 border border-destructive/20 rounded-lg px-4 py-3 space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="h-6 w-6 rounded-full bg-destructive/10 flex items-center justify-center shrink-0"><X className="h-3.5 w-3.5 text-destructive" /></div>
-                <div>
-                  <p className="text-xs font-medium text-destructive">Processing failed</p>
-                  <p className="text-[10px] text-muted-foreground">{ep.metadata?.error || "An error occurred during transcription or processing."}</p>
+          {ep.status === "error" && (() => {
+            const errorMeta = ep.metadata?.error_detail || {};
+            const errorCode = errorMeta.code || "UNKNOWN";
+            const errorStage = errorMeta.stage || (ep.metadata?.error?.includes("Transcription") ? "transcription" : "processing");
+            const errorMsg = errorMeta.explanation || ep.metadata?.error || "An error occurred.";
+            const retryable = errorMeta.retryable !== false && !!ep.source_url;
+            const userAction = errorMeta.user_action || (retryable ? "Retry transcription or paste transcript manually." : "Paste the transcript manually.");
+            
+            return (
+              <div className="bg-destructive/5 border border-destructive/20 rounded-lg px-4 py-3 space-y-2">
+                <div className="flex items-start gap-2">
+                  <div className="h-6 w-6 rounded-full bg-destructive/10 flex items-center justify-center shrink-0 mt-0.5"><X className="h-3.5 w-3.5 text-destructive" /></div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-medium text-destructive">Failed at: {errorStage}</p>
+                      <span className="text-[9px] font-mono text-destructive/60 bg-destructive/10 px-1.5 py-0.5 rounded">{errorCode}</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{errorMsg}</p>
+                    <p className="text-[10px] text-foreground/70 mt-1 font-medium">{userAction}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  {retryable && (
+                    <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => actions.retryTranscription(ep)} disabled={isTranscribing}>
+                      {isTranscribing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Globe className="h-3 w-3" />} Retry Transcription
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => actions.startEditTranscript(ep)}>
+                    <Pencil className="h-3 w-3" /> Paste Transcript Manually
+                  </Button>
                 </div>
               </div>
-              <div className="flex items-center gap-2 pt-1">
-                {ep.source_url && (
-                  <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => actions.retryTranscription(ep)} disabled={isTranscribing}>
-                    {isTranscribing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Globe className="h-3 w-3" />} Retry Transcription
-                  </Button>
-                )}
-                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => actions.startEditTranscript(ep)}>
-                  <Pencil className="h-3 w-3" /> Paste Transcript Manually
-                </Button>
-              </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Upload audio */}
           {needsTranscript && ep.status !== "error" && !isEditingTranscript && (

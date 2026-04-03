@@ -362,9 +362,26 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
         return;
       }
       
-      toast.error(msg);
+      // Classify error stage based on current pipeline stage
+      const failedStage = stage !== "idle" ? stage : "source";
+      const errorCode = msg.includes("Transcription") ? "TRANSCRIPTION_FAILED"
+        : msg.includes("Upload") ? "UPLOAD_FAILED"
+        : msg.includes("Extraction") ? "EXTRACTION_FAILED"
+        : msg.includes("episode") ? "EPISODE_CREATE_FAILED"
+        : "PIPELINE_FAILED";
+      
+      const retryable = ["TRANSCRIPTION_FAILED", "PIPELINE_FAILED"].includes(errorCode);
+      const userAction = retryable 
+        ? "You can retry or paste the transcript manually."
+        : errorCode === "UPLOAD_FAILED" 
+          ? "Check the file and try again."
+          : "Try a different source or paste content directly.";
+
+      toast.error(`${failedStage}: ${msg}`, { duration: 6000 });
+      console.error(`[Extractor] ${errorCode} at stage=${failedStage}:`, msg);
+      
       setStage("error");
-      setTimeout(() => setStage("idle"), 3000);
+      setTimeout(() => setStage("idle"), 4000);
     }
   };
 
