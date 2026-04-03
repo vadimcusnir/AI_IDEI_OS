@@ -23,15 +23,14 @@ Deno.serve(async (req) => {
     });
     const { data: { user }, error: authError } = await userClient.auth.getUser();
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
 
     // Rate limit guard
     const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 30, windowSeconds: 60 }, getCorsHeaders(req));
     if (rateLimited) return rateLimited;
-), {
-        status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
 
     // ── Check admin role ──
     const supabase = createClient(supabaseUrl, serviceKey);
