@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Clock, CheckCircle, XCircle, Loader2, Copy, ExternalLink, Eye, Lock } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, XCircle, Loader2, Copy, ExternalLink, Eye, Lock, RotateCcw, Ban } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { SEOHead } from "@/components/SEOHead";
