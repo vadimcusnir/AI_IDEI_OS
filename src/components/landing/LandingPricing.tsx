@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
-const FEATURED_INDEX = 2; // Pro plan
+const FEATURED_INDEX = 1; // Pro plan (index 1 in 3-tier: Free/Pro/VIP)
 
 interface Props {
   ctaAction: () => void;
