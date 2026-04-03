@@ -128,9 +128,7 @@ const SYSTEM_MAP: NavGroup[] = [
     icon: Wallet,
     authOnly: true,
     items: [
-      { label: "Wallet", to: "/credits", icon: Coins, controlId: "nav.credits" },
-      { label: "Pricing", to: "/pricing", icon: Wallet, controlId: "nav.pricing" },
-      { label: "Usage", to: "/wallet", icon: BarChart3, controlId: "nav.usage" },
+      { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
     ],
   },
   // ─── CONTROL ───
