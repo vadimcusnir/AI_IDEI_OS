@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 const STEPS = [
   { num: 1, label: "Spune ce vrei", desc: "Scrie obiectivul tău", icon: Target, time: "5s" },
-  { num: 2, label: "Alege sistemul", desc: "AI recomandă top 3 MMS", icon: Sparkles, time: "10s" },
+  { num: 2, label: "Alege sistemul", desc: "AI recomandă top 3 sisteme", icon: Sparkles, time: "10s" },
   { num: 3, label: "Rulează", desc: "Primești 50+ deliverables", icon: Zap, time: "<2min" },
 ];
 
