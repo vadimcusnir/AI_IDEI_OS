@@ -342,7 +342,13 @@ export function useCommandCenter() {
   // ═══ Derived ═══
   const isEmptyState = messages.length === 0 && !loading;
   const hour = new Date().getHours();
-  const greeting = hour < 6 ? "Noapte bună" : hour < 12 ? "Bună dimineața" : hour < 18 ? "Bună ziua" : "Bună seara";
+  const greeting = hour < 6
+    ? t("common:greeting_night", { defaultValue: "Good night" })
+    : hour < 12
+    ? t("common:greeting_morning", { defaultValue: "Good morning" })
+    : hour < 18
+    ? t("common:greeting_afternoon", { defaultValue: "Good afternoon" })
+    : t("common:greeting_evening", { defaultValue: "Good evening" });
   const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
   const durationSeconds =
     execState.startedAt && execState.completedAt
