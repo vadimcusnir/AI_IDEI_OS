@@ -289,6 +289,11 @@ export default function AdminDashboard() {
             <TabsContent value="root2"><Suspense fallback={<TabLoader />}><Root2PricingTab /></Suspense></TabsContent>
             <TabsContent value="llm-index"><Suspense fallback={<TabLoader />}><LLMIndexationTab /></Suspense></TabsContent>
             <TabsContent value="blog"><Suspense fallback={<TabLoader />}><AdminBlogTab /></Suspense></TabsContent>
+            <TabsContent value="kernel"><Suspense fallback={<TabLoader />}><AdminKernelTab /></Suspense></TabsContent>
+            <TabsContent value="runtime"><Suspense fallback={<TabLoader />}><AdminRuntimeTab /></Suspense></TabsContent>
+            <TabsContent value="compliance-audit"><Suspense fallback={<TabLoader />}><AdminComplianceTab /></Suspense></TabsContent>
+            <TabsContent value="command"><Suspense fallback={<TabLoader />}><AdminCommandTab /></Suspense></TabsContent>
+            <TabsContent value="analytics-ext"><Suspense fallback={<TabLoader />}><AdminAnalyticsExtendedTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
