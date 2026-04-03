@@ -621,25 +621,6 @@ function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
       </div>
 
       {/* Section 5: Cusnir_OS Unlock Progress */}
-      <div className="rounded-xl border border-border/10 p-4 bg-card/20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent" />
-        <div className="flex items-center gap-2.5 mb-2.5 relative">
-          <SigilLock size={14} className="text-muted-foreground/20" />
-          <span className="text-[11px] font-bold text-muted-foreground/40 tracking-wide">Cusnir_OS</span>
-        </div>
-        <div className="h-1.5 bg-muted/15 rounded-full overflow-hidden mb-2 relative">
-          <div className="h-full rounded-full bg-muted-foreground/8" style={{ width: "0%" }} />
-        </div>
-        <div className="flex items-center justify-between relative">
-          <span className="text-[9px] text-muted-foreground/20 tabular-nums font-mono">0/11 months</span>
-          <button
-            onClick={() => navigate("/cusnir-os")}
-            className="text-[9px] text-muted-foreground/25 hover:text-foreground transition-colors font-medium"
-          >
-            Details →
-          </button>
-        </div>
-      </div>
 
       {/* Level perks */}
       <div className="space-y-1.5">
