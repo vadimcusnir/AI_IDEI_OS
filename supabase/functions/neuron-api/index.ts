@@ -1,10 +1,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+
+let _currentReq: Request | null = null;
 
 function json(data: unknown, status = 200) {
+  const headers = _currentReq ? getCorsHeaders(_currentReq) : { "Content-Type": "application/json" };
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+    headers: { ...headers, "Content-Type": "application/json" },
   });
 }
 
@@ -96,7 +100,15 @@ function parsePath(url: URL): string[] {
 }
 
 Deno.serve(async (req) => {
+  _currentReq = req;
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
+
+  // Rate limit (IP + API key based)
+  const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const apiKey = req.headers.get("x-api-key") || "";
+  const limitKey = apiKey ? `neuron-api:${apiKey.slice(0, 12)}` : `neuron-api:${clientIp}`;
+  const rateLimited = await rateLimitGuard(limitKey, req, { maxRequests: 60, windowSeconds: 60 }, getCorsHeaders(req));
+  if (rateLimited) return rateLimited;
 
   const url = new URL(req.url);
   const segments = parsePath(url);
