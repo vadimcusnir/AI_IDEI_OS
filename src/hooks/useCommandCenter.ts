@@ -274,8 +274,11 @@ export function useCommandCenter() {
       }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
-        executionActions.failExecution(e instanceof Error ? e.message : "Unknown error");
-        toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
+        const classified = classifyError(e);
+        executionActions.failExecution(classified.message);
+        trackExecutionFailed(execState.intent, classified.type);
+        trackError(classified.type, classified.type !== "insufficient_credits");
+        toast.error(t("errors:agent_error", { message: classified.message }));
       }
     } finally {
       executionActions.setLoading(false);
