@@ -95,16 +95,15 @@ Deno.serve(async (req) => {
       error: authError,
     } = await userClient.auth.getUser();
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }
-
-    // Rate limit guard
-    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
-    if (rateLimited) return rateLimited;
-), {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    // Rate limit guard
+    const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
 
     const { url, episode_id, preferred_languages } = await req.json();
 
