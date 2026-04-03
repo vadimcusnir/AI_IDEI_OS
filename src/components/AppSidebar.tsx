@@ -141,7 +141,7 @@ const SYSTEM_MAP: NavGroup[] = [
     authOnly: true,
     items: [
       { label: "Profile", to: "/profile", icon: User, controlId: "nav.profile" },
-      { label: "Workspace", to: "/workspace-settings", icon: Settings, controlId: "nav.workspace" },
+      { label: "Workspace", to: "/workspace", icon: Settings, controlId: "nav.workspace" },
       { label: "API & Docs", to: "/docs", icon: Code, controlId: "nav.docs" },
       { label: "Data Privacy", to: "/data-privacy", icon: Shield, controlId: "nav.privacy" },
     ],
