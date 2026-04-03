@@ -152,9 +152,9 @@ const App = () => (
               <PostAuthRedirector />
               <Routes>
                 {/* Public routes — accessible without login */}
-                <Route path="/" element={<Landing />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/" element={<ErrorBoundary fallbackTitle="Landing failed to load"><Landing /></ErrorBoundary>} />
+                <Route path="/auth" element={<ErrorBoundary fallbackTitle="Auth failed to load"><Auth /></ErrorBoundary>} />
+                <Route path="/reset-password" element={<ErrorBoundary fallbackTitle="Reset password failed"><ResetPassword /></ErrorBoundary>} />
                 <Route path="/links" element={<AppLayout><ErrorBoundary fallbackTitle="Links failed to load"><Links /></ErrorBoundary></AppLayout>} />
                 <Route path="/architecture" element={<AppLayout><ErrorBoundary fallbackTitle="Architecture failed to load"><Architecture /></ErrorBoundary></AppLayout>} />
                 <Route path="/u/:username" element={<ErrorBoundary fallbackTitle="Profile failed to load"><PublicUserProfile /></ErrorBoundary>} />
@@ -209,7 +209,7 @@ const App = () => (
                 <Route path="/community/:category/thread/:threadId" element={<AppLayout><ErrorBoundary fallbackTitle="Thread failed to load"><CommunityThread /></ErrorBoundary></AppLayout>} />
 
                 {/* Protected routes — require authentication */}
-                <Route path="/home" element={<ProtectedRoute><AppLayout fullHeight><Home /></AppLayout></ProtectedRoute>} />
+                <Route path="/home" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Command Center failed"><Home /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/neurons" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Neurons failed to load"><Index /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/n/new" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Editor failed to load"><NeuronEditor /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/n/:number" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Editor failed to load"><NeuronEditor /></ErrorBoundary></AppLayout></ProtectedRoute>} />
@@ -270,7 +270,7 @@ const App = () => (
                 <Route path="/admin/revenue" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Revenue failed to load"><AdminRevenue /></ErrorBoundary></AppLayout></AdminRoute>} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
+                <Route path="*" element={<AppLayout><ErrorBoundary fallbackTitle="Page not found"><NotFound /></ErrorBoundary></AppLayout>} />
               </Routes>
             </Suspense>
             <CookieConsent />

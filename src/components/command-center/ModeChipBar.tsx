@@ -13,10 +13,10 @@ interface ModeChipBarProps {
 }
 
 const MODES = [
-  { key: "extract" as const, label: "Extract", icon: Upload, color: "text-blue-400" },
-  { key: "generate" as const, label: "Generate", icon: Wand2, color: "text-emerald-400" },
-  { key: "analyze" as const, label: "Analyze", icon: BarChart3, color: "text-amber-400" },
-  { key: "structure" as const, label: "Structure", icon: LayoutGrid, color: "text-violet-400" },
+  { key: "extract" as const, label: "Extract", icon: Upload, color: "text-info" },
+  { key: "generate" as const, label: "Generate", icon: Wand2, color: "text-success" },
+  { key: "analyze" as const, label: "Analyze", icon: BarChart3, color: "text-warning" },
+  { key: "structure" as const, label: "Structure", icon: LayoutGrid, color: "text-semantic-purple" },
 ] as const;
 
 export function ModeChipBar({ activeMode, onModeChange }: ModeChipBarProps) {
