@@ -103,7 +103,7 @@ export default function ServicesCatalog() {
             <div>
               <h1 className="text-xl font-bold">Service Registry</h1>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {stats.total} services • {stats.otos} OTOS • {stats.mms} MMS • {stats.lcss} LCSS
+                {stats.total} services • {stats.otos} Actions • {stats.mms} Systems • {stats.lcss} Programs
                 {filtered.length !== stats.total && ` • ${filtered.length} shown`}
               </p>
             </div>
