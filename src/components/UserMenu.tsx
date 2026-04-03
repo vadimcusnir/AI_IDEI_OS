@@ -1,12 +1,15 @@
+/**
+ * UserMenu — Personal identity & control dropdown.
+ * Contains ONLY: Profile, Workspace, Settings, Privacy, API & Docs, Logout.
+ * No product features. No economy links. No activity items.
+ */
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useUserTier } from "@/hooks/useUserTier";
 import {
-  User, Settings, CreditCard, Shield, Bell, MessageCircle,
-  FileText, ScrollText, Code2, LogOut, Landmark, ChevronDown,
-  Wrench, Bot, Network, Crown,
+  User, Settings, Shield, Code2, LogOut, Crown, ChevronDown, Landmark,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -50,8 +53,8 @@ export function UserMenu() {
           <ChevronDown className="h-3 w-3 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        {/* Account */}
+      <DropdownMenuContent align="end" className="w-52">
+        {/* Identity & Control */}
         <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
           {t("common:account")}
         </DropdownMenuLabel>
@@ -62,64 +65,25 @@ export function UserMenu() {
           <DropdownMenuItem onClick={() => navigate("/workspace")} className="gap-2 text-xs">
             <Settings className="h-3.5 w-3.5" /> {t("common:workspace_settings")}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/credits")} className="gap-2 text-xs">
-            <CreditCard className="h-3.5 w-3.5" /> {t("common:credits_billing")}
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/data-privacy")} className="gap-2 text-xs">
             <Shield className="h-3.5 w-3.5" /> {t("common:data_privacy")}
           </DropdownMenuItem>
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        {/* Activity */}
-        <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-          {t("common:activity")}
-        </DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => navigate("/notifications")} className="gap-2 text-xs">
-            <Bell className="h-3.5 w-3.5" /> {t("navigation:notifications")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/feedback")} className="gap-2 text-xs">
-            <MessageCircle className="h-3.5 w-3.5" /> {t("navigation:feedback")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/prompt-forge")} className="gap-2 text-xs">
-            <Wrench className="h-3.5 w-3.5" /> {t("navigation:prompt_forge")}
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        {/* Platform */}
-        <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-          {t("navigation:platform")}
-        </DropdownMenuLabel>
-        <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate("/docs")} className="gap-2 text-xs">
-            <FileText className="h-3.5 w-3.5" /> {t("common:documentation")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/api")} className="gap-2 text-xs">
-            <Code2 className="h-3.5 w-3.5" /> {t("common:api_webhooks")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/architecture")} className="gap-2 text-xs">
-            <Network className="h-3.5 w-3.5" /> {t("common:architecture")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/changelog")} className="gap-2 text-xs">
-            <ScrollText className="h-3.5 w-3.5" /> {t("navigation:changelog")}
+            <Code2 className="h-3.5 w-3.5" /> {t("common:api_docs", { defaultValue: "API & Docs" })}
           </DropdownMenuItem>
         </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
 
         {/* Admin */}
         {isAdmin && (
           <>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigate("/admin")} className="gap-2 text-xs">
               <Landmark className="h-3.5 w-3.5" /> {t("common:admin_panel")}
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </>
         )}
+
+        <DropdownMenuSeparator />
 
         {/* Sign Out */}
         <DropdownMenuItem
