@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
-// ═══ MMS System definitions ═══
+// ═══ System definitions ═══
 
 export interface MMSystem {
   id: string;
