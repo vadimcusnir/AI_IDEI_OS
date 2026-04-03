@@ -116,7 +116,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
             >
               <button
                 onClick={() => {
-                  if (tier.key === "otos") return; // OTOS not directly accessible
+                  if (tier.key === "otos") return; // Actions not directly accessible
                   onTierChange(isActive ? null : tier.key);
                 }}
                 className={cn(
