@@ -130,7 +130,7 @@ const SYSTEM_MAP: NavGroup[] = [
     items: [
       { label: "Wallet", to: "/credits", icon: Coins, controlId: "nav.credits" },
       { label: "Pricing", to: "/pricing", icon: Wallet, controlId: "nav.pricing" },
-      { label: "Usage", to: "/analytics-dashboard", icon: BarChart3, controlId: "nav.usage" },
+      { label: "Usage", to: "/wallet", icon: BarChart3, controlId: "nav.usage" },
     ],
   },
   // ─── CONTROL ───
