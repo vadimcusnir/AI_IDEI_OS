@@ -2,6 +2,9 @@
  * Home — Chat-first Command Center.
  * Layout: status bar → scrollable feed → sticky composer.
  * Single scroll region. No split-screen. No absolute positioning.
+ * 
+ * Shell fills whatever space AppLayout provides via flex-1.
+ * No hardcoded height calc — purely flex-driven.
  */
 import { useRef, useEffect } from "react";
 import { Sparkles, RotateCcw } from "lucide-react";
@@ -53,11 +56,11 @@ export default function Home() {
       <KeyboardShortcutsOverlay />
       <OfflineBanner />
 
-      {/* ═══ MAIN SHELL: full remaining height, flex row for drawer ═══ */}
-      <div className="flex-1 flex h-[calc(100dvh-var(--header-height,56px))] overflow-hidden">
+      {/* ═══ MAIN SHELL: fills AppLayout's <main> via flex-1. No hardcoded height. ═══ */}
+      <div className="flex-1 flex min-h-0 overflow-hidden">
 
         {/* ═══ CENTER COLUMN: flex column, the chat surface ═══ */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 min-h-0">
 
           {/* ── Status bar (shrink, no scroll) ── */}
           <ExecutionStatusBar
@@ -85,10 +88,10 @@ export default function Home() {
             ref={feedRef}
             className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scroll-smooth"
           >
-            <div className="max-w-3xl mx-auto px-4 sm:px-6">
+            <div className="max-w-3xl mx-auto px-3 sm:px-6">
               {cc.isEmptyState ? (
                 /* ── Empty state: centered welcome ── */
-                <div className="flex flex-col items-center justify-center min-h-[60vh] py-8">
+                <div className="flex flex-col items-center justify-center min-h-[60vh] py-6">
                   <WelcomeScreen
                     onCommand={cc.handleCommand}
                     suggestions={cc.decisionSuggestions}
@@ -99,7 +102,7 @@ export default function Home() {
                 </div>
               ) : (
                 /* ── Conversation feed ── */
-                <div className="pt-4 pb-4 space-y-4">
+                <div className="pt-3 pb-3 space-y-3">
                   {cc.messages.map((msg) => (
                     <CommandBubble
                       key={msg.id}
@@ -117,9 +120,9 @@ export default function Home() {
                       </div>
                       <div className="flex items-center gap-2 pt-2">
                         <div className="flex gap-1">
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-                          <span className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
                         </div>
                         <span className="text-xs text-muted-foreground ml-1">
                           {cc.execState.phase === "planning" ? "Planning..." : "Thinking..."}
@@ -152,7 +155,7 @@ export default function Home() {
                     />
                   )}
 
-                  {/* Inline panels (plan preview, economic gate, outputs, post-execution) */}
+                  {/* Inline panels */}
                   <AnimatePresence>
                     {cc.execState.phase === "confirming" && cc.execState.totalCredits > 0 && !cc.showEconomicGate && (
                       <PlanPreview
@@ -201,14 +204,16 @@ export default function Home() {
                     )}
                   </AnimatePresence>
 
-                  {/* New session button */}
-                  <div className="flex justify-center py-2">
-                    <Button variant="ghost" size="sm" onClick={cc.clearChat}
-                      className="h-7 px-3 text-[11px] text-muted-foreground/50 hover:text-foreground gap-1.5">
-                      <RotateCcw className="h-3 w-3" />
-                      {cc.t("common:new_session", { defaultValue: "New session" })}
-                    </Button>
-                  </div>
+                  {/* New session */}
+                  {cc.messages.length > 0 && (
+                    <div className="flex justify-center py-2">
+                      <Button variant="ghost" size="sm" onClick={cc.clearChat}
+                        className="h-7 px-3 text-[11px] text-muted-foreground/50 hover:text-foreground gap-1.5">
+                        <RotateCcw className="h-3 w-3" />
+                        {cc.t("common:new_session", { defaultValue: "New session" })}
+                      </Button>
+                    </div>
+                  )}
 
                   <div ref={cc.messagesEndRef} />
                 </div>
@@ -216,8 +221,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ── COMPOSER: sticky at bottom, never scrolls ── */}
-          <div className="shrink-0 border-t border-border/30 bg-background/95 backdrop-blur-sm px-3 sm:px-4 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
+          {/* ── COMPOSER: anchored at bottom, never scrolls ── */}
+          <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
             <div className="max-w-3xl mx-auto" data-tour="command-input">
               <CommandInputZone
                 ref={cc.inputZoneRef} input={cc.input} onInputChange={cc.setInput}
@@ -232,7 +237,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ═══ RIGHT: Context Drawer (desktop only, self-managing visibility) ═══ */}
+        {/* ═══ RIGHT: Context Drawer (desktop only, self-managing) ═══ */}
         <ContextDrawer
           execution={cc.execState}
           outputs={cc.outputs}
