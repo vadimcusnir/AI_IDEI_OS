@@ -959,33 +959,31 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Spend credits with daily cap enforcement ──
-    const { data: spendResult } = await supabase.rpc("spend_credits_capped", {
+    // ── RESERVE neurons (atomic wallet) ──
+    const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
       _user_id: user_id,
       _amount: service.credits_cost,
-      _description: `SPEND: ${service.name}`,
       _job_id: job_id,
+      _description: `RESERVE: ${service.name}`,
     });
 
-    if (!spendResult?.success) {
-      const reasonCode = spendResult?.error === "DAILY_CAP_EXCEEDED"
-        ? "RC.CREDITS.DAILY_CAP"
-        : "RC.CREDITS.INSUFFICIENT";
+    if (reserveErr || !reserved) {
+      const reasonCode = "RC.CREDITS.INSUFFICIENT";
       await supabase.from("neuron_jobs").update({
         status: "failed", completed_at: new Date().toISOString(),
-        result: { error: reasonCode, reason: spendResult?.error || `Need ${service.credits_cost} credits` },
+        result: { error: reasonCode, reason: reserveErr?.message || `Need ${service.credits_cost} credits` },
       }).eq("id", job_id);
 
       return new Response(JSON.stringify({
-        error: spendResult?.error === "DAILY_CAP_EXCEEDED"
-          ? "Daily spend cap exceeded. Try again tomorrow or increase your limit."
-          : "Insufficient credits",
+        error: "Insufficient credits",
         reason_code: reasonCode,
-        ...spendResult,
+        needed: service.credits_cost,
       }), {
         status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    let settled = false;
 
     // ── Execute AI pipeline (with prompt-loader + dry-run) ──
     const hardcodedPrompt = SERVICE_PROMPTS[service_key] || SERVICE_PROMPTS["insight-extractor"];
@@ -996,8 +994,8 @@ Deno.serve(async (req) => {
         status: "completed", completed_at: new Date().toISOString(),
         result: { dry_run: true, regime: regime.regime, message: "Simulation mode — no AI call made" },
       }).eq("id", job_id);
-      // Refund credits in simulation
-      await supabase.rpc("refund_credits", { _user_id: user_id, _amount: service.credits_cost, _job_id: job_id });
+      // Release reserved neurons in simulation (no work done)
+      await supabase.rpc("release_neurons", { _user_id: user_id, _amount: service.credits_cost, _description: "RELEASE: Dry run — no execution" });
       return new Response(JSON.stringify({ dry_run: true, regime: regime.regime }), {
         headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
@@ -1021,13 +1019,12 @@ Deno.serve(async (req) => {
     });
 
     if (!response.ok) {
-      // Refund credits on AI failure via atomic function
-      await supabase.rpc("add_credits", {
+      // RELEASE reserved neurons on AI failure
+      await supabase.rpc("release_neurons", {
         _user_id: user_id,
         _amount: service.credits_cost,
-        _description: `REFUND: ${service.name} — AI error ${response.status}`,
-        _type: "refund",
-      });
+        _description: `RELEASE: ${service.name} — AI error ${response.status}`,
+      }).catch(() => {});
 
       // Mark failed with error message for retry system
       const retryCount = currentJob?.retry_count || 0;
@@ -1048,16 +1045,16 @@ Deno.serve(async (req) => {
       }).eq("id", job_id);
 
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Credits refunded." }), {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded. Credits released." }), {
           status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Credits refunded." }), {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Credits released." }), {
           status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
         });
       }
-      return new Response(JSON.stringify({ error: "AI service unavailable. Credits refunded." }), {
+      return new Response(JSON.stringify({ error: "AI service unavailable. Credits released." }), {
         status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
@@ -1098,6 +1095,14 @@ Deno.serve(async (req) => {
           status: "completed", completed_at: new Date().toISOString(),
           result: { content: fullResult, credits_spent: service.credits_cost, service: service.name },
         }).eq("id", job_id);
+
+        // SETTLE neurons on successful completion
+        await supabase.rpc("settle_neurons", {
+          _user_id: user_id,
+          _amount: service.credits_cost,
+          _description: `SETTLE: ${service.name}`,
+        });
+        settled = true;
 
         // Save as neuron block
         if (neuron_id && fullResult) {
@@ -1163,6 +1168,14 @@ Deno.serve(async (req) => {
         }
       } catch (e) {
         console.error("Finalize job error:", e);
+        // RELEASE neurons if settle didn't happen
+        if (!settled) {
+          await supabase.rpc("release_neurons", {
+            _user_id: user_id,
+            _amount: service.credits_cost,
+            _description: `RELEASE: ${service.name} — finalization error`,
+          }).catch(() => {});
+        }
         await supabase.from("neuron_jobs").update({
           status: "completed", completed_at: new Date().toISOString(),
           result: { error: "Finalization error", partial: true },

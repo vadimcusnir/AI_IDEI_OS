@@ -151,18 +151,20 @@ Deno.serve(async (req) => {
 
     const totalCost = modulesToRun.length * 50;
 
-    // Spend credits
-    const { data: spendResult } = await supabase.rpc("spend_credits_capped", {
-      _user_id: user.id, _amount: totalCost,
-      _description: `Avatar33 Pipeline: ${modulesToRun.length} modules`,
-      _job_id: job_id || null,
+    // RESERVE neurons (atomic wallet)
+    const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
+      _user_id: user.id,
+      _amount: totalCost,
+      _description: `RESERVE: Avatar33 Pipeline: ${modulesToRun.length} modules`,
     });
 
-    if (!spendResult?.success) {
-      return new Response(JSON.stringify({ error: spendResult?.error || "Insufficient credits", needed: totalCost }), {
+    if (reserveErr || !reserved) {
+      return new Response(JSON.stringify({ error: "Insufficient credits", needed: totalCost }), {
         status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    let settled = false;
 
     // Execute in batches
     const results: Record<string, { name: string; phase: string; content: string }> = {};
@@ -231,12 +233,19 @@ Deno.serve(async (req) => {
       }).eq("id", job_id);
     }
 
+    // SETTLE neurons on success
+    await supabase.rpc("settle_neurons", { _user_id: user.id, _amount: totalCost, _description: `SETTLE: Avatar33 Pipeline` });
+    settled = true;
+
     return new Response(JSON.stringify({ results, modules_completed: completedCount, credits_spent: totalCost }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
 
   } catch (e) {
     console.error("avatar33-pipeline error:", e);
+    if (typeof settled !== "undefined" && !settled && user?.id && typeof totalCost !== "undefined") {
+      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Avatar33 — error` }).catch(() => {});
+    }
     return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

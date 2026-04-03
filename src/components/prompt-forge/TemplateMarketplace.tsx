@@ -99,12 +99,12 @@ export function TemplateMarketplace({ onSelect }: TemplateMarketplaceProps) {
     setPurchasing(template.id);
 
     if (template.price_neurons > 0) {
-      const { data: spendResult } = await supabase.rpc("spend_credits", {
+      const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
         _user_id: user.id,
         _amount: template.price_neurons,
-        _description: `Template: ${template.title}`,
+        _description: `RESERVE: Template: ${template.title}`,
       });
-      if (!spendResult) {
+      if (reserveErr || !reserved) {
         toast.error("Achiziție eșuată");
         setPurchasing(null);
         return;
@@ -116,6 +116,15 @@ export function TemplateMarketplace({ onSelect }: TemplateMarketplaceProps) {
       buyer_id: user.id,
       price_neurons: template.price_neurons,
     });
+
+    // SETTLE neurons after successful purchase
+    if (template.price_neurons > 0) {
+      await supabase.rpc("settle_neurons", {
+        _user_id: user.id,
+        _amount: template.price_neurons,
+        _description: `SETTLE: Template: ${template.title}`,
+      });
+    }
 
     await supabase
       .from("prompt_templates")
