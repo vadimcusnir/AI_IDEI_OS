@@ -44,6 +44,15 @@ export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCoun
         </div>
       </motion.div>
 
+      {/* Magic Pipeline — one-click full extraction */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.15 }}
+      >
+        <MagicPipelineButton />
+      </motion.div>
+
       {/* Proactive suggestions — max 4 */}
       {suggestions.length > 0 && (
         <motion.div
