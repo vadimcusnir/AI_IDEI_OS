@@ -223,6 +223,13 @@ export default function Credits() {
           </div>
         </ControlledSection>
 
+        {/* Storage Usage */}
+        <ControlledSection elementId="credits.storage_usage">
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <StorageUsagePanel />
+          </div>
+        </ControlledSection>
+
         {/* VIP Progress */}
         <ControlledSection elementId="credits.vip_progress">
           <div className="mb-6">
