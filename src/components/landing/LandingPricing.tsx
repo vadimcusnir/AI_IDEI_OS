@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
-const FEATURED_INDEX = 1; // Pro plan (index 1 in 3-tier: Free/Pro/VIP)
+const FEATURED_INDEX = 2; // Pro plan
 
 interface Props {
   ctaAction: () => void;
@@ -24,7 +24,7 @@ export function LandingPricing({ ctaAction }: Props) {
           <h2 id="pricing-heading" className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold tracking-[-0.01em] text-foreground mb-6 leading-[1.15]">{t("pricing.title")}</h2>
           <p className="text-[15px] text-muted-foreground max-w-[480px] mx-auto leading-[1.75]">{t("pricing.subtitle")}</p>
         </FadeInView>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border/50 rounded-xl overflow-hidden max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border/50 rounded-xl overflow-hidden max-w-4xl mx-auto">
           {plans.map((plan, i) => {
             const featured = i === FEATURED_INDEX;
             return (
