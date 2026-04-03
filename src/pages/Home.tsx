@@ -26,6 +26,7 @@ import { IntentChips, SystemRecommendations, matchIntentToSystems, type MMSystem
 import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { KeyboardShortcutsOverlay } from "@/components/command-center/KeyboardShortcutsOverlay";
 import { OfflineBanner } from "@/components/command-center/OfflineBanner";
+import { ErrorRecoveryHandler, classifyError } from "@/components/command-center/ErrorRecoveryHandler";
 import { SessionHistoryPanel } from "@/components/command-center/SessionHistoryPanel";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
