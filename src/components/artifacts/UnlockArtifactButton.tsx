@@ -62,11 +62,13 @@ export function UnlockArtifactButton({ artifactId, onUnlocked }: Props) {
     } catch {
       // RELEASE neurons on failure
       if (user) {
-        await supabase.rpc("release_neurons", {
-          _user_id: user.id,
-          _amount: UNLOCK_COST,
-          _description: `RELEASE: Artifact unlock failed`,
-        }).catch(() => {});
+        try {
+          await supabase.rpc("release_neurons", {
+            _user_id: user.id,
+            _amount: UNLOCK_COST,
+            _description: `RELEASE: Artifact unlock failed`,
+          });
+        } catch (_) { /* best-effort release */ }
       }
       toast.error("Eroare la deblocare");
     } finally {
