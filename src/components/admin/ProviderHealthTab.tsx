@@ -34,8 +34,8 @@ function ProviderRow({ provider, label, providerKey }: { provider: ProviderHealt
       <TableCell className="flex items-center gap-2">
         <Icon className={cn("h-3.5 w-3.5", cfg.color)} />
         <div>
-          <p className="text-xs font-medium">{arguments[0].label}</p>
-          <p className="text-[9px] font-mono text-muted-foreground">{arguments[0].providerKey}</p>
+          <p className="text-xs font-medium">{label}</p>
+          <p className="text-[9px] font-mono text-muted-foreground">{providerKey}</p>
         </div>
       </TableCell>
       <TableCell>
