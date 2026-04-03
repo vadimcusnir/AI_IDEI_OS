@@ -252,6 +252,7 @@ export default function Home() {
       if (isExecution) {
         // Real service execution path
         await executionEngine.confirmAndRun(rawInput, route);
+        // confirmAndRun handles its own completion lifecycle
       } else {
         // Chat/conversation path — delegate to useExecution streaming
         executionActions.transition("planning");
@@ -278,21 +279,26 @@ export default function Home() {
         }
 
         const contentWithFiles = rawInput + fileContent;
+        // CC-T04: await streaming completion BEFORE marking complete
         await executionEngine.streamAgentResponse(contentWithFiles, route, new AbortController().signal);
-      }
 
-      // Post-execution: persist and show outputs
-      const currentOutputs = store.outputs;
-      if (currentOutputs.length > 0) {
-        setShowOutputs(true);
-      }
-      executionActions.completeExecution();
-      setShowPostExecution(true);
+        // Only now mark streaming as done and check outputs
+        executionActions.setStreaming(false);
+        executionActions.setLoading(false);
 
-      if (user) {
-        const startTime = execState.startedAt ? new Date(execState.startedAt).getTime() : Date.now();
-        logExecutionCompleted(user.id, execState.actionId, execState.intent, execState.totalCredits, currentOutputs.length, Date.now() - startTime);
-        persistRun({ execution: { ...execState, phase: "completed", completedAt: new Date().toISOString() }, outputCount: currentOutputs.length });
+        const currentOutputs = store.outputs;
+        if (currentOutputs.length > 0) {
+          setShowOutputs(true);
+        }
+        // Only complete after streaming is fully resolved
+        executionActions.completeExecution();
+        setShowPostExecution(true);
+
+        if (user) {
+          const startTime = execState.startedAt ? new Date(execState.startedAt).getTime() : Date.now();
+          logExecutionCompleted(user.id, execState.actionId, execState.intent, execState.totalCredits, currentOutputs.length, Date.now() - startTime);
+          persistRun({ execution: { ...execState, phase: "completed", completedAt: new Date().toISOString() }, outputCount: currentOutputs.length });
+        }
       }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
