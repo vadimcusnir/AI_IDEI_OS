@@ -230,10 +230,8 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 {cc.activeMode === "extract" && <ExtractPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} neuronCount={cc.totalNeurons} />}
                 {cc.activeMode === "generate" && <GeneratePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
+                {cc.activeMode === "analyze" && <AnalyzePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
                 {cc.activeMode === "structure" && <StructurePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
-                {cc.activeMode === "monetize" && <MonetizePanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
-                {cc.activeMode === "library" && <LibraryPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} neuronCount={cc.totalNeurons} />}
-                {cc.activeMode === "research" && <ResearchPanel onCommand={(p) => { cc.setInput(p); cc.setActiveMode(null); cc.inputZoneRef.current?.focus(); }} />}
               </AnimatePresence>
 
               {/* Mode Chip Bar */}
