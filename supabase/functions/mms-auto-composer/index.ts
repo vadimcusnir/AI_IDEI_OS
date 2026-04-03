@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
     // 2. Select top-scoring OTOS from matched domains
     let query = supabase
       .from("os_otos")
-      .select("id, name, domain, neurons_cost, score_tier, score_total, mechanism, single_output, intent")
+      .select("id, name, domain, neurons_cost, score_tier, score_total, mechanism, intent")
       .eq("status", "active")
       .in("score_tier", ["S", "A"])
       .order("score_total", { ascending: false })
