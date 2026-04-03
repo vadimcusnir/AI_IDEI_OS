@@ -14,6 +14,7 @@ import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { prefetchUIControls } from "@/hooks/useUIControl";
 import { useKeyboardNav } from "@/hooks/useKeyboardNav";
+import { useAdoptionTracker } from "@/hooks/useAdoptionTracker";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -38,6 +39,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   usePageTracking();
   useDailyActivity();
   useKeyboardNav();
+  useAdoptionTracker();
 
   const prefetched = useRef(false);
   useEffect(() => {

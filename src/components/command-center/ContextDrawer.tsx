@@ -9,6 +9,7 @@
  */
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CommandCenterKPIs } from "./CommandCenterKPIs";
 import { useNavigate } from "react-router-dom";
 import { Loader2, X, ChevronRight } from "lucide-react";
 import {
@@ -552,6 +553,8 @@ function ProgressTab({ navigate }: { navigate: (path: string) => void }) {
 
   return (
     <div className="p-4 space-y-4">
+      {/* CC-V05: KPI Dashboard */}
+      <CommandCenterKPIs />
       {/* Section 1: Identity — Level + Rank */}
       <div className="rounded-xl border border-border/15 p-4 bg-card/30 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />

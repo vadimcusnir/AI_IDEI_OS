@@ -27,6 +27,12 @@ import {
   logCommandSubmitted, logPlanConfirmed, logExecutionCompleted,
   logPermissionDenied, logEconomicGate,
 } from "@/components/command-center/AuditLogger";
+import {
+  trackCommandSubmitted, trackFirstToken, trackExecutionCompleted,
+  trackExecutionFailed, trackOutputEngagement, trackEconomicGate,
+  trackSessionAction, trackError,
+} from "@/lib/commandCenterTelemetry";
+import { classifyError } from "@/components/command-center/ErrorRecoveryHandler";
 
 export function useCommandCenter() {
   const { user, loading: authLoading } = useAuth();
@@ -175,6 +181,9 @@ export function useCommandCenter() {
     setShowPostExecution(false);
     setPermissionBlock(null);
 
+    // CC-V02: Track submission
+    trackCommandSubmitted(rawInput, files.length, autoExec);
+
     try {
       const { route, isExecution } = await executionEngine.execute(rawInput, files, { autoExecute: autoExec });
 
@@ -257,14 +266,19 @@ export function useCommandCenter() {
 
         if (user) {
           const startTime = freshExec.startedAt ? new Date(freshExec.startedAt).getTime() : Date.now();
-          logExecutionCompleted(user.id, freshExec.actionId, freshExec.intent, freshExec.totalCredits, freshOutputs.length, Date.now() - startTime);
+          const durationMs = Date.now() - startTime;
+          logExecutionCompleted(user.id, freshExec.actionId, freshExec.intent, freshExec.totalCredits, freshOutputs.length, durationMs);
+          trackExecutionCompleted(freshExec.intent, freshExec.totalCredits, freshOutputs.length, durationMs);
           persistRun({ execution: { ...freshExec, phase: "completed", completedAt: new Date().toISOString() }, outputCount: freshOutputs.length });
         }
       }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
-        executionActions.failExecution(e instanceof Error ? e.message : "Unknown error");
-        toast.error(t("errors:agent_error", { message: e instanceof Error ? e.message : "Unknown" }));
+        const classified = classifyError(e);
+        executionActions.failExecution(classified.message);
+        trackExecutionFailed(execState.intent, classified.type);
+        trackError(classified.type, classified.type !== "insufficient_credits");
+        toast.error(t("errors:agent_error", { message: classified.message }));
       }
     } finally {
       executionActions.setLoading(false);
@@ -277,6 +291,7 @@ export function useCommandCenter() {
   const handleStop = useCallback(() => { stopActiveExecution(); }, [stopActiveExecution]);
 
   const clearChat = () => {
+    trackSessionAction("started");
     newSession(); executionActions.reset();
     executionActions.clearMessages();
     executionActions.setOutputs([]); setShowOutputs(false); setShowPostExecution(false);
@@ -287,6 +302,7 @@ export function useCommandCenter() {
     setSavingAllOutputs(true);
     const count = await persistOutputsBatch(outputs.map(o => ({ title: o.title, content: o.content, type: o.type })), [execState.intent]);
     setSavingAllOutputs(false);
+    trackOutputEngagement("save_all", outputs.length);
     toast[count > 0 ? "success" : "error"](count > 0 ? `Saved ${count} outputs as assets` : "Failed to save outputs");
   };
 
@@ -338,8 +354,10 @@ export function useCommandCenter() {
   };
 
   const handlePlanExecute = async () => {
-    if (execState.totalCredits > 50) { setShowEconomicGate(true); }
-    else if (pendingRoute) {
+    if (execState.totalCredits > 50) {
+      setShowEconomicGate(true);
+      trackEconomicGate("shown", balance, execState.totalCredits);
+    } else if (pendingRoute) {
       const lastUserMsg = messages.filter(m => m.role === "user").pop();
       await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
     }
@@ -347,6 +365,7 @@ export function useCommandCenter() {
 
   const handleEconomicProceed = async () => {
     setShowEconomicGate(false);
+    trackEconomicGate("proceed", balance, execState.totalCredits);
     if (pendingRoute) {
       const lastUserMsg = messages.filter(m => m.role === "user").pop();
       await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
@@ -355,6 +374,7 @@ export function useCommandCenter() {
 
   const handleEconomicCancel = () => {
     setShowEconomicGate(false);
+    trackEconomicGate("cancel", balance, execState.totalCredits);
     if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount);
     executionActions.reset();
   };
