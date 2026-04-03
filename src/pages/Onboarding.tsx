@@ -6,6 +6,7 @@ import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
+import { consumeRedirect } from "@/lib/authRedirect";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {

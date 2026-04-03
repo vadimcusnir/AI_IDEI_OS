@@ -78,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
+    clearRedirect();
     await supabase.auth.signOut();
   }, []);
 
