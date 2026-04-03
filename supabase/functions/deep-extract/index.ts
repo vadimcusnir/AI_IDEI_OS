@@ -335,7 +335,7 @@ Deno.serve(async (req) => {
     const regime = await getRegimeConfig("deep-extract");
     const blockReason = checkRegimeBlock(regime, totalCost);
     if (blockReason) {
-      await supabase.rpc("add_credits", { _user_id: userId, _amount: totalCost, _description: `REFUND: Regime blocked — ${blockReason}`, _type: "refund" });
+      await supabase.rpc("release_neurons", { _user_id: userId, _amount: totalCost, _description: `RELEASE: Regime blocked — ${blockReason}` }).catch(() => {});
       return new Response(JSON.stringify({ error: blockReason }), {
         status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
