@@ -354,8 +354,10 @@ export function useCommandCenter() {
   };
 
   const handlePlanExecute = async () => {
-    if (execState.totalCredits > 50) { setShowEconomicGate(true); }
-    else if (pendingRoute) {
+    if (execState.totalCredits > 50) {
+      setShowEconomicGate(true);
+      trackEconomicGate("shown", balance, execState.totalCredits);
+    } else if (pendingRoute) {
       const lastUserMsg = messages.filter(m => m.role === "user").pop();
       await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
     }
