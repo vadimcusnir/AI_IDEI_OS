@@ -215,13 +215,33 @@ export function AdminUserManagement() {
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openUserDetail(u)}>
                       <Eye className="h-3.5 w-3.5" />
                     </Button>
-                    <Button
-                      variant="ghost" size="icon" className="h-7 w-7"
-                      onClick={() => toggleUserRole(u.user_id, u.roles.includes("admin"))}
-                      title={u.roles.includes("admin") ? "Revoke admin" : "Grant admin"}
-                    >
-                      {u.roles.includes("admin") ? <UserMinus className="h-3.5 w-3.5 text-destructive" /> : <UserPlus className="h-3.5 w-3.5" />}
-                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost" size="icon" className="h-7 w-7"
+                          title={u.roles.includes("admin") ? "Revoke admin" : "Grant admin"}
+                        >
+                          {u.roles.includes("admin") ? <UserMinus className="h-3.5 w-3.5 text-destructive" /> : <UserPlus className="h-3.5 w-3.5" />}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>{u.roles.includes("admin") ? "Revoke Admin Role?" : "Grant Admin Role?"}</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {u.roles.includes("admin")
+                              ? `Remove admin privileges from ${u.email || u.user_id.substring(0, 8)}. This action is logged.`
+                              : `Grant admin privileges to ${u.email || u.user_id.substring(0, 8)}. This action is logged.`}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => toggleUserRole(u.user_id, u.roles.includes("admin"))}
+                            className={u.roles.includes("admin") ? "bg-destructive text-destructive-foreground" : ""}>
+                            {u.roles.includes("admin") ? "Revoke" : "Grant"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </TableCell>
               </TableRow>
