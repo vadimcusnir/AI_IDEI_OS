@@ -9296,6 +9296,27 @@ export type Database = {
           },
         ]
       }
+      storage_limits: {
+        Row: {
+          description: string | null
+          max_bytes: number
+          max_files: number
+          tier: string
+        }
+        Insert: {
+          description?: string | null
+          max_bytes: number
+          max_files?: number
+          tier: string
+        }
+        Update: {
+          description?: string | null
+          max_bytes?: number
+          max_files?: number
+          tier?: string
+        }
+        Relationships: []
+      }
       stripe_processed_events: {
         Row: {
           event_id: string
@@ -11182,6 +11203,14 @@ export type Database = {
       generate_daily_challenges: { Args: never; Returns: undefined }
       get_public_profile: { Args: { _username: string }; Returns: Json }
       get_tier_xp_multiplier: { Args: { _user_id: string }; Returns: number }
+      get_user_storage_usage: {
+        Args: { p_user_id: string }
+        Returns: {
+          bucket_id: string
+          file_count: number
+          total_bytes: number
+        }[]
+      }
       has_admin_permission: {
         Args: { _permission: string; _user_id: string }
         Returns: boolean

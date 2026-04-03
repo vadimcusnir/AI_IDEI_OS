@@ -20,6 +20,7 @@ import { TopUpDialog } from "@/components/credits/TopUpDialog";
 const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChart").then(m => ({ default: m.ConsumptionChart })));
 import { EconomicProjections } from "@/components/credits/EconomicProjections";
 import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
+import { StorageUsagePanel } from "@/components/storage/StorageUsagePanel";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 
@@ -219,6 +220,13 @@ export default function Credits() {
         <ControlledSection elementId="credits.subscription_plans">
           <div className="bg-card border border-border rounded-xl p-5 mb-6">
             <SubscriptionPlans />
+          </div>
+        </ControlledSection>
+
+        {/* Storage Usage */}
+        <ControlledSection elementId="credits.storage_usage">
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <StorageUsagePanel />
           </div>
         </ControlledSection>
 
