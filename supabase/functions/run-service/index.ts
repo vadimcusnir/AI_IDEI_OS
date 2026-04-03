@@ -994,8 +994,8 @@ Deno.serve(async (req) => {
         status: "completed", completed_at: new Date().toISOString(),
         result: { dry_run: true, regime: regime.regime, message: "Simulation mode — no AI call made" },
       }).eq("id", job_id);
-      // Refund credits in simulation
-      await supabase.rpc("refund_credits", { _user_id: user_id, _amount: service.credits_cost, _job_id: job_id });
+      // Release reserved neurons in simulation (no work done)
+      await supabase.rpc("release_neurons", { _user_id: user_id, _amount: service.credits_cost, _description: "RELEASE: Dry run — no execution" });
       return new Response(JSON.stringify({ dry_run: true, regime: regime.regime }), {
         headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
