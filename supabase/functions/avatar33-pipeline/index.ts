@@ -151,18 +151,20 @@ Deno.serve(async (req) => {
 
     const totalCost = modulesToRun.length * 50;
 
-    // Spend credits
-    const { data: spendResult } = await supabase.rpc("spend_credits_capped", {
-      _user_id: user.id, _amount: totalCost,
-      _description: `Avatar33 Pipeline: ${modulesToRun.length} modules`,
-      _job_id: job_id || null,
+    // RESERVE neurons (atomic wallet)
+    const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
+      _user_id: user.id,
+      _amount: totalCost,
+      _description: `RESERVE: Avatar33 Pipeline: ${modulesToRun.length} modules`,
     });
 
-    if (!spendResult?.success) {
-      return new Response(JSON.stringify({ error: spendResult?.error || "Insufficient credits", needed: totalCost }), {
+    if (reserveErr || !reserved) {
+      return new Response(JSON.stringify({ error: "Insufficient credits", needed: totalCost }), {
         status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    let settled = false;
 
     // Execute in batches
     const results: Record<string, { name: string; phase: string; content: string }> = {};

@@ -299,20 +299,22 @@ Deno.serve(async (req) => {
       (sum, e) => sum + baseCost * e.cost_multiplier, 0
     ));
 
-    // Spend credits
-    const { data: spent } = await supabase.rpc("spend_credits", {
+    // RESERVE neurons (atomic wallet)
+    const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
       _user_id: userId,
       _amount: totalCost,
-      _description: `DEEP EXTRACT (${extractors.length} extractors): ${episode.title}`,
+      _description: `RESERVE: Deep Extract (${extractors.length} extractors): ${episode.title}`,
     });
 
-    if (!spent) {
+    if (reserveErr || !reserved) {
       return new Response(JSON.stringify({
         error: "Insufficient credits",
         needed: totalCost,
         reason_code: "RC.CREDITS.INSUFFICIENT",
       }), { status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
+
+    let settled = false;
 
     // Update status
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);

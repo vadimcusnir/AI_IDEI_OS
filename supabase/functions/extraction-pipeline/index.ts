@@ -204,17 +204,20 @@ Deno.serve(async (req) => {
     const levelsToRun = PIPELINE_LEVELS.filter(l => l.level >= start_level && l.level <= end_level);
     const totalCost = Math.round(levelsToRun.reduce((s, l) => s + 50 * l.cost_multiplier, 0));
 
-    const { data: spendResult } = await supabase.rpc("spend_credits_capped", {
-      _user_id: user.id, _amount: totalCost,
-      _description: `Extraction Pipeline L${start_level}-L${end_level}: ${levelsToRun.length} levels`,
-      _job_id: job_id || null,
+    // RESERVE neurons (atomic wallet)
+    const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
+      _user_id: user.id,
+      _amount: totalCost,
+      _description: `RESERVE: Pipeline L${start_level}-L${end_level}: ${levelsToRun.length} levels`,
     });
 
-    if (!spendResult?.success) {
-      return new Response(JSON.stringify({ error: spendResult?.error || "Insufficient credits", needed: totalCost }), {
+    if (reserveErr || !reserved) {
+      return new Response(JSON.stringify({ error: "Insufficient credits", needed: totalCost }), {
         status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    let settled = false;
 
     // Execute levels in dependency order
     const levelOutputs: Record<number, string> = {};

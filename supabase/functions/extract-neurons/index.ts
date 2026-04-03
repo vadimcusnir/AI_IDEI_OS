@@ -484,20 +484,22 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Spend credits ──
-    const { data: spent } = await supabase.rpc("spend_credits", {
+    // ── RESERVE neurons (atomic wallet) ──
+    const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
       _user_id: userId,
       _amount: EXTRACTION_COST,
-      _description: `EXTRACTION: ${episode.title}`,
+      _description: `RESERVE: Extraction — ${episode.title}`,
     });
 
-    if (!spent) {
+    if (reserveErr || !reserved) {
       return new Response(JSON.stringify({
         error: "Insufficient credits for extraction",
         reason_code: "RC.CREDITS.INSUFFICIENT",
         needed: EXTRACTION_COST,
       }), { status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
+
+    let settled = false;
 
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);
 
