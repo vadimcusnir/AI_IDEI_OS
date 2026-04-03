@@ -2,6 +2,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { Loader2 } from "lucide-react";
+import { storeRedirect } from "@/lib/authRedirect";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -24,7 +25,9 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    // Preserve intended destination for post-auth redirect
+    storeRedirect(location.pathname + location.search + location.hash);
+    return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
   // Enforce onboarding for new users (skip exempt routes)

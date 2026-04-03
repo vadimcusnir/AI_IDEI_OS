@@ -1,6 +1,7 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Loader2, ShieldAlert } from "lucide-react";
+import { storeRedirect } from "@/lib/authRedirect";
 
 interface AdminRouteProps {
   children: React.ReactNode;
@@ -8,6 +9,7 @@ interface AdminRouteProps {
 
 export function AdminRoute({ children }: AdminRouteProps) {
   const { isAdmin, loading, user } = useAdminCheck();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -18,7 +20,8 @@ export function AdminRoute({ children }: AdminRouteProps) {
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    storeRedirect(location.pathname + location.search + location.hash);
+    return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
   if (!isAdmin) {
