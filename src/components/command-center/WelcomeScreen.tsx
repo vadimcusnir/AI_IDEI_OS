@@ -1,10 +1,11 @@
 /**
  * WelcomeScreen — Clean empty state for Command Center.
- * Compact: greeting + up to 4 proactive suggestions + stats.
+ * Compact: greeting + Magic Pipeline + up to 4 proactive suggestions + stats.
  */
 
 import { motion } from "framer-motion";
 import { Sparkles, Zap } from "lucide-react";
+import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
 
 interface Suggestion {
   id: string;
