@@ -52,6 +52,25 @@ export default function Auth() {
   const [tosAccepted, setTosAccepted] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  // Resolve redirect target from ?redirect=, router state, or sessionStorage
+  const redirectTarget = useMemo(
+    () => getRedirectTarget(searchParams, location.state),
+    [searchParams, location.state]
+  );
+
+  // Store redirect for OAuth flows (Google login redirects away from page)
+  useMemo(() => {
+    if (redirectTarget) storeRedirect(redirectTarget);
+  }, [redirectTarget]);
+
+  // Read ?mode= param to set initial mode
+  useMemo(() => {
+    const modeParam = searchParams.get("mode");
+    if (modeParam === "signup") setMode("signup");
+  }, []);
 
   // Minimum 8 chars (upgraded from 6)
   const PASSWORD_CHECKS = useMemo(() => [
