@@ -17,16 +17,19 @@ import {
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
-type Stage = "idle" | "detecting" | "fetching" | "processing" | "ready" | "error";
+type Stage = "idle" | "detecting" | "extracting_audio" | "downloading_audio" | "transcribing_audio" | "detecting_language" | "ready" | "error";
 
 interface TranscriptData {
   text: string;
   language: string;
-  segments: Array<{ start: number; end: number; text: string }>;
+  segments: Array<{ start: number; end: number; text: string; speaker?: string }>;
   word_count: number;
   source: string;
   title: string;
   duration_seconds: number | null;
+  speakers?: string[];
+  has_diarization?: boolean;
+  confidence?: number;
 }
 
 const TRANSCRIPT_COST = 50; // NEURONS per transcription after first free
