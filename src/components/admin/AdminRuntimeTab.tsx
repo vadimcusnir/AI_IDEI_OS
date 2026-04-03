@@ -12,6 +12,7 @@ import {
   ArrowRight, CheckCircle, XCircle, Clock, Zap, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { KillSwitchPanel } from "@/components/admin/KillSwitchPanel";
 
 interface RuntimeData {
   router: { total_intents: number; active_intents: number; top_intent: string; avg_confidence: number };
