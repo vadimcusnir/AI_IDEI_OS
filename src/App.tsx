@@ -15,6 +15,7 @@ import { CookieConsent } from "@/components/global/CookieConsent";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { GrowthHooks } from "@/components/growth/GrowthHooks";
+import { PostAuthRedirector } from "@/components/PostAuthRedirector";
 
 
 /** Retry dynamic imports once on failure (handles stale chunk hashes after deploys) */
@@ -159,6 +160,7 @@ const App = () => (
             <Suspense fallback={<PageLoader />}>
               <ScrollToTop />
               <GrowthHooks />
+              <PostAuthRedirector />
               <Routes>
                 {/* Public routes — accessible without login */}
                 <Route path="/" element={<Landing />} />

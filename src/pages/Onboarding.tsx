@@ -6,6 +6,7 @@ import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { SEOHead } from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
+import { consumeRedirect } from "@/lib/authRedirect";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
@@ -385,7 +386,10 @@ export default function Onboarding() {
               {t("onboarding.pipeline_active_desc")}
             </p>
             <div className="flex items-center justify-center gap-2">
-              <Button onClick={() => navigate("/home")} className="gap-2">
+              <Button onClick={() => {
+                const pending = consumeRedirect();
+                navigate(pending || "/home", { replace: true });
+              }} className="gap-2">
                 {t("onboarding.back_to_cockpit")}
                 <ArrowRight className="h-4 w-4" />
               </Button>
