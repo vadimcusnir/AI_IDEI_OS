@@ -92,18 +92,11 @@ const Community = lazyRetry(() => import("./pages/Community"));
 const CommunityThread = lazyRetry(() => import("./pages/CommunityThread"));
 
 const VIPDashboard = lazyRetry(() => import("./pages/VIPDashboard"));
-const DataPipeline = lazyRetry(() => import("./pages/DataPipeline"));
 const RuntimeDashboard = lazyRetry(() => import("./pages/RuntimeDashboard"));
-const CusnirOSOperator = lazyRetry(() => import("./pages/CusnirOSOperator"));
-const CusnirOSPage = lazyRetry(() => import("./pages/CusnirOSPage"));
-const CusnirOSMap = lazyRetry(() => import("./pages/CusnirOSMap"));
-const CusnirOSArchitecture = lazyRetry(() => import("./pages/CusnirOSArchitecture"));
 const About = lazyRetry(() => import("./pages/About"));
 const AboutVadimCusnir = lazyRetry(() => import("./pages/AboutVadimCusnir"));
 const SecurityDocs = lazyRetry(() => import("./pages/SecurityDocs"));
-const VttValidator = lazyRetry(() => import("./pages/VttValidator"));
 const DatabaseRelations = lazyRetry(() => import("./pages/DatabaseRelations"));
-const WalletPage = lazyRetry(() => import("./pages/WalletPage"));
 const SecuritySettings = lazyRetry(() => import("./pages/SecuritySettings"));
 const GamificationPage = lazyRetry(() => import("./pages/GamificationPage"));
 const AnalyticsDashboard = lazyRetry(() => import("./pages/AnalyticsDashboard"));
@@ -115,10 +108,6 @@ const Pricing = lazyRetry(() => import("./pages/Pricing"));
 
 const ServiceResults = lazyRetry(() => import("./pages/ServiceResults"));
 const ProductSurfacePage = lazyRetry(() => import("./pages/ProductSurfacePage"));
-const NotebookWorkspace = lazyRetry(() => import("./pages/NotebookWorkspace"));
-const NotebookDetail = lazyRetry(() => import("./pages/NotebookDetail"));
-const CapitalizationEngine = lazyRetry(() => import("./pages/CapitalizationEngine"));
-const HeadlineGenerator = lazyRetry(() => import("./pages/HeadlineGenerator"));
 const ServicesCatalog = lazyRetry(() => import("./pages/ServicesCatalog"));
 const Programs = lazyRetry(() => import("./pages/Programs"));
 const JobDetail = lazyRetry(() => import("./pages/JobDetail"));
@@ -212,7 +201,7 @@ const App = () => (
                 <Route path="/pricing" element={<AppLayout><ErrorBoundary fallbackTitle="Pricing failed to load"><Pricing /></ErrorBoundary></AppLayout>} />
                 <Route path="/about" element={<AppLayout><ErrorBoundary fallbackTitle="About failed to load"><About /></ErrorBoundary></AppLayout>} />
                 <Route path="/about-vadim-cusnir" element={<AppLayout><ErrorBoundary fallbackTitle="About Vadim failed to load"><AboutVadimCusnir /></ErrorBoundary></AppLayout>} />
-                <Route path="/tools/vtt-validator" element={<AppLayout><ErrorBoundary fallbackTitle="VTT Validator failed to load"><VttValidator /></ErrorBoundary></AppLayout>} />
+                <Route path="/tools/vtt-validator" element={<Navigate to="/home" replace />} />
                 <Route path="/payment/result" element={<AppLayout><ErrorBoundary fallbackTitle="Payment failed to load"><PaymentResult /></ErrorBoundary></AppLayout>} />
                 <Route path="/privacy" element={<AppLayout><ErrorBoundary fallbackTitle="Privacy failed to load"><PrivacyPolicy /></ErrorBoundary></AppLayout>} />
                 <Route path="/community" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
@@ -251,25 +240,25 @@ const App = () => (
                 <Route path="/workspace" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Workspace failed to load"><WorkspaceSettings /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/kb/:category" element={<Navigate to="/library" replace />} />
                 <Route path="/vip" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="VIP failed to load"><VIPDashboard /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/cusnir-os" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="CusnirOS failed to load"><CusnirOSPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/cusnir-os/map" element={<ProtectedRoute><ErrorBoundary fallbackTitle="Map failed to load"><CusnirOSMap /></ErrorBoundary></ProtectedRoute>} />
-                <Route path="/cusnir-os/architecture" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Architecture failed to load"><CusnirOSArchitecture /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/wallet" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Wallet failed to load"><WalletPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/cusnir-os" element={<Navigate to="/home" replace />} />
+                <Route path="/cusnir-os/map" element={<Navigate to="/home" replace />} />
+                <Route path="/cusnir-os/architecture" element={<Navigate to="/home" replace />} />
+                <Route path="/wallet" element={<Navigate to="/credits" replace />} />
                 <Route path="/gamification" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Gamification failed to load"><GamificationPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/data-pipeline" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><DataPipeline /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/data-pipeline" element={<Navigate to="/pipeline" replace />} />
                 <Route path="/integrations" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Integrations failed to load"><Integrations /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/cognitive-units" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Cognitive units failed to load"><CognitiveUnits /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/collection-runs" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Collection runs failed to load"><CollectionRuns /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/notebooks" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Notebooks failed to load"><NotebookWorkspace /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/notebook/:id" element={<ProtectedRoute><AppLayout fullHeight><ErrorBoundary fallbackTitle="Notebook failed to load"><NotebookDetail /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/capitalization" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Engine failed to load"><CapitalizationEngine /></ErrorBoundary></AppLayout></ProtectedRoute>} />
-                <Route path="/headline-generator" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Generator failed to load"><HeadlineGenerator /></ErrorBoundary></AppLayout></ProtectedRoute>} />
+                <Route path="/notebooks" element={<Navigate to="/library" replace />} />
+                <Route path="/notebook/:id" element={<Navigate to="/library" replace />} />
+                <Route path="/capitalization" element={<Navigate to="/marketplace" replace />} />
+                <Route path="/headline-generator" element={<Navigate to="/home" replace />} />
                 <Route path="/services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
                 <Route path="/master-agent" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Master Agent failed"><MasterAgent /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 <Route path="/automations" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Automations failed"><AutomationTemplates /></ErrorBoundary></AppLayout></ProtectedRoute>} />
                 {/* Admin routes */}
                 <Route path="/runtime" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Runtime failed to load"><RuntimeDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
-                <Route path="/cusnir-os/operator" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Operator failed to load"><CusnirOSOperator /></ErrorBoundary></AppLayout></AdminRoute>} />
+                <Route path="/cusnir-os/operator" element={<Navigate to="/admin" replace />} />
                 <Route path="/analytics" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Analytics failed to load"><AnalyticsDashboard /></ErrorBoundary></AppLayout></AdminRoute>} />
                 <Route path="/security" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="Security failed to load"><SecurityDocs /></ErrorBoundary></AppLayout></AdminRoute>} />
                 <Route path="/db-schema" element={<AdminRoute><AppLayout><ErrorBoundary fallbackTitle="DB Schema failed to load"><DatabaseRelations /></ErrorBoundary></AppLayout></AdminRoute>} />
