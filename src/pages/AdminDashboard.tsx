@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, lazy, Suspense, useMemo } from "react";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText } from "lucide-react";
+import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText, Server, Gauge, ShieldCheck, Compass } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -40,6 +40,11 @@ const AdminAdvancedTab = lazy(() => import("@/components/admin/AdminAdvancedTab"
 const Root2PricingTab = lazy(() => import("@/components/admin/Root2PricingTab").then(m => ({ default: m.Root2PricingTab })));
 const LLMIndexationTab = lazy(() => import("@/components/admin/LLMIndexationTab").then(m => ({ default: m.LLMIndexationTab })));
 const AdminBlogTab = lazy(() => import("@/components/admin/AdminBlogTab").then(m => ({ default: m.AdminBlogTab })));
+const AdminKernelTab = lazy(() => import("@/components/admin/AdminKernelTab").then(m => ({ default: m.AdminKernelTab })));
+const AdminRuntimeTab = lazy(() => import("@/components/admin/AdminRuntimeTab").then(m => ({ default: m.AdminRuntimeTab })));
+const AdminComplianceTab = lazy(() => import("@/components/admin/AdminComplianceTab").then(m => ({ default: m.AdminComplianceTab })));
+const AdminCommandTab = lazy(() => import("@/components/admin/AdminCommandTab").then(m => ({ default: m.AdminCommandTab })));
+const AdminAnalyticsExtendedTab = lazy(() => import("@/components/admin/AdminAnalyticsExtendedTab").then(m => ({ default: m.AdminAnalyticsExtendedTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -67,6 +72,15 @@ const TAB_GROUPS = [
     ],
   },
   {
+    group: "Kernel",
+    icon: Server,
+    tabs: [
+      { value: "kernel", label: "Contracts", icon: Server },
+      { value: "runtime", label: "Runtime", icon: Gauge },
+      { value: "command", label: "Command", icon: Compass },
+    ],
+  },
+  {
     group: "Economy",
     icon: DollarSign,
     tabs: [
@@ -83,6 +97,7 @@ const TAB_GROUPS = [
       { value: "changelog", label: "Changelog", icon: ScrollText },
       { value: "knowledge-graph", label: "Graph", icon: Network },
       { value: "analytics", label: "Analytics", icon: BarChart3 },
+      { value: "analytics-ext", label: "Extended", icon: TrendingUp },
       { value: "contributions", label: "Contributions", icon: Brain },
       { value: "moderation", label: "Moderation", icon: MessageCircle },
       { value: "llm-index", label: "LLM Index", icon: Bot },
@@ -97,6 +112,7 @@ const TAB_GROUPS = [
       { value: "ledger", label: "Ledger", icon: ScrollText },
       { value: "abuse", label: "Abuse", icon: AlertTriangle },
       { value: "compliance", label: "Compliance", icon: ScrollText },
+      { value: "compliance-audit", label: "Audit", icon: ShieldCheck },
       { value: "incidents", label: "Incidents", icon: AlertCircle },
       { value: "emergency", label: "Emergency", icon: ShieldAlert },
     ],
@@ -273,6 +289,11 @@ export default function AdminDashboard() {
             <TabsContent value="root2"><Suspense fallback={<TabLoader />}><Root2PricingTab /></Suspense></TabsContent>
             <TabsContent value="llm-index"><Suspense fallback={<TabLoader />}><LLMIndexationTab /></Suspense></TabsContent>
             <TabsContent value="blog"><Suspense fallback={<TabLoader />}><AdminBlogTab /></Suspense></TabsContent>
+            <TabsContent value="kernel"><Suspense fallback={<TabLoader />}><AdminKernelTab /></Suspense></TabsContent>
+            <TabsContent value="runtime"><Suspense fallback={<TabLoader />}><AdminRuntimeTab /></Suspense></TabsContent>
+            <TabsContent value="compliance-audit"><Suspense fallback={<TabLoader />}><AdminComplianceTab /></Suspense></TabsContent>
+            <TabsContent value="command"><Suspense fallback={<TabLoader />}><AdminCommandTab /></Suspense></TabsContent>
+            <TabsContent value="analytics-ext"><Suspense fallback={<TabLoader />}><AdminAnalyticsExtendedTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>

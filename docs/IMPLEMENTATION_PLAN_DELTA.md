@@ -25,8 +25,11 @@
 | **Service Contract System** | service_units (120), prompt_vault (120), deliverable_contracts (120), service_release_log (120) | ✅ COMPLET |
 | **Execution Kernel** | intent_map (6 intents), mms_nodes (118), mms_edges (98), intent-router EF, prompt-broker EF, mms-auto-composer EF | ✅ COMPLET |
 | **User Surface Translation** | OTOS→Action, MMS→System, LCSS→Program în UI + /programs route + nav | ✅ COMPLET |
-| **Admin Kernel Tab** | CRUD pe service_units, prompt_vault, release gate | 🔴 NEEXISTENT |
-| **Admin Runtime Tab** | 6 panouri: router, jobs, prompt broker, artifacts, pricing, capacity | 🔴 NEEXISTENT |
+| **Admin Kernel Tab** | CRUD service_units, prompt_vault, deliverable_contracts, release gate console | ✅ COMPLET |
+| **Admin Runtime Tab** | 6 panels: router, jobs, prompt broker, artifacts, pricing, capacity | ✅ COMPLET |
+| **Admin Compliance Tab** | Root2, atomicity, schema, i18n, prompt exposure, overlap checks | ✅ COMPLET |
+| **Admin Command Tab** | Strategic suggestions, priority scoring, warnings, system analysis | ✅ COMPLET |
+| **Admin Analytics Extended** | Revenue per level, neurons burn, intent funnel, roles/mechanisms | ✅ COMPLET |
 | **Command Layer** | Decision engine, priority engine, command types | 🔴 NEEXISTENT |
 | **i18n RU** | Limba rusă pe suprafețe publice | 🔴 NEEXISTENT |
 | **Release Gates** | Validare automată atomicitate + dedup + Root2 + schema | 🔴 NEEXISTENT |
