@@ -276,4 +276,4 @@ naming_translation:
 ## STARE CURENTĂ
 
 - **Fazele 0-12**: ✅ TOATE COMPLETATE
-- **Rămâne**: Ruta /programs (LCSS expuse ca Programs pentru user)
+- **Ruta /programs**: ✅ COMPLETĂ (exista deja)
