@@ -23,6 +23,7 @@ import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
 import { StorageUsagePanel } from "@/components/storage/StorageUsagePanel";
 import { StorageBillingPanel } from "@/components/credits/StorageBillingPanel";
 import { DailySpendingPanel } from "@/components/credits/DailySpendingPanel";
+import { ConsumptionAnalytics } from "@/components/credits/ConsumptionAnalytics";
 import { RuleEnginePanel } from "@/components/automation/RuleEnginePanel";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
 import { FlowTip } from "@/components/onboarding/FlowTip";
