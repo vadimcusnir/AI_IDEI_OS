@@ -16,6 +16,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ProfileGeneratorPanel } from "@/components/intelligence/ProfileGeneratorPanel";
+import { ConsentPanel } from "@/components/intelligence/ConsentPanel";
+import { StateTransitionsTimeline } from "@/components/intelligence/StateTransitionsTimeline";
+import { PublicIndicatorsEditor } from "@/components/intelligence/PublicIndicatorsEditor";
+import { GuardrailResultsPanel } from "@/components/intelligence/GuardrailResultsPanel";
 
 interface ProfileRow {
   id: string;
@@ -252,7 +256,7 @@ export default function AdminMediaProfiles() {
 
           {/* Detail panel */}
           {selectedProfile && (
-            <div className="w-80 shrink-0 bg-card border border-border rounded-lg p-5 sticky top-4 self-start space-y-4">
+            <div className="w-96 shrink-0 bg-card border border-border rounded-lg p-5 sticky top-4 self-start space-y-5 max-h-[calc(100vh-6rem)] overflow-y-auto">
               <h3 className="text-sm font-semibold">{selectedProfile.person_name}</h3>
               <div className="text-xs space-y-1 text-muted-foreground">
                 <div>Slug: <span className="text-foreground font-mono">{selectedProfile.public_slug}</span></div>
@@ -260,32 +264,36 @@ export default function AdminMediaProfiles() {
                 <div>Source: <span className="text-foreground">{selectedProfile.source_type}</span></div>
                 <div>Status: <span className={cn("font-medium", STATUS_COLORS[selectedProfile.visibility_status])}>{selectedProfile.visibility_status}</span></div>
                 <div>Risk: <span className={cn("font-medium", RISK_COLORS[selectedProfile.risk_flag])}>{selectedProfile.risk_flag}</span></div>
-                <div>Consent: {selectedProfile.consent_required ? "Required" : "N/A"}</div>
               </div>
 
-              {/* Guardrails */}
+              {/* ═══ Consent Tracking ═══ */}
+              <div className="pt-3 border-t border-border">
+                <ConsentPanel profileId={selectedProfile.id} consentRequired={selectedProfile.consent_required} />
+              </div>
+
+              {/* ═══ Guardrails ═══ */}
               {guardrails && (
-                <div className="space-y-2">
-                  <h4 className="text-xs font-semibold flex items-center gap-1">
-                    <Shield className="h-3 w-3" /> Guardrail Checks
-                  </h4>
-                  {guardrails.checks.map((check, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs">
-                      {check.status === "PASS" ? <CheckCircle2 className="h-3.5 w-3.5 text-success" /> :
-                       check.status === "FAIL" ? <XCircle className="h-3.5 w-3.5 text-destructive" /> :
-                       <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
-                      <span className="capitalize">{check.gate.replace("_", " ")}</span>
-                      {check.reason && <span className="text-muted-foreground">({check.reason})</span>}
-                    </div>
-                  ))}
-                  <div className={cn("text-xs font-medium px-2 py-1 rounded", guardrails.all_pass ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive")}>
-                    {guardrails.all_pass ? "✅ Ready for publish" : "⛔ Cannot publish"}
-                  </div>
+                <div className="pt-3 border-t border-border">
+                  <GuardrailResultsPanel
+                    checks={guardrails.checks}
+                    allPass={guardrails.all_pass}
+                    onRerun={() => runGuardrails(selectedProfile.id)}
+                  />
                 </div>
               )}
 
-              {/* Actions */}
-              <div className="space-y-2 pt-2 border-t border-border">
+              {/* ═══ Public Indicators Editor ═══ */}
+              <div className="pt-3 border-t border-border">
+                <PublicIndicatorsEditor profileId={selectedProfile.id} />
+              </div>
+
+              {/* ═══ State Transitions Audit ═══ */}
+              <div className="pt-3 border-t border-border">
+                <StateTransitionsTimeline profileId={selectedProfile.id} />
+              </div>
+
+              {/* ═══ Actions ═══ */}
+              <div className="space-y-2 pt-3 border-t border-border">
                 <h4 className="text-xs font-semibold">Actions</h4>
                 {selectedProfile.visibility_status === "draft" && (
                   <Button size="sm" className="w-full" variant="outline" onClick={() => transitionStatus(selectedProfile.id, "review")}>
