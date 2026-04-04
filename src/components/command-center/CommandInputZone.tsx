@@ -20,6 +20,7 @@ interface CommandInputZoneProps {
   onSubmit: () => void;
   onStop: () => void;
   loading: boolean;
+  isSubmitting?: boolean;
   files: File[];
   onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: (idx: number) => void;
