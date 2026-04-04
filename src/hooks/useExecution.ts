@@ -110,7 +110,7 @@ export function useExecution(context: ExecutionContext) {
     const { data: job, error: jobErr } = await supabase
       .from("neuron_jobs")
       .insert({
-        neuron_id: neuron.id,
+        neuron_id: Number(neuron.id),
         worker_type: serviceKey,
         status: "pending",
         input: inputParams,
