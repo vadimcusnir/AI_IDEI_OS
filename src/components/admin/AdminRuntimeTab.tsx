@@ -143,7 +143,7 @@ export function AdminRuntimeTab() {
         </Panel>
 
         {/* Artifact Pipeline */}
-        <Panel title="Artifact Pipeline" icon={Package} accent="text-blue-500">
+        <Panel title="Artifact Pipeline" icon={Package} accent="text-info">
           <Metric label="Total Artifacts" value={data.artifacts.total} />
           <div className="space-y-1">
             <div className="flex items-center justify-between">
