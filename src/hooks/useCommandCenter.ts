@@ -47,6 +47,7 @@ import {
 const QUICK_EXEC_CREDIT_THRESHOLD = 50;
 
 export function useCommandCenter() {
+  const { isOnline } = useOnlineStatus();
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
