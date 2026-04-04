@@ -69,7 +69,7 @@
     "subtitle": "With the right system, a single idea stops being a thought and starts becoming leverage.",
     "steps": [
       { "num": "01", "title": "Choose the problem", "text": "Start with what you need: copy, content, positioning, offer clarity, or execution support." },
-      { "num": "02", "title": "Use the right resource", "text": "Pick a framework, prompt, assistant, or example designed for that exact type of work." },
+      { "num": "02", "title": "Use the right resource", "text": "Pick a framework, prompt, execution agent, or example designed for that exact type of work." },
       { "num": "03", "title": "Turn it into an asset", "text": "Produce something usable: a post, email, landing page, offer, script, or campaign asset." },
       { "num": "04", "title": "Repeat with speed", "text": "Stop improvising. Start producing with clarity, consistency, and momentum." }
     ],
