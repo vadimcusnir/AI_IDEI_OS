@@ -28,6 +28,7 @@ interface CommandInputZoneProps {
   onShowSlashMenuChange: (show: boolean) => void;
   onSlashSelect: (cmd: string) => void;
   onAttachAction?: (action: string) => void;
+  inputHistory?: string[];
 }
 
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
