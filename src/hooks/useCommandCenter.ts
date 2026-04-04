@@ -1,9 +1,9 @@
 /**
  * useCommandCenter — Extracted hook for /home Command Center.
- * All state, handlers, effects, and derived values in one place.
- * CC-T06: Reduces Home.tsx from 800+ lines to ~300 lines of layout.
+ * Refactored (A2): file handling → chatFileService, session → chatSessionService.
+ * Fixes: A1 (quick-exec), A4 (debounce), A5 (persistence), A9 (cleanup).
  */
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import type { CommandMode } from "@/components/command-center/ModeChipBar";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,6 @@ import { toast } from "sonner";
 import { type OutputItem } from "@/stores/executionStore";
 import { type CommandInputZoneRef } from "@/components/command-center/CommandInputZone";
 import { type RouteResult } from "@/components/command-center/CommandRouter";
-import { type MMSystem } from "@/components/command-center/IntentSystems";
 import {
   logCommandSubmitted, logPlanConfirmed, logExecutionCompleted,
   logPermissionDenied, logEconomicGate,
@@ -34,6 +33,17 @@ import {
   trackSessionAction, trackError,
 } from "@/lib/commandCenterTelemetry";
 import { classifyError } from "@/components/command-center/ErrorRecoveryHandler";
+import {
+  validateFiles, validateInput, processFilesForPrompt,
+} from "@/services/chatFileService";
+import {
+  persistMessages, restoreMessages, clearPersistedMessages,
+  persistOutputs, restoreOutputs,
+  saveDraft, restoreDraft, clearDraft,
+} from "@/services/chatSessionService";
+
+// ═══ Quick-exec threshold (A1): plans under this cost skip EconomicGate ═══
+const QUICK_EXEC_CREDIT_THRESHOLD = 50;
 
 export function useCommandCenter() {
   const { user, loading: authLoading } = useAuth();
@@ -64,7 +74,7 @@ export function useCommandCenter() {
 
   // ═══ UI state ═══
   const initialQ = searchParams.get("q") || "";
-  const [input, setInput] = useState(initialQ);
+  const [input, setInput] = useState(initialQ || restoreDraft());
   const [files, setFiles] = useState<File[]>([]);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [showOutputs, setShowOutputs] = useState(false);
@@ -88,7 +98,7 @@ export function useCommandCenter() {
   // ═══ Lifecycle hooks ═══
   useOnboardingRedirect();
 
-  // Cleanup AbortController on unmount to prevent memory leaks (A9)
+  // Cleanup AbortController on unmount (A9)
   useEffect(() => {
     return () => {
       abortRef.current?.abort();
@@ -96,22 +106,24 @@ export function useCommandCenter() {
     };
   }, []);
 
-  // Persist draft input to localStorage (A5)
+  // Persist draft input (A5)
   useEffect(() => {
-    if (input.trim()) {
-      localStorage.setItem("cc_draft_input", input);
-    } else {
-      localStorage.removeItem("cc_draft_input");
-    }
+    saveDraft(input);
   }, [input]);
 
-  // Restore draft on mount
+  // Persist messages whenever they change (A5)
   useEffect(() => {
-    if (!initialQ) {
-      const draft = localStorage.getItem("cc_draft_input");
-      if (draft) setInput(draft);
+    if (messages.length > 0) {
+      persistMessages(messages);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [messages]);
+
+  // Persist outputs whenever they change (A5)
+  useEffect(() => {
+    if (outputs.length > 0) {
+      persistOutputs(outputs);
+    }
+  }, [outputs]);
 
   // Auto-trigger low balance gate
   useEffect(() => {
@@ -140,7 +152,7 @@ export function useCommandCenter() {
     executionActions.setStreaming(false);
   }, [executionEngine]);
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts (with proper cleanup — A9)
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -156,21 +168,28 @@ export function useCommandCenter() {
     return () => window.removeEventListener("keydown", handler);
   }, [loading, isStreaming, showOutputs, stopActiveExecution]);
 
-  // Load session on mount
+  // Load session on mount (A5: also restore persisted messages/outputs)
   useEffect(() => {
     if (!user || sessionLoaded) return;
     setSessionLoaded(true);
     loadCurrentSession().then((loaded) => {
-      if (loaded.length > 0) executionActions.setMessages(loaded);
+      if (loaded.length > 0) {
+        executionActions.setMessages(loaded);
+      } else {
+        // Try restoring from sessionStorage
+        const restored = restoreMessages();
+        if (restored.length > 0) executionActions.setMessages(restored);
+        const restoredOutputs = restoreOutputs();
+        if (restoredOutputs.length > 0) executionActions.setOutputs(restoredOutputs);
+      }
     });
   }, [user, sessionLoaded, loadCurrentSession]);
 
-  // Auto-submit from ?q= — CC-R02: actually execute, not just focus
+  // Auto-submit from ?q=
   useEffect(() => {
     if (initialQ && user && sessionLoaded && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true;
       setSearchParams({}, { replace: true });
-      // Defer to next tick so input state is settled
       const timer = setTimeout(() => {
         handleSubmit(true);
       }, 100);
@@ -197,38 +216,24 @@ export function useCommandCenter() {
   }, []);
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
 
-  // ═══ SUBMIT ═══
-  const handleSubmit = async (autoExec = false) => {
+  // ═══ SUBMIT (A4: isSubmitting guard prevents double-submit) ═══
+  const handleSubmit = useCallback(async (autoExec = false) => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
     if (isSubmitting) return;
 
-    // Validate input length (max 50K chars)
-    if (input.trim().length > 50000) {
-      toast.error(t("errors:input_too_long", { defaultValue: "Message is too long (max 50,000 characters)" }));
+    // Validate input length
+    const inputValidation = validateInput(input.trim());
+    if (!inputValidation.valid) {
+      toast.error(t(inputValidation.errorKey!, { defaultValue: inputValidation.errorDefault }));
       return;
     }
 
-    // Validate files
-    const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
-    const MAX_FILES = 10;
-    const BLOCKED_EXTENSIONS = [".exe", ".bat", ".sh", ".dll", ".bin"];
-    
-    if (files.length > MAX_FILES) {
-      toast.error(t("errors:too_many_files", { defaultValue: `Maximum ${MAX_FILES} files allowed` }));
+    // Validate files (A8: pre-upload validation)
+    const fileValidation = validateFiles(files);
+    if (!fileValidation.valid) {
+      toast.error(t(fileValidation.errorKey!, { defaultValue: fileValidation.errorDefault }));
       return;
-    }
-    
-    for (const file of files) {
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error(t("errors:file_too_large", { defaultValue: `"${file.name}" exceeds 20MB limit` }));
-        return;
-      }
-      const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
-      if (BLOCKED_EXTENSIONS.includes(ext)) {
-        toast.error(t("errors:file_type_blocked", { defaultValue: `"${file.name}" — file type not supported` }));
-        return;
-      }
     }
 
     setIsSubmitting(true);
@@ -236,12 +241,11 @@ export function useCommandCenter() {
     const rawInput = input.trim();
     setInput("");
     setFiles([]);
-    localStorage.removeItem("cc_draft_input");
+    clearDraft();
     setShowOutputs(false);
     setShowPostExecution(false);
     setPermissionBlock(null);
 
-    // CC-V02: Track submission
     trackCommandSubmitted(rawInput, files.length, autoExec);
 
     try {
@@ -267,7 +271,7 @@ export function useCommandCenter() {
           objective: route.intent.description,
         });
         setShowEconomicGate(true);
-        if (user) logEconomicGate(user.id, false, balance, route.intent.estimatedCredits, tierDiscount);
+        logEconomicGate(user.id, false, balance, route.intent.estimatedCredits, tierDiscount);
         return;
       }
 
@@ -285,32 +289,15 @@ export function useCommandCenter() {
         executionActions.setLoading(true);
         executionActions.setStreaming(true);
 
-        // CC-R01: Persist AbortController before stream starts
         const controller = new AbortController();
         abortRef.current = controller;
 
-        let fileContent = "";
-        for (const file of files) {
-          if (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".csv") || file.name.endsWith(".json")) {
-            fileContent += `\n--- ${file.name} ---\n` + await file.text();
-          } else if (file.type.startsWith("audio/") || file.type.startsWith("video/") || file.name.match(/\.(mp3|mp4|wav|m4a|webm|ogg)$/i)) {
-            const filePath = `chat-uploads/${user.id}/${Date.now()}_${file.name}`;
-            const { error: uploadErr } = await supabase.storage.from("user-uploads").upload(filePath, file);
-            if (uploadErr) {
-              fileContent += `\n[Upload failed: ${file.name} — ${uploadErr.message}]`;
-            } else {
-              const { data: urlData } = supabase.storage.from("user-uploads").getPublicUrl(filePath);
-              fileContent += `\n[Uploaded: ${file.name} → ${urlData.publicUrl}]`;
-            }
-          } else {
-            fileContent += `\n[File attached: ${file.name} (${file.type || 'unknown'}, ${(file.size / 1024).toFixed(0)} KB)]`;
-          }
-        }
-
+        // A2: File processing extracted to service
+        const fileContent = await processFilesForPrompt(files, user.id);
         const contentWithFiles = rawInput + fileContent;
         await executionEngine.streamAgentResponse(contentWithFiles, route, controller.signal);
 
-        // CC-R04: Read fresh state from store after stream completes, not stale closures
+        // Read fresh state after stream completes
         const freshState = getExecutionState();
         const freshOutputs = freshState.outputs;
         const freshExec = freshState.execution;
@@ -346,69 +333,111 @@ export function useCommandCenter() {
       abortRef.current = null;
       setIsSubmitting(false);
     }
-  };
+  }, [input, files, user, isSubmitting, executionEngine, execState, balance, tier, tierDiscount, t, saveMessage, persistRun]);
 
-  // ═══ Handlers ═══
+  // ═══ Handlers (memoized — A9: reduce re-renders) ═══
   const handleStop = useCallback(() => { stopActiveExecution(); }, [stopActiveExecution]);
 
-  const clearChat = () => {
+  const clearChat = useCallback(() => {
     trackSessionAction("started");
-    newSession(); executionActions.reset();
+    newSession();
+    executionActions.reset();
     executionActions.clearMessages();
-    executionActions.setOutputs([]); setShowOutputs(false); setShowPostExecution(false);
-    localStorage.removeItem("cc_draft_input");
-  };
+    executionActions.setOutputs([]);
+    setShowOutputs(false);
+    setShowPostExecution(false);
+    clearDraft();
+    clearPersistedMessages();
+    // A10: ensure we stay on /home
+    navigate("/home", { replace: true });
+  }, [newSession, navigate]);
 
-  const handleSaveAllOutputs = async () => {
+  const handleSaveAllOutputs = useCallback(async () => {
     if (outputs.length === 0) return;
     setSavingAllOutputs(true);
-    const count = await persistOutputsBatch(outputs.map(o => ({ title: o.title, content: o.content, type: o.type })), [execState.intent]);
-    setSavingAllOutputs(false);
-    trackOutputEngagement("save_all", outputs.length);
-    toast[count > 0 ? "success" : "error"](count > 0 ? `Saved ${count} outputs as assets` : "Failed to save outputs");
-  };
+    try {
+      const count = await persistOutputsBatch(
+        outputs.map(o => ({ title: o.title, content: o.content, type: o.type })),
+        [execState.intent],
+      );
+      trackOutputEngagement("save_all", outputs.length);
+      toast[count > 0 ? "success" : "error"](count > 0 ? `Saved ${count} outputs as assets` : "Failed to save outputs");
+    } catch {
+      toast.error("Failed to save outputs");
+    } finally {
+      setSavingAllOutputs(false);
+    }
+  }, [outputs, execState.intent, persistOutputsBatch]);
 
-  const handleSaveTemplate = async () => {
+  const handleSaveTemplate = useCallback(async () => {
     if (!user || execState.phase !== "completed") return;
     try {
       const { error } = await supabase.from("agent_plan_templates").insert({
-        intent_key: execState.intent, name: `${execState.planName} (saved)`,
+        intent_key: execState.intent,
+        name: `${execState.planName} (saved)`,
         description: execState.objective,
         steps: execState.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })) as any,
-        estimated_credits: execState.totalCredits, estimated_duration_seconds: execState.steps.length * 5, is_default: false,
+        estimated_credits: execState.totalCredits,
+        estimated_duration_seconds: execState.steps.length * 5,
+        is_default: false,
       });
       if (error) throw error;
       toast.success("Workflow saved as template");
-    } catch { toast.error("Failed to save template"); }
-  };
+    } catch {
+      toast.error("Failed to save template");
+    }
+  }, [user, execState]);
 
-  const handleRerun = () => {
+  const handleRerun = useCallback(() => {
     const lastUser = messages.filter(m => m.role === "user").pop();
-    if (lastUser) { setInput(lastUser.content); inputZoneRef.current?.focus(); }
-  };
+    if (lastUser) {
+      setInput(lastUser.content);
+      inputZoneRef.current?.focus();
+    }
+  }, [messages]);
 
-  const handleCommand = (prompt: string, autoExec = false) => {
+  const handleCommand = useCallback((prompt: string, autoExec = false) => {
     setInput(prompt);
     if (autoExec) {
       setTimeout(() => { handleSubmit(true); }, 50);
     } else {
       inputZoneRef.current?.focus();
     }
-  };
+  }, [handleSubmit]);
 
   const handlePipelineMessage = useCallback((role: "user" | "assistant", content: string, meta?: Record<string, any>) => {
-    const msg = { id: crypto.randomUUID(), role, content, timestamp: new Date(), ...(meta ? { metadata: meta } : {}) };
-    saveMessage(msg as any);
-    executionActions.addMessage(msg as any);
+    const msgId = crypto.randomUUID();
+    const msg = { id: msgId, role, content, timestamp: new Date(), ...(meta ? { metadata: meta } : {}) };
+    // A5 fix: check for duplicate before adding
+    const existing = getExecutionState().messages;
+    const isDuplicate = existing.some(m => m.role === role && m.content === content && 
+      Math.abs(new Date(m.timestamp).getTime() - Date.now()) < 2000);
+    if (!isDuplicate) {
+      saveMessage(msg as any);
+      executionActions.addMessage(msg as any);
+    }
   }, [saveMessage]);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]);
-  };
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setFiles(prev => {
+        const combined = [...prev, ...newFiles];
+        // Enforce max files limit immediately
+        if (combined.length > 10) {
+          toast.error(t("errors:too_many_files", { defaultValue: `Maximum 10 files allowed` }));
+          return prev;
+        }
+        return combined;
+      });
+    }
+  }, [t]);
 
-  const handleRemoveFile = (idx: number) => setFiles(prev => prev.filter((_, i) => i !== idx));
+  const handleRemoveFile = useCallback((idx: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== idx));
+  }, []);
 
-  const handleAttachAction = (action: string) => {
+  const handleAttachAction = useCallback((action: string) => {
     const actionPrompts: Record<string, string> = {
       extract_neurons: "/extract neurons from content",
       generate_content: "/generate content from neurons",
@@ -419,49 +448,59 @@ export function useCommandCenter() {
     };
     const prompt = actionPrompts[action];
     if (prompt) handleCommand(prompt, true);
-  };
+  }, [handleCommand]);
 
-  const handlePlanExecute = async () => {
-    if (execState.totalCredits > 50) {
+  // A1: Quick-exec for cheap plans, EconomicGate only for expensive ones
+  const handlePlanExecute = useCallback(async () => {
+    if (execState.totalCredits > QUICK_EXEC_CREDIT_THRESHOLD) {
       setShowEconomicGate(true);
       trackEconomicGate("shown", balance, execState.totalCredits);
     } else if (pendingRoute) {
       const lastUserMsg = messages.filter(m => m.role === "user").pop();
       await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
     }
-  };
+  }, [execState.totalCredits, balance, pendingRoute, messages, executionEngine]);
 
-  const handleEconomicProceed = async () => {
+  const handleEconomicProceed = useCallback(async () => {
     setShowEconomicGate(false);
     trackEconomicGate("proceed", balance, execState.totalCredits);
     if (pendingRoute) {
       const lastUserMsg = messages.filter(m => m.role === "user").pop();
       await executionEngine.confirmAndRun(lastUserMsg?.content || "", pendingRoute);
     }
-  };
+  }, [balance, execState.totalCredits, pendingRoute, messages, executionEngine]);
 
-  const handleEconomicCancel = () => {
+  const handleEconomicCancel = useCallback(() => {
     setShowEconomicGate(false);
     trackEconomicGate("cancel", balance, execState.totalCredits);
     if (user) logEconomicGate(user.id, false, balance, execState.totalCredits, tierDiscount);
     executionActions.reset();
-  };
+  }, [balance, execState.totalCredits, user, tierDiscount]);
 
-  // ═══ Derived ═══
-  const isEmptyState = messages.length === 0 && !loading;
-  const hour = new Date().getHours();
-  const greeting = hour < 6
-    ? t("common:greeting_night", { defaultValue: "Good night" })
-    : hour < 12
-    ? t("common:greeting_morning", { defaultValue: "Good morning" })
-    : hour < 18
-    ? t("common:greeting_afternoon", { defaultValue: "Good afternoon" })
-    : t("common:greeting_evening", { defaultValue: "Good evening" });
-  const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
-  const durationSeconds =
-    execState.startedAt && execState.completedAt
-      ? Math.round((new Date(execState.completedAt).getTime() - new Date(execState.startedAt).getTime()) / 1000)
-      : 0;
+  const onSlashSelect = useCallback((cmd: string) => {
+    setInput(cmd);
+    inputZoneRef.current?.focus();
+  }, []);
+
+  // ═══ Derived (memoized) ═══
+  const isEmptyState = useMemo(() => messages.length === 0 && !loading, [messages.length, loading]);
+  
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 6) return t("common:greeting_night", { defaultValue: "Good night" });
+    if (hour < 12) return t("common:greeting_morning", { defaultValue: "Good morning" });
+    if (hour < 18) return t("common:greeting_afternoon", { defaultValue: "Good afternoon" });
+    return t("common:greeting_evening", { defaultValue: "Good evening" });
+  }, [t]);
+
+  const userName = useMemo(() => {
+    return user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
+  }, [user]);
+
+  const durationSeconds = useMemo(() => {
+    if (!execState.startedAt || !execState.completedAt) return 0;
+    return Math.round((new Date(execState.completedAt).getTime() - new Date(execState.startedAt).getTime()) / 1000);
+  }, [execState.startedAt, execState.completedAt]);
 
   return {
     // Auth
@@ -490,7 +529,7 @@ export function useCommandCenter() {
     handleEconomicProceed, handleEconomicCancel,
     handlePipelineMessage,
     // Slash
-    onSlashSelect: (cmd: string) => { setInput(cmd); inputZoneRef.current?.focus(); },
+    onSlashSelect,
     // t
     t,
   };
