@@ -51,7 +51,7 @@ export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuro
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.15 }}
       >
-        <MagicPipelineFlow />
+        <MagicPipelineFlow onPipelineMessage={onPipelineMessage} />
       </motion.div>
 
       {/* Proactive suggestions — max 4 */}
