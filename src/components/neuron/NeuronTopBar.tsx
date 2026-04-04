@@ -266,16 +266,36 @@ export function NeuronTopBar({
 
       <div className="w-px h-5 bg-border hidden sm:block" />
 
-      {/* Run All */}
-      <Button
-        variant="default"
-        size="sm"
-        className="h-7 gap-1.5 text-xs px-2 sm:px-3 shrink-0"
-        onClick={onRunAll}
-      >
-        <Play className="h-3 w-3" />
-        <span className="hidden sm:inline">Run</span>
-      </Button>
+      {/* Run All — only enabled when executable blocks exist */}
+      {(() => {
+        const hasExecutable = blocks?.some(b => {
+          const cfg = BLOCK_TYPE_CONFIG[b.type];
+          return cfg?.executable;
+        });
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="h-7 gap-1.5 text-xs px-2 sm:px-3 shrink-0"
+                  onClick={onRunAll}
+                  disabled={!hasExecutable}
+                >
+                  <Play className="h-3 w-3" />
+                  <span className="hidden sm:inline">Run</span>
+                </Button>
+              </span>
+            </TooltipTrigger>
+            {!hasExecutable && (
+              <TooltipContent side="bottom" className="text-[10px]">
+                Adaugă un bloc executabil (code, prompt, ai-action) pentru a rula
+              </TooltipContent>
+            )}
+          </Tooltip>
+        );
+      })()}
 
       {/* Validate */}
       <Button
