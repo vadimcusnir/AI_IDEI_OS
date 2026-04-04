@@ -10,20 +10,20 @@ export function LandingSocialProof() {
     <section className="py-32 sm:py-44" aria-label="Testimonials">
       <ContentBoundary width="default">
         <FadeInView className="text-center mb-20 sm:mb-24">
-          <span className="text-eyebrow font-mono tracking-[0.3em] text-[hsl(var(--gold-oxide))] mb-6 block">{t("social_proof.label")}</span>
+          <span className="text-eyebrow font-mono tracking-[0.3em] text-gold mb-6 block">{t("social_proof.label")}</span>
           <h2 className="text-h2 text-foreground">{t("social_proof.title")}</h2>
         </FadeInView>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((item, i) => (
             <FadeInView key={i} delay={i * 0.1} className="relative p-6 sm:p-8 rounded-xl border border-border/50 bg-card landing-card group">
-              <span className="absolute top-4 left-6 text-5xl text-[hsl(var(--gold-oxide)/0.12)] leading-none select-none font-serif group-hover:text-[hsl(var(--gold-oxide)/0.2)] transition-colors duration-300">&ldquo;</span>
+              <span className="absolute top-4 left-6 text-5xl text-gold/12 leading-none select-none font-serif group-hover:text-gold/20 transition-colors duration-300">&ldquo;</span>
               <blockquote className="text-caption text-foreground leading-relaxed mb-6 pt-8 italic">
                 {item.text}
               </blockquote>
               <div className="border-t border-border/30 pt-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center shrink-0 group-hover:bg-[hsl(var(--gold-oxide)/0.14)] transition-colors duration-300">
-                  <span className="text-xs font-mono font-bold text-[hsl(var(--gold-oxide))]">{item.name.charAt(0)}</span>
+                <div className="h-10 w-10 rounded-full bg-gold/[0.08] flex items-center justify-center shrink-0 group-hover:bg-gold/[0.14] transition-colors duration-300">
+                  <span className="text-xs font-mono font-bold text-gold">{item.name.charAt(0)}</span>
                 </div>
                 <div>
                   <p className="text-caption font-bold text-foreground">{item.name}</p>

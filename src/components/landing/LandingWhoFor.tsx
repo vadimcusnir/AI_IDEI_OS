@@ -13,7 +13,7 @@ export function LandingWhoFor() {
     <section className="py-32 sm:py-44 border-y border-border/50" aria-label="Who this is for">
       <ContentBoundary width="default">
         <FadeInView>
-          <span className="text-eyebrow font-mono tracking-[0.3em] text-[hsl(var(--gold-oxide))] mb-6 block">{t("who_for.label")}</span>
+          <span className="text-eyebrow font-mono tracking-[0.3em] text-gold mb-6 block">{t("who_for.label")}</span>
           <h2 className="text-h2 text-foreground mb-6">{t("who_for.title")}</h2>
           <p className="text-body text-muted-foreground max-w-lg mb-16 sm:mb-24 leading-relaxed">{t("who_for.subtitle")}</p>
         </FadeInView>
@@ -22,9 +22,9 @@ export function LandingWhoFor() {
           {roles.map((role, i) => {
             const RoleIcon = ICONS[i];
             return (
-              <FadeInView key={i} delay={i * 0.07} className="group flex items-start gap-4 p-6 rounded-xl border border-border/50 bg-card hover:border-[hsl(var(--gold-oxide)/0.25)] landing-card min-h-[44px] transition-all">
-                <div className="shrink-0 w-11 h-11 rounded-lg bg-[hsl(var(--gold-oxide)/0.07)] flex items-center justify-center group-hover:bg-[hsl(var(--gold-oxide)/0.16)] group-hover:scale-105 transition-all duration-300">
-                  <RoleIcon className="text-[hsl(var(--gold-oxide))] transition-colors" size={20} />
+              <FadeInView key={i} delay={i * 0.07} className="group flex items-start gap-4 p-6 rounded-xl border border-border/50 bg-card hover:border-gold/25 landing-card min-h-[2.75rem] transition-all">
+                <div className="shrink-0 w-11 h-11 rounded-lg bg-gold/[0.07] flex items-center justify-center group-hover:bg-gold/[0.16] group-hover:scale-105 transition-all duration-300">
+                  <RoleIcon className="text-gold transition-colors" size={20} />
                 </div>
                 <div>
                   <p className="text-base font-bold text-foreground mb-2">{role.label}</p>
