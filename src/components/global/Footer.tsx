@@ -8,6 +8,7 @@
 
 import { Link } from "react-router-dom";
 import { Logo } from "@/components/shared/Logo";
+import { ContentBoundary } from "@/components/layout/ContentBoundary";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
