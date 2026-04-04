@@ -87,17 +87,15 @@ export default function Onboarding() {
 
   const loadStatus = async () => {
     const wsId = currentWorkspace!.id;
-    const [ep, ne, jo, ar] = await Promise.all([
+    const [ep, ne, ar] = await Promise.all([
       supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
       supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
-      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
       supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
     ]);
 
     const s = {
       episodes: ep.count ?? 0,
       neurons: ne.count ?? 0,
-      jobs: jo.count ?? 0,
       artifacts: ar.count ?? 0,
     };
     setStatus(s);
