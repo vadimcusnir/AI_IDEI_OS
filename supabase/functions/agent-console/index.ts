@@ -217,16 +217,6 @@ const TOOLS = [
   { type: "function", function: { name: "run_os_agent", description: "Execute a Cusnir_OS agent (e.g. Narrative Domination Engine, Viral Structure Generator) with a prompt. Returns structured intelligence.", parameters: { type: "object", properties: { agent_role: { type: "string", description: "The role/name of the OS agent to run (e.g. 'Narrative Domination Engine')" }, prompt: { type: "string", description: "The input prompt or context for the agent" } }, required: ["agent_role", "prompt"] } } },
 ];
 
-// Rate limiting
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(userId);
-  if (!entry || now > entry.resetAt) { rateLimitMap.set(userId, { count: 1, resetAt: now + 3600_000 }); return true; }
-  if (entry.count >= 60) return false;
-  entry.count++;
-  return true;
-}
 
 const InputSchema = z.object({
   messages: z.array(z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string().max(150_000) })).min(1).max(50),
