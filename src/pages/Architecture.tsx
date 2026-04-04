@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "react-i18next";
+import { sanitizeI18nHtml } from "@/lib/html-sanitize";
 import {
   Database, Layers, GitBranch, Blocks, Copy, Zap, Search, Server,
   Brain, Shield, Coins, Workflow, MessageSquare, Users, BookOpen,
