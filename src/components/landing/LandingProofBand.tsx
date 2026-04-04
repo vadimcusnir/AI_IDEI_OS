@@ -13,7 +13,7 @@ export function LandingProofBand() {
           {stats.map((stat, i) => (
             <FadeInView key={i} delay={i * 0.08}>
               <div className="text-center group">
-                <p className="text-4xl sm:text-5xl font-mono font-bold text-[hsl(var(--gold-oxide))] tracking-tight leading-none group-hover:scale-105 transition-transform duration-300">{stat.value}</p>
+                <p className="text-4xl sm:text-5xl font-mono font-bold text-gold tracking-tight leading-none group-hover:scale-105 transition-transform duration-300">{stat.value}</p>
                 <p className="text-eyebrow font-mono tracking-[0.2em] text-muted-foreground mt-3">{stat.label}</p>
               </div>
             </FadeInView>
