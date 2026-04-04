@@ -123,8 +123,9 @@ export function AppBreadcrumbs() {
             </BreadcrumbLink>
           </BreadcrumbItem>
           {crumbs.map((crumb) => (
-            <BreadcrumbItem key={crumb.path}>
+            <React.Fragment key={crumb.path}>
               <BreadcrumbSeparator />
+              <BreadcrumbItem>
               {crumb.isLast ? (
                 <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
                   {crumb.label}
