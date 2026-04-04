@@ -357,6 +357,7 @@ export const executionActions = {
         break;
     }
 
+    trackTransition(currentPhase, nextPhase, { action, payload: payload ? Object.keys(payload) : [] });
     persistSession();
     return true;
   },
