@@ -26,6 +26,13 @@ export default {
       mono: ['var(--font-mono)'],
     },
     extend: {
+      fontSize: {
+        /** Dense UI utilities — canonical replacements for arbitrary text-[Npx] */
+        'nano': ['0.5625rem', { lineHeight: '1.4' }],    /* 9px — badges, stats only */
+        'micro': ['0.625rem', { lineHeight: '1.4' }],     /* 10px — tags, metadata */
+        'dense': ['0.6875rem', { lineHeight: '1.45' }],   /* 11px — compact labels */
+        'compact': ['0.8125rem', { lineHeight: '1.5' }],  /* 13px — dense body */
+      },
       colors: {
         toolbar: {
           DEFAULT: "hsl(var(--toolbar-bg))",

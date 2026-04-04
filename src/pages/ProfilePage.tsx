@@ -333,9 +333,9 @@ export default function ProfilePage() {
                             key={opt.key}
                             onClick={() => updatePrefs({ email_digest: opt.key })}
                             className={cn(
-                              "px-3 py-1.5 rounded-full text-[11px] font-medium transition-all min-h-[32px]",
+                              "px-3 py-1.5 rounded-full text-dense font-medium transition-all min-h-[2rem]",
                               prefs.email_digest === opt.key
-                                ? "bg-[hsl(var(--gold-oxide))] text-white shadow-sm"
+                                ? "bg-primary text-primary-foreground shadow-sm"
                                 : "bg-muted text-muted-foreground hover:bg-muted/80"
                             )}
                           >
