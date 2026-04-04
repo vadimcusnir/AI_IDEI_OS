@@ -219,6 +219,15 @@ export function AppSidebar() {
   const renderSection = (section: NavSection) => {
     if (section.authOnly && !user) return null;
     if (section.adminOnly && !isAdmin) return null;
+    if (section.operatorOnly && !isOperator) return null;
+
+    // Filter items for mode — if all items are hidden, skip section
+    const visibleItems = section.items.filter(item => {
+      if (item.adminOnly && !isAdmin) return false;
+      if (item.operatorOnly && !isOperator) return false;
+      return true;
+    });
+    if (visibleItems.length === 0) return null;
 
     return (
       <SidebarGroup key={section.key} className="py-1">
