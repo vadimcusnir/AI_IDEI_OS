@@ -32,7 +32,7 @@ interface CommandInputZoneProps {
 
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
-    { input, onInputChange, onSubmit, onStop, loading, files, onFileSelect, onRemoveFile,
+    { input, onInputChange, onSubmit, onStop, loading, isSubmitting, files, onFileSelect, onRemoveFile,
       showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction },
     ref,
   ) {
