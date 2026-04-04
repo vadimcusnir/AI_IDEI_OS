@@ -257,7 +257,7 @@ export function AppSidebar() {
             {!collapsed && <span className="text-sm font-bold tracking-tight">AI-IDEI</span>}
           </button>
 
-          {/* Header actions — search, lang, theme, notifications, user menu */}
+          {/* Header actions — search, lang, theme only */}
           {!collapsed && (
             <div className="flex items-center gap-0.5 ml-auto">
               <Suspense fallback={null}><GlobalSearch /></Suspense>
@@ -283,9 +283,6 @@ export function AppSidebar() {
               </DropdownMenu>
 
               <ThemeToggle />
-
-              {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
-              {user && <Suspense fallback={null}><UserMenu /></Suspense>}
             </div>
           )}
         </div>
