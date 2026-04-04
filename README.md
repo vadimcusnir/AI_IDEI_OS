@@ -5,18 +5,19 @@
 <h1 align="center">AI-IDEI — Knowledge Extraction Operating System</h1>
 
 <p align="center">
-  <strong>The Magic Marketing Button — upload content once, extract knowledge, generate unlimited professional deliverables with AI.</strong>
+  <strong>Transform raw expertise into structured intelligence. Upload content once — extract knowledge neurons, generate 50+ professional deliverables, and monetize your intellectual capital.</strong>
 </p>
 
 <p align="center">
-  <a href="https://ai-idei-os.lovable.app"><img src="https://img.shields.io/badge/Live-ai--idei--os.lovable.app-00C853?style=flat-square&logo=vercel&logoColor=white" alt="Live" /></a>
+  <a href="https://ai-idei.com"><img src="https://img.shields.io/badge/Live-ai--idei.com-00C853?style=flat-square&logo=vercel&logoColor=white" alt="Live" /></a>
   <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/React-19.x-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React" />
-  <img src="https://img.shields.io/badge/Vite-7.x-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Vite-8.x-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind" />
   <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/Edge_Functions-56-FF6F00?style=flat-square&logo=deno&logoColor=white" alt="Edge Functions" />
+  <img src="https://img.shields.io/badge/Edge_Functions-81-FF6F00?style=flat-square&logo=deno&logoColor=white" alt="Edge Functions" />
   <img src="https://img.shields.io/badge/Tables-135+-4A154B?style=flat-square&logo=postgresql&logoColor=white" alt="Tables" />
+  <img src="https://img.shields.io/badge/Components-377-8B5CF6?style=flat-square&logo=react&logoColor=white" alt="Components" />
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
 </p>
 
@@ -24,26 +25,26 @@
 
 ## 🧬 What is AI-IDEI?
 
-AI-IDEI is a **Knowledge Extraction Operating System** that transforms raw expertise (podcasts, interviews, texts, videos) into structured, reusable intellectual assets. It combines AI extraction pipelines, a knowledge graph engine, and a service marketplace to create an intelligence layer over unstructured content.
+AI-IDEI is a **Knowledge Extraction Operating System** built by [Vadim Cușnir](https://ai-idei.com/about-vadim-cusnir) (Cușnir Media SRL). It transforms raw expertise — podcasts, interviews, texts, videos, URLs — into structured, reusable intellectual assets through AI-powered extraction pipelines, a semantic knowledge graph, and an integrated service marketplace.
 
-**One podcast → 50+ professional deliverables.** Articles, marketing frameworks, courses, psychological profiles, social posts — all generated automatically from extracted knowledge neurons.
+**One podcast → 50+ professional deliverables.** Articles, marketing frameworks, courses, psychological profiles, social media content — all generated automatically from extracted knowledge neurons.
 
-### Core Flow
+### Core Pipeline
 
 ```
-📥 Upload Content (video, audio, text, URL)
+📥 Upload Content (video, audio, text, URL, drag & drop)
     ↓
-📝 Automatic Transcription
+📝 Automatic Transcription (audio/video → text)
     ↓
 🧠 AI Knowledge Extraction (3-axis: Internal · Narrative · Commercial)
     ↓
-⚛️ Neuron Generation (atomic knowledge units)
+⚛️ Neuron Generation (atomic knowledge units with metadata)
     ↓
-🔗 Entity Projection → Knowledge Graph + IdeaRank
+🔗 Entity Projection → Knowledge Graph + IdeaRank Scoring
     ↓
-⚡ AI Services Execution → 50+ Deliverables
+⚡ AI Services Execution → 50+ Deliverables (articles, strategies, courses)
     ↓
-📚 Library (infinite reuse)
+📚 Library (infinite reuse, licensing, marketplace)
 ```
 
 ---
@@ -51,67 +52,89 @@ AI-IDEI is a **Knowledge Extraction Operating System** that transforms raw exper
 ## 🏗 Architecture
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              Frontend (React 19 + Vite 7)                │
-│  SPA · Tailwind · shadcn/ui · Framer Motion · i18next    │
-├──────────────────────────────────────────────────────────┤
-│              API Layer (56 Edge Functions)                │
-│  Deno · REST · Realtime · Webhooks · Stripe · AI Gateway │
-├──────────────────────────────────────────────────────────┤
-│              Data Layer (135+ tables · RLS)               │
-│  PostgreSQL · Knowledge Graph · IdeaRank · Multi-tenant  │
-├──────────────────────────────────────────────────────────┤
-│              AI Pipeline (Multi-model)                    │
-│  Extraction · Chunking · Entity Resolution · Ranking     │
-│  Gemini · GPT · Multi-provider via Lovable AI gateway    │
-└──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│              Frontend (React 19 + Vite 8 + TypeScript 5)     │
+│  SPA · Tailwind 3.4 · shadcn/ui · Framer Motion · i18next   │
+│  377 components · 94 pages · 77 custom hooks                 │
+├──────────────────────────────────────────────────────────────┤
+│              API Layer (81 Edge Functions)                    │
+│  Deno · REST · Realtime · Webhooks · Stripe · AI Gateway     │
+│  Rate limiting · JWT + API Key auth · CORS whitelist         │
+├──────────────────────────────────────────────────────────────┤
+│              Data Layer (135+ tables · RLS everywhere)        │
+│  PostgreSQL · Knowledge Graph · IdeaRank · Multi-tenant      │
+│  40+ SECURITY DEFINER functions · RBAC · Decision Ledger     │
+├──────────────────────────────────────────────────────────────┤
+│              AI Pipeline (Multi-model orchestration)          │
+│  Extraction · Chunking · Entity Resolution · Ranking         │
+│  Gemini 2.5 · GPT-5 · Multi-provider via Lovable AI         │
+├──────────────────────────────────────────────────────────────┤
+│              Economy Engine (NEURONS credits)                 │
+│  Stripe integration · Root2 pricing · VIP tiers · NOTA2      │
+│  Pay-per-action · Subscription plans · Marketplace           │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| **Frontend** | React 19, TypeScript 5.9, Vite 7, Tailwind CSS 3.4 |
-| **UI** | shadcn/ui, Radix Primitives, Framer Motion, Recharts |
-| **State** | TanStack Query, React Context, Realtime subscriptions |
-| **Backend** | Supabase (PostgreSQL 15, 56 Edge Functions, Auth, Storage) |
-| **AI** | Multi-provider via Lovable AI (Gemini, GPT-5, GPT-5-mini) |
-| **Payments** | Stripe (NEURONS credit system, Root2 pricing) |
-| **Security** | RLS on all 135+ tables, RBAC, SECURITY DEFINER functions |
-| **i18n** | react-i18next (EN/RO, extensible) |
+| **Frontend** | React 19, TypeScript 5, Vite 8, Tailwind CSS 3.4 |
+| **UI System** | shadcn/ui, Radix Primitives, Framer Motion, Recharts, react-force-graph-2d |
+| **State** | TanStack Query, Zustand stores, React Context, Supabase Realtime |
+| **Backend** | Supabase (PostgreSQL 15, 81 Edge Functions, Auth, Storage) |
+| **AI** | Multi-provider via Lovable AI (Gemini 2.5 Pro/Flash, GPT-5, GPT-5-mini) |
+| **Payments** | Stripe (NEURONS credit system, Root2 pricing: $23/$47/$95) |
+| **Security** | RLS on all 135+ tables, RBAC, SECURITY DEFINER, abuse detection |
+| **i18n** | react-i18next (EN/RO/RU, extensible) |
+| **Monitoring** | Sentry error tracking, custom analytics, anomaly detection |
 | **Testing** | Vitest, Playwright, Testing Library |
 
 ---
 
 ## ⚡ Key Features
 
-### Knowledge Pipeline
-- **📥 Instant Action Surface** — Paste URL, drop file, or type text → automatic transcription + extraction
-- **🧠 Neuron Editor** — Block-based IDE for atomic knowledge units with slash commands, templates, AI tools, and version history
-- **🔍 3-Axis Extraction** — Internal/Psychological, Narrative, Commercial analysis on every piece of content
-- **🌐 Knowledge Graph** — Interactive force-directed visualization of entity relationships with IdeaRank scoring
+### 🧠 Knowledge Pipeline
+- **Instant Action Surface** — Paste URL, drop file, or type text → automatic transcription + extraction in <60 seconds
+- **3-Axis Extraction** — Internal/Psychological, Narrative, and Commercial analysis on every piece of content
+- **Neuron Editor** — Block-based IDE for atomic knowledge units with slash commands, templates, AI tools, and version history
+- **Knowledge Graph** — Interactive force-directed visualization of entity relationships with IdeaRank scoring
+- **Magic Pipeline Button** — One-click: Upload → Extract → Generate pipeline
 
-### AI Services & Generation
-- **⚡ Service Catalog** — 25+ AI services (Class A/B/C/S) generating articles, strategies, social posts, courses
-- **🤖 Agent OS** — Command center with 50+ slash commands, 10 professional Command Packs, 3-level memory
-- **📓 Notebooks** — AI-assisted research notebooks with contextual chat
-- **🎯 IMF Pipeline** — Automated multi-step extraction → service execution chain
+### 🤖 Agent OS & Command Center
+- **Command Center** — Unified chat interface for orchestrating all AI operations
+- **Slash Commands** — 50+ commands across 7 modes (Extract, Generate, Structure, Analyze, Research, Monetize, Library)
+- **Plan Preview & Execution** — AI generates execution plans with cost estimation before running
+- **Streaming Responses** — Real-time SSE streaming with abort capability
+- **Context Drawer** — Live execution state, outputs, and template saving
 
-### Platform & Economy
-- **💰 NEURONS Credits** — Internal economy (1000 credits = $10) with Stripe integration and Root2 pricing
-- **🏪 Knowledge Marketplace** — Publish and trade knowledge assets with licensing
-- **👥 Guest Pages** — Auto-generated profile pages for people mentioned in transcripts
-- **📊 Intelligence Dashboard** — Real-time KPIs, graph analytics, and anomaly detection
-- **🏆 Gamification** — XP system, streaks, achievements, daily challenges, leaderboards
-- **👤 VIP System** — 11-month progressive unlock with NOTA2 token gating
+### 💰 Economy & Monetization
+- **NEURONS Credits** — Internal economy with Stripe integration and Root2 pricing ($23/$47/$95)
+- **Pay-Per-Action Catalog** — Transparent pricing per service (e.g., Analyze Podcast – 29 neurons)
+- **Tiered Subscriptions** — Starter, Pro, Enterprise plans with monthly allocations
+- **Knowledge Marketplace** — Publish, license, and trade knowledge assets with platform commission
+- **VIP System** — 11-month progressive unlock with NOTA2 token gating
 
-### Infrastructure
-- **🔒 Enterprise Security** — RLS on all tables, RBAC, abuse detection, compliance logging
-- **📱 Responsive** — Full mobile experience with adaptive bottom navigation
-- **🌍 i18n** — English + Romanian with extensible translation system
-- **📧 Email System** — Transactional emails, digests, push notifications
-- **🔗 API & Webhooks** — RESTful API with key management, webhook delivery system
-- **📈 Analytics** — Event tracking, session analytics, anomaly alerts
+### 📊 Intelligence & Analytics
+- **Intelligence Dashboard** — Real-time KPIs, graph analytics, and anomaly detection
+- **IdeaRank Engine** — 20+ scoring dimensions with emergence detection
+- **Guest Pages** — Auto-generated profile pages for entities mentioned in content
+- **Notebooks** — AI-assisted research notebooks with contextual chat
+
+### 🏆 Engagement & Gamification
+- **XP System** — Experience points for platform actions
+- **Streaks & Challenges** — Daily challenges with bonus credit rewards
+- **Achievements** — Unlockable badges across multiple categories
+- **Leaderboards** — Community ranking system
+
+### 🔒 Infrastructure & Security
+- **Enterprise Security** — RLS on all tables, RBAC, abuse detection, compliance logging
+- **Admin Dashboard** — User management, job monitoring, system health, approval workflows
+- **Responsive Design** — Full mobile experience with adaptive bottom navigation
+- **i18n** — English, Romanian, Russian with extensible translation system
+- **Email System** — Transactional emails with custom domain support
+- **API & Webhooks** — RESTful API with key management and webhook delivery
+- **Automated Content** — Blog auto-publish pipeline, changelog generation
 
 ---
 
@@ -166,39 +189,43 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key
 
 ```
 src/
-├── components/           # 200+ React components
+├── components/           # 377 React components
 │   ├── ui/               # shadcn/ui primitives (50+)
-│   ├── neuron/           # Neuron editor & blocks
+│   ├── neuron/           # Neuron editor & block system
 │   ├── intelligence/     # Knowledge graph & analytics
-│   ├── services/         # AI service panels
+│   ├── command-center/   # Agent OS & chat interface
+│   ├── services/         # AI service panels & catalog
 │   ├── onboarding/       # Guided onboarding flow
 │   ├── gamification/     # XP, streaks, achievements
 │   ├── premium/          # Tier gating & paywall
+│   ├── admin/            # Admin dashboard modules
+│   ├── landing/          # Landing page sections
 │   └── ...
-├── pages/                # 85+ route pages
-├── hooks/                # 30+ custom hooks
+├── pages/                # 94 route pages
+├── hooks/                # 77 custom hooks
+├── services/             # Business logic services
+├── stores/               # Zustand state stores
 ├── contexts/             # Auth, Workspace, Theme
+├── config/               # Centralized route registry & constants
 ├── i18n/                 # i18n configuration
-├── locales/              # EN/RO translation files
+├── locales/              # EN/RO/RU translation files
 ├── integrations/         # Supabase client & types
 └── lib/                  # Utilities & helpers
 
 supabase/
-├── functions/            # 56 Edge Functions (Deno)
+├── functions/            # 81 Edge Functions (Deno)
 │   ├── extract-neurons/  # AI neuron extraction
 │   ├── run-service/      # Service execution engine
+│   ├── agent-orchestrator/ # Multi-step pipeline orchestrator
 │   ├── neuron-chat/      # AI chat interface
 │   ├── stripe-webhook/   # Payment processing
 │   ├── transcribe-*/     # Audio/video transcription
-│   ├── generate-*/       # Content generation
-│   ├── extraction-pipeline/ # Full pipeline orchestrator
+│   ├── content-generate/ # Content generation
+│   ├── blog-generate/    # Automated blog pipeline
+│   ├── changelog-generate/ # Changelog automation
 │   └── ...
 ├── migrations/           # Database migrations
 └── config.toml           # Supabase configuration
-
-docs/
-├── NAVIGATION_AUDIT.md   # Navigation architecture audit
-└── ...
 ```
 
 ---
@@ -207,14 +234,15 @@ docs/
 
 | Metric | Count |
 |--------|-------|
-| React Components | 200+ |
-| Route Pages | 85+ |
-| Edge Functions | 56 |
+| React Components | 377 |
+| Route Pages | 94 |
+| Custom Hooks | 77 |
+| Edge Functions | 81 |
 | Database Tables | 135+ |
 | RLS Policies | Active on all tables |
 | DB Functions | 40+ (SECURITY DEFINER) |
-| Custom Hooks | 30+ |
 | Translation Keys | 500+ |
+| AI Models Supported | 12+ (Gemini, GPT-5, etc.) |
 
 ---
 
@@ -225,15 +253,20 @@ docs/
 - [x] Knowledge Graph with IdeaRank engine
 - [x] NEURONS credit economy + Stripe
 - [x] Guest profile pages
-- [x] Agent OS with Command Packs
+- [x] Agent OS with Command Center
 - [x] Gamification (XP, streaks, achievements)
 - [x] Marketplace for knowledge assets
-- [x] i18n infrastructure (EN/RO)
-- [x] Mobile-optimized experience
+- [x] i18n infrastructure (EN/RO/RU)
+- [x] Mobile-optimized responsive experience
 - [x] Contextual onboarding flow
 - [x] Notebooks with AI chat
+- [x] Admin dashboard with user management
+- [x] Blog auto-publish pipeline
+- [x] Changelog automation
+- [x] Centralized route registry
+- [x] Root2 tiered pricing ($23/$47/$95)
 - [ ] Vector embeddings + semantic search
-- [ ] Multilingual entity content (RU, FR, DE)
+- [ ] Multilingual entity content (FR, DE)
 - [ ] Public API v2 with OAuth
 - [ ] Native mobile app (React Native)
 - [ ] Team workspaces & collaboration
@@ -244,10 +277,12 @@ docs/
 
 - Row-Level Security (RLS) enabled on **all 135+ tables**
 - RBAC with `user_roles` table and `has_role()` SECURITY DEFINER function
-- Admin operations require multi-level approval
-- Append-only decision ledger for compliance
+- Admin operations require multi-level approval workflows
+- Append-only decision ledger for compliance auditing
 - Abuse detection engine with severity tracking
-- API key management with daily rate limits
+- API key management with daily rate limits and sliding window
+- CORS origin whitelisting on all edge functions
+- Sentry error tracking and anomaly alerting
 
 See [SECURITY.md](SECURITY.md) for vulnerability reporting guidelines.
 
@@ -259,7 +294,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
+3. Commit changes (`git commit -m 'feat: add amazing feature'`)
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
@@ -272,11 +307,11 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 ---
 
 <p align="center">
-  <sub>Built with <a href="https://lovable.dev">Lovable</a> · Powered by <a href="https://supabase.com">Supabase</a> · AI by <a href="https://lovable.dev">Lovable AI</a></sub>
+  <sub>Built by <a href="https://ai-idei.com/about-vadim-cusnir">Vadim Cușnir</a> · Powered by <a href="https://lovable.dev">Lovable</a> + <a href="https://supabase.com">Supabase</a></sub>
 </p>
 
 <p align="center">
   <sub>
-    <strong>Tags:</strong> knowledge-extraction · ai-pipeline · knowledge-graph · neuron-editor · expertise-capitalization · content-intelligence · marketing-automation · supabase · react · typescript · idearank · knowledge-os
+    <strong>Tags:</strong> knowledge-extraction · ai-pipeline · knowledge-graph · neuron-editor · expertise-capitalization · content-intelligence · marketing-automation · supabase · react · typescript · idearank · knowledge-os · agent-os · command-center · neurons-credits · root2-pricing
   </sub>
 </p>
