@@ -2694,6 +2694,42 @@ export type Database = {
           },
         ]
       }
+      cusnir_os_ledger: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          event_type: string
+          id: string
+          immutable_hash: string | null
+          payload: Json
+          severity: string | null
+          target_id: string | null
+          target_resource: string | null
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          immutable_hash?: string | null
+          payload?: Json
+          severity?: string | null
+          target_id?: string | null
+          target_resource?: string | null
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          immutable_hash?: string | null
+          payload?: Json
+          severity?: string | null
+          target_id?: string | null
+          target_resource?: string | null
+        }
+        Relationships: []
+      }
       daily_challenges: {
         Row: {
           active_date: string
@@ -3437,6 +3473,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      entitlements: {
+        Row: {
+          access_flags: Json
+          computed_level: string
+          created_at: string
+          cusnir_os_access: boolean | null
+          feature_gates: Json
+          last_computed_at: string | null
+          neurons_burned: number | null
+          nota2_balance: number | null
+          reputation_score: number | null
+          tenure_months: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_flags?: Json
+          computed_level?: string
+          created_at?: string
+          cusnir_os_access?: boolean | null
+          feature_gates?: Json
+          last_computed_at?: string | null
+          neurons_burned?: number | null
+          nota2_balance?: number | null
+          reputation_score?: number | null
+          tenure_months?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_flags?: Json
+          computed_level?: string
+          created_at?: string
+          cusnir_os_access?: boolean | null
+          feature_gates?: Json
+          last_computed_at?: string | null
+          neurons_burned?: number | null
+          nota2_balance?: number | null
+          reputation_score?: number | null
+          tenure_months?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       entity_content: {
         Row: {
@@ -10354,6 +10435,60 @@ export type Database = {
         }
         Relationships: []
       }
+      system_modules: {
+        Row: {
+          access_requirements: Json | null
+          component_path: string | null
+          created_at: string
+          dependencies: string[] | null
+          description: string | null
+          edge_function_key: string | null
+          id: string
+          min_tier: string | null
+          module_key: string
+          module_type: string
+          monetization_link: string | null
+          name: string
+          status: string
+          updated_at: string
+          version: string | null
+        }
+        Insert: {
+          access_requirements?: Json | null
+          component_path?: string | null
+          created_at?: string
+          dependencies?: string[] | null
+          description?: string | null
+          edge_function_key?: string | null
+          id?: string
+          min_tier?: string | null
+          module_key: string
+          module_type: string
+          monetization_link?: string | null
+          name: string
+          status?: string
+          updated_at?: string
+          version?: string | null
+        }
+        Update: {
+          access_requirements?: Json | null
+          component_path?: string | null
+          created_at?: string
+          dependencies?: string[] | null
+          description?: string | null
+          edge_function_key?: string | null
+          id?: string
+          min_tier?: string | null
+          module_key?: string
+          module_type?: string
+          monetization_link?: string | null
+          name?: string
+          status?: string
+          updated_at?: string
+          version?: string | null
+        }
+        Relationships: []
+      }
       team_challenge_contributions: {
         Row: {
           amount: number
@@ -10428,6 +10563,48 @@ export type Database = {
           starts_at?: string
           title?: string
           xp_reward?: number
+        }
+        Relationships: []
+      }
+      tier_progression_rules: {
+        Row: {
+          assets_created_threshold: number | null
+          created_at: string
+          description: string | null
+          feature_unlocks: string[] | null
+          id: string
+          label: string
+          neurons_spent_threshold: number | null
+          revenue_generated_threshold: number | null
+          streak_days_threshold: number | null
+          tier_level: string
+          unlock_effects: Json | null
+        }
+        Insert: {
+          assets_created_threshold?: number | null
+          created_at?: string
+          description?: string | null
+          feature_unlocks?: string[] | null
+          id?: string
+          label: string
+          neurons_spent_threshold?: number | null
+          revenue_generated_threshold?: number | null
+          streak_days_threshold?: number | null
+          tier_level: string
+          unlock_effects?: Json | null
+        }
+        Update: {
+          assets_created_threshold?: number | null
+          created_at?: string
+          description?: string | null
+          feature_unlocks?: string[] | null
+          id?: string
+          label?: string
+          neurons_spent_threshold?: number | null
+          revenue_generated_threshold?: number | null
+          streak_days_threshold?: number | null
+          tier_level?: string
+          unlock_effects?: Json | null
         }
         Relationships: []
       }
@@ -11399,6 +11576,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_tier_progress: {
+        Row: {
+          assets_created_total: number | null
+          created_at: string
+          current_level: string
+          current_streak_days: number | null
+          last_activity_at: string | null
+          level_achieved_at: string | null
+          longest_streak_days: number | null
+          neurons_spent_total: number | null
+          revenue_generated_total: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assets_created_total?: number | null
+          created_at?: string
+          current_level?: string
+          current_streak_days?: number | null
+          last_activity_at?: string | null
+          level_achieved_at?: string | null
+          longest_streak_days?: number | null
+          neurons_spent_total?: number | null
+          revenue_generated_total?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assets_created_total?: number | null
+          created_at?: string
+          current_level?: string
+          current_streak_days?: number | null
+          last_activity_at?: string | null
+          level_achieved_at?: string | null
+          longest_streak_days?: number | null
+          neurons_spent_total?: number | null
+          revenue_generated_total?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_xp: {
         Row: {
           created_at: string
@@ -12046,6 +12265,7 @@ export type Database = {
         Args: { _base_price: number; _user_id: string }
         Returns: Json
       }
+      compute_entitlements: { Args: { _user_id: string }; Returns: Json }
       compute_idearank: { Args: never; Returns: undefined }
       compute_person_confidence: {
         Args: { _person_id: string }
