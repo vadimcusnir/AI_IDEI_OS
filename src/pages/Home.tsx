@@ -103,7 +103,9 @@ export default function Home() {
                     episodeCount={cc.totalEpisodes}
                     balance={cc.balance}
                   />
-                </div>
+                  <div className="mt-6 w-full max-w-md">
+                    <MagicPipelineButton className="w-full" />
+                  </div>
               ) : (
                 /* ── Conversation feed ── */
                 <div className="pt-3 pb-3 space-y-3">
