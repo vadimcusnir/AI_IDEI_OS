@@ -547,13 +547,38 @@ export function useExecution(context: ExecutionContext) {
     refetchBalance();
   }, [refetchBalance]);
 
-  /** Stop current execution */
-  const stop = useCallback(() => {
+  /** Stop current execution — also cancels server-side job */
+  const stop = useCallback(async () => {
     abortRef.current?.abort();
     executionActions.setLoading(false);
     executionActions.setStreaming(false);
     executionActions.failExecution("Anulat de utilizator");
-  }, []);
+
+    // Server-side cancellation: release reserved credits
+    const jobId = activeJobIdRef.current;
+    if (jobId && user) {
+      activeJobIdRef.current = null;
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          await fetch(RUN_SERVICE_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              action: "cancel",
+              job_id: jobId,
+            }),
+          });
+        }
+      } catch {
+        // Best-effort cancellation — don't block UI
+        console.warn("Server-side cancel failed for job:", jobId);
+      }
+    }
+  }, [user]);
 
   return {
     routeInput,
