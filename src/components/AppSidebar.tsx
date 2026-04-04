@@ -216,19 +216,19 @@ export function AppSidebar() {
       <SidebarContent>
         {user ? (
           <>
-            {/* Search + Workspace above navigation */}
-            <div className={cn("px-2.5 py-1.5", collapsed && "flex justify-center")}>
-              <Suspense fallback={null}><GlobalSearch /></Suspense>
-            </div>
-            {!collapsed && workspaces.length > 0 && (
-              <div className="px-2.5 pb-1">
+            {/* Search + Workspace — full-width, matched styling */}
+            <div className="px-3 pt-3 pb-2 space-y-2">
+              <div className={cn(collapsed && "flex justify-center")}>
+                <Suspense fallback={null}><GlobalSearch /></Suspense>
+              </div>
+              {!collapsed && workspaces.length > 0 && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left hover:bg-muted/50 transition-colors">
-                      <span className="text-xs font-medium truncate flex-1 text-muted-foreground">
+                    <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-border/40 bg-muted/30 text-left hover:bg-muted/60 hover:border-border/60 transition-colors">
+                      <span className="text-xs font-medium truncate flex-1 text-foreground/80">
                         {currentWorkspace?.name || "Workspace"}
                       </span>
-                      <ChevronsUpDown className="h-3 w-3 text-muted-foreground/40 shrink-0" />
+                      <ChevronsUpDown className="h-3 w-3 text-muted-foreground/50 shrink-0" />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="min-w-[200px]">
@@ -263,9 +263,9 @@ export function AppSidebar() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
-            )}
-            <SidebarSeparator className="my-1" />
+              )}
+            </div>
+            <SidebarSeparator />
 
             {SECTIONS.map(renderSection)}
             {isAdmin && (
