@@ -37,7 +37,7 @@ export default function Index() {
   const [aiSuggesting, setAiSuggesting] = useState(false);
   const [previewNeuron, setPreviewNeuron] = useState<NeuronListItem | null>(null);
   const [showInsights, setShowInsights] = useState(false);
-  const {
+  const { structureNeurons, structuring } = useAutoStructure();
     neurons, loading, authLoading,
     viewMode, setViewMode,
     sortField, sortDir, toggleSort,
