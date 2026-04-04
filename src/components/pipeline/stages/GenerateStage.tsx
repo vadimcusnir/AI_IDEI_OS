@@ -93,20 +93,20 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
             <button
               key={svc.id}
               type="button"
-              onClick={() => setSelected(svc.key)}
+              onClick={() => setSelected(svc.service_key)}
               className={`w-full text-left px-4 py-3 rounded-lg border transition-all ${
-                selected === svc.key
+                selected === svc.service_key
                   ? "border-primary bg-primary/5"
                   : "border-border bg-card hover:border-primary/30"
               }`}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-foreground">{svc.label}</p>
+                  <p className="text-sm font-medium text-foreground">{svc.name}</p>
                   <p className="text-xs text-muted-foreground line-clamp-1">{svc.description}</p>
                 </div>
                 <span className="text-xs font-mono text-muted-foreground whitespace-nowrap ml-2">
-                  {svc.credit_cost}N
+                  {svc.credits_cost}N
                 </span>
               </div>
             </button>
