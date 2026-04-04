@@ -343,7 +343,7 @@
   "report_submitted": "Raport trimis. Multumim!",
   "already_reported": "Ai raportat deja acest continut.",
   "chat_error": "Eroare chat: {{message}}",
-  "chat_welcome": "Bun venit! Sunt asistentul AI-IDEI. Te pot ajuta sa extragi cunostinte, sa rulezi servicii AI sau sa navighezi platforma. Cu ce te pot ajuta?",
+  "chat_welcome": "Bun venit în Command Center. Extrage cunoștințe, execută servicii AI sau navighează platforma. Ce ai nevoie?",
   "chat_no_response": "Nu am putut genera un raspuns. Incearca din nou.",
   "chat_error_fallback": "A aparut o eroare. Te rog sa incerci din nou.",
   "chat_reset": "Conversatie resetata. Cu ce te pot ajuta?",
