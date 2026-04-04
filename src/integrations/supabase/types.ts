@@ -7850,8 +7850,11 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          is_suspended: boolean
           onboarding_completed: boolean | null
           preferred_language: string | null
+          suspended_at: string | null
+          suspended_by: string | null
           updated_at: string
           user_id: string
           username: string | null
@@ -7862,8 +7865,11 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          is_suspended?: boolean
           onboarding_completed?: boolean | null
           preferred_language?: string | null
+          suspended_at?: string | null
+          suspended_by?: string | null
           updated_at?: string
           user_id: string
           username?: string | null
@@ -7874,8 +7880,11 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          is_suspended?: boolean
           onboarding_completed?: boolean | null
           preferred_language?: string | null
+          suspended_at?: string | null
+          suspended_by?: string | null
           updated_at?: string
           user_id?: string
           username?: string | null
@@ -8522,6 +8531,27 @@ export type Database = {
           updated_at?: string
           window_seconds?: number
           window_start?: string
+        }
+        Relationships: []
+      }
+      rbac_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          permission_key: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permission_key: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permission_key?: string
+          role?: Database["public"]["Enums"]["app_role"]
         }
         Relationships: []
       }
@@ -11350,6 +11380,10 @@ export type Database = {
         Args: { _permission: string; _user_id: string }
         Returns: boolean
       }
+      has_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -11637,7 +11671,14 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role:
+        | "admin"
+        | "moderator"
+        | "user"
+        | "finops"
+        | "support"
+        | "reader"
+        | "security"
       approval_status: "pending" | "approved" | "rejected" | "revision_needed"
       asset_type: "atomic_asset" | "compound_asset" | "system_asset"
       content_category:
@@ -11802,7 +11843,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: [
+        "admin",
+        "moderator",
+        "user",
+        "finops",
+        "support",
+        "reader",
+        "security",
+      ],
       approval_status: ["pending", "approved", "rejected", "revision_needed"],
       asset_type: ["atomic_asset", "compound_asset", "system_asset"],
       content_category: [
