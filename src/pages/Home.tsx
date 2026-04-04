@@ -245,6 +245,7 @@ export default function Home() {
               <CommandInputZone
                 ref={cc.inputZoneRef} input={cc.input} onInputChange={cc.setInput}
                 onSubmit={cc.handleSubmit} onStop={cc.handleStop} loading={cc.loading}
+                isSubmitting={cc.isSubmitting}
                 files={cc.files} onFileSelect={cc.handleFileSelect}
                 onRemoveFile={cc.handleRemoveFile}
                 showSlashMenu={cc.showSlashMenu} onShowSlashMenuChange={cc.setShowSlashMenu}

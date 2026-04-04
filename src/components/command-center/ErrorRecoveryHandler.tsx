@@ -2,7 +2,7 @@
  * CC-V03: Error Matrix + Recovery UX
  * Handles all error states in Command Center with user-friendly recovery options.
  */
-import { AlertTriangle, RefreshCw, WifiOff, CreditCard, FileWarning, ArrowRight } from "lucide-react";
+import { AlertTriangle, RefreshCw, WifiOff, CreditCard, FileWarning, ArrowRight, Clock, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,8 @@ export type ErrorType =
   | "reconnect_mid_stream"
   | "insufficient_credits"
   | "invalid_file"
+  | "rate_limit"
+  | "unknown_command"
   | "session_switch_active"
   | "unknown";
 
@@ -80,6 +82,22 @@ const ERROR_CONFIG: Record<ErrorType, {
     recoverable: true,
     primaryAction: "dismiss",
     primaryActionKey: "common:understood",
+  },
+  rate_limit: {
+    icon: Clock,
+    titleKey: "errors:rate_limit_title",
+    descKey: "errors:rate_limit_desc",
+    recoverable: true,
+    primaryAction: "retry",
+    primaryActionKey: "common:retry_later",
+  },
+  unknown_command: {
+    icon: HelpCircle,
+    titleKey: "errors:unknown_command_title",
+    descKey: "errors:unknown_command_desc",
+    recoverable: true,
+    primaryAction: "dismiss",
+    primaryActionKey: "common:dismiss",
   },
   unknown: {
     icon: AlertTriangle,
@@ -171,8 +189,14 @@ export function classifyError(error: unknown): { type: ErrorType; message: strin
   if (lower.includes("file") || lower.includes("format") || lower.includes("unsupported")) {
     return { type: "invalid_file", message: msg };
   }
+  if (lower.includes("429") || lower.includes("rate limit") || lower.includes("rate_limit") || lower.includes("too many")) {
+    return { type: "rate_limit", message: "Rate limit reached. Please wait a moment before trying again." };
+  }
   if (lower.includes("network") || lower.includes("offline") || lower.includes("fetch")) {
     return { type: "reconnect_mid_stream", message: msg };
+  }
+  if (lower.includes("unknown command") || lower.includes("unrecognized")) {
+    return { type: "unknown_command", message: msg };
   }
 
   return { type: "unknown", message: msg };

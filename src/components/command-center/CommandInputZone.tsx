@@ -20,6 +20,7 @@ interface CommandInputZoneProps {
   onSubmit: () => void;
   onStop: () => void;
   loading: boolean;
+  isSubmitting?: boolean;
   files: File[];
   onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: (idx: number) => void;
@@ -31,7 +32,7 @@ interface CommandInputZoneProps {
 
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
-    { input, onInputChange, onSubmit, onStop, loading, files, onFileSelect, onRemoveFile,
+    { input, onInputChange, onSubmit, onStop, loading, isSubmitting, files, onFileSelect, onRemoveFile,
       showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction },
     ref,
   ) {
@@ -46,7 +47,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        onSubmit();
+        if (!isSubmitting) onSubmit();
       }
     };
 
@@ -198,7 +199,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                       : "bg-muted text-muted-foreground/30"
                   )}
                   onClick={onSubmit}
-                  disabled={!input.trim() && files.length === 0}
+                  disabled={(!input.trim() && files.length === 0) || isSubmitting}
                 >
                   <ArrowUp className="h-4 w-4" />
                 </Button>

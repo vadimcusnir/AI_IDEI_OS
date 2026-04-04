@@ -85,6 +85,14 @@ export function EconomicGate({
           )}
         </div>
 
+        {/* Cancellation info (A7 fix) */}
+        <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/30 border border-border/20">
+          <Shield className="h-3 w-3 text-muted-foreground shrink-0" />
+          <span className="text-[10px] text-muted-foreground">
+            Credits are charged only after successful execution. Cancelling now costs nothing.
+          </span>
+        </div>
+
         {/* Insufficient balance */}
         {!canAfford && (
           <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-destructive/5 border border-destructive/20">

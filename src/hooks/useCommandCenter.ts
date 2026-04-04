@@ -76,6 +76,7 @@ export function useCommandCenter() {
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [showLowBalance, setShowLowBalance] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ═══ Refs ═══
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
@@ -86,6 +87,31 @@ export function useCommandCenter() {
 
   // ═══ Lifecycle hooks ═══
   useOnboardingRedirect();
+
+  // Cleanup AbortController on unmount to prevent memory leaks (A9)
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+      abortRef.current = null;
+    };
+  }, []);
+
+  // Persist draft input to localStorage (A5)
+  useEffect(() => {
+    if (input.trim()) {
+      localStorage.setItem("cc_draft_input", input);
+    } else {
+      localStorage.removeItem("cc_draft_input");
+    }
+  }, [input]);
+
+  // Restore draft on mount
+  useEffect(() => {
+    if (!initialQ) {
+      const draft = localStorage.getItem("cc_draft_input");
+      if (draft) setInput(draft);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-trigger low balance gate
   useEffect(() => {
@@ -175,10 +201,42 @@ export function useCommandCenter() {
   const handleSubmit = async (autoExec = false) => {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
+    if (isSubmitting) return;
+
+    // Validate input length (max 50K chars)
+    if (input.trim().length > 50000) {
+      toast.error(t("errors:input_too_long", { defaultValue: "Message is too long (max 50,000 characters)" }));
+      return;
+    }
+
+    // Validate files
+    const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+    const MAX_FILES = 10;
+    const BLOCKED_EXTENSIONS = [".exe", ".bat", ".sh", ".dll", ".bin"];
+    
+    if (files.length > MAX_FILES) {
+      toast.error(t("errors:too_many_files", { defaultValue: `Maximum ${MAX_FILES} files allowed` }));
+      return;
+    }
+    
+    for (const file of files) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(t("errors:file_too_large", { defaultValue: `"${file.name}" exceeds 20MB limit` }));
+        return;
+      }
+      const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+      if (BLOCKED_EXTENSIONS.includes(ext)) {
+        toast.error(t("errors:file_type_blocked", { defaultValue: `"${file.name}" — file type not supported` }));
+        return;
+      }
+    }
+
+    setIsSubmitting(true);
 
     const rawInput = input.trim();
     setInput("");
     setFiles([]);
+    localStorage.removeItem("cc_draft_input");
     setShowOutputs(false);
     setShowPostExecution(false);
     setPermissionBlock(null);
@@ -286,6 +344,7 @@ export function useCommandCenter() {
       executionActions.setLoading(false);
       executionActions.setStreaming(false);
       abortRef.current = null;
+      setIsSubmitting(false);
     }
   };
 
@@ -297,6 +356,7 @@ export function useCommandCenter() {
     newSession(); executionActions.reset();
     executionActions.clearMessages();
     executionActions.setOutputs([]); setShowOutputs(false); setShowPostExecution(false);
+    localStorage.removeItem("cc_draft_input");
   };
 
   const handleSaveAllOutputs = async () => {
@@ -415,6 +475,7 @@ export function useCommandCenter() {
     savingAllOutputs, showLowBalance, setShowLowBalance,
     activeMode, setActiveMode,
     isEmptyState, greeting, userName, durationSeconds,
+    isSubmitting,
     // Counts
     totalNeurons, totalEpisodes,
     // Suggestions
