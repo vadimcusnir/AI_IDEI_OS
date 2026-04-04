@@ -88,6 +88,23 @@ export function useExecution(context: ExecutionContext) {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return null;
 
+    // Create job first (required by run-service Zod schema)
+    const { data: job, error: jobErr } = await supabase
+      .from("neuron_jobs")
+      .insert({
+        user_id: user.id,
+        service_key: serviceKey,
+        status: "pending",
+        input: inputParams,
+        workspace_id: context.workspaceId,
+      } as any)
+      .select("id")
+      .single();
+
+    if (jobErr || !job) {
+      throw new Error("Failed to create job");
+    }
+
     const resp = await fetch(RUN_SERVICE_URL, {
       method: "POST",
       headers: {
@@ -95,9 +112,9 @@ export function useExecution(context: ExecutionContext) {
         Authorization: `Bearer ${session.access_token}`,
       },
       body: JSON.stringify({
+        job_id: job.id,
         service_key: serviceKey,
-        input: inputParams,
-        workspace_id: context.workspaceId,
+        inputs: inputParams,
       }),
       signal,
     });
@@ -108,7 +125,7 @@ export function useExecution(context: ExecutionContext) {
     }
 
     const data = await resp.json();
-    return data.job_id || null;
+    return data.job_id || job.id;
   }, [user, context.workspaceId]);
 
   /**
