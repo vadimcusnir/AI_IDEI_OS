@@ -35,6 +35,7 @@ import {
   Clock, Trash2, MessageCircle,
   Shield, Cpu, Activity, BarChart3, Database,
   Trophy, ChevronRight, Lock, Globe,
+  Plug, Gem,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
