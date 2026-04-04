@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { ContentBoundary } from "@/components/layout/ContentBoundary";
+import knowledgeOsDiagram from "@/assets/diagrams/knowledge-os-full-dark.png";
 
 const INPUTS = [
   { label: "Rough idea", icon: "💭" },
