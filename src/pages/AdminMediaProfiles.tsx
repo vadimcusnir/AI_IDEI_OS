@@ -8,13 +8,14 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import {
   Loader2, Shield, Eye, EyeOff, AlertTriangle, CheckCircle2,
-  XCircle, ArrowRight, Plus, ChevronDown, ExternalLink
+  XCircle, ArrowRight, Plus, ChevronDown, ExternalLink, Brain
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { ProfileGeneratorPanel } from "@/components/intelligence/ProfileGeneratorPanel";
 
 interface ProfileRow {
   id: string;
@@ -59,6 +60,7 @@ export default function AdminMediaProfiles() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [guardrails, setGuardrails] = useState<{ all_pass: boolean; checks: GuardrailResult[] } | null>(null);
   const [showCreate, setShowCreate] = useState(false);
+  const [showAIGenerate, setShowAIGenerate] = useState(false);
 
   // Create form state
   const [newName, setNewName] = useState("");
@@ -160,10 +162,22 @@ export default function AdminMediaProfiles() {
             <h1 className="text-2xl font-bold">Intelligence Profiles</h1>
             <p className="text-sm text-muted-foreground">Review workflow: draft → review → published | blocked</p>
           </div>
-          <Button size="sm" onClick={() => setShowCreate(!showCreate)}>
-            <Plus className="h-4 w-4 mr-1" /> New Profile
-          </Button>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => { setShowAIGenerate(!showAIGenerate); setShowCreate(false); }}>
+              <Brain className="h-4 w-4 mr-1" /> AI Generate
+            </Button>
+            <Button size="sm" onClick={() => { setShowCreate(!showCreate); setShowAIGenerate(false); }}>
+              <Plus className="h-4 w-4 mr-1" /> Manual
+            </Button>
+          </div>
         </div>
+
+        {/* AI Generate panel */}
+        {showAIGenerate && (
+          <div className="mb-6">
+            <ProfileGeneratorPanel onComplete={() => { setShowAIGenerate(false); loadProfiles(); }} />
+          </div>
+        )}
 
         {/* Create form */}
         {showCreate && (

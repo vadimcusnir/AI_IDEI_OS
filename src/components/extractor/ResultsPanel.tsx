@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Brain, ArrowRight, RotateCcw, Layers, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { ProfileGeneratorPanel } from "@/components/intelligence/ProfileGeneratorPanel";
 
 interface ResultData {
   neurons: number;
@@ -105,6 +106,14 @@ export function ResultsPanel({ result, onReset }: Props) {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Profile Generation CTA */}
+      {hasNeurons && (
+        <ProfileGeneratorPanel
+          episodeId={result.episode_id}
+          className="mt-2"
+        />
       )}
 
       {/* Actions */}

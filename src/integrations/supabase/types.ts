@@ -7846,6 +7846,178 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_audit_log: {
+        Row: {
+          action: string
+          actor: string | null
+          created_at: string
+          details: Json | null
+          id: string
+          profile_id: string
+        }
+        Insert: {
+          action: string
+          actor?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          profile_id: string
+        }
+        Update: {
+          action?: string
+          actor?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_audit_log_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_scores: {
+        Row: {
+          certainty: number | null
+          consistency: number | null
+          data_volume: number | null
+          overall: number | null
+          prediction_accuracy: number | null
+          profile_id: string
+          updated_at: string
+          validation_score: number | null
+        }
+        Insert: {
+          certainty?: number | null
+          consistency?: number | null
+          data_volume?: number | null
+          overall?: number | null
+          prediction_accuracy?: number | null
+          profile_id: string
+          updated_at?: string
+          validation_score?: number | null
+        }
+        Update: {
+          certainty?: number | null
+          consistency?: number | null
+          data_volume?: number | null
+          overall?: number | null
+          prediction_accuracy?: number | null
+          profile_id?: string
+          updated_at?: string
+          validation_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_scores_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_signals: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          id: string
+          neuron_id: number | null
+          profile_id: string
+          signal_key: string
+          signal_type: string
+          signal_value: string | null
+          source_ref: string | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          neuron_id?: number | null
+          profile_id: string
+          signal_key: string
+          signal_type?: string
+          signal_value?: string | null
+          source_ref?: string | null
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          neuron_id?: number | null
+          profile_id?: string
+          signal_key?: string
+          signal_type?: string
+          signal_value?: string | null
+          source_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_signals_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "profile_signals_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_signals_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_versions: {
+        Row: {
+          change_summary: string | null
+          created_at: string
+          created_by: string | null
+          data_snapshot: Json
+          id: string
+          profile_id: string
+          version: number
+        }
+        Insert: {
+          change_summary?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_snapshot?: Json
+          id?: string
+          profile_id: string
+          version?: number
+        }
+        Update: {
+          change_summary?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_snapshot?: Json
+          id?: string
+          profile_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_versions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
