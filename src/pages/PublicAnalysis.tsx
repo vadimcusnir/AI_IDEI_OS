@@ -132,7 +132,7 @@ export default function PublicAnalysis() {
       },
     },
     articleSection: typeLabel,
-    keywords: analysis.tags.join(", "),
+    keywords: (analysis.tags ?? []).join(", "),
     inLanguage: "en",
     ...(analysis.og_image_url && { image: { "@type": "ImageObject", url: analysis.og_image_url, width: 1200, height: 630 } }),
   };
