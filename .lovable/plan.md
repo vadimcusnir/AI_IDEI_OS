@@ -1,50 +1,59 @@
 
 
-# Security & Infrastructure Hardening
+## Problem
 
-## Status actual
+The sidebar header, footer, and top bar layout are poorly organized. Elements are cramped, the WorkspaceSwitcher takes too much vertical space with redundant labels, and the overall hierarchy doesn't match world-class SaaS patterns (Linear, Notion, Vercel).
 
-1. **Edge Functions (extract-neurons, chunk-transcript, extract-guests, generate-entities)**: Toate 4 verifică JWT **in-code** deja (creează `userClient` cu token-ul din header și apelează `getUser()`). `verify_jwt=false` în config.toml e OK deoarece validarea se face manual. Niciuna nu acceptă `user_id` din body — extrag `userId` din token.
+## Reference Pattern: Linear/Notion Sidebar
 
-2. **useAIExtraction.ts**: Deja folosește `session.access_token` în header-ul `Authorization`. Corect implementat.
+```text
+┌─────────────────────────┐
+│ ◉ Workspace Name    ⌄   │  ← Single row: logo + workspace dropdown
+│ ⌕ Search           ⌘K  │  ← Search bar
+├─────────────────────────┤
+│ ▸ CORE                  │
+│   ● Command Center      │
+│ ▸ WORK                  │
+│   ○ Pipeline             │
+│   ○ Library              │
+│   ...                    │
+│ ▸ DISCOVER              │
+│   ...                    │
+│ ▸ SESSIONS              │
+│   ...                    │
+├─────────────────────────┤
+│ 🔵 user@email  🔔  ⚙️  │  ← Compact footer row
+│ ████████░░ 1,240N  PRO  │  ← Credit progress bar
+└─────────────────────────┘
+```
 
-3. **Extractor.tsx**: Query-ul filtrează doar pe `workspace_id`, **fără `author_id`**. Un admin (sau un user cu RLS permisiv) ar putea vedea episoade ale altor utilizatori din același workspace. Trebuie adăugat `.eq("author_id", user.id)`.
+## Plan
 
-4. **CSP**: `index.html` conține `'unsafe-eval'` în `script-src`. Trebuie eliminat — Vite nu necesită `eval` în producție.
+### 1. Sidebar Header — Merge Logo + Workspace into one row
+- Replace the current two-element header (Logo button + WorkspaceSwitcher block) with a **single clickable row**: Logo icon + workspace name + chevron dropdown
+- Remove the separate `WorkspaceSwitcher` component from the header; integrate workspace switching into the logo row dropdown
+- This saves ~40px vertical space and looks like Linear's team switcher
 
-5. **Rate limiting**: `extract-neurons` și `extract-guests` folosesc rate limiting **in-memory** (se pierde la restart). `chunk-transcript` și `generate-entities` folosesc deja DB-backed `rateLimitGuard`. Trebuie migrat și restul la `rateLimitGuard`.
+### 2. Quick Actions — Inline search properly
+- Keep Search + New Session row but make Search fill the width with the "New" button as a small icon-only button on the right
+- In collapsed mode, show only the search icon and new-session icon vertically
 
-## Plan de implementare
+### 3. Sidebar Footer — Reverse order, add credit bar
+- **Row 1 (bottom)**: Avatar + truncated email + NotificationBell + UserMenu chevron — single compact row
+- **Row 2 (above)**: Credit balance as a thin progress bar with tier badge + neuron count — clickable to /credits
+- Remove the redundant Crown icon block and oversized button styling
 
-### Pas 1: Adaugă filtru `author_id` în Extractor.tsx
-- În `fetchEpisodes()`, adaugă `.eq("author_id", user.id)` la query-ul episodes
-- Asigură că `user.id` e disponibil în scope (deja importat din `useAuth`)
+### 4. Top Bar (AppLayout) — Minimal cleanup
+- Keep: SidebarTrigger + Breadcrumbs + CompactPipeline
+- Reduce height from `h-11` to `h-10` for tighter feel
+- Remove `min-h-[44px] min-w-[44px]` from SidebarTrigger (those are for touch targets inside the sidebar, not the top bar)
 
-### Pas 2: Migrează rate limiting la DB-backed
-- **extract-neurons/index.ts**: Înlocuiește `rateLimitMap` + `checkRateLimit()` cu import `rateLimitGuard` din `_shared/rate-limiter.ts`, configurare 10 req/h
-- **extract-guests/index.ts**: Același lucru — înlocuiește rate limiting in-memory cu `rateLimitGuard`
-- Elimină funcțiile locale `checkRateLimit` și variabilele `rateLimitMap`
+### 5. UserMenu — Already good, minor polish
+- Ensure the trigger in the footer row shows just the avatar (no duplicate email text since footer already shows it)
+- Keep theme/language/settings inside the dropdown (current pattern is correct)
 
-### Pas 3: Elimină `unsafe-eval` din CSP
-- În `index.html`, elimină `'unsafe-eval'` din directiva `script-src`
-- Adaugă `https://ai.gateway.lovable.dev` la `connect-src` (lipsește, necesar pentru AI calls)
-
-### Pas 4: Activare protecție parole compromise
-- Folosim tool-ul `cloud--configure_auth` pentru a activa HIBP password check
-
-### Pas 5: Monitorizare RLS (documentare)
-- Nu necesită cod — RLS e deja aplicat universal pe toate tabelele
-- Adăugăm un comentariu/notă în documentația existentă despre revizia periodică
-
-## Fișiere modificate
-- `src/pages/Extractor.tsx` — adaugă `.eq("author_id", user.id)`
-- `supabase/functions/extract-neurons/index.ts` — migrare la `rateLimitGuard`
-- `supabase/functions/extract-guests/index.ts` — migrare la `rateLimitGuard`
-- `index.html` — CSP fără `unsafe-eval`, plus `connect-src` completat
-
-## Impact
-- Zero breaking changes — toate funcțiile deja validează JWT in-code
-- Rate limiting persistent (supraviețuiește restart-urilor edge functions)
-- CSP mai strict reduce suprafața de atac XSS
-- Episoadele filtrate corect pe `author_id` previne data leakage
+### Files Modified
+- `src/components/AppSidebar.tsx` — Major rewrite of header + footer sections
+- `src/components/AppLayout.tsx` — Top bar height tweak
+- `src/components/WorkspaceSwitcher.tsx` — Simplify expanded variant to be inline (single row trigger)
 
