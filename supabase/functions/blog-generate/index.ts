@@ -82,6 +82,11 @@ function repairAndParseJson(raw: string): any {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
 
+  // Rate limit guard (IP-based)
+  const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const rateLimited = await rateLimitGuard(clientIp + ":blog-generate", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+  if (rateLimited) return rateLimited;
+
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, serviceRoleKey);
