@@ -2663,6 +2663,7 @@ export type Database = {
           description: string
           id: string
           job_id: string | null
+          service_key: string | null
           type: string
           user_id: string
         }
@@ -2672,6 +2673,7 @@ export type Database = {
           description?: string
           id?: string
           job_id?: string | null
+          service_key?: string | null
           type?: string
           user_id: string
         }
@@ -2681,6 +2683,7 @@ export type Database = {
           description?: string
           id?: string
           job_id?: string | null
+          service_key?: string | null
           type?: string
           user_id?: string
         }
