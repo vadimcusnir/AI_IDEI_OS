@@ -328,7 +328,7 @@
       ["/dashboard", "Dashboard", "Overview analitic"]
     ],
     "admin_desc": "Overview, Utilizatori, Neuroni, Jobs, Servicii, Feedback — tabs",
-    "nav_title": "Navigație Globală (SiteHeader)",
+    "nav_title": "Navigație Globală (AppSidebar)",
     "nav_desc": "Pipeline-ul cognitiv al utilizatorului reflectat în navigație:",
     "editor_title": "Layout Editor Neuron"
   },
