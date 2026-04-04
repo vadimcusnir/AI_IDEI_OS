@@ -223,6 +223,10 @@ export function useCommandCenter() {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
     if (isSubmitting) return;
+    if (!isOnline) {
+      toast.error("You're offline. Please check your connection.");
+      return;
+    }
 
     // Validate input length
     const inputValidation = validateInput(input.trim());
