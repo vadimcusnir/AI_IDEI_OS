@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 /** Routes that should NOT trigger onboarding redirect (to avoid loops) */
-const ONBOARDING_EXEMPT = ["/onboarding", "/profile", "/auth", "/reset-password"];
+const ONBOARDING_EXEMPT = ["/onboarding", "/profile", "/auth", "/reset-password", "/home", "/credits", "/settings"];
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
