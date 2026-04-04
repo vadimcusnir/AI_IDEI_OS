@@ -35,7 +35,10 @@ export function useOnboardingState() {
       .select("welcome_seen, checklist_dismissed, checklist_completed, tutorial_skipped, tutorial_completed")
       .eq("user_id", user.id)
       .maybeSingle()
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          console.warn("[onboarding] Failed to load flags:", error.message);
+        }
         if (data) {
           setFlags({
             welcome_seen: data.welcome_seen ?? false,
@@ -45,6 +48,9 @@ export function useOnboardingState() {
             tutorial_completed: data.tutorial_completed ?? false,
           });
         }
+        setLoading(false);
+      })
+      .catch(() => {
         setLoading(false);
       });
   }, [user]);
