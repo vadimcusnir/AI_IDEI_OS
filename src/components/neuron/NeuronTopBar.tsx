@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { Block, BLOCK_TYPE_CONFIG } from "./types";
 
 type NeuronStatus = "draft" | "validated" | "published";
 type NeuronVisibility = "private" | "team" | "public";
