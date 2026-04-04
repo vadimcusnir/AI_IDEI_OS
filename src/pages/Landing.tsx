@@ -278,7 +278,7 @@ export default function Landing() {
                     <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-sm h-11 min-h-[44px] flex-1 text-muted-foreground">
                       Log in
                     </Button>
-                    <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-sm h-11 min-h-[44px] flex-1 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+                    <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-sm h-11 min-h-[44px] flex-1 bg-gold hover:bg-gold/85 text-obsidian">
                       Start Free
                       <ArrowRight className="h-3 w-3" />
                     </Button>
