@@ -268,7 +268,7 @@ export default function Landing() {
                   <button
                     key={link.key}
                     onClick={() => scrollTo(link.to)}
-                    className="block w-full text-left text-sm font-mono tracking-[0.1em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3.5 min-h-[44px] flex items-center border-b border-border/30"
+                    className="block w-full text-left text-sm font-mono tracking-[0.1em] text-muted-foreground hover:text-gold transition-colors py-3.5 min-h-[44px] flex items-center border-b border-border/30"
                   >
                     {t(`nav.${link.key}`).toUpperCase()}
                   </button>
