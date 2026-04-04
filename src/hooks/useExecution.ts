@@ -89,23 +89,27 @@ export function useExecution(context: ExecutionContext) {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return null;
 
+    const wsId = context.workspaceId ?? null;
+
     // Create a placeholder neuron for the job
     let neuronId: number;
     try {
+      const insertObj: Record<string, unknown> = {
+        title: `Job: ${serviceKey}`,
+        author_id: user.id,
+      };
+      if (wsId) insertObj.workspace_id = wsId;
+
       const { data: neuron, error: neuronErr } = await supabase
         .from("neurons")
-        .insert({
-          title: `Job: ${serviceKey}`,
-          author_id: user.id,
-          workspace_id: context.workspaceId || undefined,
-        } as any)
+        .insert(insertObj as any)
         .select("id")
         .single();
 
       if (neuronErr || !neuron) {
         throw new Error(neuronErr?.message || "Neuron creation failed");
       }
-      neuronId = Number(neuron.id); // bigint → number cast
+      neuronId = Number(neuron.id);
     } catch (err) {
       console.error("Failed to create neuron for job:", err);
       throw new Error(`Service unavailable: Could not initialize job. ${err instanceof Error ? err.message : ""}`);
@@ -114,16 +118,18 @@ export function useExecution(context: ExecutionContext) {
     // Create job linked to the neuron
     let jobId: string;
     try {
+      const jobInsert: Record<string, unknown> = {
+        neuron_id: neuronId,
+        worker_type: serviceKey,
+        status: "pending",
+        input: inputParams,
+        author_id: user.id,
+      };
+      if (wsId) jobInsert.workspace_id = wsId;
+
       const { data: job, error: jobErr } = await supabase
         .from("neuron_jobs")
-        .insert({
-          neuron_id: neuronId,
-          worker_type: serviceKey,
-          status: "pending",
-          input: inputParams as any,
-          author_id: user.id,
-          workspace_id: context.workspaceId || undefined,
-        } as any)
+        .insert(jobInsert as any)
         .select("id")
         .single();
 
@@ -156,7 +162,6 @@ export function useExecution(context: ExecutionContext) {
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
-      // Specific error handling by status code
       if (resp.status === 429) {
         const retryAfter = resp.headers.get("Retry-After") || "60";
         throw new Error(`Rate limit exceeded. Try again in ${retryAfter}s.`);
