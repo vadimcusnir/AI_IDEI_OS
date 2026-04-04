@@ -2,8 +2,13 @@
  * AppSidebar — OS-grade navigation kernel.
  * Single vertical flow: Logo → Search → Workspace → Navigation → User Control
  * Zero redundancy. Every element serves the pipeline.
+ *
+ * MODE SYSTEM:
+ * - "user" (default): Shows core pipeline routes only. Minimal cognitive load.
+ * - "operator": Shows all routes including technical/advanced ones. For admin/elite.
+ * Mode persists in localStorage. Admin users default to "operator".
  */
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,7 +22,7 @@ import {
   Home, BookOpen, Sparkles, Brain, Network, Store,
   Coins, Plus, Clock, Shield, Cpu, Activity, BarChart3,
   Database, Trophy, Workflow, Gem, Plug, LogIn,
-  ChevronsUpDown, Check, Settings, Bell,
+  ChevronsUpDown, Check, Settings, Bell, Terminal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -38,6 +43,38 @@ import { toast } from "sonner";
 const GlobalSearch = lazy(() => import("@/components/GlobalSearch").then(m => ({ default: m.GlobalSearch })));
 const UserMenu = lazy(() => import("@/components/UserMenu").then(m => ({ default: m.UserMenu })));
 
+// ═══ MODE SYSTEM ═══
+type SidebarMode = "user" | "operator";
+
+const MODE_KEY = "ai-idei-sidebar-mode";
+
+function useOperatorMode(isAdmin: boolean) {
+  const [mode, setModeState] = useState<SidebarMode>(() => {
+    try {
+      const stored = localStorage.getItem(MODE_KEY);
+      if (stored === "operator" || stored === "user") return stored;
+    } catch {}
+    return isAdmin ? "operator" : "user";
+  });
+
+  useEffect(() => {
+    // Admin users who haven't set a preference default to operator
+    if (isAdmin && !localStorage.getItem(MODE_KEY)) {
+      setModeState("operator");
+    }
+  }, [isAdmin]);
+
+  const toggleMode = useCallback(() => {
+    setModeState(prev => {
+      const next = prev === "user" ? "operator" : "user";
+      try { localStorage.setItem(MODE_KEY, next); } catch {}
+      return next;
+    });
+  }, []);
+
+  return { mode, isOperator: mode === "operator", toggleMode };
+}
+
 // ═══ NAVIGATION MAP — Flat, deterministic, pipeline-aligned ═══
 
 interface NavItem {
@@ -48,6 +85,8 @@ interface NavItem {
   minTier?: UserTier;
   highlight?: boolean;
   adminOnly?: boolean;
+  /** Only visible in operator mode */
+  operatorOnly?: boolean;
 }
 
 interface NavSection {
@@ -56,6 +95,8 @@ interface NavSection {
   items: NavItem[];
   authOnly?: boolean;
   adminOnly?: boolean;
+  /** Entire section only visible in operator mode */
+  operatorOnly?: boolean;
 }
 
 const SECTIONS: NavSection[] = [
@@ -66,7 +107,7 @@ const SECTIONS: NavSection[] = [
       { label: "Command Center", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
       { label: "Pipeline", to: "/pipeline", icon: Workflow, controlId: "nav.pipeline" },
       { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
-      { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs" },
+      { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs", operatorOnly: true },
     ],
   },
   {
@@ -81,6 +122,7 @@ const SECTIONS: NavSection[] = [
     key: "intelligence",
     label: "INTELLIGENCE",
     authOnly: true,
+    operatorOnly: true,
     items: [
       { label: "Neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
       { label: "Knowledge Graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
@@ -93,9 +135,9 @@ const SECTIONS: NavSection[] = [
     items: [
       { label: "Services", to: "/services", icon: Sparkles, controlId: "nav.services" },
       { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
-      { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
-      { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip" },
-      { label: "Integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
+      { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification", operatorOnly: true },
+      { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip", operatorOnly: true },
+      { label: "Integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations", operatorOnly: true },
     ],
   },
 ];
