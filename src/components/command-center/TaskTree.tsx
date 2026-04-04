@@ -155,7 +155,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
                     className={cn(
                       "flex items-center gap-2 py-1.5 px-2 rounded-lg transition-colors",
                       step.status === "running" && "bg-primary/5 border border-primary/20",
-                      step.status === "completed" && "bg-green-500/5",
+                      step.status === "completed" && "bg-success/5",
                       step.status === "failed" && "bg-destructive/5",
                     )}
                   >
