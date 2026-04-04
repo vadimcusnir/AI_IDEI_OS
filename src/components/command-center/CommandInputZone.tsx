@@ -34,12 +34,13 @@ interface CommandInputZoneProps {
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
     { input, onInputChange, onSubmit, onStop, loading, isSubmitting, files, onFileSelect, onRemoveFile,
-      showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction },
+      showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction, inputHistory = [] },
     ref,
   ) {
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [historyIdx, setHistoryIdx] = useState(-1);
 
     useImperativeHandle(ref, () => ({
       focus: () => inputRef.current?.focus(),
@@ -49,6 +50,20 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         if (!isSubmitting) onSubmit();
+        setHistoryIdx(-1);
+      }
+      // ↑ / ↓ history navigation
+      if (e.key === "ArrowUp" && !input.trim() && inputHistory.length > 0) {
+        e.preventDefault();
+        const nextIdx = Math.min(historyIdx + 1, inputHistory.length - 1);
+        setHistoryIdx(nextIdx);
+        onInputChange(inputHistory[nextIdx]);
+      }
+      if (e.key === "ArrowDown" && historyIdx >= 0) {
+        e.preventDefault();
+        const nextIdx = historyIdx - 1;
+        setHistoryIdx(nextIdx);
+        onInputChange(nextIdx >= 0 ? inputHistory[nextIdx] : "");
       }
     };
 
