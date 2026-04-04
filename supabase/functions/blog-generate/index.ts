@@ -474,7 +474,7 @@ Deno.serve(async (req) => {
     // ═══ POST-PUBLISH SEO ENRICHMENT (async, non-blocking) ═══
     let seoData = null;
     try {
-      seoData = await seoTransform(apiKey, {
+      seoData = await seoTransform(LOVABLE_API_KEY, {
         id: post.id,
         title: post.title,
         content: finalContent,
