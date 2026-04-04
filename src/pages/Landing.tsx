@@ -300,6 +300,7 @@ export default function Landing() {
         <LandingMechanism />
         <TransformationDiagram />
         <LandingWhatYouGet />
+        <LandingKnowledgeShowcase />
         <LandingOutputGalaxy />
         <LandingControlSurface />
         <LandingWhoFor />
