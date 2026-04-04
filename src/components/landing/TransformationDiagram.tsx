@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { ContentBoundary } from "@/components/layout/ContentBoundary";
+import knowledgeOsDiagram from "@/assets/diagrams/knowledge-os-full-dark.png";
 
 const INPUTS = [
   { label: "Rough idea", icon: "💭" },
@@ -138,6 +139,26 @@ export function TransformationDiagram() {
             <span className="text-eyebrow font-mono tracking-wider">OUTPUT</span>
           </div>
         </div>
+
+        {/* Full Knowledge OS Pipeline Diagram */}
+        <motion.div
+          initial="hidden" whileInView="visible" viewport={{ once: true }}
+          custom={5} variants={fadeUp}
+          className="mt-20 sm:mt-28"
+        >
+          <div className="text-center mb-8">
+            <span className="text-eyebrow font-mono tracking-[0.3em] text-[hsl(var(--gold-oxide)/0.6)]">FULL PIPELINE</span>
+          </div>
+          <div className="relative rounded-xl overflow-hidden border border-border/30 bg-[hsl(var(--obsidian))]">
+            <img
+              src={knowledgeOsDiagram}
+              alt="Knowledge Extraction OS: Conversations & Inputs → Extraction Core → Atomic Neurons → Digital Assets → Monetization"
+              className="w-full h-auto"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-[hsl(var(--gold-oxide)/0.08)] pointer-events-none" />
+          </div>
+        </motion.div>
       </ContentBoundary>
     </section>
   );

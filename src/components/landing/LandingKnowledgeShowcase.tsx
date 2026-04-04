@@ -7,6 +7,8 @@ import { ArrowRight, Brain, Lightbulb, Network, Zap, BookOpen, Target } from "lu
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import patternExtractionDiagram from "@/assets/diagrams/pattern-extraction-dark.png";
+import monetizeDiagram from "@/assets/diagrams/monetize-flow-dark.png";
 
 const SHOWCASE_ITEMS = [
   {
@@ -122,6 +124,47 @@ export function LandingKnowledgeShowcase() {
             );
           })}
         </div>
+
+        {/* Pattern Extraction Diagram */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-12"
+        >
+          <div className="relative rounded-xl overflow-hidden border border-border/30 bg-[hsl(var(--obsidian))]">
+            <img
+              src={patternExtractionDiagram}
+              alt="Pattern Extraction: Transcripts, Voice Notes, Text Data → Recurring Ideas, Decision Rules, Frameworks, Content Seeds, Product Insights → Atomic Knowledge Graph"
+              className="w-full h-auto"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-[hsl(var(--gold-oxide)/0.08)] pointer-events-none" />
+          </div>
+        </motion.div>
+
+        {/* Monetize Flow Diagram */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <div className="text-center mb-6">
+            <span className="text-[10px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)]">
+              MONETIZATION PIPELINE
+            </span>
+          </div>
+          <div className="relative rounded-xl overflow-hidden border border-border/30 bg-[hsl(var(--obsidian))]">
+            <img
+              src={monetizeDiagram}
+              alt="Monetizing Intelligence: Expertise → Structured Insights → Digital Assets → Content Products → Recurring Revenue (Subscriptions, Memberships, Licensing)"
+              className="w-full h-auto"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-[hsl(var(--gold-oxide)/0.08)] pointer-events-none" />
+          </div>
+        </motion.div>
 
         {/* CTA */}
         <motion.div
