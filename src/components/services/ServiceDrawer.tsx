@@ -253,7 +253,7 @@ export function ServiceDrawer({ service, open, onOpenChange }: ServiceDrawerProp
               <span className="font-mono font-bold">{serviceFull?.credits_cost || service?.credits_cost}</span>
               <span className="text-muted-foreground">NEURONS</span>
             </div>
-            <span className="text-[9px] text-muted-foreground">|</span>
+            <span className="text-nano text-muted-foreground">|</span>
             <div className="text-xs text-muted-foreground">
               Sold: <span className="font-mono font-bold text-foreground">{balance}</span>
             </div>
@@ -302,7 +302,7 @@ export function ServiceDrawer({ service, open, onOpenChange }: ServiceDrawerProp
                               />
                             )}
                             {field.description && (
-                              <p className="text-[10px] text-muted-foreground/60 mt-1">{field.description}</p>
+                              <p className="text-micro text-muted-foreground/60 mt-1">{field.description}</p>
                             )}
                           </div>
                         ))

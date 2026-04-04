@@ -111,7 +111,7 @@ export default function DatabaseRelations() {
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">{t("database_relations.title")}</h1>
-              <p className="text-[10px] text-muted-foreground">{t("database_relations.subtitle")}</p>
+              <p className="text-micro text-muted-foreground">{t("database_relations.subtitle")}</p>
             </div>
           </div>
 
@@ -126,7 +126,7 @@ export default function DatabaseRelations() {
               <div key={s.label} className="bg-card border border-border rounded-xl p-3 text-center">
                 <s.icon className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                 <p className="text-sm font-bold font-mono">{s.value}</p>
-                <p className="text-[9px] text-muted-foreground">{s.label}</p>
+                <p className="text-nano text-muted-foreground">{s.label}</p>
               </div>
             ))}
           </div>
@@ -136,7 +136,7 @@ export default function DatabaseRelations() {
             <button
               onClick={() => setFilter(null)}
               className={cn(
-                "px-2.5 py-1 rounded-full text-[10px] font-medium transition-colors",
+                "px-2.5 py-1 rounded-full text-micro font-medium transition-colors",
                 !filter ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
               )}
             >
@@ -147,7 +147,7 @@ export default function DatabaseRelations() {
                 key={cat}
                 onClick={() => setFilter(filter === cat ? null : cat)}
                 className={cn(
-                  "px-2.5 py-1 rounded-full text-[10px] font-medium transition-colors",
+                  "px-2.5 py-1 rounded-full text-micro font-medium transition-colors",
                   filter === cat ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -166,16 +166,16 @@ export default function DatabaseRelations() {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-mono font-medium">{table.name}</p>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[9px] text-muted-foreground">{t("database_relations.cols", { count: table.columns })}</span>
+                    <span className="text-nano text-muted-foreground">{t("database_relations.cols", { count: table.columns })}</span>
                     {table.relationsOut.length > 0 && (
-                      <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                      <span className="text-nano text-muted-foreground flex items-center gap-0.5">
                         <ArrowRight className="h-2.5 w-2.5" />
                         {table.relationsOut.join(", ")}
                       </span>
                     )}
                   </div>
                 </div>
-                <Badge variant="outline" className={cn("text-[8px] px-1.5 py-0 h-4", CAT_COLORS[table.category])}>
+                <Badge variant="outline" className={cn("text-nano px-1.5 py-0 h-4", CAT_COLORS[table.category])}>
                   {table.category}
                 </Badge>
                 {table.hasRLS ? (

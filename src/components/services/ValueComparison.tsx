@@ -28,7 +28,7 @@ export function ValueComparison() {
 
       <div className="rounded-xl border border-border overflow-hidden">
         {/* Header */}
-        <div className="grid grid-cols-4 text-[10px] font-bold uppercase tracking-wider bg-muted/50 px-4 py-2.5">
+        <div className="grid grid-cols-4 text-micro font-bold uppercase tracking-wider bg-muted/50 px-4 py-2.5">
           <span className="text-muted-foreground">Metric</span>
           <span className="text-muted-foreground text-center">Manual</span>
           <span className="text-primary text-center">AI-IDEI</span>

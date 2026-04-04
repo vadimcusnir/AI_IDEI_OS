@@ -349,8 +349,8 @@ export default function Integrations() {
                         </div>
                         <div className="mt-3 flex items-center justify-between">
                           <div className="flex gap-1.5">
-                            <Badge variant="outline" className="text-[10px]">{c.auth_type}</Badge>
-                            <Badge variant="outline" className="text-[10px]">{c.sync_mode}</Badge>
+                            <Badge variant="outline" className="text-micro">{c.auth_type}</Badge>
+                            <Badge variant="outline" className="text-micro">{c.sync_mode}</Badge>
                           </div>
                           <Button
                             size="sm"
@@ -421,13 +421,13 @@ export default function Integrations() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-sm">{wh.name}</span>
-                            <Badge variant={wh.is_active ? "default" : "secondary"} className="text-[10px]">
+                            <Badge variant={wh.is_active ? "default" : "secondary"} className="text-micro">
                               {wh.is_active ? "Active" : "Inactive"}
                             </Badge>
                             <span className="text-xs text-muted-foreground">{wh.calls_count} calls</span>
                           </div>
                           <div className="flex items-center gap-1 mt-1">
-                            <code className="text-[10px] text-muted-foreground truncate max-w-[400px]">{fullUrl}</code>
+                            <code className="text-micro text-muted-foreground truncate max-w-[400px]">{fullUrl}</code>
                             <Button
                               size="sm"
                               variant="ghost"
@@ -503,7 +503,7 @@ Content-Type: application/json
                             <span className="text-sm font-medium">
                               {connector?.display_name || "Unknown"}
                             </span>
-                            <Badge variant={isOk ? "default" : "destructive"} className="text-[10px]">
+                            <Badge variant={isOk ? "default" : "destructive"} className="text-micro">
                               {sync.status}
                             </Badge>
                           </div>

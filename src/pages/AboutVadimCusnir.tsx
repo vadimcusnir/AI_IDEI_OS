@@ -35,7 +35,7 @@ function StatCard({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-xl border border-border/20 bg-muted/10 p-4 text-center space-y-1">
       <p className="text-xl font-bold text-foreground tabular-nums">{value}</p>
-      <p className="text-[11px] text-muted-foreground/60 uppercase tracking-wider">{label}</p>
+      <p className="text-dense text-muted-foreground/60 uppercase tracking-wider">{label}</p>
     </div>
   );
 }
@@ -48,7 +48,7 @@ function SpiralPhase({ number, title, desc }: { number: number; title: string; d
       </div>
       <div>
         <p className="text-sm font-semibold text-foreground">{title}</p>
-        <p className="text-[13px] text-muted-foreground/70">{desc}</p>
+        <p className="text-compact text-muted-foreground/70">{desc}</p>
       </div>
     </div>
   );
@@ -102,7 +102,7 @@ export default function About() {
         <motion.div {...fade(0.1)}>
           <Section>
             <SectionTitle>{t("about.intro_title")}</SectionTitle>
-            <div className="text-[13px] leading-[1.85] text-muted-foreground/70 space-y-3">
+            <div className="text-compact leading-[1.85] text-muted-foreground/70 space-y-3">
               <p>{t("about.intro_p1")}</p>
               <p>{t("about.intro_p2")}</p>
               <p>{t("about.intro_p3")}</p>
@@ -127,7 +127,7 @@ export default function About() {
                   <div className="h-7 w-7 rounded-lg bg-muted/20 flex items-center justify-center shrink-0">
                     <item.icon className="h-3.5 w-3.5 text-primary/60" />
                   </div>
-                  <p className="text-[13px] text-muted-foreground/80">{item.text}</p>
+                  <p className="text-compact text-muted-foreground/80">{item.text}</p>
                 </div>
               ))}
             </div>
@@ -138,7 +138,7 @@ export default function About() {
         <motion.div {...fade(0.2)}>
           <Section>
             <div className="space-y-1">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary/50">
+              <p className="text-micro font-semibold uppercase tracking-[0.2em] text-primary/50">
                 {t("about.method_label")}
               </p>
               <SectionTitle>{t("about.method_title")}</SectionTitle>
@@ -150,7 +150,7 @@ export default function About() {
               <SpiralPhase number={3} title={t("about.spiral_3_title")} desc={t("about.spiral_3_desc")} />
               <SpiralPhase number={4} title={t("about.spiral_4_title")} desc={t("about.spiral_4_desc")} />
             </div>
-            <div className="text-[13px] text-muted-foreground/70 space-y-2 pt-1">
+            <div className="text-compact text-muted-foreground/70 space-y-2 pt-1">
               <p className="font-medium text-foreground/80">{t("about.method_principle_title")}</p>
               <ul className="space-y-1 pl-1">
                 <li className="flex items-center gap-2"><Zap className="h-3 w-3 text-primary/40" />{t("about.method_p1")}</li>
@@ -174,7 +174,7 @@ export default function About() {
                 t("about.exp_psych"),
                 t("about.exp_storytelling"),
               ].map((exp) => (
-                <div key={exp} className="flex items-center gap-2 p-2.5 rounded-lg border border-border/10 text-[13px] text-muted-foreground/80">
+                <div key={exp} className="flex items-center gap-2 p-2.5 rounded-lg border border-border/10 text-compact text-muted-foreground/80">
                   <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
                   {exp}
                 </div>
@@ -195,7 +195,7 @@ export default function About() {
               ].map((v) => (
                 <div key={v.title} className="rounded-xl border border-border/15 p-4 space-y-1">
                   <p className="text-sm font-semibold text-foreground">{v.title}</p>
-                  <p className="text-[13px] text-muted-foreground/70">{v.desc}</p>
+                  <p className="text-compact text-muted-foreground/70">{v.desc}</p>
                 </div>
               ))}
             </div>
@@ -217,7 +217,7 @@ export default function About() {
                 >
                   <s.icon className="h-5 w-5 text-muted-foreground/50 group-hover:text-primary/60 transition-colors" />
                   <p className="text-sm font-bold text-foreground tabular-nums">{s.stat}</p>
-                  <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider">{s.label}</p>
+                  <p className="text-micro text-muted-foreground/40 uppercase tracking-wider">{s.label}</p>
                 </a>
               ))}
             </div>
@@ -246,7 +246,7 @@ export default function About() {
 
         {/* CTA */}
         <motion.div {...fade(0.4)} className="text-center space-y-4 pb-8">
-          <p className="text-[13px] text-muted-foreground/60 italic">{t("about.cta_text")}</p>
+          <p className="text-compact text-muted-foreground/60 italic">{t("about.cta_text")}</p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="sm" className="h-9 gap-1.5">
               <Link to="/services">

@@ -68,7 +68,7 @@ export function LandingKnowledgeShowcase() {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[hsl(var(--gold-oxide)/0.2)] bg-[hsl(var(--gold-oxide)/0.05)] mb-4">
             <Brain className="h-3 w-3 text-[hsl(var(--gold-oxide))]" />
-            <span className="text-[10px] font-mono tracking-widest text-[hsl(var(--gold-oxide))]">
+            <span className="text-micro font-mono tracking-widest text-[hsl(var(--gold-oxide))]">
               KNOWLEDGE BASE
             </span>
           </div>
@@ -108,7 +108,7 @@ export function LandingKnowledgeShowcase() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={cn("text-[9px] font-mono tracking-widest uppercase", item.color)}>
+                      <span className={cn("text-nano font-mono tracking-widest uppercase", item.color)}>
                         {item.category}
                       </span>
                     </div>
@@ -151,7 +151,7 @@ export function LandingKnowledgeShowcase() {
           className="mb-10"
         >
           <div className="text-center mb-6">
-            <span className="text-[10px] font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)]">
+            <span className="text-micro font-mono tracking-[0.25em] text-[hsl(var(--gold-oxide)/0.6)]">
               MONETIZATION PIPELINE
             </span>
           </div>

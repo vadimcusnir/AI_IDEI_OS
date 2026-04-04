@@ -106,31 +106,31 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
-                    <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeColor)}>
+                    <span className={cn("text-nano font-mono uppercase px-1.5 py-0.5 rounded", typeColor)}>
                       {typeLabel}
                     </span>
                     <VisibilityIcon visibility={artifact.status === "published" ? "public" : "private"} size="xs" />
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className={cn("h-1.5 w-1.5 rounded-full", statusDot)} />
-                    <span className="text-[9px] text-muted-foreground">{statusLabel}</span>
+                    <span className="text-nano text-muted-foreground">{statusLabel}</span>
                   </div>
                 </div>
 
                 <h3 className="text-sm font-medium mb-1.5 line-clamp-2">{artifact.title}</h3>
-                <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed flex-1">
+                <p className="text-dense text-muted-foreground line-clamp-3 mb-3 leading-relaxed flex-1">
                   {(artifact.content ?? "").slice(0, 150)}
                 </p>
 
                 {(artifact.tags ?? []).length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-2">
                     {(artifact.tags ?? []).slice(0, 3).map(tag => (
-                      <Badge key={tag} variant="secondary" className="text-[8px] px-1.5 py-0">
+                      <Badge key={tag} variant="secondary" className="text-nano px-1.5 py-0">
                         {tag}
                       </Badge>
                     ))}
                     {(artifact.tags ?? []).length > 3 && (
-                      <span className="text-[8px] text-muted-foreground">+{(artifact.tags ?? []).length - 3}</span>
+                      <span className="text-nano text-muted-foreground">+{(artifact.tags ?? []).length - 3}</span>
                     )}
                   </div>
                 )}
@@ -144,7 +144,7 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
                         <Download className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="text-[10px]">Descarcă (.md)</TooltipContent>
+                    <TooltipContent side="top" className="text-micro">Descarcă (.md)</TooltipContent>
                   </Tooltip>
 
                   <Tooltip>
@@ -154,7 +154,7 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
                         <Pencil className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="text-[10px]">Editează</TooltipContent>
+                    <TooltipContent side="top" className="text-micro">Editează</TooltipContent>
                   </Tooltip>
 
                   <Tooltip>
@@ -167,7 +167,7 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
                         <Zap className="h-3 w-3 text-primary" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="text-[10px]">Folosește ca input</TooltipContent>
+                    <TooltipContent side="top" className="text-micro">Folosește ca input</TooltipContent>
                   </Tooltip>
 
                   <div className="flex-1" />
@@ -179,7 +179,7 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
                         <Store className="h-3 w-3 text-primary" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="text-[10px]">Publică în Marketplace</TooltipContent>
+                    <TooltipContent side="top" className="text-micro">Publică în Marketplace</TooltipContent>
                   </Tooltip>
 
                   <Tooltip>
@@ -189,17 +189,17 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="text-[10px]">Șterge</TooltipContent>
+                    <TooltipContent side="top" className="text-micro">Șterge</TooltipContent>
                   </Tooltip>
                 </div>
 
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-[9px] text-muted-foreground flex items-center gap-1">
+                  <span className="text-nano text-muted-foreground flex items-center gap-1">
                     <Clock className="h-2.5 w-2.5" />
                     {format(new Date(artifact.updated_at), "dd MMM yyyy")}
                   </span>
                   {artifact.service_key && (
-                    <span className="text-[8px] font-mono text-muted-foreground/50">
+                    <span className="text-nano font-mono text-muted-foreground/50">
                       {artifact.service_key}
                     </span>
                   )}

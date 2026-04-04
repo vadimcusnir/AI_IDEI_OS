@@ -173,21 +173,21 @@ export default function CognitiveUnits() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="rounded-xl border border-border bg-card p-4 text-center">
               <p className="text-2xl font-bold font-mono">{units.length}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total Units</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Total Units</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-4 text-center">
               <p className="text-2xl font-bold font-mono text-primary">{units.filter(u => u.is_validated).length}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Validated</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Validated</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-4 text-center">
               <p className="text-2xl font-bold font-mono">{units.filter(u => u.llm_ready).length}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">LLM Ready</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">LLM Ready</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-4 text-center">
               <p className="text-2xl font-bold font-mono">
                 {units.length > 0 ? (units.reduce((s, u) => s + u.quality_score, 0) / units.length).toFixed(0) : 0}%
               </p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Avg Quality</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Avg Quality</p>
             </div>
           </div>
 
@@ -218,20 +218,20 @@ export default function CognitiveUnits() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <h3 className="text-sm font-semibold truncate">{unit.title}</h3>
-                          <Badge variant="outline" className="text-[9px] uppercase">{unit.unit_type}</Badge>
+                          <Badge variant="outline" className="text-nano uppercase">{unit.unit_type}</Badge>
                           {unit.is_validated && (
-                            <Badge className="bg-primary/10 text-primary text-[9px] gap-0.5">
+                            <Badge className="bg-primary/10 text-primary text-nano gap-0.5">
                               <CheckCircle2 className="h-2.5 w-2.5" /> Validated
                             </Badge>
                           )}
                           {unit.llm_ready && (
-                            <Badge className="bg-accent/10 text-accent-foreground text-[9px] gap-0.5">
+                            <Badge className="bg-accent/10 text-accent-foreground text-nano gap-0.5">
                               <Sparkles className="h-2.5 w-2.5" /> LLM Ready
                             </Badge>
                           )}
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-2">{unit.content}</p>
-                        <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
+                        <div className="flex items-center gap-3 mt-2 text-micro text-muted-foreground">
                           {cat && <span>{cat.name}</span>}
                           <span>Quality: {(unit.quality_score * 100).toFixed(0)}%</span>
                           <span>Confidence: {(unit.confidence * 100).toFixed(0)}%</span>
@@ -244,7 +244,7 @@ export default function CognitiveUnits() {
                         {unit.tags && unit.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
                             {unit.tags.map(tag => (
-                              <span key={tag} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{tag}</span>
+                              <span key={tag} className="text-nano px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{tag}</span>
                             ))}
                           </div>
                         )}

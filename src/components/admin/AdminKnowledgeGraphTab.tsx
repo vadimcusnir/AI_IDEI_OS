@@ -222,7 +222,7 @@ export function AdminKnowledgeGraphTab() {
               <p className="text-xs text-muted-foreground">No emerging ideas detected. Compute PVS + Emergence first.</p>
             ) : (
               <div className="space-y-0.5">
-                <div className="grid grid-cols-[24px_1fr_56px_48px_48px_48px_48px_48px] gap-1 px-2 py-1 text-[8px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                <div className="grid grid-cols-[24px_1fr_56px_48px_48px_48px_48px_48px] gap-1 px-2 py-1 text-nano font-semibold uppercase tracking-wider text-muted-foreground/60">
                   <span>#</span>
                   <span>Entity</span>
                   <span className="text-right">Emrg</span>
@@ -234,10 +234,10 @@ export function AdminKnowledgeGraphTab() {
                 </div>
                 {emergingIdeas.map((m, i) => (
                   <div key={m.node_id} className="grid grid-cols-[24px_1fr_56px_48px_48px_48px_48px_48px] gap-1 px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors items-center">
-                    <span className="text-[10px] font-mono text-muted-foreground">{i + 1}</span>
+                    <span className="text-micro font-mono text-muted-foreground">{i + 1}</span>
                     <div className="truncate">
                       <span className="text-xs">{m.title}</span>
-                      <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
+                      <span className="text-nano uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
                     </div>
                     <span className="text-right text-xs font-mono font-bold text-semantic-emerald">
                       {(m.emergence_score * 100).toFixed(1)}
@@ -260,7 +260,7 @@ export function AdminKnowledgeGraphTab() {
               <p className="text-xs text-muted-foreground">No acceleration signals detected.</p>
             ) : (
               <div className="space-y-0.5">
-                <div className="grid grid-cols-[24px_1fr_56px_48px_48px_48px] gap-1 px-2 py-1 text-[8px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                <div className="grid grid-cols-[24px_1fr_56px_48px_48px_48px] gap-1 px-2 py-1 text-nano font-semibold uppercase tracking-wider text-muted-foreground/60">
                   <span>#</span>
                   <span>Entity</span>
                   <span className="text-right">Acc</span>
@@ -270,10 +270,10 @@ export function AdminKnowledgeGraphTab() {
                 </div>
                 {earlySignals.map((m, i) => (
                   <div key={m.node_id} className="grid grid-cols-[24px_1fr_56px_48px_48px_48px] gap-1 px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors items-center">
-                    <span className="text-[10px] font-mono text-muted-foreground">{i + 1}</span>
+                    <span className="text-micro font-mono text-muted-foreground">{i + 1}</span>
                     <div className="truncate">
                       <span className="text-xs">{m.title}</span>
-                      <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
+                      <span className="text-nano uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
                       {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-success/20 text-success">EMERGING</span>}
                     </div>
                     <span className="text-right text-xs font-mono font-bold text-semantic-blue">
@@ -295,7 +295,7 @@ export function AdminKnowledgeGraphTab() {
               <p className="text-xs text-muted-foreground">No PVS metrics yet.</p>
             ) : (
               <div className="space-y-0.5">
-                <div className="grid grid-cols-[24px_1fr_60px_48px_48px_48px_48px_48px_56px] gap-1 px-2 py-1 text-[8px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                <div className="grid grid-cols-[24px_1fr_60px_48px_48px_48px_48px_48px_56px] gap-1 px-2 py-1 text-nano font-semibold uppercase tracking-wider text-muted-foreground/60">
                   <span>#</span>
                   <span>Entity</span>
                   <span className="text-right">PVS</span>
@@ -308,10 +308,10 @@ export function AdminKnowledgeGraphTab() {
                 </div>
                 {pvsMetrics.map((m, i) => (
                   <div key={m.node_id} className="grid grid-cols-[24px_1fr_60px_48px_48px_48px_48px_48px_56px] gap-1 px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors items-center">
-                    <span className="text-[10px] font-mono text-muted-foreground">{i + 1}</span>
+                    <span className="text-micro font-mono text-muted-foreground">{i + 1}</span>
                     <div className="truncate">
                       <span className="text-xs">{m.title}</span>
-                      <span className="text-[8px] uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
+                      <span className="text-nano uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
                       {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-success/20 text-success">↑</span>}
                     </div>
                     <span className="text-right text-xs font-mono font-bold text-primary">
@@ -322,7 +322,7 @@ export function AdminKnowledgeGraphTab() {
                     <PVSBar value={m.pagerank_score} color="bg-semantic-purple/70" />
                     <PVSBar value={m.authority_score} color="bg-semantic-amber/70" />
                     <PVSBar value={m.economic_conversion_score} color="bg-semantic-rose/70" />
-                    <span className="text-right text-[10px] font-mono text-muted-foreground">
+                    <span className="text-right text-micro font-mono text-muted-foreground">
                       {(m.amplification_probability * 100).toFixed(0)}%
                     </span>
                   </div>
@@ -330,7 +330,7 @@ export function AdminKnowledgeGraphTab() {
               </div>
             )}
             {pvsMetrics.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-border flex items-center gap-4 text-[8px] text-muted-foreground/50 flex-wrap">
+              <div className="mt-3 pt-3 border-t border-border flex items-center gap-4 text-nano text-muted-foreground/50 flex-wrap">
                 <span>Model: {pvsMetrics[0].model_version}</span>
                 <span>Computed: {new Date(pvsMetrics[0].computed_at).toLocaleString()}</span>
                 <span className="ml-auto">PVS = 0.30·Act + 0.20·Grw + 0.20·Cen + 0.15·Auth + 0.15·Econ</span>
@@ -347,10 +347,10 @@ export function AdminKnowledgeGraphTab() {
               <div className="space-y-1">
                 {stats.topEntities.map((e, i) => (
                   <div key={e.slug} className="flex items-center gap-3 py-1.5 px-2 rounded-md hover:bg-muted/50 transition-colors">
-                    <span className="text-[10px] font-mono text-muted-foreground w-5 text-right">{i + 1}</span>
+                    <span className="text-micro font-mono text-muted-foreground w-5 text-right">{i + 1}</span>
                     <span className="text-xs truncate flex-1">{e.title}</span>
-                    <span className="text-[9px] uppercase text-muted-foreground/60">{e.entity_type}</span>
-                    <span className="text-[10px] font-mono text-primary">{e.importance_score?.toFixed(1)}</span>
+                    <span className="text-nano uppercase text-muted-foreground/60">{e.entity_type}</span>
+                    <span className="text-micro font-mono text-primary">{e.importance_score?.toFixed(1)}</span>
                   </div>
                 ))}
               </div>
@@ -364,10 +364,10 @@ export function AdminKnowledgeGraphTab() {
 
 function SectionHeader({ icon: Icon, label, count }: { icon: any; label: string; count?: number }) {
   return (
-    <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+    <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
       <Icon className="h-3 w-3" /> {label}
       {count !== undefined && count > 0 && (
-        <span className="ml-1 text-[9px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded">{count}</span>
+        <span className="ml-1 text-nano font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded">{count}</span>
       )}
     </h3>
   );
@@ -378,7 +378,7 @@ function KGKpi({ icon: Icon, label, value, color }: { icon: any; label: string; 
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className="h-3 w-3 text-muted-foreground" />
-        <span className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-lg font-bold font-mono", color)}>{value}</p>
     </div>
@@ -391,7 +391,7 @@ function PVSBar({ value, color }: { value: number; color: string }) {
       <div className="w-6 h-1 bg-muted rounded-full overflow-hidden">
         <div className={cn("h-full rounded-full", color)} style={{ width: `${Math.min(100, value * 100)}%` }} />
       </div>
-      <span className="text-[9px] font-mono text-muted-foreground w-6 text-right">
+      <span className="text-nano font-mono text-muted-foreground w-6 text-right">
         {(value * 100).toFixed(0)}
       </span>
     </div>

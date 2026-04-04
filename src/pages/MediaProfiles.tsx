@@ -88,7 +88,7 @@ export default function MediaProfiles() {
       {/* Pipeline */}
       <div className="border-b border-border bg-muted/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground overflow-x-auto">
+          <div className="flex items-center gap-2 text-micro text-muted-foreground overflow-x-auto">
             {["Media", "Transcript", "Signal Extraction", "Indicator Scoring", "Pattern Detection", "Profile Synthesis"].map(
               (step, i, arr) => (
                 <span key={step} className="flex items-center gap-2 whitespace-nowrap">
@@ -156,7 +156,7 @@ export default function MediaProfiles() {
                     </p>
                   )}
 
-                  <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
+                  <div className="flex items-center gap-3 text-micro text-muted-foreground/60">
                     {indicatorCount > 0 && (
                       <span className="flex items-center gap-1">
                         <Shield className="h-3 w-3" />

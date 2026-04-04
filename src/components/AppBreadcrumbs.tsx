@@ -120,7 +120,7 @@ export function AppBreadcrumbs() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/home" className="text-[11px]">Cockpit</Link>
+              <Link to="/home" className="text-dense">Cockpit</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           {crumbs.map((crumb) => (
@@ -128,12 +128,12 @@ export function AppBreadcrumbs() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {crumb.isLast ? (
-                  <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
+                  <BreadcrumbPage className="text-dense max-w-[160px] truncate">
                     {crumb.label}
                   </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link to={crumb.path} className="text-[11px]">
+                    <Link to={crumb.path} className="text-dense">
                       {crumb.label}
                     </Link>
                   </BreadcrumbLink>

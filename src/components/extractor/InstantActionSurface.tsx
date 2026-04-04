@@ -448,7 +448,7 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
                         <Type className="h-4 w-4 text-primary shrink-0" />
                       )}
                       <span className="text-sm truncate flex-1">{selectedFile.name}</span>
-                      <span className="text-[10px] text-muted-foreground shrink-0">
+                      <span className="text-micro text-muted-foreground shrink-0">
                         {(selectedFile.size / 1024 / 1024).toFixed(1)} MB
                       </span>
                       <button
@@ -504,7 +504,7 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
 
               {/* Balance indicator + hints */}
               <div className="flex items-center justify-between mt-3">
-                <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
+                <div className="flex items-center gap-3 text-micro text-muted-foreground/60">
                   {!balanceLoading && user && (
                     <span className={cn(
                       "flex items-center gap-1 font-mono font-medium",
@@ -523,7 +523,7 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
                 </div>
                 <button
                   onClick={() => setShowSettings(s => !s)}
-                  className="flex items-center gap-1 text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                  className="flex items-center gap-1 text-micro text-muted-foreground/60 hover:text-muted-foreground transition-colors"
                 >
                   Settings
                   <ChevronDown className={cn("h-2.5 w-2.5 transition-transform", showSettings && "rotate-180")} />
@@ -539,14 +539,14 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
                 >
                   <div className="mt-3 p-3 rounded-xl border border-destructive/20 bg-destructive/5 flex items-center gap-3">
                     <Coins className="h-4 w-4 text-destructive/60 shrink-0" />
-                    <p className="text-[11px] text-muted-foreground flex-1">
+                    <p className="text-dense text-muted-foreground flex-1">
                       {extractionDepth === "deep" ? "Deep" : "Quick"} analysis needs <span className="font-mono font-semibold text-foreground">{estimatedCost}</span> NEURONS. 
                       You have <span className="font-mono font-semibold text-destructive">{balance}</span>.
                     </p>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-7 text-[10px] px-3 shrink-0 border-destructive/30 text-destructive hover:bg-destructive/10"
+                      className="h-7 text-micro px-3 shrink-0 border-destructive/30 text-destructive hover:bg-destructive/10"
                       onClick={() => setInsufficientCredits({ needed: estimatedCost })}
                     >
                       Top Up
@@ -587,7 +587,7 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
                   >
                     <div className="border-t border-border mt-3 pt-3 space-y-2">
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-24">Extraction</span>
+                        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground w-24">Extraction</span>
                         <div className="flex gap-1">
                           {([
                             { value: "quick", label: "Quick · 100 cr", icon: Brain },
@@ -653,14 +653,14 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
                       {result.type_distribution && Object.keys(result.type_distribution).length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mt-1.5">
                           {Object.entries(result.type_distribution).map(([type, count]) => (
-                            <span key={type} className="text-[9px] px-1.5 py-0.5 rounded-md bg-primary/10 text-primary font-medium">
+                            <span key={type} className="text-nano px-1.5 py-0.5 rounded-md bg-primary/10 text-primary font-medium">
                               {type} {count}
                             </span>
                           ))}
                         </div>
                       )}
                       {result.meta?.emerging_themes && result.meta.emerging_themes.length > 0 && (
-                        <p className="text-[10px] text-muted-foreground/70 mt-1">
+                        <p className="text-micro text-muted-foreground/70 mt-1">
                           Themes: {result.meta.emerging_themes.slice(0, 3).join(", ")}
                         </p>
                       )}
@@ -690,7 +690,7 @@ export function InstantActionSurface({ onComplete, onPipelineStart, onPipelineCo
                           <StageIcon className="h-3 w-3" />
                         </div>
                         <span className={cn(
-                          "text-[8px] leading-none font-medium hidden sm:block",
+                          "text-nano leading-none font-medium hidden sm:block",
                           isActive ? "text-primary" : isPast ? "text-primary/60" : "text-muted-foreground/40"
                         )}>
                           {PIPELINE_LABELS[s]}

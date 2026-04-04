@@ -72,7 +72,7 @@ export function TranscriptHistory() {
               <FileText className="h-4 w-4 text-primary shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{ep.title || "Untitled"}</p>
-                <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
+                <div className="flex items-center gap-2 text-micro text-muted-foreground mt-0.5">
                   <span>{new Date(ep.created_at).toLocaleDateString("ro-RO")}</span>
                   {ep.language && (
                     <>
@@ -121,7 +121,7 @@ export function TranscriptHistory() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-7 text-[11px] gap-1.5"
+                        className="h-7 text-dense gap-1.5"
                         onClick={() => downloadTxt(ep)}
                       >
                         <Download className="h-3 w-3" /> TXT
@@ -129,7 +129,7 @@ export function TranscriptHistory() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-7 text-[11px] gap-1.5"
+                        className="h-7 text-dense gap-1.5"
                         onClick={async () => {
                           await navigator.clipboard.writeText(ep.transcript || "");
                         }}

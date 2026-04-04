@@ -238,14 +238,14 @@ export function MagicPipelineButton({ className, compact }: Props) {
         )}
         <span>{meta.label}</span>
         {stage === "idle" && (
-          <span className="text-[10px] opacity-70">{PIPELINE_COST}N</span>
+          <span className="text-micro opacity-70">{PIPELINE_COST}N</span>
         )}
       </Button>
       {isRunning && (
         <Progress value={meta.progress} className="h-1" />
       )}
       {stage === "error" && errorMsg && (
-        <p className="text-[10px] text-destructive">{errorMsg}</p>
+        <p className="text-micro text-destructive">{errorMsg}</p>
       )}
     </div>
   );

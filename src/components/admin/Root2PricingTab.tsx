@@ -157,7 +157,7 @@ export function Root2PricingTab() {
               <div key={pkg.price} className="flex flex-col items-center p-3 rounded-lg border border-border/50 bg-muted/30">
                 <span className="text-lg font-bold">${pkg.price}</span>
                 <span className="text-xs text-muted-foreground">{pkg.neurons.toLocaleString()} NEURONS</span>
-                <Badge variant="outline" className="mt-1 text-[10px]">
+                <Badge variant="outline" className="mt-1 text-micro">
                   root={digitRoot(pkg.price)}
                 </Badge>
               </div>

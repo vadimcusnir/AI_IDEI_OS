@@ -139,7 +139,7 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
           <button
             onClick={() => setActiveTab("tools")}
             className={cn(
-              "flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold uppercase tracking-wider transition-colors",
+              "flex items-center gap-1 px-2 py-1 rounded text-micro font-semibold uppercase tracking-wider transition-colors",
               activeTab === "tools"
                 ? "text-ai-accent bg-ai-bg"
                 : "text-muted-foreground hover:text-foreground"
@@ -151,7 +151,7 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
           <button
             onClick={() => setActiveTab("chat")}
             className={cn(
-              "flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold uppercase tracking-wider transition-colors",
+              "flex items-center gap-1 px-2 py-1 rounded text-micro font-semibold uppercase tracking-wider transition-colors",
               activeTab === "chat"
                 ? "text-ai-accent bg-ai-bg"
                 : "text-muted-foreground hover:text-foreground"
@@ -182,13 +182,13 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
 
           {/* Episode Source Selector */}
           <div className="px-3 py-2 border-b border-border">
-            <label className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block flex items-center gap-1">
+            <label className="text-nano font-semibold uppercase tracking-wider text-muted-foreground mb-1 block flex items-center gap-1">
               <FileAudio className="h-2.5 w-2.5" />
               Sursă Transcript
             </label>
             {selectedEpisodeId ? (
               <div className="flex items-center gap-1">
-                <span className="text-[10px] text-foreground truncate flex-1">
+                <span className="text-micro text-foreground truncate flex-1">
                   {episodes.find(e => e.id === selectedEpisodeId)?.title || "Episod legat"}
                 </span>
                 <button
@@ -202,7 +202,7 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
               <select
                 value={selectedEpisodeId || ""}
                 onChange={e => handleEpisodeChange(e.target.value)}
-                className="w-full bg-muted/50 rounded px-2 py-1 text-[10px] border border-border outline-none focus:border-primary"
+                className="w-full bg-muted/50 rounded px-2 py-1 text-micro border border-border outline-none focus:border-primary"
               >
                 <option value="">— Fără sursă (doar blocurile neuronului) —</option>
                 {episodes.map(ep => (
@@ -213,7 +213,7 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
               </select>
             )}
             {selectedEpisodeId && (
-              <p className="text-[8px] text-muted-foreground/50 mt-0.5">
+              <p className="text-nano text-muted-foreground/50 mt-0.5">
                 AI va folosi transcriptul ca sursă pentru extracție
               </p>
             )}
@@ -292,7 +292,7 @@ export function NeuronRightPanel({ isCollapsed, onToggle, neuronScore, blocks, n
 
           {/* Metadata footer */}
           <div className="px-3 py-2 border-t border-border bg-panel-header shrink-0">
-            <div className="grid grid-cols-2 gap-y-1 text-[10px]">
+            <div className="grid grid-cols-2 gap-y-1 text-micro">
               <span className="text-muted-foreground">{t("neuron_editor.total_blocks")}</span>
               <span className="text-right font-medium">{blocks.length}</span>
               <span className="text-muted-foreground">{t("neuron_editor.executable")}</span>

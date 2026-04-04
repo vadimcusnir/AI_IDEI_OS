@@ -18,7 +18,7 @@ export function AlertCenterTab() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+        <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           <Bell className="h-3 w-3" /> Alert Center — {alerts.length} active
         </h3>
         <Button variant="outline" size="sm" className="h-7 text-xs" onClick={reload} disabled={loading}>
@@ -42,48 +42,48 @@ export function AlertCenterTab() {
                   <Icon className={cn("h-4 w-4 mt-0.5 shrink-0", cfg.color)} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <Badge variant="outline" className={cn("text-[9px]", cfg.color)}>
+                      <Badge variant="outline" className={cn("text-nano", cfg.color)}>
                         {alert.severity.toUpperCase()}
                       </Badge>
-                      <Badge variant="outline" className="text-[9px]">{alert.alert_type}</Badge>
+                      <Badge variant="outline" className="text-nano">{alert.alert_type}</Badge>
                       {alert.provider_key && (
-                        <Badge variant="secondary" className="text-[9px]">{alert.provider_key}</Badge>
+                        <Badge variant="secondary" className="text-nano">{alert.provider_key}</Badge>
                       )}
                       {alert.occurrences > 1 && (
-                        <span className="text-[9px] font-mono text-muted-foreground">×{alert.occurrences}</span>
+                        <span className="text-nano font-mono text-muted-foreground">×{alert.occurrences}</span>
                       )}
                     </div>
                     <p className="text-xs font-medium mb-0.5">{alert.title}</p>
                     {alert.description && (
-                      <p className="text-[10px] text-muted-foreground mb-1">{alert.description}</p>
+                      <p className="text-micro text-muted-foreground mb-1">{alert.description}</p>
                     )}
                     {alert.error_signal && (
-                      <p className="text-[9px] font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded mb-1">
+                      <p className="text-nano font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded mb-1">
                         Signal: {alert.error_signal}
                       </p>
                     )}
                     {alert.recommended_action && (
-                      <p className="text-[10px] text-primary">→ {alert.recommended_action}</p>
+                      <p className="text-micro text-primary">→ {alert.recommended_action}</p>
                     )}
                     <div className="flex items-center gap-3 mt-2">
-                      <span className="text-[9px] text-muted-foreground">
+                      <span className="text-nano text-muted-foreground">
                         First: {formatDistanceToNow(new Date(alert.first_seen), { addSuffix: true })}
                       </span>
-                      <span className="text-[9px] text-muted-foreground">
+                      <span className="text-nano text-muted-foreground">
                         Last: {formatDistanceToNow(new Date(alert.last_seen), { addSuffix: true })}
                       </span>
                       {alert.impact_scope && (
-                        <span className="text-[9px] text-muted-foreground">Impact: {alert.impact_scope}</span>
+                        <span className="text-nano text-muted-foreground">Impact: {alert.impact_scope}</span>
                       )}
                     </div>
                   </div>
                   <div className="flex gap-1 shrink-0">
                     {!alert.acknowledged_at && (
-                      <Button variant="outline" size="sm" className="h-6 text-[10px] px-2" onClick={() => acknowledgeAlert(alert.id)}>
+                      <Button variant="outline" size="sm" className="h-6 text-micro px-2" onClick={() => acknowledgeAlert(alert.id)}>
                         ACK
                       </Button>
                     )}
-                    <Button variant="outline" size="sm" className="h-6 text-[10px] px-2" onClick={() => resolveAlert(alert.id)}>
+                    <Button variant="outline" size="sm" className="h-6 text-micro px-2" onClick={() => resolveAlert(alert.id)}>
                       <CheckCircle className="h-3 w-3" />
                     </Button>
                   </div>

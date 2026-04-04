@@ -133,7 +133,7 @@ export function PipelineSourcePicker({ value, onChange, placeholder, minRows = 4
           {open ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
         </Button>
         {selectedId && (
-          <span className="text-[10px] text-muted-foreground">
+          <span className="text-micro text-muted-foreground">
             Conținut completat automat · poți edita mai jos
           </span>
         )}
@@ -168,7 +168,7 @@ export function PipelineSourcePicker({ value, onChange, placeholder, minRows = 4
                 <button key={t.key}
                   onClick={() => { setTab(t.key); setSearch(""); }}
                   className={cn(
-                    "flex-1 flex items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors",
+                    "flex-1 flex items-center justify-center gap-1 py-2 text-dense font-medium transition-colors",
                     tab === t.key ? "text-primary border-b-2 border-primary bg-primary/5" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -209,16 +209,16 @@ export function PipelineSourcePicker({ value, onChange, placeholder, minRows = 4
                             : <Brain className="h-3 w-3 text-accent-foreground" />}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[11px] font-medium truncate">{src.title}</p>
+                          <p className="text-dense font-medium truncate">{src.title}</p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[9px] text-muted-foreground/60 flex items-center gap-0.5">
+                            <span className="text-nano text-muted-foreground/60 flex items-center gap-0.5">
                               <Clock className="h-2.5 w-2.5" />
                               {new Date(src.date).toLocaleDateString("ro-RO")}
                             </span>
                             {src.category && (
-                              <Badge variant="outline" className="text-[8px] h-3.5 px-1">{src.category}</Badge>
+                              <Badge variant="outline" className="text-nano h-3.5 px-1">{src.category}</Badge>
                             )}
-                            <span className="text-[9px] text-muted-foreground/60">
+                            <span className="text-nano text-muted-foreground/60">
                               {(src.fullContent.length / 1000).toFixed(1)}k
                             </span>
                           </div>

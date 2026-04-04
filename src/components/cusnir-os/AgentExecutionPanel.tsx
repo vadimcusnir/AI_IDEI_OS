@@ -129,12 +129,12 @@ export function AgentExecutionPanel({
                         <div className="flex items-center gap-2">
                           <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
                           <span className="text-xs font-medium">{agent?.role || "Agent"}</span>
-                          <Badge variant="outline" className="text-[9px]">{exec.credits_cost}N</Badge>
+                          <Badge variant="outline" className="text-nano">{exec.credits_cost}N</Badge>
                         </div>
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-7 text-[10px]"
+                          className="h-7 text-micro"
                           onClick={() => onCompleteExecution(exec.id)}
                         >
                           <CheckCircle2 className="h-3 w-3 mr-1" /> Finalizează
@@ -201,16 +201,16 @@ export function AgentExecutionPanel({
                         <div>
                           <p className="text-xs font-semibold leading-tight">{agent.role}</p>
                           <div className="flex items-center gap-1.5 mt-0.5">
-                            <Badge className={cn("text-[9px] h-4", STATUS_BADGE[agent.status])}>
+                            <Badge className={cn("text-nano h-4", STATUS_BADGE[agent.status])}>
                               {agent.status}
                             </Badge>
-                            <span className="text-[10px] text-muted-foreground capitalize">{agent.agent_type}</span>
+                            <span className="text-micro text-muted-foreground capitalize">{agent.agent_type}</span>
                           </div>
                         </div>
                       </div>
                       {/* Performance */}
                       <div className="text-right">
-                        <div className="text-[10px] text-muted-foreground">Performance</div>
+                        <div className="text-micro text-muted-foreground">Performance</div>
                         <div className={cn(
                           "text-sm font-bold tabular-nums",
                           agent.performance_score >= 0.85 ? "text-status-validated" :
@@ -224,7 +224,7 @@ export function AgentExecutionPanel({
                     {/* Capabilities */}
                     <div className="flex flex-wrap gap-1">
                       {agent.capabilities.slice(0, 3).map(cap => (
-                        <Badge key={cap} variant="outline" className="text-[9px] font-normal">
+                        <Badge key={cap} variant="outline" className="text-nano font-normal">
                           {cap.replace(/_/g, " ")}
                         </Badge>
                       ))}
@@ -234,7 +234,7 @@ export function AgentExecutionPanel({
                     <div className="flex gap-2">
                       <Input
                         placeholder={`Prompt pentru ${agent.role}...`}
-                        className="h-7 text-[10px]"
+                        className="h-7 text-micro"
                         value={prompts[agent.id] || ""}
                         onChange={e => setPrompts(p => ({ ...p, [agent.id]: e.target.value }))}
                         disabled={isStandby || isExecuting}
@@ -243,13 +243,13 @@ export function AgentExecutionPanel({
 
                     {/* Footer */}
                     <div className="flex items-center justify-between pt-1">
-                      <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                      <div className="flex items-center gap-2 text-micro text-muted-foreground">
                         <Zap className="h-3 w-3" />
                         <span>{cost}N / execuție</span>
                       </div>
                       <Button
                         size="sm"
-                        className="h-7 text-[10px] gap-1"
+                        className="h-7 text-micro gap-1"
                         disabled={isStandby || isExecuting}
                         onClick={() => {
                           const prompt = prompts[agent.id] || undefined;
@@ -267,7 +267,7 @@ export function AgentExecutionPanel({
 
                     {/* Last active */}
                     {agent.last_active_at && (
-                      <div className="text-[9px] text-muted-foreground/60 flex items-center gap-1">
+                      <div className="text-nano text-muted-foreground/60 flex items-center gap-1">
                         <Clock className="h-2.5 w-2.5" />
                         Ultima activitate: {format(new Date(agent.last_active_at), "dd MMM HH:mm")}
                       </div>
@@ -315,14 +315,14 @@ export function AgentExecutionPanel({
                         )} />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{agent?.role || "Agent necunoscut"}</p>
-                          <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
+                          <div className="flex items-center gap-2 text-micro text-muted-foreground mt-0.5">
                             <span>{format(new Date(exec.created_at), "dd MMM HH:mm")}</span>
                             {exec.duration_ms && <span>· {(exec.duration_ms / 1000).toFixed(1)}s</span>}
                             <span>· {exec.credits_cost}N</span>
-                            {hasOutput && <Badge variant="outline" className="text-[8px] h-3.5 text-primary">AI Output ↓</Badge>}
+                            {hasOutput && <Badge variant="outline" className="text-nano h-3.5 text-primary">AI Output ↓</Badge>}
                           </div>
                         </div>
-                        <Badge variant="outline" className={cn("text-[9px]", statusInfo.color)}>
+                        <Badge variant="outline" className={cn("text-nano", statusInfo.color)}>
                           {exec.status}
                         </Badge>
                       </button>
@@ -335,7 +335,7 @@ export function AgentExecutionPanel({
                             className="overflow-hidden"
                           >
                             <div className="px-3 pb-3">
-                              <div className="bg-muted/30 rounded-lg p-3 text-[10px] font-mono max-h-60 overflow-auto whitespace-pre-wrap text-foreground/80">
+                              <div className="bg-muted/30 rounded-lg p-3 text-micro font-mono max-h-60 overflow-auto whitespace-pre-wrap text-foreground/80">
                                 {JSON.stringify(exec.output, null, 2)}
                               </div>
                             </div>

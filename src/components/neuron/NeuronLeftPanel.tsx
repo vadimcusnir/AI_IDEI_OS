@@ -25,7 +25,7 @@ interface NeuronLeftPanelProps {
 function AddressTree({ addresses }: { addresses: GraphAddress[] }) {
   if (addresses.length === 0) {
     return (
-      <div className="text-[10px] text-muted-foreground/50 px-2 py-2">
+      <div className="text-micro text-muted-foreground/50 px-2 py-2">
         No graph position assigned yet.
       </div>
     );
@@ -61,7 +61,7 @@ function AddressTree({ addresses }: { addresses: GraphAddress[] }) {
                 <span className="truncate">{level}</span>
               </div>
             ))}
-            <div className="text-[9px] font-mono text-muted-foreground/40 pl-6 mt-0.5">
+            <div className="text-nano font-mono text-muted-foreground/40 pl-6 mt-0.5">
               {addr.path}
             </div>
           </div>
@@ -98,7 +98,7 @@ function LinkSection({
       >
         <Icon className="h-3 w-3" />
         {title}
-        <span className="text-[9px] bg-muted rounded-full px-1.5 ml-auto">{filtered.length}</span>
+        <span className="text-nano bg-muted rounded-full px-1.5 ml-auto">{filtered.length}</span>
         {isOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
       </button>
       {isOpen && (
@@ -120,7 +120,7 @@ function LinkSection({
                 >
                   <Zap className="h-3 w-3 shrink-0 text-primary/50" />
                   <span className="truncate flex-1">{displayTitle}</span>
-                  <span className="text-[9px] text-muted-foreground/60">{item.relationType}</span>
+                  <span className="text-nano text-muted-foreground/60">{item.relationType}</span>
                 </button>
                 {onRemoveLink && (
                   <button
@@ -173,7 +173,7 @@ function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (
   if (!isOpen) {
     return (
       <div className="px-3 py-2">
-        <Button variant="ghost" size="sm" className="w-full h-7 text-[10px] gap-1" onClick={() => setIsOpen(true)}>
+        <Button variant="ghost" size="sm" className="w-full h-7 text-micro gap-1" onClick={() => setIsOpen(true)}>
           <Plus className="h-3 w-3" /> Add Link
         </Button>
       </div>
@@ -183,7 +183,7 @@ function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (
   return (
     <div className="px-3 py-2 border-t border-border space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Add Link</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Add Link</span>
         <button onClick={() => { setIsOpen(false); setSuggestions([]); }}>
           <X className="h-3 w-3 text-muted-foreground" />
         </button>
@@ -204,7 +204,7 @@ function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (
               className="w-full flex items-center gap-2 px-2 py-1 rounded text-xs hover:bg-muted/50 transition-colors text-left"
             >
               <Zap className="h-3 w-3 text-primary/50 shrink-0" />
-              <span className="font-mono text-[10px] text-muted-foreground">#{s.number}</span>
+              <span className="font-mono text-micro text-muted-foreground">#{s.number}</span>
               <span className="truncate">{s.title}</span>
             </button>
           ))}
@@ -213,7 +213,7 @@ function AddLinkForm({ neuronId, onAddLink }: { neuronId?: number; onAddLink?: (
       <select
         value={relationType}
         onChange={e => setRelationType(e.target.value)}
-        className="w-full text-[10px] bg-muted/50 rounded-md px-2 py-1 outline-none border border-border"
+        className="w-full text-micro bg-muted/50 rounded-md px-2 py-1 outline-none border border-border"
       >
         <option value="supports">{t("neuron_editor.rel_supports")}</option>
         <option value="contradicts">{t("neuron_editor.rel_contradicts")}</option>
@@ -259,7 +259,7 @@ export function NeuronLeftPanel({
           <Link2 className="h-4 w-4" />
         </button>
         {links.length > 0 && (
-          <span className="text-[9px] font-mono text-primary">{links.length}</span>
+          <span className="text-nano font-mono text-primary">{links.length}</span>
         )}
         <button className="text-muted-foreground hover:text-foreground transition-colors">
           <GitBranch className="h-4 w-4" />
@@ -272,7 +272,7 @@ export function NeuronLeftPanel({
     <div className="w-56 border-r border-border bg-card flex flex-col shrink-0 overflow-hidden transition-all duration-200">
       {/* Header */}
       <div className="h-9 flex items-center justify-between px-3 border-b border-border">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("neuron_editor.knowledge_graph")}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("neuron_editor.knowledge_graph")}</span>
         <button onClick={onToggle} className="text-muted-foreground hover:text-foreground transition-colors">
           <ChevronRight className="h-3.5 w-3.5 rotate-180" />
         </button>
@@ -341,15 +341,15 @@ export function NeuronLeftPanel({
         {!loadingLinks && links.length === 0 && (
           <div className="px-3 py-6 text-center">
             <Network className="h-8 w-8 text-muted-foreground/20 mx-auto mb-2" />
-            <p className="text-[11px] text-muted-foreground/50">{t("neuron_editor.no_connections")}</p>
-            <p className="text-[10px] text-muted-foreground/30 mt-1">{t("neuron_editor.no_connections_hint")}</p>
+            <p className="text-dense text-muted-foreground/50">{t("neuron_editor.no_connections")}</p>
+            <p className="text-micro text-muted-foreground/30 mt-1">{t("neuron_editor.no_connections_hint")}</p>
           </div>
         )}
       </div>
 
       {/* Footer stats */}
       <div className="px-3 py-2 border-t border-border bg-panel-header">
-        <div className="grid grid-cols-2 gap-y-1 text-[10px]">
+        <div className="grid grid-cols-2 gap-y-1 text-micro">
           <span className="text-muted-foreground">{t("neuron_editor.total_links")}</span>
           <span className="text-right font-medium">{links.length}</span>
           <span className="text-muted-foreground">{t("neuron_editor.outgoing")}</span>

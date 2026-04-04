@@ -362,7 +362,7 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
       >
         <Zap className="h-4 w-4" />
         Magic Pipeline
-        <span className="text-[10px] opacity-80 ml-1">{TOTAL_COST}N</span>
+        <span className="text-micro opacity-80 ml-1">{TOTAL_COST}N</span>
       </Button>
 
       {/* ═══ Pipeline Dialog ═══ */}
@@ -419,7 +419,7 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
                       <span className="text-sm text-muted-foreground group-hover:text-foreground">
                         Drop file or click to browse
                       </span>
-                      <span className="text-[10px] text-muted-foreground/50">
+                      <span className="text-micro text-muted-foreground/50">
                         TXT, PDF, MD, SRT, VTT, CSV, Audio, Video
                       </span>
                     </button>
@@ -462,7 +462,7 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
                     <p className="text-sm font-medium truncate">
                       {selectedFile?.name || urlInput}
                     </p>
-                    <p className="text-[10px] text-muted-foreground">
+                    <p className="text-micro text-muted-foreground">
                       {selectedFile ? `${(selectedFile.size / 1024).toFixed(0)} KB` : "Web content"}
                     </p>
                   </div>
@@ -470,7 +470,7 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
 
                 {/* Step timeline preview */}
                 <div className="space-y-1">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-2">
+                  <p className="text-dense font-semibold uppercase tracking-wider text-muted-foreground/60 mb-2">
                     Execution Plan
                   </p>
                   {steps.filter((s) => s.status !== "skipped").map((step, i) => (
@@ -483,10 +483,10 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium">{step.label}</p>
-                        <p className="text-[10px] text-muted-foreground">{step.description}</p>
+                        <p className="text-micro text-muted-foreground">{step.description}</p>
                       </div>
                       {step.cost > 0 && (
-                        <span className="text-[10px] text-muted-foreground tabular-nums shrink-0">
+                        <span className="text-micro text-muted-foreground tabular-nums shrink-0">
                           {step.cost}N
                         </span>
                       )}
@@ -502,7 +502,7 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
                   </div>
                   <div className="text-right">
                     <span className="text-lg font-bold text-primary tabular-nums">{activeCost}N</span>
-                    <p className="text-[10px] text-muted-foreground">
+                    <p className="text-micro text-muted-foreground">
                       Balance: {balance.toLocaleString()}N
                     </p>
                   </div>
@@ -569,16 +569,16 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
                           {step.label}
                         </p>
                         {step.status === "running" && (
-                          <p className="text-[10px] text-primary animate-pulse">{step.description}</p>
+                          <p className="text-micro text-primary animate-pulse">{step.description}</p>
                         )}
                         {step.result?.label && step.status === "completed" && (
-                          <p className="text-[10px] text-muted-foreground">{step.result.label}</p>
+                          <p className="text-micro text-muted-foreground">{step.result.label}</p>
                         )}
                       </div>
 
                       {/* Duration */}
                       {step.startedAt && step.completedAt && (
-                        <span className="text-[10px] text-muted-foreground tabular-nums shrink-0">
+                        <span className="text-micro text-muted-foreground tabular-nums shrink-0">
                           {((step.completedAt - step.startedAt) / 1000).toFixed(1)}s
                         </span>
                       )}
@@ -587,7 +587,7 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
                       {step.result?.link && step.status === "completed" && (
                         <button
                           onClick={() => navigate(step.result!.link!)}
-                          className="text-[10px] text-primary hover:underline shrink-0"
+                          className="text-micro text-primary hover:underline shrink-0"
                         >
                           View →
                         </button>
@@ -645,7 +645,7 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
                 <Button onClick={runPipeline} disabled={!canAfford} className="gap-2">
                   <Zap className="h-4 w-4" />
                   Execute Pipeline
-                  <span className="text-[10px] opacity-70">{activeCost}N</span>
+                  <span className="text-micro opacity-70">{activeCost}N</span>
                 </Button>
               </>
             )}

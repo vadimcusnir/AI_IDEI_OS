@@ -156,7 +156,7 @@ export function AdminCommandTab() {
           </div>
           <div>
             <h2 className="text-sm font-bold">Command Panel</h2>
-            <p className="text-[10px] text-muted-foreground">Strategic suggestions ranked by priority × impact</p>
+            <p className="text-micro text-muted-foreground">Strategic suggestions ranked by priority × impact</p>
           </div>
         </div>
         <Button variant="outline" size="sm" onClick={analyze} className="gap-1 text-xs h-8">
@@ -179,7 +179,7 @@ export function AdminCommandTab() {
                 w.severity === "critical" ? "text-destructive" : "text-primary"
               )} />
               <span className="text-xs">{w.message}</span>
-              <Badge variant={w.severity === "critical" ? "destructive" : "secondary"} className="text-[9px] ml-auto shrink-0">
+              <Badge variant={w.severity === "critical" ? "destructive" : "secondary"} className="text-nano ml-auto shrink-0">
                 {w.severity}
               </Badge>
             </div>
@@ -202,15 +202,15 @@ export function AdminCommandTab() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs font-semibold">{action.title}</span>
-                    <Badge variant="outline" className="text-[9px] shrink-0">
+                    <Badge variant="outline" className="text-nano shrink-0">
                       P{action.priority}
                     </Badge>
-                    <Badge variant="secondary" className="text-[9px] shrink-0">
+                    <Badge variant="secondary" className="text-nano shrink-0">
                       {action.effort} effort
                     </Badge>
                   </div>
-                  <p className="text-[10px] text-muted-foreground">{action.reason}</p>
-                  <p className="text-[10px] text-primary mt-1 flex items-center gap-1">
+                  <p className="text-micro text-muted-foreground">{action.reason}</p>
+                  <p className="text-micro text-primary mt-1 flex items-center gap-1">
                     <Target className="h-3 w-3" /> {action.impact}
                   </p>
                 </div>

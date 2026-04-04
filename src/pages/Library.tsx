@@ -226,7 +226,7 @@ export default function Library() {
               <tab.icon className="h-3.5 w-3.5" />
               {tab.label}
               <span className={cn(
-                "text-[9px] font-mono px-1.5 py-0.5 rounded-full",
+                "text-nano font-mono px-1.5 py-0.5 rounded-full",
                 activeTab === tab.key ? "bg-[hsl(var(--gold-oxide)/0.12)] text-[hsl(var(--gold-oxide))]" : "bg-muted text-muted-foreground"
               )}>
                 {tab.count}
@@ -296,7 +296,7 @@ export default function Library() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="text-[10px] text-muted-foreground ml-auto">
+            <span className="text-micro text-muted-foreground ml-auto">
               {activeTab === "deliverables" && `${filtered.length} livrabile`}
               {activeTab === "context" && `${filteredNeurons.length} date context`}
               {activeTab === "bundles" && `${bundles.length} pachete`}
@@ -353,7 +353,7 @@ export default function Library() {
                             <h3 className="text-sm font-semibold">
                               {serviceKey.replace(/[-_]/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
                             </h3>
-                            <p className="text-[10px] text-muted-foreground">
+                            <p className="text-micro text-muted-foreground">
                               {format(new Date(dateStr), "dd MMM yyyy")} · {items.length} livrabile
                             </p>
                           </div>
@@ -373,7 +373,7 @@ export default function Library() {
                               <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-medium truncate">{item.title}</p>
-                                <span className={cn("text-[8px] font-mono uppercase px-1 py-0.5 rounded", typeColor)}>
+                                <span className={cn("text-nano font-mono uppercase px-1 py-0.5 rounded", typeColor)}>
                                   {typeLabel}
                                 </span>
                               </div>
@@ -400,12 +400,12 @@ export default function Library() {
               </DialogHeader>
               <div className="flex items-center gap-2 mb-4">
                 <span className={cn(
-                  "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded",
+                  "text-nano font-mono uppercase px-1.5 py-0.5 rounded",
                   TYPE_CONFIG[previewArtifact.artifact_type]?.color || "bg-muted text-muted-foreground"
                 )}>
                   {TYPE_CONFIG[previewArtifact.artifact_type] ? t(TYPE_CONFIG[previewArtifact.artifact_type].labelKey) : previewArtifact.artifact_type}
                 </span>
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-micro text-muted-foreground">
                   {format(new Date(previewArtifact.created_at), "dd MMM yyyy HH:mm")}
                 </span>
               </div>

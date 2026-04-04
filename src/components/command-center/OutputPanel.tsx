@@ -110,17 +110,17 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" />
           <span className="text-xs font-bold">Execution Outputs</span>
-          <Badge variant="secondary" className="text-[9px] h-4">{outputs.length}</Badge>
+          <Badge variant="secondary" className="text-nano h-4">{outputs.length}</Badge>
         </div>
         <div className="flex items-center gap-1">
           {outputs.length > 1 && onSaveAll && (
-            <Button variant="default" size="sm" className="h-6 text-[9px] gap-1" onClick={onSaveAll} disabled={savingAll}>
+            <Button variant="default" size="sm" className="h-6 text-nano gap-1" onClick={onSaveAll} disabled={savingAll}>
               {savingAll ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
               Save All ({outputs.length})
             </Button>
           )}
           {onRerun && (
-            <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={onRerun}>
+            <Button variant="ghost" size="sm" className="h-6 text-micro gap-1" onClick={onRerun}>
               <RotateCcw className="h-3 w-3" />
               Re-run
             </Button>
@@ -139,7 +139,7 @@ export function OutputPanel({ outputs, onRerun, onClose, onSaveAll, savingAll, v
               const cfg = TYPE_CONFIG[o.type] || TYPE_CONFIG.raw;
               const Icon = cfg.icon;
               return (
-                <TabsTrigger key={o.id} value={o.type} className="text-[10px] h-6 gap-1 data-[state=active]:shadow-none">
+                <TabsTrigger key={o.id} value={o.type} className="text-micro h-6 gap-1 data-[state=active]:shadow-none">
                   <Icon className={cn("h-3 w-3", cfg.color)} />
                   {cfg.label}
                 </TabsTrigger>
@@ -206,20 +206,20 @@ function OutputCard({
     <div className="max-h-[400px] overflow-y-auto">
       {/* Actions bar */}
       <div className="sticky top-0 px-4 py-2 bg-card/95 backdrop-blur-sm border-b border-border flex items-center justify-between z-10">
-        <p className="text-[11px] font-medium">{output.title}</p>
+        <p className="text-dense font-medium">{output.title}</p>
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="sm" className="h-6 text-[9px] gap-1" onClick={() => onCopy(output.content)}>
+          <Button variant="ghost" size="sm" className="h-6 text-nano gap-1" onClick={() => onCopy(output.content)}>
             <Copy className="h-3 w-3" />
             Copy
           </Button>
-          <Button variant="ghost" size="sm" className="h-6 text-[9px] gap-1" onClick={() => onExport(output)}>
+          <Button variant="ghost" size="sm" className="h-6 text-nano gap-1" onClick={() => onExport(output)}>
             <Download className="h-3 w-3" />
             Export
           </Button>
           <Button
             variant={saved ? "ghost" : "default"}
             size="sm"
-            className="h-6 text-[9px] gap-1"
+            className="h-6 text-nano gap-1"
             onClick={() => onSave(output)}
             disabled={saving || saved}
           >
@@ -232,7 +232,7 @@ function OutputCard({
           <Button
             variant={published ? "ghost" : "outline"}
             size="sm"
-            className="h-6 text-[9px] gap-1"
+            className="h-6 text-nano gap-1"
             onClick={() => onPublish(output)}
             disabled={publishing || published}
           >
@@ -249,7 +249,7 @@ function OutputCard({
 
       {/* Content */}
       <div className="px-4 py-3">
-        <div className="prose prose-xs dark:prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_h2]:text-xs [&_h3]:text-xs [&_li]:text-xs [&_code]:text-[10px]">
+        <div className="prose prose-xs dark:prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_h2]:text-xs [&_h3]:text-xs [&_li]:text-xs [&_code]:text-micro">
           <ReactMarkdown>{output.content}</ReactMarkdown>
         </div>
       </div>

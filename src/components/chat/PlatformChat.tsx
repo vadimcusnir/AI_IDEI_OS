@@ -224,7 +224,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
           </div>
           <div>
             <p className="text-xs font-semibold">AI-IDEI Assistant</p>
-            <p className="text-[9px] text-muted-foreground">Knowledge OS • Always online</p>
+            <p className="text-nano text-muted-foreground">Knowledge OS • Always online</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
@@ -241,13 +241,13 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       {showHistory && (
         <div className="border-b border-border bg-muted/30 px-4 py-3 max-h-48 overflow-y-auto space-y-1">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("previous_conversations")}</p>
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("previous_conversations")}</p>
             <button onClick={() => setShowHistory(false)} className="text-muted-foreground hover:text-foreground">
               <ChevronLeft className="h-3 w-3" />
             </button>
           </div>
           {sessions.length === 0 && (
-            <p className="text-[10px] text-muted-foreground">{t("no_saved_conversations")}</p>
+            <p className="text-micro text-muted-foreground">{t("no_saved_conversations")}</p>
           )}
           {sessions.map(s => (
             <button
@@ -255,8 +255,8 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
               onClick={() => handleLoadSession(s.session_id)}
               className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors"
             >
-              <p className="text-[10px] truncate">{s.last_message || t("conversation")}</p>
-              <p className="text-[8px] text-muted-foreground">{new Date(s.created_at).toLocaleDateString()}</p>
+              <p className="text-micro truncate">{s.last_message || t("conversation")}</p>
+              <p className="text-nano text-muted-foreground">{new Date(s.created_at).toLocaleDateString()}</p>
             </button>
           ))}
         </div>
@@ -288,7 +288,7 @@ export function PlatformChat({ neuronContext }: { neuronContext?: { title: strin
       {files.length > 0 && (
         <div className="px-4 py-2 flex gap-2 flex-wrap border-t border-border">
           {files.map((f, i) => (
-            <div key={i} className="flex items-center gap-1.5 bg-muted rounded-lg px-2.5 py-1.5 text-[10px]">
+            <div key={i} className="flex items-center gap-1.5 bg-muted rounded-lg px-2.5 py-1.5 text-micro">
               <Paperclip className="h-3 w-3 text-muted-foreground" />
               <span className="truncate max-w-[120px]">{f.name}</span>
               <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground">
@@ -347,7 +347,7 @@ function ChatBubble({ msg }: { msg: Message }) {
       )}>
         <p className="whitespace-pre-wrap text-xs leading-relaxed">{msg.content}</p>
         <p className={cn(
-          "text-[8px] mt-1",
+          "text-nano mt-1",
           msg.role === "user" ? "text-primary-foreground/50 text-right" : "text-muted-foreground/50"
         )}>
           {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}

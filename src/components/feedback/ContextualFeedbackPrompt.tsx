@@ -68,7 +68,7 @@ export function ContextualFeedbackPrompt() {
           />
           <button
             onClick={handleDismiss}
-            className="text-[10px] text-muted-foreground hover:text-foreground px-2 py-1"
+            className="text-micro text-muted-foreground hover:text-foreground px-2 py-1"
           >
             {t("later")}
           </button>

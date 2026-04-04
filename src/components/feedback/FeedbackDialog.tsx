@@ -102,7 +102,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
                 key={ft.key}
                 onClick={() => setType(ft.key)}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-dense font-medium transition-colors",
                   type === ft.key
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -157,7 +157,7 @@ export function FeedbackDialog({ trigger, defaultType = "feedback", contextLabel
           rows={4}
           className="text-sm resize-none"
         />
-        <p className="text-[10px] text-muted-foreground text-right">{message.length}/2000</p>
+        <p className="text-micro text-muted-foreground text-right">{message.length}/2000</p>
 
         <Button onClick={handleSubmit} disabled={loading} className="w-full gap-2">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

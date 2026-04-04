@@ -75,7 +75,7 @@ export function WelcomeModal() {
           <DialogHeader className="text-left mb-4">
             <div className="flex items-center gap-2 mb-1">
               <Rocket className="h-4 w-4 text-primary" aria-hidden="true" />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">{t("welcome")}</span>
+              <span className="text-micro font-semibold uppercase tracking-wider text-primary">{t("welcome")}</span>
             </div>
             <DialogTitle className="text-lg">
               {t("welcome_title")}
@@ -87,8 +87,8 @@ export function WelcomeModal() {
 
           <div className="space-y-2 mb-4" role="list" aria-label={t("welcome_steps_label", "Getting started steps")}>
             {steps.map((step, i) => (
-              <div key={i} role="listitem" className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[9px] font-bold shrink-0" aria-hidden="true">
+              <div key={i} role="listitem" className="flex items-center gap-2 text-dense text-muted-foreground">
+                <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-nano font-bold shrink-0" aria-hidden="true">
                   {i + 1}
                 </span>
                 {step}

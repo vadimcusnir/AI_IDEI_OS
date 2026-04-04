@@ -170,7 +170,7 @@ function ApprovalRequests() {
       <div className="flex items-center gap-2">
         <Lock className="h-4 w-4 text-primary" />
         <h3 className="text-sm font-semibold">Multi-Level Approvals</h3>
-        <Badge variant="outline" className="text-[9px] ml-auto">
+        <Badge variant="outline" className="text-nano ml-auto">
           {requests.filter(r => r.status === "pending").length} pending
         </Badge>
       </div>
@@ -183,7 +183,7 @@ function ApprovalRequests() {
             <div key={req.id} className="flex items-center gap-3 p-3 rounded-lg border border-border bg-background">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium truncate">{req.action_type}</p>
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   {req.target_resource} · Level {req.approval_level}/{req.required_level}
                   {req.timelock_until && ` · Timelock: ${new Date(req.timelock_until).toLocaleDateString()}`}
                 </p>
@@ -191,15 +191,15 @@ function ApprovalRequests() {
               <Badge variant={
                 req.status === "approved" ? "default" :
                 req.status === "rejected" ? "destructive" : "outline"
-              } className="text-[9px] shrink-0">
+              } className="text-nano shrink-0">
                 {req.status}
               </Badge>
               {req.status === "pending" && (
                 <div className="flex gap-1 shrink-0">
-                  <Button size="sm" className="h-7 text-[10px]" onClick={() => handleApprove(req.id)}>
+                  <Button size="sm" className="h-7 text-micro" onClick={() => handleApprove(req.id)}>
                     <CheckCircle2 className="h-3 w-3" />
                   </Button>
-                  <Button size="sm" variant="destructive" className="h-7 text-[10px]" onClick={() => handleReject(req.id, "Rejected by admin")}>
+                  <Button size="sm" variant="destructive" className="h-7 text-micro" onClick={() => handleReject(req.id, "Rejected by admin")}>
                     <XCircle className="h-3 w-3" />
                   </Button>
                 </div>
@@ -251,7 +251,7 @@ function AnomalyAlerts() {
       <div className="flex items-center gap-2">
         <Bell className="h-4 w-4 text-amber-500" />
         <h3 className="text-sm font-semibold">Anomaly Alerts</h3>
-        <Badge variant="outline" className="text-[9px] ml-auto text-amber-600">
+        <Badge variant="outline" className="text-nano ml-auto text-amber-600">
           {alerts.filter(a => !a.acknowledged_at).length} active
         </Badge>
       </div>
@@ -274,17 +274,17 @@ function AnomalyAlerts() {
               )} />
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium truncate">{alert.alert_type}: {alert.metric_name}</p>
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   Value: {alert.current_value} (threshold: {alert.threshold_value})
                   {alert.deviation_pct && ` · ${alert.deviation_pct}% deviation`}
                 </p>
               </div>
               {!alert.acknowledged_at ? (
-                <Button size="sm" variant="outline" className="h-7 text-[10px]" onClick={() => acknowledge(alert.id)}>
+                <Button size="sm" variant="outline" className="h-7 text-micro" onClick={() => acknowledge(alert.id)}>
                   <Eye className="h-3 w-3 mr-1" /> ACK
                 </Button>
               ) : (
-                <Badge variant="outline" className="text-[9px] text-emerald-600">ACK</Badge>
+                <Badge variant="outline" className="text-nano text-emerald-600">ACK</Badge>
               )}
             </div>
           ))}
@@ -361,7 +361,7 @@ function CostRevenueOverview() {
         <div className="space-y-3">
           {data.map(d => (
             <div key={d.service} className="space-y-1">
-              <div className="flex items-center justify-between text-[10px]">
+              <div className="flex items-center justify-between text-micro">
                 <span className="font-medium truncate max-w-[140px]">{d.service}</span>
                 <span className="text-muted-foreground">
                   Cost: ${d.cost.toFixed(2)} · Rev: ${d.revenue.toFixed(2)} · {d.jobs} jobs · {d.margin.toFixed(0)}% margin
@@ -373,7 +373,7 @@ function CostRevenueOverview() {
               </div>
             </div>
           ))}
-          <div className="flex items-center gap-4 text-[9px] text-muted-foreground pt-2">
+          <div className="flex items-center gap-4 text-nano text-muted-foreground pt-2">
             <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-destructive/40" /> Compute Cost</span>
             <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-primary/60" /> Revenue (10× markup)</span>
           </div>

@@ -145,28 +145,28 @@ export function EconomyLayerPanel({ unlocks, stats, userXP, onActivate, onRevoke
                         <p className={cn("text-xs font-semibold", unlocked ? "text-foreground" : "text-muted-foreground/60")}>
                           {cap.name}
                         </p>
-                        <p className="text-[10px] text-muted-foreground/50">{cap.desc}</p>
+                        <p className="text-micro text-muted-foreground/50">{cap.desc}</p>
                         {cap.linkedAgent && (
-                          <p className={cn("text-[9px] mt-0.5 flex items-center gap-1", unlocked ? "text-primary" : "text-muted-foreground/30")}>
+                          <p className={cn("text-nano mt-0.5 flex items-center gap-1", unlocked ? "text-primary" : "text-muted-foreground/30")}>
                             <Bot className="h-2.5 w-2.5" />
                             Agent: {unlocked ? "Activ" : "Standby"}
                           </p>
                         )}
                         {unlocked && unlock && (
-                          <p className="text-[10px] text-status-validated mt-0.5">
+                          <p className="text-micro text-status-validated mt-0.5">
                             Activ din {format(new Date(unlock.unlocked_at), "dd MMM yyyy")}
                           </p>
                         )}
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className={cn("text-[10px] font-mono tabular-nums", canAfford || unlocked ? "text-muted-foreground" : "text-destructive")}>
+                        <span className={cn("text-micro font-mono tabular-nums", canAfford || unlocked ? "text-muted-foreground" : "text-destructive")}>
                           {cap.xp} XP
                         </span>
                         {unlocked ? (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 px-2 text-[10px] text-muted-foreground hover:text-destructive"
+                            className="h-7 px-2 text-micro text-muted-foreground hover:text-destructive"
                             disabled={isToggling}
                             onClick={() => setConfirmAction({ type: "revoke", cap })}
                           >
@@ -176,7 +176,7 @@ export function EconomyLayerPanel({ unlocks, stats, userXP, onActivate, onRevoke
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-7 px-2 text-[10px]"
+                            className="h-7 px-2 text-micro"
                             disabled={isToggling || !canAfford}
                             onClick={() => setConfirmAction({ type: "activate", cap })}
                           >
@@ -207,7 +207,7 @@ export function EconomyLayerPanel({ unlocks, stats, userXP, onActivate, onRevoke
               Marketplace-ul intern va permite tranzacționarea de assets, sisteme și output-uri
               între operatorii Cusnir_OS.
             </p>
-            <Badge variant="outline" className="text-[9px] text-muted-foreground/30">
+            <Badge variant="outline" className="text-nano text-muted-foreground/30">
               În Dezvoltare
             </Badge>
           </div>
@@ -228,7 +228,7 @@ export function EconomyLayerPanel({ unlocks, stats, userXP, onActivate, onRevoke
               Feed-ul de inteligență privată filtrează datele de sistem de înaltă valoare
               și le transformă în insight-uri acționabile exclusiv pentru operatori.
             </p>
-            <Badge variant="outline" className="text-[9px] text-muted-foreground/30">
+            <Badge variant="outline" className="text-nano text-muted-foreground/30">
               În Dezvoltare
             </Badge>
           </div>
@@ -281,7 +281,7 @@ function StatCard({ icon: Icon, label, value, highlight }: { icon: typeof Zap; l
     <div className={cn("border border-border rounded-xl p-3 space-y-1", highlight ? "bg-primary/5" : "bg-card")}>
       <div className="flex items-center gap-1.5 text-muted-foreground">
         <Icon className="h-3 w-3" />
-        <span className="text-[10px] font-medium">{label}</span>
+        <span className="text-micro font-medium">{label}</span>
       </div>
       <div className={cn("text-sm font-bold tabular-nums", highlight && "text-primary")}>{value}</div>
     </div>

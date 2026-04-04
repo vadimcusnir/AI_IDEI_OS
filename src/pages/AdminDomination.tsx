@@ -169,7 +169,7 @@ export default function AdminDomination() {
           <div className="flex flex-wrap items-center gap-2 text-xs">
             {["INPUT", "CONTENT", "NEURONS", "SERVICES", "EXECUTION", "ASSETS", "MARKETPLACE", "REVENUE", "DATA", "OPTIMIZATION", "DOMINATION"].map((step, i) => (
               <div key={step} className="flex items-center gap-2">
-                <Badge variant={i >= 9 ? "default" : "secondary"} className="text-[10px] font-mono">
+                <Badge variant={i >= 9 ? "default" : "secondary"} className="text-micro font-mono">
                   {step}
                 </Badge>
                 {i < 10 && <span className="text-muted-foreground">→</span>}
@@ -189,17 +189,17 @@ export default function AdminDomination() {
             <div>
               <div className="text-xs text-muted-foreground mb-1">DATA MOAT</div>
               <div className="text-lg font-bold text-semantic-emerald">Active</div>
-              <div className="text-[10px] text-muted-foreground">neurons + executions + outcomes</div>
+              <div className="text-micro text-muted-foreground">neurons + executions + outcomes</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">ECONOMIC MOAT</div>
               <div className="text-lg font-bold text-semantic-blue">Active</div>
-              <div className="text-[10px] text-muted-foreground">user assets + marketplace income</div>
+              <div className="text-micro text-muted-foreground">user assets + marketplace income</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">BEHAVIORAL MOAT</div>
               <div className="text-lg font-bold text-semantic-purple">Active</div>
-              <div className="text-[10px] text-muted-foreground">user dependency on outputs</div>
+              <div className="text-micro text-muted-foreground">user dependency on outputs</div>
             </div>
           </div>
         </CardContent>

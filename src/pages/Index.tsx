@@ -138,7 +138,7 @@ export default function Index() {
                     { label: t("neurons_index.pinned"), value: pinnedIds.size, color: "text-primary" },
                   ].filter(s => s.value > 0).map(s => (
                     <div key={s.label} className="flex items-center gap-1">
-                      <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">{s.label}</span>
+                      <span className="text-micro text-muted-foreground/60 uppercase tracking-wide">{s.label}</span>
                       <span className={cn("text-xs font-mono font-bold", s.color)}>{s.value}</span>
                     </div>
                   ))}
@@ -233,12 +233,12 @@ export default function Index() {
           {(searchResults !== null || (selectedFolderId && selectedFolderId !== "__unassigned")) && (
             <div className="flex items-center gap-2 mb-3 flex-wrap">
               {searchResults !== null && (
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-micro text-muted-foreground">
                   {t("neurons_index.results_for", { count: searchResults.length, query: searchQuery })}
                 </span>
               )}
               {selectedFolderId && selectedFolderId !== "__unassigned" && (
-                <span className="inline-flex items-center gap-1 text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                <span className="inline-flex items-center gap-1 text-micro text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                   {t("neurons_index.folder_active")} · {filteredCount}
                   <button onClick={() => setSelectedFolderId(null)} className="ml-0.5 hover:text-primary/70">✕</button>
                 </span>
@@ -292,8 +292,8 @@ export default function Index() {
                   {group.label && (
                     <div className="flex items-center gap-2 mb-2 mt-2">
                       <div className={cn("h-2 w-2 rounded-full", STATUS_DOTS[group.label] || "bg-muted-foreground/30")} />
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{group.label}</span>
-                      <span className="text-[9px] text-muted-foreground/40">{group.items.length}</span>
+                      <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{group.label}</span>
+                      <span className="text-nano text-muted-foreground/40">{group.items.length}</span>
                       <div className="flex-1 h-px bg-border/50" />
                     </div>
                   )}

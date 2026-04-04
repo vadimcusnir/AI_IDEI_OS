@@ -35,7 +35,7 @@ function ToolBtn({ icon: Icon, label, active, onClick }: {
           <Icon className="h-3.5 w-3.5" />
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="bottom" className="text-[10px]">{label}</TooltipContent>
+      <TooltipContent side="bottom" className="text-micro">{label}</TooltipContent>
     </Tooltip>
   );
 }

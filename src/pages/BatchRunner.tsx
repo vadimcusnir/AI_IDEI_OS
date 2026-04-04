@@ -237,17 +237,17 @@ export default function BatchRunner() {
         {/* Balance + Cost */}
         <div className="flex items-center gap-4 mb-6 p-4 rounded-xl border border-border bg-card">
           <div className="flex-1">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("batch_runner.balance")}</span>
+            <span className="text-micro uppercase tracking-wider text-muted-foreground">{t("batch_runner.balance")}</span>
             <p className="text-xl font-bold font-mono">{balance} <span className="text-xs font-normal text-muted-foreground">NEURONS</span></p>
           </div>
           <div className="flex-1">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("batch_runner.total_cost")}</span>
+            <span className="text-micro uppercase tracking-wider text-muted-foreground">{t("batch_runner.total_cost")}</span>
             <p className={cn("text-xl font-bold font-mono", canAfford ? "text-foreground" : "text-destructive")}>
               {totalCost} <span className="text-xs font-normal text-muted-foreground">NEURONS</span>
             </p>
           </div>
           <div className="flex-1">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("batch_runner.selected")}</span>
+            <span className="text-micro uppercase tracking-wider text-muted-foreground">{t("batch_runner.selected")}</span>
             <p className="text-xl font-bold font-mono">{selected.size} <span className="text-xs font-normal text-muted-foreground">/ {services.length}</span></p>
           </div>
         </div>
@@ -282,7 +282,7 @@ export default function BatchRunner() {
 
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("batch_runner.select_services")}</h2>
-              <button onClick={selectAll} className="text-[10px] text-primary hover:underline">
+              <button onClick={selectAll} className="text-micro text-primary hover:underline">
                 {selected.size === services.length ? t("batch_runner.deselect_all") : t("batch_runner.select_all")}
               </button>
             </div>
@@ -306,9 +306,9 @@ export default function BatchRunner() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <span className="text-sm font-medium">{s.name}</span>
-                    <span className="text-[9px] text-muted-foreground/50 ml-2 uppercase">{s.category}</span>
+                    <span className="text-nano text-muted-foreground/50 ml-2 uppercase">{s.category}</span>
                   </div>
-                  <span className="text-[10px] font-mono text-muted-foreground flex items-center gap-0.5">
+                  <span className="text-micro font-mono text-muted-foreground flex items-center gap-0.5">
                     <Coins className="h-2.5 w-2.5" /> {s.credits_cost}
                   </span>
                 </button>
@@ -350,7 +350,7 @@ export default function BatchRunner() {
                   {job.status === "completed" && <CheckCircle2 className="h-4 w-4 text-status-validated shrink-0" />}
                   {job.status === "failed" && <XCircle className="h-4 w-4 text-destructive shrink-0" />}
                   <span className="text-sm flex-1">{job.serviceName}</span>
-                  <span className="text-[10px] font-mono text-muted-foreground">{job.cost} N</span>
+                  <span className="text-micro font-mono text-muted-foreground">{job.cost} N</span>
                 </div>
               ))}
             </div>

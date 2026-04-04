@@ -109,7 +109,7 @@ export function PipelinesHub() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
                   <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">{pipe.name}</h3>
-                  <span className={cn("text-[9px] font-medium px-2 py-0.5 rounded-full", colors.bg, colors.text)}>
+                  <span className={cn("text-nano font-medium px-2 py-0.5 rounded-full", colors.bg, colors.text)}>
                     {pipe.tagline}
                   </span>
                 </div>
@@ -119,17 +119,17 @@ export function PipelinesHub() {
 
                 {/* Quick stats — inline */}
                 <div className="flex items-center gap-4 mt-2">
-                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <span className="flex items-center gap-1 text-micro text-muted-foreground">
                     <Coins className="h-3 w-3" /> {pipe.cost} N
                   </span>
-                  <span className="text-[10px] text-muted-foreground">{pipe.time}</span>
-                  <span className="text-[10px] text-muted-foreground">{pipe.outputs}</span>
+                  <span className="text-micro text-muted-foreground">{pipe.time}</span>
+                  <span className="text-micro text-muted-foreground">{pipe.outputs}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 shrink-0 mt-1">
                 {!isOpen && (
-                  <span className="text-[10px] font-medium text-primary hidden sm:block">Launch</span>
+                  <span className="text-micro font-medium text-primary hidden sm:block">Launch</span>
                 )}
                 <ChevronDown className={cn(
                   "h-4 w-4 text-muted-foreground transition-transform duration-200",

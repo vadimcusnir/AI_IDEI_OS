@@ -157,7 +157,7 @@ export default function Onboarding() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))] text-[10px] font-semibold uppercase tracking-[0.15em] mb-5">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))] text-micro font-semibold uppercase tracking-[0.15em] mb-5">
             <Zap className="h-3 w-3" />
             4 Steps to Knowledge Assets
           </div>
@@ -210,7 +210,7 @@ export default function Onboarding() {
                       )}
                     </div>
                     <span className={cn(
-                      "text-[9px] sm:text-[10px] font-semibold tracking-wide",
+                      "text-nano sm:text-micro font-semibold tracking-wide",
                       isActive ? "text-[hsl(var(--gold-oxide))]" : isCompleted ? "text-foreground" : "text-muted-foreground/50"
                     )}>
                       {step.key.charAt(0).toUpperCase() + step.key.slice(1)}
@@ -228,7 +228,7 @@ export default function Onboarding() {
           </div>
           {/* Text progress */}
           <div className="flex items-center justify-between mt-3 px-1">
-            <span className="text-[10px] text-muted-foreground">{completedCount}/{STEPS.length} {t("onboarding.completed")}</span>
+            <span className="text-micro text-muted-foreground">{completedCount}/{STEPS.length} {t("onboarding.completed")}</span>
             <div className="flex items-center gap-1.5">
               <div className="w-24 h-1.5 rounded-full bg-muted overflow-hidden">
                 <motion.div
@@ -238,7 +238,7 @@ export default function Onboarding() {
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 />
               </div>
-              <span className="text-[10px] font-mono font-bold text-[hsl(var(--gold-oxide))]">{progressPercent}%</span>
+              <span className="text-micro font-mono font-bold text-[hsl(var(--gold-oxide))]">{progressPercent}%</span>
             </div>
           </div>
         </motion.div>
@@ -285,16 +285,16 @@ export default function Onboarding() {
                   {/* Step number + reward */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
+                      <span className="text-nano font-mono font-bold uppercase tracking-widest text-muted-foreground/50">
                         {t("onboarding.step", { number: activeStep + 1 })} of {STEPS.length}
                       </span>
                       {isCompleted && (
-                        <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]">
+                        <span className="text-nano font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]">
                           {t("onboarding.step_completed")}
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 text-[9px] font-semibold text-[hsl(var(--gold-oxide)/0.7)]">
+                    <div className="flex items-center gap-1 text-nano font-semibold text-[hsl(var(--gold-oxide)/0.7)]">
                       <Gift className="h-3 w-3" />
                       {step.reward}
                     </div>
@@ -310,7 +310,7 @@ export default function Onboarding() {
                     </div>
                     <div>
                       <h2 className="text-base sm:text-lg font-bold tracking-[-0.01em]">{step.title}</h2>
-                      <p className="text-[10px] text-muted-foreground font-medium">{step.subtitle}</p>
+                      <p className="text-micro text-muted-foreground font-medium">{step.subtitle}</p>
                     </div>
                   </div>
 
@@ -320,7 +320,7 @@ export default function Onboarding() {
                   <div className="rounded-xl bg-muted/30 border border-border/30 p-3.5 mb-5">
                     <div className="flex items-center gap-1.5">
                       <Play className="h-3 w-3 text-[hsl(var(--gold-oxide))] shrink-0" />
-                      <p className="text-[10px] text-muted-foreground/70 italic">{step.tip}</p>
+                      <p className="text-micro text-muted-foreground/70 italic">{step.tip}</p>
                     </div>
                   </div>
 

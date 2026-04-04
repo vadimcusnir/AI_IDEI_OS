@@ -135,15 +135,15 @@ export default function CommunityThread() {
                   {thread.is_pinned && <Pin className="h-3.5 w-3.5 text-primary" />}
                   {thread.is_locked && <Lock className="h-3.5 w-3.5 text-muted-foreground" />}
                   {thread.is_solved && (
-                    <Badge variant="outline" className="text-[9px] px-1 py-0 border-status-validated text-status-validated">
+                    <Badge variant="outline" className="text-nano px-1 py-0 border-status-validated text-status-validated">
                       <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />{t("community_thread.solved")}
                     </Badge>
                   )}
                   <h1 className="text-lg font-bold">{thread.title}</h1>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-3">
+                <div className="flex items-center gap-2 text-micro text-muted-foreground mb-3">
                   <Avatar className="h-5 w-5">
-                    <AvatarFallback className="text-[8px]">{authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback className="text-nano">{authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <span>{authorName}</span>
                   <span>·</span>

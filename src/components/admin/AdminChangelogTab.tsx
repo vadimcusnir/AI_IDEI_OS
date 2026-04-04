@@ -178,12 +178,12 @@ export function AdminChangelogTab() {
           <Sparkles className="h-4 w-4 text-primary" />
           <span className="text-xs font-semibold">{t("common:ai_narrative_generator")}</span>
           {unprocessedCount > 0 && (
-            <span className="text-[9px] bg-primary/15 text-primary px-1.5 py-0.5 rounded-full font-bold">
+            <span className="text-nano bg-primary/15 text-primary px-1.5 py-0.5 rounded-full font-bold">
               {t("common:unprocessed_changes", { count: unprocessedCount })}
             </span>
           )}
         </div>
-        <p className="text-[10px] text-muted-foreground mb-3">
+        <p className="text-micro text-muted-foreground mb-3">
           {unprocessedCount > 0
             ? t("common:unprocessed_hint", { count: unprocessedCount })
             : t("common:all_processed_hint")
@@ -206,13 +206,13 @@ export function AdminChangelogTab() {
       {/* Raw Changes Panel */}
       {showRaw && (
         <div className="bg-muted/30 border border-border rounded-xl p-4 max-h-64 overflow-y-auto">
-          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("common:raw_change_events")}</h4>
+          <h4 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("common:raw_change_events")}</h4>
           {rawChanges.length === 0 ? (
             <p className="text-xs text-muted-foreground">{t("common:no_raw_events")}</p>
           ) : (
             <div className="space-y-1">
               {rawChanges.map(r => (
-                <div key={r.id} className="flex items-center gap-2 text-[10px] py-1 border-b border-border/50 last:border-0">
+                <div key={r.id} className="flex items-center gap-2 text-micro py-1 border-b border-border/50 last:border-0">
                   <span className="font-mono bg-muted px-1 py-0.5 rounded uppercase">{r.source}</span>
                   <span className="text-muted-foreground">{r.component || "—"}</span>
                   <span className="flex-1 truncate">{r.diff_summary || "—"}</span>
@@ -262,12 +262,12 @@ export function AdminChangelogTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">{t("common:version")}</TableHead>
-                <TableHead className="text-[10px]">{t("common:category")}</TableHead>
-                <TableHead className="text-[10px]">{t("common:title")}</TableHead>
-                <TableHead className="text-[10px]">{t("common:status")}</TableHead>
-                <TableHead className="text-[10px]">{t("common:date")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("common:actions")}</TableHead>
+                <TableHead className="text-micro">{t("common:version")}</TableHead>
+                <TableHead className="text-micro">{t("common:category")}</TableHead>
+                <TableHead className="text-micro">{t("common:title")}</TableHead>
+                <TableHead className="text-micro">{t("common:status")}</TableHead>
+                <TableHead className="text-micro">{t("common:date")}</TableHead>
+                <TableHead className="text-micro text-right">{t("common:actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -275,18 +275,18 @@ export function AdminChangelogTab() {
                 <TableRow key={e.id}>
                   <TableCell className="text-xs font-mono">{e.version || "—"}</TableCell>
                   <TableCell>
-                    <span className="text-[9px] font-mono uppercase bg-muted px-1.5 py-0.5 rounded">
+                    <span className="text-nano font-mono uppercase bg-muted px-1.5 py-0.5 rounded">
                       {CATEGORIES.find(c => c.value === e.category)?.label || e.category}
                     </span>
                   </TableCell>
                   <TableCell className="text-xs max-w-[200px] truncate">{e.title}</TableCell>
                   <TableCell>
                     <span className={cn(
-                      "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded",
+                      "text-nano font-mono uppercase px-1.5 py-0.5 rounded",
                       e.status === "published" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
                     )}>{e.status}</span>
                   </TableCell>
-                  <TableCell className="text-[10px] text-muted-foreground">{e.release_date}</TableCell>
+                  <TableCell className="text-micro text-muted-foreground">{e.release_date}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center gap-1 justify-end">
                       <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => togglePublish(e)} title={e.status === "published" ? t("common:withdraw") : t("common:published")}>

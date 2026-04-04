@@ -162,7 +162,7 @@ export function ShareableOutput({ content, serviceKey, serviceName, className }:
 
         {/* Viral badge */}
         {category === "viral_short" && (
-          <span className="inline-flex items-center gap-1 text-[9px] font-mono text-primary bg-primary/10 rounded px-1.5 py-0.5">
+          <span className="inline-flex items-center gap-1 text-nano font-mono text-primary bg-primary/10 rounded px-1.5 py-0.5">
             <Sparkles className="h-2.5 w-2.5" />
             {t("share.viral_ready", { defaultValue: "Viral-ready" })}
           </span>
@@ -170,7 +170,7 @@ export function ShareableOutput({ content, serviceKey, serviceName, className }:
       </div>
 
       {/* Distribution hint */}
-      <p className="text-[10px] text-muted-foreground mt-1.5">
+      <p className="text-micro text-muted-foreground mt-1.5">
         {t("share.cta_embedded", {
           defaultValue: "CTA-ul către AI-IDEI este inclus automat în fiecare share",
         })}

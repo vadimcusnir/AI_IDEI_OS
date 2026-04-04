@@ -42,7 +42,7 @@ export function EconomicGate({
         </div>
         <div className="flex items-center gap-1.5 text-muted-foreground">
           <Clock className="h-3 w-3" />
-          <span className="text-[10px]">Est. {timeEstimate.label}</span>
+          <span className="text-micro">Est. {timeEstimate.label}</span>
         </div>
       </div>
 
@@ -50,19 +50,19 @@ export function EconomicGate({
         {/* Cost breakdown */}
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-0.5">
-            <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Base Cost</p>
+            <p className="text-nano uppercase tracking-widest text-muted-foreground">Base Cost</p>
             <p className="text-sm font-bold flex items-center gap-1">
               <Coins className="h-3.5 w-3.5 text-primary" />
               {estimatedCost}
-              <span className="text-[10px] font-normal text-muted-foreground">N</span>
+              <span className="text-micro font-normal text-muted-foreground">N</span>
             </p>
           </div>
           <div className="space-y-0.5">
-            <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Your Cost</p>
+            <p className="text-nano uppercase tracking-widest text-muted-foreground">Your Cost</p>
             <p className={cn("text-sm font-bold flex items-center gap-1", tierDiscount > 0 && "text-success")}>
               <Coins className="h-3.5 w-3.5" />
               {discountedCost}
-              <span className="text-[10px] font-normal text-muted-foreground">N</span>
+              <span className="text-micro font-normal text-muted-foreground">N</span>
             </p>
           </div>
         </div>
@@ -71,7 +71,7 @@ export function EconomicGate({
         {tierDiscount > 0 && (
           <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-success/5 border border-success/20">
             <TrendingDown className="h-3 w-3 text-success shrink-0" />
-            <span className="text-[10px] text-success">
+            <span className="text-micro text-success">
               {tier} discount: -{tierDiscount}% ({savings} NEURONS saved)
             </span>
           </div>
@@ -79,12 +79,12 @@ export function EconomicGate({
 
         {/* Balance status */}
         <div className="flex items-center justify-between px-2.5 py-2 rounded-lg bg-muted/50">
-          <div className="text-[10px]">
+          <div className="text-micro">
             <span className="text-muted-foreground">Current balance: </span>
             <span className="font-bold">{balance.toLocaleString()} N</span>
           </div>
           {canAfford && (
-            <div className="text-[10px]">
+            <div className="text-micro">
               <span className="text-muted-foreground">After: </span>
               <span className={cn("font-bold", balanceAfter < 200 ? "text-warning" : "text-foreground")}>
                 {balanceAfter.toLocaleString()} N
@@ -96,7 +96,7 @@ export function EconomicGate({
         {/* Cancellation + refund info */}
         <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/30 border border-border/20">
           <Shield className="h-3 w-3 text-muted-foreground shrink-0" />
-          <span className="text-[10px] text-muted-foreground">
+          <span className="text-micro text-muted-foreground">
             Credits are charged only after successful execution. Cancelling at any point returns your credits in full.
           </span>
         </div>
@@ -106,15 +106,15 @@ export function EconomicGate({
           <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-destructive/5 border border-destructive/20">
             <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0" />
             <div className="flex-1">
-              <p className="text-[10px] text-destructive font-medium">Insufficient balance</p>
-              <p className="text-[9px] text-destructive/70">
+              <p className="text-micro text-destructive font-medium">Insufficient balance</p>
+              <p className="text-nano text-destructive/70">
                 Need {discountedCost - balance} more NEURONS
               </p>
             </div>
             <Button
               size="sm"
               variant="destructive"
-              className="h-6 text-[9px]"
+              className="h-6 text-nano"
               onClick={() => navigate("/credits")}
             >
               Top Up
@@ -124,12 +124,12 @@ export function EconomicGate({
 
         {/* Actions */}
         <div className="flex items-center gap-2 pt-1">
-          <Button variant="ghost" size="sm" className="h-7 text-[10px] flex-1" onClick={onCancel}>
+          <Button variant="ghost" size="sm" className="h-7 text-micro flex-1" onClick={onCancel}>
             Cancel
           </Button>
           <Button
             size="sm"
-            className="h-7 text-[10px] flex-1 gap-1"
+            className="h-7 text-micro flex-1 gap-1"
             onClick={onProceed}
             disabled={!canAfford}
           >
@@ -155,7 +155,7 @@ export function KernelBadge({ variant = "inline", label }: KernelBadgeProps) {
         <div className="h-4 w-4 rounded bg-primary/10 flex items-center justify-center">
           <Shield className="h-2.5 w-2.5 text-primary" />
         </div>
-        <span className="text-[9px] text-muted-foreground">
+        <span className="text-nano text-muted-foreground">
           {label || "Optimized by system orchestration layer"}
         </span>
       </div>
@@ -189,13 +189,13 @@ export function PremiumLock({ feature, requiredTier, currentTier }: PremiumLockP
   return (
     <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center z-10">
       <Lock className="h-5 w-5 text-muted-foreground mb-2" />
-      <p className="text-[10px] font-medium mb-0.5">{feature}</p>
-      <p className="text-[9px] text-muted-foreground mb-2">
+      <p className="text-micro font-medium mb-0.5">{feature}</p>
+      <p className="text-nano text-muted-foreground mb-2">
         Requires {requiredTier} access
       </p>
       <Button
         size="sm"
-        className="h-6 text-[9px] gap-1"
+        className="h-6 text-nano gap-1"
         onClick={() => navigate("/pricing")}
       >
         <Crown className="h-2.5 w-2.5" />

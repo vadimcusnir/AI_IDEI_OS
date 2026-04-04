@@ -97,7 +97,7 @@ export function AdminAnalyticsExtendedTab() {
           </div>
           <div>
             <h2 className="text-sm font-bold">Extended Analytics</h2>
-            <p className="text-[10px] text-muted-foreground">Revenue, neurons burn, intent funnels & distribution</p>
+            <p className="text-micro text-muted-foreground">Revenue, neurons burn, intent funnels & distribution</p>
           </div>
         </div>
         <Button variant="outline" size="sm" onClick={load} className="gap-1 text-xs h-8">
@@ -108,14 +108,14 @@ export function AdminAnalyticsExtendedTab() {
       {/* KPI Strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="rounded-xl border border-border bg-card p-4">
-          <div className="flex items-center gap-1.5 mb-1"><Zap className="h-3.5 w-3.5 text-amber-500" /><span className="text-[10px] font-semibold uppercase text-muted-foreground">Total NEURONS Pool</span></div>
+          <div className="flex items-center gap-1.5 mb-1"><Zap className="h-3.5 w-3.5 text-amber-500" /><span className="text-micro font-semibold uppercase text-muted-foreground">Total NEURONS Pool</span></div>
           <span className="text-xl font-bold font-mono">{neuronsBurned.toLocaleString()}</span>
         </div>
         {revenueByLevel.map(r => (
           <div key={r.level} className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-1.5 mb-1"><DollarSign className="h-3.5 w-3.5 text-status-validated" /><span className="text-[10px] font-semibold uppercase text-muted-foreground">{r.level.toUpperCase()}</span></div>
+            <div className="flex items-center gap-1.5 mb-1"><DollarSign className="h-3.5 w-3.5 text-status-validated" /><span className="text-micro font-semibold uppercase text-muted-foreground">{r.level.toUpperCase()}</span></div>
             <span className="text-xl font-bold font-mono">{r.count}</span>
-            <span className="text-[10px] text-muted-foreground ml-1">units • {r.neurons.toLocaleString()}N</span>
+            <span className="text-micro text-muted-foreground ml-1">units • {r.neurons.toLocaleString()}N</span>
           </div>
         ))}
       </div>
@@ -132,7 +132,7 @@ export function AdminAnalyticsExtendedTab() {
               <div key={step.label} className="flex-1 flex items-center gap-2">
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] text-muted-foreground">{step.label}</span>
+                    <span className="text-micro text-muted-foreground">{step.label}</span>
                     <span className="text-xs font-mono font-bold">{step.count}</span>
                   </div>
                   <div className="h-2 rounded-full bg-muted overflow-hidden">
@@ -156,8 +156,8 @@ export function AdminAnalyticsExtendedTab() {
               return (
                 <div key={r.role} className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-medium truncate">{r.role}</span>
-                    <span className="text-[10px] font-mono text-muted-foreground">{r.count}</span>
+                    <span className="text-micro font-medium truncate">{r.role}</span>
+                    <span className="text-micro font-mono text-muted-foreground">{r.count}</span>
                   </div>
                   <Progress value={(r.count / maxC) * 100} className="h-1" />
                 </div>
@@ -175,8 +175,8 @@ export function AdminAnalyticsExtendedTab() {
               return (
                 <div key={m.mechanism} className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-medium truncate">{m.mechanism}</span>
-                    <span className="text-[10px] font-mono text-muted-foreground">{m.count}</span>
+                    <span className="text-micro font-medium truncate">{m.mechanism}</span>
+                    <span className="text-micro font-mono text-muted-foreground">{m.count}</span>
                   </div>
                   <Progress value={(m.count / maxC) * 100} className="h-1" />
                 </div>

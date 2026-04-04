@@ -30,8 +30,8 @@ function ScoreBar({ label, value, icon: Icon, color }: {
     <div className="group">
       <div className="flex items-center gap-2 mb-1.5">
         <Icon className={cn("h-3.5 w-3.5", color)} />
-        <span className="text-[13px] font-medium text-foreground flex-1">{label}</span>
-        <span className="text-[11px] font-bold tabular-nums text-primary">{value}</span>
+        <span className="text-compact font-medium text-foreground flex-1">{label}</span>
+        <span className="text-dense font-bold tabular-nums text-primary">{value}</span>
       </div>
       <div className="h-2 rounded-full bg-muted overflow-hidden">
         <div
@@ -47,7 +47,7 @@ function InsightBadge({ label, value }: { label: string; value: string | null })
   if (!value) return null;
   return (
     <div className="rounded-xl border border-border bg-card p-4 hover:border-primary/20 transition-colors">
-      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{label}</p>
+      <p className="text-micro uppercase tracking-wider text-muted-foreground mb-1">{label}</p>
       <p className="text-sm font-semibold text-foreground">{value}</p>
     </div>
   );
@@ -123,7 +123,7 @@ export function PsychologicalProfileSection({ profile }: { profile: Psychologica
           <InsightBadge label="Persuasion Approach" value={profile.persuasion_approach} />
           <InsightBadge label="Risk Tolerance" value={profile.risk_tolerance} />
           <div className="rounded-xl border border-border bg-card p-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Confidence</p>
+            <p className="text-micro uppercase tracking-wider text-muted-foreground mb-1">Confidence</p>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                 <div

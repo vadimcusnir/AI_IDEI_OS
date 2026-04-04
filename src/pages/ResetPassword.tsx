@@ -89,7 +89,7 @@ export default function ResetPassword() {
                       autoComplete="new-password" placeholder="••••••••"
                       className="w-full h-10 pl-10 pr-3 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary transition-colors" />
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-1">Min 8 chars, uppercase, number, special character</p>
+                  <p className="text-micro text-muted-foreground mt-1">Min 8 chars, uppercase, number, special character</p>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("reset_password.confirm_password")}</label>

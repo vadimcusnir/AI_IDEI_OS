@@ -76,7 +76,7 @@ export function SessionHistoryPanel({
                       <p className="text-xs text-foreground truncate">
                         {s.last_message || "Empty session"}
                       </p>
-                      <p className="text-[10px] text-muted-foreground/50 mt-0.5">
+                      <p className="text-micro text-muted-foreground/50 mt-0.5">
                         {formatDistanceToNow(new Date(s.created_at), { addSuffix: true })}
                       </p>
                     </div>

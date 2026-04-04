@@ -62,7 +62,7 @@ export default function DataPipeline() {
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">{t("data_pipeline.title")}</h1>
-              <p className="text-[10px] text-muted-foreground">{t("data_pipeline.subtitle")}</p>
+              <p className="text-micro text-muted-foreground">{t("data_pipeline.subtitle")}</p>
             </div>
           </div>
 
@@ -77,14 +77,14 @@ export default function DataPipeline() {
           {/* Progress bars */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
             <div className="bg-card border border-border rounded-xl p-4">
-              <div className="flex justify-between text-[10px] mb-1.5">
+              <div className="flex justify-between text-micro mb-1.5">
                 <span className="text-muted-foreground font-semibold uppercase tracking-wider">{t("data_pipeline.validation_rate")}</span>
                 <span className="font-mono">{validationRate}%</span>
               </div>
               <Progress value={validationRate} className="h-2" />
             </div>
             <div className="bg-card border border-border rounded-xl p-4">
-              <div className="flex justify-between text-[10px] mb-1.5">
+              <div className="flex justify-between text-micro mb-1.5">
                 <span className="text-muted-foreground font-semibold uppercase tracking-wider">{t("data_pipeline.llm_readiness")}</span>
                 <span className="font-mono">{llmReadyRate}%</span>
               </div>
@@ -96,26 +96,26 @@ export default function DataPipeline() {
           {pipelineStats && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <div className="bg-card border border-border rounded-xl p-4">
-                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                   <Beaker className="h-3 w-3" /> {t("data_pipeline.training_datasets")}
                 </h3>
                 <div className="grid grid-cols-3 gap-2 mb-3">
                   <div className="text-center">
                     <p className="text-lg font-bold font-mono">{pipelineStats.datasets}</p>
-                    <p className="text-[9px] text-muted-foreground">{t("data_pipeline.datasets")}</p>
+                    <p className="text-nano text-muted-foreground">{t("data_pipeline.datasets")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold font-mono">{pipelineStats.total_samples}</p>
-                    <p className="text-[9px] text-muted-foreground">{t("data_pipeline.samples")}</p>
+                    <p className="text-nano text-muted-foreground">{t("data_pipeline.samples")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold font-mono">{pipelineStats.validated_samples}</p>
-                    <p className="text-[9px] text-muted-foreground">{t("data_pipeline.validated")}</p>
+                    <p className="text-nano text-muted-foreground">{t("data_pipeline.validated")}</p>
                   </div>
                 </div>
                 {pipelineStats.total_samples > 0 && (
                   <div>
-                    <div className="flex justify-between text-[9px] mb-1">
+                    <div className="flex justify-between text-nano mb-1">
                       <span className="text-muted-foreground">{t("data_pipeline.sample_validation")}</span>
                       <span className="font-mono">{Math.round((pipelineStats.validated_samples / pipelineStats.total_samples) * 100)}%</span>
                     </div>
@@ -125,16 +125,16 @@ export default function DataPipeline() {
               </div>
 
               <div className="bg-card border border-border rounded-xl p-4">
-                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                   <Layers className="h-3 w-3" /> {t("data_pipeline.by_unit_type")}
                 </h3>
                 {(pipelineStats.by_type || []).length === 0 ? (
-                  <p className="text-[10px] text-muted-foreground text-center py-4">{t("data_pipeline.no_data")}</p>
+                  <p className="text-micro text-muted-foreground text-center py-4">{t("data_pipeline.no_data")}</p>
                 ) : (
                   <div className="space-y-2">
                     {pipelineStats.by_type.slice(0, 6).map(tp => (
                       <div key={tp.unit_type}>
-                        <div className="flex justify-between text-[10px] mb-0.5">
+                        <div className="flex justify-between text-micro mb-0.5">
                           <span className="font-mono">{tp.unit_type}</span>
                           <span className="text-muted-foreground">{tp.count}</span>
                         </div>
@@ -150,13 +150,13 @@ export default function DataPipeline() {
           {/* Recent Collection Runs */}
           {pipelineStats && (pipelineStats.recent_runs || []).length > 0 && (
             <div className="mb-6">
-              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+              <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                 <Clock className="h-3 w-3" /> {t("data_pipeline.recent_runs")}
               </h3>
               <div className="space-y-1">
                 {pipelineStats.recent_runs.map(run => (
                   <div key={run.id} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-card border border-border">
-                    <Badge variant="outline" className={cn("text-[8px] px-1.5 py-0 h-4",
+                    <Badge variant="outline" className={cn("text-nano px-1.5 py-0 h-4",
                       run.status === "completed" ? "text-status-validated border-status-validated/30" :
                       run.status === "failed" ? "text-destructive border-destructive/30" :
                       "text-primary border-primary/30"
@@ -164,9 +164,9 @@ export default function DataPipeline() {
                       {run.status}
                     </Badge>
                     <span className="text-xs flex-1">{run.source_type}</span>
-                    <span className="text-[9px] text-muted-foreground">{run.units_extracted} {t("data_pipeline.extracted")}</span>
-                    <span className="text-[9px] text-muted-foreground">{run.units_validated} {t("data_pipeline.validated").toLowerCase()}</span>
-                    <span className="text-[9px] text-muted-foreground/60 font-mono">
+                    <span className="text-nano text-muted-foreground">{run.units_extracted} {t("data_pipeline.extracted")}</span>
+                    <span className="text-nano text-muted-foreground">{run.units_validated} {t("data_pipeline.validated").toLowerCase()}</span>
+                    <span className="text-nano text-muted-foreground/60 font-mono">
                       {new Date(run.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </span>
                   </div>
@@ -180,7 +180,7 @@ export default function DataPipeline() {
             <button
               onClick={() => setSelectedCategory(null)}
               className={cn(
-                "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
+                "px-3 py-1.5 rounded-full text-dense font-medium transition-colors",
                 !selectedCategory ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
               )}
             >
@@ -191,7 +191,7 @@ export default function DataPipeline() {
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={cn(
-                  "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
+                  "px-3 py-1.5 rounded-full text-dense font-medium transition-colors",
                   selectedCategory === cat.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -205,7 +205,7 @@ export default function DataPipeline() {
             <div className="text-center py-16">
               <Layers className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground mb-1">{t("data_pipeline.no_units")}</p>
-              <p className="text-[10px] text-muted-foreground/60">{t("data_pipeline.no_units_hint")}</p>
+              <p className="text-micro text-muted-foreground/60">{t("data_pipeline.no_units_hint")}</p>
             </div>
           ) : (
             <div className="space-y-1">
@@ -231,15 +231,15 @@ export default function DataPipeline() {
                       <div className="flex items-center gap-1.5">
                         <p className="text-xs font-medium truncate">{unit.title}</p>
                         {cat && (
-                          <Badge variant="outline" className="text-[8px] px-1.5 py-0 h-4 shrink-0">
+                          <Badge variant="outline" className="text-nano px-1.5 py-0 h-4 shrink-0">
                             {cat.name}
                           </Badge>
                         )}
                       </div>
-                      <p className="text-[10px] text-muted-foreground truncate">{(unit.content ?? "").slice(0, 100)}</p>
+                      <p className="text-micro text-muted-foreground truncate">{(unit.content ?? "").slice(0, 100)}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-[10px] font-mono text-muted-foreground">
+                      <span className="text-micro font-mono text-muted-foreground">
                         {(unit.quality_score * 100).toFixed(0)}%
                       </span>
                       <div className={cn(
@@ -271,7 +271,7 @@ function StatCard({ icon: Icon, label, value, accent }: {
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center gap-1.5 mb-2">
         <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <span className={cn("text-xl font-bold font-mono", accent)}>{value}</span>
     </div>

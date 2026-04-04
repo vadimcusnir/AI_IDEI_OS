@@ -99,9 +99,9 @@ export function AccessSimulator() {
 
       {history.length > 0 && (
         <div className="space-y-1">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("simulation_history")}</p>
+          <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("simulation_history")}</p>
           {history.map((h, i) => (
-            <div key={i} className="flex items-center gap-2 text-[10px] py-1 border-b border-border/50 last:border-0">
+            <div key={i} className="flex items-center gap-2 text-micro py-1 border-b border-border/50 last:border-0">
               {verdictIcon(h.result.verdict)}
               <span className="font-mono text-muted-foreground truncate max-w-[120px]">{h.userId.slice(0, 8)}…</span>
               <span className="font-medium">{h.serviceKey}</span>

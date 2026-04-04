@@ -17,7 +17,7 @@ const PARTNERS = ["Lovable", "Google AI", "OpenAI"];
 export function SocialProofBlock() {
   return (
     <div className="mb-8">
-      <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
+      <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
         Social Proof
       </h2>
 
@@ -30,7 +30,7 @@ export function SocialProofBlock() {
           >
             <stat.icon className="h-3.5 w-3.5 text-primary mx-auto mb-1.5" />
             <p className="text-base font-bold text-foreground">{stat.value}</p>
-            <p className="text-[9px] text-muted-foreground mt-0.5">{stat.label}</p>
+            <p className="text-nano text-muted-foreground mt-0.5">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -44,8 +44,8 @@ export function SocialProofBlock() {
               <div>
                 <p className="text-sm text-foreground italic leading-relaxed">"{t.quote}"</p>
                 <div className="flex items-center gap-1.5 mt-1.5">
-                  <p className="text-[11px] text-muted-foreground font-medium">— {t.author}</p>
-                  <span className="text-[9px] text-muted-foreground/50">· {t.role}</span>
+                  <p className="text-dense text-muted-foreground font-medium">— {t.author}</p>
+                  <span className="text-nano text-muted-foreground/50">· {t.role}</span>
                 </div>
               </div>
             </div>
@@ -58,7 +58,7 @@ export function SocialProofBlock() {
         <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
           <Handshake className="h-3.5 w-3.5 text-muted-foreground/50" />
           {PARTNERS.map(p => (
-            <span key={p} className="text-[10px] text-muted-foreground font-medium bg-muted/50 px-2.5 py-1 rounded-full">
+            <span key={p} className="text-micro text-muted-foreground font-medium bg-muted/50 px-2.5 py-1 rounded-full">
               {p}
             </span>
           ))}

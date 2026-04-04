@@ -151,13 +151,13 @@ export function ExecutionTimeline({ planMeta }: { planMeta: PlanMeta | null }) {
               <Zap className="h-3 w-3 text-primary" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider">{planMeta.plan_name}</p>
-              <p className="text-[9px] text-muted-foreground">
+              <p className="text-micro font-bold uppercase tracking-wider">{planMeta.plan_name}</p>
+              <p className="text-nano text-muted-foreground">
                 {planMeta.intent.replace(/_/g, " ")} · {(planMeta.confidence * 100).toFixed(0)}% confidence
               </p>
             </div>
           </div>
-          <Badge variant={isComplete ? "default" : "secondary"} className="text-[9px] h-5">
+          <Badge variant={isComplete ? "default" : "secondary"} className="text-nano h-5">
             {isComplete ? "Done" : `${completedSteps}/${steps.length}`}
           </Badge>
         </div>
@@ -173,7 +173,7 @@ export function ExecutionTimeline({ planMeta }: { planMeta: PlanMeta | null }) {
         </div>
 
         {/* Cost summary */}
-        <div className="flex items-center justify-between mt-2 text-[9px] text-muted-foreground">
+        <div className="flex items-center justify-between mt-2 text-nano text-muted-foreground">
           <span className="flex items-center gap-1">
             <Coins className="h-3 w-3" />
             {planMeta.total_credits} NEURONS estimated
@@ -224,21 +224,21 @@ export function ExecutionTimeline({ planMeta }: { planMeta: PlanMeta | null }) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <ToolIcon className="h-3 w-3 text-muted-foreground" />
-                      <p className="text-[11px] font-medium">{step.label}</p>
+                      <p className="text-dense font-medium">{step.label}</p>
                     </div>
                     {step.credits_cost > 0 && (
-                      <span className="text-[9px] text-muted-foreground">{step.credits_cost} N</span>
+                      <span className="text-nano text-muted-foreground">{step.credits_cost} N</span>
                     )}
                   </div>
 
                   {step.duration_ms && (
-                    <p className="text-[9px] text-muted-foreground mt-0.5">
+                    <p className="text-nano text-muted-foreground mt-0.5">
                       {(step.duration_ms / 1000).toFixed(1)}s
                     </p>
                   )}
 
                   {step.error_message && (
-                    <p className="text-[9px] text-destructive mt-0.5">{step.error_message}</p>
+                    <p className="text-nano text-destructive mt-0.5">{step.error_message}</p>
                   )}
                 </div>
               </motion.div>

@@ -69,7 +69,7 @@ export function PipelineStepper({ current, completedStages = [], onStageClick }:
               </motion.div>
               <span
                 className={cn(
-                  "text-[10px] font-semibold uppercase tracking-wider transition-colors hidden sm:block",
+                  "text-micro font-semibold uppercase tracking-wider transition-colors hidden sm:block",
                   isActive
                     ? "text-primary"
                     : isCompleted

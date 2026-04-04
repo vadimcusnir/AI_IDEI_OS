@@ -272,7 +272,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
           <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
             Sources
             {sources.length > 0 && (
-              <span className="text-[10px] font-normal text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">
+              <span className="text-micro font-normal text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">
                 {selectedCount}/{sources.length}
               </span>
             )}
@@ -281,7 +281,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 text-[10px] px-2"
+              className="h-6 text-micro px-2"
               onClick={selectedCount === sources.length ? deselectAll : selectAll}
             >
               {selectedCount === sources.length ? "Deselect" : "Select all"}
@@ -312,7 +312,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
               key={mode}
               variant={addMode === mode ? "default" : "outline"}
               size="sm"
-              className="h-7 text-[10px] flex-1 gap-1 px-1.5"
+              className="h-7 text-micro flex-1 gap-1 px-1.5"
               onClick={() => setAddMode(addMode === mode ? null : mode)}
             >
               <Icon className="h-3 w-3" /> {label}
@@ -397,7 +397,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
               >
                 {uploading ? <Loader2 className="h-6 w-6 animate-spin text-primary" /> : <Upload className="h-6 w-6" />}
                 <span className="text-xs">{uploading ? "Uploading..." : "Click or drag & drop"}</span>
-                <span className="text-[10px] text-muted-foreground">PDF, TXT, MD, CSV, JSON • Max 20MB</span>
+                <span className="text-micro text-muted-foreground">PDF, TXT, MD, CSV, JSON • Max 20MB</span>
               </button>
             </div>
           </motion.div>
@@ -435,13 +435,13 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
                     >
                       <Brain className="h-3.5 w-3.5 text-primary shrink-0" />
                       <span className="text-xs text-foreground truncate flex-1">{n.title}</span>
-                      <span className="text-[9px] text-muted-foreground font-mono">#{n.number}</span>
+                      <span className="text-nano text-muted-foreground font-mono">#{n.number}</span>
                     </button>
                   ))}
                 </div>
               )}
               {neuronSearch.trim().length >= 2 && !searchingNeurons && neuronResults.length === 0 && (
-                <p className="text-[10px] text-muted-foreground text-center py-2">No neurons found</p>
+                <p className="text-micro text-muted-foreground text-center py-2">No neurons found</p>
               )}
             </div>
           </motion.div>
@@ -457,7 +457,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
                 <FileText className="h-6 w-6 text-muted-foreground/30" />
               </div>
               <p className="text-xs font-medium text-muted-foreground mb-1">No sources yet</p>
-              <p className="text-[10px] text-muted-foreground/60 leading-relaxed">Add text, URLs, files, or<br />import neurons to get started</p>
+              <p className="text-micro text-muted-foreground/60 leading-relaxed">Add text, URLs, files, or<br />import neurons to get started</p>
             </motion.div>
           ) : (
             filteredSources.map((src, idx) => {
@@ -511,7 +511,7 @@ export function NotebookSourcesPanel({ sources, addSource, toggleSource, deleteS
                         exit={{ height: 0, opacity: 0 }}
                         className="overflow-hidden"
                       >
-                        <div className="mx-2 mb-1 p-2 rounded bg-muted/30 text-[10px] text-muted-foreground max-h-32 overflow-y-auto whitespace-pre-wrap leading-relaxed">
+                        <div className="mx-2 mb-1 p-2 rounded bg-muted/30 text-micro text-muted-foreground max-h-32 overflow-y-auto whitespace-pre-wrap leading-relaxed">
                           {src.content?.slice(0, 1000) || "No content"}
                           {(src.content?.length || 0) > 1000 && "..."}
                         </div>

@@ -172,7 +172,7 @@ export function AdminJobsTab() {
           >
             <Icon className={cn("h-3.5 w-3.5 mx-auto mb-1", color)} />
             <p className="text-sm font-bold">{stats[key] || 0}</p>
-            <p className="text-[9px] text-muted-foreground capitalize">{key}</p>
+            <p className="text-nano text-muted-foreground capitalize">{key}</p>
           </button>
         ))}
       </div>
@@ -194,14 +194,14 @@ export function AdminJobsTab() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-[10px]">ID</TableHead>
-              <TableHead className="text-[10px]">Worker</TableHead>
-              <TableHead className="text-[10px]">Status</TableHead>
-              <TableHead className="text-[10px]">Retries</TableHead>
-              <TableHead className="text-[10px]">Created</TableHead>
-              <TableHead className="text-[10px]">Duration</TableHead>
-              <TableHead className="text-[10px]">Error</TableHead>
-              <TableHead className="text-[10px] text-right">Actions</TableHead>
+              <TableHead className="text-micro">ID</TableHead>
+              <TableHead className="text-micro">Worker</TableHead>
+              <TableHead className="text-micro">Status</TableHead>
+              <TableHead className="text-micro">Retries</TableHead>
+              <TableHead className="text-micro">Created</TableHead>
+              <TableHead className="text-micro">Duration</TableHead>
+              <TableHead className="text-micro">Error</TableHead>
+              <TableHead className="text-micro text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -211,15 +211,15 @@ export function AdminJobsTab() {
                 : null;
               return (
                 <TableRow key={j.id}>
-                  <TableCell className="text-[10px] font-mono text-muted-foreground">{j.id.substring(0, 8)}</TableCell>
+                  <TableCell className="text-micro font-mono text-muted-foreground">{j.id.substring(0, 8)}</TableCell>
                   <TableCell className="text-xs">{j.worker_type.replace(/-/g, " ")}</TableCell>
                   <TableCell><StatusBadge status={j.status} /></TableCell>
                   <TableCell className="text-xs font-mono text-center">{j.retry_count || 0}</TableCell>
-                  <TableCell className="text-[10px] text-muted-foreground">{new Date(j.created_at).toLocaleString()}</TableCell>
+                  <TableCell className="text-micro text-muted-foreground">{new Date(j.created_at).toLocaleString()}</TableCell>
                   <TableCell className="text-xs font-mono">{duration !== null ? `${duration}s` : "—"}</TableCell>
                   <TableCell className="max-w-[150px]">
                     {j.error_message && (
-                      <span className="text-[9px] text-destructive truncate block" title={j.error_message}>
+                      <span className="text-nano text-destructive truncate block" title={j.error_message}>
                         {j.error_message.substring(0, 50)}
                       </span>
                     )}
@@ -277,7 +277,7 @@ export function AdminJobsTab() {
 
       {/* Pagination */}
       <div className="flex items-center justify-between pt-1">
-        <span className="text-[10px] text-muted-foreground">
+        <span className="text-micro text-muted-foreground">
           {total > 0 ? `${page * PAGE_SIZE + 1}–${Math.min((page + 1) * PAGE_SIZE, total)} din ${total}` : "0 results"}
         </span>
         <div className="flex gap-1">

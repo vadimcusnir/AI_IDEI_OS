@@ -104,7 +104,7 @@ export function MobileBottomNav() {
                 )}
               >
                 <Icon className={cn("h-5 w-5", active && "stroke-[2.5]")} />
-                <span className={cn("text-[10px]", active ? "font-bold" : "font-medium")}>{label}</span>
+                <span className={cn("text-micro", active ? "font-bold" : "font-medium")}>{label}</span>
                 {active && <span className="absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-full bg-primary" />}
               </button>
             );
@@ -114,7 +114,7 @@ export function MobileBottomNav() {
             className="flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px] text-muted-foreground active:scale-95"
           >
             <Menu className="h-5 w-5" />
-            <span className="text-[10px] font-medium">More</span>
+            <span className="text-micro font-medium">More</span>
           </button>
         </div>
       </nav>
@@ -134,7 +134,7 @@ export function MobileBottomNav() {
 
               return (
                 <div key={section.key}>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 px-4 pt-4 pb-1.5">
+                  <p className="text-nano font-bold uppercase tracking-[0.15em] text-muted-foreground/50 px-4 pt-4 pb-1.5">
                     {section.label}
                   </p>
                   {items.map((item) => {

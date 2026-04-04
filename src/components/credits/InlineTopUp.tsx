@@ -99,7 +99,7 @@ export function InlineTopUp({ needed, balance = 0, onDismiss, compact = false }:
               )}
             >
               {isRecommended && (
-                <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
+                <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-nano font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
                   Best
                 </span>
               )}
@@ -115,7 +115,7 @@ export function InlineTopUp({ needed, balance = 0, onDismiss, compact = false }:
               </div>
               <div>
                 <span className="text-xs font-semibold block">{pkg.neurons.toLocaleString()}</span>
-                <span className="text-[9px] text-muted-foreground">NEURONS</span>
+                <span className="text-nano text-muted-foreground">NEURONS</span>
               </div>
               <span className="text-sm font-bold font-mono">${pkg.price}</span>
             </button>
@@ -125,12 +125,12 @@ export function InlineTopUp({ needed, balance = 0, onDismiss, compact = false }:
 
       {/* Balance indicator + dismiss */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-1.5 text-micro text-muted-foreground">
           <Coins className="h-3 w-3" />
           <span>Current: <span className="font-mono font-semibold">{balance}</span> NEURONS</span>
         </div>
         {onDismiss && (
-          <button onClick={onDismiss} className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+          <button onClick={onDismiss} className="text-micro text-muted-foreground/60 hover:text-muted-foreground transition-colors">
             Dismiss
           </button>
         )}

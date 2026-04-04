@@ -219,7 +219,7 @@ export function GlobalSearch() {
       >
         <Search className="h-3.5 w-3.5 shrink-0" />
         <span className="hidden sm:inline truncate">{t("search")}...</span>
-        <kbd className="hidden md:inline-flex h-5 items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground/60">
+        <kbd className="hidden md:inline-flex h-5 items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-micro text-muted-foreground/60">
           ⌘K
         </kbd>
       </button>
@@ -280,9 +280,9 @@ export function GlobalSearch() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate">{result.title}</p>
-                        <p className="text-[10px] text-muted-foreground truncate">{result.subtitle}</p>
+                        <p className="text-micro text-muted-foreground truncate">{result.subtitle}</p>
                       </div>
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground/50 shrink-0">{t(cfg.labelKey)}</span>
+                      <span className="text-nano uppercase tracking-wider text-muted-foreground/50 shrink-0">{t(cfg.labelKey)}</span>
                       {idx === selectedIndex && <ArrowRight className="h-3 w-3 text-primary shrink-0" />}
                     </button>
                   );
@@ -292,7 +292,7 @@ export function GlobalSearch() {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 border-t border-border flex items-center gap-3 text-[10px] text-muted-foreground/50">
+          <div className="px-4 py-2 border-t border-border flex items-center gap-3 text-micro text-muted-foreground/50">
             <span>↑↓ {t("navigate")}</span>
             <span>↵ {t("select")}</span>
             <span>esc {t("close")}</span>

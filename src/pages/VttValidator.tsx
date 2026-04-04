@@ -173,7 +173,7 @@ export default function VttValidator() {
                         <div key={s.label} className="bg-muted/50 rounded-lg p-3 text-center">
                           <s.icon className="h-4 w-4 text-muted-foreground mx-auto mb-1" />
                           <p className="text-lg font-bold font-mono">{s.value}</p>
-                          <p className="text-[10px] text-muted-foreground">{s.label}</p>
+                          <p className="text-micro text-muted-foreground">{s.label}</p>
                         </div>
                       ))}
                     </div>
@@ -184,7 +184,7 @@ export default function VttValidator() {
                         <p className="text-xs font-medium text-semantic-amber flex items-center gap-1 mb-1">
                           <AlertTriangle className="h-3 w-3" /> {result.warnings.length} Warning{result.warnings.length > 1 ? "s" : ""}
                         </p>
-                        <ul className="text-[10px] text-muted-foreground space-y-0.5">
+                        <ul className="text-micro text-muted-foreground space-y-0.5">
                           {result.warnings.slice(0, 5).map((w, i) => <li key={i}>• {w}</li>)}
                         </ul>
                       </div>
@@ -192,7 +192,7 @@ export default function VttValidator() {
 
                     {/* Preview */}
                     <div className="border border-border rounded-lg overflow-hidden">
-                      <div className="bg-muted/30 px-3 py-2 text-[10px] font-mono text-muted-foreground">
+                      <div className="bg-muted/30 px-3 py-2 text-micro font-mono text-muted-foreground">
                         Preview (first 10 cues)
                       </div>
                       <div className="p-3 max-h-[200px] overflow-y-auto space-y-1.5">

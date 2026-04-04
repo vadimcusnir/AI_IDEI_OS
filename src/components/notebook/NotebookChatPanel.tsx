@@ -135,15 +135,15 @@ export function NotebookChatPanel({ notebook, sources, messages: dbMessages, upd
           <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={handleNewSession} title="New chat">
             <Plus className="h-3 w-3" />
           </Button>
-          <span className="text-[10px] text-muted-foreground">
+          <span className="text-micro text-muted-foreground">
             {selectedCount}/{sources.length} sources
           </span>
           {messages.length > 0 && (
             <div className="flex items-center gap-1.5 ml-auto">
-              <button onClick={handleExportChat} className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5 transition-colors">
+              <button onClick={handleExportChat} className="text-micro text-muted-foreground hover:text-foreground flex items-center gap-0.5 transition-colors">
                 <Download className="h-2.5 w-2.5" /> Export
               </button>
-              <button onClick={handleClearChat} className="text-[10px] text-muted-foreground hover:text-destructive flex items-center gap-0.5 transition-colors">
+              <button onClick={handleClearChat} className="text-micro text-muted-foreground hover:text-destructive flex items-center gap-0.5 transition-colors">
                 <Trash2 className="h-2.5 w-2.5" /> Clear
               </button>
             </div>

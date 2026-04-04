@@ -28,7 +28,7 @@ export function ResearchPanel({ onCommand }: ResearchPanelProps) {
       <div className="py-2 space-y-2">
         <div className="flex items-center gap-1.5 px-1">
           <Search className="h-3 w-3 text-rose-400" />
-          <span className="text-[10px] font-medium text-muted-foreground/70">Cercetare & Analiză</span>
+          <span className="text-micro font-medium text-muted-foreground/70">Cercetare & Analiză</span>
         </div>
         <div className="grid grid-cols-2 gap-1.5">
           {RESEARCH_ACTIONS.map((action) => (
@@ -41,8 +41,8 @@ export function ResearchPanel({ onCommand }: ResearchPanelProps) {
                 <action.icon className="h-3.5 w-3.5" />
               </div>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium text-foreground/90 leading-tight">{action.label}</p>
-                <p className="text-[9px] text-muted-foreground/50 leading-tight">{action.desc}</p>
+                <p className="text-dense font-medium text-foreground/90 leading-tight">{action.label}</p>
+                <p className="text-nano text-muted-foreground/50 leading-tight">{action.desc}</p>
               </div>
             </button>
           ))}

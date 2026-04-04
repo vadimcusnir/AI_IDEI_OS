@@ -85,7 +85,7 @@ export function IntelligenceProfiles() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-sm truncate">{person.name}</span>
-                  <Badge variant="outline" className="text-[10px] capitalize">{person.entity_type}</Badge>
+                  <Badge variant="outline" className="text-micro capitalize">{person.entity_type}</Badge>
                 </div>
                 <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                   <span>{person.statements_count} statements</span>
@@ -216,7 +216,7 @@ function PersonDetailView({
                 <span className="text-xs font-medium text-status-validated">Puncte forte:</span>
                 <div className="flex flex-wrap gap-1.5 mt-1">
                   {(profile.strengths as string[]).map((s, i) => (
-                    <Badge key={i} variant="outline" className="text-[10px]">{s}</Badge>
+                    <Badge key={i} variant="outline" className="text-micro">{s}</Badge>
                   ))}
                 </div>
               </div>
@@ -226,7 +226,7 @@ function PersonDetailView({
                 <span className="text-xs font-medium text-destructive">Riscuri:</span>
                 <div className="flex flex-wrap gap-1.5 mt-1">
                   {(profile.risks as string[]).map((r, i) => (
-                    <Badge key={i} variant="outline" className="text-[10px] border-destructive/30">{r}</Badge>
+                    <Badge key={i} variant="outline" className="text-micro border-destructive/30">{r}</Badge>
                   ))}
                 </div>
               </div>
@@ -257,7 +257,7 @@ function TraitGroup({ label, traits }: { label: string; traits: { code: string; 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {traits.map((t) => (
           <div key={t.code} className="flex items-center gap-2 p-2 rounded-lg bg-muted/30">
-            <Badge className={cn("text-[10px] capitalize shrink-0", CATEGORY_COLORS[t.category] || "")}>
+            <Badge className={cn("text-micro capitalize shrink-0", CATEGORY_COLORS[t.category] || "")}>
               {t.category}
             </Badge>
             <span className="text-xs font-medium flex-1 truncate">{t.name}</span>

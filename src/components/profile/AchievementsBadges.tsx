@@ -48,7 +48,7 @@ export function AchievementsBadges({ userId }: { userId?: string }) {
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Realizări
         </h3>
-        <span className="text-[10px] font-bold text-primary">{totalXP} XP</span>
+        <span className="text-micro font-bold text-primary">{totalXP} XP</span>
       </div>
       <div className="flex flex-wrap gap-2">
         {achievements.map((a) => {
@@ -64,8 +64,8 @@ export function AchievementsBadges({ userId }: { userId?: string }) {
               title={a.description}
             >
               <Icon className="h-3 w-3 text-primary" />
-              <span className="text-[10px] font-medium">{a.title}</span>
-              <span className="text-[9px] text-muted-foreground">+{a.xp_reward}</span>
+              <span className="text-micro font-medium">{a.title}</span>
+              <span className="text-nano text-muted-foreground">+{a.xp_reward}</span>
             </div>
           );
         })}

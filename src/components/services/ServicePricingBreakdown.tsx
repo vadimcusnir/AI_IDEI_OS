@@ -46,8 +46,8 @@ export function ServicePricingBreakdown({ userTier, compact }: ServicePricingBre
         ].map((m) => (
           <div key={m.label} className="rounded-xl border border-border bg-card p-3 text-center">
             <p className="text-lg font-mono font-bold text-foreground">{m.value}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{m.sub}</p>
-            <p className="text-[9px] text-muted-foreground/60 mt-1">{m.label}</p>
+            <p className="text-micro text-muted-foreground mt-0.5">{m.sub}</p>
+            <p className="text-nano text-muted-foreground/60 mt-1">{m.label}</p>
           </div>
         ))}
       </div>
@@ -55,7 +55,7 @@ export function ServicePricingBreakdown({ userTier, compact }: ServicePricingBre
       {/* Tier savings */}
       {!compact && (
         <div className="rounded-xl border border-border overflow-hidden">
-          <div className="grid grid-cols-4 text-[9px] font-bold uppercase tracking-wider bg-muted/50 px-3 py-2">
+          <div className="grid grid-cols-4 text-nano font-bold uppercase tracking-wider bg-muted/50 px-3 py-2">
             <span>Plan</span>
             <span className="text-center">Preț</span>
             <span className="text-center">Discount execuție</span>
@@ -74,7 +74,7 @@ export function ServicePricingBreakdown({ userTier, compact }: ServicePricingBre
                   {t.key === "elite" && <Crown className="h-3 w-3 text-amber-500" />}
                   {t.label}
                   {isCurrentTier && (
-                    <span className="text-[8px] bg-primary/15 text-primary px-1.5 py-0.5 rounded-full font-bold">TU</span>
+                    <span className="text-nano bg-primary/15 text-primary px-1.5 py-0.5 rounded-full font-bold">TU</span>
                   )}
                 </span>
                 <span className="text-center text-muted-foreground">{t.monthly}</span>

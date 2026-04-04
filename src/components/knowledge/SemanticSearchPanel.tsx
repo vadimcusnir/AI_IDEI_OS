@@ -119,7 +119,7 @@ export function SemanticSearchPanel({ className }: { className?: string }) {
                         </span>
                         <Badge
                           variant="outline"
-                          className={cn("text-[10px] shrink-0", typeColors[result.entity_type] || "")}
+                          className={cn("text-micro shrink-0", typeColors[result.entity_type] || "")}
                         >
                           {result.entity_type}
                         </Badge>
@@ -130,11 +130,11 @@ export function SemanticSearchPanel({ className }: { className?: string }) {
                         </p>
                       )}
                       <div className="flex items-center gap-3 mt-1.5">
-                        <span className="text-[10px] text-muted-foreground">
+                        <span className="text-micro text-muted-foreground">
                           Relevance: {Math.round(result.similarity * 100)}%
                         </span>
                         {result.idea_rank != null && (
-                          <span className="text-[10px] text-muted-foreground">
+                          <span className="text-micro text-muted-foreground">
                             IdeaRank: {result.idea_rank.toFixed(2)}
                           </span>
                         )}

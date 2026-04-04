@@ -71,15 +71,15 @@ export function PromptHistory({ onReuse, refreshKey }: PromptHistoryProps) {
           >
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium text-foreground truncate">{item.goal}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">
+              <p className="text-micro text-muted-foreground mt-0.5 line-clamp-1">
                 {item.context.slice(0, 80)}...
               </p>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-[9px] text-muted-foreground flex items-center gap-1">
+                <span className="text-nano text-muted-foreground flex items-center gap-1">
                   <Clock className="h-2.5 w-2.5" />
                   {format(new Date(item.created_at), "dd MMM HH:mm")}
                 </span>
-                <span className="text-[9px] text-muted-foreground">
+                <span className="text-nano text-muted-foreground">
                   {item.credits_spent} N
                 </span>
               </div>
@@ -94,7 +94,7 @@ export function PromptHistory({ onReuse, refreshKey }: PromptHistoryProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 text-[10px] px-2"
+                className="h-6 text-micro px-2"
                 onClick={() => onReuse(item)}
               >
                 Refolosește

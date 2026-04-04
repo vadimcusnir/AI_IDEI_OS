@@ -104,7 +104,7 @@ export function AutomationPanel() {
           <h3 className="text-sm font-semibold">
             {t("automation.title", { defaultValue: "Automatizări" })}
           </h3>
-          <Badge variant="secondary" className="text-[10px]">
+          <Badge variant="secondary" className="text-micro">
             {jobs?.length || 0} {t("automation.jobs", { defaultValue: "joburi" })}
           </Badge>
         </div>
@@ -137,7 +137,7 @@ export function AutomationPanel() {
                       <span className="text-lg">{meta.icon}</span>
                       <div className="min-w-0">
                         <p className="text-xs font-medium truncate">{job.name}</p>
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-micro text-muted-foreground">
                           {meta.label} · {job.total_runs} rulări
                           {job.schedule_cron && ` · ⏰ ${job.schedule_cron}`}
                         </p>
@@ -173,18 +173,18 @@ export function AutomationPanel() {
       {/* Recent Runs */}
       {recentRuns && recentRuns.length > 0 && (
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+          <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">
             {t("automation.recent_runs", { defaultValue: "Rulări recente" })}
           </p>
           <div className="space-y-1">
             {recentRuns.map((run: any) => (
-              <div key={run.id} className="flex items-center gap-2 text-[11px] px-2 py-1.5 rounded bg-muted/30">
+              <div key={run.id} className="flex items-center gap-2 text-dense px-2 py-1.5 rounded bg-muted/30">
                 {RUN_STATUS_ICON[run.status] || RUN_STATUS_ICON.pending}
                 <span className="flex-1 truncate text-muted-foreground">
                   {run.result_summary || run.status}
                 </span>
                 {run.neurons_spent > 0 && (
-                  <span className="text-[9px] font-mono text-primary">
+                  <span className="text-nano font-mono text-primary">
                     {run.neurons_spent}N
                   </span>
                 )}

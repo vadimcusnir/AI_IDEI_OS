@@ -80,14 +80,14 @@ export function AdminNeuronsTab() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-[10px] w-16">#</TableHead>
-              <TableHead className="text-[10px]">Title</TableHead>
-              <TableHead className="text-[10px]">Status</TableHead>
-              <TableHead className="text-[10px]">Visibility</TableHead>
-              <TableHead className="text-[10px]">Lifecycle</TableHead>
-              <TableHead className="text-[10px] text-right">Score</TableHead>
-              <TableHead className="text-[10px]">Created</TableHead>
-              <TableHead className="text-[10px] w-24">Actions</TableHead>
+              <TableHead className="text-micro w-16">#</TableHead>
+              <TableHead className="text-micro">Title</TableHead>
+              <TableHead className="text-micro">Status</TableHead>
+              <TableHead className="text-micro">Visibility</TableHead>
+              <TableHead className="text-micro">Lifecycle</TableHead>
+              <TableHead className="text-micro text-right">Score</TableHead>
+              <TableHead className="text-micro">Created</TableHead>
+              <TableHead className="text-micro w-24">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -103,7 +103,7 @@ export function AdminNeuronsTab() {
                 <TableCell><StatusBadge status={n.visibility} /></TableCell>
                 <TableCell><StatusBadge status={n.lifecycle} /></TableCell>
                 <TableCell className="text-xs font-mono text-right">{n.score.toFixed(1)}</TableCell>
-                <TableCell className="text-[10px] text-muted-foreground">{new Date(n.created_at).toLocaleDateString()}</TableCell>
+                <TableCell className="text-micro text-muted-foreground">{new Date(n.created_at).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toggleVisibility(n.id, n.visibility)}>
@@ -135,7 +135,7 @@ export function AdminNeuronsTab() {
       </div>
       {/* Pagination */}
       <div className="flex items-center justify-between pt-1">
-        <span className="text-[10px] text-muted-foreground">
+        <span className="text-micro text-muted-foreground">
           {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} din {total}
         </span>
         <div className="flex gap-1">

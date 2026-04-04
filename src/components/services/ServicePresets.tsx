@@ -148,7 +148,7 @@ export function ServicePresets({ allServiceKeys, selectedKeys, onApplyPreset }: 
                 <Globe className="h-3 w-3" />
                 Public (vizibil pentru toți utilizatorii)
               </label>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-micro text-muted-foreground">
                 {selectedKeys.size} servicii selectate
               </p>
               <Button
@@ -167,7 +167,7 @@ export function ServicePresets({ allServiceKeys, selectedKeys, onApplyPreset }: 
       {/* My presets */}
       {myPresets.length > 0 && (
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+          <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">
             <BookmarkCheck className="h-3 w-3 inline mr-1" />
             Preseturile mele
           </p>
@@ -186,7 +186,7 @@ export function ServicePresets({ allServiceKeys, selectedKeys, onApplyPreset }: 
                       <Lock className="h-2.5 w-2.5 text-muted-foreground/50" />
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-micro text-muted-foreground">
                     {p.service_keys.length} servicii · folosit de {p.usage_count}×
                   </p>
                 </div>
@@ -215,7 +215,7 @@ export function ServicePresets({ allServiceKeys, selectedKeys, onApplyPreset }: 
       {/* Public presets */}
       {publicPresets.length > 0 && (
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+          <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">
             <Globe className="h-3 w-3 inline mr-1" />
             Preset-uri comunitate
           </p>
@@ -227,7 +227,7 @@ export function ServicePresets({ allServiceKeys, selectedKeys, onApplyPreset }: 
               >
                 <div className="flex-1 min-w-0">
                   <span className="text-xs font-medium truncate">{p.name}</span>
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-micro text-muted-foreground">
                     {p.service_keys.length} servicii · {p.usage_count}× folosit
                   </p>
                 </div>

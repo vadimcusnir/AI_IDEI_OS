@@ -25,7 +25,7 @@ export function ThreadRow({ thread, onClick }: ThreadRowProps) {
         <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
       </div>
       <Avatar className="h-7 w-7 shrink-0 mt-0.5">
-        <AvatarFallback className="text-[9px] bg-primary/10 text-primary">
+        <AvatarFallback className="text-nano bg-primary/10 text-primary">
           {authorName.slice(0, 2).toUpperCase()}
         </AvatarFallback>
       </Avatar>
@@ -34,16 +34,16 @@ export function ThreadRow({ thread, onClick }: ThreadRowProps) {
           {thread.is_pinned && <Pin className="h-3 w-3 text-primary" />}
           {thread.is_locked && <Lock className="h-3 w-3 text-muted-foreground" />}
           {thread.is_solved && (
-            <Badge variant="outline" className="text-[9px] px-1 py-0 border-status-validated text-status-validated">
+            <Badge variant="outline" className="text-nano px-1 py-0 border-status-validated text-status-validated">
               <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />Solved
             </Badge>
           )}
           <h4 className="font-medium text-sm truncate">{thread.title}</h4>
           {(thread as any).tags?.map((tag: string) => (
-            <Badge key={tag} variant="secondary" className="text-[8px] px-1 py-0">{tag}</Badge>
+            <Badge key={tag} variant="secondary" className="text-nano px-1 py-0">{tag}</Badge>
           ))}
         </div>
-        <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-2 mt-1 text-micro text-muted-foreground">
           <span className="font-medium text-foreground/70">{authorName}</span>
           <span>·</span>
           <span className="flex items-center gap-0.5">

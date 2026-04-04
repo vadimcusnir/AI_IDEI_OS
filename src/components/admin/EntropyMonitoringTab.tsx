@@ -171,7 +171,7 @@ export function EntropyMonitoringTab() {
             s.healthy ? "border-border" : "border-destructive/40"
           )}>
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</span>
+              <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</span>
               {s.trend === "up" ? (
                 <TrendingUp className={cn("h-3.5 w-3.5", s.healthy ? "text-primary" : "text-destructive")} />
               ) : s.trend === "down" ? (
@@ -183,7 +183,7 @@ export function EntropyMonitoringTab() {
             <p className={cn("text-2xl font-bold font-mono", s.healthy ? "text-foreground" : "text-destructive")}>
               {s.value}{s.label !== "Entropy Ratio" ? "%" : ""}
             </p>
-            <p className="text-[9px] text-muted-foreground mt-1">{s.description}</p>
+            <p className="text-nano text-muted-foreground mt-1">{s.description}</p>
           </div>
         ))}
       </div>
@@ -191,7 +191,7 @@ export function EntropyMonitoringTab() {
       {/* Weekly breakdown */}
       <div className="bg-card border border-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
             <Activity className="h-3 w-3" /> Weekly Breakdown (Last 4 Weeks)
           </h3>
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
@@ -202,19 +202,19 @@ export function EntropyMonitoringTab() {
         <div className="grid grid-cols-4 gap-2">
           {periods.map((p, i) => (
             <div key={p.period} className={cn("rounded-lg p-3 text-center space-y-2", i === 0 ? "bg-primary/5 border border-primary/20" : "bg-muted/30")}>
-              <p className="text-[10px] font-semibold uppercase text-muted-foreground">
+              <p className="text-micro font-semibold uppercase text-muted-foreground">
                 {i === 0 ? "This Week" : i === 1 ? "Last Week" : `${i} weeks ago`}
               </p>
               <div>
-                <p className="text-[9px] text-muted-foreground">Spent</p>
+                <p className="text-nano text-muted-foreground">Spent</p>
                 <p className="text-sm font-mono font-bold">{p.credits_spent}</p>
               </div>
               <div>
-                <p className="text-[9px] text-muted-foreground">Earned</p>
+                <p className="text-nano text-muted-foreground">Earned</p>
                 <p className="text-sm font-mono font-bold text-primary">{p.credits_earned}</p>
               </div>
               <div>
-                <p className="text-[9px] text-muted-foreground">Jobs ✓/✗</p>
+                <p className="text-nano text-muted-foreground">Jobs ✓/✗</p>
                 <p className="text-sm font-mono">
                   <span className="text-primary">{p.jobs_completed}</span>
                   <span className="text-muted-foreground">/</span>
@@ -222,7 +222,7 @@ export function EntropyMonitoringTab() {
                 </p>
               </div>
               <div>
-                <p className="text-[9px] text-muted-foreground">Neurons</p>
+                <p className="text-nano text-muted-foreground">Neurons</p>
                 <p className="text-sm font-mono font-bold">{p.new_neurons}</p>
               </div>
             </div>

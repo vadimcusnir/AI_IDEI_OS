@@ -351,7 +351,7 @@ ${safeBody}
                       </>
                     )}
                     {transcript.source === "subtitles" && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
+                      <span className="text-nano px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
                         ⚡ Fast Path
                       </span>
                     )}
@@ -362,7 +362,7 @@ ${safeBody}
 
             {/* Transcript preview */}
             <div className="p-5">
-              <div className="bg-muted/50 rounded-xl p-4 max-h-48 overflow-y-auto text-sm leading-relaxed text-foreground/80 font-mono text-[13px]">
+              <div className="bg-muted/50 rounded-xl p-4 max-h-48 overflow-y-auto text-sm leading-relaxed text-foreground/80 font-mono text-compact">
                 {transcript.text.slice(0, 1500)}
                 {transcript.text.length > 1500 && (
                   <span className="text-muted-foreground"> …({transcript.word_count - 250}+ cuvinte rămase)</span>
@@ -372,7 +372,7 @@ ${safeBody}
 
             {/* Download buttons */}
             <div className="px-5 pb-5">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+              <p className="text-micro font-semibold uppercase tracking-widest text-muted-foreground mb-3">
                 Descarcă transcript
               </p>
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
@@ -392,7 +392,7 @@ ${safeBody}
                   >
                     <fmt.icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                     <span className="text-xs font-semibold group-hover:text-primary transition-colors">{fmt.label}</span>
-                    <span className="text-[9px] text-muted-foreground/60">{fmt.desc}</span>
+                    <span className="text-nano text-muted-foreground/60">{fmt.desc}</span>
                   </motion.button>
                 ))}
               </div>
@@ -478,7 +478,7 @@ ${safeBody}
 
                   {/* Cost indicator */}
                   <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
+                    <div className="flex items-center gap-3 text-micro text-muted-foreground/60">
                       {episodeCount !== null && isFree ? (
                         <span className="flex items-center gap-1 text-primary font-semibold">
                           <Gift className="h-3 w-3" />
@@ -499,7 +499,7 @@ ${safeBody}
                         </span>
                       )}
                     </div>
-                    <span className="text-[9px] text-muted-foreground/40 flex items-center gap-1">
+                    <span className="text-nano text-muted-foreground/40 flex items-center gap-1">
                       <Subtitles className="h-2.5 w-2.5" /> Audio STT + diarizare
                     </span>
                   </div>
@@ -564,7 +564,7 @@ ${safeBody}
                       { label: "Finalizare", threshold: 90 },
                     ].map(({ label, threshold }) => (
                       <span key={label} className={cn(
-                        "text-[9px] font-medium transition-colors",
+                        "text-nano font-medium transition-colors",
                         progress >= threshold ? "text-primary" : "text-muted-foreground/40"
                       )}>
                         {label}

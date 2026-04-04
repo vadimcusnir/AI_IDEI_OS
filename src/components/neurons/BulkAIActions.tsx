@@ -75,7 +75,7 @@ export function BulkAIActions({ selectedCount, selectedIds, disabled }: BulkAIAc
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         <div className="px-2 py-1.5">
-          <p className="text-[10px] font-semibold text-muted-foreground">AI BULK OPERATIONS</p>
+          <p className="text-micro font-semibold text-muted-foreground">AI BULK OPERATIONS</p>
         </div>
         <DropdownMenuSeparator />
         {actions.map((action) => (
@@ -89,7 +89,7 @@ export function BulkAIActions({ selectedCount, selectedIds, disabled }: BulkAIAc
             <action.icon className="h-3.5 w-3.5 mt-0.5 text-primary shrink-0" />
             <div>
               <p className="text-xs font-medium">{action.label}</p>
-              <p className="text-[9px] text-muted-foreground">{action.description}</p>
+              <p className="text-nano text-muted-foreground">{action.description}</p>
             </div>
           </DropdownMenuItem>
         ))}

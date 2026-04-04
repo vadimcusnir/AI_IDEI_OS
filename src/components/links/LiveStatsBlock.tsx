@@ -64,7 +64,7 @@ export function LiveStatsBlock() {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           Statistici live
         </h2>
         <Activity className="h-3 w-3 text-muted-foreground/40" />
@@ -83,7 +83,7 @@ export function LiveStatsBlock() {
             >
               <item.icon className={cn("h-4 w-4 mx-auto mb-1.5", item.color)} />
               <p className="text-lg font-bold text-foreground">{item.value}</p>
-              <p className="text-[9px] text-muted-foreground mt-0.5">{item.label}</p>
+              <p className="text-nano text-muted-foreground mt-0.5">{item.label}</p>
             </div>
           ))}
         </div>

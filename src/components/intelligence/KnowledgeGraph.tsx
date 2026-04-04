@@ -288,14 +288,14 @@ export function KnowledgeGraph() {
             {truncated && <span className="text-warning ml-1">(top {MAX_NODES})</span>}
           </span>
           {focusedNode && (
-            <Button variant="ghost" size="sm" className="h-6 text-[10px] text-primary" onClick={() => setFocusedNode(null)}>
+            <Button variant="ghost" size="sm" className="h-6 text-micro text-primary" onClick={() => setFocusedNode(null)}>
               <Focus className="h-3 w-3 mr-1" /> Clear focus
             </Button>
           )}
         </div>
         <div className="flex items-center gap-1">
           <Select value={colorMode} onValueChange={(v) => setColorMode(v as ColorMode)}>
-            <SelectTrigger className="h-7 text-[10px] w-[90px]">
+            <SelectTrigger className="h-7 text-micro w-[90px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -304,7 +304,7 @@ export function KnowledgeGraph() {
             </SelectContent>
           </Select>
           <Select value={timeFilter} onValueChange={setTimeFilter}>
-            <SelectTrigger className="h-7 text-[10px] w-[80px]">
+            <SelectTrigger className="h-7 text-micro w-[80px]">
               <Clock className="h-3 w-3 mr-1" />
               <SelectValue />
             </SelectTrigger>
@@ -384,22 +384,22 @@ export function KnowledgeGraph() {
           <div className="absolute bottom-3 left-3 bg-popover/95 backdrop-blur-sm border border-border rounded-lg px-3 py-2 shadow-lg pointer-events-none">
             <p className="text-xs font-semibold">#{hoveredNode.number} {hoveredNode.label}</p>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+              <span className="text-nano font-mono uppercase px-1.5 py-0.5 rounded bg-primary/10 text-primary">
                 {hoveredNode.category || "uncategorized"}
               </span>
-              <span className="text-[9px] text-muted-foreground">{hoveredNode.status}</span>
+              <span className="text-nano text-muted-foreground">{hoveredNode.status}</span>
               {colorMode === "cluster" && (
-                <span className="text-[9px] text-muted-foreground">Cluster {hoveredNode.cluster}</span>
+                <span className="text-nano text-muted-foreground">Cluster {hoveredNode.cluster}</span>
               )}
             </div>
-            <p className="text-[9px] text-muted-foreground/60 mt-0.5">Click to focus · Double-click to open</p>
+            <p className="text-nano text-muted-foreground/60 mt-0.5">Click to focus · Double-click to open</p>
           </div>
         )}
       </div>
 
       {/* Legend */}
       <div className="bg-card border border-border rounded-xl p-3">
-        <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+        <p className="text-nano font-semibold uppercase tracking-wider text-muted-foreground mb-2">
           {colorMode === "category" ? "Categories" : "Clusters"}
         </p>
         <div className="flex flex-wrap gap-x-4 gap-y-1">
@@ -407,13 +407,13 @@ export function KnowledgeGraph() {
             ? Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
                 <div key={cat} className="flex items-center gap-1.5">
                   <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
-                  <span className="text-[10px] text-muted-foreground capitalize">{cat.replace("_", " ")}</span>
+                  <span className="text-micro text-muted-foreground capitalize">{cat.replace("_", " ")}</span>
                 </div>
               ))
             : CLUSTER_COLORS.slice(0, Math.min(10, new Set(nodes.map(n => n.cluster)).size)).map((color, i) => (
                 <div key={i} className="flex items-center gap-1.5">
                   <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
-                  <span className="text-[10px] text-muted-foreground">Cluster {i}</span>
+                  <span className="text-micro text-muted-foreground">Cluster {i}</span>
                 </div>
               ))
           }

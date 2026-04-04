@@ -102,26 +102,26 @@ export function AdminServicesTab() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-[10px]">Key</TableHead>
-              <TableHead className="text-[10px]">Name</TableHead>
-              <TableHead className="text-[10px]">Category</TableHead>
-              <TableHead className="text-[10px]">Class</TableHead>
-              <TableHead className="text-[10px] text-right">Cost</TableHead>
-              <TableHead className="text-[10px]">Status</TableHead>
-              <TableHead className="text-[10px] w-24">Actions</TableHead>
+              <TableHead className="text-micro">Key</TableHead>
+              <TableHead className="text-micro">Name</TableHead>
+              <TableHead className="text-micro">Category</TableHead>
+              <TableHead className="text-micro">Class</TableHead>
+              <TableHead className="text-micro text-right">Cost</TableHead>
+              <TableHead className="text-micro">Status</TableHead>
+              <TableHead className="text-micro w-24">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {services.map(s => (
               <TableRow key={s.id}>
-                <TableCell className="text-[10px] font-mono max-w-[120px] truncate">{s.service_key}</TableCell>
+                <TableCell className="text-micro font-mono max-w-[120px] truncate">{s.service_key}</TableCell>
                 <TableCell className="text-xs font-medium max-w-[180px] truncate">{s.name}</TableCell>
                 <TableCell>
-                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{s.category}</span>
+                  <span className="text-nano font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{s.category}</span>
                 </TableCell>
                 <TableCell>
                   <span className={cn(
-                    "text-[9px] font-mono font-bold px-1.5 py-0.5 rounded",
+                    "text-nano font-mono font-bold px-1.5 py-0.5 rounded",
                     s.service_class === "S" ? "bg-primary/15 text-primary" :
                     s.service_class === "A" ? "bg-primary/10 text-primary" :
                     s.service_class === "B" ? "bg-warning/10 text-warning" :
@@ -131,7 +131,7 @@ export function AdminServicesTab() {
                 <TableCell className="text-xs font-mono text-right">{s.credits_cost}N</TableCell>
                 <TableCell>
                   <span className={cn(
-                    "text-[9px] font-mono px-1.5 py-0.5 rounded",
+                    "text-nano font-mono px-1.5 py-0.5 rounded",
                     s.is_active ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
                   )}>{s.is_active ? "ACTIVE" : "OFF"}</span>
                 </TableCell>
@@ -149,7 +149,7 @@ export function AdminServicesTab() {
         </Table>
       </div>
       <div className="flex items-center justify-between pt-1">
-        <span className="text-[10px] text-muted-foreground">
+        <span className="text-micro text-muted-foreground">
           {total > 0 ? `${page * PAGE_SIZE + 1}–${Math.min((page + 1) * PAGE_SIZE, total)} of ${total}` : "0 results"}
         </span>
         <div className="flex gap-1">

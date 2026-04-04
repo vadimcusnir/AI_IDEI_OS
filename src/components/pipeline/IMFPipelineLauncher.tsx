@@ -198,14 +198,14 @@ export function IMFPipelineLauncher({ neuronId, episodeId, onComplete }: Props) 
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{pipeline.name}</p>
-                      <p className="text-[10px] text-muted-foreground truncate">
+                      <p className="text-micro text-muted-foreground truncate">
                         {steps.length} pași · {pipeline.trigger_event}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {cost > 0 && (
                         <Badge variant="outline" className={cn(
-                          "text-[10px]",
+                          "text-micro",
                           !canAfford && "border-destructive text-destructive"
                         )}>
                           <Coins className="h-2.5 w-2.5 mr-0.5" /> {cost}
@@ -236,7 +236,7 @@ export function IMFPipelineLauncher({ neuronId, episodeId, onComplete }: Props) 
                       )}
                       <div className="space-y-1">
                         {steps.map((step: any, i: number) => (
-                          <div key={i} className="flex items-center gap-2 text-[11px]">
+                          <div key={i} className="flex items-center gap-2 text-dense">
                             <span className="text-muted-foreground/50 font-mono w-4">{i + 1}.</span>
                             <span className="text-foreground">{step.service_key || step.name}</span>
                             {step.credits_cost && (
@@ -279,7 +279,7 @@ export function IMFPipelineLauncher({ neuronId, episodeId, onComplete }: Props) 
                       </span>
                     </div>
                     <Badge variant="outline" className={cn(
-                      "text-[9px]",
+                      "text-nano",
                       run.status === "completed" && "border-emerald-500/30 text-emerald-500",
                       run.status === "failed" && "border-destructive/30 text-destructive",
                       isActive && "border-primary/30 text-primary",
@@ -289,7 +289,7 @@ export function IMFPipelineLauncher({ neuronId, episodeId, onComplete }: Props) 
                   </div>
                   {isActive && <Progress value={progress} className="h-1.5" />}
                   {run.error_message && (
-                    <p className="text-[10px] text-destructive mt-1 truncate">{run.error_message}</p>
+                    <p className="text-micro text-destructive mt-1 truncate">{run.error_message}</p>
                   )}
                 </div>
               );

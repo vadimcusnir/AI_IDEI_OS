@@ -78,7 +78,7 @@ export function XPActivityFeed() {
 
   return (
     <div className="bg-card border border-border rounded-xl p-4">
-      <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
+      <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
         <Zap className="h-3 w-3" /> Recent XP Activity
       </h3>
       <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
@@ -88,11 +88,11 @@ export function XPActivityFeed() {
           return (
             <div key={tx.id} className="flex items-center gap-2 py-1.5 px-2 rounded-md hover:bg-muted/30 transition-colors">
               <Icon className={cn("h-3 w-3 shrink-0", sourceInfo.color)} />
-              <span className="text-[11px] text-foreground flex-1 truncate">
+              <span className="text-dense text-foreground flex-1 truncate">
                 {tx.description || tx.source.replace(/_/g, " ")}
               </span>
-              <span className="text-[10px] font-bold text-primary shrink-0">+{tx.amount}</span>
-              <span className="text-[9px] text-muted-foreground shrink-0 w-16 text-right">
+              <span className="text-micro font-bold text-primary shrink-0">+{tx.amount}</span>
+              <span className="text-nano text-muted-foreground shrink-0 w-16 text-right">
                 {formatDistanceToNow(new Date(tx.created_at), { addSuffix: false })}
               </span>
             </div>

@@ -133,17 +133,17 @@ export default function ApiDocs() {
           <div className="p-4 rounded-xl border border-border bg-card">
             <Shield className="h-5 w-5 text-primary mb-2" />
             <p className="text-xs font-semibold mb-1">{t("api_docs.auth_title")}</p>
-            <p className="text-[10px] text-muted-foreground">Header: <code className="bg-muted px-1 rounded">X-API-Key: aiidei_xxx</code></p>
+            <p className="text-micro text-muted-foreground">Header: <code className="bg-muted px-1 rounded">X-API-Key: aiidei_xxx</code></p>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card">
             <Zap className="h-5 w-5 text-ai-accent mb-2" />
             <p className="text-xs font-semibold mb-1">{t("api_docs.rate_limit_title")}</p>
-            <p className="text-[10px] text-muted-foreground">{t("api_docs.rate_limit_desc")}</p>
+            <p className="text-micro text-muted-foreground">{t("api_docs.rate_limit_desc")}</p>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card">
             <Globe className="h-5 w-5 text-status-validated mb-2" />
             <p className="text-xs font-semibold mb-1">{t("api_docs.base_url_title")}</p>
-            <p className="text-[10px] text-muted-foreground font-mono break-all">/functions/v1/neuron-api</p>
+            <p className="text-micro text-muted-foreground font-mono break-all">/functions/v1/neuron-api</p>
           </div>
         </div>
 
@@ -157,12 +157,12 @@ export default function ApiDocs() {
             <div className="mb-4 p-4 rounded-xl border-2 border-primary/30 bg-primary/5">
               <p className="text-xs font-semibold text-primary mb-2">🔑 {t("api_docs.new_key_banner")}</p>
               <div className="flex items-center gap-2">
-                <code className="text-[10px] bg-muted px-2 py-1 rounded font-mono flex-1 break-all">{revealedKey}</code>
+                <code className="text-micro bg-muted px-2 py-1 rounded font-mono flex-1 break-all">{revealedKey}</code>
                 <Button size="sm" variant="ghost" className="h-7" onClick={() => { navigator.clipboard.writeText(revealedKey); toast.success(t("api_docs.copied")); }}>
                   <Copy className="h-3 w-3" />
                 </Button>
               </div>
-              <Button size="sm" variant="outline" className="mt-2 text-[10px]" onClick={() => setRevealedKey(null)}>
+              <Button size="sm" variant="outline" className="mt-2 text-micro" onClick={() => setRevealedKey(null)}>
                 {t("api_docs.copied_hide")}
               </Button>
             </div>
@@ -170,7 +170,7 @@ export default function ApiDocs() {
 
           <div className="flex items-end gap-2 mb-4">
             <div className="flex-1">
-              <label className="text-[10px] text-muted-foreground mb-1 block">{t("api_docs.key_name_label")}</label>
+              <label className="text-micro text-muted-foreground mb-1 block">{t("api_docs.key_name_label")}</label>
               <Input
                 value={newKeyName}
                 onChange={e => setNewKeyName(e.target.value)}
@@ -186,7 +186,7 @@ export default function ApiDocs() {
                     prev.includes(scope) ? prev.filter(s => s !== scope) : [...prev, scope]
                   )}
                   className={cn(
-                    "px-2 py-1.5 rounded text-[10px] font-medium border transition-colors",
+                    "px-2 py-1.5 rounded text-micro font-medium border transition-colors",
                     newKeyScopes.includes(scope) ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"
                   )}
                 >
@@ -206,12 +206,12 @@ export default function ApiDocs() {
                 <Key className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                 <div className="flex-1 min-w-0">
                   <span className="text-xs font-medium">{key.name}</span>
-                  <span className="text-[10px] text-muted-foreground ml-2 font-mono">{key.key_prefix}</span>
+                  <span className="text-micro text-muted-foreground ml-2 font-mono">{key.key_prefix}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] text-muted-foreground">{key.requests_today}/{key.daily_limit} {t("api_docs.today")}</span>
+                  <span className="text-nano text-muted-foreground">{key.requests_today}/{key.daily_limit} {t("api_docs.today")}</span>
                   {key.scopes.map(s => (
-                    <span key={s} className="text-[8px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground uppercase">{s}</span>
+                    <span key={s} className="text-nano px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground uppercase">{s}</span>
                   ))}
                   <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-destructive" onClick={() => deleteKey(key.id)}>
                     <Trash2 className="h-3 w-3" />
@@ -230,7 +230,7 @@ export default function ApiDocs() {
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
             <Code2 className="h-4 w-4" /> {t("api_docs.curl_example")}
           </h2>
-          <pre className="bg-muted rounded-xl p-4 text-[10px] font-mono overflow-x-auto whitespace-pre-wrap text-muted-foreground">
+          <pre className="bg-muted rounded-xl p-4 text-micro font-mono overflow-x-auto whitespace-pre-wrap text-muted-foreground">
 {`curl -H "X-API-Key: aiidei_your_key_here" \\
   "${baseUrl}/neurons?page=1&per_page=10"
 
@@ -253,12 +253,12 @@ curl -H "X-API-Key: aiidei_your_key_here" \\
           <div className="space-y-1">
             {ENDPOINTS.map((ep, i) => (
               <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg border border-border bg-card hover:border-primary/20 transition-colors">
-                <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded", METHOD_COLORS[ep.method])}>
+                <span className={cn("text-nano font-bold uppercase px-1.5 py-0.5 rounded", METHOD_COLORS[ep.method])}>
                   {ep.method}
                 </span>
-                <code className="text-[10px] font-mono text-foreground">{ep.path}</code>
-                <span className="text-[10px] text-muted-foreground flex-1">{ep.desc}</span>
-                <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground uppercase">{ep.scope}</span>
+                <code className="text-micro font-mono text-foreground">{ep.path}</code>
+                <span className="text-micro text-muted-foreground flex-1">{ep.desc}</span>
+                <span className="text-nano px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground uppercase">{ep.scope}</span>
               </div>
             ))}
           </div>
@@ -272,7 +272,7 @@ curl -H "X-API-Key: aiidei_your_key_here" \\
         {/* Response format */}
         <div className="mt-8 p-4 rounded-xl border border-border bg-card">
           <h3 className="text-xs font-semibold mb-2">{t("api_docs.response_format")}</h3>
-          <pre className="text-[10px] font-mono text-muted-foreground">
+          <pre className="text-micro font-mono text-muted-foreground">
 {`// ${t("api_docs.paginated_lists")}
 {
   "data": [...],

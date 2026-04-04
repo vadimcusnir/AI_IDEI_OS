@@ -166,19 +166,19 @@ export function AdminFeedbackTab() {
       <div className="grid grid-cols-4 gap-3 mb-4">
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <p className="text-lg font-bold font-mono">{stats.total}</p>
-          <p className="text-[9px] text-muted-foreground uppercase">Total</p>
+          <p className="text-nano text-muted-foreground uppercase">Total</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <p className="text-lg font-bold font-mono text-warning">{stats.pending}</p>
-          <p className="text-[9px] text-muted-foreground uppercase">Pending</p>
+          <p className="text-nano text-muted-foreground uppercase">Pending</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <p className="text-lg font-bold font-mono text-destructive">{stats.complaints}</p>
-          <p className="text-[9px] text-muted-foreground uppercase">{t("complaints")}</p>
+          <p className="text-nano text-muted-foreground uppercase">{t("complaints")}</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <p className="text-lg font-bold font-mono text-primary">{stats.avgRating}</p>
-          <p className="text-[9px] text-muted-foreground uppercase">{t("avg_rating")}</p>
+          <p className="text-nano text-muted-foreground uppercase">{t("avg_rating")}</p>
         </div>
       </div>
 
@@ -196,7 +196,7 @@ export function AdminFeedbackTab() {
             key={f.key}
             onClick={() => setFilter(f.key)}
             className={cn(
-              "px-2.5 py-1 rounded-full text-[10px] font-medium transition-colors whitespace-nowrap",
+              "px-2.5 py-1 rounded-full text-micro font-medium transition-colors whitespace-nowrap",
               filter === f.key
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -222,11 +222,11 @@ export function AdminFeedbackTab() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       <span className="text-sm font-medium">{item.title}</span>
-                      <span className="text-[8px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground uppercase">
+                      <span className="text-nano px-1.5 py-0.5 rounded bg-muted text-muted-foreground uppercase">
                         {item.type}
                       </span>
                       <span className={cn(
-                        "text-[8px] px-1.5 py-0.5 rounded uppercase",
+                        "text-nano px-1.5 py-0.5 rounded uppercase",
                         item.status === "pending" ? "bg-warning/10 text-warning" :
                         item.status === "resolved" ? "bg-success/10 text-success" :
                         "bg-primary/10 text-primary"
@@ -234,7 +234,7 @@ export function AdminFeedbackTab() {
                         {item.status}
                       </span>
                       {item.is_public && (
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-success/10 text-success">
+                        <span className="text-nano px-1.5 py-0.5 rounded bg-success/10 text-success">
                           PUBLIC
                         </span>
                       )}
@@ -255,14 +255,14 @@ export function AdminFeedbackTab() {
 
                     {item.admin_response && (
                       <div className="bg-primary/5 border border-primary/10 rounded-lg p-2 mb-2">
-                        <p className="text-[10px] font-semibold text-primary mb-0.5 flex items-center gap-1">
+                        <p className="text-micro font-semibold text-primary mb-0.5 flex items-center gap-1">
                           <CheckCircle2 className="h-3 w-3" /> {t("admin_response_label")}
                         </p>
-                        <p className="text-[11px] text-muted-foreground">{item.admin_response}</p>
+                        <p className="text-dense text-muted-foreground">{item.admin_response}</p>
                       </div>
                     )}
 
-                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground/60">
+                    <div className="flex items-center gap-2 text-micro text-muted-foreground/60">
                       <span>{timeAgo}</span>
                       {item.context_page && <span>• {item.context_page}</span>}
                       <span>• {item.user_id.substring(0, 8)}…</span>
@@ -273,21 +273,21 @@ export function AdminFeedbackTab() {
                         <button
                           key={s.key}
                           onClick={() => updateStatus(item.id, s.key)}
-                          className="text-[9px] px-2 py-0.5 rounded border border-border hover:bg-muted transition-colors"
+                          className="text-nano px-2 py-0.5 rounded border border-border hover:bg-muted transition-colors"
                         >
                           {s.label}
                         </button>
                       ))}
                       <button
                         onClick={() => togglePublic(item.id, item.is_public)}
-                        className="text-[9px] px-2 py-0.5 rounded border border-border hover:bg-muted transition-colors flex items-center gap-1"
+                        className="text-nano px-2 py-0.5 rounded border border-border hover:bg-muted transition-colors flex items-center gap-1"
                       >
                         <Eye className="h-2.5 w-2.5" />
                         {item.is_public ? t("hide") : t("make_public")}
                       </button>
                       <button
                         onClick={() => { setRespondingId(item.id); setResponseText(item.admin_response || ""); }}
-                        className="text-[9px] px-2 py-0.5 rounded border border-primary/30 text-primary hover:bg-primary/10 transition-colors flex items-center gap-1"
+                        className="text-nano px-2 py-0.5 rounded border border-primary/30 text-primary hover:bg-primary/10 transition-colors flex items-center gap-1"
                       >
                         <Send className="h-2.5 w-2.5" /> {t("respond")}
                       </button>

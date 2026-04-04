@@ -37,7 +37,7 @@ export function WorkspaceLayerTabs({ active, onChange, executionActive }: Worksp
           key={layer.id}
           onClick={() => onChange(layer.id)}
           className={cn(
-            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150",
+            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150",
             active === layer.id
               ? "bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))]"
               : "text-muted-foreground/50 hover:text-foreground hover:bg-muted/30"
@@ -68,7 +68,7 @@ export function ExecutionSubTabs({ active, onChange }: { active: string; onChang
           key={tab.id}
           onClick={() => onChange(tab.id)}
           className={cn(
-            "flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] transition-colors",
+            "flex items-center gap-1 px-2.5 py-1 rounded-md text-dense transition-colors",
             active === tab.id ? "bg-muted text-foreground font-medium" : "text-muted-foreground/50 hover:text-foreground"
           )}
         >
@@ -94,7 +94,7 @@ export function KnowledgeSubTabs({ active, onChange }: { active: string; onChang
           key={tab.id}
           onClick={() => onChange(tab.id)}
           className={cn(
-            "flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] transition-colors",
+            "flex items-center gap-1 px-2.5 py-1 rounded-md text-dense transition-colors",
             active === tab.id ? "bg-muted text-foreground font-medium" : "text-muted-foreground/50 hover:text-foreground"
           )}
         >
@@ -120,7 +120,7 @@ export function SystemSubTabs({ active, onChange }: { active: string; onChange: 
           key={tab.id}
           onClick={() => onChange(tab.id)}
           className={cn(
-            "flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] transition-colors",
+            "flex items-center gap-1 px-2.5 py-1 rounded-md text-dense transition-colors",
             active === tab.id ? "bg-muted text-foreground font-medium" : "text-muted-foreground/50 hover:text-foreground"
           )}
         >

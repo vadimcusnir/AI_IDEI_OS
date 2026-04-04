@@ -51,7 +51,7 @@ export function NeuronBundleUpsell({ neuronsSpent, currentBalance, className }: 
               ? t("upsell.low_balance_title", { defaultValue: "Running low on NEURONS" })
               : t("upsell.continue_title", { defaultValue: "Keep the momentum going" })}
           </p>
-          <p className="text-[10px] text-muted-foreground mb-3">
+          <p className="text-micro text-muted-foreground mb-3">
             {t("upsell.spend_context", {
               defaultValue: "You just used {{spent}}N. The {{bundle}} pack ({{neurons}}N) covers ~{{runs}} more runs.",
               spent: neuronsSpent,
@@ -74,7 +74,7 @@ export function NeuronBundleUpsell({ neuronsSpent, currentBalance, className }: 
               })}
             </Button>
             {Number(savingsPerNeuron) > 0 && (
-              <span className="text-[9px] font-mono text-primary bg-primary/10 rounded px-1.5 py-0.5">
+              <span className="text-nano font-mono text-primary bg-primary/10 rounded px-1.5 py-0.5">
                 {t("upsell.save", { defaultValue: "Save {{pct}}%", pct: savingsPerNeuron })}
               </span>
             )}

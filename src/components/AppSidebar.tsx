@@ -232,7 +232,7 @@ export function AppSidebar() {
     return (
       <SidebarGroup key={section.key} className="py-1">
         {!collapsed && (
-          <SidebarGroupLabel className="text-[9px] tracking-[0.15em] font-bold text-muted-foreground/50 select-none px-3 mb-0.5">
+          <SidebarGroupLabel className="text-nano tracking-[0.15em] font-bold text-muted-foreground/50 select-none px-3 mb-0.5">
             {section.label}
           </SidebarGroupLabel>
         )}
@@ -332,7 +332,7 @@ export function AppSidebar() {
         ) : (
           <SidebarGroup>
             {!collapsed && (
-              <SidebarGroupLabel className="text-[9px] tracking-[0.15em] font-bold text-muted-foreground/50">
+              <SidebarGroupLabel className="text-nano tracking-[0.15em] font-bold text-muted-foreground/50">
                 EXPLORE
               </SidebarGroupLabel>
             )}
@@ -363,7 +363,7 @@ export function AppSidebar() {
                 title={isOperator ? "Switch to User Mode" : "Switch to Operator Mode"}
               >
                 <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
-                <span className="text-[10px] font-mono tracking-wide text-muted-foreground group-hover:text-foreground transition-colors">
+                <span className="text-micro font-mono tracking-wide text-muted-foreground group-hover:text-foreground transition-colors">
                   {isOperator ? "OPERATOR" : "USER"} MODE
                 </span>
               </button>
@@ -385,10 +385,10 @@ export function AppSidebar() {
                 className="w-full px-2 py-1 rounded-md hover:bg-muted/50 transition-colors text-left"
               >
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className={cn("text-[9px] font-bold uppercase tracking-wider", tierColor)}>
+                  <span className={cn("text-nano font-bold uppercase tracking-wider", tierColor)}>
                     {tierLabel}
                   </span>
-                  <span className="text-[10px] font-mono tabular-nums text-muted-foreground">
+                  <span className="text-micro font-mono tabular-nums text-muted-foreground">
                     {balanceLoading ? "…" : balance.toLocaleString()}N
                   </span>
                 </div>

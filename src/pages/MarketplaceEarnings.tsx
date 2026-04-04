@@ -129,7 +129,7 @@ export default function MarketplaceEarnings() {
             >
               <div className="flex items-center gap-2 mb-2">
                 <stat.icon className={cn("h-4 w-4", stat.accent ? "text-primary" : "text-muted-foreground")} />
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{stat.label}</span>
+                <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{stat.label}</span>
               </div>
               <p className={cn("text-lg font-bold", stat.accent ? "text-primary" : "text-foreground")}>
                 {stat.value}
@@ -164,7 +164,7 @@ export default function MarketplaceEarnings() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{tx.asset_title}</p>
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-micro text-muted-foreground">
                     {new Date(tx.created_at).toLocaleDateString("ro-RO", { day: "numeric", month: "short", year: "numeric" })}
                   </p>
                 </div>

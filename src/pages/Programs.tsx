@@ -110,7 +110,7 @@ export default function Programs() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="text-base font-bold">{program.name.replace(" OS", "")}</h3>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
+                          <span className="text-micro px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
                             PROGRAM
                           </span>
                         </div>
@@ -124,14 +124,14 @@ export default function Programs() {
                         {/* Included systems */}
                         {includedMms.length > 0 && (
                           <div className="space-y-2 mb-4">
-                            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                            <p className="text-micro font-medium uppercase tracking-wider text-muted-foreground">
                               Include {includedMms.length} sisteme:
                             </p>
                             <div className="flex flex-wrap gap-1.5">
                               {includedMms.map(m => (
                                 <span
                                   key={m.id}
-                                  className="text-[10px] px-2 py-1 rounded-lg border border-border bg-muted/30 text-muted-foreground"
+                                  className="text-micro px-2 py-1 rounded-lg border border-border bg-muted/30 text-muted-foreground"
                                 >
                                   <Layers className="h-2.5 w-2.5 inline mr-1" />
                                   {m.name}
@@ -142,7 +142,7 @@ export default function Programs() {
                         )}
 
                         {/* Stats */}
-                        <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
+                        <div className="flex items-center gap-4 text-micro text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Layers className="h-3 w-3" />
                             {includedMms.length} sisteme
@@ -181,7 +181,7 @@ export default function Programs() {
           )}
 
           {/* Bottom info */}
-          <div className="flex items-center justify-center gap-6 py-4 text-[10px] text-muted-foreground">
+          <div className="flex items-center justify-center gap-6 py-4 text-micro text-muted-foreground">
             <span className="flex items-center gap-1">
               <CheckCircle2 className="h-3 w-3 text-primary/50" />
               Feedback loops automate

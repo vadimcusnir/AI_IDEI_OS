@@ -53,14 +53,14 @@ export function StatsOverview({ stats }: { stats: Stats }) {
       {/* Status + Lifecycle */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-card border border-border rounded-xl p-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("stats.neuron_status")}</h3>
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("stats.neuron_status")}</h3>
           <div className="space-y-2">
             <StatusBar label={t("neuron_editor.status_draft")} value={stats.draftNeurons} total={stats.totalNeurons} className="bg-muted-foreground" />
             <StatusBar label={t("neuron_editor.status_published")} value={stats.publishedNeurons} total={stats.totalNeurons} className="bg-primary" />
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("stats.lifecycle")}</h3>
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("stats.lifecycle")}</h3>
           <div className="space-y-2">
             {Object.entries(stats.lifecycles).sort(([, a], [, b]) => b - a).map(([key, val]) => (
               <StatusBar key={key} label={key} value={val} total={stats.totalNeurons} className="bg-primary/70" />
@@ -78,7 +78,7 @@ export function StatsOverview({ stats }: { stats: Stats }) {
           <div className="bg-card border border-border rounded-xl p-4 space-y-2">
             {Object.entries(stats.categories).sort(([, a], [, b]) => b - a).map(([cat, count]) => (
               <div key={cat} className="flex items-center gap-3">
-                <span className="text-[10px] font-medium w-24 truncate capitalize">{cat.replace("_", " ")}</span>
+                <span className="text-micro font-medium w-24 truncate capitalize">{cat.replace("_", " ")}</span>
                 <div className="flex-1 h-5 bg-muted/50 rounded-full overflow-hidden">
                   <div className={cn("h-full rounded-full", CATEGORY_COLORS[cat] || "bg-primary")} style={{ width: `${(count / maxCat) * 100}%` }} />
                 </div>
@@ -101,7 +101,7 @@ export function StatsOverview({ stats }: { stats: Stats }) {
                 <div className="w-full flex items-end justify-center" style={{ height: "60px" }}>
                   <div className="w-full max-w-[28px] bg-primary/80 rounded-t" style={{ height: `${Math.max((day.count / maxActivity) * 60, day.count > 0 ? 4 : 0)}px` }} />
                 </div>
-                <span className="text-[8px] text-muted-foreground">{new Date(day.date).toLocaleDateString(undefined, { weekday: "narrow" })}</span>
+                <span className="text-nano text-muted-foreground">{new Date(day.date).toLocaleDateString(undefined, { weekday: "narrow" })}</span>
               </div>
             ))}
           </div>
@@ -125,8 +125,8 @@ export function StatsOverview({ stats }: { stats: Stats }) {
             <div className="h-full bg-primary rounded-full" style={{ width: `${stats.creditsEarned > 0 ? (stats.creditsBalance / stats.creditsEarned) * 100 : 100}%` }} />
           </div>
           <div className="flex justify-between mt-2">
-            <span className="text-[10px] text-muted-foreground">{stats.creditsSpent} {t("admin.spent").toLowerCase()}</span>
-            <span className="text-[10px] text-muted-foreground">{stats.creditsEarned} {t("admin.earned").toLowerCase()}</span>
+            <span className="text-micro text-muted-foreground">{stats.creditsSpent} {t("admin.spent").toLowerCase()}</span>
+            <span className="text-micro text-muted-foreground">{stats.creditsEarned} {t("admin.earned").toLowerCase()}</span>
           </div>
         </div>
       </div>
@@ -141,10 +141,10 @@ function KPICard({ icon: Icon, label, value, sub, color }: {
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-2xl font-bold font-mono", color)}>{value}</p>
-      {sub && <p className="text-[10px] text-muted-foreground mt-0.5">{sub}</p>}
+      {sub && <p className="text-micro text-muted-foreground mt-0.5">{sub}</p>}
     </div>
   );
 }
@@ -155,11 +155,11 @@ function StatusBar({ label, value, total, className }: {
   const pct = total > 0 ? (value / total) * 100 : 0;
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[10px] font-medium w-20 truncate capitalize">{label}</span>
+      <span className="text-micro font-medium w-20 truncate capitalize">{label}</span>
       <div className="flex-1 h-3 bg-muted/50 rounded-full overflow-hidden">
         <div className={cn("h-full rounded-full", className)} style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-[10px] font-mono w-6 text-right">{value}</span>
+      <span className="text-micro font-mono w-6 text-right">{value}</span>
     </div>
   );
 }

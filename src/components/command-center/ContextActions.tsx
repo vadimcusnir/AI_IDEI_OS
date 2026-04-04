@@ -133,13 +133,13 @@ export function ContextActions({
       animate={{ opacity: 1, y: 0 }}
       className="flex items-center gap-1.5 px-3 pb-1 overflow-x-auto scrollbar-none"
     >
-      <span className="text-[8px] text-muted-foreground/60 shrink-0 uppercase tracking-wider font-medium">Quick:</span>
+      <span className="text-nano text-muted-foreground/60 shrink-0 uppercase tracking-wider font-medium">Quick:</span>
       {actions.map((action) => (
         <button
           key={action.id}
           onClick={() => action.prompt === "__PIPELINE__" ? onOpenPipeline?.() : onAction(action.prompt)}
           className={cn(
-            "flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-medium transition-all shrink-0",
+            "flex items-center gap-1 px-2 py-0.5 rounded-full border text-nano font-medium transition-all shrink-0",
             action.color,
           )}
         >

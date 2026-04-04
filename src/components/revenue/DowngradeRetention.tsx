@@ -134,7 +134,7 @@ export function DowngradeRetention({ open, onClose, onConfirmCancel, currentTier
           {/* Member duration badge */}
           {stats && stats.memberSinceDays > 30 && (
             <p className="text-center text-xs text-muted-foreground">
-              <Badge variant="outline" className="text-[10px] h-5">
+              <Badge variant="outline" className="text-micro h-5">
                 Member for {stats.memberSinceDays} days
               </Badge>
             </p>

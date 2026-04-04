@@ -76,28 +76,28 @@ export default function SecurityDocs() {
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">{t("security_docs.title")}</h1>
-              <p className="text-[10px] text-muted-foreground">{t("security_docs.subtitle")}</p>
+              <p className="text-micro text-muted-foreground">{t("security_docs.subtitle")}</p>
             </div>
-            <Badge className="ml-auto text-[10px] bg-status-validated/10 text-status-validated border-0">
+            <Badge className="ml-auto text-micro bg-status-validated/10 text-status-validated border-0">
               {t("security_docs.fixed_count", { fixed: fixedCount, total: FINDINGS.length })}
             </Badge>
           </div>
 
           {/* Risk Matrix */}
           <section className="mb-8">
-            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
               <AlertTriangle className="h-3 w-3" /> {t("security_docs.findings_title")}
             </h2>
             <div className="space-y-1.5">
               {FINDINGS.map(f => (
                 <div key={f.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-card border border-border">
-                  <Badge variant="outline" className={cn("text-[8px] px-1.5 py-0 h-4 shrink-0", SEV_COLORS[f.severity])}>
+                  <Badge variant="outline" className={cn("text-nano px-1.5 py-0 h-4 shrink-0", SEV_COLORS[f.severity])}>
                     {f.severity.toUpperCase()}
                   </Badge>
-                  <span className="text-[10px] font-mono text-muted-foreground w-16 shrink-0">{f.id}</span>
+                  <span className="text-micro font-mono text-muted-foreground w-16 shrink-0">{f.id}</span>
                   <span className="text-xs flex-1 min-w-0 truncate">{f.title}</span>
-                  <Badge variant="outline" className="text-[8px] px-1.5 py-0 h-4 shrink-0">{f.category}</Badge>
-                  <span className={cn("text-[10px] font-semibold shrink-0", STATUS_COLORS[f.status])}>
+                  <Badge variant="outline" className="text-nano px-1.5 py-0 h-4 shrink-0">{f.category}</Badge>
+                  <span className={cn("text-micro font-semibold shrink-0", STATUS_COLORS[f.status])}>
                     {f.status === "fixed" ? "✓ Fixed" : f.status === "manual" ? "⚙ Manual" : "⚠ Open"}
                   </span>
                 </div>
@@ -107,7 +107,7 @@ export default function SecurityDocs() {
 
           {/* Threat Model */}
           <section className="mb-8">
-            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
               <Bug className="h-3 w-3" /> {t("security_docs.threat_model_title")}
             </h2>
             <div className="grid gap-3">
@@ -122,8 +122,8 @@ export default function SecurityDocs() {
                       <p className="text-xs font-semibold">{tm.threat}</p>
                     </div>
                     <div className="ml-9 space-y-1">
-                      <p className="text-[10px] text-muted-foreground"><span className="font-medium text-foreground">{t("security_docs.vector")}:</span> {tm.vector}</p>
-                      <p className="text-[10px] text-muted-foreground"><span className="font-medium text-foreground">{t("security_docs.mitigation")}:</span> {tm.mitigation}</p>
+                      <p className="text-micro text-muted-foreground"><span className="font-medium text-foreground">{t("security_docs.vector")}:</span> {tm.vector}</p>
+                      <p className="text-micro text-muted-foreground"><span className="font-medium text-foreground">{t("security_docs.mitigation")}:</span> {tm.mitigation}</p>
                     </div>
                   </div>
                 );
@@ -133,7 +133,7 @@ export default function SecurityDocs() {
 
           {/* Hardening */}
           <section>
-            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
               <ShieldCheck className="h-3 w-3" /> {t("security_docs.hardening_title")}
             </h2>
             <div className="grid gap-2">
@@ -146,7 +146,7 @@ export default function SecurityDocs() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs font-medium">{h.title}</p>
-                      <p className="text-[10px] text-muted-foreground">{h.description}</p>
+                      <p className="text-micro text-muted-foreground">{h.description}</p>
                     </div>
                     <CheckCircle2 className="h-4 w-4 text-status-validated/40 shrink-0 ml-auto" />
                   </div>

@@ -84,15 +84,15 @@ export function NeuronPreviewPane({ neuron, onClose }: Props) {
       <div className="px-4 py-3 border-b border-border/50 shrink-0">
         <h2 className="text-sm font-semibold mb-2 leading-tight">{neuron.title}</h2>
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[neuron.status] || STATUS_COLORS.draft)}>
+          <span className={cn("text-nano font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[neuron.status] || STATUS_COLORS.draft)}>
             {neuron.status}
           </span>
-          <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+          <span className="text-micro text-muted-foreground flex items-center gap-1">
             <Clock className="h-2.5 w-2.5" />
             {new Date(neuron.updated_at).toLocaleDateString("ro-RO")}
           </span>
           {neuron.score > 0 && (
-            <span className="text-[10px] text-primary/60 flex items-center gap-0.5">
+            <span className="text-micro text-primary/60 flex items-center gap-0.5">
               <Brain className="h-2.5 w-2.5" /> {neuron.score}
             </span>
           )}
@@ -100,14 +100,14 @@ export function NeuronPreviewPane({ neuron, onClose }: Props) {
             const cat = CATEGORY_BADGE[neuron.content_category!];
             const CatIcon = cat.icon;
             return (
-              <span className={cn("flex items-center gap-0.5 text-[9px] font-medium px-1.5 py-0.5 rounded-md", cat.color)}>
+              <span className={cn("flex items-center gap-0.5 text-nano font-medium px-1.5 py-0.5 rounded-md", cat.color)}>
                 <CatIcon className="h-2.5 w-2.5" />
                 {cat.label}
               </span>
             );
           })()}
           {neuron.lifecycle && (
-            <span className="text-[9px] text-muted-foreground/50 px-1.5 py-0.5 rounded-md bg-muted">
+            <span className="text-nano text-muted-foreground/50 px-1.5 py-0.5 rounded-md bg-muted">
               {neuron.lifecycle}
             </span>
           )}
@@ -115,13 +115,13 @@ export function NeuronPreviewPane({ neuron, onClose }: Props) {
       </div>
 
       {/* Stats bar */}
-      <div className="px-4 py-2 border-b border-border/50 flex items-center gap-4 text-[10px] text-muted-foreground shrink-0">
+      <div className="px-4 py-2 border-b border-border/50 flex items-center gap-4 text-micro text-muted-foreground shrink-0">
         <span>{blocks.length} blocuri</span>
         <span>{totalChars.toLocaleString()} caractere</span>
         {blockTypes.length > 0 && (
           <div className="flex gap-1 flex-wrap">
             {blockTypes.slice(0, 3).map(t => (
-              <Badge key={t} variant="secondary" className="text-[8px] px-1 py-0">{t}</Badge>
+              <Badge key={t} variant="secondary" className="text-nano px-1 py-0">{t}</Badge>
             ))}
           </div>
         )}
@@ -141,19 +141,19 @@ export function NeuronPreviewPane({ neuron, onClose }: Props) {
           blocks.map(block => (
             <div key={block.id} className="group">
               <div className="flex items-start gap-2">
-                <span className="text-[8px] font-mono text-muted-foreground/40 mt-1 w-4 shrink-0 text-right">
+                <span className="text-nano font-mono text-muted-foreground/40 mt-1 w-4 shrink-0 text-right">
                   {block.position + 1}
                 </span>
                 <div className="flex-1 min-w-0">
                   {block.type !== "text" && block.type !== "markdown" && (
-                    <span className="text-[8px] font-mono uppercase text-primary/40 block mb-0.5">{block.type}</span>
+                    <span className="text-nano font-mono uppercase text-primary/40 block mb-0.5">{block.type}</span>
                   )}
                   <div className={cn(
                     "text-xs leading-relaxed text-foreground/80",
-                    block.type === "code" && "font-mono text-[11px] bg-muted/50 rounded p-2 overflow-x-auto",
+                    block.type === "code" && "font-mono text-dense bg-muted/50 rounded p-2 overflow-x-auto",
                     block.type === "heading" && "font-semibold text-sm",
                     block.type === "quote" && "italic border-l-2 border-primary/30 pl-3",
-                    block.type === "prompt" && "bg-primary/5 rounded p-2 text-[11px]",
+                    block.type === "prompt" && "bg-primary/5 rounded p-2 text-dense",
                   )}>
                     {block.content.length > 500 ? block.content.slice(0, 500) + "…" : block.content}
                   </div>

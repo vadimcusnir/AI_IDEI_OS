@@ -36,12 +36,12 @@ function DeliveryLog({ endpointId }: { endpointId: string }) {
   const { data: deliveries, isLoading } = useWebhookDeliveries(endpointId);
 
   if (isLoading) return <Skeleton className="h-20" />;
-  if (!deliveries?.length) return <p className="text-[10px] text-muted-foreground py-2">No deliveries yet.</p>;
+  if (!deliveries?.length) return <p className="text-micro text-muted-foreground py-2">No deliveries yet.</p>;
 
   return (
     <div className="space-y-1 max-h-48 overflow-y-auto">
       {deliveries.map((d) => (
-        <div key={d.id} className="flex items-center gap-2 p-2 rounded bg-muted/50 text-[10px]">
+        <div key={d.id} className="flex items-center gap-2 p-2 rounded bg-muted/50 text-micro">
           {d.status === "delivered" ? (
             <CheckCircle2 className="h-3 w-3 text-status-validated shrink-0" />
           ) : d.status === "failed" ? (
@@ -51,14 +51,14 @@ function DeliveryLog({ endpointId }: { endpointId: string }) {
           )}
           <span className="font-mono">{d.event_type}</span>
           {d.response_status && (
-            <Badge variant="outline" className="text-[8px] px-1 py-0">{d.response_status}</Badge>
+            <Badge variant="outline" className="text-nano px-1 py-0">{d.response_status}</Badge>
           )}
           <span className="flex-1" />
           <span className="text-muted-foreground">
             {formatDistanceToNow(new Date(d.created_at), { addSuffix: true })}
           </span>
           {d.attempt > 1 && (
-            <Badge variant="outline" className="text-[8px] px-1 py-0">
+            <Badge variant="outline" className="text-nano px-1 py-0">
               <RotateCcw className="h-2 w-2 mr-0.5" />#{d.attempt}
             </Badge>
           )}
@@ -102,7 +102,7 @@ export function WebhookManagement() {
         <h2 className="text-sm font-semibold flex items-center gap-2">
           <Webhook className="h-4 w-4" /> Webhooks
         </h2>
-        <Button size="sm" className="h-7 text-[10px]" onClick={() => setShowCreate(!showCreate)}>
+        <Button size="sm" className="h-7 text-micro" onClick={() => setShowCreate(!showCreate)}>
           <Plus className="h-3 w-3 mr-1" />Add Endpoint
         </Button>
       </div>
@@ -123,14 +123,14 @@ export function WebhookManagement() {
             className="h-8 text-xs"
           />
           <div>
-            <p className="text-[10px] text-muted-foreground mb-1.5">Events to subscribe:</p>
+            <p className="text-micro text-muted-foreground mb-1.5">Events to subscribe:</p>
             <div className="flex flex-wrap gap-1.5">
               {AVAILABLE_EVENTS.map((ev) => (
                 <button
                   key={ev.key}
                   onClick={() => toggleEvent(ev.key)}
                   className={cn(
-                    "px-2 py-1 rounded text-[10px] font-medium border transition-colors",
+                    "px-2 py-1 rounded text-micro font-medium border transition-colors",
                     selectedEvents.includes(ev.key)
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-border text-muted-foreground"
@@ -142,10 +142,10 @@ export function WebhookManagement() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button size="sm" className="h-7 text-[10px]" onClick={handleCreate} disabled={createEndpoint.isPending || !url.trim()}>
+            <Button size="sm" className="h-7 text-micro" onClick={handleCreate} disabled={createEndpoint.isPending || !url.trim()}>
               {createEndpoint.isPending ? "Creating..." : "Create Endpoint"}
             </Button>
-            <Button size="sm" variant="ghost" className="h-7 text-[10px]" onClick={() => setShowCreate(false)}>
+            <Button size="sm" variant="ghost" className="h-7 text-micro" onClick={() => setShowCreate(false)}>
               Cancel
             </Button>
           </div>
@@ -174,17 +174,17 @@ export function WebhookManagement() {
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-mono truncate">{ep.url}</p>
-                    {ep.description && <p className="text-[10px] text-muted-foreground">{ep.description}</p>}
+                    {ep.description && <p className="text-micro text-muted-foreground">{ep.description}</p>}
                   </div>
                   <div className="flex items-center gap-1.5">
                     {ep.failure_count > 0 && (
-                      <Badge variant="outline" className="text-[8px] px-1 py-0 text-destructive border-destructive/30">
+                      <Badge variant="outline" className="text-nano px-1 py-0 text-destructive border-destructive/30">
                         {ep.failure_count} fails
                       </Badge>
                     )}
                     <div className="flex gap-0.5">
                       {ep.events.map((e) => (
-                        <Badge key={e} variant="outline" className="text-[8px] px-1 py-0">{e}</Badge>
+                        <Badge key={e} variant="outline" className="text-nano px-1 py-0">{e}</Badge>
                       ))}
                     </div>
                     <Button
@@ -207,10 +207,10 @@ export function WebhookManagement() {
                   </div>
                 </div>
                 <CollapsibleContent className="mt-3 pt-3 border-t border-border">
-                  <p className="text-[10px] font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Recent Deliveries</p>
+                  <p className="text-micro font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Recent Deliveries</p>
                   <DeliveryLog endpointId={ep.id} />
                   <div className="mt-2 p-2 rounded bg-muted/50">
-                    <p className="text-[9px] text-muted-foreground">
+                    <p className="text-nano text-muted-foreground">
                       Verify signatures with HMAC-SHA256 using your secret. Header: <code className="bg-muted px-1 rounded">X-Webhook-Signature</code>
                     </p>
                   </div>

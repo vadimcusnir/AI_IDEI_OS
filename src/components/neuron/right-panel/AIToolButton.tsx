@@ -25,7 +25,7 @@ export function AIToolButton({ item, onRun, isRunning }: { item: AIToolItem; onR
       )}
       <div className="flex-1 min-w-0">
         <div className="font-medium text-foreground">{item.label}</div>
-        <div className="text-[10px] text-muted-foreground truncate">{item.description}</div>
+        <div className="text-micro text-muted-foreground truncate">{item.description}</div>
       </div>
     </button>
   );

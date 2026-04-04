@@ -74,7 +74,7 @@ export function SavedPipelines({ onExecute }: SavedPipelinesProps) {
       <div className="text-center py-8">
         <BookmarkCheck className="h-8 w-8 mx-auto text-muted-foreground/20 mb-2" />
         <p className="text-xs text-muted-foreground">No saved pipelines yet.</p>
-        <p className="text-[10px] text-muted-foreground/60 mt-1">Create one using the Pipeline Composer above.</p>
+        <p className="text-micro text-muted-foreground/60 mt-1">Create one using the Pipeline Composer above.</p>
       </div>
     );
   }
@@ -103,9 +103,9 @@ export function SavedPipelines({ onExecute }: SavedPipelinesProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <h4 className="text-xs font-bold truncate">{pipeline.name}</h4>
-                  <Badge variant="outline" className="text-[8px] h-4">{steps.length} steps</Badge>
+                  <Badge variant="outline" className="text-nano h-4">{steps.length} steps</Badge>
                   {successRate !== null && (
-                    <Badge variant="outline" className={cn("text-[8px] h-4", successRate > 70 ? "text-status-validated" : "text-amber-500")}>
+                    <Badge variant="outline" className={cn("text-nano h-4", successRate > 70 ? "text-status-validated" : "text-amber-500")}>
                       {successRate}% success
                     </Badge>
                   )}
@@ -115,7 +115,7 @@ export function SavedPipelines({ onExecute }: SavedPipelinesProps) {
                 <div className="flex items-center gap-1 mb-2 overflow-x-auto scrollbar-none">
                   {steps.map((step, i) => (
                     <span key={i} className="flex items-center gap-1 shrink-0">
-                      <span className="text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-md font-medium">
+                      <span className="text-nano bg-muted text-muted-foreground px-1.5 py-0.5 rounded-md font-medium">
                         {step.label}
                       </span>
                       {i < steps.length - 1 && <ChevronRight className="h-2.5 w-2.5 text-muted-foreground/30" />}
@@ -123,7 +123,7 @@ export function SavedPipelines({ onExecute }: SavedPipelinesProps) {
                   ))}
                 </div>
 
-                <div className="flex items-center gap-3 text-[9px] text-muted-foreground">
+                <div className="flex items-center gap-3 text-nano text-muted-foreground">
                   <span className="flex items-center gap-0.5">
                     <Coins className="h-2.5 w-2.5" />
                     {pipeline.estimated_credits}N
@@ -144,7 +144,7 @@ export function SavedPipelines({ onExecute }: SavedPipelinesProps) {
                   <Trash2 className="h-3 w-3" />
                 </Button>
                 <Button
-                  size="sm" className="h-7 text-[10px] gap-1"
+                  size="sm" className="h-7 text-micro gap-1"
                   onClick={() => onExecute(pipeline)}
                 >
                   <Play className="h-3 w-3" /> Run

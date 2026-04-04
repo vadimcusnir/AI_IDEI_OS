@@ -94,7 +94,7 @@ export default function DataPrivacy() {
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mb-10">
         <div className="flex items-center gap-2 mb-3">
           <ShieldCheck className="h-5 w-5 text-primary" />
-          <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+          <span className="text-micro font-mono uppercase tracking-widest text-muted-foreground">
             {t("data_privacy.legal_doc")}
           </span>
         </div>

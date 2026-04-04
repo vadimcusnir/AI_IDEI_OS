@@ -60,7 +60,7 @@ export function FinOpsTab() {
       {/* Cost by Provider */}
       <div className="bg-card border border-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
             <DollarSign className="h-3 w-3" /> Cost by Provider
           </h3>
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={reload} disabled={loading}>
@@ -73,10 +73,10 @@ export function FinOpsTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Provider</TableHead>
-                <TableHead className="text-[10px] text-right">Measured</TableHead>
-                <TableHead className="text-[10px] text-right">Estimated</TableHead>
-                <TableHead className="text-[10px] text-right">Total USD</TableHead>
+                <TableHead className="text-micro">Provider</TableHead>
+                <TableHead className="text-micro text-right">Measured</TableHead>
+                <TableHead className="text-micro text-right">Estimated</TableHead>
+                <TableHead className="text-micro text-right">Total USD</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -95,7 +95,7 @@ export function FinOpsTab() {
 
       {/* Cost by Service */}
       <div className="bg-card border border-border rounded-xl p-4">
-        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-4">
+        <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-4">
           <BarChart3 className="h-3 w-3" /> Cost by Service
         </h3>
         {costByService.length === 0 ? (
@@ -104,10 +104,10 @@ export function FinOpsTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Service</TableHead>
-                <TableHead className="text-[10px] text-right">Entries</TableHead>
-                <TableHead className="text-[10px] text-right">Credits</TableHead>
-                <TableHead className="text-[10px] text-right">USD</TableHead>
+                <TableHead className="text-micro">Service</TableHead>
+                <TableHead className="text-micro text-right">Entries</TableHead>
+                <TableHead className="text-micro text-right">Credits</TableHead>
+                <TableHead className="text-micro text-right">USD</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -126,7 +126,7 @@ export function FinOpsTab() {
 
       {/* Recent cost entries */}
       <div className="bg-card border border-border rounded-xl p-4">
-        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-4">
+        <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-4">
           <Layers className="h-3 w-3" /> Recent Cost Entries
         </h3>
         {costs.length === 0 ? (
@@ -136,11 +136,11 @@ export function FinOpsTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">Type</TableHead>
-                  <TableHead className="text-[10px]">Provider</TableHead>
-                  <TableHead className="text-[10px]">Category</TableHead>
-                  <TableHead className="text-[10px] text-right">USD</TableHead>
-                  <TableHead className="text-[10px]">When</TableHead>
+                  <TableHead className="text-micro">Type</TableHead>
+                  <TableHead className="text-micro">Provider</TableHead>
+                  <TableHead className="text-micro">Category</TableHead>
+                  <TableHead className="text-micro text-right">USD</TableHead>
+                  <TableHead className="text-micro">When</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -149,10 +149,10 @@ export function FinOpsTab() {
                     <TableCell className="text-xs font-mono">{c.cost_type}</TableCell>
                     <TableCell className="text-xs font-mono">{c.provider_key || "—"}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-[9px]">{c.cost_category}</Badge>
+                      <Badge variant="outline" className="text-nano">{c.cost_category}</Badge>
                     </TableCell>
                     <TableCell className="text-xs font-mono text-right">${c.amount_usd.toFixed(4)}</TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground">
+                    <TableCell className="text-micro text-muted-foreground">
                       {formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}
                     </TableCell>
                   </TableRow>
@@ -171,7 +171,7 @@ function KPI({ icon: Icon, label, value, accent }: { icon: React.ElementType; la
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center gap-1.5 mb-2">
         <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <span className={cn("text-xl font-bold font-mono", accent)}>{value}</span>
     </div>

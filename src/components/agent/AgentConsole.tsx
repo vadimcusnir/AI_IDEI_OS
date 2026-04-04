@@ -388,7 +388,7 @@ export function AgentConsole() {
           </div>
           <div>
             <p className="text-xs font-bold">{t("common:knowledge_os_agent")}</p>
-            <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
+            <div className="flex items-center gap-2 text-nano text-muted-foreground">
               <span>{totalNeurons} {t("common:neurons_label")}</span>
               <span>·</span>
               <span>{totalEpisodes} {t("common:episodes_label")}</span>
@@ -423,7 +423,7 @@ export function AgentConsole() {
           >
             <div className="bg-muted/30 px-4 py-3 max-h-48 overflow-y-auto space-y-1">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">
                   {t("common:previous_sessions")} {isLoadingSessions && <Loader2 className="inline h-2.5 w-2.5 animate-spin ml-1" />}
                 </p>
                 <button onClick={() => setShowHistory(false)} className="text-muted-foreground hover:text-foreground">
@@ -431,7 +431,7 @@ export function AgentConsole() {
                 </button>
               </div>
               {sessions.length === 0 && (
-                <p className="text-[10px] text-muted-foreground">{t("common:no_saved_sessions")}</p>
+                <p className="text-micro text-muted-foreground">{t("common:no_saved_sessions")}</p>
               )}
               {sessions.map(s => (
                 <button
@@ -443,8 +443,8 @@ export function AgentConsole() {
                   )}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] truncate">{s.last_message || "Session"}</p>
-                    <p className="text-[8px] text-muted-foreground">
+                    <p className="text-micro truncate">{s.last_message || "Session"}</p>
+                    <p className="text-nano text-muted-foreground">
                       {new Date(s.created_at).toLocaleDateString()} · {s.message_count} msgs
                     </p>
                   </div>
@@ -475,7 +475,7 @@ export function AgentConsole() {
             transition={{ delay: 0.15 }}
             className="space-y-2 mt-2"
           >
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-1">
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground px-1">
               Suggested next actions
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -490,7 +490,7 @@ export function AgentConsole() {
                   </div>
                   <div>
                     <p className="text-xs font-medium">{s.label}</p>
-                    <p className="text-[10px] text-muted-foreground line-clamp-2">{s.description}</p>
+                    <p className="text-micro text-muted-foreground line-clamp-2">{s.description}</p>
                   </div>
                 </button>
               ))}
@@ -508,7 +508,7 @@ export function AgentConsole() {
           >
             {/* Command Pack Selector */}
             <div className="space-y-2">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-1">
+              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground px-1">
                 Choose your role
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -544,7 +544,7 @@ export function AgentConsole() {
                     </div>
                     <div>
                       <p className="text-xs font-medium">{qp.label}</p>
-                      <p className="text-[10px] text-muted-foreground line-clamp-2">{qp.prompt}</p>
+                      <p className="text-micro text-muted-foreground line-clamp-2">{qp.prompt}</p>
                     </div>
                   </button>
                 ))}
@@ -562,7 +562,7 @@ export function AgentConsole() {
                     </div>
                     <div>
                       <p className="text-xs font-medium">{hint.label}</p>
-                      <p className="text-[10px] text-muted-foreground truncate max-w-[180px]">{hint.example}</p>
+                      <p className="text-micro text-muted-foreground truncate max-w-[180px]">{hint.example}</p>
                     </div>
                   </button>
                 ))}
@@ -579,7 +579,7 @@ export function AgentConsole() {
             <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-3 w-3 animate-spin text-primary" />
-                <span className="text-[10px] text-muted-foreground">{t("common:processing")}</span>
+                <span className="text-micro text-muted-foreground">{t("common:processing")}</span>
               </div>
             </div>
           </div>
@@ -591,7 +591,7 @@ export function AgentConsole() {
       {files.length > 0 && (
         <div className="px-4 py-2 flex gap-2 flex-wrap border-t border-border">
           {files.map((f, i) => (
-            <div key={i} className="flex items-center gap-1.5 bg-muted rounded-lg px-2.5 py-1.5 text-[10px]">
+            <div key={i} className="flex items-center gap-1.5 bg-muted rounded-lg px-2.5 py-1.5 text-micro">
               <Paperclip className="h-3 w-3 text-muted-foreground" />
               <span className="truncate max-w-[120px]">{f.name}</span>
               <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground">
@@ -717,7 +717,7 @@ function AgentBubble({
         {isUser ? (
           <p className="whitespace-pre-wrap">{msg.content}</p>
         ) : (
-          <div className="prose prose-xs dark:prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2 [&_h1]:text-sm [&_h2]:text-xs [&_h3]:text-xs [&_li]:text-xs [&_code]:text-[10px] [&_code]:bg-background/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded">
+          <div className="prose prose-xs dark:prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2 [&_h1]:text-sm [&_h2]:text-xs [&_h3]:text-xs [&_li]:text-xs [&_code]:text-micro [&_code]:bg-background/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded">
             <ReactMarkdown>{msg.content}</ReactMarkdown>
           </div>
         )}

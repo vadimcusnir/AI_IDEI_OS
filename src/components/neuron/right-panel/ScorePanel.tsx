@@ -16,7 +16,7 @@ export function ScorePanel({ neuronScore, formatStats }: ScorePanelProps) {
   return (
     <div className="px-3 py-3 border-b border-border">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("neuron_editor.neuron_score")}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("neuron_editor.neuron_score")}</span>
         <span className="text-lg font-bold text-primary">{neuronScore}</span>
       </div>
       <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-2">
@@ -31,7 +31,7 @@ export function ScorePanel({ neuronScore, formatStats }: ScorePanelProps) {
         ].map(s => (
           <div key={s.label} className="text-center">
             <div className={cn("text-sm font-bold", s.color)}>{s.value}</div>
-            <div className="text-[8px] text-muted-foreground">{s.label}</div>
+            <div className="text-nano text-muted-foreground">{s.label}</div>
           </div>
         ))}
       </div>

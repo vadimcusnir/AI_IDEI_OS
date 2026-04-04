@@ -187,7 +187,7 @@ export default function Credits() {
           <div className="flex items-center gap-3">
             <h1 className="text-lg font-bold tracking-tight">{t("credits.title")}</h1>
             <span className={cn(
-              "text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
+              "text-micro font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
               balanceHealth === "healthy" ? "bg-status-validated/15 text-status-validated" :
               balanceHealth === "warning" ? "bg-primary/15 text-primary" :
               "bg-destructive/15 text-destructive"
@@ -275,7 +275,7 @@ export default function Credits() {
           {/* Main balance */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("credits.current_balance")}</p>
+              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("credits.current_balance")}</p>
               <div className={cn(
                 "h-10 w-10 rounded-xl flex items-center justify-center",
                 balanceHealth === "healthy" ? "bg-status-validated/10" :
@@ -294,15 +294,15 @@ export default function Credits() {
             </div>
             <div className="flex gap-4">
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.earned")}</p>
+                <p className="text-nano uppercase tracking-wider text-muted-foreground">{t("credits.earned")}</p>
                 <p className="text-xs font-bold font-mono text-status-validated">+{credits?.total_earned ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.spent")}</p>
+                <p className="text-nano uppercase tracking-wider text-muted-foreground">{t("credits.spent")}</p>
                 <p className="text-xs font-bold font-mono text-destructive">-{credits?.total_spent ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("credits.utilization")}</p>
+                <p className="text-nano uppercase tracking-wider text-muted-foreground">{t("credits.utilization")}</p>
                 <p className="text-xs font-bold font-mono">{utilization}%</p>
               </div>
             </div>
@@ -310,9 +310,9 @@ export default function Credits() {
 
           {/* Quick stats */}
           <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("credits.transactions")}</p>
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("credits.transactions")}</p>
             <span className="text-2xl font-bold font-mono">{transactions.length}</span>
-            <p className="text-[10px] text-muted-foreground mt-1">
+            <p className="text-micro text-muted-foreground mt-1">
               {transactions.filter(t => {
                 const d = new Date(t.created_at);
                 const now = new Date();
@@ -322,9 +322,9 @@ export default function Credits() {
           </div>
 
           <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("credits.services_used")}</p>
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("credits.services_used")}</p>
             <span className="text-2xl font-bold font-mono">{Object.keys(serviceStats).length}</span>
-            <p className="text-[10px] text-muted-foreground mt-1">
+            <p className="text-micro text-muted-foreground mt-1">
               {transactions.filter(t => t.type === "spend").length} {t("credits.executions")}
             </p>
           </div>
@@ -344,7 +344,7 @@ export default function Credits() {
         {/* Service consumption breakdown */}
         {Object.keys(serviceStats).length > 0 && (
           <div className="mb-6">
-            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2.5 flex items-center gap-1.5">
+            <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2.5 flex items-center gap-1.5">
               <BarChart3 className="h-3 w-3" /> {t("credits.consumption_per_service")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -354,7 +354,7 @@ export default function Credits() {
                   <div key={name} className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-border bg-card">
                     <div className="min-w-0">
                       <p className="text-xs font-medium truncate">{name}</p>
-                      <p className="text-[10px] text-muted-foreground">{stats.count} execution{stats.count !== 1 ? "s" : ""}</p>
+                      <p className="text-micro text-muted-foreground">{stats.count} execution{stats.count !== 1 ? "s" : ""}</p>
                     </div>
                     <span className="text-sm font-mono font-bold text-destructive shrink-0 ml-2">-{stats.total}</span>
                   </div>
@@ -366,7 +366,7 @@ export default function Credits() {
         {/* Transaction history */}
         <div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-3">
-            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 shrink-0">
+            <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 shrink-0">
               {t("credits.transaction_history")}
               <span className="text-muted-foreground/40 font-normal">{filteredTx.length}</span>
             </h2>
@@ -400,7 +400,7 @@ export default function Credits() {
                   key={f.value}
                   onClick={() => setTxFilter(f.value)}
                   className={cn(
-                    "px-2 py-1 rounded text-[10px] font-medium transition-colors",
+                    "px-2 py-1 rounded text-micro font-medium transition-colors",
                     txFilter === f.value ? "bg-[hsl(var(--gold-oxide)/0.1)] text-[hsl(var(--gold-oxide))]" : "text-muted-foreground/60 hover:text-foreground"
                   )}
                 >
@@ -416,7 +416,7 @@ export default function Credits() {
               {transactions.length === 0 ? (
                 <>
                    <p className="text-sm text-muted-foreground mb-1">{t("credits.no_transactions")}</p>
-                  <p className="text-[10px] text-muted-foreground/60">{t("credits.no_transactions_hint")}</p>
+                  <p className="text-micro text-muted-foreground/60">{t("credits.no_transactions_hint")}</p>
                 </>
               ) : (
                 <>
@@ -441,7 +441,7 @@ export default function Credits() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium truncate">{tx.description}</p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-micro text-muted-foreground">
                         {new Date(tx.created_at).toLocaleString()} · <span className="uppercase">{t(cfg.labelKey)}</span>
                       </p>
                     </div>

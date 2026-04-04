@@ -74,7 +74,7 @@ export function PipelineIndicator() {
         <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
           <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${(completedCount / STAGES.length) * 100}%` }} />
         </div>
-        <span className="text-[9px] font-mono text-muted-foreground">{completedCount}/{STAGES.length}</span>
+        <span className="text-nano font-mono text-muted-foreground">{completedCount}/{STAGES.length}</span>
       </div>
       {STAGES.map((stage, i) => {
         const done = stage.check(stats);
@@ -94,11 +94,11 @@ export function PipelineIndicator() {
                 )}>
                   {done ? <Check className="h-3 w-3" /> : <stage.icon className="h-3 w-3" />}
                 </div>
-                <span className={cn("text-[11px]", done && "font-medium")}>{stage.label}</span>
+                <span className={cn("text-dense", done && "font-medium")}>{stage.label}</span>
                 {i < STAGES.length - 1 && <div className={cn("ml-auto w-3 h-px", done ? "bg-primary/30" : "bg-border")} />}
               </button>
             </TooltipTrigger>
-            <TooltipContent side="right" className="text-[10px] max-w-[200px]">
+            <TooltipContent side="right" className="text-micro max-w-[200px]">
               {stage.description}
               {done && " ✓"}
             </TooltipContent>
@@ -153,7 +153,7 @@ export function CompactPipelineIndicator() {
                   {done ? <Check className="h-2.5 w-2.5" /> : <stage.icon className="h-2.5 w-2.5" />}
                 </div>
                 <span className={cn(
-                  "text-[9px] hidden md:inline transition-colors",
+                  "text-nano hidden md:inline transition-colors",
                   done ? "text-primary font-medium" : "text-muted-foreground group-hover:text-foreground"
                 )}>{stage.label}</span>
                 {i < STAGES.length - 1 && (
@@ -161,13 +161,13 @@ export function CompactPipelineIndicator() {
                 )}
               </button>
             </TooltipTrigger>
-            <TooltipContent className="text-[10px]">
+            <TooltipContent className="text-micro">
               {done ? `✓ ${stage.description}` : stage.description}
             </TooltipContent>
           </Tooltip>
         );
       })}
-      <span className="text-[9px] font-mono text-muted-foreground ml-1">{completedCount}/{STAGES.length}</span>
+      <span className="text-nano font-mono text-muted-foreground ml-1">{completedCount}/{STAGES.length}</span>
     </div>
   );
 }

@@ -71,7 +71,7 @@ export function ConsumptionAnalytics({ transactions }: ConsumptionAnalyticsProps
           <BarChart3 className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold">Consumption Analytics</h3>
         </div>
-        <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-3 text-micro text-muted-foreground">
           <span>Week: <strong className="text-foreground font-mono">{analytics.weekTotal.toLocaleString()}N</strong></span>
           <span>Avg: <strong className="text-foreground font-mono">{analytics.dailyAvg}N/day</strong></span>
         </div>
@@ -89,7 +89,7 @@ export function ConsumptionAnalytics({ transactions }: ConsumptionAnalyticsProps
 
       {/* Daily velocity chart */}
       <div className="mb-5">
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">7-Day Velocity</p>
+        <p className="text-micro uppercase tracking-wider text-muted-foreground mb-2">7-Day Velocity</p>
         <div className="flex items-end gap-1 h-16">
           {analytics.dailySpend.map((v, i) => {
             const maxDay = Math.max(...analytics.dailySpend, 1);
@@ -104,7 +104,7 @@ export function ConsumptionAnalytics({ transactions }: ConsumptionAnalyticsProps
                   style={{ height: `${h}%` }}
                   title={`${dayLabels[i]}: ${v}N`}
                 />
-                <span className="text-[8px] text-muted-foreground/60">{dayLabels[i]}</span>
+                <span className="text-nano text-muted-foreground/60">{dayLabels[i]}</span>
               </div>
             );
           })}
@@ -112,13 +112,13 @@ export function ConsumptionAnalytics({ transactions }: ConsumptionAnalyticsProps
       </div>
 
       {/* Top services */}
-      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Top Services</p>
+      <p className="text-micro uppercase tracking-wider text-muted-foreground mb-2">Top Services</p>
       <div className="space-y-2">
         {analytics.topServices.map(([name, stats]) => (
           <div key={name} className="flex items-center gap-2">
             <Zap className="h-3 w-3 text-muted-foreground/40 shrink-0" />
             <span className="text-xs truncate flex-1 min-w-0">{name}</span>
-            <span className="text-[10px] text-muted-foreground shrink-0">{stats.count}×</span>
+            <span className="text-micro text-muted-foreground shrink-0">{stats.count}×</span>
             <div className="w-20 h-1.5 bg-muted rounded-full overflow-hidden shrink-0">
               <div
                 className="h-full bg-primary rounded-full transition-all"

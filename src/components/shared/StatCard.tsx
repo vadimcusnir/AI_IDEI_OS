@@ -20,10 +20,10 @@ export function StatCard({ icon: Icon, label, value, sub, accent, alert, highlig
     )}>
       <div className="flex items-center gap-2">
         <Icon className={cn("h-4 w-4 text-muted-foreground", accent)} />
-        <span className="text-[11px] text-muted-foreground truncate">{label}</span>
+        <span className="text-dense text-muted-foreground truncate">{label}</span>
       </div>
       <p className={cn("text-lg font-semibold", accent)}>{value}</p>
-      {sub && <p className="text-[10px] text-muted-foreground">{sub}</p>}
+      {sub && <p className="text-micro text-muted-foreground">{sub}</p>}
     </div>
   );
 }

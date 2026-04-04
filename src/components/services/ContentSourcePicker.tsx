@@ -272,18 +272,18 @@ export function ContentSourcePicker({ onSelect, selectedId }: Props) {
                           <div className="flex items-center gap-2 mb-0.5">
                             <span className="text-xs font-medium truncate">{source.title}</span>
                             {source.category && (
-                              <Badge variant="outline" className="text-[9px] shrink-0">{source.category}</Badge>
+                              <Badge variant="outline" className="text-nano shrink-0">{source.category}</Badge>
                             )}
                           </div>
-                          <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                          <p className="text-dense text-muted-foreground line-clamp-2 leading-relaxed">
                             {source.preview}
                           </p>
                           <div className="flex items-center gap-2 mt-1.5">
-                            <span className="text-[10px] text-muted-foreground/60 flex items-center gap-1">
+                            <span className="text-micro text-muted-foreground/60 flex items-center gap-1">
                               <Clock className="h-2.5 w-2.5" />
                               {new Date(source.date).toLocaleDateString("ro-RO")}
                             </span>
-                            <span className="text-[10px] text-muted-foreground/60">
+                            <span className="text-micro text-muted-foreground/60">
                               {(source.fullContent.length / 1000).toFixed(1)}k caractere
                             </span>
                           </div>
@@ -301,7 +301,7 @@ export function ContentSourcePicker({ onSelect, selectedId }: Props) {
           </ScrollArea>
           {filteredList.length > 5 && (
             <div className="px-3 py-2 border-t border-border text-center">
-              <span className="text-[10px] text-muted-foreground">
+              <span className="text-micro text-muted-foreground">
                 {filteredList.length} {activeTab === "episode" ? "episoade" : "neuroni"} disponibile — scroll pentru mai multe
               </span>
             </div>

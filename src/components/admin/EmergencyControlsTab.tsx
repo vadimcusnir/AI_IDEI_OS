@@ -90,7 +90,7 @@ export function EmergencyControlsTab() {
           <AlertTriangle className="h-5 w-5 text-destructive shrink-0" />
           <div>
             <p className="text-xs font-semibold text-destructive">{activeCount} Emergency Control{activeCount > 1 ? "s" : ""} Active</p>
-            <p className="text-[10px] text-destructive/70">System is operating in restricted mode</p>
+            <p className="text-micro text-destructive/70">System is operating in restricted mode</p>
           </div>
         </div>
       )}
@@ -114,15 +114,15 @@ export function EmergencyControlsTab() {
 
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium">{LABELS[ctrl.control_type] || ctrl.control_type}</p>
-              <p className="text-[10px] text-muted-foreground">{ctrl.reason}</p>
+              <p className="text-micro text-muted-foreground">{ctrl.reason}</p>
               {ctrl.is_active && ctrl.activated_at && (
-                <p className="text-[9px] text-destructive/60 mt-0.5">
+                <p className="text-nano text-destructive/60 mt-0.5">
                   Active since {new Date(ctrl.activated_at).toLocaleString()}
                 </p>
               )}
             </div>
 
-            <Badge variant="outline" className={cn("text-[9px] shrink-0", SCOPE_COLORS[ctrl.affected_scope] || "")}>
+            <Badge variant="outline" className={cn("text-nano shrink-0", SCOPE_COLORS[ctrl.affected_scope] || "")}>
               {ctrl.affected_scope}
             </Badge>
 

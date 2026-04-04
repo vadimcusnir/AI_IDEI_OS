@@ -174,7 +174,7 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
     <div className="flex flex-col h-full">
       {/* Chat header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-ai-border">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-ai-accent flex items-center gap-1.5">
+        <span className="text-micro font-semibold uppercase tracking-wider text-ai-accent flex items-center gap-1.5">
           <MessageCircle className="h-3 w-3" />
           {t("neuron_editor.neuron_chat")}
         </span>
@@ -190,7 +190,7 @@ export function NeuronChatPanel({ blocks, neuronTitle, isVisible }: NeuronChatPa
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center px-4 py-8">
             <Sparkles className="h-6 w-6 text-ai-accent/30 mb-2" />
-            <p className="text-[10px] text-muted-foreground leading-relaxed">
+            <p className="text-micro text-muted-foreground leading-relaxed">
               {t("neuron_editor.chat_hint")}
             </p>
           </div>

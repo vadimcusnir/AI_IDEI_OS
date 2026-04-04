@@ -46,7 +46,7 @@ export function MemoryIntelligenceCard({ className }: { className?: string }) {
           <p className="text-xs font-semibold">
             {t("memory.title", { defaultValue: "Memoria ta AI" })}
           </p>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-micro text-muted-foreground">
             {t("memory.compound_level", {
               defaultValue: "Nivel {{level}} — {{label}}",
               level: profile.compounding_level,
@@ -60,31 +60,31 @@ export function MemoryIntelligenceCard({ className }: { className?: string }) {
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="text-center p-2 rounded-lg bg-muted/30">
           <p className="text-sm font-bold text-foreground">{profile.total_neurons}</p>
-          <p className="text-[9px] text-muted-foreground">Neuroni</p>
+          <p className="text-nano text-muted-foreground">Neuroni</p>
         </div>
         <div className="text-center p-2 rounded-lg bg-muted/30">
           <p className="text-sm font-bold text-foreground">{profile.total_outputs}</p>
-          <p className="text-[9px] text-muted-foreground">Outputs</p>
+          <p className="text-nano text-muted-foreground">Outputs</p>
         </div>
         <div className="text-center p-2 rounded-lg bg-muted/30">
           <p className="text-sm font-bold text-foreground">{profile.total_shares}</p>
-          <p className="text-[9px] text-muted-foreground">Shares</p>
+          <p className="text-nano text-muted-foreground">Shares</p>
         </div>
       </div>
 
       {/* Lock-in Score */}
       <div className="mb-3">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+          <span className="text-micro text-muted-foreground flex items-center gap-1">
             <Lock className="h-2.5 w-2.5" />
             {t("memory.lockin_score", { defaultValue: "Lock-in Score" })}
           </span>
-          <span className="text-[10px] font-mono font-bold text-primary">
+          <span className="text-micro font-mono font-bold text-primary">
             {lockinPct.toFixed(0)}%
           </span>
         </div>
         <Progress value={lockinPct} className="h-1.5" />
-        <p className="text-[9px] text-muted-foreground mt-0.5">
+        <p className="text-nano text-muted-foreground mt-0.5">
           {lockinPct < 30
             ? t("memory.lockin_low", { defaultValue: "Continuă să creezi pentru a crește valoarea contului" })
             : lockinPct < 70
@@ -97,7 +97,7 @@ export function MemoryIntelligenceCard({ className }: { className?: string }) {
       <div className="mb-3">
         <div className="flex items-center gap-1 mb-1">
           <Layers className="h-3 w-3 text-primary/60" />
-          <span className="text-[10px] font-medium">
+          <span className="text-micro font-medium">
             {t("memory.compounding", { defaultValue: "Compounding" })}
           </span>
         </div>
@@ -112,18 +112,18 @@ export function MemoryIntelligenceCard({ className }: { className?: string }) {
             />
           ))}
         </div>
-        <p className="text-[9px] text-muted-foreground mt-0.5">{compoundInfo.description}</p>
+        <p className="text-nano text-muted-foreground mt-0.5">{compoundInfo.description}</p>
       </div>
 
       {/* Top Topics */}
       {profile.top_topics.length > 0 && (
         <div className="mb-3">
-          <p className="text-[10px] text-muted-foreground mb-1">
+          <p className="text-micro text-muted-foreground mb-1">
             {t("memory.top_topics", { defaultValue: "Topicuri principale" })}
           </p>
           <div className="flex flex-wrap gap-1">
             {profile.top_topics.slice(0, 5).map(topic => (
-              <span key={topic} className="text-[9px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+              <span key={topic} className="text-nano px-1.5 py-0.5 rounded bg-primary/10 text-primary">
                 {topic}
               </span>
             ))}
@@ -134,7 +134,7 @@ export function MemoryIntelligenceCard({ className }: { className?: string }) {
       {/* Smart Suggestions */}
       {suggestions.length > 0 && (
         <div>
-          <p className="text-[10px] font-medium text-muted-foreground mb-1.5 flex items-center gap-1">
+          <p className="text-micro font-medium text-muted-foreground mb-1.5 flex items-center gap-1">
             <Sparkles className="h-2.5 w-2.5 text-primary" />
             {t("memory.suggestions", { defaultValue: "Sugestii inteligente" })}
           </p>
@@ -146,7 +146,7 @@ export function MemoryIntelligenceCard({ className }: { className?: string }) {
                 className="w-full flex items-center gap-2 p-1.5 rounded-lg text-left hover:bg-muted/50 transition-colors group"
               >
                 <Target className="h-3 w-3 text-primary/60 shrink-0" />
-                <span className="text-[10px] text-foreground group-hover:text-primary transition-colors flex-1">
+                <span className="text-micro text-foreground group-hover:text-primary transition-colors flex-1">
                   {s.label}
                 </span>
                 <ArrowRight className="h-2.5 w-2.5 text-muted-foreground/30 group-hover:text-primary transition-colors" />

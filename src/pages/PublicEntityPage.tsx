@@ -138,9 +138,9 @@ export default function PublicEntityPage() {
         </Link>
 
         <div className="flex items-center gap-2 mb-3">
-          <Badge variant="secondary" className="text-[10px]">{typeLabel}</Badge>
+          <Badge variant="secondary" className="text-micro">{typeLabel}</Badge>
           {entity.importance_score != null && entity.importance_score > 0.7 && (
-            <Badge variant="outline" className="text-[9px] text-primary border-primary/30">Important</Badge>
+            <Badge variant="outline" className="text-nano text-primary border-primary/30">Important</Badge>
           )}
         </div>
 
@@ -152,7 +152,7 @@ export default function PublicEntityPage() {
           </p>
         )}
 
-        <div className="flex items-center gap-3 text-[10px] text-muted-foreground mb-8">
+        <div className="flex items-center gap-3 text-micro text-muted-foreground mb-8">
           <span>Actualizat: {format(new Date(entity.updated_at), "dd MMM yyyy")}</span>
           {entity.confidence_score != null && (
             <span>Încredere: {Math.round(entity.confidence_score * 100)}%</span>

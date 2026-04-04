@@ -32,7 +32,7 @@ function TemplateCard({ template }: { template: AutomationTemplate }) {
     >
       <div className="flex items-start justify-between mb-3">
         <h3 className="font-semibold text-foreground text-sm">{template.name}</h3>
-        <Badge variant="outline" className="text-[10px] shrink-0">
+        <Badge variant="outline" className="text-micro shrink-0">
           {template.platform === "both" ? "Zapier + Make" : template.platform}
         </Badge>
       </div>
@@ -43,7 +43,7 @@ function TemplateCard({ template }: { template: AutomationTemplate }) {
       {/* Flow visualization */}
       <div className="space-y-2 mb-4">
         <div className="flex items-center gap-2 text-xs">
-          <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px]">
+          <Badge className="bg-primary/10 text-primary border-primary/20 text-micro">
             TRIGGER
           </Badge>
           <span className="text-foreground">{template.trigger.app}</span>
@@ -59,7 +59,7 @@ function TemplateCard({ template }: { template: AutomationTemplate }) {
       </div>
 
       <div className="flex items-center justify-between pt-3 border-t border-border">
-        <p className="text-[10px] text-muted-foreground max-w-[70%]">{template.useCase}</p>
+        <p className="text-micro text-muted-foreground max-w-[70%]">{template.useCase}</p>
         <Button size="sm" variant="outline" className="text-xs h-7">
           Use Template
         </Button>

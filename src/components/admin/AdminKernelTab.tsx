@@ -84,16 +84,16 @@ export function AdminKernelTab() {
         </div>
         <div>
           <h2 className="text-sm font-bold">Kernel Registry Control</h2>
-          <p className="text-[10px] text-muted-foreground">CRUD on service contracts, prompts, deliverables & release gates</p>
+          <p className="text-micro text-muted-foreground">CRUD on service contracts, prompts, deliverables & release gates</p>
         </div>
       </div>
 
       <Tabs value={subTab} onValueChange={setSubTab}>
         <TabsList className="grid grid-cols-4 w-full max-w-lg">
-          <TabsTrigger value="units" className="text-[10px] gap-1"><Package className="h-3 w-3" /> Units</TabsTrigger>
-          <TabsTrigger value="prompts" className="text-[10px] gap-1"><Lock className="h-3 w-3" /> Vault</TabsTrigger>
-          <TabsTrigger value="deliverables" className="text-[10px] gap-1"><FileText className="h-3 w-3" /> Deliverables</TabsTrigger>
-          <TabsTrigger value="gates" className="text-[10px] gap-1"><ShieldCheck className="h-3 w-3" /> Gates</TabsTrigger>
+          <TabsTrigger value="units" className="text-micro gap-1"><Package className="h-3 w-3" /> Units</TabsTrigger>
+          <TabsTrigger value="prompts" className="text-micro gap-1"><Lock className="h-3 w-3" /> Vault</TabsTrigger>
+          <TabsTrigger value="deliverables" className="text-micro gap-1"><FileText className="h-3 w-3" /> Deliverables</TabsTrigger>
+          <TabsTrigger value="gates" className="text-micro gap-1"><ShieldCheck className="h-3 w-3" /> Gates</TabsTrigger>
         </TabsList>
 
         <TabsContent value="units"><ServiceUnitsPanel /></TabsContent>
@@ -153,7 +153,7 @@ function ServiceUnitsPanel() {
         <Button variant="outline" size="sm" onClick={load} className="gap-1 text-xs h-8">
           <RefreshCw className="h-3 w-3" /> Refresh
         </Button>
-        <Badge variant="secondary" className="text-[9px]">{total} units</Badge>
+        <Badge variant="secondary" className="text-nano">{total} units</Badge>
       </div>
 
       {loading ? (
@@ -163,27 +163,27 @@ function ServiceUnitsPanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Name</TableHead>
-                <TableHead className="text-[10px]">Level</TableHead>
-                <TableHead className="text-[10px]">Output</TableHead>
-                <TableHead className="text-[10px]">Role</TableHead>
-                <TableHead className="text-[10px]">Cost</TableHead>
-                <TableHead className="text-[10px]">Status</TableHead>
-                <TableHead className="text-[10px] text-right">Actions</TableHead>
+                <TableHead className="text-micro">Name</TableHead>
+                <TableHead className="text-micro">Level</TableHead>
+                <TableHead className="text-micro">Output</TableHead>
+                <TableHead className="text-micro">Role</TableHead>
+                <TableHead className="text-micro">Cost</TableHead>
+                <TableHead className="text-micro">Status</TableHead>
+                <TableHead className="text-micro text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {units.map(u => (
                 <TableRow key={u.id}>
                   <TableCell className="text-xs font-medium max-w-[200px] truncate">{u.name}</TableCell>
-                  <TableCell><Badge variant="outline" className="text-[9px]">{u.level}</Badge></TableCell>
-                  <TableCell className="text-[10px] text-muted-foreground max-w-[150px] truncate">{u.single_output}</TableCell>
-                  <TableCell className="text-[10px]">{u.role}</TableCell>
-                  <TableCell className="text-[10px] font-mono">{u.neurons_cost}N</TableCell>
+                  <TableCell><Badge variant="outline" className="text-nano">{u.level}</Badge></TableCell>
+                  <TableCell className="text-micro text-muted-foreground max-w-[150px] truncate">{u.single_output}</TableCell>
+                  <TableCell className="text-micro">{u.role}</TableCell>
+                  <TableCell className="text-micro font-mono">{u.neurons_cost}N</TableCell>
                   <TableCell>
                     <Badge
                       variant={u.status === "active" ? "default" : u.status === "archived" ? "secondary" : "outline"}
-                      className="text-[9px]"
+                      className="text-nano"
                     >
                       {u.status}
                     </Badge>
@@ -221,12 +221,12 @@ function ServiceUnitsPanel() {
 
       {/* Pagination */}
       <div className="flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground">
+        <span className="text-micro text-muted-foreground">
           {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total}
         </span>
         <div className="flex gap-1">
-          <Button variant="outline" size="sm" className="h-7 text-[10px]" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
-          <Button variant="outline" size="sm" className="h-7 text-[10px]" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(p => p + 1)}>Next</Button>
+          <Button variant="outline" size="sm" className="h-7 text-micro" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
+          <Button variant="outline" size="sm" className="h-7 text-micro" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(p => p + 1)}>Next</Button>
         </div>
       </div>
 
@@ -266,14 +266,14 @@ function EditUnitDialog({ unit, onClose, onSaved }: { unit: ServiceUnit; onClose
           <DialogTitle className="text-sm">Edit Service Unit</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
-          <div><Label className="text-[10px]">Name</Label><Input value={name} onChange={e => setName(e.target.value)} className="h-8 text-xs" /></div>
-          <div><Label className="text-[10px]">Single Output</Label><Input value={output} onChange={e => setOutput(e.target.value)} className="h-8 text-xs" /></div>
-          <div><Label className="text-[10px]">Single Function</Label><Input value={func} onChange={e => setFunc(e.target.value)} className="h-8 text-xs" /></div>
-          <div><Label className="text-[10px]">Mechanism</Label><Input value={mechanism} onChange={e => setMechanism(e.target.value)} className="h-8 text-xs" /></div>
+          <div><Label className="text-micro">Name</Label><Input value={name} onChange={e => setName(e.target.value)} className="h-8 text-xs" /></div>
+          <div><Label className="text-micro">Single Output</Label><Input value={output} onChange={e => setOutput(e.target.value)} className="h-8 text-xs" /></div>
+          <div><Label className="text-micro">Single Function</Label><Input value={func} onChange={e => setFunc(e.target.value)} className="h-8 text-xs" /></div>
+          <div><Label className="text-micro">Mechanism</Label><Input value={mechanism} onChange={e => setMechanism(e.target.value)} className="h-8 text-xs" /></div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label className="text-[10px]">Neurons Cost</Label><Input type="number" value={cost} onChange={e => setCost(Number(e.target.value))} className="h-8 text-xs" /></div>
+            <div><Label className="text-micro">Neurons Cost</Label><Input type="number" value={cost} onChange={e => setCost(Number(e.target.value))} className="h-8 text-xs" /></div>
             <div>
-              <Label className="text-[10px]">Status</Label>
+              <Label className="text-micro">Status</Label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -323,7 +323,7 @@ function PromptVaultPanel() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <Badge variant="secondary" className="text-[9px]">{total} prompts</Badge>
+        <Badge variant="secondary" className="text-nano">{total} prompts</Badge>
         <Button variant="outline" size="sm" onClick={load} className="gap-1 text-xs h-8 ml-auto">
           <RefreshCw className="h-3 w-3" /> Refresh
         </Button>
@@ -336,26 +336,26 @@ function PromptVaultPanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Prompt ID</TableHead>
-                <TableHead className="text-[10px]">Purpose</TableHead>
-                <TableHead className="text-[10px]">Scope</TableHead>
-                <TableHead className="text-[10px]">Version</TableHead>
-                <TableHead className="text-[10px]">Created</TableHead>
-                <TableHead className="text-[10px] text-right">Visibility</TableHead>
+                <TableHead className="text-micro">Prompt ID</TableHead>
+                <TableHead className="text-micro">Purpose</TableHead>
+                <TableHead className="text-micro">Scope</TableHead>
+                <TableHead className="text-micro">Version</TableHead>
+                <TableHead className="text-micro">Created</TableHead>
+                <TableHead className="text-micro text-right">Visibility</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {entries.map(e => (
                 <TableRow key={e.prompt_id}>
-                  <TableCell className="text-[10px] font-mono">{e.prompt_id.slice(0, 8)}…</TableCell>
+                  <TableCell className="text-micro font-mono">{e.prompt_id.slice(0, 8)}…</TableCell>
                   <TableCell className="text-xs max-w-[200px] truncate">{e.purpose}</TableCell>
                   <TableCell>
-                    <Badge variant={e.access_scope === "admin" ? "destructive" : "outline"} className="text-[9px]">
+                    <Badge variant={e.access_scope === "admin" ? "destructive" : "outline"} className="text-nano">
                       {e.access_scope}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-[10px] font-mono">v{e.version}</TableCell>
-                  <TableCell className="text-[10px] text-muted-foreground">
+                  <TableCell className="text-micro font-mono">v{e.version}</TableCell>
+                  <TableCell className="text-micro text-muted-foreground">
                     {new Date(e.created_at).toLocaleDateString("ro-RO")}
                   </TableCell>
                   <TableCell className="text-right">
@@ -374,10 +374,10 @@ function PromptVaultPanel() {
       )}
 
       <div className="flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground">{page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total}</span>
+        <span className="text-micro text-muted-foreground">{page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total}</span>
         <div className="flex gap-1">
-          <Button variant="outline" size="sm" className="h-7 text-[10px]" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
-          <Button variant="outline" size="sm" className="h-7 text-[10px]" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(p => p + 1)}>Next</Button>
+          <Button variant="outline" size="sm" className="h-7 text-micro" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
+          <Button variant="outline" size="sm" className="h-7 text-micro" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(p => p + 1)}>Next</Button>
         </div>
       </div>
     </div>
@@ -409,7 +409,7 @@ function DeliverablesPanel() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <Badge variant="secondary" className="text-[9px]">{total} contracts</Badge>
+        <Badge variant="secondary" className="text-nano">{total} contracts</Badge>
         <Button variant="outline" size="sm" onClick={load} className="gap-1 text-xs h-8 ml-auto">
           <RefreshCw className="h-3 w-3" /> Refresh
         </Button>
@@ -422,21 +422,21 @@ function DeliverablesPanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">ID</TableHead>
-                <TableHead className="text-[10px]">Asset Type</TableHead>
-                <TableHead className="text-[10px]">Reuse Value</TableHead>
-                <TableHead className="text-[10px]">Ownership</TableHead>
-                <TableHead className="text-[10px]">Created</TableHead>
+                <TableHead className="text-micro">ID</TableHead>
+                <TableHead className="text-micro">Asset Type</TableHead>
+                <TableHead className="text-micro">Reuse Value</TableHead>
+                <TableHead className="text-micro">Ownership</TableHead>
+                <TableHead className="text-micro">Created</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {items.map(d => (
                 <TableRow key={d.deliverable_id}>
-                  <TableCell className="text-[10px] font-mono">{d.deliverable_id.slice(0, 8)}…</TableCell>
-                  <TableCell><Badge variant="outline" className="text-[9px]">{d.asset_type}</Badge></TableCell>
-                  <TableCell className="text-[10px]">{d.reuse_value}</TableCell>
-                  <TableCell className="text-[10px]">{d.ownership}</TableCell>
-                  <TableCell className="text-[10px] text-muted-foreground">{new Date(d.created_at).toLocaleDateString("ro-RO")}</TableCell>
+                  <TableCell className="text-micro font-mono">{d.deliverable_id.slice(0, 8)}…</TableCell>
+                  <TableCell><Badge variant="outline" className="text-nano">{d.asset_type}</Badge></TableCell>
+                  <TableCell className="text-micro">{d.reuse_value}</TableCell>
+                  <TableCell className="text-micro">{d.ownership}</TableCell>
+                  <TableCell className="text-micro text-muted-foreground">{new Date(d.created_at).toLocaleDateString("ro-RO")}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -445,10 +445,10 @@ function DeliverablesPanel() {
       )}
 
       <div className="flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground">{page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total}</span>
+        <span className="text-micro text-muted-foreground">{page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total}</span>
         <div className="flex gap-1">
-          <Button variant="outline" size="sm" className="h-7 text-[10px]" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
-          <Button variant="outline" size="sm" className="h-7 text-[10px]" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(p => p + 1)}>Next</Button>
+          <Button variant="outline" size="sm" className="h-7 text-micro" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
+          <Button variant="outline" size="sm" className="h-7 text-micro" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(p => p + 1)}>Next</Button>
         </div>
       </div>
     </div>
@@ -484,8 +484,8 @@ function ReleaseGatePanel() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <Badge variant="secondary" className="text-[9px]">{total} checks</Badge>
-        <Badge variant={passRate >= 80 ? "default" : "destructive"} className="text-[9px]">
+        <Badge variant="secondary" className="text-nano">{total} checks</Badge>
+        <Badge variant={passRate >= 80 ? "default" : "destructive"} className="text-nano">
           {passRate}% pass rate
         </Badge>
         <Button variant="outline" size="sm" onClick={load} className="gap-1 text-xs h-8 ml-auto">
@@ -500,28 +500,28 @@ function ReleaseGatePanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Unit ID</TableHead>
-                <TableHead className="text-[10px]">Atomicity</TableHead>
-                <TableHead className="text-[10px]">Dedup</TableHead>
-                <TableHead className="text-[10px]">Schema</TableHead>
-                <TableHead className="text-[10px]">Monetization</TableHead>
-                <TableHead className="text-[10px]">Root2</TableHead>
-                <TableHead className="text-[10px]">Score</TableHead>
-                <TableHead className="text-[10px]">Status</TableHead>
+                <TableHead className="text-micro">Unit ID</TableHead>
+                <TableHead className="text-micro">Atomicity</TableHead>
+                <TableHead className="text-micro">Dedup</TableHead>
+                <TableHead className="text-micro">Schema</TableHead>
+                <TableHead className="text-micro">Monetization</TableHead>
+                <TableHead className="text-micro">Root2</TableHead>
+                <TableHead className="text-micro">Score</TableHead>
+                <TableHead className="text-micro">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {entries.map(e => (
                 <TableRow key={e.id}>
-                  <TableCell className="text-[10px] font-mono">{e.service_unit_id.slice(0, 8)}…</TableCell>
+                  <TableCell className="text-micro font-mono">{e.service_unit_id.slice(0, 8)}…</TableCell>
                   <TableCell>{e.atomicity_check ? <CheckCircle className="h-3.5 w-3.5 text-status-validated" /> : <XCircle className="h-3.5 w-3.5 text-destructive" />}</TableCell>
                   <TableCell>{e.duplication_check ? <CheckCircle className="h-3.5 w-3.5 text-status-validated" /> : <XCircle className="h-3.5 w-3.5 text-destructive" />}</TableCell>
                   <TableCell>{e.schema_check ? <CheckCircle className="h-3.5 w-3.5 text-status-validated" /> : <XCircle className="h-3.5 w-3.5 text-destructive" />}</TableCell>
                   <TableCell>{e.monetization_check ? <CheckCircle className="h-3.5 w-3.5 text-status-validated" /> : <XCircle className="h-3.5 w-3.5 text-destructive" />}</TableCell>
                   <TableCell>{e.root2_check ? <CheckCircle className="h-3.5 w-3.5 text-status-validated" /> : <XCircle className="h-3.5 w-3.5 text-destructive" />}</TableCell>
-                  <TableCell className="text-[10px] font-mono font-bold">{(e.total_score * 100).toFixed(0)}%</TableCell>
+                  <TableCell className="text-micro font-mono font-bold">{(e.total_score * 100).toFixed(0)}%</TableCell>
                   <TableCell>
-                    <Badge variant={e.approval_status === "approved" ? "default" : "destructive"} className="text-[9px]">
+                    <Badge variant={e.approval_status === "approved" ? "default" : "destructive"} className="text-nano">
                       {e.approval_status}
                     </Badge>
                   </TableCell>
@@ -533,10 +533,10 @@ function ReleaseGatePanel() {
       )}
 
       <div className="flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground">{page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total}</span>
+        <span className="text-micro text-muted-foreground">{page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total}</span>
         <div className="flex gap-1">
-          <Button variant="outline" size="sm" className="h-7 text-[10px]" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
-          <Button variant="outline" size="sm" className="h-7 text-[10px]" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(p => p + 1)}>Next</Button>
+          <Button variant="outline" size="sm" className="h-7 text-micro" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
+          <Button variant="outline" size="sm" className="h-7 text-micro" disabled={(page + 1) * PAGE_SIZE >= total} onClick={() => setPage(p => p + 1)}>Next</Button>
         </div>
       </div>
     </div>

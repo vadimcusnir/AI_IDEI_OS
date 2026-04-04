@@ -110,7 +110,7 @@ export default function Jobs() {
               </div>
               <div>
                 <h1 className="text-lg font-semibold tracking-tight">Production Monitor</h1>
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   Monitorizează producția AI în timp real
                 </p>
               </div>
@@ -118,7 +118,7 @@ export default function Jobs() {
             {runningCount > 0 && (
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
                 <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                <span className="text-[10px] font-semibold text-primary">
+                <span className="text-micro font-semibold text-primary">
                   {runningCount} active
                 </span>
               </div>
@@ -167,7 +167,7 @@ export default function Jobs() {
           <div className="border-t border-border pt-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-foreground">Istoric Producții</h2>
-              <span className="text-[10px] text-muted-foreground font-mono">
+              <span className="text-micro text-muted-foreground font-mono">
                 {historyJobs.length} jobs
               </span>
             </div>
@@ -185,7 +185,7 @@ export default function Jobs() {
                     key={f.value}
                     onClick={() => setStatusFilter(f.value)}
                     className={cn(
-                      "px-2 py-1 rounded text-[10px] font-medium transition-colors",
+                      "px-2 py-1 rounded text-micro font-medium transition-colors",
                       statusFilter === f.value ? "bg-primary/10 text-primary" : "text-muted-foreground/60 hover:text-foreground"
                     )}
                   >
@@ -215,7 +215,7 @@ export default function Jobs() {
               <div className="text-center py-16">
                 <Sparkles className="h-8 w-8 opacity-20 mx-auto mb-3" />
                 <p className="text-sm text-muted-foreground mb-1">{t("jobs.no_jobs")}</p>
-                <p className="text-[10px] text-muted-foreground/60 mb-6">{t("jobs.no_jobs_hint")}</p>
+                <p className="text-micro text-muted-foreground/60 mb-6">{t("jobs.no_jobs_hint")}</p>
                 <Button onClick={() => navigate("/services")} className="gap-1.5">
                   <Sparkles className="h-4 w-4" />
                   {t("jobs.ai_services")}

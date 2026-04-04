@@ -58,7 +58,7 @@ export function StreakCalendar() {
 
   return (
     <div className="bg-card border border-border rounded-xl p-4">
-      <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
+      <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
         <Calendar className="h-3 w-3" /> Activity Calendar
       </h3>
 
@@ -66,7 +66,7 @@ export function StreakCalendar() {
         {/* Day labels */}
         <div className="flex flex-col gap-1 mr-1">
           {dayLabels.map((label, i) => (
-            <span key={i} className="text-[8px] text-muted-foreground/60 h-[14px] flex items-center">
+            <span key={i} className="text-nano text-muted-foreground/60 h-[14px] flex items-center">
               {label}
             </span>
           ))}
@@ -100,7 +100,7 @@ export function StreakCalendar() {
         ))}
       </div>
 
-      <div className="flex items-center gap-3 mt-3 text-[9px] text-muted-foreground">
+      <div className="flex items-center gap-3 mt-3 text-nano text-muted-foreground">
         <div className="flex items-center gap-1">
           <div className="h-2.5 w-2.5 rounded-sm bg-muted/60" />
           <span>Inactive</span>

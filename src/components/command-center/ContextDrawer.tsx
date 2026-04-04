@@ -123,7 +123,7 @@ export function ContextDrawer({
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-semibold tracking-wide transition-colors relative",
+                    "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-micro font-semibold tracking-wide transition-colors relative",
                     activeTab === tab.id
                       ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
                       : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
@@ -180,7 +180,7 @@ export function ContextDrawer({
             className="lg:hidden fixed inset-y-0 right-0 w-[300px] z-50 border-l border-border/20 bg-background shadow-2xl shadow-black/20 overflow-hidden flex flex-col"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/15 bg-muted/20 shrink-0">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Panel</span>
+              <span className="text-micro font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Control Panel</span>
               <button onClick={() => setIsOpen(false)} className="p-1.5 text-muted-foreground/40 hover:text-foreground rounded-lg hover:bg-muted/30 transition-colors">
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -194,7 +194,7 @@ export function ContextDrawer({
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={cn(
-                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-semibold tracking-wide transition-colors relative",
+                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-micro font-semibold tracking-wide transition-colors relative",
                       activeTab === tab.id
                         ? "bg-card text-foreground shadow-sm shadow-black/5 border border-border/30"
                         : "text-muted-foreground/35 hover:text-muted-foreground hover:bg-muted/20"
@@ -250,7 +250,7 @@ function StateTab({ tier, balance, phase, navigate }: {
         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/[0.04] to-transparent rounded-bl-full" />
         
         <div className="flex items-center justify-between mb-3 relative">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">Balance</span>
+          <span className="text-nano text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">Balance</span>
           <div className="flex items-center gap-1.5">
             <SigilCrown
               size={14}
@@ -259,7 +259,7 @@ function StateTab({ tier, balance, phase, navigate }: {
               )}
             />
             <span className={cn(
-              "text-[9px] font-bold uppercase tracking-[0.15em]",
+              "text-nano font-bold uppercase tracking-[0.15em]",
               tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
             )}>
               {(tier || "free").toUpperCase()}
@@ -291,29 +291,29 @@ function StateTab({ tier, balance, phase, navigate }: {
 
       {/* Metrics — clean grid */}
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between text-[11px]">
+        <div className="flex items-center justify-between text-dense">
           <span className="text-muted-foreground/50 flex items-center gap-2">
             <SigilTrend size={13} className="text-muted-foreground/30" />
             Burn rate
           </span>
-          <span className="text-muted-foreground font-mono tabular-nums text-[10px]">~{burnRate} N/task</span>
+          <span className="text-muted-foreground font-mono tabular-nums text-micro">~{burnRate} N/task</span>
         </div>
-        <div className="flex items-center justify-between text-[11px]">
+        <div className="flex items-center justify-between text-dense">
           <span className="text-muted-foreground/50 flex items-center gap-2">
             <SigilTarget size={13} className="text-muted-foreground/30" />
             Runway
           </span>
           <span className={cn(
-            "font-mono tabular-nums text-[10px] font-semibold",
+            "font-mono tabular-nums text-micro font-semibold",
             runway < 10 ? "text-destructive" : "text-foreground"
           )}>
             ~{runway} tasks
           </span>
         </div>
         {tier !== "vip" && tier !== "pro" && (
-          <div className="flex items-center justify-between text-[11px]">
+          <div className="flex items-center justify-between text-dense">
             <span className="text-muted-foreground/50">Discount</span>
-            <span className="text-muted-foreground/30 text-[10px]">0% — upgrade for 25%</span>
+            <span className="text-muted-foreground/30 text-micro">0% — upgrade for 25%</span>
           </div>
         )}
       </div>
@@ -321,7 +321,7 @@ function StateTab({ tier, balance, phase, navigate }: {
       {/* Warning */}
       {balance < 500 && (
         <div className={cn(
-          "rounded-xl px-3.5 py-2.5 text-[11px] leading-relaxed border",
+          "rounded-xl px-3.5 py-2.5 text-dense leading-relaxed border",
           balance < 200
             ? "bg-destructive/[0.04] border-destructive/10 text-destructive"
             : "bg-muted/20 border-border/15 text-muted-foreground/60"
@@ -343,7 +343,7 @@ function StateTab({ tier, balance, phase, navigate }: {
           <Button
             size="sm"
             variant="ghost"
-            className="w-full h-8 text-[11px] gap-2 text-muted-foreground/60 hover:text-foreground rounded-xl"
+            className="w-full h-8 text-dense gap-2 text-muted-foreground/60 hover:text-foreground rounded-xl"
             onClick={() => navigate("/credits")}
           >
             <SigilRocket size={13} /> Upgrade plan
@@ -365,8 +365,8 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
     return (
       <div className="p-4 flex flex-col items-center justify-center py-16 text-center">
         <SigilBolt size={24} className="text-muted-foreground/10 mb-3" />
-        <p className="text-[11px] text-muted-foreground/25 font-medium">No active execution</p>
-        <p className="text-[9px] text-muted-foreground/15 mt-1">Run a command to see progress here</p>
+        <p className="text-dense text-muted-foreground/25 font-medium">No active execution</p>
+        <p className="text-nano text-muted-foreground/15 mt-1">Run a command to see progress here</p>
       </div>
     );
   }
@@ -374,14 +374,14 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
   return (
     <div className="p-4 space-y-4">
       {/* Metrics strip */}
-      <div className="flex items-center gap-5 text-[11px] text-muted-foreground/60">
-        <span className="flex items-center gap-1.5 tabular-nums font-mono text-[10px]">
+      <div className="flex items-center gap-5 text-dense text-muted-foreground/60">
+        <span className="flex items-center gap-1.5 tabular-nums font-mono text-micro">
           <SigilClock size={13} className="text-muted-foreground/30" /> {elapsed}s
         </span>
-        <span className="flex items-center gap-1.5 tabular-nums font-mono text-[10px]">
+        <span className="flex items-center gap-1.5 tabular-nums font-mono text-micro">
           <SigilNeuron size={13} className="text-muted-foreground/30" /> {consumedCredits}/{totalCredits}N
         </span>
-        <span className="tabular-nums font-mono text-[10px]">
+        <span className="tabular-nums font-mono text-micro">
           {steps.filter(s => s.status === "completed").length}/{steps.length}
         </span>
       </div>
@@ -405,7 +405,7 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
         <div className="space-y-0.5">
           {steps.map(step => (
             <div key={step.id} className={cn(
-              "flex items-center gap-2.5 px-3 py-2 rounded-lg text-[11px] transition-colors",
+              "flex items-center gap-2.5 px-3 py-2 rounded-lg text-dense transition-colors",
               step.status === "running" && "bg-primary/[0.03] border border-primary/10",
             )}>
               <div className="shrink-0 w-4 flex items-center justify-center">
@@ -424,7 +424,7 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
               )}>
                 {step.label}
               </span>
-              <span className="text-[9px] tabular-nums text-muted-foreground/20 shrink-0 font-mono">{step.credits}N</span>
+              <span className="text-nano tabular-nums text-muted-foreground/20 shrink-0 font-mono">{step.credits}N</span>
             </div>
           ))}
         </div>
@@ -439,8 +439,8 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
     return (
       <div className="p-4 flex flex-col items-center justify-center py-16 text-center">
         <SigilCrystal size={24} className="text-muted-foreground/10 mb-3" />
-        <p className="text-[11px] text-muted-foreground/25 font-medium">No assets yet</p>
-        <p className="text-[9px] text-muted-foreground/15 mt-1">Execute a service to generate outputs</p>
+        <p className="text-dense text-muted-foreground/25 font-medium">No assets yet</p>
+        <p className="text-nano text-muted-foreground/15 mt-1">Execute a service to generate outputs</p>
       </div>
     );
   }
@@ -448,10 +448,10 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
   return (
     <div className="p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[9px] text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">
+        <span className="text-nano text-muted-foreground/40 uppercase tracking-[0.2em] font-semibold">
           {outputs.length} asset{outputs.length !== 1 ? "s" : ""}
         </span>
-        <button onClick={onViewOutputs} className="text-[10px] text-primary/60 hover:text-primary font-medium transition-colors">
+        <button onClick={onViewOutputs} className="text-micro text-primary/60 hover:text-primary font-medium transition-colors">
           View all →
         </button>
       </div>
@@ -467,14 +467,14 @@ function AssetsTab({ outputs, onViewOutputs }: { outputs: OutputItem[]; onViewOu
             className="flex items-center gap-2.5 py-2 px-3 rounded-xl hover:bg-muted/15 transition-all cursor-pointer group"
           >
             <SigilDocument size={14} className="text-muted-foreground/25 group-hover:text-foreground/50 transition-colors shrink-0" />
-            <span className="text-[11px] text-foreground truncate flex-1">{out.title}</span>
+            <span className="text-dense text-foreground truncate flex-1">{out.title}</span>
             {i >= 3 && <SigilLock size={12} className="text-muted-foreground/12 shrink-0" />}
           </motion.div>
         ))}
       </div>
 
       {outputs.length > 3 && (
-        <p className="text-[10px] text-muted-foreground/30 px-3 flex items-center gap-1.5">
+        <p className="text-micro text-muted-foreground/30 px-3 flex items-center gap-1.5">
           <SigilLock size={11} className="text-muted-foreground/15" />
           {outputs.length - 3} locked — unlock with NEURONS
         </p>

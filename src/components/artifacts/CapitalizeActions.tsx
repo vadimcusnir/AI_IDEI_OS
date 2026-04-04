@@ -76,7 +76,7 @@ export function CapitalizeActions({ artifactId, title, content, artifactType }: 
       <Button
         variant="ghost"
         size="sm"
-        className="h-6 text-[10px] gap-1"
+        className="h-6 text-micro gap-1"
         onClick={handleSaveToLibrary}
         disabled={saving || saved}
       >
@@ -86,7 +86,7 @@ export function CapitalizeActions({ artifactId, title, content, artifactType }: 
       <Button
         variant="ghost"
         size="sm"
-        className="h-6 text-[10px] gap-1"
+        className="h-6 text-micro gap-1"
         onClick={handlePublishToMarketplace}
         disabled={publishing || published}
       >

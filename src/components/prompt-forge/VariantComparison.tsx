@@ -33,7 +33,7 @@ export function VariantComparison({ variants, onRate, onSelect, selectedIndex }:
 
   return (
     <div className="space-y-3">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <span className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
         {t("prompt_forge.variants_label", { defaultValue: "Variante generate" })}
       </span>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
@@ -50,7 +50,7 @@ export function VariantComparison({ variants, onRate, onSelect, selectedIndex }:
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-bold text-muted-foreground">
+              <span className="text-micro font-bold text-muted-foreground">
                 V{v.index + 1}
               </span>
               <div className="flex items-center gap-1">

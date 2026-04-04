@@ -166,7 +166,7 @@ export function InstantAnalysisFlow() {
           >
             {/* Time badge */}
             <div className="flex items-center justify-between">
-              <Badge variant="secondary" className="text-[10px] gap-1">
+              <Badge variant="secondary" className="text-micro gap-1">
                 <CheckCircle2 className="h-3 w-3 text-[hsl(var(--gold-oxide))]" />
                 Completed in {elapsed}s
               </Badge>
@@ -186,7 +186,7 @@ export function InstantAnalysisFlow() {
                 <div key={label} className="rounded-xl border border-border/40 bg-card/80 p-3.5">
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <Icon className={cn("h-3.5 w-3.5", color)} />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+                    <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
                   </div>
                   <p className="text-sm text-foreground leading-relaxed">{value}</p>
                 </div>
@@ -200,7 +200,7 @@ export function InstantAnalysisFlow() {
 
             {/* CTA */}
             <div className="text-center pt-2">
-              <p className="text-[10px] text-muted-foreground mb-2">
+              <p className="text-micro text-muted-foreground mb-2">
                 Want deeper analysis with neurons, frameworks & deliverables?
               </p>
               <Button size="sm" variant="outline" className="gap-1.5 text-xs border-[hsl(var(--gold-oxide)/0.3)] text-[hsl(var(--gold-oxide))]" asChild>

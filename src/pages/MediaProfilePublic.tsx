@@ -197,7 +197,7 @@ export default function MediaProfilePublic() {
                       {ind.example}
                     </blockquote>
                   )}
-                  <div className="flex items-start gap-1.5 text-[10px] text-muted-foreground/60">
+                  <div className="flex items-start gap-1.5 text-micro text-muted-foreground/60">
                     <Info className="h-3 w-3 mt-0.5 shrink-0" />
                     <span>{ind.limitation}</span>
                   </div>

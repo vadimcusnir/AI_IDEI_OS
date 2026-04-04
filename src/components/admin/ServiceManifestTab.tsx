@@ -145,7 +145,7 @@ export function ServiceManifestTab() {
           return (
             <div key={key} className="border border-border rounded-lg p-3 bg-card text-center">
               <p className={cn("text-lg font-bold", cfg.color)}>{count}</p>
-              <p className="text-[10px] text-muted-foreground">{cfg.label} ({cfg.desc})</p>
+              <p className="text-micro text-muted-foreground">{cfg.label} ({cfg.desc})</p>
             </div>
           );
         })}
@@ -172,10 +172,10 @@ export function ServiceManifestTab() {
                       {svc?.name || manifest.service_key}
                     </p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <Badge variant="outline" className={cn("text-[9px]", classConfig.color)}>
+                      <Badge variant="outline" className={cn("text-nano", classConfig.color)}>
                         {classConfig.label}
                       </Badge>
-                      <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                      <span className="text-nano text-muted-foreground flex items-center gap-0.5">
                         <Clock className="h-2.5 w-2.5" /> {manifest.estimated_duration_seconds}s
                       </span>
                       {manifest.is_validated ? (
@@ -216,7 +216,7 @@ export function ServiceManifestTab() {
                   <div className="px-3 pb-3 border-t border-border pt-3 space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[10px] text-muted-foreground uppercase">Clasă Pipeline</label>
+                        <label className="text-micro text-muted-foreground uppercase">Clasă Pipeline</label>
                         <select
                           value={manifest.pipeline_class}
                           onChange={e => updateField(manifest.id, "pipeline_class", e.target.value)}
@@ -228,7 +228,7 @@ export function ServiceManifestTab() {
                         </select>
                       </div>
                       <div>
-                        <label className="text-[10px] text-muted-foreground uppercase">Durată estimată (s)</label>
+                        <label className="text-micro text-muted-foreground uppercase">Durată estimată (s)</label>
                         <Input
                           type="number"
                           value={manifest.estimated_duration_seconds}
@@ -238,7 +238,7 @@ export function ServiceManifestTab() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="text-[10px] text-muted-foreground uppercase">Validat</label>
+                      <label className="text-micro text-muted-foreground uppercase">Validat</label>
                       <button
                         onClick={() => updateField(manifest.id, "is_validated", !manifest.is_validated)}
                         className={cn(
@@ -253,7 +253,7 @@ export function ServiceManifestTab() {
                       </button>
                     </div>
                     <div>
-                      <label className="text-[10px] text-muted-foreground uppercase">Dependențe (separate prin virgulă)</label>
+                      <label className="text-micro text-muted-foreground uppercase">Dependențe (separate prin virgulă)</label>
                       <Input
                         value={manifest.dependencies.join(", ")}
                         onChange={e => updateField(manifest.id, "dependencies",

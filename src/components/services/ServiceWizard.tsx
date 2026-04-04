@@ -63,7 +63,7 @@ export function ServiceWizard({ onComplete, onDismiss }: ServiceWizardProps) {
       </button>
 
       <div className="mb-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary mb-1">
+        <p className="text-micro font-semibold uppercase tracking-[0.15em] text-primary mb-1">
           Pas {step + 1} / 2
         </p>
         <h3 className="text-sm font-bold">
@@ -95,7 +95,7 @@ export function ServiceWizard({ onComplete, onDismiss }: ServiceWizardProps) {
               >
                 <Icon className={cn("h-4 w-4 mb-1.5", isSelected ? "text-primary" : "text-muted-foreground")} />
                 <p className="text-xs font-semibold">{item.label}</p>
-                <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">{item.description}</p>
+                <p className="text-micro text-muted-foreground leading-snug mt-0.5">{item.description}</p>
               </button>
             );
           })}

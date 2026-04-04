@@ -143,7 +143,7 @@ export function AgentSlashMenu({ input, onSelect, visible, onClose }: AgentSlash
         {Object.entries(grouped).map(([cat, cmds]) => (
           <div key={cat}>
             <div className="px-3 py-1.5 border-b border-border sticky top-0 bg-popover/95 backdrop-blur-sm">
-              <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <p className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">
                 {CATEGORY_LABELS[cat] || cat}
               </p>
             </div>
@@ -168,9 +168,9 @@ export function AgentSlashMenu({ input, onSelect, visible, onClose }: AgentSlash
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-mono font-medium text-foreground">{cmd.command}</span>
-                      <span className="text-[10px] text-muted-foreground">{cmd.label}</span>
+                      <span className="text-micro text-muted-foreground">{cmd.label}</span>
                     </div>
-                    <p className="text-[9px] text-muted-foreground/70 truncate">{cmd.description}</p>
+                    <p className="text-nano text-muted-foreground/70 truncate">{cmd.description}</p>
                   </div>
                 </button>
               );

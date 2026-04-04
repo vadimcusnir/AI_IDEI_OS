@@ -193,7 +193,7 @@ export default function AdminAuditLog() {
             )}>
               <div className="flex items-center gap-1.5 mb-1">
                 <kpi.icon className={cn("h-3 w-3", kpi.highlight ? "text-destructive" : "text-muted-foreground")} />
-                <span className="text-[10px] text-muted-foreground">{kpi.label}</span>
+                <span className="text-micro text-muted-foreground">{kpi.label}</span>
               </div>
               <span className={cn("text-lg font-bold", kpi.highlight && "text-destructive")}>{kpi.value}</span>
             </div>
@@ -246,14 +246,14 @@ export default function AdminAuditLog() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-medium">{entry.action_type}</span>
-                        <Badge variant="outline" className="text-[8px] px-1.5 py-0 h-4">{entry.target_type}</Badge>
-                        <Badge className={cn("text-[8px] px-1.5 py-0 h-4", SEVERITY_COLORS[entry.severity])}>{entry.severity}</Badge>
+                        <Badge variant="outline" className="text-nano px-1.5 py-0 h-4">{entry.target_type}</Badge>
+                        <Badge className={cn("text-nano px-1.5 py-0 h-4", SEVERITY_COLORS[entry.severity])}>{entry.severity}</Badge>
                       </div>
-                      <p className="text-[10px] text-muted-foreground truncate">{entry.description || "—"}</p>
+                      <p className="text-micro text-muted-foreground truncate">{entry.description || "—"}</p>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className="text-[10px] text-muted-foreground/60 font-mono block">{formatDate(entry.created_at)}</span>
-                      {entry.ip_hint && <span className="text-[8px] text-muted-foreground/40 font-mono">{entry.ip_hint}</span>}
+                      <span className="text-micro text-muted-foreground/60 font-mono block">{formatDate(entry.created_at)}</span>
+                      {entry.ip_hint && <span className="text-nano text-muted-foreground/40 font-mono">{entry.ip_hint}</span>}
                     </div>
                   </div>
                 ))}
@@ -291,16 +291,16 @@ export default function AdminAuditLog() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-medium">{entry.event_type}</span>
-                          {entry.verdict && <Badge variant="outline" className="text-[8px] px-1.5 py-0 h-4">{entry.verdict}</Badge>}
+                          {entry.verdict && <Badge variant="outline" className="text-nano px-1.5 py-0 h-4">{entry.verdict}</Badge>}
                         </div>
-                        <p className="text-[10px] text-muted-foreground truncate">
+                        <p className="text-micro text-muted-foreground truncate">
                           {entry.reason || entry.target_resource || "—"}
                         </p>
                       </div>
                       <div className="text-right shrink-0">
-                        <span className="text-[10px] text-muted-foreground/60 font-mono block">{formatDate(entry.created_at)}</span>
+                        <span className="text-micro text-muted-foreground/60 font-mono block">{formatDate(entry.created_at)}</span>
                         {entry.entry_hash && (
-                          <span className="text-[8px] text-muted-foreground/30 font-mono" title={entry.entry_hash}>
+                          <span className="text-nano text-muted-foreground/30 font-mono" title={entry.entry_hash}>
                             #{entry.entry_hash.slice(0, 8)}
                           </span>
                         )}
@@ -331,18 +331,18 @@ export default function AdminAuditLog() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-mono">{s.admin_id.slice(0, 8)}…</span>
-                          <Badge variant={isActive ? "default" : "outline"} className="text-[8px] h-4">
+                          <Badge variant={isActive ? "default" : "outline"} className="text-nano h-4">
                             {isActive ? "Active" : "Ended"}
                           </Badge>
-                          <span className="text-[10px] text-muted-foreground">{s.action_count} actions</span>
+                          <span className="text-micro text-muted-foreground">{s.action_count} actions</span>
                         </div>
-                        <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60 mt-0.5">
+                        <div className="flex items-center gap-3 text-micro text-muted-foreground/60 mt-0.5">
                           <span className="flex items-center gap-1"><Clock className="h-2.5 w-2.5" /> {formatDate(s.started_at)}</span>
                           {s.ip_hint && <span>{s.ip_hint}</span>}
                         </div>
                       </div>
                       {s.user_agent && (
-                        <span className="text-[8px] text-muted-foreground/40 max-w-40 truncate hidden sm:block">
+                        <span className="text-nano text-muted-foreground/40 max-w-40 truncate hidden sm:block">
                           {s.user_agent}
                         </span>
                       )}

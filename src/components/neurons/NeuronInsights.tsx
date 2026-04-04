@@ -179,7 +179,7 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
             ].map(s => (
               <div key={s.label} className="text-center">
                 <div className={cn("text-lg font-bold tabular-nums", s.color)}>{s.value}</div>
-                <div className="text-[9px] text-muted-foreground">{s.label}</div>
+                <div className="text-nano text-muted-foreground">{s.label}</div>
               </div>
             ))}
           </div>
@@ -187,7 +187,7 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
 
         {/* Category Distribution */}
         <div className="px-4 py-3 border-b border-border/50">
-          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Category Distribution</h4>
+          <h4 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">Category Distribution</h4>
           <div className="space-y-2">
             {stats.categoryEntries.map(([cat, count]) => {
               const config = CATEGORY_CONFIG[cat];
@@ -198,9 +198,9 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <Icon className={cn("h-3 w-3", config?.color || "text-muted-foreground")} />
-                      <span className="text-[10px] font-medium">{config?.label || cat}</span>
+                      <span className="text-micro font-medium">{config?.label || cat}</span>
                     </div>
-                    <span className="text-[9px] text-muted-foreground tabular-nums">{count} ({pct}%)</span>
+                    <span className="text-nano text-muted-foreground tabular-nums">{count} ({pct}%)</span>
                   </div>
                   <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                     <motion.div
@@ -218,9 +218,9 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <AlertTriangle className="h-3 w-3 text-amber-500" />
-                    <span className="text-[10px] font-medium text-amber-500">Uncategorized</span>
+                    <span className="text-micro font-medium text-amber-500">Uncategorized</span>
                   </div>
-                  <span className="text-[9px] text-muted-foreground tabular-nums">{stats.uncategorized}</span>
+                  <span className="text-nano text-muted-foreground tabular-nums">{stats.uncategorized}</span>
                 </div>
                 <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                   <div className="h-full rounded-full bg-amber-500/50" style={{ width: `${Math.round((stats.uncategorized / stats.total) * 100)}%` }} />
@@ -232,10 +232,10 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
 
         {/* Status Breakdown */}
         <div className="px-4 py-3 border-b border-border/50">
-          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Status Breakdown</h4>
+          <h4 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">Status Breakdown</h4>
           <div className="flex gap-1.5 flex-wrap">
             {Object.entries(stats.byStatus).map(([status, count]) => (
-              <Badge key={status} variant="outline" className="text-[9px] gap-1">
+              <Badge key={status} variant="outline" className="text-nano gap-1">
                 <div className={cn("h-1.5 w-1.5 rounded-full",
                   status === "published" ? "bg-status-validated" :
                   status === "active" ? "bg-primary" :
@@ -249,7 +249,7 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
 
         {/* Activity */}
         <div className="px-4 py-3 border-b border-border/50">
-          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Activity</h4>
+          <h4 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">Activity</h4>
           <div className="flex items-center gap-2">
             <TrendingUp className={cn("h-3.5 w-3.5", stats.recentCount > 3 ? "text-status-validated" : "text-amber-500")} />
             <span className="text-xs">
@@ -261,7 +261,7 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
         {/* Smart Suggestions */}
         {suggestions.length > 0 && (
           <div className="px-4 py-3">
-            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+            <h4 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">
               <Sparkles className="h-3 w-3 inline mr-1 text-primary" />
               Suggestions
             </h4>
@@ -282,12 +282,12 @@ export function NeuronInsights({ neurons, onClose }: NeuronInsightsProps) {
                         s.priority === "high" ? "text-amber-500" : "text-primary"
                       )} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-medium">{s.title}</p>
-                        <p className="text-[9px] text-muted-foreground mt-0.5">{s.description}</p>
+                        <p className="text-dense font-medium">{s.title}</p>
+                        <p className="text-nano text-muted-foreground mt-0.5">{s.description}</p>
                       </div>
                     </div>
                     <div className="flex justify-end mt-1.5">
-                      <span className="text-[9px] text-primary flex items-center gap-0.5 font-medium">
+                      <span className="text-nano text-primary flex items-center gap-0.5 font-medium">
                         {s.action} <ArrowRight className="h-2.5 w-2.5" />
                       </span>
                     </div>

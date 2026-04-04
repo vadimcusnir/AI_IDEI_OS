@@ -109,7 +109,7 @@ export function OnboardingChecklist() {
           </div>
           <div>
             <h3 className="text-sm font-semibold">{t("getting_started")}</h3>
-            <p className="text-[10px] text-muted-foreground">
+            <p className="text-micro text-muted-foreground">
               {t("completed_count", { done: completedSteps.size, total: STEPS.length })}
             </p>
           </div>
@@ -189,11 +189,11 @@ export function OnboardingChecklist() {
                       )}>
                         {t(step.labelKey)}
                       </span>
-                      <p className="text-[10px] text-muted-foreground/60 truncate">{t(step.descKey)}</p>
+                      <p className="text-micro text-muted-foreground/60 truncate">{t(step.descKey)}</p>
                     </div>
                     {!done && (
                       <span className={cn(
-                        "flex items-center gap-0.5 text-[10px] font-medium transition-opacity",
+                        "flex items-center gap-0.5 text-micro font-medium transition-opacity",
                         isNext ? "text-primary opacity-100" : "text-primary opacity-0 group-hover:opacity-100"
                       )} aria-hidden="true">
                         {t("start")} <ArrowRight className="h-2.5 w-2.5" />

@@ -148,7 +148,7 @@ export default function AnalyticsDashboard() {
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">{t("analytics.title")}</h1>
-              <p className="text-[10px] text-muted-foreground">{t("analytics.subtitle")}</p>
+              <p className="text-micro text-muted-foreground">{t("analytics.subtitle")}</p>
             </div>
             <div className="ml-auto flex gap-1">
               {[7, 30, 90].map(d => (
@@ -156,7 +156,7 @@ export default function AnalyticsDashboard() {
                   key={d}
                   onClick={() => setDays(d)}
                   className={cn(
-                    "px-2.5 py-1 rounded-full text-[10px] font-medium transition-colors",
+                    "px-2.5 py-1 rounded-full text-micro font-medium transition-colors",
                     days === d ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -172,7 +172,7 @@ export default function AnalyticsDashboard() {
               <div key={s.label} className="bg-card border border-border rounded-xl p-4 text-center">
                 <s.icon className="h-4 w-4 text-primary mx-auto mb-1.5" />
                 <p className="text-lg font-bold font-mono">{(s.value || 0).toLocaleString()}</p>
-                <p className="text-[9px] text-muted-foreground uppercase tracking-wider">{s.label}</p>
+                <p className="text-nano text-muted-foreground uppercase tracking-wider">{s.label}</p>
               </div>
             ))}
           </div>
@@ -189,40 +189,40 @@ export default function AnalyticsDashboard() {
             <TabsContent value="overview">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                     <MousePointerClick className="h-3 w-3" /> {t("analytics.top_events")}
                   </h2>
                   <div className="bg-card border border-border rounded-xl p-4 space-y-2.5">
                     {(data.top_events || []).map(ev => (
                       <div key={ev.event_name}>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-mono truncate">{ev.event_name}</span>
-                          <span className="text-[10px] font-bold text-primary">{ev.count.toLocaleString()}</span>
+                          <span className="text-micro font-mono truncate">{ev.event_name}</span>
+                          <span className="text-micro font-bold text-primary">{ev.count.toLocaleString()}</span>
                         </div>
                         <Progress value={(ev.count / maxEventCount) * 100} className="h-1.5" />
                       </div>
                     ))}
                     {(!data.top_events || data.top_events.length === 0) && (
-                      <p className="text-[10px] text-muted-foreground text-center py-4">{t("analytics.no_events")}</p>
+                      <p className="text-micro text-muted-foreground text-center py-4">{t("analytics.no_events")}</p>
                     )}
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                     <Eye className="h-3 w-3" /> {t("analytics.top_pages")}
                   </h2>
                   <div className="bg-card border border-border rounded-xl p-4 space-y-2.5">
                     {(data.top_pages || []).map(pg => (
                       <div key={pg.page_path}>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-mono truncate">{pg.page_path}</span>
-                          <span className="text-[10px] font-bold text-primary">{pg.views.toLocaleString()}</span>
+                          <span className="text-micro font-mono truncate">{pg.page_path}</span>
+                          <span className="text-micro font-bold text-primary">{pg.views.toLocaleString()}</span>
                         </div>
                         <Progress value={(pg.views / maxPageViews) * 100} className="h-1.5" />
                       </div>
                     ))}
                     {(!data.top_pages || data.top_pages.length === 0) && (
-                      <p className="text-[10px] text-muted-foreground text-center py-4">{t("analytics.no_pages")}</p>
+                      <p className="text-micro text-muted-foreground text-center py-4">{t("analytics.no_pages")}</p>
                     )}
                   </div>
                 </div>
@@ -230,7 +230,7 @@ export default function AnalyticsDashboard() {
 
               {data.daily_breakdown && data.daily_breakdown.length > 0 && (
                 <div className="mt-6">
-                  <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                     <TrendingUp className="h-3 w-3" /> {t("analytics.daily_activity")}
                   </h2>
                   <div className="bg-card border border-border rounded-xl p-4 space-y-1">
@@ -238,10 +238,10 @@ export default function AnalyticsDashboard() {
                       const maxEvents = Math.max(...data.daily_breakdown!.map(x => x.events), 1);
                       return (
                         <div key={d.day} className="flex items-center gap-3">
-                          <span className="text-[9px] font-mono text-muted-foreground w-20 shrink-0">{d.day}</span>
+                          <span className="text-nano font-mono text-muted-foreground w-20 shrink-0">{d.day}</span>
                           <Progress value={(d.events / maxEvents) * 100} className="h-1.5 flex-1" />
-                          <span className="text-[9px] font-mono w-16 text-right shrink-0">{d.events} ev</span>
-                          <span className="text-[9px] font-mono text-muted-foreground w-12 text-right shrink-0">{d.users} u</span>
+                          <span className="text-nano font-mono w-16 text-right shrink-0">{d.events} ev</span>
+                          <span className="text-nano font-mono text-muted-foreground w-12 text-right shrink-0">{d.users} u</span>
                         </div>
                       );
                     })}
@@ -257,10 +257,10 @@ export default function AnalyticsDashboard() {
                   <Layers className="h-3.5 w-3.5 text-primary" /> {t("analytics.weekly_retention")}
                 </h2>
                 {cohorts.length === 0 ? (
-                  <p className="text-[10px] text-muted-foreground text-center py-8">{t("analytics.cohort_min_data")}</p>
+                  <p className="text-micro text-muted-foreground text-center py-8">{t("analytics.cohort_min_data")}</p>
                 ) : (
                   <div className="overflow-x-auto">
-                    <table className="w-full text-[10px]">
+                    <table className="w-full text-micro">
                       <thead>
                         <tr>
                           <th className="text-left font-medium text-muted-foreground pb-2 pr-3">{t("analytics.cohort_label")}</th>
@@ -279,7 +279,7 @@ export default function AnalyticsDashboard() {
                               <td key={i} className="text-center py-1">
                                 <span
                                   className={cn(
-                                    "inline-block px-1.5 py-0.5 rounded text-[9px] font-bold",
+                                    "inline-block px-1.5 py-0.5 rounded text-nano font-bold",
                                     pct >= 80 ? "bg-primary/20 text-primary" :
                                     pct >= 50 ? "bg-accent text-accent-foreground" :
                                     pct >= 20 ? "bg-muted text-muted-foreground" :
@@ -311,7 +311,7 @@ export default function AnalyticsDashboard() {
                         key={f.name}
                         onClick={() => setFunnelIdx(i)}
                         className={cn(
-                          "px-2 py-0.5 rounded-full text-[9px] font-medium transition-colors",
+                          "px-2 py-0.5 rounded-full text-nano font-medium transition-colors",
                           funnelIdx === i ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                         )}
                       >
@@ -332,15 +332,15 @@ export default function AnalyticsDashboard() {
                       <div key={step.event}>
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-[8px] h-4">{i + 1}</Badge>
-                            <span className="text-[10px] font-medium">{step.label}</span>
+                            <Badge variant="outline" className="text-nano h-4">{i + 1}</Badge>
+                            <span className="text-micro font-medium">{step.label}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-mono font-bold">{count.toLocaleString()}</span>
+                            <span className="text-micro font-mono font-bold">{count.toLocaleString()}</span>
                             {i > 0 && (
-                              <span className="text-[9px] text-destructive font-mono">-{dropoff}%</span>
+                              <span className="text-nano text-destructive font-mono">-{dropoff}%</span>
                             )}
-                            <span className="text-[9px] text-muted-foreground font-mono">{pctFromStart}%</span>
+                            <span className="text-nano text-muted-foreground font-mono">{pctFromStart}%</span>
                           </div>
                         </div>
                         <div className="relative h-6 bg-muted rounded overflow-hidden">

@@ -167,7 +167,7 @@ export function DuplicateMergePanel() {
       <div className="text-center py-12">
         <GitMerge className="h-8 w-8 opacity-20 mx-auto mb-3" />
         <p className="text-sm text-muted-foreground">No pending duplicates</p>
-        <p className="text-[10px] text-muted-foreground/60 mt-1">
+        <p className="text-micro text-muted-foreground/60 mt-1">
           Run deduplication from the Extractor to find similar neurons.
         </p>
       </div>
@@ -191,18 +191,18 @@ export function DuplicateMergePanel() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0 space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono text-muted-foreground">#{dup.neuron_a}</span>
+                  <span className="text-micro font-mono text-muted-foreground">#{dup.neuron_a}</span>
                   <span className="text-sm font-medium truncate">{dup.title_a}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono text-muted-foreground">#{dup.neuron_b}</span>
+                  <span className="text-micro font-mono text-muted-foreground">#{dup.neuron_b}</span>
                   <span className="text-sm font-medium truncate">{dup.title_b}</span>
                 </div>
               </div>
               <Badge
                 variant="outline"
                 className={cn(
-                  "text-[10px] shrink-0",
+                  "text-micro shrink-0",
                   dup.similarity > 0.8 ? "border-destructive/40 text-destructive" :
                   dup.similarity > 0.6 ? "border-yellow-500/40 text-yellow-600 dark:text-yellow-400" :
                   "border-muted-foreground/30"

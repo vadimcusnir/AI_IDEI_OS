@@ -134,7 +134,7 @@ export default function AdminInevitability() {
           <div key={kpi.label} className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-1.5 mb-1">
               <kpi.icon className={cn("h-3.5 w-3.5", kpi.color)} />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</span>
+              <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</span>
             </div>
             <p className="text-2xl font-bold font-mono text-foreground">{kpi.value}</p>
           </div>
@@ -147,23 +147,23 @@ export default function AdminInevitability() {
           <div className="rounded-xl border border-border bg-card p-4">
             <Users className="h-4 w-4 text-muted-foreground mb-1" />
             <p className="text-2xl font-bold text-foreground">{metrics.total_users}</p>
-            <p className="text-[10px] text-muted-foreground">Total Users</p>
-            <p className="text-[10px] text-primary">{metrics.active_users_7d} active (7d)</p>
+            <p className="text-micro text-muted-foreground">Total Users</p>
+            <p className="text-micro text-primary">{metrics.active_users_7d} active (7d)</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <Brain className="h-4 w-4 text-muted-foreground mb-1" />
             <p className="text-2xl font-bold text-foreground">{metrics.total_executions?.toLocaleString()}</p>
-            <p className="text-[10px] text-muted-foreground">Total Executions</p>
+            <p className="text-micro text-muted-foreground">Total Executions</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <Target className="h-4 w-4 text-muted-foreground mb-1" />
             <p className="text-2xl font-bold text-foreground">{metrics.total_assets?.toLocaleString()}</p>
-            <p className="text-[10px] text-muted-foreground">Total Assets</p>
+            <p className="text-micro text-muted-foreground">Total Assets</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <Zap className="h-4 w-4 text-muted-foreground mb-1" />
             <p className="text-2xl font-bold text-foreground">{Number(metrics.total_revenue_neurons).toLocaleString()}N</p>
-            <p className="text-[10px] text-muted-foreground">Total Revenue</p>
+            <p className="text-micro text-muted-foreground">Total Revenue</p>
           </div>
         </div>
       )}
@@ -195,7 +195,7 @@ export default function AdminInevitability() {
             {lockInStats && (
               <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">Average Score</span>
-                <Badge variant="outline" className="font-mono text-[10px]">{lockInStats.avgScore}/10</Badge>
+                <Badge variant="outline" className="font-mono text-micro">{lockInStats.avgScore}/10</Badge>
               </div>
             )}
           </CardContent>
@@ -216,8 +216,8 @@ export default function AdminInevitability() {
                 {(topCreators || []).map((c: any, i: number) => (
                   <div key={c.user_id} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="w-5 text-[10px] font-mono text-muted-foreground">#{c.creator_rank}</span>
-                      <Badge variant={c.creator_tier === "legend" ? "default" : "outline"} className="text-[9px] capitalize">
+                      <span className="w-5 text-micro font-mono text-muted-foreground">#{c.creator_rank}</span>
+                      <Badge variant={c.creator_tier === "legend" ? "default" : "outline"} className="text-nano capitalize">
                         {c.creator_tier}
                       </Badge>
                     </div>
@@ -260,8 +260,8 @@ export default function AdminInevitability() {
               <div key={moat.label} className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{moat.label}</span>
-                    <p className="text-[9px] text-muted-foreground/70">{moat.desc}</p>
+                    <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{moat.label}</span>
+                    <p className="text-nano text-muted-foreground/70">{moat.desc}</p>
                   </div>
                   <span className="text-xs font-mono text-foreground">{moat.value}</span>
                 </div>
@@ -288,7 +288,7 @@ export default function AdminInevitability() {
               {running === key ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Icon className="h-4 w-4 text-primary" />}
               <span className="text-xs font-semibold text-foreground">{label}</span>
             </div>
-            <p className="text-[10px] text-muted-foreground">{desc}</p>
+            <p className="text-micro text-muted-foreground">{desc}</p>
           </button>
         ))}
       </div>
@@ -304,7 +304,7 @@ export default function AdminInevitability() {
               step === "→" ? (
                 <span key={i} className="text-muted-foreground">→</span>
               ) : (
-                <Badge key={i} variant={i >= 6 ? "default" : "secondary"} className="text-[10px] font-mono">
+                <Badge key={i} variant={i >= 6 ? "default" : "secondary"} className="text-micro font-mono">
                   {step}
                 </Badge>
               )

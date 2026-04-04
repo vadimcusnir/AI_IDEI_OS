@@ -49,7 +49,7 @@ export function CommunityRewardsGuide() {
               <div className="space-y-1.5">
                 {KARMA_TIERS.map((tier) => (
                   <div key={tier.label} className="flex items-center gap-2 text-xs">
-                    <Badge variant="outline" className={`text-[9px] px-1.5 py-0 ${tier.color}`}>
+                    <Badge variant="outline" className={`text-nano px-1.5 py-0 ${tier.color}`}>
                       {tier.min}+
                     </Badge>
                     <span className={`font-medium ${tier.color}`}>{tier.label}</span>
@@ -69,12 +69,12 @@ export function CommunityRewardsGuide() {
                   <div key={r.action} className="flex items-center gap-2 text-xs p-1.5 rounded bg-muted/50">
                     <r.icon className="h-3 w-3 text-muted-foreground shrink-0" />
                     <span className="flex-1 text-foreground">{r.action}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground w-8 text-right">{r.karma}</span>
-                    <span className="font-mono text-[10px] text-primary font-medium w-20 text-right">{r.neurons}</span>
+                    <span className="font-mono text-micro text-muted-foreground w-8 text-right">{r.karma}</span>
+                    <span className="font-mono text-micro text-primary font-medium w-20 text-right">{r.neurons}</span>
                   </div>
                 ))}
               </div>
-              <div className="flex items-start gap-1.5 text-[10px] text-muted-foreground bg-primary/5 p-2 rounded">
+              <div className="flex items-start gap-1.5 text-micro text-muted-foreground bg-primary/5 p-2 rounded">
                 <ArrowUpRight className="h-3 w-3 text-primary shrink-0 mt-0.5" />
                 <span>
                   <strong className="text-foreground">Pro tip:</strong> When a thread author marks your reply as the accepted solution,

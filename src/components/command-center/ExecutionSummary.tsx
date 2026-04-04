@@ -137,15 +137,15 @@ export function ExecutionSummary({
         <div className="flex items-center gap-5 flex-wrap">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <SigilCrystal size={14} className="text-muted-foreground/50" />
-            <span className="tabular-nums font-mono text-[11px]">{stepsCompleted}/{totalSteps} steps</span>
+            <span className="tabular-nums font-mono text-dense">{stepsCompleted}/{totalSteps} steps</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <SigilNeuron size={14} className="text-muted-foreground/50" />
-            <span className="tabular-nums font-mono text-[11px]">{totalCredits} N</span>
+            <span className="tabular-nums font-mono text-dense">{totalCredits} N</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <SigilClock size={14} className="text-muted-foreground/50" />
-            <span className="tabular-nums font-mono text-[11px]">{durationSeconds}s</span>
+            <span className="tabular-nums font-mono text-dense">{durationSeconds}s</span>
           </div>
         </div>
         {outputCount > 0 && (

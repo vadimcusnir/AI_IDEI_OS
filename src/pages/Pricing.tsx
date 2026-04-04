@@ -223,10 +223,10 @@ export default function Pricing() {
                   )}
                 >
                   {plan.badge && (
-                    <Badge className="absolute -top-2.5 right-4 text-[10px]">{plan.badge}</Badge>
+                    <Badge className="absolute -top-2.5 right-4 text-micro">{plan.badge}</Badge>
                   )}
                   {isCurrent && (
-                    <Badge className="absolute -top-2.5 left-4 text-[10px] bg-primary text-primary-foreground">
+                    <Badge className="absolute -top-2.5 left-4 text-micro bg-primary text-primary-foreground">
                       {t("pricing.your_plan")}
                     </Badge>
                   )}
@@ -236,7 +236,7 @@ export default function Pricing() {
                     <span className="text-3xl font-bold font-mono">${plan.price}</span>
                     {plan.period && <span className="text-xs text-muted-foreground">{plan.period}</span>}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mb-4">
+                  <p className="text-micro text-muted-foreground mb-4">
                     {plan.neurons} {t("pricing.neurons_per_month")}
                   </p>
 
@@ -298,19 +298,19 @@ export default function Pricing() {
                     )}
                   >
                     {pkg.popular && (
-                      <Badge className="absolute -top-2 text-[9px]">Popular</Badge>
+                      <Badge className="absolute -top-2 text-nano">Popular</Badge>
                     )}
                     <span className="text-2xl font-bold font-mono">${pkg.price}</span>
                     <span className="text-xs text-muted-foreground mt-1">
                       {pkg.neurons.toLocaleString()} N
                     </span>
-                    <span className="text-[9px] text-muted-foreground/60 mt-0.5">
+                    <span className="text-nano text-muted-foreground/60 mt-0.5">
                       ${(pkg.price / pkg.neurons * 1000).toFixed(1)}/1K
                     </span>
                     <Button
                       size="sm"
                       variant={pkg.popular ? "default" : "outline"}
-                      className="w-full mt-3 text-[10px] h-7 gap-1"
+                      className="w-full mt-3 text-micro h-7 gap-1"
                       disabled={!!processing || !user}
                       onClick={async () => {
                         if (!user) { navigate("/auth"); return; }

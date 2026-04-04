@@ -74,19 +74,19 @@ export function ResultsPanel({ result, onReset }: Props) {
           {result.frameworks && (
             <div>
               <p className="text-lg font-bold text-foreground">{result.frameworks}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Frameworks</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Frameworks</p>
             </div>
           )}
           {result.raw_extracted && (
             <div>
               <p className="text-lg font-bold text-foreground">{result.raw_extracted}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Raw</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Raw</p>
             </div>
           )}
           {result.after_dedup && (
             <div>
               <p className="text-lg font-bold text-primary">{result.after_dedup}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Deduplicate</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Deduplicate</p>
             </div>
           )}
         </div>
@@ -95,7 +95,7 @@ export function ResultsPanel({ result, onReset }: Props) {
       {/* Themes */}
       {result.meta?.emerging_themes && result.meta.emerging_themes.length > 0 && (
         <div className="bg-muted/30 border border-border rounded-xl p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+          <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">
             Teme emergente
           </p>
           <div className="flex flex-wrap gap-1.5">

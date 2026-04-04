@@ -32,10 +32,10 @@ export function SessionList({
   return (
     <div className={cn("space-y-1", className)}>
       <div className="flex items-center justify-between px-2 py-1">
-        <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+        <span className="text-micro font-medium text-muted-foreground uppercase tracking-wider">
           Recent Sessions
         </span>
-        <span className="text-[9px] text-muted-foreground/60">{sessions.length}</span>
+        <span className="text-nano text-muted-foreground/60">{sessions.length}</span>
       </div>
 
       <AnimatePresence initial={false}>
@@ -55,15 +55,15 @@ export function SessionList({
           >
             <MessageSquare className="h-3 w-3 mt-0.5 shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-medium truncate leading-tight">
+              <p className="text-dense font-medium truncate leading-tight">
                 {session.last_message || "Empty session"}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <Clock className="h-2.5 w-2.5" />
-                <span className="text-[9px]">
+                <span className="text-nano">
                   {formatDistanceToNow(new Date(session.created_at), { addSuffix: true })}
                 </span>
-                <span className="text-[9px] text-muted-foreground/50">
+                <span className="text-nano text-muted-foreground/50">
                   · {session.message_count} msgs
                 </span>
               </div>
@@ -88,7 +88,7 @@ export function SessionList({
           variant="ghost"
           size="sm"
           onClick={() => setExpanded(!expanded)}
-          className="w-full h-6 text-[9px] text-muted-foreground/60 gap-1"
+          className="w-full h-6 text-nano text-muted-foreground/60 gap-1"
         >
           {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
           {expanded ? "Show less" : `Show ${sessions.length - 5} more`}

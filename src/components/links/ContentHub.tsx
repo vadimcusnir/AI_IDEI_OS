@@ -58,7 +58,7 @@ export function ContentHub() {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           Hub de Conținut
         </h2>
         <Rss className="h-3 w-3 text-muted-foreground/40" />
@@ -73,7 +73,7 @@ export function ContentHub() {
               key={ch.key}
               onClick={() => setFilter(ch.key)}
               className={cn(
-                "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all whitespace-nowrap",
+                "flex items-center gap-1 px-2.5 py-1 rounded-full text-micro font-medium transition-all whitespace-nowrap",
                 filter === ch.key
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -109,7 +109,7 @@ export function ContentHub() {
                     {item.title}
                   </span>
                   {item.isNew && (
-                    <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-status-validated/15 text-status-validated shrink-0">
+                    <span className="text-nano font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-status-validated/15 text-status-validated shrink-0">
                       New
                     </span>
                   )}

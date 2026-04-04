@@ -137,12 +137,12 @@ export function ForumModerationTab() {
             {flags.map((flag) => (
               <TableRow key={flag.id}>
                 <TableCell>
-                  <Badge variant="outline" className="text-[9px]">{flag.target_type}</Badge>
+                  <Badge variant="outline" className="text-nano">{flag.target_type}</Badge>
                 </TableCell>
                 <TableCell className="text-xs max-w-[200px] truncate">{flag.target_content}</TableCell>
                 <TableCell className="text-xs">{flag.reporter_name}</TableCell>
                 <TableCell className="text-xs max-w-[150px] truncate">{flag.reason}</TableCell>
-                <TableCell className="text-[10px] text-muted-foreground">
+                <TableCell className="text-micro text-muted-foreground">
                   {formatDistanceToNow(new Date(flag.created_at), { addSuffix: true })}
                 </TableCell>
                 <TableCell>
@@ -152,7 +152,7 @@ export function ForumModerationTab() {
                         <Button
                           size="sm"
                           variant="destructive"
-                          className="h-6 text-[10px]"
+                          className="h-6 text-micro"
                           onClick={() => resolveFlag(flag.id, "approved")}
                         >
                           <XCircle className="h-3 w-3 mr-0.5" />Remove
@@ -160,7 +160,7 @@ export function ForumModerationTab() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-6 text-[10px]"
+                          className="h-6 text-micro"
                           onClick={() => resolveFlag(flag.id, "rejected")}
                         >
                           <CheckCircle2 className="h-3 w-3 mr-0.5" />Dismiss
@@ -169,13 +169,13 @@ export function ForumModerationTab() {
                       <Textarea
                         placeholder="Note..."
                         rows={1}
-                        className="text-[10px] h-6 min-h-0"
+                        className="text-micro h-6 min-h-0"
                         value={resolveNote[flag.id] || ""}
                         onChange={(e) => setResolveNote(prev => ({ ...prev, [flag.id]: e.target.value }))}
                       />
                     </div>
                   ) : (
-                    <Badge variant={flag.status === "approved" ? "destructive" : "secondary"} className="text-[9px]">
+                    <Badge variant={flag.status === "approved" ? "destructive" : "secondary"} className="text-nano">
                       {flag.status}
                     </Badge>
                   )}

@@ -112,7 +112,7 @@ export function LeaderboardWidget() {
             key={p}
             onClick={() => setPeriod(p)}
             className={cn(
-              "px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors",
+              "px-2.5 py-1 rounded-md text-micro font-medium transition-colors",
               period === p
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted hover:bg-muted/80 text-muted-foreground"
@@ -147,14 +147,14 @@ export function LeaderboardWidget() {
                       i === 0 ? "text-primary" : i === 1 ? "text-muted-foreground" : "text-accent-foreground"
                     )} />
                   ) : (
-                    <span className="text-[10px] text-muted-foreground">{i + 1}</span>
+                    <span className="text-micro text-muted-foreground">{i + 1}</span>
                   )}
                 </span>
                 <span className={cn("text-xs flex-1 truncate", isMe && "font-semibold")}>
                   {entry.display_name}{isMe ? " (you)" : ""}
                 </span>
-                <span className="text-[10px] text-muted-foreground">{entry.rank_name}</span>
-                <span className="text-[10px] font-mono font-bold text-primary w-14 text-right">
+                <span className="text-micro text-muted-foreground">{entry.rank_name}</span>
+                <span className="text-micro font-mono font-bold text-primary w-14 text-right">
                   {entry.total_xp.toLocaleString()}
                 </span>
               </div>

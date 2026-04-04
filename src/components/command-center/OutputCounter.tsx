@@ -72,7 +72,7 @@ export function OutputCounter({ targetCount, isActive, className }: OutputCounte
       </div>
 
       <div className="flex items-baseline gap-1">
-        <span className="text-[10px] text-muted-foreground">1 input →</span>
+        <span className="text-micro text-muted-foreground">1 input →</span>
         <AnimatePresence mode="wait">
           <motion.span
             key={displayCount}
@@ -88,7 +88,7 @@ export function OutputCounter({ targetCount, isActive, className }: OutputCounte
             {displayCount}
           </motion.span>
         </AnimatePresence>
-        <span className="text-[10px] text-muted-foreground">outputs</span>
+        <span className="text-micro text-muted-foreground">outputs</span>
       </div>
 
       {phase === "done" && (
@@ -98,7 +98,7 @@ export function OutputCounter({ targetCount, isActive, className }: OutputCounte
           className="flex items-center gap-1"
         >
           <Zap className="h-3 w-3 text-primary" />
-          <span className="text-[9px] font-bold text-primary uppercase tracking-wider">
+          <span className="text-nano font-bold text-primary uppercase tracking-wider">
             {targetCount}x
           </span>
         </motion.div>

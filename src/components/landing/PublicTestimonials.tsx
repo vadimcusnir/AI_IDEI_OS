@@ -102,7 +102,7 @@ export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimo
       >
         <div className="inline-flex items-center gap-2 mb-3">
           <div className="h-1 w-6 rounded-full bg-primary" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+          <span className="text-micro font-bold uppercase tracking-[0.2em] text-primary">
             Testimoniale
           </span>
           <div className="h-1 w-6 rounded-full bg-primary" />
@@ -141,7 +141,7 @@ export const PublicTestimonials = forwardRef<HTMLElement>(function PublicTestimo
                 ))}
               </div>
             )}
-            <p className="text-[11px] font-medium text-muted-foreground">— {item.title}</p>
+            <p className="text-dense font-medium text-muted-foreground">— {item.title}</p>
           </motion.div>
         ))}
       </div>

@@ -57,7 +57,7 @@ export function FeedbackLoop({ historyId, result, goal, onRatingChange }: Feedba
   return (
     <div className="mt-4 pt-4 border-t border-border space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-medium text-muted-foreground flex items-center gap-1.5">
+        <span className="text-micro font-medium text-muted-foreground flex items-center gap-1.5">
           <MessageSquare className="h-3 w-3" />
           {t("prompt_forge.rate_result", { defaultValue: "Evaluează rezultatul" })}
         </span>

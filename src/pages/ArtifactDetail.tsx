@@ -206,10 +206,10 @@ ${(artifact.content ?? "").replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-2">
-            <span className={cn("text-[9px] font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
+            <span className={cn("text-nano font-mono uppercase px-1.5 py-0.5 rounded", typeConf.color)}>
               {typeConf.label}
             </span>
-            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+            <span className="text-micro text-muted-foreground flex items-center gap-1">
               <Clock className="h-2.5 w-2.5" />
               {format(new Date(artifact.created_at), "dd MMM yyyy, HH:mm")}
             </span>
@@ -218,7 +218,7 @@ ${(artifact.content ?? "").replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (
           {(artifact.tags ?? []).length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {(artifact.tags ?? []).map(tag => (
-                <Badge key={tag} variant="secondary" className="text-[9px]">{tag}</Badge>
+                <Badge key={tag} variant="secondary" className="text-nano">{tag}</Badge>
               ))}
             </div>
           )}
@@ -227,7 +227,7 @@ ${(artifact.content ?? "").replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (
         {/* Linked Neurons */}
         {linkedNeurons.length > 0 && (
           <div className="mb-6 bg-card border border-border rounded-xl p-4">
-            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
+            <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
               <Brain className="h-3 w-3" /> {t("artifact_detail.source_neurons")}
             </h3>
             <div className="space-y-1">
@@ -258,11 +258,11 @@ ${(artifact.content ?? "").replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (
         {/* Metadata */}
         {artifact.metadata && Object.keys(artifact.metadata).length > 0 && (
           <div className="mt-4 bg-muted/30 border border-border rounded-xl p-4">
-            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("artifact_detail.metadata")}</h3>
+            <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("artifact_detail.metadata")}</h3>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(artifact.metadata).map(([key, val]) => (
                 <div key={key}>
-                  <span className="text-[9px] text-muted-foreground uppercase">{key.replace("_", " ")}</span>
+                  <span className="text-nano text-muted-foreground uppercase">{key.replace("_", " ")}</span>
                   <p className="text-xs font-mono">{String(val)}</p>
                 </div>
               ))}

@@ -30,7 +30,7 @@ export function GeneratePanel({ onCommand }: GeneratePanelProps) {
       <div className="py-2 space-y-2">
         <div className="flex items-center gap-1.5 px-1">
           <PenTool className="h-3 w-3 text-emerald-400" />
-          <span className="text-[10px] font-medium text-muted-foreground/70">Generare conținut</span>
+          <span className="text-micro font-medium text-muted-foreground/70">Generare conținut</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
           {GENERATE_ACTIONS.map((action) => (
@@ -43,8 +43,8 @@ export function GeneratePanel({ onCommand }: GeneratePanelProps) {
                 <action.icon className="h-3 w-3" />
               </div>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium text-foreground/90 leading-tight">{action.label}</p>
-                <p className="text-[9px] text-muted-foreground/50 leading-tight">{action.desc}</p>
+                <p className="text-dense font-medium text-foreground/90 leading-tight">{action.label}</p>
+                <p className="text-nano text-muted-foreground/50 leading-tight">{action.desc}</p>
               </div>
             </button>
           ))}

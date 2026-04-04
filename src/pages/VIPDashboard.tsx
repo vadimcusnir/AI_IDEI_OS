@@ -79,10 +79,10 @@ export default function VIPDashboard() {
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">{t("vip.title")}</h1>
-              <p className="text-[10px] text-muted-foreground">{t("vip.subtitle")}</p>
+              <p className="text-micro text-muted-foreground">{t("vip.subtitle")}</p>
             </div>
             {isVIP && (
-              <Badge className="ml-auto text-[10px] bg-primary/10 text-primary border-0">
+              <Badge className="ml-auto text-micro bg-primary/10 text-primary border-0">
                 {t("vip.month_progress", { current: currentMonth })}
               </Badge>
             )}
@@ -94,7 +94,7 @@ export default function VIPDashboard() {
           {/* Milestone Rewards */}
           {milestones.length > 0 && (
             <div>
-              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+              <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                 <Gift className="h-3 w-3" /> Milestone Rewards
               </h2>
               <div className="grid gap-2">
@@ -115,26 +115,26 @@ export default function VIPDashboard() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium truncate">{m.title}</p>
-                        <p className="text-[10px] text-muted-foreground truncate">{m.description}</p>
+                        <p className="text-micro text-muted-foreground truncate">{m.description}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {m.reward_neurons > 0 && (
-                          <span className="text-[10px] font-mono text-primary">+{m.reward_neurons}</span>
+                          <span className="text-micro font-mono text-primary">+{m.reward_neurons}</span>
                         )}
                         {m.unlocked && !m.claimed ? (
                           <Button
                             size="sm"
                             variant="outline"
-                            className="text-[10px] h-7 px-2"
+                            className="text-micro h-7 px-2"
                             disabled={claimingId === m.id}
                             onClick={() => handleClaim(m.id)}
                           >
                             {claimingId === m.id ? <Loader2 className="h-3 w-3 animate-spin" /> : "Claim"}
                           </Button>
                         ) : m.claimed ? (
-                          <Badge variant="secondary" className="text-[9px]">Claimed</Badge>
+                          <Badge variant="secondary" className="text-nano">Claimed</Badge>
                         ) : (
-                          <Badge variant="outline" className="text-[9px]">Luna {m.month_number}</Badge>
+                          <Badge variant="outline" className="text-nano">Luna {m.month_number}</Badge>
                         )}
                       </div>
                     </div>
@@ -161,7 +161,7 @@ export default function VIPDashboard() {
                   <CheckCircle2 className="h-4 w-4" />
                   <span className="font-medium">Ești eligibil pentru CusnirOS!</span>
                 </div>
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   Ai completat cele 11 luni și deții {tokenBalance} NOTA2 tokens. Accesul CusnirOS este activ.
                 </p>
               </div>
@@ -173,7 +173,7 @@ export default function VIPDashboard() {
                   {cusnirReason === "NO_TOKENS" && "Trebuie să deții NOTA2 tokens pentru acces CusnirOS."}
                   {!cusnirReason && "Înscrie-te în programul VIP de 11 luni."}
                 </p>
-                <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
+                <div className="flex items-center gap-4 text-micro text-muted-foreground">
                   <span>Luna: {currentMonth}/11</span>
                   <span>NOTA2: {tokenBalance}</span>
                 </div>
@@ -184,7 +184,7 @@ export default function VIPDashboard() {
           {/* War Rooms */}
           {warRooms.length > 0 && (
             <div>
-              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+              <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                 <Shield className="h-3 w-3" /> {t("vip.war_rooms")}
               </h2>
               <div className="grid gap-3">
@@ -204,12 +204,12 @@ export default function VIPDashboard() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium">{wr.name}</p>
-                          <p className="text-[10px] text-muted-foreground truncate">{wr.description}</p>
+                          <p className="text-micro text-muted-foreground truncate">{wr.description}</p>
                         </div>
                         {locked ? (
-                          <Badge variant="outline" className="text-[9px] shrink-0">{t("vip.month_required", { month: wr.min_month })}</Badge>
+                          <Badge variant="outline" className="text-nano shrink-0">{t("vip.month_required", { month: wr.min_month })}</Badge>
                         ) : (
-                          <Badge variant="secondary" className="text-[9px] shrink-0">{t("vip.access_active")}</Badge>
+                          <Badge variant="secondary" className="text-nano shrink-0">{t("vip.access_active")}</Badge>
                         )}
                       </div>
                     </div>

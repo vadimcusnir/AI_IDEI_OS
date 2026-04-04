@@ -63,11 +63,11 @@ export function EconomicProjections({ transactions, currentBalance }: EconomicPr
   return (
     <div className="bg-card border border-border rounded-xl p-5 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+        <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           <Calendar className="h-3 w-3" /> Economic Projections
         </h2>
         <span className={cn(
-          "text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
+          "text-nano font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
           health === "positive" ? "bg-status-validated/15 text-status-validated" :
           health === "critical" ? "bg-destructive/15 text-destructive" :
           "bg-amber-500/15 text-amber-600 dark:text-amber-400"
@@ -122,14 +122,14 @@ export function EconomicProjections({ transactions, currentBalance }: EconomicPr
       {/* 30/90 day projections */}
       <div className="grid grid-cols-2 gap-3 mt-3">
         <div className="rounded-lg bg-muted/30 border border-border px-3 py-2.5">
-          <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-0.5">30-Day Forecast</p>
+          <p className="text-nano uppercase tracking-wider text-muted-foreground mb-0.5">30-Day Forecast</p>
           <p className="text-lg font-bold font-mono">{projections.projectedBalance30d.toLocaleString()}</p>
-          <p className="text-[9px] text-muted-foreground">NEURONS</p>
+          <p className="text-nano text-muted-foreground">NEURONS</p>
         </div>
         <div className="rounded-lg bg-muted/30 border border-border px-3 py-2.5">
-          <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-0.5">90-Day Forecast</p>
+          <p className="text-nano uppercase tracking-wider text-muted-foreground mb-0.5">90-Day Forecast</p>
           <p className="text-lg font-bold font-mono">{projections.projectedBalance90d.toLocaleString()}</p>
-          <p className="text-[9px] text-muted-foreground">NEURONS</p>
+          <p className="text-nano text-muted-foreground">NEURONS</p>
         </div>
       </div>
     </div>
@@ -145,10 +145,10 @@ function ProjectionCell({ label, value, unit, icon }: {
         {icon}
       </div>
       <div>
-        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{label}</p>
+        <p className="text-nano uppercase tracking-wider text-muted-foreground">{label}</p>
         <div className="flex items-baseline gap-1">
           <span className="text-sm font-bold font-mono">{value}</span>
-          <span className="text-[9px] text-muted-foreground">{unit}</span>
+          <span className="text-nano text-muted-foreground">{unit}</span>
         </div>
       </div>
     </div>

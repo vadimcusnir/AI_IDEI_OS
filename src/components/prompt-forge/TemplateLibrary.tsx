@@ -62,8 +62,8 @@ export function TemplateLibrary({ onSelect }: TemplateLibraryProps) {
             )}
           >
             <p className="text-xs font-medium text-foreground truncate">{t.title}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2">{t.description}</p>
-            <span className="inline-block mt-1.5 text-[9px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+            <p className="text-micro text-muted-foreground mt-0.5 line-clamp-2">{t.description}</p>
+            <span className="inline-block mt-1.5 text-nano px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
               {t.category}
             </span>
           </button>

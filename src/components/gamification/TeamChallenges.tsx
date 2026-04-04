@@ -64,7 +64,7 @@ export function TeamChallenges() {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+      <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
         <Users className="h-3 w-3" /> Team Challenges
       </h3>
       {challenges.map((c) => {
@@ -85,25 +85,25 @@ export function TeamChallenges() {
                 </div>
                 <div className="flex gap-1">
                   {c.xp_reward > 0 && (
-                    <Badge variant="outline" className="text-[9px] px-1 py-0">+{c.xp_reward} XP</Badge>
+                    <Badge variant="outline" className="text-nano px-1 py-0">+{c.xp_reward} XP</Badge>
                   )}
                   {c.neurons_reward > 0 && (
-                    <Badge variant="outline" className="text-[9px] px-1 py-0 border-primary text-primary">
+                    <Badge variant="outline" className="text-nano px-1 py-0 border-primary text-primary">
                       +{c.neurons_reward} N
                     </Badge>
                   )}
                 </div>
               </div>
-              <p className="text-[10px] text-muted-foreground mb-2">{c.description}</p>
+              <p className="text-micro text-muted-foreground mb-2">{c.description}</p>
               <div className="flex items-center gap-2 mb-1">
                 <Progress value={pct} className="h-1.5 flex-1" />
-                <span className="text-[9px] font-medium">{c.current_value}/{c.goal_value}</span>
+                <span className="text-nano font-medium">{c.current_value}/{c.goal_value}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[9px] text-muted-foreground">
+                <span className="text-nano text-muted-foreground">
                   Your contribution: {c.my_contribution}
                 </span>
-                <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                <span className="text-nano text-muted-foreground flex items-center gap-0.5">
                   <Clock className="h-2.5 w-2.5" />
                   {formatDistanceToNow(new Date(c.ends_at), { addSuffix: true })}
                 </span>

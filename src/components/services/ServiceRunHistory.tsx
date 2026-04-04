@@ -104,17 +104,17 @@ export function ServiceRunHistory({ limit = 20, serviceKeyFilter }: Props) {
               {statusIcon(run.status)}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{run.service_name}</p>
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   {formatDistanceToNow(new Date(run.created_at), { addSuffix: true })}
                   {run.duration_ms && ` · ${(run.duration_ms / 1000).toFixed(1)}s`}
                 </p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <Badge variant="outline" className="text-[9px] font-mono">
+                <Badge variant="outline" className="text-nano font-mono">
                   <Coins className="h-2.5 w-2.5 mr-0.5" /> {run.credits_cost}
                 </Badge>
                 <Badge variant="outline" className={cn(
-                  "text-[9px]",
+                  "text-nano",
                   run.status === "completed" && "border-emerald-500/30 text-emerald-500",
                   run.status === "failed" && "border-destructive/30 text-destructive",
                 )}>
@@ -128,7 +128,7 @@ export function ServiceRunHistory({ limit = 20, serviceKeyFilter }: Props) {
               <div className="border-t border-border px-3 py-3 space-y-3">
                 {run.result_preview && (
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                    <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1">
                       Preview rezultat
                     </p>
                     <div className="bg-muted/50 rounded-lg p-3 text-xs whitespace-pre-wrap max-h-40 overflow-auto">
@@ -137,7 +137,7 @@ export function ServiceRunHistory({ limit = 20, serviceKeyFilter }: Props) {
                   </div>
                 )}
                 {run.batch_id && (
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-micro text-muted-foreground">
                     Batch: <span className="font-mono">{run.batch_id.slice(0, 8)}...</span>
                   </p>
                 )}

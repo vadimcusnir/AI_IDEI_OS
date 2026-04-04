@@ -51,7 +51,7 @@ export default function RuntimeDashboard() {
               </div>
               <div>
                 <h1 className="text-lg font-bold tracking-tight">{t("runtime_dashboard.title")}</h1>
-                <p className="text-[10px] text-muted-foreground">{t("runtime_dashboard.subtitle")}</p>
+                <p className="text-micro text-muted-foreground">{t("runtime_dashboard.subtitle")}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={reload}>
@@ -78,7 +78,7 @@ export default function RuntimeDashboard() {
           {/* Service Health */}
           {services.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">
                 {t("runtime_dashboard.circuit_breaker")}
               </h2>
               <div className="space-y-1">
@@ -91,16 +91,16 @@ export default function RuntimeDashboard() {
                     )} />
                     <span className="text-xs font-mono flex-1 truncate">{svc.service_key}</span>
                     <Badge variant="outline" className={cn(
-                      "text-[9px]",
+                      "text-nano",
                       svc.circuit_state === "closed" ? "text-status-validated border-status-validated/30" :
                       svc.circuit_state === "half_open" ? "text-primary border-primary/30" :
                       "text-destructive border-destructive/30"
                     )}>
                       {svc.circuit_state}
                     </Badge>
-                    <span className="text-[10px] font-mono text-muted-foreground">{svc.avg_latency_ms}ms</span>
+                    <span className="text-micro font-mono text-muted-foreground">{svc.avg_latency_ms}ms</span>
                     {svc.consecutive_failures > 0 && (
-                      <span className="text-[10px] font-mono text-destructive">{svc.consecutive_failures} {t("runtime_dashboard.fails")}</span>
+                      <span className="text-micro font-mono text-destructive">{svc.consecutive_failures} {t("runtime_dashboard.fails")}</span>
                     )}
                   </div>
                 ))}
@@ -110,7 +110,7 @@ export default function RuntimeDashboard() {
 
           {/* Feature Flags */}
           <div>
-            <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+            <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">
               {t("runtime_dashboard.feature_flags")}
             </h2>
             {flags.length === 0 ? (
@@ -126,9 +126,9 @@ export default function RuntimeDashboard() {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-mono font-medium">{flag.key}</p>
-                      <p className="text-[10px] text-muted-foreground truncate">{flag.description}</p>
+                      <p className="text-micro text-muted-foreground truncate">{flag.description}</p>
                     </div>
-                    <Badge variant={flag.enabled ? "secondary" : "outline"} className="text-[9px] shrink-0">
+                    <Badge variant={flag.enabled ? "secondary" : "outline"} className="text-nano shrink-0">
                       {flag.enabled ? `${flag.rollout_percentage}%` : "OFF"}
                     </Badge>
                   </div>
@@ -152,7 +152,7 @@ function StatCard({ icon: Icon, label, value, accent }: {
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center gap-1.5 mb-2">
         <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <span className={cn("text-xl font-bold font-mono", accent)}>{value}</span>
     </div>

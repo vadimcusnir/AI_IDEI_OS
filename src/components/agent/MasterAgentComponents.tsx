@@ -148,7 +148,7 @@ export function PipelineTimeline({ currentStep, steps }: { currentStep: string; 
                 isPhaseDone ? "bg-status-validated" : isPhaseActive ? "bg-primary" : "bg-border"
               )} />
               <span className={cn(
-                "text-[9px] font-mono font-bold tracking-[0.25em] transition-colors duration-300",
+                "text-nano font-mono font-bold tracking-[0.25em] transition-colors duration-300",
                 isPhaseDone ? "text-status-validated" : isPhaseActive ? meta.color : "text-muted-foreground/30"
               )}>
                 {meta.label}
@@ -185,7 +185,7 @@ export function PipelineTimeline({ currentStep, steps }: { currentStep: string; 
                       )}
                     </div>
                     <span className={cn(
-                      "text-[8px] font-medium text-center leading-tight",
+                      "text-nano font-medium text-center leading-tight",
                       isDone ? "text-status-validated" : isCurrent ? "text-foreground" : "text-muted-foreground/40"
                     )}>
                       {step.label}
@@ -215,7 +215,7 @@ export function StatCard({ label, value, icon: Icon, delay = 0 }: {
       <div className="absolute -top-8 -right-8 h-20 w-20 rounded-full bg-primary/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <Icon className="h-4 w-4 text-primary/60 mb-2" />
       <p className="text-3xl font-bold font-mono tracking-tight text-foreground">{value}</p>
-      <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wider font-medium">{label}</p>
+      <p className="text-micro text-muted-foreground mt-1 uppercase tracking-wider font-medium">{label}</p>
     </motion.div>
   );
 }

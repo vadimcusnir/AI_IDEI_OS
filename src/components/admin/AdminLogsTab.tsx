@@ -151,13 +151,13 @@ export function AdminLogsTab() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-[10px] w-16">Source</TableHead>
-              <TableHead className="text-[10px] w-20">Severity</TableHead>
-              <TableHead className="text-[10px]">Action</TableHead>
-              <TableHead className="text-[10px]">Actor</TableHead>
-              <TableHead className="text-[10px]">Target</TableHead>
-              <TableHead className="text-[10px]">Description</TableHead>
-              <TableHead className="text-[10px]">Timestamp</TableHead>
+              <TableHead className="text-micro w-16">Source</TableHead>
+              <TableHead className="text-micro w-20">Severity</TableHead>
+              <TableHead className="text-micro">Action</TableHead>
+              <TableHead className="text-micro">Actor</TableHead>
+              <TableHead className="text-micro">Target</TableHead>
+              <TableHead className="text-micro">Description</TableHead>
+              <TableHead className="text-micro">Timestamp</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -165,7 +165,7 @@ export function AdminLogsTab() {
               <TableRow key={`${log.source}-${log.id}`}>
                 <TableCell>
                   <span className={cn(
-                    "text-[9px] font-mono px-1.5 py-0.5 rounded",
+                    "text-nano font-mono px-1.5 py-0.5 rounded",
                     log.source === "compliance" ? "bg-primary/10 text-primary" :
                     log.source === "anomaly" ? "bg-warning/10 text-warning" :
                     "bg-muted text-muted-foreground"
@@ -173,18 +173,18 @@ export function AdminLogsTab() {
                 </TableCell>
                 <TableCell>
                   <span className={cn(
-                    "inline-flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.5 rounded",
+                    "inline-flex items-center gap-1 text-nano font-mono px-1.5 py-0.5 rounded",
                     SEVERITY_STYLES[log.severity] || "bg-muted text-muted-foreground"
                   )}>
                     <SeverityIcon severity={log.severity} />
                     {log.severity}
                   </span>
                 </TableCell>
-                <TableCell className="text-[10px] font-mono">{log.action}</TableCell>
-                <TableCell className="text-[10px] font-mono text-muted-foreground">{log.actor}</TableCell>
-                <TableCell className="text-[10px] font-mono text-muted-foreground max-w-[120px] truncate">{log.target}</TableCell>
-                <TableCell className="text-[10px] max-w-[250px] truncate">{log.description}</TableCell>
-                <TableCell className="text-[10px] text-muted-foreground whitespace-nowrap">{new Date(log.timestamp).toLocaleString()}</TableCell>
+                <TableCell className="text-micro font-mono">{log.action}</TableCell>
+                <TableCell className="text-micro font-mono text-muted-foreground">{log.actor}</TableCell>
+                <TableCell className="text-micro font-mono text-muted-foreground max-w-[120px] truncate">{log.target}</TableCell>
+                <TableCell className="text-micro max-w-[250px] truncate">{log.description}</TableCell>
+                <TableCell className="text-micro text-muted-foreground whitespace-nowrap">{new Date(log.timestamp).toLocaleString()}</TableCell>
               </TableRow>
             ))}
             {logs.length === 0 && (
@@ -201,7 +201,7 @@ export function AdminLogsTab() {
         <Button variant="outline" size="sm" className="h-7 w-7 p-0" onClick={() => setPage(p => p - 1)} disabled={page === 0}>
           <ChevronLeft className="h-3.5 w-3.5" />
         </Button>
-        <span className="text-[10px] text-muted-foreground px-2">Pagina {page + 1}</span>
+        <span className="text-micro text-muted-foreground px-2">Pagina {page + 1}</span>
         <Button variant="outline" size="sm" className="h-7 w-7 p-0" onClick={() => setPage(p => p + 1)} disabled={!hasMore}>
           <ChevronRight className="h-3.5 w-3.5" />
         </Button>

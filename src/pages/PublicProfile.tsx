@@ -64,7 +64,7 @@ export default function PublicProfile() {
           <h1 className="text-2xl font-bold">{profile?.display_name}</h1>
           <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto">{profile?.bio}</p>
           <div className="flex items-center justify-center gap-2 mt-3">
-            <span className="text-[10px] bg-muted/50 text-muted-foreground px-2.5 py-1 rounded-full flex items-center gap-1">
+            <span className="text-micro bg-muted/50 text-muted-foreground px-2.5 py-1 rounded-full flex items-center gap-1">
               <Brain className="h-3 w-3 text-primary" />
               {profile?.neuron_count || 0} neurons
             </span>
@@ -92,7 +92,7 @@ export default function PublicProfile() {
         {/* Products / Monetization */}
         {profile?.products && profile.products.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
+            <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
               {t("public_profile.products_services")}
             </h2>
             <div className="space-y-2">
@@ -117,7 +117,7 @@ export default function PublicProfile() {
 
         {/* Footer */}
         <div className="text-center mt-12">
-          <a href="/links" className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
+          <a href="/links" className="inline-flex items-center gap-1.5 text-micro text-muted-foreground/50 hover:text-primary transition-colors">
             <Logo size="h-4 w-4" alt="" />
             AI-IDEI Knowledge OS
           </a>

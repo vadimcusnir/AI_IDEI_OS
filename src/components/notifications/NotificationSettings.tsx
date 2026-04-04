@@ -62,14 +62,14 @@ export function NotificationSettings() {
           <BellRing className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold">{t("common:notification_settings.push_title")}</h3>
           {pushActive && (
-            <Badge variant="outline" className="text-[10px] h-5 bg-primary/10 text-primary border-primary/30">
+            <Badge variant="outline" className="text-micro h-5 bg-primary/10 text-primary border-primary/30">
               {t("common:active")}
             </Badge>
           )}
         </div>
         <div className="space-y-3 rounded-xl border border-border p-4 bg-card">
           {!isSupported && (
-            <div className="flex items-center gap-2 text-[10px] text-destructive bg-destructive/10 rounded-lg p-2.5 mb-2">
+            <div className="flex items-center gap-2 text-micro text-destructive bg-destructive/10 rounded-lg p-2.5 mb-2">
               <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-destructive" />
               <span>{t("errors:push_not_supported")}</span>
             </div>
@@ -128,7 +128,7 @@ export function NotificationSettings() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium">{t("common:notification_settings.digest_frequency")}</p>
-              <p className="text-[10px] text-muted-foreground">{t("common:notification_settings.digest_frequency_desc")}</p>
+              <p className="text-micro text-muted-foreground">{t("common:notification_settings.digest_frequency_desc")}</p>
             </div>
             <Select
               value={prefs.email_digest}
@@ -181,12 +181,12 @@ export function NotificationSettings() {
           <h3 className="text-sm font-semibold">{t("common:notification_settings.quiet_hours")}</h3>
         </div>
         <div className="rounded-xl border border-border p-4 bg-card">
-          <p className="text-[10px] text-muted-foreground mb-3">
+          <p className="text-micro text-muted-foreground mb-3">
             {t("common:notification_settings.quiet_hours_desc")}
           </p>
           <div className="flex items-center gap-3">
             <div className="flex-1">
-              <Label className="text-[10px] text-muted-foreground mb-1 block">{t("common:notification_settings.from")}</Label>
+              <Label className="text-micro text-muted-foreground mb-1 block">{t("common:notification_settings.from")}</Label>
               <Select
                 value={prefs.quiet_hours_start?.toString() ?? "none"}
                 onValueChange={(v) => updatePrefs({ quiet_hours_start: v === "none" ? null : Number(v) })}
@@ -205,7 +205,7 @@ export function NotificationSettings() {
               </Select>
             </div>
             <div className="flex-1">
-              <Label className="text-[10px] text-muted-foreground mb-1 block">{t("common:notification_settings.to")}</Label>
+              <Label className="text-micro text-muted-foreground mb-1 block">{t("common:notification_settings.to")}</Label>
               <Select
                 value={prefs.quiet_hours_end?.toString() ?? "none"}
                 onValueChange={(v) => updatePrefs({ quiet_hours_end: v === "none" ? null : Number(v) })}
@@ -228,7 +228,7 @@ export function NotificationSettings() {
       </section>
 
       {saving && (
-        <p className="text-[10px] text-muted-foreground text-center animate-pulse">{t("common:saving")}</p>
+        <p className="text-micro text-muted-foreground text-center animate-pulse">{t("common:saving")}</p>
       )}
     </div>
   );
@@ -255,7 +255,7 @@ function ToggleRow({
         <Icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
         <div>
           <p className="text-xs font-medium">{label}</p>
-          <p className="text-[10px] text-muted-foreground">{description}</p>
+          <p className="text-micro text-muted-foreground">{description}</p>
         </div>
       </div>
       <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} />

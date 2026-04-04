@@ -215,9 +215,9 @@ export default function MarketplaceDetail() {
         {/* Header */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline" className="text-[10px]">{asset.asset_type}</Badge>
+            <Badge variant="outline" className="text-micro">{asset.asset_type}</Badge>
             {asset.is_featured && (
-              <Badge className="bg-semantic-amber/10 text-semantic-amber text-[9px] border-semantic-amber/30">
+              <Badge className="bg-semantic-amber/10 text-semantic-amber text-nano border-semantic-amber/30">
                 <Crown className="h-2.5 w-2.5 mr-1" /> {t("marketplace_detail.featured")}
               </Badge>
             )}
@@ -250,7 +250,7 @@ export default function MarketplaceDetail() {
         {asset.tags && asset.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {asset.tags.map(tag => (
-              <span key={tag} className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 bg-muted rounded-full text-muted-foreground">
+              <span key={tag} className="inline-flex items-center gap-1 text-micro px-2 py-0.5 bg-muted rounded-full text-muted-foreground">
                 <Tag className="h-2.5 w-2.5" /> {tag}
               </span>
             ))}
@@ -283,7 +283,7 @@ export default function MarketplaceDetail() {
                 {isFree && <span className="text-sm font-semibold text-emerald-600">{t("marketplace_detail.free")}</span>}
               </div>
               {!isFree && user && (
-                <p className="text-[10px] text-muted-foreground">{t("marketplace_detail.your_balance", { balance })}</p>
+                <p className="text-micro text-muted-foreground">{t("marketplace_detail.your_balance", { balance })}</p>
               )}
             </div>
             <Button
@@ -345,7 +345,7 @@ export default function MarketplaceDetail() {
                         <Star key={s} className={cn("h-3 w-3", s <= review.rating ? "text-amber-500 fill-amber-500" : "text-muted-foreground/20")} />
                       ))}
                     </div>
-                    <span className="text-[10px] text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
+                    <span className="text-micro text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
                   </div>
                   {review.review_text && <p className="text-sm text-muted-foreground">{review.review_text}</p>}
                 </div>

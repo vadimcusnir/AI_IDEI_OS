@@ -44,15 +44,15 @@ export default function GamificationPage() {
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">{t("gamification.title")}</h1>
-              <p className="text-[10px] text-muted-foreground">{t("gamification.subtitle")}</p>
+              <p className="text-micro text-muted-foreground">{t("gamification.subtitle")}</p>
             </div>
             <div className="ml-auto flex items-center gap-2">
               {tierMultiplier > 1 && (
-                <Badge variant="outline" className="text-[9px] border-primary/30 text-primary">
+                <Badge variant="outline" className="text-nano border-primary/30 text-primary">
                   {tierMultiplier}x XP Boost
                 </Badge>
               )}
-              <Badge className="text-[10px] bg-primary/10 text-primary border-0">
+              <Badge className="text-micro bg-primary/10 text-primary border-0">
                 Level {xp.level} — {xp.rank_name}
               </Badge>
             </div>
@@ -83,7 +83,7 @@ export default function GamificationPage() {
           {/* Achievement Gallery */}
           <ControlledSection elementId="gamification.achievements">
             <div className="mb-6">
-              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+              <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                 <Award className="h-3 w-3" /> {t("gamification.achievement_gallery")}
               </h2>
               <AchievementGallery />
@@ -93,7 +93,7 @@ export default function GamificationPage() {
           {/* Leaderboard */}
           <ControlledSection elementId="gamification.leaderboard">
             <div className="mb-6">
-              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+              <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                 <Medal className="h-3 w-3" /> {t("gamification.leaderboard")}
               </h2>
               <LeaderboardWidget />

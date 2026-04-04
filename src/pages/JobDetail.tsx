@@ -151,7 +151,7 @@ export default function JobDetail() {
             </h1>
             <p className="text-xs text-muted-foreground font-mono">{job.id.slice(0, 12)}...</p>
           </div>
-          <Badge className={cn("text-[10px]", statusCfg.color)}>
+          <Badge className={cn("text-micro", statusCfg.color)}>
             <StatusIcon className={cn("h-3 w-3 mr-1", job.status === "running" && "animate-spin")} />
             {statusCfg.label}
           </Badge>
@@ -169,7 +169,7 @@ export default function JobDetail() {
               )}
             </div>
             <Progress value={getProgress()} className="h-2" />
-            <div className="text-[10px] text-muted-foreground font-mono space-y-1">
+            <div className="text-micro text-muted-foreground font-mono space-y-1">
               {job.status === "running" && (
                 <>
                   <p>▸ Analizez conținutul input...</p>
@@ -192,7 +192,7 @@ export default function JobDetail() {
               </>
             )}
             {job.retry_count > 0 && (
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-micro text-muted-foreground">
                 Retry: {job.retry_count}/{job.max_retries}
               </p>
             )}
@@ -254,7 +254,7 @@ export default function JobDetail() {
             { label: "Nivel", value: (job.input as any)?.service_level || "—" },
           ].map(item => (
             <div key={item.label} className="bg-muted/30 rounded-lg p-3">
-              <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{item.label}</p>
+              <p className="text-nano font-semibold uppercase tracking-wider text-muted-foreground mb-1">{item.label}</p>
               <p className="text-xs font-medium truncate">{item.value}</p>
             </div>
           ))}
@@ -274,19 +274,19 @@ export default function JobDetail() {
                 <div key={art.id} className="bg-card border border-border rounded-xl overflow-hidden">
                   <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-[8px]">{art.artifact_type}</Badge>
+                      <Badge variant="outline" className="text-nano">{art.artifact_type}</Badge>
                       <span className="text-sm font-medium truncate">{art.title}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       {art.is_locked && !showFull[art.id] && (
-                        <Badge variant="outline" className="text-[8px] gap-1">
+                        <Badge variant="outline" className="text-nano gap-1">
                           <Lock className="h-2.5 w-2.5" /> Preview 20%
                         </Badge>
                       )}
                        <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 text-[10px]"
+                        className="h-6 text-micro"
                         onClick={() => {
                           navigator.clipboard.writeText(isUnlocked ? art.content : displayContent);
                           toast.success("Copiat!");
@@ -332,7 +332,7 @@ export default function JobDetail() {
         {/* Result JSON (fallback) */}
         {job.result && artifacts.length === 0 && (
           <div className="bg-muted/30 rounded-xl p-4">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Result</p>
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">Result</p>
             <pre className="text-xs font-mono whitespace-pre-wrap max-h-[300px] overflow-y-auto">
               {typeof job.result === "string" ? job.result : JSON.stringify(job.result, null, 2)}
             </pre>

@@ -234,11 +234,11 @@ export default function AdminMediaProfiles() {
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-medium">{p.person_name || p.public_slug}</span>
-                    <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-medium", STATUS_COLORS[p.visibility_status])}>
+                    <span className={cn("text-micro px-2 py-0.5 rounded-full font-medium", STATUS_COLORS[p.visibility_status])}>
                       {p.visibility_status}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                  <div className="flex items-center gap-3 text-micro text-muted-foreground">
                     <span>{p.profile_type.replace("_", " ")}</span>
                     <span>•</span>
                     <span className={RISK_COLORS[p.risk_flag]}>risk: {p.risk_flag}</span>

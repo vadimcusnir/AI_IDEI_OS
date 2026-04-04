@@ -74,7 +74,7 @@ function HeroBlock({ t }: { t: (k: string) => string }) {
         </p>
         <div className="flex items-center justify-center gap-3 mt-4 flex-wrap">
           {pills.map(p => (
-            <span key={p.label} className="flex items-center gap-1.5 text-[10px] text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-full">
+            <span key={p.label} className="flex items-center gap-1.5 text-micro text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-full">
               <p.icon className="h-3 w-3 text-primary" />
               {p.label}
             </span>
@@ -130,7 +130,7 @@ function LinkCard({ item, onClick, locked }: { item: LinkItem; onClick: () => vo
           </span>
           {item.badge && (
             <span className={cn(
-              "text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full",
+              "text-nano font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full",
               item.badge === "Admin" ? "bg-destructive/10 text-destructive" :
               item.badge === "New" ? "bg-status-validated/15 text-status-validated" :
               item.badge === "Core" ? "bg-primary/10 text-primary" :
@@ -140,7 +140,7 @@ function LinkCard({ item, onClick, locked }: { item: LinkItem; onClick: () => vo
             </span>
           )}
           {locked && (
-            <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+            <span className="text-nano font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
               Login
             </span>
           )}
@@ -262,7 +262,7 @@ export default function Links() {
         {/* Sections with role-based access */}
         {processedSections.map(section => (
           <div key={section.id} className="mb-8">
-            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
+            <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
               {section.title}
             </h2>
             <div className="space-y-2">

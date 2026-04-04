@@ -60,7 +60,7 @@ export function ServicesHero({ isLoggedIn, serviceCount }: ServicesHeroProps) {
         </div>
 
         {/* Social proof strip */}
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-dense text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <Clock className="h-3 w-3 text-primary/60" />
             Sub 2 minute execuție

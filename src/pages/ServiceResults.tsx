@@ -189,10 +189,10 @@ export default function ServiceResults() {
                 <kpi.icon className={cn("h-4 w-4", kpi.color || "text-muted-foreground")} />
               </div>
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</p>
+                <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</p>
                 <div className="flex items-baseline gap-0.5">
                   <span className="text-lg font-bold font-mono">{kpi.value}</span>
-                  {kpi.suffix && <span className="text-[10px] text-muted-foreground">{kpi.suffix}</span>}
+                  {kpi.suffix && <span className="text-micro text-muted-foreground">{kpi.suffix}</span>}
                 </div>
               </div>
             </div>
@@ -288,12 +288,12 @@ export default function ServiceResults() {
                       <div className="flex items-center gap-2 mb-0.5">
                         <p className="text-sm font-medium truncate">{run.service_name}</p>
                         {run.batch_id && (
-                          <Badge variant="outline" className="text-[8px] font-mono">
+                          <Badge variant="outline" className="text-nano font-mono">
                             BATCH
                           </Badge>
                         )}
                       </div>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-micro text-muted-foreground">
                         {format(new Date(run.created_at), "dd MMM yyyy, HH:mm")}
                         {run.duration_ms && ` · ${(run.duration_ms / 1000).toFixed(1)}s`}
                         {run.neuron_id && ` · Neuron #${run.neuron_id}`}
@@ -320,13 +320,13 @@ export default function ServiceResults() {
                           {run.result_preview ? (
                             <div>
                               <div className="flex items-center justify-between mb-2">
-                                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">
                                   Rezultat
                                 </p>
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  className="h-6 text-[10px] gap-1"
+                                  className="h-6 text-micro gap-1"
                                   onClick={() => copyResult(run.result_preview)}
                                 >
                                   <Copy className="h-3 w-3" /> Copiază
@@ -345,10 +345,10 @@ export default function ServiceResults() {
                           {/* Input context */}
                           {run.inputs && Object.keys(run.inputs).length > 0 && (
                             <div>
-                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                                 Input
                               </p>
-                              <div className="bg-muted/30 rounded-lg p-3 text-[11px] space-y-1">
+                              <div className="bg-muted/30 rounded-lg p-3 text-dense space-y-1">
                                 {Object.entries(run.inputs).map(([key, val]) => (
                                   <div key={key} className="flex gap-2">
                                     <span className="text-muted-foreground font-mono shrink-0">{key}:</span>
@@ -360,7 +360,7 @@ export default function ServiceResults() {
                           )}
 
                           {/* Meta */}
-                          <div className="flex flex-wrap gap-3 text-[10px] text-muted-foreground">
+                          <div className="flex flex-wrap gap-3 text-micro text-muted-foreground">
                             <span>ID: <span className="font-mono">{run.id.slice(0, 8)}</span></span>
                             {run.job_id && <span>Job: <span className="font-mono">{run.job_id.slice(0, 8)}</span></span>}
                             {run.batch_id && (
@@ -424,7 +424,7 @@ export default function ServiceResults() {
               </span>
             </div>
             <Progress value={stats.total > 0 ? (stats.completed / stats.total) * 100 : 0} className="h-2" />
-            <div className="flex justify-between mt-2 text-[10px] text-muted-foreground">
+            <div className="flex justify-between mt-2 text-micro text-muted-foreground">
               <span>{stats.completed} completate</span>
               <span>{stats.failed} eșuate</span>
               <span>{stats.uniqueServices} servicii unice</span>

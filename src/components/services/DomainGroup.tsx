@@ -40,7 +40,7 @@ export function DomainGroup({ domain, services, defaultOpen = false, onServiceCl
       >
         <span className="text-base">{meta.emoji}</span>
         <span className="text-sm font-semibold flex-1 text-left">{meta.label}</span>
-        <span className="text-[10px] font-mono text-muted-foreground bg-muted rounded-full px-2 py-0.5">
+        <span className="text-micro font-mono text-muted-foreground bg-muted rounded-full px-2 py-0.5">
           {services.length}
         </span>
         <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", open && "rotate-180")} />

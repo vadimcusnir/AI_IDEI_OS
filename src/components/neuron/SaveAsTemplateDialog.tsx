@@ -59,7 +59,7 @@ export function SaveAsTemplateDialog({ isOpen, onClose, onSave, blocks, defaultN
 
         <div className="px-5 py-4 space-y-3">
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">{t("template.name")}</label>
+            <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">{t("template.name")}</label>
             <input
               value={name}
               onChange={e => setName(e.target.value)}
@@ -68,7 +68,7 @@ export function SaveAsTemplateDialog({ isOpen, onClose, onSave, blocks, defaultN
             />
           </div>
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">{t("template.description")}</label>
+            <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">{t("template.description")}</label>
             <textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
@@ -78,7 +78,7 @@ export function SaveAsTemplateDialog({ isOpen, onClose, onSave, blocks, defaultN
             />
           </div>
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">{t("template.category")}</label>
+            <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">{t("template.category")}</label>
             <div className="flex flex-wrap gap-1.5">
               {CATEGORIES.map(c => (
                 <button
@@ -104,7 +104,7 @@ export function SaveAsTemplateDialog({ isOpen, onClose, onSave, blocks, defaultN
             </button>
             <span className="text-xs text-muted-foreground">{t("template.public_template")}</span>
           </div>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-micro text-muted-foreground">
             {t("template.blocks_saved", { count: blocks.length })}
           </p>
         </div>

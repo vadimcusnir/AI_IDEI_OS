@@ -19,7 +19,7 @@ function StatCard({ icon: Icon, label, value, sub, alert }: {
         <span className="text-xs text-muted-foreground">{label}</span>
       </div>
       <div className="text-2xl font-semibold text-foreground">{value}</div>
-      {sub && <div className="text-[10px] text-muted-foreground mt-1">{sub}</div>}
+      {sub && <div className="text-micro text-muted-foreground mt-1">{sub}</div>}
     </div>
   );
 }
@@ -87,7 +87,7 @@ export default function CapitalizationEngine() {
               </span>
             </div>
             <Progress value={utilPct} className="h-3" />
-            <div className="flex justify-between text-[10px] text-muted-foreground mt-2">
+            <div className="flex justify-between text-micro text-muted-foreground mt-2">
               <span>0%</span>
               <span className="text-muted-foreground/50">60% — Surge Start</span>
               <span className="text-muted-foreground/50">90% — Premium Only</span>
@@ -120,7 +120,7 @@ export default function CapitalizationEngine() {
                     <span className="text-xs font-mono text-muted-foreground w-6">#{i + 1}</span>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm text-foreground truncate">{item.title || "Untitled"}</div>
-                      <div className="text-[10px] text-muted-foreground">
+                      <div className="text-micro text-muted-foreground">
                         App: {Number(item.applicability_score).toFixed(0)} · Clarity: {Number(item.clarity_score).toFixed(0)} · Rarity: {Number(item.rarity_score).toFixed(0)}
                       </div>
                     </div>

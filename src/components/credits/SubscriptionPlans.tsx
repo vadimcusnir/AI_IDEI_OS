@@ -75,7 +75,7 @@ export function SubscriptionPlans() {
               )}
             >
               {isCurrentPlan && (
-                <Badge className="absolute -top-2 right-3 text-[8px] bg-primary text-primary-foreground">
+                <Badge className="absolute -top-2 right-3 text-nano bg-primary text-primary-foreground">
                   {t("subscription.your_plan")}
                 </Badge>
               )}
@@ -92,13 +92,13 @@ export function SubscriptionPlans() {
                 </span>
               </div>
 
-              <div className="text-[10px] text-muted-foreground mb-3">
+              <div className="text-micro text-muted-foreground mb-3">
                 {plan.neurons_quota.toLocaleString()} NEURONS {plan.interval === "month" ? t("subscription.per_month") : t("subscription.per_year")}
               </div>
 
               <ul className="space-y-1.5 mb-4">
                 {plan.features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-1.5 text-[11px]">
+                  <li key={i} className="flex items-center gap-1.5 text-dense">
                     <Check className="h-3 w-3 text-primary shrink-0" />
                     <span>{f}</span>
                   </li>

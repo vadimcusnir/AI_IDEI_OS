@@ -18,7 +18,7 @@ const fade = (delay: number) => ({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/40">
+    <p className="text-micro font-semibold uppercase tracking-[0.2em] text-muted-foreground/40">
       {children}
     </p>
   );
@@ -203,7 +203,7 @@ export function SuperlayerModules({ eligible }: SuperlayerModulesProps) {
     <div className="space-y-8">
       <motion.div {...fade(0)}>
         <SectionLabel>Superlayer Architecture</SectionLabel>
-        <p className="text-[13px] text-muted-foreground/70 leading-relaxed mt-2">
+        <p className="text-compact text-muted-foreground/70 leading-relaxed mt-2">
           Cusnir_OS operează pe patru axe fundamentale. Fiecare axă conține module specializate
           care transformă input-ul brut în sisteme de control economic.
         </p>
@@ -218,8 +218,8 @@ export function SuperlayerModules({ eligible }: SuperlayerModulesProps) {
                 <axis.icon className={cn("h-4 w-4", axis.color)} />
               </div>
               <div>
-                <p className="text-[13px] font-semibold text-foreground">{axis.title}</p>
-                <p className="text-[11px] text-muted-foreground/50">{axis.description}</p>
+                <p className="text-compact font-semibold text-foreground">{axis.title}</p>
+                <p className="text-dense text-muted-foreground/50">{axis.description}</p>
               </div>
             </div>
 
@@ -229,18 +229,18 @@ export function SuperlayerModules({ eligible }: SuperlayerModulesProps) {
                 <div key={mod.name} className="px-4 py-3 space-y-2">
                   <div className="flex items-center gap-2">
                     <mod.icon className="h-3.5 w-3.5 text-muted-foreground/40" />
-                    <p className="text-[12px] font-semibold text-foreground/80">{mod.name}</p>
+                    <p className="text-xs font-semibold text-foreground/80">{mod.name}</p>
                     {!eligible && (
-                      <span className="text-[9px] uppercase tracking-wider text-muted-foreground/30 ml-auto">
+                      <span className="text-nano uppercase tracking-wider text-muted-foreground/30 ml-auto">
                         locked
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-muted-foreground/50 leading-relaxed">{mod.description}</p>
+                  <p className="text-dense text-muted-foreground/50 leading-relaxed">{mod.description}</p>
                   {eligible && (
                     <ul className="space-y-1 pl-1">
                       {mod.capabilities.map((cap) => (
-                        <li key={cap} className="flex items-start gap-2 text-[11px] text-muted-foreground/60">
+                        <li key={cap} className="flex items-start gap-2 text-dense text-muted-foreground/60">
                           <ChevronRight className="h-2.5 w-2.5 mt-0.5 text-primary/30 shrink-0" />
                           <span>{cap}</span>
                         </li>

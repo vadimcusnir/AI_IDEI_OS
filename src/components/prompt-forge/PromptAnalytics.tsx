@@ -102,21 +102,21 @@ export function PromptAnalytics() {
         <div className="p-3 rounded-lg border border-border bg-card">
           <div className="flex items-center gap-1.5 mb-1">
             <Zap className="h-3 w-3 text-primary" />
-            <span className="text-[10px] text-muted-foreground">Generări</span>
+            <span className="text-micro text-muted-foreground">Generări</span>
           </div>
           <p className="text-lg font-bold text-foreground">{data.totalGenerations}</p>
         </div>
         <div className="p-3 rounded-lg border border-border bg-card">
           <div className="flex items-center gap-1.5 mb-1">
             <Coins className="h-3 w-3 text-primary" />
-            <span className="text-[10px] text-muted-foreground">Credite</span>
+            <span className="text-micro text-muted-foreground">Credite</span>
           </div>
           <p className="text-lg font-bold text-foreground">{data.totalCreditsSpent} N</p>
         </div>
         <div className="p-3 rounded-lg border border-border bg-card">
           <div className="flex items-center gap-1.5 mb-1">
             <Star className="h-3 w-3 text-primary" />
-            <span className="text-[10px] text-muted-foreground">Rating mediu</span>
+            <span className="text-micro text-muted-foreground">Rating mediu</span>
           </div>
           <p className="text-lg font-bold text-foreground">
             {data.avgRating > 0 ? data.avgRating.toFixed(1) : "—"}
@@ -125,7 +125,7 @@ export function PromptAnalytics() {
         <div className="p-3 rounded-lg border border-border bg-card">
           <div className="flex items-center gap-1.5 mb-1">
             <TrendingUp className="h-3 w-3 text-primary" />
-            <span className="text-[10px] text-muted-foreground">Variante</span>
+            <span className="text-micro text-muted-foreground">Variante</span>
           </div>
           <p className="text-lg font-bold text-foreground">{data.variantCount}</p>
         </div>
@@ -133,7 +133,7 @@ export function PromptAnalytics() {
 
       {/* Activity chart (simple bar) */}
       <div className="p-3 rounded-lg border border-border bg-card">
-        <span className="text-[10px] font-medium text-muted-foreground flex items-center gap-1.5 mb-2">
+        <span className="text-micro font-medium text-muted-foreground flex items-center gap-1.5 mb-2">
           <Clock className="h-3 w-3" />
           Ultimele 7 zile
         </span>
@@ -144,7 +144,7 @@ export function PromptAnalytics() {
                 className="w-full rounded-sm bg-primary/80 transition-all"
                 style={{ height: `${Math.max((d.count / maxDayCount) * 100, 4)}%` }}
               />
-              <span className="text-[8px] text-muted-foreground">
+              <span className="text-nano text-muted-foreground">
                 {new Date(d.day).toLocaleDateString("ro", { weekday: "short" }).slice(0, 2)}
               </span>
             </div>
@@ -155,14 +155,14 @@ export function PromptAnalytics() {
       {/* Top goals */}
       {data.topGoals.length > 0 && (
         <div className="p-3 rounded-lg border border-border bg-card">
-          <span className="text-[10px] font-medium text-muted-foreground mb-2 block">
+          <span className="text-micro font-medium text-muted-foreground mb-2 block">
             Top Goal-uri
           </span>
           <div className="space-y-1.5">
             {data.topGoals.map(g => (
               <div key={g.goal} className="flex items-center justify-between">
                 <span className="text-xs text-foreground truncate flex-1">{g.goal}</span>
-                <span className="text-[10px] font-mono text-muted-foreground ml-2">{g.count}×</span>
+                <span className="text-micro font-mono text-muted-foreground ml-2">{g.count}×</span>
               </div>
             ))}
           </div>

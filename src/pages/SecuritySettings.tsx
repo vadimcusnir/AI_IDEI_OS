@@ -99,16 +99,16 @@ export default function SecuritySettings() {
               </div>
               <div>
                 <h2 className="text-sm font-semibold">Account Information</h2>
-                <p className="text-[10px] text-muted-foreground">{user?.email}</p>
+                <p className="text-micro text-muted-foreground">{user?.email}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="bg-muted/30 rounded-lg p-3">
-                <span className="text-muted-foreground/60 text-[10px] block mb-0.5">Account created</span>
+                <span className="text-muted-foreground/60 text-micro block mb-0.5">Account created</span>
                 <span className="font-medium">{user?.created_at ? new Date(user.created_at).toLocaleDateString() : "—"}</span>
               </div>
               <div className="bg-muted/30 rounded-lg p-3">
-                <span className="text-muted-foreground/60 text-[10px] block mb-0.5">Email verified</span>
+                <span className="text-muted-foreground/60 text-micro block mb-0.5">Email verified</span>
                 <span className="font-medium flex items-center gap-1">
                   {user?.email_confirmed_at ? (
                     <><CheckCircle2 className="h-3 w-3 text-success" /> Yes</>
@@ -118,11 +118,11 @@ export default function SecuritySettings() {
                 </span>
               </div>
               <div className="bg-muted/30 rounded-lg p-3">
-                <span className="text-muted-foreground/60 text-[10px] block mb-0.5">Last sign in</span>
+                <span className="text-muted-foreground/60 text-micro block mb-0.5">Last sign in</span>
                 <span className="font-medium">{user?.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString() : "—"}</span>
               </div>
               <div className="bg-muted/30 rounded-lg p-3">
-                <span className="text-muted-foreground/60 text-[10px] block mb-0.5">Auth provider</span>
+                <span className="text-muted-foreground/60 text-micro block mb-0.5">Auth provider</span>
                 <span className="font-medium capitalize">{user?.app_metadata?.provider || "email"}</span>
               </div>
             </div>
@@ -141,13 +141,13 @@ export default function SecuritySettings() {
               </div>
               <div>
                 <h2 className="text-sm font-semibold">Change Password</h2>
-                <p className="text-[10px] text-muted-foreground">Use a strong, unique password with 8+ characters.</p>
+                <p className="text-micro text-muted-foreground">Use a strong, unique password with 8+ characters.</p>
               </div>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-[10px] font-medium text-muted-foreground mb-1 block">New Password</label>
+                <label className="text-micro font-medium text-muted-foreground mb-1 block">New Password</label>
                 <div className="relative">
                   <input
                     type={showPw ? "text" : "password"}
@@ -177,7 +177,7 @@ export default function SecuritySettings() {
                       {PASSWORD_CHECKS.map(c => (
                         <div key={c.label} className="flex items-center gap-1">
                            {c.test(newPw) ? <CheckCircle2 className="h-2.5 w-2.5 text-success" /> : <XCircle className="h-2.5 w-2.5 text-muted-foreground/30" />}
-                           <span className={cn("text-[9px]", c.test(newPw) ? "text-foreground" : "text-muted-foreground/50")}>{c.label}</span>
+                           <span className={cn("text-nano", c.test(newPw) ? "text-foreground" : "text-muted-foreground/50")}>{c.label}</span>
                          </div>
                       ))}
                     </div>
@@ -186,7 +186,7 @@ export default function SecuritySettings() {
               </div>
 
               <div>
-                <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Confirm Password</label>
+                <label className="text-micro font-medium text-muted-foreground mb-1 block">Confirm Password</label>
                 <input
                   type="password"
                   value={confirmPw}
@@ -195,7 +195,7 @@ export default function SecuritySettings() {
                   className="w-full h-9 px-3 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-primary/20"
                 />
                 {confirmPw && newPw !== confirmPw && (
-                  <p className="text-[10px] text-destructive mt-1">Passwords don't match</p>
+                  <p className="text-micro text-destructive mt-1">Passwords don't match</p>
                 )}
               </div>
 
@@ -228,7 +228,7 @@ export default function SecuritySettings() {
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold">Data & Privacy</h2>
-                  <p className="text-[10px] text-muted-foreground">Export your data, manage consent, or delete your account (GDPR).</p>
+                  <p className="text-micro text-muted-foreground">Export your data, manage consent, or delete your account (GDPR).</p>
                 </div>
               </div>
               <Button variant="outline" size="sm" onClick={() => navigate("/data-privacy")} className="gap-1.5 text-xs">
@@ -248,7 +248,7 @@ export default function SecuritySettings() {
               <Shield className="h-3.5 w-3.5 text-primary" />
               Security Tips
             </h3>
-            <ul className="space-y-2 text-[10px] text-muted-foreground">
+            <ul className="space-y-2 text-micro text-muted-foreground">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-3 w-3 text-success mt-0.5 shrink-0" />
                 Use a unique password not shared with other services

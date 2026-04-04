@@ -53,11 +53,11 @@ export function ExecutionRightPanel({
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-bold text-foreground truncate">{planName || "Execution"}</p>
-              <p className="text-[10px] text-muted-foreground truncate">{intent?.replace(/_/g, " ")}</p>
+              <p className="text-micro text-muted-foreground truncate">{intent?.replace(/_/g, " ")}</p>
             </div>
           </div>
           {objective && (
-            <p className="text-[11px] text-muted-foreground/70 line-clamp-2 pl-8">{objective}</p>
+            <p className="text-dense text-muted-foreground/70 line-clamp-2 pl-8">{objective}</p>
           )}
         </div>
 
@@ -73,10 +73,10 @@ export function ExecutionRightPanel({
         {steps.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">
+              <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground/50">
                 Progres
               </span>
-              <span className="text-[10px] tabular-nums text-muted-foreground">
+              <span className="text-micro tabular-nums text-muted-foreground">
                 {completedSteps}/{steps.length}
               </span>
             </div>
@@ -96,7 +96,7 @@ export function ExecutionRightPanel({
         {/* Step list */}
         {steps.length > 0 && (
           <div className="space-y-1">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50">
+            <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground/50">
               Pași execuție
             </span>
             <div className="space-y-0.5">
@@ -139,7 +139,7 @@ function StatCard({ icon: Icon, label, value, color }: {
     <div className="rounded-lg border border-border/30 bg-muted/20 p-2.5">
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className={cn("h-3 w-3", color)} />
-        <span className="text-[10px] text-muted-foreground/60">{label}</span>
+        <span className="text-micro text-muted-foreground/60">{label}</span>
       </div>
       <p className={cn("text-sm font-bold tabular-nums", color)}>{value}</p>
     </div>
@@ -157,7 +157,7 @@ function StepRow({ step }: { step: TaskStep }) {
 
   return (
     <div className={cn(
-      "flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] transition-colors",
+      "flex items-center gap-2 px-2 py-1.5 rounded-md text-dense transition-colors",
       step.status === "running" && "bg-primary/[0.04]",
     )}>
       <div className="shrink-0">{statusIcon[step.status]}</div>
@@ -171,7 +171,7 @@ function StepRow({ step }: { step: TaskStep }) {
         {step.label}
       </span>
       {step.credits > 0 && (
-        <span className="text-[9px] tabular-nums text-muted-foreground/40 shrink-0">{step.credits}N</span>
+        <span className="text-nano tabular-nums text-muted-foreground/40 shrink-0">{step.credits}N</span>
       )}
     </div>
   );

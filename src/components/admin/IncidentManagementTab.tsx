@@ -71,7 +71,7 @@ export function IncidentManagementTab() {
   return (
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+        <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           <AlertCircle className="h-3 w-3" /> {t("incident.management")}
         </h3>
         <div className="flex gap-1.5">
@@ -115,28 +115,28 @@ export function IncidentManagementTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Created</TableHead>
-                <TableHead className="text-[10px]">Title</TableHead>
-                <TableHead className="text-[10px]">Severity</TableHead>
-                <TableHead className="text-[10px]">Status</TableHead>
-                <TableHead className="text-[10px] w-40">Actions</TableHead>
+                <TableHead className="text-micro">Created</TableHead>
+                <TableHead className="text-micro">Title</TableHead>
+                <TableHead className="text-micro">Severity</TableHead>
+                <TableHead className="text-micro">Status</TableHead>
+                <TableHead className="text-micro w-40">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {incidents.map(inc => (
                 <TableRow key={inc.id}>
-                  <TableCell className="text-[10px] text-muted-foreground whitespace-nowrap">
+                  <TableCell className="text-micro text-muted-foreground whitespace-nowrap">
                     {new Date(inc.created_at).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
                     <div>
                       <p className="text-xs font-medium">{inc.title}</p>
-                      {inc.description && <p className="text-[10px] text-muted-foreground truncate max-w-[300px]">{inc.description}</p>}
+                      {inc.description && <p className="text-micro text-muted-foreground truncate max-w-[300px]">{inc.description}</p>}
                     </div>
                   </TableCell>
                   <TableCell>
                     <span className={cn(
-                      "text-[9px] font-mono px-1.5 py-0.5 rounded",
+                      "text-nano font-mono px-1.5 py-0.5 rounded",
                       inc.severity === "critical" ? "bg-destructive/15 text-destructive" :
                       inc.severity === "high" ? "bg-destructive/10 text-destructive" :
                       inc.severity === "medium" ? "bg-accent text-accent-foreground" :
@@ -145,7 +145,7 @@ export function IncidentManagementTab() {
                   </TableCell>
                   <TableCell>
                     <span className={cn(
-                      "text-[9px] font-mono px-1.5 py-0.5 rounded",
+                      "text-nano font-mono px-1.5 py-0.5 rounded",
                       inc.status === "open" ? "bg-destructive/10 text-destructive" :
                       inc.status === "investigating" ? "bg-accent text-accent-foreground" :
                       "bg-primary/10 text-primary"
@@ -155,17 +155,17 @@ export function IncidentManagementTab() {
                     {inc.status !== "resolved" && (
                       <div className="flex gap-1">
                         {inc.status === "open" && (
-                          <Button size="sm" variant="outline" className="h-6 text-[9px]" onClick={() => updateStatus(inc.id, "investigating")}>
+                          <Button size="sm" variant="outline" className="h-6 text-nano" onClick={() => updateStatus(inc.id, "investigating")}>
                             Investigate
                           </Button>
                         )}
-                        <Button size="sm" variant="outline" className="h-6 text-[9px]" onClick={() => updateStatus(inc.id, "resolved")}>
+                        <Button size="sm" variant="outline" className="h-6 text-nano" onClick={() => updateStatus(inc.id, "resolved")}>
                           Resolve
                         </Button>
                       </div>
                     )}
                     {inc.status === "resolved" && (
-                      <span className="text-[9px] text-muted-foreground">
+                      <span className="text-nano text-muted-foreground">
                         {inc.resolved_at ? new Date(inc.resolved_at).toLocaleDateString() : "Resolved"}
                       </span>
                     )}

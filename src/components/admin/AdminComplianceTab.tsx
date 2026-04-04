@@ -112,7 +112,7 @@ export function AdminComplianceTab() {
           </div>
           <div>
             <h2 className="text-sm font-bold">Compliance Audit</h2>
-            <p className="text-[10px] text-muted-foreground">Automated verification of system integrity rules</p>
+            <p className="text-micro text-muted-foreground">Automated verification of system integrity rules</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -144,12 +144,12 @@ export function AdminComplianceTab() {
                 </div>
                 <Badge
                   variant={check.status === "pass" ? "default" : check.status === "warn" ? "secondary" : "destructive"}
-                  className="text-[9px]"
+                  className="text-nano"
                 >
                   {check.score}%
                 </Badge>
               </div>
-              <p className="text-[10px] text-muted-foreground mb-2">{check.detail}</p>
+              <p className="text-micro text-muted-foreground mb-2">{check.detail}</p>
               <Progress value={check.score} className="h-1.5" />
             </div>
           ))}

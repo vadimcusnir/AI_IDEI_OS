@@ -131,18 +131,18 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold">{pkg.label}</span>
                     {pkg.popular && (
-                      <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/15 text-primary">
+                      <span className="text-nano font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/15 text-primary">
                         {t("common:popular")}
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                  <p className="text-micro text-muted-foreground mt-0.5">
                     {pkg.neurons.toLocaleString()} NEURONS
                   </p>
                 </div>
                 <div className="text-right shrink-0">
                   <span className="text-lg font-bold font-mono">${pkg.price}</span>
-                  <p className="text-[9px] text-muted-foreground">
+                  <p className="text-nano text-muted-foreground">
                     ${(pkg.price / pkg.neurons * 1000).toFixed(0)}/1K
                   </p>
                 </div>
@@ -152,7 +152,7 @@ export function TopUpDialog({ onSuccess }: TopUpDialogProps) {
         </div>
         <div className="flex items-center justify-center gap-1.5 mt-3">
           <ExternalLink className="h-3 w-3 text-muted-foreground/40" />
-          <p className="text-[10px] text-muted-foreground/60 text-center">
+          <p className="text-micro text-muted-foreground/60 text-center">
             {t("common:topup_stripe_footer")}
           </p>
         </div>

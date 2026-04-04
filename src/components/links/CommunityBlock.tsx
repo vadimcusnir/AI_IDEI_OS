@@ -35,7 +35,7 @@ export function CommunityBlock() {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           Comunitate
         </h2>
         <Users className="h-3 w-3 text-muted-foreground/40" />
@@ -46,7 +46,7 @@ export function CommunityBlock() {
         <p className="text-xs text-foreground font-medium mb-1">
           Alătură-te comunității AI-IDEI 🧠
         </p>
-        <p className="text-[11px] text-muted-foreground leading-relaxed">
+        <p className="text-dense text-muted-foreground leading-relaxed">
           Conectează-te cu alți knowledge builders, primește feedback pe neuronii tăi și participă la sesiuni live.
         </p>
       </div>
@@ -69,7 +69,7 @@ export function CommunityBlock() {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium group-hover:text-primary transition-colors">{ch.title}</span>
                 {ch.members && (
-                  <span className="text-[9px] text-muted-foreground/50 flex items-center gap-0.5">
+                  <span className="text-nano text-muted-foreground/50 flex items-center gap-0.5">
                     <Users className="h-2.5 w-2.5" />
                     {ch.members}
                   </span>
