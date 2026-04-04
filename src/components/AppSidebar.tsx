@@ -256,41 +256,49 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-1 py-1">
-          <button onClick={() => navigate(user ? "/home" : "/")} className="flex items-center gap-2.5 shrink-0">
-            <Logo size="h-7 w-7" className="shrink-0" loading="eager" />
-            {!collapsed && <span className="text-sm font-bold tracking-tight">AI-IDEI</span>}
+        {/* ── Logo row ── */}
+        <div className="flex items-center gap-2.5 px-2 py-2.5">
+          <button
+            onClick={() => navigate(user ? "/home" : "/")}
+            className="flex items-center gap-2.5 shrink-0 group min-h-[44px]"
+          >
+            <Logo size="h-7 w-7" className="shrink-0 transition-transform duration-200 group-hover:scale-105" loading="eager" />
+            {!collapsed && (
+              <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
+            )}
           </button>
-
-          {/* Header actions — search, lang, theme only */}
           {!collapsed && (
-            <div className="flex items-center gap-0.5 ml-auto">
+            <div className="flex items-center gap-1 ml-auto">
               <Suspense fallback={null}><GlobalSearch /></Suspense>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Change language">
-                    <span className="text-xs leading-none">{currentLang.flag}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[140px]">
-                  {LANG_OPTIONS.map(lang => (
-                    <DropdownMenuItem
-                      key={lang.code}
-                      onClick={() => changeLanguage(lang.code as any)}
-                      className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
-                    >
-                      <span>{lang.flag}</span>
-                      {lang.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <ThemeToggle />
             </div>
           )}
         </div>
+
+        {/* ── Utility row (expanded): lang + theme ── */}
+        {!collapsed && (
+          <div className="flex items-center gap-1 px-2 pb-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 min-h-[44px] min-w-[44px]" aria-label="Change language">
+                  <span className="text-xs leading-none">{currentLang.flag}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[140px]">
+                {LANG_OPTIONS.map(lang => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => changeLanguage(lang.code as any)}
+                    className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
+                  >
+                    <span>{lang.flag}</span>
+                    {lang.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <ThemeToggle />
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarSeparator />
