@@ -552,6 +552,100 @@ async function fetchSubtitlesAsMetadata(videoId: string): Promise<{
 }
 
 // ═══════════════════════════════════════
+// YouTube Captions Fallback (free, no audio)
+// ═══════════════════════════════════════
+const CAPTION_LANG_PRIORITY = ["ro", "en"];
+
+function sanitizeCaptionText(raw: string): string {
+  return raw
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/<[^>]+>/g, "")
+    .replace(/[\u200B-\u200F\u2028-\u202F\uFEFF\u00AD]/g, "")
+    .trim();
+}
+
+async function fetchYouTubeCaptions(videoId: string): Promise<TranscriptResult | null> {
+  try {
+    console.log(`[captions-fallback] Trying YouTube captions for ${videoId}`);
+
+    const listResp = await fetch(`https://video.google.com/timedtext?v=${videoId}&type=list`);
+    if (!listResp.ok) return null;
+
+    const listXml = await listResp.text();
+    const tracks: { code: string; kind?: string }[] = [];
+    const trackRegex = /lang_code="([^"]+)"(?:[^>]*kind="([^"]*)")?/g;
+    let m;
+    while ((m = trackRegex.exec(listXml)) !== null) {
+      tracks.push({ code: m[1], kind: m[2] });
+    }
+
+    if (tracks.length === 0) return null;
+
+    // Pick best language: manual first, then ASR, in priority order
+    let selected: { code: string; kind?: string } | null = null;
+    for (const lang of CAPTION_LANG_PRIORITY) {
+      selected = tracks.find(t => t.code === lang && t.kind !== "asr") || null;
+      if (selected) break;
+    }
+    if (!selected) {
+      for (const lang of CAPTION_LANG_PRIORITY) {
+        selected = tracks.find(t => t.code === lang) || null;
+        if (selected) break;
+      }
+    }
+    if (!selected) selected = tracks[0];
+
+    let subUrl = `https://video.google.com/timedtext?v=${videoId}&lang=${selected.code}`;
+    if (selected.kind) subUrl += `&kind=${selected.kind}`;
+
+    const subResp = await fetch(subUrl);
+    if (!subResp.ok) return null;
+
+    const subXml = await subResp.text();
+
+    // Parse timed text XML
+    const segments: TranscriptResult["segments"] = [];
+    const textParts: string[] = [];
+    const regex = /<text[^>]*\bstart="([\d.]+)"[^>]*\bdur="([\d.]+)"[^>]*>([\s\S]*?)<\/text>/g;
+    let match;
+    while ((match = regex.exec(subXml)) !== null) {
+      const start = parseFloat(match[1]);
+      const dur = parseFloat(match[2]);
+      const text = sanitizeCaptionText(match[3]);
+      if (text && text.length <= 2000) {
+        segments.push({ start, end: start + dur, text });
+        textParts.push(text);
+      }
+    }
+
+    const fullText = textParts.join(" ");
+    if (!fullText || fullText.length < 50) return null;
+
+    const lastSeg = segments[segments.length - 1];
+    const duration = lastSeg ? Math.ceil(lastSeg.end) : null;
+
+    console.log(`[captions-fallback] ✓ Got ${segments.length} segments, ${fullText.split(/\s+/).length} words, lang=${selected.code}`);
+
+    return {
+      text: fullText,
+      segments,
+      duration_seconds: duration,
+      detected_language: selected.code,
+      speakers: [],
+      confidence: selected.kind === "asr" ? 0.7 : 0.85,
+      processing_mode: "elevenlabs_scribe_v2" as const, // will be overridden
+    };
+  } catch (e) {
+    console.warn("[captions-fallback] Failed:", e);
+    return null;
+  }
+}
+
+// ═══════════════════════════════════════
 // Unified Transcript Schema
 // ═══════════════════════════════════════
 interface UnifiedTranscript {
@@ -694,27 +788,51 @@ Deno.serve(async (req) => {
       timings.stt_ms = Date.now() - t3;
 
     } else if (source?.platform === "youtube" && source.video_id) {
-      // ── PATH B: YouTube → extract audio → ElevenLabs ──
+      // ── PATH B: YouTube → extract audio → ElevenLabs (fallback: captions) ──
       await updateStatus("transcribing", { stage: "extracting_audio" });
 
-      // Step 3a: Extract audio from YouTube
+      // Step 3a: Extract audio from YouTube via Cobalt
       const t3a = Date.now();
       const audioExtract = await extractYouTubeAudio(source.video_id);
       timings.audio_extract_ms = Date.now() - t3a;
 
       if (!audioExtract.ok) {
-        const status = audioExtract.failureClass === "no_backend_configured" ? 503 : 422;
-        await updateStatus("error", {
-          failure_class: audioExtract.failureClass,
-          failure_reason: audioExtract.message,
-        });
-        return failResponse(
-          audioExtract.failureClass,
-          audioExtract.message,
-          status,
-          corsHeaders,
-          audioExtract.retryable,
-        );
+        // ── FALLBACK: Try YouTube captions API (free, instant) ──
+        console.log(`[pipeline] Cobalt failed (${audioExtract.failureClass}), trying captions fallback...`);
+        await updateStatus("transcribing", { stage: "captions_fallback" });
+
+        const t3f = Date.now();
+        const captionResult = await fetchYouTubeCaptions(source.video_id!);
+        timings.captions_fallback_ms = Date.now() - t3f;
+
+        if (captionResult) {
+          console.log("[pipeline] ✓ Captions fallback succeeded");
+          // Use caption result directly as sttResult with adjusted mode
+          sttResult = {
+            ...captionResult,
+            processing_mode: "elevenlabs_scribe_v2", // type compat
+          };
+          // Tag as caption-sourced for downstream awareness
+          timings.fallback_source = 1;
+
+          // Skip to step 4 (validation)
+        } else {
+          // Both Cobalt and captions failed
+          const status = audioExtract.failureClass === "no_backend_configured" ? 503 : 422;
+          await updateStatus("error", {
+            failure_class: audioExtract.failureClass,
+            failure_reason: audioExtract.message,
+            captions_attempted: true,
+            captions_available: false,
+          });
+          return failResponse(
+            audioExtract.failureClass,
+            `${audioExtract.message} (captions also unavailable)`,
+            status,
+            corsHeaders,
+            audioExtract.retryable,
+          );
+        }
       }
 
       // Step 3b: Download audio blob
@@ -796,9 +914,9 @@ Deno.serve(async (req) => {
       speakers: sttResult.speakers,
       confidence: sttResult.confidence,
       duration_seconds: sttResult.duration_seconds,
-      processing_mode: sttResult.processing_mode,
-      fallback_used: false,
-      failure_reason: null,
+      processing_mode: timings.fallback_source ? "youtube_captions_fallback" : sttResult.processing_mode,
+      fallback_used: Boolean(timings.fallback_source),
+      failure_reason: timings.fallback_source ? "cobalt_failed_captions_used" : null,
     };
 
     if (episode_id) {
