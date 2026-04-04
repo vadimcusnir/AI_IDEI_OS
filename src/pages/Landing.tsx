@@ -40,6 +40,7 @@ const EcosystemMap = lazy(() => import("@/components/landing/EcosystemMap").then
 const LandingTranscribeCTA = lazy(() => import("@/components/landing/LandingTranscribeCTA").then(m => ({ default: m.LandingTranscribeCTA })));
 const LandingPricing = lazy(() => import("@/components/landing/LandingPricing").then(m => ({ default: m.LandingPricing })));
 const LandingFinalCTA = lazy(() => import("@/components/landing/LandingFinalCTA").then(m => ({ default: m.LandingFinalCTA })));
+const LandingKnowledgeShowcase = lazy(() => import("@/components/landing/LandingKnowledgeShowcase").then(m => ({ default: m.LandingKnowledgeShowcase })));
 import { LandingFAQ, FAQ_ITEMS } from "@/components/landing/LandingFAQ";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 
@@ -299,6 +300,7 @@ export default function Landing() {
         <LandingMechanism />
         <TransformationDiagram />
         <LandingWhatYouGet />
+        <LandingKnowledgeShowcase />
         <LandingOutputGalaxy />
         <LandingControlSurface />
         <LandingWhoFor />

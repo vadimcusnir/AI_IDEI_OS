@@ -1,34 +1,23 @@
 /**
  * OfflineBanner — Shows a persistent banner when network drops.
  * Auto-dismisses on reconnect with a brief "Back online" confirmation.
+ * Also blocks form submission via exported hook.
  */
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { WifiOff, Wifi } from "lucide-react";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 export function OfflineBanner() {
-  const [online, setOnline] = useState(navigator.onLine);
-  const [showReconnected, setShowReconnected] = useState(false);
+  const { isOnline, wasOffline, resetWasOffline } = useOnlineStatus();
 
-  useEffect(() => {
-    const goOffline = () => setOnline(false);
-    const goOnline = () => {
-      setOnline(true);
-      setShowReconnected(true);
-      setTimeout(() => setShowReconnected(false), 3000);
-    };
-
-    window.addEventListener("offline", goOffline);
-    window.addEventListener("online", goOnline);
-    return () => {
-      window.removeEventListener("offline", goOffline);
-      window.removeEventListener("online", goOnline);
-    };
-  }, []);
+  // Auto-dismiss "Back online" after 3s
+  if (isOnline && wasOffline) {
+    setTimeout(resetWasOffline, 3000);
+  }
 
   return (
     <AnimatePresence>
-      {!online && (
+      {!isOnline && (
         <motion.div
           initial={{ y: -40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -39,7 +28,7 @@ export function OfflineBanner() {
           <span>You're offline — actions will resume when connection returns</span>
         </motion.div>
       )}
-      {showReconnected && online && (
+      {isOnline && wasOffline && (
         <motion.div
           initial={{ y: -40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

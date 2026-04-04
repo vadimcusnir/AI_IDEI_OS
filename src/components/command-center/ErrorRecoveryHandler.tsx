@@ -180,20 +180,27 @@ export function classifyError(error: unknown): { type: ErrorType; message: strin
   const msg = error instanceof Error ? error.message : String(error);
   const lower = msg.toLowerCase();
 
+  // HTTP status code detection
+  if (lower.includes("429") || lower.includes("rate limit") || lower.includes("rate_limit") || lower.includes("too many")) {
+    // Extract retry-after if present
+    const retryMatch = msg.match(/(\d+)s/);
+    const retryAfter = retryMatch ? retryMatch[1] : "60";
+    return { type: "rate_limit", message: `Rate limit reached. Try again in ${retryAfter} seconds.` };
+  }
+  if (lower.includes("402") || lower.includes("insufficient") || lower.includes("credits") || lower.includes("balance")) {
+    return { type: "insufficient_credits", message: msg };
+  }
   if (lower.includes("timeout") || lower.includes("504") || lower.includes("gateway")) {
     return { type: "edge_timeout", message: msg };
   }
-  if (lower.includes("insufficient") || lower.includes("credits") || lower.includes("balance")) {
-    return { type: "insufficient_credits", message: msg };
+  if (lower.includes("not available") || lower.includes("404") || lower.includes("not found")) {
+    return { type: "unknown_command", message: msg };
   }
   if (lower.includes("file") || lower.includes("format") || lower.includes("unsupported")) {
     return { type: "invalid_file", message: msg };
   }
-  if (lower.includes("429") || lower.includes("rate limit") || lower.includes("rate_limit") || lower.includes("too many")) {
-    return { type: "rate_limit", message: "Rate limit reached. Please wait a moment before trying again." };
-  }
-  if (lower.includes("network") || lower.includes("offline") || lower.includes("fetch")) {
-    return { type: "reconnect_mid_stream", message: msg };
+  if (lower.includes("network") || lower.includes("offline") || lower.includes("failed to fetch")) {
+    return { type: "reconnect_mid_stream", message: "Network error. Check your connection and try again." };
   }
   if (lower.includes("unknown command") || lower.includes("unrecognized")) {
     return { type: "unknown_command", message: msg };

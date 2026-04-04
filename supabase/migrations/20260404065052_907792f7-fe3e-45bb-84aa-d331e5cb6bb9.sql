@@ -1,0 +1,1 @@
+ALTER TABLE public.neuron_jobs ADD COLUMN IF NOT EXISTS cancel_reason text;

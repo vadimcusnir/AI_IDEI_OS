@@ -28,6 +28,7 @@ import { ExecutionStatusBar } from "@/components/command-center/ExecutionStatusB
 import { CommandInputZone } from "@/components/command-center/CommandInputZone";
 import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
+import { SessionList } from "@/components/command-center/SessionList";
 import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { KeyboardShortcutsOverlay } from "@/components/command-center/KeyboardShortcutsOverlay";
 import { OfflineBanner } from "@/components/command-center/OfflineBanner";
@@ -102,6 +103,19 @@ export default function Home() {
                     neuronCount={cc.totalNeurons}
                     episodeCount={cc.totalEpisodes}
                     balance={cc.balance}
+                  />
+                  {/* Session history below welcome */}
+                  <SessionList
+                    sessions={cc.sessions}
+                    currentSessionId={cc.sessionId}
+                    onSelect={async (sid) => {
+                      const msgs = await cc.loadSession(sid);
+                      if (msgs.length > 0) {
+                        executionActions.setMessages(msgs);
+                      }
+                    }}
+                    onDelete={cc.deleteSession}
+                    className="w-full max-w-md mt-6"
                   />
                 </div>
               ) : (

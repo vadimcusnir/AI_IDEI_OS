@@ -905,6 +905,59 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
+    // ── Check for cancel action ──
+    const rawBody = await req.json();
+    
+    if (rawBody.action === "cancel" && rawBody.job_id) {
+      const cancelJobId = z.string().uuid().safeParse(rawBody.job_id);
+      if (!cancelJobId.success) {
+        return new Response(JSON.stringify({ error: "Invalid job_id" }), {
+          status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        });
+      }
+      // Update job status to cancelled
+      const { data: job } = await supabase
+        .from("neuron_jobs")
+        .select("status, cancel_reason")
+        .eq("id", cancelJobId.data)
+        .single();
+
+      if (job && job.status !== "completed" && job.status !== "failed") {
+        await supabase.from("neuron_jobs").update({
+          status: "cancelled",
+          cancel_reason: "User cancelled",
+          completed_at: new Date().toISOString(),
+        }).eq("id", cancelJobId.data);
+
+        // Release reserved credits
+        const { data: costData } = await supabase
+          .from("neuron_jobs")
+          .select("worker_type")
+          .eq("id", cancelJobId.data)
+          .single();
+
+        if (costData) {
+          const { data: svc } = await supabase
+            .from("service_catalog")
+            .select("credits_cost, name")
+            .eq("service_key", costData.worker_type)
+            .single();
+
+          if (svc) {
+            await supabase.rpc("release_neurons", {
+              _user_id: user_id,
+              _amount: svc.credits_cost,
+              _description: `RELEASE: ${svc.name} — cancelled by user`,
+            }).catch(() => {});
+          }
+        }
+      }
+
+      return new Response(JSON.stringify({ cancelled: true, job_id: cancelJobId.data }), {
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
     const InputSchema = z.object({
       job_id: z.string().uuid("Invalid job_id"),
       service_key: z.string().min(1, "Missing service_key").max(100),
@@ -912,7 +965,7 @@ Deno.serve(async (req) => {
       inputs: z.record(z.string().max(50_000, "Input value too long")).optional(),
     });
 
-    const parsed = InputSchema.safeParse(await req.json());
+    const parsed = InputSchema.safeParse(rawBody);
     if (!parsed.success) {
       return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), {
         status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },

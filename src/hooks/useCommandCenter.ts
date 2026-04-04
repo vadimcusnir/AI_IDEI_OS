@@ -4,6 +4,7 @@
  * Fixes: A1 (quick-exec), A4 (debounce), A5 (persistence), A9 (cleanup).
  */
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import type { CommandMode } from "@/components/command-center/ModeChipBar";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -46,6 +47,7 @@ import {
 const QUICK_EXEC_CREDIT_THRESHOLD = 50;
 
 export function useCommandCenter() {
+  const { isOnline } = useOnlineStatus();
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
@@ -221,6 +223,10 @@ export function useCommandCenter() {
     if (!input.trim() && files.length === 0) return;
     if (!user) return;
     if (isSubmitting) return;
+    if (!isOnline) {
+      toast.error("You're offline. Please check your connection.");
+      return;
+    }
 
     // Validate input length
     const inputValidation = validateInput(input.trim());
@@ -333,7 +339,7 @@ export function useCommandCenter() {
       abortRef.current = null;
       setIsSubmitting(false);
     }
-  }, [input, files, user, isSubmitting, executionEngine, execState, balance, tier, tierDiscount, t, saveMessage, persistRun]);
+  }, [input, files, user, isSubmitting, isOnline, executionEngine, execState, balance, tier, tierDiscount, t, saveMessage, persistRun]);
 
   // ═══ Handlers (memoized — A9: reduce re-renders) ═══
   const handleStop = useCallback(() => { stopActiveExecution(); }, [stopActiveExecution]);
@@ -514,11 +520,13 @@ export function useCommandCenter() {
     savingAllOutputs, showLowBalance, setShowLowBalance,
     activeMode, setActiveMode,
     isEmptyState, greeting, userName, durationSeconds,
-    isSubmitting,
+    isSubmitting, isOnline,
     // Counts
     totalNeurons, totalEpisodes,
     // Suggestions
     decisionSuggestions,
+    // Sessions
+    sessions, sessionId, loadSession, deleteSession,
     // Refs
     inputZoneRef, scrollRef, messagesEndRef,
     // Handlers
