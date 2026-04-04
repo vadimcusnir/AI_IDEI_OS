@@ -65,11 +65,12 @@ export default function Extractor() {
   const episodeParam = searchParams.get("episode");
 
   const fetchEpisodes = async () => {
-    if (!currentWorkspace) return;
+    if (!currentWorkspace || !user) return;
     const { data, error } = await supabase
       .from("episodes")
       .select("*")
       .eq("workspace_id", currentWorkspace.id)
+      .eq("author_id", user.id)
       .order("created_at", { ascending: false })
       .limit(500);
     if (data) setEpisodes(data as Episode[]);
