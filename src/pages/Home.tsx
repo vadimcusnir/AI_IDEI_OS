@@ -104,6 +104,19 @@ export default function Home() {
                     episodeCount={cc.totalEpisodes}
                     balance={cc.balance}
                   />
+                  {/* Session history below welcome */}
+                  <SessionList
+                    sessions={cc.sessions}
+                    currentSessionId={cc.sessionId}
+                    onSelect={async (sid) => {
+                      const msgs = await cc.loadSession(sid);
+                      if (msgs.length > 0) {
+                        executionActions.setMessages(msgs);
+                      }
+                    }}
+                    onDelete={cc.deleteSession}
+                    className="w-full max-w-md mt-6"
+                  />
                 </div>
               ) : (
                 /* ── Conversation feed ── */
