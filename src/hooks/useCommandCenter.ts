@@ -187,7 +187,7 @@ export function useCommandCenter() {
 
   // Auto-submit from ?q=
   useEffect(() => {
-    if (initialQ && user && sessionLoaded && !autoSubmittedRef.current) {
+    if (initialQ && user && sessionLoaded && !tierLoading && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true;
       setSearchParams({}, { replace: true });
       const timer = setTimeout(() => {
@@ -195,7 +195,7 @@ export function useCommandCenter() {
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [initialQ, user, sessionLoaded, setSearchParams]);
+  }, [initialQ, user, sessionLoaded, tierLoading, setSearchParams]);
 
   // Fetch neuron/episode counts
   useEffect(() => {
