@@ -432,7 +432,7 @@ function SystemMapCanvas() {
       {/* Detail panel */}
       {selectedNode && (
         <div className="fixed top-0 right-0 w-[420px] max-w-[92vw] h-screen z-[1500] bg-[rgba(11,11,11,0.98)] border-l-2 border-[#8B7500] overflow-y-auto backdrop-blur-2xl shadow-[-12px_0_60px_rgba(0,0,0,0.6)]" style={{ paddingTop: 70 }}>
-          <button onClick={() => setSelectedNode(null)} className="absolute top-5 right-5 w-8 h-8 border border-[#2A2A2A] rounded-sm text-[#FFD700] flex items-center justify-center hover:border-red-500 hover:text-red-500 transition-colors text-lg">✕</button>
+          <button onClick={() => setSelectedNode(null)} className="absolute top-5 right-5 w-8 h-8 border border-[#2A2A2A] rounded-sm text-[#FFD700] flex items-center justify-center hover:border-destructive hover:text-destructive transition-colors text-lg">✕</button>
           <div className="px-7 pb-7">
             <div className="text-micro font-mono tracking-[2px] uppercase text-[#8B7500] mb-1.5">{selectedNode.layerName}</div>
             <div className="font-bold text-2xl tracking-[4px] uppercase mb-3.5" style={{ background: "linear-gradient(135deg, #C9A000, #FFD700)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>

@@ -249,9 +249,9 @@ export function LLMIndexationTab() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         <KPICard label="Pages" value={totalPages} icon={Globe} />
-        <KPICard label="Visibility" value={avgVisibility.toFixed(1)} icon={TrendingUp} color={avgVisibility >= 7 ? "text-primary" : avgVisibility >= 4 ? "text-yellow-500" : "text-destructive"} />
+        <KPICard label="Visibility" value={avgVisibility.toFixed(1)} icon={TrendingUp} color={avgVisibility >= 7 ? "text-primary" : avgVisibility >= 4 ? "text-warning" : "text-destructive"} />
         <KPICard label="Schema %" value={`${schemaCoverage.toFixed(0)}%`} icon={FileText} />
-        <KPICard label="Issues" value={openIssues} icon={AlertTriangle} color={openIssues > 10 ? "text-destructive" : "text-yellow-500"} />
+        <KPICard label="Issues" value={openIssues} icon={AlertTriangle} color={openIssues > 10 ? "text-destructive" : "text-warning"} />
         <KPICard label="Entities" value={totalEntities} icon={Database} />
         <KPICard label="Citations" value={totalCitations} icon={Link2} />
         <KPICard label="Surface" value={publishedSurface} icon={Layers} />
@@ -521,7 +521,7 @@ function KPICard({ label, value, icon: Icon, color }: { label: string; value: st
 }
 
 function ScoreBadge({ score }: { score: number }) {
-  const color = score >= 7 ? "bg-primary/10 text-primary" : score >= 4 ? "bg-yellow-500/10 text-yellow-600" : "bg-destructive/10 text-destructive";
+  const color = score >= 7 ? "bg-primary/10 text-primary" : score >= 4 ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive";
   return (
     <span className={cn("text-micro font-mono font-bold px-1.5 py-0.5 rounded", color)}>
       {score.toFixed(1)}

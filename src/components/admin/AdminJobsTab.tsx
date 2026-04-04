@@ -157,7 +157,7 @@ export function AdminJobsTab() {
       <div className="grid grid-cols-5 gap-2">
         {[
           { key: "queued", icon: Clock, color: "text-amber-500" },
-          { key: "processing", icon: Loader2, color: "text-blue-500" },
+          { key: "processing", icon: Loader2, color: "text-info" },
           { key: "completed", icon: CheckCircle2, color: "text-status-validated" },
           { key: "failed", icon: AlertTriangle, color: "text-destructive" },
           { key: "cancelled", icon: XCircle, color: "text-muted-foreground" },

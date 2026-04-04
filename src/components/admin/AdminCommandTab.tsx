@@ -29,7 +29,7 @@ interface Warning {
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string }> = {
   generate_revenue: { icon: DollarSign, color: "text-status-validated" },
   improve_conversion: { icon: TrendingUp, color: "text-primary" },
-  build_authority: { icon: Shield, color: "text-blue-500" },
+  build_authority: { icon: Shield, color: "text-info" },
   optimize_system: { icon: Zap, color: "text-amber-500" },
   reduce_risk: { icon: AlertTriangle, color: "text-destructive" },
 };
