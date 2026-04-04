@@ -93,36 +93,34 @@ export function useExecution(context: ExecutionContext) {
       .from("neurons")
       .insert({
         title: `Job: ${serviceKey}`,
-        status: "draft",
-        visibility: "private",
         author_id: user.id,
         workspace_id: context.workspaceId,
-      })
+      } as any)
       .select("id")
       .single();
 
     if (neuronErr || !neuron) {
       console.error("Failed to create neuron for job:", neuronErr);
-      throw new Error("Failed to create job");
+      throw new Error(`Failed to create job: ${neuronErr?.message || "Neuron creation failed"}`);
     }
 
     // Create job linked to the neuron
     const { data: job, error: jobErr } = await supabase
       .from("neuron_jobs")
       .insert({
-        neuron_id: Number(neuron.id),
+        neuron_id: neuron.id,
         worker_type: serviceKey,
-        status: "pending" as const,
-        input: inputParams as unknown as import("@/integrations/supabase/types").Json,
+        status: "pending",
+        input: inputParams as any,
         author_id: user.id,
         workspace_id: context.workspaceId,
-      } satisfies Record<string, unknown> as any)
+      } as any)
       .select("id")
       .single();
 
     if (jobErr || !job) {
       console.error("Failed to create job:", jobErr);
-      throw new Error("Failed to create job");
+      throw new Error(`Failed to create job: ${jobErr?.message || "Job creation failed"}`);
     }
 
     const resp = await fetch(RUN_SERVICE_URL, {
@@ -134,6 +132,7 @@ export function useExecution(context: ExecutionContext) {
       body: JSON.stringify({
         job_id: job.id,
         service_key: serviceKey,
+        neuron_id: neuron.id,
         inputs: inputParams,
       }),
       signal,
