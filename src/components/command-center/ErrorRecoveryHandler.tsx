@@ -189,8 +189,14 @@ export function classifyError(error: unknown): { type: ErrorType; message: strin
   if (lower.includes("file") || lower.includes("format") || lower.includes("unsupported")) {
     return { type: "invalid_file", message: msg };
   }
+  if (lower.includes("429") || lower.includes("rate limit") || lower.includes("rate_limit") || lower.includes("too many")) {
+    return { type: "rate_limit", message: "Rate limit reached. Please wait a moment before trying again." };
+  }
   if (lower.includes("network") || lower.includes("offline") || lower.includes("fetch")) {
     return { type: "reconnect_mid_stream", message: msg };
+  }
+  if (lower.includes("unknown command") || lower.includes("unrecognized")) {
+    return { type: "unknown_command", message: msg };
   }
 
   return { type: "unknown", message: msg };
