@@ -47,11 +47,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    if (!checkRateLimit(user.id)) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again later." }), {
-        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
+    // ── DB-backed rate limiting (30 req/hour) ──
+    const rateLimited = await rateLimitGuard(
+      `${user.id}:neuron-chat`,
+      req,
+      { maxRequests: 30, windowSeconds: 3600 },
+      getCorsHeaders(req)
+    );
+    if (rateLimited) return rateLimited;
 
     // ── Regime enforcement ──
     const regime = await getRegimeConfig("neuron-chat");
