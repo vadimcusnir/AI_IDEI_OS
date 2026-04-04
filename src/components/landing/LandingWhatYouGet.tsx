@@ -13,7 +13,7 @@ export function LandingWhatYouGet() {
     <section className="py-32 sm:py-44" aria-label="What you get">
       <ContentBoundary width="default">
         <FadeInView className="mb-20 sm:mb-24">
-          <span className="text-eyebrow font-mono tracking-[0.3em] text-[hsl(var(--gold-oxide))] mb-6 block">{t("what_you_get.label")}</span>
+          <span className="text-eyebrow font-mono tracking-[0.3em] text-gold mb-6 block">{t("what_you_get.label")}</span>
           <h2 className="text-h2 text-foreground mb-6">{t("what_you_get.title")}</h2>
           <p className="text-body text-muted-foreground max-w-lg leading-relaxed">{t("what_you_get.subtitle")}</p>
         </FadeInView>
@@ -23,7 +23,7 @@ export function LandingWhatYouGet() {
             const BlockIcon = ICONS[i];
             return (
               <FadeInView key={i} delay={i * 0.1} className="bg-card p-8 sm:p-10 group hover:bg-accent/5 transition-all duration-300 landing-card">
-                <BlockIcon className="text-[hsl(var(--gold-oxide))] mb-8 group-hover:scale-110 transition-transform duration-300" size={26} />
+                <BlockIcon className="text-gold mb-8 group-hover:scale-110 transition-transform duration-300" size={26} />
                 <h3 className="text-h4 text-foreground mb-3">{block.title}</h3>
                 <p className="text-caption text-muted-foreground leading-relaxed max-w-sm">{block.text}</p>
               </FadeInView>
