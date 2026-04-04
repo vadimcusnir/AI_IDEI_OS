@@ -244,6 +244,7 @@ export default function AdminDashboard() {
                 <RefreshCw className="h-3.5 w-3.5" /> Refresh
               </Button>
             </div>
+          </div>
 
           {/* KPI Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
