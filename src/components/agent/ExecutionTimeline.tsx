@@ -214,7 +214,7 @@ export function ExecutionTimeline({ planMeta }: { planMeta: PlanMeta | null }) {
                   {idx < steps.length - 1 && (
                     <div className={cn(
                       "w-0.5 h-4",
-                      step.status === "completed" ? "bg-green-500/30" : "bg-border"
+                      step.status === "completed" ? "bg-success/30" : "bg-border"
                     )} />
                   )}
                 </div>

@@ -169,7 +169,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
                       {i < execution.steps.length - 1 && (
                         <div className={cn(
                           "w-px h-3 mt-0.5",
-                          step.status === "completed" ? "bg-green-500/30" : "bg-border",
+                          step.status === "completed" ? "bg-success/30" : "bg-border",
                         )} />
                       )}
                     </div>
