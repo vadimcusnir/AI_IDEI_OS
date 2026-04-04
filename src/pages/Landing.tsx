@@ -138,7 +138,7 @@ export default function Landing() {
       </a>
       <SEOHead
         title="AI-IDEI — AI Copywriting & Marketing Execution System"
-        description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants."
+        description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and execution agents."
         canonical="https://ai-idei.com/"
       />
 
