@@ -47,7 +47,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        onSubmit();
+        if (!isSubmitting) onSubmit();
       }
     };
 
