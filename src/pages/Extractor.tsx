@@ -72,7 +72,7 @@ export default function Extractor() {
       .eq("workspace_id", currentWorkspace.id)
       .eq("author_id", user.id)
       .order("created_at", { ascending: false })
-      .limit(500);
+      .limit(100);
     if (data) setEpisodes(data as Episode[]);
     if (error) toast.error(t("errors:generic"));
     setLoading(false);
