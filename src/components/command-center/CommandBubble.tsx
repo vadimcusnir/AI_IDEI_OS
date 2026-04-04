@@ -187,8 +187,8 @@ export function CommandBubble({ msg, isStreaming, onRetry, onEdit }: CommandBubb
   return (
     <div className="flex group">
       <div className="flex items-start gap-2.5 max-w-[90%] sm:max-w-[85%]">
-        <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[hsl(var(--gold-oxide)/0.15)] to-[hsl(var(--gold-oxide)/0.05)] flex items-center justify-center shrink-0 mt-0.5 border border-[hsl(var(--gold-oxide)/0.1)]">
-          {semanticType ? SEMANTIC_ICONS[semanticType] : <Sparkles className="h-3 w-3 text-[hsl(var(--gold-oxide))]" />}
+        <div className="h-7 w-7 rounded-full bg-gradient-to-br from-gold/15 to-gold/5 flex items-center justify-center shrink-0 mt-0.5 border border-gold/10">
+          {semanticType ? SEMANTIC_ICONS[semanticType] : <Sparkles className="h-3 w-3 text-gold" />}
         </div>
         <div className="relative min-w-0">
           <div className={cn(
