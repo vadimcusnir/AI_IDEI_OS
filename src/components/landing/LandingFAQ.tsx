@@ -12,8 +12,8 @@ export function LandingFAQ() {
     <section id="faq" className="py-32 sm:py-44 border-t border-border/50" aria-labelledby="faq-heading">
       <div className="max-w-2xl mx-auto px-5 sm:px-6">
         <FadeInView className="text-center mb-16 sm:mb-24">
-          <span className="text-micro sm:text-dense font-mono tracking-[0.3em] uppercase text-[hsl(var(--gold-oxide))] mb-6 block">{t("faq.label")}</span>
-          <h2 id="faq-heading" className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold tracking-[-0.01em] text-foreground leading-[1.15]">{t("faq.title")}</h2>
+          <span className="text-eyebrow font-mono tracking-[0.3em] text-gold mb-6 block">{t("faq.label")}</span>
+          <h2 id="faq-heading" className="text-h2 text-foreground">{t("faq.title")}</h2>
         </FadeInView>
         <FadeInView delay={0.1}>
           <Accordion type="single" collapsible className="space-y-3.5">
