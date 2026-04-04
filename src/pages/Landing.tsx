@@ -42,7 +42,7 @@ const LandingPricing = lazy(() => import("@/components/landing/LandingPricing").
 const LandingFinalCTA = lazy(() => import("@/components/landing/LandingFinalCTA").then(m => ({ default: m.LandingFinalCTA })));
 const LandingKnowledgeShowcase = lazy(() => import("@/components/landing/LandingKnowledgeShowcase").then(m => ({ default: m.LandingKnowledgeShowcase })));
 import { LandingFAQ, FAQ_ITEMS } from "@/components/landing/LandingFAQ";
-import { LandingFooter } from "@/components/landing/LandingFooter";
+import { Footer } from "@/components/global/Footer";
 
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
@@ -315,7 +315,7 @@ export default function Landing() {
         <LandingFinalCTA ctaAction={ctaAction} />
       </Suspense>
       </main>
-      <LandingFooter />
+      <Footer variant="landing" />
 
       <OrganizationJsonLd />
       <WebApplicationJsonLd />
