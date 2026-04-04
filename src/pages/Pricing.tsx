@@ -205,7 +205,7 @@ export default function Pricing() {
 
         {/* Plans Grid */}
         <section className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {PLANS.map((plan) => {
               const isCurrent = isCurrentPlan(plan.key);
               const isProcessingThis = processing === plan.key;
