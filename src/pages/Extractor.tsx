@@ -68,12 +68,12 @@ export default function Extractor() {
     if (!currentWorkspace || !user) return;
     const { data, error } = await supabase
       .from("episodes")
-      .select("*")
+      .select("id, title, status, source_url, source_type, transcript, created_at, updated_at")
       .eq("workspace_id", currentWorkspace.id)
       .eq("author_id", user.id)
       .order("created_at", { ascending: false })
-      .limit(500);
-    if (data) setEpisodes(data as Episode[]);
+      .limit(100);
+    if (data) setEpisodes(data as unknown as Episode[]);
     if (error) toast.error(t("errors:generic"));
     setLoading(false);
   };
