@@ -36,6 +36,7 @@ import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
+import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
 
 export default function Home() {
   const cc = useCommandCenter();
