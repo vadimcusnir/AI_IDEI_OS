@@ -28,8 +28,16 @@ export function useOnboardingState() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) { setLoading(false); return; }
+    if (!user) {
+      setFlags(DEFAULTS);
+      setLoading(false);
+      return;
+    }
 
+    // Reset loading to true when user changes (prevents stale DEFAULTS leaking)
+    setLoading(true);
+
+    let cancelled = false;
     const load = async () => {
       try {
         const { data, error } = await supabase
@@ -37,6 +45,7 @@ export function useOnboardingState() {
           .select("welcome_seen, checklist_dismissed, checklist_completed, tutorial_skipped, tutorial_completed")
           .eq("user_id", user.id)
           .maybeSingle();
+        if (cancelled) return;
         if (error) {
           console.warn("[onboarding] Failed to load flags:", error.message);
         }
@@ -50,12 +59,13 @@ export function useOnboardingState() {
           });
         }
       } catch (e) {
-        console.warn("[onboarding] Unexpected error:", e);
+        if (!cancelled) console.warn("[onboarding] Unexpected error:", e);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
     load();
+    return () => { cancelled = true; };
   }, [user]);
 
   const updateFlag = useCallback(async (key: keyof OnboardingFlags, value: boolean) => {
