@@ -48,7 +48,7 @@ export function PresenceBar({ workspaceId, className }: PresenceBarProps) {
             +{onlineUsers.length - 5}
           </span>
         )}
-        <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse ml-1" />
+        <div className="h-2 w-2 rounded-full bg-success animate-pulse ml-1" />
       </div>
     </TooltipProvider>
   );

@@ -10,10 +10,10 @@ interface StructurePanelProps {
 }
 
 const STRUCTURE_ACTIONS = [
-  { icon: LayoutGrid, label: "Taxonomie automată", desc: "Grupare pe teme", prompt: "/structure auto-taxonomy for neurons", accent: "bg-violet-500/10 text-violet-400" },
-  { icon: GitBranch, label: "Decision Tree", desc: "Arbore de decizie", prompt: "/structure decision tree from frameworks", accent: "bg-blue-500/10 text-blue-400" },
-  { icon: Layers, label: "Framework Builder", desc: "Construiește framework", prompt: "/structure build framework from insights", accent: "bg-emerald-500/10 text-emerald-400" },
-  { icon: Network, label: "Knowledge Map", desc: "Hartă de conexiuni", prompt: "/structure knowledge map visualization", accent: "bg-amber-500/10 text-amber-400" },
+  { icon: LayoutGrid, label: "Taxonomie automată", desc: "Grupare pe teme", prompt: "/structure auto-taxonomy for neurons", accent: "bg-ai-accent/10 text-ai-accent" },
+  { icon: GitBranch, label: "Decision Tree", desc: "Arbore de decizie", prompt: "/structure decision tree from frameworks", accent: "bg-info/10 text-info" },
+  { icon: Layers, label: "Framework Builder", desc: "Construiește framework", prompt: "/structure build framework from insights", accent: "bg-success/10 text-success" },
+  { icon: Network, label: "Knowledge Map", desc: "Hartă de conexiuni", prompt: "/structure knowledge map visualization", accent: "bg-gold/10 text-gold" },
 ];
 
 export function StructurePanel({ onCommand }: StructurePanelProps) {
@@ -27,7 +27,7 @@ export function StructurePanel({ onCommand }: StructurePanelProps) {
     >
       <div className="py-2 space-y-2">
         <div className="flex items-center gap-1.5 px-1">
-          <LayoutGrid className="h-3 w-3 text-violet-400" />
+          <LayoutGrid className="h-3 w-3 text-ai-accent" />
           <span className="text-micro font-medium text-muted-foreground/70">Structurare & Organizare</span>
         </div>
         <div className="grid grid-cols-2 gap-1.5">

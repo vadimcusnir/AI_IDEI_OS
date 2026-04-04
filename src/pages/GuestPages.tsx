@@ -262,13 +262,13 @@ export default function GuestPages() {
                     className={cn(
                       "rounded-xl border bg-card p-4 transition-all cursor-pointer hover:border-primary/30 hover:shadow-sm",
                       selectedGuest?.id === guest.id ? "border-primary/40 ring-1 ring-primary/20" : "border-border",
-                      showDuplicates && isDuplicate && "border-yellow-500/30 bg-yellow-500/5"
+                      showDuplicates && isDuplicate && "border-warning/30 bg-warning/5"
                     )}
                     onClick={() => setSelectedGuest(selectedGuest?.id === guest.id ? null : guest)}
                   >
                     {/* Duplicate warning */}
                     {showDuplicates && isDuplicate && (
-                      <div className="flex items-center gap-1.5 text-nano text-yellow-600 dark:text-yellow-400 mb-2">
+                      <div className="flex items-center gap-1.5 text-nano text-warning dark:text-yellow-400 mb-2">
                         <AlertTriangle className="h-3 w-3" />
                         <span>{t("guest_pages.possible_duplicate_warning")}</span>
                       </div>

@@ -61,7 +61,7 @@ const TOOL_ICONS: Record<string, typeof Brain> = {
 const STATUS_CONFIG = {
   pending: { icon: Circle, color: "text-muted-foreground", bg: "bg-muted" },
   running: { icon: Loader2, color: "text-primary", bg: "bg-primary/10" },
-  completed: { icon: CheckCircle2, color: "text-green-500", bg: "bg-green-500/10" },
+  completed: { icon: CheckCircle2, color: "text-success", bg: "bg-success/10" },
   failed: { icon: XCircle, color: "text-destructive", bg: "bg-destructive/10" },
   skipped: { icon: SkipForward, color: "text-muted-foreground", bg: "bg-muted" },
 };
@@ -214,7 +214,7 @@ export function ExecutionTimeline({ planMeta }: { planMeta: PlanMeta | null }) {
                   {idx < steps.length - 1 && (
                     <div className={cn(
                       "w-0.5 h-4",
-                      step.status === "completed" ? "bg-green-500/30" : "bg-border"
+                      step.status === "completed" ? "bg-success/30" : "bg-border"
                     )} />
                   )}
                 </div>

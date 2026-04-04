@@ -34,19 +34,19 @@ const TOOL_ICONS: Record<string, typeof Brain> = {
 const STATUS_CONFIG: Record<TaskStep["status"], { icon: typeof Circle; color: string; label: string }> = {
   pending: { icon: Circle, color: "text-muted-foreground", label: "Pending" },
   running: { icon: Loader2, color: "text-primary", label: "Running" },
-  completed: { icon: CheckCircle2, color: "text-green-500", label: "Done" },
+  completed: { icon: CheckCircle2, color: "text-success", label: "Done" },
   failed: { icon: XCircle, color: "text-destructive", label: "Failed" },
   skipped: { icon: SkipForward, color: "text-muted-foreground/50", label: "Skipped" },
 };
 
 const PHASE_CONFIG: Record<CommandPhase, { label: string; color: string }> = {
   idle: { label: "Ready", color: "bg-muted text-muted-foreground" },
-  planning: { label: "Planning...", color: "bg-blue-500/10 text-blue-500" },
-  confirming: { label: "Awaiting Confirmation", color: "bg-yellow-500/10 text-yellow-500" },
+  planning: { label: "Planning...", color: "bg-info/10 text-info" },
+  confirming: { label: "Awaiting Confirmation", color: "bg-warning/10 text-warning" },
   executing: { label: "Executing", color: "bg-primary/10 text-primary" },
-  delivering: { label: "Delivering", color: "bg-green-500/10 text-green-500" },
-  storing: { label: "Saving to Memory", color: "bg-purple-500/10 text-purple-500" },
-  completed: { label: "Completed", color: "bg-green-500/10 text-green-500" },
+  delivering: { label: "Delivering", color: "bg-success/10 text-success" },
+  storing: { label: "Saving to Memory", color: "bg-ai-accent/10 text-ai-accent" },
+  completed: { label: "Completed", color: "bg-success/10 text-success" },
   failed: { label: "Failed", color: "bg-destructive/10 text-destructive" },
 };
 
@@ -155,7 +155,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
                     className={cn(
                       "flex items-center gap-2 py-1.5 px-2 rounded-lg transition-colors",
                       step.status === "running" && "bg-primary/5 border border-primary/20",
-                      step.status === "completed" && "bg-green-500/5",
+                      step.status === "completed" && "bg-success/5",
                       step.status === "failed" && "bg-destructive/5",
                     )}
                   >
@@ -169,7 +169,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
                       {i < execution.steps.length - 1 && (
                         <div className={cn(
                           "w-px h-3 mt-0.5",
-                          step.status === "completed" ? "bg-green-500/30" : "bg-border",
+                          step.status === "completed" ? "bg-success/30" : "bg-border",
                         )} />
                       )}
                     </div>

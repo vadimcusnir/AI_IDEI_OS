@@ -18,14 +18,14 @@ export interface RegistryServiceItem {
 }
 
 export const LEVEL_META = {
-  OTOS: { label: "Action", desc: "Quick Actions", icon: Zap, color: "text-blue-500" },
+  OTOS: { label: "Action", desc: "Quick Actions", icon: Zap, color: "text-info" },
   MMS: { label: "System", desc: "Execution Systems", icon: Layers, color: "text-amber-500" },
   LCSS: { label: "Program", desc: "Growth Programs", icon: Server, color: "text-purple-500" },
 } as const;
 
 export const TIER_COLORS: Record<string, string> = {
   S: "bg-amber-500/15 text-amber-600 border-amber-500/30",
-  A: "bg-blue-500/15 text-blue-600 border-blue-500/30",
+  A: "bg-info/15 text-info border-blue-500/30",
   B: "bg-muted text-muted-foreground border-border",
   C: "bg-muted/50 text-muted-foreground/70 border-border/50",
 };

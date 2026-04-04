@@ -24,10 +24,10 @@ export function LibraryStage({ neuronCount, artifactId, onReset }: Props) {
       <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
         <BookOpen className="h-7 w-7 text-primary" />
       </div>
-      <h3 className="text-[length:var(--h3-size)] font-bold text-foreground mb-2">
+      <h3 className="text-h3 font-bold text-foreground mb-2">
         Pipeline Complete
       </h3>
-      <p className="text-[length:var(--body-dense-size)] text-muted-foreground mb-6">
+      <p className="text-caption text-muted-foreground mb-6">
         {neuronCount} neurons processed and stored in your library.
       </p>
 

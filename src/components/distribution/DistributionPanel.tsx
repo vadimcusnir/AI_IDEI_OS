@@ -25,11 +25,11 @@ import { useContentDistribution, type DistributionChannel, type ContentVariant }
 // ─── Platform metadata ───
 const PLATFORMS: Record<DistributionChannel, { label: string; icon: string; color: string }> = {
   twitter: { label: "Twitter / X", icon: "𝕏", color: "text-foreground" },
-  linkedin: { label: "LinkedIn", icon: "in", color: "text-blue-600" },
+  linkedin: { label: "LinkedIn", icon: "in", color: "text-info" },
   telegram: { label: "Telegram", icon: "✈", color: "text-sky-500" },
   tiktok: { label: "TikTok", icon: "♪", color: "text-foreground" },
   instagram: { label: "Instagram", icon: "📸", color: "text-pink-500" },
-  youtube: { label: "YouTube", icon: "▶", color: "text-red-500" },
+  youtube: { label: "YouTube", icon: "▶", color: "text-destructive" },
   blog: { label: "Blog", icon: "📝", color: "text-foreground" },
   newsletter: { label: "Newsletter", icon: "📧", color: "text-foreground" },
   reddit: { label: "Reddit", icon: "🔗", color: "text-orange-500" },

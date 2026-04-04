@@ -18,7 +18,7 @@ import type { NeuronListItem } from "@/hooks/useNeuronList";
 
 const CATEGORY_CONFIG: Record<string, { icon: React.ElementType; color: string; label: string; bgColor: string }> = {
   insight: { icon: Lightbulb, color: "text-amber-500", bgColor: "bg-amber-500", label: "Insight" },
-  framework: { icon: Layers, color: "text-blue-500", bgColor: "bg-blue-500", label: "Framework" },
+  framework: { icon: Layers, color: "text-info", bgColor: "bg-info", label: "Framework" },
   pattern: { icon: Network, color: "text-violet-500", bgColor: "bg-violet-500", label: "Pattern" },
   narrative: { icon: MessageSquareQuote, color: "text-emerald-500", bgColor: "bg-emerald-500", label: "Narrative" },
   commercial: { icon: Target, color: "text-rose-500", bgColor: "bg-rose-500", label: "Commercial" },

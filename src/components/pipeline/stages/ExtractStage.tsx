@@ -26,10 +26,10 @@ export function ExtractStage({ result, isProcessing, onNext }: Props) {
         <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
           <Brain className="h-6 w-6 text-primary animate-pulse" />
         </div>
-        <h3 className="text-[length:var(--h3-size)] font-semibold text-foreground mb-2">
+        <h3 className="text-h3 font-semibold text-foreground mb-2">
           Extracting Knowledge...
         </h3>
-        <p className="text-[length:var(--body-dense-size)] text-muted-foreground">
+        <p className="text-caption text-muted-foreground">
           AI is analyzing your content and identifying key concepts.
         </p>
         <div className="mt-6 h-1.5 w-48 mx-auto bg-muted rounded-full overflow-hidden">
@@ -59,11 +59,11 @@ export function ExtractStage({ result, isProcessing, onNext }: Props) {
         <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
           <Brain className="h-6 w-6 text-primary" />
         </div>
-        <h3 className="text-[length:var(--h3-size)] font-bold text-foreground">
+        <h3 className="text-h3 font-bold text-foreground">
           {result.neurons} Neurons Extracted
         </h3>
         {result.frameworks && (
-          <p className="text-[length:var(--body-dense-size)] text-muted-foreground mt-1">
+          <p className="text-caption text-muted-foreground mt-1">
             {result.frameworks} frameworks identified
           </p>
         )}

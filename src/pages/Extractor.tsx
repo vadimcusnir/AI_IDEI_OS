@@ -146,7 +146,7 @@ export default function Extractor() {
           <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[hsl(var(--gold-oxide))] mb-1">
             Knowledge Pipeline
           </p>
-          <h1 className="text-[length:var(--h2-size)] font-bold leading-[var(--lh-h2)] text-foreground tracking-tight">
+          <h1 className="text-h2 font-bold leading-[var(--lh-h2)] text-foreground tracking-tight">
             Upload → Analyze → Results
           </h1>
         </motion.div>
@@ -195,10 +195,10 @@ export default function Extractor() {
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-[length:var(--body-dense-size)] font-semibold text-foreground">
+                <p className="text-caption font-semibold text-foreground">
                   Previous Materials
                 </p>
-                <p className="text-[length:var(--caption-size)] text-muted-foreground">
+                <p className="text-footnote text-muted-foreground">
                   {stats.total} total · {stats.transcribed} transcribed · {stats.analyzed} analyzed
                 </p>
               </div>
@@ -245,13 +245,13 @@ export default function Extractor() {
             <div className="h-14 w-14 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-4">
               <FileText className="h-7 w-7 text-[hsl(var(--gold-oxide)/0.4)]" />
             </div>
-            <h3 className="text-[length:var(--h3-size)] font-semibold text-foreground mb-2">
+            <h3 className="text-h3 font-semibold text-foreground mb-2">
               Start your first analysis
             </h3>
-            <p className="text-[length:var(--body-dense-size)] text-muted-foreground max-w-sm mx-auto">
+            <p className="text-caption text-muted-foreground max-w-sm mx-auto">
               Paste a link, upload a file, or type content above.
             </p>
-            <p className="text-[length:var(--caption-size)] text-muted-foreground/50 mt-1">
+            <p className="text-footnote text-muted-foreground/50 mt-1">
               YouTube, MP3, MP4, PDF, text
             </p>
           </motion.div>

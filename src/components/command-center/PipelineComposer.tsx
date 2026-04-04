@@ -34,12 +34,12 @@ const AVAILABLE_INTENTS: Array<{
   icon: typeof Search;
   color: string;
 }> = [
-  { intent: "extract", label: "Extract Knowledge", description: "Extract neurons, frameworks, patterns", credits: 350, icon: Brain, color: "text-violet-500 bg-violet-500/10" },
-  { intent: "analyze", label: "Deep Analysis", description: "Analyze content for insights", credits: 200, icon: BarChart3, color: "text-blue-500 bg-blue-500/10" },
-  { intent: "generate", label: "Generate Content", description: "Create articles, posts, scripts", credits: 150, icon: FileText, color: "text-emerald-500 bg-emerald-500/10" },
-  { intent: "search", label: "Knowledge Search", description: "Search neurons and knowledge base", credits: 20, icon: Search, color: "text-amber-500 bg-amber-500/10" },
-  { intent: "compare", label: "Compare & Diff", description: "Compare frameworks side-by-side", credits: 400, icon: GitCompare, color: "text-orange-500 bg-orange-500/10" },
-  { intent: "profile", label: "Build Profile", description: "Psychological & expertise profiles", credits: 500, icon: Users, color: "text-pink-500 bg-pink-500/10" },
+  { intent: "extract", label: "Extract Knowledge", description: "Extract neurons, frameworks, patterns", credits: 350, icon: Brain, color: "text-ai-accent bg-ai-accent/10" },
+  { intent: "analyze", label: "Deep Analysis", description: "Analyze content for insights", credits: 200, icon: BarChart3, color: "text-info bg-info/10" },
+  { intent: "generate", label: "Generate Content", description: "Create articles, posts, scripts", credits: 150, icon: FileText, color: "text-success bg-success/10" },
+  { intent: "search", label: "Knowledge Search", description: "Search neurons and knowledge base", credits: 20, icon: Search, color: "text-gold bg-gold/10" },
+  { intent: "compare", label: "Compare & Diff", description: "Compare frameworks side-by-side", credits: 400, icon: GitCompare, color: "text-primary bg-primary/10" },
+  { intent: "profile", label: "Build Profile", description: "Psychological & expertise profiles", credits: 500, icon: Users, color: "text-destructive bg-destructive/10" },
 ];
 
 interface PipelineComposerProps {

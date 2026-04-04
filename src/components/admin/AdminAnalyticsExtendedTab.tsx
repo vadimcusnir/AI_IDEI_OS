@@ -76,7 +76,7 @@ export function AdminAnalyticsExtendedTab() {
       { label: "Intents Active", count: intents.filter((i: any) => i.is_active).length, color: "bg-primary" },
       { label: "Jobs Started", count: jobs.length, color: "bg-primary/80" },
       { label: "Jobs Completed", count: completed, color: "bg-status-validated" },
-      { label: "Artifacts Saved", count: savedArtifacts, color: "bg-blue-500" },
+      { label: "Artifacts Saved", count: savedArtifacts, color: "bg-info" },
     ]);
 
     setLoading(false);

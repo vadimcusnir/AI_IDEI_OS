@@ -26,7 +26,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   framework: "bg-emerald-500",
   strategy: "bg-amber-500",
   formula: "bg-destructive",
-  pattern: "bg-blue-500",
+  pattern: "bg-info",
   avatar: "bg-pink-500",
   argument_map: "bg-teal-500",
   narrative: "bg-orange-500",

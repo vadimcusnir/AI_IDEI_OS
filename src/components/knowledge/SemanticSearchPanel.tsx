@@ -59,11 +59,11 @@ export function SemanticSearchPanel({ className }: { className?: string }) {
   };
 
   const typeColors: Record<string, string> = {
-    insight: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    insight: "bg-info/10 text-info border-blue-500/20",
     pattern: "bg-purple-500/10 text-purple-400 border-purple-500/20",
     formula: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    application: "bg-green-500/10 text-green-400 border-green-500/20",
-    contradiction: "bg-red-500/10 text-red-400 border-red-500/20",
+    application: "bg-success/10 text-green-400 border-green-500/20",
+    contradiction: "bg-destructive/10 text-red-400 border-red-500/20",
     profile: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
   };
 

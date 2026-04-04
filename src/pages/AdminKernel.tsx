@@ -94,10 +94,10 @@ export default function AdminKernel() {
 
   const kpis = [
     { label: "Total Runs", value: metrics.total_runs, icon: Brain, color: "text-primary" },
-    { label: "Success Rate", value: `${metrics.success_rate}%`, icon: CheckCircle, color: "text-green-500" },
+    { label: "Success Rate", value: `${metrics.success_rate}%`, icon: CheckCircle, color: "text-success" },
     { label: "Failed", value: metrics.failed, icon: XCircle, color: "text-destructive" },
     { label: "NEURONS Consumed", value: metrics.total_neurons_consumed.toLocaleString(), icon: Zap, color: "text-amber-500" },
-    { label: "Avg Assets/Run", value: metrics.avg_assets_per_run, icon: TrendingUp, color: "text-blue-500" },
+    { label: "Avg Assets/Run", value: metrics.avg_assets_per_run, icon: TrendingUp, color: "text-info" },
     { label: "Revenue Est.", value: `${metrics.revenue_estimate.toLocaleString()}N`, icon: DollarSign, color: "text-emerald-500" },
   ];
 

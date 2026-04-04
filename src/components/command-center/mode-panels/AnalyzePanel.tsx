@@ -10,10 +10,10 @@ interface AnalyzePanelProps {
 }
 
 const ANALYZE_ACTIONS = [
-  { icon: TrendingUp, label: "Market Analysis", desc: "Trends & opportunities", prompt: "/analyze market trends for ", accent: "bg-amber-500/10 text-amber-400" },
-  { icon: Target, label: "Competitor Research", desc: "Deep competitive analysis", prompt: "/analyze competitors in ", accent: "bg-blue-500/10 text-blue-400" },
-  { icon: Search, label: "Pattern Detection", desc: "Find patterns across neurons", prompt: "/analyze detect patterns across neurons", accent: "bg-violet-500/10 text-violet-400" },
-  { icon: BarChart3, label: "Performance Report", desc: "Content & engagement metrics", prompt: "/analyze performance report", accent: "bg-emerald-500/10 text-emerald-400" },
+  { icon: TrendingUp, label: "Market Analysis", desc: "Trends & opportunities", prompt: "/analyze market trends for ", accent: "bg-gold/10 text-gold" },
+  { icon: Target, label: "Competitor Research", desc: "Deep competitive analysis", prompt: "/analyze competitors in ", accent: "bg-info/10 text-info" },
+  { icon: Search, label: "Pattern Detection", desc: "Find patterns across neurons", prompt: "/analyze detect patterns across neurons", accent: "bg-ai-accent/10 text-ai-accent" },
+  { icon: BarChart3, label: "Performance Report", desc: "Content & engagement metrics", prompt: "/analyze performance report", accent: "bg-success/10 text-success" },
 ];
 
 export function AnalyzePanel({ onCommand }: AnalyzePanelProps) {
@@ -27,7 +27,7 @@ export function AnalyzePanel({ onCommand }: AnalyzePanelProps) {
     >
       <div className="py-2 space-y-2">
         <div className="flex items-center gap-1.5 px-1">
-          <BarChart3 className="h-3 w-3 text-amber-400" />
+          <BarChart3 className="h-3 w-3 text-gold" />
           <span className="text-micro font-medium text-muted-foreground/70">Analyze & Research</span>
         </div>
         <div className="grid grid-cols-2 gap-1.5">

@@ -13,10 +13,10 @@ export function InputStage({ onPipelineStart, onPipelineComplete, onExtractionCo
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-6">
-        <h2 className="text-[length:var(--h3-size)] font-bold text-foreground mb-1">
+        <h2 className="text-h3 font-bold text-foreground mb-1">
           Upload Content
         </h2>
-        <p className="text-[length:var(--body-dense-size)] text-muted-foreground">
+        <p className="text-caption text-muted-foreground">
           Paste a link, upload a file, or type content to begin analysis.
         </p>
       </div>

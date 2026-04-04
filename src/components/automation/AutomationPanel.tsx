@@ -18,18 +18,18 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const JOB_TYPE_META: Record<string, { label: string; icon: string; color: string }> = {
-  recurring_extract: { label: "Extracție Recurentă", icon: "🔄", color: "text-blue-500" },
+  recurring_extract: { label: "Extracție Recurentă", icon: "🔄", color: "text-info" },
   recurring_generation: { label: "Generare Recurentă", icon: "✨", color: "text-purple-500" },
-  send_digest: { label: "Trimite Digest", icon: "📧", color: "text-green-500" },
+  send_digest: { label: "Trimite Digest", icon: "📧", color: "text-success" },
   publish_asset: { label: "Publică Asset", icon: "🚀", color: "text-orange-500" },
-  notify_low_balance: { label: "Alertă Balanță", icon: "⚠️", color: "text-yellow-500" },
-  scheduled_pipeline: { label: "Pipeline Programat", icon: "⚡", color: "text-red-500" },
+  notify_low_balance: { label: "Alertă Balanță", icon: "⚠️", color: "text-warning" },
+  scheduled_pipeline: { label: "Pipeline Programat", icon: "⚡", color: "text-destructive" },
 };
 
 const RUN_STATUS_ICON: Record<string, React.ReactNode> = {
   pending: <Clock className="h-3 w-3 text-muted-foreground" />,
   running: <Loader2 className="h-3 w-3 text-primary animate-spin" />,
-  completed: <CheckCircle2 className="h-3 w-3 text-green-500" />,
+  completed: <CheckCircle2 className="h-3 w-3 text-success" />,
   failed: <AlertTriangle className="h-3 w-3 text-destructive" />,
 };
 

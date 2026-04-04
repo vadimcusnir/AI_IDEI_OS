@@ -10,10 +10,10 @@ interface ResearchPanelProps {
 }
 
 const RESEARCH_ACTIONS = [
-  { icon: Globe, label: "Web Research", desc: "Cercetare web profundă", prompt: "/research deep web analysis on ", accent: "bg-rose-500/10 text-rose-400" },
-  { icon: GitCompare, label: "Compară Outputs", desc: "Side-by-side analysis", prompt: "/research compare outputs", accent: "bg-blue-500/10 text-blue-400" },
-  { icon: Microscope, label: "Analiză Pattern", desc: "Detectează tipare", prompt: "/research detect patterns across neurons", accent: "bg-violet-500/10 text-violet-400" },
-  { icon: Search, label: "Market Intelligence", desc: "Date de piață live", prompt: "/research market intelligence report for ", accent: "bg-emerald-500/10 text-emerald-400" },
+  { icon: Globe, label: "Web Research", desc: "Cercetare web profundă", prompt: "/research deep web analysis on ", accent: "bg-destructive/10 text-destructive" },
+  { icon: GitCompare, label: "Compară Outputs", desc: "Side-by-side analysis", prompt: "/research compare outputs", accent: "bg-info/10 text-info" },
+  { icon: Microscope, label: "Analiză Pattern", desc: "Detectează tipare", prompt: "/research detect patterns across neurons", accent: "bg-ai-accent/10 text-ai-accent" },
+  { icon: Search, label: "Market Intelligence", desc: "Date de piață live", prompt: "/research market intelligence report for ", accent: "bg-success/10 text-success" },
 ];
 
 export function ResearchPanel({ onCommand }: ResearchPanelProps) {
@@ -27,7 +27,7 @@ export function ResearchPanel({ onCommand }: ResearchPanelProps) {
     >
       <div className="py-2 space-y-2">
         <div className="flex items-center gap-1.5 px-1">
-          <Search className="h-3 w-3 text-rose-400" />
+          <Search className="h-3 w-3 text-destructive" />
           <span className="text-micro font-medium text-muted-foreground/70">Cercetare & Analiză</span>
         </div>
         <div className="grid grid-cols-2 gap-1.5">

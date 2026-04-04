@@ -10,12 +10,12 @@ interface GeneratePanelProps {
 }
 
 const GENERATE_ACTIONS = [
-  { icon: Zap, label: "Hook-uri de conversie", desc: "10+ variante", prompt: "/generate 10 conversion hooks", accent: "bg-emerald-500/10 text-emerald-400" },
-  { icon: PenTool, label: "Articol complet", desc: "Din neuroni selectați", prompt: "/generate article from selected neurons", accent: "bg-blue-500/10 text-blue-400" },
-  { icon: FileText, label: "Serie LinkedIn", desc: "5 postări optimizate", prompt: "/generate LinkedIn post series", accent: "bg-violet-500/10 text-violet-400" },
-  { icon: Mail, label: "Email Sequence", desc: "Nurturing 7 emails", prompt: "/generate email nurturing sequence 7 emails", accent: "bg-amber-500/10 text-amber-400" },
-  { icon: BookOpen, label: "Mini-curs", desc: "10 micro-lecții", prompt: "/generate 10 micro-lessons from neurons", accent: "bg-rose-500/10 text-rose-400" },
-  { icon: Zap, label: "CTA Pack", desc: "20 CTA-uri testate", prompt: "/generate 20 high-converting CTAs", accent: "bg-cyan-500/10 text-cyan-400" },
+  { icon: Zap, label: "Hook-uri de conversie", desc: "10+ variante", prompt: "/generate 10 conversion hooks", accent: "bg-success/10 text-success" },
+  { icon: PenTool, label: "Articol complet", desc: "Din neuroni selectați", prompt: "/generate article from selected neurons", accent: "bg-info/10 text-info" },
+  { icon: FileText, label: "Serie LinkedIn", desc: "5 postări optimizate", prompt: "/generate LinkedIn post series", accent: "bg-ai-accent/10 text-ai-accent" },
+  { icon: Mail, label: "Email Sequence", desc: "Nurturing 7 emails", prompt: "/generate email nurturing sequence 7 emails", accent: "bg-gold/10 text-gold" },
+  { icon: BookOpen, label: "Mini-curs", desc: "10 micro-lecții", prompt: "/generate 10 micro-lessons from neurons", accent: "bg-destructive/10 text-destructive" },
+  { icon: Zap, label: "CTA Pack", desc: "20 CTA-uri testate", prompt: "/generate 20 high-converting CTAs", accent: "bg-petrol/10 text-petrol" },
 ];
 
 export function GeneratePanel({ onCommand }: GeneratePanelProps) {
@@ -29,7 +29,7 @@ export function GeneratePanel({ onCommand }: GeneratePanelProps) {
     >
       <div className="py-2 space-y-2">
         <div className="flex items-center gap-1.5 px-1">
-          <PenTool className="h-3 w-3 text-emerald-400" />
+          <PenTool className="h-3 w-3 text-success" />
           <span className="text-micro font-medium text-muted-foreground/70">Generare conținut</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">

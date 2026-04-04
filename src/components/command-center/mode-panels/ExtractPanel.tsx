@@ -11,10 +11,10 @@ interface ExtractPanelProps {
 }
 
 const EXTRACT_ACTIONS = [
-  { icon: Upload, label: "Upload & Extract", desc: "Text, PDF, DOCX", prompt: "/extract upload", accent: "bg-blue-500/10 text-blue-400" },
-  { icon: Mic, label: "Audio → Neuroni", desc: "MP3, WAV, M4A", prompt: "/extract audio to neurons", accent: "bg-violet-500/10 text-violet-400" },
-  { icon: Globe, label: "URL → Insights", desc: "Extrage din orice URL", prompt: "/extract insights from URL ", accent: "bg-emerald-500/10 text-emerald-400" },
-  { icon: FileText, label: "Transcript → Framework", desc: "Structurează transcript", prompt: "/extract frameworks from transcript", accent: "bg-amber-500/10 text-amber-400" },
+  { icon: Upload, label: "Upload & Extract", desc: "Text, PDF, DOCX", prompt: "/extract upload", accent: "bg-info/10 text-info" },
+  { icon: Mic, label: "Audio → Neuroni", desc: "MP3, WAV, M4A", prompt: "/extract audio to neurons", accent: "bg-ai-accent/10 text-ai-accent" },
+  { icon: Globe, label: "URL → Insights", desc: "Extrage din orice URL", prompt: "/extract insights from URL ", accent: "bg-success/10 text-success" },
+  { icon: FileText, label: "Transcript → Framework", desc: "Structurează transcript", prompt: "/extract frameworks from transcript", accent: "bg-gold/10 text-gold" },
 ];
 
 export function ExtractPanel({ onCommand, neuronCount = 0 }: ExtractPanelProps) {
@@ -29,7 +29,7 @@ export function ExtractPanel({ onCommand, neuronCount = 0 }: ExtractPanelProps) 
       <div className="py-2 space-y-2">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-1.5">
-            <Brain className="h-3 w-3 text-blue-400" />
+            <Brain className="h-3 w-3 text-info" />
             <span className="text-micro font-medium text-muted-foreground/70">Extracție cunoștințe</span>
           </div>
           {neuronCount > 0 && (

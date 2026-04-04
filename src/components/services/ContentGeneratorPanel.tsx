@@ -18,9 +18,9 @@ import { cn } from "@/lib/utils";
 
 const GENERATORS = [
   { key: "tweet-thread", name: "Tweet/X Thread", icon: Twitter, cost: 30, color: "text-sky-500" },
-  { key: "linkedin-post", name: "LinkedIn Post", icon: Linkedin, cost: 30, color: "text-blue-600" },
+  { key: "linkedin-post", name: "LinkedIn Post", icon: Linkedin, cost: 30, color: "text-info" },
   { key: "blog-article", name: "Blog Article", icon: FileText, cost: 80, color: "text-emerald-500" },
-  { key: "youtube-script", name: "YouTube Script", icon: Video, cost: 60, color: "text-red-500" },
+  { key: "youtube-script", name: "YouTube Script", icon: Video, cost: 60, color: "text-destructive" },
   { key: "newsletter", name: "Newsletter", icon: Mail, cost: 40, color: "text-amber-500" },
   { key: "viral-hooks", name: "Viral Hooks Pack", icon: Sparkles, cost: 25, color: "text-purple-500" },
   { key: "content-calendar", name: "30-Day Calendar", icon: CalendarDays, cost: 50, color: "text-rose-500" },
