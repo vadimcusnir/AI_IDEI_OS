@@ -552,7 +552,7 @@ async function fetchSubtitlesAsMetadata(videoId: string): Promise<{
 }
 
 // ═══════════════════════════════════════
-// YouTube Captions — Innertube API (robust, handles auto-generated)
+// YouTube Captions — HTML scraping + JSON3 (most reliable server-side)
 // ═══════════════════════════════════════
 const CAPTION_LANG_PRIORITY = ["ro", "en", "ru", "de", "fr", "es"];
 
@@ -570,73 +570,81 @@ function sanitizeCaptionText(raw: string): string {
 
 async function fetchYouTubeCaptions(videoId: string): Promise<TranscriptResult | null> {
   try {
-    console.log(`[captions] Trying Innertube API for ${videoId}`);
+    console.log(`[captions] Fetching YouTube page for ${videoId}`);
 
-    // Step 1: Get caption tracks via Innertube player endpoint
-    const playerResp = await fetch("https://www.youtube.com/youtubei/v1/player?prettyPrint=false", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        videoId,
-        context: {
-          client: {
-            hl: "en",
-            gl: "US",
-            clientName: "WEB",
-            clientVersion: "2.20240101.00.00",
-          },
-        },
-      }),
+    // Step 1: Get the watch page HTML to extract caption track URLs
+    const pageResp = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
     });
 
-    if (!playerResp.ok) {
-      console.warn(`[captions] Innertube player returned ${playerResp.status}`);
-      return fallbackLegacyCaptions(videoId);
+    if (!pageResp.ok) {
+      console.warn(`[captions] YouTube page returned ${pageResp.status}`);
+      return null;
     }
 
-    const playerData = await playerResp.json();
-    const captionTracks = playerData?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+    const html = await pageResp.text();
 
-    if (!captionTracks || captionTracks.length === 0) {
-      console.log("[captions] No caption tracks found via Innertube");
-      return fallbackLegacyCaptions(videoId);
+    // Step 2: Extract captionTracks from the embedded player config
+    const captionMatch = html.match(/"captions"\s*:\s*(\{"playerCaptionsTracklistRenderer".*?\})\s*,\s*"videoDetails"/);
+    if (!captionMatch) {
+      console.log("[captions] No captions block found in HTML");
+      return null;
     }
 
-    // Step 2: Pick best track (manual > ASR, priority language)
+    let captionData: any;
+    try {
+      captionData = JSON.parse(captionMatch[1]);
+    } catch {
+      console.warn("[captions] Failed to parse captions JSON");
+      return null;
+    }
+
+    const tracks = captionData?.playerCaptionsTracklistRenderer?.captionTracks;
+    if (!tracks || tracks.length === 0) {
+      console.log("[captions] No caption tracks available");
+      return null;
+    }
+
+    // Step 3: Pick best track (manual > ASR, priority language)
     let selected: any = null;
     for (const lang of CAPTION_LANG_PRIORITY) {
-      selected = captionTracks.find((t: any) => t.languageCode === lang && t.kind !== "asr") || null;
+      selected = tracks.find((t: any) => t.languageCode === lang && t.kind !== "asr") || null;
       if (selected) break;
     }
     if (!selected) {
       for (const lang of CAPTION_LANG_PRIORITY) {
-        selected = captionTracks.find((t: any) => t.languageCode === lang) || null;
+        selected = tracks.find((t: any) => t.languageCode === lang) || null;
         if (selected) break;
       }
     }
-    if (!selected) selected = captionTracks[0];
+    if (!selected) selected = tracks[0];
 
-    // Step 3: Fetch the actual captions (JSON3 format for structured data)
+    // Step 4: Fetch the captions in JSON3 format
     let captionUrl = selected.baseUrl;
     if (!captionUrl.includes("fmt=")) captionUrl += "&fmt=json3";
     else captionUrl = captionUrl.replace(/fmt=\w+/, "fmt=json3");
 
-    console.log(`[captions] Fetching track: lang=${selected.languageCode}, kind=${selected.kind || "manual"}`);
+    const isAsr = selected.kind === "asr";
+    console.log(`[captions] Fetching track: lang=${selected.languageCode}, kind=${isAsr ? "asr" : "manual"}`);
+
     const captionResp = await fetch(captionUrl);
     if (!captionResp.ok) {
       console.warn(`[captions] Caption fetch failed: ${captionResp.status}`);
-      return fallbackLegacyCaptions(videoId);
+      return null;
     }
 
-    const captionData = await captionResp.json();
-    const events = captionData?.events;
+    const jsonData = await captionResp.json();
+    const events = jsonData?.events;
 
     if (!events || !Array.isArray(events)) {
       console.warn("[captions] No events in JSON3 response");
-      return fallbackLegacyCaptions(videoId);
+      return null;
     }
 
-    // Step 4: Parse events into segments
+    // Step 5: Parse events into segments
     const segments: TranscriptResult["segments"] = [];
     const textParts: string[] = [];
 
@@ -664,14 +672,13 @@ async function fetchYouTubeCaptions(videoId: string): Promise<TranscriptResult |
     const fullText = textParts.join(" ");
     if (!fullText || fullText.length < 50) {
       console.warn(`[captions] Text too short (${fullText.length} chars)`);
-      return fallbackLegacyCaptions(videoId);
+      return null;
     }
 
     const lastSeg = segments[segments.length - 1];
     const duration = lastSeg ? Math.ceil(lastSeg.end) : null;
-    const isAsr = selected.kind === "asr";
 
-    console.log(`[captions] ✓ Innertube: ${segments.length} segments, ${fullText.split(/\s+/).length} words, lang=${selected.languageCode}, asr=${isAsr}`);
+    console.log(`[captions] ✓ Got ${segments.length} segments, ${fullText.split(/\s+/).length} words, lang=${selected.languageCode}, asr=${isAsr}`);
 
     return {
       text: fullText,
@@ -683,79 +690,7 @@ async function fetchYouTubeCaptions(videoId: string): Promise<TranscriptResult |
       processing_mode: "elevenlabs_scribe_v2" as const,
     };
   } catch (e) {
-    console.warn("[captions] Innertube failed:", e);
-    return fallbackLegacyCaptions(videoId);
-  }
-}
-
-// Legacy fallback using video.google.com/timedtext
-async function fallbackLegacyCaptions(videoId: string): Promise<TranscriptResult | null> {
-  try {
-    console.log(`[captions-legacy] Trying timedtext API for ${videoId}`);
-    const listResp = await fetch(`https://video.google.com/timedtext?v=${videoId}&type=list`);
-    if (!listResp.ok) return null;
-
-    const listXml = await listResp.text();
-    const tracks: { code: string; kind?: string }[] = [];
-    const trackRegex = /lang_code="([^"]+)"(?:[^>]*kind="([^"]*)")?/g;
-    let m;
-    while ((m = trackRegex.exec(listXml)) !== null) {
-      tracks.push({ code: m[1], kind: m[2] });
-    }
-
-    if (tracks.length === 0) return null;
-
-    let selected: { code: string; kind?: string } | null = null;
-    for (const lang of CAPTION_LANG_PRIORITY) {
-      selected = tracks.find(t => t.code === lang && t.kind !== "asr") || null;
-      if (selected) break;
-    }
-    if (!selected) {
-      for (const lang of CAPTION_LANG_PRIORITY) {
-        selected = tracks.find(t => t.code === lang) || null;
-        if (selected) break;
-      }
-    }
-    if (!selected) selected = tracks[0];
-
-    let subUrl = `https://video.google.com/timedtext?v=${videoId}&lang=${selected.code}`;
-    if (selected.kind) subUrl += `&kind=${selected.kind}`;
-
-    const subResp = await fetch(subUrl);
-    if (!subResp.ok) return null;
-
-    const subXml = await subResp.text();
-    const segments: TranscriptResult["segments"] = [];
-    const textParts: string[] = [];
-    const regex = /<text[^>]*\bstart="([\d.]+)"[^>]*\bdur="([\d.]+)"[^>]*>([\s\S]*?)<\/text>/g;
-    let match;
-    while ((match = regex.exec(subXml)) !== null) {
-      const start = parseFloat(match[1]);
-      const dur = parseFloat(match[2]);
-      const text = sanitizeCaptionText(match[3]);
-      if (text && text.length <= 2000) {
-        segments.push({ start, end: start + dur, text });
-        textParts.push(text);
-      }
-    }
-
-    const fullText = textParts.join(" ");
-    if (!fullText || fullText.length < 50) return null;
-
-    const lastSeg = segments[segments.length - 1];
-    console.log(`[captions-legacy] ✓ Got ${segments.length} segments`);
-
-    return {
-      text: fullText,
-      segments,
-      duration_seconds: lastSeg ? Math.ceil(lastSeg.end) : null,
-      detected_language: selected.code,
-      speakers: [],
-      confidence: selected.kind === "asr" ? 0.7 : 0.85,
-      processing_mode: "elevenlabs_scribe_v2" as const,
-    };
-  } catch (e) {
-    console.warn("[captions-legacy] Failed:", e);
+    console.warn("[captions] Failed:", e);
     return null;
   }
 }
