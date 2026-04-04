@@ -339,7 +339,7 @@ export function useCommandCenter() {
       abortRef.current = null;
       setIsSubmitting(false);
     }
-  }, [input, files, user, isSubmitting, executionEngine, execState, balance, tier, tierDiscount, t, saveMessage, persistRun]);
+  }, [input, files, user, isSubmitting, isOnline, executionEngine, execState, balance, tier, tierDiscount, t, saveMessage, persistRun]);
 
   // ═══ Handlers (memoized — A9: reduce re-renders) ═══
   const handleStop = useCallback(() => { stopActiveExecution(); }, [stopActiveExecution]);
