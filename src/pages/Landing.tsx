@@ -228,7 +228,7 @@ export default function Landing() {
             </DropdownMenu>
             <ThemeToggle />
             {user ? (
-              <Button size="sm" onClick={() => navigate("/home")} className="gap-2 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] transition-all duration-200">
+              <Button size="sm" onClick={() => navigate("/home")} className="gap-2 text-xs h-8 bg-gold hover:bg-gold/85 text-obsidian transition-all duration-200">
                 Dashboard
               </Button>
             ) : (
