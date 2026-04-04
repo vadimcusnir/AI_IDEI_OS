@@ -8534,6 +8534,27 @@ export type Database = {
         }
         Relationships: []
       }
+      rbac_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          permission_key: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permission_key: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permission_key?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
       risk_signals: {
         Row: {
           created_at: string
@@ -11356,6 +11377,10 @@ export type Database = {
         }[]
       }
       has_admin_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
+      }
+      has_permission: {
         Args: { _permission: string; _user_id: string }
         Returns: boolean
       }
