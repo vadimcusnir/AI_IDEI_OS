@@ -60,6 +60,7 @@ export default function AdminMediaProfiles() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [guardrails, setGuardrails] = useState<{ all_pass: boolean; checks: GuardrailResult[] } | null>(null);
   const [showCreate, setShowCreate] = useState(false);
+  const [showAIGenerate, setShowAIGenerate] = useState(false);
 
   // Create form state
   const [newName, setNewName] = useState("");
