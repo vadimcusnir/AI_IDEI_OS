@@ -914,9 +914,9 @@ Deno.serve(async (req) => {
       speakers: sttResult.speakers,
       confidence: sttResult.confidence,
       duration_seconds: sttResult.duration_seconds,
-      processing_mode: sttResult.processing_mode,
-      fallback_used: false,
-      failure_reason: null,
+      processing_mode: timings.fallback_source ? "youtube_captions_fallback" : sttResult.processing_mode,
+      fallback_used: Boolean(timings.fallback_source),
+      failure_reason: timings.fallback_source ? "cobalt_failed_captions_used" : null,
     };
 
     if (episode_id) {
