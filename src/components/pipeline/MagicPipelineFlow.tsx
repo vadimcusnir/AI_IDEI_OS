@@ -150,7 +150,94 @@ export function MagicPipelineFlow({ className, compact, onPipelineMessage }: Pro
       updateStep("import", { status: "running", startedAt: Date.now() });
       let sourceText = "";
 
-      if (urlInput) {
+      // Detect YouTube URLs
+      const isYouTube = urlInput && /(?:youtube\.com|youtu\.be)/i.test(urlInput);
+
+      if (isYouTube) {
+        // YouTube → create episode + transcribe-source (audio-first pipeline)
+        updateStep("import", { status: "completed", completedAt: Date.now(), result: { label: "YouTube video" } });
+        updateStep("transcribe", { status: "running", startedAt: Date.now() });
+
+        const { data: ytEpisode, error: ytEpErr } = await supabase
+          .from("episodes")
+          .insert({
+            title: "YouTube — Pipeline Import",
+            author_id: user.id,
+            workspace_id: currentWorkspace?.id,
+            source_type: "video",
+            source_url: urlInput.trim(),
+            status: "uploaded",
+            metadata: { platform: "youtube", pipeline: "magic" },
+          } as any)
+          .select("id")
+          .single();
+
+        if (ytEpErr || !ytEpisode) {
+          console.error("Episode creation error:", ytEpErr);
+          throw new Error("Failed to create episode");
+        }
+
+        const transcribeResp = await supabase.functions.invoke("transcribe-source", {
+          body: { episode_id: ytEpisode.id, url: urlInput.trim() },
+        });
+
+        if (transcribeResp.error) {
+          console.error("Transcribe error:", transcribeResp.error);
+          throw new Error("YouTube transcription failed");
+        }
+
+        sourceText = transcribeResp.data?.transcript || transcribeResp.data?.text || "";
+        if (!sourceText || sourceText.length < 50) throw new Error("Transcription returned no content");
+
+        // Update episode with transcript
+        await supabase.from("episodes").update({
+          transcript: sourceText.slice(0, 50000),
+          status: "transcribed",
+        } as any).eq("id", ytEpisode.id);
+
+        updateStep("transcribe", { status: "completed", completedAt: Date.now(), result: { count: sourceText.length, label: `${Math.round(sourceText.length / 1000)}k chars` } });
+        updateStep("import", { status: "completed", completedAt: Date.now(), result: { count: sourceText.length, label: `${Math.round(sourceText.length / 1000)}k chars` } });
+
+        // Skip to extract step directly with the episode we already created
+        updateStep("extract", { status: "running", startedAt: Date.now() });
+        const extractResp = await supabase.functions.invoke("extract-neurons", {
+          body: { episode_id: ytEpisode.id },
+        });
+        if (extractResp.error) throw new Error("Extraction failed");
+        const neuronCount = extractResp.data?.neurons_created || extractResp.data?.count || 0;
+        updateStep("extract", {
+          status: "completed", completedAt: Date.now(),
+          result: { count: neuronCount, label: `${neuronCount} neurons`, link: "/library" },
+        });
+
+        // Continue to link/generate steps (skip the duplicate extract below)
+        // Jump to step 3 (link)
+        updateStep("link", { status: "running", startedAt: Date.now() });
+        try {
+          await supabase.functions.invoke("structure-neurons", { body: { episode_id: ytEpisode.id } });
+          updateStep("link", { status: "completed", completedAt: Date.now(), result: { label: "Linked" } });
+        } catch { updateStep("link", { status: "skipped" }); }
+
+        // Step 4: Generate
+        updateStep("generate", { status: "running", startedAt: Date.now() });
+        try {
+          const genResp = await supabase.functions.invoke("run-service", {
+            body: {
+              service_name: "decision-pack",
+              input: { episode_id: ytEpisode.id, text: sourceText.slice(0, 10000), neurons: extractResp.data?.neurons?.slice(0, 20) || [], workspace_id: currentWorkspace?.id, auto_pipeline: true },
+            },
+          });
+          if (genResp.error) throw genResp.error;
+          updateStep("generate", { status: "completed", completedAt: Date.now(), result: { label: "Generated", link: "/library" } });
+        } catch { updateStep("generate", { status: "skipped" }); }
+
+        // ── Settle ──
+        await settle(reservationRef.current, undefined, "Magic Pipeline: completed");
+        refetchBalance();
+        setPhase("complete");
+        onPipelineMessage?.("assistant", `✅ Pipeline complete — ${neuronCount} neurons extracted from YouTube video`);
+        return; // Exit early — YouTube flow is fully handled
+      } else if (urlInput) {
         const resp = await supabase.functions.invoke("scrape-url", { body: { url: urlInput } });
         if (resp.error) throw new Error("Source import failed");
         sourceText = resp.data?.text || resp.data?.content || "";
