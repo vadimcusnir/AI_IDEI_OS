@@ -1944,6 +1944,57 @@ export type Database = {
         }
         Relationships: []
       }
+      classification_results: {
+        Row: {
+          classified_by: string
+          created_at: string
+          dimension: string
+          id: string
+          label: string
+          model_version: string | null
+          neuron_id: number
+          score: number
+          sub_labels: Json | null
+        }
+        Insert: {
+          classified_by: string
+          created_at?: string
+          dimension: string
+          id?: string
+          label: string
+          model_version?: string | null
+          neuron_id: number
+          score?: number
+          sub_labels?: Json | null
+        }
+        Update: {
+          classified_by?: string
+          created_at?: string
+          dimension?: string
+          id?: string
+          label?: string
+          model_version?: string | null
+          neuron_id?: number
+          score?: number
+          sub_labels?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classification_results_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "classification_results_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cognitive_categories: {
         Row: {
           created_at: string
@@ -1993,6 +2044,77 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "cognitive_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cognitive_chain_nodes: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          depth_score: number | null
+          id: string
+          layer: number
+          layer_label: string
+          neuron_id: number | null
+          parent_node_id: string | null
+          pattern_id: string | null
+          title: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          created_by: string
+          depth_score?: number | null
+          id?: string
+          layer: number
+          layer_label: string
+          neuron_id?: number | null
+          parent_node_id?: string | null
+          pattern_id?: string | null
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          depth_score?: number | null
+          id?: string
+          layer?: number
+          layer_label?: string
+          neuron_id?: number | null
+          parent_node_id?: string | null
+          pattern_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cognitive_chain_nodes_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "cognitive_chain_nodes_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cognitive_chain_nodes_parent_node_id_fkey"
+            columns: ["parent_node_id"]
+            isOneToOne: false
+            referencedRelation: "cognitive_chain_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cognitive_chain_nodes_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "extracted_patterns"
             referencedColumns: ["id"]
           },
         ]
@@ -3609,6 +3731,51 @@ export type Database = {
           updated_at?: string
           validation_required?: boolean | null
           version?: number
+        }
+        Relationships: []
+      }
+      extracted_patterns: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          created_by: string
+          description: string
+          evidence: Json | null
+          frequency: number | null
+          id: string
+          pattern_type: string
+          source_neuron_ids: number[]
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          created_by: string
+          description?: string
+          evidence?: Json | null
+          frequency?: number | null
+          id?: string
+          pattern_type: string
+          source_neuron_ids?: number[]
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          evidence?: Json | null
+          frequency?: number | null
+          id?: string
+          pattern_type?: string
+          source_neuron_ids?: number[]
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -8885,6 +9052,60 @@ export type Database = {
           },
         ]
       }
+      rso_versions: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          created_by: string
+          id: string
+          model_used: string | null
+          neuron_id: number
+          raw_output: Json
+          source_context: string | null
+          token_count: number | null
+          version: number
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          created_by: string
+          id?: string
+          model_used?: string | null
+          neuron_id: number
+          raw_output?: Json
+          source_context?: string | null
+          token_count?: number | null
+          version?: number
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          model_used?: string | null
+          neuron_id?: number
+          raw_output?: Json
+          source_context?: string | null
+          token_count?: number | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rso_versions_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "rso_versions_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       runtime_health: {
         Row: {
           avg_latency_ms: number
@@ -8963,6 +9184,51 @@ export type Database = {
         }
         Relationships: []
       }
+      scoring_results: {
+        Row: {
+          axis: string
+          created_at: string
+          id: string
+          neuron_id: number
+          rationale: string | null
+          score: number
+          scored_by: string
+        }
+        Insert: {
+          axis: string
+          created_at?: string
+          id?: string
+          neuron_id: number
+          rationale?: string | null
+          score?: number
+          scored_by: string
+        }
+        Update: {
+          axis?: string
+          created_at?: string
+          id?: string
+          neuron_id?: number
+          rationale?: string | null
+          score?: number
+          scored_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scoring_results_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "scoring_results_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_events: {
         Row: {
           created_at: string
@@ -8995,6 +9261,68 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      semantic_links: {
+        Row: {
+          context: string | null
+          created_at: string
+          created_by: string
+          id: string
+          relation_type: string
+          source_neuron_id: number
+          strength: number
+          target_neuron_id: number
+        }
+        Insert: {
+          context?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          relation_type: string
+          source_neuron_id: number
+          strength?: number
+          target_neuron_id: number
+        }
+        Update: {
+          context?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          relation_type?: string
+          source_neuron_id?: number
+          strength?: number
+          target_neuron_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "semantic_links_source_neuron_id_fkey"
+            columns: ["source_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "semantic_links_source_neuron_id_fkey"
+            columns: ["source_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "semantic_links_target_neuron_id_fkey"
+            columns: ["target_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "semantic_links_target_neuron_id_fkey"
+            columns: ["target_neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       service_catalog: {
         Row: {
