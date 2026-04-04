@@ -43,7 +43,7 @@ export function JobsGuide() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-medium text-foreground">{t("jobs.guide_title")}</p>
-              <p className="text-[10px] text-muted-foreground">{t("jobs.guide_subtitle")}</p>
+              <p className="text-micro text-muted-foreground">{t("jobs.guide_subtitle")}</p>
             </div>
             {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
           </button>
@@ -67,8 +67,8 @@ export function JobsGuide() {
                   <div className="flex items-center gap-1.5 bg-card border border-border rounded-lg px-2.5 py-1.5">
                     <step.icon className="h-3 w-3 text-primary/60" />
                     <div>
-                      <p className="text-[9px] font-semibold">{step.label}</p>
-                      <p className="text-[8px] text-muted-foreground">{step.desc}</p>
+                      <p className="text-nano font-semibold">{step.label}</p>
+                      <p className="text-nano text-muted-foreground">{step.desc}</p>
                     </div>
                   </div>
                 </div>
@@ -84,8 +84,8 @@ export function JobsGuide() {
                   <div key={key} className="flex items-start gap-2 bg-card border border-border rounded-lg p-2.5">
                     <Icon className={cn("h-3.5 w-3.5 mt-0.5 shrink-0", si.color)} />
                     <div>
-                      <p className="text-[10px] font-semibold">{t(`jobs.status_${key}`)}</p>
-                      <p className="text-[9px] text-muted-foreground leading-relaxed">{t(`jobs.status_${key}_desc`)}</p>
+                      <p className="text-micro font-semibold">{t(`jobs.status_${key}`)}</p>
+                      <p className="text-nano text-muted-foreground leading-relaxed">{t(`jobs.status_${key}_desc`)}</p>
                     </div>
                   </div>
                 );
@@ -93,7 +93,7 @@ export function JobsGuide() {
             </div>
 
             <div className="flex justify-end">
-              <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={dismiss}>
+              <Button variant="ghost" size="sm" className="text-micro h-6" onClick={dismiss}>
                 {t("jobs.guide_dismiss")}
               </Button>
             </div>

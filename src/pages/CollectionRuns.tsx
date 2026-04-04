@@ -79,19 +79,19 @@ export default function CollectionRuns() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="rounded-xl border border-border bg-card p-4 text-center">
               <p className="text-2xl font-bold font-mono">{runs.length}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total Runs</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Total Runs</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-4 text-center">
               <p className="text-2xl font-bold font-mono text-primary">{runs.filter(r => r.status === "completed").length}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Completed</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Completed</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-4 text-center">
               <p className="text-2xl font-bold font-mono">{runs.reduce((s, r) => s + r.units_extracted, 0)}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Units Extracted</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Units Extracted</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-4 text-center">
               <p className="text-2xl font-bold font-mono">{runs.reduce((s, r) => s + r.units_validated, 0)}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Validated</p>
+              <p className="text-micro text-muted-foreground uppercase tracking-wider">Validated</p>
             </div>
           </div>
 
@@ -110,14 +110,14 @@ export default function CollectionRuns() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-sm font-medium">{run.source_type}</span>
                         <Badge variant="outline" className={cn(
-                          "text-[9px] uppercase",
+                          "text-nano uppercase",
                           run.status === "completed" ? "border-primary/30 text-primary" :
                           run.status === "failed" ? "border-destructive/30 text-destructive" : ""
                         )}>
                           {run.status}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-4 mt-1 text-[10px] text-muted-foreground">
+                      <div className="flex items-center gap-4 mt-1 text-micro text-muted-foreground">
                         <span>{new Date(run.started_at).toLocaleString()}</span>
                         <span>{run.units_extracted} extracted</span>
                         <span>{run.units_validated} validated</span>

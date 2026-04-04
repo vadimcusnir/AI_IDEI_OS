@@ -57,7 +57,7 @@ export default function WalletPage() {
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight text-foreground">{t("wallet.title")}</h1>
-              <p className="text-[10px] text-muted-foreground">{t("wallet.subtitle")}</p>
+              <p className="text-micro text-muted-foreground">{t("wallet.subtitle")}</p>
             </div>
           </div>
 
@@ -71,7 +71,7 @@ export default function WalletPage() {
           </div>
 
           {/* Transaction History */}
-          <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+          <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Clock className="h-3 w-3" /> {t("wallet.transaction_history")}
           </h2>
 
@@ -94,11 +94,11 @@ export default function WalletPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium">{tx.description}</p>
-                      <p className="text-[9px] text-muted-foreground">
+                      <p className="text-nano text-muted-foreground">
                         {new Date(tx.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                       </p>
                     </div>
-                    <Badge variant="outline" className="text-[8px] px-1.5 py-0 h-4 shrink-0">{cfg.label}</Badge>
+                    <Badge variant="outline" className="text-nano px-1.5 py-0 h-4 shrink-0">{cfg.label}</Badge>
                     <span className={cn(
                       "text-xs font-mono font-bold shrink-0",
                       tx.amount > 0 ? "text-status-validated" : "text-destructive"

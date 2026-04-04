@@ -227,15 +227,15 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
             <Brain className="h-4 w-4 text-primary" />
             NEP-120 Extraction Engine
           </h3>
-          <p className="text-[10px] text-muted-foreground mt-0.5">
+          <p className="text-micro text-muted-foreground mt-0.5">
             {families.reduce((s, f) => s + f.count, 0)} extractori specializați în 12 familii
           </p>
         </div>
         <div className="flex gap-1.5">
-          <Button variant="ghost" size="sm" className="h-6 text-[10px]" onClick={selectAll}>
+          <Button variant="ghost" size="sm" className="h-6 text-micro" onClick={selectAll}>
             Selectează tot
           </Button>
-          <Button variant="ghost" size="sm" className="h-6 text-[10px]" onClick={selectNone}>
+          <Button variant="ghost" size="sm" className="h-6 text-micro" onClick={selectNone}>
             Deselectează
           </Button>
         </div>
@@ -264,13 +264,13 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
                 <span className="shrink-0">{FAMILY_ICONS[family.key] || <Zap className="h-3.5 w-3.5" />}</span>
                 <div className="flex-1 min-w-0">
                   <div className="font-medium truncate">{family.label}</div>
-                  <div className="text-[9px] text-muted-foreground">{family.count} extractori</div>
+                  <div className="text-nano text-muted-foreground">{family.count} extractori</div>
                 </div>
                 {isSelected && <Check className="h-3 w-3 shrink-0 text-primary" />}
               </button>
               <button
                 onClick={() => setExpandedFamily(isExpanded ? null : family.key)}
-                className="w-full text-[9px] text-muted-foreground hover:text-foreground text-center py-0.5"
+                className="w-full text-nano text-muted-foreground hover:text-foreground text-center py-0.5"
               >
                 {isExpanded ? <ChevronUp className="h-3 w-3 mx-auto" /> : <ChevronDown className="h-3 w-3 mx-auto" />}
               </button>
@@ -288,7 +288,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
             <div className="flex items-center gap-2 mb-2">
               {FAMILY_ICONS[family.key]}
               <span className="text-xs font-semibold">{family.label}</span>
-              <Badge variant="secondary" className="text-[9px]">{family.count} extractori</Badge>
+              <Badge variant="secondary" className="text-nano">{family.count} extractori</Badge>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {family.extractors.map(ext => {
@@ -300,7 +300,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
                     onClick={() => !familySelected && toggleExtractor(ext.id)}
                     disabled={familySelected}
                     className={cn(
-                      "flex items-center gap-2 px-2 py-1.5 rounded border text-left text-[10px] transition-all",
+                      "flex items-center gap-2 px-2 py-1.5 rounded border text-left text-micro transition-all",
                       isSelected
                         ? "border-primary/50 bg-primary/5 text-primary"
                         : "border-border/50 hover:border-primary/30"
@@ -313,7 +313,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
                       {isSelected && <Check className="h-2 w-2 text-primary-foreground" />}
                     </div>
                     <span className="flex-1 min-w-0 truncate">{ext.purpose}</span>
-                    <span className="shrink-0 text-[8px] text-muted-foreground">
+                    <span className="shrink-0 text-nano text-muted-foreground">
                       {Math.round(50 * ext.cost_multiplier)}c
                     </span>
                   </button>
@@ -331,7 +331,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
             <div className="text-xs font-medium">
               {selectedCount.count} extractori selectați
             </div>
-            <div className="text-[10px] text-muted-foreground">
+            <div className="text-micro text-muted-foreground">
               ~{selectedCount.cost} NEURONS
             </div>
           </div>
@@ -360,7 +360,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
       {extracting && (
         <div className="space-y-2">
           <Progress value={progress} className="h-2" />
-          <p className="text-[10px] text-muted-foreground text-center">
+          <p className="text-micro text-muted-foreground text-center">
             Se procesează {selectedCount.count} extractori... {progress}%
           </p>
         </div>
@@ -372,7 +372,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
           <h4 className="text-xs font-semibold">Rezultate extracție</h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {results.filter(r => r.neurons_created > 0).map(r => (
-              <div key={r.extractor_id} className="bg-muted/30 rounded p-2 text-[10px]">
+              <div key={r.extractor_id} className="bg-muted/30 rounded p-2 text-micro">
                 <div className="font-medium truncate">{r.extractor_id.replace("nep_", "").replace(/_/g, " ")}</div>
                 <div className="flex items-center justify-between mt-1 text-muted-foreground">
                   <span>{r.neurons_created} neuroni</span>
@@ -381,7 +381,7 @@ export function NEPExtractorPanel({ episodeId, onComplete }: Props) {
               </div>
             ))}
           </div>
-          <p className="text-[10px] text-muted-foreground text-center mt-2">
+          <p className="text-micro text-muted-foreground text-center mt-2">
             Total: {results.reduce((s, r) => s + r.neurons_created, 0)} neuroni extrași
           </p>
         </div>

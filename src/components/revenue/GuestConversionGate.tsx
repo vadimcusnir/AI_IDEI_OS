@@ -55,7 +55,7 @@ export function GuestConversionGate({ open, onClose, serviceName, estimatedOutpu
 
             <div className="flex flex-wrap gap-1.5">
               {["Articles", "Social Posts", "Frameworks", "Scripts", "Hooks"].map(tag => (
-                <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0 h-5">
+                <Badge key={tag} variant="secondary" className="text-micro px-1.5 py-0 h-5">
                   {tag}
                 </Badge>
               ))}

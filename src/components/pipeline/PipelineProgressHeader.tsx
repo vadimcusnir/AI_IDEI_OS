@@ -46,7 +46,7 @@ export function PipelineProgressHeader({ steps, currentStep, onStepClick }: Prop
               </div>
               <div className="min-w-0 hidden sm:block">
                 <p className={cn(
-                  "text-[10px] font-medium truncate",
+                  "text-micro font-medium truncate",
                   isActive ? "text-foreground" : "text-muted-foreground",
                 )}>
                   {step.label}

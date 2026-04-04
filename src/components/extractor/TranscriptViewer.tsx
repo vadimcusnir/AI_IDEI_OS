@@ -91,8 +91,8 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
         <div className="flex items-center gap-2">
           <MessageSquare className="h-4 w-4 text-primary" />
           <span className="text-xs font-semibold text-foreground">{t("transcript.transcript")}</span>
-          <Badge variant="secondary" className="text-[9px]">{t("transcript.segments", { count: segments.length })}</Badge>
-          {hasSpeakers && <Badge variant="outline" className="text-[9px]">{t("transcript.speakers", { count: speakers.length })}</Badge>}
+          <Badge variant="secondary" className="text-nano">{t("transcript.segments", { count: segments.length })}</Badge>
+          {hasSpeakers && <Badge variant="outline" className="text-nano">{t("transcript.speakers", { count: speakers.length })}</Badge>}
         </div>
         <button onClick={() => setCollapsed(!collapsed)} className="h-6 w-6 flex items-center justify-center rounded hover:bg-muted transition-colors">
           {collapsed ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
@@ -109,11 +109,11 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
             {hasSpeakers && (
               <div className="flex items-center gap-1 flex-wrap">
                 <button onClick={() => setActiveSpeaker(null)}
-                  className={cn("text-[10px] px-2.5 py-1 rounded-full border transition-colors",
+                  className={cn("text-micro px-2.5 py-1 rounded-full border transition-colors",
                     !activeSpeaker ? "bg-primary/10 text-primary border-primary/20" : "border-border hover:bg-muted")}>{t("all")}</button>
                 {speakers.map(s => (
                   <button key={s} onClick={() => setActiveSpeaker(activeSpeaker === s ? null : s)}
-                    className={cn("text-[10px] px-2.5 py-1 rounded-full border transition-colors",
+                    className={cn("text-micro px-2.5 py-1 rounded-full border transition-colors",
                       activeSpeaker === s ? "bg-primary/10 text-primary border-primary/20" : "border-border hover:bg-muted")}>{s}</button>
                 ))}
               </div>
@@ -136,9 +136,9 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
                         <div className="h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center">
                           <User className="h-3 w-3 text-primary" />
                         </div>
-                        <span className="text-[11px] font-semibold text-foreground">{seg.speaker}</span>
+                        <span className="text-dense font-semibold text-foreground">{seg.speaker}</span>
                         {seg.startTime !== undefined && (
-                          <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                          <span className="text-nano text-muted-foreground flex items-center gap-0.5">
                             <Clock className="h-2.5 w-2.5" /> {formatTime(seg.startTime)}
                           </span>
                         )}

@@ -70,7 +70,7 @@ export function WalletManagementTab() {
 
       <div className="bg-card border border-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
             <Wallet className="h-3 w-3" /> {t("admin.user_wallets")}
           </h3>
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
@@ -81,11 +81,11 @@ export function WalletManagementTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">{t("admin.user_id")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("admin.balance")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("admin.earned")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("admin.spent")}</TableHead>
-                <TableHead className="text-[10px]">{t("admin.last_update")}</TableHead>
+                <TableHead className="text-micro">{t("admin.user_id")}</TableHead>
+                <TableHead className="text-micro text-right">{t("admin.balance")}</TableHead>
+                <TableHead className="text-micro text-right">{t("admin.earned")}</TableHead>
+                <TableHead className="text-micro text-right">{t("admin.spent")}</TableHead>
+                <TableHead className="text-micro">{t("admin.last_update")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -93,14 +93,14 @@ export function WalletManagementTab() {
                 <TableRow key={w.user_id}>
                   <TableCell>
                     <div>
-                      <p className="text-[10px] font-medium">{w.email || "—"}</p>
-                      <p className="text-[9px] font-mono text-muted-foreground">{w.user_id.substring(0, 8)}…</p>
+                      <p className="text-micro font-medium">{w.email || "—"}</p>
+                      <p className="text-nano font-mono text-muted-foreground">{w.user_id.substring(0, 8)}…</p>
                     </div>
                   </TableCell>
                   <TableCell className="text-xs font-mono text-right font-bold text-primary">{w.balance}</TableCell>
                   <TableCell className="text-xs font-mono text-right">{w.total_earned}</TableCell>
                   <TableCell className="text-xs font-mono text-right text-destructive">{w.total_spent}</TableCell>
-                  <TableCell className="text-[10px] text-muted-foreground">
+                  <TableCell className="text-micro text-muted-foreground">
                     {new Date(w.updated_at).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
@@ -111,10 +111,10 @@ export function WalletManagementTab() {
       </div>
 
       <div className="bg-card border border-border rounded-xl p-4">
-        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+        <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           {t("admin.recent_transactions")}
         </h3>
-        <div className="space-y-0.5 max-h-[300px] overflow-y-auto font-mono text-[11px]">
+        <div className="space-y-0.5 max-h-[300px] overflow-y-auto font-mono text-dense">
           {recentTx.map(tx => (
             <div key={tx.id} className={cn(
               "flex items-center gap-2 px-2 py-1.5 rounded",
@@ -127,10 +127,10 @@ export function WalletManagementTab() {
                 {tx.amount > 0 ? "+" : ""}{tx.amount}
               </span>
               <span className={cn(
-                "text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground shrink-0"
+                "text-nano px-1.5 py-0.5 rounded bg-muted text-muted-foreground shrink-0"
               )}>{tx.type}</span>
               <span className="text-xs truncate flex-1">{tx.description}</span>
-              <span className="text-[10px] text-muted-foreground shrink-0">
+              <span className="text-micro text-muted-foreground shrink-0">
                 {new Date(tx.created_at).toLocaleString()}
               </span>
             </div>
@@ -146,7 +146,7 @@ function SummaryCard({ icon: Icon, label, value, color }: { icon: React.ElementT
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-xl font-bold font-mono", color)}>{value}</p>
     </div>

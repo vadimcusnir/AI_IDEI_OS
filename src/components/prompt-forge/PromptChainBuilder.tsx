@@ -37,7 +37,7 @@ export function PromptChainBuilder({
         <Button
           variant="ghost"
           size="sm"
-          className="h-6 text-[10px] gap-1"
+          className="h-6 text-micro gap-1"
           onClick={onAddStep}
           disabled={steps.length >= 5}
         >
@@ -65,15 +65,15 @@ export function PromptChainBuilder({
               )}
             >
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-bold text-muted-foreground">
+                <span className="text-micro font-bold text-muted-foreground">
                   {t("prompt_forge.chain_step", { defaultValue: "Pas" })} {idx + 1}
                   {idx === 0 && (
-                    <span className="ml-1 text-[9px] font-normal text-muted-foreground/60">
+                    <span className="ml-1 text-nano font-normal text-muted-foreground/60">
                       (input original)
                     </span>
                   )}
                   {idx > 0 && (
-                    <span className="ml-1 text-[9px] font-normal text-muted-foreground/60">
+                    <span className="ml-1 text-nano font-normal text-muted-foreground/60">
                       (primește output-ul anterior)
                     </span>
                   )}
@@ -99,7 +99,7 @@ export function PromptChainBuilder({
                 className="text-xs resize-none"
               />
               {step.result && (
-                <div className="mt-2 p-2 rounded bg-muted/50 text-[10px] text-muted-foreground max-h-20 overflow-y-auto">
+                <div className="mt-2 p-2 rounded bg-muted/50 text-micro text-muted-foreground max-h-20 overflow-y-auto">
                   {step.result.slice(0, 200)}...
                 </div>
               )}

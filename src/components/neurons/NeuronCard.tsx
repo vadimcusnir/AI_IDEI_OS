@@ -119,23 +119,23 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
           <Pin className="h-3 w-3" style={isPinned ? {} : { fill: "none" }} />
         </button>
         <div className={cn("h-2 w-2 rounded-full shrink-0", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
-        <span className="text-[11px] font-mono text-primary/70 w-10 shrink-0">#{n.number}</span>
+        <span className="text-dense font-mono text-primary/70 w-10 shrink-0">#{n.number}</span>
         <span className="flex-1 text-sm truncate">{n.title}</span>
         {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
           const cat = CATEGORY_CONFIG[n.content_category!];
           const CatIcon = cat.icon;
           return (
-            <span className={cn("flex items-center gap-0.5 text-[8px] font-medium px-1.5 py-0.5 rounded-md shrink-0", cat.color)}>
+            <span className={cn("flex items-center gap-0.5 text-nano font-medium px-1.5 py-0.5 rounded-md shrink-0", cat.color)}>
               <CatIcon className="h-2.5 w-2.5" />
               {cat.label}
             </span>
           );
         })()}
-        <span className="text-[10px] text-muted-foreground/60 shrink-0">{formatDate(n.updated_at)}</span>
+        <span className="text-micro text-muted-foreground/60 shrink-0">{formatDate(n.updated_at)}</span>
         {n.score > 0 && (
           <div className="flex items-center gap-0.5 shrink-0">
             <Star className="h-2.5 w-2.5 text-primary/40" />
-            <span className="text-[9px] text-primary/40">{n.score}</span>
+            <span className="text-nano text-primary/40">{n.score}</span>
           </div>
         )}
         {contextMenu}
@@ -156,7 +156,7 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1.5">
             <div className={cn("h-2 w-2 rounded-full", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
-            <span className="text-[10px] font-mono text-primary/60">#{n.number}</span>
+            <span className="text-micro font-mono text-primary/60">#{n.number}</span>
           </div>
           <div className="flex items-center gap-1">
             {isPinned && <Pin className="h-3 w-3 text-primary/60" />}
@@ -168,24 +168,24 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
           const cat = CATEGORY_CONFIG[n.content_category!];
           const CatIcon = cat.icon;
           return (
-            <span className={cn("inline-flex items-center gap-0.5 text-[8px] font-medium px-1.5 py-0.5 rounded-md w-fit mt-1", cat.color)}>
+            <span className={cn("inline-flex items-center gap-0.5 text-nano font-medium px-1.5 py-0.5 rounded-md w-fit mt-1", cat.color)}>
               <CatIcon className="h-2.5 w-2.5" />
               {cat.label}
             </span>
           );
         })()}
         <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
-          <span className="text-[9px] text-muted-foreground/50">{formatDate(n.updated_at)}</span>
+          <span className="text-nano text-muted-foreground/50">{formatDate(n.updated_at)}</span>
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-1.5 text-[9px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="h-6 px-1.5 text-nano gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
               onClick={(e) => { e.stopPropagation(); navigate(`/services?neuron=${n.id}`); }}
             >
               <Sparkles className="h-3 w-3" /> Run
             </Button>
-            <span className={cn("text-[8px] font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
+            <span className={cn("text-nano font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
               {n.status}
             </span>
           </div>
@@ -211,15 +211,15 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
       )}
       <div className="flex items-center gap-2 mb-3">
         <div className={cn("h-2.5 w-2.5 rounded-full", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
-        <span className="text-[10px] font-mono text-primary/60">#{n.number}</span>
-        <span className="text-[9px] text-muted-foreground/50 ml-auto">{formatDate(n.updated_at)}</span>
+        <span className="text-micro font-mono text-primary/60">#{n.number}</span>
+        <span className="text-nano text-muted-foreground/50 ml-auto">{formatDate(n.updated_at)}</span>
       </div>
       <h3 className="text-base font-medium line-clamp-2 mb-1">{n.title}</h3>
       {n.content_category && CATEGORY_CONFIG[n.content_category] && (() => {
         const cat = CATEGORY_CONFIG[n.content_category!];
         const CatIcon = cat.icon;
         return (
-          <span className={cn("inline-flex items-center gap-1 text-[9px] font-medium px-2 py-0.5 rounded-md w-fit mb-2", cat.color)}>
+          <span className={cn("inline-flex items-center gap-1 text-nano font-medium px-2 py-0.5 rounded-md w-fit mb-2", cat.color)}>
             <CatIcon className="h-3 w-3" />
             {cat.label}
             {n.lifecycle && <span className="opacity-60">· {n.lifecycle}</span>}
@@ -227,23 +227,23 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
         );
       })()}
       {n.title === "Untitled Neuron" && (
-        <p className="text-[11px] text-muted-foreground/60 line-clamp-2 mb-3">Neuron gol — click pentru a edita</p>
+        <p className="text-dense text-muted-foreground/60 line-clamp-2 mb-3">Neuron gol — click pentru a edita</p>
       )}
       <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/30">
-        <span className={cn("text-[8px] font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
+        <span className={cn("text-nano font-mono uppercase px-1.5 py-0.5 rounded", STATUS_COLORS[n.status] || STATUS_COLORS.draft)}>
           {n.status}
         </span>
         <div className="flex items-center gap-1">
           {n.score > 0 && (
             <div className="flex items-center gap-0.5">
               <Star className="h-2.5 w-2.5 text-primary/30" />
-              <span className="text-[9px] text-primary/40">{n.score}</span>
+              <span className="text-nano text-primary/40">{n.score}</span>
             </div>
           )}
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 px-1.5 text-[9px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="h-6 px-1.5 text-nano gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={(e) => { e.stopPropagation(); navigate(`/services?neuron=${n.id}`); }}
           >
             <Sparkles className="h-3 w-3" /> Run Service

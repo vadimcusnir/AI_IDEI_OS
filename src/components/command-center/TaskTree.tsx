@@ -84,7 +84,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
         </div>
 
         {/* Phase badge */}
-        <Badge className={cn("text-[9px] h-5 mb-2", phaseConfig.color)}>
+        <Badge className={cn("text-nano h-5 mb-2", phaseConfig.color)}>
           {execution.phase === "executing" && <Loader2 className="h-2.5 w-2.5 mr-1 animate-spin" />}
           {phaseConfig.label}
         </Badge>
@@ -100,7 +100,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
                 transition={{ duration: 0.3, ease: "easeOut" }}
               />
             </div>
-            <div className="flex justify-between text-[9px] text-muted-foreground">
+            <div className="flex justify-between text-nano text-muted-foreground">
               <span>{completedSteps}/{totalSteps} steps</span>
               <span className="flex items-center gap-0.5">
                 <Coins className="h-2.5 w-2.5" />
@@ -122,15 +122,15 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
           >
             {/* Objective */}
             <div className="px-3 py-2 border-b border-border">
-              <p className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
+              <p className="text-nano font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
                 Objective
               </p>
-              <p className="text-[11px]">{execution.objective}</p>
+              <p className="text-dense">{execution.objective}</p>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline" className="text-[8px] h-4">
+                <Badge variant="outline" className="text-nano h-4">
                   {execution.intent.replace(/_/g, " ")}
                 </Badge>
-                <span className="text-[9px] text-muted-foreground">
+                <span className="text-nano text-muted-foreground">
                   {(execution.confidence * 100).toFixed(0)}% confidence
                 </span>
               </div>
@@ -138,7 +138,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
 
             {/* Step tree */}
             <div className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
-              <p className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">
+              <p className="text-nano font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">
                 Execution Steps
               </p>
               {execution.steps.map((step, i) => {
@@ -178,19 +178,19 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
 
                     <div className="flex-1 min-w-0">
                       <p className={cn(
-                        "text-[10px] truncate",
+                        "text-micro truncate",
                         step.status === "completed" && "text-muted-foreground",
                         step.status === "skipped" && "text-muted-foreground/50 line-through",
                       )}>
                         {step.label}
                       </p>
                       {step.error && (
-                        <p className="text-[9px] text-destructive truncate">{step.error}</p>
+                        <p className="text-nano text-destructive truncate">{step.error}</p>
                       )}
                     </div>
 
                     {step.credits > 0 && (
-                      <span className="text-[8px] text-muted-foreground shrink-0">{step.credits}N</span>
+                      <span className="text-nano text-muted-foreground shrink-0">{step.credits}N</span>
                     )}
                   </motion.div>
                 );
@@ -200,12 +200,12 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
             {/* Expected outputs */}
             {execution.outputPreview.length > 0 && (
               <div className="px-3 py-2 border-t border-border">
-                <p className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">
+                <p className="text-nano font-semibold uppercase tracking-widest text-muted-foreground mb-1">
                   Expected Outputs
                 </p>
                 <div className="flex flex-wrap gap-1">
                   {execution.outputPreview.map((o, i) => (
-                    <Badge key={i} variant="secondary" className="text-[8px] h-4">{o}</Badge>
+                    <Badge key={i} variant="secondary" className="text-nano h-4">{o}</Badge>
                   ))}
                 </div>
               </div>
@@ -216,7 +216,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
               <div className="px-3 py-2 border-t border-destructive/20 bg-destructive/5">
                 <div className="flex items-center gap-1.5">
                   <AlertTriangle className="h-3 w-3 text-destructive shrink-0" />
-                  <p className="text-[10px] text-destructive">{execution.errorMessage}</p>
+                  <p className="text-micro text-destructive">{execution.errorMessage}</p>
                 </div>
               </div>
             )}
@@ -227,7 +227,7 @@ export function TaskTree({ execution, onSaveTemplate }: TaskTreeProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full h-7 text-[10px] gap-1"
+                  className="w-full h-7 text-micro gap-1"
                   onClick={onSaveTemplate}
                 >
                   <Save className="h-3 w-3" />

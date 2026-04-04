@@ -144,7 +144,7 @@ export default function PublicUserProfile() {
               </p>
             )}
 
-            <div className="flex items-center justify-center gap-6 mt-6 text-[11px] text-muted-foreground">
+            <div className="flex items-center justify-center gap-6 mt-6 text-dense text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Brain className="h-3.5 w-3.5 text-primary/60" />
                 <strong className="text-foreground">{stats.public_neurons_count}</strong> {t("public_user_profile.public_neurons")}
@@ -174,7 +174,7 @@ export default function PublicUserProfile() {
               </div>
               <h2 className="text-sm font-semibold">{t("public_user_profile.public_knowledge")}</h2>
               <div className="flex-1 h-px bg-border" />
-              <span className="text-[10px] text-muted-foreground">{stats.public_neurons_count} neurons</span>
+              <span className="text-micro text-muted-foreground">{stats.public_neurons_count} neurons</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -185,7 +185,7 @@ export default function PublicUserProfile() {
                   className="group flex items-start gap-3 p-3.5 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all"
                 >
                   <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
-                    <span className="text-[10px] font-mono font-bold text-muted-foreground group-hover:text-primary">
+                    <span className="text-micro font-mono font-bold text-muted-foreground group-hover:text-primary">
                       #{neuron.number}
                     </span>
                   </div>
@@ -195,18 +195,18 @@ export default function PublicUserProfile() {
                     </p>
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className={cn(
-                        "text-[8px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full",
+                        "text-nano font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full",
                         LIFECYCLE_COLORS[neuron.lifecycle] || LIFECYCLE_COLORS.ingested
                       )}>
                         {neuron.lifecycle}
                       </span>
                       {neuron.content_category && (
-                        <span className="text-[8px] text-muted-foreground/60 uppercase">
+                        <span className="text-nano text-muted-foreground/60 uppercase">
                           {neuron.content_category}
                         </span>
                       )}
                       {neuron.score > 0 && (
-                        <span className="text-[8px] font-mono text-ai-accent ml-auto">
+                        <span className="text-nano font-mono text-ai-accent ml-auto">
                           ★ {neuron.score}
                         </span>
                       )}
@@ -229,7 +229,7 @@ export default function PublicUserProfile() {
         <div className="rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-transparent p-6 text-center">
           <Sparkles className="h-6 w-6 text-primary mx-auto mb-2" />
           <h3 className="text-sm font-semibold mb-1">{t("public_user_profile.cta_title")}</h3>
-          <p className="text-[11px] text-muted-foreground max-w-sm mx-auto mb-4">
+          <p className="text-dense text-muted-foreground max-w-sm mx-auto mb-4">
             {t("public_user_profile.cta_desc")}
           </p>
           <Link
@@ -242,7 +242,7 @@ export default function PublicUserProfile() {
 
         {/* Footer */}
         <div className="text-center pt-6 border-t border-border">
-          <Link to="/" className="inline-flex items-center gap-2 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
+          <Link to="/" className="inline-flex items-center gap-2 text-micro text-muted-foreground/50 hover:text-primary transition-colors">
             <Logo size="h-5 w-5" />
             <span className="font-medium">AI-IDEI</span>
             <span className="text-muted-foreground/30">Knowledge OS</span>

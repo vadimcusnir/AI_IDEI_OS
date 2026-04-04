@@ -45,7 +45,7 @@ export function AIResultsPanel({ result, isExtracting, activeAction, onClose, on
           ) : (
             <Sparkles className="h-3 w-3 text-ai-accent" />
           )}
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-ai-accent">
+          <span className="text-micro font-semibold uppercase tracking-wider text-ai-accent">
             {isExtracting ? "Extracting..." : ACTION_TITLES[activeAction] || "AI Result"}
           </span>
         </div>
@@ -76,8 +76,8 @@ export function AIResultsPanel({ result, isExtracting, activeAction, onClose, on
           prose-p:text-muted-foreground prose-p:my-1
           prose-strong:text-foreground
           prose-blockquote:border-ai-accent prose-blockquote:text-muted-foreground prose-blockquote:italic
-          prose-code:text-[10px] prose-code:bg-muted prose-code:px-1 prose-code:rounded
-          prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:text-[10px]
+          prose-code:text-micro prose-code:bg-muted prose-code:px-1 prose-code:rounded
+          prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:text-micro
           prose-li:text-muted-foreground prose-li:my-0.5
           prose-ul:my-1 prose-ol:my-1
         ">

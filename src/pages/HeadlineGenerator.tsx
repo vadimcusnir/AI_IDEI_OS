@@ -155,7 +155,7 @@ export default function HeadlineGenerator() {
                 transition={{ duration: 0.4, delay: idx * 0.12 }}
                 className="group relative rounded-xl border border-border bg-card p-6 transition-colors hover:border-primary/30"
               >
-                <div className="mb-1.5 font-mono text-[10px] tracking-widest text-muted-foreground">
+                <div className="mb-1.5 font-mono text-micro tracking-widest text-muted-foreground">
                   TITLU #{idx + 1}
                 </div>
                 <p className="mb-3 text-lg font-medium leading-relaxed pr-10">

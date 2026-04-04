@@ -24,15 +24,15 @@ interface NeuronMainEditorProps {
 }
 
 const contentBlockStyles: Record<string, string> = {
-  text: "text-[15px] leading-relaxed",
+  text: "text-sm leading-relaxed",
   heading: "text-xl font-semibold",
   subheading: "text-base font-semibold",
-  markdown: "text-[15px] leading-relaxed font-mono",
-  todo: "text-[15px] leading-relaxed",
-  quote: "text-[15px] italic border-l-2 border-primary/30 pl-4 text-muted-foreground",
-  list: "text-[15px] leading-relaxed",
-  idea: "text-[15px] bg-note-yellow/30 rounded-md px-3 py-2 border-l-2 border-primary/40",
-  reference: "text-[13px] bg-muted/20 rounded-md px-3 py-2 border-l-2 border-graph-highlight/40",
+  markdown: "text-sm leading-relaxed font-mono",
+  todo: "text-sm leading-relaxed",
+  quote: "text-sm italic border-l-2 border-primary/30 pl-4 text-muted-foreground",
+  list: "text-sm leading-relaxed",
+  idea: "text-sm bg-note-yellow/30 rounded-md px-3 py-2 border-l-2 border-primary/40",
+  reference: "text-compact bg-muted/20 rounded-md px-3 py-2 border-l-2 border-graph-highlight/40",
 };
 
 const FORMAT_BLOCK_TYPES: BlockType[] = ["code", "yaml", "json", "prompt", "dataset", "diagram", "ai-action"];
@@ -243,7 +243,7 @@ export function NeuronMainEditor({
                     hoveredBlock === block.id ? "opacity-100" : "opacity-0"
                   )}>
                     <span className={cn(
-                      "text-[8px] font-mono uppercase px-1 py-0.5 rounded",
+                      "text-nano font-mono uppercase px-1 py-0.5 rounded",
                       cfg.executable
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground/40"

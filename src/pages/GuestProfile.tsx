@@ -40,8 +40,8 @@ function ExpertiseBar({ label, value, delay }: { label: string; value: number; d
   return (
     <div className="group">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[13px] font-medium text-foreground group-hover:text-primary transition-colors">{label}</span>
-        <span className="text-[11px] font-bold tabular-nums text-primary">{value}%</span>
+        <span className="text-compact font-medium text-foreground group-hover:text-primary transition-colors">{label}</span>
+        <span className="text-dense font-bold tabular-nums text-primary">{value}%</span>
       </div>
       <div className="h-2 rounded-full bg-muted overflow-hidden">
         <div
@@ -80,7 +80,7 @@ function StatCard({ icon: Icon, value, label, accent }: {
         <Icon className={cn("h-5 w-5", accent ? "text-primary" : "text-muted-foreground")} />
       </div>
       <p className="text-2xl font-bold text-foreground">{value}</p>
-      <p className="text-[11px] text-muted-foreground mt-0.5">{label}</p>
+      <p className="text-dense text-muted-foreground mt-0.5">{label}</p>
     </div>
   );
 }
@@ -98,7 +98,7 @@ function SectionHeader({ icon: Icon, label, count }: {
         <h2 className="text-sm font-semibold text-foreground tracking-tight">
           {label}
           {count !== undefined && (
-            <span className="ml-2 text-[10px] font-normal text-muted-foreground">({count})</span>
+            <span className="ml-2 text-micro font-normal text-muted-foreground">({count})</span>
           )}
         </h2>
       </div>
@@ -120,7 +120,7 @@ function PaywallSection({ children, title, premiumDesc, previewLabel }: { childr
             <Lock className="h-5 w-5 text-primary" />
           </div>
           <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-          <p className="text-[11px] text-muted-foreground leading-relaxed">
+          <p className="text-dense text-muted-foreground leading-relaxed">
             {premiumDesc}
           </p>
           <Button size="sm" className="h-8 text-xs gap-1.5" onClick={() => setUnlocked(true)}>
@@ -149,7 +149,7 @@ function QuotesSection({ quotes, authorName, showAllLabel, sectionLabel }: { quo
             <p className="relative text-sm italic text-foreground/80 leading-relaxed pl-4">{q}</p>
             <div className="flex items-center gap-2 mt-3 pl-4">
               <div className="h-px flex-1 bg-border" />
-              <span className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">— {authorName}</span>
+              <span className="text-nano text-muted-foreground/50 uppercase tracking-wider">— {authorName}</span>
             </div>
           </blockquote>
         ))}
@@ -261,7 +261,7 @@ export default function GuestProfile() {
               {guest.full_name}
             </h1>
             <div className="mt-2 flex items-center justify-center gap-2">
-              <span className="text-[10px] uppercase tracking-[0.25em] font-semibold text-primary bg-primary/10 px-4 py-1.5 rounded-full">
+              <span className="text-micro uppercase tracking-[0.25em] font-semibold text-primary bg-primary/10 px-4 py-1.5 rounded-full">
                 {guest.role}
               </span>
             </div>
@@ -269,7 +269,7 @@ export default function GuestProfile() {
               {guest.bio}
             </p>
 
-            <div className="flex items-center justify-center gap-6 mt-6 text-[11px] text-muted-foreground">
+            <div className="flex items-center justify-center gap-6 mt-6 text-dense text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Brain className="h-3.5 w-3.5 text-primary/60" />
                 <strong className="text-foreground">{guest.expertise_areas.length}</strong> {t("guest_profile.competences")}
@@ -344,7 +344,7 @@ export default function GuestProfile() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-semibold text-foreground leading-tight">{f}</h3>
-                      <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+                      <p className="text-micro text-muted-foreground mt-1.5 leading-relaxed">
                         {t("guest_profile.framework_default_desc")}
                       </p>
                     </div>
@@ -398,7 +398,7 @@ export default function GuestProfile() {
         )}
 
         <section>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <StatCard icon={Brain} value={guest.expertise_areas.length} label={t("guest_profile.competences")} accent />
             <StatCard icon={Sparkles} value={guest.frameworks_mentioned.length} label={t("guest_profile.frameworks")} />
             <StatCard icon={Lightbulb} value={totalInsights} label={t("guest_profile.total_insights")} />
@@ -408,7 +408,7 @@ export default function GuestProfile() {
         <section className="rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-transparent p-6 text-center">
           <TrendingUp className="h-6 w-6 text-primary mx-auto mb-2" />
           <h3 className="text-sm font-semibold text-foreground mb-1">{t("guest_profile.cta_title")}</h3>
-          <p className="text-[11px] text-muted-foreground max-w-sm mx-auto mb-4">
+          <p className="text-dense text-muted-foreground max-w-sm mx-auto mb-4">
             {t("guest_profile.cta_desc")}
           </p>
           <a
@@ -420,7 +420,7 @@ export default function GuestProfile() {
         </section>
 
         <div className="text-center pt-6 border-t border-border">
-          <a href="/" className="inline-flex items-center gap-2 text-[10px] text-muted-foreground/50 hover:text-primary transition-colors">
+          <a href="/" className="inline-flex items-center gap-2 text-micro text-muted-foreground/50 hover:text-primary transition-colors">
             <Logo size="h-5 w-5" />
             <span className="font-medium">AI-IDEI</span>
             <span className="text-muted-foreground/30">Knowledge OS</span>

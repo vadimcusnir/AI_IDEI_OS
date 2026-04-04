@@ -40,7 +40,7 @@ function Section({ icon, number, title, children, index, accent }: SectionProps)
           {icon}
         </span>
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{number}</span>
+          <span className="text-micro font-mono uppercase tracking-widest text-muted-foreground">{number}</span>
           <h2 className="text-base font-semibold leading-tight">{title}</h2>
         </div>
       </div>
@@ -71,7 +71,7 @@ export default function TermsOfService() {
       >
         <div className="flex items-center gap-2 mb-3">
           <Scale className="h-5 w-5 text-primary" />
-          <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+          <span className="text-micro font-mono uppercase tracking-widest text-muted-foreground">
             {t("terms.legal_doc")}
           </span>
         </div>

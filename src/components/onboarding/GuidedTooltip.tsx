@@ -111,20 +111,20 @@ export function GuidedTooltip({ tourId, steps, delay = 1500 }: GuidedTooltipProp
           <div className="flex items-start justify-between gap-2 mb-1.5">
             <div className="flex items-center gap-1.5">
               <Lightbulb className="h-3.5 w-3.5 text-primary shrink-0" />
-              <span className="text-[11px] font-semibold">{step.title}</span>
+              <span className="text-dense font-semibold">{step.title}</span>
             </div>
             <button onClick={dismiss} className="text-muted-foreground/50 hover:text-foreground">
               <X className="h-3 w-3" />
             </button>
           </div>
-          <p className="text-[10px] text-muted-foreground leading-relaxed mb-2.5">
+          <p className="text-micro text-muted-foreground leading-relaxed mb-2.5">
             {step.description}
           </p>
           <div className="flex items-center justify-between">
-            <span className="text-[9px] text-muted-foreground/50">
+            <span className="text-nano text-muted-foreground/50">
               {currentStep + 1}/{steps.length}
             </span>
-            <Button size="sm" variant="ghost" onClick={next} className="h-6 px-2 text-[10px] gap-1">
+            <Button size="sm" variant="ghost" onClick={next} className="h-6 px-2 text-micro gap-1">
               {currentStep < steps.length - 1 ? (
                 <>Next <ArrowRight className="h-2.5 w-2.5" /></>
               ) : (

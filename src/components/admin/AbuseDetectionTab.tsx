@@ -49,7 +49,7 @@ export function AbuseDetectionTab() {
   return (
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+        <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           <AlertTriangle className="h-3 w-3" /> Abuse Detection — Threat Events
         </h3>
         <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
@@ -67,53 +67,53 @@ export function AbuseDetectionTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Time</TableHead>
-                <TableHead className="text-[10px]">User</TableHead>
-                <TableHead className="text-[10px]">Type</TableHead>
-                <TableHead className="text-[10px]">Severity</TableHead>
-                <TableHead className="text-[10px]">Details</TableHead>
-                <TableHead className="text-[10px]">Action</TableHead>
-                <TableHead className="text-[10px] w-32">Resolve</TableHead>
+                <TableHead className="text-micro">Time</TableHead>
+                <TableHead className="text-micro">User</TableHead>
+                <TableHead className="text-micro">Type</TableHead>
+                <TableHead className="text-micro">Severity</TableHead>
+                <TableHead className="text-micro">Details</TableHead>
+                <TableHead className="text-micro">Action</TableHead>
+                <TableHead className="text-micro w-32">Resolve</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {events.map(e => (
                 <TableRow key={e.id}>
-                  <TableCell className="text-[10px] text-muted-foreground whitespace-nowrap">
+                  <TableCell className="text-micro text-muted-foreground whitespace-nowrap">
                     {new Date(e.created_at).toLocaleString()}
                   </TableCell>
-                  <TableCell className="text-[10px] font-mono">{e.user_id.substring(0, 8)}…</TableCell>
+                  <TableCell className="text-micro font-mono">{e.user_id.substring(0, 8)}…</TableCell>
                   <TableCell>
                     <span className={cn(
-                      "text-[9px] font-mono px-1.5 py-0.5 rounded",
+                      "text-nano font-mono px-1.5 py-0.5 rounded",
                       e.abuse_type === "prompt_probing" ? "bg-orange-500/10 text-orange-600" :
                       "bg-destructive/10 text-destructive"
                     )}>{e.abuse_type.replace(/_/g, " ")}</span>
                   </TableCell>
                   <TableCell>
                     <span className={cn(
-                      "text-[9px] font-mono px-1.5 py-0.5 rounded",
+                      "text-nano font-mono px-1.5 py-0.5 rounded",
                       e.severity === "critical" ? "bg-destructive/15 text-destructive" :
                       e.severity === "warning" ? "bg-orange-500/10 text-orange-600" :
                       "bg-muted text-muted-foreground"
                     )}>{e.severity}</span>
                   </TableCell>
-                  <TableCell className="text-[10px] font-mono text-muted-foreground max-w-[200px] truncate">
+                  <TableCell className="text-micro font-mono text-muted-foreground max-w-[200px] truncate">
                     {JSON.stringify(e.details)}
                   </TableCell>
-                  <TableCell className="text-[10px]">{e.action_taken}</TableCell>
+                  <TableCell className="text-micro">{e.action_taken}</TableCell>
                   <TableCell>
                     {!e.resolved_at ? (
                       <div className="flex gap-1">
-                        <Button size="sm" variant="outline" className="h-6 text-[9px]" onClick={() => resolve(e.id, "dismissed")}>
+                        <Button size="sm" variant="outline" className="h-6 text-nano" onClick={() => resolve(e.id, "dismissed")}>
                           Dismiss
                         </Button>
-                        <Button size="sm" variant="destructive" className="h-6 text-[9px]" onClick={() => resolve(e.id, "suspended")}>
+                        <Button size="sm" variant="destructive" className="h-6 text-nano" onClick={() => resolve(e.id, "suspended")}>
                           Suspend
                         </Button>
                       </div>
                     ) : (
-                      <span className="text-[9px] text-muted-foreground">Resolved</span>
+                      <span className="text-nano text-muted-foreground">Resolved</span>
                     )}
                   </TableCell>
                 </TableRow>

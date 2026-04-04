@@ -28,7 +28,7 @@ function SavingsDisplay({ neuronsSpent }: { neuronsSpent: number }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-success/10 border border-success/20 text-[10px]"
+      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-success/10 border border-success/20 text-micro"
     >
       <TrendingUp className="h-3 w-3 text-success" />
       <span className="text-success font-semibold">
@@ -62,7 +62,7 @@ function StreakRecoveryBanner() {
       <Button
         variant="ghost"
         size="sm"
-        className="text-[10px] h-6 ml-auto text-amber-600 hover:text-amber-700"
+        className="text-micro h-6 ml-auto text-amber-600 hover:text-amber-700"
         onClick={() => navigate("/services")}
       >
         {t("behavior.streak_recover", { defaultValue: "Recuperează acum" })}
@@ -91,7 +91,7 @@ function UpgradePromptBanner() {
       <Button
         variant="default"
         size="sm"
-        className="text-[10px] h-6 ml-auto gap-1"
+        className="text-micro h-6 ml-auto gap-1"
         onClick={() => navigate("/credits")}
       >
         <Sparkles className="h-3 w-3" />
@@ -120,7 +120,7 @@ function ExplorerCTA() {
       <Button
         variant="default"
         size="sm"
-        className="text-[10px] h-6 ml-auto gap-1"
+        className="text-micro h-6 ml-auto gap-1"
         onClick={() => navigate("/auth")}
       >
         {t("behavior.start_free", { defaultValue: "Începe gratuit" })}
@@ -150,7 +150,7 @@ function NearCapWarning({ usedPct }: { usedPct: number }) {
       <Button
         variant="ghost"
         size="sm"
-        className="text-[10px] h-6 ml-auto text-amber-600"
+        className="text-micro h-6 ml-auto text-amber-600"
         onClick={() => navigate("/credits")}
       >
         {t("behavior.upgrade_limit", { defaultValue: "Crește limita" })}
@@ -226,7 +226,7 @@ export function PostExecutionPsychology({
 
       {/* Social proof */}
       {behavior.segment === "consumer" && (
-        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-2 text-micro text-muted-foreground">
           <Target className="h-3 w-3 text-primary/60" />
           <span>
             {t("behavior.social_proof", {
@@ -238,7 +238,7 @@ export function PostExecutionPsychology({
 
       {/* Progress hint */}
       {behavior.revenueScore > 50 && (
-        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-2 text-micro text-muted-foreground">
           <Zap className="h-3 w-3 text-primary/60" />
           <span>
             {t("behavior.momentum", {

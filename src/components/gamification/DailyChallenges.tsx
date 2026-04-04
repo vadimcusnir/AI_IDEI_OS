@@ -56,7 +56,7 @@ export function DailyChallenges() {
 
   return (
     <div className="bg-card border border-border rounded-xl p-4">
-      <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
+      <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-3">
         <Target className="h-3 w-3" /> Daily Challenges
       </h3>
       <div className="space-y-3">
@@ -78,12 +78,12 @@ export function DailyChallenges() {
                     {c.title}
                   </span>
                 </div>
-                <span className="text-[9px] font-bold text-primary">+{c.xp_reward} XP</span>
+                <span className="text-nano font-bold text-primary">+{c.xp_reward} XP</span>
               </div>
-              <p className="text-[10px] text-muted-foreground mb-2">{c.description}</p>
+              <p className="text-micro text-muted-foreground mb-2">{c.description}</p>
               <div className="flex items-center gap-2">
                 <Progress value={pct} className="h-1.5 flex-1" />
-                <span className="text-[9px] text-muted-foreground">
+                <span className="text-nano text-muted-foreground">
                   {c.progress!.current_value}/{c.goal_value}
                 </span>
               </div>

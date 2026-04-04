@@ -108,7 +108,7 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-5 pb-5">
           {/* Option A: Pro subscription */}
           <div className="relative rounded-xl border-2 border-primary/30 bg-primary/5 p-4 flex flex-col">
-            <Badge className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[9px] px-2 py-0.5">
+            <Badge className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-nano px-2 py-0.5">
               Recomandat
             </Badge>
             <div className="flex items-center gap-2 mb-2">
@@ -121,7 +121,7 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
             </div>
             <ul className="space-y-1.5 mb-4 flex-1">
               {PRO_BENEFITS.map((b, i) => (
-                <li key={i} className="flex items-start gap-1.5 text-[11px] text-muted-foreground">
+                <li key={i} className="flex items-start gap-1.5 text-dense text-muted-foreground">
                   <CheckCircle2 className="h-3 w-3 text-primary shrink-0 mt-0.5" />
                   {b}
                 </li>
@@ -145,7 +145,7 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
             </div>
             <ul className="space-y-1.5 mb-4 flex-1">
               {TOPUP_BENEFITS.map((b, i) => (
-                <li key={i} className="flex items-start gap-1.5 text-[11px] text-muted-foreground">
+                <li key={i} className="flex items-start gap-1.5 text-dense text-muted-foreground">
                   <CheckCircle2 className="h-3 w-3 text-muted-foreground shrink-0 mt-0.5" />
                   {b}
                 </li>
@@ -158,7 +158,7 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
           </div>
         </div>
 
-        <p className="text-[10px] text-muted-foreground text-center pb-4 px-5">
+        <p className="text-micro text-muted-foreground text-center pb-4 px-5">
           Poți anula oricând. Gestionezi abonamentul din profilul tău.
         </p>
       </DialogContent>
@@ -170,7 +170,7 @@ export function PremiumPaywall({ open, onOpenChange, requiredTier = "pro", servi
 export function TierBadge({ tier }: { tier: string }) {
   if (!tier || tier === "free" || tier === "authenticated") return null;
   return (
-    <Badge variant="outline" className={cn("text-[8px] gap-0.5 px-1.5 py-0", getTierColor(tier))}>
+    <Badge variant="outline" className={cn("text-nano gap-0.5 px-1.5 py-0", getTierColor(tier))}>
       {tier === "vip" ? <Crown className="h-2 w-2" /> : <Lock className="h-2 w-2" />}
       {getTierLabel(tier)}
     </Badge>

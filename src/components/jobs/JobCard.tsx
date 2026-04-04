@@ -74,35 +74,35 @@ export function JobCard({ job, isExpanded, onToggle, onRefresh }: JobCardProps) 
               <StatusIcon className={cn("h-3.5 w-3.5", si.color)} />
             </div>
           </TooltipTrigger>
-          <TooltipContent side="right" className="text-[10px] max-w-[200px]">{statusDesc}</TooltipContent>
+          <TooltipContent side="right" className="text-micro max-w-[200px]">{statusDesc}</TooltipContent>
         </Tooltip>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm font-medium truncate">{job.worker_type.replace(/_/g, " ")}</span>
-            <span className={cn("text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full shrink-0", si.color, "bg-current/10")}>
+            <span className={cn("text-nano font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full shrink-0", si.color, "bg-current/10")}>
               {statusLabel}
             </span>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 mt-0.5 flex-wrap">
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-micro text-muted-foreground">
               {new Date(job.created_at).toLocaleDateString()}
             </span>
             {duration !== null && (
-              <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+              <span className="text-micro text-muted-foreground flex items-center gap-0.5">
                 <Clock className="h-2.5 w-2.5" />
                 {duration}s
               </span>
             )}
-            <span className="text-[10px] font-mono text-muted-foreground/50">
+            <span className="text-micro font-mono text-muted-foreground/50">
               N#{job.neuron_id}
             </span>
             {job.retry_count > 0 && (
-              <span className="text-[9px] text-destructive/60">
+              <span className="text-nano text-destructive/60">
                 retry {job.retry_count}/{job.max_retries}
               </span>
             )}
             {job.current_step && job.status === "running" && (
-              <span className="text-[9px] text-primary/70 font-medium">
+              <span className="text-nano text-primary/70 font-medium">
                 {job.current_step}
               </span>
             )}
@@ -115,7 +115,7 @@ export function JobCard({ job, isExpanded, onToggle, onRefresh }: JobCardProps) 
                   style={{ width: `${Math.min(100, job.progress)}%` }}
                 />
               </div>
-              <span className="text-[8px] text-muted-foreground">{job.progress}%</span>
+              <span className="text-nano text-muted-foreground">{job.progress}%</span>
             </div>
           )}
         </div>
@@ -129,16 +129,16 @@ export function JobCard({ job, isExpanded, onToggle, onRefresh }: JobCardProps) 
         <div className="px-4 pb-4 pt-1 border-t border-border">
           {job.input && Object.keys(job.input).length > 0 && (
             <div className="mb-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Input</p>
-              <pre className="text-[11px] font-mono bg-muted/50 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">
+              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1">Input</p>
+              <pre className="text-dense font-mono bg-muted/50 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">
                 {JSON.stringify(job.input, null, 2)}
               </pre>
             </div>
           )}
           {job.result && Object.keys(job.result).length > 0 && (
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("jobs.result_label")}</p>
-              <pre className="text-[11px] font-mono bg-muted/50 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap max-h-64 overflow-y-auto">
+              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("jobs.result_label")}</p>
+              <pre className="text-dense font-mono bg-muted/50 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap max-h-64 overflow-y-auto">
                 {typeof job.result === "object" && job.result.content
                   ? job.result.content
                   : JSON.stringify(job.result, null, 2)}
@@ -152,7 +152,7 @@ export function JobCard({ job, isExpanded, onToggle, onRefresh }: JobCardProps) 
                 <p className="text-xs text-destructive font-medium">
                   {job.error_message || (job.result as any)?.error || t("jobs.job_failed_label")}
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-1">
+                <p className="text-micro text-muted-foreground mt-1">
                   {job.retry_count >= job.max_retries
                     ? t("jobs.retries_exhausted")
                     : t("jobs.retries_remaining", { current: job.retry_count, max: job.max_retries })}

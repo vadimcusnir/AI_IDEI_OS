@@ -54,13 +54,13 @@ export function NewThreadDialog({ categoryId, onSuccess }: NewThreadDialogProps)
             rows={6}
           />
           <div>
-            <p className="text-[10px] text-muted-foreground mb-1.5">Tags (max 4):</p>
+            <p className="text-micro text-muted-foreground mb-1.5">Tags (max 4):</p>
             <div className="flex flex-wrap gap-1.5">
               {SUGGESTED_TAGS.map((tag) => (
                 <Badge
                   key={tag}
                   variant={tags.includes(tag) ? "default" : "outline"}
-                  className="text-[10px] cursor-pointer"
+                  className="text-micro cursor-pointer"
                   onClick={() => toggleTag(tag)}
                 >
                   {tag}
@@ -69,7 +69,7 @@ export function NewThreadDialog({ categoryId, onSuccess }: NewThreadDialogProps)
               ))}
             </div>
           </div>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-micro text-muted-foreground">
             💡 Creating a thread earns you <strong>+1 karma</strong>. Provide details to get better answers!
           </p>
           <Button

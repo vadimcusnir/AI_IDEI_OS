@@ -19,7 +19,7 @@ export function CostPreviewBadge({ estimatedCredits, balance, visible }: CostPre
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-medium border transition-all",
+        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-micro font-mono font-medium border transition-all",
         insufficient
           ? "bg-destructive/10 border-destructive/20 text-destructive"
           : "bg-muted/50 border-border/50 text-muted-foreground"
@@ -28,7 +28,7 @@ export function CostPreviewBadge({ estimatedCredits, balance, visible }: CostPre
       <Coins className="h-3 w-3" />
       <span>~{estimatedCredits} N</span>
       {insufficient && (
-        <span className="text-[9px] opacity-70">
+        <span className="text-nano opacity-70">
           (need {estimatedCredits - balance} more)
         </span>
       )}

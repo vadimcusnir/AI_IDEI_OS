@@ -172,10 +172,10 @@ export function AdminPermissionsTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px] sticky left-0 bg-card z-10 min-w-[100px]">Permission</TableHead>
+                <TableHead className="text-micro sticky left-0 bg-card z-10 min-w-[100px]">Permission</TableHead>
                 {ASSIGNABLE_ROLES.map((role) => (
-                  <TableHead key={role} className="text-[10px] text-center min-w-[80px]">
-                    <Badge variant={role === "admin" ? "destructive" : "outline"} className="text-[9px]">
+                  <TableHead key={role} className="text-micro text-center min-w-[80px]">
+                    <Badge variant={role === "admin" ? "destructive" : "outline"} className="text-nano">
                       {role}
                     </Badge>
                   </TableHead>
@@ -223,9 +223,9 @@ export function AdminPermissionsTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">User</TableHead>
-                <TableHead className="text-[10px]">Current Roles</TableHead>
-                <TableHead className="text-[10px] w-20">Actions</TableHead>
+                <TableHead className="text-micro">User</TableHead>
+                <TableHead className="text-micro">Current Roles</TableHead>
+                <TableHead className="text-micro w-20">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -233,18 +233,18 @@ export function AdminPermissionsTab() {
                 <TableRow key={u.user_id}>
                   <TableCell>
                     <p className="text-xs">{u.email || "—"}</p>
-                    <p className="text-[9px] font-mono text-muted-foreground">{u.user_id.substring(0, 8)}</p>
+                    <p className="text-nano font-mono text-muted-foreground">{u.user_id.substring(0, 8)}</p>
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1 flex-wrap">
                       {u.roles.length === 0 && (
-                        <span className="text-[9px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">user</span>
+                        <span className="text-nano bg-muted px-1.5 py-0.5 rounded text-muted-foreground">user</span>
                       )}
                       {u.roles.map((r) => (
                         <Badge
                           key={r}
                           variant={r === "admin" ? "destructive" : "outline"}
-                          className="text-[9px]"
+                          className="text-nano"
                         >
                           {r}
                         </Badge>
@@ -279,7 +279,7 @@ export function AdminPermissionsTab() {
               <div className="space-y-4 mt-4">
                 <div className="p-3 rounded-lg bg-muted/50 border">
                   <p className="text-xs font-medium">{selectedUser.email}</p>
-                  <p className="text-[9px] font-mono text-muted-foreground">{selectedUser.user_id}</p>
+                  <p className="text-nano font-mono text-muted-foreground">{selectedUser.user_id}</p>
                 </div>
 
                 <div className="space-y-2">
@@ -301,7 +301,7 @@ export function AdminPermissionsTab() {
                       />
                       <div>
                         <p className="text-xs font-medium capitalize">{role}</p>
-                        <p className="text-[9px] text-muted-foreground">
+                        <p className="text-nano text-muted-foreground">
                           {role === "admin" && "Full access to all features"}
                           {role === "finops" && "Manage credits, analytics, logs"}
                           {role === "support" && "View users, manage jobs"}

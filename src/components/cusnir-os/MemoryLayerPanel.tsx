@@ -142,19 +142,19 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                       <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
                         <s.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="text-[10px] font-semibold text-foreground">{s.step}</span>
-                      <span className="text-[8px] text-muted-foreground hidden sm:block">{s.desc}</span>
+                      <span className="text-micro font-semibold text-foreground">{s.step}</span>
+                      <span className="text-nano text-muted-foreground hidden sm:block">{s.desc}</span>
                     </div>
                     {i < 4 && <div className="w-3 sm:w-6 h-px bg-primary/30" />}
                   </div>
                 ))}
               </div>
               <div className="mt-3 p-3 bg-muted/20 rounded-lg">
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   <span className="text-foreground font-medium">Auto-Learning activ:</span> Fiecare execuție de agent generează automat pattern-uri de tip
-                  <Badge variant="outline" className="mx-1 text-[8px] h-4">success</Badge>
-                  <Badge variant="outline" className="mx-1 text-[8px] h-4">failure</Badge>
-                  <Badge variant="outline" className="mx-1 text-[8px] h-4">agent_profile</Badge>
+                  <Badge variant="outline" className="mx-1 text-nano h-4">success</Badge>
+                  <Badge variant="outline" className="mx-1 text-nano h-4">failure</Badge>
+                  <Badge variant="outline" className="mx-1 text-nano h-4">agent_profile</Badge>
                   care îmbunătățesc deciziile viitoare.
                 </p>
               </div>
@@ -175,9 +175,9 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                           <Bot className="h-3.5 w-3.5 text-amber-400" />
                           <span className="text-xs font-semibold truncate">{ap.category}</span>
                         </div>
-                        <Badge variant="outline" className="text-[9px]">{ap.frequency} runs</Badge>
+                        <Badge variant="outline" className="text-nano">{ap.frequency} runs</Badge>
                       </div>
-                      <div className="flex items-center gap-3 text-[10px]">
+                      <div className="flex items-center gap-3 text-micro">
                         <span className={cn(
                           "font-medium",
                           successRateAgent >= 80 ? "text-status-validated" : successRateAgent >= 50 ? "text-warning" : "text-destructive"
@@ -233,12 +233,12 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <Badge className={cn("text-[9px]", TYPE_COLORS[p.pattern_type])}>
+                            <Badge className={cn("text-nano", TYPE_COLORS[p.pattern_type])}>
                               {p.pattern_type}
                             </Badge>
                             <span className="text-xs font-medium capitalize">{p.category}</span>
                           </div>
-                          <div className="text-[10px] text-muted-foreground mt-0.5">
+                          <div className="text-micro text-muted-foreground mt-0.5">
                             Freq: {p.frequency} · Score: {(Number(p.effectiveness_score) * 100).toFixed(0)}%
                             {data.last_agent && <span> · Agent: {String(data.last_agent)}</span>}
                           </div>
@@ -254,7 +254,7 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                             className="overflow-hidden"
                           >
                             <div className="px-4 pb-3">
-                              <div className="bg-muted/30 rounded-lg p-3 text-[10px] font-mono max-h-40 overflow-auto whitespace-pre-wrap text-foreground/80">
+                              <div className="bg-muted/30 rounded-lg p-3 text-micro font-mono max-h-40 overflow-auto whitespace-pre-wrap text-foreground/80">
                                 {JSON.stringify(data, null, 2)}
                               </div>
                             </div>
@@ -297,16 +297,16 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                         <div className="flex items-center gap-2">
                           <Bot className="h-4 w-4 text-amber-400" />
                           <span className="text-xs font-semibold">{ap.category}</span>
-                          <Badge variant="outline" className="text-[9px] capitalize">{String(data.agent_type || "")}</Badge>
+                          <Badge variant="outline" className="text-nano capitalize">{String(data.agent_type || "")}</Badge>
                         </div>
-                        <span className="text-[10px] text-muted-foreground">
+                        <span className="text-micro text-muted-foreground">
                           {ap.last_used_at && format(new Date(ap.last_used_at), "dd MMM HH:mm")}
                         </span>
                       </div>
                       {/* Performance bars */}
                       <div className="grid grid-cols-3 gap-3">
                         <div className="space-y-1">
-                          <span className="text-[9px] text-muted-foreground">Success Rate</span>
+                          <span className="text-nano text-muted-foreground">Success Rate</span>
                           <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                             <div
                               className={cn("h-full rounded-full transition-all",
@@ -315,22 +315,22 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                               style={{ width: `${successRateAgent}%` }}
                             />
                           </div>
-                          <span className="text-[10px] font-bold">{successRateAgent.toFixed(0)}%</span>
+                          <span className="text-micro font-bold">{successRateAgent.toFixed(0)}%</span>
                         </div>
                         <div className="space-y-1">
-                          <span className="text-[9px] text-muted-foreground">Eficacitate</span>
+                          <span className="text-nano text-muted-foreground">Eficacitate</span>
                           <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                             <div
                               className="h-full bg-primary rounded-full transition-all"
                               style={{ width: `${Number(ap.effectiveness_score) * 100}%` }}
                             />
                           </div>
-                          <span className="text-[10px] font-bold">{(Number(ap.effectiveness_score) * 100).toFixed(0)}%</span>
+                          <span className="text-micro font-bold">{(Number(ap.effectiveness_score) * 100).toFixed(0)}%</span>
                         </div>
                         <div className="space-y-1">
-                          <span className="text-[9px] text-muted-foreground">Total Runs</span>
+                          <span className="text-nano text-muted-foreground">Total Runs</span>
                           <div className="text-sm font-bold tabular-nums">{totalRuns}</div>
-                          {avgDur > 0 && <span className="text-[9px] text-muted-foreground">~{(avgDur / 1000).toFixed(1)}s avg</span>}
+                          {avgDur > 0 && <span className="text-nano text-muted-foreground">~{(avgDur / 1000).toFixed(1)}s avg</span>}
                         </div>
                       </div>
                     </div>
@@ -374,7 +374,7 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                       return (
                         <tr key={e.id} className="border-b border-border/30">
                           <td className="p-3">
-                            <span className={cn("inline-flex items-center gap-1 text-[10px] font-medium",
+                            <span className={cn("inline-flex items-center gap-1 text-micro font-medium",
                               e.status === "completed" ? "text-status-validated" :
                               e.status === "failed" ? "text-destructive" :
                               "text-muted-foreground"
@@ -388,7 +388,7 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                           </td>
                           <td className="p-3 text-right">
                             {quality > 0 ? (
-                              <span className={cn("text-[10px] font-medium",
+                              <span className={cn("text-micro font-medium",
                                 quality >= 0.8 ? "text-status-validated" : quality >= 0.6 ? "text-warning" : "text-destructive"
                               )}>
                                 {(quality * 100).toFixed(0)}%
@@ -404,7 +404,7 @@ export function MemoryLayerPanel({ patterns, executions }: MemoryLayerPanelProps
                   </tbody>
                 </table>
                 {totalCredits > 0 && (
-                  <div className="px-4 py-2 text-[10px] text-muted-foreground/50 text-right border-t border-border/20">
+                  <div className="px-4 py-2 text-micro text-muted-foreground/50 text-right border-t border-border/20">
                     Total consumat: {totalCredits.toFixed(0)} NEURONS
                   </div>
                 )}
@@ -422,7 +422,7 @@ function MemStatCard({ icon: Icon, label, value, highlight }: { icon: typeof Bra
     <div className="bg-card border border-border rounded-xl p-3 space-y-1">
       <div className="flex items-center gap-1.5 text-muted-foreground">
         <Icon className="h-3 w-3" />
-        <span className="text-[10px] font-medium">{label}</span>
+        <span className="text-micro font-medium">{label}</span>
       </div>
       <div className={cn("text-sm font-bold tabular-nums", highlight && "text-status-validated")}>{value}</div>
     </div>

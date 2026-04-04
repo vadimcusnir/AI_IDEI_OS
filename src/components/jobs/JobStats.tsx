@@ -28,14 +28,14 @@ export function JobStats({ completedCount, failedCount, runningCount, avgDuratio
         <Tooltip key={stat.label}>
           <TooltipTrigger asChild>
             <div className="bg-card border border-border rounded-xl p-4 cursor-default">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{stat.label}</p>
+              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1">{stat.label}</p>
               <div className="flex items-baseline gap-1">
                 <span className={cn("text-2xl font-bold font-mono", stat.color)}>{stat.value}</span>
-                {stat.suffix && <span className="text-[10px] text-muted-foreground">{stat.suffix}</span>}
+                {stat.suffix && <span className="text-micro text-muted-foreground">{stat.suffix}</span>}
               </div>
             </div>
           </TooltipTrigger>
-          <TooltipContent className="text-[10px]">{stat.tip}</TooltipContent>
+          <TooltipContent className="text-micro">{stat.tip}</TooltipContent>
         </Tooltip>
       ))}
     </div>

@@ -155,16 +155,16 @@ export function AdvancedSearch() {
                   <p className="text-xs font-medium truncate">{r.title}</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     {r.content_category && (
-                      <Badge variant="secondary" className="text-[9px] h-4">{r.content_category}</Badge>
+                      <Badge variant="secondary" className="text-nano h-4">{r.content_category}</Badge>
                     )}
                     {r.rrf_score > 0 && (
-                      <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                      <span className="text-nano text-muted-foreground flex items-center gap-0.5">
                         <Sparkles className="h-2.5 w-2.5" />
                         {(r.rrf_score * 100).toFixed(0)}%
                       </span>
                     )}
                     {r.vector_rank > 0 && r.keyword_rank > 0 && (
-                      <span className="text-[9px] text-muted-foreground">hybrid</span>
+                      <span className="text-nano text-muted-foreground">hybrid</span>
                     )}
                   </div>
                 </div>

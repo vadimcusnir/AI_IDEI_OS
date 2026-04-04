@@ -175,7 +175,7 @@ export function ProductionMonitorCard({ job }: ProductionMonitorCardProps) {
               <h3 className="text-sm font-semibold">
                 {job.worker_type.replace(/[-_]/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
               </h3>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-micro text-muted-foreground">
                 {new Date(job.created_at).toLocaleString()}
                 {job.current_step && isRunning && (
                   <span className="ml-2 text-primary font-medium">• {job.current_step}</span>
@@ -196,10 +196,10 @@ export function ProductionMonitorCard({ job }: ProductionMonitorCardProps) {
       {(isRunning || isCompleted) && (
         <div className="px-5 pb-3">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] font-medium text-muted-foreground">
+            <span className="text-micro font-medium text-muted-foreground">
               {isCompleted ? "Producție finalizată" : "Se procesează..."}
             </span>
-            <span className="text-[10px] font-mono font-bold text-foreground">
+            <span className="text-micro font-mono font-bold text-foreground">
               {Math.round(displayProgress)}%
             </span>
           </div>
@@ -222,15 +222,15 @@ export function ProductionMonitorCard({ job }: ProductionMonitorCardProps) {
         <div className="mx-5 mb-4 rounded-xl bg-[hsl(var(--foreground)/0.03)] border border-border overflow-hidden">
           <div className="flex items-center gap-2 px-3 py-1.5 border-b border-border bg-muted/30">
             <Terminal className="h-3 w-3 text-muted-foreground" />
-            <span className="text-[9px] font-mono uppercase tracking-wider text-muted-foreground">
+            <span className="text-nano font-mono uppercase tracking-wider text-muted-foreground">
               Production Log
             </span>
             <div className="ml-auto flex items-center gap-1">
               <span className="h-1.5 w-1.5 rounded-full bg-status-validated animate-pulse" />
-              <span className="text-[8px] text-muted-foreground">LIVE</span>
+              <span className="text-nano text-muted-foreground">LIVE</span>
             </div>
           </div>
-          <div className="p-3 max-h-36 overflow-y-auto font-mono text-[11px] space-y-1">
+          <div className="p-3 max-h-36 overflow-y-auto font-mono text-dense space-y-1">
             <AnimatePresence>
               {logMessages.map((msg, i) => (
                 <motion.div
@@ -292,7 +292,7 @@ export function ProductionMonitorCard({ job }: ProductionMonitorCardProps) {
             <p className="text-xs text-destructive font-medium mb-1">
               {job.error_message || "Procesarea a eșuat"}
             </p>
-            <p className="text-[10px] text-muted-foreground">
+            <p className="text-micro text-muted-foreground">
               {job.retry_count < job.max_retries
                 ? `Reîncercare automată ${job.retry_count}/${job.max_retries}`
                 : "Toate reîncercările epuizate"}

@@ -94,7 +94,7 @@ export function DocsMarkdownRenderer({ text }: { text: string }) {
         elements.push(
           <div key={`code-${i}`} className="my-4 rounded-lg overflow-hidden border border-border">
             {codeLang && (
-              <div className="bg-muted/80 px-3 py-1 text-[10px] font-mono text-muted-foreground uppercase tracking-wider border-b border-border">
+              <div className="bg-muted/80 px-3 py-1 text-micro font-mono text-muted-foreground uppercase tracking-wider border-b border-border">
                 {codeLang}
               </div>
             )}

@@ -103,7 +103,7 @@ export function TemplatePicker({ isOpen, onClose }: TemplatePickerProps) {
             </div>
             <div>
               <div className="text-sm font-medium">Blank Neuron</div>
-              <div className="text-[10px] text-muted-foreground">Start with an empty document</div>
+              <div className="text-micro text-muted-foreground">Start with an empty document</div>
             </div>
           </button>
         </div>
@@ -119,7 +119,7 @@ export function TemplatePicker({ isOpen, onClose }: TemplatePickerProps) {
                   key={cat}
                   onClick={() => setActiveTab(cat)}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium whitespace-nowrap transition-all",
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-dense font-medium whitespace-nowrap transition-all",
                     isActive
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -128,7 +128,7 @@ export function TemplatePicker({ isOpen, onClose }: TemplatePickerProps) {
                   <CatIcon className="h-3 w-3" />
                   <span className="capitalize">{cat === "all" ? "All" : cat}</span>
                   {cat !== "all" && (
-                    <span className="text-[9px] text-muted-foreground/50">
+                    <span className="text-nano text-muted-foreground/50">
                       {templates.filter(t => t.category === cat).length}
                     </span>
                   )}
@@ -171,13 +171,13 @@ export function TemplatePicker({ isOpen, onClose }: TemplatePickerProps) {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs font-medium truncate">{tpl.name}</div>
-                      <div className="text-[10px] text-muted-foreground line-clamp-2 leading-tight mt-0.5">{tpl.description}</div>
+                      <div className="text-micro text-muted-foreground line-clamp-2 leading-tight mt-0.5">{tpl.description}</div>
                       <div className="flex items-center gap-1 mt-1">
-                        <span className="text-[9px] text-muted-foreground/60">{tpl.blocks_template.length} blocks</span>
+                        <span className="text-nano text-muted-foreground/60">{tpl.blocks_template.length} blocks</span>
                         {tpl.usage_count > 0 && (
-                          <span className="text-[9px] text-muted-foreground/60">· {tpl.usage_count} uses</span>
+                          <span className="text-nano text-muted-foreground/60">· {tpl.usage_count} uses</span>
                         )}
-                        <span className="text-[9px] text-muted-foreground/40 capitalize">· {tpl.category}</span>
+                        <span className="text-nano text-muted-foreground/40 capitalize">· {tpl.category}</span>
                       </div>
                     </div>
                   </button>

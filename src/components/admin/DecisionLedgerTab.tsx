@@ -72,10 +72,10 @@ export function DecisionLedgerTab() {
   return (
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+        <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           <ScrollText className="h-3 w-3" /> {t("admin.decision_ledger")}
           {integrityOk !== null && (
-            <span className={cn("text-[8px] px-1.5 py-0.5 rounded font-mono ml-1",
+            <span className={cn("text-nano px-1.5 py-0.5 rounded font-mono ml-1",
               integrityOk ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"
             )}>
               {integrityOk ? `🔗 ${t("admin.hash_chain_ok")}` : `⚠ ${t("admin.integrity_error")}`}
@@ -102,28 +102,28 @@ export function DecisionLedgerTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">{t("admin.time")}</TableHead>
-                <TableHead className="text-[10px]">{t("admin.event")}</TableHead>
-                <TableHead className="text-[10px]">{t("admin.actor")}</TableHead>
-                <TableHead className="text-[10px]">{t("admin.resource")}</TableHead>
-                <TableHead className="text-[10px]">{t("admin.verdict")}</TableHead>
-                <TableHead className="text-[10px]">{t("admin.reason")}</TableHead>
+                <TableHead className="text-micro">{t("admin.time")}</TableHead>
+                <TableHead className="text-micro">{t("admin.event")}</TableHead>
+                <TableHead className="text-micro">{t("admin.actor")}</TableHead>
+                <TableHead className="text-micro">{t("admin.resource")}</TableHead>
+                <TableHead className="text-micro">{t("admin.verdict")}</TableHead>
+                <TableHead className="text-micro">{t("admin.reason")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {entries.map(e => (
                 <TableRow key={e.id}>
-                  <TableCell className="text-[10px] text-muted-foreground whitespace-nowrap">
+                  <TableCell className="text-micro text-muted-foreground whitespace-nowrap">
                     {new Date(e.created_at).toLocaleString()}
                   </TableCell>
-                  <TableCell className="text-[10px] font-mono">{e.event_type}</TableCell>
-                  <TableCell className="text-[10px] font-mono">{e.actor_id?.substring(0, 8) ?? "—"}…</TableCell>
+                  <TableCell className="text-micro font-mono">{e.event_type}</TableCell>
+                  <TableCell className="text-micro font-mono">{e.actor_id?.substring(0, 8) ?? "—"}…</TableCell>
                   <TableCell className="text-xs">{e.target_resource ?? "—"}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
                       {verdictIcon(e.verdict)}
                       <span className={cn(
-                        "text-[9px] font-mono px-1.5 py-0.5 rounded",
+                        "text-nano font-mono px-1.5 py-0.5 rounded",
                         e.verdict === "ALLOW" ? "bg-primary/10 text-primary" :
                         e.verdict === "DENY" ? "bg-destructive/10 text-destructive" :
                         e.verdict === "PAYWALL" ? "bg-accent text-accent-foreground" :
@@ -131,7 +131,7 @@ export function DecisionLedgerTab() {
                       )}>{e.verdict ?? "—"}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-[10px] text-muted-foreground">{e.reason ?? "—"}</TableCell>
+                  <TableCell className="text-micro text-muted-foreground">{e.reason ?? "—"}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

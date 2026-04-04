@@ -106,7 +106,7 @@ export default function Community() {
                     key={s}
                     variant={sortBy === s ? "default" : "ghost"}
                     size="sm"
-                    className="text-[10px] h-7 px-2"
+                    className="text-micro h-7 px-2"
                     onClick={() => setSortBy(s)}
                   >
                     {s === "recent" ? t("community.sort_recent") : s === "top" ? t("community.sort_top") : t("community.sort_unsolved")}

@@ -62,7 +62,7 @@ export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuro
           transition={{ delay: 0.1 }}
           className="w-full max-w-lg space-y-3"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60 text-center">
+          <p className="text-dense font-semibold uppercase tracking-wider text-muted-foreground/60 text-center">
             Suggested for you
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

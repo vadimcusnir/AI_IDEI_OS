@@ -171,7 +171,7 @@ export default function Feedback() {
                     key={ft.key}
                     onClick={() => setType(ft.key)}
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors",
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-dense font-medium transition-colors",
                       type === ft.key
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -226,7 +226,7 @@ export default function Feedback() {
               className="text-sm resize-none"
             />
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-muted-foreground">{message.length}/2000</span>
+              <span className="text-micro text-muted-foreground">{message.length}/2000</span>
               <Button onClick={handleSubmit} disabled={sending} size="sm" className="gap-1.5">
                 {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
                 Submit
@@ -247,7 +247,7 @@ export default function Feedback() {
             key={f.key}
             onClick={() => setFilter(f.key)}
             className={cn(
-              "px-3 py-1 rounded-full text-[11px] font-medium transition-colors whitespace-nowrap",
+              "px-3 py-1 rounded-full text-dense font-medium transition-colors whitespace-nowrap",
               filter === f.key
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -287,7 +287,7 @@ export default function Feedback() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm font-medium truncate">{item.title}</p>
-                      <span className={cn("text-[9px] px-1.5 py-0.5 rounded font-medium", statusCfg.color)}>
+                      <span className={cn("text-nano px-1.5 py-0.5 rounded font-medium", statusCfg.color)}>
                         {statusCfg.label}
                       </span>
                     </div>
@@ -309,7 +309,7 @@ export default function Feedback() {
 
                     {item.admin_response && (
                       <div className="bg-primary/5 border border-primary/10 rounded-lg p-3 mt-2">
-                        <p className="text-[10px] font-semibold text-primary mb-1 flex items-center gap-1">
+                        <p className="text-micro font-semibold text-primary mb-1 flex items-center gap-1">
                           <CheckCircle2 className="h-3 w-3" /> {t("feedback.admin_response")}
                         </p>
                         <p className="text-xs text-muted-foreground">{item.admin_response}</p>
@@ -318,9 +318,9 @@ export default function Feedback() {
 
                     <div className="flex items-center gap-2 mt-2">
                       <Clock className="h-3 w-3 text-muted-foreground/50" />
-                      <span className="text-[10px] text-muted-foreground/60">{timeAgo}</span>
+                      <span className="text-micro text-muted-foreground/60">{timeAgo}</span>
                       {item.context_page && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                        <span className="text-micro px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
                           {item.context_page}
                         </span>
                       )}

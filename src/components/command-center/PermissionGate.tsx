@@ -43,13 +43,13 @@ export function PermissionGate({ intent, requiredTier, currentTier, onDismiss }:
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold mb-0.5">Access Restricted</p>
-          <p className="text-[10px] text-muted-foreground leading-relaxed">
+          <p className="text-micro text-muted-foreground leading-relaxed">
             <strong>{label}</strong> requires{" "}
-            <Badge variant="outline" className="text-[8px] h-4 px-1.5 mx-0.5">
+            <Badge variant="outline" className="text-nano h-4 px-1.5 mx-0.5">
               {TIER_LABELS[requiredTier]}
             </Badge>{" "}
             access. Your current tier:{" "}
-            <Badge variant="secondary" className="text-[8px] h-4 px-1.5 mx-0.5">
+            <Badge variant="secondary" className="text-nano h-4 px-1.5 mx-0.5">
               {TIER_LABELS[currentTier]}
             </Badge>
           </p>
@@ -57,7 +57,7 @@ export function PermissionGate({ intent, requiredTier, currentTier, onDismiss }:
           <div className="flex items-center gap-2 mt-2.5">
             <Button
               size="sm"
-              className="h-7 text-[10px] gap-1"
+              className="h-7 text-micro gap-1"
               onClick={() => navigate("/pricing")}
             >
               <Crown className="h-3 w-3" />
@@ -66,7 +66,7 @@ export function PermissionGate({ intent, requiredTier, currentTier, onDismiss }:
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 text-[10px]"
+              className="h-7 text-micro"
               onClick={onDismiss}
             >
               Dismiss
@@ -79,7 +79,7 @@ export function PermissionGate({ intent, requiredTier, currentTier, onDismiss }:
       <div className="px-4 py-2 border-t border-border bg-muted/30">
         <div className="flex items-center gap-1.5">
           <Shield className="h-3 w-3 text-muted-foreground/50" />
-          <span className="text-[9px] text-muted-foreground/70">
+          <span className="text-nano text-muted-foreground/70">
             Upgrade unlocks: advanced orchestration, priority execution, premium agents
           </span>
         </div>

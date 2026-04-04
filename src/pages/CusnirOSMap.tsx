@@ -314,7 +314,7 @@ function SystemMapCanvas() {
             <h1 className="font-bold text-lg sm:text-xl tracking-[6px] uppercase" style={{ background: "linear-gradient(135deg, #C9A000 0%, #FFD700 40%, #FFF5CC 60%, #FFD700 80%, #C9A000 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               CUSNIR OS — HARTA SISTEMULUI
             </h1>
-            <p className="text-[11px] text-muted-foreground/50 italic tracking-wider mt-0.5 font-serif">
+            <p className="text-dense text-muted-foreground/50 italic tracking-wider mt-0.5 font-serif">
               Arhitectura cognitivă, economică și de branding — 7 Layers / 30+ Nodes / 35+ Connections
             </p>
           </div>
@@ -328,13 +328,13 @@ function SystemMapCanvas() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="search node..."
-          className="bg-[rgba(11,11,11,0.92)] border border-[rgba(201,160,0,0.2)] rounded-sm px-3 py-2 text-[11px] text-white font-mono w-[200px] outline-none focus:border-[#C9A000] focus:shadow-[0_0_12px_rgba(201,160,0,0.1)] placeholder:text-[#555] placeholder:italic"
+          className="bg-[rgba(11,11,11,0.92)] border border-[rgba(201,160,0,0.2)] rounded-sm px-3 py-2 text-dense text-white font-mono w-[200px] outline-none focus:border-[#C9A000] focus:shadow-[0_0_12px_rgba(201,160,0,0.1)] placeholder:text-[#555] placeholder:italic"
         />
       </div>
 
       {/* Legend */}
-      <div className="fixed bottom-5 left-5 z-50 bg-[rgba(11,11,11,0.94)] border border-[rgba(201,160,0,0.2)] rounded-sm p-3.5 text-[11px] max-w-[280px] backdrop-blur-xl">
-        <div className="font-bold text-[12px] tracking-[3px] uppercase text-[#FFD700] mb-2">LEGENDĂ STRATURI</div>
+      <div className="fixed bottom-5 left-5 z-50 bg-[rgba(11,11,11,0.94)] border border-[rgba(201,160,0,0.2)] rounded-sm p-3.5 text-dense max-w-[280px] backdrop-blur-xl">
+        <div className="font-bold text-xs tracking-[3px] uppercase text-[#FFD700] mb-2">LEGENDĂ STRATURI</div>
         {([
           ["#FFD700", "NUCLEU — Cusnir OS"],
           ["#4a4aff", "STRAT 2 — Sisteme Cognitive"],
@@ -350,7 +350,7 @@ function SystemMapCanvas() {
           </div>
         ))}
         <hr className="border-t border-white/5 my-2.5" />
-        <div className="text-[10px] text-[#555] font-mono">CLICK → detalii · SCROLL → zoom · DRAG → pan</div>
+        <div className="text-micro text-[#555] font-mono">CLICK → detalii · SCROLL → zoom · DRAG → pan</div>
       </div>
 
       {/* Zoom controls */}
@@ -420,7 +420,7 @@ function SystemMapCanvas() {
                     {node.label}
                   </div>
                   {node.sublabel && (
-                    <div className="text-center text-[8px] text-white/50 font-mono mt-0.5 tracking-[0.5px]">{node.sublabel}</div>
+                    <div className="text-center text-nano text-white/50 font-mono mt-0.5 tracking-[0.5px]">{node.sublabel}</div>
                   )}
                 </div>
               </div>
@@ -434,7 +434,7 @@ function SystemMapCanvas() {
         <div className="fixed top-0 right-0 w-[420px] max-w-[92vw] h-screen z-[1500] bg-[rgba(11,11,11,0.98)] border-l-2 border-[#8B7500] overflow-y-auto backdrop-blur-2xl shadow-[-12px_0_60px_rgba(0,0,0,0.6)]" style={{ paddingTop: 70 }}>
           <button onClick={() => setSelectedNode(null)} className="absolute top-5 right-5 w-8 h-8 border border-[#2A2A2A] rounded-sm text-[#FFD700] flex items-center justify-center hover:border-red-500 hover:text-red-500 transition-colors text-lg">✕</button>
           <div className="px-7 pb-7">
-            <div className="text-[10px] font-mono tracking-[2px] uppercase text-[#8B7500] mb-1.5">{selectedNode.layerName}</div>
+            <div className="text-micro font-mono tracking-[2px] uppercase text-[#8B7500] mb-1.5">{selectedNode.layerName}</div>
             <div className="font-bold text-2xl tracking-[4px] uppercase mb-3.5" style={{ background: "linear-gradient(135deg, #C9A000, #FFD700)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               {selectedNode.label}
             </div>
@@ -444,11 +444,11 @@ function SystemMapCanvas() {
 
             {selectedNode.details.length > 0 && (
               <>
-                <div className="font-bold text-[13px] tracking-[2px] uppercase text-[#C9A000] my-5 pb-1.5 border-b border-[rgba(201,160,0,0.15)]">COMPONENTE & DETALII</div>
+                <div className="font-bold text-compact tracking-[2px] uppercase text-[#C9A000] my-5 pb-1.5 border-b border-[rgba(201,160,0,0.15)]">COMPONENTE & DETALII</div>
                 <ul className="space-y-1">
                   {selectedNode.details.map((d, i) => (
                     <li key={i} className="text-xs text-[#BBBBBB] pl-4 relative leading-[1.5]">
-                      <span className="absolute left-0 text-[#8B7500] text-[10px]">▸</span>
+                      <span className="absolute left-0 text-[#8B7500] text-micro">▸</span>
                       {d}
                     </li>
                   ))}
@@ -462,7 +462,7 @@ function SystemMapCanvas() {
               if (!related.length) return null;
               return (
                 <>
-                  <div className="font-bold text-[13px] tracking-[2px] uppercase text-[#C9A000] my-5 pb-1.5 border-b border-[rgba(201,160,0,0.15)]">CONEXIUNI ACTIVE</div>
+                  <div className="font-bold text-compact tracking-[2px] uppercase text-[#C9A000] my-5 pb-1.5 border-b border-[rgba(201,160,0,0.15)]">CONEXIUNI ACTIVE</div>
                   <div className="space-y-1">
                     {related.map((c, i) => {
                       const other = c.from === selectedNode.id ? nodeMap[c.to] : nodeMap[c.from];
@@ -472,10 +472,10 @@ function SystemMapCanvas() {
                       return (
                         <div
                           key={i}
-                          className="text-[11px] text-[#AAAAAA] font-mono py-1.5 pl-2.5 border-l-2 border-[#2A2A2A] hover:border-[#C9A000] transition-colors cursor-pointer"
+                          className="text-dense text-[#AAAAAA] font-mono py-1.5 pl-2.5 border-l-2 border-[#2A2A2A] hover:border-[#C9A000] transition-colors cursor-pointer"
                           onClick={() => setSelectedNode(other)}
                         >
-                          <span style={{ color }}>{dir}</span> {other.label} <span style={{ color }} className="text-[9px]">[{c.type.toUpperCase()}]</span>
+                          <span style={{ color }}>{dir}</span> {other.label} <span style={{ color }} className="text-nano">[{c.type.toUpperCase()}]</span>
                           {c.label && <span className="text-[#666]"> — {c.label}</span>}
                         </div>
                       );

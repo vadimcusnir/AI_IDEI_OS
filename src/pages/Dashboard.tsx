@@ -178,7 +178,7 @@ export default function Dashboard() {
         {/* Pipeline Progress */}
         <ControlledSection elementId="dashboard.pipeline">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }} className="bg-card border border-border rounded-xl p-4 mb-6">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Activity className="h-3 w-3" /> {t("dashboard.pipeline_progress")}
           </h3>
           <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto">
@@ -192,7 +192,7 @@ export default function Dashboard() {
                 <div className="flex-1 text-center">
                   <step.icon className={cn("h-4 w-4 mx-auto mb-1", step.value > 0 ? "text-primary" : "text-muted-foreground/30")} />
                   <p className="text-base sm:text-lg font-bold font-mono">{step.value}</p>
-                  <p className="text-[9px] text-muted-foreground">{step.label}</p>
+                  <p className="text-nano text-muted-foreground">{step.label}</p>
                 </div>
                 {i < arr.length - 1 && (
                   <div className={cn("h-0.5 w-3 sm:w-6 rounded-full shrink-0", step.value > 0 ? "bg-primary/40" : "bg-muted")} />
@@ -208,7 +208,7 @@ export default function Dashboard() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {/* Activity */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-4">
-            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
               <Activity className="h-3 w-3" /> {t("dashboard.activity_7d")}
             </h3>
             <div className="flex items-end gap-1 h-24">
@@ -226,7 +226,7 @@ export default function Dashboard() {
                         style={{ height: `${Math.max((day.neurons / maxActivity) * 80, day.neurons > 0 ? 3 : 0)}px`, marginTop: -1 }}
                       />
                     </div>
-                    <span className="text-[7px] text-muted-foreground">
+                    <span className="text-nano text-muted-foreground">
                       {new Date(day.date).toLocaleDateString(undefined, { weekday: "narrow" })}
                     </span>
                   </div>
@@ -234,17 +234,17 @@ export default function Dashboard() {
               })}
             </div>
             <div className="flex items-center gap-4 mt-2">
-              <span className="flex items-center gap-1 text-[9px] text-muted-foreground"><span className="w-2 h-2 rounded bg-primary inline-block" /> {t("dashboard.neurons")}</span>
-              <span className="flex items-center gap-1 text-[9px] text-muted-foreground"><span className="w-2 h-2 rounded bg-primary/30 inline-block" /> Jobs</span>
+              <span className="flex items-center gap-1 text-nano text-muted-foreground"><span className="w-2 h-2 rounded bg-primary inline-block" /> {t("dashboard.neurons")}</span>
+              <span className="flex items-center gap-1 text-nano text-muted-foreground"><span className="w-2 h-2 rounded bg-primary/30 inline-block" /> Jobs</span>
             </div>
           </div>
 
           {/* Credit Gauge */}
           <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-between">
-            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("dashboard.credit_economy")}</h3>
+            <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("dashboard.credit_economy")}</h3>
             <div className="text-center py-2">
               <span className="text-2xl sm:text-3xl font-bold font-mono">{data.credits.balance}</span>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{t("dashboard.neurons_available")}</p>
+              <p className="text-micro text-muted-foreground mt-0.5">{t("dashboard.neurons_available")}</p>
             </div>
             <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
               <div
@@ -263,7 +263,7 @@ export default function Dashboard() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
           {Object.keys(data.categories).length > 0 && (
             <div className="bg-card border border-border rounded-xl p-4">
-              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+              <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                 <Layers className="h-3 w-3" /> {t("dashboard.categories")}
               </h3>
               <div className="space-y-1.5">
@@ -272,7 +272,7 @@ export default function Dashboard() {
                   .slice(0, 6)
                   .map(([cat, count]) => (
                     <div key={cat} className="flex items-center justify-between">
-                      <span className="text-[10px] capitalize truncate">{cat.replace("_", " ")}</span>
+                      <span className="text-micro capitalize truncate">{cat.replace("_", " ")}</span>
                       <span className="text-xs font-mono font-bold">{count}</span>
                     </div>
                   ))}
@@ -281,7 +281,7 @@ export default function Dashboard() {
           )}
 
           <div className="bg-card border border-border rounded-xl p-4">
-            <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+            <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
               <BarChart3 className="h-3 w-3" /> {t("dashboard.system_status")}
             </h3>
             <div className="space-y-2">
@@ -299,17 +299,17 @@ export default function Dashboard() {
         {data.recentJobs.length > 0 && (
           <div className="bg-card border border-border rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                 <Clock className="h-3 w-3" /> {t("dashboard.recent_jobs")}
               </h3>
-              <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => navigate("/jobs")}>{t("dashboard.view_all")}</Button>
+              <Button variant="ghost" size="sm" className="text-micro h-6" onClick={() => navigate("/jobs")}>{t("dashboard.view_all")}</Button>
             </div>
             <div className="space-y-1">
               {data.recentJobs.map(job => (
                 <div key={job.id} className="flex items-center justify-between py-1.5">
                   <span className="text-xs truncate flex-1">{job.worker_type.replace(/-/g, " ")}</span>
                   <span className={cn(
-                    "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded",
+                    "text-nano font-mono uppercase px-1.5 py-0.5 rounded",
                     job.status === "completed" ? "bg-status-validated/15 text-status-validated" :
                     job.status === "failed" ? "bg-destructive/15 text-destructive" :
                     "bg-muted text-muted-foreground"
@@ -337,7 +337,7 @@ export default function Dashboard() {
               className="flex flex-col items-center gap-1.5 p-4 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors"
             >
               <action.icon className="h-4 w-4 text-muted-foreground" />
-              <span className="text-[10px] font-medium">{action.label}</span>
+              <span className="text-micro font-medium">{action.label}</span>
             </motion.button>
           ))}
         </motion.div>
@@ -358,10 +358,10 @@ function KPI({ icon: Icon, label, value, sub, color }: {
     >
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className="h-3 w-3 text-muted-foreground" />
-        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-xl font-bold font-mono", color)}>{value}</p>
-      {sub && <p className="text-[9px] text-muted-foreground">{sub}</p>}
+      {sub && <p className="text-nano text-muted-foreground">{sub}</p>}
     </motion.div>
   );
 }
@@ -369,10 +369,10 @@ function KPI({ icon: Icon, label, value, sub, color }: {
 function StatusRow({ label, value, detail }: { label: string; value: number; detail: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[10px] text-muted-foreground">{label}</span>
+      <span className="text-micro text-muted-foreground">{label}</span>
       <div className="text-right">
         <span className="text-xs font-mono font-bold">{value}</span>
-        <span className="text-[9px] text-muted-foreground ml-1">{detail}</span>
+        <span className="text-nano text-muted-foreground ml-1">{detail}</span>
       </div>
     </div>
   );

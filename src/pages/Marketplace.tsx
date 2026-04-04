@@ -226,7 +226,7 @@ export default function Marketplace() {
               <button
                 onClick={() => setSelectedType(null)}
                 className={cn(
-                  "shrink-0 px-3 py-1 rounded-full text-[11px] font-medium transition-colors",
+                  "shrink-0 px-3 py-1 rounded-full text-dense font-medium transition-colors",
                   selectedType === null
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -239,7 +239,7 @@ export default function Marketplace() {
                   key={tp}
                   onClick={() => setSelectedType(tp)}
                   className={cn(
-                    "shrink-0 px-3 py-1 rounded-full text-[11px] font-medium transition-colors whitespace-nowrap",
+                    "shrink-0 px-3 py-1 rounded-full text-dense font-medium transition-colors whitespace-nowrap",
                     selectedType === tp
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -296,7 +296,7 @@ function FeaturedCard({ asset, index }: { asset: KnowledgeAsset; index: number }
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 mb-1">
               <Crown className="h-3 w-3 text-[hsl(var(--gold-oxide))] shrink-0" />
-              <Badge variant="outline" className="text-[8px] px-1.5 py-0">{asset.asset_type}</Badge>
+              <Badge variant="outline" className="text-nano px-1.5 py-0">{asset.asset_type}</Badge>
             </div>
             <h3 className="text-sm font-bold line-clamp-2 group-hover:text-primary transition-colors">{asset.title}</h3>
           </div>
@@ -311,9 +311,9 @@ function FeaturedCard({ asset, index }: { asset: KnowledgeAsset; index: number }
           </div>
         </div>
         {asset.description && (
-          <p className="text-[11px] text-muted-foreground line-clamp-2">{asset.description}</p>
+          <p className="text-dense text-muted-foreground line-clamp-2">{asset.description}</p>
         )}
-        <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+        <div className="flex items-center justify-between text-micro text-muted-foreground">
           <div className="flex items-center gap-0.5">
             {[1, 2, 3, 4, 5].map(s => (
               <Star key={s} className={cn("h-2.5 w-2.5", s <= (asset.rating_avg || 0) ? "fill-amber-500 text-amber-500" : "text-muted-foreground/20")} />
@@ -380,37 +380,37 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, index }: {
       {/* Preview snippet */}
       {asset.preview_content && (
         <div className="px-4 pt-3 pb-2 border-b border-border/50">
-          <p className="text-[10px] text-muted-foreground/70 line-clamp-2 italic">{asset.preview_content}</p>
+          <p className="text-micro text-muted-foreground/70 line-clamp-2 italic">{asset.preview_content}</p>
         </div>
       )}
 
       <div className="p-4 space-y-3">
         {/* Type + Title */}
         <div>
-          <Badge variant="outline" className="text-[8px] px-1.5 py-0 mb-1.5">{asset.asset_type}</Badge>
+          <Badge variant="outline" className="text-nano px-1.5 py-0 mb-1.5">{asset.asset_type}</Badge>
           <h3 className="text-sm font-semibold line-clamp-2 group-hover:text-primary transition-colors">{asset.title}</h3>
         </div>
 
         {asset.description && (
-          <p className="text-[10px] text-muted-foreground line-clamp-2">{asset.description}</p>
+          <p className="text-micro text-muted-foreground line-clamp-2">{asset.description}</p>
         )}
 
         {/* Tags */}
         {asset.tags && asset.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {asset.tags.slice(0, 3).map(tag => (
-              <span key={tag} className="text-[8px] px-1.5 py-0.5 bg-muted rounded-full text-muted-foreground">
+              <span key={tag} className="text-nano px-1.5 py-0.5 bg-muted rounded-full text-muted-foreground">
                 {tag}
               </span>
             ))}
             {asset.tags.length > 3 && (
-              <span className="text-[8px] text-muted-foreground/50">+{asset.tags.length - 3}</span>
+              <span className="text-nano text-muted-foreground/50">+{asset.tags.length - 3}</span>
             )}
           </div>
         )}
 
         {/* Rating + Sales */}
-        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-2 text-micro text-muted-foreground">
           <div className="flex items-center gap-0.5">
             {[1, 2, 3, 4, 5].map(s => (
               <Star key={s} className={cn("h-2.5 w-2.5", s <= (asset.rating_avg || 0) ? "fill-amber-500 text-amber-500" : "text-muted-foreground/20")} />
@@ -433,13 +433,13 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, index }: {
           </div>
           {!isOwn && (
             purchased ? (
-              <span className="flex items-center gap-1 text-[10px] text-emerald-600 font-medium">
+              <span className="flex items-center gap-1 text-micro text-emerald-600 font-medium">
                 <CheckCircle2 className="h-3 w-3" /> Owned
               </span>
             ) : (
               <Button
                 size="sm"
-                className="h-7 text-[11px] gap-1 px-3"
+                className="h-7 text-dense gap-1 px-3"
                 onClick={handlePurchase}
                 disabled={purchasing || (!isFree && !canAfford)}
               >
@@ -453,7 +453,7 @@ function AssetCard({ asset, currentUserId, creditBalance = 0, index }: {
             )
           )}
           {isOwn && (
-            <span className="text-[10px] text-muted-foreground/60 font-medium">Your asset</span>
+            <span className="text-micro text-muted-foreground/60 font-medium">Your asset</span>
           )}
         </div>
       </div>

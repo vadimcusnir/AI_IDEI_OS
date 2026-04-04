@@ -84,7 +84,7 @@ export function CookieConsent() {
                   <div key={key} className="flex items-center justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-foreground">{t(labelKey)}</p>
-                      <p className="text-[10px] text-muted-foreground leading-snug">{t(descKey)}</p>
+                      <p className="text-micro text-muted-foreground leading-snug">{t(descKey)}</p>
                     </div>
                     <Switch
                       checked={categories[key]}

@@ -56,7 +56,7 @@ export function ReportDialog({ targetType, targetId }: ReportDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-[10px] h-6 text-muted-foreground hover:text-destructive">
+        <Button variant="ghost" size="sm" className="text-micro h-6 text-muted-foreground hover:text-destructive">
           <Flag className="h-3 w-3 mr-0.5" />{t("common:report")}
         </Button>
       </DialogTrigger>

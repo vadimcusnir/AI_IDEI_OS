@@ -66,7 +66,7 @@ export function LowBalanceGate({ balance, onDismiss, requiredCredits }: LowBalan
             <Rocket className="h-4 w-4" />
             {t("upgrade_pro_cta", { defaultValue: "Upgrade to PRO — $47/mo" })}
           </Button>
-          <p className="text-[10px] text-center text-muted-foreground">
+          <p className="text-micro text-center text-muted-foreground">
             {t("pro_benefits", { defaultValue: "10,000 NEURONS + 25% execution discount" })}
           </p>
 
@@ -81,7 +81,7 @@ export function LowBalanceGate({ balance, onDismiss, requiredCredits }: LowBalan
 
           <button
             onClick={onDismiss}
-            className="w-full text-center text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors py-1"
+            className="w-full text-center text-dense text-muted-foreground/50 hover:text-muted-foreground transition-colors py-1"
           >
             {t("continue_without", { defaultValue: "Continue without credits" })}
           </button>

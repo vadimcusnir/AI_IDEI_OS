@@ -175,7 +175,7 @@ export default function GuestPages() {
                 <FolderTree className="h-3.5 w-3.5" />
               </Button>
               <h1 className="text-lg font-semibold tracking-tight">{t("guest_pages.title")}</h1>
-              <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+              <span className="text-micro font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
                 {t("guest_pages.profiles_count", { count: guests.length })}
               </span>
             </div>
@@ -185,14 +185,14 @@ export default function GuestPages() {
                   <Button
                     variant={showDuplicates ? "default" : "outline"}
                     size="sm"
-                    className="text-[10px] h-7 gap-1"
+                    className="text-micro h-7 gap-1"
                     onClick={() => setShowDuplicates(!showDuplicates)}
                   >
                     <AlertTriangle className="h-3 w-3" />
                     {t("guest_pages.possible_duplicates", { count: duplicates.size })}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-[220px] text-[10px]">
+                <TooltipContent side="bottom" className="max-w-[220px] text-micro">
                   {t("guest_pages.duplicate_tooltip")}
                 </TooltipContent>
               </Tooltip>
@@ -209,8 +209,8 @@ export default function GuestPages() {
                 <p className="text-xs text-foreground font-medium">
                   {t("guest_pages.auto_generated")}
                 </p>
-                <p className="text-[11px] text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: t("guest_pages.auto_generated_desc") }} />
-                <div className="flex flex-wrap gap-3 pt-1 text-[10px] text-muted-foreground/70">
+                <p className="text-dense text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: t("guest_pages.auto_generated_desc") }} />
+                <div className="flex flex-wrap gap-3 pt-1 text-micro text-muted-foreground/70">
                   <span className="flex items-center gap-1"><TrendingUp className="h-3 w-3" /> {t("guest_pages.organic_traffic")}</span>
                   <span className="flex items-center gap-1"><Share2 className="h-3 w-3" /> {t("guest_pages.social_sharing")}</span>
                   <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" /> {t("guest_pages.viral_content")}</span>
@@ -268,7 +268,7 @@ export default function GuestPages() {
                   >
                     {/* Duplicate warning */}
                     {showDuplicates && isDuplicate && (
-                      <div className="flex items-center gap-1.5 text-[9px] text-yellow-600 dark:text-yellow-400 mb-2">
+                      <div className="flex items-center gap-1.5 text-nano text-yellow-600 dark:text-yellow-400 mb-2">
                         <AlertTriangle className="h-3 w-3" />
                         <span>{t("guest_pages.possible_duplicate_warning")}</span>
                       </div>
@@ -284,7 +284,7 @@ export default function GuestPages() {
                         </div>
                         <div>
                           <h3 className="text-sm font-semibold">{guest.full_name}</h3>
-                          <span className="text-[9px] uppercase tracking-wider text-muted-foreground">{guest.role}</span>
+                          <span className="text-nano uppercase tracking-wider text-muted-foreground">{guest.role}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -298,7 +298,7 @@ export default function GuestPages() {
                                 <Copy className="h-3 w-3" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent side="top" className="text-[10px]">{t("guest_pages.copy_public_url")}</TooltipContent>
+                            <TooltipContent side="top" className="text-micro">{t("guest_pages.copy_public_url")}</TooltipContent>
                           </Tooltip>
                         )}
                         <Tooltip>
@@ -316,7 +316,7 @@ export default function GuestPages() {
                               />
                             </div>
                           </TooltipTrigger>
-                          <TooltipContent side="top" className="text-[10px] max-w-[180px]">
+                          <TooltipContent side="top" className="text-micro max-w-[180px]">
                             {guest.is_public
                               ? t("guest_pages.profile_public_tooltip")
                               : t("guest_pages.profile_private_tooltip")
@@ -327,24 +327,24 @@ export default function GuestPages() {
                     </div>
 
                     {/* Bio */}
-                    <p className="text-[11px] text-muted-foreground line-clamp-2 mb-2">{guest.bio}</p>
+                    <p className="text-dense text-muted-foreground line-clamp-2 mb-2">{guest.bio}</p>
 
                     {/* Tags */}
                     {guest.expertise_areas.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-2">
                         {guest.expertise_areas.slice(0, 4).map((area, i) => (
-                          <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                          <span key={i} className="text-nano px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
                             {area}
                           </span>
                         ))}
                         {guest.expertise_areas.length > 4 && (
-                          <span className="text-[9px] text-muted-foreground/50">+{guest.expertise_areas.length - 4}</span>
+                          <span className="text-nano text-muted-foreground/50">+{guest.expertise_areas.length - 4}</span>
                         )}
                       </div>
                     )}
 
                     {/* Stats */}
-                    <div className="flex items-center gap-3 text-[9px] text-muted-foreground/60">
+                    <div className="flex items-center gap-3 text-nano text-muted-foreground/60">
                       <span className="flex items-center gap-0.5">
                         <Brain className="h-2.5 w-2.5" />
                         {guest.frameworks_mentioned?.length || 0} {t("guest_pages.frameworks").toLowerCase()}
@@ -361,12 +361,12 @@ export default function GuestPages() {
                       <div className="mt-3 pt-3 border-t border-border space-y-3">
                         {guest.frameworks_mentioned.length > 0 && (
                           <div>
-                            <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                            <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
                               {t("guest_pages.frameworks")}
                             </span>
                             <div className="flex flex-wrap gap-1">
                               {guest.frameworks_mentioned.map((f, i) => (
-                                <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                                <span key={i} className="text-micro px-2 py-0.5 rounded-full bg-primary/10 text-primary">
                                   {f}
                                 </span>
                               ))}
@@ -375,12 +375,12 @@ export default function GuestPages() {
                         )}
                         {guest.psychological_traits.length > 0 && (
                           <div>
-                            <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                            <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
                               {t("guest_pages.traits")}
                             </span>
                             <div className="flex flex-wrap gap-1">
                               {guest.psychological_traits.map((tr, i) => (
-                                <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-accent/15 text-accent-foreground">
+                                <span key={i} className="text-micro px-2 py-0.5 rounded-full bg-accent/15 text-accent-foreground">
                                   {tr}
                                 </span>
                               ))}
@@ -389,12 +389,12 @@ export default function GuestPages() {
                         )}
                         {guest.key_quotes.length > 0 && (
                           <div>
-                            <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                            <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
                               {t("guest_pages.key_quotes")}
                             </span>
                             <div className="space-y-1">
                               {guest.key_quotes.map((q, i) => (
-                                <p key={i} className="text-[10px] italic text-muted-foreground pl-2 border-l-2 border-primary/20">
+                                <p key={i} className="text-micro italic text-muted-foreground pl-2 border-l-2 border-primary/20">
                                   "{q}"
                                 </p>
                               ))}
@@ -407,7 +407,7 @@ export default function GuestPages() {
                               href={`/guest/${guest.slug}`}
                               target="_blank"
                               rel="noopener"
-                              className="inline-flex items-center gap-1 text-[10px] text-primary hover:underline"
+                              className="inline-flex items-center gap-1 text-micro text-primary hover:underline"
                               onClick={e => e.stopPropagation()}
                             >
                               <ExternalLink className="h-3 w-3" />

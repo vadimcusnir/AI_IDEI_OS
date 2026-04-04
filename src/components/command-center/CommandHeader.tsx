@@ -40,7 +40,7 @@ export function CommandHeader({
         </div>
         <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
           <span className="font-semibold text-foreground tracking-tight">Command Center</span>
-          <div className="hidden sm:flex items-center gap-2.5 text-[10px]">
+          <div className="hidden sm:flex items-center gap-2.5 text-micro">
             <span className="opacity-30">·</span>
             <span className="tabular-nums">{totalNeurons} neurons</span>
             <span className="opacity-30">·</span>

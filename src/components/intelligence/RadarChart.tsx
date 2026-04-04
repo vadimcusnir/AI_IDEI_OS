@@ -120,7 +120,7 @@ export function RadarChart({ data, size = 240, className }: RadarChartProps) {
             y={p.labelY}
             textAnchor="middle"
             dominantBaseline="central"
-            className="fill-muted-foreground text-[9px] font-medium"
+            className="fill-muted-foreground text-nano font-medium"
           >
             {p.label}
           </text>

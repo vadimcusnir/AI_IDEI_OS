@@ -400,7 +400,7 @@ export function AdminBlogTab() {
                                       {(editingPost.inline_images as any[]).map((img: any, i: number) => (
                                         <div key={i} className="relative">
                                           <img src={img.url} alt={img.prompt || ""} className="w-full h-24 object-cover rounded border border-border" />
-                                          <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{img.prompt}</p>
+                                          <p className="text-micro text-muted-foreground mt-0.5 line-clamp-1">{img.prompt}</p>
                                         </div>
                                       ))}
                                     </div>
@@ -486,13 +486,13 @@ export function AdminBlogTab() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
                           {statusIcon(topic.status)}
-                          <Badge variant={statusColor(topic.status)} className="text-[10px]">{topic.status}</Badge>
-                          <Badge variant="outline" className="text-[10px]">{topic.category}</Badge>
+                          <Badge variant={statusColor(topic.status)} className="text-micro">{topic.status}</Badge>
+                          <Badge variant="outline" className="text-micro">{topic.category}</Badge>
                           {topic.difficulty && (
-                            <Badge variant="outline" className="text-[10px]">{topic.difficulty}</Badge>
+                            <Badge variant="outline" className="text-micro">{topic.difficulty}</Badge>
                           )}
                           {topic.priority != null && (
-                            <span className="text-[10px] text-muted-foreground">P{topic.priority}</span>
+                            <span className="text-micro text-muted-foreground">P{topic.priority}</span>
                           )}
                         </div>
                         <p className="text-sm text-foreground truncate">{topic.title}</p>

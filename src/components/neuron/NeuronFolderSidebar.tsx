@@ -226,7 +226,7 @@ export function NeuronFolderSidebar({
           ) : (
             <span className="flex-1 text-xs truncate">{folder.name}</span>
           )}
-          {count > 0 && <span className="text-[9px] text-muted-foreground/50">{count}</span>}
+          {count > 0 && <span className="text-nano text-muted-foreground/50">{count}</span>}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}>
@@ -277,7 +277,7 @@ export function NeuronFolderSidebar({
   return (
     <div className="w-56 shrink-0 border-r border-border bg-card/50 flex flex-col h-full overflow-hidden">
       <div className="px-3 py-2.5 border-b border-border flex items-center justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("folders.folders")}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("folders.folders")}</span>
         <div className="flex items-center gap-0.5">
           <button
             onClick={onAISuggest}
@@ -307,7 +307,7 @@ export function NeuronFolderSidebar({
         >
           <Folder className="h-3.5 w-3.5" />
           <span className="flex-1 text-xs">{t("folders.all_neurons")}</span>
-          <span className="text-[9px] text-muted-foreground/50">{neurons.length}</span>
+          <span className="text-nano text-muted-foreground/50">{neurons.length}</span>
         </div>
 
         {unassignedCount > 0 && unassignedCount < neurons.length && (
@@ -320,7 +320,7 @@ export function NeuronFolderSidebar({
           >
             <Folder className="h-3.5 w-3.5 text-muted-foreground/40" />
             <span className="flex-1 text-xs text-muted-foreground">{t("folders.uncategorized")}</span>
-            <span className="text-[9px] text-muted-foreground/50">{unassignedCount}</span>
+            <span className="text-nano text-muted-foreground/50">{unassignedCount}</span>
           </div>
         )}
 

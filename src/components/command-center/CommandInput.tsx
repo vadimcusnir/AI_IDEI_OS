@@ -78,7 +78,7 @@ export function CommandInput({ onSubmit, loading, onStop, disabled }: CommandInp
             className="flex items-center gap-2 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
           >
             <Link2 className="h-3 w-3 text-primary shrink-0" />
-            <span className="text-[9px] text-primary/80 truncate">
+            <span className="text-nano text-primary/80 truncate">
               {detectedUrls.length} URL{detectedUrls.length > 1 ? "s" : ""} detected — will be processed
             </span>
           </motion.div>
@@ -89,7 +89,7 @@ export function CommandInput({ onSubmit, loading, onStop, disabled }: CommandInp
       {files.length > 0 && (
         <div className="flex gap-2 flex-wrap">
           {files.map((f, i) => (
-            <div key={i} className="flex items-center gap-1.5 bg-muted rounded-lg px-2.5 py-1.5 text-[10px]">
+            <div key={i} className="flex items-center gap-1.5 bg-muted rounded-lg px-2.5 py-1.5 text-micro">
               <FileText className="h-3 w-3 text-muted-foreground" />
               <span className="truncate max-w-[120px]">{f.name}</span>
               <span className="text-muted-foreground/60">

@@ -80,7 +80,7 @@ export function FeatureFlagsTab() {
             )}
             <div className="flex-1 min-w-0">
               <p className="text-xs font-mono font-medium">{flag.key}</p>
-              <p className="text-[10px] text-muted-foreground">{flag.description}</p>
+              <p className="text-micro text-muted-foreground">{flag.description}</p>
             </div>
             <Switch
               checked={flag.enabled}
@@ -91,7 +91,7 @@ export function FeatureFlagsTab() {
 
           {flag.enabled && (
             <div className="flex items-center gap-2 ml-7">
-              <span className="text-[10px] text-muted-foreground">Rollout:</span>
+              <span className="text-micro text-muted-foreground">Rollout:</span>
               <div className="flex gap-1">
                 {[0, 25, 50, 75, 100].map(pct => (
                   <button
@@ -99,7 +99,7 @@ export function FeatureFlagsTab() {
                     onClick={() => updateRollout(flag.key, pct)}
                     disabled={saving === flag.key}
                     className={cn(
-                      "px-2 py-0.5 rounded text-[10px] font-mono transition-colors",
+                      "px-2 py-0.5 rounded text-micro font-mono transition-colors",
                       flag.rollout_percentage === pct
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-muted-foreground hover:text-foreground"

@@ -38,7 +38,7 @@ export default function NotebookDetail() {
           </button>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold truncate">{title}</p>
-            {updatedAt && <p className="text-[9px] text-muted-foreground">Updated {updatedAt}</p>}
+            {updatedAt && <p className="text-nano text-muted-foreground">Updated {updatedAt}</p>}
           </div>
         </div>
 
@@ -59,7 +59,7 @@ export default function NotebookDetail() {
               <Icon className="h-3.5 w-3.5" />
               {label}
               {count !== undefined && count > 0 && (
-                <span className="text-[9px] bg-primary/10 text-primary px-1 rounded-full">{count}</span>
+                <span className="text-nano bg-primary/10 text-primary px-1 rounded-full">{count}</span>
               )}
               {mobileTab === key && (
                 <motion.div
@@ -107,7 +107,7 @@ export default function NotebookDetail() {
               title="Expand sources"
             >
               <PanelLeftOpen className="h-4 w-4" />
-              <span className="text-[9px] font-medium" style={{ writingMode: "vertical-lr" }}>
+              <span className="text-nano font-medium" style={{ writingMode: "vertical-lr" }}>
                 Sources ({detail.sources.length})
               </span>
             </button>

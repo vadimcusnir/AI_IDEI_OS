@@ -209,7 +209,7 @@ export function OnboardingTutorial({ open, onClose }: Props) {
                     <Icon className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/50">
+                    <span className="text-nano font-mono uppercase tracking-widest text-muted-foreground/50">
                       {t("tutorial.module")} {moduleIdx + 1}/{MODULES.length}
                     </span>
                     <h3 className="text-sm font-semibold leading-tight">{t(currentModule.titleKey)}</h3>
@@ -236,7 +236,7 @@ export function OnboardingTutorial({ open, onClose }: Props) {
 
                 {/* Actions */}
                 <div className="flex items-center justify-between">
-                  <button onClick={handleSkip} className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+                  <button onClick={handleSkip} className="text-micro text-muted-foreground/60 hover:text-muted-foreground transition-colors">
                     {t("tutorial.skip_tutorial")}
                   </button>
                   <Button size="sm" onClick={handleNext} className="gap-1.5 text-xs">

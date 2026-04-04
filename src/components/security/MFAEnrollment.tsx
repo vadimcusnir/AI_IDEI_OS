@@ -95,12 +95,12 @@ export function MFAEnrollment() {
         </div>
         <div>
           <h2 className="text-sm font-semibold">Two-Factor Authentication</h2>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-micro text-muted-foreground">
             Add an extra layer of security with TOTP authenticator app.
           </p>
         </div>
         {status === "enrolled" && (
-          <StatusBadge className="ml-auto bg-primary/10 text-primary text-[8px]">Enabled</StatusBadge>
+          <StatusBadge className="ml-auto bg-primary/10 text-primary text-nano">Enabled</StatusBadge>
         )}
       </div>
 
@@ -108,7 +108,7 @@ export function MFAEnrollment() {
         <div className="space-y-3">
           <div className="bg-muted/30 rounded-lg p-3 flex items-start gap-2">
             <AlertTriangle className="h-3.5 w-3.5 text-accent-foreground mt-0.5 shrink-0" />
-            <p className="text-[10px] text-muted-foreground">
+            <p className="text-micro text-muted-foreground">
               MFA protects your account even if your password is compromised. 
               You'll need an authenticator app like Google Authenticator or Authy.
             </p>
@@ -126,14 +126,14 @@ export function MFAEnrollment() {
           <div className="flex flex-col items-center gap-3">
             {qrUri && <img src={qrUri} alt="MFA QR Code" loading="lazy" className="w-48 h-48 rounded-lg border border-border" />}
             <div className="flex items-center gap-2">
-              <code className="text-[10px] font-mono bg-muted px-2 py-1 rounded select-all">{secret}</code>
+              <code className="text-micro font-mono bg-muted px-2 py-1 rounded select-all">{secret}</code>
               <Button variant="ghost" size="sm" onClick={copySecret} className="h-6 w-6 p-0">
                 <Copy className="h-3 w-3" />
               </Button>
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Enter 6-digit code</label>
+            <label className="text-micro font-medium text-muted-foreground mb-1 block">Enter 6-digit code</label>
             <div className="flex gap-2">
               <Input
                 value={code}
@@ -159,7 +159,7 @@ export function MFAEnrollment() {
                 <span className="text-xs">{f.friendly_name}</span>
               </div>
               <Button variant="ghost" size="sm" onClick={() => unenroll(f.id)} disabled={loading}
-                className="text-[10px] text-destructive hover:text-destructive h-7">
+                className="text-micro text-destructive hover:text-destructive h-7">
                 {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Disable"}
               </Button>
             </div>

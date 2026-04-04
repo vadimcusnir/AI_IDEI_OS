@@ -134,13 +134,13 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold tracking-tight">{t("profile.title")}</h1>
                 {(tier === "pro" || tier === "vip") && (
-                  <Badge variant="outline" className="text-[8px] px-1.5 py-0 gap-0.5 border-[hsl(var(--gold-oxide)/0.3)] text-[hsl(var(--gold-oxide))]">
+                  <Badge variant="outline" className="text-nano px-1.5 py-0 gap-0.5 border-[hsl(var(--gold-oxide)/0.3)] text-[hsl(var(--gold-oxide))]">
                     <Crown className="h-2.5 w-2.5" />
                     {tier === "vip" ? "VIP" : "PRO"}
                   </Badge>
                 )}
               </div>
-              <p className="text-[10px] text-muted-foreground mt-0.5">
+              <p className="text-micro text-muted-foreground mt-0.5">
                 {(tier === "pro" || tier === "vip") && subscriptionEnd
                   ? `${tier.toUpperCase()} until ${new Date(subscriptionEnd).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
                   : "Manage your identity and preferences"}
@@ -186,7 +186,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium mb-1">Avatar</p>
-                    <p className="text-[10px] text-muted-foreground mb-3">
+                    <p className="text-micro text-muted-foreground mb-3">
                       Enter a URL for your profile image.
                     </p>
                     <input
@@ -230,14 +230,14 @@ export default function ProfilePage() {
                   {profile.username && (
                     <Link
                       to={`/u/${profile.username}`}
-                      className="inline-flex items-center gap-1 text-[10px] text-primary hover:underline mt-1.5"
+                      className="inline-flex items-center gap-1 text-micro text-primary hover:underline mt-1.5"
                     >
                       <ExternalLink className="h-2.5 w-2.5" />
                       View public profile at /u/{profile.username}
                     </Link>
                   )}
                   {!profile.username && (
-                    <p className="text-[10px] text-muted-foreground mt-1">
+                    <p className="text-micro text-muted-foreground mt-1">
                       {t("common:profile.set_username_hint")}
                     </p>
                   )}
@@ -253,7 +253,7 @@ export default function ProfilePage() {
                     maxLength={500}
                     className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm outline-none focus-ring transition-colors resize-none"
                   />
-                  <p className="text-[10px] text-muted-foreground text-right mt-0.5">
+                  <p className="text-micro text-muted-foreground text-right mt-0.5">
                     {profile.bio.length}/500
                   </p>
                 </div>
@@ -282,7 +282,7 @@ export default function ProfilePage() {
                           <BellRing className="h-4 w-4 text-[hsl(var(--gold-oxide))]" />
                           <div>
                             <p className="text-xs font-medium">{t("profile.browser_notifications")}</p>
-                            <p className="text-[10px] text-muted-foreground">
+                            <p className="text-micro text-muted-foreground">
                               {t("profile.browser_notifications_desc")}
                             </p>
                           </div>
@@ -317,7 +317,7 @@ export default function ProfilePage() {
                         <Mail className="h-4 w-4 text-primary" />
                         <div>
                            <p className="text-xs font-medium">{t("profile.email_digest")}</p>
-                          <p className="text-[10px] text-muted-foreground">
+                          <p className="text-micro text-muted-foreground">
                             {t("profile.email_digest_desc")}
                           </p>
                         </div>
@@ -361,7 +361,7 @@ export default function ProfilePage() {
                         <Clock className="h-4 w-4 text-muted-foreground" />
                         <div>
                           <p className="text-xs font-medium">{t("profile.quiet_hours")}</p>
-                          <p className="text-[10px] text-muted-foreground">
+                          <p className="text-micro text-muted-foreground">
                             {t("profile.quiet_hours_desc")}
                           </p>
                         </div>
@@ -399,7 +399,7 @@ export default function ProfilePage() {
             {/* Account info */}
             <StaggerItem>
               <div className="bg-card border border-border rounded-xl p-6">
-                <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("profile.account_info")}</h2>
+                <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("profile.account_info")}</h2>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">Email</span>
@@ -407,7 +407,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">{t("profile.user_id")}</span>
-                    <span className="text-[10px] font-mono text-muted-foreground/50">{user?.id.slice(0, 8)}...</span>
+                    <span className="text-micro font-mono text-muted-foreground/50">{user?.id.slice(0, 8)}...</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">{t("profile.created")}</span>
@@ -438,7 +438,7 @@ export default function ProfilePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium">{t("profile.data_privacy")}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">
+                    <p className="text-micro text-muted-foreground mt-0.5">
                       {t("profile.data_privacy_desc")}
                     </p>
                   </div>

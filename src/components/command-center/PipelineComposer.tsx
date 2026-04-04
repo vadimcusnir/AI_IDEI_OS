@@ -103,10 +103,10 @@ export function PipelineComposer({ balance, onExecute, onSave, onClose }: Pipeli
         <div className="flex items-center gap-2">
           <Workflow className="h-4 w-4 text-primary" />
           <span className="text-xs font-bold">Pipeline Composer</span>
-          <Badge variant="outline" className="text-[9px]">{steps.length} steps</Badge>
+          <Badge variant="outline" className="text-nano">{steps.length} steps</Badge>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-1 text-micro text-muted-foreground">
             <Coins className="h-3 w-3" />
             <span className={cn("font-mono font-bold", totalCredits > balance ? "text-destructive" : "text-primary")}>
               {totalCredits} N
@@ -150,17 +150,17 @@ export function PipelineComposer({ balance, onExecute, onSave, onClose }: Pipeli
                     )}>
                       <div className="flex items-center gap-2">
                         <GripVertical className="h-3 w-3 text-muted-foreground/30 cursor-grab active:cursor-grabbing" />
-                        <Badge variant="outline" className="text-[9px] h-4 w-4 flex items-center justify-center p-0 font-mono">
+                        <Badge variant="outline" className="text-nano h-4 w-4 flex items-center justify-center p-0 font-mono">
                           {idx + 1}
                         </Badge>
                         <div className={cn("h-6 w-6 rounded-md flex items-center justify-center", step.color)}>
                           <Icon className="h-3 w-3" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[11px] font-medium truncate">{step.label}</p>
-                          <p className="text-[9px] text-muted-foreground truncate">{step.description}</p>
+                          <p className="text-dense font-medium truncate">{step.label}</p>
+                          <p className="text-nano text-muted-foreground truncate">{step.description}</p>
                         </div>
-                        <span className="text-[9px] font-mono text-muted-foreground">{step.credits}N</span>
+                        <span className="text-nano font-mono text-muted-foreground">{step.credits}N</span>
                         <button
                           onClick={() => setExpandedStep(isExpanded ? null : step.id)}
                           className="p-0.5 text-muted-foreground hover:text-foreground"
@@ -186,17 +186,17 @@ export function PipelineComposer({ balance, onExecute, onSave, onClose }: Pipeli
                           >
                             <div className="mt-3 pt-3 border-t border-border space-y-2">
                               <div>
-                                <label className="text-[9px] text-muted-foreground font-medium">Custom instructions (optional)</label>
+                                <label className="text-nano text-muted-foreground font-medium">Custom instructions (optional)</label>
                                 <textarea
                                   value={step.config.instructions || ""}
                                   onChange={(e) => updateConfig(step.id, "instructions", e.target.value)}
                                   placeholder={`Additional context for ${step.label}...`}
-                                  className="w-full mt-1 rounded-md border border-border bg-muted/30 px-2 py-1.5 text-[10px] resize-none focus:outline-none focus:ring-1 focus:ring-primary/30"
+                                  className="w-full mt-1 rounded-md border border-border bg-muted/30 px-2 py-1.5 text-micro resize-none focus:outline-none focus:ring-1 focus:ring-primary/30"
                                   rows={2}
                                 />
                               </div>
                               {idx > 0 && (
-                                <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground">
+                                <div className="flex items-center gap-1.5 text-nano text-muted-foreground">
                                   <Zap className="h-2.5 w-2.5" />
                                   <span>Uses output from Step {idx} as input</span>
                                 </div>
@@ -218,7 +218,7 @@ export function PipelineComposer({ balance, onExecute, onSave, onClose }: Pipeli
           onClick={() => setShowPicker(!showPicker)}
           className={cn(
             "w-full border border-dashed border-border rounded-lg p-3",
-            "flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground",
+            "flex items-center justify-center gap-1.5 text-micro text-muted-foreground",
             "hover:border-primary/40 hover:text-primary transition-colors"
           )}
         >
@@ -251,10 +251,10 @@ export function PipelineComposer({ balance, onExecute, onSave, onClose }: Pipeli
                         <div className={cn("h-5 w-5 rounded flex items-center justify-center", intentDef.color)}>
                           <Icon className="h-3 w-3" />
                         </div>
-                        <span className="text-[10px] font-medium">{intentDef.label}</span>
+                        <span className="text-micro font-medium">{intentDef.label}</span>
                       </div>
-                      <p className="text-[9px] text-muted-foreground line-clamp-1">{intentDef.description}</p>
-                      <div className="text-[8px] font-mono text-muted-foreground mt-1">~{intentDef.credits}N</div>
+                      <p className="text-nano text-muted-foreground line-clamp-1">{intentDef.description}</p>
+                      <div className="text-nano font-mono text-muted-foreground mt-1">~{intentDef.credits}N</div>
                     </button>
                   );
                 })}
@@ -267,7 +267,7 @@ export function PipelineComposer({ balance, onExecute, onSave, onClose }: Pipeli
       {/* Footer Actions */}
       <div className="px-4 py-3 border-t border-border bg-muted/20 flex items-center gap-2">
         {totalCredits > balance && (
-          <div className="flex items-center gap-1 text-[9px] text-destructive flex-1">
+          <div className="flex items-center gap-1 text-nano text-destructive flex-1">
             <AlertTriangle className="h-3 w-3" />
             Insufficient balance ({balance}N available)
           </div>
@@ -278,17 +278,17 @@ export function PipelineComposer({ balance, onExecute, onSave, onClose }: Pipeli
             value={pipelineName}
             onChange={(e) => setPipelineName(e.target.value)}
             placeholder="Pipeline name..."
-            className="h-7 rounded-md border border-border bg-background px-2 text-[10px] w-32 focus:outline-none focus:ring-1 focus:ring-primary/30"
+            className="h-7 rounded-md border border-border bg-background px-2 text-micro w-32 focus:outline-none focus:ring-1 focus:ring-primary/30"
           />
           <Button
-            variant="outline" size="sm" className="h-7 text-[10px] gap-1"
+            variant="outline" size="sm" className="h-7 text-micro gap-1"
             disabled={steps.length < 2 || !pipelineName.trim()}
             onClick={() => onSave(steps, pipelineName)}
           >
             <Save className="h-3 w-3" /> Save
           </Button>
           <Button
-            size="sm" className="h-7 text-[10px] gap-1"
+            size="sm" className="h-7 text-micro gap-1"
             disabled={!canExecute}
             onClick={() => onExecute(steps)}
           >

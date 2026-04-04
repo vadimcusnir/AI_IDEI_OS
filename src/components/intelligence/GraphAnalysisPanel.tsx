@@ -102,7 +102,7 @@ export function GraphAnalysisPanel() {
               <div key={i} className="p-3 rounded-lg border border-border bg-muted/30 space-y-1">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
-                  <Badge variant={severityColor(c.severity)} className="text-[9px]">{c.severity}</Badge>
+                  <Badge variant={severityColor(c.severity)} className="text-nano">{c.severity}</Badge>
                 </div>
                 <p className="text-xs">{c.description}</p>
               </div>
@@ -121,13 +121,13 @@ export function GraphAnalysisPanel() {
               <div key={i} className="p-3 rounded-lg border border-border bg-muted/30 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium">{g.topic}</span>
-                  <Badge variant="outline" className="text-[9px]">{g.gap_type}</Badge>
+                  <Badge variant="outline" className="text-nano">{g.gap_type}</Badge>
                 </div>
-                <p className="text-[11px] text-muted-foreground">{g.description}</p>
+                <p className="text-dense text-muted-foreground">{g.description}</p>
                 {g.suggested_sources?.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-1">
                     {g.suggested_sources.map((s, j) => (
-                      <Badge key={j} variant="secondary" className="text-[9px]">{s}</Badge>
+                      <Badge key={j} variant="secondary" className="text-nano">{s}</Badge>
                     ))}
                   </div>
                 )}
@@ -146,11 +146,11 @@ export function GraphAnalysisPanel() {
             {suggestions.map((s, i) => (
               <div key={i} className="p-3 rounded-lg border border-border bg-muted/30 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Badge variant={priorityColor(s.priority)} className="text-[9px]">{s.priority}</Badge>
-                  <span className="text-[9px] text-muted-foreground">~{s.effort}</span>
+                  <Badge variant={priorityColor(s.priority)} className="text-nano">{s.priority}</Badge>
+                  <span className="text-nano text-muted-foreground">~{s.effort}</span>
                 </div>
                 <p className="text-xs">{s.suggestion}</p>
-                <Badge variant="outline" className="text-[9px]">{s.category}</Badge>
+                <Badge variant="outline" className="text-nano">{s.category}</Badge>
               </div>
             ))}
           </TabsContent>

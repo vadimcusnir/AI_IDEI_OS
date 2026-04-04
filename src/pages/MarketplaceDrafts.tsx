@@ -102,11 +102,11 @@ export default function MarketplaceDrafts() {
           </div>
           <div>
             <h1 className="text-lg font-semibold tracking-tight">Marketplace Drafts</h1>
-            <p className="text-[10px] text-muted-foreground">
+            <p className="text-micro text-muted-foreground">
               Aprobă sau editează asset-urile generate automat din execuții
             </p>
           </div>
-          <Badge variant="outline" className="ml-auto text-[10px]">
+          <Badge variant="outline" className="ml-auto text-micro">
             {drafts.length} drafturi
           </Badge>
         </div>
@@ -116,7 +116,7 @@ export default function MarketplaceDrafts() {
           <div className="text-center py-16">
             <Package className="h-8 w-8 opacity-20 mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">Nu ai drafturi de aprobat</p>
-            <p className="text-[10px] text-muted-foreground/60 mt-1">
+            <p className="text-micro text-muted-foreground/60 mt-1">
               Execută un serviciu pentru a genera automat asset-uri marketplace
             </p>
           </div>
@@ -132,11 +132,11 @@ export default function MarketplaceDrafts() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="outline" className="text-[8px]">{draft.asset_type}</Badge>
+                    <Badge variant="outline" className="text-nano">{draft.asset_type}</Badge>
                     <span className="text-sm font-medium truncate">{draft.title}</span>
                   </div>
                   <p className="text-xs text-muted-foreground line-clamp-2">{draft.description}</p>
-                  <p className="text-[9px] text-muted-foreground/50 mt-1">
+                  <p className="text-nano text-muted-foreground/50 mt-1">
                     {new Date(draft.created_at).toLocaleString("ro-RO")}
                   </p>
                 </div>
@@ -145,7 +145,7 @@ export default function MarketplaceDrafts() {
               {/* Preview */}
               {draft.preview_text && (
                 <div className="bg-muted/30 rounded-lg p-3 max-h-[120px] overflow-y-auto">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 flex items-center gap-1">
+                  <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1 flex items-center gap-1">
                     <Eye className="h-3 w-3" /> Preview
                   </p>
                   <p className="text-xs whitespace-pre-wrap">{draft.preview_text.slice(0, 300)}...</p>
@@ -163,7 +163,7 @@ export default function MarketplaceDrafts() {
                     className="h-7 w-24 text-xs"
                     min={1}
                   />
-                  <span className="text-[9px] text-muted-foreground">NEURONS</span>
+                  <span className="text-nano text-muted-foreground">NEURONS</span>
                 </div>
 
                 <div className="flex-1" />

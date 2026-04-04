@@ -41,7 +41,7 @@ export function StreakWidget() {
           {streak.freeze_tokens > 0 && (
             <span className="flex items-center gap-0.5 ml-0.5">
               <Snowflake className="h-2.5 w-2.5 text-sky-500" />
-              <span className="text-[8px] font-bold text-sky-500">{streak.freeze_tokens}</span>
+              <span className="text-nano font-bold text-sky-500">{streak.freeze_tokens}</span>
             </span>
           )}
         </button>
@@ -53,12 +53,12 @@ export function StreakWidget() {
             <div>
               <p className="text-sm font-bold">{days}-day streak</p>
               {isGrace && (
-                <p className="text-[9px] text-amber-500 font-medium">⚠ Grace period active</p>
+                <p className="text-nano text-amber-500 font-medium">⚠ Grace period active</p>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-[10px]">
+          <div className="grid grid-cols-2 gap-2 text-micro">
             <div className="bg-muted/50 rounded-md px-2 py-1.5">
               <p className="text-muted-foreground">Current</p>
               <p className="font-bold text-sm">{days} days</p>
@@ -70,13 +70,13 @@ export function StreakWidget() {
           </div>
 
           {streak.freeze_tokens > 0 && (
-            <div className="flex items-center gap-1.5 text-[10px] text-sky-600">
+            <div className="flex items-center gap-1.5 text-micro text-sky-600">
               <Snowflake className="h-3 w-3" />
               <span>{streak.freeze_tokens} freeze token{streak.freeze_tokens !== 1 ? "s" : ""} available</span>
             </div>
           )}
 
-          <p className="text-[9px] text-muted-foreground/70 italic">
+          <p className="text-nano text-muted-foreground/70 italic">
             {days >= 30
               ? "🔥 You're on fire! Legendary streak!"
               : days >= 7

@@ -123,7 +123,7 @@ export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFol
                 className="flex-1 bg-transparent text-xs outline-none border-b border-primary px-0.5" onBlur={() => handleRename(folder.id)} />
             </form>
           ) : <span className="flex-1 text-xs truncate">{folder.name}</span>}
-          {cnt > 0 && <span className="text-[9px] text-muted-foreground/50">{cnt}</span>}
+          {cnt > 0 && <span className="text-nano text-muted-foreground/50">{cnt}</span>}
           <DropdownMenu>
             <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}>
               <button className="h-5 w-5 flex items-center justify-center rounded opacity-0 group-hover:opacity-100 hover:bg-muted transition-all"><MoreHorizontal className="h-3 w-3" /></button>
@@ -151,7 +151,7 @@ export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFol
   return (
     <div className="w-56 shrink-0 border-r border-border bg-card/50 flex flex-col h-full overflow-hidden">
       <div className="px-3 py-2.5 border-b border-border flex items-center justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{resolvedHeaderLabel}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{resolvedHeaderLabel}</span>
         <button onClick={() => { setAddingTo("root"); setNewName(""); }}
           className="h-6 w-6 flex items-center justify-center rounded hover:bg-accent text-muted-foreground/60 hover:text-foreground transition-colors" title={t("folders.new_folder")}>
           <Plus className="h-3 w-3" />
@@ -161,14 +161,14 @@ export function FolderSidebar({ storageKey, items, selectedFolderId, onSelectFol
         <div className={cn("flex items-center gap-1.5 py-1 px-2 rounded cursor-pointer transition-colors text-sm",
           !selectedFolderId ? "bg-primary/10 text-primary" : "hover:bg-accent/50")} onClick={() => onSelectFolder(null)}>
           <Folder className="h-3.5 w-3.5" /><span className="flex-1 text-xs">{resolvedAllLabel}</span>
-          <span className="text-[9px] text-muted-foreground/50">{items.length}</span>
+          <span className="text-nano text-muted-foreground/50">{items.length}</span>
         </div>
         {unassignedCount > 0 && unassignedCount < items.length && (
           <div className={cn("flex items-center gap-1.5 py-1 px-2 rounded cursor-pointer transition-colors text-sm",
             selectedFolderId === "__unassigned" ? "bg-primary/10 text-primary" : "hover:bg-accent/50")}
             onClick={() => onSelectFolder(selectedFolderId === "__unassigned" ? null : "__unassigned")}>
             <Folder className="h-3.5 w-3.5 text-muted-foreground/40" /><span className="flex-1 text-xs text-muted-foreground">{t("folders.uncategorized")}</span>
-            <span className="text-[9px] text-muted-foreground/50">{unassignedCount}</span>
+            <span className="text-nano text-muted-foreground/50">{unassignedCount}</span>
           </div>
         )}
         {folders.length > 0 && <div className="h-px bg-border/50 my-1" />}

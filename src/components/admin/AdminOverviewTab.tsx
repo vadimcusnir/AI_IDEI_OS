@@ -42,10 +42,10 @@ function MetricCard({ label, value, trend, icon: Icon, sparkData, index }: {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+          <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
         </div>
         {trend !== undefined && (
-          <div className={cn("flex items-center gap-0.5 text-[9px] font-mono",
+          <div className={cn("flex items-center gap-0.5 text-nano font-mono",
             trend >= 0 ? "text-emerald-500" : "text-destructive"
           )}>
             {trend >= 0 ? <TrendingUp className="h-2.5 w-2.5" /> : <TrendingDown className="h-2.5 w-2.5" />}
@@ -86,7 +86,7 @@ function ActivityItem({ type, message, time, severity }: {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-xs leading-tight">{message}</p>
-        <p className="text-[9px] text-muted-foreground mt-0.5">{time}</p>
+        <p className="text-nano text-muted-foreground mt-0.5">{time}</p>
       </div>
     </div>
   );
@@ -199,7 +199,7 @@ export function AdminOverviewTab({ stats }: {
           transition={{ delay: 0.2 }}
           className="bg-card border border-border rounded-xl p-5"
         >
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
             <Shield className="h-3 w-3" /> Platform Health
           </h3>
           <div className="space-y-3">
@@ -207,7 +207,7 @@ export function AdminOverviewTab({ stats }: {
               <span className="text-xs text-muted-foreground">Neurons</span>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono font-bold">{stats.totalNeurons}</span>
-                <Badge variant="outline" className="text-[8px]">{stats.publishedNeurons} pub</Badge>
+                <Badge variant="outline" className="text-nano">{stats.publishedNeurons} pub</Badge>
               </div>
             </div>
             <div className="flex items-center justify-between">
@@ -238,7 +238,7 @@ export function AdminOverviewTab({ stats }: {
           transition={{ delay: 0.25 }}
           className="bg-card border border-border rounded-xl p-5"
         >
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
             <Zap className="h-3 w-3" /> Quick Actions
           </h3>
           <div className="space-y-2">
@@ -280,7 +280,7 @@ export function AdminOverviewTab({ stats }: {
           transition={{ delay: 0.3 }}
           className="bg-card border border-border rounded-xl p-5"
         >
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
             <Clock className="h-3 w-3" /> Recent Activity
           </h3>
           <div className="space-y-0.5 max-h-52 overflow-y-auto">
@@ -302,27 +302,27 @@ export function AdminOverviewTab({ stats }: {
         transition={{ delay: 0.35 }}
         className="bg-card border border-border rounded-xl p-5"
       >
-        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
+        <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
           <BarChart3 className="h-3 w-3" /> Economy Overview
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div>
-            <p className="text-[9px] text-muted-foreground uppercase">Circulating</p>
+            <p className="text-nano text-muted-foreground uppercase">Circulating</p>
             <p className="text-lg font-bold font-mono">{stats.totalCreditsCirculating.toLocaleString()}<span className="text-xs text-muted-foreground ml-1">N</span></p>
           </div>
           <div>
-            <p className="text-[9px] text-muted-foreground uppercase">Consumed</p>
+            <p className="text-nano text-muted-foreground uppercase">Consumed</p>
             <p className="text-lg font-bold font-mono text-amber-500">{stats.totalCreditsSpent.toLocaleString()}<span className="text-xs text-muted-foreground ml-1">N</span></p>
           </div>
           <div>
-            <p className="text-[9px] text-muted-foreground uppercase">Avg/User</p>
+            <p className="text-nano text-muted-foreground uppercase">Avg/User</p>
             <p className="text-lg font-bold font-mono">
               {stats.totalUsers > 0 ? Math.round(stats.totalCreditsCirculating / stats.totalUsers).toLocaleString() : 0}
               <span className="text-xs text-muted-foreground ml-1">N</span>
             </p>
           </div>
           <div>
-            <p className="text-[9px] text-muted-foreground uppercase">Neurons/User</p>
+            <p className="text-nano text-muted-foreground uppercase">Neurons/User</p>
             <p className="text-lg font-bold font-mono">
               {stats.totalUsers > 0 ? (stats.totalNeurons / stats.totalUsers).toFixed(1) : "0"}
             </p>

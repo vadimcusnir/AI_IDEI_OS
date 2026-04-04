@@ -168,18 +168,18 @@ export function NeuronTopBar({
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Fingerprint className="h-3 w-3" />
-              <span className="font-mono text-[10px]">{neuronUuid}</span>
+              <span className="font-mono text-micro">{neuronUuid}</span>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="h-3 w-3" />
-              <span className="font-mono text-[10px]">{nasPath}</span>
+              <span className="font-mono text-micro">{nasPath}</span>
             </div>
           </div>
         </TooltipContent>
       </Tooltip>
 
       {/* NAS Path - desktop only */}
-      <span className="text-[10px] font-mono text-muted-foreground/60 hidden xl:inline truncate max-w-[200px]">
+      <span className="text-micro font-mono text-muted-foreground/60 hidden xl:inline truncate max-w-[200px]">
         {nasPath}
       </span>
 
@@ -210,7 +210,7 @@ export function NeuronTopBar({
           <Badge
             key={tag}
             variant="secondary"
-            className="text-[10px] font-normal px-1.5 py-0 h-5 cursor-pointer hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0"
+            className="text-micro font-normal px-1.5 py-0 h-5 cursor-pointer hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0"
             onClick={() => handleRemoveTag(tag)}
           >
             <Hash className="h-2.5 w-2.5 mr-0.5" />
@@ -222,7 +222,7 @@ export function NeuronTopBar({
           onChange={(e) => setNewTag(e.target.value)}
           onKeyDown={handleAddTag}
           placeholder="+ tag"
-          className="text-[10px] bg-transparent border-none outline-none w-12 text-muted-foreground placeholder:text-muted-foreground/40"
+          className="text-micro bg-transparent border-none outline-none w-12 text-muted-foreground placeholder:text-muted-foreground/40"
         />
       </div>
 
@@ -232,7 +232,7 @@ export function NeuronTopBar({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs px-1.5 sm:px-2 shrink-0">
-            <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ${statusCfg.className}`}>
+            <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-micro font-medium ${statusCfg.className}`}>
               {statusCfg.label}
             </span>
             <ChevronDown className="h-3 w-3 hidden sm:block" />
@@ -290,7 +290,7 @@ export function NeuronTopBar({
               </span>
             </TooltipTrigger>
             {!hasExecutable && (
-              <TooltipContent side="bottom" className="text-[10px]">
+              <TooltipContent side="bottom" className="text-micro">
                 Adaugă un bloc executabil (code, prompt, ai-action) pentru a rula
               </TooltipContent>
             )}
@@ -325,7 +325,7 @@ export function NeuronTopBar({
             <Share2 className="h-3.5 w-3.5" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" className="text-[10px]">Copy link</TooltipContent>
+        <TooltipContent side="bottom" className="text-micro">Copy link</TooltipContent>
       </Tooltip>
 
       {/* Clone / Fork */}
@@ -398,7 +398,7 @@ export function NeuronTopBar({
               <BookmarkPlus className="h-3.5 w-3.5" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom" className="text-[10px]">Save as template</TooltipContent>
+          <TooltipContent side="bottom" className="text-micro">Save as template</TooltipContent>
         </Tooltip>
       )}
 
@@ -409,7 +409,7 @@ export function NeuronTopBar({
             <Download className="h-3.5 w-3.5" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" className="text-[10px]">Download as Markdown</TooltipContent>
+        <TooltipContent side="bottom" className="text-micro">Download as Markdown</TooltipContent>
       </Tooltip>
     </div>
   );

@@ -110,7 +110,7 @@ export default function AdminFinancialization() {
           <div key={kpi.label} className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-1.5 mb-1">
               <kpi.icon className={cn("h-3.5 w-3.5", kpi.color)} />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</span>
+              <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</span>
             </div>
             <p className="text-2xl font-bold font-mono text-foreground">{kpi.value}</p>
           </div>
@@ -138,23 +138,23 @@ export default function AdminFinancialization() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <span className="text-[10px] text-muted-foreground">Total Units</span>
+                    <span className="text-micro text-muted-foreground">Total Units</span>
                     <p className="text-lg font-bold font-mono text-foreground">{tokenStats?.totalUnits?.toLocaleString() ?? 0}</p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground">Units Sold</span>
+                    <span className="text-micro text-muted-foreground">Units Sold</span>
                     <p className="text-lg font-bold font-mono text-foreground">{tokenStats?.soldUnits?.toLocaleString() ?? 0}</p>
                   </div>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Sell-Through Rate</span>
+                  <span className="text-micro text-muted-foreground">Sell-Through Rate</span>
                   <Progress
                     value={tokenStats && tokenStats.totalUnits > 0 ? (tokenStats.soldUnits / tokenStats.totalUnits) * 100 : 0}
                     className="h-2 mt-1"
                   />
                 </div>
                 <div className="pt-2 border-t border-border">
-                  <span className="text-[10px] text-muted-foreground">Total Revenue</span>
+                  <span className="text-micro text-muted-foreground">Total Revenue</span>
                   <p className="text-xl font-bold font-mono text-primary">{(tokenStats?.totalRevenue || 0).toLocaleString()}N</p>
                 </div>
               </CardContent>
@@ -194,19 +194,19 @@ export default function AdminFinancialization() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-4 gap-3">
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Active Listings</span>
+                  <span className="text-micro text-muted-foreground">Active Listings</span>
                   <p className="text-lg font-bold text-foreground">{perfStats?.total ?? 0}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Verified</span>
+                  <span className="text-micro text-muted-foreground">Verified</span>
                   <p className="text-lg font-bold text-semantic-emerald">{perfStats?.verified ?? 0}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Total Sales</span>
+                  <span className="text-micro text-muted-foreground">Total Sales</span>
                   <p className="text-lg font-bold text-foreground">{perfStats?.totalSales ?? 0}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Avg Conversion</span>
+                  <span className="text-micro text-muted-foreground">Avg Conversion</span>
                   <p className="text-lg font-bold text-foreground">{perfStats?.avgConversion ?? 0}%</p>
                 </div>
               </div>
@@ -230,18 +230,18 @@ export default function AdminFinancialization() {
               <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <span className="text-[10px] text-muted-foreground">Total Reports</span>
+                    <span className="text-micro text-muted-foreground">Total Reports</span>
                     <p className="text-lg font-bold text-foreground">{intelStats?.total ?? 0}</p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground">NEURONS Consumed</span>
+                    <span className="text-micro text-muted-foreground">NEURONS Consumed</span>
                     <p className="text-lg font-bold font-mono text-foreground">{(intelStats?.totalCost || 0).toLocaleString()}N</p>
                   </div>
                 </div>
                 {intelStats?.byType && Object.entries(intelStats.byType).map(([type, count]) => (
                   <div key={type} className="flex items-center justify-between text-xs">
                     <span className="text-muted-foreground capitalize">{type.replace(/_/g, " ")}</span>
-                    <Badge variant="outline" className="text-[9px] font-mono">{count as number}</Badge>
+                    <Badge variant="outline" className="text-nano font-mono">{count as number}</Badge>
                   </div>
                 ))}
               </CardContent>
@@ -261,7 +261,7 @@ export default function AdminFinancialization() {
                 ].map(cap => (
                   <div key={cap.label} className="p-2.5 rounded-lg bg-muted/30">
                     <p className="font-semibold text-foreground">{cap.label}</p>
-                    <p className="text-[10px] text-muted-foreground">{cap.desc}</p>
+                    <p className="text-micro text-muted-foreground">{cap.desc}</p>
                   </div>
                 ))}
               </CardContent>
@@ -280,15 +280,15 @@ export default function AdminFinancialization() {
             <CardContent className="space-y-3">
               <div className="grid grid-cols-3 gap-3 mb-4">
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Available Certs</span>
+                  <span className="text-micro text-muted-foreground">Available Certs</span>
                   <p className="text-lg font-bold text-foreground">{certStats?.available ?? 0}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Awarded</span>
+                  <span className="text-micro text-muted-foreground">Awarded</span>
                   <p className="text-lg font-bold text-primary">{certStats?.awarded ?? 0}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Conversion</span>
+                  <span className="text-micro text-muted-foreground">Conversion</span>
                   <p className="text-lg font-bold text-foreground">
                     {certStats && certStats.available > 0 ? `${Math.round((certStats.awarded / Math.max(1, certStats.available)) * 100)}%` : "—"}
                   </p>
@@ -298,9 +298,9 @@ export default function AdminFinancialization() {
                 <div key={cert.cert_key} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/30">
                   <div>
                     <p className="text-xs font-semibold text-foreground">{cert.name}</p>
-                    <p className="text-[10px] text-muted-foreground capitalize">{cert.level}</p>
+                    <p className="text-micro text-muted-foreground capitalize">{cert.level}</p>
                   </div>
-                  <Badge variant="outline" className="text-[9px]">{cert.cert_key}</Badge>
+                  <Badge variant="outline" className="text-nano">{cert.cert_key}</Badge>
                 </div>
               ))}
             </CardContent>
@@ -318,19 +318,19 @@ export default function AdminFinancialization() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-4 gap-3">
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Products</span>
+                  <span className="text-micro text-muted-foreground">Products</span>
                   <p className="text-lg font-bold text-foreground">{dataStats?.total ?? 0}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Published</span>
+                  <span className="text-micro text-muted-foreground">Published</span>
                   <p className="text-lg font-bold text-emerald-500">{dataStats?.published ?? 0}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Total Sales</span>
+                  <span className="text-micro text-muted-foreground">Total Sales</span>
                   <p className="text-lg font-bold text-foreground">{dataStats?.totalSales ?? 0}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Revenue</span>
+                  <span className="text-micro text-muted-foreground">Revenue</span>
                   <p className="text-lg font-bold font-mono text-primary">{(dataStats?.totalRevenue || 0).toLocaleString()}N</p>
                 </div>
               </div>
@@ -354,7 +354,7 @@ export default function AdminFinancialization() {
               step === "→" ? (
                 <span key={i} className="text-muted-foreground">→</span>
               ) : (
-                <Badge key={i} variant={i >= 8 ? "default" : "secondary"} className="text-[10px] font-mono">
+                <Badge key={i} variant={i >= 8 ? "default" : "secondary"} className="text-micro font-mono">
                   {step}
                 </Badge>
               )

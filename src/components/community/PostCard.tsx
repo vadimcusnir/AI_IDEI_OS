@@ -79,17 +79,17 @@ export function PostCard({ post, threadAuthorId, threadId, replies = [], depth =
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <Avatar className="h-5 w-5">
-              <AvatarFallback className="text-[9px]">{authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
+              <AvatarFallback className="text-nano">{authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
             <span className="text-xs font-medium">{authorName}</span>
-            <Badge variant="outline" className="text-[9px] px-1 py-0">
+            <Badge variant="outline" className="text-nano px-1 py-0">
               <Award className="h-2.5 w-2.5 mr-0.5" />{karma}
             </Badge>
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-micro text-muted-foreground">
               {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
             </span>
             {post.is_solution && (
-              <Badge className="text-[9px] px-1.5 py-0 bg-status-validated/15 text-status-validated border-status-validated/30">
+              <Badge className="text-nano px-1.5 py-0 bg-status-validated/15 text-status-validated border-status-validated/30">
                 <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />Solution
               </Badge>
             )}
@@ -102,7 +102,7 @@ export function PostCard({ post, threadAuthorId, threadId, replies = [], depth =
               <Button
                 variant="outline"
                 size="sm"
-                className="text-[10px] h-6"
+                className="text-micro h-6"
                 onClick={() => markSolution.mutate({ threadId, postId: post.id })}
                 disabled={markSolution.isPending}
               >
@@ -113,7 +113,7 @@ export function PostCard({ post, threadAuthorId, threadId, replies = [], depth =
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-[10px] h-6 text-muted-foreground"
+                className="text-micro h-6 text-muted-foreground"
                 onClick={() => setShowReply(!showReply)}
               >
                 <Reply className="h-3 w-3 mr-1" />Reply
@@ -135,10 +135,10 @@ export function PostCard({ post, threadAuthorId, threadId, replies = [], depth =
                   className="text-xs mb-1.5"
                 />
                 <div className="flex gap-1.5">
-                  <Button size="sm" className="text-[10px] h-6" onClick={handleReply} disabled={createPost.isPending || !replyText.trim()}>
+                  <Button size="sm" className="text-micro h-6" onClick={handleReply} disabled={createPost.isPending || !replyText.trim()}>
                     <Send className="h-3 w-3 mr-1" />{createPost.isPending ? "..." : "Reply"}
                   </Button>
-                  <Button variant="ghost" size="sm" className="text-[10px] h-6" onClick={() => { setShowReply(false); setReplyText(""); }}>
+                  <Button variant="ghost" size="sm" className="text-micro h-6" onClick={() => { setShowReply(false); setReplyText(""); }}>
                     Cancel
                   </Button>
                 </div>

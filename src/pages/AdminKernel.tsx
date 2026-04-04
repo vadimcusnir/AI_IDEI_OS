@@ -127,7 +127,7 @@ export default function AdminKernel() {
           <div key={kpi.label} className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 mb-2">
               <kpi.icon className={cn("h-4 w-4", kpi.color)} />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</span>
+              <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</span>
             </div>
             <p className="text-2xl font-bold font-mono text-foreground">{kpi.value}</p>
           </div>
@@ -147,10 +147,10 @@ export default function AdminKernel() {
               {metrics.top_services.map((svc, i) => (
                 <div key={svc.key} className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-[10px] font-mono text-muted-foreground w-4">{i + 1}.</span>
+                    <span className="text-micro font-mono text-muted-foreground w-4">{i + 1}.</span>
                     <span className="text-xs font-medium truncate text-foreground">{svc.key}</span>
                   </div>
-                  <Badge variant="outline" className="text-[9px] font-mono shrink-0">{svc.count}x</Badge>
+                  <Badge variant="outline" className="text-nano font-mono shrink-0">{svc.count}x</Badge>
                 </div>
               ))}
             </div>
@@ -169,7 +169,7 @@ export default function AdminKernel() {
                 <div key={tier} className="space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-medium capitalize text-foreground">{tier}</span>
-                    <span className="text-[10px] text-muted-foreground">{tierJobs.length} runs</span>
+                    <span className="text-micro text-muted-foreground">{tierJobs.length} runs</span>
                   </div>
                   <Progress value={metrics.total_runs > 0 ? (tierJobs.length / metrics.total_runs) * 100 : 0} className="h-1.5" />
                 </div>
@@ -186,13 +186,13 @@ export default function AdminKernel() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs text-foreground">Success Rate</span>
-              <Badge variant={metrics.success_rate >= 80 ? "default" : "destructive"} className="text-[9px]">
+              <Badge variant={metrics.success_rate >= 80 ? "default" : "destructive"} className="text-nano">
                 {metrics.success_rate}%
               </Badge>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-foreground">Failure Rate</span>
-              <Badge variant={metrics.failed < metrics.total_runs * 0.2 ? "outline" : "destructive"} className="text-[9px]">
+              <Badge variant={metrics.failed < metrics.total_runs * 0.2 ? "outline" : "destructive"} className="text-nano">
                 {metrics.total_runs > 0 ? Math.round((metrics.failed / metrics.total_runs) * 100) : 0}%
               </Badge>
             </div>
@@ -239,7 +239,7 @@ export default function AdminKernel() {
                 return (
                   <tr key={job.id} className="border-b border-border/50 hover:bg-muted/30">
                     <td className="py-2 px-2">
-                      <Badge variant={job.status === "completed" ? "default" : "destructive"} className="text-[9px]">
+                      <Badge variant={job.status === "completed" ? "default" : "destructive"} className="text-nano">
                         {job.status}
                       </Badge>
                     </td>

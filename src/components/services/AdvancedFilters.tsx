@@ -33,7 +33,7 @@ function ToggleChip({ label, active, onClick }: { label: string; active: boolean
     <button
       onClick={onClick}
       className={cn(
-        "text-[10px] px-2.5 py-1 rounded-full border transition-all font-medium",
+        "text-micro px-2.5 py-1 rounded-full border transition-all font-medium",
         active
           ? "bg-primary text-primary-foreground border-primary"
           : "bg-muted/50 text-muted-foreground border-border hover:border-primary/30"
@@ -66,7 +66,7 @@ export function AdvancedFilters({ filters, onChange, availableComplexities, avai
         <Filter className="h-3 w-3" />
         Filters
         {activeCount > 0 && (
-          <Badge variant="secondary" className="h-4 w-4 p-0 text-[8px] rounded-full flex items-center justify-center">
+          <Badge variant="secondary" className="h-4 w-4 p-0 text-nano rounded-full flex items-center justify-center">
             {activeCount}
           </Badge>
         )}
@@ -76,7 +76,7 @@ export function AdvancedFilters({ filters, onChange, availableComplexities, avai
         <div className="mt-2 bg-card border border-border rounded-xl p-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
           {/* Cost range */}
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Cost Range (NEURONS)
             </p>
             <Slider
@@ -87,7 +87,7 @@ export function AdvancedFilters({ filters, onChange, availableComplexities, avai
               onValueChange={([min, max]) => onChange({ ...filters, costMin: min, costMax: max })}
               className="mb-1"
             />
-            <div className="flex justify-between text-[9px] text-muted-foreground font-mono">
+            <div className="flex justify-between text-nano text-muted-foreground font-mono">
               <span>{filters.costMin}</span>
               <span>{filters.costMax}</span>
             </div>
@@ -95,7 +95,7 @@ export function AdvancedFilters({ filters, onChange, availableComplexities, avai
 
           {/* Score tier */}
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Score Tier</p>
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">Score Tier</p>
             <div className="flex gap-1.5">
               {["S", "A", "B", "C"].map(t => (
                 <ToggleChip
@@ -110,7 +110,7 @@ export function AdvancedFilters({ filters, onChange, availableComplexities, avai
 
           {/* Complexity */}
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Complexity</p>
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">Complexity</p>
             <div className="flex gap-1.5">
               {availableComplexities.map(c => (
                 <ToggleChip
@@ -125,7 +125,7 @@ export function AdvancedFilters({ filters, onChange, availableComplexities, avai
 
           {/* Output type */}
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Output Type</p>
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">Output Type</p>
             <div className="flex gap-1.5 flex-wrap">
               {availableOutputTypes.map(o => (
                 <ToggleChip

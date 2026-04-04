@@ -37,7 +37,7 @@ function FeatureCard({ icon: Icon, title, desc }: { icon: React.ElementType; tit
         </div>
         <p className="text-sm font-semibold text-foreground">{title}</p>
       </div>
-      <p className="text-[13px] text-muted-foreground/70 leading-relaxed">{desc}</p>
+      <p className="text-compact text-muted-foreground/70 leading-relaxed">{desc}</p>
     </div>
   );
 }
@@ -72,7 +72,7 @@ export default function About() {
         <motion.div {...fade(0.05)}>
           <Section>
             <SectionTitle>{t("about_platform.what_title")}</SectionTitle>
-            <div className="text-[13px] leading-[1.85] text-muted-foreground/70 space-y-3">
+            <div className="text-compact leading-[1.85] text-muted-foreground/70 space-y-3">
               <p>{t("about_platform.what_p1")}</p>
               <p>{t("about_platform.what_p2")}</p>
               <p>{t("about_platform.what_p3")}</p>
@@ -144,7 +144,7 @@ export default function About() {
             <SectionTitle>{t("about_platform.security_title")}</SectionTitle>
             <div className="flex items-start gap-3 rounded-xl border border-border/15 p-4">
               <Shield className="h-5 w-5 text-primary/60 shrink-0 mt-0.5" />
-              <div className="text-[13px] text-muted-foreground/70 space-y-2">
+              <div className="text-compact text-muted-foreground/70 space-y-2">
                 <p>{t("about_platform.security_p1")}</p>
                 <p>{t("about_platform.security_p2")}</p>
               </div>
@@ -165,7 +165,7 @@ export default function About() {
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2.5 p-3 rounded-lg border border-border/10">
                   <Target className="h-3.5 w-3.5 text-primary/50 shrink-0" />
-                  <p className="text-[13px] text-muted-foreground/80">{item}</p>
+                  <p className="text-compact text-muted-foreground/80">{item}</p>
                 </div>
               ))}
             </div>
@@ -174,7 +174,7 @@ export default function About() {
 
         {/* CTA */}
         <motion.div {...fade(0.35)} className="text-center space-y-4 pb-8">
-          <p className="text-[13px] text-muted-foreground/60 italic">{t("about_platform.cta_text")}</p>
+          <p className="text-compact text-muted-foreground/60 italic">{t("about_platform.cta_text")}</p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="sm" className="h-9 gap-1.5">
               <Link to="/services">

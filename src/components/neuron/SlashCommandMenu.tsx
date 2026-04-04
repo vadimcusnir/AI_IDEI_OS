@@ -95,7 +95,7 @@ export function SlashCommandMenu({ isOpen, filter, position, onSelect, onClose }
         {/* Header */}
         <div className="px-3 py-2 border-b border-border flex items-center gap-2">
           <Search className="h-3 w-3 text-muted-foreground" />
-          <span className="text-[10px] text-muted-foreground">
+          <span className="text-micro text-muted-foreground">
             {filter ? `Filtering: "${filter}"` : "Type to filter blocks"}
           </span>
         </div>
@@ -106,7 +106,7 @@ export function SlashCommandMenu({ isOpen, filter, position, onSelect, onClose }
           return (
             <div key={cat}>
               <div className="px-3 pt-2 pb-1">
-                <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">
                   {categoryLabels[cat]}
                 </span>
               </div>
@@ -136,12 +136,12 @@ export function SlashCommandMenu({ isOpen, filter, position, onSelect, onClose }
                       <div className="font-medium flex items-center gap-1.5">
                         {cfg.label}
                         {cfg.executable && (
-                          <span className="text-[8px] bg-primary/15 text-primary rounded px-1 py-0 font-semibold">RUN</span>
+                          <span className="text-nano bg-primary/15 text-primary rounded px-1 py-0 font-semibold">RUN</span>
                         )}
                       </div>
-                      <div className="text-[10px] text-muted-foreground truncate">{cfg.description}</div>
+                      <div className="text-micro text-muted-foreground truncate">{cfg.description}</div>
                     </div>
-                    <span className="text-[9px] font-mono text-muted-foreground/40">/{type}</span>
+                    <span className="text-nano font-mono text-muted-foreground/40">/{type}</span>
                   </button>
                 );
               })}

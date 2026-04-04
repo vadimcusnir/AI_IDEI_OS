@@ -35,39 +35,39 @@ function ProviderRow({ provider, label, providerKey }: { provider: ProviderHealt
         <Icon className={cn("h-3.5 w-3.5", cfg.color)} />
         <div>
           <p className="text-xs font-medium">{label}</p>
-          <p className="text-[9px] font-mono text-muted-foreground">{providerKey}</p>
+          <p className="text-nano font-mono text-muted-foreground">{providerKey}</p>
         </div>
       </TableCell>
       <TableCell>
-        <Badge variant="outline" className={cn("text-[9px]", cfg.color)}>
+        <Badge variant="outline" className={cn("text-nano", cfg.color)}>
           {status.toUpperCase()}
         </Badge>
       </TableCell>
-      <TableCell className="text-[10px] font-mono text-right">
+      <TableCell className="text-micro font-mono text-right">
         {p?.auth_status === "ok" ? "✓" : p?.auth_status || "—"}
       </TableCell>
-      <TableCell className="text-[10px] font-mono text-right">
+      <TableCell className="text-micro font-mono text-right">
         {p?.quota_remaining != null && p?.quota_limit != null
           ? `${Math.round((p.quota_remaining / p.quota_limit) * 100)}%`
           : "—"}
       </TableCell>
-      <TableCell className="text-[10px] font-mono text-right">
+      <TableCell className="text-micro font-mono text-right">
         {p?.balance_remaining != null ? `$${p.balance_remaining.toFixed(2)}` : "—"}
       </TableCell>
-      <TableCell className="text-[10px] font-mono text-right">
+      <TableCell className="text-micro font-mono text-right">
         {p?.monthly_spend != null ? `$${p.monthly_spend.toFixed(2)}` : "—"}
       </TableCell>
-      <TableCell className="text-[10px] font-mono text-right">
+      <TableCell className="text-micro font-mono text-right">
         {p ? `${p.failure_rate_1h.toFixed(1)}%` : "—"}
       </TableCell>
-      <TableCell className="text-[10px] font-mono text-right">
+      <TableCell className="text-micro font-mono text-right">
         {p ? `${Math.round(p.avg_latency_1h)}ms` : "—"}
       </TableCell>
-      <TableCell className="text-[10px] font-mono text-right">
+      <TableCell className="text-micro font-mono text-right">
         {p ? `${p.retry_rate.toFixed(1)}%` : "—"}
       </TableCell>
       <TableCell>
-        <Badge variant="outline" className={cn("text-[9px]",
+        <Badge variant="outline" className={cn("text-nano",
           p?.alert_level === "critical" ? "text-destructive border-destructive/30" :
           p?.alert_level === "high" ? "text-semantic-amber border-semantic-amber/30" :
           p?.alert_level === "none" || !p?.alert_level ? "text-muted-foreground" : ""
@@ -98,7 +98,7 @@ export function ProviderHealthTab() {
       {/* Provider grid */}
       <div className="bg-card border border-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
             <Activity className="h-3 w-3" /> Provider Status Grid
           </h3>
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={reload} disabled={loading}>
@@ -109,16 +109,16 @@ export function ProviderHealthTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">Provider</TableHead>
-                <TableHead className="text-[10px]">Status</TableHead>
-                <TableHead className="text-[10px] text-right">Auth</TableHead>
-                <TableHead className="text-[10px] text-right">Quota</TableHead>
-                <TableHead className="text-[10px] text-right">Balance</TableHead>
-                <TableHead className="text-[10px] text-right">Spend/mo</TableHead>
-                <TableHead className="text-[10px] text-right">Fail% 1h</TableHead>
-                <TableHead className="text-[10px] text-right">Latency 1h</TableHead>
-                <TableHead className="text-[10px] text-right">Retry%</TableHead>
-                <TableHead className="text-[10px]">Alert</TableHead>
+                <TableHead className="text-micro">Provider</TableHead>
+                <TableHead className="text-micro">Status</TableHead>
+                <TableHead className="text-micro text-right">Auth</TableHead>
+                <TableHead className="text-micro text-right">Quota</TableHead>
+                <TableHead className="text-micro text-right">Balance</TableHead>
+                <TableHead className="text-micro text-right">Spend/mo</TableHead>
+                <TableHead className="text-micro text-right">Fail% 1h</TableHead>
+                <TableHead className="text-micro text-right">Latency 1h</TableHead>
+                <TableHead className="text-micro text-right">Retry%</TableHead>
+                <TableHead className="text-micro">Alert</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -155,7 +155,7 @@ function KPI({ icon: Icon, label, value, accent }: { icon: React.ElementType; la
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-center gap-1.5 mb-2">
         <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <span className={cn("text-xl font-bold font-mono", accent)}>{value}</span>
     </div>

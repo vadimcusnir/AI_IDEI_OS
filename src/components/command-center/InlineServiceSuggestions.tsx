@@ -101,7 +101,7 @@ export function InlineServiceSuggestions({ input, onSelect, visible }: InlineSer
       >
         <div className="flex items-center gap-1.5 mb-1.5 px-1">
           <Zap className="h-3 w-3 text-primary/50" />
-          <span className="text-[10px] text-muted-foreground/50 font-medium">Servicii detectate</span>
+          <span className="text-micro text-muted-foreground/50 font-medium">Servicii detectate</span>
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
           {suggestions.map((svc) => (
@@ -120,9 +120,9 @@ export function InlineServiceSuggestions({ input, onSelect, visible }: InlineSer
               </div>
               <div className="text-left min-w-0">
                 <p className="text-xs font-medium text-foreground leading-tight">{svc.label}</p>
-                <p className="text-[10px] text-muted-foreground/60 leading-tight">{svc.description}</p>
+                <p className="text-micro text-muted-foreground/60 leading-tight">{svc.description}</p>
               </div>
-              <span className="text-[10px] text-primary/60 font-mono shrink-0">{svc.credits}n</span>
+              <span className="text-micro text-primary/60 font-mono shrink-0">{svc.credits}n</span>
             </button>
           ))}
         </div>

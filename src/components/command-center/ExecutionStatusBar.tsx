@@ -67,7 +67,7 @@ export function ExecutionStatusBar({
 
           {/* Intent */}
           {intent && (
-            <span className="text-[10px] font-medium text-muted-foreground/70 px-2 py-0.5 rounded-full bg-muted/50 border border-border/30">
+            <span className="text-micro font-medium text-muted-foreground/70 px-2 py-0.5 rounded-full bg-muted/50 border border-border/30">
               {intent.replace(/_/g, " ")}
             </span>
           )}
@@ -82,7 +82,7 @@ export function ExecutionStatusBar({
                   transition={{ duration: 0.3 }}
                 />
               </div>
-              <span className="text-[10px] tabular-nums text-muted-foreground shrink-0">
+              <span className="text-micro tabular-nums text-muted-foreground shrink-0">
                 {stepsCompleted}/{totalSteps}
               </span>
             </div>
@@ -92,7 +92,7 @@ export function ExecutionStatusBar({
 
           {/* Credits */}
           {totalCredits > 0 && (
-            <div className="flex items-center gap-1 text-[10px] text-muted-foreground tabular-nums">
+            <div className="flex items-center gap-1 text-micro text-muted-foreground tabular-nums">
               <Coins className="h-3 w-3" />
               <span>{totalCredits} N</span>
             </div>
@@ -100,7 +100,7 @@ export function ExecutionStatusBar({
 
           {/* Elapsed time */}
           {elapsed > 0 && phase === "executing" && (
-            <div className="flex items-center gap-1 text-[10px] text-muted-foreground tabular-nums">
+            <div className="flex items-center gap-1 text-micro text-muted-foreground tabular-nums">
               <Clock className="h-3 w-3" />
               <span>{elapsed}s</span>
             </div>
@@ -108,7 +108,7 @@ export function ExecutionStatusBar({
 
           {/* Error */}
           {errorMessage && (
-            <span className="text-[10px] text-destructive truncate max-w-[200px]">{errorMessage}</span>
+            <span className="text-micro text-destructive truncate max-w-[200px]">{errorMessage}</span>
           )}
         </div>
       </motion.div>

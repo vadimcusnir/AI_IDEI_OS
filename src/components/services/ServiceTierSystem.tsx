@@ -96,7 +96,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
       <div className="flex items-center gap-2">
         <Sparkles className="h-4 w-4 text-primary" />
         <h2 className="text-sm font-bold tracking-tight">Arhitectura Serviciilor</h2>
-        <span className="text-[10px] text-muted-foreground ml-auto">3 nivele • 1460+ sisteme</span>
+        <span className="text-micro text-muted-foreground ml-auto">3 nivele • 1460+ sisteme</span>
       </div>
 
       {/* Visual hierarchy */}
@@ -132,7 +132,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                 {/* Badge */}
                 <div className="flex items-center gap-2 mb-2">
                   <span className={cn(
-                    "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full",
+                    "text-nano font-bold uppercase tracking-wider px-2 py-0.5 rounded-full",
                     tier.key === "otos" && "bg-muted text-muted-foreground",
                     tier.key === "mms" && "bg-primary/15 text-primary",
                     tier.key === "lcss" && "bg-semantic-amber/15 text-semantic-amber",
@@ -141,7 +141,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                   </span>
                   {tier.key === "otos" && <Lock className="h-3 w-3 text-muted-foreground/50" />}
                   {isPrimary && (
-                    <span className="text-[8px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full ml-auto">
+                    <span className="text-nano font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full ml-auto">
                       RECOMANDAT
                     </span>
                   )}
@@ -157,25 +157,25 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
                   )} />
                   <div>
                     <h3 className="text-sm font-bold">{tier.label}</h3>
-                    <p className="text-[10px] text-muted-foreground">{tier.tagline}</p>
+                    <p className="text-micro text-muted-foreground">{tier.tagline}</p>
                   </div>
                 </div>
 
                 {/* Count */}
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-lg font-mono font-bold text-foreground">{tier.count}</span>
-                  <span className="text-[10px] text-muted-foreground">sisteme</span>
+                  <span className="text-micro text-muted-foreground">sisteme</span>
                 </div>
 
                 {/* Description */}
-                <p className="text-[11px] text-muted-foreground/80 mt-2 leading-relaxed line-clamp-2">
+                <p className="text-dense text-muted-foreground/80 mt-2 leading-relaxed line-clamp-2">
                   {tier.description}
                 </p>
 
                 {/* Features */}
                 <div className="mt-3 space-y-1">
                   {tier.features.map((f, fi) => (
-                    <div key={fi} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                    <div key={fi} className="flex items-center gap-1.5 text-micro text-muted-foreground">
                       <CheckCircle2 className={cn(
                         "h-2.5 w-2.5 shrink-0",
                         tier.key === "otos" && "text-muted-foreground/40",
@@ -189,7 +189,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
 
                 {/* Access indicator */}
                 <div className="mt-3 pt-2 border-t border-border/20 flex items-center justify-between">
-                  <span className="text-[10px] text-muted-foreground">
+                  <span className="text-micro text-muted-foreground">
                     Acces: <span className="font-medium text-foreground">{tier.access}</span>
                   </span>
                   {tier.key !== "otos" && (
@@ -206,7 +206,7 @@ export function ServiceTierSystem({ activeTier, onTierChange }: ServiceTierSyste
       </div>
 
       {/* Flow visualization */}
-      <div className="flex items-center justify-center gap-2 py-2 text-[10px] text-muted-foreground">
+      <div className="flex items-center justify-center gap-2 py-2 text-micro text-muted-foreground">
         <span className="bg-muted/50 px-2 py-1 rounded-full">Actions (quick)</span>
         <ArrowRight className="h-3 w-3" />
         <span className="bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">Systems (products)</span>

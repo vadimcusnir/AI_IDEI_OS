@@ -90,10 +90,10 @@ export function AdminContributionsTab() {
             <div className="flex items-center gap-2">
               <Icon className={`h-4 w-4 ${cfg.color}`} />
               <span className="text-xs font-medium flex-1">{c.title}</span>
-              <Badge variant="outline" className="text-[9px]">{c.contribution_type}</Badge>
-              <span className="text-[10px] text-muted-foreground">{c.word_count}w</span>
-              <span className="text-[10px] text-muted-foreground">Q:{c.quality_score}</span>
-              <span className="text-[10px] text-muted-foreground">
+              <Badge variant="outline" className="text-nano">{c.contribution_type}</Badge>
+              <span className="text-micro text-muted-foreground">{c.word_count}w</span>
+              <span className="text-micro text-muted-foreground">Q:{c.quality_score}</span>
+              <span className="text-micro text-muted-foreground">
                 {formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}
               </span>
               <Button variant="ghost" size="sm" className="h-6" onClick={() => setExpandedId(expandedId === c.id ? null : c.id)}>
@@ -107,7 +107,7 @@ export function AdminContributionsTab() {
                 </div>
                 {(c.tags ?? []).length > 0 && (
                   <div className="flex gap-1">
-                    {(c.tags ?? []).map((t) => <Badge key={t} variant="outline" className="text-[8px]">{t}</Badge>)}
+                    {(c.tags ?? []).map((t) => <Badge key={t} variant="outline" className="text-nano">{t}</Badge>)}
                   </div>
                 )}
                 <Textarea
@@ -142,7 +142,7 @@ export function AdminContributionsTab() {
       {/* Reviewed */}
       {reviewed.length > 0 && (
         <div className="space-y-1.5">
-          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Previously Reviewed</p>
+          <p className="text-micro font-semibold text-muted-foreground uppercase tracking-wider">Previously Reviewed</p>
           {reviewed.slice(0, 20).map((c) => {
             const cfg = statusConfig[c.status] || statusConfig.pending;
             const Icon = cfg.icon;
@@ -150,9 +150,9 @@ export function AdminContributionsTab() {
               <div key={c.id} className="flex items-center gap-2 p-2 rounded-lg border border-border bg-card">
                 <Icon className={`h-3.5 w-3.5 ${cfg.color}`} />
                 <span className="text-xs flex-1 truncate">{c.title}</span>
-                <Badge variant="outline" className={`text-[8px] ${cfg.color}`}>{c.status}</Badge>
+                <Badge variant="outline" className={`text-nano ${cfg.color}`}>{c.status}</Badge>
                 {c.neurons_awarded > 0 && (
-                  <Badge className="text-[8px] px-1 py-0 bg-primary/10 text-primary border-primary/20">
+                  <Badge className="text-nano px-1 py-0 bg-primary/10 text-primary border-primary/20">
                     <Coins className="h-2 w-2 mr-0.5" />+{c.neurons_awarded}
                   </Badge>
                 )}

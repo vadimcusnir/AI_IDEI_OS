@@ -20,7 +20,7 @@ const fade = (d: number) => ({
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/40">
+    <p className="text-micro font-semibold uppercase tracking-[0.2em] text-muted-foreground/40">
       {children}
     </p>
   );
@@ -183,7 +183,7 @@ export default function CusnirOSArchitecture() {
           {/* Hero */}
           <motion.div {...fade(0.02)} className="space-y-2">
             <h1 className="text-xl font-bold tracking-tight">Superlayer Architecture v1.0</h1>
-            <p className="text-[13px] text-muted-foreground/60 leading-relaxed">
+            <p className="text-compact text-muted-foreground/60 leading-relaxed">
               Specificație completă a sistemului de control. Fiecare modul documentat,
               fiecare flux definit, fiecare ieșire validată.
             </p>
@@ -193,13 +193,13 @@ export default function CusnirOSArchitecture() {
           <motion.div {...fade(0.04)} className="space-y-3">
             <Label>System Definition</Label>
             <div className="rounded-xl border border-border/15 p-4 space-y-2">
-              <p className="text-[12px] font-semibold text-foreground">Role: Control Plane + Economic Engine + Agent Orchestrator</p>
-              <p className="text-[11px] text-muted-foreground/60 leading-relaxed">
+              <p className="text-xs font-semibold text-foreground">Role: Control Plane + Economic Engine + Agent Orchestrator</p>
+              <p className="text-dense text-muted-foreground/60 leading-relaxed">
                 Transformă utilizatori → operatori. Transformă conținut → sisteme. Transformă sisteme → loop-uri de venit.
               </p>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {["Agent Layer", "Service Engine", "Knowledge Graph", "Economy Engine"].map(l => (
-                  <span key={l} className="text-[9px] px-2 py-0.5 rounded-full border border-border/20 text-muted-foreground/50">
+                  <span key={l} className="text-nano px-2 py-0.5 rounded-full border border-border/20 text-muted-foreground/50">
                     {l}
                   </span>
                 ))}
@@ -210,11 +210,11 @@ export default function CusnirOSArchitecture() {
           {/* Pipeline */}
           <motion.div {...fade(0.06)} className="space-y-3">
             <Label>{PIPELINE.title}</Label>
-            <p className="text-[11px] text-muted-foreground/50">{PIPELINE.description}</p>
+            <p className="text-dense text-muted-foreground/50">{PIPELINE.description}</p>
             <div className="rounded-xl border border-border/15 p-4">
               <ul className="space-y-1.5">
                 {PIPELINE.items.map(item => (
-                  <li key={item} className="flex items-start gap-2 text-[11px] text-muted-foreground/70">
+                  <li key={item} className="flex items-start gap-2 text-dense text-muted-foreground/70">
                     <ChevronRight className="h-2.5 w-2.5 mt-0.5 text-primary/30 shrink-0" />
                     <span>{item}</span>
                   </li>
@@ -227,11 +227,11 @@ export default function CusnirOSArchitecture() {
           {LAYERS.map((layer, i) => (
             <motion.div key={layer.id} {...fade(0.08 + i * 0.03)} className="space-y-3">
               <Label>{layer.title}</Label>
-              <p className="text-[11px] text-muted-foreground/50">{layer.description}</p>
+              <p className="text-dense text-muted-foreground/50">{layer.description}</p>
               <div className="rounded-xl border border-border/15 p-4">
                 <ul className="space-y-1.5">
                   {layer.items.map(item => (
-                    <li key={item} className="flex items-start gap-2 text-[11px] text-muted-foreground/70">
+                    <li key={item} className="flex items-start gap-2 text-dense text-muted-foreground/70">
                       <ChevronRight className="h-2.5 w-2.5 mt-0.5 text-primary/30 shrink-0" />
                       <span>{item}</span>
                     </li>
@@ -250,17 +250,17 @@ export default function CusnirOSArchitecture() {
                   "rounded-xl border p-4 space-y-2",
                   t.tier === "Cusnir_OS" ? "border-primary/15 bg-primary/[0.02]" : "border-border/15"
                 )}>
-                  <p className="text-[12px] font-semibold text-foreground">{t.tier}</p>
+                  <p className="text-xs font-semibold text-foreground">{t.tier}</p>
                   <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40">Cerințe</p>
+                    <p className="text-micro uppercase tracking-wider text-muted-foreground/40">Cerințe</p>
                     {t.requirements.map(r => (
-                      <p key={r} className="text-[11px] text-muted-foreground/60">• {r}</p>
+                      <p key={r} className="text-dense text-muted-foreground/60">• {r}</p>
                     ))}
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40">Capabilități</p>
+                    <p className="text-micro uppercase tracking-wider text-muted-foreground/40">Capabilități</p>
                     {t.capabilities.map(c => (
-                      <p key={c} className="text-[11px] text-muted-foreground/60">• {c}</p>
+                      <p key={c} className="text-dense text-muted-foreground/60">• {c}</p>
                     ))}
                   </div>
                 </div>
@@ -274,7 +274,7 @@ export default function CusnirOSArchitecture() {
             <div className="rounded-xl border border-border/15 p-4">
               <ul className="space-y-1.5">
                 {SCORING.map(s => (
-                  <li key={s} className="flex items-start gap-2 text-[11px] text-muted-foreground/70">
+                  <li key={s} className="flex items-start gap-2 text-dense text-muted-foreground/70">
                     <ChevronRight className="h-2.5 w-2.5 mt-0.5 text-primary/30 shrink-0" />
                     <span>{s}</span>
                   </li>
@@ -289,7 +289,7 @@ export default function CusnirOSArchitecture() {
             <div className="rounded-xl border border-border/15 p-4">
               <ul className="space-y-1.5">
                 {AUTOMATION.map(a => (
-                  <li key={a} className="flex items-start gap-2 text-[11px] text-muted-foreground/70">
+                  <li key={a} className="flex items-start gap-2 text-dense text-muted-foreground/70">
                     <ChevronRight className="h-2.5 w-2.5 mt-0.5 text-primary/30 shrink-0" />
                     <span>{a}</span>
                   </li>
@@ -300,14 +300,14 @@ export default function CusnirOSArchitecture() {
 
           {/* Verdict */}
           <motion.div {...fade(0.39)} className="rounded-xl border border-primary/15 bg-primary/[0.02] p-5 space-y-3 text-center">
-            <p className="text-[13px] font-semibold text-foreground">Verdict</p>
-            <p className="text-[12px] text-muted-foreground/70 leading-relaxed">
+            <p className="text-compact font-semibold text-foreground">Verdict</p>
+            <p className="text-xs text-muted-foreground/70 leading-relaxed">
               Cusnir_OS devine un sistem de control total asupra producției, distribuției și monetizării.
             </p>
-            <p className="text-[11px] text-foreground/80 font-medium">
+            <p className="text-dense text-foreground/80 font-medium">
               User → Executor → System Operator
             </p>
-            <p className="text-[11px] italic text-muted-foreground/40">
+            <p className="text-dense italic text-muted-foreground/40">
               Infrastructură autonomă de generare și scalare economică.
             </p>
           </motion.div>

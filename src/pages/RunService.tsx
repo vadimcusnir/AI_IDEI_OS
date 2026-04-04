@@ -324,7 +324,7 @@ export default function RunService() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 <h1 className="text-xl sm:text-2xl font-medium">{service.name}</h1>
-                <Badge variant="secondary" className="text-[9px] font-mono uppercase">
+                <Badge variant="secondary" className="text-nano font-mono uppercase">
                   {service.category}
                 </Badge>
                 <TierBadge tier={service.access_tier} />
@@ -390,7 +390,7 @@ export default function RunService() {
                 <div className="space-y-3">
                   {inputFields.length > 0 ? inputFields.map((field: any, i: number) => (
                     <div key={i} className="group">
-                      <label className="text-[11px] font-semibold text-muted-foreground mb-1.5 block">
+                      <label className="text-dense font-semibold text-muted-foreground mb-1.5 block">
                         {field.label || field.name || `Field ${i + 1}`}
                       </label>
                       {field.type === "textarea" ? (
@@ -410,7 +410,7 @@ export default function RunService() {
                         />
                       )}
                       {field.description && (
-                        <p className="text-[10px] text-muted-foreground/60 mt-1.5 pl-1">{field.description}</p>
+                        <p className="text-micro text-muted-foreground/60 mt-1.5 pl-1">{field.description}</p>
                       )}
                     </div>
                   )) : (
@@ -448,23 +448,23 @@ export default function RunService() {
                   <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
                     <Coins className="h-3 w-3" /> {t("run_service.cost_preview")}
                   </h2>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.service_cost")}</p>
+                      <p className="text-micro text-muted-foreground mb-0.5">{t("run_service.service_cost")}</p>
                       <p className="text-2xl font-bold font-mono">{service.credits_cost}</p>
-                      <p className="text-[9px] text-muted-foreground">NEURONS</p>
+                      <p className="text-nano text-muted-foreground">NEURONS</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.your_balance")}</p>
+                      <p className="text-micro text-muted-foreground mb-0.5">{t("run_service.your_balance")}</p>
                       <p className="text-2xl font-bold font-mono">{creditBalance}</p>
-                      <p className="text-[9px] text-muted-foreground">NEURONS</p>
+                      <p className="text-nano text-muted-foreground">NEURONS</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground mb-0.5">{t("run_service.after_run")}</p>
+                      <p className="text-micro text-muted-foreground mb-0.5">{t("run_service.after_run")}</p>
                       <p className={cn("text-2xl font-bold font-mono", hasEnoughCredits ? "text-status-validated" : "text-destructive")}>
                         {creditBalance - service.credits_cost}
                       </p>
-                      <p className="text-[9px] text-muted-foreground">NEURONS</p>
+                      <p className="text-nano text-muted-foreground">NEURONS</p>
                     </div>
                   </div>
                 </div>
@@ -544,7 +544,7 @@ export default function RunService() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      className="h-6 text-[10px] ml-auto shrink-0"
+                      className="h-6 text-micro ml-auto shrink-0"
                       onClick={() => navigate("/credits")}
                     >
                       Cumpără NEURONS
@@ -601,7 +601,7 @@ export default function RunService() {
                         {step.label}
                       </span>
                       {isActive && (
-                        <span className="ml-auto text-[10px] text-primary/60 animate-pulse">{t("run_service.processing")}</span>
+                        <span className="ml-auto text-micro text-primary/60 animate-pulse">{t("run_service.processing")}</span>
                       )}
                     </motion.div>
                   );
@@ -627,7 +627,7 @@ export default function RunService() {
                 {jobStatus === "running" && (
                   <div className="flex items-center gap-1.5">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                    <span className="text-[10px] text-primary">{t("run_service.live")}</span>
+                    <span className="text-micro text-primary">{t("run_service.live")}</span>
                   </div>
                 )}
               </div>

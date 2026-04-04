@@ -54,12 +54,12 @@ export function RegistryCard({ service: s, onClick }: RegistryCardProps) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium truncate">{s.name}</span>
-          <Badge variant="outline" className={cn("text-[8px] h-4 px-1 shrink-0 border", TIER_COLORS[s.score_tier] || TIER_COLORS.C)}>
+          <Badge variant="outline" className={cn("text-nano h-4 px-1 shrink-0 border", TIER_COLORS[s.score_tier] || TIER_COLORS.C)}>
             {s.score_tier}
           </Badge>
         </div>
         {s.category && (
-          <span className="text-[9px] text-muted-foreground truncate block mt-0.5 max-w-[300px]">{s.category}</span>
+          <span className="text-nano text-muted-foreground truncate block mt-0.5 max-w-[300px]">{s.category}</span>
         )}
       </div>
 
@@ -73,7 +73,7 @@ export function RegistryCard({ service: s, onClick }: RegistryCardProps) {
                 : `${s.neurons_cost_min}–${s.neurons_cost_max}N`}
             </span>
           </div>
-          <span className="text-[8px] text-muted-foreground/60">{s.complexity} · {s.output_type}</span>
+          <span className="text-nano text-muted-foreground/60">{s.complexity} · {s.output_type}</span>
         </div>
         <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors" />
       </div>

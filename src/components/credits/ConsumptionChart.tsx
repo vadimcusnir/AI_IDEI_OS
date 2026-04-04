@@ -53,17 +53,17 @@ export function ConsumptionChart({ transactions }: ConsumptionChartProps) {
   return (
     <div className="bg-card border border-border rounded-xl p-5 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">
           30-Day Activity
         </h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 rounded-full bg-destructive" />
-            <span className="text-[10px] text-muted-foreground">Spent: <span className="font-mono font-bold text-destructive">-{totalSpent30d}</span></span>
+            <span className="text-micro text-muted-foreground">Spent: <span className="font-mono font-bold text-destructive">-{totalSpent30d}</span></span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 rounded-full bg-status-validated" />
-            <span className="text-[10px] text-muted-foreground">Earned: <span className="font-mono font-bold text-status-validated">+{totalEarned30d}</span></span>
+            <span className="text-micro text-muted-foreground">Earned: <span className="font-mono font-bold text-status-validated">+{totalEarned30d}</span></span>
           </div>
         </div>
       </div>

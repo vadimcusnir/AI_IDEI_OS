@@ -14,7 +14,7 @@ export function KPI({ label, value, icon: Icon, color, index = 0 }: {
     >
       <div className="flex items-center gap-1 mb-1">
         <Icon className="h-3 w-3 text-muted-foreground" />
-        <span className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <p className={cn("text-lg font-bold font-mono", color)}>{value}</p>
     </motion.div>
@@ -39,7 +39,7 @@ const statusColors: Record<string, string> = {
 export function StatusBadge({ status }: { status: string }) {
   return (
     <span className={cn(
-      "text-[9px] font-mono uppercase px-1.5 py-0.5 rounded",
+      "text-nano font-mono uppercase px-1.5 py-0.5 rounded",
       statusColors[status] || "bg-muted text-muted-foreground"
     )}>
       {status}
@@ -56,7 +56,7 @@ export function LogLevelBadge({ level }: { level: string }) {
   };
   return (
     <span className={cn(
-      "text-[8px] font-mono uppercase px-1.5 py-0.5 rounded shrink-0 w-10 text-center",
+      "text-nano font-mono uppercase px-1.5 py-0.5 rounded shrink-0 w-10 text-center",
       colors[level] || "bg-muted text-muted-foreground"
     )}>
       {level}

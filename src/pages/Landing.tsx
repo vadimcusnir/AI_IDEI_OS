@@ -65,7 +65,7 @@ function ExtractionSpine({ labels }: { labels: string[] }) {
       {labels.map((l, i) => (
         <div key={l} className="flex flex-col items-center">
           <div className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] my-1.5" />
-          <span className="text-[9px] font-mono tracking-[0.25em] text-[hsl(var(--ivory-dim)/0.25)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
+          <span className="text-nano font-mono tracking-[0.25em] text-[hsl(var(--ivory-dim)/0.25)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
             {l}
           </span>
           {i < labels.length - 1 && <div className="w-px h-14 bg-[hsl(var(--gold-oxide)/0.06)]" />}
@@ -165,7 +165,7 @@ export default function Landing() {
       <div className="relative overflow-hidden bg-foreground/95 border-b border-border/50">
         <div className="flex whitespace-nowrap animate-[marquee_14s_linear_infinite] py-2.5">
           {[...Array(4)].map((_, i) => (
-            <span key={i} className="flex items-center gap-8 px-8 text-[11px] sm:text-xs font-mono tracking-[0.15em] text-background/90 shrink-0">
+            <span key={i} className="flex items-center gap-8 px-8 text-dense sm:text-xs font-mono tracking-[0.15em] text-background/90 shrink-0">
               <span className="h-1 w-1 rounded-full bg-[hsl(var(--gold-oxide))] shrink-0" />
               Turn rough ideas into copy, content, offers, and campaigns — faster.
             </span>
@@ -188,7 +188,7 @@ export default function Landing() {
                 key={link.key}
                 onClick={() => scrollTo(link.to)}
                 className={cn(
-                  "text-[11px] font-mono tracking-[0.12em] transition-colors relative py-1.5 focus-ring rounded-sm",
+                  "text-dense font-mono tracking-[0.12em] transition-colors relative py-1.5 focus-ring rounded-sm",
                   activeSection === link.to
                     ? "text-[hsl(var(--gold-oxide))]"
                     : "text-muted-foreground hover:text-[hsl(var(--gold-oxide))]"

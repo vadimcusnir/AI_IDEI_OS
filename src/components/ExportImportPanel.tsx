@@ -216,7 +216,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
 
         {/* Export */}
         <div className="px-5 py-4 border-b border-border">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("export_all_neurons")}</h3>
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("export_all_neurons")}</h3>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="text-xs gap-1.5 flex-1" onClick={handleExportJSON} disabled={exporting}>
               {exporting ? <Loader2 className="h-3 w-3 animate-spin" /> : <FileJson className="h-3 w-3" />}
@@ -231,7 +231,7 @@ export function ExportImportPanel({ isOpen, onClose }: { isOpen: boolean; onClos
 
         {/* Import */}
         <div className="px-5 py-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("import_content")}</h3>
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">{t("import_content")}</h3>
 
           <div className="flex gap-1.5 mb-3">
             {(["text", "markdown", "json"] as const).map(fmt => (

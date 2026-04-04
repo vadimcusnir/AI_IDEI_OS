@@ -152,7 +152,7 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
           </div>
           <h3 className="text-sm font-semibold text-foreground">Studio</h3>
         </div>
-        <p className="text-[10px] text-muted-foreground mt-1.5">
+        <p className="text-micro text-muted-foreground mt-1.5">
           {selectedSources.length === 0
             ? "Select sources to start generating"
             : `${selectedSources.length} source${selectedSources.length !== 1 ? "s" : ""} selected — ready to generate`
@@ -200,7 +200,7 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
                       {label}
                       {hasContent && <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />}
                     </div>
-                    <div className="text-[10px] text-muted-foreground truncate">{desc}</div>
+                    <div className="text-micro text-muted-foreground truncate">{desc}</div>
                   </div>
                   {hasContent && (
                     <div className="flex items-center gap-0.5">
@@ -256,7 +256,7 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
         {/* Saved artifacts */}
         {artifacts.length > 0 && (
           <div className="px-3 pb-3">
-            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2">
+            <div className="text-micro font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2">
               Saved ({artifacts.length})
             </div>
             <div className="space-y-1">
@@ -293,7 +293,7 @@ export function NotebookStudioPanel({ artifacts, sources, notebookId }: Props) {
                           exit={{ height: 0, opacity: 0 }}
                           className="overflow-hidden"
                         >
-                          <div className="mx-2 mb-1 p-2 rounded bg-muted/30 text-[10px] max-h-48 overflow-y-auto">
+                          <div className="mx-2 mb-1 p-2 rounded bg-muted/30 text-micro max-h-48 overflow-y-auto">
                             <div className="prose prose-xs dark:prose-invert max-w-none">
                               <ReactMarkdown>{art.content || ""}</ReactMarkdown>
                             </div>

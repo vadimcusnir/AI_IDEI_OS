@@ -134,7 +134,7 @@ export default function MasterAgent() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-3"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-[10px] font-mono font-bold text-primary uppercase tracking-widest">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-micro font-mono font-bold text-primary uppercase tracking-widest">
             <Cpu className="h-3 w-3" />
             Autonomous Production Engine
           </div>
@@ -163,11 +163,11 @@ export default function MasterAgent() {
               {/* Source input */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+                  <label className="text-micro font-mono font-bold uppercase tracking-widest text-muted-foreground">
                     Conținut sursă
                   </label>
                   <span className={cn(
-                    "text-[10px] font-mono transition-colors",
+                    "text-micro font-mono transition-colors",
                     isReady ? "text-status-validated" : "text-muted-foreground"
                   )}>
                     {charCount} {!isReady && "/ 50 min"}
@@ -195,7 +195,7 @@ export default function MasterAgent() {
 
               {/* Goal input */}
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+                <label className="text-micro font-mono font-bold uppercase tracking-widest text-muted-foreground">
                   Obiectiv
                   <span className="text-muted-foreground/40 ml-2 normal-case tracking-normal">opțional</span>
                 </label>
@@ -230,14 +230,14 @@ export default function MasterAgent() {
                           {cfg.label}
                         </span>
                         <span className={cn(
-                          "text-[8px] font-mono font-bold px-2 py-0.5 rounded-full",
+                          "text-nano font-mono font-bold px-2 py-0.5 rounded-full",
                           isSelected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
                         )}>
                           {cfg.badge}
                         </span>
                       </div>
-                      <p className="text-[10px] text-muted-foreground leading-relaxed">{cfg.desc}</p>
-                      <p className="text-[10px] font-mono text-muted-foreground/60 mt-1">{cfg.neurons}</p>
+                      <p className="text-micro text-muted-foreground leading-relaxed">{cfg.desc}</p>
+                      <p className="text-micro font-mono text-muted-foreground/60 mt-1">{cfg.neurons}</p>
                     </button>
                   );
                 })}
@@ -249,13 +249,13 @@ export default function MasterAgent() {
                   <Store className="h-4 w-4 text-muted-foreground" />
                   <div>
                     <p className="text-xs font-medium">Monetizare automată</p>
-                    <p className="text-[10px] text-muted-foreground">Publică drafturi în marketplace</p>
+                    <p className="text-micro text-muted-foreground">Publică drafturi în marketplace</p>
                   </div>
                 </div>
                 <Button
                   variant={monetize ? "default" : "outline"}
                   size="sm"
-                  className="text-[10px] h-7 px-3 rounded-full"
+                  className="text-micro h-7 px-3 rounded-full"
                   onClick={() => setMonetize(!monetize)}
                 >
                   {monetize ? "Activă" : "Dezactivată"}
@@ -280,7 +280,7 @@ export default function MasterAgent() {
                 >
                   <Play className="h-5 w-5" />
                   Lansează Master Agent
-                  <span className="text-[10px] font-mono font-normal opacity-70">
+                  <span className="text-micro font-mono font-normal opacity-70">
                     {DEPTH_CONFIG[depth].neurons}
                   </span>
                 </Button>
@@ -300,10 +300,10 @@ export default function MasterAgent() {
               {/* Progress bar — full width, cinematic */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-primary">
+                  <span className="text-micro font-mono font-bold uppercase tracking-widest text-primary">
                     Processing
                   </span>
-                  <span className="text-[10px] font-mono text-muted-foreground">
+                  <span className="text-micro font-mono text-muted-foreground">
                     {Math.round(progress)}%
                   </span>
                 </div>
@@ -374,7 +374,7 @@ export default function MasterAgent() {
                     <div className="h-5 w-5 rounded-md bg-ai-accent/10 flex items-center justify-center">
                       <Cpu className="h-3 w-3 text-ai-accent" />
                     </div>
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+                    <span className="text-nano font-mono font-bold uppercase tracking-widest text-muted-foreground">
                       Kernel Report
                     </span>
                   </div>
@@ -387,7 +387,7 @@ export default function MasterAgent() {
                       { label: "Memory", value: `${result.kernel.memory_runs} runs` },
                     ].map((item) => (
                       <div key={item.label}>
-                        <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">{item.label}</p>
+                        <p className="text-nano text-muted-foreground/60 uppercase tracking-wider mb-0.5">{item.label}</p>
                         <p className="font-mono font-semibold text-foreground capitalize">{item.value}</p>
                       </div>
                     ))}
@@ -402,7 +402,7 @@ export default function MasterAgent() {
                     onClick={() => setShowPipeline(!showPipeline)}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors"
                   >
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <span className="text-micro font-mono font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                       <Layers className="h-3 w-3" />
                       Pipeline Log — {result.steps.length} steps
                     </span>
@@ -436,10 +436,10 @@ export default function MasterAgent() {
                                 ) : (
                                   <XCircle className="h-3 w-3 text-destructive shrink-0" />
                                 )}
-                                <span className="text-muted-foreground w-24 shrink-0 font-mono text-[10px]">
+                                <span className="text-muted-foreground w-24 shrink-0 font-mono text-micro">
                                   {stepMeta?.label || step.step}
                                 </span>
-                                <span className="text-foreground/70 text-[10px] truncate">
+                                <span className="text-foreground/70 text-micro truncate">
                                   {d.count !== undefined && `${d.count} items`}
                                   {d.outputs !== undefined && ` ${d.outputs} outputs`}
                                   {d.items !== undefined && ` ${d.items} items`}
@@ -472,7 +472,7 @@ export default function MasterAgent() {
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <Award className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+                    <span className="text-micro font-mono font-bold uppercase tracking-widest text-muted-foreground">
                       Top Ranked
                     </span>
                   </div>
@@ -482,7 +482,7 @@ export default function MasterAgent() {
                         <span className="text-lg font-bold font-mono text-muted-foreground/30 w-8">
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <Badge variant="outline" className="text-[8px] shrink-0">{item.type}</Badge>
+                        <Badge variant="outline" className="text-nano shrink-0">{item.type}</Badge>
                         <span className="text-xs font-medium truncate flex-1">{item.title}</span>
                         <span className="text-xs font-mono font-bold text-primary">
                           {(item.score * 100).toFixed(0)}%
@@ -503,20 +503,20 @@ export default function MasterAgent() {
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <Package className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+                    <span className="text-micro font-mono font-bold uppercase tracking-widest text-muted-foreground">
                       Assets Generate
                     </span>
-                    <span className="text-[10px] font-mono text-muted-foreground/50 ml-auto">
+                    <span className="text-micro font-mono text-muted-foreground/50 ml-auto">
                       {result.assets.length}
                     </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {result.assets.map((asset: any, i: number) => (
                       <div key={i} className="flex items-center gap-2 p-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
-                        <Badge variant="outline" className="text-[8px] shrink-0">{asset.type}</Badge>
+                        <Badge variant="outline" className="text-nano shrink-0">{asset.type}</Badge>
                         <span className="text-xs truncate flex-1">{asset.title}</span>
                         {asset.price_usd && (
-                          <span className="text-[10px] font-mono font-bold text-primary">${asset.price_usd}</span>
+                          <span className="text-micro font-mono font-bold text-primary">${asset.price_usd}</span>
                         )}
                       </div>
                     ))}
@@ -534,20 +534,20 @@ export default function MasterAgent() {
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkles className="h-3.5 w-3.5 text-ai-accent" />
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+                    <span className="text-micro font-mono font-bold uppercase tracking-widest text-muted-foreground">
                       Servicii Auto-Generate
                     </span>
                   </div>
                   <div className="space-y-1.5">
                     {result.new_services.map((svc: any, i: number) => (
                       <div key={i} className="flex items-center gap-2 p-2.5 rounded-xl bg-muted/30">
-                        <Badge variant="outline" className="text-[8px]">{svc.class}</Badge>
+                        <Badge variant="outline" className="text-nano">{svc.class}</Badge>
                         <span className="text-xs font-medium truncate flex-1">{svc.name}</span>
-                        <span className="text-[10px] font-mono text-muted-foreground">{svc.credits_cost}N</span>
+                        <span className="text-micro font-mono text-muted-foreground">{svc.credits_cost}N</span>
                       </div>
                     ))}
                   </div>
-                  <p className="text-[9px] text-muted-foreground/50 mt-3 text-center">
+                  <p className="text-nano text-muted-foreground/50 mt-3 text-center">
                     Serviciile noi necesită aprobare admin
                   </p>
                 </motion.div>

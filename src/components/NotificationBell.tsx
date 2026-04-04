@@ -64,7 +64,7 @@ export function NotificationBell() {
       >
         <Bell className="h-3.5 w-3.5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[8px] font-bold flex items-center justify-center animate-pulse">
+          <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-nano font-bold flex items-center justify-center animate-pulse">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -78,7 +78,7 @@ export function NotificationBell() {
               <span className="text-xs font-semibold">{t("notifications")}</span>
               <div className="flex items-center gap-2">
                 {unreadCount > 0 && (
-                  <button onClick={markAllRead} className="text-[10px] text-primary hover:underline">
+                  <button onClick={markAllRead} className="text-micro text-primary hover:underline">
                     {t("mark_all_read")}
                   </button>
                 )}
@@ -89,7 +89,7 @@ export function NotificationBell() {
               {recent.length === 0 ? (
                 <div className="px-4 py-8 text-center">
                   <Bell className="h-5 w-5 opacity-20 mx-auto mb-2" />
-                  <p className="text-[11px] text-muted-foreground">{t("no_notifications")}</p>
+                  <p className="text-dense text-muted-foreground">{t("no_notifications")}</p>
                 </div>
               ) : (
                 recent.map((notif) => {
@@ -113,9 +113,9 @@ export function NotificationBell() {
                         )}
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-medium truncate">{notif.title}</p>
-                        <p className="text-[10px] text-muted-foreground truncate">{notif.message}</p>
-                        <p className="text-[9px] text-muted-foreground/60 mt-0.5">{timeAgo}</p>
+                        <p className="text-dense font-medium truncate">{notif.title}</p>
+                        <p className="text-micro text-muted-foreground truncate">{notif.message}</p>
+                        <p className="text-nano text-muted-foreground/60 mt-0.5">{timeAgo}</p>
                       </div>
                       {!notif.read && (
                         <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
@@ -132,7 +132,7 @@ export function NotificationBell() {
                   setOpen(false);
                   navigate("/notifications");
                 }}
-                className="w-full px-4 py-2 text-center text-[11px] text-primary font-medium hover:bg-muted/50 transition-colors border-t border-border"
+                className="w-full px-4 py-2 text-center text-dense text-primary font-medium hover:bg-muted/50 transition-colors border-t border-border"
               >
                 {t("view_all_notifications")} →
               </button>

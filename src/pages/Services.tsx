@@ -257,10 +257,10 @@ export default function Services() {
                     )}>
                       <Icon className={cn("h-3.5 w-3.5", isActive ? "text-[hsl(var(--gold-oxide))]" : "text-muted-foreground")} />
                     </div>
-                    <span className="text-[10px] font-mono text-muted-foreground">{count}</span>
+                    <span className="text-micro font-mono text-muted-foreground">{count}</span>
                   </div>
                   <p className="text-xs font-bold">{cfg.label}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{cfg.tagline}</p>
+                  <p className="text-micro text-muted-foreground mt-0.5 line-clamp-1">{cfg.tagline}</p>
                 </button>
               );
             })}
@@ -297,7 +297,7 @@ export default function Services() {
               <List className="h-3.5 w-3.5" />
             </button>
           </div>
-          <span className="text-[10px] font-mono text-muted-foreground shrink-0">
+          <span className="text-micro font-mono text-muted-foreground shrink-0">
             {totalFiltered}/{services.length}
           </span>
         </div>
@@ -339,9 +339,9 @@ export default function Services() {
                     <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
                       {cfg.label}
                     </h3>
-                    <p className="text-[10px] text-muted-foreground">{cfg.tagline}</p>
+                    <p className="text-micro text-muted-foreground">{cfg.tagline}</p>
                   </div>
-                  <span className="text-[10px] font-mono text-muted-foreground/60">
+                  <span className="text-micro font-mono text-muted-foreground/60">
                     {intentServices.length} servicii
                   </span>
                 </div>
@@ -413,7 +413,7 @@ export default function Services() {
             <ArrowRight className="h-4 w-4" />
           </Button>
           {!user && (
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-dense text-muted-foreground">
               500 NEURONS gratuit la înregistrare • Fără card
             </p>
           )}

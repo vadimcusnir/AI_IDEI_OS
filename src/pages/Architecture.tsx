@@ -22,7 +22,7 @@ const Section = ({ icon: Icon, title, children }: { icon: any; title: string; ch
 
 const CodeBlock = ({ title, children }: { title?: string; children: string }) => (
   <div className="rounded-lg border border-border bg-card overflow-hidden my-4">
-    {title && <div className="px-4 py-2 border-b border-border bg-muted text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</div>}
+    {title && <div className="px-4 py-2 border-b border-border bg-muted text-micro font-mono uppercase tracking-wider text-muted-foreground">{title}</div>}
     <pre className="p-4 text-xs font-mono overflow-x-auto whitespace-pre text-foreground">{children}</pre>
   </div>
 );
@@ -60,7 +60,7 @@ export default function Architecture() {
               "Lovable AI Gateway", "RLS Security", "SSE Streaming",
               "Realtime Subscriptions", "Desktop Notifications",
             ].map(tag => (
-              <span key={tag} className="text-[10px] uppercase tracking-wider bg-muted px-2 py-1 rounded font-semibold text-muted-foreground">{tag}</span>
+              <span key={tag} className="text-micro uppercase tracking-wider bg-muted px-2 py-1 rounded font-semibold text-muted-foreground">{tag}</span>
             ))}
           </div>
         </div>
@@ -582,7 +582,7 @@ Rate limits: per-workspace, 429 on exceed, 402 on credits exhausted`}</CodeBlock
         {/* Footer */}
         <div className="border-t border-border pt-8 mt-16 text-center">
           <p className="text-xs text-muted-foreground">AI-IDEI · Knowledge Operating System v1.1</p>
-          <p className="text-[10px] text-muted-foreground/50 mt-1">
+          <p className="text-micro text-muted-foreground/50 mt-1">
             {t("footer.doc_label")} — 18 {t("footer.sections")} · {new Date().toLocaleDateString()}
           </p>
           <div className="flex items-center justify-center gap-3 mt-4">

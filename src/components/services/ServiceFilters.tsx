@@ -37,7 +37,7 @@ export function ServiceFilters({
           <div className="bg-card border border-border rounded-xl p-4 space-y-4">
             {/* Category filter */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                 {t("services.filter_category")}
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -75,7 +75,7 @@ export function ServiceFilters({
 
             {/* Cost filter */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                 {t("services.filter_cost")}
               </p>
               <div className="flex gap-1.5">

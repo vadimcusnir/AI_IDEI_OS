@@ -29,7 +29,7 @@ export function ModeChipBar({ activeMode, onModeChange }: ModeChipBarProps) {
             key={mode.key}
             onClick={() => onModeChange(isActive ? null : mode.key)}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap transition-all duration-200 border",
+              "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-dense font-medium whitespace-nowrap transition-all duration-200 border",
               isActive
                 ? "bg-primary/10 border-primary/30 text-primary"
                 : "bg-card/60 border-border/30 text-muted-foreground/60 hover:text-muted-foreground hover:border-border/50 hover:bg-card"

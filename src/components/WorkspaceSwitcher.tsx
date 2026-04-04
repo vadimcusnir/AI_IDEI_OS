@@ -90,7 +90,7 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
           <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors text-left">
             <Building2 className="h-4 w-4 text-primary shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold">{t("workspace")}</p>
+              <p className="text-nano uppercase tracking-wider text-muted-foreground font-semibold">{t("workspace")}</p>
               <p className="text-xs font-medium truncate">{currentWorkspace?.name || "—"}</p>
             </div>
             <ChevronsUpDown className="h-3 w-3 text-muted-foreground shrink-0" />

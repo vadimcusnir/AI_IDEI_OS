@@ -128,15 +128,15 @@ export function DistributionPanel({ content, serviceKey, serviceName, className 
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+        <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           <Share2 className="h-3 w-3 text-primary" />
           {t("distribution.title", { defaultValue: "Distribuie & crește" })}
         </p>
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+          <span className="text-nano font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary">
             {categoryInfo.emoji} {categoryInfo.label}
           </span>
-          <span className="text-[9px] text-muted-foreground">
+          <span className="text-nano text-muted-foreground">
             {plan.variants.length} {t("distribution.variants", { defaultValue: "variante" })}
           </span>
         </div>
@@ -168,7 +168,7 @@ export function DistributionPanel({ content, serviceKey, serviceName, className 
       {/* Expand variants */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-1 text-[10px] text-primary hover:underline mb-2"
+        className="flex items-center gap-1 text-micro text-primary hover:underline mb-2"
       >
         {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
         {expanded
@@ -191,7 +191,7 @@ export function DistributionPanel({ content, serviceKey, serviceName, className 
                   key={type}
                   onClick={() => setActiveVariantType(type)}
                   className={cn(
-                    "text-[10px] px-2 py-1 rounded-full border transition-colors",
+                    "text-micro px-2 py-1 rounded-full border transition-colors",
                     activeVariantType === type
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-card border-border text-muted-foreground hover:border-primary/30"
@@ -210,20 +210,20 @@ export function DistributionPanel({ content, serviceKey, serviceName, className 
                   className="p-2.5 rounded-lg border border-border bg-muted/30 text-xs"
                 >
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[9px] font-mono text-muted-foreground">
+                    <span className="text-nano font-mono text-muted-foreground">
                       {PLATFORMS[variant.platform]?.icon} {variant.platform}
                     </span>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-5 text-[10px] gap-1 px-1.5"
+                      className="h-5 text-micro gap-1 px-1.5"
                       onClick={() => handleCopy(variant.text, variant.platform)}
                     >
                       {copied === variant.platform ? <Check className="h-2.5 w-2.5" /> : <Copy className="h-2.5 w-2.5" />}
                       {copied === variant.platform ? "✓" : "Copy"}
                     </Button>
                   </div>
-                  <p className="text-foreground whitespace-pre-wrap text-[11px] leading-relaxed line-clamp-4">
+                  <p className="text-foreground whitespace-pre-wrap text-dense leading-relaxed line-clamp-4">
                     {variant.text}
                   </p>
                 </div>
@@ -234,7 +234,7 @@ export function DistributionPanel({ content, serviceKey, serviceName, className 
       </AnimatePresence>
 
       {/* CTA embed note */}
-      <p className="text-[9px] text-muted-foreground mt-2 flex items-center gap-1">
+      <p className="text-nano text-muted-foreground mt-2 flex items-center gap-1">
         <Zap className="h-2.5 w-2.5 text-primary/50" />
         {t("distribution.cta_note", {
           defaultValue: "CTA-ul către AI-IDEI este inclus automat în fiecare variantă",

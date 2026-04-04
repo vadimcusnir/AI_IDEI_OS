@@ -202,7 +202,7 @@ export function GuestProfileAdvanced({ guestId, guestName, episodeIds, isOwner }
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold">Psychological Analysis</p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-micro text-muted-foreground">
                 {psychProfile
                   ? `Last analyzed: ${profileTier} tier`
                   : "No analysis yet — run to generate profile"}
@@ -246,9 +246,9 @@ export function GuestProfileAdvanced({ guestId, guestName, episodeIds, isOwner }
             {duplicates.length} duplicate merge suggestion{duplicates.length > 1 ? "s" : ""} pending
           </p>
           {duplicates.map(d => (
-            <div key={d.id} className="flex items-center gap-2 text-[10px] text-muted-foreground">
+            <div key={d.id} className="flex items-center gap-2 text-micro text-muted-foreground">
               <span>Possible match: {d.target_profile_id === guestId ? d.source_profile_id : d.target_profile_id}</span>
-              <Badge variant="outline" className="text-[8px]">{d.status}</Badge>
+              <Badge variant="outline" className="text-nano">{d.status}</Badge>
             </div>
           ))}
         </div>
@@ -262,11 +262,11 @@ export function GuestProfileAdvanced({ guestId, guestName, episodeIds, isOwner }
             {pendingEdits.filter(e => e.status === "pending").length} edit suggestion{pendingEdits.filter(e => e.status === "pending").length > 1 ? "s" : ""} pending review
           </p>
           {pendingEdits.filter(e => e.status === "pending").slice(0, 3).map(edit => (
-            <div key={edit.id} className="flex items-center justify-between text-[10px] p-2 rounded-lg bg-background border border-border">
+            <div key={edit.id} className="flex items-center justify-between text-micro p-2 rounded-lg bg-background border border-border">
               <div>
                 <span className="font-medium">{edit.field_name}</span>: "{edit.new_value.slice(0, 60)}{edit.new_value.length > 60 ? "…" : ""}"
               </div>
-              <Badge variant="outline" className="text-[8px]">{edit.status}</Badge>
+              <Badge variant="outline" className="text-nano">{edit.status}</Badge>
             </div>
           ))}
         </div>
@@ -302,7 +302,7 @@ export function GuestProfileAdvanced({ guestId, guestName, episodeIds, isOwner }
         <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 text-center">
           <Sparkles className="h-6 w-6 text-primary mx-auto mb-2" />
           <h3 className="text-sm font-semibold mb-1">Unlock Deep Analysis</h3>
-          <p className="text-[11px] text-muted-foreground max-w-sm mx-auto mb-3">
+          <p className="text-dense text-muted-foreground max-w-sm mx-auto mb-3">
             Premium analysis includes 6 additional modules: Cognitive Style, Emotional Drivers,
             Narrative Patterns, Values System, and Expertise Mapping with detailed scoring.
           </p>
@@ -335,9 +335,9 @@ export function GuestProfileAdvanced({ guestId, guestName, episodeIds, isOwner }
                 <div key={r.id} className="flex items-center justify-between p-2 rounded-lg border border-border text-xs">
                   <div>
                     <p className="font-medium">{r.full_name}</p>
-                    <p className="text-[10px] text-muted-foreground">{r.role}</p>
+                    <p className="text-micro text-muted-foreground">{r.role}</p>
                   </div>
-                  <Button size="sm" variant="outline" className="h-7 text-[10px]" onClick={() => suggestMerge(r.id)}>
+                  <Button size="sm" variant="outline" className="h-7 text-micro" onClick={() => suggestMerge(r.id)}>
                     <GitMerge className="h-3 w-3 mr-1" /> Suggest
                   </Button>
                 </div>
@@ -358,7 +358,7 @@ export function GuestProfileAdvanced({ guestId, guestName, episodeIds, isOwner }
           </p>
           <div className="space-y-3">
             <div>
-              <label className="text-[10px] font-medium text-muted-foreground">Field</label>
+              <label className="text-micro font-medium text-muted-foreground">Field</label>
               <select value={editField} onChange={e => setEditField(e.target.value)}
                 className="w-full h-9 rounded-md border border-border bg-background px-3 text-xs mt-1">
                 <option value="">Select field...</option>
@@ -371,7 +371,7 @@ export function GuestProfileAdvanced({ guestId, guestName, episodeIds, isOwner }
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-medium text-muted-foreground">Suggested value</label>
+              <label className="text-micro font-medium text-muted-foreground">Suggested value</label>
               <Textarea value={editValue} onChange={e => setEditValue(e.target.value)}
                 placeholder="Enter the correct or additional information..."
                 className="text-xs min-h-[80px] mt-1" />
@@ -428,7 +428,7 @@ function ModuleCard({ icon: Icon, title, data, fields }: {
         <Icon className="h-4 w-4 text-primary" />
         <h3 className="text-sm font-semibold">{title}</h3>
         {scores.length > 5 && (
-          <Button variant="ghost" size="sm" className="h-6 text-[10px] ml-auto"
+          <Button variant="ghost" size="sm" className="h-6 text-micro ml-auto"
             onClick={() => setExpanded(!expanded)}>
             {expanded ? "Less" : `+${scores.length - 5} more`}
           </Button>
@@ -440,8 +440,8 @@ function ModuleCard({ icon: Icon, title, data, fields }: {
           {visibleScores.map((s, i) => (
             <div key={i}>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] text-foreground">{s.label}</span>
-                <span className="text-[10px] font-bold text-primary tabular-nums">{Math.round(s.value)}</span>
+                <span className="text-dense text-foreground">{s.label}</span>
+                <span className="text-micro font-bold text-primary tabular-nums">{Math.round(s.value)}</span>
               </div>
               <div className="h-1.5 rounded-full bg-muted overflow-hidden">
                 <div className="h-full rounded-full bg-primary/60" style={{ width: `${s.value}%` }} />
@@ -455,7 +455,7 @@ function ModuleCard({ icon: Icon, title, data, fields }: {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {visibleInsights.map((ins, i) => (
             <div key={i} className="rounded-lg border border-border p-3">
-              <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-0.5">{ins.label}</p>
+              <p className="text-nano uppercase tracking-wider text-muted-foreground mb-0.5">{ins.label}</p>
               <p className="text-xs font-medium">{ins.value}</p>
             </div>
           ))}

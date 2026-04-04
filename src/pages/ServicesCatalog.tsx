@@ -169,7 +169,7 @@ export default function ServicesCatalog() {
                 key={d}
                 onClick={() => setSelectedDomain(selectedDomain === d ? "" : d)}
                 className={cn(
-                  "text-[10px] px-2 py-0.5 rounded-full border transition-all",
+                  "text-micro px-2 py-0.5 rounded-full border transition-all",
                   selectedDomain === d
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-muted/50 text-muted-foreground border-border hover:border-primary/30"

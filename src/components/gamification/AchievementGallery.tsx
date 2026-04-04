@@ -100,7 +100,7 @@ export function AchievementGallery() {
         </div>
         <button
           onClick={() => setShowHidden(!showHidden)}
-          className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1 text-micro text-muted-foreground hover:text-foreground transition-colors"
         >
           {showHidden ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
           {showHidden ? "Hide secret" : "Show secret"}
@@ -112,7 +112,7 @@ export function AchievementGallery() {
         <button
           onClick={() => setFilter("all")}
           className={cn(
-            "px-2 py-1 rounded-md text-[10px] font-medium transition-colors",
+            "px-2 py-1 rounded-md text-micro font-medium transition-colors",
             filter === "all" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
           )}
         >
@@ -127,7 +127,7 @@ export function AchievementGallery() {
               key={cat}
               onClick={() => setFilter(cat)}
               className={cn(
-                "flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-colors",
+                "flex items-center gap-1 px-2 py-1 rounded-md text-micro font-medium transition-colors",
                 filter === cat ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
               )}
             >
@@ -177,18 +177,18 @@ export function AchievementGallery() {
                   </p>
                   <Badge
                     variant="outline"
-                    className={cn("text-[8px] px-1 py-0 h-3.5 shrink-0", TIER_BADGE[ach.tier])}
+                    className={cn("text-nano px-1 py-0 h-3.5 shrink-0", TIER_BADGE[ach.tier])}
                   >
                     {ach.tier}
                   </Badge>
                 </div>
-                <p className="text-[10px] text-muted-foreground line-clamp-1">
+                <p className="text-micro text-muted-foreground line-clamp-1">
                   {isHiddenLocked ? "Discover this hidden achievement" : ach.description}
                 </p>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[9px] font-bold text-primary">+{ach.xp_reward} XP</span>
+                  <span className="text-nano font-bold text-primary">+{ach.xp_reward} XP</span>
                   {date && (
-                    <span className="text-[8px] text-muted-foreground">
+                    <span className="text-nano text-muted-foreground">
                       {new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </span>
                   )}

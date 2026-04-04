@@ -108,7 +108,7 @@ export function StorageBillingPanel() {
           Storage Billing
         </h3>
         {monthlyEstimate > 0 && (
-          <Badge variant="outline" className="text-[9px] gap-1">
+          <Badge variant="outline" className="text-nano gap-1">
             <TrendingUp className="h-3 w-3" />
             ~{dailyEstimate} N/day
           </Badge>
@@ -118,19 +118,19 @@ export function StorageBillingPanel() {
       {/* Cost summary */}
       <div className="grid grid-cols-2 gap-2">
         <div className="rounded-lg border border-border bg-muted/30 p-2.5">
-          <p className="text-[10px] text-muted-foreground">Total stored</p>
+          <p className="text-micro text-muted-foreground">Total stored</p>
           <p className="text-sm font-semibold font-mono">{formatBytes(cost.total_bytes)}</p>
-          <p className="text-[10px] text-muted-foreground">{cost.artifact_count} files</p>
+          <p className="text-micro text-muted-foreground">{cost.artifact_count} files</p>
         </div>
         <div className="rounded-lg border border-border bg-muted/30 p-2.5">
-          <p className="text-[10px] text-muted-foreground">Monthly cost</p>
+          <p className="text-micro text-muted-foreground">Monthly cost</p>
           <p className={cn(
             "text-sm font-semibold font-mono",
             monthlyEstimate > 0 ? "text-destructive" : "text-muted-foreground"
           )}>
             {monthlyEstimate} N
           </p>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-micro text-muted-foreground">
             Free: {formatBytes(cost.free_bytes)}
           </p>
         </div>
@@ -139,7 +139,7 @@ export function StorageBillingPanel() {
       {/* Billing progress bar */}
       {cost.total_bytes > 0 && (
         <div className="space-y-1">
-          <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+          <div className="flex items-center justify-between text-micro text-muted-foreground">
             <span>Free tier usage</span>
             <span>{formatBytes(Math.min(cost.total_bytes, cost.free_bytes))} / {formatBytes(cost.free_bytes)}</span>
           </div>
@@ -158,11 +158,11 @@ export function StorageBillingPanel() {
       {/* Recent billing log */}
       {billingLogQuery.data && billingLogQuery.data.length > 0 && (
         <div className="space-y-1.5 pt-2 border-t border-border">
-          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <span className="text-micro font-medium text-muted-foreground uppercase tracking-wider">
             Recent charges
           </span>
           {billingLogQuery.data.map((entry) => (
-            <div key={entry.id} className="flex items-center justify-between text-[11px] py-0.5">
+            <div key={entry.id} className="flex items-center justify-between text-dense py-0.5">
               <span className="text-muted-foreground">
                 {format(new Date(entry.billing_date), "dd MMM")}
               </span>
@@ -175,11 +175,11 @@ export function StorageBillingPanel() {
       {/* Largest files */}
       {largeFilesQuery.data && largeFilesQuery.data.length > 0 && (
         <div className="space-y-1.5 pt-2 border-t border-border">
-          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <span className="text-micro font-medium text-muted-foreground uppercase tracking-wider">
             Largest files
           </span>
           {largeFilesQuery.data.map((f) => (
-            <div key={f.id} className="flex items-center justify-between text-[11px] py-0.5">
+            <div key={f.id} className="flex items-center justify-between text-dense py-0.5">
               <span className="text-muted-foreground truncate max-w-[160px]" title={f.title}>
                 <FileText className="inline h-3 w-3 mr-1" />
                 {f.title}

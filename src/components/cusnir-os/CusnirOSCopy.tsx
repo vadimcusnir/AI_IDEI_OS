@@ -24,7 +24,7 @@ function Section({ children, className }: { children: React.ReactNode; className
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/40">
+    <p className="text-micro font-semibold uppercase tracking-[0.2em] text-muted-foreground/40">
       {children}
     </p>
   );
@@ -32,7 +32,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 function CopyBlock({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("text-[13px] leading-[1.8] text-muted-foreground/70 space-y-3", className)}>
+    <div className={cn("text-compact leading-[1.8] text-muted-foreground/70 space-y-3", className)}>
       {children}
     </div>
   );
@@ -42,7 +42,7 @@ function BulletList({ items }: { items: string[] }) {
   return (
     <ul className="space-y-1.5 pl-1">
       {items.map((item) => (
-        <li key={item} className="flex items-start gap-2 text-[13px] text-muted-foreground/70">
+        <li key={item} className="flex items-start gap-2 text-compact text-muted-foreground/70">
           <ChevronRight className="h-3 w-3 mt-1 text-primary/40 shrink-0" />
           <span>{item}</span>
         </li>
@@ -121,7 +121,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
         </div>
         <div className="space-y-2">
           <h1 className="text-xl font-bold tracking-tight">Cusnir_OS</h1>
-          <p className="text-[13px] text-muted-foreground/60 leading-relaxed max-w-md mx-auto">
+          <p className="text-compact text-muted-foreground/60 leading-relaxed max-w-md mx-auto">
             You are not accessing a feature.<br />
             You are entering a control layer.
           </p>
@@ -160,7 +160,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
             "operate beyond standard user limitations",
           ]} />
           <CopyBlock className="pt-2">
-            <p className="text-[12px] italic text-muted-foreground/40">
+            <p className="text-xs italic text-muted-foreground/40">
               If you are looking for productivity — you are in the wrong place.<br />
               If you are looking for leverage — continue.
             </p>
@@ -184,7 +184,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
             "operate without instruction",
           ]} />
           <CopyBlock className="pt-2">
-            <p className="text-[12px] italic text-muted-foreground/40">
+            <p className="text-xs italic text-muted-foreground/40">
               If this creates friction, you are not the intended user.
             </p>
           </CopyBlock>
@@ -211,7 +211,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
                   <div className="h-7 w-7 rounded-lg bg-muted/20 flex items-center justify-center">
                     <perm.icon className="h-3.5 w-3.5 text-foreground/50" />
                   </div>
-                  <p className="text-[12px] font-semibold text-foreground">{perm.title}</p>
+                  <p className="text-xs font-semibold text-foreground">{perm.title}</p>
                 </div>
                 <BulletList items={perm.items} />
               </div>
@@ -239,20 +239,20 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
           </CopyBlock>
 
           <div className="rounded-xl border border-border/15 p-4 space-y-3 mt-2">
-            <p className="text-[12px] font-semibold text-foreground">Requirements</p>
+            <p className="text-xs font-semibold text-foreground">Requirements</p>
             <BulletList items={[
               "11 consecutive months of sustained activity",
               "continuous economic participation",
               "maintained system discipline",
               "no critical violations",
             ]} />
-            <p className="text-[12px] text-muted-foreground/40 italic pt-1">
+            <p className="text-xs text-muted-foreground/40 italic pt-1">
               Any break resets progression. There are no exceptions.
             </p>
           </div>
 
           <div className="rounded-xl border border-border/15 p-4 space-y-3 mt-2">
-            <p className="text-[12px] font-semibold text-foreground">Loss Conditions</p>
+            <p className="text-xs font-semibold text-foreground">Loss Conditions</p>
             <CopyBlock>
               <p>Access is not permanent. It is continuously validated.</p>
               <p>Loss is triggered by:</p>
@@ -262,7 +262,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
               "economic threshold failure",
               "behavioral violations",
             ]} />
-            <p className="text-[12px] text-muted-foreground/40 italic pt-1">
+            <p className="text-xs text-muted-foreground/40 italic pt-1">
               When lost, access is revoked immediately. Re-entry requires restarting the full cycle or paying a reinstatement cost.
             </p>
           </div>
@@ -279,7 +279,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
             <p>Access is not limited by supply. It is limited by behavior.</p>
             <p>Less than 1% of users maintain the required consistency window.</p>
             <p>Most fail within the first 90 days.</p>
-            <p className="text-[12px] italic text-muted-foreground/40">
+            <p className="text-xs italic text-muted-foreground/40">
               Not due to lack of capability — but due to inability to sustain discipline.
             </p>
           </CopyBlock>
@@ -318,11 +318,11 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
           <SectionLabel>Economic Reframe</SectionLabel>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="rounded-xl border border-border/15 p-4 space-y-2">
-              <p className="text-[12px] font-semibold text-muted-foreground/50">Standard</p>
+              <p className="text-xs font-semibold text-muted-foreground/50">Standard</p>
               <BulletList items={["run tasks", "consume credits", "receive outputs"]} />
             </div>
             <div className="rounded-xl border border-primary/15 bg-primary/[0.02] p-4 space-y-2">
-              <p className="text-[12px] font-semibold text-foreground">Cusnir_OS</p>
+              <p className="text-xs font-semibold text-foreground">Cusnir_OS</p>
               <BulletList items={["define task structure", "influence cost dynamics", "control execution pathways"]} />
             </div>
           </div>
@@ -337,12 +337,12 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
           <SectionLabel>Identity Shift</SectionLabel>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="rounded-xl border border-border/15 p-4 text-center">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-1">Before</p>
-              <p className="text-[13px] text-muted-foreground/60">You use the platform.</p>
+              <p className="text-micro uppercase tracking-wider text-muted-foreground/40 mb-1">Before</p>
+              <p className="text-compact text-muted-foreground/60">You use the platform.</p>
             </div>
             <div className="rounded-xl border border-primary/15 bg-primary/[0.02] p-4 text-center">
-              <p className="text-[10px] uppercase tracking-wider text-primary/50 mb-1">After</p>
-              <p className="text-[13px] text-foreground/80 font-medium">You operate the platform.</p>
+              <p className="text-micro uppercase tracking-wider text-primary/50 mb-1">After</p>
+              <p className="text-compact text-foreground/80 font-medium">You operate the platform.</p>
             </div>
           </div>
         </Section>
@@ -361,7 +361,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
             <p className="text-foreground/80 font-medium">
               The value is not the entry. The value is maintaining control after entry.
             </p>
-            <p className="text-[12px] italic text-muted-foreground/40">
+            <p className="text-xs italic text-muted-foreground/40">
               Without discipline, access is lost regardless of how it was obtained.
             </p>
           </CopyBlock>
@@ -383,7 +383,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
           {/* Minimal progress hint */}
           {!eligible && monthProgress > 0 && (
             <div className="rounded-xl border border-border/15 p-4 space-y-2 mt-2">
-              <div className="flex items-center justify-between text-[10px] text-muted-foreground/40">
+              <div className="flex items-center justify-between text-micro text-muted-foreground/40">
                 <span>Signal detected</span>
                 <span className="tabular-nums">{Math.min(monthProgress, 11)}/11</span>
               </div>
@@ -444,7 +444,7 @@ export function CusnirOSCopy({ monthProgress, eligible, onNavigateCredits }: Cus
             Maintain discipline.<br />
             Return daily.
           </p>
-          <p className="text-[12px] italic text-muted-foreground/30 pt-2">
+          <p className="text-xs italic text-muted-foreground/30 pt-2">
             The system observes.
           </p>
         </CopyBlock>

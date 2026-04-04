@@ -462,7 +462,7 @@ export default function PromptForge() {
                     </div>
                   )}
 
-                  <p className="text-[10px] text-muted-foreground/50 text-center">
+                  <p className="text-micro text-muted-foreground/50 text-center">
                     {t("prompt_forge.balance_label", { balance })}
                   </p>
 

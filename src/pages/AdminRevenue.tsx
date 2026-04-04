@@ -132,7 +132,7 @@ export default function AdminRevenue() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <h1 className="text-lg font-bold tracking-tight">Revenue Dashboard</h1>
-              <Badge variant="secondary" className="text-[10px]">Admin</Badge>
+              <Badge variant="secondary" className="text-micro">Admin</Badge>
             </div>
             <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => loadData(true)} disabled={refreshing}>
               {refreshing ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
@@ -153,7 +153,7 @@ export default function AdminRevenue() {
               <div key={i} className="bg-card border border-border rounded-xl p-4">
                 <div className="flex items-center gap-1.5 mb-2">
                   <kpi.icon className={cn("h-3.5 w-3.5", kpi.color)} />
-                  <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</span>
+                  <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{kpi.label}</span>
                 </div>
                 <span className="text-lg font-bold font-mono">{kpi.value}</span>
               </div>
@@ -205,7 +205,7 @@ export default function AdminRevenue() {
               </div>
               <div className="flex flex-wrap gap-2 mt-2">
                 {typeBreakdown.map((t, i) => (
-                  <span key={t.name} className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <span key={t.name} className="flex items-center gap-1 text-micro text-muted-foreground">
                     <span className="h-2 w-2 rounded-full" style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }} />
                     {t.name}: {t.value}
                   </span>
@@ -225,13 +225,13 @@ export default function AdminRevenue() {
                   <div key={tx.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-background border border-border/50">
                     <div>
                       <p className="text-xs font-medium truncate max-w-[180px]">{tx.description}</p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-micro text-muted-foreground">
                         {new Date(tx.created_at).toLocaleDateString("ro-RO", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                       </p>
                     </div>
                     <div className="text-right">
                       <span className="text-sm font-mono font-bold text-status-validated">+{Math.abs(tx.amount)}</span>
-                      <p className="text-[9px] text-muted-foreground">${(Math.abs(tx.amount) * 0.002).toFixed(2)}</p>
+                      <p className="text-nano text-muted-foreground">${(Math.abs(tx.amount) * 0.002).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
@@ -254,8 +254,8 @@ export default function AdminRevenue() {
                     <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${step.pct}%` }} />
                   </div>
                   <p className="text-lg font-bold font-mono">{typeof step.value === "number" ? step.value.toLocaleString() : step.value}</p>
-                  <p className="text-[10px] text-muted-foreground">{step.label}</p>
-                  <p className="text-[9px] text-primary font-medium">{step.pct}%</p>
+                  <p className="text-micro text-muted-foreground">{step.label}</p>
+                  <p className="text-nano text-primary font-medium">{step.pct}%</p>
                 </div>
               ))}
             </div>

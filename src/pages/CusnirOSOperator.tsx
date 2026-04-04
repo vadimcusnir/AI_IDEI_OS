@@ -219,12 +219,12 @@ export default function CusnirOSOperator() {
                               <tr key={m.id} className="border-b border-border/50 hover:bg-muted/20">
                                 <td className="p-3">
                                   <div className="font-medium">{m.module_name}</div>
-                                  <div className="text-muted-foreground text-[10px] mt-0.5 max-w-[200px] truncate">{m.description}</div>
+                                  <div className="text-muted-foreground text-micro mt-0.5 max-w-[200px] truncate">{m.description}</div>
                                 </td>
                                 <td className="p-3 capitalize">{m.module_type}</td>
                                 <td className="p-3 font-mono">{m.version}</td>
                                 <td className="p-3">
-                                  <Badge className={cn("text-[10px]", STATUS_COLORS[m.status] || "")}>{m.status}</Badge>
+                                  <Badge className={cn("text-micro", STATUS_COLORS[m.status] || "")}>{m.status}</Badge>
                                 </td>
                                 <td className="p-3">
                                   <span className={cn("inline-flex items-center gap-1", HEALTH_COLORS[m.health_status] || "")}>
@@ -273,9 +273,9 @@ export default function CusnirOSOperator() {
                                 <div className="flex-1 min-w-0 space-y-1.5">
                                   <div className="flex items-center gap-2">
                                     <p className="text-xs font-semibold text-foreground">{mod.name}</p>
-                                    <Badge className={cn("text-[9px]", MODULE_STATUS_COLORS[mod.status])}>{mod.status}</Badge>
+                                    <Badge className={cn("text-nano", MODULE_STATUS_COLORS[mod.status])}>{mod.status}</Badge>
                                   </div>
-                                  <div className="flex flex-wrap gap-3 text-[10px]">
+                                  <div className="flex flex-wrap gap-3 text-micro">
                                     <div>
                                       <span className="text-muted-foreground/50">Inputs: </span>
                                       <span className="text-muted-foreground">{mod.inputs.join(", ")}</span>
@@ -359,7 +359,7 @@ export default function CusnirOSOperator() {
                                 <td className="p-3">{e.target_resource || "—"}</td>
                                 <td className="p-3">
                                   {e.verdict && (
-                                    <Badge variant="outline" className={cn("text-[10px]",
+                                    <Badge variant="outline" className={cn("text-micro",
                                       e.verdict === "ALLOW" ? "text-status-validated" :
                                       e.verdict === "DENY" ? "text-destructive" : ""
                                     )}>{e.verdict}</Badge>
@@ -388,7 +388,7 @@ function IndicatorCard({ icon: Icon, label, value }: { icon: typeof Activity; la
     <div className="bg-card border border-border rounded-xl p-3 space-y-1">
       <div className="flex items-center gap-1.5 text-muted-foreground">
         <Icon className="h-3 w-3" />
-        <span className="text-[10px] font-medium">{label}</span>
+        <span className="text-micro font-medium">{label}</span>
       </div>
       <div className="text-sm font-bold tabular-nums">{value}</div>
     </div>

@@ -22,7 +22,7 @@ export function RankTimeline() {
 
   return (
     <div className="bg-card border border-border rounded-xl p-4">
-      <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-4">
+      <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-4">
         <Gem className="h-3 w-3" /> Rank Progression
       </h3>
       <div className="relative">
@@ -62,21 +62,21 @@ export function RankTimeline() {
                     >
                       {rank.name}
                     </span>
-                    <span className="text-[9px] text-muted-foreground">Lv.{rank.level}+</span>
+                    <span className="text-nano text-muted-foreground">Lv.{rank.level}+</span>
                     {isCurrent && (
-                      <span className="text-[8px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+                      <span className="text-nano font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
                         YOU
                       </span>
                     )}
                   </div>
-                  <span className="text-[9px] text-muted-foreground">
+                  <span className="text-nano text-muted-foreground">
                     {rank.xp.toLocaleString()} XP
                   </span>
                 </div>
 
                 {/* Progress to next */}
                 {isCurrent && i < RANKS.length - 1 && (
-                  <span className="text-[9px] text-muted-foreground">
+                  <span className="text-nano text-muted-foreground">
                     {(RANKS[i + 1].xp - xp.total_xp).toLocaleString()} XP to {RANKS[i + 1].name}
                   </span>
                 )}

@@ -47,7 +47,7 @@ export function PopularNeuronsBlock() {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           Neuroni populari
         </h2>
         <TrendingUp className="h-3 w-3 text-muted-foreground/40" />
@@ -77,7 +77,7 @@ export function PopularNeuronsBlock() {
                   #{n.number} — {n.title}
                 </span>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                  <span className="text-nano text-muted-foreground flex items-center gap-0.5">
                     <Star className="h-2.5 w-2.5 text-primary/60" />
                     {n.score.toFixed(1)}
                   </span>
@@ -118,7 +118,7 @@ export function RecommendedTemplatesBlock() {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           Șabloane recomandate
         </h2>
         <Layers className="h-3 w-3 text-muted-foreground/40" />
@@ -144,7 +144,7 @@ export function RecommendedTemplatesBlock() {
               <span className="text-xs font-medium group-hover:text-primary transition-colors line-clamp-1 block">
                 {t.name}
               </span>
-              <span className="text-[9px] text-muted-foreground mt-0.5 block">
+              <span className="text-nano text-muted-foreground mt-0.5 block">
                 {t.category} · {t.usage_count} utilizări
               </span>
             </button>
@@ -180,7 +180,7 @@ export function LatestVersionsBlock() {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           Ultimele versiuni
         </h2>
         <Clock className="h-3 w-3 text-muted-foreground/40" />
@@ -203,7 +203,7 @@ export function LatestVersionsBlock() {
                 <span className="text-xs font-medium group-hover:text-primary transition-colors truncate block">
                   {v.title}
                 </span>
-                <span className="text-[9px] text-muted-foreground">
+                <span className="text-nano text-muted-foreground">
                   v{v.version} · {new Date(v.created_at).toLocaleDateString("ro-RO")}
                 </span>
               </div>

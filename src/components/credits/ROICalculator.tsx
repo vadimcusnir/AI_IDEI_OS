@@ -85,7 +85,7 @@ export function ROICalculator({ creditsCost, deliverablesCount, serviceName }: R
 
           {/* Root2 badge */}
           {isRoot2(creditsCost) && (
-            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-micro text-muted-foreground">
               <Sparkles className="h-3 w-3 text-primary" />
               <span>Root2 Certified Price — digital root = 2</span>
             </div>
@@ -95,9 +95,9 @@ export function ROICalculator({ creditsCost, deliverablesCount, serviceName }: R
           <div className="bg-status-validated/5 border border-status-validated/20 rounded-lg px-3 py-2.5">
             <div className="flex items-center gap-1.5 mb-1">
               <TrendingUp className="h-3.5 w-3.5 text-status-validated" />
-              <span className="text-[11px] font-semibold text-status-validated">Value Multiplier</span>
+              <span className="text-dense font-semibold text-status-validated">Value Multiplier</span>
             </div>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-dense text-muted-foreground">
               {metrics.deliverables} deliverables at ${metrics.costPerDeliverable.toFixed(2)} each.
               Equivalent freelancer cost: ${metrics.savingsVsFreelancer}.
               <span className="font-semibold text-foreground"> You save {((1 - metrics.costUSD / metrics.savingsVsFreelancer) * 100).toFixed(0)}%.</span>
@@ -123,12 +123,12 @@ function MetricCard({ label, value, sublabel, highlight, positive }: {
       positive ? "bg-status-validated/5 border border-status-validated/20" :
       "bg-muted/30 border border-border"
     )}>
-      <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-0.5">{label}</p>
+      <p className="text-nano uppercase tracking-wider text-muted-foreground mb-0.5">{label}</p>
       <p className={cn(
         "text-sm font-bold font-mono",
         positive ? "text-status-validated" : "text-foreground"
       )}>{value}</p>
-      <p className="text-[9px] text-muted-foreground">{sublabel}</p>
+      <p className="text-nano text-muted-foreground">{sublabel}</p>
     </div>
   );
 }

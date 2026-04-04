@@ -54,7 +54,7 @@ export function KillSwitchPanel() {
           <Shield className={cn("h-4 w-4", active ? "text-destructive" : "text-muted-foreground")} />
           Kill Switch
           {active && (
-            <span className="text-[10px] font-bold uppercase tracking-wider text-destructive bg-destructive/10 px-1.5 py-0.5 rounded animate-pulse">
+            <span className="text-micro font-bold uppercase tracking-wider text-destructive bg-destructive/10 px-1.5 py-0.5 rounded animate-pulse">
               ACTIVE
             </span>
           )}
@@ -67,9 +67,9 @@ export function KillSwitchPanel() {
               <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
               <div className="space-y-1">
                 <p className="text-xs font-medium text-destructive">All executions are halted</p>
-                {reason && <p className="text-[11px] text-muted-foreground">Reason: {reason}</p>}
+                {reason && <p className="text-dense text-muted-foreground">Reason: {reason}</p>}
                 {activatedAt && (
-                  <p className="text-[10px] text-muted-foreground/60">
+                  <p className="text-micro text-muted-foreground/60">
                     Activated {formatDistanceToNow(new Date(activatedAt), { addSuffix: true })}
                   </p>
                 )}
@@ -98,7 +98,7 @@ export function KillSwitchPanel() {
           </>
         ) : (
           <>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-dense text-muted-foreground">
               Emergency halt for all AI executions. Use when provider costs spike or critical errors occur.
             </p>
             <Input

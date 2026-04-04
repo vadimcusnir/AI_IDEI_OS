@@ -89,7 +89,7 @@ export default function Changelog() {
           {t("changelog.subtitle")}
         </p>
         {totalCount > 0 && (
-          <p className="text-[10px] text-muted-foreground mt-1">
+          <p className="text-micro text-muted-foreground mt-1">
             {t("changelog.updates_count", { count: totalCount })}
           </p>
         )}
@@ -110,7 +110,7 @@ export default function Changelog() {
           <Button
             size="sm"
             variant={activeFilter === null ? "default" : "outline"}
-            className="h-7 text-[10px] px-2.5"
+            className="h-7 text-micro px-2.5"
             onClick={() => setActiveFilter(null)}
           >
             <Filter className="h-3 w-3 mr-1" /> {t("changelog.filter_all")}
@@ -122,7 +122,7 @@ export default function Changelog() {
                 key={key}
                 size="sm"
                 variant={activeFilter === key ? "default" : "outline"}
-                className="h-7 text-[10px] px-2.5"
+                className="h-7 text-micro px-2.5"
                 onClick={() => setActiveFilter(activeFilter === key ? null : key)}
               >
                 <Icon className="h-3 w-3 mr-1" /> {t(meta.key)}
@@ -150,11 +150,11 @@ export default function Changelog() {
               <section key={version}>
                 <div className="flex items-center gap-3 mb-5 flex-wrap">
                   <h2 className="text-lg font-bold font-mono">{version}</h2>
-                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <span className="flex items-center gap-1 text-micro text-muted-foreground">
                     <Calendar className="h-3 w-3" />
                     {new Date(date).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
                   </span>
-                  <span className="text-[9px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                  <span className="text-nano bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
                     {t("changelog.changes_count", { count: items.length })}
                   </span>
                 </div>
@@ -168,7 +168,7 @@ export default function Changelog() {
                         <div className="absolute -left-[21px] sm:-left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-border ring-2 ring-background" />
                         <div className="bg-card border border-border rounded-xl p-3 sm:p-4">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className={cn("flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full", meta.color)}>
+                            <span className={cn("flex items-center gap-1 text-nano font-bold uppercase tracking-wider px-2 py-0.5 rounded-full", meta.color)}>
                               <Icon className="h-3 w-3" />
                               {t(meta.key)}
                             </span>
@@ -179,7 +179,7 @@ export default function Changelog() {
                           )}
                           {entry.example && (
                             <div className="bg-muted/50 rounded-lg px-3 py-2 mb-2">
-                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("changelog.example_label")}</p>
+                              <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1">{t("changelog.example_label")}</p>
                               <p className="text-xs">{entry.example}</p>
                             </div>
                           )}

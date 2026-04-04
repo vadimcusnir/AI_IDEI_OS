@@ -46,7 +46,7 @@ export function PromptOutput({ result, goal }: PromptOutputProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <span className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           {t("prompt_forge.result_label")}
         </span>
         <div className="flex items-center gap-1">

@@ -185,7 +185,7 @@ export default function PublicAnalysis() {
         <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Type badge + metadata */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <Badge variant="secondary" className="text-[10px] uppercase tracking-wider font-semibold">
+            <Badge variant="secondary" className="text-micro uppercase tracking-wider font-semibold">
               {typeLabel}
             </Badge>
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -214,7 +214,7 @@ export default function PublicAnalysis() {
           {(analysis.tags ?? []).length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-8">
               {(analysis.tags ?? []).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-[10px]">
+                <Badge key={tag} variant="outline" className="text-micro">
                   <Tag className="h-2.5 w-2.5 mr-1" />
                   {tag}
                 </Badge>

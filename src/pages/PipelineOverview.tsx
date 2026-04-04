@@ -117,7 +117,7 @@ export default function PipelineOverview() {
           >
             {t("common.previous", "Previous")}
           </Button>
-          <span className="text-[10px] text-muted-foreground">
+          <span className="text-micro text-muted-foreground">
             {currentStep + 1} / {PIPELINE_STEPS.length}
           </span>
           <Button
@@ -134,7 +134,7 @@ export default function PipelineOverview() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
           className="mt-8 rounded-xl border border-primary/20 bg-primary/5 p-5 text-center"
         >
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">
+          <p className="text-micro font-semibold uppercase tracking-widest text-muted-foreground mb-1">
             {t("pipeline_overview.complete_pipeline")}
           </p>
           <p className="text-sm font-medium">

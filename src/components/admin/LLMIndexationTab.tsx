@@ -275,13 +275,13 @@ export function LLMIndexationTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">URL / Title</TableHead>
-                  <TableHead className="text-[10px]">Type</TableHead>
-                  <TableHead className="text-[10px]">Schema</TableHead>
-                  <TableHead className="text-[10px] text-right">Words</TableHead>
-                  <TableHead className="text-[10px] text-right">Entities</TableHead>
-                  <TableHead className="text-[10px] text-right">Visibility</TableHead>
-                  <TableHead className="text-[10px]">Last Scan</TableHead>
+                  <TableHead className="text-micro">URL / Title</TableHead>
+                  <TableHead className="text-micro">Type</TableHead>
+                  <TableHead className="text-micro">Schema</TableHead>
+                  <TableHead className="text-micro text-right">Words</TableHead>
+                  <TableHead className="text-micro text-right">Entities</TableHead>
+                  <TableHead className="text-micro text-right">Visibility</TableHead>
+                  <TableHead className="text-micro">Last Scan</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -290,19 +290,19 @@ export function LLMIndexationTab() {
                     <TableCell>
                       <div className="flex flex-col">
                         <span className="text-xs font-medium truncate max-w-[220px]">{page.title || "Untitled"}</span>
-                        <span className="text-[10px] text-muted-foreground font-mono truncate max-w-[220px]">{page.url}</span>
+                        <span className="text-micro text-muted-foreground font-mono truncate max-w-[220px]">{page.url}</span>
                       </div>
                     </TableCell>
-                    <TableCell><Badge variant="outline" className="text-[9px]">{page.page_type}</Badge></TableCell>
+                    <TableCell><Badge variant="outline" className="text-nano">{page.page_type}</Badge></TableCell>
                     <TableCell>
                       {page.schema_present ? (
                         <div className="flex gap-0.5 flex-wrap">
                           {(page.schema_types || []).slice(0, 3).map((s, i) => (
-                            <Badge key={i} variant="secondary" className="text-[8px] px-1">{s}</Badge>
+                            <Badge key={i} variant="secondary" className="text-nano px-1">{s}</Badge>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-[9px] text-destructive">None</span>
+                        <span className="text-nano text-destructive">None</span>
                       )}
                     </TableCell>
                     <TableCell className="text-right text-xs font-mono">{page.word_count ?? "—"}</TableCell>
@@ -310,7 +310,7 @@ export function LLMIndexationTab() {
                     <TableCell className="text-right">
                       <ScoreBadge score={Number(page.llm_visibility_score) || 0} />
                     </TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground">
+                    <TableCell className="text-micro text-muted-foreground">
                       {page.last_scan ? new Date(page.last_scan).toLocaleDateString() : "Never"}
                     </TableCell>
                   </TableRow>
@@ -331,11 +331,11 @@ export function LLMIndexationTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">Entity</TableHead>
-                  <TableHead className="text-[10px]">Type</TableHead>
-                  <TableHead className="text-[10px] text-right">Confidence</TableHead>
-                  <TableHead className="text-[10px]">Source</TableHead>
-                  <TableHead className="text-[10px]">Extracted</TableHead>
+                  <TableHead className="text-micro">Entity</TableHead>
+                  <TableHead className="text-micro">Type</TableHead>
+                  <TableHead className="text-micro text-right">Confidence</TableHead>
+                  <TableHead className="text-micro">Source</TableHead>
+                  <TableHead className="text-micro">Extracted</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -345,18 +345,18 @@ export function LLMIndexationTab() {
                       <div className="flex flex-col">
                         <span className="text-xs font-medium">{entity.entity_name}</span>
                         {entity.description && (
-                          <span className="text-[10px] text-muted-foreground truncate max-w-[250px]">{entity.description}</span>
+                          <span className="text-micro text-muted-foreground truncate max-w-[250px]">{entity.description}</span>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell><Badge variant="outline" className="text-[9px]">{entity.entity_type}</Badge></TableCell>
+                    <TableCell><Badge variant="outline" className="text-nano">{entity.entity_type}</Badge></TableCell>
                     <TableCell className="text-right">
                       <ScoreBadge score={Number(entity.confidence) * 10} />
                     </TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground font-mono truncate max-w-[150px]">
+                    <TableCell className="text-micro text-muted-foreground font-mono truncate max-w-[150px]">
                       {entity.source || "—"}
                     </TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground">
+                    <TableCell className="text-micro text-muted-foreground">
                       {new Date(entity.created_at).toLocaleDateString()}
                     </TableCell>
                   </TableRow>
@@ -383,15 +383,15 @@ export function LLMIndexationTab() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center gap-2">
-                      <Badge variant={issue.severity === "high" ? "destructive" : "outline"} className="text-[9px]">
+                      <Badge variant={issue.severity === "high" ? "destructive" : "outline"} className="text-nano">
                         {issue.severity}
                       </Badge>
                       <span className="text-xs font-medium">{issue.issue_type.replace(/_/g, " ")}</span>
                       {issue.auto_fix_available && (
-                        <Badge variant="secondary" className="text-[8px]">Auto-fixable</Badge>
+                        <Badge variant="secondary" className="text-nano">Auto-fixable</Badge>
                       )}
                     </div>
-                    <p className="text-[10px] text-muted-foreground">{issue.description}</p>
+                    <p className="text-micro text-muted-foreground">{issue.description}</p>
                     <p className="text-xs text-primary">
                       <span className="font-medium">Fix:</span> {issue.suggested_fix}
                     </p>
@@ -411,12 +411,12 @@ export function LLMIndexationTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">Title</TableHead>
-                  <TableHead className="text-[10px]">Type</TableHead>
-                  <TableHead className="text-[10px]">Status</TableHead>
-                  <TableHead className="text-[10px] text-right">Views</TableHead>
-                  <TableHead className="text-[10px] text-right">Citations</TableHead>
-                  <TableHead className="text-[10px] text-right">Quality</TableHead>
+                  <TableHead className="text-micro">Title</TableHead>
+                  <TableHead className="text-micro">Type</TableHead>
+                  <TableHead className="text-micro">Status</TableHead>
+                  <TableHead className="text-micro text-right">Views</TableHead>
+                  <TableHead className="text-micro text-right">Citations</TableHead>
+                  <TableHead className="text-micro text-right">Quality</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -425,12 +425,12 @@ export function LLMIndexationTab() {
                     <TableCell>
                       <div className="flex flex-col">
                         <span className="text-xs font-medium">{sp.title}</span>
-                        <span className="text-[10px] text-muted-foreground font-mono">/{sp.slug}</span>
+                        <span className="text-micro text-muted-foreground font-mono">/{sp.slug}</span>
                       </div>
                     </TableCell>
-                    <TableCell><Badge variant="outline" className="text-[9px]">{sp.page_type}</Badge></TableCell>
+                    <TableCell><Badge variant="outline" className="text-nano">{sp.page_type}</Badge></TableCell>
                     <TableCell>
-                      <Badge variant={sp.status === "published" ? "default" : "secondary"} className="text-[9px]">{sp.status}</Badge>
+                      <Badge variant={sp.status === "published" ? "default" : "secondary"} className="text-nano">{sp.status}</Badge>
                     </TableCell>
                     <TableCell className="text-right text-xs font-mono">{sp.view_count}</TableCell>
                     <TableCell className="text-right text-xs font-mono">{sp.llm_citation_count}</TableCell>
@@ -453,19 +453,19 @@ export function LLMIndexationTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">LLM Source</TableHead>
-                  <TableHead className="text-[10px]">Query</TableHead>
-                  <TableHead className="text-[10px]">Cited URL</TableHead>
-                  <TableHead className="text-[10px]">Detected</TableHead>
+                  <TableHead className="text-micro">LLM Source</TableHead>
+                  <TableHead className="text-micro">Query</TableHead>
+                  <TableHead className="text-micro">Cited URL</TableHead>
+                  <TableHead className="text-micro">Detected</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {citations.map(c => (
                   <TableRow key={c.id}>
-                    <TableCell><Badge variant="outline" className="text-[9px]">{c.llm_source}</Badge></TableCell>
+                    <TableCell><Badge variant="outline" className="text-nano">{c.llm_source}</Badge></TableCell>
                     <TableCell className="text-xs truncate max-w-[200px]">{c.query_text || "—"}</TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground font-mono truncate max-w-[200px]">{c.cited_url || "—"}</TableCell>
-                    <TableCell className="text-[10px] text-muted-foreground">{new Date(c.detected_at).toLocaleDateString()}</TableCell>
+                    <TableCell className="text-micro text-muted-foreground font-mono truncate max-w-[200px]">{c.cited_url || "—"}</TableCell>
+                    <TableCell className="text-micro text-muted-foreground">{new Date(c.detected_at).toLocaleDateString()}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -481,7 +481,7 @@ export function LLMIndexationTab() {
         {/* ── LLM Traffic ── */}
         <TabsContent value="traffic">
           <div className="bg-card border border-border rounded-xl p-4 space-y-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <Bot className="h-3 w-3" /> LLM Referrer Sources
             </p>
             {referrers.length === 0 ? (
@@ -513,7 +513,7 @@ function KPICard({ label, value, icon: Icon, color }: { label: string; value: st
     <div className="bg-card border border-border rounded-lg p-3">
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className={cn("h-3 w-3", color || "text-muted-foreground")} />
-        <span className="text-[9px] text-muted-foreground uppercase tracking-wider">{label}</span>
+        <span className="text-nano text-muted-foreground uppercase tracking-wider">{label}</span>
       </div>
       <span className={cn("text-lg font-bold font-mono", color)}>{value}</span>
     </div>
@@ -523,7 +523,7 @@ function KPICard({ label, value, icon: Icon, color }: { label: string; value: st
 function ScoreBadge({ score }: { score: number }) {
   const color = score >= 7 ? "bg-primary/10 text-primary" : score >= 4 ? "bg-yellow-500/10 text-yellow-600" : "bg-destructive/10 text-destructive";
   return (
-    <span className={cn("text-[10px] font-mono font-bold px-1.5 py-0.5 rounded", color)}>
+    <span className={cn("text-micro font-mono font-bold px-1.5 py-0.5 rounded", color)}>
       {score.toFixed(1)}
     </span>
   );

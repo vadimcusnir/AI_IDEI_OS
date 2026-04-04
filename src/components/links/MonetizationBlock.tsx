@@ -40,7 +40,7 @@ export function MonetizationBlock() {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           Monetizare
         </h2>
         <Coins className="h-3 w-3 text-muted-foreground/40" />
@@ -64,7 +64,7 @@ export function MonetizationBlock() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium group-hover:text-primary transition-colors">{item.title}</span>
-                <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+                <span className="text-nano font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
                   {item.badge}
                 </span>
               </div>
@@ -72,7 +72,7 @@ export function MonetizationBlock() {
             </div>
             <div className="flex flex-col items-end shrink-0 gap-0.5">
               <span className="text-sm font-bold text-primary">{item.priceUsd}</span>
-              <span className="text-[9px] text-muted-foreground/60">{item.priceNeurons}</span>
+              <span className="text-nano text-muted-foreground/60">{item.priceNeurons}</span>
             </div>
             <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary/50 transition-colors shrink-0" />
           </button>
@@ -85,7 +85,7 @@ export function MonetizationBlock() {
             className="w-full flex items-center gap-2 px-4 py-3 rounded-xl border border-dashed border-border bg-muted/30 text-center hover:border-primary/20 transition-colors"
           >
             <Lock className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-dense text-muted-foreground">
               Autentifică-te pentru a vedea toate serviciile disponibile
             </p>
           </button>

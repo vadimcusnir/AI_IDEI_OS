@@ -116,7 +116,7 @@ export function ProfileGeneratorPanel({ episodeId, sourceUrl, suggestedName, onC
                 <SelectItem key={t.value} value={t.value}>
                   <div>
                     <div className="text-xs font-medium">{t.label}</div>
-                    <div className="text-[10px] text-muted-foreground">{t.desc}</div>
+                    <div className="text-micro text-muted-foreground">{t.desc}</div>
                   </div>
                 </SelectItem>
               ))}
@@ -142,7 +142,7 @@ export function ProfileGeneratorPanel({ episodeId, sourceUrl, suggestedName, onC
               key={t.value}
               onClick={() => setProfileType(t.value)}
               className={cn(
-                "px-2.5 py-1 rounded-full text-[10px] font-medium border transition-all",
+                "px-2.5 py-1 rounded-full text-micro font-medium border transition-all",
                 profileType === t.value
                   ? "border-primary bg-primary/5 text-primary"
                   : "border-border text-muted-foreground hover:border-primary/30"
@@ -183,7 +183,7 @@ export function ProfileGeneratorPanel({ episodeId, sourceUrl, suggestedName, onC
           >
             <div className="space-y-2 pt-2">
               {["Extragere semnale...", "Sinteză profil AI...", "Scrubbing PII...", "Salvare draft..."].map((step, i) => (
-                <div key={step} className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                <div key={step} className="flex items-center gap-2 text-micro text-muted-foreground">
                   <div className={cn(
                     "h-1.5 w-1.5 rounded-full",
                     generating ? "bg-primary animate-pulse" : "bg-muted"

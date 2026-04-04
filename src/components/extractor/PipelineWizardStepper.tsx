@@ -55,7 +55,7 @@ export function PipelineWizardStepper({ current, completedSteps = [] }: Props) {
               </motion.div>
               <span
                 className={cn(
-                  "text-[10px] font-semibold uppercase tracking-wider transition-colors",
+                  "text-micro font-semibold uppercase tracking-wider transition-colors",
                   isActive
                     ? "text-primary"
                     : isCompleted

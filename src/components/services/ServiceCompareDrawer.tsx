@@ -68,7 +68,7 @@ export function ServiceCompareDrawer({ services, onRemove, onClear, categoryConf
             <table className="w-full text-xs">
               <thead>
                 <tr>
-                  <th className="text-left text-[10px] text-muted-foreground font-semibold uppercase tracking-wider py-1.5 pr-4 w-28" />
+                  <th className="text-left text-micro text-muted-foreground font-semibold uppercase tracking-wider py-1.5 pr-4 w-28" />
                   {services.map(s => (
                     <th key={s.id} className="text-left py-1.5 px-3 min-w-[160px]">
                       <div className="flex items-center gap-2">
@@ -87,7 +87,7 @@ export function ServiceCompareDrawer({ services, onRemove, onClear, categoryConf
               <tbody>
                 {ROWS.map(row => (
                   <tr key={row.key} className="border-t border-border/50">
-                    <td className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider py-2 pr-4">
+                    <td className="text-micro text-muted-foreground font-semibold uppercase tracking-wider py-2 pr-4">
                       {row.label}
                     </td>
                     {services.map(s => {
@@ -105,7 +105,7 @@ export function ServiceCompareDrawer({ services, onRemove, onClear, categoryConf
                       } else if (row.key === "service_class") {
                         const cls = classBadge[val as string] || classBadge.A;
                         display = (
-                          <span className={cn("text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-md", cls.className)}>
+                          <span className={cn("text-micro font-bold uppercase px-1.5 py-0.5 rounded-md", cls.className)}>
                             {cls.label}
                           </span>
                         );
@@ -115,7 +115,7 @@ export function ServiceCompareDrawer({ services, onRemove, onClear, categoryConf
                           <span className={cn("flex items-center gap-1 font-mono font-bold", isCheapest && "text-primary")}>
                             <Coins className="h-3 w-3 text-ai-accent" />
                             {val}
-                            {isCheapest && <span className="text-[8px] text-primary bg-primary/10 px-1 rounded">Best</span>}
+                            {isCheapest && <span className="text-nano text-primary bg-primary/10 px-1 rounded">Best</span>}
                           </span>
                         );
                       } else if (row.key === "access_tier") {
@@ -135,11 +135,11 @@ export function ServiceCompareDrawer({ services, onRemove, onClear, categoryConf
                 ))}
                 {/* Description row */}
                 <tr className="border-t border-border/50">
-                  <td className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider py-2 pr-4">
+                  <td className="text-micro text-muted-foreground font-semibold uppercase tracking-wider py-2 pr-4">
                     Description
                   </td>
                   {services.map(s => (
-                    <td key={s.id} className="py-2 px-3 text-[11px] text-muted-foreground leading-relaxed">
+                    <td key={s.id} className="py-2 px-3 text-dense text-muted-foreground leading-relaxed">
                       {s.description}
                     </td>
                   ))}

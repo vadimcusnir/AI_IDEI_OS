@@ -91,7 +91,7 @@ const RiskBadge = ({ level }: { level: string }) => {
     critical: "bg-destructive/15 text-destructive",
   };
   return (
-    <span className={cn("text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded-full", colors[level] || colors.low)}>
+    <span className={cn("text-nano font-semibold uppercase px-1.5 py-0.5 rounded-full", colors[level] || colors.low)}>
       {level}
     </span>
   );
@@ -103,7 +103,7 @@ const RegimeBadge = ({ regime }: { regime: string }) => {
   };
   const Icon = icons[regime] || Settings2;
   return (
-    <Badge variant="outline" className="gap-1 text-[10px]">
+    <Badge variant="outline" className="gap-1 text-micro">
       <Icon className="h-2.5 w-2.5" />
       {regime}
     </Badge>
@@ -228,26 +228,26 @@ export function ControlLayerTab() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="bg-muted/30 rounded-lg p-3 border border-border">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Prompts</p>
+          <p className="text-micro text-muted-foreground uppercase tracking-wider">Prompts</p>
           <p className="text-lg font-bold">{prompts.length}</p>
-          <p className="text-[10px] text-muted-foreground">{prompts.filter(p => p.is_active).length} active</p>
+          <p className="text-micro text-muted-foreground">{prompts.filter(p => p.is_active).length} active</p>
         </div>
         <div className="bg-muted/30 rounded-lg p-3 border border-border">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Regimes</p>
+          <p className="text-micro text-muted-foreground uppercase tracking-wider">Regimes</p>
           <p className="text-lg font-bold">{regimes.length}</p>
-          <p className="text-[10px] text-muted-foreground">{regimes.filter(r => r.is_active).length} active</p>
+          <p className="text-micro text-muted-foreground">{regimes.filter(r => r.is_active).length} active</p>
         </div>
         <div className="bg-muted/30 rounded-lg p-3 border border-border">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">UI Elements</p>
+          <p className="text-micro text-muted-foreground uppercase tracking-wider">UI Elements</p>
           <p className="text-lg font-bold">{uiItems.length}</p>
-          <p className="text-[10px] text-muted-foreground">{uiItems.filter(u => u.visible).length} visible</p>
+          <p className="text-micro text-muted-foreground">{uiItems.filter(u => u.visible).length} visible</p>
         </div>
         <div className="bg-muted/30 rounded-lg p-3 border border-border">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Changes (24h)</p>
+          <p className="text-micro text-muted-foreground uppercase tracking-wider">Changes (24h)</p>
           <p className="text-lg font-bold">
             {changeLog.filter(c => new Date(c.created_at) > new Date(Date.now() - 86400000)).length}
           </p>
-          <p className="text-[10px] text-muted-foreground">{changeLog.length} total logged</p>
+          <p className="text-micro text-muted-foreground">{changeLog.length} total logged</p>
         </div>
       </div>
 
@@ -272,13 +272,13 @@ export function ControlLayerTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">ID</TableHead>
-                  <TableHead className="text-[10px]">Category</TableHead>
-                  <TableHead className="text-[10px]">Mode</TableHead>
-                  <TableHead className="text-[10px]">Risk</TableHead>
-                  <TableHead className="text-[10px]">Ver</TableHead>
-                  <TableHead className="text-[10px]">Active</TableHead>
-                  <TableHead className="text-[10px] w-20">Actions</TableHead>
+                  <TableHead className="text-micro">ID</TableHead>
+                  <TableHead className="text-micro">Category</TableHead>
+                  <TableHead className="text-micro">Mode</TableHead>
+                  <TableHead className="text-micro">Risk</TableHead>
+                  <TableHead className="text-micro">Ver</TableHead>
+                  <TableHead className="text-micro">Active</TableHead>
+                  <TableHead className="text-micro w-20">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -324,14 +324,14 @@ export function ControlLayerTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">Service</TableHead>
-                  <TableHead className="text-[10px]">Regime</TableHead>
-                  <TableHead className="text-[10px]">Max Cost</TableHead>
-                  <TableHead className="text-[10px]">Retries</TableHead>
-                  <TableHead className="text-[10px]">Timeout</TableHead>
-                  <TableHead className="text-[10px]">Validation</TableHead>
-                  <TableHead className="text-[10px]">Dry Run</TableHead>
-                  <TableHead className="text-[10px] w-16">Edit</TableHead>
+                  <TableHead className="text-micro">Service</TableHead>
+                  <TableHead className="text-micro">Regime</TableHead>
+                  <TableHead className="text-micro">Max Cost</TableHead>
+                  <TableHead className="text-micro">Retries</TableHead>
+                  <TableHead className="text-micro">Timeout</TableHead>
+                  <TableHead className="text-micro">Validation</TableHead>
+                  <TableHead className="text-micro">Dry Run</TableHead>
+                  <TableHead className="text-micro w-16">Edit</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -369,12 +369,12 @@ export function ControlLayerTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[10px]">ID</TableHead>
-                  <TableHead className="text-[10px]">Label</TableHead>
-                  <TableHead className="text-[10px]">Type</TableHead>
-                  <TableHead className="text-[10px]">Visible</TableHead>
-                  <TableHead className="text-[10px]">Enabled</TableHead>
-                  <TableHead className="text-[10px]">Order</TableHead>
+                  <TableHead className="text-micro">ID</TableHead>
+                  <TableHead className="text-micro">Label</TableHead>
+                  <TableHead className="text-micro">Type</TableHead>
+                  <TableHead className="text-micro">Visible</TableHead>
+                  <TableHead className="text-micro">Enabled</TableHead>
+                  <TableHead className="text-micro">Order</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -416,13 +416,13 @@ export function ControlLayerTab() {
               )}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-muted-foreground">{c.registry_type}</span>
-                    <span className="text-[10px] font-semibold">{c.item_id}</span>
-                    <Badge variant="outline" className="text-[9px] h-4">{c.change_type}</Badge>
+                    <span className="text-micro font-mono text-muted-foreground">{c.registry_type}</span>
+                    <span className="text-micro font-semibold">{c.item_id}</span>
+                    <Badge variant="outline" className="text-nano h-4">{c.change_type}</Badge>
                     <RiskBadge level={c.risk_level} />
-                    {c.rolled_back && <Badge variant="destructive" className="text-[9px] h-4">ROLLED BACK</Badge>}
+                    {c.rolled_back && <Badge variant="destructive" className="text-nano h-4">ROLLED BACK</Badge>}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                  <p className="text-micro text-muted-foreground mt-0.5">
                     {new Date(c.created_at).toLocaleString()} · mode: {c.edit_mode}
                     {c.change_reason && ` · ${c.change_reason}`}
                   </p>
@@ -443,17 +443,17 @@ export function ControlLayerTab() {
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Purpose</label>
+                  <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Purpose</label>
                   <Input value={editPrompt.purpose} onChange={e => setEditPrompt({ ...editPrompt, purpose: e.target.value })} className="mt-1 h-8 text-xs" />
                 </div>
                 <div>
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Category</label>
+                  <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Category</label>
                   <Input value={editPrompt.category} onChange={e => setEditPrompt({ ...editPrompt, category: e.target.value })} className="mt-1 h-8 text-xs" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Execution Mode</label>
+                  <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Execution Mode</label>
                   <Select value={editPrompt.execution_mode} onValueChange={v => setEditPrompt({ ...editPrompt, execution_mode: v })}>
                     <SelectTrigger className="mt-1 h-8 text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -464,7 +464,7 @@ export function ControlLayerTab() {
                   </Select>
                 </div>
                 <div>
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Risk Level</label>
+                  <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Risk Level</label>
                   <Select value={editPrompt.risk_level} onValueChange={v => setEditPrompt({ ...editPrompt, risk_level: v })}>
                     <SelectTrigger className="mt-1 h-8 text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -476,7 +476,7 @@ export function ControlLayerTab() {
                 </div>
               </div>
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Core Prompt</label>
+                <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Core Prompt</label>
                 <Textarea
                   value={editPrompt.core_prompt}
                   onChange={e => setEditPrompt({ ...editPrompt, core_prompt: e.target.value })}
@@ -488,9 +488,9 @@ export function ControlLayerTab() {
                   <Switch checked={editPrompt.is_active} onCheckedChange={v => setEditPrompt({ ...editPrompt, is_active: v })} />
                   Active
                 </label>
-                <span className="text-[10px] text-muted-foreground">Version: v{editPrompt.version}</span>
+                <span className="text-micro text-muted-foreground">Version: v{editPrompt.version}</span>
                 {editPrompt.rollback_version && (
-                  <span className="text-[10px] text-muted-foreground">Rollback to: v{editPrompt.rollback_version}</span>
+                  <span className="text-micro text-muted-foreground">Rollback to: v{editPrompt.rollback_version}</span>
                 )}
               </div>
             </div>
@@ -514,7 +514,7 @@ export function ControlLayerTab() {
           {editRegime && (
             <div className="space-y-3">
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Regime</label>
+                <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Regime</label>
                 <Select value={editRegime.regime} onValueChange={v => setEditRegime({ ...editRegime, regime: v })}>
                   <SelectTrigger className="mt-1 h-8 text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -526,15 +526,15 @@ export function ControlLayerTab() {
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Max Cost</label>
+                  <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Max Cost</label>
                   <Input type="number" value={editRegime.max_cost_credits} onChange={e => setEditRegime({ ...editRegime, max_cost_credits: +e.target.value })} className="mt-1 h-8 text-xs" />
                 </div>
                 <div>
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Max Retries</label>
+                  <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Max Retries</label>
                   <Input type="number" value={editRegime.max_retries} onChange={e => setEditRegime({ ...editRegime, max_retries: +e.target.value })} className="mt-1 h-8 text-xs" />
                 </div>
                 <div>
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Timeout (s)</label>
+                  <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">Timeout (s)</label>
                   <Input type="number" value={editRegime.timeout_seconds} onChange={e => setEditRegime({ ...editRegime, timeout_seconds: +e.target.value })} className="mt-1 h-8 text-xs" />
                 </div>
               </div>
@@ -591,11 +591,11 @@ function NewPromptDialog({ open, onClose, onCreate }: {
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.prompt_id")}</label>
+              <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.prompt_id")}</label>
               <Input value={id} onChange={e => setId(e.target.value)} placeholder={t("admin.prompt_id_placeholder")} className="mt-1 h-8 text-xs" />
             </div>
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("template.category")}</label>
+              <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("template.category")}</label>
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger className="mt-1 h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -607,11 +607,11 @@ function NewPromptDialog({ open, onClose, onCreate }: {
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.purpose")}</label>
+            <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.purpose")}</label>
             <Input value={purpose} onChange={e => setPurpose(e.target.value)} placeholder={t("admin.purpose_placeholder")} className="mt-1 h-8 text-xs" />
           </div>
           <div>
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.core_prompt")}</label>
+            <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.core_prompt")}</label>
             <Textarea value={corePrompt} onChange={e => setCorePrompt(e.target.value)} placeholder={t("admin.core_prompt_placeholder")} className="mt-1 text-xs font-mono min-h-[150px]" />
           </div>
         </div>

@@ -311,7 +311,7 @@ export default function Auth() {
                           />
                         ))}
                       </div>
-                      <span className={cn("text-[10px] font-semibold tracking-wide", strength.score >= 3 ? "text-emerald-600" : "text-muted-foreground")}>
+                      <span className={cn("text-micro font-semibold tracking-wide", strength.score >= 3 ? "text-emerald-600" : "text-muted-foreground")}>
                         {strength.label}
                       </span>
                     </div>
@@ -324,7 +324,7 @@ export default function Auth() {
                           ) : (
                             <XCircle className="h-3 w-3 text-muted-foreground/30 shrink-0" />
                           )}
-                          <span className={cn("text-[11px]", check.passed ? "text-foreground/80" : "text-muted-foreground/50")}>
+                          <span className={cn("text-dense", check.passed ? "text-foreground/80" : "text-muted-foreground/50")}>
                             {check.label}
                           </span>
                         </div>
@@ -344,7 +344,7 @@ export default function Auth() {
                   onChange={(e) => setTosAccepted(e.target.checked)}
                   className="mt-0.5 h-4 w-4 rounded border-border text-primary focus:ring-[hsl(var(--gold-oxide)/0.25)]"
                 />
-                <span className="text-[11px] text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">
+                <span className="text-dense text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">
                   {t("common:auth.accept_tos")}{" "}
                   <a href="/terms" target="_blank" className="text-[hsl(var(--gold-oxide))] hover:underline font-medium">ToS</a>
                   {" & "}
@@ -376,7 +376,7 @@ export default function Auth() {
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border/40" /></div>
                 <div className="relative flex justify-center">
-                  <span className="bg-card/90 px-4 text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em] font-medium">{t("auth.or")}</span>
+                  <span className="bg-card/90 px-4 text-micro text-muted-foreground/60 uppercase tracking-[0.2em] font-medium">{t("auth.or")}</span>
                 </div>
               </div>
               <button
@@ -420,7 +420,7 @@ export default function Auth() {
         </div>
 
         {/* Footer note */}
-        <p className="text-center text-[10px] text-muted-foreground/40 mt-6 tracking-wide">
+        <p className="text-center text-micro text-muted-foreground/40 mt-6 tracking-wide">
           {t("auth.footer")}
         </p>
       </motion.div>

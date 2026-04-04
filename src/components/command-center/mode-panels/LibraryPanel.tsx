@@ -30,10 +30,10 @@ export function LibraryPanel({ onCommand, neuronCount = 0 }: LibraryPanelProps) 
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-1.5">
             <Library className="h-3 w-3 text-cyan-400" />
-            <span className="text-[10px] font-medium text-muted-foreground/70">Bibliotecă</span>
+            <span className="text-micro font-medium text-muted-foreground/70">Bibliotecă</span>
           </div>
           {neuronCount > 0 && (
-            <span className="text-[10px] text-muted-foreground/40">{neuronCount} total</span>
+            <span className="text-micro text-muted-foreground/40">{neuronCount} total</span>
           )}
         </div>
         <div className="grid grid-cols-2 gap-1.5">
@@ -47,8 +47,8 @@ export function LibraryPanel({ onCommand, neuronCount = 0 }: LibraryPanelProps) 
                 <action.icon className="h-3.5 w-3.5" />
               </div>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium text-foreground/90 leading-tight">{action.label}</p>
-                <p className="text-[9px] text-muted-foreground/50 leading-tight">{action.desc}</p>
+                <p className="text-dense font-medium text-foreground/90 leading-tight">{action.label}</p>
+                <p className="text-nano text-muted-foreground/50 leading-tight">{action.desc}</p>
               </div>
             </button>
           ))}

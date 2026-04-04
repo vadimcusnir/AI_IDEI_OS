@@ -113,7 +113,7 @@ export function PostExecutionRecommendations({
       transition={{ delay: 0.4 }}
       className={cn("mt-6", className)}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+      <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
         <Zap className="h-3 w-3 text-primary" />
         Acțiuni recomandate
         {lastOutput && (
@@ -146,17 +146,17 @@ export function PostExecutionRecommendations({
                 <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors">
                   {rec.label}
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">
+                <p className="text-micro text-muted-foreground mt-0.5 line-clamp-1">
                   {rec.description}
                 </p>
                 <div className="flex items-center gap-1.5 mt-1">
                   {rec.costHint && (
-                    <span className="inline-block text-[9px] font-mono text-primary/70 bg-primary/10 rounded px-1 py-0.5">
+                    <span className="inline-block text-nano font-mono text-primary/70 bg-primary/10 rounded px-1 py-0.5">
                       {rec.costHint}
                     </span>
                   )}
                   {rec.serviceKey && lastOutput && onChainService && (
-                    <span className="inline-block text-[9px] font-medium text-primary bg-primary/10 rounded px-1 py-0.5">
+                    <span className="inline-block text-nano font-medium text-primary bg-primary/10 rounded px-1 py-0.5">
                       ⚡ auto-fill
                     </span>
                   )}

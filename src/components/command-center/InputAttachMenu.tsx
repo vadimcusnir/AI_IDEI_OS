@@ -75,8 +75,8 @@ export function InputAttachMenu({ onFileClick, onAction }: InputAttachMenuProps)
                     <item.icon className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[13px] font-medium text-foreground leading-tight">{item.label}</p>
-                    <p className="text-[10px] text-muted-foreground/60 leading-tight">{item.desc}</p>
+                    <p className="text-compact font-medium text-foreground leading-tight">{item.label}</p>
+                    <p className="text-micro text-muted-foreground/60 leading-tight">{item.desc}</p>
                   </div>
                 </button>
               ))}

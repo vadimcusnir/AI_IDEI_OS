@@ -48,7 +48,7 @@ function ExecutionBadge({ mode }: { mode: string }) {
     automated: "bg-ai-accent/15 text-ai-accent",
   };
   return (
-    <span className={cn("text-[8px] font-semibold uppercase px-1.5 py-0.5 rounded", colors[mode] || colors.passive)}>
+    <span className={cn("text-nano font-semibold uppercase px-1.5 py-0.5 rounded", colors[mode] || colors.passive)}>
       {mode}
     </span>
   );
@@ -62,7 +62,7 @@ function BlockHeader({ block, onExecute, onLanguageChange, children }: {
   const [showLangs, setShowLangs] = useState(false);
 
   return (
-    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/30 border-b border-border rounded-t-md text-[10px]">
+    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/30 border-b border-border rounded-t-md text-micro">
       <span className="font-semibold uppercase tracking-wider text-muted-foreground">{cfg.shortLabel}</span>
 
       {block.language && onLanguageChange && (
@@ -81,7 +81,7 @@ function BlockHeader({ block, onExecute, onLanguageChange, children }: {
                   key={lang}
                   onClick={() => { onLanguageChange(lang); setShowLangs(false); }}
                   className={cn(
-                    "w-full text-left px-2.5 py-1 text-[10px] font-mono hover:bg-muted transition-colors",
+                    "w-full text-left px-2.5 py-1 text-micro font-mono hover:bg-muted transition-colors",
                     lang === block.language && "text-primary font-semibold"
                   )}
                 >
@@ -128,7 +128,7 @@ function ExecutionResult({ result, status }: { result?: string; status?: Executi
       "px-3 py-2 text-xs font-mono border-t border-border",
       status === "success" ? "bg-status-validated/5 text-status-validated" : "bg-destructive/5 text-destructive"
     )}>
-      <div className="text-[9px] uppercase font-semibold mb-1 opacity-60">
+      <div className="text-nano uppercase font-semibold mb-1 opacity-60">
         {status === "success" ? "Output" : "Error"}
       </div>
       <pre className="whitespace-pre-wrap">{result}</pre>
@@ -206,7 +206,7 @@ export function PromptBlock({ block, onContentChange, onExecute }: FormatBlockPr
       <div className="divide-y divide-border">
         {["ROLE", "INPUT", "INSTRUCTIONS", "OUTPUT"].map(section => (
           <div key={section} className="px-3 py-2">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-primary/60 mb-1">{section}</div>
+            <div className="text-nano font-semibold uppercase tracking-wider text-primary/60 mb-1">{section}</div>
             <textarea
               value={sections[section] || ""}
               onChange={(e) => {
@@ -265,7 +265,7 @@ export function DatasetBlock({ block, onContentChange, onExecute }: FormatBlockP
         <textarea
           value={block.content}
           onChange={(e) => onContentChange(e.target.value)}
-          className="w-full font-mono text-[10px] bg-transparent border-none outline-none resize-none min-h-[30px] text-muted-foreground"
+          className="w-full font-mono text-micro bg-transparent border-none outline-none resize-none min-h-[30px] text-muted-foreground"
           placeholder={t("common:neuron_editor.csv_placeholder")}
           rows={2}
           spellCheck={false}

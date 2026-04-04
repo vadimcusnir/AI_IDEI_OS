@@ -69,22 +69,22 @@ export function ReconciliationTab() {
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-card border border-border rounded-xl p-4">
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.total_runs")}</span>
+          <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.total_runs")}</span>
           <p className="text-xl font-bold font-mono">{totals.totalRuns}</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.revenue_credits")}</span>
+          <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.revenue_credits")}</span>
           <p className="text-xl font-bold font-mono text-primary">{totals.totalRevenue}</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.revenue_usd")}</span>
+          <span className="text-nano font-semibold uppercase tracking-wider text-muted-foreground">{t("admin.revenue_usd")}</span>
           <p className="text-xl font-bold font-mono text-primary">${totals.totalUsd}</p>
         </div>
       </div>
 
       <div className="bg-card border border-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+          <h3 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
             <DollarSign className="h-3 w-3" /> {t("admin.service_reconciliation")}
           </h3>
           <Button variant="outline" size="sm" className="h-7 text-xs" onClick={load} disabled={loading}>
@@ -95,12 +95,12 @@ export function ReconciliationTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[10px]">{t("admin.service")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("admin.cost_per_run")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("admin.total_runs")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("admin.completed")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("admin.revenue_credits")}</TableHead>
-                <TableHead className="text-[10px] text-right">{t("admin.revenue_usd")}</TableHead>
+                <TableHead className="text-micro">{t("admin.service")}</TableHead>
+                <TableHead className="text-micro text-right">{t("admin.cost_per_run")}</TableHead>
+                <TableHead className="text-micro text-right">{t("admin.total_runs")}</TableHead>
+                <TableHead className="text-micro text-right">{t("admin.completed")}</TableHead>
+                <TableHead className="text-micro text-right">{t("admin.revenue_credits")}</TableHead>
+                <TableHead className="text-micro text-right">{t("admin.revenue_usd")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -108,7 +108,7 @@ export function ReconciliationTab() {
                 <TableRow key={r.service_key}>
                   <TableCell>
                     <p className="text-xs font-medium">{r.name}</p>
-                    <p className="text-[9px] font-mono text-muted-foreground">{r.service_key}</p>
+                    <p className="text-nano font-mono text-muted-foreground">{r.service_key}</p>
                   </TableCell>
                   <TableCell className="text-xs font-mono text-right">{r.credits_cost}</TableCell>
                   <TableCell className="text-xs font-mono text-right">{r.total_runs}</TableCell>

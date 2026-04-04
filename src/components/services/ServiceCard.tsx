@@ -79,9 +79,9 @@ export function ServiceCard({
         </div>
         <div className="flex-1 min-w-0">
           <span className="text-sm font-medium group-hover:text-primary transition-colors">{service.name}</span>
-          <p className="text-[10px] text-muted-foreground line-clamp-1">{service.description}</p>
+          <p className="text-micro text-muted-foreground line-clamp-1">{service.description}</p>
         </div>
-        <div className="hidden sm:flex items-center gap-3 text-[10px] text-muted-foreground shrink-0">
+        <div className="hidden sm:flex items-center gap-3 text-micro text-muted-foreground shrink-0">
           <span className="flex items-center gap-1">
             <FileText className="h-3 w-3" />
             {meta.outputs}
@@ -120,13 +120,13 @@ export function ServiceCard({
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {catCfg && <catCfg.icon className={cn("h-3.5 w-3.5", catCfg.color)} />}
-          <span className={cn("text-[9px] font-semibold uppercase tracking-wider", catCfg?.color || "text-muted-foreground")}>
+          <span className={cn("text-nano font-semibold uppercase tracking-wider", catCfg?.color || "text-muted-foreground")}>
             {catCfg?.label || service.category}
           </span>
         </div>
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className={cn("text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-md cursor-help", clsBadge.className)}>
+            <span className={cn("text-nano font-bold uppercase px-1.5 py-0.5 rounded-md cursor-help", clsBadge.className)}>
               {clsBadge.label}
             </span>
           </TooltipTrigger>
@@ -141,12 +141,12 @@ export function ServiceCard({
       <h3 className="text-sm font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
         {service.name}
       </h3>
-      <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2 mb-3">
+      <p className="text-dense text-muted-foreground leading-relaxed line-clamp-2 mb-3">
         {service.description}
       </p>
 
       {/* Output meta row */}
-      <div className="flex items-center gap-3 text-[10px] text-muted-foreground mb-3">
+      <div className="flex items-center gap-3 text-micro text-muted-foreground mb-3">
         <span className="flex items-center gap-1">
           <FileText className="h-3 w-3 text-primary/50" />
           <span className="font-semibold text-foreground">{meta.outputs}</span> outputs
@@ -163,15 +163,15 @@ export function ServiceCard({
           <div className="flex items-center gap-1.5">
             <Coins className="h-3 w-3 text-ai-accent" />
             <span className="text-xs font-bold font-mono">{service.credits_cost}</span>
-            <span className="text-[9px] text-muted-foreground">N</span>
-            <span className="text-[9px] text-muted-foreground/60 ml-1">~${costUsd}</span>
+            <span className="text-nano text-muted-foreground">N</span>
+            <span className="text-nano text-muted-foreground/60 ml-1">~${costUsd}</span>
           </div>
           <div className="flex items-center gap-1.5">
             {showTierBadge && <TierBadge tier={service.access_tier} />}
             {locked ? (
               <Lock className="h-3.5 w-3.5 text-muted-foreground/40" />
             ) : (
-              <span className="text-[9px] text-primary/70 font-mono">${meta.costPerOutput}/output</span>
+              <span className="text-nano text-primary/70 font-mono">${meta.costPerOutput}/output</span>
             )}
           </div>
         </div>
@@ -180,7 +180,7 @@ export function ServiceCard({
         <Button
           variant={locked ? "outline" : "default"}
           size="sm"
-          className="w-full h-8 text-[11px] font-semibold gap-1.5"
+          className="w-full h-8 text-dense font-semibold gap-1.5"
           onClick={(e) => { e.stopPropagation(); onClick(); }}
         >
           {locked ? (

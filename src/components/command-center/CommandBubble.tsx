@@ -36,10 +36,10 @@ function CodeBlock({ children, className }: { children: string; className?: stri
   return (
     <div className="relative group/code my-3 -mx-1">
       <div className="flex items-center justify-between px-3 py-1.5 bg-muted/80 border border-border/40 rounded-t-xl">
-        <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">{lang || "code"}</span>
+        <span className="text-micro font-mono text-muted-foreground uppercase tracking-wider">{lang || "code"}</span>
         <button
           onClick={handleCopy}
-          className="text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+          className="text-micro text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
         >
           {copied ? <Check className="h-3 w-3 text-success" /> : <Copy className="h-3 w-3" />}
           {copied ? "Copied" : "Copy"}
@@ -110,11 +110,11 @@ export function CommandBubble({ msg, isStreaming, onRetry, onEdit }: CommandBubb
             <div className="prose prose-sm dark:prose-invert max-w-none
               [&_p]:mb-3 [&_p]:last:mb-0
               [&_ul]:mb-3 [&_ol]:mb-3
-              [&_li]:mb-1 [&_li]:text-[14px]
+              [&_li]:mb-1 [&_li]:text-sm
               [&_h1]:text-lg [&_h1]:font-bold [&_h1]:mt-6 [&_h1]:mb-3
               [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-5 [&_h2]:mb-2
-              [&_h3]:text-[15px] [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
-              [&_code]:text-[13px] [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:font-mono [&_code]:border [&_code]:border-border/30
+              [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
+              [&_code]:text-compact [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:font-mono [&_code]:border [&_code]:border-border/30
               [&_pre]:bg-muted/60 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-border/40 [&_pre]:p-3 [&_pre_code]:bg-transparent [&_pre_code]:border-0 [&_pre_code]:p-0
               [&_blockquote]:border-l-2 [&_blockquote]:border-primary/30 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground
               [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-primary/80

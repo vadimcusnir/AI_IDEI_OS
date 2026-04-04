@@ -135,24 +135,24 @@ export function EpisodeCard({
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium truncate">{ep.title}</p>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-            <span className="text-[10px] text-muted-foreground">{new Date(ep.created_at).toLocaleDateString("en-US")}</span>
+            <span className="text-micro text-muted-foreground">{new Date(ep.created_at).toLocaleDateString("en-US")}</span>
             {ep.duration_seconds && (
-              <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+              <span className="text-micro text-muted-foreground flex items-center gap-0.5">
                 <Clock className="h-2.5 w-2.5" />{Math.round(ep.duration_seconds / 60)}min
               </span>
             )}
-            {ep.language && <span className="text-[10px] text-muted-foreground/60 uppercase">{ep.language}</span>}
-            {hasTranscript && <span className="hidden sm:inline text-[10px] text-muted-foreground/40">{wordCount.toLocaleString()} words</span>}
-            {needsTranscript && <span className="text-[10px] text-amber-500 font-medium">⚠ no transcript</span>}
+            {ep.language && <span className="text-micro text-muted-foreground/60 uppercase">{ep.language}</span>}
+            {hasTranscript && <span className="hidden sm:inline text-micro text-muted-foreground/40">{wordCount.toLocaleString()} words</span>}
+            {needsTranscript && <span className="text-micro text-amber-500 font-medium">⚠ no transcript</span>}
           </div>
         </div>
-        <span className={cn("text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0", STATUS_COLORS[ep.status] || STATUS_COLORS.uploaded)}>
+        <span className={cn("text-nano font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0", STATUS_COLORS[ep.status] || STATUS_COLORS.uploaded)}>
           {STATUS_LABELS[ep.status] || ep.status}
         </span>
         {isTranscribing && (
           <div className="flex items-center gap-1.5 shrink-0">
             <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-            <span className="hidden sm:inline text-[10px] text-primary font-medium">Transcribing…</span>
+            <span className="hidden sm:inline text-micro text-primary font-medium">Transcribing…</span>
           </div>
         )}
         {/* Desktop quick actions */}
@@ -175,9 +175,9 @@ export function EpisodeCard({
             <Pencil className="h-3 w-3" /> Add Transcript
           </Button>
         )}
-        {isExtracting && <div className="flex items-center gap-1.5 shrink-0"><Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" /><span className="hidden sm:inline text-[10px] text-ai-accent font-medium">Extracting…</span></div>}
-        {actions.deepExtractingId === ep.id && <div className="flex items-center gap-1.5 shrink-0"><Loader2 className="h-3.5 w-3.5 animate-spin text-primary" /><span className="hidden sm:inline text-[10px] text-primary font-medium">Deep Extract…</span></div>}
-        {isAnalyzed && <span className="text-[10px] text-status-validated font-medium shrink-0">✓</span>}
+        {isExtracting && <div className="flex items-center gap-1.5 shrink-0"><Loader2 className="h-3.5 w-3.5 animate-spin text-ai-accent" /><span className="hidden sm:inline text-micro text-ai-accent font-medium">Extracting…</span></div>}
+        {actions.deepExtractingId === ep.id && <div className="flex items-center gap-1.5 shrink-0"><Loader2 className="h-3.5 w-3.5 animate-spin text-primary" /><span className="hidden sm:inline text-micro text-primary font-medium">Deep Extract…</span></div>}
+        {isAnalyzed && <span className="text-micro text-status-validated font-medium shrink-0">✓</span>}
         <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground/40 shrink-0 transition-transform", isExpanded && "rotate-180")} />
       </div>
 
@@ -192,12 +192,12 @@ export function EpisodeCard({
           )}
           {canExtract && !isExtracting && !isTranscribing && !actions.deepExtractingId && (
             <>
-              <Button variant="outline" size="sm" className="h-7 text-[11px] gap-1 flex-1" onClick={() => actions.handleExtractNeurons(ep)}><Brain className="h-3 w-3" /> Extract</Button>
-              <Button variant="default" size="sm" className="h-7 text-[11px] gap-1 flex-1" onClick={() => isPro ? actions.handleDeepExtract(ep) : onPaywall()}>{!isPro && <Crown className="h-3 w-3" />}<Layers className="h-3 w-3" /> Deep</Button>
+              <Button variant="outline" size="sm" className="h-7 text-dense gap-1 flex-1" onClick={() => actions.handleExtractNeurons(ep)}><Brain className="h-3 w-3" /> Extract</Button>
+              <Button variant="default" size="sm" className="h-7 text-dense gap-1 flex-1" onClick={() => isPro ? actions.handleDeepExtract(ep) : onPaywall()}>{!isPro && <Crown className="h-3 w-3" />}<Layers className="h-3 w-3" /> Deep</Button>
             </>
           )}
           {needsTranscript && !isExtracting && !isTranscribing && (
-            <Button variant="outline" size="sm" className="h-7 text-[11px] gap-1 flex-1 border-amber-500/30 text-amber-600" onClick={() => { setExpandedId(ep.id); actions.startEditTranscript(ep); }}>
+            <Button variant="outline" size="sm" className="h-7 text-dense gap-1 flex-1 border-amber-500/30 text-amber-600" onClick={() => { setExpandedId(ep.id); actions.startEditTranscript(ep); }}>
               <Pencil className="h-3 w-3" /> Add Transcript
             </Button>
           )}
@@ -208,7 +208,7 @@ export function EpisodeCard({
       {isExpanded && (
         <div className="border-t border-border px-3 sm:px-4 py-3 sm:py-4 space-y-3">
           {/* Metadata */}
-          <div className="flex items-center gap-2 sm:gap-4 text-[10px] text-muted-foreground flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-4 text-micro text-muted-foreground flex-wrap">
             <span>Type: <strong className="text-foreground">{ep.source_type}</strong></span>
             {ep.source_url && (
               <a href={ep.source_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-0.5 text-primary hover:underline">
@@ -231,9 +231,9 @@ export function EpisodeCard({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {(ep.metadata.deep_extract.results as Array<{level?: string; neurons_created?: number; avg_score?: number}>).filter((r: any) => r && r.level).map((r: any) => (
                   <div key={r.level} className="bg-background rounded-md px-2 py-1.5 border border-border">
-                    <p className="text-[9px] font-mono text-muted-foreground uppercase">{(r.level || "").replace("_", " ")}</p>
+                    <p className="text-nano font-mono text-muted-foreground uppercase">{(r.level || "").replace("_", " ")}</p>
                     <p className="text-xs font-bold">{r.neurons_created ?? 0} <span className="text-muted-foreground font-normal">neurons</span></p>
-                    {(r.avg_score ?? 0) > 0 && <p className={cn("text-[9px] font-mono", r.avg_score > 70 ? "text-primary" : r.avg_score >= 40 ? "text-status-validated" : "text-muted-foreground")}>score: {r.avg_score}</p>}
+                    {(r.avg_score ?? 0) > 0 && <p className={cn("text-nano font-mono", r.avg_score > 70 ? "text-primary" : r.avg_score >= 40 ? "text-status-validated" : "text-muted-foreground")}>score: {r.avg_score}</p>}
                   </div>
                 ))}
               </div>
@@ -256,10 +256,10 @@ export function EpisodeCard({
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-xs font-medium text-destructive">Failed at: {errorStage}</p>
-                      <span className="text-[9px] font-mono text-destructive/60 bg-destructive/10 px-1.5 py-0.5 rounded">{errorCode}</span>
+                      <span className="text-nano font-mono text-destructive/60 bg-destructive/10 px-1.5 py-0.5 rounded">{errorCode}</span>
                     </div>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{errorMsg}</p>
-                    <p className="text-[10px] text-foreground/70 mt-1 font-medium">{userAction}</p>
+                    <p className="text-micro text-muted-foreground mt-0.5">{errorMsg}</p>
+                    <p className="text-micro text-foreground/70 mt-1 font-medium">{userAction}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 pt-1">
@@ -280,7 +280,7 @@ export function EpisodeCard({
           {needsTranscript && ep.status !== "error" && !isEditingTranscript && (
             <div className="bg-muted/30 border border-border rounded-lg px-4 py-3 space-y-2">
               <p className="text-xs font-medium">Transcribe from audio file</p>
-              <p className="text-[10px] text-muted-foreground">Upload an audio or video file and it will be transcribed automatically.</p>
+              <p className="text-micro text-muted-foreground">Upload an audio or video file and it will be transcribed automatically.</p>
               <input type="file" accept={ACCEPTED_FILE_TYPES} className="hidden" id={`upload-audio-${ep.id}`}
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
@@ -293,7 +293,7 @@ export function EpisodeCard({
                 <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => document.getElementById(`upload-audio-${ep.id}`)?.click()} disabled={isTranscribing}>
                   {isTranscribing ? <Loader2 className="h-3 w-3 animate-spin" /> : <FileAudio className="h-3 w-3" />} Upload Audio/Video
                 </Button>
-                <span className="text-[10px] text-muted-foreground">or</span>
+                <span className="text-micro text-muted-foreground">or</span>
                 <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => actions.startEditTranscript(ep)}><Pencil className="h-3 w-3" /> Paste Transcript</Button>
                 <input type="file" accept={ACCEPTED_TRANSCRIPT_FILES} className="hidden" id={`import-transcript-${ep.id}`} onChange={e => actions.handleTranscriptFileImport(e, ep.id)} />
                 <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => document.getElementById(`import-transcript-${ep.id}`)?.click()}>
@@ -307,7 +307,7 @@ export function EpisodeCard({
           {isEditingTranscript ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{hasTranscript ? "Edit Transcript" : "Add Transcript"}</span>
+                <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{hasTranscript ? "Edit Transcript" : "Add Transcript"}</span>
                 <div className="flex items-center gap-1.5">
                   <label className="cursor-pointer">
                     <input type="file" accept={ACCEPTED_TRANSCRIPT_FILES} className="hidden" onChange={e => {
@@ -319,10 +319,10 @@ export function EpisodeCard({
                       });
                       e.target.value = "";
                     }} />
-                    <span className="inline-flex items-center gap-1 text-[10px] text-primary hover:underline cursor-pointer"><FileUp className="h-2.5 w-2.5" /> Import</span>
+                    <span className="inline-flex items-center gap-1 text-micro text-primary hover:underline cursor-pointer"><FileUp className="h-2.5 w-2.5" /> Import</span>
                   </label>
-                  <Button variant="ghost" size="sm" className="h-6 text-[10px]" onClick={() => { actions.setEditingTranscriptId(null); actions.setEditTranscriptText(""); }}>Cancel</Button>
-                  <Button size="sm" className="h-6 text-[10px] gap-1" onClick={() => actions.handleSaveTranscript(ep.id)} disabled={actions.savingTranscript || !actions.editTranscriptText.trim()}>
+                  <Button variant="ghost" size="sm" className="h-6 text-micro" onClick={() => { actions.setEditingTranscriptId(null); actions.setEditTranscriptText(""); }}>Cancel</Button>
+                  <Button size="sm" className="h-6 text-micro gap-1" onClick={() => actions.handleSaveTranscript(ep.id)} disabled={actions.savingTranscript || !actions.editTranscriptText.trim()}>
                     {actions.savingTranscript ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <Save className="h-2.5 w-2.5" />} Save
                   </Button>
                 </div>
@@ -330,16 +330,16 @@ export function EpisodeCard({
               <textarea value={actions.editTranscriptText} onChange={e => actions.setEditTranscriptText(e.target.value)} placeholder="Paste your transcript here…" rows={8}
                 className="w-full bg-muted/50 rounded-lg px-3 py-2.5 text-xs outline-none border border-border focus:border-primary transition-colors resize-none font-mono leading-relaxed" autoFocus />
               {actions.editTranscriptText.trim() && (
-                <p className="text-[10px] text-muted-foreground/50">{actions.editTranscriptText.length.toLocaleString()} chars · ~{Math.ceil(actions.editTranscriptText.split(/\s+/).length)} words</p>
+                <p className="text-micro text-muted-foreground/50">{actions.editTranscriptText.length.toLocaleString()} chars · ~{Math.ceil(actions.editTranscriptText.split(/\s+/).length)} words</p>
               )}
             </div>
           ) : hasTranscript ? (
             <div className="space-y-2">
               <div className="flex items-center gap-1 justify-end">
-                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => actions.startEditTranscript(ep)}><Pencil className="h-2.5 w-2.5" /> Edit</Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => actions.copyTranscript(ep.transcript!)}><Copy className="h-2.5 w-2.5" /> Copy</Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => actions.exportTranscript(ep, "txt")}><Download className="h-2.5 w-2.5" /> TXT</Button>
-                <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1" onClick={() => actions.exportTranscript(ep, "srt")}><Download className="h-2.5 w-2.5" /> SRT</Button>
+                <Button variant="ghost" size="sm" className="h-6 text-micro gap-1" onClick={() => actions.startEditTranscript(ep)}><Pencil className="h-2.5 w-2.5" /> Edit</Button>
+                <Button variant="ghost" size="sm" className="h-6 text-micro gap-1" onClick={() => actions.copyTranscript(ep.transcript!)}><Copy className="h-2.5 w-2.5" /> Copy</Button>
+                <Button variant="ghost" size="sm" className="h-6 text-micro gap-1" onClick={() => actions.exportTranscript(ep, "txt")}><Download className="h-2.5 w-2.5" /> TXT</Button>
+                <Button variant="ghost" size="sm" className="h-6 text-micro gap-1" onClick={() => actions.exportTranscript(ep, "srt")}><Download className="h-2.5 w-2.5" /> SRT</Button>
               </div>
               <TranscriptViewer transcript={ep.transcript!} />
             </div>
@@ -349,17 +349,17 @@ export function EpisodeCard({
           {actions.chunkPreview?.episodeId === ep.id && actions.chunkPreview.chunks.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1"><Layers className="h-2.5 w-2.5" /> {actions.chunkPreview.chunks.length} Segments</span>
-                <Button variant="ghost" size="sm" className="h-5 text-[9px]" onClick={() => actions.setChunkPreview(null)}>Hide</Button>
+                <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1"><Layers className="h-2.5 w-2.5" /> {actions.chunkPreview.chunks.length} Segments</span>
+                <Button variant="ghost" size="sm" className="h-5 text-nano" onClick={() => actions.setChunkPreview(null)}>Hide</Button>
               </div>
               <div className="space-y-1 max-h-48 overflow-y-auto">
                 {actions.chunkPreview.chunks.map((chunk: any) => (
                   <div key={chunk.index} className="bg-muted/30 rounded-lg px-3 py-2 border border-border/50">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[9px] font-mono text-muted-foreground">Segment {chunk.index + 1}</span>
-                      <span className="text-[9px] text-muted-foreground/50">~{chunk.token_estimate} tokens</span>
+                      <span className="text-nano font-mono text-muted-foreground">Segment {chunk.index + 1}</span>
+                      <span className="text-nano text-muted-foreground/50">~{chunk.token_estimate} tokens</span>
                     </div>
-                    <p className="text-[11px] text-muted-foreground line-clamp-2">{chunk.content.slice(0, 200)}</p>
+                    <p className="text-dense text-muted-foreground line-clamp-2">{chunk.content.slice(0, 200)}</p>
                   </div>
                 ))}
               </div>
@@ -371,7 +371,7 @@ export function EpisodeCard({
             <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3">
               <div className="flex items-center gap-2 mb-2"><Loader2 className="h-3.5 w-3.5 animate-spin text-primary" /><span className="text-xs font-medium text-primary">Extraction in progress…</span></div>
               <Progress value={actions.extractionProgress.neurons > 0 ? 100 : 50} className="h-1.5" />
-              <p className="text-[10px] text-muted-foreground mt-1.5">
+              <p className="text-micro text-muted-foreground mt-1.5">
                 {actions.extractionProgress.neurons > 0 ? `${actions.extractionProgress.neurons} neurons extracted from ${actions.extractionProgress.chunks} segments` : "Chunking and AI analysis…"}
               </p>
             </div>

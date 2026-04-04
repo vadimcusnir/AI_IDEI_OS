@@ -35,7 +35,7 @@ export function CategoryList({ categories, onSelect }: CategoryListProps) {
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">{cat.name}</h3>
                 <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{cat.description}</p>
-                <div className="flex gap-3 mt-2 text-[10px] text-muted-foreground">
+                <div className="flex gap-3 mt-2 text-micro text-muted-foreground">
                   <span>{cat.thread_count} threads</span>
                   <span>{cat.post_count} posts</span>
                 </div>

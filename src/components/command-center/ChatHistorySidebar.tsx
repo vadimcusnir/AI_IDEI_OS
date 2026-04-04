@@ -167,7 +167,7 @@ function SidebarContent({
       <div className="flex-1 overflow-y-auto px-2 pb-3">
         {Object.entries(groups).map(([groupName, items]) => (
           <div key={groupName} className="mb-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/40 px-2 py-1.5">
+            <p className="text-micro font-semibold uppercase tracking-wider text-muted-foreground/40 px-2 py-1.5">
               {groupName}
             </p>
             {items.map((s) => (
@@ -185,7 +185,7 @@ function SidebarContent({
                 )}
               >
                 <MessageSquare className="h-3.5 w-3.5 shrink-0 opacity-40" />
-                <span className="truncate flex-1 text-[13px]">{s.last_message || "Sesiune nouă"}</span>
+                <span className="truncate flex-1 text-compact">{s.last_message || "Sesiune nouă"}</span>
                 {hoveredId === s.session_id && (
                   <button
                     onClick={(e) => { e.stopPropagation(); onDeleteSession(s.session_id); }}

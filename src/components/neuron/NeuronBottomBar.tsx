@@ -78,7 +78,7 @@ export function NeuronBottomBar({
             key={tab.id}
             onClick={() => { setActiveTab(tab.id); if (!isExpanded) onToggle(); }}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors",
+              "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-dense font-medium transition-colors",
               activeTab === tab.id && isExpanded
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -87,13 +87,13 @@ export function NeuronBottomBar({
             <tab.icon className="h-3 w-3" />
             {tab.label}
             {tab.id === "relations" && links.length > 0 && (
-              <span className="text-[9px] bg-muted rounded-full px-1.5">{links.length}</span>
+              <span className="text-nano bg-muted rounded-full px-1.5">{links.length}</span>
             )}
             {tab.id === "logs" && executionLogs.length > 0 && (
-              <span className="text-[9px] bg-primary/15 text-primary rounded-full px-1.5">{executionLogs.length}</span>
+              <span className="text-nano bg-primary/15 text-primary rounded-full px-1.5">{executionLogs.length}</span>
             )}
             {tab.id === "history" && versions.length > 0 && (
-              <span className="text-[9px] bg-muted rounded-full px-1.5">{versions.length}</span>
+              <span className="text-nano bg-muted rounded-full px-1.5">{versions.length}</span>
             )}
           </button>
         ))}
@@ -101,12 +101,12 @@ export function NeuronBottomBar({
 
         {/* Tab-specific actions */}
         {isExpanded && activeTab === "logs" && executionLogs.length > 0 && onClearLogs && (
-          <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2 text-muted-foreground" onClick={onClearLogs}>
+          <Button variant="ghost" size="sm" className="h-6 text-micro px-2 text-muted-foreground" onClick={onClearLogs}>
             <Trash2 className="h-3 w-3 mr-1" /> Clear
           </Button>
         )}
         {isExpanded && activeTab === "history" && onSaveVersion && (
-          <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2 text-primary" onClick={onSaveVersion}>
+          <Button variant="ghost" size="sm" className="h-6 text-micro px-2 text-primary" onClick={onSaveVersion}>
             <Save className="h-3 w-3 mr-1" /> Save Version
           </Button>
         )}
@@ -139,13 +139,13 @@ export function NeuronBottomBar({
 
                     return (
                       <div key={rel.id} className="group flex items-center gap-2 bg-muted/30 rounded-lg px-3 py-1.5 text-xs hover:bg-muted/60 transition-colors">
-                        <span className={cn("text-[9px]", rel.direction === "outgoing" ? "text-primary" : "text-muted-foreground")}>
+                        <span className={cn("text-nano", rel.direction === "outgoing" ? "text-primary" : "text-muted-foreground")}>
                           {rel.direction === "outgoing" ? "→" : "←"}
                         </span>
                         <button onClick={() => navigate(`/n/${targetNumber}`)} className="font-medium hover:text-primary transition-colors">
                           {displayTitle}
                         </button>
-                        <Badge variant="secondary" className={cn("text-[9px] px-1.5 py-0", relationColors[rel.relationType] || "bg-muted text-muted-foreground")}>
+                        <Badge variant="secondary" className={cn("text-nano px-1.5 py-0", relationColors[rel.relationType] || "bg-muted text-muted-foreground")}>
                           {rel.relationType}
                         </Badge>
                         {onRemoveLink && (
@@ -183,13 +183,13 @@ export function NeuronBottomBar({
                       <span className="text-muted-foreground w-24 shrink-0">
                         {formatDistanceToNow(new Date(v.createdAt), { addSuffix: true })}
                       </span>
-                      <span className="font-mono text-[10px] text-muted-foreground/60">v{v.version}</span>
+                      <span className="font-mono text-micro text-muted-foreground/60">v{v.version}</span>
                       <span className="font-medium flex-1 truncate">{v.title}</span>
                       {onRestoreVersion && (
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-5 text-[9px] px-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary"
+                          className="h-5 text-nano px-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary"
                           onClick={() => onRestoreVersion(v)}
                         >
                           Restore
@@ -215,10 +215,10 @@ export function NeuronBottomBar({
                   return (
                     <div key={log.id} className="flex items-center gap-2 px-2 py-1.5 rounded-md text-xs hover:bg-muted/30">
                       <StatusIcon className={cn("h-3.5 w-3.5 shrink-0", logStatusColors[log.status], log.status === "running" && "animate-spin")} />
-                      <span className="font-mono text-[10px] text-muted-foreground w-16 shrink-0">{log.timestamp}</span>
-                      <span className={cn("font-mono text-[9px] uppercase px-1 py-0 rounded", "bg-muted text-muted-foreground")}>{log.blockType}</span>
+                      <span className="font-mono text-micro text-muted-foreground w-16 shrink-0">{log.timestamp}</span>
+                      <span className={cn("font-mono text-nano uppercase px-1 py-0 rounded", "bg-muted text-muted-foreground")}>{log.blockType}</span>
                       <span className="flex-1 font-medium">{log.action}</span>
-                      {log.result && <span className="text-muted-foreground text-[10px]">{log.result}</span>}
+                      {log.result && <span className="text-muted-foreground text-micro">{log.result}</span>}
                     </div>
                   );
                 })
@@ -238,7 +238,7 @@ export function NeuronBottomBar({
                 <div key={stat.label} className="flex flex-col items-center gap-1 py-2">
                   <stat.icon className="h-4 w-4 text-muted-foreground" />
                   <span className="text-xl font-bold text-foreground">{stat.value}</span>
-                  <span className="text-[10px] text-muted-foreground">{stat.label}</span>
+                  <span className="text-micro text-muted-foreground">{stat.label}</span>
                 </div>
               ))}
             </div>

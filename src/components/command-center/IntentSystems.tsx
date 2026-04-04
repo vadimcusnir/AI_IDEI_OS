@@ -223,7 +223,7 @@ export function IntentChips({ onSelect }: IntentChipsProps) {
     >
       <div className="flex items-center gap-2 mb-4 px-1">
         <Target className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide)/0.5)]" />
-        <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold">Ce vrei să obții?</span>
+        <span className="text-micro uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold">Ce vrei să obții?</span>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
         {INTENT_CHIPS.map((chip) => (
@@ -231,7 +231,7 @@ export function IntentChips({ onSelect }: IntentChipsProps) {
             key={chip.label}
             onClick={() => { trackInternalEvent({ event: AnalyticsEvents.INTENT_CHIP_CLICKED, params: { label: chip.label, prompt: chip.prompt } }); onSelect(chip.prompt); }}
             className={cn(
-              "flex items-center gap-2.5 px-4 py-3.5 rounded-xl text-[13px] font-medium",
+              "flex items-center gap-2.5 px-4 py-3.5 rounded-xl text-compact font-medium",
               "border border-border/40 bg-card/60 backdrop-blur-sm",
               "hover:border-[hsl(var(--gold-oxide)/0.35)] hover:bg-[hsl(var(--gold-oxide)/0.04)] hover:text-foreground hover:shadow-sm hover:shadow-[hsl(var(--gold-oxide)/0.05)]",
               "transition-all duration-200 group"
@@ -305,7 +305,7 @@ export function SystemRecommendations({ systems, onSelect, input }: SystemRecomm
                     <div className="flex items-center gap-2">
                       <h3 className="text-sm font-semibold text-foreground">{sys.name}</h3>
                       {i === 0 && (
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
+                        <span className="text-nano font-bold uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
                           Best match
                         </span>
                       )}
@@ -315,7 +315,7 @@ export function SystemRecommendations({ systems, onSelect, input }: SystemRecomm
                   <div className="flex items-center gap-3 shrink-0">
                     <div className="text-right">
                       <p className="text-xs font-mono font-semibold text-primary">{sys.estimatedCredits}N</p>
-                      <p className="text-[10px] text-muted-foreground">{sys.estimatedOutputs} outputs</p>
+                      <p className="text-micro text-muted-foreground">{sys.estimatedOutputs} outputs</p>
                     </div>
                     <ChevronRight className={cn(
                       "h-4 w-4 text-muted-foreground transition-transform",
@@ -338,7 +338,7 @@ export function SystemRecommendations({ systems, onSelect, input }: SystemRecomm
                         {/* Steps */}
                         <div className="flex items-center gap-1 mb-2 overflow-x-auto scrollbar-none">
                           {sys.steps.map((step, si) => (
-                            <span key={si} className="flex items-center gap-1 text-[10px] text-muted-foreground whitespace-nowrap">
+                            <span key={si} className="flex items-center gap-1 text-micro text-muted-foreground whitespace-nowrap">
                               {si > 0 && <ArrowRight className="h-2.5 w-2.5 text-muted-foreground/30" />}
                               <span className="bg-muted/50 px-2 py-0.5 rounded-full">{step}</span>
                             </span>
@@ -348,7 +348,7 @@ export function SystemRecommendations({ systems, onSelect, input }: SystemRecomm
                         {/* Output preview */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mb-3">
                           {sys.outputs.slice(0, 6).map((out, oi) => (
-                            <div key={oi} className="flex items-center gap-1.5 text-[11px] text-foreground/80">
+                            <div key={oi} className="flex items-center gap-1.5 text-dense text-foreground/80">
                               <CheckCircle2 className="h-3 w-3 text-primary/50 shrink-0" />
                               <span className="truncate">{out}</span>
                             </div>

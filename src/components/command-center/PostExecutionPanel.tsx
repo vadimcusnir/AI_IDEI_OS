@@ -97,11 +97,11 @@ export function PostExecutionPanel({
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" />
           <span className="text-xs font-bold">Execution Complete</span>
-          <Badge variant="secondary" className="text-[9px] h-4">
+          <Badge variant="secondary" className="text-nano h-4">
             {creditsSpent} N spent · {outputCount} outputs
           </Badge>
         </div>
-        <button onClick={onDismiss} className="text-[9px] text-muted-foreground hover:text-foreground">
+        <button onClick={onDismiss} className="text-nano text-muted-foreground hover:text-foreground">
           Dismiss
         </button>
       </div>
@@ -116,8 +116,8 @@ export function PostExecutionPanel({
             <Workflow className="h-4 w-4 text-primary" />
           </div>
           <div className="flex-1">
-            <p className="text-[11px] font-medium">Save as Reusable Workflow</p>
-            <p className="text-[9px] text-muted-foreground">Turn this execution into a template for instant replay</p>
+            <p className="text-dense font-medium">Save as Reusable Workflow</p>
+            <p className="text-nano text-muted-foreground">Turn this execution into a template for instant replay</p>
           </div>
           <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
         </button>
@@ -125,7 +125,7 @@ export function PostExecutionPanel({
 
       {/* Recommendations */}
       <div className="px-4 py-3 space-y-1.5">
-        <p className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">
+        <p className="text-nano font-semibold uppercase tracking-widest text-muted-foreground mb-2">
           Suggested Next Steps
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -137,10 +137,10 @@ export function PostExecutionPanel({
             >
               <rec.icon className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary mt-0.5 shrink-0 transition-colors" />
               <div className="min-w-0">
-                <p className="text-[10px] font-medium truncate">{rec.label}</p>
-                <p className="text-[9px] text-muted-foreground line-clamp-2">{rec.description}</p>
+                <p className="text-micro font-medium truncate">{rec.label}</p>
+                <p className="text-nano text-muted-foreground line-clamp-2">{rec.description}</p>
                 {rec.credits > 0 && (
-                  <span className="text-[8px] text-muted-foreground/60 mt-0.5 inline-block">~{rec.credits} N</span>
+                  <span className="text-nano text-muted-foreground/60 mt-0.5 inline-block">~{rec.credits} N</span>
                 )}
               </div>
             </button>

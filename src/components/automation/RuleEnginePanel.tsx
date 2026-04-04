@@ -111,11 +111,11 @@ function RuleCard({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium truncate">{rule.name}</span>
-          <Badge variant="outline" className="text-[9px] shrink-0">
+          <Badge variant="outline" className="text-nano shrink-0">
             {trigger ? t(trigger.labelKey) : rule.trigger_event}
           </Badge>
         </div>
-        <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-1.5 mt-0.5 text-micro text-muted-foreground">
           <ActionIcon className="h-3 w-3" />
           <span>{action ? t(action.labelKey) : rule.action_type}</span>
           {rule.fire_count > 0 && (

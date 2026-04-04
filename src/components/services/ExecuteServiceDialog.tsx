@@ -257,10 +257,10 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
             <div className="flex-1 min-w-0">
               <DialogTitle className="text-base">{service.name}</DialogTitle>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline" className={cn("text-[9px] px-1.5 border", TIER_COLORS[service.score_tier] || TIER_COLORS.C)}>
+                <Badge variant="outline" className={cn("text-nano px-1.5 border", TIER_COLORS[service.score_tier] || TIER_COLORS.C)}>
                   Tier {service.score_tier}
                 </Badge>
-                <Badge variant="outline" className="text-[9px] px-1.5">{service.service_level}</Badge>
+                <Badge variant="outline" className="text-nano px-1.5">{service.service_level}</Badge>
               </div>
             </div>
           </div>
@@ -285,7 +285,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
             <div className="text-right">
               <span className="text-lg font-bold font-mono">{costCharged || estimatedCost}</span>
               <span className="text-xs text-muted-foreground ml-1">NEURONS</span>
-              <p className="text-[9px] text-muted-foreground">
+              <p className="text-nano text-muted-foreground">
                 {state === "executing" ? "🔒 blocat până la finalizare" : `≈ $${((costCharged || estimatedCost) * 0.002).toFixed(2)} USD`}
               </p>
             </div>
@@ -295,7 +295,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
           {state === "configure" && (
             <>
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                   Obiectiv (opțional)
                 </label>
                 <Input
@@ -306,7 +306,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
                 />
               </div>
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                <label className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                   Conținut / Context
                 </label>
                 <Textarea
@@ -316,7 +316,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
                   className="min-h-[140px] text-sm"
                 />
                 {service.intent && (
-                  <p className="text-[9px] text-muted-foreground mt-1">Intent: {service.intent}</p>
+                  <p className="text-nano text-muted-foreground mt-1">Intent: {service.intent}</p>
                 )}
               </div>
 
@@ -355,7 +355,7 @@ export function ExecuteServiceDialog({ service, open, onClose, initialInput, ini
                   )}
                 </div>
                 {costCharged > 0 && (
-                  <Badge variant="outline" className="text-[9px]">
+                  <Badge variant="outline" className="text-nano">
                     <Coins className="h-3 w-3 mr-1" />{costCharged} NEURONS
                   </Badge>
                 )}

@@ -45,7 +45,7 @@ export function OutputFamilies({ compact }: OutputFamiliesProps) {
           <Zap className="h-4 w-4 text-primary" />
           <h2 className="text-sm font-bold tracking-tight">12 Familii de Output</h2>
         </div>
-        <span className="text-[10px] text-muted-foreground font-mono">50+ deliverables per run</span>
+        <span className="text-micro text-muted-foreground font-mono">50+ deliverables per run</span>
       </div>
 
       <div className={cn(
@@ -76,7 +76,7 @@ export function OutputFamilies({ compact }: OutputFamiliesProps) {
               {!compact && (
                 <div className="space-y-0.5">
                   {fam.examples.map((ex, ei) => (
-                    <p key={ei} className="text-[9px] text-muted-foreground/60">{ex}</p>
+                    <p key={ei} className="text-nano text-muted-foreground/60">{ex}</p>
                   ))}
                 </div>
               )}

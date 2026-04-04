@@ -90,7 +90,7 @@ export function KeyboardShortcutsOverlay() {
             <div className="px-5 py-4 space-y-5 max-h-[60vh] overflow-y-auto">
               {SHORTCUT_GROUPS.map((group) => (
                 <div key={group.label}>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 mb-2">
+                  <p className="text-micro font-bold uppercase tracking-wider text-muted-foreground/60 mb-2">
                     {group.label}
                   </p>
                   <div className="space-y-1.5">
@@ -101,7 +101,7 @@ export function KeyboardShortcutsOverlay() {
                           {s.keys.map((k) => (
                             <kbd
                               key={k}
-                              className="inline-flex items-center justify-center min-w-[22px] h-5 px-1.5 text-[10px] font-mono font-medium rounded border border-border bg-muted/50 text-muted-foreground"
+                              className="inline-flex items-center justify-center min-w-[22px] h-5 px-1.5 text-micro font-mono font-medium rounded border border-border bg-muted/50 text-muted-foreground"
                             >
                               {k}
                             </kbd>
@@ -114,8 +114,8 @@ export function KeyboardShortcutsOverlay() {
               ))}
             </div>
             <div className="px-5 py-3 border-t border-border/30 bg-muted/20">
-              <p className="text-[10px] text-center text-muted-foreground/50">
-                Press <kbd className="px-1 py-0.5 rounded border border-border bg-muted/50 text-[9px] font-mono">?</kbd> or <kbd className="px-1 py-0.5 rounded border border-border bg-muted/50 text-[9px] font-mono">Esc</kbd> to close
+              <p className="text-micro text-center text-muted-foreground/50">
+                Press <kbd className="px-1 py-0.5 rounded border border-border bg-muted/50 text-nano font-mono">?</kbd> or <kbd className="px-1 py-0.5 rounded border border-border bg-muted/50 text-nano font-mono">Esc</kbd> to close
               </p>
             </div>
           </motion.div>

@@ -226,7 +226,7 @@ export default function Home() {
                   {cc.messages.length > 0 && (
                     <div className="flex justify-center py-2">
                       <Button variant="ghost" size="sm" onClick={cc.clearChat}
-                        className="h-7 px-3 text-[11px] text-muted-foreground/50 hover:text-foreground gap-1.5">
+                        className="h-7 px-3 text-dense text-muted-foreground/50 hover:text-foreground gap-1.5">
                         <RotateCcw className="h-3 w-3" />
                         {cc.t("common:new_session", { defaultValue: "New session" })}
                       </Button>

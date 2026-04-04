@@ -132,7 +132,7 @@ export function ContentGeneratorPanel() {
                     <g.icon className={cn("h-4 w-4 shrink-0", g.color)} />
                     <div className="min-w-0">
                       <p className="text-xs font-medium truncate">{g.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{g.cost} N</p>
+                      <p className="text-micro text-muted-foreground">{g.cost} N</p>
                     </div>
                   </label>
                 ))}

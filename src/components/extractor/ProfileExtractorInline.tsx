@@ -234,7 +234,7 @@ export function ProfileExtractorInline() {
           {result ? (
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                <span className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
                   Rezultat
                 </span>
                 <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={copyToClipboard}>

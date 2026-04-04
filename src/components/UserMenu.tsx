@@ -57,7 +57,7 @@ export function UserMenu() {
         )}>
           <Avatar className="h-7 w-7 shrink-0">
             <AvatarFallback className={cn(
-              "text-[10px] font-semibold",
+              "text-micro font-semibold",
               tier === "vip" ? "bg-tier-vip/15 text-tier-vip"
                 : tier === "pro" ? "bg-primary/15 text-primary"
                 : "bg-muted text-muted-foreground"
@@ -85,7 +85,7 @@ export function UserMenu() {
         <DropdownMenuLabel className="font-normal py-2">
           <p className="text-xs font-medium truncate">{user.email}</p>
           <p className={cn(
-            "text-[10px] font-semibold uppercase tracking-wider mt-0.5",
+            "text-micro font-semibold uppercase tracking-wider mt-0.5",
             tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/60"
           )}>
             {tier === "vip" ? "VIP" : tier === "pro" ? "PRO" : "FREE"}

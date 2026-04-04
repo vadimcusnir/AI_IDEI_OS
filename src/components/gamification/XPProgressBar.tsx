@@ -27,13 +27,13 @@ export function XPProgressBar({ compact = false }: { compact?: boolean }) {
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <RankIcon className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold">Lv.{xp.level}</span>
+          <span className="text-micro font-bold">Lv.{xp.level}</span>
         </div>
         <Progress value={levelProgress} className="h-1.5 flex-1 max-w-[80px]" />
         {streak.current_streak > 0 && (
           <div className="flex items-center gap-0.5">
             <Flame className="h-3 w-3 text-orange-500" />
-            <span className="text-[10px] font-bold text-orange-500">{streak.current_streak}</span>
+            <span className="text-micro font-bold text-orange-500">{streak.current_streak}</span>
           </div>
         )}
       </div>
@@ -53,23 +53,23 @@ export function XPProgressBar({ compact = false }: { compact?: boolean }) {
           </div>
           <div>
             <p className="text-xs font-semibold">{xp.rank_name}</p>
-            <p className="text-[10px] text-muted-foreground">Level {xp.level}</p>
+            <p className="text-micro text-muted-foreground">Level {xp.level}</p>
           </div>
         </div>
         <div className="text-right">
           <p className="text-sm font-bold font-mono text-primary">{xp.total_xp.toLocaleString()}</p>
-          <p className="text-[9px] text-muted-foreground">TOTAL XP</p>
+          <p className="text-nano text-muted-foreground">TOTAL XP</p>
         </div>
       </div>
 
       {/* Progress bar */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[9px] text-muted-foreground">Level {xp.level}</span>
-          <span className="text-[9px] text-muted-foreground">Level {xp.level + 1}</span>
+          <span className="text-nano text-muted-foreground">Level {xp.level}</span>
+          <span className="text-nano text-muted-foreground">Level {xp.level + 1}</span>
         </div>
         <Progress value={levelProgress} className="h-2" />
-        <p className="text-[9px] text-muted-foreground mt-1 text-center">
+        <p className="text-nano text-muted-foreground mt-1 text-center">
           {xpToNext.toLocaleString()} XP to next level
         </p>
       </div>
@@ -82,16 +82,16 @@ export function XPProgressBar({ compact = false }: { compact?: boolean }) {
             {streak.current_streak > 0 ? `${streak.current_streak}-day streak` : "No streak"}
           </span>
           {streak.longest_streak > 0 && streak.longest_streak !== streak.current_streak && (
-            <span className="text-[9px] text-muted-foreground">(best: {streak.longest_streak})</span>
+            <span className="text-nano text-muted-foreground">(best: {streak.longest_streak})</span>
           )}
         </div>
         <div className="text-right flex items-center gap-2">
           {tierMultiplier > 1 && (
-            <span className="text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+            <span className="text-nano font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
               {tierMultiplier}x XP
             </span>
           )}
-          <span className="text-[9px] text-muted-foreground">Today: {xp.daily_xp_earned}/200 XP</span>
+          <span className="text-nano text-muted-foreground">Today: {xp.daily_xp_earned}/200 XP</span>
         </div>
       </div>
     </div>

@@ -56,7 +56,7 @@ export function StreakUpsellBanner() {
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium">
               {nextXPMilestone.xp - xp.total_xp} XP to{" "}
-              <Badge variant="secondary" className="text-[9px] h-4 px-1">
+              <Badge variant="secondary" className="text-nano h-4 px-1">
                 {nextXPMilestone.label}
               </Badge>{" "}
               — earn <span className="text-primary font-bold">+{nextXPMilestone.bonus}N</span>
@@ -83,7 +83,7 @@ export function StreakUpsellBanner() {
           <Button
             variant={balance < 100 ? "destructive" : "outline"}
             size="sm"
-            className="h-7 text-[10px] gap-1 shrink-0"
+            className="h-7 text-micro gap-1 shrink-0"
             onClick={() => navigate("/pricing")}
           >
             Top Up <ArrowRight className="h-3 w-3" />

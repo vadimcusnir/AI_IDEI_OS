@@ -108,7 +108,7 @@ export function AdminRuntimeTab() {
           </div>
           <div>
             <h2 className="text-sm font-bold">Runtime Monitor</h2>
-            <p className="text-[10px] text-muted-foreground">Live execution state across all subsystems</p>
+            <p className="text-micro text-muted-foreground">Live execution state across all subsystems</p>
           </div>
         </div>
         <Button variant="outline" size="sm" onClick={load} className="gap-1 text-xs h-8">
@@ -147,8 +147,8 @@ export function AdminRuntimeTab() {
           <Metric label="Total Artifacts" value={data.artifacts.total} />
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-muted-foreground">Save Rate</span>
-              <span className="text-[10px] font-mono">{data.artifacts.saved_rate}%</span>
+              <span className="text-micro text-muted-foreground">Save Rate</span>
+              <span className="text-micro font-mono">{data.artifacts.saved_rate}%</span>
             </div>
             <Progress value={data.artifacts.saved_rate} className="h-1.5" />
           </div>
@@ -167,13 +167,13 @@ export function AdminRuntimeTab() {
           <Metric label="Avg Latency" value={`${data.capacity.avg_latency_ms}ms`} />
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-muted-foreground">Utilization</span>
-              <span className="text-[10px] font-mono">{data.capacity.utilization}%</span>
+              <span className="text-micro text-muted-foreground">Utilization</span>
+              <span className="text-micro font-mono">{data.capacity.utilization}%</span>
             </div>
             <Progress value={data.capacity.utilization} className="h-1.5" />
           </div>
           {data.capacity.premium_only && (
-            <Badge variant="destructive" className="text-[9px] mt-1">PREMIUM ONLY MODE</Badge>
+            <Badge variant="destructive" className="text-nano mt-1">PREMIUM ONLY MODE</Badge>
           )}
         </Panel>
       </div>
@@ -198,7 +198,7 @@ function Panel({ title, icon: Icon, accent, children }: {
 function Metric({ label, value, accent }: { label: string; value: string | number; accent?: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[10px] text-muted-foreground">{label}</span>
+      <span className="text-micro text-muted-foreground">{label}</span>
       <span className={cn("text-xs font-mono font-medium", accent || "text-foreground")}>{value}</span>
     </div>
   );

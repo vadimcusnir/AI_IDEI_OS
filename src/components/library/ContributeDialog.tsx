@@ -102,7 +102,7 @@ export function ContributeDialog() {
           />
 
           <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50 border border-border">
-            <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+            <div className="flex items-center gap-3 text-micro text-muted-foreground">
               <span className="flex items-center gap-1">
                 <FileText className="h-3 w-3" />{wordCount} {t("words")}
               </span>
@@ -116,7 +116,7 @@ export function ContributeDialog() {
             </div>
           </div>
 
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-micro text-muted-foreground">
             {t("contribution_review_hint")}
           </p>
 
@@ -150,15 +150,15 @@ export function ContributionsList() {
             <div key={c.id} className="flex items-center gap-2 p-2.5 rounded-lg border border-border bg-card">
               <StatusIcon className={`h-3.5 w-3.5 shrink-0 ${statusCfg.color}`} />
               <span className="text-xs font-medium flex-1 truncate">{c.title}</span>
-              <Badge variant="outline" className={`text-[8px] px-1 py-0 ${statusCfg.color}`}>
+              <Badge variant="outline" className={`text-nano px-1 py-0 ${statusCfg.color}`}>
                 {statusCfg.label}
               </Badge>
               {c.neurons_awarded > 0 && (
-                <Badge className="text-[8px] px-1 py-0 bg-primary/10 text-primary border-primary/20">
+                <Badge className="text-nano px-1 py-0 bg-primary/10 text-primary border-primary/20">
                   +{c.neurons_awarded} NEURONS
                 </Badge>
               )}
-              <span className="text-[9px] text-muted-foreground">Q:{c.quality_score}</span>
+              <span className="text-nano text-muted-foreground">Q:{c.quality_score}</span>
             </div>
           );
         })}

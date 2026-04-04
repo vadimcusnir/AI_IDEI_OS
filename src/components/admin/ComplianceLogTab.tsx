@@ -63,13 +63,13 @@ export function ComplianceLogTab() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium">{entry.action_type}</span>
-                <Badge variant="outline" className="text-[8px] px-1.5 py-0 h-4">{entry.target_type}</Badge>
+                <Badge variant="outline" className="text-nano px-1.5 py-0 h-4">{entry.target_type}</Badge>
               </div>
-              <p className="text-[10px] text-muted-foreground truncate">
+              <p className="text-micro text-muted-foreground truncate">
                 {entry.description || entry.target_id || "—"}
               </p>
             </div>
-            <span className="text-[10px] text-muted-foreground/60 font-mono shrink-0">
+            <span className="text-micro text-muted-foreground/60 font-mono shrink-0">
               {new Date(entry.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
             </span>
           </div>

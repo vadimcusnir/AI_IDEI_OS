@@ -29,7 +29,7 @@ export function PresenceBar({ workspaceId, className }: PresenceBarProps) {
             <Tooltip key={u.userId}>
               <TooltipTrigger asChild>
                 <Avatar className="h-7 w-7 border-2 border-background">
-                  <AvatarFallback className="text-[10px] bg-primary/20 text-primary">
+                  <AvatarFallback className="text-micro bg-primary/20 text-primary">
                     {(u.email || u.userId).slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>

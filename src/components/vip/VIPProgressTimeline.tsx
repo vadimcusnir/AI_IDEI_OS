@@ -36,7 +36,7 @@ export function VIPProgressTimeline() {
         <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
           Programul de 11 luni care îți deblochează tot ecosistemul CusnirOS — framework-uri, war rooms și strategii avansate.
         </p>
-        <Badge variant="outline" className="text-[10px]">
+        <Badge variant="outline" className="text-micro">
           Necesită abonament Pro activ + NOTA2 tokens
         </Badge>
       </div>
@@ -53,7 +53,7 @@ export function VIPProgressTimeline() {
           <Crown className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold">CusnirOS Journey</h3>
         </div>
-        <Badge variant="secondary" className="text-[10px] font-mono">
+        <Badge variant="secondary" className="text-micro font-mono">
           Luna {currentMonth}/11
         </Badge>
       </div>
@@ -62,7 +62,7 @@ export function VIPProgressTimeline() {
       <div className="mb-1">
         <Progress value={progress} className="h-2" />
       </div>
-      <div className="flex justify-between text-[9px] text-muted-foreground mb-5">
+      <div className="flex justify-between text-nano text-muted-foreground mb-5">
         <span>Start{startDate ? `: ${startDate.toLocaleDateString("ro-RO")}` : ""}</span>
         <span>{progress}% completat</span>
       </div>
@@ -103,22 +103,22 @@ export function VIPProgressTimeline() {
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-mono text-muted-foreground">M{m.month_number}</span>
+                  <span className="text-micro font-mono text-muted-foreground">M{m.month_number}</span>
                   <span className="text-xs font-medium truncate">{m.title}</span>
                   {isCurrent && (
-                    <Badge className="text-[8px] px-1.5 py-0 h-4 bg-primary/10 text-primary border-0">
+                    <Badge className="text-nano px-1.5 py-0 h-4 bg-primary/10 text-primary border-0">
                       CURENT
                     </Badge>
                   )}
                 </div>
-                <p className="text-[10px] text-muted-foreground truncate">{m.description}</p>
+                <p className="text-micro text-muted-foreground truncate">{m.description}</p>
               </div>
 
               {/* Reward */}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className={cn(
-                    "text-[10px] font-mono shrink-0",
+                    "text-micro font-mono shrink-0",
                     isUnlocked ? "text-status-validated" : "text-muted-foreground/50"
                   )}>
                     +{m.reward_neurons}
@@ -138,7 +138,7 @@ export function VIPProgressTimeline() {
         <div className="mt-4 p-3 rounded-lg bg-status-validated/5 border border-status-validated/20 text-center">
           <Sparkles className="h-5 w-5 text-status-validated mx-auto mb-1" />
           <p className="text-xs font-semibold text-status-validated">CusnirOS Complete!</p>
-          <p className="text-[10px] text-muted-foreground">Acces pe viață la tot ecosistemul.</p>
+          <p className="text-micro text-muted-foreground">Acces pe viață la tot ecosistemul.</p>
         </div>
       )}
     </div>

@@ -165,7 +165,7 @@ export function PublishToMarketplaceDialog({ open, onOpenChange, artifact }: Pub
                   </Label>
                   <Input value={priceNeurons} onChange={e => setPriceNeurons(e.target.value)}
                     type="number" min={20} className="h-8 text-sm font-mono" />
-                  <p className="text-[9px] text-muted-foreground mt-0.5">
+                  <p className="text-nano text-muted-foreground mt-0.5">
                     ≈ ${priceUsd} USD
                   </p>
                 </div>

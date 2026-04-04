@@ -48,11 +48,11 @@ export function QuickStartFlow({ onStart }: QuickStartFlowProps) {
                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Icon className="h-4 w-4 text-primary" />
                 </div>
-                <span className="text-[9px] font-mono text-primary/60">{step.time}</span>
+                <span className="text-nano font-mono text-primary/60">{step.time}</span>
               </div>
               <div className="min-w-0 pt-0.5">
                 <p className="text-xs font-semibold truncate">{step.label}</p>
-                <p className="text-[10px] text-muted-foreground truncate">{step.desc}</p>
+                <p className="text-micro text-muted-foreground truncate">{step.desc}</p>
               </div>
               {i < STEPS.length - 1 && (
                 <ArrowRight className="h-4 w-4 text-muted-foreground/30 shrink-0 mt-2 hidden sm:block" />
@@ -73,7 +73,7 @@ export function QuickStartFlow({ onStart }: QuickStartFlowProps) {
       </Button>
 
       {/* Social proof */}
-      <div className="flex items-center justify-center gap-4 mt-3 text-[10px] text-muted-foreground">
+      <div className="flex items-center justify-center gap-4 mt-3 text-micro text-muted-foreground">
         <span className="flex items-center gap-1">
           <CheckCircle2 className="h-3 w-3 text-primary/50" />
           1200+ acțiuni AI

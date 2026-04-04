@@ -166,12 +166,12 @@ export function AdminAnalyticsTab() {
                   className="w-full bg-primary/20 rounded-t-sm relative group"
                   style={{ height: `${(d.count / maxDaily) * 100}%`, minHeight: 2 }}
                 >
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-popover border border-border rounded px-1.5 py-0.5 text-[9px] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-popover border border-border rounded px-1.5 py-0.5 text-nano opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                     {d.date}: {d.count}
                   </div>
                   <div className="w-full h-full bg-primary rounded-t-sm" />
                 </div>
-                <span className="text-[8px] text-muted-foreground">{d.date.slice(8)}</span>
+                <span className="text-nano text-muted-foreground">{d.date.slice(8)}</span>
               </div>
             ))}
           </div>
@@ -194,7 +194,7 @@ export function AdminAnalyticsTab() {
                     <div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} />
                   </div>
                   <span className="text-xs font-mono w-10 text-right">{stat.count}</span>
-                  <span className="text-[10px] text-muted-foreground w-16 text-right">{stat.unique_users} users</span>
+                  <span className="text-micro text-muted-foreground w-16 text-right">{stat.unique_users} users</span>
                 </div>
               );
             })}
@@ -216,7 +216,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
     <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
       <div className="flex items-center gap-1.5">
         {icon}
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="text-micro font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
       <span className="text-2xl font-bold font-mono">{value.toLocaleString()}</span>
     </div>
@@ -227,7 +227,7 @@ function QueueItem({ label, value, color }: { label: string; value: number; colo
   return (
     <div className="text-center">
       <div className={cn("text-lg font-bold font-mono", color)}>{value}</div>
-      <div className="text-[9px] text-muted-foreground uppercase">{label}</div>
+      <div className="text-nano text-muted-foreground uppercase">{label}</div>
     </div>
   );
 }
@@ -262,13 +262,13 @@ function FunnelDisplay({ events }: { events: EventStat[] }) {
                 className="h-full bg-primary/30 rounded transition-all"
                 style={{ width: `${width}%` }}
               />
-              <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono">
+              <span className="absolute inset-0 flex items-center justify-center text-micro font-mono">
                 {count}
               </span>
             </div>
             {i > 0 && (
               <span className={cn(
-                "text-[10px] font-mono w-10 text-right",
+                "text-micro font-mono w-10 text-right",
                 convRate >= 50 ? "text-status-validated" : convRate >= 20 ? "text-ai-accent" : "text-destructive"
               )}>
                 {convRate}%

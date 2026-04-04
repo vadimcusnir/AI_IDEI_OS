@@ -52,7 +52,7 @@ export function TokenPanel() {
     return (
       <div className="rounded-xl border border-border bg-card p-6 animate-pulse">
         <div className="h-6 w-40 bg-muted rounded mb-4" />
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[1, 2, 3].map(i => <div key={i} className="h-16 bg-muted rounded-lg" />)}
         </div>
       </div>
@@ -64,7 +64,7 @@ export function TokenPanel() {
       <div className="rounded-xl border border-border bg-card p-6 text-center">
         <Coins className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
         <p className="text-sm text-muted-foreground">{t("token.not_initialized", "No NOTA2 tokens yet")}</p>
-        <p className="text-[10px] text-muted-foreground/60 mt-1">{t("token.earn_hint", "Earn tokens through platform activity and contributions")}</p>
+        <p className="text-micro text-muted-foreground/60 mt-1">{t("token.earn_hint", "Earn tokens through platform activity and contributions")}</p>
       </div>
     );
   }
@@ -82,7 +82,7 @@ export function TokenPanel() {
             <h3 className="text-sm font-semibold">NOTA2 Token</h3>
           </div>
           <div className="flex items-center gap-2">
-            <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider", TIER_COLORS[token.accessTier] || TIER_COLORS.free)}>
+            <span className={cn("px-2 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider", TIER_COLORS[token.accessTier] || TIER_COLORS.free)}>
               {token.accessTier}
             </span>
             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={refresh}>
@@ -96,7 +96,7 @@ export function TokenPanel() {
           <div className="bg-card px-4 py-3 bg-primary/[0.02]">
             <div className="flex items-center gap-1.5 mb-1">
               <TrendingUp className="h-3.5 w-3.5 text-semantic-amber" />
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+              <span className="text-micro uppercase tracking-wider text-muted-foreground font-semibold">
                 {t("token.available", "Available")}
               </span>
             </div>
@@ -107,7 +107,7 @@ export function TokenPanel() {
           <div className="bg-card px-4 py-3">
             <div className="flex items-center gap-1.5 mb-1">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+              <span className="text-micro uppercase tracking-wider text-muted-foreground font-semibold">
                 {t("token.staked", "Staked")}
               </span>
             </div>
@@ -118,7 +118,7 @@ export function TokenPanel() {
           <div className="bg-card px-4 py-3">
             <div className="flex items-center gap-1.5 mb-1">
               <Shield className="h-3.5 w-3.5 text-status-validated" />
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+              <span className="text-micro uppercase tracking-wider text-muted-foreground font-semibold">
                 {t("token.total_earned", "Total Earned")}
               </span>
             </div>
@@ -129,7 +129,7 @@ export function TokenPanel() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-5 py-2.5 border-t border-border text-[11px] text-muted-foreground">
+        <div className="flex items-center justify-between px-5 py-2.5 border-t border-border text-dense text-muted-foreground">
           <span>
             {t("token.total_supply", "Total supply")}: 100,000,000 NOTA2
           </span>
@@ -144,16 +144,16 @@ export function TokenPanel() {
 
       {/* Access Info */}
       <div className="rounded-xl border border-border bg-card p-4">
-        <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+        <h4 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           {t("token.access_model", "Token ≠ Compute · Token = Access")}
         </h4>
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-lg bg-muted/50 p-3">
-            <p className="text-[10px] font-semibold text-semantic-amber mb-0.5">NOTA2</p>
+            <p className="text-micro font-semibold text-semantic-amber mb-0.5">NOTA2</p>
             <p className="text-xs text-muted-foreground">{t("token.access_desc", "Access rights, governance, tier unlock")}</p>
           </div>
           <div className="rounded-lg bg-muted/50 p-3">
-            <p className="text-[10px] font-semibold text-primary mb-0.5">NEURONS</p>
+            <p className="text-micro font-semibold text-primary mb-0.5">NEURONS</p>
             <p className="text-xs text-muted-foreground">{t("token.compute_desc", "Service execution, AI compute credits")}</p>
           </div>
         </div>
@@ -162,7 +162,7 @@ export function TokenPanel() {
       {/* Token Transactions */}
       {txns.length > 0 && (
         <div>
-          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+          <h4 className="text-micro font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Clock className="h-3 w-3" /> {t("token.activity", "Token Activity")}
           </h4>
           <div className="space-y-1">
@@ -177,11 +177,11 @@ export function TokenPanel() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{tx.description}</p>
-                  <p className="text-[9px] text-muted-foreground">
+                  <p className="text-nano text-muted-foreground">
                     {new Date(tx.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </p>
                 </div>
-                <Badge variant="outline" className="text-[8px] px-1.5 py-0 h-4 shrink-0">{tx.type}</Badge>
+                <Badge variant="outline" className="text-nano px-1.5 py-0 h-4 shrink-0">{tx.type}</Badge>
                 <span className={cn(
                   "text-xs font-mono font-bold shrink-0",
                   tx.amount > 0 ? "text-status-validated" : "text-destructive"

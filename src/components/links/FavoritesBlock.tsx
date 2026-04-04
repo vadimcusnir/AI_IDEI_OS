@@ -72,7 +72,7 @@ export function FavoritesBlock() {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <h2 className="text-micro font-semibold uppercase tracking-widest text-muted-foreground">
           Linkurile tale favorite
         </h2>
         <Star className="h-3 w-3 text-muted-foreground/40" />

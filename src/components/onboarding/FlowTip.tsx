@@ -121,7 +121,7 @@ export function FlowTip({
             <div className="flex items-center gap-2 mb-0.5">
               <span
                 className={cn(
-                  "text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded",
+                  "text-nano font-bold uppercase tracking-widest px-1.5 py-0.5 rounded",
                   config.badgeBg
                 )}
               >
@@ -129,7 +129,7 @@ export function FlowTip({
               </span>
             </div>
             <p className="text-xs font-semibold leading-snug">{title}</p>
-            <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
+            <p className="text-dense text-muted-foreground leading-relaxed mt-0.5">
               {description}
             </p>
 
@@ -137,7 +137,7 @@ export function FlowTip({
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-6 px-2 text-[10px] gap-1 mt-1.5 text-primary hover:text-primary"
+                className="h-6 px-2 text-micro gap-1 mt-1.5 text-primary hover:text-primary"
                 onClick={handleAction}
               >
                 {action.label}

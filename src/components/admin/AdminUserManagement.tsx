@@ -269,7 +269,7 @@ export function AdminUserManagement() {
             ))}
           </SelectContent>
         </Select>
-        <Badge variant="outline" className="text-[10px]">{filteredUsers.length} users</Badge>
+        <Badge variant="outline" className="text-micro">{filteredUsers.length} users</Badge>
       </div>
 
       {/* Users table */}
@@ -277,12 +277,12 @@ export function AdminUserManagement() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-[10px]">User</TableHead>
-              <TableHead className="text-[10px]">Status</TableHead>
-              <TableHead className="text-[10px]">Roles</TableHead>
-              <TableHead className="text-[10px] text-right">Neurons</TableHead>
-              <TableHead className="text-[10px] text-right">Balance</TableHead>
-              <TableHead className="text-[10px] w-32">Actions</TableHead>
+              <TableHead className="text-micro">User</TableHead>
+              <TableHead className="text-micro">Status</TableHead>
+              <TableHead className="text-micro">Roles</TableHead>
+              <TableHead className="text-micro text-right">Neurons</TableHead>
+              <TableHead className="text-micro text-right">Balance</TableHead>
+              <TableHead className="text-micro w-32">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -300,21 +300,21 @@ export function AdminUserManagement() {
                 <TableRow key={u.user_id} className={cn("cursor-pointer hover:bg-muted/50", isSuspended && "opacity-60")} onClick={() => openUserDetail(u)}>
                   <TableCell>
                     <p className="text-xs font-medium">{u.email || "—"}</p>
-                    <p className="text-[9px] font-mono text-muted-foreground">{u.user_id.substring(0, 8)}…</p>
+                    <p className="text-nano font-mono text-muted-foreground">{u.user_id.substring(0, 8)}…</p>
                   </TableCell>
                   <TableCell>
                     {isSuspended ? (
-                      <Badge variant="destructive" className="text-[9px]">Suspended</Badge>
+                      <Badge variant="destructive" className="text-nano">Suspended</Badge>
                     ) : (
-                      <Badge variant="outline" className="text-[9px] text-status-validated">Active</Badge>
+                      <Badge variant="outline" className="text-nano text-status-validated">Active</Badge>
                     )}
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1 flex-wrap">
-                      {u.roles.length === 0 && <span className="text-[9px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">user</span>}
+                      {u.roles.length === 0 && <span className="text-nano bg-muted px-1.5 py-0.5 rounded text-muted-foreground">user</span>}
                       {u.roles.map((r) => (
                         <span key={r} className={cn(
-                          "text-[9px] px-1.5 py-0.5 rounded font-mono",
+                          "text-nano px-1.5 py-0.5 rounded font-mono",
                           r === "admin" ? "bg-destructive/15 text-destructive" : "bg-primary/10 text-primary"
                         )}>{r}</span>
                       ))}
@@ -376,7 +376,7 @@ export function AdminUserManagement() {
           <Button variant="ghost" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
             <ChevronLeft className="h-3.5 w-3.5 mr-1" />Back
           </Button>
-          <span className="text-[10px] text-muted-foreground">Page {page + 1} of {totalPages}</span>
+          <span className="text-micro text-muted-foreground">Page {page + 1} of {totalPages}</span>
           <Button variant="ghost" size="sm" disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>
             Next<ChevronRight className="h-3.5 w-3.5 ml-1" />
           </Button>
@@ -394,15 +394,15 @@ export function AdminUserManagement() {
               <div className="space-y-4 mt-4">
                 {/* User info */}
                 <div className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
-                  <p className="text-[10px] text-muted-foreground font-mono">{selectedUser.user_id}</p>
+                  <p className="text-micro text-muted-foreground font-mono">{selectedUser.user_id}</p>
                   {selectedUser.email && <p className="text-xs font-medium">{selectedUser.email}</p>}
                   <div className="flex gap-1 items-center">
                     {suspendedMap[selectedUser.user_id] && (
-                      <Badge variant="destructive" className="text-[9px]">Suspended</Badge>
+                      <Badge variant="destructive" className="text-nano">Suspended</Badge>
                     )}
-                    {selectedUser.roles.length === 0 && <Badge variant="outline" className="text-[9px]">user</Badge>}
+                    {selectedUser.roles.length === 0 && <Badge variant="outline" className="text-nano">user</Badge>}
                     {selectedUser.roles.map((r) => (
-                      <Badge key={r} variant={r === "admin" ? "destructive" : "default"} className="text-[9px]">{r}</Badge>
+                      <Badge key={r} variant={r === "admin" ? "destructive" : "default"} className="text-nano">{r}</Badge>
                     ))}
                   </div>
                 </div>
@@ -416,38 +416,38 @@ export function AdminUserManagement() {
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <Brain className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.neuron_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Neurons</p>
+                        <p className="text-nano text-muted-foreground">Neurons</p>
                       </div>
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <FileText className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.artifact_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Artifacts</p>
+                        <p className="text-nano text-muted-foreground">Artifacts</p>
                       </div>
                       <div className="p-2.5 rounded-lg bg-card border text-center">
                         <Briefcase className="h-3.5 w-3.5 text-primary mx-auto mb-1" />
                         <p className="text-sm font-bold">{userActivity.episode_count}</p>
-                        <p className="text-[9px] text-muted-foreground">Episodes</p>
+                        <p className="text-nano text-muted-foreground">Episodes</p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-3 gap-2 text-center">
                       <div className="p-2 rounded-lg bg-primary/5">
                         <p className="text-sm font-bold text-primary">{selectedUser.balance}</p>
-                        <p className="text-[9px] text-muted-foreground">Balance</p>
+                        <p className="text-nano text-muted-foreground">Balance</p>
                       </div>
                       <div className="p-2 rounded-lg bg-muted/50">
                         <p className="text-sm font-bold">{selectedUser.total_spent}</p>
-                        <p className="text-[9px] text-muted-foreground">Spent</p>
+                        <p className="text-nano text-muted-foreground">Spent</p>
                       </div>
                       <div className="p-2 rounded-lg bg-muted/50">
                         <p className="text-sm font-bold">{selectedUser.total_earned}</p>
-                        <p className="text-[9px] text-muted-foreground">Earned</p>
+                        <p className="text-nano text-muted-foreground">Earned</p>
                       </div>
                     </div>
 
                     {/* Credit adjustment */}
                     <div className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Adjust Credits</p>
+                      <p className="text-micro font-semibold text-muted-foreground uppercase tracking-wider">Adjust Credits</p>
                       <div className="flex gap-2">
                         <Input type="number" placeholder="Amount" value={adjustAmount} onChange={(e) => setAdjustAmount(e.target.value)} className="h-7 text-xs w-24" />
                         <Input placeholder="Reason" value={adjustDescription} onChange={(e) => setAdjustDescription(e.target.value)} className="h-7 text-xs flex-1" />
@@ -507,10 +507,10 @@ export function AdminUserManagement() {
 
                     {/* Recent transactions */}
                     <div>
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Transactions</p>
+                      <p className="text-micro font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Transactions</p>
                       <div className="space-y-1 max-h-40 overflow-y-auto">
                         {userActivity.recent_transactions.map((tx) => (
-                          <div key={tx.id} className="flex items-center gap-2 p-2 rounded bg-muted/30 text-[10px]">
+                          <div key={tx.id} className="flex items-center gap-2 p-2 rounded bg-muted/30 text-micro">
                             <span className={cn("font-mono font-bold", tx.amount > 0 ? "text-status-validated" : "text-destructive")}>
                               {tx.amount > 0 ? "+" : ""}{tx.amount}
                             </span>
@@ -521,19 +521,19 @@ export function AdminUserManagement() {
                           </div>
                         ))}
                         {userActivity.recent_transactions.length === 0 && (
-                          <p className="text-[10px] text-muted-foreground text-center py-2">No transactions</p>
+                          <p className="text-micro text-muted-foreground text-center py-2">No transactions</p>
                         )}
                       </div>
                     </div>
 
                     {/* Recent jobs */}
                     <div>
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Jobs</p>
+                      <p className="text-micro font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Jobs</p>
                       <div className="space-y-1 max-h-40 overflow-y-auto">
                         {userActivity.recent_jobs.map((job) => (
-                          <div key={job.id} className="flex items-center gap-2 p-2 rounded bg-muted/30 text-[10px]">
+                          <div key={job.id} className="flex items-center gap-2 p-2 rounded bg-muted/30 text-micro">
                             <Badge variant="outline" className={cn(
-                              "text-[8px] px-1 py-0",
+                              "text-nano px-1 py-0",
                               job.status === "completed" ? "text-status-validated" : job.status === "failed" ? "text-destructive" : "text-muted-foreground"
                             )}>{job.status}</Badge>
                             <span className="flex-1 truncate font-mono">{job.worker_type}</span>
@@ -543,7 +543,7 @@ export function AdminUserManagement() {
                           </div>
                         ))}
                         {userActivity.recent_jobs.length === 0 && (
-                          <p className="text-[10px] text-muted-foreground text-center py-2">No jobs</p>
+                          <p className="text-micro text-muted-foreground text-center py-2">No jobs</p>
                         )}
                       </div>
                     </div>

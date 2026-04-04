@@ -282,21 +282,21 @@ export function TemplateMarketplace({ onSelect }: TemplateMarketplaceProps) {
                 <div className="flex items-start justify-between mb-1">
                   <p className="text-xs font-medium text-foreground truncate flex-1">{t.title}</p>
                   {t.avg_rating ? (
-                    <span className="flex items-center gap-0.5 text-[10px] text-primary">
+                    <span className="flex items-center gap-0.5 text-micro text-primary">
                       <Star className="h-2.5 w-2.5 fill-primary" />
                       {t.avg_rating.toFixed(1)}
                     </span>
                   ) : null}
                 </div>
-                <p className="text-[10px] text-muted-foreground line-clamp-2 mb-2">{t.description}</p>
+                <p className="text-micro text-muted-foreground line-clamp-2 mb-2">{t.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] text-muted-foreground">
+                  <span className="text-nano text-muted-foreground">
                     {t.sales_count || 0} vândute
                   </span>
                   <Button
                     size="sm"
                     variant={owned ? "ghost" : "default"}
-                    className="h-6 text-[10px] gap-1"
+                    className="h-6 text-micro gap-1"
                     onClick={() => handlePurchase(t)}
                     disabled={purchasing === t.id}
                   >
