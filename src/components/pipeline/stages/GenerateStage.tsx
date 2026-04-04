@@ -11,10 +11,10 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface Service {
   id: string;
-  key: string;
-  label: string;
+  service_key: string;
+  name: string;
   description: string;
-  credit_cost: number;
+  credits_cost: number;
 }
 
 interface Props {
