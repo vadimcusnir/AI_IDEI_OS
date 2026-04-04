@@ -31,7 +31,7 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 
 ### Reporting Security Vulnerabilities
 
-- **Critical:** Email [security@ai-idei.com](mailto:security@ai-idei.com) privately
+- **Critical:** Email [vadim.kusnir@gmail.com](mailto:vadim.kusnir@gmail.com) privately
 - **Non-critical:** Use the **Security Report** issue template
 
 ### Suggesting Features
