@@ -342,7 +342,7 @@ export function useCommandCenter() {
     executionActions.addMessage(msg as any);
   }, [saveMessage]);
 
-
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]);
   };
 
