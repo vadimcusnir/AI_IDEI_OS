@@ -61,8 +61,8 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
           {/* ═══ INLINE TOP BAR ═══ */}
-          <div className="shrink-0 h-11 flex items-center gap-3 border-b border-border/30 bg-background/80 backdrop-blur-md px-3">
-            <SidebarTrigger aria-label="Toggle sidebar" className="h-9 w-9 min-h-[44px] min-w-[44px]" />
+          <div className="shrink-0 h-10 flex items-center gap-3 border-b border-border/30 bg-background/80 backdrop-blur-md px-3">
+            <SidebarTrigger aria-label="Toggle sidebar" className="h-8 w-8" />
             <div className="hidden md:flex items-center flex-1 min-w-0">
               <AppBreadcrumbs />
             </div>

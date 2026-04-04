@@ -2,11 +2,10 @@
  * AppSidebar — World-class sidebar following Linear/Notion/Vercel patterns.
  *
  * Structure (top → bottom):
- *   HEADER   — Logo + Workspace switcher (clean, minimal)
+ *   HEADER   — Logo + Workspace name (single row, Linear-style team switcher)
+ *   SEARCH   — Full-width search + compact "New" button
  *   CONTENT  — Navigation groups (CORE, WORK, DISCOVER, SESSIONS, ADMIN)
- *   FOOTER   — User identity row (avatar + name + notifications + settings)
- *
- * Utilities (theme, language) live inside UserMenu dropdown — not scattered.
+ *   FOOTER   — Credit progress bar + User row (avatar + email + notifications)
  */
 import { lazy, Suspense } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -17,15 +16,17 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier, type UserTier } from "@/hooks/useUserTier";
 import { useChatHistory } from "@/hooks/useChatHistory";
 import { usePrefetch } from "@/hooks/usePrefetch";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { Logo } from "@/components/shared/Logo";
 import {
   Home, BookOpen, Sparkles,
   Brain, Network, Store,
-  Coins, Crown, Plus, Wallet,
+  Coins, Plus, Wallet,
   Clock, Trash2, MessageCircle,
   Shield, Cpu, Activity, BarChart3, Database,
   Trophy, ChevronRight, Lock,
-  Plug, Gem, Workflow, Search, LogIn,
+  Plug, Gem, Workflow, LogIn,
+  ChevronsUpDown, Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -34,12 +35,16 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem,
   SidebarSeparator, useSidebar,
 } from "@/components/ui/sidebar";
-import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
 import { ControlledNavItem } from "@/components/ControlledNavItem";
 import {
   Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
@@ -146,6 +151,7 @@ export function AppSidebar() {
   const { tier } = useUserTier();
   const { sessions, loadSession, deleteSession, newSession } = useChatHistory();
   const { prefetchServices, prefetchCredits, prefetchLibrary } = usePrefetch();
+  const { workspaces, currentWorkspace, switchWorkspace, createWorkspace } = useWorkspace();
 
   const prefetchMap: Record<string, (() => void) | undefined> = {
     "/services": prefetchServices,
@@ -159,6 +165,9 @@ export function AppSidebar() {
 
   const recentSessions = (sessions || []).slice(0, 8);
   const initials = (user?.email || "U").slice(0, 2).toUpperCase();
+
+  // Credit progress (cap at 10000 for visual)
+  const creditPercent = Math.min((balance / 10000) * 100, 100);
 
   // ─── Render helpers ───
 
@@ -239,51 +248,106 @@ export function AppSidebar() {
     );
   };
 
+  // Tier badge helper
+  const tierLabel = tier === "vip" ? "VIP" : tier === "pro" ? "PRO" : "FREE";
+  const tierColor = tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/60";
+
   return (
     <Sidebar collapsible="icon">
       {/* ═══════════════════════════════════════════
-          HEADER — Logo + Workspace (Linear-style)
+          HEADER — Logo + Workspace (Linear team-switcher style)
+          Single row: Logo icon + workspace name + dropdown chevron
           ═══════════════════════════════════════════ */}
-      <SidebarHeader>
-        <div className="flex items-center gap-2.5 px-2 h-11">
+      <SidebarHeader className="p-0">
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className={cn(
+                "w-full flex items-center gap-2.5 px-3 transition-colors hover:bg-muted/50",
+                collapsed ? "justify-center h-10" : "h-12"
+              )}>
+                <Logo size="h-6 w-6" className="shrink-0" loading="eager" />
+                {!collapsed && (
+                  <>
+                    <span className="text-sm font-semibold truncate text-foreground flex-1 text-left">
+                      {currentWorkspace?.name || "AI-IDEI"}
+                    </span>
+                    <ChevronsUpDown className="h-3 w-3 text-muted-foreground/40 shrink-0" />
+                  </>
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" side={collapsed ? "right" : "bottom"} className="min-w-[220px]">
+              {workspaces.map((ws) => (
+                <DropdownMenuItem
+                  key={ws.id}
+                  onClick={() => {
+                    if (ws.id !== currentWorkspace?.id) {
+                      switchWorkspace(ws.id);
+                      toast.success(t("common:workspace_switched", { name: ws.name }));
+                    }
+                  }}
+                  className="gap-2 text-xs"
+                >
+                  {ws.id === currentWorkspace?.id ? (
+                    <Check className="h-3 w-3 text-primary" />
+                  ) : (
+                    <div className="w-3" />
+                  )}
+                  <span className="truncate">{ws.name}</span>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={async () => {
+                  const name = prompt(t("common:workspace_name_placeholder", { defaultValue: "Workspace name" }));
+                  if (name?.trim()) {
+                    const ws = await createWorkspace(name.trim());
+                    if (ws) toast.success(t("common:workspace_created", { name: ws.name }));
+                  }
+                }}
+                className="gap-2 text-xs"
+              >
+                <Plus className="h-3 w-3" />
+                {t("common:new_workspace", { defaultValue: "New workspace" })}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
           <button
-            onClick={() => navigate(user ? "/home" : "/")}
-            className="flex items-center gap-2.5 shrink-0 group"
-          >
-            <Logo size="h-6 w-6" className="shrink-0 transition-transform duration-200 group-hover:scale-105" loading="eager" />
-            {!collapsed && (
-              <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
+            onClick={() => navigate("/")}
+            className={cn(
+              "w-full flex items-center gap-2.5 px-3 transition-colors hover:bg-muted/50",
+              collapsed ? "justify-center h-10" : "h-12"
             )}
+          >
+            <Logo size="h-6 w-6" className="shrink-0" loading="eager" />
+            {!collapsed && <span className="text-sm font-semibold text-foreground">AI-IDEI</span>}
           </button>
-          {!collapsed && user && (
-            <div className="ml-auto">
-              <WorkspaceSwitcher collapsed={false} />
-            </div>
-          )}
-        </div>
+        )}
       </SidebarHeader>
 
       {/* ═══════════════════════════════════════════
-          QUICK ACTIONS — Search + New Session
+          QUICK ACTIONS — Search fills width, compact "New" icon
           ═══════════════════════════════════════════ */}
       {user && !collapsed && (
-        <div className="px-2 pb-1">
-          <div className="flex items-center gap-1.5">
-            <Suspense fallback={null}><GlobalSearch /></Suspense>
+        <div className="px-2.5 py-1.5">
+          <div className="flex items-center gap-1">
+            <div className="flex-1 min-w-0">
+              <Suspense fallback={null}><GlobalSearch /></Suspense>
+            </div>
             <button
               onClick={() => { newSession(); navigate("/home"); }}
-              className="h-8 px-2.5 rounded-md border border-border/40 bg-muted/30 hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 text-xs shrink-0"
+              className="h-7 w-7 rounded-md bg-primary/10 hover:bg-primary/20 text-primary flex items-center justify-center transition-colors shrink-0"
               title="New session"
             >
               <Plus className="h-3.5 w-3.5" />
-              {!collapsed && <span>New</span>}
             </button>
           </div>
         </div>
       )}
       {user && collapsed && (
         <div className="flex flex-col items-center gap-1 py-1.5">
-          <WorkspaceSwitcher collapsed={true} />
           <Suspense fallback={null}><GlobalSearch /></Suspense>
         </div>
       )}
@@ -392,50 +456,33 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* ═══════════════════════════════════════════
-          FOOTER — User identity (Notion/Linear style)
-          Credits bar + Avatar row + Notifications
+          FOOTER — Credit bar + User row (Notion/Linear style)
           ═══════════════════════════════════════════ */}
       <SidebarFooter>
         <SidebarSeparator />
 
         {/* ── Authenticated: expanded ── */}
         {user && !collapsed && (
-          <div className="px-2 py-2.5 space-y-2">
-            {/* Credits bar — clickable */}
+          <div className="px-2 py-2 space-y-2">
+            {/* Credit progress bar — clickable */}
             <button
               onClick={() => navigate("/credits")}
-              className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-muted/40 hover:bg-muted/70 border border-border/30 transition-colors"
+              className="w-full px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors text-left group/credits"
             >
-              <div className={cn(
-                "h-6 w-6 rounded-md flex items-center justify-center shrink-0",
-                tier === "vip" ? "bg-tier-vip/15" : tier === "pro" ? "bg-primary/15" : "bg-muted"
-              )}>
-                <Crown className={cn(
-                  "h-3.5 w-3.5",
-                  tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/50"
-                )} />
-              </div>
-              <div className="flex flex-col items-start min-w-0 flex-1">
-                <span className={cn(
-                  "text-[9px] font-bold uppercase tracking-[0.1em] leading-none",
-                  tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/70"
-                )}>
-                  {tier === "vip" ? "VIP" : tier === "pro" ? "PRO" : "FREE"}
+              <div className="flex items-center justify-between mb-1">
+                <span className={cn("text-[9px] font-bold uppercase tracking-wider", tierColor)}>
+                  {tierLabel}
                 </span>
-                <span className="text-[10px] text-muted-foreground/50 leading-tight">
-                  {t("common:neurons_currency", { defaultValue: "neurons" })}
+                <span className="text-[10px] font-mono tabular-nums text-muted-foreground group-hover/credits:text-foreground transition-colors">
+                  {balanceLoading ? "…" : balance.toLocaleString()}N
                 </span>
               </div>
-              <span className="text-xs font-mono tabular-nums font-semibold text-foreground/90">
-                {balanceLoading ? "…" : balance.toLocaleString()}
-              </span>
+              <Progress value={creditPercent} className="h-1 bg-muted/60" />
             </button>
 
-            {/* User row — avatar + name + actions */}
+            {/* User row — avatar + email + notifications + menu */}
             <div className="flex items-center gap-2 px-0.5">
-              <Suspense fallback={
-                <div className="h-7 w-7 rounded-full bg-muted animate-pulse" />
-              }>
+              <Suspense fallback={<div className="h-7 w-7 rounded-full bg-muted animate-pulse" />}>
                 <UserMenu />
               </Suspense>
               <div className="flex-1 min-w-0" />
@@ -446,24 +493,8 @@ export function AppSidebar() {
 
         {/* ── Authenticated: collapsed ── */}
         {user && collapsed && (
-          <div className="flex flex-col items-center gap-1.5 py-2.5">
-            {/* Credits icon */}
-            <button
-              onClick={() => navigate("/credits")}
-              className={cn(
-                "h-8 w-8 rounded-lg flex items-center justify-center transition-colors",
-                tier === "vip" ? "bg-tier-vip/10 hover:bg-tier-vip/20" : tier === "pro" ? "bg-primary/10 hover:bg-primary/20" : "bg-muted/50 hover:bg-muted"
-              )}
-              title={`${tier.toUpperCase()} · ${balance}N`}
-            >
-              <Crown className={cn(
-                "h-3.5 w-3.5",
-                tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/50"
-              )} />
-            </button>
-            {/* Notifications */}
+          <div className="flex flex-col items-center gap-1.5 py-2">
             <Suspense fallback={null}><NotificationBell /></Suspense>
-            {/* User avatar */}
             <Suspense fallback={null}><UserMenu /></Suspense>
           </div>
         )}
