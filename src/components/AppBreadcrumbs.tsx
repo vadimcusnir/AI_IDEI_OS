@@ -126,18 +126,19 @@ export function AppBreadcrumbs() {
             <React.Fragment key={crumb.path}>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-              {crumb.isLast ? (
-                <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
-                  {crumb.label}
-                </BreadcrumbPage>
-              ) : (
-                <BreadcrumbLink asChild>
-                  <Link to={crumb.path} className="text-[11px]">
+                {crumb.isLast ? (
+                  <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
                     {crumb.label}
-                  </Link>
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
+                  </BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link to={crumb.path} className="text-[11px]">
+                      {crumb.label}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </React.Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>
