@@ -3,22 +3,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
 
-// ── Rate limiting ──
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 10;
-const RATE_WINDOW = 3600_000;
-
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(userId);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
@@ -48,12 +33,9 @@ Deno.serve(async (req) => {
     }
     const userId = caller.id;
 
-    // ── Rate limit check ──
-    if (!checkRateLimit(userId)) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded (10 guest extractions/hour)" }), {
-        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
+    // ── Rate limit check (DB-backed, persistent) ──
+    const rateLimited = await rateLimitGuard(userId, req, { maxRequests: 10, windowSeconds: 3600 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
