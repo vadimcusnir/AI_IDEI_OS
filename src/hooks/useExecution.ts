@@ -88,20 +88,40 @@ export function useExecution(context: ExecutionContext) {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return null;
 
-    // Create job first (required by run-service Zod schema)
+    // Create a placeholder neuron for the job
+    const { data: neuron, error: neuronErr } = await supabase
+      .from("neurons")
+      .insert({
+        title: `Job: ${serviceKey}`,
+        status: "draft",
+        visibility: "private",
+        author_id: user.id,
+        workspace_id: context.workspaceId,
+      })
+      .select("id")
+      .single();
+
+    if (neuronErr || !neuron) {
+      console.error("Failed to create neuron for job:", neuronErr);
+      throw new Error("Failed to create job");
+    }
+
+    // Create job linked to the neuron
     const { data: job, error: jobErr } = await supabase
       .from("neuron_jobs")
       .insert({
-        user_id: user.id,
-        service_key: serviceKey,
-        status: "pending",
-        input: inputParams,
+        neuron_id: Number(neuron.id),
+        worker_type: serviceKey,
+        status: "pending" as const,
+        input: inputParams as unknown as import("@/integrations/supabase/types").Json,
+        author_id: user.id,
         workspace_id: context.workspaceId,
-      } as any)
+      } satisfies Record<string, unknown> as any)
       .select("id")
       .single();
 
     if (jobErr || !job) {
+      console.error("Failed to create job:", jobErr);
       throw new Error("Failed to create job");
     }
 
