@@ -8,13 +8,14 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import {
   Loader2, Shield, Eye, EyeOff, AlertTriangle, CheckCircle2,
-  XCircle, ArrowRight, Plus, ChevronDown, ExternalLink
+  XCircle, ArrowRight, Plus, ChevronDown, ExternalLink, Brain
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { ProfileGeneratorPanel } from "@/components/intelligence/ProfileGeneratorPanel";
 
 interface ProfileRow {
   id: string;
