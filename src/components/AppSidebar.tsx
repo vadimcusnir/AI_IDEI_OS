@@ -169,6 +169,7 @@ export function AppSidebar() {
   const { tier } = useUserTier();
   const { prefetchServices, prefetchCredits, prefetchLibrary } = usePrefetch();
   const { workspaces, currentWorkspace, switchWorkspace, createWorkspace } = useWorkspace();
+  const { mode, isOperator, toggleMode } = useOperatorMode(isAdmin);
 
   const prefetchMap: Record<string, (() => void) | undefined> = {
     "/services": prefetchServices,
