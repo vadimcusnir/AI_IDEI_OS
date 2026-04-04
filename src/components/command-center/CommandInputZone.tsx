@@ -141,7 +141,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
             "relative flex items-center gap-2 rounded-2xl border bg-card/90 backdrop-blur-sm transition-all duration-200",
             "px-2 py-1.5",
             "shadow-sm",
-            "border-border/50 focus-within:border-[hsl(var(--gold-oxide)/0.4)] focus-within:shadow-md focus-within:shadow-[hsl(var(--gold-oxide)/0.04)] focus-within:ring-1 focus-within:ring-[hsl(var(--gold-oxide)/0.15)]"
+            "border-border/50 focus-within:border-gold/40 focus-within:shadow-md focus-within:shadow-gold/[0.04] focus-within:ring-1 focus-within:ring-gold/15"
           )}>
             <input
               ref={fileInputRef}
