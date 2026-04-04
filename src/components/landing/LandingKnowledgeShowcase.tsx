@@ -7,6 +7,8 @@ import { ArrowRight, Brain, Lightbulb, Network, Zap, BookOpen, Target } from "lu
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import patternExtractionDiagram from "@/assets/diagrams/pattern-extraction-dark.png";
+import monetizeDiagram from "@/assets/diagrams/monetize-flow-dark.png";
 
 const SHOWCASE_ITEMS = [
   {
