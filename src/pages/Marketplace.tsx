@@ -98,6 +98,15 @@ export default function Marketplace() {
       )
     : assets;
 
+  const PREMIUM_CATEGORIES = [
+    { key: "course", label: "Courses", icon: "🎓" },
+    { key: "playbook", label: "Playbooks", icon: "📘" },
+    { key: "framework", label: "Frameworks", icon: "🧩" },
+    { key: "template", label: "Templates", icon: "📄" },
+    { key: "intelligence", label: "Intelligence", icon: "🧠" },
+    { key: "strategy", label: "Strategy", icon: "🎯" },
+  ];
+
   const types = [...new Set(assets.map(a => a.asset_type))];
 
   return (
