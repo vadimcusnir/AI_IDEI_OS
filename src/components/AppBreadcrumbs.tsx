@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useLocation, Link } from "react-router-dom";
 import {
   Breadcrumb,
@@ -123,20 +124,22 @@ export function AppBreadcrumbs() {
             </BreadcrumbLink>
           </BreadcrumbItem>
           {crumbs.map((crumb) => (
-            <BreadcrumbItem key={crumb.path}>
+            <Fragment key={crumb.path}>
               <BreadcrumbSeparator />
-              {crumb.isLast ? (
-                <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
-                  {crumb.label}
-                </BreadcrumbPage>
-              ) : (
-                <BreadcrumbLink asChild>
-                  <Link to={crumb.path} className="text-[11px]">
+              <BreadcrumbItem>
+                {crumb.isLast ? (
+                  <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
                     {crumb.label}
-                  </Link>
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
+                  </BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link to={crumb.path} className="text-[11px]">
+                      {crumb.label}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>
