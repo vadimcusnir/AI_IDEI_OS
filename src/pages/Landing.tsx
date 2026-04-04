@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useLocale } from "@/hooks/useLocale";
 import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd, WebApplicationJsonLd, FAQJsonLd } from "@/components/seo/JsonLd";
+import { LLMDiscoveryMeta } from "@/components/seo/LLMDiscoveryMeta";
 import { useAuth } from "@/contexts/AuthContext";
 import { Logo } from "@/components/shared/Logo";
 import { ArrowRight, Menu, X } from "lucide-react";
