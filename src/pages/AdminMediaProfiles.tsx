@@ -162,10 +162,22 @@ export default function AdminMediaProfiles() {
             <h1 className="text-2xl font-bold">Intelligence Profiles</h1>
             <p className="text-sm text-muted-foreground">Review workflow: draft → review → published | blocked</p>
           </div>
-          <Button size="sm" onClick={() => setShowCreate(!showCreate)}>
-            <Plus className="h-4 w-4 mr-1" /> New Profile
-          </Button>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => { setShowAIGenerate(!showAIGenerate); setShowCreate(false); }}>
+              <Brain className="h-4 w-4 mr-1" /> AI Generate
+            </Button>
+            <Button size="sm" onClick={() => { setShowCreate(!showCreate); setShowAIGenerate(false); }}>
+              <Plus className="h-4 w-4 mr-1" /> Manual
+            </Button>
+          </div>
         </div>
+
+        {/* AI Generate panel */}
+        {showAIGenerate && (
+          <div className="mb-6">
+            <ProfileGeneratorPanel onComplete={() => { setShowAIGenerate(false); loadProfiles(); }} />
+          </div>
+        )}
 
         {/* Create form */}
         {showCreate && (
