@@ -165,7 +165,7 @@ export function KernelBadge({ variant = "inline", label }: KernelBadgeProps) {
   return (
     <Badge
       variant="outline"
-      className="text-[7px] h-3.5 px-1.5 gap-0.5 border-primary/20 text-primary/70"
+      className="text-nano h-3.5 px-1.5 gap-0.5 border-primary/20 text-primary/70"
     >
       <Shield className="h-2 w-2" />
       {label || "Orchestrated"}

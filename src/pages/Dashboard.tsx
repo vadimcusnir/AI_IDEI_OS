@@ -226,7 +226,7 @@ export default function Dashboard() {
                         style={{ height: `${Math.max((day.neurons / maxActivity) * 80, day.neurons > 0 ? 3 : 0)}px`, marginTop: -1 }}
                       />
                     </div>
-                    <span className="text-[7px] text-muted-foreground">
+                    <span className="text-nano text-muted-foreground">
                       {new Date(day.date).toLocaleDateString(undefined, { weekday: "narrow" })}
                     </span>
                   </div>

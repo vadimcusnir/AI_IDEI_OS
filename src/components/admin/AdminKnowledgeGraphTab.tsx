@@ -274,7 +274,7 @@ export function AdminKnowledgeGraphTab() {
                     <div className="truncate">
                       <span className="text-xs">{m.title}</span>
                       <span className="text-nano uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
-                      {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-success/20 text-success">EMERGING</span>}
+                      {m.is_emerging && <span className="text-nano ml-1 px-1 py-0.5 rounded bg-success/20 text-success">EMERGING</span>}
                     </div>
                     <span className="text-right text-xs font-mono font-bold text-semantic-blue">
                       {(m.acceleration_score * 100).toFixed(1)}
@@ -312,7 +312,7 @@ export function AdminKnowledgeGraphTab() {
                     <div className="truncate">
                       <span className="text-xs">{m.title}</span>
                       <span className="text-nano uppercase text-muted-foreground/50 ml-1.5">{m.entity_type}</span>
-                      {m.is_emerging && <span className="text-[7px] ml-1 px-1 py-0.5 rounded bg-success/20 text-success">↑</span>}
+                      {m.is_emerging && <span className="text-nano ml-1 px-1 py-0.5 rounded bg-success/20 text-success">↑</span>}
                     </div>
                     <span className="text-right text-xs font-mono font-bold text-primary">
                       {(m.propagation_value_score * 100).toFixed(1)}

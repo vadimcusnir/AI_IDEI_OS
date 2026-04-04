@@ -113,7 +113,7 @@ export function CommandBubble({ msg, isStreaming, onRetry, onEdit }: CommandBubb
               [&_li]:mb-1 [&_li]:text-sm
               [&_h1]:text-lg [&_h1]:font-bold [&_h1]:mt-6 [&_h1]:mb-3
               [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-5 [&_h2]:mb-2
-              [&_h3]:text-[15px] [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
+              [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
               [&_code]:text-compact [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:font-mono [&_code]:border [&_code]:border-border/30
               [&_pre]:bg-muted/60 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-border/40 [&_pre]:p-3 [&_pre_code]:bg-transparent [&_pre_code]:border-0 [&_pre_code]:p-0
               [&_blockquote]:border-l-2 [&_blockquote]:border-primary/30 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground
