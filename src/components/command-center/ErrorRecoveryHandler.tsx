@@ -83,6 +83,22 @@ const ERROR_CONFIG: Record<ErrorType, {
     primaryAction: "dismiss",
     primaryActionKey: "common:understood",
   },
+  rate_limit: {
+    icon: Clock,
+    titleKey: "errors:rate_limit_title",
+    descKey: "errors:rate_limit_desc",
+    recoverable: true,
+    primaryAction: "retry",
+    primaryActionKey: "common:retry_later",
+  },
+  unknown_command: {
+    icon: HelpCircle,
+    titleKey: "errors:unknown_command_title",
+    descKey: "errors:unknown_command_desc",
+    recoverable: true,
+    primaryAction: "dismiss",
+    primaryActionKey: "common:dismiss",
+  },
   unknown: {
     icon: AlertTriangle,
     titleKey: "errors:unknown_error_title",
