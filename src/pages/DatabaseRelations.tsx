@@ -116,7 +116,7 @@ export default function DatabaseRelations() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
             {[
               { label: t("database_relations.tables"), value: TABLE_CATALOG.length, icon: Table2 },
               { label: t("database_relations.relations"), value: totalRelations, icon: Link2 },

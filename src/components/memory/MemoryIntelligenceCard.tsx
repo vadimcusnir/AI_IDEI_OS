@@ -57,7 +57,7 @@ export function MemoryIntelligenceCard({ className }: { className?: string }) {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
         <div className="text-center p-2 rounded-lg bg-muted/30">
           <p className="text-sm font-bold text-foreground">{profile.total_neurons}</p>
           <p className="text-nano text-muted-foreground">Neuroni</p>

@@ -448,7 +448,7 @@ export default function RunService() {
                   <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-1.5">
                     <Coins className="h-3 w-3" /> {t("run_service.cost_preview")}
                   </h2>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <p className="text-micro text-muted-foreground mb-0.5">{t("run_service.service_cost")}</p>
                       <p className="text-2xl font-bold font-mono">{service.credits_cost}</p>

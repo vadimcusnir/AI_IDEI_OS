@@ -52,7 +52,7 @@ export function TokenPanel() {
     return (
       <div className="rounded-xl border border-border bg-card p-6 animate-pulse">
         <div className="h-6 w-40 bg-muted rounded mb-4" />
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[1, 2, 3].map(i => <div key={i} className="h-16 bg-muted rounded-lg" />)}
         </div>
       </div>

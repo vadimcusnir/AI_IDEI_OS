@@ -22,7 +22,7 @@ export function SocialProofBlock() {
       </h2>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
         {STATS.map(stat => (
           <div
             key={stat.label}

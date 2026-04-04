@@ -167,7 +167,7 @@ export default function AnalyticsDashboard() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
             {statCards.map(s => (
               <div key={s.label} className="bg-card border border-border rounded-xl p-4 text-center">
                 <s.icon className="h-4 w-4 text-primary mx-auto mb-1.5" />

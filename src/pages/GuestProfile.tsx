@@ -398,7 +398,7 @@ export default function GuestProfile() {
         )}
 
         <section>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <StatCard icon={Brain} value={guest.expertise_areas.length} label={t("guest_profile.competences")} accent />
             <StatCard icon={Sparkles} value={guest.frameworks_mentioned.length} label={t("guest_profile.frameworks")} />
             <StatCard icon={Lightbulb} value={totalInsights} label={t("guest_profile.total_insights")} />

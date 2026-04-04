@@ -38,7 +38,7 @@ export function ServicePricingBreakdown({ userTier, compact }: ServicePricingBre
       </div>
 
       {/* Key metrics */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
           { label: "Cost mediu/serviciu", value: `${avgCost} N`, sub: `~$${(avgCost * costPerNeuron).toFixed(2)}` },
           { label: "Outputs/serviciu", value: "50+", sub: "deliverables" },
