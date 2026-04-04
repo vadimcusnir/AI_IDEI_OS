@@ -1,13 +1,16 @@
 /**
- * GenerateStage — Select and run a service to produce deliverables
+ * GenerateStage — Select and run a service to produce deliverables.
+ * Includes pre-flight cost confirmation via EconomicGate.
  */
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Sparkles, ArrowRight, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles, ArrowRight, Loader2, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { useEconomicGate } from "@/hooks/useEconomicGate";
+import { EconomicGate } from "@/components/command-center/EconomicGate";
 
 interface Service {
   id: string;
@@ -29,6 +32,9 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
+  const gate = useEconomicGate();
+
+  const selectedService = services.find(s => s.service_key === selected);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -44,8 +50,18 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
     fetchServices();
   }, []);
 
+  const handleExecuteClick = () => {
+    if (!selectedService) return;
+    if (gate.shouldSkipGate(selectedService.credits_cost)) {
+      runService();
+    } else {
+      gate.setShowGate(true);
+    }
+  };
+
   const runService = async () => {
     if (!selected || !user) return;
+    gate.setShowGate(false);
     setRunning(true);
     try {
       const { data, error } = await supabase.functions.invoke("run-service", {
@@ -105,7 +121,8 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
                   <p className="text-sm font-medium text-foreground">{svc.name}</p>
                   <p className="text-xs text-muted-foreground line-clamp-1">{svc.description}</p>
                 </div>
-                <span className="text-xs font-mono text-muted-foreground whitespace-nowrap ml-2">
+                <span className="inline-flex items-center gap-1 text-xs font-mono text-muted-foreground whitespace-nowrap ml-2">
+                  <Coins className="h-3 w-3" />
                   {svc.credits_cost}N
                 </span>
               </div>
@@ -114,10 +131,26 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
         </div>
       )}
 
+      {/* Pre-flight EconomicGate */}
+      <AnimatePresence>
+        {gate.showGate && selectedService && (
+          <div className="mb-4">
+            <EconomicGate
+              balance={gate.balance}
+              estimatedCost={selectedService.credits_cost}
+              tierDiscount={gate.tierDiscount}
+              tier={gate.tier}
+              onProceed={runService}
+              onCancel={() => gate.setShowGate(false)}
+            />
+          </div>
+        )}
+      </AnimatePresence>
+
       <div className="flex gap-2">
         <Button
-          onClick={runService}
-          disabled={!selected || running}
+          onClick={handleExecuteClick}
+          disabled={!selected || running || gate.showGate}
           size="lg"
           className="flex-1"
         >
