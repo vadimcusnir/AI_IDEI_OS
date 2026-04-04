@@ -6279,6 +6279,7 @@ export type Database = {
         Row: {
           author_id: string | null
           block_id: string | null
+          cancel_reason: string | null
           completed_at: string | null
           created_at: string
           dead_letter: boolean
@@ -6298,6 +6299,7 @@ export type Database = {
         Insert: {
           author_id?: string | null
           block_id?: string | null
+          cancel_reason?: string | null
           completed_at?: string | null
           created_at?: string
           dead_letter?: boolean
@@ -6317,6 +6319,7 @@ export type Database = {
         Update: {
           author_id?: string | null
           block_id?: string | null
+          cancel_reason?: string | null
           completed_at?: string | null
           created_at?: string
           dead_letter?: boolean
