@@ -25,8 +25,8 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
     <section ref={heroRef} className="relative overflow-hidden" aria-label="Hero">
       {/* Layered ambient glow — asymmetric for visual tension */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-[55%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-[hsl(var(--gold-oxide)/0.05)] blur-[180px]" />
-        <div className="absolute bottom-0 left-[30%] w-[350px] h-[250px] rounded-full bg-[hsl(var(--gold-oxide)/0.025)] blur-[140px]" />
+        <div className="absolute top-1/4 left-[55%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-gold/5 blur-[180px]" />
+        <div className="absolute bottom-0 left-[30%] w-[350px] h-[250px] rounded-full bg-gold/[0.025] blur-[140px]" />
       </div>
 
       <ContentBoundary width="default" className="relative pt-24 sm:pt-36 md:pt-44 pb-10 sm:pb-20 text-center">
@@ -34,7 +34,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
         <motion.p
           {...fadeUp}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-eyebrow font-mono tracking-[0.35em] text-[hsl(var(--gold-oxide))] mb-10 sm:mb-12"
+          className="text-eyebrow font-mono tracking-[0.35em] text-gold mb-10 sm:mb-12"
         >
           {t("hero.tagline")}
         </motion.p>
@@ -46,7 +46,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
           className="text-h1 text-foreground mb-8"
         >
           {t("hero.title_prefix")}{" "}
-          <MagicButton className="text-[hsl(var(--gold-oxide))]">{t("hero.title_highlight")}</MagicButton>
+          <MagicButton className="text-gold">{t("hero.title_highlight")}</MagicButton>
           {" "}{t("hero.title_suffix")}
         </motion.h1>
 
@@ -68,7 +68,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
           <Button
             size="lg"
             onClick={ctaAction}
-            className="cta-canon cta-glow gap-2.5 text-sm font-semibold px-10 h-12 sm:h-14 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-dim))] text-[hsl(var(--obsidian))] shadow-lg shadow-[hsl(var(--gold-oxide)/0.18)] w-full sm:w-auto rounded-lg transition-all duration-200"
+            className="cta-canon cta-glow gap-2.5 text-sm font-semibold px-10 h-12 sm:h-14 bg-gold hover:bg-gold-dim text-obsidian shadow-lg shadow-gold/18 w-full sm:w-auto rounded-lg transition-all duration-200"
           >
             {t("hero.cta_start")}
             <ArrowRight className="h-4 w-4" />
@@ -77,7 +77,7 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
             variant="outline"
             size="lg"
             onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })}
-            className="cta-canon gap-2.5 text-sm h-12 sm:h-14 w-full sm:w-auto border-border/50 text-muted-foreground hover:bg-accent/8 hover:border-[hsl(var(--gold-oxide)/0.3)] rounded-lg transition-all duration-200"
+            className="cta-canon gap-2.5 text-sm h-12 sm:h-14 w-full sm:w-auto border-border/50 text-muted-foreground hover:bg-accent/8 hover:border-gold/30 rounded-lg transition-all duration-200"
           >
             <Eye className="h-4 w-4" />
             {t("hero.cta_mechanism")}
