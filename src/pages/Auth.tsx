@@ -229,7 +229,7 @@ export default function Auth() {
             <div className="absolute inset-0 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <Logo size="h-10 w-10" className="relative shadow-lg shadow-[hsl(var(--gold-oxide)/0.08)]" loading="eager" />
           </div>
-          <span className="text-[22px] font-semibold tracking-[-0.01em] text-foreground">AI-IDEI</span>
+          <span className="text-h4 font-semibold tracking-tight text-foreground">AI-IDEI</span>
         </button>
 
         {/* Auth card */}
