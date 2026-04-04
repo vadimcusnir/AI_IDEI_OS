@@ -210,66 +210,63 @@ export function AppSidebar() {
         </button>
       </SidebarHeader>
 
-      {/* ═══ SEARCH — Global semantic search ═══ */}
-      {user && (
-        <div className={cn("px-2.5 py-1", collapsed && "flex justify-center")}>
-          <Suspense fallback={null}><GlobalSearch /></Suspense>
-        </div>
-      )}
-
-      {/* ═══ WORKSPACE — Switcher (below search) ═══ */}
-      {user && !collapsed && workspaces.length > 0 && (
-        <div className="px-2.5 pb-1">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left hover:bg-muted/50 transition-colors">
-                <span className="text-xs font-medium truncate flex-1 text-muted-foreground">
-                  {currentWorkspace?.name || "Workspace"}
-                </span>
-                <ChevronsUpDown className="h-3 w-3 text-muted-foreground/40 shrink-0" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="min-w-[200px]">
-              {workspaces.map((ws) => (
-                <DropdownMenuItem
-                  key={ws.id}
-                  onClick={() => {
-                    if (ws.id !== currentWorkspace?.id) {
-                      switchWorkspace(ws.id);
-                      toast.success(t("common:workspace_switched", { name: ws.name }));
-                    }
-                  }}
-                  className="gap-2 text-xs"
-                >
-                  {ws.id === currentWorkspace?.id ? <Check className="h-3 w-3 text-primary" /> : <div className="w-3" />}
-                  <span className="truncate">{ws.name}</span>
-                </DropdownMenuItem>
-              ))}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={async () => {
-                  const name = prompt(t("common:workspace_name_placeholder", { defaultValue: "Workspace name" }));
-                  if (name?.trim()) {
-                    const ws = await createWorkspace(name.trim());
-                    if (ws) toast.success(t("common:workspace_created", { name: ws.name }));
-                  }
-                }}
-                className="gap-2 text-xs"
-              >
-                <Plus className="h-3 w-3" />
-                {t("common:new_workspace", { defaultValue: "New workspace" })}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
-
       <SidebarSeparator />
 
       {/* ═══ NAVIGATION — Single vertical flow ═══ */}
       <SidebarContent>
         {user ? (
           <>
+            {/* Search + Workspace above navigation */}
+            <div className={cn("px-2.5 py-1.5", collapsed && "flex justify-center")}>
+              <Suspense fallback={null}><GlobalSearch /></Suspense>
+            </div>
+            {!collapsed && workspaces.length > 0 && (
+              <div className="px-2.5 pb-1">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left hover:bg-muted/50 transition-colors">
+                      <span className="text-xs font-medium truncate flex-1 text-muted-foreground">
+                        {currentWorkspace?.name || "Workspace"}
+                      </span>
+                      <ChevronsUpDown className="h-3 w-3 text-muted-foreground/40 shrink-0" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="min-w-[200px]">
+                    {workspaces.map((ws) => (
+                      <DropdownMenuItem
+                        key={ws.id}
+                        onClick={() => {
+                          if (ws.id !== currentWorkspace?.id) {
+                            switchWorkspace(ws.id);
+                            toast.success(t("common:workspace_switched", { name: ws.name }));
+                          }
+                        }}
+                        className="gap-2 text-xs"
+                      >
+                        {ws.id === currentWorkspace?.id ? <Check className="h-3 w-3 text-primary" /> : <div className="w-3" />}
+                        <span className="truncate">{ws.name}</span>
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={async () => {
+                        const name = prompt(t("common:workspace_name_placeholder", { defaultValue: "Workspace name" }));
+                        if (name?.trim()) {
+                          const ws = await createWorkspace(name.trim());
+                          if (ws) toast.success(t("common:workspace_created", { name: ws.name }));
+                        }
+                      }}
+                      className="gap-2 text-xs"
+                    >
+                      <Plus className="h-3 w-3" />
+                      {t("common:new_workspace", { defaultValue: "New workspace" })}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
+            <SidebarSeparator className="my-1" />
+
             {SECTIONS.map(renderSection)}
             {isAdmin && (
               <>
