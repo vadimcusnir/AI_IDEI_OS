@@ -356,6 +356,7 @@ export function useCommandCenter() {
     newSession(); executionActions.reset();
     executionActions.clearMessages();
     executionActions.setOutputs([]); setShowOutputs(false); setShowPostExecution(false);
+    localStorage.removeItem("cc_draft_input");
   };
 
   const handleSaveAllOutputs = async () => {
