@@ -204,7 +204,7 @@ export function DuplicateMergePanel() {
                 className={cn(
                   "text-micro shrink-0",
                   dup.similarity > 0.8 ? "border-destructive/40 text-destructive" :
-                  dup.similarity > 0.6 ? "border-yellow-500/40 text-yellow-600 dark:text-yellow-400" :
+                  dup.similarity > 0.6 ? "border-yellow-500/40 text-warning dark:text-yellow-400" :
                   "border-muted-foreground/30"
                 )}
               >
@@ -275,7 +275,7 @@ export function DuplicateMergePanel() {
             <DialogDescription className="text-xs">
               {actionDialog?.action === "merge" ? (
                 <>
-                  <AlertTriangle className="h-3 w-3 inline mr-1 text-yellow-500" />
+                  <AlertTriangle className="h-3 w-3 inline mr-1 text-warning" />
                   This will merge <strong>#{actionDialog.dup.neuron_b}</strong> into <strong>#{actionDialog.dup.neuron_a}</strong>.
                   Blocks from neuron B will be appended to neuron A. Neuron B will be archived.
                 </>

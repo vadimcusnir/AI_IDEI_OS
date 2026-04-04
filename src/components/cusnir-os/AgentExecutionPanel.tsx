@@ -66,7 +66,7 @@ const AGENT_ICONS: Record<string, typeof Bot> = {
 
 const TYPE_COLORS: Record<string, string> = {
   cognitive: "text-purple-400 bg-purple-400/10",
-  social: "text-blue-400 bg-blue-400/10",
+  social: "text-info bg-info/10",
   commercial: "text-emerald-400 bg-emerald-400/10",
   infrastructure: "text-amber-400 bg-amber-400/10",
 };

@@ -81,7 +81,7 @@ const AXES: Axis[] = [
   {
     title: "Axa Socială",
     icon: Users,
-    color: "text-blue-400",
+    color: "text-info",
     description: "Mapează influența, generează viralitate, acumulează reputație.",
     modules: [
       {

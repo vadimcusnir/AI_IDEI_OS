@@ -9,7 +9,7 @@ import type { NeuronListItem } from "@/hooks/useNeuronList";
 
 const CATEGORY_BADGE: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   insight: { icon: Lightbulb, color: "text-amber-500 bg-amber-500/10", label: "Insight" },
-  framework: { icon: Layers, color: "text-blue-500 bg-blue-500/10", label: "Framework" },
+  framework: { icon: Layers, color: "text-info bg-info/10", label: "Framework" },
   pattern: { icon: Network, color: "text-purple-500 bg-purple-500/10", label: "Pattern" },
   narrative: { icon: MessageSquareQuote, color: "text-emerald-500 bg-emerald-500/10", label: "Narrative" },
   commercial: { icon: Target, color: "text-rose-500 bg-rose-500/10", label: "Commercial" },

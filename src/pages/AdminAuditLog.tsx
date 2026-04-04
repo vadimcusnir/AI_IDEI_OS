@@ -57,9 +57,9 @@ const SEVERITY_COLORS: Record<string, string> = {
 };
 
 const VERDICT_ICONS: Record<string, { icon: typeof ShieldCheck; color: string }> = {
-  ALLOW: { icon: ShieldCheck, color: "text-green-600" },
+  ALLOW: { icon: ShieldCheck, color: "text-success" },
   DENY: { icon: ShieldX, color: "text-destructive" },
-  PAYWALL: { icon: ShieldAlert, color: "text-yellow-600" },
+  PAYWALL: { icon: ShieldAlert, color: "text-warning" },
 };
 
 function formatDate(d: string) {
@@ -238,9 +238,9 @@ export default function AdminAuditLog() {
                 {filteredCompliance.map(entry => (
                   <div key={entry.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-card transition-colors border border-transparent hover:border-border">
                     <div className={cn("h-6 w-6 rounded-md flex items-center justify-center shrink-0",
-                      entry.severity === "critical" ? "bg-destructive/10" : entry.severity === "warning" ? "bg-yellow-500/10" : "bg-muted")}>
+                      entry.severity === "critical" ? "bg-destructive/10" : entry.severity === "warning" ? "bg-warning/10" : "bg-muted")}>
                       {entry.severity === "critical" ? <AlertTriangle className="h-3 w-3 text-destructive" /> :
-                       entry.severity === "warning" ? <AlertTriangle className="h-3 w-3 text-yellow-600" /> :
+                       entry.severity === "warning" ? <AlertTriangle className="h-3 w-3 text-warning" /> :
                        <Info className="h-3 w-3 text-muted-foreground" />}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -325,8 +325,8 @@ export default function AdminAuditLog() {
                   return (
                     <div key={s.id} className="bg-card border border-border rounded-lg p-4 flex items-center gap-4">
                       <div className={cn("h-8 w-8 rounded-full flex items-center justify-center shrink-0",
-                        isActive ? "bg-green-500/10" : "bg-muted")}>
-                        <User className={cn("h-4 w-4", isActive ? "text-green-600" : "text-muted-foreground")} />
+                        isActive ? "bg-success/10" : "bg-muted")}>
+                        <User className={cn("h-4 w-4", isActive ? "text-success" : "text-muted-foreground")} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
