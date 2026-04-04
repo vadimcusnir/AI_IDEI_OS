@@ -225,10 +225,16 @@ export default function Credits() {
           </div>
         </ControlledSection>
 
-        {/* Storage Usage */}
+        {/* Storage Usage + Billing */}
         <ControlledSection elementId="credits.storage_usage">
           <div className="bg-card border border-border rounded-xl p-5 mb-6">
             <StorageUsagePanel />
+          </div>
+        </ControlledSection>
+
+        <ControlledSection elementId="credits.storage_billing">
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <StorageBillingPanel />
           </div>
         </ControlledSection>
 
