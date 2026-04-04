@@ -361,9 +361,14 @@ Deno.serve(async (req) => {
     const { data: { user }, error: authError } = await userClient.auth.getUser();
     if (authError || !user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
 
-    if (!checkRateLimit(user.id)) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
-    }
+    // DB-backed rate limiting (60 req/hour)
+    const rateLimited = await rateLimitGuard(
+      `${user.id}:agent-console`,
+      req,
+      { maxRequests: 60, windowSeconds: 3600 },
+      getCorsHeaders(req)
+    );
+    if (rateLimited) return rateLimited;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
