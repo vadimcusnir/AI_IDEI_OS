@@ -45,6 +45,7 @@ const MasterAgent = lazyRetry(() => import("@/pages/MasterAgent"));
 const AutomationTemplates = lazyRetry(() => import("@/pages/AutomationTemplates"));
 const MarketplaceDrafts = lazyRetry(() => import("@/pages/MarketplaceDrafts"));
 const MarketplaceEarnings = lazyRetry(() => import("@/pages/MarketplaceEarnings"));
+const Pipeline = lazyRetry(() => import("@/pages/Pipeline"));
 
 export function protectedRoutes() {
   return (
@@ -84,6 +85,7 @@ export function protectedRoutes() {
       <Route path="/wallet" element={<Navigate to="/credits" replace />} />
       <Route path="/gamification" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Gamification failed to load"><GamificationPage /></ErrorBoundary></AppLayout></ProtectedRoute>} />
       <Route path="/data-pipeline" element={<Navigate to="/pipeline" replace />} />
+      <Route path="/pipeline" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><Pipeline /></ErrorBoundary></AppLayout></ProtectedRoute>} />
       <Route path="/integrations" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Integrations failed to load"><Integrations /></ErrorBoundary></AppLayout></ProtectedRoute>} />
       <Route path="/cognitive-units" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Cognitive units failed to load"><CognitiveUnits /></ErrorBoundary></AppLayout></ProtectedRoute>} />
       <Route path="/collection-runs" element={<ProtectedRoute><AppLayout><ErrorBoundary fallbackTitle="Collection runs failed to load"><CollectionRuns /></ErrorBoundary></AppLayout></ProtectedRoute>} />
