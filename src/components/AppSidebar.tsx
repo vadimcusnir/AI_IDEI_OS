@@ -177,9 +177,9 @@ export function AppSidebar() {
     if (section.adminOnly && !isAdmin) return null;
 
     return (
-      <SidebarGroup key={section.key}>
+      <SidebarGroup key={section.key} className="py-1">
         {!collapsed && (
-          <SidebarGroupLabel className="text-[9px] tracking-[0.15em] font-bold text-muted-foreground/50 select-none">
+          <SidebarGroupLabel className="text-[9px] tracking-[0.15em] font-bold text-muted-foreground/50 select-none px-3 mb-0.5">
             {section.label}
           </SidebarGroupLabel>
         )}
