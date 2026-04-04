@@ -15,22 +15,59 @@ Deno.serve(async (req) => {
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, serviceKey);
 
+  const xmlHeaders = { ...getCorsHeaders(req), "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600, s-maxage=3600" };
+
+  function xmlResponse(body: string) {
+    return new Response(
+      `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${body}
+</urlset>`,
+      { headers: xmlHeaders }
+    );
+  }
+
+  function mapUrls(data: any[] | null, prefix: string, priority: number) {
+    return (data || []).map(
+      (e: any) => `  <url>
+    <loc>${BASE_URL}/${prefix}/${e.slug}</loc>
+    <lastmod>${new Date(e.updated_at).toISOString().split("T")[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>${priority}</priority>
+  </url>`
+    ).join("\n");
+  }
+
   try {
     // ═══ Sitemap Index ═══
     if (type === "index") {
       const subs = [
+        "blog",
         "insights", "patterns", "formulas", "contradictions",
-        "applications", "profiles", "topics", "docs", "marketplace",
-        "knowledge", "media-profiles",
+        "applications", "profiles", "topics", "marketplace",
+        "knowledge", "media-profiles", "analyses",
       ];
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap><loc>${BASE_URL}/sitemap-static.xml</loc></sitemap>
-  ${subs.map((t) => `<sitemap><loc>${BASE_URL}/api/sitemap?type=${t}</loc></sitemap>`).join("\n  ")}
+  ${subs.map((t) => `<sitemap><loc>${BASE_URL}/functions/v1/sitemap?type=${t}</loc></sitemap>`).join("\n  ")}
 </sitemapindex>`;
-      return new Response(xml, {
-        headers: { ...getCorsHeaders(req), "Content-Type": "application/xml" },
-      });
+      return new Response(xml, { headers: xmlHeaders });
+    }
+
+    // ═══ Blog ═══
+    if (type === "blog") {
+      const { data: posts } = await supabase
+        .from("blog_posts")
+        .select("slug, updated_at")
+        .eq("status", "published")
+        .order("published_at", { ascending: false })
+        .limit(5000);
+      const urls = [
+        `  <url><loc>${BASE_URL}/blog</loc><changefreq>daily</changefreq><priority>0.8</priority></url>`,
+        ...mapUrls(posts, "blog", 0.7),
+      ];
+      return xmlResponse(urls.join("\n"));
     }
 
     // ═══ Docs ═══
@@ -76,6 +113,23 @@ Deno.serve(async (req) => {
     <lastmod>${new Date(a.updated_at).toISOString().split("T")[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>`);
+      return xmlResponse(urls.join("\n"));
+    }
+
+    // ═══ Public Analyses ═══
+    if (type === "analyses") {
+      const { data } = await supabase
+        .from("public_analyses")
+        .select("slug, updated_at")
+        .eq("is_published", true)
+        .order("created_at", { ascending: false })
+        .limit(50000);
+      const urls = (data || []).map((a: any) => `  <url>
+    <loc>${BASE_URL}/analysis/${a.slug}</loc>
+    <lastmod>${a.updated_at ? new Date(a.updated_at).toISOString().split("T")[0] : ""}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>`);
       return xmlResponse(urls.join("\n"));
     }
@@ -130,8 +184,6 @@ Deno.serve(async (req) => {
       .order("updated_at", { ascending: false })
       .limit(50000);
 
-    // Map entity type to its public route prefix
-    const routePrefix = type;
     const urls = (entities || []).map(
       (e: any) => `  <url>
     <loc>${BASE_URL}/knowledge/${e.slug}</loc>
@@ -146,24 +198,3 @@ Deno.serve(async (req) => {
     return new Response("Error generating sitemap", { status: 500 });
   }
 });
-
-function xmlResponse(body: string) {
-  return new Response(
-    `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${body}
-</urlset>`,
-    { headers: { ...getCorsHeaders(req), "Content-Type": "application/xml" } }
-  );
-}
-
-function mapUrls(data: any[] | null, prefix: string, priority: number) {
-  return (data || []).map(
-    (e: any) => `  <url>
-    <loc>${BASE_URL}/${prefix}/${e.slug}</loc>
-    <lastmod>${new Date(e.updated_at).toISOString().split("T")[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>${priority}</priority>
-  </url>`
-  ).join("\n");
-}

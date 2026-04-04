@@ -45,9 +45,9 @@ export function ExecutionRightPanel({
           <div className="flex items-center gap-2">
             <div className={cn(
               "h-6 w-6 rounded-lg flex items-center justify-center",
-              isDone ? "bg-green-500/10" : isFailed ? "bg-destructive/10" : "bg-primary/10"
+              isDone ? "bg-success/10" : isFailed ? "bg-destructive/10" : "bg-primary/10"
             )}>
-              {isDone ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> :
+              {isDone ? <CheckCircle2 className="h-3.5 w-3.5 text-success" /> :
                isFailed ? <XCircle className="h-3.5 w-3.5 text-destructive" /> :
                <Zap className="h-3.5 w-3.5 text-primary" />}
             </div>
@@ -65,8 +65,8 @@ export function ExecutionRightPanel({
         <div className="grid grid-cols-2 gap-2">
           <StatCard icon={Coins} label="Cost" value={`${totalCredits} N`} color="text-primary" />
           <StatCard icon={Clock} label="Timp" value={`${elapsed}s`} color="text-muted-foreground" />
-          <StatCard icon={Package} label="Outputs" value={`${outputCount}`} color="text-green-500" />
-          <StatCard icon={TrendingUp} label="Balanță" value={`${balance.toLocaleString()}`} color="text-amber-500" />
+          <StatCard icon={Package} label="Outputs" value={`${outputCount}`} color="text-success" />
+          <StatCard icon={TrendingUp} label="Balanță" value={`${balance.toLocaleString()}`} color="text-warning" />
         </div>
 
         {/* Progress */}
@@ -84,7 +84,7 @@ export function ExecutionRightPanel({
               <motion.div
                 className={cn(
                   "h-full rounded-full",
-                  isDone ? "bg-green-500" : isFailed ? "bg-destructive" : "bg-primary"
+                  isDone ? "bg-success" : isFailed ? "bg-destructive" : "bg-primary"
                 )}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.3 }}
@@ -150,7 +150,7 @@ function StepRow({ step }: { step: TaskStep }) {
   const statusIcon = {
     pending: <div className="h-2 w-2 rounded-full bg-border/60" />,
     running: <Loader2 className="h-3 w-3 text-primary animate-spin" />,
-    completed: <CheckCircle2 className="h-3 w-3 text-green-500" />,
+    completed: <CheckCircle2 className="h-3 w-3 text-success" />,
     failed: <XCircle className="h-3 w-3 text-destructive" />,
     skipped: <div className="h-2 w-2 rounded-full bg-muted-foreground/20" />,
   };

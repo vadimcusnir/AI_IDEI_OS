@@ -130,7 +130,7 @@ export function ProfileExtractorInline() {
       <div className="rounded-2xl border-2 border-dashed border-border bg-card p-8 text-center">
         <UserCheck className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
         <p className="text-sm text-muted-foreground mb-4">Autentifică-te pentru a extrage un profil expert.</p>
-        <Button onClick={() => navigate("/auth")} className="gap-2">
+        <Button onClick={() => navigate("/auth?redirect=/extractor")} className="gap-2">
           Începe gratuit <ArrowRight className="h-4 w-4" />
         </Button>
       </div>

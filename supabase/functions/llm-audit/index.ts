@@ -7,6 +7,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
  * - fix: Generate AI suggestions for detected issues
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const BASE_URL = "https://ai-idei.com";
 
@@ -72,6 +73,11 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":llm-audit", req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const body = await req.json().catch(() => ({}));
     const { action = "scan" } = body;
 

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useLocale } from "@/hooks/useLocale";
 import { SEOHead } from "@/components/SEOHead";
 import { OrganizationJsonLd, WebApplicationJsonLd, FAQJsonLd } from "@/components/seo/JsonLd";
+import { LLMDiscoveryMeta } from "@/components/seo/LLMDiscoveryMeta";
 import { useAuth } from "@/contexts/AuthContext";
 import { Logo } from "@/components/shared/Logo";
 import { ArrowRight, Menu, X } from "lucide-react";
@@ -138,8 +139,22 @@ export default function Landing() {
       </a>
       <SEOHead
         title="AI-IDEI — AI Copywriting & Marketing Execution System"
-        description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants."
+        description="Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and execution agents."
         canonical="https://ai-idei.com/"
+      />
+      <LLMDiscoveryMeta
+        pageName="Knowledge Extraction OS"
+        pageDescription="Transform expertise into digital assets. Upload content once, generate dozens of professional outputs automatically. AI-powered copywriting and marketing execution system."
+        capabilities={[
+          "Audio/Video Transcription",
+          "Knowledge Extraction",
+          "AI Copywriting",
+          "Marketing Execution",
+          "Content Strategy",
+          "Offer Creation",
+          "Funnel Building",
+          "Knowledge Monetization",
+        ]}
       />
 
       <ScrollProgress />

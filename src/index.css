@@ -280,11 +280,7 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
-  @media (min-width: 768px) {
-    body {
-      font-size: var(--body-dense-size); /* 14px on desktop — denser UI */
-    }
-  }
+  /* 16px body globally — WCAG AA minimum. Dense UI uses utility classes, not base. */
 
   /* ── Global focus states — P1 accessibility ── */
   :focus-visible {
@@ -311,12 +307,80 @@
 }
 
 @layer components {
+  /* ── MOBILE-FIRST CANON v2.0 — Canonical Typography ── */
+  .text-h1 {
+    font-size: clamp(2rem, 3vw + 1rem, 2.8rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .text-h2 {
+    font-size: clamp(1.5rem, 2.2vw + 0.5rem, 2rem);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .text-h3 {
+    font-size: clamp(1.25rem, 1.6vw + 0.5rem, 1.5rem);
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  .text-h4 {
+    font-size: 1.125rem;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  .text-body {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .text-body-lg {
+    font-size: 1.125rem;
+    line-height: 1.65;
+  }
+  .text-caption {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .text-eyebrow {
+    font-size: 0.6875rem;
+    line-height: 1;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .text-footnote {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  /* ── Spacing Stack Utility ── */
+  .stack-xs > * + * { margin-top: 0.25rem; }
+  .stack-sm > * + * { margin-top: 0.5rem; }
+  .stack-md > * + * { margin-top: 1rem; }
+  .stack-lg > * + * { margin-top: 1.5rem; }
+  .stack-xl > * + * { margin-top: 2rem; }
+
+  /* ── CTA Canon — min 44px touch, canon radius ── */
+  .cta-canon {
+    min-height: 2.75rem; /* 44px */
+    padding-inline: 1rem;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  @media (min-width: 640px) {
+    .cta-canon {
+      padding-inline: 1.5rem;
+    }
+  }
+
   .panel-section {
     @apply border-b border-border py-3 px-3;
   }
 
   .panel-section-title {
-    @apply text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2;
+    @apply text-eyebrow text-muted-foreground mb-2;
   }
 
   .neuron-block-placeholder:empty::before {
@@ -551,24 +615,57 @@
 
   /* Landing: calm-premium micro-interactions */
   .landing-card {
-    transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    transition: border-color 0.35s ease, background-color 0.35s ease, transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.35s ease;
   }
   .landing-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px -8px hsl(var(--gold-oxide) / 0.1), 0 2px 8px -2px hsl(var(--foreground) / 0.04);
+  }
+
+  /* Landing CTA glow on hover */
+  .cta-glow {
+    position: relative;
+    overflow: visible;
+  }
+  .cta-glow::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(var(--gold-oxide) / 0.35), hsl(var(--gold-oxide) / 0.1));
+    filter: blur(16px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .cta-glow:hover::before {
+    opacity: 1;
   }
 
   /* Landing: section gold divider */
   .gold-divider {
-    @apply w-full h-px;
+    @apply w-full;
+    height: 2px;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      hsl(var(--gold-oxide) / 0.08) 20%,
-      hsl(var(--gold-oxide) / 0.2) 50%,
-      hsl(var(--gold-oxide) / 0.08) 80%,
+      hsl(var(--gold-oxide) / 0.06) 15%,
+      hsl(var(--gold-oxide) / 0.25) 50%,
+      hsl(var(--gold-oxide) / 0.06) 85%,
       transparent 100%
     );
   }
+
+  /* SVG section separator pattern */
+  .section-sigil {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--sp-4) 0;
+  }
+
+  /* Landing section spacing rhythm: major=py-32/py-44, minor=py-20/py-28 */
 
   /* Reduced motion — disable ALL decorative animations */
   @media (prefers-reduced-motion: reduce) {

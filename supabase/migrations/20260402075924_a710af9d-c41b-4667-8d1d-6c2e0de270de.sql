@@ -1,0 +1,5 @@
+ALTER TABLE public.onboarding_progress
+  ADD COLUMN IF NOT EXISTS welcome_seen BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS checklist_dismissed BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS checklist_completed BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS tutorial_skipped BOOLEAN NOT NULL DEFAULT false;

@@ -1,5 +1,5 @@
 /**
- * CommandInputZone — Premium chat input with Perplexity-style + menu.
+ * CommandInputZone — Premium chat input with centered alignment.
  */
 
 import { useRef, useState, forwardRef, useImperativeHandle, useCallback } from "react";
@@ -20,6 +20,7 @@ interface CommandInputZoneProps {
   onSubmit: () => void;
   onStop: () => void;
   loading: boolean;
+  isSubmitting?: boolean;
   files: File[];
   onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: (idx: number) => void;
@@ -31,7 +32,7 @@ interface CommandInputZoneProps {
 
 export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZoneProps>(
   function CommandInputZone(
-    { input, onInputChange, onSubmit, onStop, loading, files, onFileSelect, onRemoveFile,
+    { input, onInputChange, onSubmit, onStop, loading, isSubmitting, files, onFileSelect, onRemoveFile,
       showSlashMenu, onShowSlashMenuChange, onSlashSelect, onAttachAction },
     ref,
   ) {
@@ -46,7 +47,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        onSubmit();
+        if (!isSubmitting) onSubmit();
       }
     };
 
@@ -68,7 +69,6 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
       if (onAttachAction) {
         onAttachAction(action);
       } else {
-        // Default: insert action as slash command
         const actionMap: Record<string, string> = {
           web_search: "/search ",
           deep_research: "/research ",
@@ -85,7 +85,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
 
     return (
       <div
-        className="bg-background"
+        className="bg-background relative"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -104,25 +104,26 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
           )}
         </AnimatePresence>
 
-        <div className="max-w-3xl mx-auto px-2 sm:px-5 pb-1 sm:pb-2 pt-1 sm:pt-2">
+        <div className="max-w-3xl mx-auto px-2 sm:px-4 pb-1 sm:pb-2 pt-1 sm:pt-2">
           {/* Attached files */}
           {files.length > 0 && (
-              <div className="flex gap-1.5 flex-wrap pb-1.5">
-                {files.map((f, i) => (
-                  <div key={i} className="flex items-center gap-1 bg-card border border-border/40 rounded-md px-2 py-1 text-[11px] shadow-sm">
-                    <Paperclip className="h-2.5 w-2.5 text-muted-foreground/60" />
-                    <span className="truncate max-w-[120px] text-foreground">{f.name}</span>
-                    <button onClick={() => onRemoveFile(i)} className="text-muted-foreground hover:text-foreground transition-colors ml-0.5">
-                      <X className="h-2.5 w-2.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+            <div className="flex gap-1.5 flex-wrap pb-2">
+              {files.map((f, i) => (
+                <div key={i} className="flex items-center gap-1.5 bg-card border border-border/40 rounded-lg px-2.5 py-1.5 text-xs shadow-sm">
+                  <Paperclip className="h-3 w-3 text-muted-foreground/60" />
+                  <span className="truncate max-w-[120px] text-foreground">{f.name}</span>
+                  <button onClick={() => onRemoveFile(i)} className="text-muted-foreground hover:text-foreground transition-colors ml-0.5">
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
           )}
 
-          {/* Main input container — COMPACT */}
+          {/* Main input container — items-center for vertical alignment */}
           <div className={cn(
-            "relative flex items-end gap-0.5 rounded-[14px] border bg-card/90 backdrop-blur-sm transition-all duration-200",
+            "relative flex items-center gap-2 rounded-2xl border bg-card/90 backdrop-blur-sm transition-all duration-200",
+            "px-2 py-1.5",
             "shadow-sm",
             "border-border/50 focus-within:border-[hsl(var(--gold-oxide)/0.4)] focus-within:shadow-md focus-within:shadow-[hsl(var(--gold-oxide)/0.04)] focus-within:ring-1 focus-within:ring-[hsl(var(--gold-oxide)/0.15)]"
           )}>
@@ -135,16 +136,16 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               onChange={onFileSelect}
             />
 
-            {/* Plus menu */}
-            <div className="ml-0.5 mb-0.5">
+            {/* Plus menu — centered vertically */}
+            <div className="shrink-0 flex items-center justify-center">
               <InputAttachMenu
                 onFileClick={() => fileInputRef.current?.click()}
                 onAction={handleAttachAction}
               />
             </div>
 
-            {/* Textarea — compact */}
-            <div className="flex-1 relative py-0.5">
+            {/* Textarea — fills center, vertically centered */}
+            <div className="flex-1 relative flex items-center min-w-0">
               <textarea
                 ref={inputRef}
                 value={input}
@@ -154,7 +155,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                 }}
                 onKeyDown={handleKeyDown}
                 placeholder="Execută comandă..."
-                className="w-full resize-none bg-transparent px-1 py-1.5 text-[15px] sm:text-sm leading-[20px] focus:outline-none placeholder:text-muted-foreground/30 min-h-[36px] max-h-[180px]"
+                className="w-full resize-none bg-transparent px-1 py-2 text-sm leading-5 focus:outline-none placeholder:text-muted-foreground/35 min-h-[40px] max-h-[180px]"
                 rows={1}
                 style={{ height: "auto" }}
                 onInput={(e) => {
@@ -176,35 +177,37 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
               )}
             </div>
 
-            {/* Send / Stop — compact 32px */}
-            {loading ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
-                onClick={onStop}
-                title="Oprește generarea"
-              >
-                <Square className="h-3 w-3 fill-current" />
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                className={cn(
-                  "h-8 w-8 p-0 shrink-0 rounded-[10px] mr-0.5 mb-0.5 transition-all duration-200",
-                  (input.trim() || files.length > 0)
-                    ? "bg-[hsl(var(--gold-oxide))] text-[hsl(var(--obsidian))] shadow-sm shadow-[hsl(var(--gold-oxide)/0.2)] hover:shadow-md hover:bg-[hsl(var(--gold-dim))]"
-                    : "bg-muted text-muted-foreground/30"
-                )}
-                onClick={onSubmit}
-                disabled={!input.trim() && files.length === 0}
-              >
-                <ArrowUp className="h-3.5 w-3.5" />
-              </Button>
-            )}
+            {/* Send / Stop — centered vertically */}
+            <div className="shrink-0 flex items-center justify-center">
+              {loading ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 rounded-xl bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
+                  onClick={onStop}
+                  title="Oprește generarea"
+                >
+                  <Square className="h-3.5 w-3.5 fill-current" />
+                </Button>
+              ) : (
+                <Button
+                  size="icon"
+                  className={cn(
+                    "h-10 w-10 rounded-xl transition-all duration-200",
+                    (input.trim() || files.length > 0)
+                      ? "bg-[hsl(var(--gold-oxide))] text-[hsl(var(--obsidian))] shadow-sm shadow-[hsl(var(--gold-oxide)/0.2)] hover:shadow-md hover:bg-[hsl(var(--gold-dim))]"
+                      : "bg-muted text-muted-foreground/30"
+                  )}
+                  onClick={onSubmit}
+                  disabled={(!input.trim() && files.length === 0) || isSubmitting}
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
           </div>
 
-          {/* Keyboard hint — compact */}
+          {/* Keyboard hint */}
           <p className="text-[9px] text-muted-foreground/20 text-center mt-1.5 select-none tracking-wide">
             <kbd className="font-mono">Enter</kbd> trimite · <kbd className="font-mono">/</kbd> comenzi · <kbd className="font-mono">+</kbd> servicii
           </p>

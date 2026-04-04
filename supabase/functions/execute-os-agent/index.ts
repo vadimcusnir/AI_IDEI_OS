@@ -85,11 +85,21 @@ serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
-  // Rate limit by auth header or IP
+  // Auth guard — require valid JWT
   const authHeader = req.headers.get("authorization") || "";
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const limitKey = `os-agent:${authHeader ? "auth" : ip}`;
-  const rateLimited = await rateLimitGuard(limitKey, req, { maxRequests: 20, windowSeconds: 60 }, corsHeaders);
+  if (!authHeader.startsWith("Bearer ")) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  }
+  const token = authHeader.replace("Bearer ", "");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+  const authClient = createClient(Deno.env.get("SUPABASE_URL")!, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
+  const { data: { user: authUser }, error: authErr } = await authClient.auth.getUser();
+  if (authErr || !authUser) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  }
+
+  // Rate limit (user-based, post-auth)
+  const rateLimited = await rateLimitGuard(authUser.id + ":os-agent", req, { maxRequests: 20, windowSeconds: 60 }, corsHeaders);
   if (rateLimited) return rateLimited;
 
   try {

@@ -2,41 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { SUBSCRIPTION_TIERS, NEURONS_EXCHANGE_RATE } from "@/config/economyConfig";
 
-export const NEURONS_EXCHANGE_RATE = 0.002; // 1 NEURON = $0.002 USD → $1 = 500 NEURONS
-
-export const SUBSCRIPTION_TIERS = {
-  core_monthly: {
-    price_id: "price_1T8qQtIK7fwtty4o6GFGNU28",
-    product_id: "prod_U74a8adWSDNymI",
-    name: "Core",
-    price: 11,
-    interval: "month" as const,
-    neurons_quota: 2000,
-    execution_discount: 0.10,
-    features: ["2,000 NEURONS / lună", "Toate serviciile AI", "Extracție nelimitată", "Knowledge Graph", "-10% cost execuție"],
-  },
-  pro_monthly: {
-    price_id: "price_1T8qRgIK7fwtty4ox2y0cEZJ",
-    product_id: "prod_U74aOlNMMVn7lY",
-    name: "Pro",
-    price: 47,
-    interval: "month" as const,
-    neurons_quota: 10000,
-    execution_discount: 0.25,
-    features: ["10,000 NEURONS / lună", "Tot din Core", "Procesare prioritară", "Batch processing", "Analytics avansat", "-25% cost execuție"],
-  },
-  elite_monthly: {
-    price_id: "price_elite_placeholder",
-    product_id: "prod_elite_placeholder",
-    name: "Elite",
-    price: 128,
-    interval: "month" as const,
-    neurons_quota: 30000,
-    execution_discount: 0.40,
-    features: ["30,000 NEURONS / lună", "Tot din Pro", "Locuri nelimitate", "SLA & suport dedicat", "NOTA2 benefits", "-40% cost execuție"],
-  },
-} as const;
+export { SUBSCRIPTION_TIERS, NEURONS_EXCHANGE_RATE };
 
 interface SubscriptionState {
   subscribed: boolean;

@@ -1,10 +1,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 /**
  * fetch-subtitles: Downloads YouTube subtitles/captions.
  * Checks languages in priority order: ro, en, auto-generated.
- * 
+ *
  * Input: { url, episode_id, preferred_languages?: string[] }
  * Output: { subtitle_text, subtitle_language, segments }
  */
@@ -19,9 +20,18 @@ interface SubtitleSegment {
 
 // ── Dangerous content patterns (XSS vectors) ──
 const DANGEROUS_PATTERNS = [
-  /<script/i, /onerror\s*=/i, /onload\s*=/i, /onclick\s*=/i,
-  /<iframe/i, /<object/i, /<embed/i, /javascript\s*:/i,
-  /data\s*:\s*text\/html/i, /<style/i, /<meta/i, /<link/i,
+  /<script/i,
+  /onerror\s*=/i,
+  /onload\s*=/i,
+  /onclick\s*=/i,
+  /<iframe/i,
+  /<object/i,
+  /<embed/i,
+  /javascript\s*:/i,
+  /data\s*:\s*text\/html/i,
+  /<style/i,
+  /<meta/i,
+  /<link/i,
 ];
 
 function sanitizeText(raw: string): string {
@@ -38,20 +48,25 @@ function sanitizeText(raw: string): string {
 }
 
 function containsMaliciousContent(text: string): boolean {
-  return DANGEROUS_PATTERNS.some(p => p.test(text));
+  return DANGEROUS_PATTERNS.some((p) => p.test(text));
 }
 
-function parseTimedTextXml(xml: string): { text: string; segments: SubtitleSegment[] } {
+function parseTimedTextXml(
+  xml: string,
+): { text: string; segments: SubtitleSegment[] } {
   // Security: reject entire payload if malicious patterns detected
   if (containsMaliciousContent(xml)) {
-    console.warn("[security] Malicious content detected in subtitle XML, rejecting");
+    console.warn(
+      "[security] Malicious content detected in subtitle XML, rejecting",
+    );
     return { text: "", segments: [] };
   }
 
   const segments: SubtitleSegment[] = [];
   const textParts: string[] = [];
 
-  const regex = /<text[^>]*\bstart="([\d.]+)"[^>]*\bdur="([\d.]+)"[^>]*>([\s\S]*?)<\/text>/g;
+  const regex =
+    /<text[^>]*\bstart="([\d.]+)"[^>]*\bdur="([\d.]+)"[^>]*>([\s\S]*?)<\/text>/g;
   let match;
 
   while ((match = regex.exec(xml)) !== null) {
@@ -100,6 +115,13 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Rate limit guard
+    const rateLimited = await rateLimitGuard(user.id, req, {
+      maxRequests: 20,
+      windowSeconds: 60,
+    }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const { url, episode_id, preferred_languages } = await req.json();
 
     if (!url || typeof url !== "string") {
@@ -110,11 +132,20 @@ Deno.serve(async (req) => {
     }
 
     // Extract YouTube video ID
-    const ytMatch = url.match(/[?&]v=([\w-]{11})/) || url.match(/youtu\.be\/([\w-]{11})/);
+    const ytMatch = url.match(/[?&]v=([\w-]{11})/) ||
+      url.match(/youtu\.be\/([\w-]{11})/);
     if (!ytMatch?.[1]) {
       return new Response(
-        JSON.stringify({ error: "Only YouTube URLs are supported for subtitle download" }),
-        { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        JSON.stringify({
+          error: "Only YouTube URLs are supported for subtitle download",
+        }),
+        {
+          status: 400,
+          headers: {
+            ...getCorsHeaders(req),
+            "Content-Type": "application/json",
+          },
+        },
       );
     }
     const videoId = ytMatch[1];
@@ -124,16 +155,26 @@ Deno.serve(async (req) => {
     const listResp = await fetch(listUrl);
     if (!listResp.ok) {
       return new Response(
-        JSON.stringify({ error: "Failed to fetch subtitle list", subtitles_available: false }),
-        { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        JSON.stringify({
+          error: "Failed to fetch subtitle list",
+          subtitles_available: false,
+        }),
+        {
+          status: 404,
+          headers: {
+            ...getCorsHeaders(req),
+            "Content-Type": "application/json",
+          },
+        },
       );
     }
 
     const listXml = await listResp.text();
-    
+
     // Parse available languages
     const availableLangs: { code: string; name: string; kind?: string }[] = [];
-    const trackRegex = /lang_code="([^"]+)"[^>]*name="([^"]*)"(?:[^>]*kind="([^"]*)")?/g;
+    const trackRegex =
+      /lang_code="([^"]+)"[^>]*name="([^"]*)"(?:[^>]*kind="([^"]*)")?/g;
     let trackMatch;
     while ((trackMatch = trackRegex.exec(listXml)) !== null) {
       availableLangs.push({
@@ -145,8 +186,17 @@ Deno.serve(async (req) => {
 
     if (availableLangs.length === 0) {
       return new Response(
-        JSON.stringify({ error: "No subtitles available", subtitles_available: false }),
-        { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        JSON.stringify({
+          error: "No subtitles available",
+          subtitles_available: false,
+        }),
+        {
+          status: 404,
+          headers: {
+            ...getCorsHeaders(req),
+            "Content-Type": "application/json",
+          },
+        },
       );
     }
 
@@ -157,7 +207,9 @@ Deno.serve(async (req) => {
 
     // First pass: manual captions in priority order
     for (const lang of langPriority) {
-      const manual = availableLangs.find((t) => t.code === lang && t.kind !== "asr");
+      const manual = availableLangs.find((t) =>
+        t.code === lang && t.kind !== "asr"
+      );
       if (manual) {
         selectedLang = manual.code;
         selectedKind = manual.kind;
@@ -185,13 +237,23 @@ Deno.serve(async (req) => {
 
     if (!selectedLang) {
       return new Response(
-        JSON.stringify({ error: "No matching subtitle language found", subtitles_available: false }),
-        { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        JSON.stringify({
+          error: "No matching subtitle language found",
+          subtitles_available: false,
+        }),
+        {
+          status: 404,
+          headers: {
+            ...getCorsHeaders(req),
+            "Content-Type": "application/json",
+          },
+        },
       );
     }
 
     // Download the subtitle track
-    let subtitleUrl = `https://video.google.com/timedtext?v=${videoId}&lang=${selectedLang}`;
+    let subtitleUrl =
+      `https://video.google.com/timedtext?v=${videoId}&lang=${selectedLang}`;
     if (selectedKind) {
       subtitleUrl += `&kind=${selectedKind}`;
     }
@@ -200,7 +262,13 @@ Deno.serve(async (req) => {
     if (!subResp.ok) {
       return new Response(
         JSON.stringify({ error: "Failed to download subtitles" }),
-        { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        {
+          status: 500,
+          headers: {
+            ...getCorsHeaders(req),
+            "Content-Type": "application/json",
+          },
+        },
       );
     }
 
@@ -210,14 +278,23 @@ Deno.serve(async (req) => {
     if (!text.trim()) {
       return new Response(
         JSON.stringify({ error: "Downloaded subtitles are empty" }),
-        { status: 404, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        {
+          status: 404,
+          headers: {
+            ...getCorsHeaders(req),
+            "Content-Type": "application/json",
+          },
+        },
       );
     }
 
     // Store transcript in episode if episode_id provided
     if (episode_id) {
-      const serviceClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-      
+      const serviceClient = createClient(
+        supabaseUrl,
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      );
+
       const lastSegment = segments[segments.length - 1];
       const durationSeconds = lastSegment ? Math.ceil(lastSegment.end) : null;
 
@@ -252,13 +329,20 @@ Deno.serve(async (req) => {
         word_count: text.split(/\s+/).length,
         available_languages: availableLangs.map((l) => l.code),
       }),
-      { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+      {
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      },
     );
   } catch (e) {
     console.error("fetch-subtitles error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+      JSON.stringify({
+        error: e instanceof Error ? e.message : "Unknown error",
+      }),
+      {
+        status: 500,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      },
     );
   }
 });

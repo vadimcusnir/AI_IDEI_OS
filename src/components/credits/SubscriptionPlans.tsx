@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSubscription, SUBSCRIPTION_TIERS } from "@/hooks/useSubscription";
 import { Check, Crown, Zap, Loader2, ExternalLink, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,13 +12,14 @@ export function SubscriptionPlans() {
   const { subscribed, tier, subscriptionEnd, loading, subscribe, manageSubscription } = useSubscription();
   const [subscribing, setSubscribing] = useState<string | null>(null);
   const [showRetention, setShowRetention] = useState(false);
+  const { t } = useTranslation("common");
 
   const handleSubscribe = async (priceId: string, tierKey: string) => {
     setSubscribing(tierKey);
     try {
       await subscribe(priceId);
     } catch (e: any) {
-      toast.error(e.message || "Eroare la abonare");
+      toast.error(e.message || t("subscription.error_subscribe"));
     } finally {
       setSubscribing(null);
     }
@@ -27,7 +29,7 @@ export function SubscriptionPlans() {
     try {
       await manageSubscription();
     } catch (e: any) {
-      toast.error(e.message || "Eroare la deschidere portal");
+      toast.error(e.message || t("subscription.error_portal"));
     }
   };
 
@@ -43,18 +45,18 @@ export function SubscriptionPlans() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold flex items-center gap-1.5">
-          <Crown className="h-4 w-4 text-primary" /> Planuri de Abonament
+          <Crown className="h-4 w-4 text-primary" /> {t("subscription.plans_title")}
         </h3>
         {subscribed && (
           <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => setShowRetention(true)}>
-            <Settings className="h-3 w-3" /> Gestionează abonament
+            <Settings className="h-3 w-3" /> {t("subscription.manage_btn")}
           </Button>
         )}
       </div>
 
       {subscribed && subscriptionEnd && (
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">Abonament activ</span> — expiră pe{" "}
+          <span className="font-medium text-foreground">{t("subscription.active_label")}</span> — {t("subscription.expires_on")}{" "}
           {new Date(subscriptionEnd).toLocaleDateString("ro-RO", { day: "numeric", month: "long", year: "numeric" })}
         </div>
       )}
@@ -74,7 +76,7 @@ export function SubscriptionPlans() {
             >
               {isCurrentPlan && (
                 <Badge className="absolute -top-2 right-3 text-[8px] bg-primary text-primary-foreground">
-                  Planul tău
+                  {t("subscription.your_plan")}
                 </Badge>
               )}
 
@@ -85,11 +87,13 @@ export function SubscriptionPlans() {
 
               <div className="flex items-baseline gap-1 mb-3">
                 <span className="text-2xl font-bold">${plan.price}</span>
-                <span className="text-xs text-muted-foreground">/{plan.interval === "month" ? "lună" : "an"}</span>
+                <span className="text-xs text-muted-foreground">
+                  {plan.interval === "month" ? t("subscription.per_month") : t("subscription.per_year")}
+                </span>
               </div>
 
               <div className="text-[10px] text-muted-foreground mb-3">
-                {plan.neurons_quota.toLocaleString()} NEURONS / {plan.interval === "month" ? "lună" : "an"}
+                {plan.neurons_quota.toLocaleString()} NEURONS {plan.interval === "month" ? t("subscription.per_month") : t("subscription.per_year")}
               </div>
 
               <ul className="space-y-1.5 mb-4">
@@ -103,7 +107,7 @@ export function SubscriptionPlans() {
 
               {isCurrentPlan ? (
                 <Button variant="outline" size="sm" className="w-full text-xs" disabled>
-                  Plan activ
+                  {t("subscription.plan_active")}
                 </Button>
               ) : (
                 <Button
@@ -117,7 +121,7 @@ export function SubscriptionPlans() {
                   ) : (
                     <ExternalLink className="h-3 w-3" />
                   )}
-                  {subscribing === key ? "Se procesează..." : "Abonează-te"}
+                  {subscribing === key ? t("subscription.processing") : t("subscription.subscribe")}
                 </Button>
               )}
             </div>

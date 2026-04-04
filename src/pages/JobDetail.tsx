@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Clock, CheckCircle, XCircle, Loader2, Copy, ExternalLink, Eye, Lock } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, XCircle, Loader2, Copy, ExternalLink, Eye, Lock, RotateCcw, Ban } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { SEOHead } from "@/components/SEOHead";
@@ -182,16 +182,66 @@ export default function JobDetail() {
           </div>
         )}
 
-        {/* Error */}
-        {job.status === "failed" && job.error_message && (
-          <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-4">
-            <p className="text-sm text-destructive font-medium">Eroare</p>
-            <p className="text-xs text-muted-foreground mt-1">{job.error_message}</p>
+        {/* Error + Actions */}
+        {job.status === "failed" && (
+          <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-4 space-y-3">
+            {job.error_message && (
+              <>
+                <p className="text-sm text-destructive font-medium">Eroare</p>
+                <p className="text-xs text-muted-foreground mt-1">{job.error_message}</p>
+              </>
+            )}
             {job.retry_count > 0 && (
-              <p className="text-[10px] text-muted-foreground mt-2">
+              <p className="text-[10px] text-muted-foreground">
                 Retry: {job.retry_count}/{job.max_retries}
               </p>
             )}
+            <div className="flex gap-2 pt-1">
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 text-xs"
+                onClick={async () => {
+                  const { error } = await supabase.from("neuron_jobs")
+                    .update({ status: "pending", error_message: null, completed_at: null, retry_count: (job.retry_count || 0) + 1 })
+                    .eq("id", job.id);
+                  if (error) { toast.error("Retry failed"); return; }
+                  toast.success("Job re-queued for retry");
+                  fetchJob();
+                }}
+              >
+                <RotateCcw className="h-3 w-3" />
+                Retry
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Cancel running/pending jobs */}
+        {(job.status === "running" || job.status === "pending") && (
+          <div className="flex justify-end">
+            <Button
+              size="sm"
+              variant="destructive"
+              className="gap-1.5 text-xs"
+              onClick={async () => {
+                const { error } = await supabase.from("neuron_jobs")
+                  .update({ status: "failed", error_message: "Cancelled by user", completed_at: new Date().toISOString() })
+                  .eq("id", job.id);
+                if (error) { toast.error("Cancel failed"); return; }
+                // Release reserved credits
+                await supabase.rpc("release_neurons", {
+                  _user_id: user!.id,
+                  _amount: (job.input as any)?.credits_cost || 0,
+                  _description: `Cancelled job ${job.id.slice(0, 8)}`,
+                });
+                toast.success("Job cancelled — credits returned");
+                fetchJob();
+              }}
+            >
+              <Ban className="h-3 w-3" />
+              Cancel & Refund
+            </Button>
           </div>
         )}
 

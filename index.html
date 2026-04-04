@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://*.supabase.co https://*.supabase.com wss://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://ai-idei.com https://gateway.lovable.dev; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://*.supabase.co https://*.supabase.com wss://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://ai-idei.com https://gateway.lovable.dev https://ai.gateway.lovable.dev; frame-src 'self' https://js.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self';" />
     <!-- Preconnect & preload critical fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,6 +11,13 @@
     <link rel="preconnect" href="https://swghuuxkcilayybesadm.supabase.co" crossorigin />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+    <!-- hreflang for multilingual SEO -->
+    <link rel="alternate" hreflang="en" href="https://ai-idei.com/" />
+    <link rel="alternate" hreflang="ro" href="https://ai-idei.com/?lang=ro" />
+    <link rel="alternate" hreflang="ru" href="https://ai-idei.com/?lang=ru" />
+    <link rel="alternate" hreflang="x-default" href="https://ai-idei.com/" />
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="AI-IDEI Blog" href="https://swghuuxkcilayybesadm.supabase.co/functions/v1/blog-rss" />
     <!-- Google Consent Mode v2 Advanced — defaults BEFORE tag loads -->
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -88,7 +95,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#f97316" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="AI-IDEI" />
     <link rel="icon" href="/favicon.png" type="image/png" />
@@ -122,18 +129,7 @@
     <meta name="twitter:image" content="https://ai-idei.com/og/og-default.png" />
     <meta name="twitter:image:alt" content="AI-IDEI Knowledge Extraction OS" />
 
-    <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="
-      default-src 'self';
-      script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com;
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-      font-src 'self' https://fonts.gstatic.com;
-      img-src 'self' data: blob: https:;
-      connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://ai-idei.com https://ai.gateway.lovable.dev;
-      frame-src 'self' https://js.stripe.com;
-      object-src 'none';
-      base-uri 'self';
-    " />
+    <!-- CSP is defined in the first meta tag at line 5 -->
 
     <!-- Critical CSS: inline skeleton to reduce FCP -->
     <style>

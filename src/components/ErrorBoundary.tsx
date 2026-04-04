@@ -52,7 +52,7 @@ export class ErrorBoundary extends Component<Props, State> {
             {this.props.fallbackTitle || t("boundary_title", "Something went wrong")}
           </h2>
           <p className="text-sm text-muted-foreground max-w-md mb-6">
-            {this.state.error?.message || t("boundary_description", "An unexpected error occurred.")}
+            {t("boundary_description", "An unexpected error occurred. Please try again.")}
           </p>
           <div className="flex gap-3">
             <Button variant="outline" size="sm" onClick={this.handleRetry}>

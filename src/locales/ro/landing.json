@@ -22,7 +22,7 @@
     "title_prefix": "Cu Adevărat Cel Mai Aproape Lucru De Un",
     "title_highlight": "Buton Magic",
     "title_suffix": "Pentru Copywriting Și Marketing",
-    "subtitle": "Transforma o idee bruta in copy persuasiv, oferte mai puternice, active de continut si executie reala de marketing cu framework-uri AI practice, prompturi si asistenti construiti pentru munca reala.",
+    "subtitle": "Transformă o idee brută în copy persuasiv, oferte mai puternice, active de conținut și execuție reală de marketing — alimentat de un OS de extracție a cunoștințelor construit pentru output comercial.",
     "cta_start": "Incepe Gratuit",
     "cta_mechanism": "Vezi Mecanismul"
   },
@@ -69,7 +69,7 @@
     "subtitle": "Cu sistemul potrivit, o singura idee nu mai e doar un gand si devine parghie.",
     "steps": [
       { "num": "01", "title": "Alege problema", "text": "Incepe cu ce ai nevoie: copy, continut, pozitionare, claritate in oferta sau suport de executie." },
-      { "num": "02", "title": "Foloseste resursa potrivita", "text": "Alege un framework, prompt, asistent sau exemplu proiectat pentru exact acel tip de munca." },
+      { "num": "02", "title": "Foloseste resursa potrivita", "text": "Alege un framework, prompt, agent de execuție sau exemplu proiectat pentru exact acel tip de munca." },
       { "num": "03", "title": "Transforma-l intr-un activ", "text": "Produce ceva utilizabil: un post, email, landing page, oferta, script sau activ de campanie." },
       { "num": "04", "title": "Repeta cu viteza", "text": "Nu mai improviza. Incepe sa produci cu claritate, consistenta si impuls." }
     ],
@@ -86,7 +86,7 @@
     "subtitle": "In AI-IDEI, primesti resurse practice construite sa imbunatateasca executia, nu sa te impresioneze cu complexitate.",
     "blocks": [
       { "title": "Framework-uri", "text": "Foloseste structuri dovedite pentru copywriting, oferte, pozitionare, funnel-uri, strategie de continut, planificare si executie. Nu mai construi de la zero de fiecare data." },
-      { "title": "Asistenti AI", "text": "Foloseste asistenti specializati pentru scriere, ideatie, creare de oferte, cercetare, mesaje, strategie si executie de marketing." },
+      { "title": "Agenți de Execuție", "text": "Folosește agenți specializați pentru scriere, ideație, creare de oferte, cercetare, mesaje, strategie și execuție de marketing." },
       { "title": "Prompturi", "text": "Primesti prompturi construite pentru rezultate reale — nu colectii aleatorii. Clare, adaptabile, practice, proiectate sa produca output-uri mai puternice mai repede." },
       { "title": "Exemple Reale", "text": "Vezi cum o singura idee bruta poate deveni un post, email, landing page, oferta, campanie, script sau activ de continut structurat." }
     ]
@@ -148,7 +148,7 @@
   "output_galaxy": {
     "label": "UNIVERSUL OUTPUT-URILOR",
     "title": "O idee poate deveni mult mai mult decat un singur output",
-    "subtitle": "Continut, educatie, vanzari, cunostinte, asistenti — organizati in familii de active.",
+    "subtitle": "Conținut, educație, vânzări, cunoștințe, agenți de execuție — organizați în familii de active.",
     "footer": "AI-IDEI te ajuta sa creezi mai repede, mai clar si cu mai multa intentie comerciala."
   },
   "pricing": {

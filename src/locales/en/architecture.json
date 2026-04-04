@@ -328,7 +328,7 @@
       ["/dashboard", "Dashboard", "Analytical overview"]
     ],
     "admin_desc": "Overview, Users, Neurons, Jobs, Services, Feedback — tabs",
-    "nav_title": "Global Navigation (SiteHeader)",
+    "nav_title": "Global Navigation (AppSidebar)",
     "nav_desc": "The user's cognitive pipeline reflected in navigation:",
     "editor_title": "Neuron Editor Layout"
   },

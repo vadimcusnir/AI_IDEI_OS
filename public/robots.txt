@@ -37,6 +37,7 @@ Allow: /pricing
 Allow: /changelog
 Allow: /terms
 Allow: /privacy
+Allow: /tools/
 Disallow: /admin
 Disallow: /runtime
 Disallow: /analytics
@@ -57,4 +58,4 @@ Disallow: /extractor
 Disallow: /notifications
 
 Sitemap: https://ai-idei.com/sitemap-static.xml
-Sitemap: https://ai-idei.com/functions/v1/dynamic-sitemap
+Sitemap: https://ai-idei.com/functions/v1/sitemap?type=index

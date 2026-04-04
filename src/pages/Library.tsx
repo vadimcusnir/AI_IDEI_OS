@@ -74,33 +74,24 @@ export default function Library() {
     const [artifactsRes, neuronsRes] = await Promise.all([
       supabase
         .from("artifacts")
-        .select("id, title, artifact_type, format, content, status, tags, service_key, created_at, updated_at")
+        .select("id, title, artifact_type, format, status, tags, service_key, created_at, updated_at")
         .eq("workspace_id", currentWorkspace!.id)
         .order("updated_at", { ascending: false })
-        .limit(500),
+        .limit(100),
       supabase
         .from("neurons")
-        .select("id, title, status, lifecycle, content_category, created_at, updated_at, number, neuron_blocks(content, position)")
+        .select("id, title, status, lifecycle, content_category, created_at, updated_at, number")
         .eq("workspace_id", currentWorkspace!.id)
         .order("updated_at", { ascending: false })
-        .limit(500),
+        .limit(100),
     ]);
     setArtifacts((artifactsRes.data as Artifact[]) || []);
 
-    const neuronItems: NeuronItem[] = (neuronsRes.data || []).map((n: any) => {
-      const blocks = Array.isArray(n.neuron_blocks) ? n.neuron_blocks : [];
-      const preview = blocks
-        .sort((a: any, b: any) => a.position - b.position)
-        .map((b: any) => b.content)
-        .filter(Boolean)
-        .join(" ")
-        .slice(0, 200);
-      return {
-        id: n.id, title: n.title, status: n.status, lifecycle: n.lifecycle,
-        content_category: n.content_category, created_at: n.created_at,
-        updated_at: n.updated_at, number: n.number, blockPreview: preview,
-      };
-    });
+    const neuronItems: NeuronItem[] = (neuronsRes.data || []).map((n: any) => ({
+      id: n.id, title: n.title, status: n.status, lifecycle: n.lifecycle,
+      content_category: n.content_category, created_at: n.created_at,
+      updated_at: n.updated_at, number: n.number, blockPreview: "",
+    }));
     setNeurons(neuronItems);
     setLoading(false);
   };

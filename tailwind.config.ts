@@ -26,7 +26,35 @@ export default {
       mono: ['var(--font-mono)'],
     },
     extend: {
+      fontSize: {
+        /** Dense UI utilities — canonical replacements for arbitrary text-[Npx] */
+        'nano': ['0.5625rem', { lineHeight: '1.4' }],    /* 9px — badges, stats only */
+        'micro': ['0.625rem', { lineHeight: '1.4' }],     /* 10px — tags, metadata */
+        'dense': ['0.6875rem', { lineHeight: '1.45' }],   /* 11px — compact labels */
+        'compact': ['0.8125rem', { lineHeight: '1.5' }],  /* 13px — dense body */
+      },
       colors: {
+        /* Brand palette — canonical, replaces all arbitrary hsl(var(--gold-oxide)) etc. */
+        gold: {
+          DEFAULT: "hsl(var(--gold-oxide))",
+          dim: "hsl(var(--gold-dim))",
+          subtle: "hsl(var(--gold-subtle))",
+        },
+        petrol: {
+          DEFAULT: "hsl(var(--petrol))",
+          dim: "hsl(var(--petrol-dim))",
+        },
+        obsidian: {
+          DEFAULT: "hsl(var(--obsidian))",
+          light: "hsl(var(--obsidian-light))",
+        },
+        ivory: {
+          DEFAULT: "hsl(var(--ivory))",
+          dim: "hsl(var(--ivory-dim))",
+        },
+        signal: {
+          red: "hsl(var(--signal-red))",
+        },
         toolbar: {
           DEFAULT: "hsl(var(--toolbar-bg))",
           border: "hsl(var(--toolbar-border))",
@@ -130,6 +158,17 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      spacing: {
+        'sp-1': 'var(--sp-1)',
+        'sp-2': 'var(--sp-2)',
+        'sp-3': 'var(--sp-3)',
+        'sp-4': 'var(--sp-4)',
+        'sp-6': 'var(--sp-6)',
+        'sp-8': 'var(--sp-8)',
+        'sp-10': 'var(--sp-10)',
+        'sp-12': 'var(--sp-12)',
+        'sp-16': 'var(--sp-16)',
       },
       borderRadius: {
         lg: "var(--radius)",

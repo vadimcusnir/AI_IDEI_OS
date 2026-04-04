@@ -17,16 +17,19 @@ import {
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
-type Stage = "idle" | "detecting" | "fetching" | "processing" | "ready" | "error";
+type Stage = "idle" | "detecting" | "extracting_audio" | "downloading_audio" | "transcribing_audio" | "detecting_language" | "ready" | "error";
 
 interface TranscriptData {
   text: string;
   language: string;
-  segments: Array<{ start: number; end: number; text: string }>;
+  segments: Array<{ start: number; end: number; text: string; speaker?: string }>;
   word_count: number;
   source: string;
   title: string;
   duration_seconds: number | null;
+  speakers?: string[];
+  has_diarization?: boolean;
+  confidence?: number;
 }
 
 const TRANSCRIPT_COST = 50; // NEURONS per transcription after first free
@@ -83,22 +86,22 @@ export function YouTubeTranscriber() {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token || "";
 
-      // Charge credits (skip for first free)
+      // Reserve credits (skip for first free)
       if (!isFree) {
-        const { data: spent } = await supabase.rpc("spend_credits", {
+        const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
           _user_id: user.id,
           _amount: TRANSCRIPT_COST,
-          _description: "YouTube transcript download",
+          _description: "RESERVE: YouTube transcript",
         });
-        if (!spent) {
+        if (reserveErr || !reserved) {
           setShowTopUp(true);
           setStage("idle");
           return;
         }
       }
 
-      setStage("fetching");
-      setProgress(30);
+      setStage("extracting_audio");
+      setProgress(20);
 
       // Create episode
       const { data: ep, error: epErr } = await supabase.from("episodes").insert({
@@ -114,10 +117,10 @@ export function YouTubeTranscriber() {
       if (epErr || !ep) throw new Error("Failed to create episode");
       setLastEpisodeId(ep.id);
 
-      setProgress(50);
-      setStage("processing");
+      setProgress(40);
+      setStage("downloading_audio");
 
-      // Call transcribe-source
+      // Call transcribe-source (audio-first pipeline)
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-source`,
         {
@@ -133,11 +136,17 @@ export function YouTubeTranscriber() {
         }
       );
 
-      setProgress(80);
+      setStage("transcribing_audio");
+      setProgress(60);
       const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || "Transcription failed");
+      if (!resp.ok) {
+        const failureClass = data.failure_class || "unknown";
+        const retryable = data.retryable || false;
+        throw new Error(data.error || `Transcription failed (${failureClass})${retryable ? " — retryable" : ""}`);
+      }
 
-      setProgress(100);
+      setStage("detecting_language");
+      setProgress(90);
 
       // Fetch updated episode for title
       const { data: updated } = await supabase
@@ -146,14 +155,19 @@ export function YouTubeTranscriber() {
         .eq("id", ep.id)
         .single();
 
+      setProgress(100);
+
       setTranscript({
         text: data.transcript || updated?.transcript || "",
         language: data.language || updated?.language || "unknown",
         segments: data.segments || [],
         word_count: (data.transcript || updated?.transcript || "").split(/\s+/).length,
-        source: data.source || "subtitles",
+        source: data.source || "audio_stt",
         title: updated?.title || "YouTube Transcript",
         duration_seconds: data.duration_seconds || updated?.duration_seconds || null,
+        speakers: data.speakers || [],
+        has_diarization: data.has_diarization || false,
+        confidence: data.confidence,
       });
 
       setStage("ready");
@@ -298,7 +312,7 @@ ${safeBody}
     toast.success(t("toast_pdf_opening"));
   };
 
-  const isRunning = ["detecting", "fetching", "processing"].includes(stage);
+  const isRunning = ["detecting", "extracting_audio", "downloading_audio", "transcribing_audio", "detecting_language"].includes(stage);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -435,7 +449,7 @@ ${safeBody}
                 </div>
                 <div>
                   <h2 className="text-base font-semibold">YouTube → Transcript</h2>
-                  <p className="text-xs text-muted-foreground">Lipește un link YouTube. Obții transcrierea instant.</p>
+                  <p className="text-xs text-muted-foreground">Lipește un link YouTube. Audio-ul se extrage și se transcrie automat.</p>
                 </div>
               </div>
 
@@ -486,7 +500,7 @@ ${safeBody}
                       )}
                     </div>
                     <span className="text-[9px] text-muted-foreground/40 flex items-center gap-1">
-                      <Subtitles className="h-2.5 w-2.5" /> Auto-detectare limbă
+                      <Subtitles className="h-2.5 w-2.5" /> Audio STT + diarizare
                     </span>
                   </div>
 
@@ -534,24 +548,28 @@ ${safeBody}
                     <Loader2 className="h-5 w-5 animate-spin text-primary" />
                     <span className="text-sm font-medium">
                       {stage === "detecting" && "Se detectează sursa…"}
-                      {stage === "fetching" && "Se descarcă subtitrarile…"}
-                      {stage === "processing" && "Se procesează transcrierea…"}
+                      {stage === "extracting_audio" && "Se extrage audio-ul din video…"}
+                      {stage === "downloading_audio" && "Se descarcă audio-ul…"}
+                      {stage === "transcribing_audio" && "Se transcrie audio-ul (speech-to-text)…"}
+                      {stage === "detecting_language" && "Se detectează limba și vorbitorii…"}
                     </span>
                   </div>
                   <Progress value={progress} className="h-1.5" />
                   <div className="flex justify-between mt-2">
-                    {["Detectare", "Descărcare", "Procesare"].map((label, i) => {
-                      const stageProgress = [10, 50, 80];
-                      const active = progress >= stageProgress[i];
-                      return (
-                        <span key={label} className={cn(
-                          "text-[9px] font-medium transition-colors",
-                          active ? "text-primary" : "text-muted-foreground/40"
-                        )}>
-                          {label}
-                        </span>
-                      );
-                    })}
+                    {[
+                      { label: "Detectare", threshold: 10 },
+                      { label: "Extragere Audio", threshold: 20 },
+                      { label: "Descărcare", threshold: 40 },
+                      { label: "Transcriere STT", threshold: 60 },
+                      { label: "Finalizare", threshold: 90 },
+                    ].map(({ label, threshold }) => (
+                      <span key={label} className={cn(
+                        "text-[9px] font-medium transition-colors",
+                        progress >= threshold ? "text-primary" : "text-muted-foreground/40"
+                      )}>
+                        {label}
+                      </span>
+                    ))}
                   </div>
                 </motion.div>
               )}

@@ -22,7 +22,7 @@
     "title_prefix": "The Really Closest Thing To A",
     "title_highlight": "Magic Button",
     "title_suffix": "For Copywriting And Marketing Work",
-    "subtitle": "Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution with practical AI frameworks, prompts, and assistants built for real work.",
+    "subtitle": "Turn one rough idea into persuasive copy, stronger offers, content assets, and real marketing execution — powered by a knowledge extraction OS built for commercial output.",
     "cta_start": "Start Free",
     "cta_mechanism": "See the Mechanism"
   },
@@ -31,7 +31,7 @@
     "before_title": "Most people do not struggle with ideas. They struggle with turning ideas into assets.",
     "before_p1": "You have thoughts. Notes. Drafts. Angles. Offers. Half-built campaigns. Fragments of good copy.",
     "before_p2": "But the real bottleneck is not creativity. It is execution.",
-    "before_q1": "You open ChatGPT. You test random prompts.",
+    "before_q1": "You open another AI tool. You test random prompts.",
     "before_q2": "You save interesting things. You try to write.",
     "before_q3": "You restart. You overthink. You lose momentum.",
     "before_items": ["too many ideas", "weak positioning", "slow writing", "unclear offers", "inconsistent content", "scattered execution"],
@@ -69,7 +69,7 @@
     "subtitle": "With the right system, a single idea stops being a thought and starts becoming leverage.",
     "steps": [
       { "num": "01", "title": "Choose the problem", "text": "Start with what you need: copy, content, positioning, offer clarity, or execution support." },
-      { "num": "02", "title": "Use the right resource", "text": "Pick a framework, prompt, assistant, or example designed for that exact type of work." },
+      { "num": "02", "title": "Use the right resource", "text": "Pick a framework, prompt, execution agent, or example designed for that exact type of work." },
       { "num": "03", "title": "Turn it into an asset", "text": "Produce something usable: a post, email, landing page, offer, script, or campaign asset." },
       { "num": "04", "title": "Repeat with speed", "text": "Stop improvising. Start producing with clarity, consistency, and momentum." }
     ],
@@ -86,7 +86,7 @@
     "subtitle": "Inside AI-IDEI, you get practical resources built to improve execution, not impress you with complexity.",
     "blocks": [
       { "title": "Frameworks", "text": "Use proven structures for copywriting, offers, positioning, funnels, content strategy, planning, and execution. Stop building from zero every time." },
-      { "title": "AI Assistants", "text": "Use specialized assistants for writing, ideation, offer creation, research, messaging, strategy, and marketing execution." },
+      { "title": "Execution Agents", "text": "Use specialized agents for writing, ideation, offer creation, research, messaging, strategy, and marketing execution." },
       { "title": "Prompts", "text": "Get prompts built for real outcomes — not random collections. Clear, adaptable, practical, designed to produce stronger outputs faster." },
       { "title": "Real Examples", "text": "See how one raw idea can become a post, email, landing page, offer, campaign, script, or structured content asset." }
     ]
@@ -148,7 +148,7 @@
   "output_galaxy": {
     "label": "OUTPUT UNIVERSE",
     "title": "One idea can become much more than one output",
-    "subtitle": "Content, education, sales, knowledge, assistants — organized into asset families.",
+    "subtitle": "Content, education, sales, knowledge, execution agents — organized into asset families.",
     "footer": "AI-IDEI helps you create faster, clearer, and with more commercial intent."
   },
   "pricing": {

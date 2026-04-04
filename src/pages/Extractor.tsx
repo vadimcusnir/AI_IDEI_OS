@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { ExtractorSkeleton } from "@/components/skeletons/ExtractorSkeleton";
 import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { EXTRACTOR_TOUR } from "@/components/onboarding/tourDefinitions";
@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FileText, ArrowRight } from "lucide-react";
+import { FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { InstantActionSurface } from "@/components/extractor/InstantActionSurface";
@@ -65,14 +65,15 @@ export default function Extractor() {
   const episodeParam = searchParams.get("episode");
 
   const fetchEpisodes = async () => {
-    if (!currentWorkspace) return;
+    if (!currentWorkspace || !user) return;
     const { data, error } = await supabase
       .from("episodes")
-      .select("*")
+      .select("id, title, status, source_url, source_type, transcript, created_at, updated_at")
       .eq("workspace_id", currentWorkspace.id)
+      .eq("author_id", user.id)
       .order("created_at", { ascending: false })
-      .limit(500);
-    if (data) setEpisodes(data as Episode[]);
+      .limit(100);
+    if (data) setEpisodes(data as unknown as Episode[]);
     if (error) toast.error(t("errors:generic"));
     setLoading(false);
   };
@@ -88,34 +89,34 @@ export default function Extractor() {
   useEffect(() => {
     if (episodeParam && episodes.length > 0 && !expandedId) {
       const found = episodes.find(e => e.id === episodeParam);
-      if (found) {
-        setExpandedId(found.id);
-        // If navigated to a specific episode, show the history
-      }
+      if (found) setExpandedId(found.id);
     }
   }, [episodeParam, episodes]);
 
-  const handlePipelineStart = () => {
+  /**
+   * Called by InstantActionSurface when pipeline starts processing.
+   * Advances wizard to step 2 WITHOUT destroying the component.
+   */
+  const handlePipelineStart = useCallback(() => {
     setWizardStep("process");
     setCompletedSteps(prev => prev.includes("upload") ? prev : [...prev, "upload"]);
-  };
+  }, []);
 
-  const handleExtractionComplete = () => {
+  const handleExtractionComplete = useCallback(() => {
     fetchEpisodes();
-  };
+  }, [currentWorkspace]);
 
-  // Listen for pipeline completion from InstantActionSurface
-  const handlePipelineComplete = (result: typeof lastResult) => {
+  const handlePipelineComplete = useCallback((result: typeof lastResult) => {
     setLastResult(result);
     setWizardStep("results");
     setCompletedSteps(["upload", "process"]);
-  };
+  }, []);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setWizardStep("upload");
     setCompletedSteps([]);
     setLastResult(null);
-  };
+  }, []);
 
   const stats = useMemo(() => ({
     total: episodes.length,
@@ -160,117 +161,22 @@ export default function Extractor() {
           <PipelineWizardStepper current={wizardStep} completedSteps={completedSteps} />
         </motion.div>
 
-        {/* ── Step Content ── */}
+        {/* ── SINGLE InstantActionSurface — persists across all wizard steps ── */}
+        {wizardStep !== "results" && (
+          <div className={wizardStep === "process" ? "max-w-lg mx-auto" : ""}>
+            <div className="mb-6">
+              <InstantActionSurface
+                onComplete={handleExtractionComplete}
+                onPipelineStart={handlePipelineStart}
+                onPipelineComplete={handlePipelineComplete}
+                compact
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ── Results Panel ── */}
         <AnimatePresence mode="wait">
-          {/* STEP 1: Upload */}
-          {wizardStep === "upload" && (
-            <motion.div
-              key="upload"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="mb-6">
-                <InstantActionSurface
-                  onComplete={handleExtractionComplete}
-                  onPipelineStart={handlePipelineStart}
-                  onPipelineComplete={handlePipelineComplete}
-                  compact
-                />
-              </div>
-
-              {/* Previous episodes */}
-              {episodes.length > 0 && (
-                <div className="mt-8">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <p className="text-[length:var(--body-dense-size)] font-semibold text-foreground">
-                        Previous Materials
-                      </p>
-                      <p className="text-[length:var(--caption-size)] text-muted-foreground">
-                        {stats.total} total · {stats.transcribed} transcribed · {stats.analyzed} analyzed
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    {episodes.slice(0, 5).map(ep => (
-                      <EpisodeCard
-                        key={ep.id}
-                        ep={ep}
-                        isExpanded={expandedId === ep.id}
-                        isTargeted={ep.id === episodeParam}
-                        isPro={isPro}
-                        onToggleExpand={() => setExpandedId(expandedId === ep.id ? null : ep.id)}
-                        onPaywall={() => setPaywallOpen(true)}
-                        actions={actions}
-                        episodes={episodes}
-                        expandedId={expandedId}
-                        setExpandedId={setExpandedId}
-                        setEpisodes={setEpisodes}
-                        fetchEpisodes={fetchEpisodes}
-                      />
-                    ))}
-                    {episodes.length > 5 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full text-xs text-muted-foreground"
-                        onClick={() => navigate("/library")}
-                      >
-                        View all {episodes.length} materials →
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Empty state */}
-              {episodes.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-16 bg-card border border-dashed border-border rounded-2xl mt-4"
-                >
-                  <div className="h-14 w-14 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-4">
-                    <FileText className="h-7 w-7 text-[hsl(var(--gold-oxide)/0.4)]" />
-                  </div>
-                  <h3 className="text-[length:var(--h3-size)] font-semibold text-foreground mb-2">
-                    Start your first analysis
-                  </h3>
-                  <p className="text-[length:var(--body-dense-size)] text-muted-foreground max-w-sm mx-auto">
-                    Paste a link, upload a file, or type content above.
-                  </p>
-                  <p className="text-[length:var(--caption-size)] text-muted-foreground/50 mt-1">
-                    YouTube, MP3, MP4, PDF, text
-                  </p>
-                </motion.div>
-              )}
-            </motion.div>
-          )}
-
-          {/* STEP 2: Processing — handled by InstantActionSurface internal state */}
-          {wizardStep === "process" && (
-            <motion.div
-              key="process"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="max-w-lg mx-auto">
-                <InstantActionSurface
-                  onComplete={handleExtractionComplete}
-                  onPipelineStart={handlePipelineStart}
-                  onPipelineComplete={handlePipelineComplete}
-                  compact
-                  autoShowProgress
-                />
-              </div>
-            </motion.div>
-          )}
-
-          {/* STEP 3: Results */}
           {wizardStep === "results" && lastResult && (
             <motion.div
               key="results"
@@ -283,6 +189,73 @@ export default function Extractor() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* ── Previous episodes (only in upload step) ── */}
+        {wizardStep === "upload" && episodes.length > 0 && (
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-[length:var(--body-dense-size)] font-semibold text-foreground">
+                  Previous Materials
+                </p>
+                <p className="text-[length:var(--caption-size)] text-muted-foreground">
+                  {stats.total} total · {stats.transcribed} transcribed · {stats.analyzed} analyzed
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              {episodes.slice(0, 5).map(ep => (
+                <EpisodeCard
+                  key={ep.id}
+                  ep={ep}
+                  isExpanded={expandedId === ep.id}
+                  isTargeted={ep.id === episodeParam}
+                  isPro={isPro}
+                  onToggleExpand={() => setExpandedId(expandedId === ep.id ? null : ep.id)}
+                  onPaywall={() => setPaywallOpen(true)}
+                  actions={actions}
+                  episodes={episodes}
+                  expandedId={expandedId}
+                  setExpandedId={setExpandedId}
+                  setEpisodes={setEpisodes}
+                  fetchEpisodes={fetchEpisodes}
+                />
+              ))}
+              {episodes.length > 5 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-xs text-muted-foreground"
+                  onClick={() => navigate("/library")}
+                >
+                  View all {episodes.length} materials →
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {wizardStep === "upload" && episodes.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-16 bg-card border border-dashed border-border rounded-2xl mt-4"
+          >
+            <div className="h-14 w-14 rounded-2xl bg-[hsl(var(--gold-oxide)/0.08)] flex items-center justify-center mx-auto mb-4">
+              <FileText className="h-7 w-7 text-[hsl(var(--gold-oxide)/0.4)]" />
+            </div>
+            <h3 className="text-[length:var(--h3-size)] font-semibold text-foreground mb-2">
+              Start your first analysis
+            </h3>
+            <p className="text-[length:var(--body-dense-size)] text-muted-foreground max-w-sm mx-auto">
+              Paste a link, upload a file, or type content above.
+            </p>
+            <p className="text-[length:var(--caption-size)] text-muted-foreground/50 mt-1">
+              YouTube, MP3, MP4, PDF, text
+            </p>
+          </motion.div>
+        )}
       </div>
     </div>
     </PageTransition>

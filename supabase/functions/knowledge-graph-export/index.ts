@@ -6,6 +6,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
  * GET /knowledge-graph-export → JSON-LD with Person, Organization, CreativeWork, DefinedTerm
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const BASE_URL = "https://ai-idei.com";
 
@@ -17,6 +18,11 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceKey);
 
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":knowledge-graph-export", req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     const url = new URL(req.url);
     const forceRefresh = url.searchParams.get("refresh") === "true";
 

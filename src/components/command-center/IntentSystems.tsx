@@ -1,6 +1,6 @@
 /**
  * IntentSystems — Decision Engine UI.
- * Maps user goals to MMS (Multi-Module Systems) instead of showing raw OTOS.
+ * Maps user goals to Systems (execution packs) instead of raw Actions.
  * Flow: Intent → Top 3 Systems → Preview → Execute
  */
 import { useMemo, useState } from "react";
@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 
-// ═══ MMS System definitions ═══
+// ═══ System definitions ═══
 
 export interface MMSystem {
   id: string;

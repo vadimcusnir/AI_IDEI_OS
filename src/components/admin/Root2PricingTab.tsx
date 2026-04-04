@@ -47,11 +47,11 @@ const ROOT2_PACKAGES = [
   { neurons: 1000, price: 2 },
   { neurons: 5500, price: 11 },
   { neurons: 10000, price: 20 },
-  { neurons: 14500, price: 29 },
+  { neurons: 18500, price: 37, label: "Pro" },
   { neurons: 23500, price: 47 },
   { neurons: 37000, price: 74 },
   { neurons: 46000, price: 92 },
-  { neurons: 68500, price: 137 },
+  { neurons: 68500, price: 137, label: "VIP" },
   { neurons: 100000, price: 200 },
   { neurons: 145000, price: 290 },
 ];

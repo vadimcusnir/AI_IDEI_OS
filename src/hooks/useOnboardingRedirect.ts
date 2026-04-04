@@ -2,21 +2,23 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Redirects new users (0 neurons) to /onboarding after login.
- * Skips if already on /onboarding, /auth, or /reset-password.
+ * Now reads flags from DB instead of localStorage.
  */
 export function useOnboardingRedirect() {
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
+  const { flags, loading: flagsLoading } = useOnboardingState();
   const navigate = useNavigate();
   const location = useLocation();
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    if (authLoading || wsLoading || checked) return;
+    if (authLoading || wsLoading || flagsLoading || checked) return;
     if (!user || !currentWorkspace) { setChecked(true); return; }
 
     const skipPaths = ["/onboarding", "/auth", "/reset-password"];
@@ -25,10 +27,7 @@ export function useOnboardingRedirect() {
       return;
     }
 
-    // Check if user has already dismissed onboarding or completed it
-    const dismissed = localStorage.getItem(`onboarding_dismissed_${user.id}`);
-    const completed = localStorage.getItem(`onboarding_completed_${user.id}`);
-    if (dismissed === "true" || completed === "true") {
+    if (flags.checklist_dismissed || flags.checklist_completed) {
       setChecked(true);
       return;
     }
@@ -51,5 +50,5 @@ export function useOnboardingRedirect() {
       }
       setChecked(true);
     });
-  }, [user, authLoading, wsLoading, currentWorkspace, checked, location.pathname]);
+  }, [user, authLoading, wsLoading, flagsLoading, currentWorkspace, checked, location.pathname, flags]);
 }

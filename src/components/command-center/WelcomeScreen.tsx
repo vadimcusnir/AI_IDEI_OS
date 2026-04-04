@@ -1,16 +1,11 @@
 /**
- * WelcomeScreen — Premium empty state for Command Center.
- * Best practices: centered, large suggestions, minimal clutter.
+ * WelcomeScreen — Clean empty state for Command Center.
+ * Compact: greeting + Magic Pipeline + up to 4 proactive suggestions + stats.
  */
 
 import { motion } from "framer-motion";
-import {
-  Globe, Brain, Sparkles, Network, Zap,
-  ArrowRight,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { COMMAND_PACKS, type CommandPack } from "@/components/agent/CommandPacks";
+import { Sparkles, Zap } from "lucide-react";
+import { MagicPipelineFlow } from "@/components/pipeline/MagicPipelineFlow";
 
 interface Suggestion {
   id: string;
@@ -22,24 +17,16 @@ interface Suggestion {
 
 interface WelcomeScreenProps {
   onCommand: (prompt: string) => void;
+  onPipelineMessage?: (role: "user" | "assistant", content: string, meta?: Record<string, any>) => void;
   suggestions: Suggestion[];
   neuronCount: number;
   episodeCount: number;
   balance: number;
 }
 
-const QUICK_COMMANDS = [
-  { label: "Analyze a source", desc: "YouTube, podcast, article", icon: Globe, example: "Analyze this YouTube video: https://...", color: "from-primary/10 to-primary/5 border-primary/10" },
-  { label: "Extract neurons", desc: "From your latest content", icon: Brain, example: "Extract neurons from my latest episode", color: "from-color-purple/10 to-color-purple/5 border-color-purple/10" },
-  { label: "Generate assets", desc: "Articles, frameworks, courses", icon: Sparkles, example: "Generate an article from neurons about leadership", color: "from-color-amber/10 to-color-amber/5 border-color-amber/10" },
-  { label: "Search knowledge", desc: "Find patterns and insights", icon: Network, example: "Show all neurons about persuasion techniques", color: "from-color-emerald/10 to-color-emerald/5 border-color-emerald/10" },
-];
-
-export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
-  const [activePack, setActivePack] = useState<CommandPack | null>(null);
-
+export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-8">
+    <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-6">
       {/* Logo + greeting */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -53,12 +40,21 @@ export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCoun
         <div>
           <h2 className="text-xl font-bold tracking-tight">How can I help?</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Describe what you need, upload a file, or use a command.
+            Describe what you need, upload a file, or pick a suggestion below.
           </p>
         </div>
       </motion.div>
 
-      {/* Proactive suggestions */}
+      {/* Magic Pipeline — one-click full extraction */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.15 }}
+      >
+        <MagicPipelineFlow onPipelineMessage={onPipelineMessage} />
+      </motion.div>
+
+      {/* Proactive suggestions — max 4 */}
       {suggestions.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -87,96 +83,11 @@ export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCoun
         </motion.div>
       )}
 
-      {/* Quick commands */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="w-full max-w-lg"
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {QUICK_COMMANDS.map((cmd, i) => (
-            <motion.button
-              key={cmd.label}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.05 }}
-              onClick={() => onCommand(cmd.example)}
-              className={cn(
-                "group flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left",
-                "bg-gradient-to-br hover:shadow-md hover:scale-[1.01]",
-                cmd.color
-              )}
-            >
-              <div className="h-9 w-9 rounded-lg bg-background/80 flex items-center justify-center shrink-0 shadow-sm">
-                <cmd.icon className="h-4 w-4 text-foreground/70" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-foreground">{cmd.label}</p>
-                <p className="text-xs text-muted-foreground">{cmd.desc}</p>
-              </div>
-              <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors shrink-0" />
-            </motion.button>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Command Packs */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
-        className="w-full max-w-lg space-y-3"
-      >
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60 text-center">
-          Command Packs
-        </p>
-        <div className="flex flex-wrap justify-center gap-1.5">
-          {COMMAND_PACKS.map((pack) => (
-            <button
-              key={pack.id}
-              onClick={() => setActivePack(activePack?.id === pack.id ? null : pack)}
-              className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs transition-all",
-                activePack?.id === pack.id
-                  ? "border-primary/40 bg-primary/10 text-primary font-medium shadow-sm"
-                  : "border-border/40 bg-card hover:border-primary/20 text-muted-foreground"
-              )}
-            >
-              <span>{pack.emoji}</span>
-              <span>{pack.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {activePack && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-2 overflow-hidden"
-          >
-            {activePack.quickPrompts.map((qp) => (
-              <button
-                key={qp.label}
-                onClick={() => onCommand(qp.prompt)}
-                className="group flex items-start gap-3 p-3 rounded-xl border border-border/40 bg-card hover:border-primary/20 hover:shadow-sm transition-all text-left"
-              >
-                <span className="text-base shrink-0">{activePack.emoji}</span>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium">{qp.label}</p>
-                  <p className="text-xs text-muted-foreground line-clamp-2">{qp.prompt}</p>
-                </div>
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </motion.div>
-
       {/* Stats */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.3 }}
         className="flex items-center justify-center gap-6 text-xs text-muted-foreground/40"
       >
         <span className="tabular-nums">{neuronCount} neurons</span>

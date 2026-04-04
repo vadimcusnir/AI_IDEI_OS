@@ -64,10 +64,32 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
     const load = async () => {
       setLoading(true);
-      const { data } = await supabase
+      // Fetch only workspaces where the user is a member (covers owner too)
+      const { data: memberRows } = await supabase
+        .from("workspace_members")
+        .select("workspace_id")
+        .eq("user_id", user.id);
+
+      const memberWsIds = (memberRows || []).map((r: any) => r.workspace_id);
+
+      // Also fetch owned workspaces (in case membership row is missing)
+      const { data: ownedRows } = await supabase
         .from("workspaces")
-        .select("*")
-        .order("created_at");
+        .select("id")
+        .eq("owner_id", user.id);
+
+      const ownedIds = (ownedRows || []).map((r: any) => r.id);
+      const allIds = [...new Set([...memberWsIds, ...ownedIds])];
+
+      let data: any[] = [];
+      if (allIds.length > 0) {
+        const { data: wsData } = await supabase
+          .from("workspaces")
+          .select("*")
+          .in("id", allIds)
+          .order("created_at");
+        data = wsData || [];
+      }
 
       let ws = (data || []) as Workspace[];
 

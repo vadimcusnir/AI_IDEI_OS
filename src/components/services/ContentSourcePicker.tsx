@@ -54,13 +54,13 @@ export function ContentSourcePicker({ onSelect, selectedId }: Props) {
         .eq("workspace_id", currentWorkspace.id)
         .not("transcript", "is", null)
         .order("created_at", { ascending: false })
-        .limit(200),
+        .limit(50),
       supabase
         .from("neurons")
         .select("id, title, status, content_category, created_at, neuron_blocks(content, position)")
         .eq("workspace_id", currentWorkspace.id)
         .order("created_at", { ascending: false })
-        .limit(500),
+        .limit(50),
     ]);
 
     const items: ContentSource[] = [];

@@ -58,6 +58,33 @@ const ROUTE_LABELS: Record<string, string> = {
   kb: "Knowledge Base",
   batch: "Batch Runner",
   pricing: "Pricing",
+  // Previously missing labels
+  gamification: "Progress",
+  wallet: "Usage",
+  vip: "VIP Dashboard",
+  "cusnir-os": "Cusnir_OS",
+  "data-pipeline": "Data Pipeline",
+  "master-agent": "Master Agent",
+  programs: "Programs",
+  "services-catalog": "Service Catalog",
+  runtime: "Runtime",
+  analytics: "Analytics",
+  about: "About",
+  "about-vadim-cusnir": "Vadim Cușnir",
+  blog: "Blog",
+  "security-settings": "Security",
+  integrations: "Integrations",
+  "cognitive-units": "Cognitive Units",
+  "collection-runs": "Collection Runs",
+  notebooks: "Notebooks",
+  notebook: "Notebook",
+  capitalization: "Capitalization",
+  "headline-generator": "Headline Generator",
+  automations: "Automations",
+  "payment": "Payment",
+  "db-schema": "DB Schema",
+  security: "Security",
+  kernel: "Kernel",
 };
 
 export function AppBreadcrumbs() {
@@ -96,22 +123,20 @@ export function AppBreadcrumbs() {
             </BreadcrumbLink>
           </BreadcrumbItem>
           {crumbs.map((crumb) => (
-            <span key={crumb.path} className="contents">
+            <BreadcrumbItem key={crumb.path}>
               <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {crumb.isLast ? (
-                  <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
+              {crumb.isLast ? (
+                <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
+                  {crumb.label}
+                </BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link to={crumb.path} className="text-[11px]">
                     {crumb.label}
-                  </BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link to={crumb.path} className="text-[11px]">
-                      {crumb.label}
-                    </Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-            </span>
+                  </Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
           ))}
         </BreadcrumbList>
       </Breadcrumb>

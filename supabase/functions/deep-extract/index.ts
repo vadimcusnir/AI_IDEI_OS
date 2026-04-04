@@ -299,20 +299,22 @@ Deno.serve(async (req) => {
       (sum, e) => sum + baseCost * e.cost_multiplier, 0
     ));
 
-    // Spend credits
-    const { data: spent } = await supabase.rpc("spend_credits", {
+    // RESERVE neurons (atomic wallet)
+    const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
       _user_id: userId,
       _amount: totalCost,
-      _description: `DEEP EXTRACT (${extractors.length} extractors): ${episode.title}`,
+      _description: `RESERVE: Deep Extract (${extractors.length} extractors): ${episode.title}`,
     });
 
-    if (!spent) {
+    if (reserveErr || !reserved) {
       return new Response(JSON.stringify({
         error: "Insufficient credits",
         needed: totalCost,
         reason_code: "RC.CREDITS.INSUFFICIENT",
       }), { status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
+
+    let settled = false;
 
     // Update status
     await supabase.from("episodes").update({ status: "analyzing" }).eq("id", episode_id);
@@ -333,7 +335,7 @@ Deno.serve(async (req) => {
     const regime = await getRegimeConfig("deep-extract");
     const blockReason = checkRegimeBlock(regime, totalCost);
     if (blockReason) {
-      await supabase.rpc("add_credits", { _user_id: userId, _amount: totalCost, _description: `REFUND: Regime blocked — ${blockReason}`, _type: "refund" });
+      await supabase.rpc("release_neurons", { _user_id: userId, _amount: totalCost, _description: `RELEASE: Regime blocked — ${blockReason}` }).catch(() => {});
       return new Response(JSON.stringify({ error: blockReason }), {
         status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
@@ -461,14 +463,13 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Refund if nothing extracted
+    // Release if nothing extracted
     if (totalNeurons === 0) {
-      await supabase.rpc("add_credits", {
+      await supabase.rpc("release_neurons", {
         _user_id: userId,
         _amount: totalCost,
-        _description: `REFUND: Deep extract ${episode.title} — no results`,
-        _type: "refund",
-      });
+        _description: `RELEASE: Deep extract ${episode.title} — no results`,
+      }).catch(() => {});
       await supabase.from("episodes").update({ status: "transcribed" }).eq("id", episode_id);
       if (jobId) {
         await supabase.from("neuron_jobs").update({
@@ -481,6 +482,14 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    // SETTLE neurons on success
+    await supabase.rpc("settle_neurons", {
+      _user_id: userId,
+      _amount: totalCost,
+      _description: `SETTLE: Deep Extract — ${totalNeurons} neurons`,
+    });
+    settled = true;
 
     // Finalize
     const familiesUsed = [...new Set(results.map(r => r.family))];

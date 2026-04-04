@@ -51,7 +51,7 @@ export function EconomicGate({
           </div>
           <div className="space-y-0.5">
             <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Your Cost</p>
-            <p className={cn("text-sm font-bold flex items-center gap-1", tierDiscount > 0 && "text-green-500")}>
+            <p className={cn("text-sm font-bold flex items-center gap-1", tierDiscount > 0 && "text-success")}>
               <Coins className="h-3.5 w-3.5" />
               {discountedCost}
               <span className="text-[10px] font-normal text-muted-foreground">N</span>
@@ -61,9 +61,9 @@ export function EconomicGate({
 
         {/* Tier discount */}
         {tierDiscount > 0 && (
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-green-500/5 border border-green-500/20">
-            <TrendingDown className="h-3 w-3 text-green-500 shrink-0" />
-            <span className="text-[10px] text-green-600 dark:text-green-400">
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-success/5 border border-success/20">
+            <TrendingDown className="h-3 w-3 text-success shrink-0" />
+            <span className="text-[10px] text-success">
               {tier} discount: -{tierDiscount}% ({savings} NEURONS saved)
             </span>
           </div>
@@ -78,11 +78,19 @@ export function EconomicGate({
           {canAfford && (
             <div className="text-[10px]">
               <span className="text-muted-foreground">After: </span>
-              <span className={cn("font-bold", balanceAfter < 200 ? "text-yellow-500" : "text-foreground")}>
+              <span className={cn("font-bold", balanceAfter < 200 ? "text-warning" : "text-foreground")}>
                 {balanceAfter.toLocaleString()} N
               </span>
             </div>
           )}
+        </div>
+
+        {/* Cancellation info (A7 fix) */}
+        <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/30 border border-border/20">
+          <Shield className="h-3 w-3 text-muted-foreground shrink-0" />
+          <span className="text-[10px] text-muted-foreground">
+            Credits are charged only after successful execution. Cancelling now costs nothing.
+          </span>
         </div>
 
         {/* Insufficient balance */}

@@ -1,5 +1,5 @@
 /**
- * UnlockArtifactButton — Deduces NEURONS to unlock full artifact content.
+ * UnlockArtifactButton — Atomic Reserve→Settle pattern for artifact unlock.
  */
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, Loader2, Coins } from "lucide-react";
 import { toast } from "sonner";
 
-const UNLOCK_COST = 50; // NEURONS per artifact unlock
+const UNLOCK_COST = 50;
 
 interface Props {
   artifactId: string;
@@ -28,14 +28,14 @@ export function UnlockArtifactButton({ artifactId, onUnlocked }: Props) {
     setUnlocking(true);
 
     try {
-      // Deduct NEURONS
-      const { data: spent, error: spendErr } = await supabase.rpc("spend_credits", {
+      // RESERVE neurons
+      const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
         _user_id: user.id,
         _amount: UNLOCK_COST,
-        _description: `Artifact unlock: ${artifactId.slice(0, 8)}`,
+        _description: `RESERVE: Artifact unlock: ${artifactId.slice(0, 8)}`,
       });
 
-      if (spendErr || !spent) {
+      if (reserveErr || !reserved) {
         toast.error("NEURONS insuficienți pentru deblocare");
         setUnlocking(false);
         return;
@@ -49,10 +49,27 @@ export function UnlockArtifactButton({ artifactId, onUnlocked }: Props) {
         description: `Artifact unlock: ${artifactId.slice(0, 8)}`,
       });
 
+      // SETTLE neurons (unlock successful)
+      await supabase.rpc("settle_neurons", {
+        _user_id: user.id,
+        _amount: UNLOCK_COST,
+        _description: `SETTLE: Artifact unlock: ${artifactId.slice(0, 8)}`,
+      });
+
       await refetch();
       toast.success(`Conținut deblocat! -${UNLOCK_COST} NEURONS`);
       onUnlocked();
     } catch {
+      // RELEASE neurons on failure
+      if (user) {
+        try {
+          await supabase.rpc("release_neurons", {
+            _user_id: user.id,
+            _amount: UNLOCK_COST,
+            _description: `RELEASE: Artifact unlock failed`,
+          });
+        } catch (_) { /* best-effort release */ }
+      }
       toast.error("Eroare la deblocare");
     } finally {
       setUnlocking(false);

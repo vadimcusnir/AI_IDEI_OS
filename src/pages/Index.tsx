@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
-import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen, Trash2, CheckSquare, XSquare, BarChart3 } from "lucide-react";
+import { Plus, Loader2, Search, Filter, Download, FolderTree, PanelRightOpen, Trash2, CheckSquare, XSquare, BarChart3, Workflow } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplatePicker } from "@/components/neuron/TemplatePicker";
 import { ExportImportPanel } from "@/components/ExportImportPanel";
@@ -18,6 +18,7 @@ import { ListPageSkeleton } from "@/components/skeletons/ListPageSkeleton";
 import { useTranslation } from "react-i18next";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { AnimatePresence } from "framer-motion";
+import { useAutoStructure } from "@/hooks/useAutoStructure";
 
 const STATUS_DOTS: Record<string, string> = {
   draft: "bg-muted-foreground/40",
@@ -36,6 +37,7 @@ export default function Index() {
   const [aiSuggesting, setAiSuggesting] = useState(false);
   const [previewNeuron, setPreviewNeuron] = useState<NeuronListItem | null>(null);
   const [showInsights, setShowInsights] = useState(false);
+  const { structureNeurons, structuring } = useAutoStructure();
   const {
     neurons, loading, authLoading,
     viewMode, setViewMode,
@@ -173,6 +175,17 @@ export default function Index() {
               </Button>
               <Button variant="ghost" size="sm" className="h-8 text-xs gap-1" onClick={() => setShowExportImport(true)}>
                 <Download className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1.5 text-xs"
+                onClick={() => structureNeurons(selectedIds.size > 0 ? Array.from(selectedIds) : undefined)}
+                disabled={structuring || neurons.length === 0}
+                title="Auto-structure neurons into clusters and identify relationships"
+              >
+                {structuring ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Workflow className="h-3.5 w-3.5" />}
+                <span className="hidden sm:inline">{structuring ? "Structuring…" : "Auto-Structure"}</span>
               </Button>
               <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => setShowTemplatePicker(true)}>
                 <Plus className="h-3.5 w-3.5" /> {t("neurons_index.new_neuron")}

@@ -1,22 +1,24 @@
 /**
  * APP LAYOUT — Canonical Shell
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- * Structure: Sidebar | [Header + Content + Footer]
- * Header & Footer imported ONLY from components/global/.
- * No page may override this structure.
+ * Structure: Sidebar | Content
+ * Header eliminated — navigation consolidated into AppSidebar.
+ * SidebarTrigger, Search, UserMenu, Theme, Lang all live in AppSidebar.
  */
 
 import { ReactNode, useEffect, useRef, lazy, Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { prefetchUIControls } from "@/hooks/useUIControl";
 import { useKeyboardNav } from "@/hooks/useKeyboardNav";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { useAdoptionTracker } from "@/hooks/useAdoptionTracker";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { Header } from "@/components/global/Header";
+import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
 
 // Lazy-load non-critical components
 const LowBalanceBanner = lazy(() => import("@/components/credits/LowBalanceBanner").then(m => ({ default: m.LowBalanceBanner })));
@@ -37,6 +39,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
   usePageTracking();
   useDailyActivity();
   useKeyboardNav();
+  useAdoptionTracker();
 
   const prefetched = useRef(false);
   useEffect(() => {
@@ -57,36 +60,39 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
         </a>
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-          {/* ═══ CANONICAL HEADER ═══ */}
-          <Header />
-
-          {/* ═══ PIPELINE CONTEXT BAR ═══ */}
-          {user && (
-            <div className="hidden md:flex items-center justify-center border-b border-border/20 bg-muted/10 py-1.5 px-4 shrink-0">
-              <Suspense fallback={null}>
-                <CompactPipeline />
-              </Suspense>
+          {/* ═══ INLINE TOP BAR — SidebarTrigger + Breadcrumbs + Pipeline ═══ */}
+          <div className="shrink-0 h-10 flex items-center gap-2 border-b border-border/40 bg-background/95 backdrop-blur-sm px-3">
+            <SidebarTrigger aria-label="Toggle sidebar" />
+            <div className="hidden md:block">
+              <AppBreadcrumbs />
             </div>
-          )}
+            {user && (
+              <div className="hidden md:flex items-center ml-auto">
+                <Suspense fallback={null}>
+                  <CompactPipeline />
+                </Suspense>
+              </div>
+            )}
+          </div>
 
           <div className="shrink-0">
-            <Suspense fallback={null}><LowBalanceBanner /></Suspense>
+            <Suspense fallback={<div className="h-8"><Skeleton className="h-8 w-full" /></div>}><LowBalanceBanner /></Suspense>
             <Suspense fallback={null}><BehaviorOverlay /></Suspense>
           </div>
 
           {fullHeight ? (
             <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
+              <ErrorBoundary><div className="flex-1 flex flex-col min-h-0">{children}</div></ErrorBoundary>
             </main>
           ) : (
             <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">
               <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
-              <Suspense fallback={null}><Footer /></Suspense>
+              <Suspense fallback={<div className="py-8"><Skeleton className="h-4 w-32 mx-auto" /></div>}><Footer /></Suspense>
             </main>
           )}
         </div>
       </div>
-      <Suspense fallback={null}><MobileBottomNav /></Suspense>
+      <Suspense fallback={<div className="fixed bottom-0 left-0 right-0 h-14 bg-background border-t border-border md:hidden"><Skeleton className="h-full w-full" /></div>}><MobileBottomNav /></Suspense>
       <Suspense fallback={null}>
         <ContextualFeedbackPrompt />
         <GamificationToasts />

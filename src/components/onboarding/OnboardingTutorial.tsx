@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { supabase } from "@/integrations/supabase/client";
+import { trackInternalEvent, AnalyticsEvents } from "@/lib/internalAnalytics";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -65,6 +67,7 @@ interface Props {
 export function OnboardingTutorial({ open, onClose }: Props) {
   const { t } = useTranslation("common");
   const { user } = useAuth();
+  const { updateFlag } = useOnboardingState();
   const [moduleIdx, setModuleIdx] = useState(0);
   const [slideIdx, setSlideIdx] = useState(0);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
@@ -72,6 +75,7 @@ export function OnboardingTutorial({ open, onClose }: Props) {
 
   useEffect(() => {
     if (!user || !open) return;
+    trackInternalEvent({ event: AnalyticsEvents.TUTORIAL_STARTED });
     supabase
       .from("onboarding_progress")
       .select("tutorial_modules_completed")
@@ -99,6 +103,11 @@ export function OnboardingTutorial({ open, onClose }: Props) {
     newCompleted.add(currentModule.id);
     setCompleted(newCompleted);
 
+    trackInternalEvent({
+      event: AnalyticsEvents.TUTORIAL_MODULE_COMPLETED,
+      params: { module: currentModule.id },
+    });
+
     const arr = Array.from(newCompleted);
     await supabase
       .from("onboarding_progress")
@@ -110,8 +119,8 @@ export function OnboardingTutorial({ open, onClose }: Props) {
       }, { onConflict: "user_id" });
 
     if (arr.length === MODULES.length) {
-      // Award completion bonus
       setAwarding(true);
+      trackInternalEvent({ event: AnalyticsEvents.TUTORIAL_COMPLETED });
       const { data } = await supabase.rpc("complete_onboarding_tutorial", {
         _user_id: user.id,
       });
@@ -136,24 +145,25 @@ export function OnboardingTutorial({ open, onClose }: Props) {
   };
 
   const handleSkip = () => {
-    if (user) localStorage.setItem(`tutorial_skipped_${user.id}`, "true");
+    updateFlag("tutorial_skipped", true);
+    trackInternalEvent({ event: AnalyticsEvents.TUTORIAL_SKIPPED });
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-label={t("tutorial.title", "Tutorial")}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl overflow-hidden"
       >
         {/* Close */}
-        <button onClick={handleSkip} className="absolute top-3 right-3 z-10 h-7 w-7 flex items-center justify-center rounded-full hover:bg-muted transition-colors">
+        <button onClick={handleSkip} className="absolute top-3 right-3 z-10 h-7 w-7 flex items-center justify-center rounded-full hover:bg-muted transition-colors" aria-label={t("tutorial.skip_tutorial")}>
           <X className="h-4 w-4 text-muted-foreground" />
         </button>
 
         {/* Module progress */}
-        <div className="flex items-center gap-1 px-4 pt-4">
+        <div className="flex items-center gap-1 px-4 pt-4" role="progressbar" aria-valuenow={moduleIdx + 1} aria-valuemin={1} aria-valuemax={MODULES.length}>
           {MODULES.map((m, i) => (
             <div key={m.id} className="flex-1 flex items-center gap-1">
               <div className={cn(
@@ -173,15 +183,15 @@ export function OnboardingTutorial({ open, onClose }: Props) {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-6"
             >
-              <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                 <Trophy className="h-7 w-7 text-primary" />
               </div>
               <h3 className="text-lg font-bold mb-2">{t("tutorial.all_done_title")}</h3>
               <p className="text-xs text-muted-foreground mb-4">{t("tutorial.all_done_desc")}</p>
-              {awarding && <Loader2 className="h-4 w-4 animate-spin mx-auto mb-2 text-primary" />}
-              <Button onClick={onClose} className="gap-2">
+              {awarding && <Loader2 className="h-4 w-4 animate-spin mx-auto mb-2 text-primary" aria-label="Loading" />}
+              <Button onClick={onClose} className="gap-2" aria-label={t("tutorial.start_exploring")}>
                 {t("tutorial.start_exploring")}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
             </motion.div>
           ) : (
@@ -195,7 +205,7 @@ export function OnboardingTutorial({ open, onClose }: Props) {
               >
                 {/* Module header */}
                 <div className="flex items-center gap-2 mb-1">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center" aria-hidden="true">
                     <Icon className="h-4 w-4 text-primary" />
                   </div>
                   <div>
@@ -214,7 +224,7 @@ export function OnboardingTutorial({ open, onClose }: Props) {
 
                 {/* Slide dots */}
                 {currentModule.slides.length > 1 && (
-                  <div className="flex items-center justify-center gap-1 mb-4">
+                  <div className="flex items-center justify-center gap-1 mb-4" aria-hidden="true">
                     {currentModule.slides.map((_, i) => (
                       <div key={i} className={cn(
                         "h-1.5 w-1.5 rounded-full transition-colors",
@@ -231,7 +241,7 @@ export function OnboardingTutorial({ open, onClose }: Props) {
                   </button>
                   <Button size="sm" onClick={handleNext} className="gap-1.5 text-xs">
                     {isLastSlide && isLastModule ? t("tutorial.finish") : isLastSlide ? t("tutorial.next_module") : t("tutorial.next")}
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                   </Button>
                 </div>
               </motion.div>

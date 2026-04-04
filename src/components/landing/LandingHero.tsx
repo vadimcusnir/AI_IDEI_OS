@@ -2,8 +2,11 @@ import { ArrowRight, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ExtractionEngine } from "./ExtractionEngine";
 import { MagicButton } from "./MagicButton";
+import { ContentBoundary } from "@/components/layout/ContentBoundary";
 import { RefObject } from "react";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Props {
   heroRef: RefObject<HTMLDivElement | null>;
@@ -12,39 +15,60 @@ interface Props {
 
 export function LandingHero({ heroRef, ctaAction }: Props) {
   const { t } = useTranslation("landing");
+  const reduced = useReducedMotion();
+
+  const fadeUp = reduced
+    ? {}
+    : { initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 } };
 
   return (
     <section ref={heroRef} className="relative overflow-hidden" aria-label="Hero">
       {/* Layered ambient glow — asymmetric for visual tension */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-[55%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-[hsl(var(--gold-oxide)/0.05)] blur-[180px]" />
-        <div className="absolute bottom-0 left-[30%] w-[350px] h-[250px] rounded-full bg-[hsl(var(--gold-oxide)/0.025)] blur-[140px]" />
+        <div className="absolute top-1/4 left-[55%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-gold/5 blur-[180px]" />
+        <div className="absolute bottom-0 left-[30%] w-[350px] h-[250px] rounded-full bg-gold/[0.025] blur-[140px]" />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-5 sm:px-6 pt-24 sm:pt-36 md:pt-44 pb-10 sm:pb-20 text-center">
+      <ContentBoundary width="default" className="relative pt-24 sm:pt-36 md:pt-44 pb-10 sm:pb-20 text-center">
         {/* Mono tagline — eyebrow */}
-        <p className="text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-[hsl(var(--gold-oxide))] mb-10 sm:mb-12">
+        <motion.p
+          {...fadeUp}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-eyebrow font-mono tracking-[0.35em] text-gold mb-10 sm:mb-12"
+        >
           {t("hero.tagline")}
-        </p>
+        </motion.p>
 
         {/* H1 — dominant, tight, commanding */}
-        <h1 className="text-[clamp(2.25rem,5.5vw,4rem)] font-bold leading-[1.05] tracking-[-0.02em] text-foreground mb-7 sm:mb-8">
+        <motion.h1
+          {...fadeUp}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-h1 text-foreground mb-8"
+        >
           {t("hero.title_prefix")}{" "}
-          <MagicButton className="text-[hsl(var(--gold-oxide))]">{t("hero.title_highlight")}</MagicButton>
+          <MagicButton className="text-gold">{t("hero.title_highlight")}</MagicButton>
           {" "}{t("hero.title_suffix")}
-        </h1>
+        </motion.h1>
 
         {/* Subtitle — narrower, more breathing */}
-        <p className="text-[15px] sm:text-lg text-muted-foreground leading-[1.75] max-w-[580px] mx-auto mb-12 sm:mb-16 px-2">
+        <motion.p
+          {...fadeUp}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="text-body sm:text-body-lg text-muted-foreground leading-relaxed max-w-[36rem] mx-auto mb-12 sm:mb-16 px-2"
+        >
           {t("hero.subtitle")}
-        </p>
+        </motion.p>
 
         {/* CTA cluster — generous spacing, clear hierarchy */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-20 sm:mb-24 px-4 sm:px-0">
+        <motion.div
+          {...fadeUp}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-20 sm:mb-24 px-4 sm:px-0"
+        >
           <Button
             size="lg"
             onClick={ctaAction}
-            className="gap-2.5 text-sm font-semibold px-10 h-[52px] sm:h-14 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-dim))] text-[hsl(var(--obsidian))] shadow-lg shadow-[hsl(var(--gold-oxide)/0.18)] w-full sm:w-auto min-h-[48px] rounded-lg transition-all duration-200"
+            className="cta-canon cta-glow gap-2.5 text-sm font-semibold px-10 h-12 sm:h-14 bg-gold hover:bg-gold-dim text-obsidian shadow-lg shadow-gold/18 w-full sm:w-auto rounded-lg transition-all duration-200"
           >
             {t("hero.cta_start")}
             <ArrowRight className="h-4 w-4" />
@@ -53,18 +77,18 @@ export function LandingHero({ heroRef, ctaAction }: Props) {
             variant="outline"
             size="lg"
             onClick={() => document.querySelector("#mechanism")?.scrollIntoView({ behavior: "smooth" })}
-            className="gap-2.5 text-sm h-[52px] sm:h-14 w-full sm:w-auto border-border/50 text-muted-foreground hover:bg-accent/8 hover:border-[hsl(var(--gold-oxide)/0.3)] min-h-[48px] rounded-lg transition-all duration-200"
+            className="cta-canon gap-2.5 text-sm h-12 sm:h-14 w-full sm:w-auto border-border/50 text-muted-foreground hover:bg-accent/8 hover:border-gold/30 rounded-lg transition-all duration-200"
           >
             <Eye className="h-4 w-4" />
             {t("hero.cta_mechanism")}
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      </ContentBoundary>
 
       {/* Extraction engine visual — more top spacing for separation */}
-      <div className="relative max-w-3xl mx-auto px-3 sm:px-4 pb-20 sm:pb-32">
+      <ContentBoundary width="narrow" className="pb-20 sm:pb-32">
         <ExtractionEngine />
-      </div>
+      </ContentBoundary>
     </section>
   );
 }

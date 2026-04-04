@@ -3,14 +3,8 @@
  */
 import { motion } from "framer-motion";
 import { IconFramework, IconAssistant, IconOutput, IconPodcast, IconExtract, IconMultiply } from "./ProprietaryIcons";
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
-  }),
-};
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { ContentBoundary } from "@/components/layout/ContentBoundary";
 
 const CATEGORIES = [
   {
@@ -46,13 +40,23 @@ const CATEGORIES = [
 ];
 
 export function EcosystemMap() {
+  const reduced = useReducedMotion();
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: reduced ? 0 : 20 },
+    visible: (i: number) => ({
+      opacity: 1, y: 0,
+      transition: { delay: i * 0.08, duration: reduced ? 0 : 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const },
+    }),
+  };
+
   return (
-    <section className="py-24 sm:py-36 border-y border-border/40" aria-label="Ecosystem overview">
-      <div className="max-w-5xl mx-auto px-5 sm:px-6">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-16 sm:mb-24">
-          <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-[hsl(var(--gold-oxide))] mb-6 block">ECOSYSTEM</span>
-          <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold tracking-[-0.01em] text-foreground mb-6 leading-[1.15]">Inside AI-IDEI</h2>
-          <p className="text-[15px] text-muted-foreground max-w-[440px] mx-auto leading-[1.75]">
+    <section className="py-24 sm:py-40 border-y border-border/40" aria-label="Ecosystem overview">
+      <ContentBoundary width="default">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-20 sm:mb-24">
+          <span className="text-eyebrow font-mono tracking-[0.35em] text-[hsl(var(--gold-oxide))] mb-6 block">ECOSYSTEM</span>
+          <h2 className="text-h2 text-foreground mb-6">Inside AI-IDEI</h2>
+          <p className="text-body text-muted-foreground max-w-lg mx-auto leading-relaxed">
             A growing system of resources organized by function, not by volume.
           </p>
         </motion.div>
@@ -66,17 +70,17 @@ export function EcosystemMap() {
               viewport={{ once: true, margin: "-30px" }}
               custom={i}
               variants={fadeUp}
-              className="group p-7 sm:p-8 rounded-xl border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.15)] landing-card transition-all"
+              className="group p-6 sm:p-8 rounded-xl border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.2)] landing-card transition-all"
             >
               <div className="flex items-center gap-4 mb-6">
-                <cat.icon className="text-[hsl(var(--gold-oxide))] transition-colors" size={20} />
-                <h3 className="text-sm font-bold text-foreground">{cat.title}</h3>
+                <cat.icon className="text-[hsl(var(--gold-oxide))] group-hover:scale-110 transition-transform duration-300" size={20} />
+                <h3 className="text-caption font-bold text-foreground">{cat.title}</h3>
               </div>
               <div className="space-y-3">
                 {cat.items.map((item) => (
-                  <div key={item} className="flex items-center gap-3.5">
-                    <div className="h-1 w-1 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] shrink-0" />
-                    <span className="text-sm text-muted-foreground">{item}</span>
+                  <div key={item} className="flex items-center gap-3 group/item">
+                    <div className="h-1 w-1 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] shrink-0 group-hover/item:bg-[hsl(var(--gold-oxide)/0.5)] transition-colors" />
+                    <span className="text-caption text-muted-foreground group-hover/item:text-foreground transition-colors duration-200">{item}</span>
                   </div>
                 ))}
               </div>
@@ -84,10 +88,10 @@ export function EcosystemMap() {
           ))}
         </div>
 
-        <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-12 text-[10px] sm:text-[11px] font-mono tracking-[0.2em] uppercase text-muted-foreground">
+        <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-12 text-eyebrow font-mono tracking-[0.2em] text-muted-foreground">
           New resources added weekly · Built for execution, not decoration
         </motion.p>
-      </div>
+      </ContentBoundary>
     </section>
   );
 }

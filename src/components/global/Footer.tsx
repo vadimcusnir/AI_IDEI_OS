@@ -1,13 +1,14 @@
 /**
  * CANONICAL GLOBAL FOOTER — components/global/Footer.tsx
- * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * Single source of truth for all authenticated app pages.
  * 4-column grid: Brand | Platform | About | Legal
- * Uses only semantic tokens from design system.
+ * Uses routes from ROUTES registry.
  */
 
 import { Link } from "react-router-dom";
 import { Logo } from "@/components/shared/Logo";
+import { ContentBoundary } from "@/components/layout/ContentBoundary";
+import { ROUTES, NAV_GROUPS } from "@/config/routes";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
@@ -50,11 +51,9 @@ function PlatformColumn() {
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-foreground">Platform</h3>
       <ul className="space-y-2">
-        <li><FooterLink to="/services">Services</FooterLink></li>
-        <li><FooterLink to="/marketplace">Marketplace</FooterLink></li>
-        <li><FooterLink to="/docs">Documentation</FooterLink></li>
-        <li><FooterLink to="/changelog">Changelog</FooterLink></li>
-        <li><FooterLink to="/pricing">Pricing</FooterLink></li>
+        {NAV_GROUPS.platform.map((item) => (
+          <li key={item.to}><FooterLink to={item.to}>{item.label}</FooterLink></li>
+        ))}
       </ul>
     </div>
   );
@@ -65,11 +64,15 @@ function AboutColumn() {
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-foreground">About</h3>
       <ul className="space-y-2">
-        <li><FooterLink to="/about">About AI-IDEI</FooterLink></li>
-        <li><FooterLink to="/about-vadim-cusnir">About Vadim Cușnir</FooterLink></li>
-        <li><FooterLink to="/cusnir-os">About Cusnir_OS</FooterLink></li>
-        <li><ExtLink href="https://cusnirvadim.com">cusnirvadim.com</ExtLink></li>
-        <li><ExtLink href="https://notadoi.com">Nota Doi</ExtLink></li>
+        {NAV_GROUPS.about.map((item, i) => (
+          <li key={i}>
+            {'external' in item ? (
+              <ExtLink href={item.external}>{item.label}</ExtLink>
+            ) : (
+              <FooterLink to={item.to}>{item.label}</FooterLink>
+            )}
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -80,9 +83,9 @@ function LegalColumn() {
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-foreground">Legal</h3>
       <ul className="space-y-2">
-        <li><FooterLink to="/terms">Terms of Service</FooterLink></li>
-        <li><FooterLink to="/privacy">Privacy Policy</FooterLink></li>
-        <li><FooterLink to="/data-privacy">Data Privacy</FooterLink></li>
+        {NAV_GROUPS.legal.map((item) => (
+          <li key={item.to}><FooterLink to={item.to}>{item.label}</FooterLink></li>
+        ))}
       </ul>
     </div>
   );
@@ -91,7 +94,7 @@ function LegalColumn() {
 export function Footer() {
   return (
     <footer className="border-t border-border bg-card mt-auto">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <ContentBoundary width="wide" className="py-8 sm:py-10">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <BrandColumn />
           <PlatformColumn />
@@ -102,12 +105,12 @@ export function Footer() {
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-4 text-xs text-muted-foreground sm:flex-row">
           <span>© {new Date().getFullYear()} Cușnir Media SRL · AI-IDEI. All rights reserved.</span>
           <div className="flex flex-wrap items-center gap-4">
-            <FooterLink to="/terms">Terms</FooterLink>
-            <FooterLink to="/privacy">Privacy</FooterLink>
-            <FooterLink to="/about">About</FooterLink>
+            <FooterLink to={ROUTES.TERMS}>Terms</FooterLink>
+            <FooterLink to={ROUTES.PRIVACY}>Privacy</FooterLink>
+            <FooterLink to={ROUTES.ABOUT}>About</FooterLink>
           </div>
         </div>
-      </div>
+      </ContentBoundary>
     </footer>
   );
 }

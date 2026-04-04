@@ -9,11 +9,11 @@ export function LandingTranscribeCTA() {
   const { t } = useTranslation("landing");
 
   return (
-    <section className="py-16 sm:py-24" aria-label="YouTube transcription">
+    <section className="py-20 sm:py-28" aria-label="YouTube transcription">
       <FadeInView className="max-w-3xl mx-auto px-5 sm:px-6">
-        <div className="relative rounded-xl border border-border/50 bg-card p-9 sm:p-12 flex flex-col sm:flex-row items-center gap-8 sm:gap-14 overflow-hidden">
-          <div className="absolute top-0 right-0 w-56 h-56 bg-[hsl(var(--signal-red)/0.025)] rounded-full blur-[120px] pointer-events-none" />
-          <div className="relative shrink-0 w-16 h-16 rounded-xl bg-[hsl(var(--signal-red)/0.07)] flex items-center justify-center">
+        <div className="relative rounded-xl border border-border/50 bg-card p-9 sm:p-12 flex flex-col sm:flex-row items-center gap-8 sm:gap-14 overflow-hidden landing-card group">
+          <div className="absolute top-0 right-0 w-56 h-56 bg-[hsl(var(--signal-red)/0.03)] rounded-full blur-[120px] pointer-events-none group-hover:bg-[hsl(var(--signal-red)/0.05)] transition-colors duration-500" />
+          <div className="relative shrink-0 w-16 h-16 rounded-xl bg-[hsl(var(--signal-red)/0.07)] flex items-center justify-center group-hover:bg-[hsl(var(--signal-red)/0.12)] group-hover:scale-105 transition-all duration-300">
             <Youtube className="h-8 w-8 text-[hsl(var(--signal-red))]" />
           </div>
           <div className="relative flex-1 text-center sm:text-left">

@@ -44,17 +44,17 @@ const LANG_OPTIONS = [
 function BrandZone() {
   return (
     <div className="flex items-center gap-2 shrink-0">
-      <SidebarTrigger />
+      <SidebarTrigger aria-label="Toggle sidebar" />
       <Link
         to="/home"
         className="flex items-center gap-1.5 group min-h-[44px] min-w-[44px] items-center"
-        title="Home"
+        aria-label="AI-IDEI Home"
       >
         <div className="h-6 w-6 rounded-lg bg-primary/8 flex items-center justify-center group-hover:bg-primary/12 transition-colors">
           <Brain className="h-3.5 w-3.5 text-[hsl(var(--gold-oxide))]" />
         </div>
         <span className="text-sm font-bold tracking-tight hidden sm:inline text-foreground">
-          {"\n"}
+          AI-IDEI
         </span>
       </Link>
       <div className="hidden md:block ml-1">
@@ -78,7 +78,7 @@ function ActionsZone() {
       <div className="flex items-center border-l border-border/30 pl-1 ml-1">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 min-h-[44px] min-w-[44px]" title="Language">
+            <Button variant="ghost" size="icon" className="h-8 w-8 min-h-[44px] min-w-[44px]" aria-label="Change language">
               <span className="text-sm leading-none">{currentLang.flag}</span>
             </Button>
           </DropdownMenuTrigger>
@@ -115,6 +115,8 @@ export function Header() {
 
   return (
     <header
+      role="banner"
+      aria-label="Main navigation"
       className={cn(
         "shrink-0 z-40 h-[var(--header-height)] flex items-center",
         "border-b border-border/40 bg-background/95 backdrop-blur-sm",

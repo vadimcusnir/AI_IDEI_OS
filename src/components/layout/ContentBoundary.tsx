@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 interface ContentBoundaryProps {
   children: ReactNode;
   className?: string;
-  /** Use "narrow" for article/docs (max-w-3xl), "default" for pages (max-w-5xl), "wide" for dashboards (max-w-7xl) */
+  /** "narrow" for article/docs (~740px), "default" for pages (~1000px), "wide" for dashboards (~1160px) */
   width?: "narrow" | "default" | "wide";
   /** Remove horizontal padding (e.g. for nested usage) */
   noPadding?: boolean;
@@ -13,11 +13,17 @@ interface ContentBoundaryProps {
 
 /**
  * ContentBoundary — canonical container for all readable content.
- * xs/sm: w=100%, px=16
- * md: px=24
- * lg: px=32
- * xl: px=40
+ * MOBILE-FIRST CANON v2.0:
+ *   xs/sm: w=100%, px=16 (1rem)
+ *   md:    px=24 (1.5rem)
+ *   lg:    px=32 (2rem)
+ *   xl:    px=40 (2.5rem)
  * Text never goes full-width. Background can.
+ *
+ * Max-widths (canon spec):
+ *   narrow:  46.25rem (740px)  — articles, docs
+ *   default: 62.5rem  (1000px) — standard pages
+ *   wide:    72.5rem  (1160px) — dashboards
  */
 export function ContentBoundary({
   children,
@@ -30,10 +36,10 @@ export function ContentBoundary({
     <Tag
       className={cn(
         "mx-auto w-full",
-        !noPadding && "px-4 sm:px-6 md:px-6 lg:px-8 xl:px-10",
-        width === "narrow" && "max-w-3xl",
-        width === "default" && "max-w-5xl",
-        width === "wide" && "max-w-7xl",
+        !noPadding && "px-4 md:px-6 lg:px-8 xl:px-10",
+        width === "narrow" && "max-w-[46.25rem]",
+        width === "default" && "max-w-[62.5rem]",
+        width === "wide" && "max-w-[72.5rem]",
         className,
       )}
     >

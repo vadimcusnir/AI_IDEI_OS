@@ -161,17 +161,20 @@ Deno.serve(async (req) => {
 
     const totalCost = keys.reduce((s: number, k: string) => s + (CONTENT_GENERATORS[k]?.cost || 30), 0);
 
-    const { data: spendResult } = await supabase.rpc("spend_credits_capped", {
-      _user_id: user.id, _amount: totalCost,
-      _description: `Content Generation: ${keys.length} formats`,
-      _job_id: job_id || null,
+    // RESERVE neurons (atomic wallet)
+    const { data: reserved, error: reserveErr } = await supabase.rpc("reserve_neurons", {
+      _user_id: user.id,
+      _amount: totalCost,
+      _description: `RESERVE: Content Generation: ${keys.length} formats`,
     });
 
-    if (!spendResult?.success) {
-      return new Response(JSON.stringify({ error: spendResult?.error || "Insufficient credits", needed: totalCost }), {
+    if (reserveErr || !reserved) {
+      return new Response(JSON.stringify({ error: "Insufficient credits", needed: totalCost }), {
         status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    let settled = false;
 
     // Execute in parallel batches of 4
     const results: Record<string, { name: string; content: string }> = {};
@@ -229,12 +232,20 @@ Deno.serve(async (req) => {
       }).eq("id", job_id);
     }
 
+    // SETTLE neurons on success
+    await supabase.rpc("settle_neurons", { _user_id: user.id, _amount: totalCost, _description: `SETTLE: Content Generation: ${keys.length} formats` });
+    settled = true;
+
     return new Response(JSON.stringify({ results, formats_completed: keys.length, credits_spent: totalCost }), {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
 
   } catch (e) {
     console.error("content-generate error:", e);
+    // RELEASE neurons on failure (if not settled)
+    if (typeof settled !== "undefined" && !settled && user?.id && typeof totalCost !== "undefined") {
+      await supabase.rpc("release_neurons", { _user_id: user.id, _amount: totalCost, _description: `RELEASE: Content Generation — error` }).catch(() => {});
+    }
     return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });

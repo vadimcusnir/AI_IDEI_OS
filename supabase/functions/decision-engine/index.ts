@@ -13,6 +13,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
@@ -115,6 +116,11 @@ async function callAI(system: string, prompt: string): Promise<any> {
   const data = await res.json();
   const content = data.choices?.[0]?.message?.content || "";
   try {
+    // Rate limit guard (IP-based)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimited = await rateLimitGuard(clientIp + ":decision-engine", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+    if (rateLimited) return rateLimited;
+
     return JSON.parse(content);
   } catch {
     console.error("Failed to parse AI JSON:", content.slice(0, 500));

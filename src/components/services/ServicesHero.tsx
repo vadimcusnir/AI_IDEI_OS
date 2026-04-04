@@ -20,7 +20,7 @@ export function ServicesHero({ isLoggedIn, serviceCount }: ServicesHeroProps) {
 
   const handleGenerate = () => {
     if (!isLoggedIn) {
-      navigate("/auth");
+      navigate("/auth?redirect=/services");
       return;
     }
     navigate("/home", { state: { prefill: quickInput } });
