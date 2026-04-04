@@ -66,25 +66,25 @@ function renderUserContent(text: string) {
       parts.push(text.slice(lastIdx, match.index));
     }
     if (match[1]) {
-      // URL
+      // URL — dark text on gold bg for contrast
       parts.push(
         <a
           key={key++}
           href={match[1]}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-info underline underline-offset-2 hover:text-info/80 transition-colors inline-flex items-center gap-0.5"
+          className="text-obsidian/70 underline underline-offset-2 decoration-obsidian/40 hover:text-obsidian hover:decoration-obsidian/60 transition-colors inline-flex items-center gap-0.5"
         >
           {match[1].length > 50 ? match[1].slice(0, 50) + "…" : match[1]}
-          <ExternalLink className="h-2.5 w-2.5 inline shrink-0" />
+          <ExternalLink className="h-2.5 w-2.5 inline shrink-0 opacity-60" />
         </a>
       );
     } else if (match[2]) {
-      // Command
+      // Command — obsidian chip on gold bg
       parts.push(
         <span
           key={key++}
-          className="inline-block bg-muted border border-border/40 text-warning font-semibold text-compact px-1.5 py-0.5 rounded-md font-mono"
+          className="inline-block bg-obsidian/15 text-obsidian font-semibold text-compact px-1.5 py-0.5 rounded-md font-mono"
         >
           {match[2]}
         </span>
