@@ -76,6 +76,7 @@ export function useCommandCenter() {
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [showLowBalance, setShowLowBalance] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ═══ Refs ═══
   const inputZoneRef = useRef<CommandInputZoneRef>(null);
