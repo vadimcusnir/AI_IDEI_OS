@@ -161,7 +161,7 @@ export function CommandBubble({ msg, isStreaming, onRetry, onEdit }: CommandBubb
       <div className="flex justify-end group">
         <div className="flex items-start gap-2.5 max-w-[85%] sm:max-w-[75%]">
           <div className="relative">
-            <div className="bg-[hsl(var(--gold-oxide))] text-[hsl(var(--obsidian))] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed shadow-sm shadow-[hsl(var(--gold-oxide)/0.1)]">
+            <div className="bg-gold text-obsidian rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed shadow-sm shadow-gold/10">
               <p className="whitespace-pre-wrap">{renderUserContent(msg.content)}</p>
             </div>
             <div className="absolute -bottom-6 right-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all duration-200">
