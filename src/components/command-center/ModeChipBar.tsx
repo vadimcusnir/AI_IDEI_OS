@@ -21,7 +21,7 @@ const MODES = [
 
 export function ModeChipBar({ activeMode, onModeChange }: ModeChipBarProps) {
   return (
-    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 px-1">
+    <div className="flex items-center gap-1 overflow-x-auto scrollbar-none py-1 px-1">
       {MODES.map((mode) => {
         const isActive = activeMode === mode.key;
         return (
@@ -29,10 +29,10 @@ export function ModeChipBar({ activeMode, onModeChange }: ModeChipBarProps) {
             key={mode.key}
             onClick={() => onModeChange(isActive ? null : mode.key)}
             className={cn(
-              "flex items-center gap-1.5 px-2 py-0.5 rounded-md text-micro whitespace-nowrap transition-all duration-200 border",
+              "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-micro whitespace-nowrap transition-all duration-200 border",
               isActive
                 ? "bg-primary/10 border-primary/20 text-primary"
-                : "bg-transparent border-transparent text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50"
+                : "bg-muted/40 border-border/30 text-muted-foreground/60 hover:text-muted-foreground hover:bg-muted/70"
             )}
           >
             <mode.icon className={cn("h-3 w-3", isActive ? "text-primary" : mode.color)} />
