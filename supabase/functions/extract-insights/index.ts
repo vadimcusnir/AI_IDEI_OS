@@ -10,7 +10,7 @@ const VALID_ACTIONS = new Set([
   "extract_quotes", "extract_prompts", "debug_code", "optimize_code",
   "generate_tests", "explain_code", "transform_article", "transform_twitter",
   "transform_script", "transform_slide", "find_related", "idea_clusters",
-  "influence_score",
+  "influence_score", "run_pipeline", "simulate", "schedule", "validate_schema",
 ]);
 
 // ── Rate limiting ──

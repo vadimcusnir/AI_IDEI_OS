@@ -124,10 +124,10 @@ export default function NeuronEditor() {
   const AI_ACTIONS = [
     "extract_insights", "extract_frameworks", "extract_questions",
     "extract_quotes", "extract_prompts",
-    // Extended actions routed to same edge function with custom prompts
     "debug_code", "optimize_code", "generate_tests", "explain_code",
     "transform_article", "transform_twitter", "transform_script", "transform_slide",
     "find_related", "idea_clusters", "influence_score",
+    "run_pipeline", "simulate", "schedule", "validate_schema",
   ];
 
   const handleAIAction = useCallback((action: string) => {
