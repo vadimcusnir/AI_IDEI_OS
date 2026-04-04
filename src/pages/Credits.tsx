@@ -225,6 +225,11 @@ export default function Credits() {
           <DailySpendingPanel />
         </div>
 
+        {/* Consumption Analytics */}
+        <div className="mb-6">
+          <ConsumptionAnalytics transactions={transactions} />
+        </div>
+
         {/* Subscription Plans */}
         <ControlledSection elementId="credits.subscription_plans">
           <div className="bg-card border border-border rounded-xl p-5 mb-6">
