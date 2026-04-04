@@ -336,6 +336,12 @@ export function useCommandCenter() {
     }
   };
 
+  const handlePipelineMessage = useCallback((role: "user" | "assistant", content: string, meta?: Record<string, any>) => {
+    const msg = { id: crypto.randomUUID(), role, content, timestamp: new Date(), ...(meta ? { metadata: meta } : {}) };
+    saveMessage(msg as any);
+    executionActions.addMessage(msg as any);
+  }, [saveMessage]);
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]);
   };
@@ -421,6 +427,7 @@ export function useCommandCenter() {
     handleCommand, handleFileSelect, handleRemoveFile,
     handleAttachAction, handlePlanExecute,
     handleEconomicProceed, handleEconomicCancel,
+    handlePipelineMessage,
     // Slash
     onSlashSelect: (cmd: string) => { setInput(cmd); inputZoneRef.current?.focus(); },
     // t

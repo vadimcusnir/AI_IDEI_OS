@@ -5,7 +5,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, Zap } from "lucide-react";
-import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
+import { MagicPipelineFlow } from "@/components/pipeline/MagicPipelineFlow";
 
 interface Suggestion {
   id: string;
@@ -17,13 +17,14 @@ interface Suggestion {
 
 interface WelcomeScreenProps {
   onCommand: (prompt: string) => void;
+  onPipelineMessage?: (role: "user" | "assistant", content: string, meta?: Record<string, any>) => void;
   suggestions: Suggestion[];
   neuronCount: number;
   episodeCount: number;
   balance: number;
 }
 
-export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
+export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
   return (
     <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-6">
       {/* Logo + greeting */}
@@ -50,7 +51,7 @@ export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCoun
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.15 }}
       >
-        <MagicPipelineButton />
+        <MagicPipelineFlow onPipelineMessage={onPipelineMessage} />
       </motion.div>
 
       {/* Proactive suggestions — max 4 */}
