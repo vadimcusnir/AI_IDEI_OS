@@ -90,39 +90,54 @@ export function useExecution(context: ExecutionContext) {
     if (!session) return null;
 
     // Create a placeholder neuron for the job
-    const { data: neuron, error: neuronErr } = await supabase
-      .from("neurons")
-      .insert({
-        title: `Job: ${serviceKey}`,
-        author_id: user.id,
-        workspace_id: context.workspaceId,
-      } as any)
-      .select("id")
-      .single();
+    let neuronId: number;
+    try {
+      const { data: neuron, error: neuronErr } = await supabase
+        .from("neurons")
+        .insert({
+          title: `Job: ${serviceKey}`,
+          author_id: user.id,
+          workspace_id: context.workspaceId || undefined,
+        } as any)
+        .select("id")
+        .single();
 
-    if (neuronErr || !neuron) {
-      console.error("Failed to create neuron for job:", neuronErr);
-      throw new Error(`Failed to create job: ${neuronErr?.message || "Neuron creation failed"}`);
+      if (neuronErr || !neuron) {
+        throw new Error(neuronErr?.message || "Neuron creation failed");
+      }
+      neuronId = Number(neuron.id); // bigint → number cast
+    } catch (err) {
+      console.error("Failed to create neuron for job:", err);
+      throw new Error(`Service unavailable: Could not initialize job. ${err instanceof Error ? err.message : ""}`);
     }
 
     // Create job linked to the neuron
-    const { data: job, error: jobErr } = await supabase
-      .from("neuron_jobs")
-      .insert({
-        neuron_id: neuron.id,
-        worker_type: serviceKey,
-        status: "pending",
-        input: inputParams as any,
-        author_id: user.id,
-        workspace_id: context.workspaceId,
-      } as any)
-      .select("id")
-      .single();
+    let jobId: string;
+    try {
+      const { data: job, error: jobErr } = await supabase
+        .from("neuron_jobs")
+        .insert({
+          neuron_id: neuronId,
+          worker_type: serviceKey,
+          status: "pending",
+          input: inputParams as any,
+          author_id: user.id,
+          workspace_id: context.workspaceId || undefined,
+        } as any)
+        .select("id")
+        .single();
 
-    if (jobErr || !job) {
-      console.error("Failed to create job:", jobErr);
-      throw new Error(`Failed to create job: ${jobErr?.message || "Job creation failed"}`);
+      if (jobErr || !job) {
+        throw new Error(jobErr?.message || "Job creation failed");
+      }
+      jobId = job.id;
+    } catch (err) {
+      console.error("Failed to create job:", err);
+      throw new Error(`Failed to create job: ${err instanceof Error ? err.message : "Unknown error"}`);
     }
+
+    // Track active job for server-side abort
+    activeJobIdRef.current = jobId;
 
     const resp = await fetch(RUN_SERVICE_URL, {
       method: "POST",
@@ -131,9 +146,9 @@ export function useExecution(context: ExecutionContext) {
         Authorization: `Bearer ${session.access_token}`,
       },
       body: JSON.stringify({
-        job_id: job.id,
+        job_id: jobId,
         service_key: serviceKey,
-        neuron_id: neuron.id,
+        neuron_id: neuronId,
         inputs: inputParams,
       }),
       signal,
@@ -141,11 +156,22 @@ export function useExecution(context: ExecutionContext) {
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
+      // Specific error handling by status code
+      if (resp.status === 429) {
+        const retryAfter = resp.headers.get("Retry-After") || "60";
+        throw new Error(`Rate limit exceeded. Try again in ${retryAfter}s.`);
+      }
+      if (resp.status === 402) {
+        throw new Error(`Insufficient credits. ${err.needed ? `Need ${err.needed} NEURONS.` : ""}`);
+      }
+      if (resp.status === 404) {
+        throw new Error(`Service "${serviceKey}" not available. Please try a different action.`);
+      }
       throw new Error(err.error || `Service execution failed (${resp.status})`);
     }
 
     const data = await resp.json();
-    return data.job_id || job.id;
+    return data.job_id || jobId;
   }, [user, context.workspaceId]);
 
   /**
