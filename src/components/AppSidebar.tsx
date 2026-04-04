@@ -256,41 +256,49 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-1 py-1">
-          <button onClick={() => navigate(user ? "/home" : "/")} className="flex items-center gap-2.5 shrink-0">
-            <Logo size="h-7 w-7" className="shrink-0" loading="eager" />
-            {!collapsed && <span className="text-sm font-bold tracking-tight">AI-IDEI</span>}
+        {/* ── Logo row ── */}
+        <div className="flex items-center gap-2.5 px-2 py-2.5">
+          <button
+            onClick={() => navigate(user ? "/home" : "/")}
+            className="flex items-center gap-2.5 shrink-0 group min-h-[44px]"
+          >
+            <Logo size="h-7 w-7" className="shrink-0 transition-transform duration-200 group-hover:scale-105" loading="eager" />
+            {!collapsed && (
+              <span className="text-sm font-bold tracking-tight text-foreground">AI-IDEI</span>
+            )}
           </button>
-
-          {/* Header actions — search, lang, theme only */}
           {!collapsed && (
-            <div className="flex items-center gap-0.5 ml-auto">
+            <div className="flex items-center gap-1 ml-auto">
               <Suspense fallback={null}><GlobalSearch /></Suspense>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Change language">
-                    <span className="text-xs leading-none">{currentLang.flag}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[140px]">
-                  {LANG_OPTIONS.map(lang => (
-                    <DropdownMenuItem
-                      key={lang.code}
-                      onClick={() => changeLanguage(lang.code as any)}
-                      className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
-                    >
-                      <span>{lang.flag}</span>
-                      {lang.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <ThemeToggle />
             </div>
           )}
         </div>
+
+        {/* ── Utility row (expanded): lang + theme ── */}
+        {!collapsed && (
+          <div className="flex items-center gap-1 px-2 pb-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 min-h-[44px] min-w-[44px]" aria-label="Change language">
+                  <span className="text-xs leading-none">{currentLang.flag}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[140px]">
+                {LANG_OPTIONS.map(lang => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => changeLanguage(lang.code as any)}
+                    className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
+                  >
+                    <span>{lang.flag}</span>
+                    {lang.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <ThemeToggle />
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarSeparator />
@@ -425,14 +433,14 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarSeparator />
 
-        {/* Collapsed: show action icons */}
+        {/* ═══ COLLAPSED FOOTER ═══ */}
         {collapsed && (
-          <div className="flex flex-col items-center gap-1 py-2">
+          <div className="flex flex-col items-center gap-2 py-3">
             <Suspense fallback={null}><GlobalSearch /></Suspense>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="h-7 w-7 rounded-lg flex items-center justify-center hover:bg-muted transition-colors" aria-label="Language">
-                  <Globe className="h-3.5 w-3.5 text-muted-foreground" />
+                <button className="h-9 w-9 rounded-lg flex items-center justify-center hover:bg-muted transition-colors" aria-label="Language">
+                  <Globe className="h-4 w-4 text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="end" className="min-w-[140px]">
@@ -449,54 +457,66 @@ export function AppSidebar() {
               </DropdownMenuContent>
             </DropdownMenu>
             <ThemeToggle />
+            <div className="w-6 h-px bg-border/40 my-0.5" />
             {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
+            {user && (
+              <button
+                onClick={() => navigate("/credits")}
+                className={cn(
+                  "h-9 w-9 rounded-lg flex items-center justify-center transition-colors",
+                  tier === "vip" ? "bg-tier-vip/10 hover:bg-tier-vip/15" : tier === "pro" ? "bg-primary/10 hover:bg-primary/15" : "bg-muted/50 hover:bg-muted"
+                )}
+                title={`${tier.toUpperCase()} · ${balance}N`}
+              >
+                <Crown className={cn(
+                  "h-4 w-4",
+                  tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/50"
+                )} />
+              </button>
+            )}
             {user && <Suspense fallback={null}><UserMenu /></Suspense>}
           </div>
         )}
 
-        {/* User identity + tier — expanded */}
+        {/* ═══ EXPANDED FOOTER ═══ */}
         {user && !collapsed && (
-          <div className="px-3 py-2 space-y-1.5">
-            <div className="flex items-center gap-2">
-              <Suspense fallback={null}><UserMenu /></Suspense>
-              <div className="flex-1 min-w-0" />
-              <Suspense fallback={null}><NotificationBell /></Suspense>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <Crown className={cn(
-                  "h-3 w-3",
-                  tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
-                )} />
+          <div className="px-3 py-3 space-y-3">
+            {/* Tier + Balance card */}
+            <button
+              onClick={() => navigate("/credits")}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors",
+                tier === "vip"
+                  ? "bg-tier-vip/8 hover:bg-tier-vip/12 border border-tier-vip/15"
+                  : tier === "pro"
+                  ? "bg-primary/8 hover:bg-primary/12 border border-primary/15"
+                  : "bg-muted/50 hover:bg-muted border border-border/40"
+              )}
+            >
+              <Crown className={cn(
+                "h-4 w-4 shrink-0",
+                tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/50"
+              )} />
+              <div className="flex flex-col items-start min-w-0">
                 <span className={cn(
-                  "text-[10px] font-bold uppercase tracking-wider",
+                  "text-[10px] font-bold uppercase tracking-[0.12em] leading-none",
                   tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground"
                 )}>
                   {tier === "vip" ? "VIP" : tier === "pro" ? "PRO" : "FREE"}
                 </span>
               </div>
-              <span className="text-[10px] font-mono tabular-nums text-muted-foreground">
-                {balanceLoading ? "…" : balance.toLocaleString()} N
+              <span className="ml-auto text-xs font-mono tabular-nums font-semibold text-foreground/80">
+                {balanceLoading ? "…" : balance.toLocaleString()}
+                <span className="text-[9px] text-muted-foreground/60 ml-0.5">N</span>
               </span>
-            </div>
-          </div>
-        )}
-
-        {user && collapsed && (
-          <div className="flex flex-col items-center gap-1.5 py-2">
-            <button
-              onClick={() => navigate("/credits")}
-              className={cn(
-                "h-7 w-7 rounded-lg flex items-center justify-center transition-colors",
-                tier === "vip" ? "bg-tier-vip/10" : tier === "pro" ? "bg-primary/10" : "bg-muted/50 hover:bg-primary/10"
-              )}
-              title={`${tier.toUpperCase()} — ${balance}N`}
-            >
-              <Crown className={cn(
-                "h-3.5 w-3.5",
-                tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/40"
-              )} />
             </button>
+
+            {/* User row */}
+            <div className="flex items-center gap-2">
+              <Suspense fallback={null}><UserMenu /></Suspense>
+              <div className="flex-1 min-w-0" />
+              <Suspense fallback={null}><NotificationBell /></Suspense>
+            </div>
           </div>
         )}
 
