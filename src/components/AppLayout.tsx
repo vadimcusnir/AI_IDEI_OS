@@ -58,7 +58,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
           {/* ═══ HEADER — Minimal control bar ═══ */}
-          <div className="shrink-0 h-11 md:h-10 flex items-center gap-2 border-b border-border/30 bg-background/80 backdrop-blur-md px-2 md:px-3">
+          <div className="shrink-0 h-12 flex items-center gap-2 border-b border-border/30 bg-background/80 backdrop-blur-md px-2 md:px-3">
             <SidebarTrigger
               aria-label="Toggle sidebar"
               className="h-9 w-9 min-h-[44px] min-w-[44px] md:h-8 md:w-8 md:min-h-0 md:min-w-0"

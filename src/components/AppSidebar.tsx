@@ -197,13 +197,13 @@ export function AppSidebar() {
         <button
           onClick={() => navigate(user ? "/home" : "/")}
           className={cn(
-            "w-full flex items-center gap-2.5 px-3 transition-colors hover:bg-muted/50",
-            collapsed ? "justify-center h-10" : "h-11"
+            "w-full flex items-center gap-3 px-3 transition-colors hover:bg-muted/50",
+            collapsed ? "justify-center h-12" : "h-12"
           )}
         >
-          <Logo size="h-6 w-6" className="shrink-0" loading="eager" />
+          <Logo size="h-7 w-7" className="shrink-0" loading="eager" />
           {!collapsed && (
-            <span className="text-sm font-bold tracking-tight text-foreground">
+            <span className="text-base font-bold tracking-tight text-foreground">
               AI-<span className="text-primary">IDEI</span>
             </span>
           )}
