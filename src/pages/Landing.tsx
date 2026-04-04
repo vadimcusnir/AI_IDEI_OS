@@ -61,17 +61,17 @@ const NAV_LINK_KEYS = [
 function ExtractionSpine({ labels }: { labels: string[] }) {
   return (
     <div className="hidden xl:flex flex-col items-center gap-0 fixed left-8 top-1/2 -translate-y-1/2 z-40" aria-hidden="true">
-      <div className="w-px h-10 bg-[hsl(var(--gold-oxide)/0.12)]" />
+      <div className="w-px h-10 bg-gold/12" />
       {labels.map((l, i) => (
         <div key={l} className="flex flex-col items-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] my-1.5" />
-          <span className="text-nano font-mono tracking-[0.25em] text-[hsl(var(--ivory-dim)/0.25)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
+          <div className="w-1.5 h-1.5 rounded-full bg-gold/25 my-1.5" />
+          <span className="text-nano font-mono tracking-[0.25em] text-ivory-dim/25 -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
             {l}
           </span>
-          {i < labels.length - 1 && <div className="w-px h-14 bg-[hsl(var(--gold-oxide)/0.06)]" />}
+          {i < labels.length - 1 && <div className="w-px h-14 bg-gold/[0.06]" />}
         </div>
       ))}
-      <div className="w-px h-10 bg-[hsl(var(--gold-oxide)/0.12)]" />
+      <div className="w-px h-10 bg-gold/12" />
     </div>
   );
 }
