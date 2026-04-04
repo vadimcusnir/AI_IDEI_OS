@@ -343,7 +343,7 @@
   "report_submitted": "Report submitted. Thank you!",
   "already_reported": "You already reported this.",
   "chat_error": "Chat error: {{message}}",
-  "chat_welcome": "Welcome! I'm the AI-IDEI assistant. I can help you extract knowledge, run AI services, or navigate the platform. How can I help?",
+  "chat_welcome": "Welcome to Command Center. Extract knowledge, execute AI services, or navigate the platform. What do you need?",
   "chat_no_response": "Sorry, I couldn't generate a response. Please try again.",
   "chat_error_fallback": "An error occurred. Please try again.",
   "chat_reset": "Conversation reset. How can I help?",
