@@ -108,7 +108,7 @@ const SYSTEM_MAP: NavGroup[] = [
       { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs" },
       { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
-      { label: "Wallet", to: "/wallet", icon: Coins, controlId: "nav.wallet" },
+      { label: "Wallet", to: "/wallet", icon: Wallet, controlId: "nav.wallet" },
     ],
   },
   {
