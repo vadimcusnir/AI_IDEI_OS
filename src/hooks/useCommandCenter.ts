@@ -4,6 +4,7 @@
  * Fixes: A1 (quick-exec), A4 (debounce), A5 (persistence), A9 (cleanup).
  */
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import type { CommandMode } from "@/components/command-center/ModeChipBar";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
