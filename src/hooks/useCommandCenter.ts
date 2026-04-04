@@ -88,6 +88,31 @@ export function useCommandCenter() {
   // ═══ Lifecycle hooks ═══
   useOnboardingRedirect();
 
+  // Cleanup AbortController on unmount to prevent memory leaks (A9)
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+      abortRef.current = null;
+    };
+  }, []);
+
+  // Persist draft input to localStorage (A5)
+  useEffect(() => {
+    if (input.trim()) {
+      localStorage.setItem("cc_draft_input", input);
+    } else {
+      localStorage.removeItem("cc_draft_input");
+    }
+  }, [input]);
+
+  // Restore draft on mount
+  useEffect(() => {
+    if (!initialQ) {
+      const draft = localStorage.getItem("cc_draft_input");
+      if (draft) setInput(draft);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Auto-trigger low balance gate
   useEffect(() => {
     if (balance <= 0 && execState.phase === "completed" && !showLowBalance) {
