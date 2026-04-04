@@ -7992,6 +7992,39 @@ export type Database = {
         }
         Relationships: []
       }
+      pipeline_phase_log: {
+        Row: {
+          action_type: string | null
+          created_at: string
+          from_phase: string
+          id: string
+          metadata: Json | null
+          session_id: string
+          to_phase: string
+          user_id: string | null
+        }
+        Insert: {
+          action_type?: string | null
+          created_at?: string
+          from_phase: string
+          id?: string
+          metadata?: Json | null
+          session_id: string
+          to_phase: string
+          user_id?: string | null
+        }
+        Update: {
+          action_type?: string | null
+          created_at?: string
+          from_phase?: string
+          id?: string
+          metadata?: Json | null
+          session_id?: string
+          to_phase?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       platform_cost_ledger: {
         Row: {
           amount_credits: number | null
