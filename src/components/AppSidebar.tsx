@@ -120,6 +120,8 @@ const SYSTEM_MAP: NavGroup[] = [
       { label: "Knowledge Graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
       { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
+      { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip" },
+      { label: "Integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations" },
     ],
   },
 ];
