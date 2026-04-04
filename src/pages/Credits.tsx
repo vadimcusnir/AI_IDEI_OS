@@ -27,6 +27,7 @@ import { ConsumptionAnalytics } from "@/components/credits/ConsumptionAnalytics"
 import { RuleEnginePanel } from "@/components/automation/RuleEnginePanel";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
 import { FlowTip } from "@/components/onboarding/FlowTip";
+import { StreakUpsellBanner } from "@/components/gamification/StreakUpsellBanner";
 
 interface UserCredits {
   balance: number;
