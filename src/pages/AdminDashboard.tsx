@@ -298,6 +298,7 @@ export default function AdminDashboard() {
             <TabsContent value="users"><Suspense fallback={<TabLoader />}><AdminUserManagement /></Suspense></TabsContent>
             <TabsContent value="neurons"><Suspense fallback={<TabLoader />}><AdminNeuronsTab /></Suspense></TabsContent>
             <TabsContent value="jobs"><Suspense fallback={<TabLoader />}><AdminJobsTab /></Suspense></TabsContent>
+            <TabsContent value="permissions"><Suspense fallback={<TabLoader />}><AdminPermissionsTab /></Suspense></TabsContent>
             <TabsContent value="services"><Suspense fallback={<TabLoader />}><AdminServicesTab /></Suspense></TabsContent>
             <TabsContent value="logs"><Suspense fallback={<TabLoader />}><AdminLogsTab /></Suspense></TabsContent>
             <TabsContent value="feedback"><Suspense fallback={<TabLoader />}><AdminFeedbackTab /></Suspense></TabsContent>
