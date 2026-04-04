@@ -968,7 +968,6 @@ Deno.serve(async (req) => {
         sttResult = await transcribeWithElevenLabs(audioBlob, audioExtract.filename, ELEVENLABS_API_KEY, language);
         timings.stt_ms = Date.now() - t3c;
       }
-      timings.stt_ms = Date.now() - t3c;
 
     } else if (source?.platform === "direct" || source?.platform === "vimeo") {
       // ── PATH C: Direct URL → download → ElevenLabs ──
