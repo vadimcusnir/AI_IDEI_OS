@@ -315,7 +315,7 @@ export default function Landing() {
         <LandingFinalCTA ctaAction={ctaAction} />
       </Suspense>
       </main>
-      <LandingFooter />
+      <Footer variant="landing" />
 
       <OrganizationJsonLd />
       <WebApplicationJsonLd />
