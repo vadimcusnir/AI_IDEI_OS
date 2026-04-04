@@ -427,6 +427,7 @@ export function useCommandCenter() {
     handleCommand, handleFileSelect, handleRemoveFile,
     handleAttachAction, handlePlanExecute,
     handleEconomicProceed, handleEconomicCancel,
+    handlePipelineMessage,
     // Slash
     onSlashSelect: (cmd: string) => { setInput(cmd); inputZoneRef.current?.focus(); },
     // t
