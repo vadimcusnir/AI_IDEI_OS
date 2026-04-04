@@ -43,6 +43,7 @@ export function useExecution(context: ExecutionContext) {
   const { tier } = useUserTier();
   const navigate = useNavigate();
   const abortRef = useRef<AbortController | null>(null);
+  const activeJobIdRef = useRef<string | null>(null);
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
 
   /**
