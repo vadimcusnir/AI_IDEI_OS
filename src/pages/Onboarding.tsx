@@ -10,7 +10,7 @@ import { consumeRedirect } from "@/lib/authRedirect";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
-  Upload, Brain, Sparkles, TrendingUp,
+  Upload, Brain, Sparkles,
   Check, ArrowRight, Loader2, Play, Zap, Gift, Crown, BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,16 +23,15 @@ import { InstantAnalysisFlow } from "@/components/onboarding/InstantAnalysisFlow
 interface StepStatus {
   episodes: number;
   neurons: number;
-  jobs: number;
   artifacts: number;
 }
 
 const STEPS = [
   {
-    key: "upload",
-    title: "Upload Your Content",
-    subtitle: "The journey starts here",
-    desc: "Drop an MP3, paste a YouTube link, or type text directly. Our AI transcribes and prepares everything automatically.",
+    key: "source",
+    title: "Add Your Source",
+    subtitle: "Upload or paste content",
+    desc: "Drop an MP3, paste a YouTube link, or type text directly. AI transcribes and structures everything automatically.",
     icon: Upload,
     action: "/extractor",
     actionLabel: "Open Extractor",
@@ -43,9 +42,9 @@ const STEPS = [
   },
   {
     key: "extract",
-    title: "Extract Neurons",
-    subtitle: "Atomic knowledge units",
-    desc: "AI analyzes your content and extracts frameworks, insights, patterns, and formulas. Each neuron is reusable forever.",
+    title: "Extract Knowledge",
+    subtitle: "AI finds patterns & insights",
+    desc: "Our AI analyzes your content and extracts frameworks, insights, patterns, and reusable neurons — all automatically.",
     icon: Brain,
     action: "/neurons",
     actionLabel: "View Neurons",
@@ -55,30 +54,17 @@ const STEPS = [
     tip: "One episode typically yields 5-15 unique neurons.",
   },
   {
-    key: "execute",
-    title: "Run AI Services",
-    subtitle: "Transform neurons into deliverables",
-    desc: "Pick a service — article writer, strategy builder, copy engine — and let AI transform your neurons into professional outputs.",
+    key: "produce",
+    title: "Generate Assets",
+    subtitle: "Transform into deliverables",
+    desc: "Run AI services to transform neurons into articles, strategies, reports, and professional assets — saved in your Library.",
     icon: Sparkles,
     action: "/services",
     actionLabel: "Explore Services",
-    checkField: "jobs" as keyof StepStatus,
-    reward: "+15 XP per job",
+    checkField: "artifacts" as keyof StepStatus,
+    reward: "+15 XP per asset",
     gradient: "from-status-validated/20 to-status-validated/5",
     tip: "Start with 'Quick Extract' — it's the fastest way to see results.",
-  },
-  {
-    key: "capitalize",
-    title: "Capitalize & Reuse",
-    subtitle: "Your knowledge library grows",
-    desc: "Every output is saved in your Library. Edit, export, share, or use them as inputs for more complex deliverables.",
-    icon: TrendingUp,
-    action: "/library",
-    actionLabel: "Open Library",
-    checkField: "artifacts" as keyof StepStatus,
-    reward: "Unlocks Intelligence",
-    gradient: "from-destructive/15 to-destructive/5",
-    tip: "10 service runs = 50+ professional deliverables.",
   },
 ];
 
@@ -87,7 +73,7 @@ export default function Onboarding() {
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace, loading: wsLoading } = useWorkspace();
   const navigate = useNavigate();
-  const [status, setStatus] = useState<StepStatus>({ episodes: 0, neurons: 0, jobs: 0, artifacts: 0 });
+  const [status, setStatus] = useState<StepStatus>({ episodes: 0, neurons: 0, artifacts: 0 });
   const [loading, setLoading] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
   const [tutorialOpen, setTutorialOpen] = useState(false);
@@ -101,17 +87,15 @@ export default function Onboarding() {
 
   const loadStatus = async () => {
     const wsId = currentWorkspace!.id;
-    const [ep, ne, jo, ar] = await Promise.all([
+    const [ep, ne, ar] = await Promise.all([
       supabase.from("episodes").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
       supabase.from("neurons").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
-      supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
       supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("workspace_id", wsId),
     ]);
 
     const s = {
       episodes: ep.count ?? 0,
       neurons: ne.count ?? 0,
-      jobs: jo.count ?? 0,
       artifacts: ar.count ?? 0,
     };
     setStatus(s);
@@ -148,7 +132,7 @@ export default function Onboarding() {
     <PageTransition>
     <OnboardingTutorial open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
     <div className="flex-1 overflow-y-auto">
-      <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 4 steps." />
+       <SEOHead title="Get Started — AI-IDEI" description="Transform your content into structured knowledge assets in 3 steps." />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
         {/* Hero Header */}
@@ -159,7 +143,7 @@ export default function Onboarding() {
         >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))] text-micro font-semibold uppercase tracking-[0.15em] mb-5">
             <Zap className="h-3 w-3" />
-            4 Steps to Knowledge Assets
+            3 Steps to Knowledge Assets
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-[-0.02em] mb-2.5">
             {t("onboarding.title")}
