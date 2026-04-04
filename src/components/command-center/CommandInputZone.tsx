@@ -199,7 +199,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                       : "bg-muted text-muted-foreground/30"
                   )}
                   onClick={onSubmit}
-                  disabled={!input.trim() && files.length === 0}
+                  disabled={(!input.trim() && files.length === 0) || isSubmitting}
                 >
                   <ArrowUp className="h-4 w-4" />
                 </Button>
