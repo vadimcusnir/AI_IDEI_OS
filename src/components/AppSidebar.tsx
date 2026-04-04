@@ -355,6 +355,29 @@ export function AppSidebar() {
             "space-y-1.5",
             collapsed ? "flex flex-col items-center py-2 space-y-1.5" : "px-2 py-2"
           )}>
+            {/* Mode toggle */}
+            {!collapsed && (
+              <button
+                onClick={toggleMode}
+                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors text-left group"
+                title={isOperator ? "Switch to User Mode" : "Switch to Operator Mode"}
+              >
+                <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
+                <span className="text-[10px] font-mono tracking-wide text-muted-foreground group-hover:text-foreground transition-colors">
+                  {isOperator ? "OPERATOR" : "USER"} MODE
+                </span>
+              </button>
+            )}
+            {collapsed && (
+              <button
+                onClick={toggleMode}
+                className="p-1.5 rounded-md hover:bg-muted/50 transition-colors"
+                title={isOperator ? "Operator Mode" : "User Mode"}
+              >
+                <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
+              </button>
+            )}
+
             {/* Credit bar (expanded only) */}
             {!collapsed && (
               <button
