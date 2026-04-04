@@ -65,8 +65,8 @@ export function PublishToMarketplaceDialog({ open, onOpenChange, artifact }: Pub
       asset_type: category,
       price_neurons: neuronsNum,
       price_usd: Number(priceUsd),
-      preview_content: artifact.content.slice(0, 300),
-      tags: artifact.tags,
+      preview_content: (artifact.content ?? "").slice(0, 300),
+      tags: artifact.tags ?? [],
       artifact_ids: [artifact.id],
       is_published: true,
     }).select("id").single();
