@@ -336,7 +336,13 @@ export function useCommandCenter() {
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePipelineMessage = useCallback((role: "user" | "assistant", content: string, meta?: Record<string, any>) => {
+    const msg = { id: crypto.randomUUID(), role, content, timestamp: new Date(), ...(meta ? { metadata: meta } : {}) };
+    saveMessage(msg as any);
+    executionActions.addMessage(msg as any);
+  }, [saveMessage]);
+
+
     if (e.target.files) setFiles(prev => [...prev, ...Array.from(e.target.files!)]);
   };
 
