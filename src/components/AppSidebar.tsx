@@ -188,6 +188,7 @@ export function AppSidebar() {
   // ─── Render nav item ───
   const renderItem = (item: NavItem) => {
     if (item.adminOnly && !isAdmin) return null;
+    if (item.operatorOnly && !isOperator) return null;
     const el = (
       <SidebarMenuItem key={item.to}>
         <SidebarMenuButton
