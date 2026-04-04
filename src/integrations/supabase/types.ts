@@ -1487,6 +1487,54 @@ export type Database = {
           },
         ]
       }
+      axis_extraction_results: {
+        Row: {
+          axis: string
+          confidence: number | null
+          created_at: string
+          extraction: Json
+          id: string
+          model_version: string | null
+          neuron_id: number
+          user_id: string
+        }
+        Insert: {
+          axis: string
+          confidence?: number | null
+          created_at?: string
+          extraction?: Json
+          id?: string
+          model_version?: string | null
+          neuron_id: number
+          user_id: string
+        }
+        Update: {
+          axis?: string
+          confidence?: number | null
+          created_at?: string
+          extraction?: Json
+          id?: string
+          model_version?: string | null
+          neuron_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "axis_extraction_results_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neuron_lifecycle_pricing"
+            referencedColumns: ["neuron_id"]
+          },
+          {
+            foreignKeyName: "axis_extraction_results_neuron_id_fkey"
+            columns: ["neuron_id"]
+            isOneToOne: false
+            referencedRelation: "neurons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       billing_config: {
         Row: {
           config_key: string
@@ -8916,6 +8964,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      public_figure_seo: {
+        Row: {
+          canonical_url: string | null
+          content_score: Json | null
+          created_at: string
+          hreflang: Json | null
+          id: string
+          internal_links: Json | null
+          json_ld: Json | null
+          keyword_clusters: Json | null
+          og_description: string | null
+          og_image_url: string | null
+          og_title: string | null
+          profile_id: string
+          updated_at: string
+        }
+        Insert: {
+          canonical_url?: string | null
+          content_score?: Json | null
+          created_at?: string
+          hreflang?: Json | null
+          id?: string
+          internal_links?: Json | null
+          json_ld?: Json | null
+          keyword_clusters?: Json | null
+          og_description?: string | null
+          og_image_url?: string | null
+          og_title?: string | null
+          profile_id: string
+          updated_at?: string
+        }
+        Update: {
+          canonical_url?: string | null
+          content_score?: Json | null
+          created_at?: string
+          hreflang?: Json | null
+          id?: string
+          internal_links?: Json | null
+          json_ld?: Json | null
+          keyword_clusters?: Json | null
+          og_description?: string | null
+          og_image_url?: string | null
+          og_title?: string | null
+          profile_id?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       push_config: {
         Row: {
