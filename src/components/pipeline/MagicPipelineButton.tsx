@@ -65,7 +65,49 @@ export function MagicPipelineButton({ className, compact }: Props) {
       setStage("uploading");
       let sourceText = "";
 
-      if (url) {
+      const isYouTube = url && /(?:youtube\.com|youtu\.be)/i.test(url);
+
+      if (isYouTube) {
+        // YouTube → create episode + transcribe-source
+        const { data: ytEp, error: ytErr } = await supabase.from("episodes").insert({
+          title: "YouTube — Pipeline Import",
+          author_id: user.id,
+          workspace_id: currentWorkspace?.id,
+          source_type: "video",
+          source_url: url.trim(),
+          status: "uploaded",
+          metadata: { platform: "youtube", pipeline: "magic" },
+        } as any).select("id").single();
+
+        if (ytErr || !ytEp) { console.error("Episode error:", ytErr); throw new Error("Failed to create episode"); }
+
+        const transcribeResp = await supabase.functions.invoke("transcribe-source", {
+          body: { episode_id: ytEp.id, url: url.trim() },
+        });
+        if (transcribeResp.error) throw new Error("YouTube transcription failed");
+        sourceText = transcribeResp.data?.transcript || transcribeResp.data?.text || "";
+        if (!sourceText || sourceText.length < 50) throw new Error("Transcription returned no content");
+
+        await supabase.from("episodes").update({ transcript: sourceText.slice(0, 50000), status: "transcribed" } as any).eq("id", ytEp.id);
+
+        // Go directly to extraction with existing episode
+        setStage("extracting");
+        const extractResp = await supabase.functions.invoke("extract-neurons", { body: { episode_id: ytEp.id } });
+        if (extractResp.error) throw new Error("Extraction failed");
+        const neuronCount = extractResp.data?.neurons_created || extractResp.data?.count || 0;
+
+        setStage("generating");
+        try {
+          await supabase.functions.invoke("run-service", {
+            body: { service_name: "decision-pack", input: { episode_id: ytEp.id, text: sourceText.slice(0, 10000), neurons: extractResp.data?.neurons?.slice(0, 20) || [], workspace_id: currentWorkspace?.id, auto_pipeline: true } },
+          });
+        } catch {}
+
+        await settle(reservation.reserved, undefined, "Magic Pipeline: completed");
+        setStage("complete");
+        toast.success(`Pipeline complete — ${neuronCount} neurons extracted`);
+        return;
+      } else if (url) {
         const resp = await supabase.functions.invoke("scrape-url", {
           body: { url },
         });
