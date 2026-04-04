@@ -106,6 +106,7 @@ export default function Home() {
                   <div className="mt-6 w-full max-w-md">
                     <MagicPipelineButton className="w-full" />
                   </div>
+                </div>
               ) : (
                 /* ── Conversation feed ── */
                 <div className="pt-3 pb-3 space-y-3">
