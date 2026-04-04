@@ -69,7 +69,7 @@
     "subtitle": "Cu sistemul potrivit, o singura idee nu mai e doar un gand si devine parghie.",
     "steps": [
       { "num": "01", "title": "Alege problema", "text": "Incepe cu ce ai nevoie: copy, continut, pozitionare, claritate in oferta sau suport de executie." },
-      { "num": "02", "title": "Foloseste resursa potrivita", "text": "Alege un framework, prompt, asistent sau exemplu proiectat pentru exact acel tip de munca." },
+      { "num": "02", "title": "Foloseste resursa potrivita", "text": "Alege un framework, prompt, agent de execuție sau exemplu proiectat pentru exact acel tip de munca." },
       { "num": "03", "title": "Transforma-l intr-un activ", "text": "Produce ceva utilizabil: un post, email, landing page, oferta, script sau activ de campanie." },
       { "num": "04", "title": "Repeta cu viteza", "text": "Nu mai improviza. Incepe sa produci cu claritate, consistenta si impuls." }
     ],
