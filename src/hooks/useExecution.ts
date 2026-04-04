@@ -5,7 +5,7 @@
  * it triggers actual service pipelines via run-service/run-pipeline edge functions
  * and streams results back to the global execution store.
  */
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
