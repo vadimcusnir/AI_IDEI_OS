@@ -104,6 +104,7 @@ const SYSTEM_MAP: NavGroup[] = [
     defaultOpen: true,
     authOnly: true,
     items: [
+      { label: "Pipeline", to: "/pipeline", icon: Workflow, controlId: "nav.pipeline", highlight: true },
       { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs" },
       { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
