@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "react-i18next";
+import { sanitizeI18nHtml } from "@/lib/html-sanitize";
 import {
   Database, Layers, GitBranch, Blocks, Copy, Zap, Search, Server,
   Brain, Shield, Coins, Workflow, MessageSquare, Users, BookOpen,
@@ -83,17 +84,17 @@ export default function Architecture() {
           <p>{t("s1.intro")}</p>
           <ul className="list-disc pl-6 space-y-1">
             {(t("s1.bullets", { returnObjects: true }) as string[]).map((b, i) => (
-              <li key={i} dangerouslySetInnerHTML={{ __html: b }} />
+              <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(b) }} />
             ))}
           </ul>
 
           <h3 className="text-base mt-6 text-foreground">{t("s1.pipeline_title")}</h3>
           <CodeBlock title="Knowledge Pipeline">{t("s1.pipeline_code")}</CodeBlock>
 
-          <p dangerouslySetInnerHTML={{ __html: t("s1.philosophy") }} />
+          <p dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("s1.philosophy") as string) }} />
 
           <h3 className="text-base mt-6 text-foreground">{t("s1.positioning_title")}</h3>
-          <p dangerouslySetInnerHTML={{ __html: t("s1.positioning") }} />
+          <p dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("s1.positioning") as string) }} />
         </Section>
 
         {/* ─── 2. NEURON OBJECT MODEL ─── */}
@@ -135,7 +136,7 @@ export default function Architecture() {
 
         {/* ─── 3. BLOCK SYSTEM ─── */}
         <Section icon={Blocks} title={t("s3.title")}>
-          <p dangerouslySetInnerHTML={{ __html: t("s3.intro") }} />
+          <p dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("s3.intro") as string) }} />
 
           <CodeBlock title="Block Schema">{`neuron_blocks
 ├── id: uuid (PK)
@@ -154,12 +155,12 @@ export default function Architecture() {
             rows={t("s3.types_rows", { returnObjects: true }) as string[][]}
           />
 
-          <p dangerouslySetInnerHTML={{ __html: t("s3.editor_desc") }} />
+          <p dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("s3.editor_desc") as string) }} />
         </Section>
 
         {/* ─── 4. CONTENT CLASSIFICATION ─── */}
         <Section icon={Layers} title={t("s4.title")}>
-          <p dangerouslySetInnerHTML={{ __html: t("s4.intro") }} />
+          <p dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("s4.intro") as string) }} />
 
           <Table
             headers={[t("s4.category"), t("s4.description"), t("s4.example")]}
@@ -185,7 +186,7 @@ export default function Architecture() {
 │                         'references','derived_from','parent','child'
 └── created_at: timestamptz`}</CodeBlock>
 
-          <p dangerouslySetInnerHTML={{ __html: t("s5.nas_desc") }} />
+          <p dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("s5.nas_desc") as string) }} />
           <CodeBlock title="Addressing">{`neuron_addresses
 ├── neuron_id → neurons(id)
 ├── domain: text — 'marketing', 'psychology', etc.
@@ -314,7 +315,7 @@ For each extracted neuron:
   - episode_id: linked to source episode
   - credits_cost: proportional (100 / num_neurons)`}</CodeBlock>
 
-          <p dangerouslySetInnerHTML={{ __html: t("s9.podcast_desc") }} />
+          <p dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("s9.podcast_desc") as string) }} />
 
           <Table
             headers={[t("s9.stage"), t("s9.component"), t("s9.output")]}
@@ -366,7 +367,7 @@ Auto-created via handle_new_user() trigger on auth.users INSERT.`}</CodeBlock>
             rows={t("s10.channels_rows", { returnObjects: true }) as string[][]}
           />
 
-          <p dangerouslySetInnerHTML={{ __html: t("s10.bell_desc") }} />
+          <p dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("s10.bell_desc") as string) }} />
         </Section>
 
         {/* ─── 11. FEEDBACK & TESTIMONIALS ─── */}

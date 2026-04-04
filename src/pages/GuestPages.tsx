@@ -18,6 +18,7 @@ import {
 import { FolderSidebar, useFolderSidebar } from "@/components/shared/FolderSidebar";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { sanitizeI18nHtml } from "@/lib/html-sanitize";
 
 interface GuestProfile {
   id: string;
@@ -209,7 +210,7 @@ export default function GuestPages() {
                 <p className="text-xs text-foreground font-medium">
                   {t("guest_pages.auto_generated")}
                 </p>
-                <p className="text-dense text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: t("guest_pages.auto_generated_desc") }} />
+                <p className="text-dense text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: sanitizeI18nHtml(t("guest_pages.auto_generated_desc") as string) }} />
                 <div className="flex flex-wrap gap-3 pt-1 text-micro text-muted-foreground/70">
                   <span className="flex items-center gap-1"><TrendingUp className="h-3 w-3" /> {t("guest_pages.organic_traffic")}</span>
                   <span className="flex items-center gap-1"><Share2 className="h-3 w-3" /> {t("guest_pages.social_sharing")}</span>

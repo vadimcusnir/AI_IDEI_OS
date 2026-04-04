@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 // ── Types ──
 type Intent = "analyze_video" | "extract_knowledge" | "generate_content" | "search_knowledge" |
@@ -216,16 +217,6 @@ const TOOLS = [
   { type: "function", function: { name: "run_os_agent", description: "Execute a Cusnir_OS agent (e.g. Narrative Domination Engine, Viral Structure Generator) with a prompt. Returns structured intelligence.", parameters: { type: "object", properties: { agent_role: { type: "string", description: "The role/name of the OS agent to run (e.g. 'Narrative Domination Engine')" }, prompt: { type: "string", description: "The input prompt or context for the agent" } }, required: ["agent_role", "prompt"] } } },
 ];
 
-// Rate limiting
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(userId);
-  if (!entry || now > entry.resetAt) { rateLimitMap.set(userId, { count: 1, resetAt: now + 3600_000 }); return true; }
-  if (entry.count >= 60) return false;
-  entry.count++;
-  return true;
-}
 
 const InputSchema = z.object({
   messages: z.array(z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string().max(150_000) })).min(1).max(50),
@@ -370,9 +361,14 @@ Deno.serve(async (req) => {
     const { data: { user }, error: authError } = await userClient.auth.getUser();
     if (authError || !user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
 
-    if (!checkRateLimit(user.id)) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
-    }
+    // DB-backed rate limiting (60 req/hour)
+    const rateLimited = await rateLimitGuard(
+      `${user.id}:agent-console`,
+      req,
+      { maxRequests: 60, windowSeconds: 3600 },
+      getCorsHeaders(req)
+    );
+    if (rateLimited) return rateLimited;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");

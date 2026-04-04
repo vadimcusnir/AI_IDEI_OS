@@ -3,20 +3,7 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { loadPrompt } from "../_shared/prompt-loader.ts";
 import { getRegimeConfig, checkRegimeBlock } from "../_shared/regime-check.ts";
-
-// Rate limiting — 30 requests per hour per user
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(userId);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(userId, { count: 1, resetAt: now + 3600_000 });
-    return true;
-  }
-  if (entry.count >= 30) return false;
-  entry.count++;
-  return true;
-}
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const FALLBACK_SYSTEM_PROMPT = `You are the AI assistant embedded in a Knowledge Operating System called AI-IDEI.
 
@@ -60,11 +47,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    if (!checkRateLimit(user.id)) {
-      return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again later." }), {
-        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
+    // ── DB-backed rate limiting (30 req/hour) ──
+    const rateLimited = await rateLimitGuard(
+      `${user.id}:neuron-chat`,
+      req,
+      { maxRequests: 30, windowSeconds: 3600 },
+      getCorsHeaders(req)
+    );
+    if (rateLimited) return rateLimited;
 
     // ── Regime enforcement ──
     const regime = await getRegimeConfig("neuron-chat");
