@@ -221,10 +221,29 @@ export default function AdminDashboard() {
                 <p className="text-xs text-muted-foreground">{t("admin.subtitle")}</p>
               </div>
             </div>
-            <Button variant="outline" size="sm" onClick={loadStats} className="gap-1.5">
-              <RefreshCw className="h-3.5 w-3.5" /> Refresh
-            </Button>
-          </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="destructive"
+                size="sm"
+                className="gap-1.5"
+                onClick={() => {
+                  setActiveTab("emergency");
+                }}
+              >
+                <ShieldAlert className="h-3.5 w-3.5" /> Kill Switch
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5"
+                onClick={() => setActiveTab("alerts")}
+              >
+                <Bell className="h-3.5 w-3.5" /> Alerts
+              </Button>
+              <Button variant="outline" size="sm" onClick={loadStats} className="gap-1.5">
+                <RefreshCw className="h-3.5 w-3.5" /> Refresh
+              </Button>
+            </div>
 
           {/* KPI Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
