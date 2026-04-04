@@ -7846,6 +7846,57 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_artifacts: {
+        Row: {
+          artifact_type: string
+          content: Json
+          created_at: string
+          created_by: string | null
+          format: string | null
+          id: string
+          job_id: string | null
+          profile_id: string
+          title: string | null
+        }
+        Insert: {
+          artifact_type?: string
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          format?: string | null
+          id?: string
+          job_id?: string | null
+          profile_id: string
+          title?: string | null
+        }
+        Update: {
+          artifact_type?: string
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          format?: string | null
+          id?: string
+          job_id?: string | null
+          profile_id?: string
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_artifacts_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "profile_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_artifacts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profile_audit_log: {
         Row: {
           action: string
@@ -7874,6 +7925,68 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "profile_audit_log_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          credits_cost: number | null
+          error_message: string | null
+          id: string
+          input_params: Json | null
+          job_type: string
+          max_retries: number | null
+          output_data: Json | null
+          profile_id: string | null
+          retry_count: number | null
+          started_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          credits_cost?: number | null
+          error_message?: string | null
+          id?: string
+          input_params?: Json | null
+          job_type?: string
+          max_retries?: number | null
+          output_data?: Json | null
+          profile_id?: string | null
+          retry_count?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          credits_cost?: number | null
+          error_message?: string | null
+          id?: string
+          input_params?: Json | null
+          job_type?: string
+          max_retries?: number | null
+          output_data?: Json | null
+          profile_id?: string | null
+          retry_count?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_jobs_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "intelligence_profiles"
