@@ -10,6 +10,7 @@
  *   LOAD_INPUT, TRANSCRIBE, EXTRACT, BUILD_NEURONS, RUN_SERVICE, SAVE_ARTIFACT, MONETIZE
  */
 import { useSyncExternalStore } from "react";
+import { trackTransition } from "@/lib/internalAnalytics";
 
 // ═══ Pipeline State Machine ═══
 
