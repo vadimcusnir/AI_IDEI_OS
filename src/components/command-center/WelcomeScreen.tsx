@@ -17,13 +17,14 @@ interface Suggestion {
 
 interface WelcomeScreenProps {
   onCommand: (prompt: string) => void;
+  onPipelineMessage?: (role: "user" | "assistant", content: string, meta?: Record<string, any>) => void;
   suggestions: Suggestion[];
   neuronCount: number;
   episodeCount: number;
   balance: number;
 }
 
-export function WelcomeScreen({ onCommand, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
+export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
   return (
     <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-6">
       {/* Logo + greeting */}
