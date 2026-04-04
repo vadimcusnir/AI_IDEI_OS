@@ -10,6 +10,7 @@
  *   LOAD_INPUT, TRANSCRIBE, EXTRACT, BUILD_NEURONS, RUN_SERVICE, SAVE_ARTIFACT, MONETIZE
  */
 import { useSyncExternalStore } from "react";
+import { trackTransition } from "@/lib/internalAnalytics";
 
 // ═══ Pipeline State Machine ═══
 
@@ -356,6 +357,7 @@ export const executionActions = {
         break;
     }
 
+    trackTransition(currentPhase, nextPhase, { action, payload: payload ? Object.keys(payload) : [] });
     persistSession();
     return true;
   },
