@@ -352,22 +352,25 @@ export function AppSidebar() {
                           </p>
                         )}
                         {recentSessions.map((session) => (
-                          <SidebarMenuItem key={session.session_id}>
+                          <SidebarMenuItem key={session.session_id} className="group/session">
                             <SidebarMenuButton
-                              className="group/session text-[11px] h-7"
+                              className="text-[11px] h-7"
                               onClick={() => { loadSession(session.session_id); navigate("/home"); }}
                             >
                               <MessageCircle className="h-3 w-3 text-muted-foreground/50 shrink-0" />
                               <span className="flex-1 truncate text-muted-foreground group-hover/session:text-foreground">
                                 {session.last_message?.slice(0, 30) || formatDistanceToNow(new Date(session.created_at), { addSuffix: true })}
                               </span>
-                              <button
-                                onClick={(e) => { e.stopPropagation(); deleteSession(session.session_id); toast.success("Deleted"); }}
-                                className="opacity-0 group-hover/session:opacity-100 h-3.5 w-3.5 rounded flex items-center justify-center hover:bg-destructive/10 transition-all"
-                              >
-                                <Trash2 className="h-2 w-2 text-muted-foreground hover:text-destructive" />
-                              </button>
                             </SidebarMenuButton>
+                            <span
+                              role="button"
+                              tabIndex={0}
+                              onClick={(e) => { e.stopPropagation(); deleteSession(session.session_id); toast.success("Deleted"); }}
+                              onKeyDown={(e) => { if (e.key === "Enter") { deleteSession(session.session_id); toast.success("Deleted"); } }}
+                              className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover/session:opacity-100 h-4 w-4 rounded flex items-center justify-center hover:bg-destructive/10 transition-all cursor-pointer z-10"
+                            >
+                              <Trash2 className="h-2 w-2 text-muted-foreground hover:text-destructive" />
+                            </span>
                           </SidebarMenuItem>
                         ))}
                       </SidebarMenu>
