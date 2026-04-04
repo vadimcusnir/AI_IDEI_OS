@@ -143,7 +143,7 @@ export default function Onboarding() {
         >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(var(--gold-oxide)/0.08)] text-[hsl(var(--gold-oxide))] text-micro font-semibold uppercase tracking-[0.15em] mb-5">
             <Zap className="h-3 w-3" />
-            4 Steps to Knowledge Assets
+            3 Steps to Knowledge Assets
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-[-0.02em] mb-2.5">
             {t("onboarding.title")}
