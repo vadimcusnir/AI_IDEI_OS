@@ -16,6 +16,7 @@ const AdminOverviewTab = lazy(() => import("@/components/admin/AdminOverviewTab"
 const AdminUserManagement = lazy(() => import("@/components/admin/AdminUserManagement").then(m => ({ default: m.AdminUserManagement })));
 const AdminNeuronsTab = lazy(() => import("@/components/admin/AdminNeuronsTab").then(m => ({ default: m.AdminNeuronsTab })));
 const AdminJobsTab = lazy(() => import("@/components/admin/AdminJobsTab").then(m => ({ default: m.AdminJobsTab })));
+const AdminPermissionsTab = lazy(() => import("@/components/admin/AdminPermissionsTab").then(m => ({ default: m.AdminPermissionsTab })));
 const AdminServicesTab = lazy(() => import("@/components/admin/AdminServicesTab").then(m => ({ default: m.AdminServicesTab })));
 const AdminLogsTab = lazy(() => import("@/components/admin/AdminLogsTab").then(m => ({ default: m.AdminLogsTab })));
 const AdminFeedbackTab = lazy(() => import("@/components/feedback/AdminFeedbackTab").then(m => ({ default: m.AdminFeedbackTab })));
