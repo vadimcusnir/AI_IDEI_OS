@@ -13,6 +13,8 @@ export type ErrorType =
   | "reconnect_mid_stream"
   | "insufficient_credits"
   | "invalid_file"
+  | "rate_limit"
+  | "unknown_command"
   | "session_switch_active"
   | "unknown";
 
