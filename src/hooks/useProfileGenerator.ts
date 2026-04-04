@@ -1,5 +1,6 @@
 /**
  * useProfileGenerator — Hook for generating intelligence profiles from episodes
+ * Supports full job lifecycle: create → reserve → generate → quality gate → settle
  */
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +21,8 @@ interface GenerateResult {
   status: string;
   signal_count: number;
   neuron_count: number;
+  quality_score: number;
+  job_id: string;
 }
 
 export function useProfileGenerator() {
@@ -41,7 +44,7 @@ export function useProfileGenerator() {
       const res = data as GenerateResult;
       setResult(res);
       toast.success("Profil generat cu succes!", {
-        description: `${res.signal_count} semnale extrase din ${res.neuron_count} neuroni`,
+        description: `${res.signal_count} semnale • calitate: ${(res.quality_score * 100).toFixed(0)}%`,
       });
       return res;
     } catch (err: unknown) {
