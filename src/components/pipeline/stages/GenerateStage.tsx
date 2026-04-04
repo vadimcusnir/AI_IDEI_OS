@@ -34,11 +34,11 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
     const fetchServices = async () => {
       const { data } = await supabase
         .from("service_catalog")
-        .select("id, key, label, description, credit_cost")
+        .select("id, service_key, name, description, credits_cost")
         .eq("is_active", true)
-        .order("credit_cost", { ascending: true })
+        .order("credits_cost", { ascending: true })
         .limit(8);
-      setServices((data as Service[]) || []);
+      setServices((data as unknown as Service[]) || []);
       setLoading(false);
     };
     fetchServices();
