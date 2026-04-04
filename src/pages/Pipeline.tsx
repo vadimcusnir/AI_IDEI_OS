@@ -101,7 +101,7 @@ export default function Pipeline() {
             <p className="text-[length:var(--eyebrow-size)] font-semibold uppercase tracking-[var(--tracking-eyebrow)] text-[hsl(var(--gold-oxide))] mb-1">
               Knowledge Pipeline
             </p>
-            <h1 className="text-[length:var(--h2-size)] font-bold leading-[var(--lh-h2)] text-foreground tracking-tight">
+            <h1 className="text-h2 font-bold leading-[var(--lh-h2)] text-foreground tracking-tight">
               Content → Knowledge → Assets
             </h1>
           </motion.div>

@@ -43,10 +43,10 @@ export function ResultsPanel({ result, onReset }: Props) {
         >
           <Sparkles className="h-8 w-8 text-primary" />
         </motion.div>
-        <h2 className="text-[length:var(--h3-size)] font-bold text-foreground mb-1">
+        <h2 className="text-h3 font-bold text-foreground mb-1">
           {hasNeurons ? `${result.neurons} Neurons Extracted` : "Episode Created"}
         </h2>
-        <p className="text-[length:var(--body-dense-size)] text-muted-foreground">
+        <p className="text-caption text-muted-foreground">
           {hasNeurons
             ? "Materialul tău a fost analizat și structurat în cunoștințe acționabile."
             : "Episodul a fost creat. Adaugă audio pentru extracție automată."}

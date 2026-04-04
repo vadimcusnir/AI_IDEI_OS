@@ -75,10 +75,10 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
         <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
           <Sparkles className="h-6 w-6 text-primary" />
         </div>
-        <h3 className="text-[length:var(--h3-size)] font-bold text-foreground">
+        <h3 className="text-h3 font-bold text-foreground">
           Generate Deliverables
         </h3>
-        <p className="text-[length:var(--body-dense-size)] text-muted-foreground mt-1">
+        <p className="text-caption text-muted-foreground mt-1">
           Choose a service to produce actionable outputs.
         </p>
       </div>

@@ -49,10 +49,10 @@ export function StructureStage({ episodeId, neuronCount, onNext }: Props) {
 
       {status === "idle" && (
         <>
-          <h3 className="text-[length:var(--h3-size)] font-bold text-foreground mb-2">
+          <h3 className="text-h3 font-bold text-foreground mb-2">
             Structure Knowledge
           </h3>
-          <p className="text-[length:var(--body-dense-size)] text-muted-foreground mb-6">
+          <p className="text-caption text-muted-foreground mb-6">
             Connect {neuronCount} neurons into a knowledge graph with relations and entities.
           </p>
           <Button onClick={runStructuring} size="lg" className="w-full">
@@ -69,10 +69,10 @@ export function StructureStage({ episodeId, neuronCount, onNext }: Props) {
 
       {status === "running" && (
         <>
-          <h3 className="text-[length:var(--h3-size)] font-semibold text-foreground mb-2">
+          <h3 className="text-h3 font-semibold text-foreground mb-2">
             Structuring...
           </h3>
-          <p className="text-[length:var(--body-dense-size)] text-muted-foreground mb-4">
+          <p className="text-caption text-muted-foreground mb-4">
             Detecting relations, building knowledge graph.
           </p>
           <Loader2 className="h-6 w-6 text-primary animate-spin mx-auto" />
@@ -81,7 +81,7 @@ export function StructureStage({ episodeId, neuronCount, onNext }: Props) {
 
       {status === "done" && stats && (
         <>
-          <h3 className="text-[length:var(--h3-size)] font-bold text-foreground mb-2">
+          <h3 className="text-h3 font-bold text-foreground mb-2">
             <Check className="inline h-5 w-5 text-primary mr-1" />
             Structured
           </h3>
