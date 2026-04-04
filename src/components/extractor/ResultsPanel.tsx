@@ -108,6 +108,14 @@ export function ResultsPanel({ result, onReset }: Props) {
         </div>
       )}
 
+      {/* Profile Generation CTA */}
+      {hasNeurons && (
+        <ProfileGeneratorPanel
+          episodeId={result.episode_id}
+          className="mt-2"
+        />
+      )}
+
       {/* Actions */}
       <div className="flex items-center gap-3 pt-2">
         <Button variant="outline" className="flex-1 gap-2" onClick={onReset}>
