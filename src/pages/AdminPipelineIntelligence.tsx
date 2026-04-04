@@ -13,6 +13,8 @@ import { SemanticLinkGraph } from "@/components/pipeline/SemanticLinkGraph";
 import { ScoringRadar } from "@/components/pipeline/ScoringRadar";
 import { PatternExtractor } from "@/components/pipeline/PatternExtractor";
 import { CognitiveChainViewer } from "@/components/pipeline/CognitiveChainViewer";
+import { ThreeAxisViewer } from "@/components/intelligence/ThreeAxisViewer";
+import { ContentCategoryManager } from "@/components/intelligence/ContentCategoryManager";
 
 export default function AdminPipelineIntelligence() {
   const { user, loading: authLoading } = useAuth();
