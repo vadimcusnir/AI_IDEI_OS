@@ -257,7 +257,7 @@ export function AppSidebar() {
             {!collapsed && <span className="text-sm font-bold tracking-tight">AI-IDEI</span>}
           </button>
 
-          {/* Header actions — search, lang, theme, notifications, user menu */}
+          {/* Header actions — search, lang, theme only */}
           {!collapsed && (
             <div className="flex items-center gap-0.5 ml-auto">
               <Suspense fallback={null}><GlobalSearch /></Suspense>
@@ -283,9 +283,6 @@ export function AppSidebar() {
               </DropdownMenu>
 
               <ThemeToggle />
-
-              {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
-              {user && <Suspense fallback={null}><UserMenu /></Suspense>}
             </div>
           )}
         </div>
@@ -452,9 +449,14 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* Tier badge — compact */}
+        {/* User identity + tier — expanded */}
         {user && !collapsed && (
-          <div className="px-3 py-2">
+          <div className="px-3 py-2 space-y-1.5">
+            <div className="flex items-center gap-2">
+              <Suspense fallback={null}><UserMenu /></Suspense>
+              <div className="flex-1 min-w-0" />
+              <Suspense fallback={null}><NotificationBell /></Suspense>
+            </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Crown className={cn(
