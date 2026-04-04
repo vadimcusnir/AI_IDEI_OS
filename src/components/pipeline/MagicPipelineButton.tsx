@@ -91,14 +91,29 @@ export function MagicPipelineButton({ className, compact }: Props) {
         throw new Error("Source content too short for extraction");
       }
 
-      // Stage 2: Extract neurons
+      // Stage 2: Create episode, then extract neurons
       setStage("extracting");
-      const extractResp = await supabase.functions.invoke("extract-neurons", {
-        body: {
-          text: sourceText.slice(0, 50000),
+      const episodeTitle = url
+        ? new URL(url).hostname + " — Import"
+        : (file?.name || "Pipeline Import");
+
+      const { data: newEpisode, error: epError } = await supabase
+        .from("episodes")
+        .insert({
+          title: episodeTitle,
+          transcript: sourceText.slice(0, 50000),
+          author_id: user.id,
           workspace_id: currentWorkspace?.id,
           source_type: url ? "url" : "file",
-        },
+          status: "transcribed",
+        })
+        .select("id")
+        .single();
+
+      if (epError || !newEpisode) throw new Error("Failed to create episode");
+
+      const extractResp = await supabase.functions.invoke("extract-neurons", {
+        body: { episode_id: newEpisode.id },
       });
       if (extractResp.error) throw new Error("Extraction failed");
       const neuronCount = extractResp.data?.neurons_created || extractResp.data?.count || 0;
