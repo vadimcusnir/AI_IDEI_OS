@@ -3,10 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Coins, AlertTriangle, ArrowRight, TrendingDown,
-  Shield, Zap, Crown, Lock,
+  Shield, Zap, Crown, Lock, Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { getTimeEstimate } from "@/hooks/useEconomicGate";
 
 interface EconomicGateProps {
   balance: number;
@@ -25,6 +26,7 @@ export function EconomicGate({
   const canAfford = balance >= discountedCost;
   const savings = estimatedCost - discountedCost;
   const balanceAfter = balance - discountedCost;
+  const timeEstimate = getTimeEstimate(estimatedCost);
 
   return (
     <motion.div
@@ -33,9 +35,15 @@ export function EconomicGate({
       className="border border-border rounded-xl bg-card overflow-hidden"
     >
       {/* Header */}
-      <div className="px-4 py-2.5 border-b border-border flex items-center gap-2">
-        <Shield className="h-4 w-4 text-primary" />
-        <span className="text-xs font-bold">Economic Pre-flight Check</span>
+      <div className="px-4 py-2.5 border-b border-border flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Shield className="h-4 w-4 text-primary" />
+          <span className="text-xs font-bold">Economic Pre-flight Check</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <Clock className="h-3 w-3" />
+          <span className="text-[10px]">Est. {timeEstimate.label}</span>
+        </div>
       </div>
 
       <div className="px-4 py-3 space-y-3">
@@ -85,11 +93,11 @@ export function EconomicGate({
           )}
         </div>
 
-        {/* Cancellation info (A7 fix) */}
+        {/* Cancellation + refund info */}
         <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/30 border border-border/20">
           <Shield className="h-3 w-3 text-muted-foreground shrink-0" />
           <span className="text-[10px] text-muted-foreground">
-            Credits are charged only after successful execution. Cancelling now costs nothing.
+            Credits are charged only after successful execution. Cancelling at any point returns your credits in full.
           </span>
         </div>
 
