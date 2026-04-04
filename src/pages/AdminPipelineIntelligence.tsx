@@ -79,6 +79,12 @@ export default function AdminPipelineIntelligence() {
               <TabsContent value="scoring"><ScoringRadar neuronId={neuronId} /></TabsContent>
               <TabsContent value="patterns"><PatternExtractor userId={user?.id} /></TabsContent>
               <TabsContent value="chain"><CognitiveChainViewer neuronId={neuronId} /></TabsContent>
+              <TabsContent value="axes">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <ThreeAxisViewer neuronId={neuronId} />
+                  <ContentCategoryManager neuronId={neuronId} />
+                </div>
+              </TabsContent>
             </div>
           </Tabs>
         ) : (
