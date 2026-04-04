@@ -21,6 +21,7 @@ const ConsumptionChart = lazy(() => import("@/components/credits/ConsumptionChar
 import { EconomicProjections } from "@/components/credits/EconomicProjections";
 import { SubscriptionPlans } from "@/components/credits/SubscriptionPlans";
 import { StorageUsagePanel } from "@/components/storage/StorageUsagePanel";
+import { StorageBillingPanel } from "@/components/credits/StorageBillingPanel";
 import { RuleEnginePanel } from "@/components/automation/RuleEnginePanel";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
 import { FlowTip } from "@/components/onboarding/FlowTip";
@@ -224,10 +225,16 @@ export default function Credits() {
           </div>
         </ControlledSection>
 
-        {/* Storage Usage */}
+        {/* Storage Usage + Billing */}
         <ControlledSection elementId="credits.storage_usage">
           <div className="bg-card border border-border rounded-xl p-5 mb-6">
             <StorageUsagePanel />
+          </div>
+        </ControlledSection>
+
+        <ControlledSection elementId="credits.storage_billing">
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <StorageBillingPanel />
           </div>
         </ControlledSection>
 

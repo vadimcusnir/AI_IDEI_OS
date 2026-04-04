@@ -1005,7 +1005,9 @@ export type Database = {
           metadata: Json | null
           preview_content: string | null
           service_key: string | null
+          size_bytes: number | null
           status: string
+          stored_at: string | null
           tags: string[] | null
           title: string
           updated_at: string
@@ -1024,7 +1026,9 @@ export type Database = {
           metadata?: Json | null
           preview_content?: string | null
           service_key?: string | null
+          size_bytes?: number | null
           status?: string
+          stored_at?: string | null
           tags?: string[] | null
           title?: string
           updated_at?: string
@@ -1043,7 +1047,9 @@ export type Database = {
           metadata?: Json | null
           preview_content?: string | null
           service_key?: string | null
+          size_bytes?: number | null
           status?: string
+          stored_at?: string | null
           tags?: string[] | null
           title?: string
           updated_at?: string
@@ -1480,6 +1486,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      billing_config: {
+        Row: {
+          config_key: string
+          config_value: Json
+          created_at: string | null
+          description: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          config_key: string
+          config_value?: Json
+          created_at?: string | null
+          description?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          config_key?: string
+          config_value?: Json
+          created_at?: string | null
+          description?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       block_type_registry: {
         Row: {
@@ -9344,6 +9374,53 @@ export type Database = {
           },
         ]
       }
+      storage_billing_log: {
+        Row: {
+          artifact_count: number | null
+          billable_bytes: number | null
+          billing_date: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          neurons_charged: number | null
+          total_bytes: number | null
+          user_id: string
+          workspace_id: string | null
+        }
+        Insert: {
+          artifact_count?: number | null
+          billable_bytes?: number | null
+          billing_date?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          neurons_charged?: number | null
+          total_bytes?: number | null
+          user_id: string
+          workspace_id?: string | null
+        }
+        Update: {
+          artifact_count?: number | null
+          billable_bytes?: number | null
+          billing_date?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          neurons_charged?: number | null
+          total_bytes?: number | null
+          user_id?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "storage_billing_log_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       storage_limits: {
         Row: {
           description: string | null
@@ -11140,6 +11217,16 @@ export type Database = {
           _user_id: string
         }
         Returns: Json
+      }
+      calculate_storage_cost: {
+        Args: { p_user_id: string }
+        Returns: {
+          artifact_count: number
+          billable_bytes: number
+          cost_neurons: number
+          free_bytes: number
+          total_bytes: number
+        }[]
       }
       capacity_dashboard_stats: { Args: never; Returns: Json }
       check_access: {
