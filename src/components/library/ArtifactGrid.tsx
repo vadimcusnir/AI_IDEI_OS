@@ -119,18 +119,18 @@ export function ArtifactGrid({ artifacts, showHeader, onDelete, onToggleStatus, 
 
                 <h3 className="text-sm font-medium mb-1.5 line-clamp-2">{artifact.title}</h3>
                 <p className="text-[11px] text-muted-foreground line-clamp-3 mb-3 leading-relaxed flex-1">
-                  {artifact.content.slice(0, 150)}
+                  {(artifact.content ?? "").slice(0, 150)}
                 </p>
 
-                {artifact.tags.length > 0 && (
+                {(artifact.tags ?? []).length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-2">
-                    {artifact.tags.slice(0, 3).map(tag => (
+                    {(artifact.tags ?? []).slice(0, 3).map(tag => (
                       <Badge key={tag} variant="secondary" className="text-[8px] px-1.5 py-0">
                         {tag}
                       </Badge>
                     ))}
-                    {artifact.tags.length > 3 && (
-                      <span className="text-[8px] text-muted-foreground">+{artifact.tags.length - 3}</span>
+                    {(artifact.tags ?? []).length > 3 && (
+                      <span className="text-[8px] text-muted-foreground">+{(artifact.tags ?? []).length - 3}</span>
                     )}
                   </div>
                 )}
