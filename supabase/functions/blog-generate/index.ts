@@ -313,6 +313,7 @@ Deno.serve(async (req) => {
         status: 422, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+    if (!pipelineScores) pipelineScores = {};
     pipelineScores.moderation = modResult.scores;
 
     // ═══ GENERATE THUMBNAIL ═══
