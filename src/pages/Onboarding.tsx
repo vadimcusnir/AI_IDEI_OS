@@ -23,7 +23,6 @@ import { InstantAnalysisFlow } from "@/components/onboarding/InstantAnalysisFlow
 interface StepStatus {
   episodes: number;
   neurons: number;
-  jobs: number;
   artifacts: number;
 }
 
