@@ -28,6 +28,7 @@ import { ExecutionStatusBar } from "@/components/command-center/ExecutionStatusB
 import { CommandInputZone } from "@/components/command-center/CommandInputZone";
 import { ExecutionSummary } from "@/components/command-center/ExecutionSummary";
 import { ContextDrawer } from "@/components/command-center/ContextDrawer";
+import { SessionList } from "@/components/command-center/SessionList";
 import { LowBalanceGate } from "@/components/command-center/LowBalanceGate";
 import { KeyboardShortcutsOverlay } from "@/components/command-center/KeyboardShortcutsOverlay";
 import { OfflineBanner } from "@/components/command-center/OfflineBanner";
