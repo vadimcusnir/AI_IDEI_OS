@@ -10,10 +10,10 @@ interface MonetizePanelProps {
 }
 
 const MONETIZE_ACTIONS = [
-  { icon: Package, label: "Împachetează Asset", desc: "Creează knowledge asset", prompt: "/monetize package neurons as knowledge asset", accent: "bg-amber-500/10 text-amber-400" },
-  { icon: Tag, label: "Calculează Preț", desc: "Root2 pricing engine", prompt: "/monetize calculate optimal pricing for asset", accent: "bg-emerald-500/10 text-emerald-400" },
-  { icon: ShoppingBag, label: "Publică Marketplace", desc: "Listează spre vânzare", prompt: "/monetize publish asset to marketplace", accent: "bg-blue-500/10 text-blue-400" },
-  { icon: TrendingUp, label: "Revenue Report", desc: "Statistici venituri", prompt: "/monetize show revenue analytics", accent: "bg-rose-500/10 text-rose-400" },
+  { icon: Package, label: "Împachetează Asset", desc: "Creează knowledge asset", prompt: "/monetize package neurons as knowledge asset", accent: "bg-gold/10 text-gold" },
+  { icon: Tag, label: "Calculează Preț", desc: "Root2 pricing engine", prompt: "/monetize calculate optimal pricing for asset", accent: "bg-success/10 text-success" },
+  { icon: ShoppingBag, label: "Publică Marketplace", desc: "Listează spre vânzare", prompt: "/monetize publish asset to marketplace", accent: "bg-info/10 text-info" },
+  { icon: TrendingUp, label: "Revenue Report", desc: "Statistici venituri", prompt: "/monetize show revenue analytics", accent: "bg-destructive/10 text-destructive" },
 ];
 
 export function MonetizePanel({ onCommand }: MonetizePanelProps) {
@@ -27,7 +27,7 @@ export function MonetizePanel({ onCommand }: MonetizePanelProps) {
     >
       <div className="py-2 space-y-2">
         <div className="flex items-center gap-1.5 px-1">
-          <DollarSign className="h-3 w-3 text-amber-400" />
+          <DollarSign className="h-3 w-3 text-gold" />
           <span className="text-micro font-medium text-muted-foreground/70">Monetizare & Marketplace</span>
         </div>
         <div className="grid grid-cols-2 gap-1.5">
