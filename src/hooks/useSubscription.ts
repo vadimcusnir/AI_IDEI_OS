@@ -2,51 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { SUBSCRIPTION_TIERS, NEURONS_EXCHANGE_RATE } from "@/config/economyConfig";
 
-export const NEURONS_EXCHANGE_RATE = 0.002; // 1 NEURON = $0.002 USD → $1 = 500 NEURONS
-
-export const SUBSCRIPTION_TIERS = {
-  starter_monthly: {
-    price_id: "price_1TIKY1IK7fwtty4owN1RjdOy",
-    product_id: "prod_UGsIVXzAl33sDX",
-    name: "Starter",
-    price: 23,
-    interval: "month" as const,
-    neurons_quota: 3000,
-    execution_discount: 0.10,
-    features: ["3,000 NEURONS / lună", "Servicii AI de bază", "Extracție & structurare", "Library access", "-10% cost execuție"],
-  },
-  pro_monthly: {
-    price_id: "price_1TIKYHIK7fwtty4o4Sa2M9BK",
-    product_id: "prod_UGsI5IhppWlJ1B",
-    name: "Pro",
-    price: 47,
-    interval: "month" as const,
-    neurons_quota: 10000,
-    execution_discount: 0.20,
-    features: ["10,000 NEURONS / lună", "Toate serviciile AI", "Procesare prioritară", "Batch processing", "Analytics avansat", "Knowledge Graph", "-20% cost execuție"],
-  },
-  vip_monthly: {
-    price_id: "price_1TIKYJIK7fwtty4ovNton4Pq",
-    product_id: "prod_UGsI4kjBe8Km2J",
-    name: "VIP",
-    price: 95,
-    interval: "month" as const,
-    neurons_quota: 30000,
-    execution_discount: 0.40,
-    features: ["30,000 NEURONS / lună", "Tot din Pro", "Locuri nelimitate", "SLA & suport dedicat", "API access", "NOTA2 benefits", "-40% cost execuție"],
-  },
-  enterprise_monthly: {
-    price_id: "price_1TIKYQIK7fwtty4oDzVo8A9X",
-    product_id: "prod_UGsJp3Rln1QfqD",
-    name: "Enterprise",
-    price: 137,
-    interval: "month" as const,
-    neurons_quota: 50000,
-    execution_discount: 0.50,
-    features: ["50,000 NEURONS / lună", "Tot din VIP", "API nelimitat", "White-label reports", "Dedicated account manager", "Custom workflows", "-50% cost execuție"],
-  },
-} as const;
+export { SUBSCRIPTION_TIERS, NEURONS_EXCHANGE_RATE };
 
 interface SubscriptionState {
   subscribed: boolean;
