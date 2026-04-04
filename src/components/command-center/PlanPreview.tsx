@@ -194,6 +194,14 @@ export function PlanPreview({ plan, balance, onExecute, onEdit, onDismiss, execu
                   </span>
                 </div>
               )}
+
+              {/* Cancellation clarity (A7) */}
+              <div className="px-4 pb-3 flex items-center gap-2">
+                <Shield className="h-3 w-3 text-muted-foreground/60 shrink-0" />
+                <span className="text-[9px] text-muted-foreground/60">
+                  No credits charged until execution completes successfully. Dismiss to cancel free.
+                </span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
