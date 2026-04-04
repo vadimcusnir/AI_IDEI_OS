@@ -10,7 +10,7 @@ import { consumeRedirect } from "@/lib/authRedirect";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/motion/PageTransition";
 import {
-  Upload, Brain, Sparkles, TrendingUp,
+  Upload, Brain, Sparkles,
   Check, ArrowRight, Loader2, Play, Zap, Gift, Crown, BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
