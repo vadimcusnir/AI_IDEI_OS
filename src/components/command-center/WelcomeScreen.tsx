@@ -5,7 +5,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, Zap } from "lucide-react";
-import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
+import { MagicPipelineFlow } from "@/components/pipeline/MagicPipelineFlow";
 
 interface Suggestion {
   id: string;
