@@ -24,7 +24,7 @@ export function LandingMechanism() {
 
         {/* Visual Diagram — Extraction Process */}
         <FadeInView className="mb-20 sm:mb-24">
-          <div className="relative rounded-xl overflow-hidden border border-border/30 bg-[hsl(var(--obsidian))]">
+          <div className="relative rounded-xl overflow-hidden border border-border/30 bg-obsidian">
             <img
               src={extractionDiagram}
               alt="Extraction Process: Messy Inputs → Filtration, Parsing, Clustering, Semantic Compression → Atomic Knowledge Units"
