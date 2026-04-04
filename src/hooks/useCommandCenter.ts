@@ -236,6 +236,7 @@ export function useCommandCenter() {
     const rawInput = input.trim();
     setInput("");
     setFiles([]);
+    localStorage.removeItem("cc_draft_input");
     setShowOutputs(false);
     setShowPostExecution(false);
     setPermissionBlock(null);
