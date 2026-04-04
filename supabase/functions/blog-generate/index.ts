@@ -42,12 +42,7 @@ const IMAGE_STYLE_PROMPT = `Style requirements (MANDATORY):
 
 function repairAndParseJson(raw: string): any {
   let cleaned = raw.replace(/```(?:json)?\s*/gi, "").replace(/```\s*/g, "").trim();
-  try {
-    // Rate limit guard (IP-based)
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    const rateLimited = await rateLimitGuard(clientIp + ":blog-generate", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
-    if (rateLimited) return rateLimited;
- return JSON.parse(cleaned); } catch { /* continue */ }
+  try { return JSON.parse(cleaned); } catch { /* continue */ }
 
   const jsonStart = cleaned.search(/[{[]/);
   if (jsonStart === -1) return null;
@@ -86,6 +81,11 @@ function repairAndParseJson(raw: string): any {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
+
+  // Rate limit guard (IP-based)
+  const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const rateLimited = await rateLimitGuard(clientIp + ":blog-generate", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+  if (rateLimited) return rateLimited;
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -474,7 +474,7 @@ Deno.serve(async (req) => {
     // ═══ POST-PUBLISH SEO ENRICHMENT (async, non-blocking) ═══
     let seoData = null;
     try {
-      seoData = await seoTransform(apiKey, {
+      seoData = await seoTransform(LOVABLE_API_KEY, {
         id: post.id,
         title: post.title,
         content: finalContent,
