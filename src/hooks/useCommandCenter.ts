@@ -520,11 +520,13 @@ export function useCommandCenter() {
     savingAllOutputs, showLowBalance, setShowLowBalance,
     activeMode, setActiveMode,
     isEmptyState, greeting, userName, durationSeconds,
-    isSubmitting,
+    isSubmitting, isOnline,
     // Counts
     totalNeurons, totalEpisodes,
     // Suggestions
     decisionSuggestions,
+    // Sessions
+    sessions, sessionId, loadSession, deleteSession,
     // Refs
     inputZoneRef, scrollRef, messagesEndRef,
     // Handlers
