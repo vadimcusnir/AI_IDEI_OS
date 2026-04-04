@@ -123,7 +123,7 @@ export function AppBreadcrumbs() {
             </BreadcrumbLink>
           </BreadcrumbItem>
           {crumbs.map((crumb) => (
-            <React.Fragment key={crumb.path}>
+            <Fragment key={crumb.path}>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {crumb.isLast ? (
@@ -138,7 +138,7 @@ export function AppBreadcrumbs() {
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>
-            </React.Fragment>
+            </Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>
