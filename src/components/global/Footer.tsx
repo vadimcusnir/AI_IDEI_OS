@@ -8,6 +8,7 @@
 
 import { Link } from "react-router-dom";
 import { Logo } from "@/components/shared/Logo";
+import { ContentBoundary } from "@/components/layout/ContentBoundary";
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
@@ -92,7 +93,7 @@ function LegalColumn() {
 export function Footer() {
   return (
     <footer className="border-t border-border bg-card mt-auto">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <ContentBoundary width="wide" className="py-8 sm:py-10">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <BrandColumn />
           <PlatformColumn />
@@ -108,7 +109,7 @@ export function Footer() {
             <FooterLink to="/about">About</FooterLink>
           </div>
         </div>
-      </div>
+      </ContentBoundary>
     </footer>
   );
 }

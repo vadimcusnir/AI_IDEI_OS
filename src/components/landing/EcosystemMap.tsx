@@ -4,6 +4,7 @@
 import { motion } from "framer-motion";
 import { IconFramework, IconAssistant, IconOutput, IconPodcast, IconExtract, IconMultiply } from "./ProprietaryIcons";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { ContentBoundary } from "@/components/layout/ContentBoundary";
 
 const CATEGORIES = [
   {
@@ -50,12 +51,12 @@ export function EcosystemMap() {
   };
 
   return (
-    <section className="py-28 sm:py-40 border-y border-border/40" aria-label="Ecosystem overview">
-      <div className="max-w-5xl mx-auto px-5 sm:px-6">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-20 sm:mb-28">
-          <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.35em] uppercase text-[hsl(var(--gold-oxide))] mb-6 block">ECOSYSTEM</span>
-          <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold tracking-[-0.01em] text-foreground mb-6 leading-[1.15]">Inside AI-IDEI</h2>
-          <p className="text-[15px] text-muted-foreground max-w-[480px] mx-auto leading-[1.75]">
+    <section className="py-24 sm:py-40 border-y border-border/40" aria-label="Ecosystem overview">
+      <ContentBoundary width="default">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-20 sm:mb-24">
+          <span className="text-eyebrow font-mono tracking-[0.35em] text-[hsl(var(--gold-oxide))] mb-6 block">ECOSYSTEM</span>
+          <h2 className="text-h2 text-foreground mb-6">Inside AI-IDEI</h2>
+          <p className="text-body text-muted-foreground max-w-lg mx-auto leading-relaxed">
             A growing system of resources organized by function, not by volume.
           </p>
         </motion.div>
@@ -69,17 +70,17 @@ export function EcosystemMap() {
               viewport={{ once: true, margin: "-30px" }}
               custom={i}
               variants={fadeUp}
-              className="group p-7 sm:p-8 rounded-xl border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.2)] landing-card transition-all"
+              className="group p-6 sm:p-8 rounded-xl border border-border/40 bg-card/50 hover:border-[hsl(var(--gold-oxide)/0.2)] landing-card transition-all"
             >
               <div className="flex items-center gap-4 mb-6">
                 <cat.icon className="text-[hsl(var(--gold-oxide))] group-hover:scale-110 transition-transform duration-300" size={20} />
-                <h3 className="text-sm font-bold text-foreground">{cat.title}</h3>
+                <h3 className="text-caption font-bold text-foreground">{cat.title}</h3>
               </div>
               <div className="space-y-3">
                 {cat.items.map((item) => (
-                  <div key={item} className="flex items-center gap-3.5 group/item">
+                  <div key={item} className="flex items-center gap-3 group/item">
                     <div className="h-1 w-1 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] shrink-0 group-hover/item:bg-[hsl(var(--gold-oxide)/0.5)] transition-colors" />
-                    <span className="text-sm text-muted-foreground group-hover/item:text-foreground transition-colors duration-200">{item}</span>
+                    <span className="text-caption text-muted-foreground group-hover/item:text-foreground transition-colors duration-200">{item}</span>
                   </div>
                 ))}
               </div>
@@ -87,10 +88,10 @@ export function EcosystemMap() {
           ))}
         </div>
 
-        <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-14 text-[10px] sm:text-[11px] font-mono tracking-[0.2em] uppercase text-muted-foreground">
+        <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-12 text-eyebrow font-mono tracking-[0.2em] text-muted-foreground">
           New resources added weekly · Built for execution, not decoration
         </motion.p>
-      </div>
+      </ContentBoundary>
     </section>
   );
 }
