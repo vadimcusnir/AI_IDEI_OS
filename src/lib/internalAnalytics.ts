@@ -136,6 +136,29 @@ export function trackTransition(from: string, to: string, params?: Record<string
     event: AnalyticsEvents.STATE_TRANSITION,
     params: { from, to, trigger: lastClickLabel, latency_ms: Date.now() - lastClickTimestamp, ...params },
   });
+
+  // Persist pipeline phase transitions to audit log
+  logPipelinePhaseTransition(from, to, params);
+}
+
+/** Persist pipeline phase transition to pipeline_phase_log table */
+async function logPipelinePhaseTransition(from: string, to: string, params?: Record<string, unknown>) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const sessionRaw = sessionStorage.getItem("ai-idei-execution-session");
+    const sessionId = sessionRaw ? JSON.parse(sessionRaw)?.id : getSessionId();
+    await supabase.from("pipeline_phase_log" as any).insert({
+      session_id: sessionId,
+      user_id: user.id,
+      from_phase: from,
+      to_phase: to,
+      action_type: (params as any)?.action || null,
+      metadata: params || {},
+    } as any);
+  } catch {
+    // Silent fail — audit should never break the app
+  }
 }
 
 /** Track API call result */
