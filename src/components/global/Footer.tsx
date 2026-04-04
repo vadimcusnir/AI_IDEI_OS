@@ -82,7 +82,7 @@ function BrandColumn({ landing }: { landing: boolean }) {
 
 function SectionHeading({ children, landing }: { children: React.ReactNode; landing: boolean }) {
   return landing ? (
-    <h3 className="text-micro sm:text-dense font-mono tracking-[0.2em] text-muted-foreground uppercase">{children}</h3>
+    <h3 className="text-dense font-mono tracking-[0.2em] text-muted-foreground uppercase">{children}</h3>
   ) : (
     <h3 className="text-sm font-semibold text-foreground">{children}</h3>
   );

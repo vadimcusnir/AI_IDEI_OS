@@ -61,17 +61,17 @@ const NAV_LINK_KEYS = [
 function ExtractionSpine({ labels }: { labels: string[] }) {
   return (
     <div className="hidden xl:flex flex-col items-center gap-0 fixed left-8 top-1/2 -translate-y-1/2 z-40" aria-hidden="true">
-      <div className="w-px h-10 bg-[hsl(var(--gold-oxide)/0.12)]" />
+      <div className="w-px h-10 bg-gold/12" />
       {labels.map((l, i) => (
         <div key={l} className="flex flex-col items-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold-oxide)/0.25)] my-1.5" />
-          <span className="text-nano font-mono tracking-[0.25em] text-[hsl(var(--ivory-dim)/0.25)] -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
+          <div className="w-1.5 h-1.5 rounded-full bg-gold/25 my-1.5" />
+          <span className="text-nano font-mono tracking-[0.25em] text-ivory-dim/25 -rotate-90 whitespace-nowrap origin-center" style={{ writingMode: "vertical-lr" }}>
             {l}
           </span>
-          {i < labels.length - 1 && <div className="w-px h-14 bg-[hsl(var(--gold-oxide)/0.06)]" />}
+          {i < labels.length - 1 && <div className="w-px h-14 bg-gold/[0.06]" />}
         </div>
       ))}
-      <div className="w-px h-10 bg-[hsl(var(--gold-oxide)/0.12)]" />
+      <div className="w-px h-10 bg-gold/12" />
     </div>
   );
 }
@@ -228,7 +228,7 @@ export default function Landing() {
             </DropdownMenu>
             <ThemeToggle />
             {user ? (
-              <Button size="sm" onClick={() => navigate("/home")} className="gap-2 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] transition-all duration-200">
+              <Button size="sm" onClick={() => navigate("/home")} className="gap-2 text-xs h-8 bg-gold hover:bg-gold/85 text-obsidian transition-all duration-200">
                 Dashboard
               </Button>
             ) : (
@@ -236,7 +236,7 @@ export default function Landing() {
                 <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-muted-foreground">
                   Log in
                 </Button>
-                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))] hidden sm:inline-flex transition-all duration-200">
+                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-gold hover:bg-gold/85 text-obsidian hidden sm:inline-flex transition-all duration-200">
                   Start Free
                   <ArrowRight className="h-3 w-3" />
                 </Button>
@@ -268,7 +268,7 @@ export default function Landing() {
                   <button
                     key={link.key}
                     onClick={() => scrollTo(link.to)}
-                    className="block w-full text-left text-sm font-mono tracking-[0.1em] text-muted-foreground hover:text-[hsl(var(--gold-oxide))] transition-colors py-3.5 min-h-[44px] flex items-center border-b border-border/30"
+                    className="block w-full text-left text-sm font-mono tracking-[0.1em] text-muted-foreground hover:text-gold transition-colors py-3.5 min-h-[44px] flex items-center border-b border-border/30"
                   >
                     {t(`nav.${link.key}`).toUpperCase()}
                   </button>
@@ -278,7 +278,7 @@ export default function Landing() {
                     <Button variant="ghost" size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="text-sm h-11 min-h-[44px] flex-1 text-muted-foreground">
                       Log in
                     </Button>
-                    <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-sm h-11 min-h-[44px] flex-1 bg-[hsl(var(--gold-oxide))] hover:bg-[hsl(var(--gold-oxide)/0.85)] text-[hsl(var(--obsidian))]">
+                    <Button size="sm" onClick={() => { setMobileMenuOpen(false); navigate("/auth"); }} className="gap-1.5 text-sm h-11 min-h-[44px] flex-1 bg-gold hover:bg-gold/85 text-obsidian">
                       Start Free
                       <ArrowRight className="h-3 w-3" />
                     </Button>

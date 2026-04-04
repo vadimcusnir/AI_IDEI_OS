@@ -24,14 +24,14 @@ export function LandingMechanism() {
 
         {/* Visual Diagram — Extraction Process */}
         <FadeInView className="mb-20 sm:mb-24">
-          <div className="relative rounded-xl overflow-hidden border border-border/30 bg-[hsl(var(--obsidian))]">
+          <div className="relative rounded-xl overflow-hidden border border-border/30 bg-obsidian">
             <img
               src={extractionDiagram}
               alt="Extraction Process: Messy Inputs → Filtration, Parsing, Clustering, Semantic Compression → Atomic Knowledge Units"
               className="w-full h-auto"
               loading="lazy"
             />
-            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-[hsl(var(--gold-oxide)/0.08)] pointer-events-none" />
+            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-gold/[0.08] pointer-events-none" />
           </div>
         </FadeInView>
 

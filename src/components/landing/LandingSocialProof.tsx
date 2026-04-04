@@ -17,8 +17,8 @@ export function LandingSocialProof() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((item, i) => (
             <FadeInView key={i} delay={i * 0.1} className="relative p-6 sm:p-8 rounded-xl border border-border/50 bg-card landing-card group">
-              <span className="absolute top-4 left-6 text-5xl text-gold/12 leading-none select-none font-serif group-hover:text-gold/20 transition-colors duration-300">&ldquo;</span>
-              <blockquote className="text-caption text-foreground leading-relaxed mb-6 pt-8 italic">
+              <span className="absolute top-4 left-6 text-5xl text-gold/15 leading-none select-none font-serif group-hover:text-gold/25 transition-colors duration-300">&ldquo;</span>
+              <blockquote className="text-sm text-foreground leading-relaxed mb-6 pt-8 italic">
                 {item.text}
               </blockquote>
               <div className="border-t border-border/30 pt-4 flex items-center gap-3">

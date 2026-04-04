@@ -57,7 +57,7 @@ export function PlanPreview({ plan, balance, onExecute, onEdit, onDismiss, execu
   if (!plan) return null;
 
   const canAfford = balance >= plan.total_credits;
-  const confidenceColor = plan.confidence >= 0.8 ? "text-green-500" : plan.confidence >= 0.5 ? "text-yellow-500" : "text-destructive";
+  const confidenceColor = plan.confidence >= 0.8 ? "text-success" : plan.confidence >= 0.5 ? "text-warning" : "text-destructive";
   const confidenceLabel = plan.confidence >= 0.8 ? "High" : plan.confidence >= 0.5 ? "Medium" : "Low";
 
   return (
