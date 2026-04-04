@@ -473,6 +473,7 @@ export function useCommandCenter() {
     savingAllOutputs, showLowBalance, setShowLowBalance,
     activeMode, setActiveMode,
     isEmptyState, greeting, userName, durationSeconds,
+    isSubmitting,
     // Counts
     totalNeurons, totalEpisodes,
     // Suggestions
