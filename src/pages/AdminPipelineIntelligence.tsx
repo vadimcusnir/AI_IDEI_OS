@@ -13,6 +13,8 @@ import { SemanticLinkGraph } from "@/components/pipeline/SemanticLinkGraph";
 import { ScoringRadar } from "@/components/pipeline/ScoringRadar";
 import { PatternExtractor } from "@/components/pipeline/PatternExtractor";
 import { CognitiveChainViewer } from "@/components/pipeline/CognitiveChainViewer";
+import { ThreeAxisViewer } from "@/components/intelligence/ThreeAxisViewer";
+import { ContentCategoryManager } from "@/components/intelligence/ContentCategoryManager";
 
 export default function AdminPipelineIntelligence() {
   const { user, loading: authLoading } = useAuth();
@@ -63,6 +65,7 @@ export default function AdminPipelineIntelligence() {
               <TabsTrigger value="scoring" className="text-xs gap-1"><Target className="h-3 w-3" /> Scoring</TabsTrigger>
               <TabsTrigger value="patterns" className="text-xs gap-1"><Shapes className="h-3 w-3" /> Patterns</TabsTrigger>
               <TabsTrigger value="chain" className="text-xs gap-1"><Layers className="h-3 w-3" /> Chain</TabsTrigger>
+              <TabsTrigger value="axes" className="text-xs gap-1"><Brain className="h-3 w-3" /> 3-Axis</TabsTrigger>
             </TabsList>
 
             <div className="bg-card border border-border rounded-lg p-5">
@@ -76,6 +79,12 @@ export default function AdminPipelineIntelligence() {
               <TabsContent value="scoring"><ScoringRadar neuronId={neuronId} /></TabsContent>
               <TabsContent value="patterns"><PatternExtractor userId={user?.id} /></TabsContent>
               <TabsContent value="chain"><CognitiveChainViewer neuronId={neuronId} /></TabsContent>
+              <TabsContent value="axes">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <ThreeAxisViewer neuronId={neuronId} />
+                  <ContentCategoryManager neuronId={neuronId} />
+                </div>
+              </TabsContent>
             </div>
           </Tabs>
         ) : (
