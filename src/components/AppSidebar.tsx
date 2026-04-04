@@ -1,14 +1,15 @@
 /**
- * AppSidebar — Command Center navigation.
+ * AppSidebar — Unified navigation + header actions.
  *
- * 3 groups + sessions:
- *   CORE     — Command Center, Chats
+ * 3 groups + sessions + admin:
+ *   CORE     — Command Center
  *   WORK     — Library, Jobs, Credits
- *   MORE     — Services, Neurons, Knowledge Graph, Marketplace, Progress, VIP (conditional)
+ *   DISCOVER — Services, Neurons, Knowledge Graph, Marketplace, Progress
  *
- * Personal items (Profile, Workspace, Settings, Privacy, Docs) → UserMenu
- * Admin → separate section for admins only
+ * Header zone: Logo + Search + ThemeToggle + LangSwitcher + NotificationBell + UserMenu
+ * Footer: Tier badge, credits
  */
+import { lazy, Suspense } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,14 +18,23 @@ import { useCreditBalance } from "@/hooks/useCreditBalance";
 import { useUserTier, type UserTier } from "@/hooks/useUserTier";
 import { useChatHistory } from "@/hooks/useChatHistory";
 import { usePrefetch } from "@/hooks/usePrefetch";
+import { useLocale } from "@/hooks/useLocale";
 import { Logo } from "@/components/shared/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Home, BookOpen, Sparkles,
   Brain, Network, Store,
   Coins, Crown, Plus,
   Clock, Trash2, MessageCircle,
   Shield, Cpu, Activity, BarChart3, Database,
-  Trophy, ChevronRight, Lock,
+  Trophy, ChevronRight, Lock, Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -41,6 +51,17 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+
+// Lazy-load header widgets
+const GlobalSearch = lazy(() => import("@/components/GlobalSearch").then(m => ({ default: m.GlobalSearch })));
+const NotificationBell = lazy(() => import("@/components/NotificationBell").then(m => ({ default: m.NotificationBell })));
+const UserMenu = lazy(() => import("@/components/UserMenu").then(m => ({ default: m.UserMenu })));
+
+const LANG_OPTIONS = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "ro", label: "Română", flag: "🇷🇴" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+];
 
 // ═══ ROUTE REGISTRY ═══
 
@@ -66,7 +87,6 @@ interface NavGroup {
 }
 
 const SYSTEM_MAP: NavGroup[] = [
-  // ─── CORE ───
   {
     key: "core",
     label: "CORE",
@@ -76,7 +96,6 @@ const SYSTEM_MAP: NavGroup[] = [
       { label: "Command Center", to: "/home", icon: Home, controlId: "nav.home", highlight: true },
     ],
   },
-  // ─── WORK ───
   {
     key: "work",
     label: "WORK",
@@ -89,7 +108,6 @@ const SYSTEM_MAP: NavGroup[] = [
       { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
     ],
   },
-  // ─── MORE ───
   {
     key: "more",
     label: "DISCOVER",
@@ -138,6 +156,8 @@ export function AppSidebar() {
   const { tier } = useUserTier();
   const { sessions, loadSession, deleteSession, newSession } = useChatHistory();
   const { prefetchServices, prefetchCredits, prefetchLibrary } = usePrefetch();
+  const { currentLanguage, changeLanguage } = useLocale();
+  const currentLang = LANG_OPTIONS.find(l => l.code === currentLanguage) || LANG_OPTIONS[0];
 
   const prefetchMap: Record<string, (() => void) | undefined> = {
     "/services": prefetchServices,
@@ -231,10 +251,44 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <button onClick={() => navigate(user ? "/home" : "/")} className="flex items-center gap-2.5 px-1 py-1">
-          <Logo size="h-7 w-7" className="shrink-0" loading="eager" />
-          {!collapsed && <span className="text-sm font-bold tracking-tight">AI-IDEI</span>}
-        </button>
+        <div className="flex items-center gap-2 px-1 py-1">
+          <button onClick={() => navigate(user ? "/home" : "/")} className="flex items-center gap-2.5 shrink-0">
+            <Logo size="h-7 w-7" className="shrink-0" loading="eager" />
+            {!collapsed && <span className="text-sm font-bold tracking-tight">AI-IDEI</span>}
+          </button>
+
+          {/* Header actions — search, lang, theme, notifications, user menu */}
+          {!collapsed && (
+            <div className="flex items-center gap-0.5 ml-auto">
+              <Suspense fallback={null}><GlobalSearch /></Suspense>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Change language">
+                    <span className="text-xs leading-none">{currentLang.flag}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-[140px]">
+                  {LANG_OPTIONS.map(lang => (
+                    <DropdownMenuItem
+                      key={lang.code}
+                      onClick={() => changeLanguage(lang.code as any)}
+                      className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
+                    >
+                      <span>{lang.flag}</span>
+                      {lang.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <ThemeToggle />
+
+              {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
+              {user && <Suspense fallback={null}><UserMenu /></Suspense>}
+            </div>
+          )}
+        </div>
       </SidebarHeader>
 
       <SidebarSeparator />
@@ -271,7 +325,6 @@ export function AppSidebar() {
       <SidebarContent>
         {user ? (
           <>
-            {/* ═══ 3 navigation groups ═══ */}
             {SYSTEM_MAP.map(renderGroup)}
 
             {/* ═══ SESSIONS ═══ */}
@@ -349,7 +402,6 @@ export function AppSidebar() {
             )}
           </>
         ) : (
-          /* ═══ PUBLIC (logged out) ═══ */
           <SidebarGroup>
             {!collapsed && (
               <SidebarGroupLabel className="text-[9px] tracking-[0.15em] font-bold">
@@ -367,6 +419,35 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarSeparator />
+
+        {/* Collapsed: show action icons */}
+        {collapsed && (
+          <div className="flex flex-col items-center gap-1 py-2">
+            <Suspense fallback={null}><GlobalSearch /></Suspense>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-7 w-7 rounded-lg flex items-center justify-center hover:bg-muted transition-colors" aria-label="Language">
+                  <Globe className="h-3.5 w-3.5 text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" align="end" className="min-w-[140px]">
+                {LANG_OPTIONS.map(lang => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => changeLanguage(lang.code as any)}
+                    className={cn("gap-2 text-xs", currentLanguage === lang.code && "bg-accent")}
+                  >
+                    <span>{lang.flag}</span>
+                    {lang.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <ThemeToggle />
+            {user && <Suspense fallback={null}><NotificationBell /></Suspense>}
+            {user && <Suspense fallback={null}><UserMenu /></Suspense>}
+          </div>
+        )}
 
         {/* Tier badge — compact */}
         {user && !collapsed && (
@@ -391,7 +472,6 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* Collapsed footer */}
         {user && collapsed && (
           <div className="flex flex-col items-center gap-1.5 py-2">
             <button
@@ -410,7 +490,6 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* Sign in */}
         {!user && (
           <SidebarMenu>
             <SidebarMenuItem>
