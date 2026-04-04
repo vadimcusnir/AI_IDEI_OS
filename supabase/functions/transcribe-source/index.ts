@@ -788,27 +788,51 @@ Deno.serve(async (req) => {
       timings.stt_ms = Date.now() - t3;
 
     } else if (source?.platform === "youtube" && source.video_id) {
-      // ── PATH B: YouTube → extract audio → ElevenLabs ──
+      // ── PATH B: YouTube → extract audio → ElevenLabs (fallback: captions) ──
       await updateStatus("transcribing", { stage: "extracting_audio" });
 
-      // Step 3a: Extract audio from YouTube
+      // Step 3a: Extract audio from YouTube via Cobalt
       const t3a = Date.now();
       const audioExtract = await extractYouTubeAudio(source.video_id);
       timings.audio_extract_ms = Date.now() - t3a;
 
       if (!audioExtract.ok) {
-        const status = audioExtract.failureClass === "no_backend_configured" ? 503 : 422;
-        await updateStatus("error", {
-          failure_class: audioExtract.failureClass,
-          failure_reason: audioExtract.message,
-        });
-        return failResponse(
-          audioExtract.failureClass,
-          audioExtract.message,
-          status,
-          corsHeaders,
-          audioExtract.retryable,
-        );
+        // ── FALLBACK: Try YouTube captions API (free, instant) ──
+        console.log(`[pipeline] Cobalt failed (${audioExtract.failureClass}), trying captions fallback...`);
+        await updateStatus("transcribing", { stage: "captions_fallback" });
+
+        const t3f = Date.now();
+        const captionResult = await fetchYouTubeCaptions(source.video_id!);
+        timings.captions_fallback_ms = Date.now() - t3f;
+
+        if (captionResult) {
+          console.log("[pipeline] ✓ Captions fallback succeeded");
+          // Use caption result directly as sttResult with adjusted mode
+          sttResult = {
+            ...captionResult,
+            processing_mode: "elevenlabs_scribe_v2", // type compat
+          };
+          // Tag as caption-sourced for downstream awareness
+          timings.fallback_source = 1;
+
+          // Skip to step 4 (validation)
+        } else {
+          // Both Cobalt and captions failed
+          const status = audioExtract.failureClass === "no_backend_configured" ? 503 : 422;
+          await updateStatus("error", {
+            failure_class: audioExtract.failureClass,
+            failure_reason: audioExtract.message,
+            captions_attempted: true,
+            captions_available: false,
+          });
+          return failResponse(
+            audioExtract.failureClass,
+            `${audioExtract.message} (captions also unavailable)`,
+            status,
+            corsHeaders,
+            audioExtract.retryable,
+          );
+        }
       }
 
       // Step 3b: Download audio blob
