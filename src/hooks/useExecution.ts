@@ -359,44 +359,47 @@ export function useExecution(context: ExecutionContext) {
 
     try {
       const services = route.intent.suggestedServices;
+      let serviceExecutionSucceeded = false;
 
-      if (services.length > 1 && route.intent.category === "pipeline") {
-        // Multi-service pipeline
-        const pipelineSteps = services.map(svc => ({
-          service_key: svc,
-          label: svc.replace(/_/g, " "),
-        }));
-        
-        const pipelineId = await executePipeline(pipelineSteps, rawInput, controller.signal);
-        
-        if (pipelineId) {
-          // Subscribe to progress
-          const unsub = subscribeToJob(pipelineId, () => {
-            loadJobOutputs(pipelineId);
-            unsub();
-          });
-        }
-      } else if (services.length > 0) {
-        // Single service execution
-        const serviceKey = services[0];
-        
-        // Mark first step as running
-        executionActions.updateStep(serviceKey, { status: "running" });
-        
-        const jobId = await executeService(serviceKey, { text: rawInput }, controller.signal);
-        
-        if (jobId) {
+      try {
+        if (services.length > 1 && route.intent.category === "pipeline") {
+          const pipelineSteps = services.map(svc => ({
+            service_key: svc,
+            label: svc.replace(/_/g, " "),
+          }));
+          
+          const pipelineId = await executePipeline(pipelineSteps, rawInput, controller.signal);
+          
+          if (pipelineId) {
+            serviceExecutionSucceeded = true;
+            const unsub = subscribeToJob(pipelineId, () => {
+              loadJobOutputs(pipelineId);
+              unsub();
+            });
+          }
+        } else if (services.length > 0) {
+          const serviceKey = services[0];
           executionActions.updateStep(serviceKey, { status: "running" });
           
-          const unsub = subscribeToJob(jobId, () => {
-            executionActions.updateStep(serviceKey, { status: "completed" });
-            loadJobOutputs(jobId);
-            unsub();
-          });
+          const jobId = await executeService(serviceKey, { text: rawInput }, controller.signal);
+          
+          if (jobId) {
+            serviceExecutionSucceeded = true;
+            executionActions.updateStep(serviceKey, { status: "running" });
+            
+            const unsub = subscribeToJob(jobId, () => {
+              executionActions.updateStep(serviceKey, { status: "completed" });
+              loadJobOutputs(jobId);
+              unsub();
+            });
+          }
         }
+      } catch (serviceErr) {
+        // Service execution failed — fall back to agent chat
+        console.warn("Service execution failed, falling back to chat:", serviceErr);
       }
 
-      // Also stream agent analysis in parallel
+      // Stream agent analysis (works as fallback if service failed)
       await streamAgentResponse(rawInput, route, controller.signal);
 
     } catch (e) {
