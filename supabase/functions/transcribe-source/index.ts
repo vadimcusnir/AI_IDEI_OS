@@ -788,76 +788,71 @@ Deno.serve(async (req) => {
       timings.stt_ms = Date.now() - t3;
 
     } else if (source?.platform === "youtube" && source.video_id) {
-      // ── PATH B: YouTube → extract audio → ElevenLabs (fallback: captions) ──
-      await updateStatus("transcribing", { stage: "extracting_audio" });
+      // ── PATH B: YouTube → captions-first, then audio extraction ──
 
-      // Step 3a: Extract audio from YouTube via Cobalt
-      const t3a = Date.now();
-      const audioExtract = await extractYouTubeAudio(source.video_id);
-      timings.audio_extract_ms = Date.now() - t3a;
+      // Step 3a: Try captions FIRST (instant, free, no infrastructure needed)
+      await updateStatus("transcribing", { stage: "checking_captions" });
+      const t3cap = Date.now();
+      const captionResult = await fetchYouTubeCaptions(source.video_id!);
+      timings.captions_check_ms = Date.now() - t3cap;
 
-      if (!audioExtract.ok) {
-        // ── FALLBACK: Try YouTube captions API (free, instant) ──
-        console.log(`[pipeline] Cobalt failed (${audioExtract.failureClass}), trying captions fallback...`);
-        await updateStatus("transcribing", { stage: "captions_fallback" });
+      if (captionResult) {
+        console.log("[pipeline] ✓ Captions available — using as primary source");
+        sttResult = {
+          ...captionResult,
+          processing_mode: "elevenlabs_scribe_v2",
+        };
+        timings.fallback_source = 1;
+      } else {
+        // Step 3b: No captions → extract audio via Cobalt → ElevenLabs STT
+        console.log("[pipeline] No captions, trying audio extraction...");
+        await updateStatus("transcribing", { stage: "extracting_audio" });
 
-        const t3f = Date.now();
-        const captionResult = await fetchYouTubeCaptions(source.video_id!);
-        timings.captions_fallback_ms = Date.now() - t3f;
+        const t3a = Date.now();
+        const audioExtract = await extractYouTubeAudio(source.video_id);
+        timings.audio_extract_ms = Date.now() - t3a;
 
-        if (captionResult) {
-          console.log("[pipeline] ✓ Captions fallback succeeded");
-          // Use caption result directly as sttResult with adjusted mode
-          sttResult = {
-            ...captionResult,
-            processing_mode: "elevenlabs_scribe_v2", // type compat
-          };
-          // Tag as caption-sourced for downstream awareness
-          timings.fallback_source = 1;
-
-          // Skip to step 4 (validation)
-        } else {
-          // Both Cobalt and captions failed
+        if (!audioExtract.ok) {
           const status = audioExtract.failureClass === "no_backend_configured" ? 503 : 422;
           await updateStatus("error", {
             failure_class: audioExtract.failureClass,
             failure_reason: audioExtract.message,
-            captions_attempted: true,
             captions_available: false,
           });
           return failResponse(
             audioExtract.failureClass,
-            `${audioExtract.message} (captions also unavailable)`,
+            `No captions available. Audio extraction also failed: ${audioExtract.message}. Deploy a Cobalt instance and update COBALT_API_URL.`,
             status,
             corsHeaders,
             audioExtract.retryable,
           );
         }
-      }
 
-      // Step 3b: Download audio blob
-      await updateStatus("transcribing", { stage: "downloading_audio" });
-      const t3b = Date.now();
-      let audioBlob: Blob;
-      try {
-        audioBlob = await downloadAudioBlob(audioExtract.audioUrl);
-      } catch (e) {
-        await updateStatus("error", { failure_class: "media_fetch_failed" });
-        return failResponse(
-          "media_fetch_failed",
-          e instanceof Error ? e.message : "Audio download failed",
-          422,
-          corsHeaders,
-          true,
-        );
-      }
-      timings.download_ms = Date.now() - t3b;
-      console.log(`[pipeline] Audio downloaded: ${(audioBlob.size / 1024 / 1024).toFixed(2)} MB`);
+        // Step 3c: Download audio blob
+        await updateStatus("transcribing", { stage: "downloading_audio" });
+        const t3b = Date.now();
+        let audioBlob: Blob;
+        try {
+          audioBlob = await downloadAudioBlob(audioExtract.audioUrl);
+        } catch (e) {
+          await updateStatus("error", { failure_class: "media_fetch_failed" });
+          return failResponse(
+            "media_fetch_failed",
+            e instanceof Error ? e.message : "Audio download failed",
+            422,
+            corsHeaders,
+            true,
+          );
+        }
+        timings.download_ms = Date.now() - t3b;
+        console.log(`[pipeline] Audio downloaded: ${(audioBlob.size / 1024 / 1024).toFixed(2)} MB`);
 
-      // Step 3c: Transcribe with ElevenLabs
-      await updateStatus("transcribing", { stage: "transcribing_audio" });
-      const t3c = Date.now();
-      sttResult = await transcribeWithElevenLabs(audioBlob, audioExtract.filename, ELEVENLABS_API_KEY, language);
+        // Step 3d: Transcribe with ElevenLabs
+        await updateStatus("transcribing", { stage: "transcribing_audio" });
+        const t3c = Date.now();
+        sttResult = await transcribeWithElevenLabs(audioBlob, audioExtract.filename, ELEVENLABS_API_KEY, language);
+        timings.stt_ms = Date.now() - t3c;
+      }
       timings.stt_ms = Date.now() - t3c;
 
     } else if (source?.platform === "direct" || source?.platform === "vimeo") {
