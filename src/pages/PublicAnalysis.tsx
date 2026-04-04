@@ -132,7 +132,7 @@ export default function PublicAnalysis() {
       },
     },
     articleSection: typeLabel,
-    keywords: analysis.tags.join(", "),
+    keywords: (analysis.tags ?? []).join(", "),
     inLanguage: "en",
     ...(analysis.og_image_url && { image: { "@type": "ImageObject", url: analysis.og_image_url, width: 1200, height: 630 } }),
   };
@@ -211,9 +211,9 @@ export default function PublicAnalysis() {
           )}
 
           {/* Tags */}
-          {analysis.tags.length > 0 && (
+          {(analysis.tags ?? []).length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-8">
-              {analysis.tags.map((tag) => (
+              {(analysis.tags ?? []).map((tag) => (
                 <Badge key={tag} variant="outline" className="text-[10px]">
                   <Tag className="h-2.5 w-2.5 mr-1" />
                   {tag}

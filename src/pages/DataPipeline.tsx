@@ -236,7 +236,7 @@ export default function DataPipeline() {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-[10px] text-muted-foreground truncate">{unit.content.slice(0, 100)}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{(unit.content ?? "").slice(0, 100)}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="text-[10px] font-mono text-muted-foreground">

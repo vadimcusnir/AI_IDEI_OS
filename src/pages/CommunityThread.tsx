@@ -119,7 +119,7 @@ export default function CommunityThread() {
 
   return (
     <PageTransition>
-      <SEOHead title={`${thread.title} — Community`} description={thread.content.slice(0, 160)} />
+      <SEOHead title={`${thread.title} — Community`} description={(thread.content ?? "").slice(0, 160)} />
       <div className="flex-1 overflow-auto p-4 md:p-6 max-w-4xl mx-auto">
         <Button variant="ghost" size="sm" className="mb-4" onClick={() => navigate(`/community/${category}`)}>
           <ArrowLeft className="h-3.5 w-3.5 mr-1" />{t("community_thread.back")}

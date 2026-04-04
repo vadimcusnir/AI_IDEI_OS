@@ -105,9 +105,9 @@ export function AdminContributionsTab() {
                 <div className="p-3 rounded bg-muted/50 text-xs whitespace-pre-wrap max-h-48 overflow-y-auto">
                   {c.content}
                 </div>
-                {c.tags.length > 0 && (
+                {(c.tags ?? []).length > 0 && (
                   <div className="flex gap-1">
-                    {c.tags.map((t) => <Badge key={t} variant="outline" className="text-[8px]">{t}</Badge>)}
+                    {(c.tags ?? []).map((t) => <Badge key={t} variant="outline" className="text-[8px]">{t}</Badge>)}
                   </div>
                 )}
                 <Textarea

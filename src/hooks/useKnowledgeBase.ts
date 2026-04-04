@@ -57,7 +57,7 @@ export function useKnowledgeBase(opts: UseKnowledgeBaseOptions = {}) {
       (i) =>
         i.title.toLowerCase().includes(q) ||
         i.excerpt?.toLowerCase().includes(q) ||
-        i.tags.some((t) => t.toLowerCase().includes(q))
+        (i.tags ?? []).some((t) => t.toLowerCase().includes(q))
     );
   }, [items, search]);
 
