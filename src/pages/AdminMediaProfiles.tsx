@@ -16,6 +16,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ProfileGeneratorPanel } from "@/components/intelligence/ProfileGeneratorPanel";
+import { ConsentPanel } from "@/components/intelligence/ConsentPanel";
+import { StateTransitionsTimeline } from "@/components/intelligence/StateTransitionsTimeline";
+import { PublicIndicatorsEditor } from "@/components/intelligence/PublicIndicatorsEditor";
+import { GuardrailResultsPanel } from "@/components/intelligence/GuardrailResultsPanel";
 
 interface ProfileRow {
   id: string;
