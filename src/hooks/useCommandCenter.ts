@@ -318,6 +318,7 @@ export function useCommandCenter() {
       executionActions.setLoading(false);
       executionActions.setStreaming(false);
       abortRef.current = null;
+      setIsSubmitting(false);
     }
   };
 
