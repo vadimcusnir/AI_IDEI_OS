@@ -1,12 +1,19 @@
 /**
- * AppLayout — Single OS Shell.
- * Header = minimal control (trigger + breadcrumbs)
- * Sidebar = navigation kernel
- * Main = execution surface
- * Footer = system/meta (non-fullHeight pages only)
+ * AppLayout — Single OS Shell (Canonical Spec).
+ * 
+ * ARCHITECTURE:
+ *   Sidebar (navigation kernel)
+ *   ├── Header (minimal control bar — uses --header-height token)
+ *   ├── Main (execution surface)
+ *   └── Footer (system/meta — non-fullHeight only)
+ * 
+ * RULES:
+ * - Header height = var(--header-height), synced with sidebar header
+ * - Footer = end of flow, never sticky
+ * - No local header/footer variations per page
+ * - All tokens from index.css
  */
 import { ReactNode, useEffect, useRef, lazy, Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { useDailyActivity } from "@/hooks/useDailyActivity";
@@ -55,23 +62,35 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
         >
           Skip to content
         </a>
+
         <AppSidebar />
+
         <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-          {/* ═══ HEADER — Minimal control bar ═══ */}
-          <div className="shrink-0 h-12 flex items-center gap-2 border-b border-border/30 bg-background/80 backdrop-blur-md px-2 md:px-3">
+          {/* ═══ HEADER — Canonical control bar ═══
+              height: var(--header-height) via h-[--header-height]
+              backdrop: blur + semi-transparent bg
+              border: subtle bottom border from tokens
+              shadow: --shadow-header token
+          */}
+          <header
+            className="shrink-0 flex items-center gap-2 border-b border-border/40 bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 px-3"
+            style={{ height: 'var(--header-height)' }}
+          >
             <SidebarTrigger
               aria-label="Toggle sidebar"
               className="h-9 w-9 min-h-[44px] min-w-[44px] md:h-8 md:w-8 md:min-h-0 md:min-w-0"
             />
+
             {/* Mobile: page title */}
             <div className="flex-1 min-w-0 md:hidden">
               <MobilePageTitle />
             </div>
-            {/* Desktop: breadcrumbs only */}
+
+            {/* Desktop: breadcrumbs */}
             <div className="hidden md:flex items-center flex-1 min-w-0">
               <AppBreadcrumbs />
             </div>
-          </div>
+          </header>
 
           {/* Banners */}
           <div className="shrink-0">
@@ -82,16 +101,21 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           {/* ═══ MAIN — Execution surface ═══ */}
           {fullHeight ? (
             <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <ErrorBoundary><div className="flex-1 flex flex-col min-h-0">{children}</div></ErrorBoundary>
+              <ErrorBoundary>
+                <div className="flex-1 flex flex-col min-h-0">{children}</div>
+              </ErrorBoundary>
             </main>
           ) : (
             <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">
-              <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
+              <ErrorBoundary>
+                <PageTransition>{children}</PageTransition>
+              </ErrorBoundary>
               <Suspense fallback={null}><Footer /></Suspense>
             </main>
           )}
         </div>
       </div>
+
       <Suspense fallback={null}><MobileBottomNav /></Suspense>
       <Suspense fallback={null}><GamificationToasts /></Suspense>
     </SidebarProvider>

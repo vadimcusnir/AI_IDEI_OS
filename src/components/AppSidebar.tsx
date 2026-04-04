@@ -198,8 +198,9 @@ export function AppSidebar() {
           onClick={() => navigate(user ? "/home" : "/")}
           className={cn(
             "w-full flex items-center gap-3 px-3 transition-colors hover:bg-muted/50",
-            collapsed ? "justify-center h-12" : "h-12"
+            collapsed ? "justify-center" : ""
           )}
+          style={{ height: 'var(--header-height)' }}
         >
           <Logo size="h-7 w-7" className="shrink-0" loading="eager" />
           {!collapsed && (

@@ -9,7 +9,8 @@
 
 @layer base {
   :root {
-    --header-height: 3.5rem; /* 56px mobile */
+    --header-height: 3rem; /* 48px — canonical, matches sidebar header */
+    --shadow-header: 0 1px 3px 0 hsl(0 0% 0% / 0.04);
 
     /* ── RULE.VISUAL.TEXT v2.0 tokens ── */
     --text-max: 70ch;
