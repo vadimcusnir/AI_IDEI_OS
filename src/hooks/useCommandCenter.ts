@@ -61,7 +61,7 @@ export function useCommandCenter() {
   const store = useExecutionStore();
   const { execution: execState, messages, outputs, loading, isStreaming } = store;
   const { persistRun, persistOutputsBatch } = useExecutionHistory();
-  const { tier } = useUserTier();
+  const { tier, loading: tierLoading } = useUserTier();
   const tierDiscount = tier === "pro" ? 25 : tier === "free" ? 0 : 10;
   const [totalNeurons, setTotalNeurons] = useState(0);
   const [totalEpisodes, setTotalEpisodes] = useState(0);
