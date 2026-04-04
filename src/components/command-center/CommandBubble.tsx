@@ -66,25 +66,23 @@ function renderUserContent(text: string) {
       parts.push(text.slice(lastIdx, match.index));
     }
     if (match[1]) {
-      // URL — dark text on gold bg for contrast
       parts.push(
         <a
           key={key++}
           href={match[1]}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-obsidian/70 underline underline-offset-2 decoration-obsidian/40 hover:text-obsidian hover:decoration-obsidian/60 transition-colors inline-flex items-center gap-0.5"
+          className="text-info underline underline-offset-2 hover:text-info/80 transition-colors inline-flex items-center gap-0.5"
         >
           {match[1].length > 50 ? match[1].slice(0, 50) + "…" : match[1]}
           <ExternalLink className="h-2.5 w-2.5 inline shrink-0 opacity-60" />
         </a>
       );
     } else if (match[2]) {
-      // Command — obsidian chip on gold bg
       parts.push(
         <span
           key={key++}
-          className="inline-block bg-obsidian/15 text-obsidian font-semibold text-compact px-1.5 py-0.5 rounded-md font-mono"
+          className="inline-block bg-border/40 text-foreground/80 font-semibold text-compact px-1.5 py-0.5 rounded-md font-mono"
         >
           {match[2]}
         </span>
@@ -161,7 +159,7 @@ export function CommandBubble({ msg, isStreaming, onRetry, onEdit }: CommandBubb
       <div className="flex justify-end group">
         <div className="flex items-start gap-2.5 max-w-[85%] sm:max-w-[75%]">
           <div className="relative">
-            <div className="bg-gold text-obsidian rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed shadow-sm shadow-gold/10">
+            <div className="bg-muted/80 text-foreground border border-border/30 rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed">
               <p className="whitespace-pre-wrap">{renderUserContent(msg.content)}</p>
             </div>
             <div className="absolute -bottom-6 right-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all duration-200">
