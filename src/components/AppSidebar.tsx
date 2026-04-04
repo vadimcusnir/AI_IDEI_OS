@@ -31,7 +31,7 @@ import {
 import {
   Home, BookOpen, Sparkles,
   Brain, Network, Store,
-  Coins, Crown, Plus,
+  Coins, Crown, Plus, Wallet,
   Clock, Trash2, MessageCircle,
   Shield, Cpu, Activity, BarChart3, Database,
   Trophy, ChevronRight, Lock, Globe,
@@ -108,6 +108,7 @@ const SYSTEM_MAP: NavGroup[] = [
       { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs" },
       { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { label: "Wallet", to: "/wallet", icon: Wallet, controlId: "nav.wallet" },
     ],
   },
   {

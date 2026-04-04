@@ -36,6 +36,7 @@ import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
 import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
+import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
 
 export default function Home() {
   const cc = useCommandCenter();
@@ -102,6 +103,9 @@ export default function Home() {
                     episodeCount={cc.totalEpisodes}
                     balance={cc.balance}
                   />
+                  <div className="mt-6 w-full max-w-md">
+                    <MagicPipelineButton className="w-full" />
+                  </div>
                 </div>
               ) : (
                 /* ── Conversation feed ── */
