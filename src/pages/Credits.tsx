@@ -216,6 +216,11 @@ export default function Credits() {
           className="mb-4"
         />
 
+        {/* Gamified Upsells */}
+        <div className="mb-6">
+          <StreakUpsellBanner />
+        </div>
+
         {/* Wallet State */}
         <div className="mb-6">
           <WalletPanel />
