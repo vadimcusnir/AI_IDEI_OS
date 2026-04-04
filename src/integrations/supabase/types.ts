@@ -11525,6 +11525,10 @@ export type Database = {
       advance_vip_month: { Args: { _user_id: string }; Returns: Json }
       analytics_summary: { Args: { _days?: number }; Returns: Json }
       apply_abuse_ladder: { Args: { _user_id: string }; Returns: string }
+      approve_profile: {
+        Args: { _profile_id: string; _user_id: string }
+        Returns: Json
+      }
       award_xp: {
         Args: {
           _amount: number
@@ -11568,6 +11572,10 @@ export type Database = {
           p_max_attempts?: number
           p_window_minutes?: number
         }
+        Returns: Json
+      }
+      check_profile_eligibility: {
+        Args: { _episode_id?: string; _user_id: string }
         Returns: Json
       }
       check_rate_limit: {
@@ -11627,6 +11635,7 @@ export type Database = {
         Args: { _person_id: string }
         Returns: undefined
       }
+      compute_profile_trust: { Args: { _profile_id: string }; Returns: Json }
       compute_user_intelligence: { Args: { _user_id: string }; Returns: Json }
       data_pipeline_stats: { Args: never; Returns: Json }
       deactivate_emergency: { Args: { _control_id: string }; Returns: boolean }
@@ -11790,6 +11799,10 @@ export type Database = {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean
       }
+      reject_profile: {
+        Args: { _profile_id: string; _reason?: string; _user_id: string }
+        Returns: Json
+      }
       release_neurons: {
         Args: {
           _amount: number
@@ -11797,6 +11810,10 @@ export type Database = {
           _job_id?: string
           _user_id: string
         }
+        Returns: Json
+      }
+      reprocess_profile: {
+        Args: { _profile_id: string; _user_id: string }
         Returns: Json
       }
       reserve_credits: {
@@ -11816,6 +11833,10 @@ export type Database = {
       retry_failed_job: { Args: { _job_id: string }; Returns: boolean }
       revoke_power_unlock: {
         Args: { _capability_key: string; _user_id: string }
+        Returns: Json
+      }
+      rollback_profile: {
+        Args: { _profile_id: string; _target_version: number; _user_id: string }
         Returns: Json
       }
       root2_nearest: { Args: { _price: number }; Returns: number }
