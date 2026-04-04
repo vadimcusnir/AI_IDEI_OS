@@ -12,7 +12,7 @@ We take security seriously. If you discover a vulnerability, please report it re
 
 ### How to Report
 
-1. **Email:** Send details to [security@ai-idei.com](mailto:security@ai-idei.com)
+1. **Email:** Send details to [vadim.kusnir@gmail.com](mailto:vadim.kusnir@gmail.com)
 2. **Subject:** `[SECURITY] Brief description of the issue`
 3. **Include:**
    - Description of the vulnerability

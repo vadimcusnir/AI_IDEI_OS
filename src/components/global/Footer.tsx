@@ -41,6 +41,7 @@ function BrandColumn() {
       <div className="text-xs text-muted-foreground/60 space-y-0.5 pt-1">
         <p className="font-medium text-muted-foreground/80">Cușnir Media SRL</p>
         <p>Republic of Moldova, r. Ocnița, s-tul Bîrlădeni</p>
+        <a href="mailto:vadim.kusnir@gmail.com" className="text-muted-foreground/80 hover:text-foreground transition-colors">vadim.kusnir@gmail.com</a>
       </div>
     </div>
   );
