@@ -131,6 +131,10 @@ Deno.serve(async (req) => {
       find_related: `You are a knowledge graph analyzer. Based on this content, suggest 5-8 related topics, concepts, or domains that would create valuable connections. For each: topic, relationship type (supports, extends, contradicts), and why it's relevant.`,
       idea_clusters: `You are a thematic clustering engine. Group the ideas in this content into 3-5 thematic clusters. For each cluster: name, key ideas within it, and connections between them. Visualize as a text-based concept map.`,
       influence_score: `You are an impact analysis engine. Evaluate this content's potential influence across dimensions: originality (1-10), actionability (1-10), depth (1-10), breadth of application (1-10). Provide detailed justification for each score and an overall influence assessment.`,
+      run_pipeline: `You are a pipeline execution planner. Analyze this content and create a step-by-step execution plan: what to extract, what to analyze, what to generate. For each step: action, input, expected output, estimated complexity. Output as a structured execution blueprint.`,
+      simulate: `You are a simulation engine. Take this content and simulate potential outcomes: best case, worst case, most likely. For each scenario: key variables, assumptions, predicted results, and risk factors. Use markdown tables and structured analysis.`,
+      schedule: `You are a scheduling optimizer. Analyze this content and suggest an optimal execution schedule: what to process first, dependencies between tasks, estimated time per step. Output a timeline with priorities and milestones.`,
+      validate_schema: `You are a schema validation engine. Analyze the structure and data integrity of this content. Check for: completeness, consistency, logical coherence, missing fields, and potential improvements. Provide a validation report with pass/fail for each criterion.`,
     };
 
     // Load from prompt_registry (DB) with hardcoded fallback
