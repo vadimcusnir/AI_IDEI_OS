@@ -25,6 +25,7 @@ const AnalyticsDashboard = lazyRetry(() => import("@/pages/AnalyticsDashboard"))
 const SecurityDocs = lazyRetry(() => import("@/pages/SecurityDocs"));
 const DatabaseRelations = lazyRetry(() => import("@/pages/DatabaseRelations"));
 const AdminPipelineIntelligence = lazyRetry(() => import("@/pages/AdminPipelineIntelligence"));
+const AdminGovernance = lazyRetry(() => import("@/pages/AdminGovernance"));
 
 export function adminRoutes() {
   return (
