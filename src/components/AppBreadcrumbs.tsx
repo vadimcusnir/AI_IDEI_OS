@@ -123,22 +123,20 @@ export function AppBreadcrumbs() {
             </BreadcrumbLink>
           </BreadcrumbItem>
           {crumbs.map((crumb) => (
-            <span key={crumb.path} className="contents">
+            <BreadcrumbItem key={crumb.path}>
               <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {crumb.isLast ? (
-                  <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
+              {crumb.isLast ? (
+                <BreadcrumbPage className="text-[11px] max-w-[160px] truncate">
+                  {crumb.label}
+                </BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link to={crumb.path} className="text-[11px]">
                     {crumb.label}
-                  </BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link to={crumb.path} className="text-[11px]">
-                      {crumb.label}
-                    </Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-            </span>
+                  </Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
           ))}
         </BreadcrumbList>
       </Breadcrumb>
