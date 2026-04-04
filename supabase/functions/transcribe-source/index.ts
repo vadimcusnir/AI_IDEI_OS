@@ -149,57 +149,214 @@ function failResponse(
   );
 }
 
+type AudioExtractSuccess = {
+  ok: true;
+  audioUrl: string;
+  filename: string;
+};
+
+type AudioExtractFailure = {
+  ok: false;
+  failureClass: FailureClass;
+  message: string;
+  retryable: boolean;
+};
+
+type AudioExtractResult = AudioExtractSuccess | AudioExtractFailure;
+
+function getCobaltConfig() {
+  const configuredUrl = Deno.env.get("COBALT_API_URL")?.trim();
+  const apiKey = Deno.env.get("COBALT_API_KEY")?.trim();
+  const bearerToken = Deno.env.get("COBALT_BEARER_TOKEN")?.trim();
+
+  return {
+    url: (configuredUrl || "https://api.cobalt.tools").replace(/\/+$/, ""),
+    apiKey,
+    bearerToken,
+    hasCustomConfig: Boolean(configuredUrl || apiKey || bearerToken),
+  };
+}
+
+function getCobaltHeaders(config: ReturnType<typeof getCobaltConfig>): HeadersInit {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  };
+
+  if (config.apiKey) {
+    headers.Authorization = `Api-Key ${config.apiKey}`;
+  } else if (config.bearerToken) {
+    headers.Authorization = `Bearer ${config.bearerToken}`;
+  }
+
+  return headers;
+}
+
+async function parseJsonResponse(resp: Response): Promise<any | null> {
+  const text = await resp.text();
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { raw: text };
+  }
+}
+
+function extractCobaltErrorMessage(payload: any): string | null {
+  const parts = [
+    payload?.error?.code,
+    payload?.error?.message,
+    payload?.title,
+    payload?.detail,
+    payload?.error_name,
+    payload?.what_you_should_do,
+    payload?.raw,
+  ].filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+
+  return parts.length > 0 ? parts.join(" — ") : null;
+}
+
+function classifyCobaltFailure(
+  status: number,
+  payload: any,
+  config: ReturnType<typeof getCobaltConfig>,
+): AudioExtractFailure {
+  const errorMessage = extractCobaltErrorMessage(payload) || "Audio provider failed to fetch the YouTube audio stream.";
+  const normalized = errorMessage.toLowerCase();
+
+  if (
+    normalized.includes("api.auth") ||
+    normalized.includes("jwt.missing") ||
+    normalized.includes("api-key") ||
+    normalized.includes("authorization") ||
+    normalized.includes("browser_signature_banned") ||
+    normalized.includes("access denied") ||
+    normalized.includes("turnstile")
+  ) {
+    return {
+      ok: false,
+      failureClass: "no_backend_configured",
+      message: config.hasCustomConfig
+        ? "YouTube extraction backend rejected the configured Cobalt access. Update COBALT_API_URL / COBALT_API_KEY / COBALT_BEARER_TOKEN."
+        : "YouTube audio extraction is blocked by the public Cobalt endpoint. Configure an authenticated Cobalt backend (COBALT_API_URL plus COBALT_API_KEY or COBALT_BEARER_TOKEN).",
+      retryable: false,
+    };
+  }
+
+  if (
+    normalized.includes("private") ||
+    normalized.includes("geo") ||
+    normalized.includes("age") ||
+    normalized.includes("unavailable") ||
+    normalized.includes("members only")
+  ) {
+    return {
+      ok: false,
+      failureClass: "video_private_or_blocked",
+      message: "This YouTube video is restricted (private, age-gated, or geo-blocked), so audio could not be fetched.",
+      retryable: false,
+    };
+  }
+
+  if (status === 429 || normalized.includes("rate limit")) {
+    return {
+      ok: false,
+      failureClass: "media_fetch_failed",
+      message: "YouTube audio provider is rate-limited right now. Try again in a moment.",
+      retryable: true,
+    };
+  }
+
+  return {
+    ok: false,
+    failureClass: "media_fetch_failed",
+    message: errorMessage,
+    retryable: status >= 500 || status === 429,
+  };
+}
+
 // ═══════════════════════════════════════
 // Audio Extraction — YouTube via cobalt.tools
 // ═══════════════════════════════════════
-async function extractYouTubeAudio(videoId: string): Promise<{ audioUrl: string; filename: string } | null> {
-  const COBALT_INSTANCES = [
-    "https://api.cobalt.tools",
-  ];
+async function extractYouTubeAudio(videoId: string): Promise<AudioExtractResult> {
+  const config = getCobaltConfig();
 
-  for (const instance of COBALT_INSTANCES) {
-    try {
-      console.log(`[audio-extract] Trying cobalt: ${instance}`);
-      const resp = await fetch(`${instance}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          url: `https://www.youtube.com/watch?v=${videoId}`,
-          downloadMode: "audio",
-          audioFormat: "mp3",
-        }),
-      });
+  try {
+    console.log(`[audio-extract] Trying cobalt: ${config.url}`);
+    const resp = await fetch(`${config.url}/`, {
+      method: "POST",
+      headers: getCobaltHeaders(config),
+      body: JSON.stringify({
+        url: `https://www.youtube.com/watch?v=${videoId}`,
+        downloadMode: "audio",
+        audioFormat: "best",
+        filenameStyle: "basic",
+        youtubeBetterAudio: true,
+        youtubeHLS: true,
+        alwaysProxy: true,
+      }),
+    });
 
-      if (!resp.ok) {
-        console.warn(`[audio-extract] cobalt ${instance} returned ${resp.status}`);
-        continue;
-      }
+    const data = await parseJsonResponse(resp);
 
-      const data = await resp.json();
-      if (data.status === "tunnel" || data.status === "redirect") {
-        const audioUrl = data.url;
-        if (audioUrl) {
-          console.log(`[audio-extract] ✓ Got audio URL from cobalt`);
-          return { audioUrl, filename: `yt_${videoId}.mp3` };
-        }
-      }
-      if (data.status === "picker" && data.picker?.length > 0) {
-        // Pick audio track
-        const audioTrack = data.picker.find((p: any) => p.type === "audio") || data.picker[0];
-        if (audioTrack?.url) {
-          return { audioUrl: audioTrack.url, filename: `yt_${videoId}.mp3` };
-        }
-      }
-      console.warn(`[audio-extract] cobalt response status: ${data.status}`);
-    } catch (e) {
-      console.warn(`[audio-extract] cobalt ${instance} error:`, e);
+    if (!resp.ok) {
+      console.warn(`[audio-extract] cobalt ${config.url} returned ${resp.status}`);
+      return classifyCobaltFailure(resp.status, data, config);
     }
-  }
 
-  return null;
+    if (data?.status === "tunnel" || data?.status === "redirect") {
+      const audioUrl = data.url;
+      if (audioUrl) {
+        console.log("[audio-extract] ✓ Got audio URL from cobalt");
+        return {
+          ok: true,
+          audioUrl,
+          filename: data.filename || `yt_${videoId}.mp3`,
+        };
+      }
+    }
+
+    if (data?.status === "local-processing" && Array.isArray(data.tunnel) && data.tunnel[0]) {
+      console.log("[audio-extract] ✓ Got local-processing tunnel from cobalt");
+      return {
+        ok: true,
+        audioUrl: data.tunnel[0],
+        filename: data.output?.filename || `yt_${videoId}.${data.audio?.format || "webm"}`,
+      };
+    }
+
+    if (data?.status === "picker" && data.picker?.length > 0) {
+      const audioTrack = data.picker.find((p: any) => p.type === "audio") || data.picker[0];
+      if (audioTrack?.url) {
+        return {
+          ok: true,
+          audioUrl: audioTrack.url,
+          filename: data.audioFilename || `yt_${videoId}.mp3`,
+        };
+      }
+    }
+
+    if (data?.status === "error") {
+      return classifyCobaltFailure(400, data, config);
+    }
+
+    console.warn(`[audio-extract] cobalt response status: ${data?.status ?? "unknown"}`);
+    return {
+      ok: false,
+      failureClass: "media_fetch_failed",
+      message: "Audio provider did not return a usable audio stream.",
+      retryable: true,
+    };
+  } catch (e) {
+    console.warn(`[audio-extract] cobalt ${config.url} error:`, e);
+    return {
+      ok: false,
+      failureClass: "media_fetch_failed",
+      message: e instanceof Error ? e.message : "Audio provider request failed",
+      retryable: true,
+    };
+  }
 }
 
 // ═══════════════════════════════════════
@@ -545,14 +702,18 @@ Deno.serve(async (req) => {
       const audioExtract = await extractYouTubeAudio(source.video_id);
       timings.audio_extract_ms = Date.now() - t3a;
 
-      if (!audioExtract) {
-        await updateStatus("error", { failure_class: "media_fetch_failed" });
+      if (!audioExtract.ok) {
+        const status = audioExtract.failureClass === "no_backend_configured" ? 503 : 422;
+        await updateStatus("error", {
+          failure_class: audioExtract.failureClass,
+          failure_reason: audioExtract.message,
+        });
         return failResponse(
-          "media_fetch_failed",
-          "Could not extract audio from YouTube video. The video may be private, age-restricted, or geo-blocked.",
-          422,
+          audioExtract.failureClass,
+          audioExtract.message,
+          status,
           corsHeaders,
-          true,
+          audioExtract.retryable,
         );
       }
 
