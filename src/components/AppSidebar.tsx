@@ -35,7 +35,7 @@ import {
   Clock, Trash2, MessageCircle,
   Shield, Cpu, Activity, BarChart3, Database,
   Trophy, ChevronRight, Lock, Globe,
-  Plug, Gem,
+  Plug, Gem, Workflow,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -104,6 +104,7 @@ const SYSTEM_MAP: NavGroup[] = [
     defaultOpen: true,
     authOnly: true,
     items: [
+      { label: "Pipeline", to: "/pipeline", icon: Workflow, controlId: "nav.pipeline", highlight: true },
       { label: "Library", to: "/library", icon: BookOpen, controlId: "nav.library" },
       { label: "Jobs", to: "/jobs", icon: Clock, controlId: "nav.jobs" },
       { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
