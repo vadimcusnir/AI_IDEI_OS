@@ -2,7 +2,7 @@
  * CC-V03: Error Matrix + Recovery UX
  * Handles all error states in Command Center with user-friendly recovery options.
  */
-import { AlertTriangle, RefreshCw, WifiOff, CreditCard, FileWarning, ArrowRight } from "lucide-react";
+import { AlertTriangle, RefreshCw, WifiOff, CreditCard, FileWarning, ArrowRight, Clock, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
