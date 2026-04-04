@@ -211,9 +211,9 @@ export default function PublicAnalysis() {
           )}
 
           {/* Tags */}
-          {analysis.tags.length > 0 && (
+          {(analysis.tags ?? []).length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-8">
-              {analysis.tags.map((tag) => (
+              {(analysis.tags ?? []).map((tag) => (
                 <Badge key={tag} variant="outline" className="text-[10px]">
                   <Tag className="h-2.5 w-2.5 mr-1" />
                   {tag}

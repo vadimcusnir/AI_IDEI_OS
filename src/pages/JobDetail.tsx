@@ -268,7 +268,7 @@ export default function JobDetail() {
               const isUnlocked = showFull[art.id] || !art.is_locked;
               const displayContent = isUnlocked
                 ? art.content
-                : (art.preview_content || art.content.slice(0, Math.floor(art.content.length * 0.2)));
+                : (art.preview_content || (art.content ?? "").slice(0, Math.floor((art.content ?? "").length * 0.2)));
 
               return (
                 <div key={art.id} className="bg-card border border-border rounded-xl overflow-hidden">

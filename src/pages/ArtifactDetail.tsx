@@ -215,9 +215,9 @@ ${artifact.content.replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm,
             </span>
           </div>
           <h1 className="text-xl font-bold">{artifact.title}</h1>
-          {artifact.tags.length > 0 && (
+          {(artifact.tags ?? []).length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
-              {artifact.tags.map(tag => (
+              {(artifact.tags ?? []).map(tag => (
                 <Badge key={tag} variant="secondary" className="text-[9px]">{tag}</Badge>
               ))}
             </div>
