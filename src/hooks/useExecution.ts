@@ -112,11 +112,11 @@ export function useExecution(context: ExecutionContext) {
       .insert({
         neuron_id: Number(neuron.id),
         worker_type: serviceKey,
-        status: "pending",
-        input: inputParams,
+        status: "pending" as const,
+        input: inputParams as unknown as import("@/integrations/supabase/types").Json,
         author_id: user.id,
         workspace_id: context.workspaceId,
-      })
+      } satisfies Record<string, unknown> as any)
       .select("id")
       .single();
 
