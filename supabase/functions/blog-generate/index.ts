@@ -42,12 +42,7 @@ const IMAGE_STYLE_PROMPT = `Style requirements (MANDATORY):
 
 function repairAndParseJson(raw: string): any {
   let cleaned = raw.replace(/```(?:json)?\s*/gi, "").replace(/```\s*/g, "").trim();
-  try {
-    // Rate limit guard (IP-based)
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    const rateLimited = await rateLimitGuard(clientIp + ":blog-generate", req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
-    if (rateLimited) return rateLimited;
- return JSON.parse(cleaned); } catch { /* continue */ }
+  try { return JSON.parse(cleaned); } catch { /* continue */ }
 
   const jsonStart = cleaned.search(/[{[]/);
   if (jsonStart === -1) return null;
