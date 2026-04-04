@@ -235,7 +235,7 @@ export function CommandBubble({ msg, isStreaming, onRetry, onEdit }: CommandBubb
             </div>
           </div>
           {isStreaming && (
-            <span className="inline-block w-[3px] h-5 bg-[hsl(var(--gold-oxide)/0.6)] animate-pulse rounded-full ml-1 -mb-1" />
+            <span className="inline-block w-[3px] h-5 bg-gold/60 animate-pulse rounded-full ml-1 -mb-1" />
           )}
 
           {/* Actions */}

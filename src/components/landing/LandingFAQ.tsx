@@ -18,7 +18,7 @@ export function LandingFAQ() {
         <FadeInView delay={0.1}>
           <Accordion type="single" collapsible className="space-y-3.5">
             {items.map((faq, i) => (
-              <AccordionItem key={i} value={`faq-${i}`} className="border border-border/50 rounded-xl px-6 data-[state=open]:border-[hsl(var(--gold-oxide)/0.22)] data-[state=open]:bg-card data-[state=open]:shadow-sm transition-all">
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-border/50 rounded-xl px-6 data-[state=open]:border-gold/22 data-[state=open]:bg-card data-[state=open]:shadow-sm transition-all">
                 <AccordionTrigger className="text-sm font-semibold py-5.5 hover:no-underline text-foreground text-left min-h-[52px]">
                   {faq.q}
                 </AccordionTrigger>

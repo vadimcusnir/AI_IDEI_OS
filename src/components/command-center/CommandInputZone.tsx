@@ -211,7 +211,7 @@ export const CommandInputZone = forwardRef<CommandInputZoneRef, CommandInputZone
                   className={cn(
                     "h-10 w-10 rounded-xl transition-all duration-200",
                     (input.trim() || files.length > 0)
-                      ? "bg-[hsl(var(--gold-oxide))] text-[hsl(var(--obsidian))] shadow-sm shadow-[hsl(var(--gold-oxide)/0.2)] hover:shadow-md hover:bg-[hsl(var(--gold-dim))]"
+                      ? "bg-gold text-obsidian shadow-sm shadow-gold/20 hover:shadow-md hover:bg-gold-dim"
                       : "bg-muted text-muted-foreground/30"
                   )}
                   onClick={onSubmit}

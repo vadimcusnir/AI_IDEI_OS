@@ -31,7 +31,7 @@ export function LandingMechanism() {
               className="w-full h-auto"
               loading="lazy"
             />
-            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-[hsl(var(--gold-oxide)/0.08)] pointer-events-none" />
+            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-gold/[0.08] pointer-events-none" />
           </div>
         </FadeInView>
 
