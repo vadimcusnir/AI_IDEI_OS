@@ -1,9 +1,8 @@
 /**
- * APP LAYOUT — Canonical Shell
- * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- * Structure: Sidebar | Content
- * Header eliminated — navigation consolidated into AppSidebar.
- * SidebarTrigger, Search, UserMenu, Theme, Lang all live in AppSidebar.
+ * APP LAYOUT — Canonical Shell (Mobile-First)
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * Mobile: Top bar (trigger + page title) + content + bottom nav
+ * Desktop: Sidebar | Top bar (trigger + breadcrumbs + pipeline) | content
  */
 
 import { ReactNode, useEffect, useRef, lazy, Suspense } from "react";
@@ -19,6 +18,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
+import { MobilePageTitle } from "@/components/MobilePageTitle";
 
 // Lazy-load non-critical components
 const LowBalanceBanner = lazy(() => import("@/components/credits/LowBalanceBanner").then(m => ({ default: m.LowBalanceBanner })));
@@ -60,9 +60,17 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
         </a>
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-          {/* ═══ INLINE TOP BAR ═══ */}
-          <div className="shrink-0 h-10 flex items-center gap-3 border-b border-border/30 bg-background/80 backdrop-blur-md px-3">
-            <SidebarTrigger aria-label="Toggle sidebar" className="h-8 w-8" />
+          {/* ═══ TOP BAR — Mobile-first: trigger + page title on mobile, breadcrumbs on desktop ═══ */}
+          <div className="shrink-0 h-12 md:h-10 flex items-center gap-2 border-b border-border/30 bg-background/80 backdrop-blur-md px-2 md:px-3">
+            <SidebarTrigger
+              aria-label="Toggle sidebar"
+              className="h-10 w-10 min-h-[44px] min-w-[44px] md:h-8 md:w-8 md:min-h-0 md:min-w-0"
+            />
+            {/* Mobile: show current page title */}
+            <div className="flex-1 min-w-0 md:hidden">
+              <MobilePageTitle />
+            </div>
+            {/* Desktop: breadcrumbs */}
             <div className="hidden md:flex items-center flex-1 min-w-0">
               <AppBreadcrumbs />
             </div>
@@ -85,14 +93,14 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
               <ErrorBoundary><div className="flex-1 flex flex-col min-h-0">{children}</div></ErrorBoundary>
             </main>
           ) : (
-            <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-16 md:pb-0">
+            <main id="main-content" className="flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden pb-20 md:pb-0">
               <ErrorBoundary><PageTransition>{children}</PageTransition></ErrorBoundary>
               <Suspense fallback={<div className="py-8"><Skeleton className="h-4 w-32 mx-auto" /></div>}><Footer /></Suspense>
             </main>
           )}
         </div>
       </div>
-      <Suspense fallback={<div className="fixed bottom-0 left-0 right-0 h-14 bg-background border-t border-border md:hidden"><Skeleton className="h-full w-full" /></div>}><MobileBottomNav /></Suspense>
+      <Suspense fallback={<div className="fixed bottom-0 left-0 right-0 h-16 bg-background border-t border-border md:hidden"><Skeleton className="h-full w-full" /></div>}><MobileBottomNav /></Suspense>
       <Suspense fallback={null}>
         <ContextualFeedbackPrompt />
         <GamificationToasts />
