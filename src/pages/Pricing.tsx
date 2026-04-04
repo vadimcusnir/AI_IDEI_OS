@@ -36,9 +36,28 @@ function usePlans() {
       cta: t("pricing.start_free"),
     },
     {
+      key: "starter",
+      name: "Starter",
+      price: "23",
+      period: t("pricing.per_month"),
+      neurons: "3,000",
+      badge: null,
+      highlight: false,
+      priceId: SUBSCRIPTION_TIERS.starter_monthly.price_id,
+      mode: "subscription" as const,
+      features: [
+        "3,000 NEURONS / lună",
+        "Servicii AI de bază",
+        "Extracție & structurare",
+        "Library access",
+        "-10% cost execuție",
+      ],
+      cta: "Choose Starter",
+    },
+    {
       key: "pro",
       name: t("pricing.plan_pro"),
-      price: "37",
+      price: "47",
       period: t("pricing.per_month"),
       neurons: "10,000",
       badge: "Popular",
@@ -59,10 +78,10 @@ function usePlans() {
     {
       key: "vip",
       name: t("pricing.plan_vip"),
-      price: "137",
+      price: "95",
       period: t("pricing.per_month"),
       neurons: "30,000",
-      badge: "Max Power",
+      badge: "Best Value",
       highlight: false,
       priceId: SUBSCRIPTION_TIERS.vip_monthly.price_id,
       mode: "subscription" as const,
@@ -71,11 +90,30 @@ function usePlans() {
         t("pricing.feat_discount_40"),
         t("pricing.feat_all_pro"),
         t("pricing.feat_api"),
-        t("pricing.feat_custom_integrations"),
         t("pricing.feat_sla"),
         t("pricing.feat_nota2"),
       ],
       cta: t("pricing.choose_vip"),
+    },
+    {
+      key: "enterprise",
+      name: "Enterprise",
+      price: "137",
+      period: t("pricing.per_month"),
+      neurons: "50,000",
+      badge: "Max Power",
+      highlight: false,
+      priceId: SUBSCRIPTION_TIERS.enterprise_monthly.price_id,
+      mode: "subscription" as const,
+      features: [
+        "50,000 NEURONS / lună",
+        "Tot din VIP",
+        "API nelimitat",
+        "White-label reports",
+        "Dedicated account manager",
+        "-50% cost execuție",
+      ],
+      cta: "Choose Enterprise",
     },
   ];
 }
@@ -134,8 +172,10 @@ export default function Pricing() {
 
   const isCurrentPlan = (planKey: string) => {
     if (planKey === "free" && !subscribed) return true;
+    if (planKey === "starter" && tier === "starter_monthly") return true;
     if (planKey === "pro" && tier === "pro_monthly") return true;
     if (planKey === "vip" && tier === "vip_monthly") return true;
+    if (planKey === "enterprise" && tier === "enterprise_monthly") return true;
     return false;
   };
 
@@ -165,7 +205,7 @@ export default function Pricing() {
 
         {/* Plans Grid */}
         <section className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {PLANS.map((plan) => {
               const isCurrent = isCurrentPlan(plan.key);
               const isProcessingThis = processing === plan.key;

@@ -65,11 +65,15 @@ export function RegistryCard({ service: s, onClick }: RegistryCardProps) {
 
       <div className="flex items-center gap-3 shrink-0">
         <div className="text-right">
-          <div className="flex items-center gap-0.5 text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-0.5 text-xs font-semibold text-primary">
             <Coins className="h-3 w-3" />
-            <span className="font-mono">{s.neurons_cost_min}–{s.neurons_cost_max}</span>
+            <span className="font-mono">
+              {s.neurons_cost_min === s.neurons_cost_max
+                ? `${s.neurons_cost_min}N`
+                : `${s.neurons_cost_min}–${s.neurons_cost_max}N`}
+            </span>
           </div>
-          <span className="text-[8px] text-muted-foreground/60">{s.complexity}</span>
+          <span className="text-[8px] text-muted-foreground/60">{s.complexity} · {s.output_type}</span>
         </div>
         <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors" />
       </div>
