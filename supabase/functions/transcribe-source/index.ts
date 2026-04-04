@@ -552,9 +552,9 @@ async function fetchSubtitlesAsMetadata(videoId: string): Promise<{
 }
 
 // ═══════════════════════════════════════
-// YouTube Captions Fallback (free, no audio)
+// YouTube Captions — HTML scraping + JSON3 (most reliable server-side)
 // ═══════════════════════════════════════
-const CAPTION_LANG_PRIORITY = ["ro", "en"];
+const CAPTION_LANG_PRIORITY = ["ro", "en", "ru", "de", "fr", "es"];
 
 function sanitizeCaptionText(raw: string): string {
   return raw
@@ -570,77 +570,127 @@ function sanitizeCaptionText(raw: string): string {
 
 async function fetchYouTubeCaptions(videoId: string): Promise<TranscriptResult | null> {
   try {
-    console.log(`[captions-fallback] Trying YouTube captions for ${videoId}`);
+    console.log(`[captions] Fetching YouTube page for ${videoId}`);
 
-    const listResp = await fetch(`https://video.google.com/timedtext?v=${videoId}&type=list`);
-    if (!listResp.ok) return null;
+    // Step 1: Get the watch page HTML to extract caption track URLs
+    const pageResp = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+    });
 
-    const listXml = await listResp.text();
-    const tracks: { code: string; kind?: string }[] = [];
-    const trackRegex = /lang_code="([^"]+)"(?:[^>]*kind="([^"]*)")?/g;
-    let m;
-    while ((m = trackRegex.exec(listXml)) !== null) {
-      tracks.push({ code: m[1], kind: m[2] });
+    if (!pageResp.ok) {
+      console.warn(`[captions] YouTube page returned ${pageResp.status}`);
+      return null;
     }
 
-    if (tracks.length === 0) return null;
+    const html = await pageResp.text();
 
-    // Pick best language: manual first, then ASR, in priority order
-    let selected: { code: string; kind?: string } | null = null;
+    // Step 2: Extract captionTracks from the embedded player config
+    const captionMatch = html.match(/"captions"\s*:\s*(\{"playerCaptionsTracklistRenderer".*?\})\s*,\s*"videoDetails"/);
+    if (!captionMatch) {
+      console.log("[captions] No captions block found in HTML");
+      return null;
+    }
+
+    let captionData: any;
+    try {
+      captionData = JSON.parse(captionMatch[1]);
+    } catch {
+      console.warn("[captions] Failed to parse captions JSON");
+      return null;
+    }
+
+    const tracks = captionData?.playerCaptionsTracklistRenderer?.captionTracks;
+    if (!tracks || tracks.length === 0) {
+      console.log("[captions] No caption tracks available");
+      return null;
+    }
+
+    // Step 3: Pick best track (manual > ASR, priority language)
+    let selected: any = null;
     for (const lang of CAPTION_LANG_PRIORITY) {
-      selected = tracks.find(t => t.code === lang && t.kind !== "asr") || null;
+      selected = tracks.find((t: any) => t.languageCode === lang && t.kind !== "asr") || null;
       if (selected) break;
     }
     if (!selected) {
       for (const lang of CAPTION_LANG_PRIORITY) {
-        selected = tracks.find(t => t.code === lang) || null;
+        selected = tracks.find((t: any) => t.languageCode === lang) || null;
         if (selected) break;
       }
     }
     if (!selected) selected = tracks[0];
 
-    let subUrl = `https://video.google.com/timedtext?v=${videoId}&lang=${selected.code}`;
-    if (selected.kind) subUrl += `&kind=${selected.kind}`;
+    // Step 4: Fetch the captions in JSON3 format
+    let captionUrl = selected.baseUrl;
+    if (!captionUrl.includes("fmt=")) captionUrl += "&fmt=json3";
+    else captionUrl = captionUrl.replace(/fmt=\w+/, "fmt=json3");
 
-    const subResp = await fetch(subUrl);
-    if (!subResp.ok) return null;
+    const isAsr = selected.kind === "asr";
+    console.log(`[captions] Fetching track: lang=${selected.languageCode}, kind=${isAsr ? "asr" : "manual"}`);
 
-    const subXml = await subResp.text();
+    const captionResp = await fetch(captionUrl);
+    if (!captionResp.ok) {
+      console.warn(`[captions] Caption fetch failed: ${captionResp.status}`);
+      return null;
+    }
 
-    // Parse timed text XML
+    const jsonData = await captionResp.json();
+    const events = jsonData?.events;
+
+    if (!events || !Array.isArray(events)) {
+      console.warn("[captions] No events in JSON3 response");
+      return null;
+    }
+
+    // Step 5: Parse events into segments
     const segments: TranscriptResult["segments"] = [];
     const textParts: string[] = [];
-    const regex = /<text[^>]*\bstart="([\d.]+)"[^>]*\bdur="([\d.]+)"[^>]*>([\s\S]*?)<\/text>/g;
-    let match;
-    while ((match = regex.exec(subXml)) !== null) {
-      const start = parseFloat(match[1]);
-      const dur = parseFloat(match[2]);
-      const text = sanitizeCaptionText(match[3]);
-      if (text && text.length <= 2000) {
-        segments.push({ start, end: start + dur, text });
-        textParts.push(text);
-      }
+
+    for (const event of events) {
+      if (!event.segs) continue;
+      const text = event.segs
+        .map((s: any) => s.utf8 || "")
+        .join("")
+        .trim();
+      if (!text || text === "\n") continue;
+
+      const cleanText = sanitizeCaptionText(text);
+      if (!cleanText) continue;
+
+      const startMs = event.tStartMs || 0;
+      const durMs = event.dDurationMs || 3000;
+      segments.push({
+        start: startMs / 1000,
+        end: (startMs + durMs) / 1000,
+        text: cleanText,
+      });
+      textParts.push(cleanText);
     }
 
     const fullText = textParts.join(" ");
-    if (!fullText || fullText.length < 50) return null;
+    if (!fullText || fullText.length < 50) {
+      console.warn(`[captions] Text too short (${fullText.length} chars)`);
+      return null;
+    }
 
     const lastSeg = segments[segments.length - 1];
     const duration = lastSeg ? Math.ceil(lastSeg.end) : null;
 
-    console.log(`[captions-fallback] ✓ Got ${segments.length} segments, ${fullText.split(/\s+/).length} words, lang=${selected.code}`);
+    console.log(`[captions] ✓ Got ${segments.length} segments, ${fullText.split(/\s+/).length} words, lang=${selected.languageCode}, asr=${isAsr}`);
 
     return {
       text: fullText,
       segments,
       duration_seconds: duration,
-      detected_language: selected.code,
+      detected_language: selected.languageCode,
       speakers: [],
-      confidence: selected.kind === "asr" ? 0.7 : 0.85,
-      processing_mode: "elevenlabs_scribe_v2" as const, // will be overridden
+      confidence: isAsr ? 0.7 : 0.85,
+      processing_mode: "elevenlabs_scribe_v2" as const,
     };
   } catch (e) {
-    console.warn("[captions-fallback] Failed:", e);
+    console.warn("[captions] Failed:", e);
     return null;
   }
 }
@@ -853,7 +903,6 @@ Deno.serve(async (req) => {
         sttResult = await transcribeWithElevenLabs(audioBlob, audioExtract.filename, ELEVENLABS_API_KEY, language);
         timings.stt_ms = Date.now() - t3c;
       }
-      timings.stt_ms = Date.now() - t3c;
 
     } else if (source?.platform === "direct" || source?.platform === "vimeo") {
       // ── PATH C: Direct URL → download → ElevenLabs ──
