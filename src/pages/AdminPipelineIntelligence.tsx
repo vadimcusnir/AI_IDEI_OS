@@ -65,6 +65,7 @@ export default function AdminPipelineIntelligence() {
               <TabsTrigger value="scoring" className="text-xs gap-1"><Target className="h-3 w-3" /> Scoring</TabsTrigger>
               <TabsTrigger value="patterns" className="text-xs gap-1"><Shapes className="h-3 w-3" /> Patterns</TabsTrigger>
               <TabsTrigger value="chain" className="text-xs gap-1"><Layers className="h-3 w-3" /> Chain</TabsTrigger>
+              <TabsTrigger value="axes" className="text-xs gap-1"><Brain className="h-3 w-3" /> 3-Axis</TabsTrigger>
             </TabsList>
 
             <div className="bg-card border border-border rounded-lg p-5">
