@@ -34,6 +34,27 @@ export default {
         'compact': ['0.8125rem', { lineHeight: '1.5' }],  /* 13px — dense body */
       },
       colors: {
+        /* Brand palette — canonical, replaces all arbitrary hsl(var(--gold-oxide)) etc. */
+        gold: {
+          DEFAULT: "hsl(var(--gold-oxide))",
+          dim: "hsl(var(--gold-dim))",
+          subtle: "hsl(var(--gold-subtle))",
+        },
+        petrol: {
+          DEFAULT: "hsl(var(--petrol))",
+          dim: "hsl(var(--petrol-dim))",
+        },
+        obsidian: {
+          DEFAULT: "hsl(var(--obsidian))",
+          light: "hsl(var(--obsidian-light))",
+        },
+        ivory: {
+          DEFAULT: "hsl(var(--ivory))",
+          dim: "hsl(var(--ivory-dim))",
+        },
+        signal: {
+          red: "hsl(var(--signal-red))",
+        },
         toolbar: {
           DEFAULT: "hsl(var(--toolbar-bg))",
           border: "hsl(var(--toolbar-border))",
