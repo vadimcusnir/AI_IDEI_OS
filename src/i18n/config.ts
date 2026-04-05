@@ -77,7 +77,8 @@ i18n
       },
     },
     detection: {
-      order: ["querystring", "localStorage", "navigator"],
+      order: ["path", "querystring", "localStorage", "navigator"],
+      lookupFromPathIndex: 0,
       lookupQuerystring: "lang",
       lookupLocalStorage: "i18nextLng",
       caches: ["localStorage"],
