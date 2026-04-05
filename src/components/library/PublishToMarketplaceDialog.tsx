@@ -179,12 +179,30 @@ export function PublishToMarketplaceDialog({ open, onOpenChange, artifact }: Pub
                   </p>
                 </div>
               </div>
+              {/* Quality Gate Indicators */}
+              <div className="rounded-lg border border-border/50 p-3 space-y-1.5">
+                <p className="text-micro font-medium flex items-center gap-1.5 text-muted-foreground">
+                  <ShieldCheck className="h-3 w-3" /> Verificări de publicare
+                </p>
+                {gateResult.checks.map(c => (
+                  <div key={c.key} className="flex items-center gap-2 text-micro">
+                    {c.passed
+                      ? <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />
+                      : <AlertTriangle className="h-3 w-3 text-semantic-amber shrink-0" />
+                    }
+                    <span className={c.passed ? "text-muted-foreground" : "text-foreground"}>
+                      {c.label}
+                      {!c.passed && c.reason && <span className="text-muted-foreground/60 ml-1">— {c.reason}</span>}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <DialogFooter>
               <Button variant="outline" size="sm" onClick={() => handleClose(false)}>Anulează</Button>
               <Button size="sm" onClick={handlePublish}
-                disabled={publishing || !title.trim() || !description.trim() || neuronsNum < 20}
+                disabled={publishing || !gateResult.passed}
                 className="gap-1.5">
                 <Store className="h-3.5 w-3.5" />
                 {publishing ? "Se publică..." : "Publică"}
