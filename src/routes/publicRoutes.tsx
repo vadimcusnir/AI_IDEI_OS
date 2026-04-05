@@ -93,7 +93,7 @@ export function publicRoutes() {
       <Route path="/admin/media-profiles" element={<AppLayout><ErrorBoundary fallbackTitle="Admin media failed"><AdminMediaProfiles /></ErrorBoundary></AppLayout>} />
 
       {/* Pipeline & services (public catalog) */}
-      <Route path="/pipeline" element={<AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><PipelineOverview /></ErrorBoundary></AppLayout>} />
+      <Route path="/pipeline-overview" element={<AppLayout><ErrorBoundary fallbackTitle="Pipeline failed to load"><PipelineOverview /></ErrorBoundary></AppLayout>} />
       <Route path="/services" element={<AppLayout><ErrorBoundary fallbackTitle="Services failed to load"><Services /></ErrorBoundary></AppLayout>} />
       <Route path="/programs" element={<AppLayout><ErrorBoundary fallbackTitle="Programs failed to load"><Programs /></ErrorBoundary></AppLayout>} />
       <Route path="/services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
