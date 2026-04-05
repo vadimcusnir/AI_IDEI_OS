@@ -97,7 +97,7 @@ export function useForumThreads(categorySlug: string | undefined) {
       // Fetch author profiles
       const authorIds = [...new Set((data || []).map((t: any) => t.author_id))];
       const { data: profiles } = await supabase
-        .from("profiles")
+        .from("profiles_public" as any)
         .select("user_id, display_name, avatar_url")
         .in("user_id", authorIds);
 
@@ -125,7 +125,7 @@ export function useForumThread(threadId: string | undefined) {
 
       // Get author profile
       const { data: profile } = await supabase
-        .from("profiles")
+        .from("profiles_public" as any)
         .select("user_id, display_name, avatar_url")
         .eq("user_id", data.author_id)
         .single();
@@ -151,7 +151,7 @@ export function useForumPosts(threadId: string | undefined) {
       // Fetch author profiles and karma
       const authorIds = [...new Set((data || []).map((p: any) => p.author_id))];
       const [{ data: profiles }, { data: karmas }] = await Promise.all([
-        supabase.from("profiles").select("user_id, display_name, avatar_url").in("user_id", authorIds),
+        supabase.from("profiles_public" as any).select("user_id, display_name, avatar_url").in("user_id", authorIds),
         supabase.from("user_karma").select("user_id, karma").in("user_id", authorIds),
       ]);
 
