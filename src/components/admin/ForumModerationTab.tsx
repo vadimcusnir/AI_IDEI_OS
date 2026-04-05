@@ -56,7 +56,7 @@ export function ForumModerationTab() {
         target_content = thread?.title || "";
       }
 
-      const { data: profile } = await supabase.from("profiles").select("display_name").eq("user_id", flag.reporter_id).single();
+      const { data: profile } = await supabase.from("profiles_public" as any).select("display_name").eq("user_id", flag.reporter_id).single() as { data: { display_name: string } | null };
 
       return { ...flag, target_content, reporter_name: profile?.display_name || "Unknown" };
     }));

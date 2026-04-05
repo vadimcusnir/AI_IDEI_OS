@@ -86,9 +86,9 @@ export function LeaderboardWidget() {
     const enrichEntries = async (data: any[]) => {
       const userIds = data.map((d) => d.user_id);
       const { data: profiles } = await supabase
-        .from("profiles")
+        .from("profiles_public" as any)
         .select("user_id, display_name")
-        .in("user_id", userIds);
+        .in("user_id", userIds) as { data: { user_id: string; display_name: string }[] | null };
 
       const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p.display_name]));
       setEntries(data.map((d) => ({

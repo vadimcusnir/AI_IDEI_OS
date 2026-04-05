@@ -78,10 +78,10 @@ export default function MarketplaceDetail() {
       // Load author name
       if (data?.author_id) {
         const { data: profile } = await supabase
-          .from("profiles")
+          .from("profiles_public" as any)
           .select("display_name, username")
           .eq("user_id", data.author_id)
-          .maybeSingle();
+          .maybeSingle() as { data: { display_name: string; username: string } | null };
         if (profile) setAuthorName(profile.display_name || profile.username || "Creator");
       }
 
