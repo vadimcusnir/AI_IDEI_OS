@@ -63,8 +63,8 @@ const App = () => (
           <BrowserRouter>
             <Suspense fallback={<PageLoader />}>
               <ScrollToTop />
-              <GrowthHooks />
-              <PostAuthRedirector />
+              <Suspense fallback={null}><GrowthHooks /></Suspense>
+              <Suspense fallback={null}><PostAuthRedirector /></Suspense>
               <Routes>
                 {publicRoutes()}
                 {protectedRoutes()}
@@ -74,7 +74,7 @@ const App = () => (
                 <Route path="*" element={<AppLayout><ErrorBoundary fallbackTitle="Page not found"><NotFound /></ErrorBoundary></AppLayout>} />
               </Routes>
             </Suspense>
-            <CookieConsent />
+            <Suspense fallback={null}><CookieConsent /></Suspense>
           </BrowserRouter>
         </TooltipProvider>
         </WorkspaceProvider>
