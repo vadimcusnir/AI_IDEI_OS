@@ -87,7 +87,7 @@ export function SEOHead({ title, description, canonical, ogImage, jsonLd }: SEOH
 
     setMeta("og:url", canonicalUrl, true);
 
-    // Hreflang tags
+    // Hreflang tags — subfolder-based
     const langs = ["en", "ro", "ru"];
     
     // Remove old hreflang links
@@ -95,19 +95,22 @@ export function SEOHead({ title, description, canonical, ogImage, jsonLd }: SEOH
     
     const createdLinks: HTMLLinkElement[] = [];
     
+    // Strip existing lang prefix from path for clean reconstruction
+    const cleanPath = path.replace(/^\/(en|ro|ru)(\/|$)/, '/').replace(/^$/, '/');
+    
     for (const lang of langs) {
       const hreflang = document.createElement("link");
       hreflang.setAttribute("rel", "alternate");
       hreflang.setAttribute("hreflang", lang);
-      hreflang.setAttribute("href", `${BASE_URL}${path}?lang=${lang}`);
+      hreflang.setAttribute("href", `${BASE_URL}/${lang}${cleanPath === '/' ? '' : cleanPath}`);
       document.head.appendChild(hreflang);
       createdLinks.push(hreflang);
     }
-    // x-default
+    // x-default points to /en version
     const xDefault = document.createElement("link");
     xDefault.setAttribute("rel", "alternate");
     xDefault.setAttribute("hreflang", "x-default");
-    xDefault.setAttribute("href", `${BASE_URL}${path}`);
+    xDefault.setAttribute("href", `${BASE_URL}/en${cleanPath === '/' ? '' : cleanPath}`);
     document.head.appendChild(xDefault);
     createdLinks.push(xDefault);
 
