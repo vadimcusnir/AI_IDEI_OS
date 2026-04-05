@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles, Brain, Lightbulb, Network, MessageSquareQuote, BarChart3, HelpCircle, Layers, Target, Boxes } from "lucide-react";
+import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles, Brain, Lightbulb, Network, MessageSquareQuote, BarChart3, HelpCircle, Layers, Target, Boxes, Search } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -132,6 +132,11 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
           );
         })()}
         <span className="text-micro text-muted-foreground/60 shrink-0">{formatDate(n.updated_at)}</span>
+        {n.has_embedding && (
+          <span title="Semantic search ready" className="shrink-0">
+            <Search className="h-2.5 w-2.5 text-status-validated/60" />
+          </span>
+        )}
         {n.score > 0 && (
           <div className="flex items-center gap-0.5 shrink-0">
             <Star className="h-2.5 w-2.5 text-primary/40" />
@@ -157,6 +162,7 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
           <div className="flex items-center gap-1.5">
             <div className={cn("h-2 w-2 rounded-full", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
             <span className="text-micro font-mono text-primary/60">#{n.number}</span>
+            {n.has_embedding && <span title="Semantic search ready"><Search className="h-2.5 w-2.5 text-status-validated/50" /></span>}
           </div>
           <div className="flex items-center gap-1">
             {isPinned && <Pin className="h-3 w-3 text-primary/60" />}
@@ -212,6 +218,7 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
       <div className="flex items-center gap-2 mb-3">
         <div className={cn("h-2.5 w-2.5 rounded-full", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
         <span className="text-micro font-mono text-primary/60">#{n.number}</span>
+        {n.has_embedding && <span title="Semantic search ready"><Search className="h-2.5 w-2.5 text-status-validated/50" /></span>}
         <span className="text-nano text-muted-foreground/50 ml-auto">{formatDate(n.updated_at)}</span>
       </div>
       <h3 className="text-base font-medium line-clamp-2 mb-1">{n.title}</h3>

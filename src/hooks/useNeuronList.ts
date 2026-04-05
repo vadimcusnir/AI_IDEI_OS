@@ -17,6 +17,7 @@ export interface NeuronListItem {
   content_category: string | null;
   lifecycle: string | null;
   episode_id: string | null;
+  has_embedding?: boolean;
 }
 
 export type ViewMode = "list" | "grid" | "cards";
@@ -55,10 +56,17 @@ export function useNeuronList() {
     const fetchNeurons = async () => {
       const { data, error } = await supabase
         .from("neurons")
-        .select("id, number, title, status, updated_at, created_at, score, visibility, content_category, lifecycle, episode_id")
+        .select("id, number, title, status, updated_at, created_at, score, visibility, content_category, lifecycle, episode_id, neuron_embeddings(neuron_id)")
         .eq("workspace_id", currentWorkspace.id)
         .order("updated_at", { ascending: false });
-      if (data) setNeurons(data as NeuronListItem[]);
+      if (data) {
+        const mapped = data.map((n: any) => ({
+          ...n,
+          has_embedding: Array.isArray(n.neuron_embeddings) && n.neuron_embeddings.length > 0,
+          neuron_embeddings: undefined,
+        }));
+        setNeurons(mapped as NeuronListItem[]);
+      }
       if (error) toast.error(t("failed_to_load_neurons"));
       setLoading(false);
     };
