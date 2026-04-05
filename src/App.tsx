@@ -9,11 +9,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import { AppLayout } from "@/components/AppLayout";
-import { CookieConsent } from "@/components/global/CookieConsent";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { GrowthHooks } from "@/components/growth/GrowthHooks";
-import { PostAuthRedirector } from "@/components/PostAuthRedirector";
+
+// Non-critical components — lazy-loaded to reduce main-thread work at startup
+const CookieConsent = lazy(() => import("@/components/global/CookieConsent").then(m => ({ default: m.CookieConsent })));
+const GrowthHooks = lazy(() => import("@/components/growth/GrowthHooks").then(m => ({ default: m.GrowthHooks })));
+const PostAuthRedirector = lazy(() => import("@/components/PostAuthRedirector").then(m => ({ default: m.PostAuthRedirector })));
 
 import { publicRoutes } from "@/routes/publicRoutes";
 import { protectedRoutes } from "@/routes/protectedRoutes";
