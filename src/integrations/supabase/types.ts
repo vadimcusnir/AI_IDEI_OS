@@ -10231,6 +10231,13 @@ export type Database = {
             referencedRelation: "user_integrations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "source_documents_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "user_integrations_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       storage_billing_log: {
@@ -10437,6 +10444,13 @@ export type Database = {
             columns: ["integration_id"]
             isOneToOne: false
             referencedRelation: "user_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sync_history_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "user_integrations_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -12126,6 +12140,60 @@ export type Database = {
         }
         Relationships: []
       }
+      leaderboard_karma: {
+        Row: {
+          karma: number | null
+          user_id: string | null
+        }
+        Insert: {
+          karma?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          karma?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      leaderboard_streaks: {
+        Row: {
+          current_streak: number | null
+          longest_streak: number | null
+          user_id: string | null
+        }
+        Insert: {
+          current_streak?: number | null
+          longest_streak?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          current_streak?: number | null
+          longest_streak?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      leaderboard_xp: {
+        Row: {
+          level: number | null
+          rank_name: string | null
+          total_xp: number | null
+          user_id: string | null
+        }
+        Insert: {
+          level?: number | null
+          rank_name?: string | null
+          total_xp?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          level?: number | null
+          rank_name?: string | null
+          total_xp?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       neuron_lifecycle_pricing: {
         Row: {
           adjusted_cost: number | null
@@ -12229,6 +12297,62 @@ export type Database = {
           username?: string | null
         }
         Relationships: []
+      }
+      user_integrations_safe: {
+        Row: {
+          connector_id: string | null
+          created_at: string | null
+          documents_imported: number | null
+          error_message: string | null
+          id: string | null
+          last_sync_at: string | null
+          neurons_generated: number | null
+          next_sync_at: string | null
+          settings: Json | null
+          status: string | null
+          sync_interval_hours: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          connector_id?: string | null
+          created_at?: string | null
+          documents_imported?: number | null
+          error_message?: string | null
+          id?: string | null
+          last_sync_at?: string | null
+          neurons_generated?: number | null
+          next_sync_at?: string | null
+          settings?: Json | null
+          status?: string | null
+          sync_interval_hours?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          connector_id?: string | null
+          created_at?: string | null
+          documents_imported?: number | null
+          error_message?: string | null
+          id?: string | null
+          last_sync_at?: string | null
+          neurons_generated?: number | null
+          next_sync_at?: string | null
+          settings?: Json | null
+          status?: string | null
+          sync_interval_hours?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_integrations_connector_id_fkey"
+            columns: ["connector_id"]
+            isOneToOne: false
+            referencedRelation: "integration_connectors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
