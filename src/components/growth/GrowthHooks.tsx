@@ -5,10 +5,12 @@
 
 import { useReferralCapture, useReferralAttribution } from "@/hooks/useReferralTracking";
 import { useStreakRecovery } from "@/hooks/useStreakRecovery";
+import { useRecordActivity } from "@/hooks/useRecordActivity";
 
 export function GrowthHooks() {
   useReferralCapture();
   useReferralAttribution();
   useStreakRecovery();
+  useRecordActivity();
   return null;
 }
