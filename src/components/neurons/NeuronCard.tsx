@@ -218,6 +218,7 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
       <div className="flex items-center gap-2 mb-3">
         <div className={cn("h-2.5 w-2.5 rounded-full", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
         <span className="text-micro font-mono text-primary/60">#{n.number}</span>
+        {n.has_embedding && <Search className="h-2.5 w-2.5 text-status-validated/50" title="Semantic search ready" />}
         <span className="text-nano text-muted-foreground/50 ml-auto">{formatDate(n.updated_at)}</span>
       </div>
       <h3 className="text-base font-medium line-clamp-2 mb-1">{n.title}</h3>
