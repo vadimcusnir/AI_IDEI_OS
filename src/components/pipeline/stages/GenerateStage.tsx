@@ -4,13 +4,14 @@
  */
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ArrowRight, Loader2, Coins } from "lucide-react";
+import { Sparkles, ArrowRight, Loader2, Coins, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEconomicGate } from "@/hooks/useEconomicGate";
 import { EconomicGate } from "@/components/command-center/EconomicGate";
+import { useDynamicPrice } from "@/hooks/useCapitalization";
 
 interface Service {
   id: string;
@@ -35,6 +36,7 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
   const gate = useEconomicGate();
 
   const selectedService = services.find(s => s.service_key === selected);
+  const { data: dynamicPrice } = useDynamicPrice(selectedService?.credits_cost ?? 0);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -123,7 +125,10 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
                 </div>
                 <span className="inline-flex items-center gap-1 text-xs font-mono text-muted-foreground whitespace-nowrap ml-2">
                   <Coins className="h-3 w-3" />
-                  {svc.credits_cost}N
+                  {selected === svc.service_key && dynamicPrice
+                    ? <>{dynamicPrice.final_price}N {dynamicPrice.multiplier > 1 && <TrendingUp className="h-2.5 w-2.5 text-semantic-amber" />}</>
+                    : <>{svc.credits_cost}N</>
+                  }
                 </span>
               </div>
             </button>

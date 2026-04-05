@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Store, Coins, Copy, ExternalLink, CheckCircle2 } from "lucide-react";
+import { Store, Coins, Copy, ExternalLink, CheckCircle2, AlertTriangle, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +13,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { runPublishGates } from "@/lib/marketplaceGates";
 
 interface PublishToMarketplaceDialogProps {
   open: boolean;
@@ -50,10 +51,18 @@ export function PublishToMarketplaceDialog({ open, onOpenChange, artifact }: Pub
     ? `${window.location.origin}/marketplace/${publishedId}`
     : null;
 
+  const gateResult = useMemo(() => runPublishGates({
+    title,
+    description,
+    content: artifact.content ?? "",
+    priceNeurons: neuronsNum,
+    category,
+  }), [title, description, artifact.content, neuronsNum, category]);
+
   const handlePublish = async () => {
     if (!user) return;
-    if (neuronsNum < 20) {
-      toast.error("Prețul minim este 20 NEURONS.");
+    if (!gateResult.passed) {
+      toast.error("Verifică toate cerințele înainte de publicare.");
       return;
     }
     setPublishing(true);
@@ -170,12 +179,30 @@ export function PublishToMarketplaceDialog({ open, onOpenChange, artifact }: Pub
                   </p>
                 </div>
               </div>
+              {/* Quality Gate Indicators */}
+              <div className="rounded-lg border border-border/50 p-3 space-y-1.5">
+                <p className="text-micro font-medium flex items-center gap-1.5 text-muted-foreground">
+                  <ShieldCheck className="h-3 w-3" /> Verificări de publicare
+                </p>
+                {gateResult.checks.map(c => (
+                  <div key={c.key} className="flex items-center gap-2 text-micro">
+                    {c.passed
+                      ? <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />
+                      : <AlertTriangle className="h-3 w-3 text-semantic-amber shrink-0" />
+                    }
+                    <span className={c.passed ? "text-muted-foreground" : "text-foreground"}>
+                      {c.label}
+                      {!c.passed && c.reason && <span className="text-muted-foreground/60 ml-1">— {c.reason}</span>}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <DialogFooter>
               <Button variant="outline" size="sm" onClick={() => handleClose(false)}>Anulează</Button>
               <Button size="sm" onClick={handlePublish}
-                disabled={publishing || !title.trim() || !description.trim() || neuronsNum < 20}
+                disabled={publishing || !gateResult.passed}
                 className="gap-1.5">
                 <Store className="h-3.5 w-3.5" />
                 {publishing ? "Se publică..." : "Publică"}
