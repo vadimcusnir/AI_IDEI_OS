@@ -51,10 +51,18 @@ export function PublishToMarketplaceDialog({ open, onOpenChange, artifact }: Pub
     ? `${window.location.origin}/marketplace/${publishedId}`
     : null;
 
+  const gateResult = useMemo(() => runPublishGates({
+    title,
+    description,
+    content: artifact.content ?? "",
+    priceNeurons: neuronsNum,
+    category,
+  }), [title, description, artifact.content, neuronsNum, category]);
+
   const handlePublish = async () => {
     if (!user) return;
-    if (neuronsNum < 20) {
-      toast.error("Prețul minim este 20 NEURONS.");
+    if (!gateResult.passed) {
+      toast.error("Verifică toate cerințele înainte de publicare.");
       return;
     }
     setPublishing(true);
