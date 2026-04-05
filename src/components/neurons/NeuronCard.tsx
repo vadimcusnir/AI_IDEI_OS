@@ -162,6 +162,7 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
           <div className="flex items-center gap-1.5">
             <div className={cn("h-2 w-2 rounded-full", STATUS_DOTS[n.status] || STATUS_DOTS.draft)} />
             <span className="text-micro font-mono text-primary/60">#{n.number}</span>
+            {n.has_embedding && <Search className="h-2.5 w-2.5 text-status-validated/50" title="Semantic search ready" />}
           </div>
           <div className="flex items-center gap-1">
             {isPinned && <Pin className="h-3 w-3 text-primary/60" />}
