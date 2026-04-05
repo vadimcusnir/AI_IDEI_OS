@@ -12333,6 +12333,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      evaluate_tier_progression: { Args: { _user_id: string }; Returns: Json }
       finops_dashboard_stats: { Args: never; Returns: Json }
       forum_mark_solution: {
         Args: { _post_id: string; _thread_id: string }
