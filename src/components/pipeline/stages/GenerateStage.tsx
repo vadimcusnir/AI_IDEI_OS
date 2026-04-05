@@ -4,13 +4,14 @@
  */
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ArrowRight, Loader2, Coins } from "lucide-react";
+import { Sparkles, ArrowRight, Loader2, Coins, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEconomicGate } from "@/hooks/useEconomicGate";
 import { EconomicGate } from "@/components/command-center/EconomicGate";
+import { useDynamicPrice } from "@/hooks/useCapitalization";
 
 interface Service {
   id: string;
