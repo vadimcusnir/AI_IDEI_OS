@@ -33,7 +33,7 @@ export function LeaderboardWidget() {
       if (period === "all") {
         // All-time: sort by total_xp
         const { data } = await supabase
-          .from("user_xp")
+          .from("leaderboard_xp" as any)
           .select("user_id, total_xp, level, rank_name")
           .order("total_xp", { ascending: false })
           .limit(20);
@@ -66,7 +66,7 @@ export function LeaderboardWidget() {
 
         const userIds = sorted.map(([uid]) => uid);
         const { data: xpData } = await supabase
-          .from("user_xp")
+          .from("leaderboard_xp" as any)
           .select("user_id, total_xp, level, rank_name")
           .in("user_id", userIds);
 
