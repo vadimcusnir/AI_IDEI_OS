@@ -125,7 +125,10 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
                 </div>
                 <span className="inline-flex items-center gap-1 text-xs font-mono text-muted-foreground whitespace-nowrap ml-2">
                   <Coins className="h-3 w-3" />
-                  {svc.credits_cost}N
+                  {selected === svc.service_key && dynamicPrice
+                    ? <>{dynamicPrice.final_price}N {dynamicPrice.multiplier > 1 && <TrendingUp className="h-2.5 w-2.5 text-semantic-amber" />}</>
+                    : <>{svc.credits_cost}N</>
+                  }
                 </span>
               </div>
             </button>
