@@ -52,7 +52,7 @@ export const ROUTES = {
   SERVICES: "/services",
   SERVICES_CATALOG: "/services-catalog",
   PROGRAMS: "/programs",
-  PIPELINE_OVERVIEW: "/pipeline",
+  PIPELINE_OVERVIEW: "/pipeline-overview",
   PRODUCT: (slug: string) => `/products/${slug}`,
 
   // Community
