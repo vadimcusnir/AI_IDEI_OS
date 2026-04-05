@@ -12662,6 +12662,7 @@ export type Database = {
         }
         Returns: Json
       }
+      trunc_minute: { Args: { ts: string }; Returns: string }
       validate_profile_guardrails: {
         Args: { _profile_id: string }
         Returns: Json
