@@ -81,7 +81,7 @@ export default function MarketplaceDetail() {
           .from("profiles_public" as any)
           .select("display_name, username")
           .eq("user_id", data.author_id)
-          .maybeSingle();
+          .maybeSingle() as { data: { display_name: string; username: string } | null };
         if (profile) setAuthorName(profile.display_name || profile.username || "Creator");
       }
 

@@ -99,7 +99,7 @@ export function useForumThreads(categorySlug: string | undefined) {
       const { data: profiles } = await supabase
         .from("profiles_public" as any)
         .select("user_id, display_name, avatar_url")
-        .in("user_id", authorIds);
+        .in("user_id", authorIds) as { data: { user_id: string; display_name: string; avatar_url: string }[] | null };
 
       const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
       return (data || []).map((t: any) => ({
@@ -128,7 +128,7 @@ export function useForumThread(threadId: string | undefined) {
         .from("profiles_public" as any)
         .select("user_id, display_name, avatar_url")
         .eq("user_id", data.author_id)
-        .single();
+        .single() as { data: { user_id: string; display_name: string; avatar_url: string } | null };
 
       return { ...data, author_profile: profile } as ForumThread;
     },
@@ -151,7 +151,7 @@ export function useForumPosts(threadId: string | undefined) {
       // Fetch author profiles and karma
       const authorIds = [...new Set((data || []).map((p: any) => p.author_id))];
       const [{ data: profiles }, { data: karmas }] = await Promise.all([
-        supabase.from("profiles_public" as any).select("user_id, display_name, avatar_url").in("user_id", authorIds),
+        supabase.from("profiles_public" as any).select("user_id, display_name, avatar_url").in("user_id", authorIds) as unknown as { data: { user_id: string; display_name: string; avatar_url: string }[] | null },
         supabase.from("user_karma").select("user_id, karma").in("user_id", authorIds),
       ]);
 
