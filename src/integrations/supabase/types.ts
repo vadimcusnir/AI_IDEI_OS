@@ -12102,6 +12102,30 @@ export type Database = {
       }
     }
     Views: {
+      capacity_state_public: {
+        Row: {
+          id: number | null
+          premium_only_mode: boolean | null
+          queue_depth: number | null
+          updated_at: string | null
+          utilization: number | null
+        }
+        Insert: {
+          id?: number | null
+          premium_only_mode?: boolean | null
+          queue_depth?: number | null
+          updated_at?: string | null
+          utilization?: number | null
+        }
+        Update: {
+          id?: number | null
+          premium_only_mode?: boolean | null
+          queue_depth?: number | null
+          updated_at?: string | null
+          utilization?: number | null
+        }
+        Relationships: []
+      }
       neuron_lifecycle_pricing: {
         Row: {
           adjusted_cost: number | null
