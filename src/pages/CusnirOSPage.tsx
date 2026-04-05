@@ -1,22 +1,22 @@
 /**
  * CusnirOSPage — VIP-facing Cusnir_OS governance layer.
- * Autonomous: uses useCusnirOS + useAuth.
+ * Real access enforcement via useEntitlements (compute_entitlements RPC).
  */
 import { SEOHead } from "@/components/SEOHead";
 import { PageTransition } from "@/components/motion/PageTransition";
-import { useCusnirOS } from "@/hooks/useCusnirOS";
+import { useEntitlements } from "@/hooks/useEntitlements";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Loader2, Lock } from "lucide-react";
+import { Loader2, Lock, Shield } from "lucide-react";
 import { CusnirOSCopy } from "@/components/cusnir-os/CusnirOSCopy";
 
 export default function CusnirOSPage() {
   const { user, loading: authLoading } = useAuth();
-  const { eligible, currentMonth, loading: cusnirLoading } = useCusnirOS();
+  const { cusnirOs, level, vipMonth, loading: entLoading } = useEntitlements();
   const navigate = useNavigate();
 
-  const loading = authLoading || cusnirLoading;
+  const loading = authLoading || entLoading;
 
   if (loading) {
     return (
@@ -36,6 +36,29 @@ export default function CusnirOSPage() {
     );
   }
 
+  if (!cusnirOs && level !== "L4") {
+    return (
+      <PageTransition>
+        <div className="flex-1 overflow-y-auto">
+          <SEOHead title="Cusnir_OS — Locked" description="Earn access through consistency." />
+          <div className="max-w-md mx-auto px-4 py-16 text-center space-y-4">
+            <Shield className="h-10 w-10 text-muted-foreground/20 mx-auto" />
+            <h2 className="text-lg font-bold">Cusnir_OS — Access Restricted</h2>
+            <p className="text-sm text-muted-foreground">
+              Requires Level L4: VIP subscription, 11 months loyalty, 100+ NOTA2 tokens.
+            </p>
+            <p className="text-xs text-muted-foreground/50">
+              Current: {level} · VIP Month: {vipMonth}/11
+            </p>
+            <Button size="sm" variant="outline" onClick={() => navigate("/pricing")}>
+              View Plans
+            </Button>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
   return (
     <PageTransition>
       <div className="flex-1 overflow-y-auto">
@@ -45,8 +68,8 @@ export default function CusnirOSPage() {
         />
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <CusnirOSCopy
-            monthProgress={currentMonth}
-            eligible={eligible}
+            monthProgress={vipMonth}
+            eligible={cusnirOs}
             onNavigateCredits={() => navigate("/credits")}
           />
         </div>
