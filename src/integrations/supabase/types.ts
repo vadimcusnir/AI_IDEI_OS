@@ -12474,7 +12474,7 @@ export type Database = {
           read_ct: number
         }[]
       }
-      record_daily_activity: { Args: { _user_id: string }; Returns: undefined }
+      record_daily_activity: { Args: { _user_id: string }; Returns: Json }
       refund_credits: {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean
