@@ -36,6 +36,7 @@ export function GenerateStage({ episodeId, neuronIds, onNext }: Props) {
   const gate = useEconomicGate();
 
   const selectedService = services.find(s => s.service_key === selected);
+  const { data: dynamicPrice } = useDynamicPrice(selectedService?.credits_cost ?? 0);
 
   useEffect(() => {
     const fetchServices = async () => {
