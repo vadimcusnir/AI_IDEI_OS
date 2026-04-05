@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles, Brain, Lightbulb, Network, MessageSquareQuote, BarChart3, HelpCircle, Layers, Target, Boxes } from "lucide-react";
+import { Pin, PinOff, MoreHorizontal, BookOpen, Trash2, Star, Zap, Sparkles, Brain, Lightbulb, Network, MessageSquareQuote, BarChart3, HelpCircle, Layers, Target, Boxes, Search } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
