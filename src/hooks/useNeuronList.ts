@@ -17,6 +17,7 @@ export interface NeuronListItem {
   content_category: string | null;
   lifecycle: string | null;
   episode_id: string | null;
+  has_embedding?: boolean;
 }
 
 export type ViewMode = "list" | "grid" | "cards";
