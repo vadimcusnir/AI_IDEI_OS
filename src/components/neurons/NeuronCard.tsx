@@ -132,6 +132,11 @@ export function NeuronCard({ neuron: n, viewMode, isPinned, isSelected, onToggle
           );
         })()}
         <span className="text-micro text-muted-foreground/60 shrink-0">{formatDate(n.updated_at)}</span>
+        {n.has_embedding && (
+          <span title="Semantic search ready" className="shrink-0">
+            <Search className="h-2.5 w-2.5 text-status-validated/60" />
+          </span>
+        )}
         {n.score > 0 && (
           <div className="flex items-center gap-0.5 shrink-0">
             <Star className="h-2.5 w-2.5 text-primary/40" />
