@@ -12822,6 +12822,13 @@ export type Database = {
           title: string
         }[]
       }
+      search_public_profiles: {
+        Args: { lim?: number; query: string }
+        Returns: {
+          display_name: string
+          user_id: string
+        }[]
+      }
       settle_credits: {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean
