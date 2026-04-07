@@ -12229,6 +12229,36 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles_public: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
       public_contributions: {
         Row: {
           content: string | null
@@ -12568,6 +12598,15 @@ export type Database = {
               username: string
             }[]
           }
+      get_public_profiles: {
+        Args: { user_ids: string[] }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          user_id: string
+          username: string
+        }[]
+      }
       get_tier_xp_multiplier: { Args: { _user_id: string }; Returns: number }
       get_user_storage_usage: {
         Args: { p_user_id: string }
