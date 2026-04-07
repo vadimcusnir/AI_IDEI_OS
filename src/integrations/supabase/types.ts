@@ -12933,6 +12933,10 @@ export type Database = {
         Returns: Json
       }
       trunc_minute: { Args: { ts: string }; Returns: string }
+      update_user_credits: {
+        Args: { p_amount: number; p_user_id: string }
+        Returns: undefined
+      }
       validate_profile_guardrails: {
         Args: { _profile_id: string }
         Returns: Json
