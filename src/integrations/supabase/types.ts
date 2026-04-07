@@ -12229,6 +12229,36 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles_public: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
       public_contributions: {
         Row: {
           content: string | null
@@ -12522,7 +12552,61 @@ export type Database = {
         Returns: Json
       }
       generate_daily_challenges: { Args: never; Returns: undefined }
-      get_public_profile: { Args: { _username: string }; Returns: Json }
+      get_capacity_status: {
+        Args: never
+        Returns: {
+          premium_only_mode: boolean
+          queue_depth: number
+          utilization: number
+        }[]
+      }
+      get_leaderboard_karma: {
+        Args: { lim?: number }
+        Returns: {
+          karma: number
+          user_id: string
+        }[]
+      }
+      get_leaderboard_streaks: {
+        Args: { lim?: number }
+        Returns: {
+          current_streak: number
+          longest_streak: number
+          user_id: string
+        }[]
+      }
+      get_leaderboard_xp: {
+        Args: { lim?: number }
+        Returns: {
+          level: number
+          rank_name: string
+          total_xp: number
+          user_id: string
+        }[]
+      }
+      get_public_profile:
+        | { Args: { _username: string }; Returns: Json }
+        | {
+            Args: { p_user_id: string }
+            Returns: {
+              avatar_url: string
+              bio: string
+              created_at: string
+              display_name: string
+              id: string
+              user_id: string
+              username: string
+            }[]
+          }
+      get_public_profiles: {
+        Args: { user_ids: string[] }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          user_id: string
+          username: string
+        }[]
+      }
       get_tier_xp_multiplier: { Args: { _user_id: string }; Returns: number }
       get_user_storage_usage: {
         Args: { p_user_id: string }
@@ -12736,6 +12820,13 @@ export type Database = {
           neuron_id: number
           similarity: number
           title: string
+        }[]
+      }
+      search_public_profiles: {
+        Args: { lim?: number; query: string }
+        Returns: {
+          display_name: string
+          user_id: string
         }[]
       }
       settle_credits: {

@@ -24,12 +24,8 @@ export function MentionTextarea({ value, onChange, placeholder, rows = 4, classN
 
   const searchUsers = useCallback(async (query: string) => {
     if (query.length < 2) { setSuggestions([]); return; }
-    const { data } = await supabase
-      .from("profiles_public" as any)
-      .select("user_id, display_name")
-      .ilike("display_name", `%${query}%`)
-      .limit(5) as { data: { user_id: string; display_name: string }[] | null };
-    setSuggestions(data || []);
+    const { data } = await supabase.rpc("search_public_profiles", { query, lim: 5 });
+    setSuggestions((data as { user_id: string; display_name: string }[]) || []);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

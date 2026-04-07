@@ -96,10 +96,7 @@ export function useForumThreads(categorySlug: string | undefined) {
 
       // Fetch author profiles
       const authorIds = [...new Set((data || []).map((t: any) => t.author_id))];
-      const { data: profiles } = await supabase
-        .from("profiles_public" as any)
-        .select("user_id, display_name, avatar_url")
-        .in("user_id", authorIds) as { data: { user_id: string; display_name: string; avatar_url: string }[] | null };
+      const { data: profiles } = await supabase.rpc("get_public_profiles", { user_ids: authorIds }) as { data: { user_id: string; display_name: string; avatar_url: string }[] | null };
 
       const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
       return (data || []).map((t: any) => ({
@@ -124,11 +121,8 @@ export function useForumThread(threadId: string | undefined) {
       if (error) throw error;
 
       // Get author profile
-      const { data: profile } = await supabase
-        .from("profiles_public" as any)
-        .select("user_id, display_name, avatar_url")
-        .eq("user_id", data.author_id)
-        .single() as { data: { user_id: string; display_name: string; avatar_url: string } | null };
+      const { data: profileArr } = await supabase.rpc("get_public_profiles", { user_ids: [data.author_id] });
+      const profile = profileArr?.[0] || null;
 
       return { ...data, author_profile: profile } as ForumThread;
     },
@@ -151,8 +145,8 @@ export function useForumPosts(threadId: string | undefined) {
       // Fetch author profiles and karma
       const authorIds = [...new Set((data || []).map((p: any) => p.author_id))];
       const [{ data: profiles }, { data: karmas }] = await Promise.all([
-        supabase.from("profiles_public" as any).select("user_id, display_name, avatar_url").in("user_id", authorIds) as unknown as { data: { user_id: string; display_name: string; avatar_url: string }[] | null },
-        supabase.from("leaderboard_karma" as any).select("user_id, karma").in("user_id", authorIds),
+        supabase.rpc("get_public_profiles", { user_ids: authorIds }) as unknown as { data: { user_id: string; display_name: string; avatar_url: string }[] | null },
+        supabase.rpc("get_leaderboard_karma", { lim: 200 }),
       ]);
 
       const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
