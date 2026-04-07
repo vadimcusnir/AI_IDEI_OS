@@ -7,13 +7,13 @@ import i18next from "i18next";
 export interface WebhookEndpoint {
   id: string;
   url: string;
-  secret: string;
   events: string[];
   is_active: boolean;
   description: string;
   failure_count: number;
   last_triggered_at: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export interface WebhookDelivery {
@@ -35,7 +35,7 @@ export function useWebhookEndpoints() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("webhook_endpoints")
-        .select("*")
+        .select("id, user_id, url, events, is_active, description, failure_count, last_triggered_at, created_at, updated_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as WebhookEndpoint[];

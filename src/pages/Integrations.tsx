@@ -77,7 +77,7 @@ export default function Integrations() {
       if (!user) return [];
       const { data } = await supabase
         .from("incoming_webhooks")
-        .select("*")
+        .select("id, user_id, name, is_active, accepted_content_types, auto_extract, target_workspace_id, calls_count, last_called_at, created_at")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       return data || [];
