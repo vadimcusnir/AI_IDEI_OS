@@ -152,7 +152,7 @@ export function useForumPosts(threadId: string | undefined) {
       const authorIds = [...new Set((data || []).map((p: any) => p.author_id))];
       const [{ data: profiles }, { data: karmas }] = await Promise.all([
         supabase.from("profiles_public" as any).select("user_id, display_name, avatar_url").in("user_id", authorIds) as unknown as { data: { user_id: string; display_name: string; avatar_url: string }[] | null },
-        supabase.from("leaderboard_karma" as any).select("user_id, karma").in("user_id", authorIds),
+        supabase.rpc("get_leaderboard_karma", { lim: 200 }),
       ]);
 
       const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));

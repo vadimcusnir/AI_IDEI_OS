@@ -31,12 +31,8 @@ export function LeaderboardWidget() {
       setLoading(true);
 
       if (period === "all") {
-        // All-time: sort by total_xp
-        const { data } = await supabase
-          .from("leaderboard_xp" as any)
-          .select("user_id, total_xp, level, rank_name")
-          .order("total_xp", { ascending: false })
-          .limit(20);
+        // All-time: sort by total_xp via RPC
+        const { data } = await supabase.rpc("get_leaderboard_xp", { lim: 20 });
 
         if (!data || data.length === 0) { setLoading(false); setEntries([]); return; }
         await enrichEntries(data);
@@ -65,10 +61,7 @@ export function LeaderboardWidget() {
           .slice(0, 20);
 
         const userIds = sorted.map(([uid]) => uid);
-        const { data: xpData } = await supabase
-          .from("leaderboard_xp" as any)
-          .select("user_id, total_xp, level, rank_name")
-          .in("user_id", userIds);
+        const { data: xpData } = await supabase.rpc("get_leaderboard_xp", { lim: 50 });
 
         const xpMap = new Map((xpData || []).map((x: any) => [x.user_id, x]));
 
