@@ -35,7 +35,7 @@ export function useWebhookEndpoints() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("webhook_endpoints")
-        .select("*")
+        .select("id, user_id, url, events, is_active, description, failure_count, last_triggered_at, created_at, updated_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as WebhookEndpoint[];

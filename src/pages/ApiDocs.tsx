@@ -71,7 +71,7 @@ export default function ApiDocs() {
   const loadKeys = async () => {
     const { data } = await supabase
       .from("api_keys")
-      .select("*")
+      .select("id, user_id, key_prefix, name, scopes, is_active, last_used_at, requests_today, daily_limit, created_at, expires_at")
       .order("created_at", { ascending: false });
     setKeys((data as ApiKey[]) || []);
     setLoading(false);
