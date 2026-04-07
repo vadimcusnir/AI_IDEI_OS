@@ -7,13 +7,13 @@ import i18next from "i18next";
 export interface WebhookEndpoint {
   id: string;
   url: string;
-  secret: string;
   events: string[];
   is_active: boolean;
   description: string;
   failure_count: number;
   last_triggered_at: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export interface WebhookDelivery {
