@@ -61,7 +61,7 @@ export default function Integrations() {
     queryFn: async () => {
       if (!user) return [];
       const { data } = await supabase
-        .from("user_integrations")
+        .from("user_integrations_safe")
         .select("*, integration_connectors(*)")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
