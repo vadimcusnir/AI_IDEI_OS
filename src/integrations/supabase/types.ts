@@ -12522,7 +12522,52 @@ export type Database = {
         Returns: Json
       }
       generate_daily_challenges: { Args: never; Returns: undefined }
-      get_public_profile: { Args: { _username: string }; Returns: Json }
+      get_capacity_status: {
+        Args: never
+        Returns: {
+          premium_only_mode: boolean
+          queue_depth: number
+          utilization: number
+        }[]
+      }
+      get_leaderboard_karma: {
+        Args: { lim?: number }
+        Returns: {
+          karma: number
+          user_id: string
+        }[]
+      }
+      get_leaderboard_streaks: {
+        Args: { lim?: number }
+        Returns: {
+          current_streak: number
+          longest_streak: number
+          user_id: string
+        }[]
+      }
+      get_leaderboard_xp: {
+        Args: { lim?: number }
+        Returns: {
+          level: number
+          rank_name: string
+          total_xp: number
+          user_id: string
+        }[]
+      }
+      get_public_profile:
+        | { Args: { _username: string }; Returns: Json }
+        | {
+            Args: { p_user_id: string }
+            Returns: {
+              avatar_url: string
+              bio: string
+              created_at: string
+              display_name: string
+              id: string
+              user_id: string
+              username: string
+            }[]
+          }
       get_tier_xp_multiplier: { Args: { _user_id: string }; Returns: number }
       get_user_storage_usage: {
         Args: { p_user_id: string }
