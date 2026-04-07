@@ -9648,6 +9648,13 @@ export type Database = {
             referencedRelation: "service_manifests"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "service_executions_manifest_id_fkey"
+            columns: ["manifest_id"]
+            isOneToOne: false
+            referencedRelation: "service_manifests_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       service_manifests: {
@@ -12328,6 +12335,44 @@ export type Database = {
         }
         Relationships: []
       }
+      service_manifests_public: {
+        Row: {
+          base_neurons: number | null
+          created_at: string | null
+          id: string | null
+          is_validated: boolean | null
+          pipeline_class: string | null
+          preview_enabled: boolean | null
+          service_key: string | null
+        }
+        Insert: {
+          base_neurons?: number | null
+          created_at?: string | null
+          id?: string | null
+          is_validated?: boolean | null
+          pipeline_class?: string | null
+          preview_enabled?: boolean | null
+          service_key?: string | null
+        }
+        Update: {
+          base_neurons?: number | null
+          created_at?: string | null
+          id?: string | null
+          is_validated?: boolean | null
+          pipeline_class?: string | null
+          preview_enabled?: boolean | null
+          service_key?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_manifests_service_key_fkey"
+            columns: ["service_key"]
+            isOneToOne: true
+            referencedRelation: "service_catalog"
+            referencedColumns: ["service_key"]
+          },
+        ]
+      }
       user_integrations_safe: {
         Row: {
           connector_id: string | null
@@ -12552,6 +12597,16 @@ export type Database = {
         Returns: Json
       }
       generate_daily_challenges: { Args: never; Returns: undefined }
+      get_active_services: {
+        Args: never
+        Returns: {
+          base_neurons: number
+          id: string
+          pipeline_class: string
+          preview_enabled: boolean
+          service_key: string
+        }[]
+      }
       get_capacity_status: {
         Args: never
         Returns: {
