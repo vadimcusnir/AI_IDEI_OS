@@ -187,12 +187,7 @@ export function WebhookManagement() {
                         <Badge key={e} variant="outline" className="text-nano px-1 py-0">{e}</Badge>
                       ))}
                     </div>
-                    <Button
-                      size="sm" variant="ghost" className="h-6 w-6 p-0"
-                      onClick={() => { navigator.clipboard.writeText(ep.secret); toast.success(t("common:copied")); }}
-                    >
-                      <Copy className="h-3 w-3" />
-                    </Button>
+                    <span className="text-nano text-muted-foreground/50 italic">secret hidden</span>
                     <CollapsibleTrigger asChild>
                       <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
                         <Eye className="h-3 w-3" />
