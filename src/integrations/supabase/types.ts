@@ -3791,6 +3791,45 @@ export type Database = {
           },
         ]
       }
+      execution_prompts: {
+        Row: {
+          created_at: string
+          execution_type: string
+          id: string
+          internal_name: string
+          linked_service_id: string | null
+          linked_service_level: string | null
+          prompt_text: string
+          prompt_version: number
+          quality_rules: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          execution_type?: string
+          id?: string
+          internal_name: string
+          linked_service_id?: string | null
+          linked_service_level?: string | null
+          prompt_text: string
+          prompt_version?: number
+          quality_rules?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          execution_type?: string
+          id?: string
+          internal_name?: string
+          linked_service_id?: string | null
+          linked_service_level?: string | null
+          prompt_text?: string
+          prompt_version?: number
+          quality_rules?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       execution_regime_config: {
         Row: {
           cost_cap_action: string | null
@@ -3992,6 +4031,42 @@ export type Database = {
           type?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      formation_frameworks: {
+        Row: {
+          adaptation_rules: Json | null
+          assembly_rules: Json | null
+          created_at: string
+          framework_logic: string
+          id: string
+          internal_name: string
+          linked_service_id: string | null
+          linked_service_level: string | null
+          updated_at: string
+        }
+        Insert: {
+          adaptation_rules?: Json | null
+          assembly_rules?: Json | null
+          created_at?: string
+          framework_logic: string
+          id?: string
+          internal_name: string
+          linked_service_id?: string | null
+          linked_service_level?: string | null
+          updated_at?: string
+        }
+        Update: {
+          adaptation_rules?: Json | null
+          assembly_rules?: Json | null
+          created_at?: string
+          framework_logic?: string
+          id?: string
+          internal_name?: string
+          linked_service_id?: string | null
+          linked_service_level?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -10047,6 +10122,273 @@ export type Database = {
             columns: ["otos_id"]
             isOneToOne: false
             referencedRelation: "os_otos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services_level_1: {
+        Row: {
+          category: string
+          component_l2_ids: string[] | null
+          component_l3_ids_optional: string[] | null
+          created_at: string
+          deliverable_name: string
+          deliverable_type: string
+          description_internal: string | null
+          description_public: string
+          estimated_delivery_seconds: number
+          execution_prompt_id: string | null
+          final_delivery_assembly_logic: Json | null
+          formation_framework_id: string | null
+          id: string
+          internal_credit_cost: number
+          master_deliverables: Json | null
+          output_types: string[] | null
+          price_usd: number
+          production_cost_usd: number
+          service_name: string
+          service_slug: string
+          status: string
+          subcategory: string | null
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          category?: string
+          component_l2_ids?: string[] | null
+          component_l3_ids_optional?: string[] | null
+          created_at?: string
+          deliverable_name?: string
+          deliverable_type?: string
+          description_internal?: string | null
+          description_public?: string
+          estimated_delivery_seconds?: number
+          execution_prompt_id?: string | null
+          final_delivery_assembly_logic?: Json | null
+          formation_framework_id?: string | null
+          id?: string
+          internal_credit_cost?: number
+          master_deliverables?: Json | null
+          output_types?: string[] | null
+          price_usd?: number
+          production_cost_usd?: number
+          service_name: string
+          service_slug: string
+          status?: string
+          subcategory?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          category?: string
+          component_l2_ids?: string[] | null
+          component_l3_ids_optional?: string[] | null
+          created_at?: string
+          deliverable_name?: string
+          deliverable_type?: string
+          description_internal?: string | null
+          description_public?: string
+          estimated_delivery_seconds?: number
+          execution_prompt_id?: string | null
+          final_delivery_assembly_logic?: Json | null
+          formation_framework_id?: string | null
+          id?: string
+          internal_credit_cost?: number
+          master_deliverables?: Json | null
+          output_types?: string[] | null
+          price_usd?: number
+          production_cost_usd?: number
+          service_name?: string
+          service_slug?: string
+          status?: string
+          subcategory?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_level_1_execution_prompt_id_fkey"
+            columns: ["execution_prompt_id"]
+            isOneToOne: false
+            referencedRelation: "execution_prompts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_level_1_formation_framework_id_fkey"
+            columns: ["formation_framework_id"]
+            isOneToOne: false
+            referencedRelation: "formation_frameworks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services_level_2: {
+        Row: {
+          category: string
+          component_execution_order: Json | null
+          component_l3_ids: string[] | null
+          component_selection_logic: Json | null
+          created_at: string
+          deliverable_name: string
+          deliverable_type: string
+          description_internal: string | null
+          description_public: string
+          estimated_delivery_seconds: number
+          execution_prompt_id: string | null
+          formation_framework_id: string | null
+          id: string
+          internal_credit_cost: number
+          price_usd: number
+          production_cost_usd: number
+          service_name: string
+          service_slug: string
+          status: string
+          subcategory: string | null
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          category?: string
+          component_execution_order?: Json | null
+          component_l3_ids?: string[] | null
+          component_selection_logic?: Json | null
+          created_at?: string
+          deliverable_name?: string
+          deliverable_type?: string
+          description_internal?: string | null
+          description_public?: string
+          estimated_delivery_seconds?: number
+          execution_prompt_id?: string | null
+          formation_framework_id?: string | null
+          id?: string
+          internal_credit_cost?: number
+          price_usd?: number
+          production_cost_usd?: number
+          service_name: string
+          service_slug: string
+          status?: string
+          subcategory?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          category?: string
+          component_execution_order?: Json | null
+          component_l3_ids?: string[] | null
+          component_selection_logic?: Json | null
+          created_at?: string
+          deliverable_name?: string
+          deliverable_type?: string
+          description_internal?: string | null
+          description_public?: string
+          estimated_delivery_seconds?: number
+          execution_prompt_id?: string | null
+          formation_framework_id?: string | null
+          id?: string
+          internal_credit_cost?: number
+          price_usd?: number
+          production_cost_usd?: number
+          service_name?: string
+          service_slug?: string
+          status?: string
+          subcategory?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_level_2_execution_prompt_id_fkey"
+            columns: ["execution_prompt_id"]
+            isOneToOne: false
+            referencedRelation: "execution_prompts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_level_2_formation_framework_id_fkey"
+            columns: ["formation_framework_id"]
+            isOneToOne: false
+            referencedRelation: "formation_frameworks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services_level_3: {
+        Row: {
+          category: string
+          created_at: string
+          deliverable_name: string
+          deliverable_type: string
+          description_internal: string | null
+          description_public: string
+          estimated_delivery_seconds: number
+          execution_prompt_id: string | null
+          formation_framework_id: string | null
+          id: string
+          internal_credit_cost: number
+          price_usd: number
+          production_cost_usd: number
+          service_name: string
+          service_slug: string
+          status: string
+          subcategory: string | null
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          deliverable_name?: string
+          deliverable_type?: string
+          description_internal?: string | null
+          description_public?: string
+          estimated_delivery_seconds?: number
+          execution_prompt_id?: string | null
+          formation_framework_id?: string | null
+          id?: string
+          internal_credit_cost?: number
+          price_usd?: number
+          production_cost_usd?: number
+          service_name: string
+          service_slug: string
+          status?: string
+          subcategory?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          deliverable_name?: string
+          deliverable_type?: string
+          description_internal?: string | null
+          description_public?: string
+          estimated_delivery_seconds?: number
+          execution_prompt_id?: string | null
+          formation_framework_id?: string | null
+          id?: string
+          internal_credit_cost?: number
+          price_usd?: number
+          production_cost_usd?: number
+          service_name?: string
+          service_slug?: string
+          status?: string
+          subcategory?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_level_3_execution_prompt_id_fkey"
+            columns: ["execution_prompt_id"]
+            isOneToOne: false
+            referencedRelation: "execution_prompts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_level_3_formation_framework_id_fkey"
+            columns: ["formation_framework_id"]
+            isOneToOne: false
+            referencedRelation: "formation_frameworks"
             referencedColumns: ["id"]
           },
         ]
