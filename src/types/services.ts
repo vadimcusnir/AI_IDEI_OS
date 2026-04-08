@@ -1,3 +1,5 @@
+import { Json } from "@/integrations/supabase/types";
+
 // Service Catalog Types — L3/L2/L1 hierarchy
 
 export type ServiceStatus = 'active' | 'inactive' | 'draft';
@@ -16,8 +18,8 @@ export interface ServiceBase {
   deliverable_name: string;
   deliverable_type: string;
   estimated_delivery_seconds: number;
-  status: ServiceStatus;
-  visibility: ServiceVisibility;
+  status: string;
+  visibility: string;
   created_at: string;
   updated_at: string;
 }
@@ -33,8 +35,8 @@ export interface ServiceL2 extends ServiceBase {
   execution_prompt_id: string | null;
   formation_framework_id: string | null;
   component_l3_ids: string[];
-  component_selection_logic: Record<string, unknown>;
-  component_execution_order: unknown[];
+  component_selection_logic: Json;
+  component_execution_order: Json;
 }
 
 export interface ServiceL1 extends ServiceBase {
@@ -43,8 +45,8 @@ export interface ServiceL1 extends ServiceBase {
   formation_framework_id: string | null;
   component_l2_ids: string[];
   component_l3_ids_optional: string[];
-  final_delivery_assembly_logic: Record<string, unknown>;
-  master_deliverables: unknown[];
+  final_delivery_assembly_logic: Json;
+  master_deliverables: Json;
   output_types: string[];
 }
 
