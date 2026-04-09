@@ -9660,6 +9660,74 @@ export type Database = {
         }
         Relationships: []
       }
+      service_deliverables: {
+        Row: {
+          classification_tags: string[] | null
+          content: string | null
+          created_at: string
+          deliverable_name: string
+          deliverable_type: string
+          file_storage_key: string | null
+          format: string
+          generated_at: string | null
+          id: string
+          metadata: Json | null
+          purchase_id: string
+          quality_score: number | null
+          service_id: string
+          service_level: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          classification_tags?: string[] | null
+          content?: string | null
+          created_at?: string
+          deliverable_name?: string
+          deliverable_type?: string
+          file_storage_key?: string | null
+          format?: string
+          generated_at?: string | null
+          id?: string
+          metadata?: Json | null
+          purchase_id: string
+          quality_score?: number | null
+          service_id: string
+          service_level: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          classification_tags?: string[] | null
+          content?: string | null
+          created_at?: string
+          deliverable_name?: string
+          deliverable_type?: string
+          file_storage_key?: string | null
+          format?: string
+          generated_at?: string | null
+          id?: string
+          metadata?: Json | null
+          purchase_id?: string
+          quality_score?: number | null
+          service_id?: string
+          service_level?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_deliverables_purchase_id_fkey"
+            columns: ["purchase_id"]
+            isOneToOne: false
+            referencedRelation: "service_purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_executions: {
         Row: {
           artifacts_count: number | null
@@ -9835,6 +9903,60 @@ export type Database = {
           service_keys?: string[]
           updated_at?: string | null
           usage_count?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      service_purchases: {
+        Row: {
+          created_at: string
+          execution_completed_at: string | null
+          execution_started_at: string | null
+          execution_status: string
+          id: string
+          metadata: Json | null
+          neuroni_cost_snapshot: number
+          payment_method: string
+          payment_status: string
+          price_usd_snapshot: number
+          service_id: string
+          service_level: string
+          service_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          execution_completed_at?: string | null
+          execution_started_at?: string | null
+          execution_status?: string
+          id?: string
+          metadata?: Json | null
+          neuroni_cost_snapshot?: number
+          payment_method?: string
+          payment_status?: string
+          price_usd_snapshot?: number
+          service_id: string
+          service_level: string
+          service_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          execution_completed_at?: string | null
+          execution_started_at?: string | null
+          execution_status?: string
+          id?: string
+          metadata?: Json | null
+          neuroni_cost_snapshot?: number
+          payment_method?: string
+          payment_status?: string
+          price_usd_snapshot?: number
+          service_id?: string
+          service_level?: string
+          service_name?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
