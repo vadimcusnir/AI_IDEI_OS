@@ -3,6 +3,7 @@ import { useServiceBySlug } from "@/hooks/useServiceCatalog";
 import { Button } from "@/components/ui/button";
 import { ServiceUpsellBanner } from "@/components/services/ServiceUpsellBanner";
 import { PostExecutionUpsell } from "@/components/services/PostExecutionUpsell";
+import { ServiceCompositionTree } from "@/components/services/ServiceCompositionTree";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Clock, DollarSign, Zap, Layers, Server, Package, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -50,13 +51,7 @@ export default function ServiceDetail() {
   const Icon = cfg.icon;
   const deliveryMin = Math.ceil(service.estimated_delivery_seconds / 60);
 
-  // Composition info for L2/L1
   const hasComposition = level === "L2" || level === "L1";
-  const componentIds = level === "L2"
-    ? (service as any).component_l3_ids || []
-    : level === "L1"
-    ? (service as any).component_l2_ids || []
-    : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -114,24 +109,14 @@ export default function ServiceDetail() {
         </div>
 
         {/* Composition for L2/L1 */}
-        {hasComposition && componentIds.length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-5 mb-8">
-            <h2 className="text-sm font-semibold mb-2">
-              Componente incluse ({componentIds.length})
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {componentIds.map((id: string) => (
-                <Badge key={id} variant="outline" className="text-nano font-mono">
-                  {id.slice(0, 8)}…
-                </Badge>
-              ))}
-            </div>
-            <p className="text-micro text-muted-foreground mt-2">
-              {level === "L2"
-                ? "Acest pack combină mai multe servicii atomice (L3) într-un flux integrat."
-                : "Acest sistem master orchestrează mai multe pack-uri (L2) și servicii (L3)."}
-            </p>
-          </div>
+        {hasComposition && (
+          <ServiceCompositionTree
+            level={level as "L1" | "L2"}
+            componentL3Ids={level === "L2" ? (service as any).component_l3_ids : undefined}
+            componentL2Ids={level === "L1" ? (service as any).component_l2_ids : undefined}
+            componentL3IdsOptional={level === "L1" ? (service as any).component_l3_ids_optional : undefined}
+            className="mb-8"
+          />
         )}
 
         {/* L1 specific: output types */}

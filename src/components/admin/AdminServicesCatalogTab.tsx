@@ -4,6 +4,7 @@
  */
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { ServiceCompositionEditor } from "@/components/admin/ServiceCompositionEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -102,6 +103,8 @@ function LevelTable({ level }: { level: Level }) {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<Omit<ServiceRow, "id">>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [componentIds, setComponentIds] = useState<string[]>([]);
+  const [optionalL3Ids, setOptionalL3Ids] = useState<string[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -130,10 +133,23 @@ function LevelTable({ level }: { level: Level }) {
     load();
   };
 
-  const openEdit = (s: ServiceRow) => {
+  const openEdit = async (s: ServiceRow) => {
     setEditing(s);
     setForm({ ...s });
     setCreating(false);
+    // Load composition data for L2/L1
+    if (level === "L2") {
+      const { data } = await (supabase.from("services_level_2") as any).select("component_l3_ids").eq("id", s.id).single();
+      setComponentIds(data?.component_l3_ids || []);
+      setOptionalL3Ids([]);
+    } else if (level === "L1") {
+      const { data } = await (supabase.from("services_level_1") as any).select("component_l2_ids, component_l3_ids_optional").eq("id", s.id).single();
+      setComponentIds(data?.component_l2_ids || []);
+      setOptionalL3Ids(data?.component_l3_ids_optional || []);
+    } else {
+      setComponentIds([]);
+      setOptionalL3Ids([]);
+    }
   };
 
   const openCreate = () => {
@@ -149,12 +165,21 @@ function LevelTable({ level }: { level: Level }) {
     }
     setSaving(true);
 
+    // Build payload with composition data for L2/L1
+    const payload: any = { ...form };
+    if (level === "L2") {
+      payload.component_l3_ids = componentIds;
+    } else if (level === "L1") {
+      payload.component_l2_ids = componentIds;
+      payload.component_l3_ids_optional = optionalL3Ids;
+    }
+
     if (creating) {
-      const { error } = await supabase.from(tableName as any).insert(form as any);
+      const { error } = await supabase.from(tableName as any).insert(payload);
       if (error) { toast.error(error.message); setSaving(false); return; }
       toast.success("Service created");
     } else if (editing) {
-      const { error } = await supabase.from(tableName as any).update(form as any).eq("id", editing.id as any);
+      const { error } = await supabase.from(tableName as any).update(payload).eq("id", editing.id as any);
       if (error) { toast.error(error.message); setSaving(false); return; }
       toast.success("Service updated");
     }
@@ -334,6 +359,18 @@ function LevelTable({ level }: { level: Level }) {
                 </Select>
               </div>
             </div>
+            {/* Composition editor for L2/L1 */}
+            {(level === "L2" || level === "L1") && (
+              <div className="border-t border-border pt-3">
+                <ServiceCompositionEditor
+                  level={level}
+                  selectedIds={componentIds}
+                  optionalIds={level === "L1" ? optionalL3Ids : undefined}
+                  onChange={setComponentIds}
+                  onOptionalChange={level === "L1" ? setOptionalL3Ids : undefined}
+                />
+              </div>
+            )}
             <Button onClick={saveForm} disabled={saving} className="w-full gap-1.5 h-8 text-xs">
               {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
               {creating ? "Create Service" : "Save Changes"}
