@@ -138,6 +138,7 @@ const TAB_GROUPS = [
       { value: "compliance-audit", label: "Audit", icon: ShieldCheck },
       { value: "incidents", label: "Incidents", icon: AlertCircle },
       { value: "emergency", label: "Emergency", icon: ShieldAlert },
+      { value: "ssot-guardian", label: "SSOT Guardian", icon: ShieldCheck },
     ],
   },
   {
