@@ -78,7 +78,7 @@ export function AdminJobsTab() {
   }, [page, search, statusFilter]);
 
   const loadStats = useCallback(async () => {
-    const statuses = ["queued", "processing", "completed", "failed", "cancelled"];
+    const statuses = ["pending", "queued", "running", "processing", "completed", "failed", "cancelled"];
     const results = await Promise.all(
       statuses.map((s) =>
         supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("status", s)
@@ -213,9 +213,11 @@ export function AdminJobsTab() {
   return (
     <div className="space-y-3">
       {/* Stats cards */}
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-7 gap-2">
         {[
-          { key: "queued", icon: Clock, color: "text-amber-500" },
+          { key: "pending", icon: Clock, color: "text-amber-500" },
+          { key: "queued", icon: Clock, color: "text-amber-400" },
+          { key: "running", icon: Loader2, color: "text-info" },
           { key: "processing", icon: Loader2, color: "text-info" },
           { key: "completed", icon: CheckCircle2, color: "text-status-validated" },
           { key: "failed", icon: AlertTriangle, color: "text-destructive" },
