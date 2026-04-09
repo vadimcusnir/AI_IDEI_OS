@@ -184,7 +184,7 @@ export default function AdminRevenue() {
               <div key={tx.id} className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-muted/30 text-xs">
                 <div className="flex items-center gap-2 min-w-0">
                   {Number(tx.amount) > 0 ? (
-                    <ArrowUpRight className="h-3 w-3 text-emerald-500 shrink-0" />
+                    <ArrowUpRight className="h-3 w-3 text-status-validated shrink-0" />
                   ) : (
                     <ArrowDownRight className="h-3 w-3 text-destructive shrink-0" />
                   )}
