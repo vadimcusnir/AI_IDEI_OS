@@ -10,6 +10,15 @@ export function usePageTracking(pageName?: string) {
   const location = useLocation();
 
   useEffect(() => {
+    // GA4 page_view
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "page_view", {
+        page_path: location.pathname,
+        page_title: document.title,
+      });
+    }
+
+    // Internal analytics
     trackInternalEvent({
       event: AnalyticsEvents.PAGE_VIEW,
       params: {
