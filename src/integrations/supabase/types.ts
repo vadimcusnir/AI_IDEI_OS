@@ -12879,6 +12879,13 @@ export type Database = {
             referencedRelation: "webhook_endpoints"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "webhook_deliveries_endpoint_id_fkey"
+            columns: ["endpoint_id"]
+            isOneToOne: false
+            referencedRelation: "webhook_endpoints_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       webhook_endpoints: {
@@ -13331,6 +13338,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      webhook_endpoints_safe: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          events: string[] | null
+          failure_count: number | null
+          id: string | null
+          is_active: boolean | null
+          last_triggered_at: string | null
+          updated_at: string | null
+          url: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          events?: string[] | null
+          failure_count?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          last_triggered_at?: string | null
+          updated_at?: string | null
+          url?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          events?: string[] | null
+          failure_count?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          last_triggered_at?: string | null
+          updated_at?: string | null
+          url?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {
