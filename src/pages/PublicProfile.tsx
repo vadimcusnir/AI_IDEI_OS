@@ -29,7 +29,6 @@ interface PublicAsset {
   title: string;
   asset_type: string;
   price_neurons: number;
-  slug: string;
 }
 
 export default function PublicProfile() {
