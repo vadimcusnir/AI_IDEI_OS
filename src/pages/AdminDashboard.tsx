@@ -340,6 +340,9 @@ export default function AdminDashboard() {
             <TabsContent value="provider-health"><Suspense fallback={<TabLoader />}><ProviderHealthTab /></Suspense></TabsContent>
             <TabsContent value="alerts"><Suspense fallback={<TabLoader />}><AlertCenterTab /></Suspense></TabsContent>
             <TabsContent value="finops"><Suspense fallback={<TabLoader />}><FinOpsTab /></Suspense></TabsContent>
+            <TabsContent value="prompts"><Suspense fallback={<TabLoader />}><AdminPromptsTab /></Suspense></TabsContent>
+            <TabsContent value="revenue"><Suspense fallback={<TabLoader />}><AdminRevenueTab /></Suspense></TabsContent>
+            <TabsContent value="cms"><Suspense fallback={<TabLoader />}><AdminCMSTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
