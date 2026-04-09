@@ -107,6 +107,7 @@ function publicRouteDefinitions() {
       <Route path="services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
       <Route path="services/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Service detail failed"><ServiceDetail /></ErrorBoundary></AppLayout>} />
       <Route path="services/:slug/execute" element={<AppLayout><ErrorBoundary fallbackTitle="Service execution failed"><ServiceExecute /></ErrorBoundary></AppLayout>} />
+      <Route path="deliverables" element={<AppLayout><ErrorBoundary fallbackTitle="Deliverables failed to load"><DeliverablesLibrary /></ErrorBoundary></AppLayout>} />
       <Route path="products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
 
       {/* Static pages */}
