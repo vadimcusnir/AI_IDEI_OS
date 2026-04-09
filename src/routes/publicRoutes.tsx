@@ -42,6 +42,7 @@ const AboutVadimCusnir = lazyRetry(() => import("@/pages/AboutVadimCusnir"));
 const PaymentResult = lazyRetry(() => import("@/pages/PaymentResult"));
 const PrivacyPolicy = lazyRetry(() => import("@/pages/PrivacyPolicy"));
 const Community = lazyRetry(() => import("@/pages/Community"));
+const Unsubscribe = lazyRetry(() => import("@/pages/Unsubscribe"));
 const CommunityThread = lazyRetry(() => import("@/pages/CommunityThread"));
 const Services = lazyRetry(() => import("@/pages/Services"));
 const Programs = lazyRetry(() => import("@/pages/Programs"));
@@ -129,6 +130,7 @@ function publicRouteDefinitions() {
       <Route path="about-vadim-cusnir" element={<AppLayout><ErrorBoundary fallbackTitle="About Vadim failed to load"><AboutVadimCusnir /></ErrorBoundary></AppLayout>} />
       <Route path="payment/result" element={<AppLayout><ErrorBoundary fallbackTitle="Payment failed to load"><PaymentResult /></ErrorBoundary></AppLayout>} />
       <Route path="privacy" element={<AppLayout><ErrorBoundary fallbackTitle="Privacy failed to load"><PrivacyPolicy /></ErrorBoundary></AppLayout>} />
+      <Route path="unsubscribe" element={<Unsubscribe />} />
 
       {/* Community */}
       <Route path="community" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
