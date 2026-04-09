@@ -98,7 +98,7 @@ export default function AdminRevenue() {
     },
     {
       label: "Revenue (7d)", value: stripe ? `$${stripe.revenue7d.toFixed(2)}` : "—",
-      icon: Activity, color: "text-blue-500",
+      icon: Activity, color: "text-info",
       sub: stripe ? `avg $${stripe.avgChargeAmount.toFixed(2)}` : undefined,
     },
     {
