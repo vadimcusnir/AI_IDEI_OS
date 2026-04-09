@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, lazy, Suspense, useMemo } from "react";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText, Server, Gauge, ShieldCheck, Compass, Bell, HeartPulse } from "lucide-react";
+import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText, Server, Gauge, ShieldCheck, Compass, Bell, HeartPulse, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
