@@ -146,7 +146,7 @@
   },
   "onboarding": {
     "title": "Your Knowledge Pipeline",
-    "subtitle": "Transform expertise into reusable digital assets. Follow the 4 steps to unlock the full potential.",
+    "subtitle": "Transform expertise into reusable digital assets. Follow the 3 steps to unlock the full potential.",
     "progress": "Progress",
     "completed": "completed",
     "step": "Step {{number}}",
