@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { AchievementsBadges } from "@/components/profile/AchievementsBadges";
+import { SkillRadar } from "@/components/profile/SkillRadar";
 import { ControlledSection } from "@/components/ControlledSection";
 import { XPProgressBar } from "@/components/gamification/XPProgressBar";
 import { PageTransition, StaggerContainer, StaggerItem } from "@/components/motion/PageTransition";
@@ -427,6 +428,9 @@ export default function ProfilePage() {
               <div className="bg-card border border-border rounded-xl p-5">
                 <AchievementsBadges />
               </div>
+            </StaggerItem>
+            <StaggerItem>
+              <SkillRadar />
             </StaggerItem>
 
             {/* Data & Privacy */}

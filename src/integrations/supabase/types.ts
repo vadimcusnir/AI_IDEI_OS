@@ -5813,9 +5813,12 @@ export type Database = {
           created_at: string
           created_by: string | null
           description: string
+          difficulty: string
+          estimated_minutes: number
           id: string
           is_active: boolean
           slug: string
+          steps: Json
           title: string
           updated_at: string
         }
@@ -5824,9 +5827,12 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           description?: string
+          difficulty?: string
+          estimated_minutes?: number
           id?: string
           is_active?: boolean
           slug: string
+          steps?: Json
           title: string
           updated_at?: string
         }
@@ -5835,9 +5841,12 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           description?: string
+          difficulty?: string
+          estimated_minutes?: number
           id?: string
           is_active?: boolean
           slug?: string
+          steps?: Json
           title?: string
           updated_at?: string
         }
@@ -12224,6 +12233,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_learning_progress: {
+        Row: {
+          completed_at: string | null
+          completed_steps: Json
+          created_at: string
+          current_step: number
+          id: string
+          path_id: string
+          started_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_steps?: Json
+          created_at?: string
+          current_step?: number
+          id?: string
+          path_id: string
+          started_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_steps?: Json
+          created_at?: string
+          current_step?: number
+          id?: string
+          path_id?: string
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_learning_progress_path_id_fkey"
+            columns: ["path_id"]
+            isOneToOne: false
+            referencedRelation: "learning_paths"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_links: {
         Row: {
