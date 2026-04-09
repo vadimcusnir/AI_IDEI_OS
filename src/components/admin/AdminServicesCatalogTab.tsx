@@ -359,6 +359,18 @@ function LevelTable({ level }: { level: Level }) {
                 </Select>
               </div>
             </div>
+            {/* Composition editor for L2/L1 */}
+            {(level === "L2" || level === "L1") && (
+              <div className="border-t border-border pt-3">
+                <ServiceCompositionEditor
+                  level={level}
+                  selectedIds={componentIds}
+                  optionalIds={level === "L1" ? optionalL3Ids : undefined}
+                  onChange={setComponentIds}
+                  onOptionalChange={level === "L1" ? setOptionalL3Ids : undefined}
+                />
+              </div>
+            )}
             <Button onClick={saveForm} disabled={saving} className="w-full gap-1.5 h-8 text-xs">
               {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
               {creating ? "Create Service" : "Save Changes"}
