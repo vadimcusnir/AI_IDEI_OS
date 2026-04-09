@@ -385,13 +385,19 @@ export default function Services() {
           })}
         </div>
 
-        {/* ═══ LAYER 5: OUTPUT FAMILIES ═══ */}
+        {/* ═══ LAYER 5: FUTURE SERVICES + VOTING ═══ */}
+        <FutureServicesVoting />
+
+        {/* ═══ LAYER 6: COST SIMULATOR ═══ */}
+        <CostSimulator />
+
+        {/* ═══ LAYER 7: OUTPUT FAMILIES ═══ */}
         <OutputFamilies compact />
 
-        {/* ═══ LAYER 6: PRICING BREAKDOWN ═══ */}
+        {/* ═══ LAYER 8: PRICING BREAKDOWN ═══ */}
         <ServicePricingBreakdown userTier={userTier} />
 
-        {/* ═══ LAYER 7: VALUE COMPARISON ═══ */}
+        {/* ═══ LAYER 9: VALUE COMPARISON ═══ */}
         <ValueComparison />
 
         {/* ═══ LAYER 8: FINAL CTA ═══ */}
