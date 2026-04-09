@@ -50,6 +50,7 @@ const ServiceDetail = lazyRetry(() => import("@/pages/ServiceDetail"));
 const ServiceExecute = lazyRetry(() => import("@/pages/ServiceExecute"));
 const DeliverablesLibrary = lazyRetry(() => import("@/pages/DeliverablesLibrary"));
 const PurchaseHistory = lazyRetry(() => import("@/pages/PurchaseHistory"));
+const PersonalOS = lazyRetry(() => import("@/pages/PersonalOS"));
 
 /**
  * All public SEO-indexable route definitions.
@@ -110,6 +111,7 @@ function publicRouteDefinitions() {
       <Route path="services/:slug/execute" element={<AppLayout><ErrorBoundary fallbackTitle="Service execution failed"><ServiceExecute /></ErrorBoundary></AppLayout>} />
       <Route path="deliverables" element={<AppLayout><ErrorBoundary fallbackTitle="Deliverables failed to load"><DeliverablesLibrary /></ErrorBoundary></AppLayout>} />
       <Route path="purchases" element={<AppLayout><ErrorBoundary fallbackTitle="Purchases failed to load"><PurchaseHistory /></ErrorBoundary></AppLayout>} />
+      <Route path="personal-os" element={<AppLayout><ErrorBoundary fallbackTitle="Personal OS failed to load"><PersonalOS /></ErrorBoundary></AppLayout>} />
       <Route path="products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
 
       {/* Static pages */}
