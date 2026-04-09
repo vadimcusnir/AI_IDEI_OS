@@ -1,20 +1,23 @@
 /**
  * MobileBottomNav — 4 tabs + More sheet.
- * Aligned 1:1 with sidebar sections. Zero redundancy.
+ * More sheet mirrors AppSidebar sections exactly. Single source of truth.
  */
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useCreditBalance } from "@/hooks/useCreditBalance";
+import { useUserTier } from "@/hooks/useUserTier";
 import {
   Home, BookOpen, Sparkles, Brain, Network, Store,
   Coins, Clock, Trophy, Shield, Cpu, Activity, BarChart3,
-  Database, Menu, LogOut, Workflow, Gem, Plug,
-  User, Settings, Bell, MessageSquare,
+  Database, Menu, LogOut, Workflow, Gem, Plug, Zap, GraduationCap,
+  User, Settings, Bell, Terminal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Progress } from "@/components/ui/progress";
 
 const BAR_ITEMS = [
   { path: "/home", icon: Home, label: "Home" },
@@ -23,36 +26,44 @@ const BAR_ITEMS = [
   { path: "/services", icon: Sparkles, label: "Services" },
 ];
 
-interface MenuItem { path: string; icon: React.ElementType; label: string; adminOnly?: boolean }
-interface MenuSection { key: string; label: string; items: MenuItem[]; adminOnly?: boolean }
+interface MenuItem { path: string; icon: React.ElementType; label: string; adminOnly?: boolean; operatorOnly?: boolean }
+interface MenuSection { key: string; label: string; items: MenuItem[]; adminOnly?: boolean; operatorOnly?: boolean }
 
+// ═══ MIRROR OF AppSidebar SECTIONS — keep in sync ═══
 const MENU_SECTIONS: MenuSection[] = [
   {
     key: "core", label: "CORE", items: [
       { path: "/home", icon: Home, label: "Command Center" },
       { path: "/pipeline", icon: Workflow, label: "Pipeline" },
+      { path: "/services", icon: Sparkles, label: "Services" },
       { path: "/library", icon: BookOpen, label: "Library" },
-      { path: "/jobs", icon: Clock, label: "Jobs" },
+      { path: "/jobs", icon: Clock, label: "Jobs", operatorOnly: true },
     ],
   },
   {
     key: "economy", label: "ECONOMY", items: [
       { path: "/credits", icon: Coins, label: "Credits" },
+      { path: "/marketplace", icon: Store, label: "Marketplace" },
+      { path: "/purchases", icon: Clock, label: "Purchases", operatorOnly: true },
     ],
   },
   {
-    key: "intelligence", label: "INTELLIGENCE", items: [
+    key: "intelligence", label: "INTELLIGENCE", operatorOnly: true, items: [
       { path: "/neurons", icon: Brain, label: "Neurons" },
       { path: "/intelligence", icon: Network, label: "Knowledge Graph" },
+      { path: "/my-analytics", icon: BarChart3, label: "My Analytics" },
     ],
   },
   {
-    key: "expansion", label: "EXPANSION", items: [
-      { path: "/services", icon: Sparkles, label: "Services" },
-      { path: "/marketplace", icon: Store, label: "Marketplace" },
+    key: "tools", label: "TOOLS", items: [
+      { path: "/deliverables", icon: Database, label: "Deliverables" },
+      { path: "/learning", icon: GraduationCap, label: "Learning" },
       { path: "/gamification", icon: Trophy, label: "Progress" },
-      { path: "/vip", icon: Gem, label: "VIP Program" },
-      { path: "/integrations", icon: Plug, label: "Integrations" },
+      { path: "/workspace", icon: Database, label: "Workspace", operatorOnly: true },
+      { path: "/personal-os", icon: Cpu, label: "Personal OS", operatorOnly: true },
+      { path: "/augmentation", icon: Zap, label: "Augmentation", operatorOnly: true },
+      { path: "/vip", icon: Gem, label: "VIP Program", operatorOnly: true },
+      { path: "/integrations", icon: Plug, label: "Integrations", operatorOnly: true },
     ],
   },
   {
@@ -66,6 +77,8 @@ const MENU_SECTIONS: MenuSection[] = [
   },
 ];
 
+const MODE_KEY = "ai-idei-sidebar-mode";
+
 export function MobileBottomNav() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
@@ -73,6 +86,18 @@ export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { balance, loading: balanceLoading } = useCreditBalance();
+  const { tier } = useUserTier();
+
+  // Read operator mode from localStorage (same key as AppSidebar)
+  const isOperator = (() => {
+    try {
+      const stored = localStorage.getItem(MODE_KEY);
+      if (stored === "operator") return true;
+      if (stored === "user") return false;
+      return isAdmin; // default: admin=operator, user=user
+    } catch { return false; }
+  })();
 
   if (!user) return null;
 
@@ -80,6 +105,10 @@ export function MobileBottomNav() {
     location.pathname === path || location.pathname.startsWith(path + "/");
 
   const handleNav = (path: string) => { navigate(path); setMenuOpen(false); };
+
+  const tierLabel = tier === "vip" ? "VIP" : tier === "pro" ? "PRO" : "FREE";
+  const tierColor = tier === "vip" ? "text-tier-vip" : tier === "pro" ? "text-primary" : "text-muted-foreground/60";
+  const creditPercent = Math.min((balance / 10000) * 100, 100);
 
   return (
     <>
@@ -118,17 +147,25 @@ export function MobileBottomNav() {
         </div>
       </nav>
 
-      {/* Full navigation sheet */}
+      {/* Full navigation sheet — mirrors AppSidebar */}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="w-[280px] p-0 flex flex-col">
           <SheetHeader className="p-4 pb-3 border-b border-border/30">
-            <SheetTitle className="text-sm font-bold text-left">Navigation</SheetTitle>
+            <SheetTitle className="text-base font-bold text-left">
+              AI-<span className="text-primary">IDEI</span>
+            </SheetTitle>
           </SheetHeader>
 
           <div className="flex-1 overflow-y-auto">
             {MENU_SECTIONS.map((section) => {
               if (section.adminOnly && !isAdmin) return null;
-              const items = section.items.filter(i => !i.adminOnly || isAdmin);
+              if (section.operatorOnly && !isOperator) return null;
+
+              const items = section.items.filter(i => {
+                if (i.adminOnly && !isAdmin) return false;
+                if (i.operatorOnly && !isOperator) return false;
+                return true;
+              });
               if (!items.length) return null;
 
               return (
@@ -159,8 +196,32 @@ export function MobileBottomNav() {
             })}
           </div>
 
-          {/* Footer: user actions */}
-          <div className="border-t border-border/30 p-3 space-y-0.5">
+          {/* Footer: credit bar + user actions */}
+          <div className="border-t border-border/30 p-3 space-y-1">
+            {/* Credit bar */}
+            <button
+              onClick={() => handleNav("/credits")}
+              className="w-full px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors text-left"
+            >
+              <div className="flex items-center justify-between mb-0.5">
+                <span className={cn("text-nano font-bold uppercase tracking-wider", tierColor)}>
+                  {tierLabel}
+                </span>
+                <span className="text-micro font-mono tabular-nums text-muted-foreground">
+                  {balanceLoading ? "…" : balance.toLocaleString()}N
+                </span>
+              </div>
+              <Progress value={creditPercent} className="h-1 bg-muted/60" />
+            </button>
+
+            {/* Mode indicator */}
+            <div className="flex items-center gap-2 px-3 py-1.5 text-left">
+              <Terminal className={cn("h-3.5 w-3.5", isOperator ? "text-primary" : "text-muted-foreground/40")} />
+              <span className="text-micro font-mono tracking-wide text-muted-foreground">
+                {isOperator ? "OPERATOR" : "USER"} MODE
+              </span>
+            </div>
+
             <button onClick={() => handleNav("/profile")} className="flex items-center gap-3 w-full py-2.5 px-3 text-sm hover:bg-muted/50 rounded-lg min-h-[44px]">
               <User className="h-4 w-4 text-muted-foreground" /> Profile
             </button>

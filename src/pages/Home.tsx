@@ -243,7 +243,7 @@ export default function Home() {
           </div>
 
           {/* ── COMPOSER: anchored at bottom, never scrolls ── */}
-          <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
+          <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] mb-14 md:mb-0">
             <div className="max-w-3xl mx-auto" data-tour="command-input">
               {/* Mode Panels — contextual actions above input */}
               <AnimatePresence mode="wait">
