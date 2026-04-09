@@ -55,7 +55,7 @@ const queryClient = new QueryClient({
 const App = () => {
   useEffect(() => { prefetchCriticalRoutes(); }, []);
   return (
-  <MotionConfig reducedMotion="user">
+  <LazyMotion features={domAnimation} strict>
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <AuthProvider>
@@ -84,7 +84,7 @@ const App = () => {
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
-  </MotionConfig>
+  </LazyMotion>
   );
 };
 
