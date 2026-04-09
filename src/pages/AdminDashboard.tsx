@@ -18,6 +18,7 @@ const AdminNeuronsTab = lazy(() => import("@/components/admin/AdminNeuronsTab").
 const AdminJobsTab = lazy(() => import("@/components/admin/AdminJobsTab").then(m => ({ default: m.AdminJobsTab })));
 const AdminPermissionsTab = lazy(() => import("@/components/admin/AdminPermissionsTab").then(m => ({ default: m.AdminPermissionsTab })));
 const AdminServicesTab = lazy(() => import("@/components/admin/AdminServicesTab").then(m => ({ default: m.AdminServicesTab })));
+const AdminServicesCatalogTab = lazy(() => import("@/components/admin/AdminServicesCatalogTab").then(m => ({ default: m.AdminServicesCatalogTab })));
 const AdminLogsTab = lazy(() => import("@/components/admin/AdminLogsTab").then(m => ({ default: m.AdminLogsTab })));
 const AdminFeedbackTab = lazy(() => import("@/components/feedback/AdminFeedbackTab").then(m => ({ default: m.AdminFeedbackTab })));
 const AdminChangelogTab = lazy(() => import("@/components/admin/AdminChangelogTab").then(m => ({ default: m.AdminChangelogTab })));
@@ -72,6 +73,7 @@ const TAB_GROUPS = [
       { value: "neurons", label: "Neurons", icon: Brain },
       { value: "jobs", label: "Jobs", icon: Briefcase },
       { value: "services", label: "Services", icon: Coins },
+      { value: "catalog", label: "Catalog L1/L2/L3", icon: Layers },
       { value: "logs", label: "Logs", icon: ScrollText },
     ],
   },
@@ -300,6 +302,7 @@ export default function AdminDashboard() {
             <TabsContent value="jobs"><Suspense fallback={<TabLoader />}><AdminJobsTab /></Suspense></TabsContent>
             <TabsContent value="permissions"><Suspense fallback={<TabLoader />}><AdminPermissionsTab /></Suspense></TabsContent>
             <TabsContent value="services"><Suspense fallback={<TabLoader />}><AdminServicesTab /></Suspense></TabsContent>
+            <TabsContent value="catalog"><Suspense fallback={<TabLoader />}><AdminServicesCatalogTab /></Suspense></TabsContent>
             <TabsContent value="logs"><Suspense fallback={<TabLoader />}><AdminLogsTab /></Suspense></TabsContent>
             <TabsContent value="feedback"><Suspense fallback={<TabLoader />}><AdminFeedbackTab /></Suspense></TabsContent>
             <TabsContent value="changelog"><Suspense fallback={<TabLoader />}><AdminChangelogTab /></Suspense></TabsContent>
