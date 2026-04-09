@@ -44,7 +44,7 @@ export default function Jobs() {
   const fetchJobs = async () => {
     const { data, error } = await supabase
       .from("neuron_jobs")
-      .select("id, neuron_id, worker_type, status, input, result, error_message, created_at, completed_at, retry_count, max_retries, priority")
+      .select("id, neuron_id, worker_type, status, input, result, error_message, created_at, completed_at, retry_count, max_retries, priority, progress, current_step, total_steps, queue_position, estimated_remaining_seconds")
       .eq("workspace_id", currentWorkspace!.id)
       .order("created_at", { ascending: false })
       .limit(100);
