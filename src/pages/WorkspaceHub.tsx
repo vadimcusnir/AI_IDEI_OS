@@ -50,7 +50,7 @@ export default function WorkspaceHub() {
     setLoading(true);
 
     const [neuronsRes, artifactsRes, assetsRes, pubAssetsRes] = await Promise.all([
-      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+      supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id" as any, user.id),
       supabase.from("artifacts").select("id, title, artifact_type, status, visibility, created_at")
         .eq("author_id", user.id).order("created_at", { ascending: false }).limit(50),
       supabase.from("knowledge_assets").select("id", { count: "exact", head: true }).eq("author_id", user.id),
