@@ -5401,11 +5401,15 @@ export type Database = {
           artifact_ids: string[] | null
           asset_type: string
           author_id: string
+          commercialization_status: string
+          conflict_details: Json | null
+          conflict_score: number | null
           created_at: string
           description: string | null
           id: string
           is_featured: boolean | null
           is_published: boolean | null
+          license_type: string
           metadata: Json | null
           neuron_ids: number[] | null
           preview_content: string | null
@@ -5422,11 +5426,15 @@ export type Database = {
           artifact_ids?: string[] | null
           asset_type?: string
           author_id: string
+          commercialization_status?: string
+          conflict_details?: Json | null
+          conflict_score?: number | null
           created_at?: string
           description?: string | null
           id?: string
           is_featured?: boolean | null
           is_published?: boolean | null
+          license_type?: string
           metadata?: Json | null
           neuron_ids?: number[] | null
           preview_content?: string | null
@@ -5443,11 +5451,15 @@ export type Database = {
           artifact_ids?: string[] | null
           asset_type?: string
           author_id?: string
+          commercialization_status?: string
+          conflict_details?: Json | null
+          conflict_score?: number | null
           created_at?: string
           description?: string | null
           id?: string
           is_featured?: boolean | null
           is_published?: boolean | null
+          license_type?: string
           metadata?: Json | null
           neuron_ids?: number[] | null
           preview_content?: string | null

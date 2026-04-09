@@ -18,6 +18,9 @@ import {
   Share2, ArrowRightLeft, ExternalLink,
 } from "lucide-react";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
+import { LicensingControls } from "@/components/library/LicensingControls";
+import { CommercializationCheck } from "@/components/library/CommercializationCheck";
+import type { LicenseType } from "@/hooks/useAssetMonetization";
 
 interface KnowledgeAsset {
   id: string;
@@ -300,6 +303,21 @@ export default function MarketplaceDetail() {
             <InlineTopUp needed={price} balance={balance} compact />
           )}
         </div>
+
+        {/* Owner Controls: Licensing & Commercialization */}
+        {isOwn && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <LicensingControls
+              assetId={asset.id}
+              currentLicense={((asset as any).license_type || "private_use_only") as LicenseType}
+            />
+            <CommercializationCheck
+              assetId={asset.id}
+              assetTitle={asset.title}
+              assetTags={asset.tags || []}
+            />
+          </div>
+        )}
 
         <Separator />
 
