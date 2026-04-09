@@ -645,6 +645,50 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_twin_sessions: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          feedback_score: number | null
+          id: string
+          messages_count: number | null
+          session_context: Json | null
+          started_at: string
+          twin_config_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          feedback_score?: number | null
+          id?: string
+          messages_count?: number | null
+          session_context?: Json | null
+          started_at?: string
+          twin_config_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          feedback_score?: number | null
+          id?: string
+          messages_count?: number | null
+          session_context?: Json | null
+          started_at?: string
+          twin_config_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_twin_sessions_twin_config_id_fkey"
+            columns: ["twin_config_id"]
+            isOneToOne: false
+            referencedRelation: "personal_os_configs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       aias_agent_profiles: {
         Row: {
           agent_key: string
@@ -8163,6 +8207,48 @@ export type Database = {
           },
         ]
       }
+      personal_os_configs: {
+        Row: {
+          adaptation_layer: Json | null
+          created_at: string
+          execution_layer: Json | null
+          id: string
+          identity_layer: Json | null
+          is_active: boolean | null
+          knowledge_layer: Json | null
+          monetization_layer: Json | null
+          os_version: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          adaptation_layer?: Json | null
+          created_at?: string
+          execution_layer?: Json | null
+          id?: string
+          identity_layer?: Json | null
+          is_active?: boolean | null
+          knowledge_layer?: Json | null
+          monetization_layer?: Json | null
+          os_version?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          adaptation_layer?: Json | null
+          created_at?: string
+          execution_layer?: Json | null
+          id?: string
+          identity_layer?: Json | null
+          is_active?: boolean | null
+          knowledge_layer?: Json | null
+          monetization_layer?: Json | null
+          os_version?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       personal_os_layers: {
         Row: {
           completeness_pct: number | null
@@ -12083,6 +12169,60 @@ export type Database = {
           id?: string
           total_earned?: number
           total_spent?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_identity_profiles: {
+        Row: {
+          cognitive_logic: Json | null
+          completeness_score: number | null
+          created_at: string
+          dark_patterns: Json | null
+          extraction_status: string
+          id: string
+          identity_layers: Json | null
+          knowledge_signature: Json | null
+          last_extracted_at: string | null
+          operational_identity: Json | null
+          problem_solving_model: Json | null
+          source_neuron_ids: number[] | null
+          tone_of_voice: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cognitive_logic?: Json | null
+          completeness_score?: number | null
+          created_at?: string
+          dark_patterns?: Json | null
+          extraction_status?: string
+          id?: string
+          identity_layers?: Json | null
+          knowledge_signature?: Json | null
+          last_extracted_at?: string | null
+          operational_identity?: Json | null
+          problem_solving_model?: Json | null
+          source_neuron_ids?: number[] | null
+          tone_of_voice?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cognitive_logic?: Json | null
+          completeness_score?: number | null
+          created_at?: string
+          dark_patterns?: Json | null
+          extraction_status?: string
+          id?: string
+          identity_layers?: Json | null
+          knowledge_signature?: Json | null
+          last_extracted_at?: string | null
+          operational_identity?: Json | null
+          problem_solving_model?: Json | null
+          source_neuron_ids?: number[] | null
+          tone_of_voice?: Json | null
           updated_at?: string
           user_id?: string
         }
