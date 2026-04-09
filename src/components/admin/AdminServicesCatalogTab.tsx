@@ -165,12 +165,21 @@ function LevelTable({ level }: { level: Level }) {
     }
     setSaving(true);
 
+    // Build payload with composition data for L2/L1
+    const payload: any = { ...form };
+    if (level === "L2") {
+      payload.component_l3_ids = componentIds;
+    } else if (level === "L1") {
+      payload.component_l2_ids = componentIds;
+      payload.component_l3_ids_optional = optionalL3Ids;
+    }
+
     if (creating) {
-      const { error } = await supabase.from(tableName as any).insert(form as any);
+      const { error } = await supabase.from(tableName as any).insert(payload);
       if (error) { toast.error(error.message); setSaving(false); return; }
       toast.success("Service created");
     } else if (editing) {
-      const { error } = await supabase.from(tableName as any).update(form as any).eq("id", editing.id as any);
+      const { error } = await supabase.from(tableName as any).update(payload).eq("id", editing.id as any);
       if (error) { toast.error(error.message); setSaving(false); return; }
       toast.success("Service updated");
     }
