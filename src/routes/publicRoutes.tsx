@@ -48,6 +48,7 @@ const Programs = lazyRetry(() => import("@/pages/Programs"));
 const ServicesCatalog = lazyRetry(() => import("@/pages/NewServicesCatalog"));
 const ServiceDetail = lazyRetry(() => import("@/pages/ServiceDetail"));
 const ServiceExecute = lazyRetry(() => import("@/pages/ServiceExecute"));
+const Avatar33Page = lazyRetry(() => import("@/pages/Avatar33Page"));
 const DeliverablesLibrary = lazyRetry(() => import("@/pages/DeliverablesLibrary"));
 const PurchaseHistory = lazyRetry(() => import("@/pages/PurchaseHistory"));
 const PersonalOS = lazyRetry(() => import("@/pages/PersonalOS"));
@@ -112,6 +113,7 @@ function publicRouteDefinitions() {
       <Route path="services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
       <Route path="services/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Service detail failed"><ServiceDetail /></ErrorBoundary></AppLayout>} />
       <Route path="services/:slug/execute" element={<AppLayout><ErrorBoundary fallbackTitle="Service execution failed"><ServiceExecute /></ErrorBoundary></AppLayout>} />
+      <Route path="avatar33" element={<AppLayout><ErrorBoundary fallbackTitle="Avatar33 failed"><Avatar33Page /></ErrorBoundary></AppLayout>} />
       <Route path="deliverables" element={<AppLayout><ErrorBoundary fallbackTitle="Deliverables failed to load"><DeliverablesLibrary /></ErrorBoundary></AppLayout>} />
       <Route path="purchases" element={<AppLayout><ErrorBoundary fallbackTitle="Purchases failed to load"><PurchaseHistory /></ErrorBoundary></AppLayout>} />
       <Route path="personal-os" element={<AppLayout><ErrorBoundary fallbackTitle="Personal OS failed to load"><PersonalOS /></ErrorBoundary></AppLayout>} />
