@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useServiceBySlug } from "@/hooks/useServiceCatalog";
 import { Button } from "@/components/ui/button";
+import { ServiceUpsellBanner } from "@/components/services/ServiceUpsellBanner";
+import { PostExecutionUpsell } from "@/components/services/PostExecutionUpsell";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Clock, DollarSign, Zap, Layers, Server, Package, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -144,6 +146,13 @@ export default function ServiceDetail() {
           </div>
         )}
 
+        {/* Upsell Banner */}
+        <ServiceUpsellBanner
+          currentSlug={slug || ""}
+          currentLevel={level}
+          className="mb-8"
+        />
+
         {/* CTA */}
         <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 text-center">
           <p className="text-lg font-bold mb-1">${service.price_usd}</p>
@@ -153,6 +162,13 @@ export default function ServiceDetail() {
             Cumpără și Execută
           </Button>
         </div>
+
+        {/* Post-execution recommendations */}
+        <PostExecutionUpsell
+          completedServiceSlug={slug}
+          completedCategory={service.category}
+          className="mt-8"
+        />
       </div>
     </div>
   );
