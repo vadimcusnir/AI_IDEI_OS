@@ -88,7 +88,7 @@ export default function AdminRevenue() {
   const kpiCards = [
     {
       label: "MRR", value: stripe ? `$${stripe.mrr.toFixed(2)}` : "—",
-      icon: DollarSign, color: "text-emerald-500",
+      icon: DollarSign, color: "text-status-validated",
       sub: stripe ? `${stripe.activeSubscriptions} active subs` : undefined,
     },
     {
@@ -103,12 +103,12 @@ export default function AdminRevenue() {
     },
     {
       label: "Stripe Balance", value: stripe ? `$${stripe.availableBalance.toFixed(2)}` : "—",
-      icon: Wallet, color: "text-amber-500",
+      icon: Wallet, color: "text-tier-vip",
       sub: stripe ? `$${stripe.pendingBalance.toFixed(2)} pending` : undefined,
     },
     {
       label: "Customers", value: stripe?.totalCustomers?.toLocaleString() ?? "—",
-      icon: Users, color: "text-indigo-500",
+      icon: Users, color: "text-accent-foreground",
       sub: `${local.totalUsers} platform users`,
     },
     {
