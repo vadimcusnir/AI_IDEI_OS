@@ -1,29 +1,52 @@
 /**
- * AdminCommandTab — Strategic decision panel with suggested actions, priority scores, warnings.
- * Phase 7 / T7.4
+ * AdminCommandTab — Strategic decision panel powered by command-engine.
+ * Phase 8 / T8.4 — Now uses real backend pipeline.
  */
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  RefreshCw, Loader2, Compass, ArrowRight, AlertTriangle,
+  RefreshCw, Loader2, Compass, AlertTriangle,
   TrendingUp, Zap, Target, Shield, DollarSign,
+  Send, Clock, CheckCircle, History,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-interface SuggestedAction {
+interface NextAction {
   title: string;
-  type: "generate_revenue" | "improve_conversion" | "build_authority" | "optimize_system" | "reduce_risk";
-  priority: number;
-  impact: string;
-  effort: "low" | "medium" | "high";
+  type: string;
+  priority_score: number;
+  estimated_credits: number;
   reason: string;
+  service_unit_id: string | null;
 }
 
 interface Warning {
   message: string;
-  severity: "info" | "warn" | "critical";
+  severity: string;
+}
+
+interface DecisionResult {
+  decision_id: string;
+  command_type: string;
+  priority_score: number;
+  next_actions: NextAction[];
+  warnings: Warning[];
+  pipeline_duration_ms: number;
+}
+
+interface HistoryItem {
+  id: string;
+  user_goal: string;
+  command_type: string;
+  priority_score: number;
+  status: string;
+  created_at: string;
+  warnings: Warning[] | null;
+  next_actions: NextAction[] | null;
 }
 
 const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string }> = {
@@ -35,147 +58,157 @@ const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string }> = 
 };
 
 export function AdminCommandTab() {
-  const [actions, setActions] = useState<SuggestedAction[]>([]);
-  const [warnings, setWarnings] = useState<Warning[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [goal, setGoal] = useState("");
+  const [result, setResult] = useState<DecisionResult | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
-  const analyze = useCallback(async () => {
-    setLoading(true);
-    const suggestedActions: SuggestedAction[] = [];
-    const systemWarnings: Warning[] = [];
-
-    // Gather system state
-    const [jobsRes, unitsRes, artifactsRes, capRes] = await Promise.all([
-      supabase.from("neuron_jobs").select("status").order("created_at", { ascending: false }).limit(200),
-      supabase.from("service_units").select("id, status, neurons_cost"),
-      supabase.from("artifacts").select("id, status").limit(100),
-      supabase.from("capacity_state").select("*").limit(1),
-    ]);
-
-    const jobs = (jobsRes.data as any[]) || [];
-    const units = (unitsRes.data as any[]) || [];
-    const artifacts = (artifactsRes.data as any[]) || [];
-    const cap = ((capRes.data as any[]) || [])[0];
-
-    const failedJobs = jobs.filter(j => j.status === "failed").length;
-    const failRate = jobs.length > 0 ? failedJobs / jobs.length : 0;
-    const activeUnits = units.filter(u => u.status === "active").length;
-    const draftUnits = units.filter(u => u.status === "draft").length;
-
-    // Generate suggestions based on system state
-    if (draftUnits > 0) {
-      suggestedActions.push({
-        title: `Activate ${draftUnits} draft service units`,
-        type: "generate_revenue",
-        priority: 85,
-        impact: `${draftUnits} new services available for monetization`,
-        effort: "low",
-        reason: "Draft units represent unrealized revenue potential",
-      });
-    }
-
-    if (failRate > 0.1) {
-      suggestedActions.push({
-        title: "Investigate high job failure rate",
-        type: "reduce_risk",
-        priority: 95,
-        impact: `${(failRate * 100).toFixed(0)}% failure rate affecting user experience`,
-        effort: "medium",
-        reason: `${failedJobs} failed jobs in recent batch`,
-      });
-      systemWarnings.push({
-        message: `Job failure rate at ${(failRate * 100).toFixed(0)}% — exceeds 10% threshold`,
-        severity: "critical",
-      });
-    }
-
-    if (cap?.utilization > 70) {
-      suggestedActions.push({
-        title: "Scale capacity before saturation",
-        type: "optimize_system",
-        priority: 80,
-        impact: `Current utilization at ${cap.utilization}%`,
-        effort: "medium",
-        reason: "System approaching capacity limits",
-      });
-      systemWarnings.push({
-        message: `System utilization at ${cap.utilization}% — consider scaling`,
-        severity: "warn",
-      });
-    }
-
-    if (artifacts.length < 50) {
-      suggestedActions.push({
-        title: "Drive artifact generation campaigns",
-        type: "improve_conversion",
-        priority: 70,
-        impact: "Increase library value and user retention",
-        effort: "medium",
-        reason: "Low artifact count indicates underutilization",
-      });
-    }
-
-    suggestedActions.push({
-      title: "Launch i18n RU translations",
-      type: "build_authority",
-      priority: 60,
-      impact: "Access Russian-speaking market segment",
-      effort: "high",
-      reason: "RU translations required by SSOT (Phase 9)",
+  const loadHistory = useCallback(async () => {
+    const { data } = await supabase.functions.invoke("command-engine", {
+      body: { action: "history", limit: 10 },
     });
-
-    suggestedActions.push({
-      title: "Implement AIAS Level 1 certification",
-      type: "build_authority",
-      priority: 55,
-      impact: "Establish standard credibility for agent marketplace",
-      effort: "high",
-      reason: "AIAS infiltration planned in Phase 10",
-    });
-
-    // Sort by priority
-    suggestedActions.sort((a, b) => b.priority - a.priority);
-
-    setActions(suggestedActions);
-    setWarnings(systemWarnings);
-    setLoading(false);
+    if (data?.decisions) setHistory(data.decisions);
   }, []);
 
-  useEffect(() => { analyze(); }, [analyze]);
+  useEffect(() => { loadHistory(); }, [loadHistory]);
 
-  if (loading) {
-    return <div className="flex justify-center py-12"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>;
-  }
+  const analyze = useCallback(async () => {
+    if (!goal.trim()) return;
+    setLoading(true);
+    setResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("command-engine", {
+        body: { action: "analyze", user_goal: goal.trim() },
+      });
+      if (error) throw error;
+      setResult(data as DecisionResult);
+      setShowHistory(false);
+      loadHistory();
+    } catch (err: any) {
+      toast.error(err.message || "Analysis failed");
+    } finally {
+      setLoading(false);
+    }
+  }, [goal, loadHistory]);
+
+  const executeDecision = useCallback(async (decisionId: string) => {
+    const { error } = await supabase.functions.invoke("command-engine", {
+      body: { action: "execute", decision_id: decisionId },
+    });
+    if (error) { toast.error("Execution failed"); return; }
+    toast.success("Execution triggered");
+    loadHistory();
+  }, [loadHistory]);
 
   return (
     <div className="space-y-4">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Compass className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h2 className="text-sm font-bold">Command Panel</h2>
-            <p className="text-micro text-muted-foreground">Strategic suggestions ranked by priority × impact</p>
+            <h2 className="text-sm font-bold">Command Engine</h2>
+            <p className="text-micro text-muted-foreground">6-stage decision pipeline with priority scoring</p>
           </div>
         </div>
-        <Button variant="outline" size="sm" onClick={analyze} className="gap-1 text-xs h-8">
-          <RefreshCw className="h-3 w-3" /> Re-analyze
+        <Button
+          variant="outline" size="sm"
+          onClick={() => setShowHistory(!showHistory)}
+          className="gap-1 text-xs h-8"
+        >
+          <History className="h-3 w-3" />
+          {showHistory ? "Back" : "History"}
+        </Button>
+      </div>
+
+      {/* Goal Input */}
+      {!showHistory && (
+        <div className="flex gap-2">
+          <Input
+            placeholder="Describe your business objective..."
+            value={goal}
+            onChange={e => setGoal(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && analyze()}
+            className="text-sm"
+            disabled={loading}
+          />
+          <Button onClick={analyze} disabled={loading || !goal.trim()} size="sm" className="gap-1 shrink-0">
+            {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3" />}
+            Analyze
+          </Button>
+        </div>
+      )}
+
+      {/* Loading */}
+      {loading && (
+        <div className="flex flex-col items-center py-8 gap-2">
+          <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          <span className="text-xs text-muted-foreground">Running 6-stage pipeline...</span>
+        </div>
+      )}
+
+      {/* Result */}
+      {result && !showHistory && <DecisionResultView result={result} onExecute={executeDecision} />}
+
+      {/* History */}
+      {showHistory && <DecisionHistory items={history} onSelect={(item) => {
+        setResult({
+          decision_id: item.id,
+          command_type: item.command_type,
+          priority_score: item.priority_score,
+          next_actions: item.next_actions || [],
+          warnings: item.warnings || [],
+          pipeline_duration_ms: 0,
+        });
+        setShowHistory(false);
+      }} />}
+    </div>
+  );
+}
+
+/* ═══ Sub-components ═══ */
+
+function DecisionResultView({ result, onExecute }: { result: DecisionResult; onExecute: (id: string) => void }) {
+  const config = TYPE_CONFIG[result.command_type] || TYPE_CONFIG.optimize_system;
+  const TypeIcon = config.icon;
+
+  return (
+    <div className="space-y-3">
+      {/* Summary */}
+      <div className="rounded-xl border border-border bg-card p-4 flex items-center gap-3">
+        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <TypeIcon className={cn("h-5 w-5", config.color)} />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold capitalize">{result.command_type.replace(/_/g, " ")}</span>
+            <Badge variant="outline" className="text-nano">Score {result.priority_score}</Badge>
+            {result.pipeline_duration_ms > 0 && (
+              <Badge variant="secondary" className="text-nano gap-1">
+                <Clock className="h-2.5 w-2.5" />{result.pipeline_duration_ms}ms
+              </Badge>
+            )}
+          </div>
+          <p className="text-micro text-muted-foreground mt-0.5">{result.next_actions.length} actions identified</p>
+        </div>
+        <Button size="sm" variant="default" className="text-xs h-7 gap-1" onClick={() => onExecute(result.decision_id)}>
+          <CheckCircle className="h-3 w-3" /> Execute
         </Button>
       </div>
 
       {/* Warnings */}
-      {warnings.length > 0 && (
-        <div className="space-y-2">
-          {warnings.map((w, i) => (
+      {result.warnings.length > 0 && (
+        <div className="space-y-1.5">
+          {result.warnings.map((w, i) => (
             <div key={i} className={cn(
-              "rounded-lg border px-4 py-3 flex items-center gap-3",
+              "rounded-lg border px-3 py-2 flex items-center gap-2",
               w.severity === "critical" ? "border-destructive/30 bg-destructive/5" :
-              w.severity === "warn" ? "border-primary/30 bg-primary/5" :
-              "border-border bg-card"
+              w.severity === "warn" ? "border-primary/30 bg-primary/5" : "border-border bg-card"
             )}>
-              <AlertTriangle className={cn(
-                "h-4 w-4 shrink-0",
+              <AlertTriangle className={cn("h-3.5 w-3.5 shrink-0",
                 w.severity === "critical" ? "text-destructive" : "text-primary"
               )} />
               <span className="text-xs">{w.message}</span>
@@ -187,38 +220,67 @@ export function AdminCommandTab() {
         </div>
       )}
 
-      {/* Suggested Actions */}
+      {/* Actions */}
       <div className="space-y-2">
-        {actions.map((action, i) => {
-          const config = TYPE_CONFIG[action.type] || TYPE_CONFIG.optimize_system;
-          const Icon = config.icon;
-
+        {result.next_actions.map((action, i) => {
+          const ac = TYPE_CONFIG[action.type] || TYPE_CONFIG.optimize_system;
+          const AIcon = ac.icon;
           return (
-            <div key={i} className="rounded-xl border border-border bg-card p-4 hover:bg-muted/30 transition-colors">
+            <div key={i} className="rounded-xl border border-border bg-card p-3 hover:bg-muted/30 transition-colors">
               <div className="flex items-start gap-3">
-                <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center shrink-0", `bg-card border border-border`)}>
-                  <Icon className={cn("h-4 w-4", config.color)} />
+                <div className="h-7 w-7 rounded-lg bg-card border border-border flex items-center justify-center shrink-0">
+                  <AIcon className={cn("h-3.5 w-3.5", ac.color)} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-xs font-semibold">{action.title}</span>
                     <Badge variant="outline" className="text-nano shrink-0">
-                      P{action.priority}
+                      P{action.priority_score}
                     </Badge>
-                    <Badge variant="secondary" className="text-nano shrink-0">
-                      {action.effort} effort
-                    </Badge>
+                    {action.estimated_credits > 0 && (
+                      <Badge variant="secondary" className="text-nano shrink-0">
+                        {action.estimated_credits} N
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-micro text-muted-foreground">{action.reason}</p>
-                  <p className="text-micro text-primary mt-1 flex items-center gap-1">
-                    <Target className="h-3 w-3" /> {action.impact}
-                  </p>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function DecisionHistory({ items, onSelect }: { items: HistoryItem[]; onSelect: (item: HistoryItem) => void }) {
+  if (items.length === 0) {
+    return <p className="text-xs text-muted-foreground text-center py-8">No decisions yet</p>;
+  }
+  return (
+    <div className="space-y-2">
+      {items.map(item => (
+        <button
+          key={item.id}
+          onClick={() => onSelect(item)}
+          className="w-full text-left rounded-xl border border-border bg-card p-3 hover:bg-muted/30 transition-colors"
+        >
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-semibold truncate">{item.user_goal}</span>
+            <Badge variant={item.status === "suggested" ? "default" : item.status === "executing" ? "secondary" : "outline"} className="text-nano shrink-0 ml-2">
+              {item.status}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-2 text-micro text-muted-foreground">
+            <span className="capitalize">{item.command_type?.replace(/_/g, " ")}</span>
+            <span>•</span>
+            <span>Score {item.priority_score}</span>
+            <span>•</span>
+            <span>{new Date(item.created_at).toLocaleDateString()}</span>
+          </div>
+        </button>
+      ))}
     </div>
   );
 }
