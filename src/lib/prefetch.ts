@@ -1,9 +1,15 @@
 /**
  * Route prefetch — preloads critical route chunks on idle.
- * Call once after initial render to warm the cache.
+ * Only prefetches app routes when user is authenticated (on app pages).
+ * Landing visitors get no unnecessary prefetch.
  */
 export function prefetchCriticalRoutes() {
   if (typeof window === "undefined") return;
+
+  const isLanding = window.location.pathname === "/" || /^\/(en|ro|ru)\/?$/.test(window.location.pathname);
+  
+  // On landing page, don't prefetch app routes — user hasn't authed yet
+  if (isLanding) return;
 
   const routes = [
     () => import("@/pages/Home"),
