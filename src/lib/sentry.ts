@@ -1,10 +1,12 @@
 let sentryInstance: typeof import("@sentry/react") | null = null;
 
+const SENTRY_DSN = "https://fae81b65b5a78611ea8ea19045ac5245@o4511189919596544.ingest.us.sentry.io/4511189995683840";
+
 export function initSentry() {
-  if (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN) {
+  if (import.meta.env.PROD) {
     import("@sentry/react").then((Sentry) => {
       Sentry.init({
-        dsn: import.meta.env.VITE_SENTRY_DSN,
+        dsn: SENTRY_DSN,
         integrations: [
           Sentry.browserTracingIntegration(),
           Sentry.replayIntegration({ maskAllText: false, blockAllMedia: false }),
