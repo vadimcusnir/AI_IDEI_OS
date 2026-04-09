@@ -54,7 +54,7 @@ const AdminPromptsTab = lazy(() => import("@/components/admin/AdminPromptsTab").
 const AdminRevenueTab = lazy(() => import("@/components/admin/AdminRevenueTab").then(m => ({ default: m.AdminRevenueTab })));
 const AdminCMSTab = lazy(() => import("@/components/admin/AdminCMSTab").then(m => ({ default: m.AdminCMSTab })));
 const ContentProfileAdmin = lazy(() => import("@/components/admin/ContentProfileAdmin").then(m => ({ default: m.ContentProfileAdmin })));
-
+const SSOTGuardianTab = lazy(() => import("@/components/admin/SSOTGuardianTab").then(m => ({ default: m.SSOTGuardianTab })));
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
 }
