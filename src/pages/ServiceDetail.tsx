@@ -146,6 +146,13 @@ export default function ServiceDetail() {
           </div>
         )}
 
+        {/* Upsell Banner */}
+        <ServiceUpsellBanner
+          currentSlug={slug || ""}
+          currentLevel={level}
+          className="mb-8"
+        />
+
         {/* CTA */}
         <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 text-center">
           <p className="text-lg font-bold mb-1">${service.price_usd}</p>
@@ -155,6 +162,13 @@ export default function ServiceDetail() {
             Cumpără și Execută
           </Button>
         </div>
+
+        {/* Post-execution recommendations */}
+        <PostExecutionUpsell
+          completedServiceSlug={slug}
+          completedCategory={service.category}
+          className="mt-8"
+        />
       </div>
     </div>
   );
