@@ -6752,17 +6752,22 @@ export type Database = {
           cancel_reason: string | null
           completed_at: string | null
           created_at: string
+          current_step: string | null
           dead_letter: boolean
           error_message: string | null
+          estimated_remaining_seconds: number | null
           id: string
           input: Json | null
           max_retries: number
           neuron_id: number
           priority: number
+          progress: number
+          queue_position: number | null
           result: Json | null
           retry_count: number
           scheduled_at: string | null
           status: string
+          total_steps: number
           worker_type: string
           workspace_id: string | null
         }
@@ -6772,17 +6777,22 @@ export type Database = {
           cancel_reason?: string | null
           completed_at?: string | null
           created_at?: string
+          current_step?: string | null
           dead_letter?: boolean
           error_message?: string | null
+          estimated_remaining_seconds?: number | null
           id?: string
           input?: Json | null
           max_retries?: number
           neuron_id: number
           priority?: number
+          progress?: number
+          queue_position?: number | null
           result?: Json | null
           retry_count?: number
           scheduled_at?: string | null
           status?: string
+          total_steps?: number
           worker_type: string
           workspace_id?: string | null
         }
@@ -6792,17 +6802,22 @@ export type Database = {
           cancel_reason?: string | null
           completed_at?: string | null
           created_at?: string
+          current_step?: string | null
           dead_letter?: boolean
           error_message?: string | null
+          estimated_remaining_seconds?: number | null
           id?: string
           input?: Json | null
           max_retries?: number
           neuron_id?: number
           priority?: number
+          progress?: number
+          queue_position?: number | null
           result?: Json | null
           retry_count?: number
           scheduled_at?: string | null
           status?: string
+          total_steps?: number
           worker_type?: string
           workspace_id?: string | null
         }
@@ -12513,6 +12528,7 @@ export type Database = {
           daily_xp_date: string
           daily_xp_earned: number
           level: number
+          quality_multiplier: number
           rank_name: string
           total_xp: number
           updated_at: string
@@ -12523,6 +12539,7 @@ export type Database = {
           daily_xp_date?: string
           daily_xp_earned?: number
           level?: number
+          quality_multiplier?: number
           rank_name?: string
           total_xp?: number
           updated_at?: string
@@ -12533,6 +12550,7 @@ export type Database = {
           daily_xp_date?: string
           daily_xp_earned?: number
           level?: number
+          quality_multiplier?: number
           rank_name?: string
           total_xp?: number
           updated_at?: string
