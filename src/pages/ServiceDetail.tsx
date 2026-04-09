@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useServiceBySlug } from "@/hooks/useServiceCatalog";
 import { Button } from "@/components/ui/button";
+import { ServiceUpsellBanner } from "@/components/services/ServiceUpsellBanner";
+import { PostExecutionUpsell } from "@/components/services/PostExecutionUpsell";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Clock, DollarSign, Zap, Layers, Server, Package, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
