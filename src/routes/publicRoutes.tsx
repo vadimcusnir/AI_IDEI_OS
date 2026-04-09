@@ -191,6 +191,7 @@ export function publicRoutes() {
       <Route path="/services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
       <Route path="/services/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Service detail failed"><ServiceDetail /></ErrorBoundary></AppLayout>} />
       <Route path="/services/:slug/execute" element={<AppLayout><ErrorBoundary fallbackTitle="Service execution failed"><ServiceExecute /></ErrorBoundary></AppLayout>} />
+      <Route path="/avatar33" element={<AppLayout><ErrorBoundary fallbackTitle="Avatar33 failed"><Avatar33Page /></ErrorBoundary></AppLayout>} />
       <Route path="/deliverables" element={<AppLayout><ErrorBoundary fallbackTitle="Deliverables failed"><DeliverablesLibrary /></ErrorBoundary></AppLayout>} />
       <Route path="/purchases" element={<AppLayout><ErrorBoundary fallbackTitle="Purchases failed"><PurchaseHistory /></ErrorBoundary></AppLayout>} />
       <Route path="/products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
