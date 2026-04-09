@@ -1011,6 +1011,7 @@ export type Database = {
           tags: string[] | null
           title: string
           updated_at: string
+          visibility: string
           workspace_id: string | null
         }
         Insert: {
@@ -1032,6 +1033,7 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+          visibility?: string
           workspace_id?: string | null
         }
         Update: {
@@ -1053,6 +1055,7 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+          visibility?: string
           workspace_id?: string | null
         }
         Relationships: [
@@ -8671,6 +8674,10 @@ export type Database = {
           is_suspended: boolean
           onboarding_completed: boolean | null
           preferred_language: string | null
+          public_bio: string | null
+          public_links: Json | null
+          public_profile_enabled: boolean
+          seller_verified: boolean
           suspended_at: string | null
           suspended_by: string | null
           updated_at: string
@@ -8686,6 +8693,10 @@ export type Database = {
           is_suspended?: boolean
           onboarding_completed?: boolean | null
           preferred_language?: string | null
+          public_bio?: string | null
+          public_links?: Json | null
+          public_profile_enabled?: boolean
+          seller_verified?: boolean
           suspended_at?: string | null
           suspended_by?: string | null
           updated_at?: string
@@ -8701,6 +8712,10 @@ export type Database = {
           is_suspended?: boolean
           onboarding_completed?: boolean | null
           preferred_language?: string | null
+          public_bio?: string | null
+          public_links?: Json | null
+          public_profile_enabled?: boolean
+          seller_verified?: boolean
           suspended_at?: string | null
           suspended_by?: string | null
           updated_at?: string
