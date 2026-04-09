@@ -38,6 +38,7 @@ import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
+import { NeuronBundleUpsell } from "@/components/upsell/NeuronBundleUpsell";
 import { KnowledgeGapDashboard } from "@/components/upsell/KnowledgeGapDashboard";
 
 export default function Home() {
@@ -173,6 +174,14 @@ export default function Home() {
                       durationSeconds={cc.durationSeconds} errorMessage={cc.execState.errorMessage}
                       onSaveTemplate={cc.handleSaveTemplate} onSaveAllOutputs={cc.handleSaveAllOutputs}
                       onRerun={cc.handleRerun} onViewOutputs={() => cc.setShowOutputs(true)}
+                    />
+                  )}
+
+                  {/* Post-execution upsell */}
+                  {cc.execState.phase === "completed" && cc.execState.totalCredits > 0 && (
+                    <NeuronBundleUpsell
+                      balance={cc.balance}
+                      creditsJustSpent={cc.execState.totalCredits}
                     />
                   )}
 
