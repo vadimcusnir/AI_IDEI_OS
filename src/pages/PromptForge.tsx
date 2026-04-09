@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sparkles, Layers, Link2, Store, BarChart3 } from "lucide-react";
+import { Loader2, Sparkles, Layers, Link2, Store, BarChart3, Swords, Puzzle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
@@ -22,6 +22,9 @@ import { PromptChainBuilder, ChainStep } from "@/components/prompt-forge/PromptC
 import { FeedbackLoop } from "@/components/prompt-forge/FeedbackLoop";
 import { TemplateMarketplace } from "@/components/prompt-forge/TemplateMarketplace";
 import { PromptAnalytics } from "@/components/prompt-forge/PromptAnalytics";
+import { PromptScoring7D } from "@/components/prompt-forge/PromptScoring7D";
+import { PromptTestArena } from "@/components/prompt-forge/PromptTestArena";
+import { PromptModuleComposer } from "@/components/prompt-forge/PromptModuleComposer";
 
 const SINGLE_COST = 200;
 const VARIANT_COST = 500;
