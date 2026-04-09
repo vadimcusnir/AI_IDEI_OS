@@ -4612,6 +4612,45 @@ export type Database = {
           },
         ]
       }
+      identity_dimensions: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          dimension_key: string
+          dimension_label: string
+          extraction: Json
+          id: string
+          model_version: string | null
+          source_neuron_ids: number[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          dimension_key: string
+          dimension_label: string
+          extraction?: Json
+          id?: string
+          model_version?: string | null
+          source_neuron_ids?: number[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          dimension_key?: string
+          dimension_label?: string
+          extraction?: Json
+          id?: string
+          model_version?: string | null
+          source_neuron_ids?: number[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       imf_pipeline_runs: {
         Row: {
           completed_at: string | null
@@ -8055,6 +8094,42 @@ export type Database = {
           },
         ]
       }
+      personal_os_layers: {
+        Row: {
+          completeness_pct: number | null
+          created_at: string
+          gap_details: Json | null
+          id: string
+          layer_data: Json
+          layer_key: string
+          layer_label: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completeness_pct?: number | null
+          created_at?: string
+          gap_details?: Json | null
+          id?: string
+          layer_data?: Json
+          layer_key: string
+          layer_label: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completeness_pct?: number | null
+          created_at?: string
+          gap_details?: Json | null
+          id?: string
+          layer_data?: Json
+          layer_key?: string
+          layer_label?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       personality_dimensions: {
         Row: {
           code: string
@@ -8350,6 +8425,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profile_gap_detections: {
+        Row: {
+          created_at: string
+          dimension_key: string
+          gap_severity: string
+          id: string
+          resolved: boolean | null
+          resolved_at: string | null
+          suggested_service_slug: string | null
+          suggestion_text: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dimension_key: string
+          gap_severity?: string
+          id?: string
+          resolved?: boolean | null
+          resolved_at?: string | null
+          suggested_service_slug?: string | null
+          suggestion_text?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dimension_key?: string
+          gap_severity?: string
+          id?: string
+          resolved?: boolean | null
+          resolved_at?: string | null
+          suggested_service_slug?: string | null
+          suggestion_text?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       profile_jobs: {
         Row: {
