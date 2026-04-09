@@ -345,6 +345,7 @@ export default function AdminDashboard() {
             <TabsContent value="prompts"><Suspense fallback={<TabLoader />}><AdminPromptsTab /></Suspense></TabsContent>
             <TabsContent value="revenue"><Suspense fallback={<TabLoader />}><AdminRevenueTab /></Suspense></TabsContent>
             <TabsContent value="cms"><Suspense fallback={<TabLoader />}><AdminCMSTab /></Suspense></TabsContent>
+            <TabsContent value="content-profile"><Suspense fallback={<TabLoader />}><ContentProfileAdmin /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
