@@ -139,6 +139,7 @@ const SECTIONS: NavSection[] = [
       { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
       { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip" },
+      { label: "Personal OS", to: "/personal-os", icon: Cpu, controlId: "nav.personal-os" },
       { label: "Integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations", operatorOnly: true },
     ],
   },
