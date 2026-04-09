@@ -54,7 +54,7 @@ export const SUBSCRIPTION_TIERS = {
     ],
   },
   vip_monthly: {
-    price_id: "price_1TIKYJIK7fwtty4ovNton4Pq",
+    price_id: "price_1TKGWfIK7fwtty4o69tnJvzF",
     product_id: "prod_UGsI4kjBe8Km2J",
     name: "VIP",
     price: 137,
@@ -72,7 +72,7 @@ export const SUBSCRIPTION_TIERS = {
     ],
   },
   enterprise_monthly: {
-    price_id: "price_1TIKYQIK7fwtty4oDzVo8A9X",
+    price_id: "price_1TKGWqIK7fwtty4oYbjGPc70",
     product_id: "prod_UGsJp3Rln1QfqD",
     name: "Enterprise",
     price: 191,
