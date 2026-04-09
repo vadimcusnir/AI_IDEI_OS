@@ -203,6 +203,7 @@ export function publicRoutes() {
       <Route path="/about-vadim-cusnir" element={<AppLayout><ErrorBoundary fallbackTitle="About Vadim failed to load"><AboutVadimCusnir /></ErrorBoundary></AppLayout>} />
       <Route path="/payment/result" element={<AppLayout><ErrorBoundary fallbackTitle="Payment failed to load"><PaymentResult /></ErrorBoundary></AppLayout>} />
       <Route path="/privacy" element={<AppLayout><ErrorBoundary fallbackTitle="Privacy failed to load"><PrivacyPolicy /></ErrorBoundary></AppLayout>} />
+      <Route path="/unsubscribe" element={<Unsubscribe />} />
       <Route path="/community" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
       <Route path="/community/:category" element={<AppLayout><ErrorBoundary fallbackTitle="Community failed to load"><Community /></ErrorBoundary></AppLayout>} />
       <Route path="/community/:category/thread/:threadId" element={<AppLayout><ErrorBoundary fallbackTitle="Thread failed to load"><CommunityThread /></ErrorBoundary></AppLayout>} />
