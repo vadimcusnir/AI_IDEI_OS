@@ -341,10 +341,18 @@ export default function PromptForge() {
 
           {/* Main Tabs: Create / Marketplace / Analytics */}
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="mb-6">
-            <TabsList className="h-8">
+            <TabsList className="h-8 flex-wrap">
               <TabsTrigger value="create" className="text-xs gap-1.5">
                 <Sparkles className="h-3 w-3" />
                 Creează
+              </TabsTrigger>
+              <TabsTrigger value="arena" className="text-xs gap-1.5">
+                <Swords className="h-3 w-3" />
+                Arena
+              </TabsTrigger>
+              <TabsTrigger value="modules" className="text-xs gap-1.5">
+                <Puzzle className="h-3 w-3" />
+                Module
               </TabsTrigger>
               <TabsTrigger value="marketplace" className="text-xs gap-1.5">
                 <Store className="h-3 w-3" />
@@ -355,6 +363,14 @@ export default function PromptForge() {
                 Statistici
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="arena" className="mt-4">
+              <PromptTestArena context={context} goal={goal} />
+            </TabsContent>
+
+            <TabsContent value="modules" className="mt-4">
+              <PromptModuleComposer onCompose={(composed) => setDetails(prev => prev ? `${prev}\n\n${composed}` : composed)} />
+            </TabsContent>
 
             <TabsContent value="marketplace" className="mt-4">
               <TemplateMarketplace onSelect={handleTemplateSelect} />
