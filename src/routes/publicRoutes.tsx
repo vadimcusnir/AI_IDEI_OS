@@ -47,6 +47,7 @@ const Services = lazyRetry(() => import("@/pages/Services"));
 const Programs = lazyRetry(() => import("@/pages/Programs"));
 const ServicesCatalog = lazyRetry(() => import("@/pages/NewServicesCatalog"));
 const ServiceDetail = lazyRetry(() => import("@/pages/ServiceDetail"));
+const ServiceExecute = lazyRetry(() => import("@/pages/ServiceExecute"));
 
 /**
  * All public SEO-indexable route definitions.
@@ -104,6 +105,7 @@ function publicRouteDefinitions() {
       <Route path="programs" element={<AppLayout><ErrorBoundary fallbackTitle="Programs failed to load"><Programs /></ErrorBoundary></AppLayout>} />
       <Route path="services-catalog" element={<AppLayout><ErrorBoundary fallbackTitle="Catalog failed to load"><ServicesCatalog /></ErrorBoundary></AppLayout>} />
       <Route path="services/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Service detail failed"><ServiceDetail /></ErrorBoundary></AppLayout>} />
+      <Route path="services/:slug/execute" element={<AppLayout><ErrorBoundary fallbackTitle="Service execution failed"><ServiceExecute /></ErrorBoundary></AppLayout>} />
       <Route path="products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
 
       {/* Static pages */}

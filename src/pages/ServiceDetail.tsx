@@ -157,7 +157,7 @@ export default function ServiceDetail() {
         <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 text-center">
           <p className="text-lg font-bold mb-1">${service.price_usd}</p>
           <p className="text-xs text-muted-foreground mb-4">{service.internal_credit_cost} Neuroni</p>
-          <Button size="lg" className="gap-2 px-8">
+          <Button size="lg" className="gap-2 px-8" onClick={() => navigate(`/services/${slug}/execute`)}>
             <Zap className="h-4 w-4" />
             Cumpără și Execută
           </Button>
