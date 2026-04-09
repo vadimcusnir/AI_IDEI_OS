@@ -4308,6 +4308,48 @@ export type Database = {
         }
         Relationships: []
       }
+      future_services: {
+        Row: {
+          availability_timeframe: string | null
+          category: string
+          created_at: string
+          description: string
+          estimated_credits: number
+          id: string
+          service_key: string
+          status: string
+          title: string
+          updated_at: string
+          vote_count: number
+        }
+        Insert: {
+          availability_timeframe?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          estimated_credits?: number
+          id?: string
+          service_key: string
+          status?: string
+          title: string
+          updated_at?: string
+          vote_count?: number
+        }
+        Update: {
+          availability_timeframe?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          estimated_credits?: number
+          id?: string
+          service_key?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          vote_count?: number
+        }
+        Relationships: []
+      }
       guest_profile_edits: {
         Row: {
           created_at: string | null
@@ -10382,6 +10424,35 @@ export type Database = {
             columns: ["otos_id"]
             isOneToOne: false
             referencedRelation: "os_otos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_votes: {
+        Row: {
+          future_service_id: string
+          id: string
+          user_id: string
+          voted_at: string
+        }
+        Insert: {
+          future_service_id: string
+          id?: string
+          user_id: string
+          voted_at?: string
+        }
+        Update: {
+          future_service_id?: string
+          id?: string
+          user_id?: string
+          voted_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_votes_future_service_id_fkey"
+            columns: ["future_service_id"]
+            isOneToOne: false
+            referencedRelation: "future_services"
             referencedColumns: ["id"]
           },
         ]
