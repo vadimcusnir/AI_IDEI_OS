@@ -77,6 +77,7 @@ const TAB_GROUPS = [
       { value: "jobs", label: "Jobs", icon: Briefcase },
       { value: "services", label: "Services", icon: Coins },
       { value: "catalog", label: "Catalog L1/L2/L3", icon: Layers },
+      { value: "prompts", label: "Prompts", icon: FileText },
       { value: "logs", label: "Logs", icon: ScrollText },
     ],
   },
@@ -95,6 +96,7 @@ const TAB_GROUPS = [
     tabs: [
       { value: "wallets", label: "Wallets", icon: Wallet },
       { value: "reconciliation", label: "Reconciliation", icon: DollarSign },
+      { value: "revenue", label: "Revenue", icon: TrendingUp },
       { value: "root2", label: "Pricing", icon: DollarSign },
     ],
   },
@@ -120,6 +122,7 @@ const TAB_GROUPS = [
       { value: "moderation", label: "Moderation", icon: MessageCircle },
       { value: "llm-index", label: "LLM Index", icon: Bot },
       { value: "blog", label: "Blog", icon: FileText },
+      { value: "cms", label: "CMS", icon: Globe },
     ],
   },
   {
