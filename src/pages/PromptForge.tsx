@@ -501,11 +501,16 @@ export default function PromptForge() {
                     <div className="min-h-[400px] rounded-xl border border-border bg-card p-5 overflow-y-auto max-h-[70vh]">
                       <PromptOutput result={activeResult} goal={goal} />
                       {activeResult && mode === "single" && (
-                        <FeedbackLoop
-                          historyId={lastHistoryId}
-                          result={activeResult}
-                          goal={goal}
-                        />
+                        <>
+                          <div className="mt-3">
+                            <PromptScoring7D promptText={activeResult} goal={goal} />
+                          </div>
+                          <FeedbackLoop
+                            historyId={lastHistoryId}
+                            result={activeResult}
+                            goal={goal}
+                          />
+                        </>
                       )}
                     </div>
                   )}
