@@ -52,6 +52,8 @@ const DeliverablesLibrary = lazyRetry(() => import("@/pages/DeliverablesLibrary"
 const PurchaseHistory = lazyRetry(() => import("@/pages/PurchaseHistory"));
 const PersonalOS = lazyRetry(() => import("@/pages/PersonalOS"));
 const AugmentationDashboard = lazyRetry(() => import("@/pages/AugmentationDashboard"));
+const WorkspaceHub = lazyRetry(() => import("@/pages/WorkspaceHub"));
+const PublicProfile = lazyRetry(() => import("@/pages/PublicProfile"));
 
 /**
  * All public SEO-indexable route definitions.
