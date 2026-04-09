@@ -21,7 +21,7 @@ export function useOnboardingRedirect() {
     if (authLoading || wsLoading || flagsLoading || checked) return;
     if (!user || !currentWorkspace) { setChecked(true); return; }
 
-    const skipPaths = ["/onboarding", "/auth", "/reset-password"];
+    const skipPaths = ["/onboarding", "/auth", "/reset-password", "/payment"];
     if (skipPaths.some(p => location.pathname.startsWith(p))) {
       setChecked(true);
       return;
