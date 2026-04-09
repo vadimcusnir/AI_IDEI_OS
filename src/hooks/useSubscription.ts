@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -14,53 +14,88 @@ interface SubscriptionState {
   loading: boolean;
 }
 
+// Global cache to prevent duplicate calls across hook instances
+let _cache: { data: SubscriptionState; ts: number } | null = null;
+let _inflight: Promise<void> | null = null;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const POLL_INTERVAL = 5 * 60 * 1000; // 5 minutes (was 60s — caused 429s)
+
 export function useSubscription() {
   const { user, session } = useAuth();
-  const [state, setState] = useState<SubscriptionState>({
-    subscribed: false,
-    productId: null,
-    subscriptionEnd: null,
-    tier: null,
-    loading: true,
-  });
+  const [state, setState] = useState<SubscriptionState>(
+    _cache ? _cache.data : {
+      subscribed: false,
+      productId: null,
+      subscriptionEnd: null,
+      tier: null,
+      loading: true,
+    }
+  );
+  const mountedRef = useRef(true);
 
-  const checkSubscription = useCallback(async () => {
+  const checkSubscription = useCallback(async (force = false) => {
     if (!session?.access_token) {
       setState(s => ({ ...s, loading: false }));
       return;
     }
 
-    try {
-      const { data, error } = await supabase.functions.invoke("check-subscription", {
-        headers: { Authorization: `Bearer ${session.access_token}` },
-      });
-
-      if (error) throw error;
-
-      let tier: keyof typeof SUBSCRIPTION_TIERS | null = null;
-      if (data?.product_id) {
-        const found = Object.entries(SUBSCRIPTION_TIERS).find(
-          ([, t]) => t.product_id === data.product_id
-        );
-        if (found) tier = found[0] as keyof typeof SUBSCRIPTION_TIERS;
-      }
-
-      setState({
-        subscribed: data?.subscribed ?? false,
-        productId: data?.product_id ?? null,
-        subscriptionEnd: data?.subscription_end ?? null,
-        tier,
-        loading: false,
-      });
-    } catch {
-      setState(s => ({ ...s, loading: false }));
+    // Return cached result if fresh enough
+    if (!force && _cache && Date.now() - _cache.ts < CACHE_TTL) {
+      if (mountedRef.current) setState(_cache.data);
+      return;
     }
+
+    // Deduplicate in-flight requests
+    if (_inflight) {
+      await _inflight;
+      if (_cache && mountedRef.current) setState(_cache.data);
+      return;
+    }
+
+    _inflight = (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("check-subscription", {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+
+        if (error) throw error;
+
+        let tier: keyof typeof SUBSCRIPTION_TIERS | null = null;
+        if (data?.product_id) {
+          const found = Object.entries(SUBSCRIPTION_TIERS).find(
+            ([, t]) => t.product_id === data.product_id
+          );
+          if (found) tier = found[0] as keyof typeof SUBSCRIPTION_TIERS;
+        }
+
+        const newState: SubscriptionState = {
+          subscribed: data?.subscribed ?? false,
+          productId: data?.product_id ?? null,
+          subscriptionEnd: data?.subscription_end ?? null,
+          tier,
+          loading: false,
+        };
+
+        _cache = { data: newState, ts: Date.now() };
+        if (mountedRef.current) setState(newState);
+      } catch {
+        if (mountedRef.current) setState(s => ({ ...s, loading: false }));
+      } finally {
+        _inflight = null;
+      }
+    })();
+
+    await _inflight;
   }, [session?.access_token]);
 
   useEffect(() => {
+    mountedRef.current = true;
     checkSubscription();
-    const interval = setInterval(checkSubscription, 60000);
-    return () => clearInterval(interval);
+    const interval = setInterval(() => checkSubscription(), POLL_INTERVAL);
+    return () => {
+      mountedRef.current = false;
+      clearInterval(interval);
+    };
   }, [checkSubscription]);
 
   /**

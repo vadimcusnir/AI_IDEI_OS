@@ -40,14 +40,17 @@ export function SessionList({
 
       <AnimatePresence initial={false}>
         {visibleSessions.map((session) => (
-          <motion.button
+          <motion.div
             key={session.session_id}
+            role="button"
+            tabIndex={0}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             onClick={() => onSelect(session.session_id)}
+            onKeyDown={(e) => { if (e.key === "Enter") onSelect(session.session_id); }}
             className={cn(
-              "w-full flex items-start gap-2 px-2 py-1.5 rounded-md text-left transition-colors group",
+              "w-full flex items-start gap-2 px-2 py-1.5 rounded-md text-left transition-colors group cursor-pointer",
               session.session_id === currentSessionId
                 ? "bg-accent/50 text-foreground"
                 : "text-muted-foreground hover:bg-accent/30 hover:text-foreground"
@@ -79,7 +82,7 @@ export function SessionList({
             >
               <Trash2 className="h-2.5 w-2.5 text-destructive" />
             </Button>
-          </motion.button>
+          </motion.div>
         ))}
       </AnimatePresence>
 

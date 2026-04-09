@@ -236,7 +236,7 @@ export default function Landing() {
                 <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8 hidden sm:inline-flex text-muted-foreground">
                   Log in
                 </Button>
-                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-gold hover:bg-gold/85 text-obsidian hidden sm:inline-flex transition-all duration-200">
+                <Button size="sm" onClick={() => navigate("/auth")} className="gap-1.5 text-xs h-8 bg-gold hover:bg-gold/85 text-obsidian transition-all duration-200">
                   Start Free
                   <ArrowRight className="h-3 w-3" />
                 </Button>
