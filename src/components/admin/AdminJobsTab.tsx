@@ -29,7 +29,7 @@ interface JobRow {
 }
 
 const PAGE_SIZE = 30;
-const STATUSES = ["all", "queued", "processing", "completed", "failed", "cancelled"];
+const STATUSES = ["all", "pending", "queued", "running", "processing", "completed", "failed", "cancelled"];
 
 export function AdminJobsTab() {
   const [jobs, setJobs] = useState<JobRow[]>([]);
