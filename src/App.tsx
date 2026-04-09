@@ -85,6 +85,7 @@ const App = () => {
     </ThemeProvider>
   </QueryClientProvider>
   </MotionConfig>
-);
+  );
+};
 
 export default App;
