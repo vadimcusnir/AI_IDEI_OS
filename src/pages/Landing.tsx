@@ -41,8 +41,15 @@ const LandingTranscribeCTA = lazy(() => import("@/components/landing/LandingTran
 const LandingPricing = lazy(() => import("@/components/landing/LandingPricing").then(m => ({ default: m.LandingPricing })));
 const LandingFinalCTA = lazy(() => import("@/components/landing/LandingFinalCTA").then(m => ({ default: m.LandingFinalCTA })));
 const LandingKnowledgeShowcase = lazy(() => import("@/components/landing/LandingKnowledgeShowcase").then(m => ({ default: m.LandingKnowledgeShowcase })));
-import { LandingFAQ, FAQ_ITEMS } from "@/components/landing/LandingFAQ";
-import { Footer } from "@/components/global/Footer";
+const LandingFAQ = lazy(() => import("@/components/landing/LandingFAQ").then(m => ({ default: m.LandingFAQ })));
+const Footer = lazy(() => import("@/components/global/Footer").then(m => ({ default: m.Footer })));
+
+// FAQ items needed for JSON-LD — extracted statically to avoid loading the component
+const FAQ_ITEMS = [
+  { q: "What is AI-IDEI?", a: "AI-IDEI is a Knowledge Extraction OS that transforms your expertise into structured digital assets." },
+  { q: "How does it work?", a: "Upload content, AI extracts atomic knowledge units (neurons), then generates professional outputs automatically." },
+  { q: "Is it free?", a: "Yes, you can start free with 50 neurons. Premium plans unlock unlimited extraction and advanced features." },
+];
 
 const LANG_OPTIONS = [
   { code: "en", label: "English", flag: "🇬🇧" },
@@ -315,7 +322,9 @@ export default function Landing() {
         <LandingFinalCTA ctaAction={ctaAction} />
       </Suspense>
       </main>
-      <Footer variant="landing" />
+      <Suspense fallback={<div className="h-64 bg-background" />}>
+        <Footer variant="landing" />
+      </Suspense>
 
       <OrganizationJsonLd />
       <WebApplicationJsonLd />
