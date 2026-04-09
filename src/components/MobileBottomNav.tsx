@@ -98,7 +98,7 @@ export function MobileBottomNav() {
                 key={path}
                 onClick={() => navigate(path)}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px]",
+                  "flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px] relative",
                   "transition-colors active:scale-95",
                   active ? "text-primary" : "text-muted-foreground"
                 )}
