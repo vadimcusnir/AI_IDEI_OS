@@ -29,7 +29,7 @@ interface JobRow {
 }
 
 const PAGE_SIZE = 30;
-const STATUSES = ["all", "queued", "processing", "completed", "failed", "cancelled"];
+const STATUSES = ["all", "pending", "queued", "running", "processing", "completed", "failed", "cancelled"];
 
 export function AdminJobsTab() {
   const [jobs, setJobs] = useState<JobRow[]>([]);
@@ -78,7 +78,7 @@ export function AdminJobsTab() {
   }, [page, search, statusFilter]);
 
   const loadStats = useCallback(async () => {
-    const statuses = ["queued", "processing", "completed", "failed", "cancelled"];
+    const statuses = ["pending", "queued", "running", "processing", "completed", "failed", "cancelled"];
     const results = await Promise.all(
       statuses.map((s) =>
         supabase.from("neuron_jobs").select("id", { count: "exact", head: true }).eq("status", s)
@@ -189,7 +189,7 @@ export function AdminJobsTab() {
   };
 
   const bulkCancelQueued = async () => {
-    const queuedSelected = jobs.filter(j => selected.has(j.id) && (j.status === "queued" || j.status === "processing"));
+    const queuedSelected = jobs.filter(j => selected.has(j.id) && (j.status === "queued" || j.status === "pending" || j.status === "processing" || j.status === "running"));
     if (!queuedSelected.length) { toast.error("No queued/processing jobs selected"); return; }
     for (const j of queuedSelected) await cancelJob(j.id);
     toast.success(`${queuedSelected.length} jobs cancelled`);
@@ -213,9 +213,11 @@ export function AdminJobsTab() {
   return (
     <div className="space-y-3">
       {/* Stats cards */}
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-7 gap-2">
         {[
-          { key: "queued", icon: Clock, color: "text-amber-500" },
+          { key: "pending", icon: Clock, color: "text-amber-500" },
+          { key: "queued", icon: Clock, color: "text-amber-400" },
+          { key: "running", icon: Loader2, color: "text-info" },
           { key: "processing", icon: Loader2, color: "text-info" },
           { key: "completed", icon: CheckCircle2, color: "text-status-validated" },
           { key: "failed", icon: AlertTriangle, color: "text-destructive" },
@@ -318,7 +320,7 @@ export function AdminJobsTab() {
                           <RotateCcw className="h-3 w-3 text-primary" />
                         </Button>
                       )}
-                      {(j.status === "queued" || j.status === "processing") && (
+                      {(j.status === "queued" || j.status === "pending" || j.status === "processing" || j.status === "running") && (
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => cancelJob(j.id)} title="Cancel">
                           <XCircle className="h-3 w-3 text-destructive" />
                         </Button>

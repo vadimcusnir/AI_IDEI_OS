@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, lazy, Suspense, useMemo } from "react";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText, Server, Gauge, ShieldCheck, Compass, Bell, HeartPulse } from "lucide-react";
+import { Shield, Users, Brain, Briefcase, Coins, Activity, RefreshCw, ScrollText, MessageCircle, Network, BarChart3, AlertTriangle, Wallet, DollarSign, AlertCircle, TrendingUp, Loader2, ShieldAlert, Layers, Settings, Bot, FileText, Server, Gauge, ShieldCheck, Compass, Bell, HeartPulse, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -50,6 +50,9 @@ const AdminAnalyticsExtendedTab = lazy(() => import("@/components/admin/AdminAna
 const ProviderHealthTab = lazy(() => import("@/components/admin/ProviderHealthTab").then(m => ({ default: m.ProviderHealthTab })));
 const AlertCenterTab = lazy(() => import("@/components/admin/AlertCenterTab").then(m => ({ default: m.AlertCenterTab })));
 const FinOpsTab = lazy(() => import("@/components/admin/FinOpsTab").then(m => ({ default: m.FinOpsTab })));
+const AdminPromptsTab = lazy(() => import("@/components/admin/AdminPromptsTab").then(m => ({ default: m.AdminPromptsTab })));
+const AdminRevenueTab = lazy(() => import("@/components/admin/AdminRevenueTab").then(m => ({ default: m.AdminRevenueTab })));
+const AdminCMSTab = lazy(() => import("@/components/admin/AdminCMSTab").then(m => ({ default: m.AdminCMSTab })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -74,6 +77,7 @@ const TAB_GROUPS = [
       { value: "jobs", label: "Jobs", icon: Briefcase },
       { value: "services", label: "Services", icon: Coins },
       { value: "catalog", label: "Catalog L1/L2/L3", icon: Layers },
+      { value: "prompts", label: "Prompts", icon: FileText },
       { value: "logs", label: "Logs", icon: ScrollText },
     ],
   },
@@ -92,6 +96,7 @@ const TAB_GROUPS = [
     tabs: [
       { value: "wallets", label: "Wallets", icon: Wallet },
       { value: "reconciliation", label: "Reconciliation", icon: DollarSign },
+      { value: "revenue", label: "Revenue", icon: TrendingUp },
       { value: "root2", label: "Pricing", icon: DollarSign },
     ],
   },
@@ -117,6 +122,7 @@ const TAB_GROUPS = [
       { value: "moderation", label: "Moderation", icon: MessageCircle },
       { value: "llm-index", label: "LLM Index", icon: Bot },
       { value: "blog", label: "Blog", icon: FileText },
+      { value: "cms", label: "CMS", icon: Globe },
     ],
   },
   {
@@ -334,6 +340,9 @@ export default function AdminDashboard() {
             <TabsContent value="provider-health"><Suspense fallback={<TabLoader />}><ProviderHealthTab /></Suspense></TabsContent>
             <TabsContent value="alerts"><Suspense fallback={<TabLoader />}><AlertCenterTab /></Suspense></TabsContent>
             <TabsContent value="finops"><Suspense fallback={<TabLoader />}><FinOpsTab /></Suspense></TabsContent>
+            <TabsContent value="prompts"><Suspense fallback={<TabLoader />}><AdminPromptsTab /></Suspense></TabsContent>
+            <TabsContent value="revenue"><Suspense fallback={<TabLoader />}><AdminRevenueTab /></Suspense></TabsContent>
+            <TabsContent value="cms"><Suspense fallback={<TabLoader />}><AdminCMSTab /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>

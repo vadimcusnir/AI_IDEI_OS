@@ -10677,6 +10677,48 @@ export type Database = {
         }
         Relationships: []
       }
+      site_content: {
+        Row: {
+          body: string
+          content_key: string
+          created_at: string
+          id: string
+          is_published: boolean
+          locale: string
+          metadata: Json | null
+          section: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          body?: string
+          content_key: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          locale?: string
+          metadata?: Json | null
+          section?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          body?: string
+          content_key?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          locale?: string
+          metadata?: Json | null
+          section?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       site_pages: {
         Row: {
           canonical_url: string | null
