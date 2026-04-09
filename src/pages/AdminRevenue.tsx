@@ -194,7 +194,7 @@ export default function AdminRevenue() {
                   <Badge variant="outline" className="text-nano">
                     {tx.type}
                   </Badge>
-                  <span className={cn("font-mono font-bold", Number(tx.amount) > 0 ? "text-emerald-500" : "text-destructive")}>
+                  <span className={cn("font-mono font-bold", Number(tx.amount) > 0 ? "text-status-validated" : "text-destructive")}>
                     {Number(tx.amount) > 0 ? "+" : ""}{tx.amount}N
                   </span>
                 </div>
