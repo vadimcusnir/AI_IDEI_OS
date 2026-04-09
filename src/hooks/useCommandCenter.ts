@@ -1,17 +1,15 @@
 /**
- * useCommandCenter — Extracted hook for /home Command Center.
- * Refactored (A2): file handling → chatFileService, session → chatSessionService.
- * Fixes: A1 (quick-exec), A4 (debounce), A5 (persistence), A9 (cleanup).
+ * useCommandCenter — Orchestrator hook for /home Command Center.
+ * Delegates to sub-hooks: useCommandInput, useCommandSession.
+ * Handles execution, economic gates, and keyboard shortcuts.
  */
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import type { CommandMode } from "@/components/command-center/ModeChipBar";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCreditBalance } from "@/hooks/useCreditBalance";
-import { useChatHistory } from "@/hooks/useChatHistory";
 import { useExecutionStore, executionActions, getExecutionState, type Message } from "@/stores/executionStore";
 import { useExecutionHistory } from "@/hooks/useExecutionHistory";
 import { useRealtimeSteps } from "@/hooks/useRealtimeSteps";
@@ -21,8 +19,6 @@ import { useOnboardingRedirect } from "@/hooks/useOnboardingRedirect";
 import { useExecution } from "@/hooks/useExecution";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { type OutputItem } from "@/stores/executionStore";
-import { type CommandInputZoneRef } from "@/components/command-center/CommandInputZone";
 import { type RouteResult } from "@/components/command-center/CommandRouter";
 import {
   logCommandSubmitted, logPlanConfirmed, logExecutionCompleted,
@@ -34,16 +30,12 @@ import {
   trackSessionAction, trackError,
 } from "@/lib/commandCenterTelemetry";
 import { classifyError } from "@/components/command-center/ErrorRecoveryHandler";
-import {
-  validateFiles, validateInput, processFilesForPrompt,
-} from "@/services/chatFileService";
-import {
-  persistMessages, restoreMessages, clearPersistedMessages,
-  persistOutputs, restoreOutputs,
-  saveDraft, restoreDraft, clearDraft,
-} from "@/services/chatSessionService";
+import { processFilesForPrompt } from "@/services/chatFileService";
+import { persistMessages, persistOutputs } from "@/services/chatSessionService";
 
-// ═══ Quick-exec threshold (A1): plans under this cost skip EconomicGate ═══
+import { useCommandInput } from "@/hooks/command-center/useCommandInput";
+import { useCommandSession } from "@/hooks/command-center/useCommandSession";
+
 const QUICK_EXEC_CREDIT_THRESHOLD = 50;
 
 export function useCommandCenter() {
@@ -51,15 +43,13 @@ export function useCommandCenter() {
   const { user, loading: authLoading } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const { balance } = useCreditBalance();
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { t } = useTranslation(["common", "errors", "pages"]);
 
-  const {
-    sessionId, sessions,
-    saveMessage, loadSession, loadCurrentSession,
-    deleteSession, newSession, refreshSessions,
-  } = useChatHistory();
+  // ═══ Sub-hooks ═══
+  const initialQ = searchParams.get("q") || "";
+  const cmd = useCommandInput(initialQ);
+  const session = useCommandSession();
+
   const store = useExecutionStore();
   const { execution: execState, messages, outputs, loading, isStreaming } = store;
   const { persistRun, persistOutputsBatch } = useExecutionHistory();
@@ -75,59 +65,37 @@ export function useCommandCenter() {
   const { suggestions: decisionSuggestions } = useAgentDecisionEngine();
 
   // ═══ UI state ═══
-  const initialQ = searchParams.get("q") || "";
-  const [input, setInput] = useState(initialQ || restoreDraft());
-  const [files, setFiles] = useState<File[]>([]);
-  const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [showOutputs, setShowOutputs] = useState(false);
   const [showPostExecution, setShowPostExecution] = useState(false);
   const [showEconomicGate, setShowEconomicGate] = useState(false);
   const [permissionBlock, setPermissionBlock] = useState<RouteResult | null>(null);
   const [savingAllOutputs, setSavingAllOutputs] = useState(false);
   const [activeMode, setActiveMode] = useState<CommandMode>(null);
-  const [sessionLoaded, setSessionLoaded] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<RouteResult | null>(null);
   const [showLowBalance, setShowLowBalance] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ═══ Refs ═══
-  const inputZoneRef = useRef<CommandInputZoneRef>(null);
   const abortRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const autoSubmittedRef = useRef(false);
 
-  // ═══ Lifecycle hooks ═══
+  // ═══ Lifecycle ═══
   useOnboardingRedirect();
 
-  // Cleanup AbortController on unmount (A9)
   useEffect(() => {
-    return () => {
-      abortRef.current?.abort();
-      abortRef.current = null;
-    };
+    return () => { abortRef.current?.abort(); abortRef.current = null; };
   }, []);
 
-  // Persist draft input (A5)
-  useEffect(() => {
-    saveDraft(input);
-  }, [input]);
+  // Persist draft
+  useEffect(() => { cmd.saveDraft(cmd.input); }, [cmd.input]);
 
-  // Persist messages whenever they change (A5)
-  useEffect(() => {
-    if (messages.length > 0) {
-      persistMessages(messages);
-    }
-  }, [messages]);
+  // Persist messages/outputs
+  useEffect(() => { if (messages.length > 0) persistMessages(messages); }, [messages]);
+  useEffect(() => { if (outputs.length > 0) persistOutputs(outputs); }, [outputs]);
 
-  // Persist outputs whenever they change (A5)
-  useEffect(() => {
-    if (outputs.length > 0) {
-      persistOutputs(outputs);
-    }
-  }, [outputs]);
-
-  // Auto-trigger low balance gate
+  // Low balance gate
   useEffect(() => {
     if (balance <= 0 && execState.phase === "completed" && !showLowBalance) {
       const timer = setTimeout(() => setShowLowBalance(true), 1500);
@@ -135,7 +103,7 @@ export function useCommandCenter() {
     }
   }, [balance, execState.phase, showLowBalance]);
 
-  // Realtime step tracking
+  // Realtime steps
   useRealtimeSteps({
     actionId: execState.actionId,
     enabled: execState.phase === "executing" || execState.phase === "delivering",
@@ -145,7 +113,7 @@ export function useCommandCenter() {
     },
   });
 
-  // ═══ Unified stop routine ═══
+  // ═══ Stop ═══
   const stopActiveExecution = useCallback(() => {
     abortRef.current?.abort();
     abortRef.current = null;
@@ -154,52 +122,23 @@ export function useCommandCenter() {
     executionActions.setStreaming(false);
   }, [executionEngine]);
 
-  // Keyboard shortcuts (with proper cleanup — A9)
+  // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        inputZoneRef.current?.focus();
+        cmd.inputZoneRef.current?.focus();
       }
       if (e.key === "Escape") {
-        if (loading || isStreaming) { stopActiveExecution(); }
+        if (loading || isStreaming) stopActiveExecution();
         else if (showOutputs) setShowOutputs(false);
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [loading, isStreaming, showOutputs, stopActiveExecution]);
+  }, [loading, isStreaming, showOutputs, stopActiveExecution, cmd.inputZoneRef]);
 
-  // Load session on mount (A5: also restore persisted messages/outputs)
-  useEffect(() => {
-    if (!user || sessionLoaded) return;
-    setSessionLoaded(true);
-    loadCurrentSession().then((loaded) => {
-      if (loaded.length > 0) {
-        executionActions.setMessages(loaded);
-      } else {
-        // Try restoring from sessionStorage
-        const restored = restoreMessages();
-        if (restored.length > 0) executionActions.setMessages(restored);
-        const restoredOutputs = restoreOutputs();
-        if (restoredOutputs.length > 0) executionActions.setOutputs(restoredOutputs);
-      }
-    });
-  }, [user, sessionLoaded, loadCurrentSession]);
-
-  // Auto-submit from ?q=
-  useEffect(() => {
-    if (initialQ && user && sessionLoaded && !tierLoading && !autoSubmittedRef.current) {
-      autoSubmittedRef.current = true;
-      setSearchParams({}, { replace: true });
-      const timer = setTimeout(() => {
-        handleSubmit(true);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [initialQ, user, sessionLoaded, tierLoading, setSearchParams]);
-
-  // Fetch neuron/episode counts
+  // Fetch counts
   useEffect(() => {
     if (!user || !currentWorkspace) return;
     const wsId = currentWorkspace.id;
@@ -212,50 +151,42 @@ export function useCommandCenter() {
     });
   }, [user, currentWorkspace]);
 
+  // Auto-submit from ?q=
+  useEffect(() => {
+    if (initialQ && user && session.sessionLoaded && !tierLoading && !autoSubmittedRef.current) {
+      autoSubmittedRef.current = true;
+      setSearchParams({}, { replace: true });
+      const timer = setTimeout(() => handleSubmit(true), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [initialQ, user, session.sessionLoaded, tierLoading, setSearchParams]);
+
   // Auto-scroll
   const scrollToBottom = useCallback((smooth = true) => {
     messagesEndRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "instant" });
   }, []);
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
 
-  // ═══ SUBMIT (A4: isSubmitting guard prevents double-submit) ═══
+  // ═══ SUBMIT ═══
   const handleSubmit = useCallback(async (autoExec = false) => {
-    if (!input.trim() && files.length === 0) return;
-    if (!user) return;
-    if (isSubmitting) return;
+    if (!cmd.input.trim() && cmd.files.length === 0) return;
+    if (!user || isSubmitting) return;
     if (!isOnline) {
       toast.error("You're offline. Please check your connection.");
       return;
     }
-
-    // Validate input length
-    const inputValidation = validateInput(input.trim());
-    if (!inputValidation.valid) {
-      toast.error(t(inputValidation.errorKey!, { defaultValue: inputValidation.errorDefault }));
-      return;
-    }
-
-    // Validate files (A8: pre-upload validation)
-    const fileValidation = validateFiles(files);
-    if (!fileValidation.valid) {
-      toast.error(t(fileValidation.errorKey!, { defaultValue: fileValidation.errorDefault }));
-      return;
-    }
+    if (!cmd.validate()) return;
 
     setIsSubmitting(true);
-
-    const rawInput = input.trim();
-    setInput("");
-    setFiles([]);
-    clearDraft();
+    const rawInput = cmd.consumeInput();
     setShowOutputs(false);
     setShowPostExecution(false);
     setPermissionBlock(null);
 
-    trackCommandSubmitted(rawInput, files.length, autoExec);
+    trackCommandSubmitted(rawInput, cmd.files.length, autoExec);
 
     try {
-      const { route, isExecution } = await executionEngine.execute(rawInput, files, { autoExecute: autoExec });
+      const { route, isExecution } = await executionEngine.execute(rawInput, cmd.files, { autoExecute: autoExec });
 
       if (!route.permitted) {
         setPermissionBlock(route);
@@ -263,17 +194,13 @@ export function useCommandCenter() {
         return;
       }
 
-      // Check if intent is blocked (insufficient balance)
       if (route.intent.blocked) {
         setPendingRoute(route);
-        saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
+        session.saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
         executionActions.setPlan({
-          actionId: null,
-          intent: route.intent.category,
-          confidence: route.intent.confidence,
-          planName: route.intent.label,
-          totalCredits: route.intent.estimatedCredits,
-          steps: [],
+          actionId: null, intent: route.intent.category,
+          confidence: route.intent.confidence, planName: route.intent.label,
+          totalCredits: route.intent.estimatedCredits, steps: [],
           objective: route.intent.description,
         });
         setShowEconomicGate(true);
@@ -282,11 +209,9 @@ export function useCommandCenter() {
       }
 
       setPendingRoute(route);
-      saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
+      session.saveMessage({ id: crypto.randomUUID(), role: "user", content: rawInput, timestamp: new Date() });
 
-      if (isExecution && execState.phase === "confirming" && route.intent.confidence < 0.9 && !autoExec) {
-        return;
-      }
+      if (isExecution && execState.phase === "confirming" && route.intent.confidence < 0.9 && !autoExec) return;
 
       if (isExecution) {
         await executionEngine.confirmAndRun(rawInput, route);
@@ -298,12 +223,10 @@ export function useCommandCenter() {
         const controller = new AbortController();
         abortRef.current = controller;
 
-        // A2: File processing extracted to service
-        const fileContent = await processFilesForPrompt(files, user.id);
+        const fileContent = await processFilesForPrompt(cmd.files, user.id);
         const contentWithFiles = rawInput + fileContent;
         await executionEngine.streamAgentResponse(contentWithFiles, route, controller.signal);
 
-        // Read fresh state after stream completes
         const freshState = getExecutionState();
         const freshOutputs = freshState.outputs;
         const freshExec = freshState.execution;
@@ -311,9 +234,7 @@ export function useCommandCenter() {
         executionActions.setStreaming(false);
         executionActions.setLoading(false);
 
-        if (freshOutputs.length > 0) {
-          setShowOutputs(true);
-        }
+        if (freshOutputs.length > 0) setShowOutputs(true);
         executionActions.completeExecution();
         setShowPostExecution(true);
 
@@ -331,7 +252,7 @@ export function useCommandCenter() {
         executionActions.failExecution(classified.message);
         trackExecutionFailed(execState.intent, classified.type);
         trackError(classified.type, classified.type !== "insufficient_credits");
-        toast.error(t("errors:agent_error", { message: classified.message }));
+        toast.error(cmd.t("errors:agent_error", { message: classified.message }));
       }
     } finally {
       executionActions.setLoading(false);
@@ -339,24 +260,10 @@ export function useCommandCenter() {
       abortRef.current = null;
       setIsSubmitting(false);
     }
-  }, [input, files, user, isSubmitting, isOnline, executionEngine, execState, balance, tier, tierDiscount, t, saveMessage, persistRun]);
+  }, [cmd.input, cmd.files, user, isSubmitting, isOnline, executionEngine, execState, balance, tier, tierDiscount, cmd, session, persistRun]);
 
-  // ═══ Handlers (memoized — A9: reduce re-renders) ═══
-  const handleStop = useCallback(() => { stopActiveExecution(); }, [stopActiveExecution]);
-
-  const clearChat = useCallback(() => {
-    trackSessionAction("started");
-    newSession();
-    executionActions.reset();
-    executionActions.clearMessages();
-    executionActions.setOutputs([]);
-    setShowOutputs(false);
-    setShowPostExecution(false);
-    clearDraft();
-    clearPersistedMessages();
-    // A10: ensure we stay on /home
-    navigate("/home", { replace: true });
-  }, [newSession, navigate]);
+  // ═══ Handlers ═══
+  const handleStop = useCallback(() => stopActiveExecution(), [stopActiveExecution]);
 
   const handleSaveAllOutputs = useCallback(async () => {
     if (outputs.length === 0) return;
@@ -379,13 +286,11 @@ export function useCommandCenter() {
     if (!user || execState.phase !== "completed") return;
     try {
       const { error } = await supabase.from("agent_plan_templates").insert({
-        intent_key: execState.intent,
-        name: `${execState.planName} (saved)`,
+        intent_key: execState.intent, name: `${execState.planName} (saved)`,
         description: execState.objective,
         steps: execState.steps.map(s => ({ tool: s.tool, label: s.label, credits: s.credits })) as any,
         estimated_credits: execState.totalCredits,
-        estimated_duration_seconds: execState.steps.length * 5,
-        is_default: false,
+        estimated_duration_seconds: execState.steps.length * 5, is_default: false,
       });
       if (error) throw error;
       toast.success("Workflow saved as template");
@@ -397,51 +302,31 @@ export function useCommandCenter() {
   const handleRerun = useCallback(() => {
     const lastUser = messages.filter(m => m.role === "user").pop();
     if (lastUser) {
-      setInput(lastUser.content);
-      inputZoneRef.current?.focus();
+      cmd.setInput(lastUser.content);
+      cmd.inputZoneRef.current?.focus();
     }
-  }, [messages]);
+  }, [messages, cmd]);
 
   const handleCommand = useCallback((prompt: string, autoExec = false) => {
-    setInput(prompt);
+    cmd.setInput(prompt);
     if (autoExec) {
-      setTimeout(() => { handleSubmit(true); }, 50);
+      setTimeout(() => handleSubmit(true), 50);
     } else {
-      inputZoneRef.current?.focus();
+      cmd.inputZoneRef.current?.focus();
     }
-  }, [handleSubmit]);
+  }, [handleSubmit, cmd]);
 
   const handlePipelineMessage = useCallback((role: "user" | "assistant", content: string, meta?: Record<string, any>) => {
     const msgId = crypto.randomUUID();
     const msg = { id: msgId, role, content, timestamp: new Date(), ...(meta ? { metadata: meta } : {}) };
-    // A5 fix: check for duplicate before adding
     const existing = getExecutionState().messages;
-    const isDuplicate = existing.some(m => m.role === role && m.content === content && 
+    const isDuplicate = existing.some(m => m.role === role && m.content === content &&
       Math.abs(new Date(m.timestamp).getTime() - Date.now()) < 2000);
     if (!isDuplicate) {
-      saveMessage(msg as any);
+      session.saveMessage(msg as any);
       executionActions.addMessage(msg as any);
     }
-  }, [saveMessage]);
-
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      setFiles(prev => {
-        const combined = [...prev, ...newFiles];
-        // Enforce max files limit immediately
-        if (combined.length > 10) {
-          toast.error(t("errors:too_many_files", { defaultValue: `Maximum 10 files allowed` }));
-          return prev;
-        }
-        return combined;
-      });
-    }
-  }, [t]);
-
-  const handleRemoveFile = useCallback((idx: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== idx));
-  }, []);
+  }, [session]);
 
   const handleAttachAction = useCallback((action: string) => {
     const actionPrompts: Record<string, string> = {
@@ -456,7 +341,6 @@ export function useCommandCenter() {
     if (prompt) handleCommand(prompt, true);
   }, [handleCommand]);
 
-  // A1: Quick-exec for cheap plans, EconomicGate only for expensive ones
   const handlePlanExecute = useCallback(async () => {
     if (execState.totalCredits > QUICK_EXEC_CREDIT_THRESHOLD) {
       setShowEconomicGate(true);
@@ -483,21 +367,16 @@ export function useCommandCenter() {
     executionActions.reset();
   }, [balance, execState.totalCredits, user, tierDiscount]);
 
-  const onSlashSelect = useCallback((cmd: string) => {
-    setInput(cmd);
-    inputZoneRef.current?.focus();
-  }, []);
-
-  // ═══ Derived (memoized) ═══
+  // ═══ Derived ═══
   const isEmptyState = useMemo(() => messages.length === 0 && !loading, [messages.length, loading]);
-  
+
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour < 6) return t("common:greeting_night", { defaultValue: "Good night" });
-    if (hour < 12) return t("common:greeting_morning", { defaultValue: "Good morning" });
-    if (hour < 18) return t("common:greeting_afternoon", { defaultValue: "Good afternoon" });
-    return t("common:greeting_evening", { defaultValue: "Good evening" });
-  }, [t]);
+    if (hour < 6) return cmd.t("common:greeting_night", { defaultValue: "Good night" });
+    if (hour < 12) return cmd.t("common:greeting_morning", { defaultValue: "Good morning" });
+    if (hour < 18) return cmd.t("common:greeting_afternoon", { defaultValue: "Good afternoon" });
+    return cmd.t("common:greeting_evening", { defaultValue: "Good evening" });
+  }, [cmd.t]);
 
   const userName = useMemo(() => {
     return user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
@@ -514,7 +393,8 @@ export function useCommandCenter() {
     // Store
     execState, messages, outputs, loading, isStreaming,
     // UI state
-    input, setInput, files, showSlashMenu, setShowSlashMenu,
+    input: cmd.input, setInput: cmd.setInput, files: cmd.files,
+    showSlashMenu: cmd.showSlashMenu, setShowSlashMenu: cmd.setShowSlashMenu,
     showOutputs, setShowOutputs, showPostExecution, setShowPostExecution,
     showEconomicGate, permissionBlock, setPermissionBlock,
     savingAllOutputs, showLowBalance, setShowLowBalance,
@@ -526,19 +406,21 @@ export function useCommandCenter() {
     // Suggestions
     decisionSuggestions,
     // Sessions
-    sessions, sessionId, loadSession, deleteSession,
+    sessions: session.sessions, sessionId: session.sessionId,
+    loadSession: session.loadSession, deleteSession: session.deleteSession,
     // Refs
-    inputZoneRef, scrollRef, messagesEndRef,
+    inputZoneRef: cmd.inputZoneRef, scrollRef, messagesEndRef,
     // Handlers
-    handleSubmit, handleStop, clearChat,
+    handleSubmit, handleStop, clearChat: session.clearChat,
     handleSaveAllOutputs, handleSaveTemplate, handleRerun,
-    handleCommand, handleFileSelect, handleRemoveFile,
+    handleCommand, handleFileSelect: cmd.handleFileSelect,
+    handleRemoveFile: cmd.handleRemoveFile,
     handleAttachAction, handlePlanExecute,
     handleEconomicProceed, handleEconomicCancel,
     handlePipelineMessage,
     // Slash
-    onSlashSelect,
+    onSlashSelect: cmd.onSlashSelect,
     // t
-    t,
+    t: cmd.t,
   };
 }
