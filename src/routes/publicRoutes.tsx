@@ -48,6 +48,7 @@ const Programs = lazyRetry(() => import("@/pages/Programs"));
 const ServicesCatalog = lazyRetry(() => import("@/pages/NewServicesCatalog"));
 const ServiceDetail = lazyRetry(() => import("@/pages/ServiceDetail"));
 const ServiceExecute = lazyRetry(() => import("@/pages/ServiceExecute"));
+const DeliverablesLibrary = lazyRetry(() => import("@/pages/DeliverablesLibrary"));
 
 /**
  * All public SEO-indexable route definitions.
