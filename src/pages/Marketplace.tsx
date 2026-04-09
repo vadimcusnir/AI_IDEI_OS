@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SEOHead } from "@/components/SEOHead";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ControlledSection } from "@/components/ControlledSection";
@@ -115,6 +116,10 @@ export default function Marketplace() {
         title="Marketplace — AI-IDEI Knowledge Assets"
         description="Browse and purchase knowledge assets, templates, and intelligence packages on the AI-IDEI marketplace."
       />
+      <BreadcrumbJsonLd items={[
+        { name: "AI-IDEI", url: "https://ai-idei.com" },
+        { name: "Marketplace", url: "https://ai-idei.com/marketplace" },
+      ]} />
 
       {/* ═══ Hero ═══ */}
       <div className="relative border-b border-border overflow-hidden">

@@ -44,4 +44,6 @@
   <url><loc>https://ai-idei.com/marketplace</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://ai-idei.com/community</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://ai-idei.com/media/profiles</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ai-idei.com/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-idei.com/services</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 </urlset>

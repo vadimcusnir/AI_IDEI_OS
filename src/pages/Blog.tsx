@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SEOHead } from "@/components/SEOHead";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface BlogPost {
@@ -40,6 +41,10 @@ export default function Blog() {
         description="Expert insights on AI, knowledge extraction, content intelligence, and cognitive frameworks from the AI-IDEI platform."
         canonical="https://ai-idei.com/blog"
       />
+      <BreadcrumbJsonLd items={[
+        { name: "AI-IDEI", url: "https://ai-idei.com" },
+        { name: "Blog", url: "https://ai-idei.com/blog" },
+      ]} />
       <div className="min-h-screen bg-background">
         {/* Hero */}
         <section className="border-b border-border/40 bg-gradient-to-b from-background to-muted/20">
