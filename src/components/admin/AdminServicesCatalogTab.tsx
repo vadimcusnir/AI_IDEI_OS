@@ -103,6 +103,8 @@ function LevelTable({ level }: { level: Level }) {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<Omit<ServiceRow, "id">>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [componentIds, setComponentIds] = useState<string[]>([]);
+  const [optionalL3Ids, setOptionalL3Ids] = useState<string[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -131,10 +133,23 @@ function LevelTable({ level }: { level: Level }) {
     load();
   };
 
-  const openEdit = (s: ServiceRow) => {
+  const openEdit = async (s: ServiceRow) => {
     setEditing(s);
     setForm({ ...s });
     setCreating(false);
+    // Load composition data for L2/L1
+    if (level === "L2") {
+      const { data } = await (supabase.from("services_level_2") as any).select("component_l3_ids").eq("id", s.id).single();
+      setComponentIds(data?.component_l3_ids || []);
+      setOptionalL3Ids([]);
+    } else if (level === "L1") {
+      const { data } = await (supabase.from("services_level_1") as any).select("component_l2_ids, component_l3_ids_optional").eq("id", s.id).single();
+      setComponentIds(data?.component_l2_ids || []);
+      setOptionalL3Ids(data?.component_l3_ids_optional || []);
+    } else {
+      setComponentIds([]);
+      setOptionalL3Ids([]);
+    }
   };
 
   const openCreate = () => {
