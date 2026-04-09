@@ -52,6 +52,8 @@ const DeliverablesLibrary = lazyRetry(() => import("@/pages/DeliverablesLibrary"
 const PurchaseHistory = lazyRetry(() => import("@/pages/PurchaseHistory"));
 const PersonalOS = lazyRetry(() => import("@/pages/PersonalOS"));
 const AugmentationDashboard = lazyRetry(() => import("@/pages/AugmentationDashboard"));
+const WorkspaceHub = lazyRetry(() => import("@/pages/WorkspaceHub"));
+const PublicProfile = lazyRetry(() => import("@/pages/PublicProfile"));
 
 /**
  * All public SEO-indexable route definitions.
@@ -114,6 +116,8 @@ function publicRouteDefinitions() {
       <Route path="purchases" element={<AppLayout><ErrorBoundary fallbackTitle="Purchases failed to load"><PurchaseHistory /></ErrorBoundary></AppLayout>} />
       <Route path="personal-os" element={<AppLayout><ErrorBoundary fallbackTitle="Personal OS failed to load"><PersonalOS /></ErrorBoundary></AppLayout>} />
       <Route path="augmentation" element={<AppLayout><ErrorBoundary fallbackTitle="Augmentation failed to load"><AugmentationDashboard /></ErrorBoundary></AppLayout>} />
+      <Route path="workspace" element={<AppLayout><ErrorBoundary fallbackTitle="Workspace failed to load"><WorkspaceHub /></ErrorBoundary></AppLayout>} />
+      <Route path="p/:username" element={<ErrorBoundary fallbackTitle="Public profile failed"><PublicProfile /></ErrorBoundary>} />
       <Route path="products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
 
       {/* Static pages */}
@@ -199,6 +203,8 @@ export function publicRoutes() {
       <Route path="/community/:category/thread/:threadId" element={<AppLayout><ErrorBoundary fallbackTitle="Thread failed to load"><CommunityThread /></ErrorBoundary></AppLayout>} />
       <Route path="/transcribe" element={<Navigate to="/extractor" replace />} />
       <Route path="/tools/vtt-validator" element={<Navigate to="/home" replace />} />
+      <Route path="/workspace" element={<AppLayout><ErrorBoundary fallbackTitle="Workspace failed"><WorkspaceHub /></ErrorBoundary></AppLayout>} />
+      <Route path="/p/:username" element={<ErrorBoundary fallbackTitle="Public profile failed"><PublicProfile /></ErrorBoundary>} />
     </>
   );
 }
