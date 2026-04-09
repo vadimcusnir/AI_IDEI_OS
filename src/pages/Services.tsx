@@ -33,6 +33,8 @@ import { ValueComparison } from "@/components/services/ValueComparison";
 import { ServicePricingBreakdown } from "@/components/services/ServicePricingBreakdown";
 import { OutputFamilies } from "@/components/services/OutputFamilies";
 import { ServiceWizard } from "@/components/services/ServiceWizard";
+import { FutureServicesVoting } from "@/components/services/FutureServicesVoting";
+import { CostSimulator } from "@/components/services/CostSimulator";
 
 interface Service {
   id: string;
