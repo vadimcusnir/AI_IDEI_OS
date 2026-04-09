@@ -189,7 +189,7 @@ export function AdminJobsTab() {
   };
 
   const bulkCancelQueued = async () => {
-    const queuedSelected = jobs.filter(j => selected.has(j.id) && (j.status === "queued" || j.status === "processing"));
+    const queuedSelected = jobs.filter(j => selected.has(j.id) && (j.status === "queued" || j.status === "pending" || j.status === "processing" || j.status === "running"));
     if (!queuedSelected.length) { toast.error("No queued/processing jobs selected"); return; }
     for (const j of queuedSelected) await cancelJob(j.id);
     toast.success(`${queuedSelected.length} jobs cancelled`);
@@ -320,7 +320,7 @@ export function AdminJobsTab() {
                           <RotateCcw className="h-3 w-3 text-primary" />
                         </Button>
                       )}
-                      {(j.status === "queued" || j.status === "processing") && (
+                      {(j.status === "queued" || j.status === "pending" || j.status === "processing" || j.status === "running") && (
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => cancelJob(j.id)} title="Cancel">
                           <XCircle className="h-3 w-3 text-destructive" />
                         </Button>
