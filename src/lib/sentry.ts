@@ -1,6 +1,7 @@
+let sentryInstance: typeof import("@sentry/react") | null = null;
+
 export function initSentry() {
   if (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN) {
-    // Lazy-load Sentry to keep it off the critical path
     import("@sentry/react").then((Sentry) => {
       Sentry.init({
         dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -12,7 +13,36 @@ export function initSentry() {
         replaysSessionSampleRate: 0.05,
         replaysOnErrorSampleRate: 1.0,
         environment: import.meta.env.MODE,
+        beforeSend(event) {
+          // Filter noisy errors
+          if (event.exception?.values?.[0]?.value?.includes("ResizeObserver")) return null;
+          if (event.exception?.values?.[0]?.value?.includes("ChunkLoadError")) return null;
+          return event;
+        },
       });
+      sentryInstance = Sentry;
     });
+  }
+}
+
+export function setSentryUser(user: { id: string; email?: string } | null) {
+  if (sentryInstance) {
+    if (user) {
+      sentryInstance.setUser({ id: user.id, email: user.email });
+    } else {
+      sentryInstance.setUser(null);
+    }
+  }
+}
+
+export function captureError(error: Error, context?: Record<string, unknown>) {
+  if (sentryInstance) {
+    sentryInstance.captureException(error, { extra: context });
+  }
+}
+
+export function addBreadcrumb(message: string, category?: string, data?: Record<string, unknown>) {
+  if (sentryInstance) {
+    sentryInstance.addBreadcrumb({ message, category, data, level: "info" });
   }
 }
