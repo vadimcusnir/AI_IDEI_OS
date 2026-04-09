@@ -26,7 +26,7 @@ export function ROICalculator() {
     if (!user) return;
     const load = async () => {
       const [neurons, artifacts, debits, credits] = await Promise.all([
-        supabase.from("neurons").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+        supabase.from("neurons").select("id", { count: "exact", head: true }).eq("author_id", user.id),
         supabase.from("artifacts").select("id", { count: "exact", head: true }).eq("author_id", user.id),
         supabase.from("credit_transactions").select("amount").eq("user_id", user.id).lt("amount", 0),
         supabase.from("credit_transactions").select("amount").eq("user_id", user.id).gt("amount", 0),

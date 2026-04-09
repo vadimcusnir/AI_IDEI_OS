@@ -26,9 +26,9 @@ export function ProductivityTimeline() {
       const since = new Date(Date.now() - 7 * 86400000).toISOString();
 
       const [neurons, artifacts, jobs] = await Promise.all([
-        supabase.from("neurons").select("created_at").eq("user_id", user.id).gte("created_at", since),
+        supabase.from("neurons").select("created_at").eq("author_id", user.id).gte("created_at", since),
         supabase.from("artifacts").select("created_at").eq("author_id", user.id).gte("created_at", since),
-        supabase.from("neuron_jobs").select("created_at").eq("user_id", user.id).gte("created_at", since),
+        supabase.from("neuron_jobs").select("created_at").eq("author_id", user.id).gte("created_at", since),
       ]);
 
       const dayMap = new Map<string, DayActivity>();
