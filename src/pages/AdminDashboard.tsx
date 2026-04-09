@@ -53,6 +53,7 @@ const FinOpsTab = lazy(() => import("@/components/admin/FinOpsTab").then(m => ({
 const AdminPromptsTab = lazy(() => import("@/components/admin/AdminPromptsTab").then(m => ({ default: m.AdminPromptsTab })));
 const AdminRevenueTab = lazy(() => import("@/components/admin/AdminRevenueTab").then(m => ({ default: m.AdminRevenueTab })));
 const AdminCMSTab = lazy(() => import("@/components/admin/AdminCMSTab").then(m => ({ default: m.AdminCMSTab })));
+const ContentProfileAdmin = lazy(() => import("@/components/admin/ContentProfileAdmin").then(m => ({ default: m.ContentProfileAdmin })));
 
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -123,6 +124,7 @@ const TAB_GROUPS = [
       { value: "llm-index", label: "LLM Index", icon: Bot },
       { value: "blog", label: "Blog", icon: FileText },
       { value: "cms", label: "CMS", icon: Globe },
+      { value: "content-profile", label: "Content Profile", icon: FileText },
     ],
   },
   {
@@ -343,6 +345,7 @@ export default function AdminDashboard() {
             <TabsContent value="prompts"><Suspense fallback={<TabLoader />}><AdminPromptsTab /></Suspense></TabsContent>
             <TabsContent value="revenue"><Suspense fallback={<TabLoader />}><AdminRevenueTab /></Suspense></TabsContent>
             <TabsContent value="cms"><Suspense fallback={<TabLoader />}><AdminCMSTab /></Suspense></TabsContent>
+            <TabsContent value="content-profile"><Suspense fallback={<TabLoader />}><ContentProfileAdmin /></Suspense></TabsContent>
           </Tabs>
         </div>
       </div>
