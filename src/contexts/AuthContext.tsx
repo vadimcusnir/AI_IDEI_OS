@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useCallback, ReactNode 
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { clearRedirect } from "@/lib/authRedirect";
+import { setSentryUser } from "@/lib/sentry";
 
 interface AuthContextType {
   user: User | null;
@@ -40,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       setSession(newSession);
       setUser(newSession?.user ?? null);
+      setSentryUser(newSession?.user ? { id: newSession.user.id, email: newSession.user.email } : null);
       setLoading(false);
       setInitialized(true);
     });
