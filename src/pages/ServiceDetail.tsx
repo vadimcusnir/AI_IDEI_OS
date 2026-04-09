@@ -51,13 +51,7 @@ export default function ServiceDetail() {
   const Icon = cfg.icon;
   const deliveryMin = Math.ceil(service.estimated_delivery_seconds / 60);
 
-  // Composition info for L2/L1
   const hasComposition = level === "L2" || level === "L1";
-  const componentIds = level === "L2"
-    ? (service as any).component_l3_ids || []
-    : level === "L1"
-    ? (service as any).component_l2_ids || []
-    : [];
 
   return (
     <div className="min-h-screen bg-background">
