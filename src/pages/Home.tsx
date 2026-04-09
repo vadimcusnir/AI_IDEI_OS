@@ -177,6 +177,14 @@ export default function Home() {
                     />
                   )}
 
+                  {/* Post-execution upsell */}
+                  {cc.execState.phase === "completed" && cc.execState.totalCredits > 0 && (
+                    <NeuronBundleUpsell
+                      balance={cc.balance}
+                      creditsJustSpent={cc.execState.totalCredits}
+                    />
+                  )}
+
                   {/* Inline panels */}
                   <AnimatePresence>
                     {cc.execState.phase === "confirming" && cc.execState.totalCredits > 0 && !cc.showEconomicGate && (
