@@ -46,6 +46,7 @@ const AutomationTemplates = lazyRetry(() => import("@/pages/AutomationTemplates"
 const MarketplaceDrafts = lazyRetry(() => import("@/pages/MarketplaceDrafts"));
 const MarketplaceEarnings = lazyRetry(() => import("@/pages/MarketplaceEarnings"));
 const Pipeline = lazyRetry(() => import("@/pages/Pipeline"));
+const MyAnalytics = lazyRetry(() => import("@/pages/MyAnalytics"));
 
 export function protectedRoutes() {
   return (
