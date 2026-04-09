@@ -88,7 +88,7 @@ export function MobileBottomNav() {
         "fixed bottom-0 left-0 right-0 z-50 md:hidden",
         "border-t border-border/50 bg-background/95 backdrop-blur-lg",
         "pb-[env(safe-area-inset-bottom,0px)]",
-        location.pathname === "/home" && "translate-y-full pointer-events-none"
+        )}>
       )}>
         <div className="flex items-stretch justify-around h-14 px-1">
           {BAR_ITEMS.map(({ path, icon: Icon, label }) => {
