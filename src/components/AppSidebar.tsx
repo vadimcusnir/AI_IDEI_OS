@@ -129,6 +129,7 @@ const SECTIONS: NavSection[] = [
     items: [
       { label: "Neurons", to: "/neurons", icon: Brain, controlId: "nav.neurons" },
       { label: "Knowledge Graph", to: "/intelligence", icon: Network, controlId: "nav.intelligence" },
+      { label: "My Analytics", to: "/my-analytics", icon: BarChart3, controlId: "nav.my_analytics" },
     ],
   },
   {
