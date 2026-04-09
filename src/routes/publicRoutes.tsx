@@ -49,6 +49,7 @@ const ServicesCatalog = lazyRetry(() => import("@/pages/NewServicesCatalog"));
 const ServiceDetail = lazyRetry(() => import("@/pages/ServiceDetail"));
 const ServiceExecute = lazyRetry(() => import("@/pages/ServiceExecute"));
 const DeliverablesLibrary = lazyRetry(() => import("@/pages/DeliverablesLibrary"));
+const PurchaseHistory = lazyRetry(() => import("@/pages/PurchaseHistory"));
 
 /**
  * All public SEO-indexable route definitions.
@@ -108,6 +109,7 @@ function publicRouteDefinitions() {
       <Route path="services/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Service detail failed"><ServiceDetail /></ErrorBoundary></AppLayout>} />
       <Route path="services/:slug/execute" element={<AppLayout><ErrorBoundary fallbackTitle="Service execution failed"><ServiceExecute /></ErrorBoundary></AppLayout>} />
       <Route path="deliverables" element={<AppLayout><ErrorBoundary fallbackTitle="Deliverables failed to load"><DeliverablesLibrary /></ErrorBoundary></AppLayout>} />
+      <Route path="purchases" element={<AppLayout><ErrorBoundary fallbackTitle="Purchases failed to load"><PurchaseHistory /></ErrorBoundary></AppLayout>} />
       <Route path="products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
 
       {/* Static pages */}
@@ -180,6 +182,7 @@ export function publicRoutes() {
       <Route path="/services/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Service detail failed"><ServiceDetail /></ErrorBoundary></AppLayout>} />
       <Route path="/services/:slug/execute" element={<AppLayout><ErrorBoundary fallbackTitle="Service execution failed"><ServiceExecute /></ErrorBoundary></AppLayout>} />
       <Route path="/deliverables" element={<AppLayout><ErrorBoundary fallbackTitle="Deliverables failed"><DeliverablesLibrary /></ErrorBoundary></AppLayout>} />
+      <Route path="/purchases" element={<AppLayout><ErrorBoundary fallbackTitle="Purchases failed"><PurchaseHistory /></ErrorBoundary></AppLayout>} />
       <Route path="/products/:slug" element={<AppLayout><ErrorBoundary fallbackTitle="Product failed to load"><ProductSurfacePage /></ErrorBoundary></AppLayout>} />
       <Route path="/terms" element={<AppLayout><ErrorBoundary fallbackTitle="Terms failed to load"><TermsOfService /></ErrorBoundary></AppLayout>} />
       <Route path="/pricing" element={<AppLayout><ErrorBoundary fallbackTitle="Pricing failed to load"><Pricing /></ErrorBoundary></AppLayout>} />
