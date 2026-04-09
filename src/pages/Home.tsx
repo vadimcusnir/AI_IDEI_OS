@@ -38,6 +38,7 @@ import { GuidedTooltip } from "@/components/onboarding/GuidedTooltip";
 import { HOME_TOUR } from "@/components/onboarding/tourDefinitions";
 import { HomeSkeleton } from "@/components/skeletons/HomeSkeleton";
 import { MagicPipelineButton } from "@/components/pipeline/MagicPipelineButton";
+import { KnowledgeGapDashboard } from "@/components/upsell/KnowledgeGapDashboard";
 
 export default function Home() {
   const cc = useCommandCenter();
@@ -117,6 +118,8 @@ export default function Home() {
                     onDelete={cc.deleteSession}
                     className="w-full max-w-md mt-6"
                   />
+                  {/* Knowledge gap analysis */}
+                  <KnowledgeGapDashboard compact className="w-full max-w-md mt-4" />
                 </div>
               ) : (
                 /* ── Conversation feed ── */
