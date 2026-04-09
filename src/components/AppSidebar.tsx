@@ -116,6 +116,7 @@ const SECTIONS: NavSection[] = [
     authOnly: true,
     items: [
       { label: "Credits", to: "/credits", icon: Coins, controlId: "nav.credits" },
+      { label: "Purchases", to: "/purchases", icon: Clock, controlId: "nav.purchases", operatorOnly: true },
     ],
   },
   {
@@ -134,6 +135,7 @@ const SECTIONS: NavSection[] = [
     authOnly: true,
     items: [
       { label: "Services", to: "/services", icon: Sparkles, controlId: "nav.services" },
+      { label: "Deliverables", to: "/deliverables", icon: Database, controlId: "nav.deliverables" },
       { label: "Marketplace", to: "/marketplace", icon: Store, controlId: "nav.marketplace" },
       { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
       { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip" },
