@@ -45,7 +45,8 @@ const Community = lazyRetry(() => import("@/pages/Community"));
 const CommunityThread = lazyRetry(() => import("@/pages/CommunityThread"));
 const Services = lazyRetry(() => import("@/pages/Services"));
 const Programs = lazyRetry(() => import("@/pages/Programs"));
-const ServicesCatalog = lazyRetry(() => import("@/pages/ServicesCatalog"));
+const ServicesCatalog = lazyRetry(() => import("@/pages/NewServicesCatalog"));
+const ServiceDetail = lazyRetry(() => import("@/pages/ServiceDetail"));
 
 /**
  * All public SEO-indexable route definitions.
