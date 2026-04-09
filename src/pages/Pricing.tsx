@@ -8,7 +8,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { FAQJsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Sparkles, Zap, Crown, ArrowRight, Brain, Loader2, ShoppingCart, Coins, Settings } from "lucide-react";
+import { Check, Sparkles, Zap, Crown, ArrowRight, Brain, Loader2, ShoppingCart, Coins, Settings, Users, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ function usePlans() {
       highlight: false,
       priceId: null,
       mode: null as "subscription" | null,
+      savingsVsFree: null,
       features: [
         t("pricing.feat_welcome_bonus"),
         t("pricing.feat_transcriptions_3"),
@@ -38,92 +39,68 @@ function usePlans() {
     {
       key: "starter",
       name: "Starter",
-      price: "23",
+      price: String(SUBSCRIPTION_TIERS.starter_monthly.price),
       period: t("pricing.per_month"),
-      neurons: "3,000",
+      neurons: SUBSCRIPTION_TIERS.starter_monthly.neurons_quota.toLocaleString(),
       badge: null,
       highlight: false,
       priceId: SUBSCRIPTION_TIERS.starter_monthly.price_id,
       mode: "subscription" as const,
-      features: [
-        "3,000 NEURONS / lună",
-        "Servicii AI de bază",
-        "Extracție & structurare",
-        "Library access",
-        "-10% cost execuție",
-      ],
+      savingsVsFree: null,
+      features: SUBSCRIPTION_TIERS.starter_monthly.features,
       cta: "Choose Starter",
     },
     {
       key: "pro",
       name: t("pricing.plan_pro"),
-      price: "47",
+      price: String(SUBSCRIPTION_TIERS.pro_monthly.price),
       period: t("pricing.per_month"),
-      neurons: "10,000",
+      neurons: SUBSCRIPTION_TIERS.pro_monthly.neurons_quota.toLocaleString(),
       badge: "Popular",
       highlight: true,
       priceId: SUBSCRIPTION_TIERS.pro_monthly.price_id,
       mode: "subscription" as const,
-      features: [
-        t("pricing.feat_neurons_10000"),
-        t("pricing.feat_discount_20"),
-        t("pricing.feat_all_services"),
-        t("pricing.feat_priority"),
-        t("pricing.feat_batch"),
-        t("pricing.feat_analytics"),
-        t("pricing.feat_knowledge_graph"),
-      ],
+      savingsVsFree: "53%",
+      features: SUBSCRIPTION_TIERS.pro_monthly.features,
       cta: t("pricing.choose_pro"),
     },
     {
       key: "vip",
       name: t("pricing.plan_vip"),
-      price: "95",
+      price: String(SUBSCRIPTION_TIERS.vip_monthly.price),
       period: t("pricing.per_month"),
-      neurons: "30,000",
+      neurons: SUBSCRIPTION_TIERS.vip_monthly.neurons_quota.toLocaleString(),
       badge: "Best Value",
       highlight: false,
       priceId: SUBSCRIPTION_TIERS.vip_monthly.price_id,
       mode: "subscription" as const,
-      features: [
-        t("pricing.feat_neurons_30000"),
-        t("pricing.feat_discount_40"),
-        t("pricing.feat_all_pro"),
-        t("pricing.feat_api"),
-        t("pricing.feat_sla"),
-        t("pricing.feat_nota2"),
-      ],
+      savingsVsFree: "77%",
+      features: SUBSCRIPTION_TIERS.vip_monthly.features,
       cta: t("pricing.choose_vip"),
     },
     {
       key: "enterprise",
       name: "Enterprise",
-      price: "137",
+      price: String(SUBSCRIPTION_TIERS.enterprise_monthly.price),
       period: t("pricing.per_month"),
-      neurons: "50,000",
+      neurons: SUBSCRIPTION_TIERS.enterprise_monthly.neurons_quota.toLocaleString(),
       badge: "Max Power",
       highlight: false,
       priceId: SUBSCRIPTION_TIERS.enterprise_monthly.price_id,
       mode: "subscription" as const,
-      features: [
-        "50,000 NEURONS / lună",
-        "Tot din VIP",
-        "API nelimitat",
-        "White-label reports",
-        "Dedicated account manager",
-        "-50% cost execuție",
-      ],
+      savingsVsFree: "81%",
+      features: SUBSCRIPTION_TIERS.enterprise_monthly.features,
       cta: "Choose Enterprise",
     },
   ];
 }
 
 const TOPUP_PACKAGES = [
-  { key: "micro", neurons: 1000, price: 2, label: "Micro" },
-  { key: "starter", neurons: 5500, price: 11, label: "Starter" },
-  { key: "standard", neurons: 10000, price: 20, label: "Standard", popular: true },
-  { key: "growth", neurons: 23500, price: 47, label: "Growth" },
-  { key: "scale", neurons: 46000, price: 92, label: "Scale" },
+  { key: "micro", neurons: 1000, price: 2, label: "Micro", savings: null },
+  { key: "starter", neurons: 5500, price: 11, label: "Starter", savings: null },
+  { key: "standard", neurons: 10000, price: 20, label: "Standard", popular: true, savings: "Save 9%" },
+  { key: "growth", neurons: 23500, price: 47, label: "Growth", savings: "Save 15%" },
+  { key: "scale", neurons: 46000, price: 92, label: "Scale", savings: "Save 20%" },
 ];
 
 function useFaqItems() {
@@ -197,9 +174,25 @@ export default function Pricing() {
             <h1 className="text-3xl sm:text-4xl font-bold mb-3">
               {t("pricing.hero_title")}
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-[50ch] mx-auto">
+            <p className="text-sm sm:text-base text-muted-foreground max-w-[50ch] mx-auto mb-6">
               {t("pricing.hero_desc")}
             </p>
+
+            {/* Social proof bar */}
+            <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Users className="h-3.5 w-3.5 text-primary" />
+                <strong className="text-foreground">2,400+</strong> knowledge workers
+              </span>
+              <span className="hidden sm:flex items-center gap-1.5">
+                <TrendingUp className="h-3.5 w-3.5 text-primary" />
+                <strong className="text-foreground">1.2M+</strong> neurons processed
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Brain className="h-3.5 w-3.5 text-primary" />
+                <strong className="text-foreground">50+</strong> AI services
+              </span>
+            </div>
           </div>
         </section>
 
@@ -236,9 +229,17 @@ export default function Pricing() {
                     <span className="text-3xl font-bold font-mono">${plan.price}</span>
                     {plan.period && <span className="text-xs text-muted-foreground">{plan.period}</span>}
                   </div>
-                  <p className="text-micro text-muted-foreground mb-4">
+                  <p className="text-micro text-muted-foreground mb-1">
                     {plan.neurons} {t("pricing.neurons_per_month")}
                   </p>
+
+                  {/* Savings anchor */}
+                  {plan.savingsVsFree && (
+                    <p className="text-nano font-semibold text-status-validated mb-3">
+                      Save {plan.savingsVsFree} vs pay-as-you-go
+                    </p>
+                  )}
+                  {!plan.savingsVsFree && <div className="mb-3" />}
 
                   <ul className="space-y-2 flex-1 mb-5">
                     {plan.features.map((f, i) => (
@@ -307,6 +308,11 @@ export default function Pricing() {
                     <span className="text-nano text-muted-foreground/60 mt-0.5">
                       ${(pkg.price / pkg.neurons * 1000).toFixed(1)}/1K
                     </span>
+                    {pkg.savings && (
+                      <span className="text-nano font-semibold text-status-validated mt-1">
+                        {pkg.savings}
+                      </span>
+                    )}
                     <Button
                       size="sm"
                       variant={pkg.popular ? "default" : "outline"}
