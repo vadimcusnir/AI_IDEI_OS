@@ -11829,6 +11829,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_adaptation_log: {
+        Row: {
+          adaptation_type: string
+          applied: boolean | null
+          applied_at: string | null
+          confidence: number | null
+          created_at: string
+          id: string
+          new_value: Json | null
+          old_value: Json | null
+          user_id: string
+        }
+        Insert: {
+          adaptation_type: string
+          applied?: boolean | null
+          applied_at?: string | null
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          new_value?: Json | null
+          old_value?: Json | null
+          user_id: string
+        }
+        Update: {
+          adaptation_type?: string
+          applied?: boolean | null
+          applied_at?: string | null
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          new_value?: Json | null
+          old_value?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_certifications: {
         Row: {
           awarded_at: string | null
@@ -12159,6 +12195,87 @@ export type Database = {
           source_id?: string | null
           source_type?: string | null
           title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_memory_entries: {
+        Row: {
+          access_count: number | null
+          category: string
+          content: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          last_accessed_at: string | null
+          memory_type: string
+          metadata: Json | null
+          relevance_score: number | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_count?: number | null
+          category?: string
+          content?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_accessed_at?: string | null
+          memory_type?: string
+          metadata?: Json | null
+          relevance_score?: number | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_count?: number | null
+          category?: string
+          content?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_accessed_at?: string | null
+          memory_type?: string
+          metadata?: Json | null
+          relevance_score?: number | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_personalization: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          id: string
+          pref_key: string
+          pref_value: Json
+          source: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          pref_key: string
+          pref_value?: Json
+          source?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          pref_key?: string
+          pref_value?: Json
+          source?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
