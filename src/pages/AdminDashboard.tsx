@@ -54,7 +54,7 @@ const AdminPromptsTab = lazy(() => import("@/components/admin/AdminPromptsTab").
 const AdminRevenueTab = lazy(() => import("@/components/admin/AdminRevenueTab").then(m => ({ default: m.AdminRevenueTab })));
 const AdminCMSTab = lazy(() => import("@/components/admin/AdminCMSTab").then(m => ({ default: m.AdminCMSTab })));
 const ContentProfileAdmin = lazy(() => import("@/components/admin/ContentProfileAdmin").then(m => ({ default: m.ContentProfileAdmin })));
-
+const SSOTGuardianTab = lazy(() => import("@/components/admin/SSOTGuardianTab").then(m => ({ default: m.SSOTGuardianTab })));
 function TabLoader() {
   return <div className="flex items-center justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
 }
@@ -138,6 +138,7 @@ const TAB_GROUPS = [
       { value: "compliance-audit", label: "Audit", icon: ShieldCheck },
       { value: "incidents", label: "Incidents", icon: AlertCircle },
       { value: "emergency", label: "Emergency", icon: ShieldAlert },
+      { value: "ssot-guardian", label: "SSOT Guardian", icon: ShieldCheck },
     ],
   },
   {
@@ -325,6 +326,7 @@ export default function AdminDashboard() {
             <TabsContent value="entropy"><Suspense fallback={<TabLoader />}><EntropyMonitoringTab /></Suspense></TabsContent>
             <TabsContent value="contributions"><Suspense fallback={<TabLoader />}><AdminContributionsTab /></Suspense></TabsContent>
             <TabsContent value="emergency"><Suspense fallback={<TabLoader />}><EmergencyControlsTab /></Suspense></TabsContent>
+            <TabsContent value="ssot-guardian"><Suspense fallback={<TabLoader />}><SSOTGuardianTab /></Suspense></TabsContent>
             <TabsContent value="compliance"><Suspense fallback={<TabLoader />}><ComplianceLogTab /></Suspense></TabsContent>
             <TabsContent value="flags"><Suspense fallback={<TabLoader />}><FeatureFlagsTab /></Suspense></TabsContent>
             <TabsContent value="moderation"><Suspense fallback={<TabLoader />}><ForumModerationTab /></Suspense></TabsContent>
