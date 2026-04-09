@@ -767,6 +767,13 @@ export type Database = {
             referencedRelation: "service_units"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "aias_agent_profiles_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       aias_output_contracts: {
@@ -1388,6 +1395,13 @@ export type Database = {
             columns: ["service_unit_id"]
             isOneToOne: false
             referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_jobs_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units_public"
             referencedColumns: ["id"]
           },
         ]
@@ -3085,6 +3099,13 @@ export type Database = {
             columns: ["service_unit_id"]
             isOneToOne: false
             referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deliverable_contracts_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units_public"
             referencedColumns: ["id"]
           },
         ]
@@ -6443,6 +6464,13 @@ export type Database = {
             referencedRelation: "service_units"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "mms_nodes_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       mpi_scores: {
@@ -9163,6 +9191,13 @@ export type Database = {
             referencedRelation: "service_units"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "prompt_vault_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       prompt_versions: {
@@ -10372,6 +10407,13 @@ export type Database = {
             columns: ["service_unit_id"]
             isOneToOne: false
             referencedRelation: "service_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_release_log_service_unit_id_fkey"
+            columns: ["service_unit_id"]
+            isOneToOne: false
+            referencedRelation: "service_units_public"
             referencedColumns: ["id"]
           },
         ]
@@ -13422,6 +13464,54 @@ export type Database = {
             referencedColumns: ["service_key"]
           },
         ]
+      }
+      service_units_public: {
+        Row: {
+          created_at: string | null
+          domain: string | null
+          id: string | null
+          intent: string | null
+          level: Database["public"]["Enums"]["service_level"] | null
+          mechanism: string | null
+          name: string | null
+          role: string | null
+          single_decision: string | null
+          single_function: string | null
+          single_output: string | null
+          status: string | null
+          version: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          domain?: string | null
+          id?: string | null
+          intent?: string | null
+          level?: Database["public"]["Enums"]["service_level"] | null
+          mechanism?: string | null
+          name?: string | null
+          role?: string | null
+          single_decision?: string | null
+          single_function?: string | null
+          single_output?: string | null
+          status?: string | null
+          version?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          domain?: string | null
+          id?: string | null
+          intent?: string | null
+          level?: Database["public"]["Enums"]["service_level"] | null
+          mechanism?: string | null
+          name?: string | null
+          role?: string | null
+          single_decision?: string | null
+          single_function?: string | null
+          single_output?: string | null
+          status?: string | null
+          version?: number | null
+        }
+        Relationships: []
       }
       user_integrations_safe: {
         Row: {
