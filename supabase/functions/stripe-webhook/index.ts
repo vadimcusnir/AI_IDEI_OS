@@ -2,11 +2,12 @@ import Stripe from "npm:stripe@17.7.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
 
-// Product → tier mapping (must match useSubscription.ts SUBSCRIPTION_TIERS)
+// Product → tier mapping (must match economyConfig.ts SUBSCRIPTION_TIERS)
 const PRODUCT_TIERS: Record<string, { tier: string; neurons: number; label: string }> = {
-  prod_U74a8adWSDNymI: { tier: "core", neurons: 2000, label: "Core" },
-  prod_U74aOlNMMVn7lY: { tier: "pro", neurons: 10000, label: "Pro" },
-  prod_elite_placeholder: { tier: "vip", neurons: 30000, label: "VIP" },
+  prod_UGsIVXzAl33sDX: { tier: "starter", neurons: 3000, label: "Starter" },
+  prod_UGsI5IhppWlJ1B: { tier: "pro", neurons: 10000, label: "Pro" },
+  prod_UGsI4kjBe8Km2J: { tier: "vip", neurons: 30000, label: "VIP" },
+  prod_UGsJp3Rln1QfqD: { tier: "enterprise", neurons: 50000, label: "Enterprise" },
 };
 
 const log = (step: string, details?: any) => {
