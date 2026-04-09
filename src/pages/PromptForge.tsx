@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PipelineSourcePicker } from "@/components/services/PipelineSourcePicker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sparkles, Layers, Link2, Store, BarChart3 } from "lucide-react";
+import { Loader2, Sparkles, Layers, Link2, Store, BarChart3, Swords, Puzzle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { truncateForService, formatTruncationMessage } from "@/lib/contentTruncation";
 import { InlineTopUp } from "@/components/credits/InlineTopUp";
@@ -22,6 +22,9 @@ import { PromptChainBuilder, ChainStep } from "@/components/prompt-forge/PromptC
 import { FeedbackLoop } from "@/components/prompt-forge/FeedbackLoop";
 import { TemplateMarketplace } from "@/components/prompt-forge/TemplateMarketplace";
 import { PromptAnalytics } from "@/components/prompt-forge/PromptAnalytics";
+import { PromptScoring7D } from "@/components/prompt-forge/PromptScoring7D";
+import { PromptTestArena } from "@/components/prompt-forge/PromptTestArena";
+import { PromptModuleComposer } from "@/components/prompt-forge/PromptModuleComposer";
 
 const SINGLE_COST = 200;
 const VARIANT_COST = 500;
@@ -338,10 +341,18 @@ export default function PromptForge() {
 
           {/* Main Tabs: Create / Marketplace / Analytics */}
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="mb-6">
-            <TabsList className="h-8">
+            <TabsList className="h-8 flex-wrap">
               <TabsTrigger value="create" className="text-xs gap-1.5">
                 <Sparkles className="h-3 w-3" />
                 Creează
+              </TabsTrigger>
+              <TabsTrigger value="arena" className="text-xs gap-1.5">
+                <Swords className="h-3 w-3" />
+                Arena
+              </TabsTrigger>
+              <TabsTrigger value="modules" className="text-xs gap-1.5">
+                <Puzzle className="h-3 w-3" />
+                Module
               </TabsTrigger>
               <TabsTrigger value="marketplace" className="text-xs gap-1.5">
                 <Store className="h-3 w-3" />
@@ -352,6 +363,14 @@ export default function PromptForge() {
                 Statistici
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="arena" className="mt-4">
+              <PromptTestArena context={context} goal={goal} />
+            </TabsContent>
+
+            <TabsContent value="modules" className="mt-4">
+              <PromptModuleComposer onCompose={(composed) => setDetails(prev => prev ? `${prev}\n\n${composed}` : composed)} />
+            </TabsContent>
 
             <TabsContent value="marketplace" className="mt-4">
               <TemplateMarketplace onSelect={handleTemplateSelect} />
@@ -482,11 +501,16 @@ export default function PromptForge() {
                     <div className="min-h-[400px] rounded-xl border border-border bg-card p-5 overflow-y-auto max-h-[70vh]">
                       <PromptOutput result={activeResult} goal={goal} />
                       {activeResult && mode === "single" && (
-                        <FeedbackLoop
-                          historyId={lastHistoryId}
-                          result={activeResult}
-                          goal={goal}
-                        />
+                        <>
+                          <div className="mt-3">
+                            <PromptScoring7D promptText={activeResult} goal={goal} />
+                          </div>
+                          <FeedbackLoop
+                            historyId={lastHistoryId}
+                            result={activeResult}
+                            goal={goal}
+                          />
+                        </>
                       )}
                     </div>
                   )}
