@@ -21,7 +21,7 @@ import { Logo } from "@/components/shared/Logo";
 import {
   Home, BookOpen, Sparkles, Brain, Network, Store,
   Coins, Plus, Clock, Shield, Cpu, Activity, BarChart3,
-  Database, Trophy, Workflow, Gem, Plug, LogIn,
+  Database, Trophy, Workflow, Gem, Plug, LogIn, Zap,
   ChevronsUpDown, Check, Settings, Bell, Terminal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -140,6 +140,7 @@ const SECTIONS: NavSection[] = [
       { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
       { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip" },
       { label: "Personal OS", to: "/personal-os", icon: Cpu, controlId: "nav.personal-os" },
+      { label: "Augmentation", to: "/augmentation", icon: Zap, controlId: "nav.augmentation" },
       { label: "Integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations", operatorOnly: true },
     ],
   },
