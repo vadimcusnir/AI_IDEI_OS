@@ -140,6 +140,7 @@ const SECTIONS: NavSection[] = [
       { label: "Progress", to: "/gamification", icon: Trophy, controlId: "nav.gamification" },
       { label: "VIP Program", to: "/vip", icon: Gem, controlId: "nav.vip" },
       { label: "Personal OS", to: "/personal-os", icon: Cpu, controlId: "nav.personal-os" },
+      { label: "Augmentation", to: "/augmentation", icon: Zap, controlId: "nav.augmentation" },
       { label: "Integrations", to: "/integrations", icon: Plug, controlId: "nav.integrations", operatorOnly: true },
     ],
   },
