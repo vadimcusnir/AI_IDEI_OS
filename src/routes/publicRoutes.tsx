@@ -50,6 +50,7 @@ const ServiceDetail = lazyRetry(() => import("@/pages/ServiceDetail"));
 const ServiceExecute = lazyRetry(() => import("@/pages/ServiceExecute"));
 const DeliverablesLibrary = lazyRetry(() => import("@/pages/DeliverablesLibrary"));
 const PurchaseHistory = lazyRetry(() => import("@/pages/PurchaseHistory"));
+const PersonalOS = lazyRetry(() => import("@/pages/PersonalOS"));
 
 /**
  * All public SEO-indexable route definitions.
