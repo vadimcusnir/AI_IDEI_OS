@@ -52,7 +52,9 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
+const App = () => {
+  useEffect(() => { prefetchCriticalRoutes(); }, []);
+  return (
   <MotionConfig reducedMotion="user">
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
