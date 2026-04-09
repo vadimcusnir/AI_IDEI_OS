@@ -325,8 +325,6 @@ export default function Landing() {
       <Suspense fallback={<div className="h-64 bg-background" />}>
         <Footer variant="landing" />
       </Suspense>
-      </main>
-      <Footer variant="landing" />
 
       <OrganizationJsonLd />
       <WebApplicationJsonLd />
