@@ -32,19 +32,19 @@ export function SSOTGuardianTab() {
       // Fetch services for taxonomy validation
       const { data: services } = await supabase
         .from("services_level_3")
-        .select("service_name, output_type, internal_credit_cost")
+        .select("service_name, internal_credit_cost")
         .limit(500);
 
-      const mappedServices = (services || []).map(s => ({
+      const mappedServices = (services || []).map((s: any) => ({
         service_name: s.service_name,
-        output_type: s.output_type ?? undefined,
+        output_type: undefined,
         credit_cost: s.internal_credit_cost ?? undefined,
       }));
 
       // i18n key count estimation (from site_content)
-      const { count: enCount } = await supabase.from("site_content").select("*", { count: "exact", head: true }).eq("language", "en");
-      const { count: roCount } = await supabase.from("site_content").select("*", { count: "exact", head: true }).eq("language", "ro");
-      const { count: ruCount } = await supabase.from("site_content").select("*", { count: "exact", head: true }).eq("language", "ru");
+      const { count: enCount } = await supabase.from("site_content").select("*", { count: "exact", head: true }).eq("locale", "en");
+      const { count: roCount } = await supabase.from("site_content").select("*", { count: "exact", head: true }).eq("locale", "ro");
+      const { count: ruCount } = await supabase.from("site_content").select("*", { count: "exact", head: true }).eq("locale", "ru");
 
       const result = runSSOTAudit({
         services: mappedServices,
