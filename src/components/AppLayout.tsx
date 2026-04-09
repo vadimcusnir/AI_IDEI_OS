@@ -78,7 +78,7 @@ export function AppLayout({ children, fullHeight = false }: AppLayoutProps) {
           >
             <SidebarTrigger
               aria-label="Toggle sidebar"
-              className="h-9 w-9 min-h-[44px] min-w-[44px] md:h-8 md:w-8 md:min-h-0 md:min-w-0"
+              className="hidden md:flex h-8 w-8"
             />
 
             {/* Mobile: page title */}
