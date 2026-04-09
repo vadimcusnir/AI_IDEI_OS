@@ -21,7 +21,7 @@ import { Logo } from "@/components/shared/Logo";
 import {
   Home, BookOpen, Sparkles, Brain, Network, Store,
   Coins, Plus, Clock, Shield, Cpu, Activity, BarChart3,
-  Database, Trophy, Workflow, Gem, Plug, LogIn,
+  Database, Trophy, Workflow, Gem, Plug, LogIn, Zap,
   ChevronsUpDown, Check, Settings, Bell, Terminal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
