@@ -70,7 +70,7 @@ export default function PublicProfile() {
           .order("created_at", { ascending: false })
           .limit(20),
         supabase.from("knowledge_assets")
-          .select("id, title, asset_type, price_neurons, slug")
+          .select("id, title, asset_type, price_neurons")
           .eq("author_id", uid)
           .eq("is_published", true)
           .order("created_at", { ascending: false })
@@ -151,7 +151,7 @@ export default function PublicProfile() {
               {assets.map(asset => (
                 <a
                   key={asset.id}
-                  href={`/marketplace/${asset.slug}`}
+                  href={`/marketplace/${asset.id}`}
                   className="flex items-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-card hover:border-primary/25 hover:shadow-md transition-all group"
                 >
                   <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
