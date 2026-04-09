@@ -2,7 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Core pages -->
-  <url><loc>https://ai-idei.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url>
+    <loc>https://ai-idei.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ai-idei.com/en" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://ai-idei.com/ro" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://ai-idei.com/ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ai-idei.com/en" />
+  </url>
   <url><loc>https://ai-idei.com/auth</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://ai-idei.com/pricing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://ai-idei.com/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -11,8 +19,8 @@
   <url><loc>https://ai-idei.com/links</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://ai-idei.com/terms</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <url><loc>https://ai-idei.com/privacy</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
-
-  <!-- Documentation -->
+  <url><loc>https://ai-idei.com/services</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-idei.com/programs</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 
   <!-- Documentation -->
   <url><loc>https://ai-idei.com/docs</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
@@ -45,5 +53,10 @@
   <url><loc>https://ai-idei.com/community</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://ai-idei.com/media/profiles</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://ai-idei.com/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ai-idei.com/services</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- Blog categories -->
+  <url><loc>https://ai-idei.com/blog?category=knowledge-extraction</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ai-idei.com/blog?category=ai-strategy</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ai-idei.com/blog?category=digital-economics</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ai-idei.com/blog?category=platform-updates</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
 </urlset>

@@ -31,6 +31,13 @@ Allow: /marketplace/
 Allow: /media/profiles/
 Allow: /docs/
 Allow: /topics/
+Allow: /blog
+Allow: /blog?category=
+Allow: /community
+Allow: /services
+Allow: /programs
+Allow: /k/
+Allow: /p/
 Allow: /about
 Allow: /about-vadim-cusnir
 Allow: /pricing
