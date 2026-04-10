@@ -238,12 +238,17 @@ export default function Pricing() {
                   </p>
 
                   {/* Savings anchor */}
-                  {plan.savingsVsFree && (
+                  {plan.annualSavings ? (
+                    <p className="text-nano font-semibold text-status-validated mb-3">
+                      Economisești {plan.annualSavings} anual
+                    </p>
+                  ) : plan.savingsVsFree ? (
                     <p className="text-nano font-semibold text-status-validated mb-3">
                       Save {plan.savingsVsFree} vs pay-as-you-go
                     </p>
+                  ) : (
+                    <div className="mb-3" />
                   )}
-                  {!plan.savingsVsFree && <div className="mb-3" />}
 
                   <ul className="space-y-2 flex-1 mb-5">
                     {plan.features.map((f, i) => (
