@@ -40,10 +40,26 @@ export function AdminLogsTab() {
   const [hasMore, setHasMore] = useState(false);
   const [severityFilter, setSeverityFilter] = useState<string>("all");
 
+  // Resolve user IDs to emails via profiles
+  const resolveEmails = async (ids: string[]): Promise<Record<string, string>> => {
+    const unique = [...new Set(ids.filter(Boolean))];
+    if (unique.length === 0) return {};
+    const { data } = await supabase.from("profiles").select("user_id, email").in("user_id", unique);
+    const map: Record<string, string> = {};
+    (data || []).forEach((p: any) => { if (p.email) map[p.user_id] = p.email; });
+    return map;
+  };
+
+  const formatActor = (id: string | null, emailMap: Record<string, string>) => {
+    if (!id) return "system";
+    return emailMap[id] || id.substring(0, 8) + "…";
+  };
+
   const load = useCallback(async () => {
     setLoading(true);
     const from = page * PAGE_SIZE;
     const entries: LogEntry[] = [];
+    const actorIds: string[] = [];
 
     // Fetch from compliance_log
     let complianceQuery = supabase.from("compliance_log")
@@ -55,7 +71,24 @@ export function AdminLogsTab() {
       complianceQuery = complianceQuery.eq("severity", severityFilter);
     }
 
-    const { data: complianceLogs } = await complianceQuery;
+    const [{ data: complianceLogs }, { data: ledgerLogs }, { data: anomalyLogs }] = await Promise.all([
+      complianceQuery,
+      supabase.from("decision_ledger")
+        .select("id, event_type, actor_id, verdict, reason, target_resource, created_at")
+        .order("created_at", { ascending: false })
+        .range(from, from + PAGE_SIZE - 1),
+      supabase.from("anomaly_alerts")
+        .select("id, alert_type, metric_name, severity, current_value, threshold_value, user_id, created_at")
+        .order("created_at", { ascending: false })
+        .limit(PAGE_SIZE),
+    ]);
+
+    // Collect all actor IDs for batch resolution
+    (complianceLogs || []).forEach((l: any) => { if (l.actor_id) actorIds.push(l.actor_id); if (l.target_id) actorIds.push(l.target_id); });
+    (ledgerLogs || []).forEach((l: any) => { if (l.actor_id) actorIds.push(l.actor_id); });
+    (anomalyLogs || []).forEach((l: any) => { if (l.user_id) actorIds.push(l.user_id); });
+
+    const emailMap = await resolveEmails(actorIds);
 
     (complianceLogs || []).forEach((log: any) => {
       entries.push({
@@ -63,18 +96,12 @@ export function AdminLogsTab() {
         source: "compliance",
         severity: log.severity || "info",
         action: log.action_type,
-        actor: log.actor_id?.substring(0, 8) || "system",
-        target: log.target_type ? `${log.target_type}:${log.target_id?.substring(0, 8) || "—"}` : "—",
+        actor: formatActor(log.actor_id, emailMap),
+        target: log.target_type ? `${log.target_type}:${formatActor(log.target_id, emailMap)}` : "—",
         description: log.description || "",
         timestamp: log.created_at,
       });
     });
-
-    // Also fetch from decision_ledger
-    const { data: ledgerLogs } = await supabase.from("decision_ledger")
-      .select("id, event_type, actor_id, verdict, reason, target_resource, created_at")
-      .order("created_at", { ascending: false })
-      .range(from, from + PAGE_SIZE - 1);
 
     (ledgerLogs || []).forEach((log: any) => {
       entries.push({
@@ -82,18 +109,12 @@ export function AdminLogsTab() {
         source: "ledger",
         severity: log.verdict === "deny" ? "high" : "info",
         action: log.event_type,
-        actor: log.actor_id?.substring(0, 8) || "system",
+        actor: formatActor(log.actor_id, emailMap),
         target: log.target_resource || "—",
         description: log.reason || log.verdict || "",
         timestamp: log.created_at,
       });
     });
-
-    // Also fetch anomaly alerts
-    const { data: anomalyLogs } = await supabase.from("anomaly_alerts")
-      .select("id, alert_type, metric_name, severity, current_value, threshold_value, user_id, created_at")
-      .order("created_at", { ascending: false })
-      .limit(PAGE_SIZE);
 
     (anomalyLogs || []).forEach((log: any) => {
       entries.push({
@@ -101,7 +122,7 @@ export function AdminLogsTab() {
         source: "anomaly",
         severity: log.severity || "medium",
         action: log.alert_type,
-        actor: log.user_id?.substring(0, 8) || "system",
+        actor: formatActor(log.user_id, emailMap),
         target: log.metric_name,
         description: `${log.metric_name}: ${log.current_value} (threshold: ${log.threshold_value})`,
         timestamp: log.created_at,
