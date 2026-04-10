@@ -158,9 +158,9 @@
     "popular": "POPULAR",
     "plans": [
       { "name": "Free", "price": "$0", "period": "forever", "promise": "Test the system", "text": "Get inside, explore, and see how AI-IDEI works before making a commitment.", "cta": "Start Free" },
-      { "name": "Core", "price": "$11", "period": "/mo", "promise": "Build clarity", "text": "For people who want practical access to essentials for better copy, content, and execution.", "cta": "Choose Core" },
-      { "name": "Pro", "price": "$47", "period": "/mo", "promise": "Produce more", "text": "Deeper access, advanced resources, and stronger leverage across copywriting and marketing.", "cta": "Choose Pro" },
-      { "name": "Elite", "price": "$137", "period": "/mo", "promise": "Full power", "text": "For serious operators who want the most complete version and premium execution resources.", "cta": "Choose Elite" }
+      { "name": "Starter", "price": "$23", "priceAnnual": "$227", "period": "/mo", "promise": "Build clarity", "text": "For people who want practical access to essentials for better copy, content, and execution.", "cta": "Choose Starter" },
+      { "name": "Pro", "price": "$47", "priceAnnual": "$461", "period": "/mo", "promise": "Produce more", "text": "Deeper access, advanced resources, and stronger leverage across copywriting and marketing.", "cta": "Choose Pro" },
+      { "name": "VIP", "price": "$137", "priceAnnual": "$1,307", "period": "/mo", "promise": "Full power", "text": "For serious operators who want the most complete version and premium execution resources.", "cta": "Choose VIP" }
     ]
   },
   "faq": {

@@ -158,9 +158,9 @@
     "popular": "POPULAR",
     "plans": [
       { "name": "Free", "price": "$0", "period": "pentru totdeauna", "promise": "Testeaza sistemul", "text": "Intra, exploreaza si vezi cum functioneaza AI-IDEI inainte sa te angajezi.", "cta": "Incepe Gratuit" },
-      { "name": "Core", "price": "$11", "period": "/luna", "promise": "Construieste claritate", "text": "Pentru cei care vor acces practic la esentiale pentru copy, continut si executie mai buna.", "cta": "Alege Core" },
-      { "name": "Pro", "price": "$47", "period": "/luna", "promise": "Produce mai mult", "text": "Acces mai profund, resurse avansate si parghie mai puternica in copywriting si marketing.", "cta": "Alege Pro" },
-      { "name": "Elite", "price": "$137", "period": "/luna", "promise": "Putere totala", "text": "Pentru operatori seriosi care vor versiunea cea mai completa si resurse premium de executie.", "cta": "Alege Elite" }
+      { "name": "Starter", "price": "$23", "priceAnnual": "$227", "period": "/luna", "promise": "Construieste claritate", "text": "Pentru cei care vor acces practic la esentiale pentru copy, continut si executie mai buna.", "cta": "Alege Starter" },
+      { "name": "Pro", "price": "$47", "priceAnnual": "$461", "period": "/luna", "promise": "Produce mai mult", "text": "Acces mai profund, resurse avansate si parghie mai puternica in copywriting si marketing.", "cta": "Alege Pro" },
+      { "name": "VIP", "price": "$137", "priceAnnual": "$1,307", "period": "/luna", "promise": "Putere totala", "text": "Pentru operatori seriosi care vor versiunea cea mai completa si resurse premium de executie.", "cta": "Alege VIP" }
     ]
   },
   "faq": {
