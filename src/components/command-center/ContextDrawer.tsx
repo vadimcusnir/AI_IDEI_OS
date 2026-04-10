@@ -8,7 +8,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, ExternalLink } from "lucide-react";
 import {
   SigilEye, SigilBolt, SigilCrystal,
   SigilCrown, SigilLock, SigilNeuron,
@@ -159,6 +159,7 @@ export function ContextDrawer({
                   steps={steps} phase={phase} elapsed={elapsed} progress={progress}
                   isDone={isDone} isFailed={isFailed} isActive={isActive}
                   consumedCredits={consumedCredits} totalCredits={totalCredits}
+                  navigate={navigate}
                 />
               )}
               {activeTab === "assets" && (
@@ -222,6 +223,7 @@ export function ContextDrawer({
                   steps={steps} phase={phase} elapsed={elapsed} progress={progress}
                   isDone={isDone} isFailed={isFailed} isActive={isActive}
                   consumedCredits={consumedCredits} totalCredits={totalCredits}
+                  navigate={navigate}
                 />
               )}
               {activeTab === "assets" && (
@@ -356,10 +358,11 @@ function StateTab({ tier, balance, phase, navigate }: {
 }
 
 // ═══ TAB: RUNS ═══
-function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, consumedCredits, totalCredits }: {
+function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, consumedCredits, totalCredits, navigate }: {
   steps: TaskStep[]; phase: string; elapsed: number; progress: number;
   isDone: boolean; isFailed: boolean; isActive: boolean;
   consumedCredits: number; totalCredits: number;
+  navigate: (path: string) => void;
 }) {
   if (phase === "idle") {
     return (
@@ -403,30 +406,43 @@ function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, 
       {/* Steps */}
       {steps.length > 0 && (
         <div className="space-y-0.5">
-          {steps.map(step => (
-            <div key={step.id} className={cn(
-              "flex items-center gap-2.5 px-3 py-2 rounded-lg text-dense transition-colors",
-              step.status === "running" && "bg-primary/[0.03] border border-primary/10",
-            )}>
-              <div className="shrink-0 w-4 flex items-center justify-center">
-                {step.status === "pending" && <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/12" />}
-                {step.status === "running" && <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />}
-                {step.status === "completed" && <SigilCheck size={14} className="text-success" />}
-                {step.status === "failed" && <SigilFail size={14} className="text-destructive" />}
-                {step.status === "skipped" && <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/8" />}
-              </div>
-              <span className={cn(
-                "truncate flex-1",
-                step.status === "completed" ? "text-foreground" :
-                step.status === "running" ? "text-foreground font-medium" :
-                step.status === "failed" ? "text-destructive" :
-                "text-muted-foreground/25",
-              )}>
-                {step.label}
-              </span>
-              <span className="text-nano tabular-nums text-muted-foreground/20 shrink-0 font-mono">{step.credits}N</span>
-            </div>
-          ))}
+          {steps.map(step => {
+            const isClickable = step.status === "completed" && step.resultUrl;
+            const StepWrapper = isClickable ? "button" : "div";
+            return (
+              <StepWrapper
+                key={step.id}
+                {...(isClickable ? { onClick: () => navigate(step.resultUrl!) } : {})}
+                className={cn(
+                  "flex items-center gap-2.5 px-3 py-2 rounded-lg text-dense transition-colors w-full text-left",
+                  step.status === "running" && "bg-primary/[0.03] border border-primary/10",
+                  isClickable && "hover:bg-primary/[0.06] cursor-pointer group",
+                )}
+              >
+                <div className="shrink-0 w-4 flex items-center justify-center">
+                  {step.status === "pending" && <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/12" />}
+                  {step.status === "running" && <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />}
+                  {step.status === "completed" && <SigilCheck size={14} className="text-success" />}
+                  {step.status === "failed" && <SigilFail size={14} className="text-destructive" />}
+                  {step.status === "skipped" && <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/8" />}
+                </div>
+                <span className={cn(
+                  "truncate flex-1",
+                  step.status === "completed" ? "text-foreground" :
+                  step.status === "running" ? "text-foreground font-medium" :
+                  step.status === "failed" ? "text-destructive" :
+                  "text-muted-foreground/25",
+                  isClickable && "group-hover:text-primary",
+                )}>
+                  {step.label}
+                </span>
+                {isClickable && (
+                  <ExternalLink className="h-3 w-3 text-muted-foreground/20 group-hover:text-primary shrink-0" />
+                )}
+                <span className="text-nano tabular-nums text-muted-foreground/20 shrink-0 font-mono">{step.credits}N</span>
+              </StepWrapper>
+            );
+          })}
         </div>
       )}
     </div>

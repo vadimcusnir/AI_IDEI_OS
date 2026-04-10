@@ -132,6 +132,41 @@ export interface ExecutionSession {
   updatedAt: string;
 }
 
+// ═══ Tool → Result Route Mapping ═══
+
+/** Auto-map tool names to navigation routes for completed steps */
+const TOOL_RESULT_ROUTES: Record<string, string> = {
+  transcribe: "/library",
+  transcription: "/library",
+  extract_neurons: "/library",
+  neuron_extraction: "/library",
+  chunking: "/library",
+  structure_neurons: "/library",
+  relationship_detection: "/graph",
+  build_graph: "/graph",
+  insight_generation: "/library",
+  generate_content: "/library",
+  run_service: "/services",
+  analyze: "/library",
+  analyze_content: "/library",
+};
+
+const TOOL_RESULT_LABELS: Record<string, string> = {
+  transcribe: "Vezi transcript",
+  transcription: "Vezi transcript",
+  extract_neurons: "Vezi neuroni",
+  neuron_extraction: "Vezi neuroni",
+  chunking: "Vezi chunks",
+  structure_neurons: "Vezi structură",
+  relationship_detection: "Vezi graph",
+  build_graph: "Vezi graph",
+  insight_generation: "Vezi insights",
+  generate_content: "Vezi conținut",
+  run_service: "Vezi servicii",
+  analyze: "Vezi analiză",
+  analyze_content: "Vezi analiză",
+};
+
 // ═══ Legacy Execution Types (kept for backward compat) ═══
 
 export type CommandPhase =
@@ -154,6 +189,10 @@ export interface TaskStep {
   completedAt?: string;
   output?: unknown;
   error?: string;
+  /** URL to navigate to when step is completed (e.g. /neurons, /jobs/123) */
+  resultUrl?: string;
+  /** Short label for the result link */
+  resultLabel?: string;
 }
 
 export interface ExecutionState {
@@ -420,6 +459,8 @@ export const executionActions = {
           label: s.label,
           credits: s.credits,
           status: "pending" as const,
+          resultUrl: TOOL_RESULT_ROUTES[s.tool],
+          resultLabel: TOOL_RESULT_LABELS[s.tool],
         })),
       },
     }));
