@@ -8,7 +8,7 @@ import { getCorsHeaders } from "../_shared/cors.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
-const SITE_BASE = "https://ai-idei-os.lovable.app";
+const SITE_BASE = "https://ai-idei.com";
 
 // Known static routes from ROUTE_TREE
 const STATIC_ROUTES = [
@@ -16,7 +16,7 @@ const STATIC_ROUTES = [
   "/contradictions", "/applications",
   "/profiles", "/topics", "/media/profiles", "/library",
   "/home", "/neurons", "/dashboard", "/extractor", "/services", "/jobs",
-  "/credits", "/library", "/intelligence", "/prompt-forge", "/profile-extractor",
+  "/credits", "/intelligence", "/prompt-forge", "/profile-extractor",
   "/profile", "/notifications", "/feedback", "/guests", "/onboarding",
   "/community", "/marketplace", "/admin",
   "/docs/getting-started/overview", "/docs/foundation/neuron-model",
@@ -24,7 +24,9 @@ const STATIC_ROUTES = [
 ];
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
+  const corsHeaders = getCorsHeaders(req);
+
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -32,12 +34,16 @@ Deno.serve(async (req) => {
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   const supabase = createClient(supabaseUrl, serviceKey);
 
+  const jsonResp = (data: any, status = 200) =>
+    new Response(JSON.stringify(data), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+
   // Admin auth check
   const authHeader = req.headers.get("authorization") || "";
   if (!authHeader.startsWith("Bearer ")) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
+    return jsonResp({ error: "Unauthorized" }, 401);
   }
   const token = authHeader.replace("Bearer ", "");
   const userClient = createClient(supabaseUrl, anonKey, {
@@ -45,22 +51,18 @@ Deno.serve(async (req) => {
   });
   const { data: { user }, error: authErr } = await userClient.auth.getUser();
   if (authErr || !user) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
+    return jsonResp({ error: "Unauthorized" }, 401);
   }
 
   const { data: roleData } = await supabase
     .from("user_roles").select("role")
     .eq("user_id", user.id).eq("role", "admin").single();
   if (!roleData) {
-    return new Response(JSON.stringify({ error: "Admin access required" }), {
-      status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
+    return jsonResp({ error: "Admin access required" }, 403);
   }
 
   // Rate limit (user-based, post-auth)
-  const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, getCorsHeaders(req));
+  const rateLimited = await rateLimitGuard(user.id, req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
   if (rateLimited) return rateLimited;
 
   try {
@@ -69,13 +71,13 @@ Deno.serve(async (req) => {
 
     switch (action) {
       case "crawl":
-        return await handleCrawl(supabase, limit);
+        return await handleCrawl(supabase, jsonResp, limit);
       case "analyze":
-        return await handleAnalyze(supabase, LOVABLE_API_KEY, limit);
+        return await handleAnalyze(supabase, LOVABLE_API_KEY, jsonResp, limit);
       case "score":
-        return await handleScore(supabase);
+        return await handleScore(supabase, jsonResp);
       case "detect-issues":
-        return await handleDetectIssues(supabase);
+        return await handleDetectIssues(supabase, jsonResp);
       default:
         return jsonResp({ error: "Invalid action" }, 400);
     }
@@ -85,21 +87,16 @@ Deno.serve(async (req) => {
   }
 });
 
-function jsonResp(data: any, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-  });
-}
+type JsonResp = (data: any, status?: number) => Response;
 
 /** CRAWL — Discover and register pages */
-async function handleCrawl(supabase: any, limit: number) {
+async function handleCrawl(supabase: any, jsonResp: JsonResp, limit: number) {
   let discovered = 0;
   let updated = 0;
 
   for (const route of STATIC_ROUTES.slice(0, limit)) {
     const url = `${SITE_BASE}${route}`;
 
-    // Upsert page
     const { data: existing } = await supabase
       .from("site_pages").select("id").eq("url", url).single();
 
@@ -109,7 +106,6 @@ async function handleCrawl(supabase: any, limit: number) {
         .eq("id", existing.id);
       updated++;
     } else {
-      // Determine page type
       let pageType = "page";
       if (route === "/") pageType = "landing";
       else if (route.startsWith("/docs")) pageType = "documentation";
@@ -128,7 +124,7 @@ async function handleCrawl(supabase: any, limit: number) {
     }
   }
 
-  // Also discover entity pages from entities table
+  // Also discover entity pages
   const { data: entities } = await supabase
     .from("entities")
     .select("slug, entity_type, name")
@@ -150,14 +146,56 @@ async function handleCrawl(supabase: any, limit: number) {
     }
   }
 
+  // Discover topic pages
+  const { data: topics } = await supabase
+    .from("topics")
+    .select("slug, title")
+    .limit(limit);
+
+  for (const topic of (topics || [])) {
+    const url = `${SITE_BASE}/topics/${topic.slug}`;
+    const { data: ex } = await supabase.from("site_pages").select("id").eq("url", url).single();
+    if (!ex) {
+      await supabase.from("site_pages").insert({
+        url,
+        title: topic.title,
+        page_type: "knowledge",
+        status_code: 200,
+        last_scan: new Date().toISOString(),
+      });
+      discovered++;
+    }
+  }
+
+  // Discover blog posts
+  const { data: posts } = await supabase
+    .from("blog_posts")
+    .select("slug, title")
+    .eq("status", "published")
+    .limit(limit);
+
+  for (const post of (posts || [])) {
+    const url = `${SITE_BASE}/blog/${post.slug}`;
+    const { data: ex } = await supabase.from("site_pages").select("id").eq("url", url).single();
+    if (!ex) {
+      await supabase.from("site_pages").insert({
+        url,
+        title: post.title,
+        page_type: "blog",
+        status_code: 200,
+        last_scan: new Date().toISOString(),
+      });
+      discovered++;
+    }
+  }
+
   return jsonResp({ discovered, updated, total_routes: STATIC_ROUTES.length });
 }
 
 /** ANALYZE — Extract entities from pages using AI */
-async function handleAnalyze(supabase: any, apiKey: string | undefined, limit: number) {
+async function handleAnalyze(supabase: any, apiKey: string | undefined, jsonResp: JsonResp, limit: number) {
   if (!apiKey) return jsonResp({ error: "AI API key not configured" }, 400);
 
-  // Get pages that haven't been analyzed recently
   const { data: pages } = await supabase
     .from("site_pages")
     .select("id, url, title, page_type")
@@ -171,6 +209,28 @@ async function handleAnalyze(supabase: any, apiKey: string | undefined, limit: n
 
   for (const page of pages) {
     try {
+      // Try to fetch actual page content for better analysis
+      let pageContent = "";
+      try {
+        const fetchResp = await fetch(page.url, {
+          headers: { "User-Agent": "AI-IDEI-Crawler/1.0" },
+          signal: AbortSignal.timeout(5000),
+        });
+        if (fetchResp.ok) {
+          const html = await fetchResp.text();
+          // Extract text content from HTML (strip tags)
+          pageContent = html
+            .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+            .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+            .replace(/<[^>]+>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .slice(0, 3000);
+        }
+      } catch {
+        // Fallback to title-only analysis
+      }
+
       const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -190,11 +250,12 @@ async function handleAnalyze(supabase: any, apiKey: string | undefined, limit: n
 URL: ${page.url}
 Title: ${page.title || "Unknown"}
 Type: ${page.page_type}
+${pageContent ? `Content preview:\n${pageContent.slice(0, 2000)}` : ""}
 
 Extract:
 1. Key entities (people, organizations, concepts, frameworks)
 2. Schema.org types that apply
-3. Estimated word count
+3. Word count (estimate from content or title)
 4. Topic keywords
 
 Output JSON:
@@ -222,9 +283,13 @@ Output JSON:
         if (jsonMatch) parsed = JSON.parse(jsonMatch[0]);
       } catch { continue; }
 
-      // Update page
+      // Update page with real word count if we fetched content
+      const wordCount = pageContent
+        ? pageContent.split(/\s+/).filter(Boolean).length
+        : (parsed.estimated_word_count || 0);
+
       await supabase.from("site_pages").update({
-        word_count: parsed.estimated_word_count || 0,
+        word_count: wordCount,
         entity_count: (parsed.entities || []).length,
         schema_types: parsed.schema_types || [],
         schema_present: (parsed.schema_types || []).length > 0,
@@ -269,7 +334,7 @@ Output JSON:
 }
 
 /** SCORE — Compute LLM visibility scores per page */
-async function handleScore(supabase: any) {
+async function handleScore(supabase: any, jsonResp: JsonResp) {
   const { data: pages } = await supabase
     .from("site_pages")
     .select("id, word_count, entity_count, schema_present, schema_types, internal_link_count");
@@ -296,7 +361,6 @@ async function handleScore(supabase: any) {
       computed_at: new Date().toISOString(),
     }, { onConflict: "page_id" });
 
-    // Update page visibility score
     await supabase.from("site_pages").update({
       llm_visibility_score: Math.round(visibility * 100) / 100,
     }).eq("id", page.id);
@@ -308,7 +372,7 @@ async function handleScore(supabase: any) {
 }
 
 /** DETECT ISSUES — Find indexation problems */
-async function handleDetectIssues(supabase: any) {
+async function handleDetectIssues(supabase: any, jsonResp: JsonResp) {
   const { data: pages } = await supabase
     .from("site_pages")
     .select("id, url, title, meta_description, word_count, entity_count, schema_present, schema_types");
@@ -320,7 +384,6 @@ async function handleDetectIssues(supabase: any) {
   for (const page of pages) {
     const issues: Array<{ type: string; severity: string; desc: string; fix: string }> = [];
 
-    // Missing schema
     if (!page.schema_present) {
       issues.push({
         type: "missing_schema",
@@ -330,7 +393,6 @@ async function handleDetectIssues(supabase: any) {
       });
     }
 
-    // Weak title
     if (!page.title || page.title.length < 10) {
       issues.push({
         type: "weak_title",
@@ -340,7 +402,6 @@ async function handleDetectIssues(supabase: any) {
       });
     }
 
-    // Missing meta description
     if (!page.meta_description || page.meta_description.length < 50) {
       issues.push({
         type: "missing_meta",
@@ -350,7 +411,6 @@ async function handleDetectIssues(supabase: any) {
       });
     }
 
-    // Low entity count
     if ((page.entity_count || 0) < 2) {
       issues.push({
         type: "low_entities",
@@ -360,7 +420,6 @@ async function handleDetectIssues(supabase: any) {
       });
     }
 
-    // Thin content
     if ((page.word_count || 0) < 200 && page.url !== `${SITE_BASE}/`) {
       issues.push({
         type: "thin_content",
@@ -370,7 +429,6 @@ async function handleDetectIssues(supabase: any) {
       });
     }
 
-    // Insert issues
     for (const issue of issues) {
       const { data: existing } = await supabase
         .from("llm_issues")
