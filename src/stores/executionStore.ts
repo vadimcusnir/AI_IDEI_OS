@@ -424,6 +424,8 @@ export const executionActions = {
           label: s.label,
           credits: s.credits,
           status: "pending" as const,
+          resultUrl: TOOL_RESULT_ROUTES[s.tool],
+          resultLabel: TOOL_RESULT_LABELS[s.tool],
         })),
       },
     }));
