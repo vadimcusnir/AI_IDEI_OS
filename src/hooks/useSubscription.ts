@@ -2,23 +2,23 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { SUBSCRIPTION_TIERS, NEURONS_EXCHANGE_RATE } from "@/config/economyConfig";
+import { ALL_TIERS, SUBSCRIPTION_TIERS, ANNUAL_TIERS, NEURONS_EXCHANGE_RATE } from "@/config/economyConfig";
 
-export { SUBSCRIPTION_TIERS, NEURONS_EXCHANGE_RATE };
+export { SUBSCRIPTION_TIERS, ANNUAL_TIERS, NEURONS_EXCHANGE_RATE };
 
 interface SubscriptionState {
   subscribed: boolean;
   productId: string | null;
   subscriptionEnd: string | null;
-  tier: keyof typeof SUBSCRIPTION_TIERS | null;
+  tier: string | null;
   loading: boolean;
 }
 
 // Global cache to prevent duplicate calls across hook instances
 let _cache: { data: SubscriptionState; ts: number } | null = null;
 let _inflight: Promise<void> | null = null;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-const POLL_INTERVAL = 5 * 60 * 1000; // 5 minutes (was 60s — caused 429s)
+const CACHE_TTL = 5 * 60 * 1000;
+const POLL_INTERVAL = 5 * 60 * 1000;
 
 export function useSubscription() {
   const { user, session } = useAuth();
@@ -39,13 +39,11 @@ export function useSubscription() {
       return;
     }
 
-    // Return cached result if fresh enough
     if (!force && _cache && Date.now() - _cache.ts < CACHE_TTL) {
       if (mountedRef.current) setState(_cache.data);
       return;
     }
 
-    // Deduplicate in-flight requests
     if (_inflight) {
       await _inflight;
       if (_cache && mountedRef.current) setState(_cache.data);
@@ -60,12 +58,12 @@ export function useSubscription() {
 
         if (error) throw error;
 
-        let tier: keyof typeof SUBSCRIPTION_TIERS | null = null;
+        let tier: string | null = null;
         if (data?.product_id) {
-          const found = Object.entries(SUBSCRIPTION_TIERS).find(
+          const found = Object.entries(ALL_TIERS).find(
             ([, t]) => t.product_id === data.product_id
           );
-          if (found) tier = found[0] as keyof typeof SUBSCRIPTION_TIERS;
+          if (found) tier = found[0];
         }
 
         const newState: SubscriptionState = {
@@ -98,11 +96,6 @@ export function useSubscription() {
     };
   }, [checkSubscription]);
 
-  /**
-   * Unified checkout — creates a Stripe Checkout session and redirects.
-   * @param priceId — Stripe price ID
-   * @param mode — 'subscription' for recurring, 'payment' for one-time top-ups
-   */
   const createCheckoutSession = async (
     priceId: string,
     mode: "subscription" | "payment" = "subscription"
@@ -118,15 +111,9 @@ export function useSubscription() {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
 
-      if (error) {
-        throw new Error(error.message || "Eroare la crearea sesiunii de plată.");
-      }
+      if (error) throw new Error(error.message || "Eroare la crearea sesiunii de plată.");
+      if (!data?.url) throw new Error("Nu s-a primit URL-ul de checkout de la Stripe.");
 
-      if (!data?.url) {
-        throw new Error("Nu s-a primit URL-ul de checkout de la Stripe.");
-      }
-
-      // Redirect to Stripe Checkout
       window.location.href = data.url;
     } catch (e: any) {
       const message = e?.message || "A apărut o eroare. Încearcă din nou.";
@@ -135,10 +122,7 @@ export function useSubscription() {
     }
   };
 
-  /** Shortcut: subscribe to a recurring plan */
   const subscribe = (priceId: string) => createCheckoutSession(priceId, "subscription");
-
-  /** Shortcut: one-time NEURONS purchase */
   const buyNeurons = (priceId: string) => createCheckoutSession(priceId, "payment");
 
   const manageSubscription = async () => {

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSubscription, SUBSCRIPTION_TIERS } from "@/hooks/useSubscription";
+import { useSubscription, SUBSCRIPTION_TIERS, ANNUAL_TIERS } from "@/hooks/useSubscription";
+import { TIER_PAIRS, annualSavingsPct, type BillingInterval } from "@/config/economyConfig";
 
 import { SEOHead } from "@/components/SEOHead";
 import { FAQJsonLd } from "@/components/seo/JsonLd";
@@ -13,8 +14,12 @@ import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { toast } from "sonner";
 
-function usePlans() {
+function usePlans(billingInterval: BillingInterval) {
   const { t } = useTranslation("pages");
+  const tiers = billingInterval === "month" ? SUBSCRIPTION_TIERS : ANNUAL_TIERS;
+  const suffix = billingInterval === "month" ? "_monthly" : "_annual";
+  const periodLabel = billingInterval === "month" ? t("pricing.per_month") : t("pricing.per_year");
+
   return [
     {
       key: "free",
@@ -27,6 +32,7 @@ function usePlans() {
       priceId: null,
       mode: null as "subscription" | null,
       savingsVsFree: null,
+      annualSavings: null as string | null,
       features: [
         t("pricing.feat_welcome_bonus"),
         t("pricing.feat_transcriptions_3"),
@@ -35,63 +41,32 @@ function usePlans() {
         t("pricing.feat_community_access"),
       ],
       cta: t("pricing.start_free"),
+      tierKey: "free",
     },
-    {
-      key: "starter",
-      name: "Starter",
-      price: String(SUBSCRIPTION_TIERS.starter_monthly.price),
-      period: t("pricing.per_month"),
-      neurons: SUBSCRIPTION_TIERS.starter_monthly.neurons_quota.toLocaleString(),
-      badge: null,
-      highlight: false,
-      priceId: SUBSCRIPTION_TIERS.starter_monthly.price_id,
-      mode: "subscription" as const,
-      savingsVsFree: null,
-      features: SUBSCRIPTION_TIERS.starter_monthly.features,
-      cta: "Choose Starter",
-    },
-    {
-      key: "pro",
-      name: t("pricing.plan_pro"),
-      price: String(SUBSCRIPTION_TIERS.pro_monthly.price),
-      period: t("pricing.per_month"),
-      neurons: SUBSCRIPTION_TIERS.pro_monthly.neurons_quota.toLocaleString(),
-      badge: "Popular",
-      highlight: true,
-      priceId: SUBSCRIPTION_TIERS.pro_monthly.price_id,
-      mode: "subscription" as const,
-      savingsVsFree: "53%",
-      features: SUBSCRIPTION_TIERS.pro_monthly.features,
-      cta: t("pricing.choose_pro"),
-    },
-    {
-      key: "vip",
-      name: t("pricing.plan_vip"),
-      price: String(SUBSCRIPTION_TIERS.vip_monthly.price),
-      period: t("pricing.per_month"),
-      neurons: SUBSCRIPTION_TIERS.vip_monthly.neurons_quota.toLocaleString(),
-      badge: "Best Value",
-      highlight: false,
-      priceId: SUBSCRIPTION_TIERS.vip_monthly.price_id,
-      mode: "subscription" as const,
-      savingsVsFree: "77%",
-      features: SUBSCRIPTION_TIERS.vip_monthly.features,
-      cta: t("pricing.choose_vip"),
-    },
-    {
-      key: "enterprise",
-      name: "Enterprise",
-      price: String(SUBSCRIPTION_TIERS.enterprise_monthly.price),
-      period: t("pricing.per_month"),
-      neurons: SUBSCRIPTION_TIERS.enterprise_monthly.neurons_quota.toLocaleString(),
-      badge: "Max Power",
-      highlight: false,
-      priceId: SUBSCRIPTION_TIERS.enterprise_monthly.price_id,
-      mode: "subscription" as const,
-      savingsVsFree: "81%",
-      features: SUBSCRIPTION_TIERS.enterprise_monthly.features,
-      cta: "Choose Enterprise",
-    },
+    ...TIER_PAIRS.map((pair) => {
+      const key = billingInterval === "month" ? pair.monthly : pair.annual;
+      const plan = tiers[key];
+      const monthlyTier = SUBSCRIPTION_TIERS[pair.monthly];
+      const annualTier = ANNUAL_TIERS[pair.annual];
+      const savings = annualSavingsPct(monthlyTier.price, annualTier.price);
+
+      return {
+        key: pair.name.toLowerCase(),
+        name: plan.name,
+        price: String(plan.price),
+        period: periodLabel,
+        neurons: plan.neurons_quota.toLocaleString(),
+        badge: pair.name === "Pro" ? "Popular" : pair.name === "VIP" ? "Best Value" : pair.name === "Enterprise" ? "Max Power" : null,
+        highlight: pair.name === "Pro",
+        priceId: plan.price_id,
+        mode: "subscription" as const,
+        savingsVsFree: pair.name === "Pro" ? "53%" : pair.name === "VIP" ? "77%" : pair.name === "Enterprise" ? "81%" : null,
+        annualSavings: billingInterval === "year" ? `${savings}%` : null,
+        features: plan.features,
+        cta: `Choose ${plan.name}`,
+        tierKey: key,
+      };
+    }),
   ];
 }
 
@@ -121,10 +96,11 @@ export default function Pricing() {
   const { subscribed, tier, subscribe, buyNeurons, manageSubscription } = useSubscription();
   const { t } = useTranslation("pages");
   const [processing, setProcessing] = useState<string | null>(null);
-  const PLANS = usePlans();
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>("month");
+  const PLANS = usePlans(billingInterval);
   const FAQ_ITEMS = useFaqItems();
 
-  const handlePlanAction = async (plan: ReturnType<typeof usePlans>[number]) => {
+  const handlePlanAction = async (plan: (typeof PLANS)[number]) => {
     if (!user) {
       navigate("/auth");
       return;
@@ -147,12 +123,9 @@ export default function Pricing() {
     navigate("/credits");
   };
 
-  const isCurrentPlan = (planKey: string) => {
+  const isCurrentPlan = (planKey: string, tierKey?: string) => {
     if (planKey === "free" && !subscribed) return true;
-    if (planKey === "starter" && tier === "starter_monthly") return true;
-    if (planKey === "pro" && tier === "pro_monthly") return true;
-    if (planKey === "vip" && tier === "vip_monthly") return true;
-    if (planKey === "enterprise" && tier === "enterprise_monthly") return true;
+    if (tierKey && tier === tierKey) return true;
     return false;
   };
 
@@ -196,11 +169,42 @@ export default function Pricing() {
           </div>
         </section>
 
+        {/* Billing Toggle */}
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-4">
+          <div className="flex items-center justify-center gap-1 p-1 bg-muted rounded-lg w-fit mx-auto">
+            <button
+              onClick={() => setBillingInterval("month")}
+              className={cn(
+                "px-5 py-2 rounded-md text-sm font-medium transition-all",
+                billingInterval === "month"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Lunar
+            </button>
+            <button
+              onClick={() => setBillingInterval("year")}
+              className={cn(
+                "px-5 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2",
+                billingInterval === "year"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Anual
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-status-validated/15 text-status-validated">
+                -18%
+              </span>
+            </button>
+          </div>
+        </section>
+
         {/* Plans Grid */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-10 sm:pb-14">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {PLANS.map((plan) => {
-              const isCurrent = isCurrentPlan(plan.key);
+              const isCurrent = isCurrentPlan(plan.key, plan.tierKey);
               const isProcessingThis = processing === plan.key;
 
               return (
@@ -234,12 +238,17 @@ export default function Pricing() {
                   </p>
 
                   {/* Savings anchor */}
-                  {plan.savingsVsFree && (
+                  {plan.annualSavings ? (
+                    <p className="text-nano font-semibold text-status-validated mb-3">
+                      Economisești {plan.annualSavings} anual
+                    </p>
+                  ) : plan.savingsVsFree ? (
                     <p className="text-nano font-semibold text-status-validated mb-3">
                       Save {plan.savingsVsFree} vs pay-as-you-go
                     </p>
+                  ) : (
+                    <div className="mb-3" />
                   )}
-                  {!plan.savingsVsFree && <div className="mb-3" />}
 
                   <ul className="space-y-2 flex-1 mb-5">
                     {plan.features.map((f, i) => (

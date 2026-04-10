@@ -28,6 +28,8 @@ import { RuleEnginePanel } from "@/components/automation/RuleEnginePanel";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { StreakUpsellBanner } from "@/components/gamification/StreakUpsellBanner";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 
 interface UserCredits {
   balance: number;
@@ -243,32 +245,53 @@ export default function Credits() {
           </div>
         </ControlledSection>
 
-        {/* Storage Usage + Billing */}
-        <ControlledSection elementId="credits.storage_usage">
-          <div className="bg-card border border-border rounded-xl p-5 mb-6">
-            <StorageUsagePanel />
-          </div>
-        </ControlledSection>
+        {/* Collapsible secondary sections */}
+        <div className="space-y-2 mb-6">
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
+              <span className="text-xs font-semibold">Stocare & Billing</span>
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-2 space-y-3">
+              <ControlledSection elementId="credits.storage_usage">
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <StorageUsagePanel />
+                </div>
+              </ControlledSection>
+              <ControlledSection elementId="credits.storage_billing">
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <StorageBillingPanel />
+                </div>
+              </ControlledSection>
+            </CollapsibleContent>
+          </Collapsible>
 
-        <ControlledSection elementId="credits.storage_billing">
-          <div className="bg-card border border-border rounded-xl p-5 mb-6">
-            <StorageBillingPanel />
-          </div>
-        </ControlledSection>
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
+              <span className="text-xs font-semibold">VIP Progress</span>
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-2">
+              <ControlledSection elementId="credits.vip_progress">
+                <VIPProgressTimeline />
+              </ControlledSection>
+            </CollapsibleContent>
+          </Collapsible>
 
-        {/* VIP Progress */}
-        <ControlledSection elementId="credits.vip_progress">
-          <div className="mb-6">
-            <VIPProgressTimeline />
-          </div>
-        </ControlledSection>
-
-        {/* Rule Engine */}
-        <ControlledSection elementId="credits.rule_engine">
-          <div className="bg-card border border-border rounded-xl p-5 mb-6">
-            <RuleEnginePanel />
-          </div>
-        </ControlledSection>
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
+              <span className="text-xs font-semibold">Reguli Automatizare</span>
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-2">
+              <ControlledSection elementId="credits.rule_engine">
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <RuleEnginePanel />
+                </div>
+              </ControlledSection>
+            </CollapsibleContent>
+          </Collapsible>
+        </div>
 
         {/* Balance + Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
