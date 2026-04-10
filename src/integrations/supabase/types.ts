@@ -13784,6 +13784,30 @@ export type Database = {
         }
         Relationships: []
       }
+      push_subscriptions_safe: {
+        Row: {
+          created_at: string | null
+          endpoint_masked: string | null
+          id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          endpoint_masked?: never
+          id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          endpoint_masked?: never
+          id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       service_manifests_public: {
         Row: {
           base_neurons: number | null
