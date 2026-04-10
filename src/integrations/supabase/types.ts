@@ -9937,6 +9937,45 @@ export type Database = {
           },
         ]
       }
+      service_access_rules: {
+        Row: {
+          cooldown_seconds: number
+          created_at: string
+          geo_restrictions: Json | null
+          id: string
+          max_daily_uses: number
+          min_tier: string
+          required_certifications: string[] | null
+          requires_kyc: boolean
+          service_key: string
+          updated_at: string
+        }
+        Insert: {
+          cooldown_seconds?: number
+          created_at?: string
+          geo_restrictions?: Json | null
+          id?: string
+          max_daily_uses?: number
+          min_tier?: string
+          required_certifications?: string[] | null
+          requires_kyc?: boolean
+          service_key: string
+          updated_at?: string
+        }
+        Update: {
+          cooldown_seconds?: number
+          created_at?: string
+          geo_restrictions?: Json | null
+          id?: string
+          max_daily_uses?: number
+          min_tier?: string
+          required_certifications?: string[] | null
+          requires_kyc?: boolean
+          service_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       service_catalog: {
         Row: {
           access_tier: string
@@ -10052,6 +10091,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      service_economic_contracts: {
+        Row: {
+          base_neurons: number
+          created_at: string
+          currency_model: string
+          id: string
+          margin_target: number
+          notes: string | null
+          refund_policy: string
+          revenue_split_pct: number
+          service_key: string
+          tier_multipliers: Json
+          updated_at: string
+        }
+        Insert: {
+          base_neurons?: number
+          created_at?: string
+          currency_model?: string
+          id?: string
+          margin_target?: number
+          notes?: string | null
+          refund_policy?: string
+          revenue_split_pct?: number
+          service_key: string
+          tier_multipliers?: Json
+          updated_at?: string
+        }
+        Update: {
+          base_neurons?: number
+          created_at?: string
+          currency_model?: string
+          id?: string
+          margin_target?: number
+          notes?: string | null
+          refund_policy?: string
+          revenue_split_pct?: number
+          service_key?: string
+          tier_multipliers?: Json
+          updated_at?: string
+        }
+        Relationships: []
       }
       service_executions: {
         Row: {
@@ -10286,6 +10367,48 @@ export type Database = {
         }
         Relationships: []
       }
+      service_qa_configs: {
+        Row: {
+          auto_regenerate_on_fail: boolean
+          created_at: string
+          id: string
+          max_regenerations: number
+          min_word_count: number
+          plagiarism_check: boolean
+          qa_checks: Json
+          required_sections: string[] | null
+          service_key: string
+          tone_check: boolean
+          updated_at: string
+        }
+        Insert: {
+          auto_regenerate_on_fail?: boolean
+          created_at?: string
+          id?: string
+          max_regenerations?: number
+          min_word_count?: number
+          plagiarism_check?: boolean
+          qa_checks?: Json
+          required_sections?: string[] | null
+          service_key: string
+          tone_check?: boolean
+          updated_at?: string
+        }
+        Update: {
+          auto_regenerate_on_fail?: boolean
+          created_at?: string
+          id?: string
+          max_regenerations?: number
+          min_word_count?: number
+          plagiarism_check?: boolean
+          qa_checks?: Json
+          required_sections?: string[] | null
+          service_key?: string
+          tone_check?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       service_registry: {
         Row: {
           category: string | null
@@ -10418,6 +10541,45 @@ export type Database = {
           },
         ]
       }
+      service_retry_configs: {
+        Row: {
+          circuit_breaker_threshold: number
+          created_at: string
+          fallback_model: string | null
+          fallback_service_key: string | null
+          id: string
+          max_retries: number
+          retry_delay_ms: number
+          service_key: string
+          timeout_seconds: number
+          updated_at: string
+        }
+        Insert: {
+          circuit_breaker_threshold?: number
+          created_at?: string
+          fallback_model?: string | null
+          fallback_service_key?: string | null
+          id?: string
+          max_retries?: number
+          retry_delay_ms?: number
+          service_key: string
+          timeout_seconds?: number
+          updated_at?: string
+        }
+        Update: {
+          circuit_breaker_threshold?: number
+          created_at?: string
+          fallback_model?: string | null
+          fallback_service_key?: string | null
+          id?: string
+          max_retries?: number
+          retry_delay_ms?: number
+          service_key?: string
+          timeout_seconds?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       service_run_history: {
         Row: {
           batch_id: string | null
@@ -10466,6 +10628,81 @@ export type Database = {
           service_name?: string
           status?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      service_security_policies: {
+        Row: {
+          audit_log_required: boolean
+          created_at: string
+          id: string
+          input_sanitization_level: string
+          output_filtering: boolean
+          pii_detection: boolean
+          prompt_injection_guard: boolean
+          rate_limit_override: Json | null
+          service_key: string
+          updated_at: string
+        }
+        Insert: {
+          audit_log_required?: boolean
+          created_at?: string
+          id?: string
+          input_sanitization_level?: string
+          output_filtering?: boolean
+          pii_detection?: boolean
+          prompt_injection_guard?: boolean
+          rate_limit_override?: Json | null
+          service_key: string
+          updated_at?: string
+        }
+        Update: {
+          audit_log_required?: boolean
+          created_at?: string
+          id?: string
+          input_sanitization_level?: string
+          output_filtering?: boolean
+          pii_detection?: boolean
+          prompt_injection_guard?: boolean
+          rate_limit_override?: Json | null
+          service_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      service_template_compliance: {
+        Row: {
+          compliance_score: number
+          created_at: string
+          id: string
+          issues: Json | null
+          last_validated_at: string | null
+          sections_completed: Json
+          service_key: string
+          updated_at: string
+          validator_version: string | null
+        }
+        Insert: {
+          compliance_score?: number
+          created_at?: string
+          id?: string
+          issues?: Json | null
+          last_validated_at?: string | null
+          sections_completed?: Json
+          service_key: string
+          updated_at?: string
+          validator_version?: string | null
+        }
+        Update: {
+          compliance_score?: number
+          created_at?: string
+          id?: string
+          issues?: Json | null
+          last_validated_at?: string | null
+          sections_completed?: Json
+          service_key?: string
+          updated_at?: string
+          validator_version?: string | null
         }
         Relationships: []
       }
@@ -10579,6 +10816,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      service_verdict_configs: {
+        Row: {
+          auto_approve_threshold: number
+          created_at: string
+          human_review_required: boolean
+          id: string
+          minimum_pass_score: number
+          scoring_dimensions: Json
+          service_key: string
+          updated_at: string
+          verdict_schema: Json | null
+        }
+        Insert: {
+          auto_approve_threshold?: number
+          created_at?: string
+          human_review_required?: boolean
+          id?: string
+          minimum_pass_score?: number
+          scoring_dimensions?: Json
+          service_key: string
+          updated_at?: string
+          verdict_schema?: Json | null
+        }
+        Update: {
+          auto_approve_threshold?: number
+          created_at?: string
+          human_review_required?: boolean
+          id?: string
+          minimum_pass_score?: number
+          scoring_dimensions?: Json
+          service_key?: string
+          updated_at?: string
+          verdict_schema?: Json | null
+        }
+        Relationships: []
       }
       service_votes: {
         Row: {
