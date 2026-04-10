@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FadeInView } from "@/components/motion/PageTransition";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,8 +14,10 @@ interface Props {
 
 export function LandingPricing({ ctaAction }: Props) {
   const { t } = useTranslation("landing");
+  const [interval, setInterval] = useState<"month" | "year">("month");
+
   const plans = t("pricing.plans", { returnObjects: true }) as Array<{
-    name: string; price: string; period: string; promise: string; text: string; cta: string;
+    name: string; price: string; priceAnnual?: string; period: string; promise: string; text: string; cta: string;
   }>;
 
   return (
@@ -25,9 +28,44 @@ export function LandingPricing({ ctaAction }: Props) {
           <h2 id="pricing-heading" className="text-h2 text-foreground mb-6">{t("pricing.title")}</h2>
           <p className="text-body text-muted-foreground max-w-lg mx-auto leading-relaxed">{t("pricing.subtitle")}</p>
         </FadeInView>
+
+        {/* Billing toggle */}
+        <FadeInView className="flex items-center justify-center gap-1 p-1 bg-muted/50 rounded-lg w-fit mx-auto mb-12">
+          <button
+            onClick={() => setInterval("month")}
+            className={cn(
+              "px-5 py-2 rounded-md text-sm font-mono font-medium transition-all",
+              interval === "month"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Lunar
+          </button>
+          <button
+            onClick={() => setInterval("year")}
+            className={cn(
+              "px-5 py-2 rounded-md text-sm font-mono font-medium transition-all flex items-center gap-2",
+              interval === "year"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Anual
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-gold/15 text-gold">
+              -18%
+            </span>
+          </button>
+        </FadeInView>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border/50 rounded-xl overflow-hidden max-w-4xl mx-auto">
           {plans.map((plan, i) => {
             const featured = i === FEATURED_INDEX;
+            const displayPrice = interval === "year" && plan.priceAnnual
+              ? plan.priceAnnual
+              : plan.price;
+            const displayPeriod = interval === "year" ? "/an" : plan.period;
+
             return (
               <FadeInView
                 key={i}
@@ -42,9 +80,12 @@ export function LandingPricing({ ctaAction }: Props) {
                 )}
                 <h3 className="text-h4 text-foreground">{plan.name}</h3>
                 <div className="flex items-baseline gap-1.5 mt-4 mb-2">
-                  <span className="text-3xl font-mono font-bold text-gold tracking-tight group-hover:scale-105 transition-transform duration-300 origin-left">{plan.price}</span>
-                  <span className="text-caption font-mono text-muted-foreground">{plan.period}</span>
+                  <span className="text-3xl font-mono font-bold text-gold tracking-tight group-hover:scale-105 transition-transform duration-300 origin-left">{displayPrice}</span>
+                  <span className="text-caption font-mono text-muted-foreground">{displayPeriod}</span>
                 </div>
+                {interval === "year" && (
+                  <p className="text-eyebrow font-mono tracking-[0.15em] text-gold-dim mb-2">Economisești ~18%</p>
+                )}
                 <p className="text-eyebrow font-mono tracking-[0.15em] text-gold-dim mb-6">{plan.promise}</p>
                 <p className="text-caption text-muted-foreground leading-relaxed flex-1">{plan.text}</p>
                 <Button
