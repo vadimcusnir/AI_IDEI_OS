@@ -1,7 +1,7 @@
 # System Architecture — AI-IDEI Platform
 
-**Version:** 11.0  
-**Last Updated:** 2026-03-26
+**Version:** 12.0  
+**Last Updated:** 2026-04-10
 
 ---
 
