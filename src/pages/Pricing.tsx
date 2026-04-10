@@ -169,11 +169,42 @@ export default function Pricing() {
           </div>
         </section>
 
+        {/* Billing Toggle */}
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-4">
+          <div className="flex items-center justify-center gap-1 p-1 bg-muted rounded-lg w-fit mx-auto">
+            <button
+              onClick={() => setBillingInterval("month")}
+              className={cn(
+                "px-5 py-2 rounded-md text-sm font-medium transition-all",
+                billingInterval === "month"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Lunar
+            </button>
+            <button
+              onClick={() => setBillingInterval("year")}
+              className={cn(
+                "px-5 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2",
+                billingInterval === "year"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Anual
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-status-validated/15 text-status-validated">
+                -18%
+              </span>
+            </button>
+          </div>
+        </section>
+
         {/* Plans Grid */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-10 sm:pb-14">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {PLANS.map((plan) => {
-              const isCurrent = isCurrentPlan(plan.key);
+              const isCurrent = isCurrentPlan(plan.key, plan.tierKey);
               const isProcessingThis = processing === plan.key;
 
               return (
