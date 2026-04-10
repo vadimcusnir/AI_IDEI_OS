@@ -8,7 +8,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, ExternalLink } from "lucide-react";
 import {
   SigilEye, SigilBolt, SigilCrystal,
   SigilCrown, SigilLock, SigilNeuron,
@@ -356,10 +356,11 @@ function StateTab({ tier, balance, phase, navigate }: {
 }
 
 // ═══ TAB: RUNS ═══
-function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, consumedCredits, totalCredits }: {
+function RunsTab({ steps, phase, elapsed, progress, isDone, isFailed, isActive, consumedCredits, totalCredits, navigate }: {
   steps: TaskStep[]; phase: string; elapsed: number; progress: number;
   isDone: boolean; isFailed: boolean; isActive: boolean;
   consumedCredits: number; totalCredits: number;
+  navigate: (path: string) => void;
 }) {
   if (phase === "idle") {
     return (
