@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { EconomyLayerPanel } from "@/components/cusnir-os/EconomyLayerPanel";
 import { MemoryLayerPanel } from "@/components/cusnir-os/MemoryLayerPanel";
 import { AgentExecutionPanel } from "@/components/cusnir-os/AgentExecutionPanel";
+import { LockinScorePanel } from "@/components/cusnir-os/LockinScorePanel";
 const HEALTH_COLORS: Record<string, string> = {
   healthy: "text-status-validated bg-status-validated/10",
   warning: "text-warning bg-warning/10",
@@ -92,7 +93,7 @@ const MODULE_STATUS_COLORS: Record<string, string> = {
   experimental: "bg-warning/10 text-warning",
 };
 
-type Tab = "modules" | "superlayer" | "agents" | "economy" | "memory" | "ledger";
+type Tab = "modules" | "superlayer" | "agents" | "economy" | "memory" | "ledger" | "lockin";
 
 export default function CusnirOSOperator() {
   const { user, loading: authLoading } = useAuth();
@@ -162,7 +163,7 @@ export default function CusnirOSOperator() {
 
           {/* Tab Navigation */}
           <div className="flex gap-1 border-b border-border/30 pb-0 overflow-x-auto">
-            {(["modules", "superlayer", "agents", "economy", "memory", "ledger"] as Tab[]).map(t => {
+            {(["modules", "superlayer", "agents", "economy", "memory", "ledger", "lockin"] as Tab[]).map(t => {
               const labels: Record<Tab, string> = {
                 modules: "Module Registry",
                 superlayer: "Superlayer Axes",
@@ -170,6 +171,7 @@ export default function CusnirOSOperator() {
                 economy: "Economy Layer",
                 memory: "Memory Engine",
                 ledger: "Decision Ledger",
+                lockin: "Lock-in Score",
               };
               return (
                 <button
@@ -374,6 +376,11 @@ export default function CusnirOSOperator() {
                     )}
                   </CardContent>
                 </Card>
+              </motion.div>
+            )}
+            {tab === "lockin" && (
+              <motion.div key="lockin" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.2 }}>
+                <LockinScorePanel />
               </motion.div>
             )}
           </AnimatePresence>
