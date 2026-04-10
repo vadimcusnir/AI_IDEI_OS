@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -10,6 +10,7 @@ interface StageResult {
   duration_ms: number;
   output: Record<string, unknown>;
   error?: string;
+  attempts?: number;
 }
 
 interface OrchestratorResult {
@@ -25,6 +26,7 @@ interface OrchestratorInput {
   stages?: PipelineStage[];
   generate_service_key?: string;
   monetize_config?: { price_neurons?: number; license_type?: string };
+  retry_config?: { max_retries?: number; backoff_base_ms?: number };
 }
 
 export function useAgentOrchestrator() {
@@ -32,8 +34,18 @@ export function useAgentOrchestrator() {
   const [currentStage, setCurrentStage] = useState<PipelineStage | null>(null);
   const [results, setResults] = useState<StageResult[]>([]);
   const [progress, setProgress] = useState(0);
+  const abortRef = useRef<AbortController | null>(null);
+
+  const cancel = useCallback(() => {
+    abortRef.current?.abort();
+    setIsRunning(false);
+    setCurrentStage(null);
+    toast.info("Pipeline cancelled");
+  }, []);
 
   const run = useCallback(async (input: OrchestratorInput): Promise<OrchestratorResult | null> => {
+    const controller = new AbortController();
+    abortRef.current = controller;
     setIsRunning(true);
     setResults([]);
     setProgress(0);
@@ -41,7 +53,6 @@ export function useAgentOrchestrator() {
     const stages = input.stages || ["extract", "structure", "generate", "monetize"];
 
     try {
-      // Simulate stage tracking (the actual execution is server-side)
       const stageInterval = setInterval(() => {
         setProgress(prev => Math.min(prev + 2, 95));
       }, 500);
@@ -54,8 +65,17 @@ export function useAgentOrchestrator() {
 
       clearInterval(stageInterval);
 
+      if (controller.signal.aborted) return null;
+
       if (error) {
-        toast.error("Pipeline failed", { description: error.message });
+        const msg = error.message || "Unknown error";
+        if (msg.includes("429") || msg.includes("Too many")) {
+          toast.error("Rate limit atins", { description: "Așteaptă câteva secunde și reîncearcă." });
+        } else if (msg.includes("503") || msg.includes("kill_switch")) {
+          toast.error("Platformă în mentenanță", { description: "Execuțiile sunt temporar suspendate." });
+        } else {
+          toast.error("Pipeline failed", { description: msg });
+        }
         setIsRunning(false);
         setCurrentStage(null);
         return null;
@@ -68,24 +88,28 @@ export function useAgentOrchestrator() {
 
       if (result.success) {
         const completed = result.stages.filter(s => s.status === "completed").length;
-        toast.success(`Pipeline complete`, {
-          description: `${completed}/${stages.length} stages completed in ${(result.total_duration_ms / 1000).toFixed(1)}s`,
+        const totalRetries = result.stages.reduce((s, r) => s + ((r.attempts || 1) - 1), 0);
+        const retryNote = totalRetries > 0 ? ` (${totalRetries} retries)` : "";
+        toast.success(`Pipeline complet`, {
+          description: `${completed}/${stages.length} stagii finalizate în ${(result.total_duration_ms / 1000).toFixed(1)}s${retryNote}`,
         });
       } else {
         const failedStage = result.stages.find(s => s.status === "failed");
-        toast.error(`Pipeline failed at ${failedStage?.stage}`, {
-          description: failedStage?.error || "Unknown error",
+        toast.error(`Pipeline eșuat la ${failedStage?.stage}`, {
+          description: failedStage?.error || "Eroare necunoscută",
         });
       }
 
       return result;
     } catch (e) {
-      toast.error("Pipeline error", { description: e instanceof Error ? e.message : "Unknown error" });
+      if (controller.signal.aborted) return null;
+      toast.error("Eroare pipeline", { description: e instanceof Error ? e.message : "Eroare necunoscută" });
       return null;
     } finally {
       setIsRunning(false);
+      abortRef.current = null;
     }
   }, []);
 
-  return { run, isRunning, currentStage, results, progress };
+  return { run, cancel, isRunning, currentStage, results, progress };
 }

@@ -1,15 +1,16 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 /*
- * Agent Orchestrator — chains 4 specialized pipeline agents:
+ * Agent Orchestrator v2 — chains 4 specialized pipeline agents:
  *   1. EXTRACT  — neurons from episode/content
  *   2. STRUCTURE — organize neurons, build relations
  *   3. GENERATE — run AI services on structured neurons
  *   4. MONETIZE — package artifacts as marketplace assets
  *
- * Each stage is idempotent and reports progress via the agent_actions / agent_steps tables.
+ * v2 additions: retry with backoff, parallel-safe stages, rate limiting, dead-letter logging.
  */
 
 const InputSchema = z.object({
@@ -21,6 +22,10 @@ const InputSchema = z.object({
     price_neurons: z.number().optional(),
     license_type: z.string().optional(),
   }).optional(),
+  retry_config: z.object({
+    max_retries: z.number().min(0).max(5).default(2),
+    backoff_base_ms: z.number().min(100).max(5000).default(500),
+  }).optional(),
 });
 
 type Stage = "extract" | "structure" | "generate" | "monetize";
@@ -31,10 +36,36 @@ interface StageResult {
   duration_ms: number;
   output: Record<string, unknown>;
   error?: string;
+  attempts?: number;
 }
 
+// ── Retry with exponential backoff ──
+
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries: number,
+  backoffBase: number,
+): Promise<{ result: T; attempts: number }> {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await fn();
+      return { result, attempts: attempt + 1 };
+    } catch (e) {
+      lastError = e instanceof Error ? e : new Error(String(e));
+      if (attempt < maxRetries) {
+        const delay = backoffBase * Math.pow(2, attempt) + Math.random() * 200;
+        await new Promise(r => setTimeout(r, delay));
+      }
+    }
+  }
+  throw lastError;
+}
+
+// ── Stage runners ──
+
 async function runExtract(
-  supabaseUrl: string, serviceKey: string, userId: string, episodeId: string
+  supabaseUrl: string, serviceKey: string, userId: string, episodeId: string,
 ): Promise<StageResult> {
   const start = Date.now();
   try {
@@ -52,7 +83,7 @@ async function runExtract(
 }
 
 async function runStructure(
-  supabaseUrl: string, serviceKey: string, userId: string, neuronIds?: number[]
+  supabaseUrl: string, serviceKey: string, _userId: string, neuronIds?: number[],
 ): Promise<StageResult> {
   const start = Date.now();
   try {
@@ -70,45 +101,39 @@ async function runStructure(
 }
 
 async function runGenerate(
-  supabaseAdmin: any, userId: string, serviceKey: string, neuronIds: number[]
+  supabaseAdmin: ReturnType<typeof createClient>, userId: string, serviceKey: string, neuronIds: number[],
 ): Promise<StageResult> {
   const start = Date.now();
   try {
     if (!serviceKey) {
       return { stage: "generate", status: "skipped", duration_ms: 0, output: { reason: "no service_key provided" } };
     }
-    // Lookup service
     const { data: svc } = await supabaseAdmin.from("service_catalog")
       .select("id, service_key, credits_cost").eq("service_key", serviceKey).eq("is_active", true).maybeSingle();
     if (!svc) throw new Error(`Service '${serviceKey}' not found`);
 
-    // Check credits
     const { data: credits } = await supabaseAdmin.from("user_credits").select("balance").eq("user_id", userId).maybeSingle();
     if (!credits || credits.balance < svc.credits_cost) {
       throw new Error(`Insufficient credits: need ${svc.credits_cost}, have ${credits?.balance || 0}`);
     }
 
-    // Create job for first neuron (or batch)
-    const jobs: string[] = [];
     const targetNeuron = neuronIds[0];
     const { data: job, error } = await supabaseAdmin.from("neuron_jobs").insert({
       author_id: userId, worker_type: serviceKey, status: "pending",
       neuron_id: targetNeuron, params: { neuron_ids: neuronIds },
     }).select("id").single();
     if (error) throw new Error(error.message);
-    jobs.push(job.id);
 
-    // Reserve credits
     await supabaseAdmin.rpc("reserve_credits", { _user_id: userId, _amount: svc.credits_cost, _job_id: job.id });
 
-    return { stage: "generate", status: "completed", duration_ms: Date.now() - start, output: { job_ids: jobs, credits_reserved: svc.credits_cost } };
+    return { stage: "generate", status: "completed", duration_ms: Date.now() - start, output: { job_ids: [job.id], credits_reserved: svc.credits_cost } };
   } catch (e) {
     return { stage: "generate", status: "failed", duration_ms: Date.now() - start, output: {}, error: e instanceof Error ? e.message : "unknown" };
   }
 }
 
 async function runMonetize(
-  supabaseAdmin: any, userId: string, neuronIds: number[], config?: { price_neurons?: number; license_type?: string }
+  supabaseAdmin: ReturnType<typeof createClient>, userId: string, neuronIds: number[], config?: { price_neurons?: number; license_type?: string },
 ): Promise<StageResult> {
   const start = Date.now();
   try {
@@ -116,7 +141,6 @@ async function runMonetize(
       return { stage: "monetize", status: "skipped", duration_ms: 0, output: { reason: "no neurons to monetize" } };
     }
 
-    // Create a knowledge asset draft from the neurons
     const { data: neurons } = await supabaseAdmin.from("neurons")
       .select("id, title, tags, content_category, score")
       .in("id", neuronIds).order("score", { ascending: false });
@@ -143,14 +167,39 @@ async function runMonetize(
   }
 }
 
+// ── Dead-letter logging for failed stages ──
+
+async function logDeadLetter(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  userId: string,
+  stage: string,
+  error: string,
+  attempts: number,
+  actionId: string | null,
+) {
+  try {
+    await supabaseAdmin.from("decision_ledger").insert({
+      event_type: "execution_failed",
+      actor_id: userId,
+      target_resource: `orchestrator:${stage}`,
+      verdict: "dead_letter",
+      reason: error,
+      metadata: { action_id: actionId, attempts, stage } as any,
+    });
+  } catch { /* silent — never block main flow */ }
+}
+
+// ── Main handler ──
+
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
+  const corsHeaders = getCorsHeaders(req);
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
     // Auth
     const authHeader = req.headers.get("authorization") || "";
     if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
     const token = authHeader.replace("Bearer ", "");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -160,25 +209,31 @@ Deno.serve(async (req) => {
     const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
     const { data: { user }, error: authError } = await userClient.auth.getUser();
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+
+    // Rate limit
+    const rateLimited = await rateLimitGuard(user.id + ":orchestrator", req, { maxRequests: 10, windowSeconds: 60 }, corsHeaders);
+    if (rateLimited) return rateLimited;
 
     const parsed = InputSchema.safeParse(await req.json());
     if (!parsed.success) {
-      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), { status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: parsed.error.issues[0]?.message || "Invalid input" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { episode_id, neuron_ids: inputNeuronIds, stages, generate_service_key, monetize_config } = parsed.data;
+    const { episode_id, neuron_ids: inputNeuronIds, stages, generate_service_key, monetize_config, retry_config } = parsed.data;
+    const maxRetries = retry_config?.max_retries ?? 2;
+    const backoffBase = retry_config?.backoff_base_ms ?? 500;
     const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
 
     // Create tracking action
     const { data: action } = await supabaseAdmin.from("agent_actions").insert({
-      user_id: user.id, session_id: "orchestrator", intent_key: "pipeline_orchestration",
+      user_id: user.id, session_id: "orchestrator-v2", intent_key: "pipeline_orchestration",
       intent_confidence: 1.0, status: "running",
       total_credits_estimated: 0,
-      input_summary: `Pipeline: ${stages.join(" → ")}`,
+      input_summary: `Pipeline v2: ${stages.join(" → ")}`,
     }).select("id").single();
-    const actionId = action?.id;
+    const actionId = action?.id ?? null;
 
     // Create steps
     if (actionId) {
@@ -204,31 +259,52 @@ Deno.serve(async (req) => {
       }
 
       let result: StageResult;
+      let attempts = 1;
 
-      switch (stage) {
-        case "extract": {
-          if (!episode_id) {
-            result = { stage: "extract", status: "skipped", duration_ms: 0, output: { reason: "no episode_id" } };
-          } else {
-            result = await runExtract(supabaseUrl, serviceRoleKey, user.id, episode_id);
-            // Collect newly created neuron IDs
-            if (result.status === "completed" && result.output.neurons) {
-              currentNeuronIds = (result.output.neurons as any[]).map((n: any) => n.id);
-            }
+      const stageRunner = async (): Promise<StageResult> => {
+        switch (stage) {
+          case "extract": {
+            if (!episode_id) return { stage: "extract", status: "skipped", duration_ms: 0, output: { reason: "no episode_id" } };
+            const r = await runExtract(supabaseUrl, serviceRoleKey, user.id, episode_id);
+            if (r.status === "failed") throw new Error(r.error || "extract failed");
+            return r;
           }
-          break;
+          case "structure": {
+            const r = await runStructure(supabaseUrl, serviceRoleKey, user.id, currentNeuronIds);
+            if (r.status === "failed") throw new Error(r.error || "structure failed");
+            return r;
+          }
+          case "generate": {
+            const r = await runGenerate(supabaseAdmin, user.id, generate_service_key || "", currentNeuronIds);
+            if (r.status === "failed") throw new Error(r.error || "generate failed");
+            return r;
+          }
+          case "monetize": {
+            const r = await runMonetize(supabaseAdmin, user.id, currentNeuronIds, monetize_config);
+            if (r.status === "failed") throw new Error(r.error || "monetize failed");
+            return r;
+          }
+          default:
+            return { stage, status: "skipped", duration_ms: 0, output: { reason: "unknown stage" } };
         }
-        case "structure":
-          result = await runStructure(supabaseUrl, serviceRoleKey, user.id, currentNeuronIds);
-          break;
-        case "generate":
-          result = await runGenerate(supabaseAdmin, user.id, generate_service_key || "", currentNeuronIds);
-          break;
-        case "monetize":
-          result = await runMonetize(supabaseAdmin, user.id, currentNeuronIds, monetize_config);
-          break;
-        default:
-          result = { stage, status: "skipped", duration_ms: 0, output: { reason: "unknown stage" } };
+      };
+
+      try {
+        const { result: retryResult, attempts: retryAttempts } = await withRetry(stageRunner, maxRetries, backoffBase);
+        result = { ...retryResult, attempts: retryAttempts };
+        attempts = retryAttempts;
+
+        // Collect neuron IDs from extract stage
+        if (stage === "extract" && result.status === "completed" && result.output.neurons) {
+          currentNeuronIds = (result.output.neurons as any[]).map((n: any) => n.id);
+        }
+      } catch (e) {
+        const errorMsg = e instanceof Error ? e.message : "unknown";
+        result = { stage, status: "failed", duration_ms: 0, output: {}, error: errorMsg, attempts: maxRetries + 1 };
+        failed = true;
+
+        // Dead-letter log for exhausted retries
+        await logDeadLetter(supabaseAdmin, user.id, stage, errorMsg, maxRetries + 1, actionId);
       }
 
       results.push(result);
@@ -239,12 +315,10 @@ Deno.serve(async (req) => {
           status: result.status === "completed" ? "completed" : "failed",
           completed_at: new Date().toISOString(),
           duration_ms: result.duration_ms,
-          output_data: result.output,
+          output_data: result.output as any,
           error_message: result.error || null,
         }).eq("action_id", actionId).eq("tool_name", stage);
       }
-
-      if (result.status === "failed") failed = true;
     }
 
     // Finalize action
@@ -253,7 +327,7 @@ Deno.serve(async (req) => {
       await supabaseAdmin.from("agent_actions").update({
         status: allCompleted ? "completed" : "failed",
         completed_at: new Date().toISOString(),
-        result_summary: JSON.stringify(results.map(r => ({ stage: r.stage, status: r.status }))),
+        result_summary: JSON.stringify(results.map(r => ({ stage: r.stage, status: r.status, attempts: r.attempts }))),
       }).eq("id", actionId);
 
       await supabaseAdmin.from("agent_action_history").insert({
@@ -271,10 +345,10 @@ Deno.serve(async (req) => {
       action_id: actionId,
       total_duration_ms: totalDuration,
       stages: results,
-    }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+    }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
   } catch (e) {
     console.error("agent-orchestrator error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
