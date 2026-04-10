@@ -223,77 +223,7 @@ export default function Credits() {
           <StreakUpsellBanner />
         </div>
 
-        {/* Wallet State */}
-        <div className="mb-6">
-          <WalletPanel />
-        </div>
-
-        {/* Daily Spending Protection */}
-        <div className="mb-6">
-          <DailySpendingPanel />
-        </div>
-
-        {/* Consumption Analytics */}
-        <div className="mb-6">
-          <ConsumptionAnalytics transactions={transactions} />
-        </div>
-
-        {/* Subscription Plans */}
-        <ControlledSection elementId="credits.subscription_plans">
-          <div className="bg-card border border-border rounded-xl p-5 mb-6">
-            <SubscriptionPlans />
-          </div>
-        </ControlledSection>
-
-        {/* Collapsible secondary sections */}
-        <div className="space-y-2 mb-6">
-          <Collapsible>
-            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
-              <span className="text-xs font-semibold">Stocare & Billing</span>
-              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="pt-2 space-y-3">
-              <ControlledSection elementId="credits.storage_usage">
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <StorageUsagePanel />
-                </div>
-              </ControlledSection>
-              <ControlledSection elementId="credits.storage_billing">
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <StorageBillingPanel />
-                </div>
-              </ControlledSection>
-            </CollapsibleContent>
-          </Collapsible>
-
-          <Collapsible>
-            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
-              <span className="text-xs font-semibold">VIP Progress</span>
-              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="pt-2">
-              <ControlledSection elementId="credits.vip_progress">
-                <VIPProgressTimeline />
-              </ControlledSection>
-            </CollapsibleContent>
-          </Collapsible>
-
-          <Collapsible>
-            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
-              <span className="text-xs font-semibold">Reguli Automatizare</span>
-              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="pt-2">
-              <ControlledSection elementId="credits.rule_engine">
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <RuleEnginePanel />
-                </div>
-              </ControlledSection>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-
-        {/* Balance + Stats row */}
+        {/* Unified Balance + Wallet */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
           {/* Main balance */}
           <div className="sm:col-span-2 bg-card border border-border rounded-xl p-5">
@@ -351,6 +281,77 @@ export default function Credits() {
               {transactions.filter(t => t.type === "spend").length} {t("credits.executions")}
             </p>
           </div>
+        </div>
+
+        {/* Wallet State (detailed) */}
+        <div className="mb-6">
+          <WalletPanel />
+        </div>
+
+        {/* Subscription Plans */}
+        <ControlledSection elementId="credits.subscription_plans">
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <SubscriptionPlans />
+          </div>
+        </ControlledSection>
+
+        {/* Collapsible analytics sections */}
+        <div className="space-y-2 mb-6">
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
+              <span className="text-xs font-semibold">Cheltuieli & Analytics</span>
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-2 space-y-3">
+              <DailySpendingPanel />
+              <ConsumptionAnalytics transactions={transactions} />
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
+              <span className="text-xs font-semibold">Stocare & Billing</span>
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-2 space-y-3">
+              <ControlledSection elementId="credits.storage_usage">
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <StorageUsagePanel />
+                </div>
+              </ControlledSection>
+              <ControlledSection elementId="credits.storage_billing">
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <StorageBillingPanel />
+                </div>
+              </ControlledSection>
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
+              <span className="text-xs font-semibold">VIP Progress</span>
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-2">
+              <ControlledSection elementId="credits.vip_progress">
+                <VIPProgressTimeline />
+              </ControlledSection>
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-5 py-3 hover:bg-muted/50 transition-colors group">
+              <span className="text-xs font-semibold">Reguli Automatizare</span>
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-2">
+              <ControlledSection elementId="credits.rule_engine">
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <RuleEnginePanel />
+                </div>
+              </ControlledSection>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
 
         {/* Consumption chart */}
