@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSubscription, SUBSCRIPTION_TIERS } from "@/hooks/useSubscription";
+import { useSubscription, SUBSCRIPTION_TIERS, ANNUAL_TIERS } from "@/hooks/useSubscription";
+import { TIER_PAIRS, annualSavingsPct, type BillingInterval } from "@/config/economyConfig";
 
 import { SEOHead } from "@/components/SEOHead";
 import { FAQJsonLd } from "@/components/seo/JsonLd";
@@ -13,8 +14,12 @@ import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { toast } from "sonner";
 
-function usePlans() {
+function usePlans(billingInterval: BillingInterval) {
   const { t } = useTranslation("pages");
+  const tiers = billingInterval === "month" ? SUBSCRIPTION_TIERS : ANNUAL_TIERS;
+  const suffix = billingInterval === "month" ? "_monthly" : "_annual";
+  const periodLabel = billingInterval === "month" ? t("pricing.per_month") : t("pricing.per_year");
+
   return [
     {
       key: "free",
@@ -27,6 +32,7 @@ function usePlans() {
       priceId: null,
       mode: null as "subscription" | null,
       savingsVsFree: null,
+      annualSavings: null as string | null,
       features: [
         t("pricing.feat_welcome_bonus"),
         t("pricing.feat_transcriptions_3"),
@@ -35,63 +41,32 @@ function usePlans() {
         t("pricing.feat_community_access"),
       ],
       cta: t("pricing.start_free"),
+      tierKey: "free",
     },
-    {
-      key: "starter",
-      name: "Starter",
-      price: String(SUBSCRIPTION_TIERS.starter_monthly.price),
-      period: t("pricing.per_month"),
-      neurons: SUBSCRIPTION_TIERS.starter_monthly.neurons_quota.toLocaleString(),
-      badge: null,
-      highlight: false,
-      priceId: SUBSCRIPTION_TIERS.starter_monthly.price_id,
-      mode: "subscription" as const,
-      savingsVsFree: null,
-      features: SUBSCRIPTION_TIERS.starter_monthly.features,
-      cta: "Choose Starter",
-    },
-    {
-      key: "pro",
-      name: t("pricing.plan_pro"),
-      price: String(SUBSCRIPTION_TIERS.pro_monthly.price),
-      period: t("pricing.per_month"),
-      neurons: SUBSCRIPTION_TIERS.pro_monthly.neurons_quota.toLocaleString(),
-      badge: "Popular",
-      highlight: true,
-      priceId: SUBSCRIPTION_TIERS.pro_monthly.price_id,
-      mode: "subscription" as const,
-      savingsVsFree: "53%",
-      features: SUBSCRIPTION_TIERS.pro_monthly.features,
-      cta: t("pricing.choose_pro"),
-    },
-    {
-      key: "vip",
-      name: t("pricing.plan_vip"),
-      price: String(SUBSCRIPTION_TIERS.vip_monthly.price),
-      period: t("pricing.per_month"),
-      neurons: SUBSCRIPTION_TIERS.vip_monthly.neurons_quota.toLocaleString(),
-      badge: "Best Value",
-      highlight: false,
-      priceId: SUBSCRIPTION_TIERS.vip_monthly.price_id,
-      mode: "subscription" as const,
-      savingsVsFree: "77%",
-      features: SUBSCRIPTION_TIERS.vip_monthly.features,
-      cta: t("pricing.choose_vip"),
-    },
-    {
-      key: "enterprise",
-      name: "Enterprise",
-      price: String(SUBSCRIPTION_TIERS.enterprise_monthly.price),
-      period: t("pricing.per_month"),
-      neurons: SUBSCRIPTION_TIERS.enterprise_monthly.neurons_quota.toLocaleString(),
-      badge: "Max Power",
-      highlight: false,
-      priceId: SUBSCRIPTION_TIERS.enterprise_monthly.price_id,
-      mode: "subscription" as const,
-      savingsVsFree: "81%",
-      features: SUBSCRIPTION_TIERS.enterprise_monthly.features,
-      cta: "Choose Enterprise",
-    },
+    ...TIER_PAIRS.map((pair) => {
+      const key = billingInterval === "month" ? pair.monthly : pair.annual;
+      const plan = tiers[key];
+      const monthlyTier = SUBSCRIPTION_TIERS[pair.monthly];
+      const annualTier = ANNUAL_TIERS[pair.annual];
+      const savings = annualSavingsPct(monthlyTier.price, annualTier.price);
+
+      return {
+        key: pair.name.toLowerCase(),
+        name: plan.name,
+        price: String(plan.price),
+        period: periodLabel,
+        neurons: plan.neurons_quota.toLocaleString(),
+        badge: pair.name === "Pro" ? "Popular" : pair.name === "VIP" ? "Best Value" : pair.name === "Enterprise" ? "Max Power" : null,
+        highlight: pair.name === "Pro",
+        priceId: plan.price_id,
+        mode: "subscription" as const,
+        savingsVsFree: pair.name === "Pro" ? "53%" : pair.name === "VIP" ? "77%" : pair.name === "Enterprise" ? "81%" : null,
+        annualSavings: billingInterval === "year" ? `${savings}%` : null,
+        features: plan.features,
+        cta: `Choose ${plan.name}`,
+        tierKey: key,
+      };
+    }),
   ];
 }
 
