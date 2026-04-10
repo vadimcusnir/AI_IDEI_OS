@@ -124,7 +124,7 @@ export default function Home() {
                 </div>
               ) : (
                 /* ── Conversation feed ── */
-                <div className="pt-3 pb-3 space-y-3">
+                <div className="pt-3 pb-3 space-y-3" role="log" aria-live="polite" aria-label="Conversation">
                   {cc.messages.map((msg) => (
                     <CommandBubble
                       key={msg.id}
