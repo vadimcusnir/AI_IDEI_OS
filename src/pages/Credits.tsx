@@ -28,6 +28,8 @@ import { RuleEnginePanel } from "@/components/automation/RuleEnginePanel";
 import { VIPProgressTimeline } from "@/components/vip/VIPProgressTimeline";
 import { FlowTip } from "@/components/onboarding/FlowTip";
 import { StreakUpsellBanner } from "@/components/gamification/StreakUpsellBanner";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 
 interface UserCredits {
   balance: number;
