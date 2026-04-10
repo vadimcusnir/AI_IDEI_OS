@@ -962,7 +962,7 @@ Deno.serve(async (req) => {
       job_id: z.string().uuid("Invalid job_id"),
       service_key: z.string().min(1, "Missing service_key").max(100),
       neuron_id: z.number().int().optional(),
-      inputs: z.record(z.string().max(50_000, "Input value too long")).optional(),
+      inputs: z.record(z.string().max(120_000, "Input value too long")).optional(),
     });
 
     const parsed = InputSchema.safeParse(rawBody);
