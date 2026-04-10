@@ -124,7 +124,7 @@ export default function Home() {
                 </div>
               ) : (
                 /* ── Conversation feed ── */
-                <div className="pt-3 pb-3 space-y-3">
+                <div className="pt-3 pb-3 space-y-3" role="log" aria-live="polite" aria-label="Conversation">
                   {cc.messages.map((msg) => (
                     <CommandBubble
                       key={msg.id}
@@ -252,7 +252,7 @@ export default function Home() {
           </div>
 
           {/* ── COMPOSER: anchored at bottom, never scrolls ── */}
-          <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] mb-14 md:mb-0">
+          <div className="shrink-0 border-t border-border/20 bg-background/95 backdrop-blur-sm px-2 sm:px-4 py-1 pb-[max(3.75rem,calc(3.5rem+env(safe-area-inset-bottom)))] md:pb-1">
             <div className="max-w-3xl mx-auto" data-tour="command-input">
               {/* Mode Panels — contextual actions above input */}
               <AnimatePresence mode="wait">

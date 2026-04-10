@@ -33,7 +33,10 @@
       "run_service_desc": "Generate AI deliverables",
       "view_jobs": "View Jobs",
       "view_jobs_desc": "Monitor executions"
-    }
+    },
+    "welcome_title": "How can I help?",
+    "welcome_subtitle": "Describe what you need, upload a file, or pick a suggestion below.",
+    "suggested_for_you": "Suggested for you"
   },
   "credits": {
     "title": "NEURONS Credits",

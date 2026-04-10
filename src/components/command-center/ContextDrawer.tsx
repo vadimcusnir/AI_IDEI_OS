@@ -241,7 +241,9 @@ export function ContextDrawer({
 function StateTab({ tier, balance, phase, navigate }: {
   tier: string; balance: number; phase: string; navigate: (path: string) => void;
 }) {
-  const burnRate = 32;
+  // Dynamic burn rate: average cost from recent credit transactions
+  // TODO: fetch from useQuery("burn-rate") for real data; fallback = 32
+  const burnRate = 32; // placeholder — will be replaced by dynamic query
   const runway = burnRate > 0 ? Math.floor(balance / burnRate) : 999;
 
   return (

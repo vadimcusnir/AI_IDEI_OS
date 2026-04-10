@@ -1,37 +1,23 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function useAdminCheck() {
   const { user, loading: authLoading } = useAuth();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (authLoading) return;
-    if (!user) {
-      setIsAdmin(false);
-      setLoading(false);
-      return;
-    }
+  const { data: isAdmin = false, isLoading } = useQuery({
+    queryKey: ["user-role-admin", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.rpc("has_role", {
+        _user_id: user!.id,
+        _role: "admin",
+      });
+      return !!data;
+    },
+    enabled: !!user && !authLoading,
+    staleTime: 5 * 60 * 1000, // 5 min — deduplicate across components
+    gcTime: 10 * 60 * 1000,
+  });
 
-    const check = async () => {
-      try {
-        const { data } = await supabase.rpc("has_role", {
-          _user_id: user.id,
-          _role: "admin",
-        });
-        setIsAdmin(!!data);
-      } catch (err) {
-        console.warn("[useAdminCheck] Failed to check role:", err);
-        setIsAdmin(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    check();
-  }, [user, authLoading]);
-
-  return { isAdmin, loading, user };
+  return { isAdmin, loading: authLoading || isLoading, user };
 }

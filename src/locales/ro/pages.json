@@ -33,7 +33,10 @@
       "run_service_desc": "Generează livrabile AI",
       "view_jobs": "Vezi Joburi",
       "view_jobs_desc": "Monitorizează execuțiile"
-    }
+    },
+    "welcome_title": "Cu ce te pot ajuta?",
+    "welcome_subtitle": "Descrie ce ai nevoie, încarcă un fișier sau alege o sugestie.",
+    "suggested_for_you": "Sugerate pentru tine"
   },
   "credits": {
     "title": "Credite NEURONS",
