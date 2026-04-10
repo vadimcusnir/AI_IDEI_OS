@@ -154,6 +154,10 @@ export interface TaskStep {
   completedAt?: string;
   output?: unknown;
   error?: string;
+  /** URL to navigate to when step is completed (e.g. /neurons, /jobs/123) */
+  resultUrl?: string;
+  /** Short label for the result link */
+  resultLabel?: string;
 }
 
 export interface ExecutionState {
