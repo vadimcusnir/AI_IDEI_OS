@@ -3,15 +3,12 @@ import { getCorsHeaders } from "../_shared/cors.ts";
  * llm-audit — Scans pages for LLM indexation issues and generates AI fix suggestions.
  * 
  * POST /llm-audit { action: "scan" | "fix", page_paths?: string[] }
- * - scan: Analyze pages and populate llm_page_index + detect issues
- * - fix: Generate AI suggestions for detected issues
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
 
 const BASE_URL = "https://ai-idei.com";
 
-// Known public routes with their expected schema types
 const KNOWN_ROUTES = [
   { path: "/", title: "Home", type: "landing", schemas: ["Organization", "WebApplication"] },
   { path: "/extractor", title: "Extractor", type: "tool", schemas: ["WebApplication"] },
@@ -32,7 +29,9 @@ const KNOWN_ROUTES = [
 ];
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: getCorsHeaders(req) });
+  const corsHeaders = getCorsHeaders(req);
+
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -40,12 +39,16 @@ Deno.serve(async (req) => {
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   const supabase = createClient(supabaseUrl, serviceKey);
 
+  const jsonResp = (data: any, status = 200) =>
+    new Response(JSON.stringify(data), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+
   // Auth check — admin only
   const authHeader = req.headers.get("authorization") || "";
   if (!authHeader.startsWith("Bearer ")) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
+    return jsonResp({ error: "Unauthorized" }, 401);
   }
   const token = authHeader.replace("Bearer ", "");
   const userClient = createClient(supabaseUrl, anonKey, {
@@ -53,12 +56,9 @@ Deno.serve(async (req) => {
   });
   const { data: { user }, error: authErr } = await userClient.auth.getUser();
   if (authErr || !user) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
+    return jsonResp({ error: "Unauthorized" }, 401);
   }
 
-  // Check admin
   const { data: roleData } = await supabase
     .from("user_roles")
     .select("role")
@@ -67,45 +67,38 @@ Deno.serve(async (req) => {
     .single();
   
   if (!roleData) {
-    return new Response(JSON.stringify({ error: "Admin access required" }), {
-      status: 403, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
+    return jsonResp({ error: "Admin access required" }, 403);
   }
 
   try {
-    // Rate limit guard (IP-based)
     const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    const rateLimited = await rateLimitGuard(clientIp + ":llm-audit", req, { maxRequests: 20, windowSeconds: 60 }, getCorsHeaders(req));
+    const rateLimited = await rateLimitGuard(clientIp + ":llm-audit", req, { maxRequests: 20, windowSeconds: 60 }, corsHeaders);
     if (rateLimited) return rateLimited;
 
     const body = await req.json().catch(() => ({}));
     const { action = "scan" } = body;
 
     if (action === "scan") {
-      return await handleScan(supabase);
+      return await handleScan(supabase, jsonResp);
     } else if (action === "fix" && LOVABLE_API_KEY) {
-      return await handleFix(supabase, LOVABLE_API_KEY);
+      return await handleFix(supabase, LOVABLE_API_KEY, jsonResp);
     } else {
-      return new Response(JSON.stringify({ error: "Invalid action or missing API key" }), {
-        status: 400, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
+      return jsonResp({ error: "Invalid action or missing API key" }, 400);
     }
   } catch (err) {
     console.error("llm-audit error:", err);
-    return new Response(JSON.stringify({ error: err instanceof Error ? err.message : "Unknown error" }), {
-      status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
+    return jsonResp({ error: err instanceof Error ? err.message : "Unknown error" }, 500);
   }
 });
 
-async function handleScan(supabase: any) {
+type JsonResp = (data: any, status?: number) => Response;
+
+async function handleScan(supabase: any, jsonResp: JsonResp) {
   const results: any[] = [];
 
-  // Scan static routes
   for (const route of KNOWN_ROUTES) {
     const issues: any[] = [];
 
-    // Check: missing schemas
     if (route.schemas.length > 0) {
       issues.push({
         type: "schema_check",
@@ -114,7 +107,6 @@ async function handleScan(supabase: any) {
       });
     }
 
-    // Check for thin content (pages without enough context)
     if (route.type === "content" && !route.schemas.length) {
       issues.push({
         type: "missing_schema",
@@ -150,7 +142,6 @@ async function handleScan(supabase: any) {
     contradiction: "contradictions", application: "applications", profile: "profiles",
   };
 
-  let orphanCount = 0;
   for (const entity of (entities || [])) {
     const plural = entityTypes[entity.entity_type] || entity.entity_type + "s";
     const path = `/${plural}/${entity.slug}`;
@@ -163,8 +154,7 @@ async function handleScan(supabase: any) {
       issues.push({ type: "missing_tags", severity: "medium", message: "No tags defined" });
     }
 
-    const wordCount = (entity.summary || "").split(/\s+/).length;
-    const hasSchema = true; // Entity pages have JSON-LD
+    const hasSchema = true;
     const score = Math.min(10, (entity.summary?.length > 100 ? 3 : 1) + (entity.tags?.length || 0) * 0.5 + (hasSchema ? 3 : 0) + 2);
 
     results.push({
@@ -173,7 +163,7 @@ async function handleScan(supabase: any) {
       page_type: "entity",
       schema_types: ["CreativeWork"],
       entity_count: 1,
-      word_count: wordCount,
+      word_count: (entity.summary || "").split(/\s+/).length,
       issues,
       overall_score: score,
       topic_clarity_score: entity.summary?.length > 100 ? 8.0 : 4.0,
@@ -224,20 +214,17 @@ async function handleScan(supabase: any) {
     ? (results.reduce((s, r) => s + r.overall_score, 0) / results.length).toFixed(1)
     : "0";
 
-  return new Response(JSON.stringify({
+  return jsonResp({
     pages_scanned: results.length,
     total_issues: totalIssues,
     average_score: parseFloat(avgScore),
     static_routes: KNOWN_ROUTES.length,
     entity_pages: (entities || []).length,
     guest_pages: (guests || []).length,
-  }), {
-    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
   });
 }
 
-async function handleFix(supabase: any, apiKey: string) {
-  // Get pages with issues
+async function handleFix(supabase: any, apiKey: string, jsonResp: JsonResp) {
   const { data: pages } = await supabase
     .from("llm_page_index")
     .select("id, page_path, page_title, page_type, issues, overall_score")
@@ -246,9 +233,7 @@ async function handleFix(supabase: any, apiKey: string) {
     .limit(20);
 
   if (!pages?.length) {
-    return new Response(JSON.stringify({ fixes_generated: 0, message: "No low-scoring pages found" }), {
-      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-    });
+    return jsonResp({ fixes_generated: 0, message: "No low-scoring pages found" });
   }
 
   let fixCount = 0;
@@ -296,7 +281,6 @@ Output as JSON array: [{ "issue_type": "...", "current_value": "...", "suggested
       const aiData = await aiResp.json();
       const content = aiData.choices?.[0]?.message?.content?.trim() || "";
       
-      // Extract JSON from response
       let fixes: any[] = [];
       try {
         const jsonMatch = content.match(/\[[\s\S]*\]/);
@@ -320,10 +304,5 @@ Output as JSON array: [{ "issue_type": "...", "current_value": "...", "suggested
     }
   }
 
-  return new Response(JSON.stringify({
-    fixes_generated: fixCount,
-    pages_analyzed: pages.length,
-  }), {
-    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-  });
+  return jsonResp({ fixes_generated: fixCount, pages_analyzed: pages.length });
 }
