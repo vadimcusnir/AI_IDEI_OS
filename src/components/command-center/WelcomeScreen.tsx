@@ -5,6 +5,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, Zap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { MagicPipelineFlow } from "@/components/pipeline/MagicPipelineFlow";
 
 interface Suggestion {
@@ -25,6 +26,8 @@ interface WelcomeScreenProps {
 }
 
 export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuronCount, episodeCount, balance }: WelcomeScreenProps) {
+  const { t } = useTranslation(["pages", "common"]);
+
   return (
     <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-6">
       {/* Logo + greeting */}
@@ -38,9 +41,11 @@ export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuro
           <Sparkles className="h-7 w-7 text-primary" />
         </div>
         <div>
-          <h2 className="text-xl font-bold tracking-tight">How can I help?</h2>
+          <h2 className="text-xl font-bold tracking-tight">
+            {t("pages:home.welcome_title", { defaultValue: "How can I help?" })}
+          </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Describe what you need, upload a file, or pick a suggestion below.
+            {t("pages:home.welcome_subtitle", { defaultValue: "Describe what you need, upload a file, or pick a suggestion below." })}
           </p>
         </div>
       </motion.div>
@@ -63,7 +68,7 @@ export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuro
           className="w-full max-w-lg space-y-3"
         >
           <p className="text-dense font-semibold uppercase tracking-wider text-muted-foreground/60 text-center">
-            Suggested for you
+            {t("pages:home.suggested_for_you", { defaultValue: "Suggested for you" })}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {suggestions.slice(0, 4).map((s) => (
@@ -90,9 +95,9 @@ export function WelcomeScreen({ onCommand, onPipelineMessage, suggestions, neuro
         transition={{ delay: 0.3 }}
         className="flex items-center justify-center gap-6 text-xs text-muted-foreground/40"
       >
-        <span className="tabular-nums">{neuronCount} neurons</span>
+        <span className="tabular-nums">{neuronCount} {t("common:neurons", { defaultValue: "neurons" })}</span>
         <span>·</span>
-        <span className="tabular-nums">{episodeCount} episodes</span>
+        <span className="tabular-nums">{episodeCount} {t("common:episodes", { defaultValue: "episodes" })}</span>
         <span>·</span>
         <span className="flex items-center gap-1 text-primary/50 font-medium tabular-nums">
           <Zap className="h-3 w-3" />
