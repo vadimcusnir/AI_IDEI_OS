@@ -7705,6 +7705,51 @@ export type Database = {
         }
         Relationships: []
       }
+      os_lockin_scores: {
+        Row: {
+          active_agents: number
+          asset_count: number
+          computed_at: string
+          created_at: string
+          dependency_level: string
+          id: string
+          lockin_score: number
+          months_active: number
+          neurons_burned: number
+          services_used: number
+          total_executions: number
+          user_id: string
+        }
+        Insert: {
+          active_agents?: number
+          asset_count?: number
+          computed_at?: string
+          created_at?: string
+          dependency_level?: string
+          id?: string
+          lockin_score?: number
+          months_active?: number
+          neurons_burned?: number
+          services_used?: number
+          total_executions?: number
+          user_id: string
+        }
+        Update: {
+          active_agents?: number
+          asset_count?: number
+          computed_at?: string
+          created_at?: string
+          dependency_level?: string
+          id?: string
+          lockin_score?: number
+          months_active?: number
+          neurons_burned?: number
+          services_used?: number
+          total_executions?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       os_memory_patterns: {
         Row: {
           category: string
@@ -7969,6 +8014,45 @@ export type Database = {
           unlocked_at?: string
           user_id?: string
           xp_cost?: number
+        }
+        Relationships: []
+      }
+      os_superlayer_results: {
+        Row: {
+          axis: string
+          created_at: string
+          credits_cost: number
+          id: string
+          input_text: string
+          model_used: string | null
+          module_key: string
+          output: Json
+          quality_score: number | null
+          user_id: string
+        }
+        Insert: {
+          axis: string
+          created_at?: string
+          credits_cost?: number
+          id?: string
+          input_text?: string
+          model_used?: string | null
+          module_key: string
+          output?: Json
+          quality_score?: number | null
+          user_id: string
+        }
+        Update: {
+          axis?: string
+          created_at?: string
+          credits_cost?: number
+          id?: string
+          input_text?: string
+          model_used?: string | null
+          module_key?: string
+          output?: Json
+          quality_score?: number | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -14008,6 +14092,7 @@ export type Database = {
       }
       compute_entitlements: { Args: { _user_id: string }; Returns: Json }
       compute_idearank: { Args: never; Returns: undefined }
+      compute_lockin_score: { Args: { _user_id: string }; Returns: Json }
       compute_person_confidence: {
         Args: { _person_id: string }
         Returns: number
