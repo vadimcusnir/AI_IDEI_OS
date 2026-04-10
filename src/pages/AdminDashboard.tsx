@@ -38,6 +38,7 @@ const FeatureFlagsTab = lazy(() => import("@/components/admin/FeatureFlagsTab").
 const ForumModerationTab = lazy(() => import("@/components/admin/ForumModerationTab").then(m => ({ default: m.ForumModerationTab })));
 const ControlLayerTab = lazy(() => import("@/components/admin/ControlLayerTab").then(m => ({ default: m.ControlLayerTab })));
 const ServiceManifestTab = lazy(() => import("@/components/admin/ServiceManifestTab").then(m => ({ default: m.ServiceManifestTab })));
+const ServiceBuilderTab = lazy(() => import("@/components/admin/ServiceBuilderTab").then(m => ({ default: m.ServiceBuilderTab })));
 const AdminAdvancedTab = lazy(() => import("@/components/admin/AdminAdvancedTab").then(m => ({ default: m.AdminAdvancedTab })));
 const Root2PricingTab = lazy(() => import("@/components/admin/Root2PricingTab").then(m => ({ default: m.Root2PricingTab })));
 const LLMIndexationTab = lazy(() => import("@/components/admin/LLMIndexationTab").then(m => ({ default: m.LLMIndexationTab })));
@@ -149,6 +150,7 @@ const TAB_GROUPS = [
       { value: "flags", label: "Flags", icon: Activity },
       { value: "control-layer", label: "Control", icon: Layers },
       { value: "manifests", label: "Manifests", icon: Settings },
+      { value: "service-builder", label: "Service Builder", icon: Compass },
       { value: "advanced", label: "Advanced", icon: TrendingUp },
     ],
   },
@@ -332,6 +334,7 @@ export default function AdminDashboard() {
             <TabsContent value="moderation"><Suspense fallback={<TabLoader />}><ForumModerationTab /></Suspense></TabsContent>
             <TabsContent value="control-layer"><Suspense fallback={<TabLoader />}><ControlLayerTab /></Suspense></TabsContent>
             <TabsContent value="manifests"><Suspense fallback={<TabLoader />}><ServiceManifestTab /></Suspense></TabsContent>
+            <TabsContent value="service-builder"><Suspense fallback={<TabLoader />}><ServiceBuilderTab /></Suspense></TabsContent>
             <TabsContent value="advanced"><Suspense fallback={<TabLoader />}><AdminAdvancedTab /></Suspense></TabsContent>
             <TabsContent value="root2"><Suspense fallback={<TabLoader />}><Root2PricingTab /></Suspense></TabsContent>
             <TabsContent value="llm-index"><Suspense fallback={<TabLoader />}><LLMIndexationTab /></Suspense></TabsContent>
