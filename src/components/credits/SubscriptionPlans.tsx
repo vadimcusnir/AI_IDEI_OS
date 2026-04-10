@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSubscription, SUBSCRIPTION_TIERS } from "@/hooks/useSubscription";
+import { useSubscription } from "@/hooks/useSubscription";
+import {
+  SUBSCRIPTION_TIERS,
+  ANNUAL_TIERS,
+  TIER_PAIRS,
+  annualSavingsPct,
+  type BillingInterval,
+  type SubscriptionTier,
+} from "@/config/economyConfig";
 import { Check, Crown, Zap, Loader2, ExternalLink, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +20,7 @@ export function SubscriptionPlans() {
   const { subscribed, tier, subscriptionEnd, loading, subscribe, manageSubscription } = useSubscription();
   const [subscribing, setSubscribing] = useState<string | null>(null);
   const [showRetention, setShowRetention] = useState(false);
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>("month");
   const { t } = useTranslation("common");
 
   const handleSubscribe = async (priceId: string, tierKey: string) => {
@@ -41,6 +50,8 @@ export function SubscriptionPlans() {
     );
   }
 
+  const tiers = billingInterval === "month" ? SUBSCRIPTION_TIERS : ANNUAL_TIERS;
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -54,6 +65,35 @@ export function SubscriptionPlans() {
         )}
       </div>
 
+      {/* Monthly / Annual toggle */}
+      <div className="flex items-center justify-center gap-1 p-1 bg-muted rounded-lg w-fit mx-auto">
+        <button
+          onClick={() => setBillingInterval("month")}
+          className={cn(
+            "px-4 py-1.5 rounded-md text-xs font-medium transition-all",
+            billingInterval === "month"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Lunar
+        </button>
+        <button
+          onClick={() => setBillingInterval("year")}
+          className={cn(
+            "px-4 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5",
+            billingInterval === "year"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Anual
+          <span className="text-nano font-bold px-1.5 py-0.5 rounded-full bg-status-validated/15 text-status-validated">
+            -18%
+          </span>
+        </button>
+      </div>
+
       {subscribed && subscriptionEnd && (
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-xs text-muted-foreground">
           <span className="font-medium text-foreground">{t("subscription.active_label")}</span> — {t("subscription.expires_on")}{" "}
@@ -62,8 +102,15 @@ export function SubscriptionPlans() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {Object.entries(SUBSCRIPTION_TIERS).map(([key, plan]) => {
+        {TIER_PAIRS.map((pair) => {
+          const key = billingInterval === "month" ? pair.monthly : pair.annual;
+          const plan = tiers[key];
+          if (!plan) return null;
           const isCurrentPlan = tier === key;
+          const monthlyTier = SUBSCRIPTION_TIERS[pair.monthly];
+          const annualTier = ANNUAL_TIERS[pair.annual];
+          const savings = annualSavingsPct(monthlyTier.price, annualTier.price);
+
           return (
             <div
               key={key}
@@ -85,15 +132,21 @@ export function SubscriptionPlans() {
                 <h4 className="text-sm font-semibold">{plan.name}</h4>
               </div>
 
-              <div className="flex items-baseline gap-1 mb-3">
+              <div className="flex items-baseline gap-1 mb-1">
                 <span className="text-2xl font-bold">${plan.price}</span>
                 <span className="text-xs text-muted-foreground">
-                  {plan.interval === "month" ? t("subscription.per_month") : t("subscription.per_year")}
+                  /{billingInterval === "month" ? t("subscription.per_month") : t("subscription.per_year")}
                 </span>
               </div>
 
+              {billingInterval === "year" && (
+                <p className="text-nano text-status-validated font-medium mb-2">
+                  Economisești {savings}% — ${monthlyTier.price * 12 - annualTier.price}/an
+                </p>
+              )}
+
               <div className="text-micro text-muted-foreground mb-3">
-                {plan.neurons_quota.toLocaleString()} NEURONS {plan.interval === "month" ? t("subscription.per_month") : t("subscription.per_year")}
+                {plan.neurons_quota.toLocaleString()} NEURONS / lună
               </div>
 
               <ul className="space-y-1.5 mb-4">
