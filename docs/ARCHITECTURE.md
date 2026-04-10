@@ -16,7 +16,7 @@
                        │ HTTPS (JWT / API Key)
 ┌──────────────────────▼──────────────────────────────────────┐
 │                   EDGE FUNCTIONS (Deno)                       │
-│  67+ functions: extract, analyze, generate, execute, chat    │
+│  80+ functions: extract, analyze, generate, execute, chat     │
 │  Shared: CORS, Validation, Rate Limiting, Error Reporting    │
 └──────────────────────┬──────────────────────────────────────┘
                        │ Service Role
@@ -126,6 +126,47 @@ Public Analysis Page (/analysis/:slug)
 | `os_executions` | Agent execution logs |
 | `os_memory_patterns` | Learned patterns from executions |
 | `os_power_unlocks` | XP-gated capability unlocks |
+| `os_lockin_scores` | Platform dependency scores (6 vectors) |
+| `os_superlayer_results` | 4-axis superlayer AI outputs |
+
+---
+
+## Agent Orchestrator v2
+
+The pipeline orchestrator chains 4 stages with automatic retry and dead-letter logging.
+
+### Retry Strategy
+- **Default:** 2 retries per stage with exponential backoff (base 500ms + jitter)
+- **Dead letter:** Failed stages after exhaustion logged to `decision_ledger`
+- **Fail-fast:** Subsequent stages skipped after a failure
+- **Rate limiting:** 10 req/min per user, DB-backed, fail-closed
+- **Cancellation:** Client-side AbortController support
+
+### Stage Dependencies
+| Stage | Depends On | Output |
+|-------|-----------|--------|
+| Extract | episode_id | neuron IDs |
+| Structure | neuron IDs | structured relations |
+| Generate | neuron IDs + service_key | job IDs, credits reserved |
+| Monetize | neuron IDs | knowledge asset draft |
+
+---
+
+## CusnirOS Superlayer
+
+12 AI modules across 4 strategic axes (16-25 NEURONS each):
+
+| Axis | Modules |
+|------|---------|
+| **Psychological** | Identity Simulation, Behavioral Leverage, Narrative Domination |
+| **Social** | Influence Graph, Viral Structure, Reputation Accumulation |
+| **Commercial** | Offer Multiplication, Pricing Intelligence, Funnel Autogenerator |
+| **Infrastructure** | Stepback Compiler, Agent Swarm, Knowledge Arbitrage |
+
+### Lock-in Score Engine
+Inevitability Score (0-100) from 6 weighted vectors:
+- Neurons burned (25%), Assets (20%), Months active (20%)
+- Executions (15%), Agents (10%), Services (10%)
 
 ---
 
@@ -172,7 +213,7 @@ Client → API Key → Edge Function → SHA-256 hash → api_keys lookup → us
 ```
 
 ### RLS Strategy
-- All 35+ tables have RLS enabled
+- All 100+ tables have RLS enabled
 - User data scoped via `auth.uid()` matching
 - Admin access via `has_role()` SECURITY DEFINER function
 - No self-role-assignment (privilege escalation prevented)
