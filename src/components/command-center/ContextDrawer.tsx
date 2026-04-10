@@ -223,6 +223,7 @@ export function ContextDrawer({
                   steps={steps} phase={phase} elapsed={elapsed} progress={progress}
                   isDone={isDone} isFailed={isFailed} isActive={isActive}
                   consumedCredits={consumedCredits} totalCredits={totalCredits}
+                  navigate={navigate}
                 />
               )}
               {activeTab === "assets" && (
