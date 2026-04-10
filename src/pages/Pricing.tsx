@@ -96,10 +96,11 @@ export default function Pricing() {
   const { subscribed, tier, subscribe, buyNeurons, manageSubscription } = useSubscription();
   const { t } = useTranslation("pages");
   const [processing, setProcessing] = useState<string | null>(null);
-  const PLANS = usePlans();
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>("month");
+  const PLANS = usePlans(billingInterval);
   const FAQ_ITEMS = useFaqItems();
 
-  const handlePlanAction = async (plan: ReturnType<typeof usePlans>[number]) => {
+  const handlePlanAction = async (plan: (typeof PLANS)[number]) => {
     if (!user) {
       navigate("/auth");
       return;
@@ -122,12 +123,9 @@ export default function Pricing() {
     navigate("/credits");
   };
 
-  const isCurrentPlan = (planKey: string) => {
+  const isCurrentPlan = (planKey: string, tierKey?: string) => {
     if (planKey === "free" && !subscribed) return true;
-    if (planKey === "starter" && tier === "starter_monthly") return true;
-    if (planKey === "pro" && tier === "pro_monthly") return true;
-    if (planKey === "vip" && tier === "vip_monthly") return true;
-    if (planKey === "enterprise" && tier === "enterprise_monthly") return true;
+    if (tierKey && tier === tierKey) return true;
     return false;
   };
 
