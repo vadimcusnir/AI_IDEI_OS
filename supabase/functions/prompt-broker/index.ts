@@ -221,18 +221,23 @@ Structure your output in three sections:
       const errText = await llmResponse.text();
       console.error("LLM error:", llmResponse.status, errText);
 
-      // ═══ COMPENSATING TRANSACTION — refund neurons on LLM failure ═══
-      const { error: refundErr } = await supabase.rpc("add_credits", {
+      // ═══ COMPENSATING TRANSACTION — refund neurons + compliance log ═══
+      const { data: refundResult, error: refundErr } = await supabase.rpc("refund_llm_failure", {
         _user_id: user_id,
         _amount: neuronsCost,
-        _description: `Refund: ${unit.name} — LLM failure (${llmResponse.status})`,
-        _type: "refund",
+        _reason: `${unit.name} — LLM HTTP ${llmResponse.status}`,
+        _service_key: unit.name,
+        _job_id: null,
       });
       if (refundErr) {
         console.error("CRITICAL: Refund failed for user", user_id, "amount", neuronsCost, refundErr);
       }
 
-      return new Response(JSON.stringify({ error: "LLM execution failed", refunded: !refundErr }), {
+      return new Response(JSON.stringify({
+        error: "LLM execution failed",
+        refunded: !refundErr,
+        refund_id: (refundResult as any)?.refund_id ?? null,
+      }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

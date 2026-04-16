@@ -818,6 +818,13 @@ export type Database = {
             referencedRelation: "aias_agent_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "aias_output_contracts_agent_profile_id_fkey"
+            columns: ["agent_profile_id"]
+            isOneToOne: false
+            referencedRelation: "aias_agent_profiles_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       aias_routing_metadata: {
@@ -872,6 +879,13 @@ export type Database = {
             columns: ["agent_profile_id"]
             isOneToOne: false
             referencedRelation: "aias_agent_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aias_routing_metadata_agent_profile_id_fkey"
+            columns: ["agent_profile_id"]
+            isOneToOne: false
+            referencedRelation: "aias_agent_profiles_public"
             referencedColumns: ["id"]
           },
         ]
@@ -3976,6 +3990,36 @@ export type Database = {
           updated_at?: string
           validation_required?: boolean | null
           version?: number
+        }
+        Relationships: []
+      }
+      export_audit_log: {
+        Row: {
+          created_at: string
+          export_type: string
+          id: string
+          metadata: Json | null
+          resource_count: number
+          resource_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          export_type?: string
+          id?: string
+          metadata?: Json | null
+          resource_count?: number
+          resource_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          export_type?: string
+          id?: string
+          metadata?: Json | null
+          resource_count?: number
+          resource_type?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -13643,6 +13687,99 @@ export type Database = {
       }
     }
     Views: {
+      aias_agent_profiles_public: {
+        Row: {
+          agent_key: string | null
+          avg_quality_score: number | null
+          certification_level: number | null
+          created_at: string | null
+          display_name: string | null
+          id: string | null
+          is_certified: boolean | null
+          status: string | null
+          success_rate: number | null
+          total_executions: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_key?: string | null
+          avg_quality_score?: number | null
+          certification_level?: number | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          is_certified?: boolean | null
+          status?: string | null
+          success_rate?: number | null
+          total_executions?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_key?: string | null
+          avg_quality_score?: number | null
+          certification_level?: number | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          is_certified?: boolean | null
+          status?: string | null
+          success_rate?: number | null
+          total_executions?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      aias_routing_metadata_safe: {
+        Row: {
+          agent_profile_id: string | null
+          blocked: boolean | null
+          certification_check: boolean | null
+          created_at: string | null
+          id: string | null
+          routing_confidence: number | null
+          schema_valid: boolean | null
+          score_check_passed: boolean | null
+          service_unit_id: string | null
+        }
+        Insert: {
+          agent_profile_id?: string | null
+          blocked?: boolean | null
+          certification_check?: boolean | null
+          created_at?: string | null
+          id?: string | null
+          routing_confidence?: number | null
+          schema_valid?: boolean | null
+          score_check_passed?: boolean | null
+          service_unit_id?: string | null
+        }
+        Update: {
+          agent_profile_id?: string | null
+          blocked?: boolean | null
+          certification_check?: boolean | null
+          created_at?: string | null
+          id?: string | null
+          routing_confidence?: number | null
+          schema_valid?: boolean | null
+          score_check_passed?: boolean | null
+          service_unit_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aias_routing_metadata_agent_profile_id_fkey"
+            columns: ["agent_profile_id"]
+            isOneToOne: false
+            referencedRelation: "aias_agent_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aias_routing_metadata_agent_profile_id_fkey"
+            columns: ["agent_profile_id"]
+            isOneToOne: false
+            referencedRelation: "aias_agent_profiles_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       capacity_state_public: {
         Row: {
           id: number | null
@@ -14379,6 +14516,15 @@ export type Database = {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
       }
+      detect_cross_tenant_access: {
+        Args: {
+          _action?: string
+          _actor_id: string
+          _resource: string
+          _target_user_id: string
+        }
+        Returns: undefined
+      }
       detect_export_farming: { Args: { _user_id: string }; Returns: boolean }
       detect_prompt_probing: { Args: { _user_id: string }; Returns: boolean }
       enqueue_email: {
@@ -14604,9 +14750,28 @@ export type Database = {
         }[]
       }
       record_daily_activity: { Args: { _user_id: string }; Returns: Json }
+      record_export: {
+        Args: {
+          _export_type?: string
+          _metadata?: Json
+          _resource_count?: number
+          _resource_type: string
+        }
+        Returns: Json
+      }
       refund_credits: {
         Args: { _amount: number; _job_id: string; _user_id: string }
         Returns: boolean
+      }
+      refund_llm_failure: {
+        Args: {
+          _amount: number
+          _job_id?: string
+          _reason: string
+          _service_key?: string
+          _user_id: string
+        }
+        Returns: Json
       }
       reject_profile: {
         Args: { _profile_id: string; _reason?: string; _user_id: string }
@@ -14748,6 +14913,7 @@ export type Database = {
         Args: { p_amount: number; p_user_id: string }
         Returns: undefined
       }
+      validate_jsonld_schema: { Args: { _schema: Json }; Returns: Json }
       validate_profile_guardrails: {
         Args: { _profile_id: string }
         Returns: Json
