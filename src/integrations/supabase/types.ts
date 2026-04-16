@@ -14442,6 +14442,10 @@ export type Database = {
       }
       i18n_coverage_report: { Args: never; Returns: Json }
       increment_analysis_views: { Args: { _slug: string }; Returns: undefined }
+      increment_api_key_usage: {
+        Args: { _daily_limit: number; _key_id: string }
+        Returns: boolean
+      }
       is_feature_enabled: {
         Args: { _key: string; _user_id?: string }
         Returns: boolean
