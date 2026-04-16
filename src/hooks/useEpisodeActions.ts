@@ -128,7 +128,7 @@ export function useEpisodeActions(fetchEpisodes: () => Promise<void>) {
     const { error } = await supabase.from("episodes").update({
       transcript: editTranscriptText.trim(),
       status: "transcribed",
-    } as any).eq("id", episodeId);
+    } as { transcript: string; status: string }).eq("id", episodeId);
     if (error) {
       toast.error(t("errors:save_failed", { message: error.message }));
     } else {
@@ -317,7 +317,7 @@ export function useEpisodeActions(fetchEpisodes: () => Promise<void>) {
       const storagePath = `${user.id}/${Date.now()}.${ext}`;
       const { error: uploadErr } = await supabase.storage.from("episode-files").upload(storagePath, file);
       if (uploadErr) throw new Error(uploadErr.message);
-      await supabase.from("episodes").update({ file_path: storagePath } as any).eq("id", episodeId);
+      await supabase.from("episodes").update({ file_path: storagePath } as { file_path: string }).eq("id", episodeId);
       await triggerTranscription(episodeId, storagePath);
     } catch (err: any) {
       toast.error(err.message || "Upload failed");

@@ -115,7 +115,7 @@ export function useNotifications() {
     );
     await supabase
       .from("notifications")
-      .update({ read: true } as any)
+      .update({ read: true } as { read: boolean })
       .eq("id", id);
   }, []);
 
@@ -124,7 +124,7 @@ export function useNotifications() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     await supabase
       .from("notifications")
-      .update({ read: true } as any)
+      .update({ read: true } as { read: boolean })
       .eq("user_id", user.id)
       .eq("read", false);
   }, [user]);
