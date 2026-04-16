@@ -6403,6 +6403,593 @@ export type Database = {
         }
         Relationships: []
       }
+      mcl_control_actions: {
+        Row: {
+          code: string
+          control_action: string
+          created_at: string
+          effect_summary: Json | null
+          id: string
+          initiator: string
+          linked_decision_id: string | null
+          name: string
+          rationale: string
+          scope_reference: string | null
+          scope_type: string
+        }
+        Insert: {
+          code: string
+          control_action: string
+          created_at?: string
+          effect_summary?: Json | null
+          id?: string
+          initiator: string
+          linked_decision_id?: string | null
+          name: string
+          rationale: string
+          scope_reference?: string | null
+          scope_type: string
+        }
+        Update: {
+          code?: string
+          control_action?: string
+          created_at?: string
+          effect_summary?: Json | null
+          id?: string
+          initiator?: string
+          linked_decision_id?: string | null
+          name?: string
+          rationale?: string
+          scope_reference?: string | null
+          scope_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mcl_control_actions_linked_decision_id_fkey"
+            columns: ["linked_decision_id"]
+            isOneToOne: false
+            referencedRelation: "mcl_decisions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mcl_decisions: {
+        Row: {
+          code: string
+          confidence: number
+          created_at: string
+          created_by: string | null
+          decision_type: string
+          id: string
+          metadata: Json | null
+          name: string
+          priority_score: number
+          rationale: string
+          resolved_at: string | null
+          source_reference: string | null
+          source_type: string
+          status: string
+          target_entity_reference: string | null
+          target_entity_type: string
+          trust_state: string
+        }
+        Insert: {
+          code: string
+          confidence: number
+          created_at?: string
+          created_by?: string | null
+          decision_type: string
+          id?: string
+          metadata?: Json | null
+          name: string
+          priority_score?: number
+          rationale: string
+          resolved_at?: string | null
+          source_reference?: string | null
+          source_type: string
+          status?: string
+          target_entity_reference?: string | null
+          target_entity_type: string
+          trust_state?: string
+        }
+        Update: {
+          code?: string
+          confidence?: number
+          created_at?: string
+          created_by?: string | null
+          decision_type?: string
+          id?: string
+          metadata?: Json | null
+          name?: string
+          priority_score?: number
+          rationale?: string
+          resolved_at?: string | null
+          source_reference?: string | null
+          source_type?: string
+          status?: string
+          target_entity_reference?: string | null
+          target_entity_type?: string
+          trust_state?: string
+        }
+        Relationships: []
+      }
+      mcl_economic_units: {
+        Row: {
+          code: string
+          cost_estimate: number
+          created_at: string
+          credit_cost: number
+          id: string
+          margin_score: number | null
+          measured_at: string
+          name: string
+          profit_amount: number | null
+          revenue_amount: number
+          scope_reference: string
+          scope_type: string
+          time_estimate_seconds: number
+        }
+        Insert: {
+          code: string
+          cost_estimate?: number
+          created_at?: string
+          credit_cost?: number
+          id?: string
+          margin_score?: number | null
+          measured_at?: string
+          name: string
+          profit_amount?: number | null
+          revenue_amount?: number
+          scope_reference: string
+          scope_type: string
+          time_estimate_seconds?: number
+        }
+        Update: {
+          code?: string
+          cost_estimate?: number
+          created_at?: string
+          credit_cost?: number
+          id?: string
+          margin_score?: number | null
+          measured_at?: string
+          name?: string
+          profit_amount?: number | null
+          revenue_amount?: number
+          scope_reference?: string
+          scope_type?: string
+          time_estimate_seconds?: number
+        }
+        Relationships: []
+      }
+      mcl_memory_records: {
+        Row: {
+          code: string
+          created_at: string
+          expire_at: string
+          id: string
+          memory_class: string
+          name: string
+          retained_signal: Json
+          retention_reason: string
+          source_reference: string | null
+          source_type: string
+          status: string
+          ttl_class: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expire_at: string
+          id?: string
+          memory_class: string
+          name: string
+          retained_signal: Json
+          retention_reason: string
+          source_reference?: string | null
+          source_type: string
+          status?: string
+          ttl_class: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expire_at?: string
+          id?: string
+          memory_class?: string
+          name?: string
+          retained_signal?: Json
+          retention_reason?: string
+          source_reference?: string | null
+          source_type?: string
+          status?: string
+          ttl_class?: string
+        }
+        Relationships: []
+      }
+      mcl_meta_metric_reports: {
+        Row: {
+          automation_rate: number | null
+          code: string
+          created_at: string
+          decision_accuracy_score: number | null
+          health_score: number
+          id: string
+          key_failures: Json | null
+          key_recommendations: Json
+          name: string
+          raw_metrics: Json | null
+          recovery_success_rate: number | null
+          report_window: string
+          revenue_per_execution: number | null
+        }
+        Insert: {
+          automation_rate?: number | null
+          code: string
+          created_at?: string
+          decision_accuracy_score?: number | null
+          health_score: number
+          id?: string
+          key_failures?: Json | null
+          key_recommendations?: Json
+          name: string
+          raw_metrics?: Json | null
+          recovery_success_rate?: number | null
+          report_window: string
+          revenue_per_execution?: number | null
+        }
+        Update: {
+          automation_rate?: number | null
+          code?: string
+          created_at?: string
+          decision_accuracy_score?: number | null
+          health_score?: number
+          id?: string
+          key_failures?: Json | null
+          key_recommendations?: Json
+          name?: string
+          raw_metrics?: Json | null
+          recovery_success_rate?: number | null
+          report_window?: string
+          revenue_per_execution?: number | null
+        }
+        Relationships: []
+      }
+      mcl_priority_rules: {
+        Row: {
+          active_from: string
+          code: string
+          created_at: string
+          formula_version: string
+          id: string
+          name: string
+          status: string
+          target_scope: string
+          weighting_definition: Json
+        }
+        Insert: {
+          active_from?: string
+          code: string
+          created_at?: string
+          formula_version?: string
+          id?: string
+          name: string
+          status?: string
+          target_scope: string
+          weighting_definition: Json
+        }
+        Update: {
+          active_from?: string
+          code?: string
+          created_at?: string
+          formula_version?: string
+          id?: string
+          name?: string
+          status?: string
+          target_scope?: string
+          weighting_definition?: Json
+        }
+        Relationships: []
+      }
+      mcl_recovery_events: {
+        Row: {
+          code: string
+          created_at: string
+          degraded_mode_activated: boolean
+          failure_type: string
+          id: string
+          metadata: Json | null
+          name: string
+          resolved_at: string | null
+          response_mode: string
+          retry_count: number
+          rollback_possible: boolean
+          severity: string
+          source_reference: string | null
+          status: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          degraded_mode_activated?: boolean
+          failure_type: string
+          id?: string
+          metadata?: Json | null
+          name: string
+          resolved_at?: string | null
+          response_mode: string
+          retry_count?: number
+          rollback_possible?: boolean
+          severity?: string
+          source_reference?: string | null
+          status?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          degraded_mode_activated?: boolean
+          failure_type?: string
+          id?: string
+          metadata?: Json | null
+          name?: string
+          resolved_at?: string | null
+          response_mode?: string
+          retry_count?: number
+          rollback_possible?: boolean
+          severity?: string
+          source_reference?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      mcl_recovery_policies: {
+        Row: {
+          allowed_response_modes: string[]
+          code: string
+          created_at: string
+          failure_type: string
+          id: string
+          max_retry_count: number
+          name: string
+          status: string
+        }
+        Insert: {
+          allowed_response_modes: string[]
+          code: string
+          created_at?: string
+          failure_type: string
+          id?: string
+          max_retry_count?: number
+          name: string
+          status?: string
+        }
+        Update: {
+          allowed_response_modes?: string[]
+          code?: string
+          created_at?: string
+          failure_type?: string
+          id?: string
+          max_retry_count?: number
+          name?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      mcl_selection_events: {
+        Row: {
+          applied: boolean
+          code: string
+          created_at: string
+          evidence_summary: Json
+          expected_impact: string | null
+          id: string
+          name: string
+          selection_action: string
+          selection_reason: string
+          target_entity_reference: string
+          target_entity_type: string
+        }
+        Insert: {
+          applied?: boolean
+          code: string
+          created_at?: string
+          evidence_summary: Json
+          expected_impact?: string | null
+          id?: string
+          name: string
+          selection_action: string
+          selection_reason: string
+          target_entity_reference: string
+          target_entity_type: string
+        }
+        Update: {
+          applied?: boolean
+          code?: string
+          created_at?: string
+          evidence_summary?: Json
+          expected_impact?: string | null
+          id?: string
+          name?: string
+          selection_action?: string
+          selection_reason?: string
+          target_entity_reference?: string
+          target_entity_type?: string
+        }
+        Relationships: []
+      }
+      mcl_simulation_runs: {
+        Row: {
+          assumptions: Json
+          code: string
+          confidence: string
+          created_at: string
+          id: string
+          initiator: string | null
+          name: string
+          projected_impact: Json
+          recommendation: string | null
+          risk_estimate: string
+          scenario_summary: string
+          simulation_type: string
+          source_data_window: string | null
+        }
+        Insert: {
+          assumptions: Json
+          code: string
+          confidence: string
+          created_at?: string
+          id?: string
+          initiator?: string | null
+          name: string
+          projected_impact: Json
+          recommendation?: string | null
+          risk_estimate: string
+          scenario_summary: string
+          simulation_type: string
+          source_data_window?: string | null
+        }
+        Update: {
+          assumptions?: Json
+          code?: string
+          confidence?: string
+          created_at?: string
+          id?: string
+          initiator?: string | null
+          name?: string
+          projected_impact?: Json
+          recommendation?: string | null
+          risk_estimate?: string
+          scenario_summary?: string
+          simulation_type?: string
+          source_data_window?: string | null
+        }
+        Relationships: []
+      }
+      mcl_temporal_policies: {
+        Row: {
+          code: string
+          created_at: string
+          decay_rule: Json | null
+          entity_type: string
+          frequency: string
+          id: string
+          name: string
+          status: string
+          ttl_class: string
+          ttl_days: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          decay_rule?: Json | null
+          entity_type: string
+          frequency: string
+          id?: string
+          name: string
+          status?: string
+          ttl_class: string
+          ttl_days: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          decay_rule?: Json | null
+          entity_type?: string
+          frequency?: string
+          id?: string
+          name?: string
+          status?: string
+          ttl_class?: string
+          ttl_days?: number
+        }
+        Relationships: []
+      }
+      mcl_trust_profiles: {
+        Row: {
+          code: string
+          confidence_score: number
+          created_at: string
+          decision_scope: string
+          economic_risk_level: string
+          id: string
+          name: string
+          reversibility_level: string
+          status: string
+          target_entity_reference: string | null
+          target_entity_type: string
+          trust_level: string
+        }
+        Insert: {
+          code: string
+          confidence_score?: number
+          created_at?: string
+          decision_scope: string
+          economic_risk_level?: string
+          id?: string
+          name: string
+          reversibility_level?: string
+          status?: string
+          target_entity_reference?: string | null
+          target_entity_type: string
+          trust_level: string
+        }
+        Update: {
+          code?: string
+          confidence_score?: number
+          created_at?: string
+          decision_scope?: string
+          economic_risk_level?: string
+          id?: string
+          name?: string
+          reversibility_level?: string
+          status?: string
+          target_entity_reference?: string | null
+          target_entity_type?: string
+          trust_level?: string
+        }
+        Relationships: []
+      }
+      mcl_user_progression: {
+        Row: {
+          code: string
+          commercial_behavior_summary: Json | null
+          created_at: string
+          current_stage: string
+          feature_usage_summary: Json | null
+          id: string
+          name: string
+          previous_stage: string | null
+          transition_trigger: string | null
+          updated_at: string
+          user_reference: string
+        }
+        Insert: {
+          code: string
+          commercial_behavior_summary?: Json | null
+          created_at?: string
+          current_stage: string
+          feature_usage_summary?: Json | null
+          id?: string
+          name: string
+          previous_stage?: string | null
+          transition_trigger?: string | null
+          updated_at?: string
+          user_reference: string
+        }
+        Update: {
+          code?: string
+          commercial_behavior_summary?: Json | null
+          created_at?: string
+          current_stage?: string
+          feature_usage_summary?: Json | null
+          id?: string
+          name?: string
+          previous_stage?: string | null
+          transition_trigger?: string | null
+          updated_at?: string
+          user_reference?: string
+        }
+        Relationships: []
+      }
       mms_edges: {
         Row: {
           created_at: string
@@ -14726,6 +15313,35 @@ export type Database = {
           neuron_id: number
           similarity: number
         }[]
+      }
+      mcl_compute_priority: {
+        Args: {
+          _effort: number
+          _frequency: number
+          _revenue_potential: number
+          _risk: number
+          _strategic_value: number
+          _urgency: number
+        }
+        Returns: number
+      }
+      mcl_create_decision: {
+        Args: {
+          _confidence: number
+          _decision_type: string
+          _name: string
+          _priority_score?: number
+          _rationale: string
+          _source_reference: string
+          _source_type: string
+          _target_entity_reference: string
+          _target_entity_type: string
+        }
+        Returns: string
+      }
+      mcl_override_decision: {
+        Args: { _decision_id: string; _new_status: string; _rationale: string }
+        Returns: undefined
       }
       move_to_dlq: {
         Args: {
