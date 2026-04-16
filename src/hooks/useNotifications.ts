@@ -43,7 +43,7 @@ export function useNotifications() {
     try {
       const n = new Notification(notif.title, {
         body: notif.message,
-        icon: "/favicon.ico",
+        icon: "/favicon.png",
         tag: notif.id,
         silent: false,
       });
