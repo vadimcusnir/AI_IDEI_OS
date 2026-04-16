@@ -1,7 +1,7 @@
 /**
  * Ecosystem Map — visual library with category groupings.
  */
-import { motion } from "framer-motion";
+import { MobileMotion } from "@/components/motion/MobileMotion";
 import { IconFramework, IconAssistant, IconOutput, IconPodcast, IconExtract, IconMultiply } from "./ProprietaryIcons";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { ContentBoundary } from "@/components/layout/ContentBoundary";
@@ -53,17 +53,17 @@ export function EcosystemMap() {
   return (
     <section className="py-24 sm:py-40 border-y border-border/40" aria-label="Ecosystem overview">
       <ContentBoundary width="default">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-20 sm:mb-24">
+        <MobileMotion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} custom={0} variants={fadeUp} className="text-center mb-20 sm:mb-24">
           <span className="text-eyebrow font-mono tracking-[0.35em] text-[hsl(var(--gold-oxide))] mb-6 block">ECOSYSTEM</span>
           <h2 className="text-h2 text-foreground mb-6">Inside AI-IDEI</h2>
           <p className="text-body text-muted-foreground max-w-lg mx-auto leading-relaxed">
             A growing system of resources organized by function, not by volume.
           </p>
-        </motion.div>
+        </MobileMotion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {CATEGORIES.map((cat, i) => (
-            <motion.div
+            <MobileMotion.div
               key={cat.title}
               initial="hidden"
               whileInView="visible"
@@ -84,13 +84,13 @@ export function EcosystemMap() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </MobileMotion.div>
           ))}
         </div>
 
-        <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-12 text-eyebrow font-mono tracking-[0.2em] text-muted-foreground">
+        <MobileMotion.p initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp} className="text-center mt-12 text-eyebrow font-mono tracking-[0.2em] text-muted-foreground">
           New resources added weekly · Built for execution, not decoration
-        </motion.p>
+        </MobileMotion.p>
       </ContentBoundary>
     </section>
   );
