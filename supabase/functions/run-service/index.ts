@@ -151,8 +151,8 @@ const SERVICE_ARTIFACT_TYPE: Record<string, string> = {
   "implementation-guide": "document",
 };
 
-// Valid service keys for input validation
-const VALID_SERVICE_KEYS = new Set(Object.keys(SERVICE_PROMPTS));
+// Valid service keys for input validation — now derived from artifact type map (prompts live in DB)
+const VALID_SERVICE_KEYS = new Set(Object.keys(SERVICE_ARTIFACT_TYPE));
 
 // ── Rate limiting ──
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -344,8 +344,7 @@ Deno.serve(async (req) => {
     let settled = false;
 
     // ── Execute AI pipeline (with prompt-loader + dry-run) ──
-    const hardcodedPrompt = SERVICE_PROMPTS[service_key] || SERVICE_PROMPTS["insight-extractor"];
-    const { prompt: systemPrompt } = await loadPrompt(service_key, hardcodedPrompt);
+    const { prompt: systemPrompt } = await loadPrompt(service_key, DEFAULT_FALLBACK_PROMPT);
 
     if (isDryRun) {
       await supabase.from("neuron_jobs").update({
