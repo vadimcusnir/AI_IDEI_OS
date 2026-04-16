@@ -14021,6 +14021,14 @@ export type Database = {
         Args: { _profile_id: string; _user_id: string }
         Returns: Json
       }
+      atomic_deduct_neurons: {
+        Args: { p_amount: number; p_description?: string; p_user_id: string }
+        Returns: {
+          error_message: string
+          new_balance: number
+          success: boolean
+        }[]
+      }
       award_xp: {
         Args: {
           _amount: number
