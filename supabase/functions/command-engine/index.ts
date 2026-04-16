@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { rateLimitGuard } from "../_shared/rate-limiter.ts";
+import { sanitizeUserInput } from "../_shared/sanitize-prompt.ts";
 
 /**
  * Phase 8 — Command Engine
